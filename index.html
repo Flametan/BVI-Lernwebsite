@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B VI – Lernen für den höheren Dienst</title>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       GOOGLE FONTS
+       Bebas Neue: authoritative headline font (military/institutional feel)
+       Source Serif 4: refined body font for long-form reading
+  ══════════════════════════════════════════════════════════════════ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════════
+       CSS CUSTOM PROPERTIES
+       A deep navy-and-amber palette – serious, institutional, readable
+    ══════════════════════════════════════════════════════════════════ */
+    :root {
+      --navy:      #0d1b2a;
+      --navy-mid:  #1b2d45;
+      --navy-lite: #243b55;
+      --amber:     #e8a020;
+      --amber-dim: #c4841a;
+      --cream:     #f5f0e8;
+      --cream-dim: #e8e0d0;
+      --text:      #1a1a2e;
+      --text-soft: #4a5568;
+      --white:     #ffffff;
+      --green:     #2d7a4f;
+      --red:       #b5311a;
+      --sidebar-w: 280px;
+      --header-h:  64px;
+      --radius:    6px;
+      --shadow:    0 4px 24px rgba(0,0,0,0.18);
+      --transition: 0.25s ease;
+    }
+
+    /* ─── RESET ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--cream);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────────────────── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      z-index: 200;
+      border-bottom: 3px solid var(--amber);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+    }
+
+    header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 2px;
+      color: var(--amber);
+      margin-left: 12px;
+    }
+
+    header .shield {
+      font-size: 28px;
+      color: var(--amber);
+    }
+
+    header .version-badge {
+      margin-left: auto;
+      background: var(--amber);
+      color: var(--navy);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+    }
+
+    /* ─── SIDEBAR TOGGLE (hamburger) ─────────────────────────────── */
+    #sidebar-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      margin-right: 12px;
+      color: var(--amber);
+      font-size: 22px;
+    }
+
+    /* ─── LAYOUT ─────────────────────────────────────────────────── */
+    .app-body {
+      display: flex;
+      margin-top: var(--header-h);
+      min-height: calc(100vh - var(--header-h));
+    }
+
+    /* ─── SIDEBAR ─────────────────────────────────────────────────── */
+    #sidebar {
+      width: var(--sidebar-w);
+      background: var(--navy-mid);
+      flex-shrink: 0;
+      position: fixed;
+      top: var(--header-h);
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+      z-index: 100;
+      border-right: 2px solid var(--amber);
+      transition: transform var(--transition);
+      scrollbar-width: thin;
+      scrollbar-color: var(--amber) var(--navy);
+    }
+
+    #sidebar::-webkit-scrollbar { width: 5px; }
+    #sidebar::-webkit-scrollbar-track { background: var(--navy); }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--amber); border-radius: 3px; }
+
+    /* Top-level tabs in sidebar */
+    .sidebar-tab {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: var(--cream);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 15px;
+      letter-spacing: 1.5px;
+      padding: 14px 20px;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-tab:hover { background: var(--navy-lite); color: var(--amber); }
+    .sidebar-tab.active { background: var(--amber); color: var(--navy); }
+
+    .sidebar-tab .tab-arrow {
+      margin-left: auto;
+      transition: transform var(--transition);
+      font-size: 12px;
+    }
+
+    .sidebar-tab.open .tab-arrow { transform: rotate(90deg); }
+
+    /* Sub-items */
+    .sidebar-sub {
+      list-style: none;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.4s ease;
+      background: rgba(0,0,0,0.2);
+    }
+
+    .sidebar-sub.open { max-height: 2000px; }
+
+    .sidebar-sub li button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--cream-dim);
+      font-family: 'Source Serif 4', serif;
+      font-size: 13px;
+      padding: 10px 20px 10px 36px;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+      position: relative;
+    }
+
+    .sidebar-sub li button::before {
+      content: '›';
+      position: absolute;
+      left: 22px;
+      color: var(--amber);
+      opacity: 0.6;
+    }
+
+    .sidebar-sub li button:hover { background: rgba(232,160,32,0.12); color: var(--amber); }
+    .sidebar-sub li button.active { color: var(--amber); font-weight: 600; background: rgba(232,160,32,0.18); }
+
+    /* ─── MAIN CONTENT ─────────────────────────────────────────────── */
+    #main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 40px 48px;
+      max-width: 960px;
+    }
+
+    /* content panels – hidden by default */
+    .panel { display: none; animation: fadeIn 0.3s ease; }
+    .panel.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── TYPOGRAPHY IN PANELS ─────────────────────────────────────── */
+    .panel h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      letter-spacing: 2px;
+      color: var(--navy);
+      border-bottom: 3px solid var(--amber);
+      padding-bottom: 10px;
+      margin-bottom: 28px;
+    }
+
+    .panel h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 1px;
+      color: var(--navy-mid);
+      margin: 28px 0 12px;
+    }
+
+    .panel h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 20px 0 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .panel p { margin-bottom: 14px; color: var(--text-soft); }
+
+    .panel ul, .panel ol {
+      margin: 0 0 16px 20px;
+      color: var(--text-soft);
+    }
+
+    .panel li { margin-bottom: 6px; }
+
+    /* Info-box / callout */
+    .callout {
+      background: var(--navy);
+      color: var(--cream);
+      border-left: 4px solid var(--amber);
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      margin: 20px 0;
+      font-size: 14px;
+    }
+
+    .callout strong { color: var(--amber); }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--cream-dim);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+    .card .card-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 1px;
+      color: var(--navy);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card .card-label .icon { font-size: 20px; }
+
+    .card p { font-size: 13px; margin: 0; }
+
+    /* Table */
+    .styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+
+    .styled-table th {
+      background: var(--navy);
+      color: var(--amber);
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 1px;
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    .styled-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--cream-dim);
+      vertical-align: top;
+    }
+
+    .styled-table tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+
+    /* Accordion for sub-sections */
+    .accordion { margin: 16px 0; }
+
+    .acc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--navy-mid);
+      color: var(--cream);
+      padding: 12px 18px;
+      cursor: pointer;
+      border-radius: var(--radius);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 17px;
+      letter-spacing: 1px;
+      transition: background var(--transition);
+      border: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .acc-header:hover { background: var(--navy); }
+    .acc-header .arrow { transition: transform var(--transition); }
+    .acc-header.open .arrow { transform: rotate(180deg); }
+
+    .acc-body {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+      background: var(--white);
+      border: 1px solid var(--cream-dim);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 0 18px;
+    }
+
+    .acc-body.open {
+      max-height: 4000px;
+      padding: 18px 18px;
+    }
+
+    /* ─── PLACEHOLDER PANELS ────────────────────────────────────── */
+    .placeholder {
+      text-align: center;
+      padding: 80px 40px;
+      opacity: 0.5;
+    }
+
+    .placeholder .big-icon { font-size: 64px; margin-bottom: 16px; }
+    .placeholder h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; }
+
+    /* ─── VERBESSERUNGSVORSCHLÄGE ──────────────────────────────────── */
+    .suggestion-form {
+      background: var(--white);
+      border: 1px solid var(--cream-dim);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .suggestion-form label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      letter-spacing: 1px;
+      color: var(--navy);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    #suggestion-input {
+      width: 100%;
+      min-height: 120px;
+      border: 2px solid var(--cream-dim);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-family: 'Source Serif 4', serif;
+      font-size: 15px;
+      color: var(--text);
+      resize: vertical;
+      transition: border-color var(--transition);
+    }
+
+    #suggestion-input:focus {
+      outline: none;
+      border-color: var(--amber);
+    }
+
+    .form-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+
+    #submit-suggestion {
+      background: var(--amber);
+      color: var(--navy);
+      border: none;
+      border-radius: var(--radius);
+      padding: 10px 22px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+    }
+
+    #submit-suggestion:hover { background: var(--amber-dim); transform: translateY(-1px); }
+    #submit-suggestion:active { transform: translateY(0); }
+
+    /* Suggestion cards */
+    #suggestions-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .suggestion-card {
+      background: var(--white);
+      border: 1px solid var(--cream-dim);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      animation: fadeIn 0.3s ease;
+      transition: box-shadow var(--transition);
+    }
+
+    .suggestion-card:hover { box-shadow: var(--shadow); }
+
+    .vote-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-width: 44px;
+    }
+
+    .vote-btn {
+      background: none;
+      border: 1px solid var(--cream-dim);
+      border-radius: 4px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .vote-btn.up:hover   { background: #e6f4ea; border-color: var(--green); color: var(--green); }
+    .vote-btn.down:hover { background: #fdecea; border-color: var(--red);   color: var(--red); }
+    .vote-btn.up.voted   { background: var(--green); color: white; border-color: var(--green); }
+    .vote-btn.down.voted { background: var(--red);   color: white; border-color: var(--red); }
+
+    .vote-score {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .vote-score.positive { color: var(--green); }
+    .vote-score.negative { color: var(--red); }
+
+    .suggestion-content { flex: 1; }
+
+    .suggestion-text {
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    .suggestion-meta {
+      font-size: 12px;
+      color: var(--text-soft);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px;
+      color: var(--text-soft);
+      font-size: 15px;
+    }
+
+    /* ─── DRAMA DREIECK SVG-LIKE VISUAL ────────────────────────────── */
+    .drama-triangle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 28px 0;
+    }
+
+    .triangle-top, .triangle-bottom {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    .role-box {
+      background: var(--navy);
+      color: var(--cream);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      text-align: center;
+      min-width: 140px;
+      border-bottom: 4px solid var(--amber);
+      margin: 8px;
+    }
+
+    .role-box .role-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 1px;
+      color: var(--amber);
+    }
+
+    .role-box .role-sub {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+
+    /* Eskalation table color coding */
+    .esc-win-win  { background: #e6f4ea; }
+    .esc-win-lose { background: #fff8e1; }
+    .esc-lose     { background: #fdecea; }
+
+    /* ─── BELLA SCHEMA ──────────────────────────────────────────────── */
+    .bella-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      padding: 14px 18px;
+      background: var(--white);
+      border-radius: var(--radius);
+      border-left: 4px solid var(--amber);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .bella-letter {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      color: var(--amber);
+      line-height: 1;
+      min-width: 32px;
+    }
+
+    .bella-desc strong { color: var(--navy); display: block; margin-bottom: 4px; }
+    .bella-desc p { margin: 0; font-size: 14px; }
+
+    /* SORK Table */
+    .sork-row {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--cream-dim);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .sork-letter {
+      background: var(--navy);
+      color: var(--amber);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      min-width: 60px;
+      justify-content: center;
+    }
+
+    .sork-body {
+      padding: 14px 18px;
+      background: var(--white);
+      flex: 1;
+    }
+
+    .sork-body strong { display: block; font-size: 14px; margin-bottom: 4px; color: var(--navy); }
+    .sork-body small { font-size: 13px; color: var(--text-soft); }
+
+    /* ─── RESPONSIVE ────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      :root { --sidebar-w: 260px; }
+
+      #sidebar-toggle { display: flex; }
+
+      #sidebar {
+        transform: translateX(calc(-1 * var(--sidebar-w)));
+      }
+
+      #sidebar.open {
+        transform: translateX(0);
+      }
+
+      #main {
+        margin-left: 0;
+        padding: 24px 20px;
+      }
+
+      .panel h2 { font-size: 28px; }
+
+      #overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 99;
+      }
+
+      #overlay.open { display: block; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════════════════════════ -->
+<header>
+  <button id="sidebar-toggle" aria-label="Menü öffnen">☰</button>
+  <span class="shield">🛡️</span>
+  <h1>B VI &nbsp;–&nbsp; Lernen für den höheren Dienst</h1>
+  <span class="version-badge">v1.0</span>
+</header>
+
+<!-- Mobile overlay (closes sidebar on tap) -->
+<div id="overlay"></div>
+
+<div class="app-body">
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SIDEBAR NAVIGATION
+  ══════════════════════════════════════════════════════════════════ -->
+  <nav id="sidebar" aria-label="Hauptnavigation">
+
+    <!-- ── IBK Heyrothsberge ─────────────────────────────────────── -->
+    <button class="sidebar-tab active" data-tab="ibk" data-toggle="ibk-sub">
+      🏛️ IBK Heyrothsberge
+      <span class="tab-arrow">›</span>
+    </button>
+    <ul class="sidebar-sub open" id="ibk-sub">
+      <li><button data-panel="ta"          class="active">Transaktionsanalyse</button></li>
+      <li><button data-panel="funktions">  Funktionsmodell</button></li>
+      <li><button data-panel="komm">       Kommunikationsregeln</button></li>
+      <li><button data-panel="verdeckt">   Verdeckte Kommunikation</button></li>
+      <li><button data-panel="grundeinst"> Grundeinstellung</button></li>
+      <li><button data-panel="konflik">    Konfliktursachen</button></li>
+      <li><button data-panel="konfltyp">   Konfliktarten &amp; -typen</button></li>
+      <li><button data-panel="drama">      Drama-Dreieck (Karpman)</button></li>
+      <li><button data-panel="b4">         B4-Regel</button></li>
+      <li><button data-panel="grundbed">   Grundbedürfnisse</button></li>
+      <li><button data-panel="glasl">      Eskalationsstufen (Glasl)</button></li>
+      <li><button data-panel="stress">     Stresstheorie</button></li>
+      <li><button data-panel="psnv">       PSNV</button></li>
+      <li><button data-panel="projekt">    Projektmanagement</button></li>
+      <li><button data-panel="bgm">        Betriebliches Gesundheitsmanagement</button></li>
+      <li><button data-panel="zeit">       Zeitmanagement</button></li>
+    </ul>
+
+    <!-- ── VAk Berlin ──────────────────────────────────────────────── -->
+    <button class="sidebar-tab" data-panel="vak" data-tab="vak">
+      🏙️ VAk Berlin
+    </button>
+
+    <!-- ── FeuAK Hamburg ───────────────────────────────────────────── -->
+    <button class="sidebar-tab" data-panel="feuak" data-tab="feuak">
+      🔥 FeuAK Hamburg
+    </button>
+
+    <!-- ── IdF Münster ─────────────────────────────────────────────── -->
+    <button class="sidebar-tab" data-panel="idf" data-tab="idf">
+      🎓 IdF Münster
+    </button>
+
+    <!-- ── Verbesserungsvorschläge ──────────────────────────────────── -->
+    <button class="sidebar-tab" data-panel="vbs" data-tab="vbs">
+      💡 Verbesserungsvorschläge
+    </button>
+
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       MAIN CONTENT PANELS
+  ══════════════════════════════════════════════════════════════════ -->
+  <main id="main">
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Transaktionsanalyse
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel active" id="panel-ta">
+      <h2>Transaktionsanalyse (TA)</h2>
+
+      <p>Die Transaktionsanalyse (TA) ist eine psychologische Theorie der menschlichen Persönlichkeitsstruktur, die Mitte des 20. Jahrhunderts vom amerikanischen Psychiater <strong>Eric Berne (1910–1970)</strong> begründet wurde und bis heute weiterentwickelt wird.</p>
+
+      <div class="callout">
+        <strong>Kernziel der TA:</strong> Das Erwachsenen-Ich so zu stärken, dass es in jeder Situation frei entscheiden kann, mit bzw. aus welchem Ich-Zustand es agieren will.
+      </div>
+
+      <h3>Grundannahmen der TA</h3>
+      <ul>
+        <li>Jeder Mensch hat die Fähigkeit zu denken und Probleme zu lösen.</li>
+        <li>Jeder Mensch ist in all seinen Schattierungen und in seiner Ganzheit in Ordnung.</li>
+        <li>Jeder Mensch ist in der Lage, Verantwortung für sein Leben und dessen Gestaltung zu übernehmen.</li>
+        <li>Jeder Mensch wird als fähig angesehen, sein Lebenskonzept schöpferisch, zuträglich und konstruktiv zu gestalten.</li>
+      </ul>
+
+      <h3>Gliederung der TA</h3>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-label"><span class="icon">🔍</span> Strukturanalyse</div>
+          <p>Ausprägungen von Ich-Zuständen innerhalb einer Person. „Was geht in mir vor?" (Ich-Zustände)</p>
+        </div>
+        <div class="card">
+          <div class="card-label"><span class="icon">💬</span> Transaktionsanalyse</div>
+          <p>Ausprägungen der Kommunikation zwischen Menschen. „Was geht zwischen uns vor?" (Kommunikationsregeln)</p>
+        </div>
+        <div class="card">
+          <div class="card-label"><span class="icon">❤️</span> Grundbedürfnisse</div>
+          <p>Bedeutung von Zuwendung, Missachtung und Zeitstrukturierung. „Was ist elementar für den Menschen?"</p>
+        </div>
+        <div class="card">
+          <div class="card-label"><span class="icon">🌐</span> Grundeinstellungen</div>
+          <p>Existenzielle Grundeinstellungen. „Was sind die vier Lebensanschauungen?" (o. k. und nicht o. k.)</p>
+        </div>
+        <div class="card">
+          <div class="card-label"><span class="icon">🎭</span> Spielanalyse</div>
+          <p>Opfer, Retter und Verfolger als Elemente manipulativer Rollen. Das Drama-Dreieck.</p>
+        </div>
+        <div class="card">
+          <div class="card-label"><span class="icon">⚡</span> Antreiber</div>
+          <p>Welche Antreiber verursachen Stress? Die fünf Antreiber.</p>
+        </div>
+        <div class="card">
+          <div class="card-label"><span class="icon">📖</span> Skriptanalyse</div>
+          <p>Ausprägungen des unbewussten Lebensplanes. „Welche Botschaften lebe ich?" (Lebensdrehbücher)</p>
+        </div>
+      </div>
+
+      <h3>Die drei Ich-Zustände</h3>
+      <p>Nach Berne trägt jeder Mensch drei Ich-Zustände in sich, die seine Gedanken, Gefühle und Verhaltensweisen beeinflussen:</p>
+
+      <div class="accordion">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          🏫 Eltern-Ich (EL) <span class="arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <p><strong>Kritisches Eltern-Ich (kEL):</strong> Zeigt, inwiefern eine Person an überlieferten und unreflektiert übernommenen Grundsätzen und Regeln festhält. Vergangenheitsorientiert; ein schlechter Problemlöser. Typisch: erhobener Zeigefinger, zusammengezogene Augenbrauen, Worte wie „müssen", „sollen", „immer", „nie".</p>
+          <p><strong>Fürsorgliches Eltern-Ich (fEL):</strong> Drückt wohlwollende, fürsorgliche, unterstützende Verhaltensweisen aus. Zeigt Verständnis, lobt, tröstet, hilft, umsorgt, streichelt. Kennzeichnend: Worte wie „Kopf hoch", „Du Armer".</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          🧠 Erwachsenen-Ich (ER) <span class="arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <p>Illustriert, inwieweit die Person sachlich-rational an Probleme herangeht und sie eigenständig löst. Hat nichts mit dem Alter zu tun. Sammelt Informationen, schätzt Wahrscheinlichkeiten ein und trifft Entscheidungen. Typisch: sachlich klare, leidenschaftslose Stimme, W-Fragen.</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          👶 Kind-Ich (K) <span class="arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <p><strong>Natürliches Kind-Ich (nK):</strong> Person nimmt Bedürfnisse und Gefühle ungehemmt wahr und äußert sich intuitiv und spontan. Sitz der Vitalität, des Spaßes. Spielt, faulenzt, freut und ärgert sich, egoistisch, hemmungslos.</p>
+          <p><strong>Angepasstes Kind-Ich (aK):</strong> Fähigkeit, Kompromisse einzugehen und sich unterzuordnen. Duldet, gehorcht, verzichtet, fühlt sich schuldig, bleibt passiv, höflich – ohne eigene Meinung und Initiative; kann sich aber auch vernünftig sozial angepasst verhalten.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Funktionsmodell
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-funktions">
+      <h2>Das Funktionsmodell</h2>
+      <p>Das Funktionsmodell zeigt, wie sich die Ich-Zustände in der Praxis verhalten – jeder Zustand hat eine konstruktive (+) und eine destruktive (–) Ausprägung.</p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Ich-Zustand</th>
+            <th>Konstruktiv (+)</th>
+            <th>Destruktiv (–)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Kritisches Eltern-Ich (kEL)</strong></td>
+            <td>Setzt Grenzen, schützt, strukturiert</td>
+            <td>Überkritisch, schulmeisternd, einschränkend</td>
+          </tr>
+          <tr>
+            <td><strong>Fürsorgliches Eltern-Ich (fEL)</strong></td>
+            <td>Fürsorgliche, unterstützende Verhaltensweisen</td>
+            <td>Überfürsorglich, bevormundend, unselbständig machend</td>
+          </tr>
+          <tr>
+            <td><strong>Erwachsenen-Ich (ER)</strong></td>
+            <td>Sachlich klar, beobachtend, analysierend</td>
+            <td>Roboterhaftes „facts-and-figures"-Verhalten</td>
+          </tr>
+          <tr>
+            <td><strong>Natürliches Kind-Ich (nK)</strong></td>
+            <td>Gefühlvoll, lustig, kreativ, spontan</td>
+            <td>Rücksichtslos, gefährdend, hemmungslos</td>
+          </tr>
+          <tr>
+            <td><strong>Angepasstes Kind-Ich (aK)</strong></td>
+            <td>Sinnvoll sozial angepasstes Verhalten</td>
+            <td>Überanpassung, Resignation, Hilflosigkeit</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <strong>Merksatz:</strong> Keine Ausprägung ist per se gut oder schlecht. Entscheidend ist der Kontext und die Intensität.
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Kommunikationsregeln
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-komm">
+      <h2>Transaktionen &amp; Kommunikationsregeln</h2>
+
+      <p>Eine <strong>Transaktion</strong> ist die Grundeinheit aller sozialen Verbindungen: ein Reiz (Eröffnungszug) und die darauf folgende Reaktion. Eric Berne hat drei Kommunikationsregeln aufgestellt:</p>
+
+      <div class="accordion">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          1. Kommunikationsregel – Parallele Transaktionen <span class="arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <p><em>„Solange die Botschaften stimmig zueinander oder parallel verlaufen, kann sich die Kommunikation ungestört und unendlich lange fortsetzen."</em></p>
+          <p>Es gibt insgesamt <strong>9 mögliche Arten</strong> von Paralleltransaktionen: horizontal-parallele (EL→EL, ER→ER, K→K) und schräg-parallele (symmetrische und asymmetrische Botschaften).</p>
+          <p>Beziehungen mit überwiegend parallelen Transaktionen (z. B. EL→K/K→EL dauerhaft) nennt die TA <strong>„Symbiose"</strong>; EL→nK/nK→EL können zum <strong>„Tumult"</strong> werden.</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          2. Kommunikationsregel – Überkreuzte Transaktionen <span class="arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <p><em>„Die Kommunikation bricht ab, wenn eine Transaktion gekreuzt verläuft. Im Umkehrschluss: Wenn eine Kommunikation abbricht, dann ist dies die Folge einer gekreuzten Transaktion."</em></p>
+          <p>Es gibt insgesamt <strong>72 Arten</strong> von Überkreuz-Transaktionen; in der Praxis spielen jedoch häufig <strong>sechs</strong> eine größere Rolle:</p>
+          <ul>
+            <li>ER/ER – K/EL</li><li>ER/ER – EL/K</li><li>K/EL – ER/ER</li>
+            <li>EL/K – ER/ER</li><li>K/EL – K/EL</li><li>EL/K – EL/K</li>
+          </ul>
+          <p>Überkreuztransaktionen sind häufig der Anlass emotionaler Missverständnisse zwischen (Ehe-)Partnern, bei der Arbeit oder in anderen Situationen.</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          3. Kommunikationsregel – Verdeckte Transaktionen <span class="arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <p><em>„Bei der verdeckten Transaktion fällt die Entscheidung über das weitere Verhalten auf der psychologischen Ebene und nicht auf der sozialen Ebene."</em></p>
+          <p>Es gibt <strong>unvollständige doppelbödige (anguläre)</strong> und <strong>vollständige doppelbödige</strong> Transaktionen. Bei Letzteren sind immer vier Ich-Zustände mit zwei Botschaften beteiligt: eine offene (Sachebene) und eine unterschwellige (Beziehungsebene).</p>
+          <p>Nach Berne sind bis zu <strong>6.480 Duplex-Transaktionen</strong> möglich; im Alltag sind 6 relevant.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Verdeckte Kommunikation
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-verdeckt">
+      <h2>Verdeckte Kommunikation</h2>
+      <p>Verdeckte (doppelbödige) Transaktionen sind besonders herausfordernd. Sie enthalten eine offene Botschaft auf der Sachebene und eine unterschwellige Botschaft auf der Beziehungsebene.</p>
+
+      <h3>Regeln zum Umgang mit verdeckten Transaktionen</h3>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-label">🚫 Vermeiden</div>
+          <p>Auf doppelbödige Transaktionen strikt verzichten (Ausnahme: humorvoll-ironische Übertreibungen zur Konfrontation, wenn beide Seiten eingeweiht sind).</p>
+        </div>
+        <div class="card">
+          <div class="card-label">👁️ Ignorieren</div>
+          <p>Die verdeckte Ebene ignorieren und stattdessen auf der sozialen, offen geäußerten Ebene (Sachebene) beim Wort nehmen.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">🗣️ Auffordern</div>
+          <p>Zu einer direkten Botschaft auffordern: <em>„Was ist es, was Du mir damit sagen möchtest?"</em></p>
+        </div>
+        <div class="card">
+          <div class="card-label">⚡ Konfrontieren</div>
+          <p><em>„Mir fällt auf, dass Du eine doppelbödige Aussage gemacht hast!"</em> Dann Feedback über die Wirkung geben.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">🚪 Abbrechen</div>
+          <p>Bei hartnäckigem Beibehalten verdeckter Transaktionen das Gespräch abbrechen und einen erfreulicheren Gesprächspartner suchen.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Besonderheit:</strong> Nonverbale Botschaften strafen jene Botschaften Lügen, die in Worten übermittelt werden (nach Berne und Rogers). Inkongruenzen zwischen Worten und Mimik/Gestik sind ein Zeichen besonderer persönlicher Reife, wenn man direkt darauf antwortet.
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Grundeinstellung
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-grundeinst">
+      <h2>Die Grundeinstellungen</h2>
+      <p>Eric Berne führte die Begriffe „o. k." und „nicht o. k." ein, um die existenzielle Grundeinstellung eines Menschen zu sich und seiner Mitwelt zu kennzeichnen. Es werden <strong>vier Grundeinstellungen</strong> unterschieden:</p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Haltung</th>
+            <th>Bezeichnung</th>
+            <th>Merkmale</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1.</strong> Ich bin nicht o. k. – Du bist o. k.</td>
+            <td>– + Haltung</td>
+            <td>Grundeinstellung mit Unterlegenheitsgefühlen</td>
+            <td>Minderwertigkeitsgefühle, Neigung zur Selbstentschuldigung, depressiv</td>
+          </tr>
+          <tr>
+            <td><strong>2.</strong> Ich bin o. k. – Du bist nicht o. k.</td>
+            <td>+ – Haltung</td>
+            <td>Grundeinstellung mit Überlegenheitsgefühlen</td>
+            <td>Paranoide oder projektive Grundeinstellung; findet stets den Fehler bei anderen</td>
+          </tr>
+          <tr>
+            <td><strong>3.</strong> Ich bin nicht o. k. – Du bist nicht o. k.</td>
+            <td>– – Haltung</td>
+            <td>Grundeinstellung der Sinn- und Wertlosigkeit</td>
+            <td>Verzweifelt oder hoffnungslos, irrt sich; verbirgt Überzeugung von Sinnlosigkeit der Existenz</td>
+          </tr>
+          <tr>
+            <td><strong>4.</strong> Ich bin o. k. – Du bist o. k.</td>
+            <td>+ + Haltung</td>
+            <td>Grundeinstellung mit Gleichwertigkeit</td>
+            <td>Wertungsfrei, offen, gelassen; manipuliert nicht; zeichnet echte Führungspersönlichkeiten aus</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <strong>Wichtig:</strong> Keine der drei Grundpositionen mit einer Nicht-OK-Haltung dient der erfolgreichen Bewältigung von Konfliktsituationen und dem glaubwürdigen Aufbau stabiler persönlicher Beziehungen. Die Grundeinstellung kommt spätestens in Krisensituationen meist deutlich zum Ausdruck.
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Konfliktursachen
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-konflik">
+      <h2>Konfliktursachen</h2>
+      <p>Konflikte entstehen nicht zufällig. Die TA unterscheidet vier wesentliche Ursachenbereiche:</p>
+
+      <div class="card-grid">
+        <div class="card" style="border-top: 4px solid #e8c020;">
+          <div class="card-label">🎯 Bewertungskonflikte</div>
+          <p><em>Uneinigkeit über die Ziele</em><br>Ursache: unterschiedliche Werte und Normen, gegensätzliche Ziele</p>
+        </div>
+        <div class="card" style="border-top: 4px solid #20a0e8;">
+          <div class="card-label">🔬 Beurteilungskonflikte</div>
+          <p><em>Uneinigkeit über die Wege</em><br>Ursache: unterschiedliche Erfahrungen, unterschiedliche Informationsquellen, unterschiedliche Informationsverarbeitung</p>
+        </div>
+        <div class="card" style="border-top: 4px solid #e82020;">
+          <div class="card-label">📦 Verteilungskonflikte</div>
+          <p><em>Uneinigkeit über die Mittel</em><br>Ursache: knappe oder knapp gehaltene Mittel, Diskrepanz zwischen Mitteln und Ansprüchen</p>
+        </div>
+        <div class="card" style="border-top: 4px solid #20e860;">
+          <div class="card-label">👥 Beziehungskonflikte</div>
+          <p><em>Uneinigkeit über die soziale Beziehung</em><br>Ursache: Verletzungen des Selbstwertgefühls</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Konfliktarten & -typen
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-konfltyp">
+      <h2>Konfliktarten &amp; Konflikttypen</h2>
+
+      <h3>5 Konfliktarten</h3>
+      <table class="styled-table">
+        <thead>
+          <tr><th>Konfliktart</th><th>Beschreibung</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Intra-personale Konflikte</strong></td><td>Konflikte innerhalb einer Person</td></tr>
+          <tr><td><strong>Inter-personale Konflikte</strong></td><td>Konflikte zwischen Einzelpersonen</td></tr>
+          <tr><td><strong>Intra-Gruppenkonflikte</strong></td><td>Konflikte innerhalb einer Gruppe</td></tr>
+          <tr><td><strong>Inter-Gruppenkonflikte</strong></td><td>Konflikte zwischen Gruppen</td></tr>
+          <tr><td><strong>Personen-Gruppenkonflikt</strong></td><td>Konflikte zwischen Einzelpersonen und Gruppen</td></tr>
+        </tbody>
+      </table>
+
+      <h3>2 Konflikttypen</h3>
+      <div class="card-grid">
+        <div class="card" style="border-left: 4px solid var(--red);">
+          <div class="card-label">🔥 Heiße Konflikte</div>
+          <p>Konflikte, die <strong>offen</strong> ausgetragen werden. Die Beteiligten streiten direkt und sichtbar.</p>
+        </div>
+        <div class="card" style="border-left: 4px solid #4488cc;">
+          <div class="card-label">❄️ Kalte Konflikte</div>
+          <p>Konflikte, die <strong>verdeckt</strong> ausgetragen werden. Spannung unter der Oberfläche, subtile Sabotage, Rückzug.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Drama-Dreieck
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-drama">
+      <h2>Das Drama-Dreieck (Karpman-Dreieck)</h2>
+      <p>Stephen Karpman entwickelte das Drama-Dreieck zur Analyse psychologischer Spiele. In Konfliktsituationen wechseln Beteiligte häufig zwischen drei klassischen Rollen:</p>
+
+      <div class="drama-triangle">
+        <div class="triangle-top">
+          <div class="role-box">
+            <div class="role-name">⚔️ Verfolger</div>
+            <div class="role-sub">(Verbesserer)</div>
+            <div style="font-size:12px; margin-top:6px; opacity:0.8">Grundeinst.: + –<br>„Ich bin besser als du!"</div>
+          </div>
+          <div class="role-box">
+            <div class="role-name">🛡️ Retter</div>
+            <div class="role-sub">(Ratgeber)</div>
+            <div style="font-size:12px; margin-top:6px; opacity:0.8">Grundeinst.: + –<br>„Ohne mich geht es nicht."</div>
+          </div>
+        </div>
+        <div class="triangle-bottom">
+          <div class="role-box" style="margin-top:0;">
+            <div class="role-name">😔 Opfer</div>
+            <div class="role-sub">(Objekt)</div>
+            <div style="font-size:12px; margin-top:6px; opacity:0.8">Grundeinst.: – +<br>„Das begreife ich ohnehin nie."</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Psychologische Rollen im Detail</h3>
+
+      <div class="accordion">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          ⚔️ Verfolger-Rolle <span class="arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <p>Als Verfolger bezeichnet man eine Person, die andere herabsetzt, sie herunterputzt, einschüchtert, Vorwürfe macht, zurechtweist, anklagt, auslacht, rhetorische und inquisitorische Fragen stellt, taktiert, Schuldgefühle in anderen hervorruft, auf Distanz geht und andere im Regen stehen lässt.</p>
+          <p>Indem Verfolger genaue Vorschriften machen, geben sie anderen ungewollt viel Sicherheit, denn man braucht sich lediglich vorschriftsmäßig zu verhalten. Dadurch werden jedoch <strong>Hilflosigkeit und Bequemlichkeit unterstützt</strong>.</p>
+          <p>Der Verfolger handelt aus der <strong>Grundeinstellung + – </strong>: Ich bin besser als der/die andere.</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          🛡️ Retter-Rolle <span class="arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <p>Auch der Retter betrachtet die anderen im Grunde als nicht o. k. – indem er aus seiner überlegenen Position heraus Hilfe anbietet, tröstet, „Ratschläge" verteilt und erwartet, dass andere sich danach richten.</p>
+          <p>Die <strong>Hilfe des Retters macht abhängig</strong>, nimmt ihm die Verantwortung und verhilft ihm zu einem bequemen Leben. Retter erwarten Dank, den sie selten bekommen – denn sie wirken als „Opfer". Ziel: dem anderen zu beweisen, dass er eigentlich minderwertig ist.</p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          😔 Opfer-Rolle <span class="arrow">▼</span>
+        </button>
+        <div class="acc-body">
+          <p>Wer eine Opfer-Rolle einnimmt, gibt sich unterwürfig, mimt Unwissenheit, fühlt sich unschuldig und spielt das „arme Schwein". Opfer warten und hoffen, dass sich etwas von selbst ändert oder besser wird. Sie haben Angst und trauen sich nicht, sie geben gerne nach und passen sich an.</p>
+          <p>Unterscheidung: <strong>tatsächliche Opfer</strong> (Katastrophe, Krankheit, Vorurteile) vs. <strong>vermeintliche Opfer</strong> (die keine Hilfe annehmen, um den Kontakt mit anderen aufrechtzuerhalten, der verloren ginge, wenn das Problem gelöst würde).</p>
+          <p>Opfer handeln aus der <strong>– + Grundeinstellung</strong>: Ich bin hilflos, du bist besser als ich.</p>
+        </div>
+      </div>
+
+      <h3>Statistische Durchschnittswerte</h3>
+      <div class="callout">
+        <strong>Verfolger-Rolle:</strong> Ø 16 Punkte &nbsp;|&nbsp;
+        <strong>Retter-Rolle:</strong> Ø 18 Punkte &nbsp;|&nbsp;
+        <strong>Opfer-Rolle:</strong> Ø 10 Punkte<br>
+        Je höher die Punktzahl in einer der Rollen, umso abhängiger bin ich vom entsprechenden Verhalten – desto eher besteht die Tendenz, mit diesen Rollen auf Kosten anderer einen „Lustgewinn" zu holen.
+      </div>
+
+      <h3>Elemente psychologischer Spiele im Drama-Dreieck</h3>
+      <ul>
+        <li>Ziel zum Einstieg: Erfüllung des Wunsches nach Zuwendung</li>
+        <li>Gleichzeitig läuft eine verdeckte Transaktion, nämlich zu beweisen, dass man selbst oder der andere nicht o. k. ist</li>
+        <li>Es werden alle drei Rollen eingenommen, wobei es eine gibt, in der man sich häufiger bewegt als in den anderen</li>
+        <li>Das Drama-Dreieck ist dynamisch – blitzschnelle Rollenwechsel finden statt</li>
+        <li>Die Rollen ziehen sich gegenseitig an: ohne Mitspieler würde man in der eigenen Rolle leer laufen</li>
+      </ul>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: B4-Regel
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-b4">
+      <h2>Die B4-Regel</h2>
+      <p>Die B4-Regel beschreibt den Umgang mit einem schwierigen Sachverhalt – z. B. einem radikalen Kameraden in der Mannschaft:</p>
+
+      <div class="callout">
+        <strong>Vorgehen:</strong> Erst beobachten, dann belehren, dann beobachten ob Maßnahme eingehalten wird. Wenn nicht, dann bestrafen. (B4)
+      </div>
+
+      <div class="card-grid">
+        <div class="card" style="border-top: 4px solid var(--amber);">
+          <div class="card-label">👁️ 1. Beobachten</div>
+          <p>Dokumentation, Wirkungskreise abstecken, Konsequenzen zeigen</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--amber);">
+          <div class="card-label">📚 2. Belehren</div>
+          <p>Zeitansatz stecken, Konsequenzen benennen, Widerspruch ermöglichen</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--amber);">
+          <div class="card-label">👁️ 3. Beobachten</div>
+          <p>Überprüfen, ob die vereinbarten Maßnahmen eingehalten werden</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--red);">
+          <div class="card-label">⚖️ 4. Bestrafen</div>
+          <p>Konsequenzen umsetzen, wenn Maßnahmen nicht eingehalten wurden</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Grundbedürfnisse
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-grundbed">
+      <h2>Grundbedürfnisse in der TA</h2>
+      <p>In der TA werden drei <strong>„psychologische Grundbedürfnisse"</strong> unterschieden, die von ähnlich elementarer Bedeutung für den Menschen sind wie die Bedürfnisse nach Nahrung, Schlaf und Kleidung:</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-label">🤝 Zuwendung / Beachtung</div>
+          <p>„Strokes" – die Notwendigkeit, Zuwendung zu empfangen. Kann positiv, negativ, bedingungslos oder bedingt sein.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">⏱️ Zeitgestaltung</div>
+          <p>Das Grundbedürfnis nach sinnvoller Strukturierung der Zeit (im modernen Zeit-Management als überholt geltend).</p>
+        </div>
+        <div class="card">
+          <div class="card-label">🧩 Sinnliche Anregung</div>
+          <p>Das Bedürfnis nach Stimulation und Abwechslung.</p>
+        </div>
+      </div>
+
+      <h3>Hierarchie der Beachtung (5 Stufen)</h3>
+      <table class="styled-table">
+        <thead>
+          <tr><th>#</th><th>Art der Zuwendung</th><th>Beispiel</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td><strong>Bedingungslose positive Beachtung</strong></td><td>„Ich habe Dich einfach gern" (auch wenn Du nicht machst, was ich sage)</td></tr>
+          <tr><td>2</td><td><strong>Bedingte positive Beachtung</strong></td><td>„Ich schätze Sie, wenn Sie das tun, was ich Ihnen sage."</td></tr>
+          <tr><td>3</td><td><strong>Bedingte negative Beachtung</strong></td><td>„Ich schätze Sie nicht, wenn Sie dauernd zu spät kommen."</td></tr>
+          <tr><td>4</td><td><strong>Bedingungslose negative Beachtung</strong></td><td>„Sie sind ein Idiot!"</td></tr>
+          <tr><td>5</td><td><strong>Weder positive noch negative Beachtung</strong></td><td>Absichtliches Ignorieren – am schwersten erträglich!</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <strong>Heinz Holzer:</strong> <em>„Das größte Übel, was wir unseren Mitmenschen antun können, ist nicht, sie zu hassen, sondern ihnen gegenüber gleichgültig zu sein. Das ist absolute Unmenschlichkeit."</em>
+      </div>
+
+      <h3>Maslow'sche Bedürfnispyramide</h3>
+      <p>Ergänzend zur TA-Perspektive zeigt Maslows Hierarchie (1943) fünf Bedarfsebenen:</p>
+      <ol>
+        <li>Physiologische Bedürfnisse (Essen, Schlafen, Wärme)</li>
+        <li>Sicherheitsbedürfnisse (Schutz, Stabilität)</li>
+        <li>Soziale Bedürfnisse (Zugehörigkeit, Liebe)</li>
+        <li>Anerkennungsbedürfnisse (Wertschätzung, Status)</li>
+        <li>Selbstverwirklichung (Wachstum, Potenzialentfaltung)</li>
+      </ol>
+      <p>Die ersten vier Ebenen sind <strong>Mangelbedürfnisse</strong>, die fünfte ist ein <strong>Wachstumsbedürfnis</strong>.</p>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Eskalationsstufen nach Glasl
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-glasl">
+      <h2>Eskalationsstufen nach Glasl</h2>
+      <p>Friedrich Glasl entwickelte ein Modell mit <strong>9 Eskalationsstufen</strong>, gegliedert in drei Ebenen:</p>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Ebene</th>
+            <th>Stufe</th>
+            <th>Name</th>
+            <th>Kernmerkmal</th>
+            <th>Intervention</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="esc-win-win">
+            <td rowspan="3"><strong>Win-Win</strong><br>Beide Seiten haben eine Chance</td>
+            <td>1</td>
+            <td>Verhärtung</td>
+            <td>Standpunkte verhärten, prallen aufeinander</td>
+            <td rowspan="3">Moderation / Mediation</td>
+          </tr>
+          <tr class="esc-win-win">
+            <td>2</td>
+            <td>Debatte, Polemik</td>
+            <td>Polarisiertes Schwarz-Weiß-Denken; Taktiken anstelle rationaler Argumente</td>
+          </tr>
+          <tr class="esc-win-win">
+            <td>3</td>
+            <td>Taten statt Worte</td>
+            <td>Vollendete Tatsachen schaffen; Empathie geht verloren</td>
+          </tr>
+          <tr class="esc-win-lose">
+            <td rowspan="3"><strong>Win-Lose</strong><br>Eine Seite soll gewinnen</td>
+            <td>4</td>
+            <td>Images &amp; Koalitionen</td>
+            <td>Stereotype, Feindbilder; negative Rollen; Werben um Anhänger</td>
+            <td rowspan="3">Prozessbegleitung / Mediation</td>
+          </tr>
+          <tr class="esc-win-lose">
+            <td>5</td>
+            <td>Gesichtsverlust</td>
+            <td>Öffentliche Entlarvung; polarisiertes Feindbild; Ausstoßung</td>
+          </tr>
+          <tr class="esc-win-lose">
+            <td>6</td>
+            <td>Drohstrategien</td>
+            <td>Drohung und Gegendrohung; Selbstbindungsaktivitäten; Ultimata</td>
+          </tr>
+          <tr class="esc-lose">
+            <td rowspan="3"><strong>Lose-Lose</strong><br>Eigene Verluste werden einkalkuliert</td>
+            <td>7</td>
+            <td>Begrenzte Vernichtungsschläge</td>
+            <td>Denken in Ding-Kategorien; keinerlei menschliche Qualität</td>
+            <td rowspan="3">Machteingriff</td>
+          </tr>
+          <tr class="esc-lose">
+            <td>8</td>
+            <td>Zersplitterung</td>
+            <td>Totaler Zusammenbruch des Gegners als Ziel; vitale Systemfaktoren werden zerstört</td>
+          </tr>
+          <tr class="esc-lose">
+            <td>9</td>
+            <td>Gemeinsam in den Abgrund</td>
+            <td>Keine Umkehr möglich; totale Konfrontation; Vernichtung auf eigene Kosten</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Stresstheorie
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-stress">
+      <h2>Stresstheorie</h2>
+
+      <h3>Stressarten</h3>
+      <div class="card-grid">
+        <div class="card" style="border-left: 4px solid var(--red);">
+          <div class="card-label">😰 Distress</div>
+          <p>Negativer, belastender Stress. Entsteht z. B. durch Drohungen, Erwartungshaltung (–).</p>
+        </div>
+        <div class="card" style="border-left: 4px solid var(--green);">
+          <div class="card-label">💪 Eustress</div>
+          <p>Positiver, leistungsfördernder Stress. Entsteht z. B. durch Lob, Ressourcen des Selbsthildes (+).</p>
+        </div>
+      </div>
+
+      <h3>Flow-Modell</h3>
+      <p>Das Konzept des Flow (nach Csikszentmihalyi) beschreibt den optimalen Leistungszustand zwischen Über- und Unterforderung:</p>
+      <div class="callout">
+        <strong>Unterforderung</strong> → Langeweile, Apathie | &nbsp;
+        <strong>Flow</strong> → optimale Leistung, Zufriedenheit | &nbsp;
+        <strong>Überforderung</strong> → Angst, Burnout
+      </div>
+
+      <h3>Das S-O-R-K-C-Modell</h3>
+      <p>Das Stimuli-Organismus-Reaktion-Kontingenz-Consequenz-Modell (ursprünglich S-O-R nach Lazarus, erweitert durch Kanfer) erklärt individuelle Stress-Reaktionen:</p>
+
+      <div class="sork-row">
+        <div class="sork-letter">S</div>
+        <div class="sork-body"><strong>Stimulus / Stressor</strong><small>Welcher Reiz löst das Verhalten aus? z. B. Kritik von Vorgesetzten, Zeitdruck, Lärm, Familienprobleme</small></div>
+      </div>
+      <div class="sork-row">
+        <div class="sork-letter">O</div>
+        <div class="sork-body"><strong>Organismus (Person)</strong><small>Biologische, psychische Eigenschaften der Person: Erbanlagen, Lerngeschichte, Alter, Geschlecht, Persönlichkeitsstruktur, Interessen</small></div>
+      </div>
+      <div class="sork-row">
+        <div class="sork-letter">R</div>
+        <div class="sork-body"><strong>Reaktion</strong><small>Wie wird auf den Reiz reagiert? Kognitiv (Konzentrationsmangel, Blackout), vegetativ (Schwitzen, erhöhter Puls), emotional (Angst, Wut), muskulär (Zittern, Verkrampfungen)</small></div>
+      </div>
+      <div class="sork-row">
+        <div class="sork-letter">K</div>
+        <div class="sork-body"><strong>Kontingenz</strong><small>Wie oft treten Reaktion und Konsequenz gemeinsam auf? Häufigkeit der Verknüpfung</small></div>
+      </div>
+      <div class="sork-row">
+        <div class="sork-letter">C</div>
+        <div class="sork-body"><strong>Consequenz</strong><small>Welche langfristigen Auswirkungen hat die Reaktion? Fehler, ungesunder Lebensstil, Störungen auf physischer/psychischer Ebene, soziale Auffälligkeiten</small></div>
+      </div>
+
+      <h3>Die 5 Antreiber (Taibi Kahler)</h3>
+      <p>Antreiber sind grundlegende elterliche Forderungen in unserer Leistungsgesellschaft. Jeder Mensch hat einen oder zwei <strong>Primärantreiber</strong>:</p>
+      <table class="styled-table">
+        <thead>
+          <tr><th>Antreiber</th><th>Kernmerkmal</th><th>Führungshinweis</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Sei anderen gefällig!</strong></td>
+            <td>Will immer recht machen; eigene Bedürfnisse spielen keine Rolle; liest Wünsche von den Augen ab</td>
+            <td>Hilf dem Betroffenen, eigene Bedürfnisse zu erkennen und nach außen zu vertreten</td>
+          </tr>
+          <tr>
+            <td><strong>Sei perfekt!</strong></td>
+            <td>Verlangt absolute Perfektion; früh gelernt, nur anerkannt zu werden, wenn er perfekt ist; Karrieregrab-Risiko</td>
+            <td>Helfen, besser zu erkennen, wann Perfektion wirklich angebracht ist</td>
+          </tr>
+          <tr>
+            <td><strong>Sei stark!</strong></td>
+            <td>Spielt den unerschütterlichen Helden; Gefühle werden nach außen nicht kommuniziert; wirkt arrogant</td>
+            <td>Lernen, dass das Zeigen menschlicher Züge keineswegs bedeutet, schwach zu erscheinen</td>
+          </tr>
+          <tr>
+            <td><strong>Beeil Dich!</strong></td>
+            <td>Erledigt alles rasch, mehrere Dinge gleichzeitig; ständiger innerer Zeitdruck kann zu Panik führen</td>
+            <td>Anleitung zur Selbsthilfe: sich Zeit nehmen, die eigene Zeit einteilen</td>
+          </tr>
+          <tr>
+            <td><strong>Streng Dich an!</strong></td>
+            <td>Bemüht sich ständig, strengt sich an; benutzt umständlichste Lösungswege; ständig von Problemen umgeben</td>
+            <td>Helfen zu erkennen, wann es sich wirklich lohnt, sich anzustrengen</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <strong>Durchschnittswerte:</strong> Die Antreiber liegen bei durchschnittlich 16 Punkten. Werte unter 8 können zu Konflikten mit unserer Leistungsgesellschaft führen. Werte über 24 können Versagensängste und Stress auslösen.
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: PSNV
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-psnv">
+      <h2>PSNV – Psychosoziale Notfallversorgung</h2>
+
+      <div class="callout">
+        <strong>Alarmierung:</strong> Ca. 30 % der geschätzten Verletzten → bei 100 Verletzten ≈ 30 PSNV-Bedarf
+      </div>
+
+      <h3>Demobilisation</h3>
+      <p>Die Demobilisation ist eine strukturierte Maßnahme nach belastenden Einsätzen mit drei Schritten:</p>
+
+      <div class="bella-step">
+        <div class="bella-letter">1</div>
+        <div class="bella-desc">
+          <strong>REKONSTRUIEREN</strong>
+          <p>„Wir hatten gerade einen besonderen Einsatz. Gemeinsam schauen wir auf den Ablauf."<br>
+          Beginn: Alarmierung, Einsatzstichwort | Verlauf: chronologisch, Ergänzungen zulassen, Fachsprache | Ende: Abschluss, Wertschätzung, offene Fragen</p>
+        </div>
+      </div>
+
+      <div class="bella-step">
+        <div class="bella-letter">2</div>
+        <div class="bella-desc">
+          <strong>NORMALISIEREN</strong>
+          <p>„Solche Reaktionen können zu Reaktionen bei jedem von uns führen – das ist typisch."<br>
+          Kurze Beschreibung von möglichen Reaktionen | Reaktionen werden leichter, Erholung ist die Regel | Kontaktmöglichkeiten: Führungskraft, Mannschaft, PSNV</p>
+        </div>
+      </div>
+
+      <div class="bella-step">
+        <div class="bella-letter">3</div>
+        <div class="bella-desc">
+          <strong>AKTIVIEREN</strong>
+          <p>„Jeder schaut auf sich – und gemeinsam schauen wir auf uns!"<br>
+          Persönliche Bewältigungsstrategien aktivieren | evtl. Einladung zum Defusing mit PSNV | gruppeninterne Bewältigungsstrategien aktivieren</p>
+        </div>
+      </div>
+
+      <h3>BELLA-Gesprächskonzept</h3>
+      <p>Das BELLA-Konzept beschreibt die Phasen eines psychosozialen Erstgesprächs:</p>
+
+      <div class="bella-step">
+        <div class="bella-letter">B</div>
+        <div class="bella-desc">
+          <strong>Beziehungen aufbauen</strong>
+          <p>Sich vorstellen, einen ruhigen, geschützten Ort suchen, Gesprächspartner ernst nehmen!</p>
+        </div>
+      </div>
+      <div class="bella-step">
+        <div class="bella-letter">E</div>
+        <div class="bella-desc">
+          <strong>Erfassen der Situation</strong>
+          <p>Zuhören; Was bedeutet die Situation für den Gesprächspartner?</p>
+        </div>
+      </div>
+      <div class="bella-step">
+        <div class="bella-letter">L</div>
+        <div class="bella-desc">
+          <strong>Linderung der Symptome</strong>
+          <p>Entlasten, ordnen lassen, Gefühle ausdrücken lassen, ganzheitlich helfen!</p>
+        </div>
+      </div>
+      <div class="bella-step">
+        <div class="bella-letter">L</div>
+        <div class="bella-desc">
+          <strong>Leute mit einbeziehen</strong>
+          <p>Soziales Umfeld des Betroffenen einbeziehen, Fachkräfte vermitteln, ermutigen!</p>
+        </div>
+      </div>
+      <div class="bella-step">
+        <div class="bella-letter">A</div>
+        <div class="bella-desc">
+          <strong>Ansatz zur Problembewältigung</strong>
+          <p>Mögliche Wege aufzeigen, praktische Hilfen vorstellen.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Projektmanagement
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-projekt">
+      <h2>Projektmanagement</h2>
+
+      <div class="callout">
+        <strong>Definition DIN 69901:</strong> Ein Projekt ist ein Vorhaben, das im Wesentlichen durch die Einmaligkeit der Bedingungen in ihrer Gesamtheit gekennzeichnet ist, z. B. Zielvorgabe, zeitliche, finanzielle, personelle oder andere Begrenzungen, Abgrenzung gegenüber anderen Vorhaben, projektspezifische Organisation.
+      </div>
+
+      <h3>Projektphasen (klassisches Modell)</h3>
+      <table class="styled-table">
+        <thead>
+          <tr><th>Phase</th><th>Inhalte</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>1. Initiierung</strong></td><td>Projektidee, Machbarkeitsstudie, Projektauftrag</td></tr>
+          <tr><td><strong>2. Planung</strong></td><td>Zieldefinition (SMART), Ressourcenplanung, Zeitplanung (Gantt-Chart, Meilensteine), Risikoanalyse</td></tr>
+          <tr><td><strong>3. Durchführung</strong></td><td>Umsetzung der Arbeitspakete, Statusberichte, Änderungsmanagement</td></tr>
+          <tr><td><strong>4. Controlling</strong></td><td>Soll-Ist-Vergleich, Kostenkontrolle, Qualitätssicherung</td></tr>
+          <tr><td><strong>5. Abschluss</strong></td><td>Abnahme, Dokumentation, Lessons Learned, Projektabschlussbericht</td></tr>
+        </tbody>
+      </table>
+
+      <h3>SMART-Ziele</h3>
+      <div class="card-grid">
+        <div class="card"><div class="card-label">S</div><p><strong>Spezifisch</strong> – klar und konkret formuliert</p></div>
+        <div class="card"><div class="card-label">M</div><p><strong>Messbar</strong> – mit Kriterien überprüfbar</p></div>
+        <div class="card"><div class="card-label">A</div><p><strong>Attraktiv / Akzeptiert</strong> – von Beteiligten getragen</p></div>
+        <div class="card"><div class="card-label">R</div><p><strong>Realistisch</strong> – erreichbar mit vorhandenen Mitteln</p></div>
+        <div class="card"><div class="card-label">T</div><p><strong>Terminiert</strong> – mit klarem Enddatum versehen</p></div>
+      </div>
+
+      <h3>Stakeholder-Management</h3>
+      <p>Frühzeitige Identifikation und systematische Einbindung aller Beteiligten und Betroffenen ist entscheidend für den Projekterfolg. Stakeholder-Matrix: Einfluss vs. Interesse.</p>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: BGM
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-bgm">
+      <h2>Betriebliches Gesundheitsmanagement (BGM)</h2>
+
+      <div class="callout">
+        <strong>Frage:</strong> Was kann der Einzelne &amp; die Führung / das Unternehmen beim Thema Gesundheit, Werte, Arbeitsbedingungen / Führung, Kompetenz tun?
+      </div>
+
+      <h3>Säulen des BGM</h3>
+      <div class="card-grid">
+        <div class="card" style="border-top: 4px solid var(--green);">
+          <div class="card-label">❤️ Gesundheit</div>
+          <p>Betriebliche Gesundheitsförderung, Prävention, Gesundheitschecks, Ergonomie am Arbeitsplatz</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--amber);">
+          <div class="card-label">⚖️ Werte &amp; Kultur</div>
+          <p>Unternehmenskultur, Leitbild, Wertschätzung, psychologische Sicherheit im Team</p>
+        </div>
+        <div class="card" style="border-top: 4px solid #5555cc;">
+          <div class="card-label">🏗️ Arbeitsbedingungen</div>
+          <p>Arbeitszeit, Arbeitsbelastung, Work-Life-Balance, Arbeitsschutz, hybrides Arbeiten</p>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--red);">
+          <div class="card-label">👔 Führung</div>
+          <p>Gesundheitsorientierte Führung, Fürsorgepflicht, Feedbackkultur, Mitarbeitergespräche</p>
+        </div>
+        <div class="card" style="border-top: 4px solid #cc8800;">
+          <div class="card-label">🎓 Kompetenz</div>
+          <p>Fort- und Weiterbildung, Resilienztraining, Stressmanagement-Schulungen</p>
+        </div>
+      </div>
+
+      <h3>Handlungsebenen im BGM</h3>
+      <table class="styled-table">
+        <thead>
+          <tr><th>Ebene</th><th>Maßnahmen (Einzelner)</th><th>Maßnahmen (Organisation)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Verhaltensprävention</strong></td>
+            <td>Sport, gesunde Ernährung, Stressbewältigung, Achtsamkeit</td>
+            <td>Gesundheitskurse, EAP-Programme, Sportangebote</td>
+          </tr>
+          <tr>
+            <td><strong>Verhältnisprävention</strong></td>
+            <td>Ergonomischen Arbeitsplatz einrichten, Pausen einhalten</td>
+            <td>Gefährdungsbeurteilung, Lärmschutz, flexible Arbeitszeiten</td>
+          </tr>
+          <tr>
+            <td><strong>Führungsverhalten</strong></td>
+            <td>Selbstfürsorge der Führungskraft, Vorbildfunktion</td>
+            <td>Führungskräfteentwicklung, Führungsleitlinien, Mentoring</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Zeitmanagement
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-zeit">
+      <h2>Zeitmanagement</h2>
+
+      <h3>Eisenhower-Matrix</h3>
+      <p>Aufgaben nach Dringlichkeit und Wichtigkeit priorisieren:</p>
+      <table class="styled-table">
+        <thead>
+          <tr><th></th><th>Dringend</th><th>Nicht dringend</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Wichtig</strong></td>
+            <td style="background:#fdecea;"><strong>A – Sofort erledigen</strong><br>Krisen, Deadlines</td>
+            <td style="background:#e6f4ea;"><strong>B – Terminieren</strong><br>Planung, Entwicklung</td>
+          </tr>
+          <tr>
+            <td><strong>Nicht wichtig</strong></td>
+            <td style="background:#fff8e1;"><strong>C – Delegieren</strong><br>Unterbrechungen, Routinen</td>
+            <td style="background:#f5f5f5;"><strong>D – Eliminieren</strong><br>Zeitfresser, Ablenkung</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Das Pareto-Prinzip (80/20-Regel)</h3>
+      <p>80 % der Ergebnisse werden mit 20 % des Aufwands erzielt. Fokus auf die „20 % Schlüsselaktivitäten", die den größten Nutzen bringen.</p>
+
+      <h3>ALPEN-Methode</h3>
+      <div class="card-grid">
+        <div class="card"><div class="card-label">A</div><p><strong>Aufgaben aufschreiben</strong></p></div>
+        <div class="card"><div class="card-label">L</div><p><strong>Länge schätzen</strong> (Zeitdauer)</p></div>
+        <div class="card"><div class="card-label">P</div><p><strong>Puffer einplanen</strong> (60-%-Regel)</p></div>
+        <div class="card"><div class="card-label">E</div><p><strong>Entscheidungen treffen</strong> (Prioritäten)</p></div>
+        <div class="card"><div class="card-label">N</div><p><strong>Nachkontrolle</strong></p></div>
+      </div>
+
+      <h3>Weitere Methoden</h3>
+      <ul>
+        <li><strong>Pomodoro-Technik:</strong> 25 Minuten konzentrierte Arbeit, 5 Minuten Pause</li>
+        <li><strong>Getting Things Done (GTD):</strong> Alle Aufgaben erfassen, verarbeiten, organisieren, durchschauen, handeln</li>
+        <li><strong>Time-Boxing:</strong> Feste Zeitfenster für Aufgaben reservieren</li>
+        <li><strong>Nein sagen lernen:</strong> Klare Grenzen setzen, Aufgaben ablehnen, die nicht zur eigenen Prioritätenliste passen</li>
+      </ul>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PLACEHOLDER PANELS: VAk, FeuAK, IdF
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-vak">
+      <h2>VAk Berlin</h2>
+      <div class="placeholder">
+        <div class="big-icon">🏙️</div>
+        <h3>Inhalte folgen in Kürze</h3>
+        <p>Dieser Bereich wird noch befüllt.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-feuak">
+      <h2>FeuAK Hamburg</h2>
+      <div class="placeholder">
+        <div class="big-icon">🔥</div>
+        <h3>Inhalte folgen in Kürze</h3>
+        <p>Dieser Bereich wird noch befüllt.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-idf">
+      <h2>IdF Münster</h2>
+      <div class="placeholder">
+        <div class="big-icon">🎓</div>
+        <h3>Inhalte folgen in Kürze</h3>
+        <p>Dieser Bereich wird noch befüllt.</p>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         PANEL: Verbesserungsvorschläge
+    ─────────────────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-vbs">
+      <h2>Verbesserungsvorschläge</h2>
+      <p>Hast du einen Vorschlag, eine Ergänzung oder einen Fehler gefunden? Schreib ihn hier auf – andere Nutzer können über die Einträge abstimmen.</p>
+
+      <!-- Eingabeformular -->
+      <div class="suggestion-form">
+        <label for="suggestion-input">Dein Verbesserungsvorschlag:</label>
+        <textarea
+          id="suggestion-input"
+          placeholder="z. B. „Im Kapitel Stresstheorie fehlt das Lazarus-Modell der Stressbewertung…""
+          maxlength="1000"
+        ></textarea>
+        <div class="form-footer">
+          <button id="submit-suggestion" title="Vorschlag absenden">✉ Absenden</button>
+        </div>
+      </div>
+
+      <!-- Liste der Vorschläge -->
+      <h3>Eingereichte Vorschläge</h3>
+      <div id="suggestions-list">
+        <div class="empty-state" id="empty-hint">
+          Noch keine Vorschläge vorhanden. Sei der Erste!
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /#main -->
+</div><!-- /.app-body -->
+
+<!-- ═══════════════════════════════════════════════════════════════
+     JAVASCRIPT
+     - Navigation (tabs, sub-items, panels)
+     - Accordion toggles
+     - Verbesserungsvorschläge (Speicherung per localStorage + Up/Downvote)
+═══════════════════════════════════════════════════════════════ -->
+<script>
+/* ───────────────────────────────────────────────────────────────
+   ACCORDION HELPER
+   Öffnet / schließt einzelne Akkordeon-Sektionen.
+   Wird über das onclick-Attribut aufgerufen.
+─────────────────────────────────────────────────────────────── */
+function toggleAcc(btn) {
+  const body = btn.nextElementSibling;   // .acc-body folgt direkt
+  const isOpen = btn.classList.contains('open');
+  btn.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+
+/* ───────────────────────────────────────────────────────────────
+   SIDEBAR TOGGLE (Hamburger für Mobile)
+─────────────────────────────────────────────────────────────── */
+const sidebar        = document.getElementById('sidebar');
+const sidebarToggle  = document.getElementById('sidebar-toggle');
+const overlay        = document.getElementById('overlay');
+
+sidebarToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+});
+
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('open');
+});
+
+/* ───────────────────────────────────────────────────────────────
+   NAVIGATION
+   Logik für Top-Level-Tabs (IBK, VAk, FeuAK, IdF, Verbesserungen)
+   und Unter-Punkte (IBK-Unterpunkte).
+─────────────────────────────────────────────────────────────── */
+
+/**
+ * Zeigt das Panel mit der angegebenen ID und versteckt alle anderen.
+ * @param {string} panelId – ID ohne „panel-" Präfix
+ */
+function showPanel(panelId) {
+  // Alle Panels ausblenden
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+
+  // Gewünschtes Panel einblenden
+  const target = document.getElementById('panel-' + panelId);
+  if (target) target.classList.add('active');
+
+  // Mobile: Sidebar schließen nach Klick
+  sidebar.classList.remove('open');
+  overlay.classList.remove('open');
+}
+
+/**
+ * Aktualisiert den aktiven Zustand der Sidebar-Buttons.
+ * @param {HTMLElement} clickedBtn – der geklickte Button
+ * @param {string}      group      – 'tab' oder 'sub' (getrennte aktive States)
+ */
+function setActiveBtn(clickedBtn, group) {
+  if (group === 'sub') {
+    document.querySelectorAll('.sidebar-sub li button').forEach(b => b.classList.remove('active'));
+  } else {
+    document.querySelectorAll('.sidebar-tab').forEach(b => b.classList.remove('active'));
+  }
+  clickedBtn.classList.add('active');
+}
+
+/* Top-Level-Tabs verarbeiten */
+document.querySelectorAll('.sidebar-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const panelId  = tab.dataset.panel;   // direktes Panel (VAk, FeuAK, IdF, VBS)
+    const toggleId = tab.dataset.toggle;  // ID der Unterliste (IBK)
+
+    if (toggleId) {
+      // IBK: Unterliste auf-/zuklappen
+      const subList = document.getElementById(toggleId);
+      const isOpen  = subList.classList.contains('open');
+      subList.classList.toggle('open', !isOpen);
+      tab.classList.toggle('open', !isOpen);
+      // Tab bleibt „aktiv", wenn bereits aufgeklappt
+      tab.classList.add('active');
+    } else if (panelId) {
+      // Direktes Panel (kein Untermenü)
+      setActiveBtn(tab, 'tab');
+      // Sub-Buttons deaktivieren
+      document.querySelectorAll('.sidebar-sub li button').forEach(b => b.classList.remove('active'));
+      showPanel(panelId);
+    }
+  });
+});
+
+/* Unter-Buttons (IBK Unterpunkte) verarbeiten */
+document.querySelectorAll('.sidebar-sub li button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    setActiveBtn(btn, 'sub');
+    // IBK-Tab aktiv markieren
+    document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('[data-tab="ibk"]').classList.add('active');
+    showPanel(btn.dataset.panel);
+  });
+});
+
+/* ───────────────────────────────────────────────────────────────
+   VERBESSERUNGSVORSCHLÄGE
+   Speicherung im localStorage (browserseitig, persistent).
+   Datenstruktur:
+   suggestions = [
+     { id: number, text: string, date: string, score: number, voted: null|'up'|'down' },
+     …
+   ]
+─────────────────────────────────────────────────────────────── */
+
+/** Alle Vorschläge aus localStorage laden */
+function loadSuggestions() {
+  try {
+    return JSON.parse(localStorage.getItem('bvi_suggestions') || '[]');
+  } catch {
+    return [];
+  }
+}
+
+/** Vorschläge in localStorage speichern */
+function saveSuggestions(list) {
+  localStorage.setItem('bvi_suggestions', JSON.stringify(list));
+}
+
+/** Rendert die komplette Vorschlagsliste neu */
+function renderSuggestions() {
+  const list      = loadSuggestions();
+  const container = document.getElementById('suggestions-list');
+  const emptyHint = document.getElementById('empty-hint');
+
+  // Leere-Zustand-Hinweis
+  if (emptyHint) emptyHint.style.display = list.length === 0 ? 'block' : 'none';
+
+  // Bestehende Karten entfernen (außer dem Empty-State-Div)
+  container.querySelectorAll('.suggestion-card').forEach(el => el.remove());
+
+  // Sortierung: höchste Score zuerst
+  const sorted = [...list].sort((a, b) => b.score - a.score);
+
+  sorted.forEach(item => {
+    const card = createSuggestionCard(item);
+    container.appendChild(card);
+  });
+}
+
+/**
+ * Erstellt eine Vorschlag-Karte als DOM-Element.
+ * @param {object} item – Vorschlag-Objekt
+ * @returns {HTMLElement}
+ */
+function createSuggestionCard(item) {
+  const card = document.createElement('div');
+  card.className = 'suggestion-card';
+  card.dataset.id = item.id;
+
+  // Vorzeichen der Score für Klasse
+  const scoreClass = item.score > 0 ? 'positive' : item.score < 0 ? 'negative' : '';
+
+  card.innerHTML = `
+    <!-- Abstimm-Spalte -->
+    <div class="vote-col">
+      <button class="vote-btn up ${item.voted === 'up' ? 'voted' : ''}"
+              title="Upvote" aria-label="Upvote">▲</button>
+      <span class="vote-score ${scoreClass}">${item.score > 0 ? '+' : ''}${item.score}</span>
+      <button class="vote-btn down ${item.voted === 'down' ? 'voted' : ''}"
+              title="Downvote" aria-label="Downvote">▼</button>
+    </div>
+    <!-- Text -->
+    <div class="suggestion-content">
+      <div class="suggestion-text">${escapeHtml(item.text)}</div>
+      <div class="suggestion-meta">Eingereicht am ${item.date}</div>
+    </div>
+  `;
+
+  // Upvote-Button
+  card.querySelector('.vote-btn.up').addEventListener('click', () => vote(item.id, 'up'));
+  // Downvote-Button
+  card.querySelector('.vote-btn.down').addEventListener('click', () => vote(item.id, 'down'));
+
+  return card;
+}
+
+/**
+ * Verarbeitet eine Abstimmung (up/down) für einen Vorschlag.
+ * Jedes Gerät kann nur einmal pro Vorschlag abstimmen
+ * (Zustand wird im Objekt selbst gespeichert).
+ * @param {number} id        – Vorschlag-ID
+ * @param {string} direction – 'up' oder 'down'
+ */
+function vote(id, direction) {
+  const list  = loadSuggestions();
+  const index = list.findIndex(s => s.id === id);
+  if (index === -1) return;
+
+  const item = list[index];
+
+  if (item.voted === direction) {
+    // Vote zurücknehmen
+    item.score  += direction === 'up' ? -1 : 1;
+    item.voted   = null;
+  } else {
+    // Alten Vote rückgängig machen, dann neuen anwenden
+    if (item.voted !== null) {
+      item.score += item.voted === 'up' ? -1 : 1;
+    }
+    item.score  += direction === 'up' ? 1 : -1;
+    item.voted   = direction;
+  }
+
+  list[index] = item;
+  saveSuggestions(list);
+  renderSuggestions();
+}
+
+/**
+ * Sanitiert HTML-Entities, um XSS zu verhindern.
+ * @param {string} str
+ * @returns {string}
+ */
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/* Absende-Button */
+document.getElementById('submit-suggestion').addEventListener('click', () => {
+  const input = document.getElementById('suggestion-input');
+  const text  = input.value.trim();
+
+  if (text.length < 5) {
+    input.focus();
+    input.style.borderColor = '#b5311a';
+    setTimeout(() => input.style.borderColor = '', 1500);
+    return;
+  }
+
+  const list = loadSuggestions();
+
+  // Neuen Vorschlag erstellen
+  const newItem = {
+    id:    Date.now(),                                   // Eindeutige ID (Timestamp)
+    text:  text,
+    date:  new Date().toLocaleDateString('de-DE', {     // Deutsches Datumsformat
+             day: '2-digit', month: '2-digit', year: 'numeric',
+             hour: '2-digit', minute: '2-digit'
+           }),
+    score: 0,
+    voted: null
+  };
+
+  list.push(newItem);
+  saveSuggestions(list);
+  renderSuggestions();
+
+  // Formular zurücksetzen
+  input.value = '';
+});
+
+/* Initial rendern, falls das Panel zu Beginn geladen wird */
+renderSuggestions();
+
+/* ───────────────────────────────────────────────────────────────
+   INITIALISIERUNG
+   Das erste Panel (Transaktionsanalyse) ist per HTML class="active"
+   bereits sichtbar. Nichts weiteres nötig.
+─────────────────────────────────────────────────────────────── */
+</script>
+</body>
+</html>
