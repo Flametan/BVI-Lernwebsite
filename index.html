@@ -357,6 +357,21 @@
       <p class="hero-sub">Prüfungsvorbereitung für den höheren feuerwehrtechnischen Dienst – fundiert, strukturiert, prüfungsrelevant.</p>
       <div class="gold-rule"></div>
       <div class="home-grid">
+        <!-- ── SFS REGENSBURG ───────────────────────────────────── -->
+        <div class="glass-tile" onclick="NAV.go('v-sfs','SFS Regensburg')">
+          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <div class="tile-name">SFS Regensburg</div>
+          <div class="tile-desc">B3 Gruppenführer – FwDV 3/100, Taktik, Methodik, Ausbilden</div>
+          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <!-- ── HLFS KASSEL ──────────────────────────────────────── -->
+        <div class="glass-tile" onclick="NAV.go('v-hlfs','HLFS Kassel')">
+          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/><path d="M3.05 11a9 9 0 0 1 17.9 0"/></svg>
+          <div class="tile-name">HLFS Kassel</div>
+          <div class="tile-desc">Führungsvorgang, GABC, Tunnel, VB, MANV, Zug-/Verbandsführer, Stab</div>
+          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <!-- ── IBK ─────────────────────────────────────────────── -->
         <div class="glass-tile" onclick="NAV.go('v-ibk','IBK Heyrothsberge')">
           <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           <div class="tile-name">IBK Heyrothsberge</div>
@@ -380,6 +395,1421 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SFS REGENSBURG – ÜBERSICHT (B3 Gruppenführer)
+     Quelle: KannListe, KannListe_Lösungen, FwDV100, Lernzettel_1,
+             Rechtsgrundlagen, Ausbilden-PDF
+============================================================ -->
+<div id="v-sfs" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">Staatliche Feuerwehrschule Bayern</p>
+    <h1 class="page-title">SFS <span class="accent">Regensburg</span></h1>
+    <p class="page-lead">B3 – Gruppenführerlehrgang. Taktik, Recht, Ausbilden und Führung im Einsatz.</p>
+  </div></div>
+  <div class="pc">
+    <div class="topic-grid">
+      <div class="topic-card" onclick="NAV.go('v-sfs-fwdv3','Führung &amp; Taktik (FwDV 3/100)')"><div class="tc-num">01</div><div class="tc-name">Führung &amp; Taktik</div><div class="tc-sub">FwDV 3, FwDV 100, Führungskreislauf, Befehlsgebung, Lagemeldung</div></div>
+      <div class="topic-card" onclick="NAV.go('v-sfs-methodik','Methodik der Ausbildung')"><div class="tc-num">02</div><div class="tc-name">Methodik &amp; Didaktik</div><div class="tc-sub">4-Stufen-Methode, AVIVA, Bloom-Taxonomie, Lernziele, UVP</div></div>
+      <div class="topic-card" onclick="NAV.go('v-sfs-rechtsgrundlagen','Rechtsgrundlagen')"><div class="tc-num">03</div><div class="tc-name">Rechtsgrundlagen</div><div class="tc-sub">Normenpyramide, Muss/Soll/Kann, Einsatzleitung kraft Gesetz, FwG</div></div>
+      <div class="topic-card" onclick="NAV.go('v-sfs-abc','Geräte, ABC &amp; Atemschutz')"><div class="tc-num">04</div><div class="tc-name">Geräte, ABC &amp; Atemschutz</div><div class="tc-sub">Rettungsgeräte, Arbeitsgeräte, GAMS, Körperschutz, FwDV 7, FwDV 500</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     SFS · 01 – FÜHRUNG & TAKTIK (FwDV 3 / FwDV 100)
+────────────────────────────────────────────────── -->
+<div id="v-sfs-fwdv3" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">SFS Regensburg · B3 · Thema 01</p>
+    <h1 class="page-title">Führung &amp; <span class="accent">Taktik</span></h1>
+    <p class="page-lead">FwDV 3 regelt den Löscheinsatz; FwDV 100 den Führungsvorgang. Zusammen bilden sie das taktische Fundament des Gruppenführers.</p>
+  </div></div>
+  <div class="pc">
+
+    <!-- FÜHRUNGSVORGANG -->
+    <h2 class="sec-h">Der Führungsvorgang (FwDV 100)</h2>
+    <div class="def-box"><div class="def-box-label">Merksatz</div><p>Der Führungsvorgang ist ein <strong>kontinuierlicher Kreislauf</strong> aus Lagefeststellung, Planung und Befehlsgebung – mit ständiger Kontrolle. Er ist nicht statisch, sondern wird bei neuen Informationen neu durchlaufen.</p></div>
+
+    <!-- SVG: Führungskreislauf -->
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr-g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#C9A84C"/></marker>
+        </defs>
+        <!-- Zentrales Label -->
+        <rect x="195" y="105" width="130" height="50" rx="8" fill="rgba(201,168,76,0.08)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+        <text x="260" y="127" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C" font-weight="600">Lage/Auftrag</text>
+        <text x="260" y="143" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080">Kontrolle/Überwachung</text>
+
+        <!-- 3 Phasen-Kreise -->
+        <!-- LAGEFESTSTELLUNG -->
+        <circle cx="260" cy="52" r="40" fill="rgba(139,26,26,0.2)" stroke="#A50000" stroke-width="1.5"/>
+        <text x="260" y="47" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E07070" font-weight="700">LAGE-</text>
+        <text x="260" y="60" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E07070" font-weight="700">FESTSTELLUNG</text>
+
+        <!-- PLANUNG -->
+        <circle cx="140" cy="196" r="40" fill="rgba(176,115,32,0.2)" stroke="#B07320" stroke-width="1.5"/>
+        <text x="140" y="193" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#D4903A" font-weight="700">PLANUNG</text>
+        <text x="140" y="207" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Entschluss/Beurteilung</text>
+
+        <!-- BEFEHLSGEBUNG -->
+        <circle cx="380" cy="196" r="40" fill="rgba(42,122,82,0.2)" stroke="#2A7A52" stroke-width="1.5"/>
+        <text x="380" y="193" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#4ACD90" font-weight="700">BEFEHL</text>
+        <text x="380" y="207" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Befehl/Lagemeldung</text>
+
+        <!-- Pfeile im Uhrzeigersinn -->
+        <path d="M290 80 Q350 80 365 160" fill="none" stroke="#C9A84C" stroke-width="1.8" marker-end="url(#arr-g)"/>
+        <path d="M340 210 Q260 245 175 210" fill="none" stroke="#C9A84C" stroke-width="1.8" marker-end="url(#arr-g)"/>
+        <path d="M107 173 Q90 100 222 68" fill="none" stroke="#C9A84C" stroke-width="1.8" marker-end="url(#arr-g)"/>
+      </svg>
+      <p class="diagram-caption">Führungsvorgang nach FwDV 100 – zyklischer Prozess</p>
+    </div>
+
+    <!-- LAGEFESTSTELLUNG -->
+    <h2 class="sec-h">Lagefeststellung</h2>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>3 Lagen beurteilen</div><p><strong>Allgemeine Lage:</strong> Zeit, Ort, Wetter<br><strong>Schadenslage:</strong> Schaden, Objekt, Umfang<br><strong>Eigene Lage:</strong> Führung, Kräfte, Mittel</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>4 Phasen der Erkundung</div><p>1. Frontalansicht (Rauch)<br>2. Befragung von Personen<br>3. Zugänge / Innenansicht<br>4. Gesamtansicht (um das Gebäude)</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>6 Seiten der Einsatzstelle</div><p>Vorne · Hinten · Links · Rechts · Oben · Unten – alle Seiten im Blick haben!</p></div>
+    </div>
+
+    <!-- PLANUNG: 4A-C-4E -->
+    <h2 class="sec-h">Planung – Gefahrenmatrix (4A-C-4E)</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>4A – Gefahren für Personen/Tiere/Umwelt</div>
+        <ul class="bl"><li><strong>Atemgifte</strong></li><li><strong>Angstreaktionen</strong></li><li><strong>Ausbreitung</strong> (Brand, Kontamination)</li><li><strong>Atomare Gefahren</strong></li></ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>4E – Gefahren für Kräfte &amp; Geräte</div>
+        <ul class="bl"><li><strong>Erkrankung/Verletzung</strong></li><li><strong>Explosion</strong></li><li><strong>Elektrizität</strong></li><li><strong>Einsturz</strong></li></ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>C – Chemische Stoffe</div><p>Gase, Flüssigkeiten, Feststoffe mit toxischer Wirkung. Gefahrenmatrix ist nicht statisch – wird immer neu evaluiert!</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Taktische Optionen</div>
+        <ul class="bl"><li><strong>Verteidigung:</strong> sichern, schützen, begrenzen</li><li><strong>Rettung:</strong> räumen, evakuieren, bergen</li><li><strong>Angriff:</strong> löschen, ausschalten, beseitigen</li><li><strong>Rückzug:</strong> aufgeben, fliehen, abbrechen</li></ul>
+      </div>
+    </div>
+
+    <!-- ENTSCHLUSS -->
+    <h2 class="sec-h">Entschluss &amp; Befehlsgebung</h2>
+    <div class="def-box"><div class="def-box-label">Befehlskommando (ohne Bereitstellung)</div><p>Lageschilderung · Wasserentnahmestelle · Lage des Verteilers · <strong>Einheit · Auftrag · Mittel · Ziel · Weg · VOR!</strong></p></div>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Lagemeldung (MELDEN)</div>
+        <ul class="bl"><li><strong>M</strong> – Meldender</li><li><strong>E</strong> – Einsatzstelle</li><li><strong>L</strong> – Lage</li><li><strong>D</strong> – Durchgeführte Maßnahmen</li><li><strong>E</strong> – Einheiten im Einsatz</li><li><strong>N</strong> – Nachforderungen</li></ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Gefahrenabwehr (STOP)</div>
+        <ul class="bl"><li><strong>S</strong> – Substitution</li><li><strong>T</strong> – Technische Lösung</li><li><strong>O</strong> – Organisatorisch</li><li><strong>P</strong> – Persönliche Maßnahme</li></ul>
+      </div>
+    </div>
+
+    <!-- TAKTISCHE EINHEITEN -->
+    <h2 class="sec-h">Taktische Einheiten nach FwDV 3</h2>
+    <table class="dt">
+      <thead><tr><th>Einheit</th><th>Besetzung</th><th>Stärke</th><th>Fahrzeug</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Selbstständiger Trupp</strong></td><td>Truppführer + Truppmann (+ Maschinist)</td><td>1/2 – 1/3</td><td>KLF, TSF</td></tr>
+        <tr><td><strong>Staffel</strong></td><td>GF, Ma, AT(2), WT(2)</td><td>1/5 – 1/6</td><td>TSF-W, LF 10</td></tr>
+        <tr><td><strong>Gruppe</strong></td><td>GF, Me, Ma, AT(2), WT(2), SchT(2)</td><td>1/8 – 1/9</td><td>LF 10, LF 20</td></tr>
+        <tr><td><strong>Zug</strong></td><td>ZF + 2–3 Gruppen/Staffeln</td><td>1/13–1/22</td><td>mehrere FZ</td></tr>
+        <tr><td><strong>Verband</strong></td><td>mehrere, verschiedene taktische Einheiten</td><td>variabel</td><td>variabel</td></tr>
+      </tbody>
+    </table>
+
+    <!-- FÜHRUNGSEBENEN -->
+    <h2 class="sec-h">Führungsebenen &amp; Führungsstufen</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Führungsebenen (alle FW-Einsätze)</div>
+        <ul class="bl"><li><strong>Gruppe</strong> → GF (Me.)</li><li><strong>Zug</strong> → ZF (Zugtrupp)</li><li><strong>Einsatzleitung</strong> → EL (Führungshilfspersonal)</li></ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Führungsstufen</div>
+        <ul class="bl"><li><strong>A:</strong> Führen ohne Führungseinheit – bis 2 Gruppen (GF)</li><li><strong>B:</strong> Führen mit örtlicher Führungseinheit – Zug/Verband (ZF)</li><li><strong>C:</strong> Führen mit Führungsgruppe – Verband (VF)</li><li><strong>D:</strong> Führen mit Führungsgruppe/-stab – mehrere Verbände (B VI)</li></ul>
+      </div>
+    </div>
+
+    <!-- LÖSCHAUFBAU -->
+    <h2 class="sec-h">Löschaufbau nach FwDV 3</h2>
+    <div class="step-stack">
+      <div class="step-item"><div class="step-letter">1</div><div><div class="step-title">Wasserentnahmestelle</div><div class="step-desc">Hydrant oder offenes Gewässer – Wassertrupp stellt Versorgung sicher</div></div></div>
+      <div class="step-item"><div class="step-letter">2</div><div><div class="step-title">Wasserförderung</div><div class="step-desc">Schläuche, Pumpe – Schlauchtrupp verlegt die Schlauchleitungen</div></div></div>
+      <div class="step-item"><div class="step-letter">3</div><div><div class="step-title">Verteiler</div><div class="step-desc">Aufstellpunkt für die weitere Wasserverteilung</div></div></div>
+      <div class="step-item"><div class="step-letter">4</div><div><div class="step-title">Angriffsleitung</div><div class="step-desc">Angriffstrupp rückt zur Brandbekämpfung vor – Menschenrettung hat Priorität</div></div></div>
+    </div>
+
+    <!-- AUFGABENVERTEILUNG FwDV 3 -->
+    <h2 class="sec-h">Aufgabenverteilung im Einsatz (FwDV 3)</h2>
+    <table class="dt">
+      <thead><tr><th>Funktion</th><th>Aufgabe</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Gruppenführer (GF)</strong></td><td>Führung, Lageerkundung, Entscheidung, Befehlsgebung</td></tr>
+        <tr><td><strong>Angriffstrupp (AT)</strong></td><td>Menschenrettung, Brandbekämpfung, erste Maßnahmen</td></tr>
+        <tr><td><strong>Wassertrupp (WT)</strong></td><td>Wasserversorgung, Sicherung, ggf. Unterstützung Innenangriff</td></tr>
+        <tr><td><strong>Schlauchtrupp (SchT)</strong></td><td>Schlauchleitungen verlegen, Aufbau unterstützen</td></tr>
+        <tr><td><strong>Maschinist (Ma)</strong></td><td>Fahrzeug, Pumpe und Aggregate bedienen</td></tr>
+        <tr><td><strong>Melder (Me)</strong></td><td>Gruppenführer unterstützen, Laufwege/Funkverbindungen</td></tr>
+      </tbody>
+    </table>
+
+    <!-- FÜHRUNGSSYSTEM -->
+    <h2 class="sec-h">Das Führungssystem (FwDV 100)</h2>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Führungsorganisation (Aufbau)</div><p>Einsatzleitung: Einsatzleiter, unterstützt durch Einsatzzentrale (IuK). Bei größeren Einsätzen zusätzlich: Führungstrupp, -staffel, -gruppe, -stab.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Führungsvorgang (Ablauf)</div><p>Ständiger Kreislauf: Lagefeststellung → Planung (Entschluss/Beurteilung) → Befehlsgebung → Kontrolle.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Führungsmittel (Ausstattung)</div><p><strong>Informationsgewinnung:</strong> Pläne, Handbücher<br><strong>Informationsverarbeitung:</strong> EDV, Büroausstattung<br><strong>Informationsübertragung:</strong> Funk, Besprechungen</p></div>
+    </div>
+    <div class="hint"><span>📌</span><p><strong>Merksatz Befehlskommando:</strong> Lageschilderung – Wasserentnahmestelle – Lage des Verteilers – Einheit – Auftrag – Mittel – Ziel – Weg – <strong>VOR!</strong> (mit Bereitstellung entfällt Einheit/Auftrag/Mittel/Ziel/Weg).</p></div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     SFS · 02 – METHODIK DER AUSBILDUNG
+────────────────────────────────────────────────── -->
+<div id="v-sfs-methodik" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">SFS Regensburg · B3 · Thema 02</p>
+    <h1 class="page-title">Methodik &amp; <span class="accent">Didaktik</span></h1>
+    <p class="page-lead">Ausbilden im Feuerwehrdienst – vom Regelkreis der Ausbildung bis zur 4-Stufen-Methode und dem AVIVA-Modell.</p>
+  </div></div>
+  <div class="pc">
+
+    <!-- REGELKREIS -->
+    <h2 class="sec-h">Regelkreis der guten Ausbildung</h2>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="arw" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#C9A84C"/></marker></defs>
+        <!-- Kreissegmente -->
+        <circle cx="280" cy="100" r="70" fill="none" stroke="rgba(201,168,76,0.15)" stroke-width="40"/>
+        <!-- Labels im Kreis -->
+        <text x="280" y="44"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C" font-weight="600">Analyse</text>
+        <text x="340" y="90"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C" font-weight="600">Struktur</text>
+        <text x="310" y="155" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C" font-weight="600">Durchführung</text>
+        <text x="220" y="155" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C" font-weight="600">Kontrolle</text>
+        <!-- Außen: Beschriftungen -->
+        <text x="280" y="16"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Ausbildende &amp; Teilnehmer · Rahmenbedingung · Lernziele</text>
+        <text x="430" y="100" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Zeit · UVP</text>
+        <text x="280" y="190" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Methode · Medien · Ankommen &amp; Einstimmen</text>
+        <text x="120" y="100" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Kontrolle d. Lernziele</text>
+        <!-- Pfeil -->
+        <circle cx="280" cy="100" r="25" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+        <text x="280" y="97"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#E8C97A" font-weight="600">Regel-</text>
+        <text x="280" y="108" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#E8C97A" font-weight="600">kreis</text>
+      </svg>
+      <p class="diagram-caption">Regelkreis der guten Ausbildung – Grundlage für jeden Übungsdienst</p>
+    </div>
+
+    <!-- LERNZIELE -->
+    <h2 class="sec-h">Lernziele</h2>
+    <div class="def-box"><div class="def-box-label">Definition Lernziel</div><p>Die am Ende einer Unterrichtseinheit zu erwerbende Kompetenz. Ein Lernziel besteht aus einer <strong>Handlungskomponente (Verb)</strong> und einer <strong>Inhaltskomponente (Substantiv)</strong>. Kein „können", „wissen", „kennen"!</p></div>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Hierarchie der Lernziele</div>
+        <ul class="bl"><li><strong>Leitziele</strong> – übergeordnete Bildungsziele</li><li><strong>Richtziele</strong> – Lernbereich/Fach</li><li><strong>Grobziele</strong> – Unterrichtseinheit</li><li><strong>Feinziele</strong> – operationalisierbar, prüfbar</li></ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>3 Lernzielbereiche</div>
+        <ul class="bl"><li><strong>Kognitiv</strong> – Wissen, Verstehen, Analysieren</li><li><strong>Psychomotorisch</strong> – Fertigkeiten, praktisches Können</li><li><strong>Affektiv</strong> – Haltungen, Einstellungen, Werte</li></ul>
+      </div>
+    </div>
+
+    <!-- AVIVA -->
+    <h2 class="sec-h">Das AVIVA-Modell</h2>
+    <p>AVIVA ist ein didaktisches Strukturmodell für die Planung und Durchführung von Unterricht:</p>
+    <div class="step-stack">
+      <div class="step-item"><div class="step-letter">A</div><div><div class="step-title">Ankommen &amp; Einstimmen</div><div class="step-desc">Teilnehmer abholen, Vorwissen aktivieren, Lernziel transparent machen. Methode: Karten unter Stuhl kleben → Diskussion leiten → Übergang zu „Vorwissen aktivieren".</div></div></div>
+      <div class="step-item"><div class="step-letter">V</div><div><div class="step-title">Vorwissen aktivieren</div><div class="step-desc">Anknüpfen an Bekanntes, Vorerfahrungen einbeziehen, Motivation aufbauen.</div></div></div>
+      <div class="step-item"><div class="step-letter">I</div><div><div class="step-title">Informieren</div><div class="step-desc">Neues Wissen strukturiert vermitteln. Medienwahl: Präsentation, Demonstration, praktische Vorführung.</div></div></div>
+      <div class="step-item"><div class="step-letter">V</div><div><div class="step-title">Verarbeiten</div><div class="step-desc">Übungen, Gruppenarbeit, praktische Anwendung – Lernzielkontrolle durch Beobachtung.</div></div></div>
+      <div class="step-item"><div class="step-letter">A</div><div><div class="step-title">Auswerten</div><div class="step-desc">Reflexion, Feedback-Runde, Lernzielsicherung. Abschließend: formelle Lernzielkontrolle.</div></div></div>
+    </div>
+
+    <!-- 4-STUFEN-METHODE -->
+    <h2 class="sec-h">Die 4-Stufen-Methode (Unterweisung)</h2>
+    <div class="def-box"><div class="def-box-label">Anwendungsbereich</div><p>Die 4-Stufen-Methode ist die klassische Unterweisungsmethode für <strong>praktische Fertigkeiten</strong> im Feuerwehrdienst. Optimal für Gerätekunde, Atemschutzübungen und Einsatztaktik.</p></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 540 80" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="a2" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#C9A84C" opacity=".7"/></marker></defs>
+        <!-- 4 Felder -->
+        <rect x="5"   y="10" width="115" height="60" rx="6" fill="rgba(165,0,0,.15)" stroke="#A50000" stroke-width="1.2"/>
+        <rect x="140" y="10" width="115" height="60" rx="6" fill="rgba(176,115,32,.15)" stroke="#B07320" stroke-width="1.2"/>
+        <rect x="275" y="10" width="115" height="60" rx="6" fill="rgba(58,127,212,.12)" stroke="#3A7FD4" stroke-width="1.2"/>
+        <rect x="410" y="10" width="125" height="60" rx="6" fill="rgba(42,122,82,.15)" stroke="#2A7A52" stroke-width="1.2"/>
+        <!-- Pfeile -->
+        <line x1="120" y1="40" x2="138" y2="40" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#a2)" opacity=".7"/>
+        <line x1="255" y1="40" x2="273" y2="40" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#a2)" opacity=".7"/>
+        <line x1="390" y1="40" x2="408" y2="40" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#a2)" opacity=".7"/>
+        <!-- Texte -->
+        <text x="62"  y="33" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#E07070" font-weight="700">1. Vorbereiten</text>
+        <text x="62"  y="50" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7.5" fill="#8FA0B0">Lernziel nennen</text>
+        <text x="62"  y="61" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7.5" fill="#8FA0B0">Vorwissen prüfen</text>
+        <text x="197" y="33" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#D4903A" font-weight="700">2. Vorführen</text>
+        <text x="197" y="50" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7.5" fill="#8FA0B0">Ausbilder zeigt</text>
+        <text x="197" y="61" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7.5" fill="#8FA0B0">mit Erklärung</text>
+        <text x="332" y="33" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#6BAAD4" font-weight="700">3. Nachmachen</text>
+        <text x="332" y="50" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7.5" fill="#8FA0B0">TN führt durch</text>
+        <text x="332" y="61" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7.5" fill="#8FA0B0">AB beobachtet</text>
+        <text x="472" y="33" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#4ACD90" font-weight="700">4. Üben</text>
+        <text x="472" y="50" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7.5" fill="#8FA0B0">Selbstständig üben</text>
+        <text x="472" y="61" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7.5" fill="#8FA0B0">Lernzielkontrolle</text>
+      </svg>
+      <p class="diagram-caption">4-Stufen-Methode – Grundprinzip praktischer Unterweisung</p>
+    </div>
+
+    <!-- Detailkarten 4-Stufen -->
+    <div class="cg cg-2" style="margin-top:.75rem;">
+      <div class="info-card" style="border-top:2px solid var(--c-red)">
+        <div class="info-card-title"><span class="dot dot-r"></span>Stufe 1: Vorbereiten</div>
+        <ul class="bl">
+          <li>Teilnehmer auf das Lernziel einstimmen</li>
+          <li>Vorwissen aktivieren: „Was wissen Sie bereits?"</li>
+          <li>Lernziel klar und messbar formulieren</li>
+          <li>Unterweisungsort und Material vorbereiten</li>
+          <li>Motivation schaffen: Relevanz für den Einsatz zeigen</li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:2px solid #B07320">
+        <div class="info-card-title"><span class="dot dot-w"></span>Stufe 2: Vorführen</div>
+        <ul class="bl">
+          <li>Ausbilder führt Tätigkeit in normalem Tempo vor</li>
+          <li>Dann: langsam, mit Kommentar zu jedem Schritt</li>
+          <li>TN schauen zu und hören zu (keine Ausführung)</li>
+          <li>Auf kritische Schritte hinweisen</li>
+          <li>Fragen der TN beantworten</li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:2px solid #3A7FD4">
+        <div class="info-card-title"><span class="dot dot-b"></span>Stufe 3: Nachmachen</div>
+        <ul class="bl">
+          <li>TN führt die Tätigkeit aus – Ausbilder beobachtet</li>
+          <li>TN kommentiert dabei sein Vorgehen (Think-aloud)</li>
+          <li>Korrekturen sofort und wertschätzend</li>
+          <li>Fehler direkt ansprechen, nicht korrigieren lassen</li>
+          <li>Sicherheit geht vor!</li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:2px solid var(--c-ok)">
+        <div class="info-card-title"><span class="dot dot-ok"></span>Stufe 4: Üben (Automatisierung)</div>
+        <ul class="bl">
+          <li>TN übt selbstständig bis zur Routine</li>
+          <li>Ausbilder beobachtet, gibt abschließend Feedback</li>
+          <li>Lernzielkontrolle: Kann TN das Lernziel erfüllen?</li>
+          <li>Zeitvorgaben einführen (Praxisnähe)</li>
+          <li>Dokumentation der Lernzielerfüllung</li>
+        </ul>
+      </div>
+    </div>
+    <div class="hint"><span>📌</span><p><strong>Hinweis Übungsdienst:</strong> Die 4-Stufen-Methode ist die Standardmethode für alle praktischen Übungen. Typische Fehler: Stufe 2 weglassen (sofort nachmachen lassen) oder Stufe 4 zu kurz (zu wenig Wiederholung). Für Führungsübungen (Taktikübungen): AVIVA-Modell kombinieren!</p></div>
+
+    <!-- FEEDBACK -->
+    <h2 class="sec-h">Feedback geben &amp; nehmen</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Feedback-Geber</div>
+        <ul class="bl"><li>Ich-Perspektive / Ich-Botschaft</li><li>Sachlich, kurz &amp; knapp</li><li>Auf Wesentliches konzentrieren</li><li>Konstruktiv, Feedback-Burger</li><li>Neutral, authentisch</li></ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Feedback-Nehmer</div>
+        <ul class="bl"><li>Ruhig zuhören</li><li>Annehmen / akzeptieren</li><li>Nicht in Rechtfertigung rutschen</li><li>Trennung: sachliche &amp; menschliche Ebene</li><li>Offenheit, Danke sagen</li></ul>
+      </div>
+    </div>
+
+    <!-- UVP -->
+    <h2 class="sec-h">Unterrichts-Verlaufs-Plan (UVP)</h2>
+    <div class="def-box"><div class="def-box-label">Merksatz</div><p>Für <strong>jedes Lernziel</strong> benötigst du einen UVP. Der UVP enthält: <strong>Phase | Zeit | Inhalt | Methode/Sozialform | Begriff | Medien</strong>. Die Phasen folgen dem AVIVA-Schema: A–V–I–V–A. Abschließend: Lernzielkontrolle.</p></div>
+    <div class="hint blue-h"><span>💡</span><p><strong>Hinweis:</strong> Lernziele sind kognitiv, psychomotorisch oder affektiv. Bei Lernzielen kein „können", „wissen", „kennen" – stattdessen konkrete, messbare Verben verwenden (z. B. „benennen", „erklären", „durchführen").</p></div>
+
+    <!-- BLOOM-TAXONOMIE -->
+    <h2 class="sec-h">Lernziel-Taxonomie nach Bloom (kognitiv)</h2>
+    <div class="def-box"><div class="def-box-label">Anwendung im Feuerwehrdienst</div><p>Die Bloom'sche Taxonomie ordnet kognitive Lernziele in <strong>sechs Niveaustufen</strong>. Für die Feuerwehrausbildung gilt: Einfache Handlungen beginnen auf Stufe 1–2, komplexe taktische Führungsentscheidungen auf Stufe 5–6.</p></div>
+    <div class="cg cg-3">
+      <div class="info-card" style="border-top:2px solid rgba(42,122,82,.6)"><div class="info-card-title"><span class="dot dot-ok"></span>Stufe 1 – Erinnern</div>
+        <p>Wissen abrufen. Verben: <em>nennen, aufzählen, aufschreiben, identifizieren</em>. Beispiel: „Nennen Sie die 4 Phasen der Erkundung."</p>
+      </div>
+      <div class="info-card" style="border-top:2px solid rgba(42,122,82,.6)"><div class="info-card-title"><span class="dot dot-ok"></span>Stufe 2 – Verstehen</div>
+        <p>Bedeutung erklären. Verben: <em>erklären, beschreiben, zusammenfassen, erläutern</em>. Beispiel: „Erklären Sie das Prinzip der GAMS-Regel."</p>
+      </div>
+      <div class="info-card" style="border-top:2px solid rgba(58,127,212,.6)"><div class="info-card-title"><span class="dot dot-b"></span>Stufe 3 – Anwenden</div>
+        <p>Wissen nutzen. Verben: <em>anwenden, durchführen, berechnen, ausführen</em>. Beispiel: „Führen Sie die Atemschutzüberwachung durch."</p>
+      </div>
+      <div class="info-card" style="border-top:2px solid rgba(58,127,212,.6)"><div class="info-card-title"><span class="dot dot-b"></span>Stufe 4 – Analysieren</div>
+        <p>Zusammenhänge erkennen. Verben: <em>analysieren, unterscheiden, gliedern, vergleichen</em>. Beispiel: „Analysieren Sie die Gefahrenschwerpunkte."</p>
+      </div>
+      <div class="info-card" style="border-top:2px solid var(--c-gold)"><div class="info-card-title"><span class="dot"></span>Stufe 5 – Bewerten</div>
+        <p>Entscheidungen begründen. Verben: <em>beurteilen, begründen, empfehlen, entscheiden</em>. Beispiel: „Beurteilen Sie die taktische Vorgehensweise."</p>
+      </div>
+      <div class="info-card" style="border-top:2px solid var(--c-red)"><div class="info-card-title"><span class="dot dot-r"></span>Stufe 6 – Erschaffen</div>
+        <p>Neues gestalten. Verben: <em>entwickeln, planen, entwerfen, konzipieren</em>. Beispiel: „Entwickeln Sie ein Ausbildungskonzept."</p>
+      </div>
+    </div>
+
+    <table class="dt" style="margin-top:1rem;">
+      <thead><tr><th>Taxonomiestufe</th><th>Beispielverben Feuerwehr</th><th>Typische Prüfungsaufgabe</th></tr></thead>
+      <tbody>
+        <tr><td>1 – Erinnern</td><td>nennen, aufzählen, identifizieren</td><td>„Nennen Sie die Führungsstufen A–D."</td></tr>
+        <tr><td>2 – Verstehen</td><td>erklären, beschreiben, erläutern</td><td>„Erklären Sie das MELDEN-Schema."</td></tr>
+        <tr><td>3 – Anwenden</td><td>durchführen, berechnen, anwenden</td><td>„Führen Sie die Lageerkundung durch."</td></tr>
+        <tr><td>4 – Analysieren</td><td>analysieren, vergleichen, gliedern</td><td>„Analysieren Sie die Einsatzsituation."</td></tr>
+        <tr><td>5 – Bewerten</td><td>beurteilen, begründen, empfehlen</td><td>„Beurteilen Sie die Abschnittsbildung."</td></tr>
+        <tr><td>6 – Erschaffen</td><td>entwickeln, planen, konzipieren</td><td>„Entwickeln Sie ein Übungskonzept."</td></tr>
+      </tbody>
+    </table>
+
+    <!-- HANDLUNGSSCHLEIFE -->
+    <h2 class="sec-h">Handlungsschleife (Didaktisches Prinzip)</h2>
+    <p>Die Handlungsschleife beschreibt den vollständigen Lernzyklus im handlungsorientierten Unterricht:</p>
+    <div class="cg">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Orientieren</div><p>Situationsanalyse, Ausgangslage klären</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Informieren</div><p>Informationen beschaffen und strukturieren</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Planen</div><p>Lösungswege entwickeln, Maßnahmen festlegen</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Entscheiden</div><p>Beste Option auswählen und begründen</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Durchführen</div><p>Maßnahme ausführen</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Kontrollieren</div><p>Ergebnis überprüfen, Soll-Ist-Vergleich</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Bewerten/Reflektieren</div><p>Auswertung, Lessons Learned, Feedback</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     SFS · 03 – RECHTSGRUNDLAGEN
+────────────────────────────────────────────────── -->
+<div id="v-sfs-rechtsgrundlagen" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">SFS Regensburg · B3 · Thema 03</p>
+    <h1 class="page-title">Recht<span class="accent">grundlagen</span></h1>
+    <p class="page-lead">Normenpyramide, Grundsätze des Verwaltungshandelns, Aufgaben der Feuerwehr und Einsatzleitung.</p>
+  </div></div>
+  <div class="pc">
+
+    <!-- Normenpyramide SVG -->
+    <h2 class="sec-h">Die Normenpyramide</h2>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="200,10 10,210 390,210" fill="rgba(10,25,47,0.6)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+        <!-- Schichten -->
+        <line x1="127" y1="86"  x2="273" y2="86"  stroke="rgba(201,168,76,.2)" stroke-width="1"/>
+        <line x1="82"  y1="127" x2="318" y2="127" stroke="rgba(201,168,76,.2)" stroke-width="1"/>
+        <line x1="51"  y1="163" x2="349" y2="163" stroke="rgba(201,168,76,.2)" stroke-width="1"/>
+        <!-- Labels -->
+        <text x="200" y="55"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#E8C97A" font-weight="700">GG</text>
+        <text x="200" y="72"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8"  fill="#8FA0B0">Bundes- &amp; Landesgesetze</text>
+        <text x="200" y="110" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#D4903A" font-weight="600">Rechtsverordnung</text>
+        <text x="200" y="122" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7.5" fill="#607080">← Gruppenführer-Ebene</text>
+        <text x="200" y="148" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#C9A84C">Satzung</text>
+        <text x="200" y="185" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#4ACD90">Verwaltungsvorschriften (FwDV)</text>
+        <text x="200" y="205" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7"  fill="#607080">niedrigste Norm – trotzdem bindend!</text>
+      </svg>
+      <p class="diagram-caption">Normenpyramide – der Gruppenführer handelt ab Rechtsverordnungsebene</p>
+    </div>
+
+    <div class="cg cg-2">
+      <div class="def-box"><div class="def-box-label">Grundsätze des Verwaltungshandelns</div><p><strong>Kein Handeln ohne das Gesetz</strong> (Vorbehalt des Gesetzes)<br><strong>Kein Handeln gegen das Gesetz</strong> (Vorrang des Gesetzes)</p></div>
+      <div class="def-box"><div class="def-box-label">Rechtssatz</div><p>Besteht aus <strong>Tatbestand</strong> („wenn …") und <strong>Rechtsfolge</strong> („dann …"). Die Rechtsfolge kennt 3 Ausprägungen: <strong>Muss-Vorschrift</strong> (nur eine Entscheidung rechtmäßig), <strong>Soll-Vorschrift</strong> (muss, wenn kein besonderer Ausnahmefall) und <strong>Kann-Vorschrift</strong> (mehrere Entscheidungen rechtmäßig = Ermessen).</p></div>
+    </div>
+
+    <!-- Einsatzleitung -->
+    <h2 class="sec-h">Einsatzleitung</h2>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Kraft Gesetz</div><p>Der Erste an der Einsatzstelle übernimmt die Einsatzleitung bis zum Eintreffen einer übergeordneten Führungskraft.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Kraft Übernahme am Einsatzort</div><p>Dienstältester oder ranghöchster Feuerwehrbeamter übernimmt die Führung.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Kraft Übertragung</div><p>Einsatzleitung wird offiziell übertragen (z. B. durch Leitstelle oder höhere Führungsebene).</p></div>
+    </div>
+
+    <!-- Aufgaben der Feuerwehr -->
+    <h2 class="sec-h">Aufgaben der Feuerwehr</h2>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Pflichtaufgaben</div>
+        <ul class="bl"><li>Abwehrender Brandschutz</li><li>Technische Hilfe (TH)</li><li>Notwendige Sicherheitswachen</li></ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Weitere Pflichtaufgaben</div>
+        <ul class="bl"><li>Katastrophenhilfe</li><li>Amtshilfe</li></ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Freiwillige Tätigkeiten</div>
+        <ul class="bl"><li>Keine Konkurrenz zu privaten Unternehmen</li><li>Öffentlicher Zweck</li><li>Einwilligung der Gemeinde</li><li>Einsatzbereitschaft nicht beeinträchtigt</li></ul>
+      </div>
+    </div>
+
+    <!-- Gefahren (rechtlich) -->
+    <h2 class="sec-h">Gefahrenbegriffe im Feuerwehrrecht</h2>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Konkrete Gefahr</div><p>Eine im Einzelfall mit hinreichender Wahrscheinlichkeit drohende Beeinträchtigung eines Schutzguts.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Anscheinsgefahr</div><p>Eine Gefahr, die bei ex-ante-Betrachtung vorlag, aber tatsächlich nicht bestand. Maßnahmen können dennoch rechtmäßig sein.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Scheingefahr (Putativgefahr)</div><p>Die handelnde Behörde nimmt nur subjektiv eine Gefahr an aufgrund falscher Sachverhaltsbeurteilung oder unzureichender Anhaltspunkte.</p></div>
+    </div>
+    <div class="hint err-h"><span>⚖️</span><p><strong>Merksatz:</strong> „Nach Empathie handeln, dann handelt man meistens rechtlich richtig." – Verhältnismäßigkeit, Amtshilfe und zeitliche Angemessenheit beachten (BayFwG Art. 4). Kostenersatz nach Art. 28.2 BayFwG bei Scheingefahr möglich.</p></div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     SFS · 04 – GERÄTE, ABC & ATEMSCHUTZ
+────────────────────────────────────────────────── -->
+<div id="v-sfs-abc" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">SFS Regensburg · B3 · Thema 04</p>
+    <h1 class="page-title">Geräte, ABC &amp; <span class="accent">Atemschutz</span></h1>
+    <p class="page-lead">Rettungsgeräte, Arbeitsgeräte, Atemschutzgrundsätze (FwDV 7), GAMS-Regel und Körperschutzformen nach FwDV 500.</p>
+  </div></div>
+  <div class="pc">
+
+    <!-- RETTUNGSGERÄTE -->
+    <h2 class="sec-h">1. Gerätegruppe: Rettungsgeräte</h2>
+    <div class="cg">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Steck- und Schiebleiter</div><p>Dienen dem Überwinden von Höhen und Tiefen (z. B. Rettung aus oberen Stockwerken). Steckleiter: Einzelelemente, schnell und flexibel einsetzbar.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Rettungsplattform</div><p>Arbeitsplattform in höhergelegenen Bereichen, z. B. bei Lkw-Unfällen.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Sprungpolster</div><p>Bei drohenden Sprüngen aus großer Höhe eingesetzt (i. d. R. bei Gebäudebränden).</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Einfache Rettung aus Höhen/Tiefen</div><p>Mittels Haltegurten, Rettungsdreieck oder Schleifkorbtrage werden Personen aus schwer zugänglichen Bereichen gerettet.</p></div>
+    </div>
+    <div class="def-box"><div class="def-box-label">Einsatzgrundsatz Rettungsgeräte</div><p>Sicherheit geht vor Schnelligkeit – <strong>Personen- und Eigenschutz beachten</strong>, Geräte korrekt sichern und aufstellen.</p></div>
+
+    <!-- ARBEITSGERÄTE -->
+    <h2 class="sec-h">2. Gerätegruppe: Arbeitsgeräte</h2>
+    <div class="cg">
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Rettungssatz (Schere/Spreizer)</div><p>Besteht aus hydraulischer Schere, Spreizer und ggf. Zylindern – dient zur Befreiung eingeklemmter Personen (z. B. nach Verkehrsunfall).</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Hydraulische Winde</div><p>Wird zum Ziehen oder Heben von Lasten verwendet.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Mehrzweckzug</div><p>Manuell betriebener Seilzug zum Heben/Ziehen von Lasten oder zur Sicherung.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Hebekissen</div><p>Mit Druckluft gefüllt, zum Anheben schwerer Lasten bei gleichzeitig sehr niedriger Aufbauhöhe.</p></div>
+    </div>
+    <div class="def-box"><div class="def-box-label">Einsatzgrundsatz Arbeitsgeräte</div><p>Standsicherheit · Unterbauen · Gerätekontrolle vor Einsatz · immer <strong>Eigenschutz und Patientenorientierung</strong> beachten.</p></div>
+
+    <!-- ATEMSCHUTZ FwDV 7 -->
+    <h2 class="sec-h">Atemschutzgrundsätze nach FwDV 7</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Grundsätze</div>
+        <ul class="bl">
+          <li>Nur ausgebildete und taugliche Einsatzkräfte unter PA</li>
+          <li><strong>Truppweise vorgehen</strong> (mind. 2 Personen)</li>
+          <li>Rückwegsicherung (z. B. Schlauchleitung)</li>
+          <li>Atemschutzüberwachung führen (Name, Flaschendruck, Einsatzzeit)</li>
+          <li>Sicherheitszeit und <strong>Mindestdruck 100 bar Rückzug</strong> beachten</li>
+          <li>Notfallmanagement kennen (Mayday-Meldung, Sicherheitstrupp)</li>
+        </ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Atemschutzüberwachung</div>
+        <ul class="bl">
+          <li>Name des Atemschutzträgers</li>
+          <li>Einsatzzeitpunkt (Beginn)</li>
+          <li>Flaschenfülldruck beim Eingang</li>
+          <li>Berechnung: Einsatzzeit aus Flaschendruck</li>
+          <li>Spätester Rückzugszeitpunkt berechnen</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- GAMS -->
+    <h2 class="sec-h">GAMS-Regel (FwDV 500)</h2>
+    <div class="step-stack">
+      <div class="step-item"><div class="step-letter">G</div><div><div class="step-title">Gefahr erkennen</div><div class="step-desc">Art, Ausmaß und Betroffenheit einschätzen. Gefahrgutzeichen, Kennzeichnungen, Aggregatzustand beachten.</div></div></div>
+      <div class="step-item"><div class="step-letter">A</div><div><div class="step-title">Absperren</div><div class="step-desc">Mindestabstand einhalten. Absperrbereich: 25 mSv/h (Abstandsregel). Windrichtung beachten.</div></div></div>
+      <div class="step-item"><div class="step-letter">M</div><div><div class="step-title">Menschenrettung durchführen (unter Eigenschutz!)</div><div class="step-desc">Rettung unter geeignetem Körperschutz. Kontaminationsverschleppung verhindern. Inkorporation ausschließen.</div></div></div>
+      <div class="step-item"><div class="step-letter">S</div><div><div class="step-title">Spezialkräfte nachfordern</div><div class="step-desc">ABC-Zug, CBRN-Einheiten, Feuerwehr-Rüstwagen, RettD, Polizei.</div></div></div>
+    </div>
+
+    <!-- KÖRPERSCHUTZFORMEN -->
+    <h2 class="sec-h">Körperschutzformen &amp; ABC-Gefährdungen</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>ABC-Gefährdungen</div>
+        <ul class="bl">
+          <li><strong>A (Atomar):</strong> Radioaktive Stoffe, ionisierende Strahlung</li>
+          <li><strong>B (Biologisch):</strong> Krankheitserreger, Viren, Bakterien</li>
+          <li><strong>C (Chemisch):</strong> Gase, Flüssigkeiten, Feststoffe mit toxischer Wirkung</li>
+        </ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>4 Körperschutzformen</div>
+        <ul class="bl">
+          <li><strong>Form 1:</strong> Feuerwehrschutzkleidung mit PA</li>
+          <li><strong>Form 2:</strong> Zusätzliche flüssigkeitsdichte Kleidung (z. B. CSA leicht)</li>
+          <li><strong>Form 3:</strong> Vollschutz mit Pressluftatmer innenliegend (CSA)</li>
+          <li><strong>Form 4:</strong> Strahlenschutzanzug (bei radioaktiver Kontamination)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- DEKON-STUFEN -->
+    <h2 class="sec-h">Stufenkonzept Dekontamination (FwDV 500)</h2>
+    <div class="cg cg-3">
+      <div class="info-card" style="border-top:2px solid var(--c-ok)"><div class="info-card-title"><span class="dot dot-ok"></span>Stufe 1 – Sofort-Dekon</div><p>Sofortmaßnahme, z. B. mit Wasser aus Schnellangriff. Grundprinzip: Energie/Kontamination so gering wie möglich halten.</p></div>
+      <div class="info-card" style="border-top:2px solid var(--c-gold)"><div class="info-card-title"><span class="dot dot-w"></span>Stufe 2 – Notdekon</div><p>Erweiterte Notdekontamination mit spezieller Ausrüstung, z. B. Dekon-Platz. Kontaminationsverschleppung verhindern.</p></div>
+      <div class="info-card" style="border-top:2px solid var(--c-red)"><div class="info-card-title"><span class="dot dot-r"></span>Stufe 3 – Vollständige Dekon</div><p>Vollständige Dekontamination durch Spezialkräfte (z. B. Dekon-V). Inkorporation ausschließen.</p></div>
+    </div>
+
+    <!-- REFERENZWERTE -->
+    <h2 class="sec-h">A-Referenzwerte (Strahlenschutz)</h2>
+    <table class="dt">
+      <thead><tr><th>Grenzwert</th><th>Dosis</th><th>Zweck</th></tr></thead>
+      <tbody>
+        <tr><td>Umweltschutz</td><td>20 mSv / Einsatz × Jahr</td><td>Einsatz zum Schutz der Umwelt</td></tr>
+        <tr><td>Menschenleben</td><td>100 mSv / Einsatz × Jahr</td><td>Einsatz zum Schutz von Menschenleben</td></tr>
+        <tr><td>Rettung von Menschen</td><td>250 mSv / Einsatz × Jahr</td><td>Rettung von Menschenleben</td></tr>
+        <tr><td>Frauen (gebärfähiges Alter)</td><td>2 mSv / Monat</td><td>Besonderen Schutz beachten</td></tr>
+        <tr><td><strong>Absperrbereich</strong></td><td><strong>25 mSv/h</strong></td><td>Allgemeiner Abstandsbereich</td></tr>
+      </tbody>
+    </table>
+    <div class="hint"><span>📌</span><p><strong>Funk-Rückmeldung an Einheitsführer</strong> – nach dem 5-W-Schema: Wer · Was · Wo · Wann · Wie. Beispiel: „Florian Musterstadt 1/44, Angriffstrupp – starke Rauchentwicklung im Treppenraum, keine Personen im 1. OG, Rückzug eingeleitet."</p></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     HLFS KASSEL – ÜBERSICHT
+     Hessische Landesfeuerwehrschule
+============================================================ -->
+<div id="v-hlfs" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">Hessische Landesfeuerwehrschule</p>
+    <h1 class="page-title">HLFS <span class="accent">Kassel</span></h1>
+    <p class="page-lead">Fachmodule für Führungskräfte – Führungsvorgang, GABC, Tunnel, Vorbeugender Brandschutz, MANV, Zug-/Verbandsführer und Bildung eines Stabs.</p>
+  </div></div>
+  <div class="pc">
+    <div class="topic-grid">
+      <div class="topic-card" onclick="NAV.go('v-hlfs-fuehrungsvorgang','Führungsvorgang')"><div class="tc-num">01</div><div class="tc-name">Führungsvorgang</div><div class="tc-sub">Kreislauf Lage→Planung→Befehl, 8 Fragen, MELDEN, GAMS, Erkundungsphasen</div></div>
+      <div class="topic-card" onclick="NAV.go('v-hlfs-gabc','GABC Führen')"><div class="tc-num">02</div><div class="tc-name">GABC Führen</div><div class="tc-sub">FwDV 500, GAMS, EIMER-Regel, Dekon-Stufen, Absperrgrenzen, Spezialkräfte</div></div>
+      <div class="topic-card" onclick="NAV.go('v-hlfs-tunnel','Tunnelseminar')"><div class="tc-num">03</div><div class="tc-name">Tunnelseminar</div><div class="tc-sub">Brandbekämpfung in unterirdischen Verkehrsanlagen, Ventilation, Suchen &amp; Retten</div></div>
+      <div class="topic-card" onclick="NAV.go('v-hlfs-vb','Vorbeugender Brandschutz')"><div class="tc-num">04</div><div class="tc-name">Vorbeugender Brandschutz</div><div class="tc-sub">Baulicher, anlagentechnischer und organisatorischer Brandschutz</div></div>
+      <div class="topic-card" onclick="NAV.go('v-hlfs-manv','MANV &amp; OLRD')"><div class="tc-num">05</div><div class="tc-name">MANV &amp; OLRD</div><div class="tc-sub">Massenanfall von Verletzten, Schnell-Sichtung, Zusammenarbeit Rettungsdienst</div></div>
+      <div class="topic-card" onclick="NAV.go('v-hlfs-zugfuehrer','Zug- &amp; Verbandsführer')"><div class="tc-num">06</div><div class="tc-name">Zug- &amp; Verbandsführer</div><div class="tc-sub">Führung größerer Einheiten, Abschnittsführung, taktische Zeichen, TETRA-Funk</div></div>
+      <div class="topic-card" onclick="NAV.go('v-hlfs-stab','Bildung eines Stabs')"><div class="tc-num">07</div><div class="tc-name">Bildung eines Stabs</div><div class="tc-sub">S1–S6 Sachgebiete, TEL-Struktur, Verwaltungsstab, Führungsstufen A–D</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     HLFS · NEU – FÜHRUNGSVORGANG
+────────────────────────────────────────────────── -->
+<div id="v-hlfs-fuehrungsvorgang" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">HLFS Kassel · Thema 01</p>
+    <h1 class="page-title">Der <span class="accent">Führungsvorgang</span></h1>
+    <p class="page-lead">Der Führungsvorgang nach FwDV 100 – ein kontinuierlicher Kreislauf aus Lagefeststellung, Planung und Befehlsgebung. Grundlage jeder taktischen Entscheidung.</p>
+  </div></div>
+  <div class="pc">
+
+    <div class="def-box"><div class="def-box-label">Grundprinzip</div><p>Der Führungsvorgang ist <strong>kein linearer Prozess</strong>, sondern ein sich ständig wiederholender Kreislauf. Bei neuen Informationen wird der Kreislauf neu gestartet. Basis: FwDV 100 – „Führung und Leitung im Feuerwehreinsatz".</p></div>
+
+    <!-- FÜHRUNGSKREISLAUF SVG -->
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg" aria-label="Führungskreislauf FwDV 100">
+        <defs>
+          <marker id="fv-arr" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0,9 3.5,0 7" fill="#C9A84C"/>
+          </marker>
+          <filter id="fv-glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+
+        <!-- Zentrum: Lage/Auftrag -->
+        <rect x="220" y="130" width="160" height="60" rx="10" fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+        <text x="300" y="155" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#E8C97A" font-weight="700">Lage / Auftrag</text>
+        <text x="300" y="173" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#607080">Kontrolle / Überwachung</text>
+
+        <!-- LAGEFESTSTELLUNG (oben) -->
+        <ellipse cx="300" cy="55" rx="90" ry="38" fill="rgba(165,0,0,0.2)" stroke="#A50000" stroke-width="1.8" filter="url(#fv-glow)"/>
+        <text x="300" y="50" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="12" fill="#E07070" font-weight="700">LAGE-</text>
+        <text x="300" y="65" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="12" fill="#E07070" font-weight="700">FESTSTELLUNG</text>
+
+        <!-- PLANUNG (links-unten) -->
+        <ellipse cx="115" cy="225" rx="90" ry="38" fill="rgba(176,115,32,0.2)" stroke="#B07320" stroke-width="1.8"/>
+        <text x="115" y="220" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="12" fill="#D4903A" font-weight="700">PLANUNG</text>
+        <text x="115" y="237" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#8FA0B0">Entschluss/Beurteilung</text>
+
+        <!-- BEFEHLSGEBUNG (rechts-unten) -->
+        <ellipse cx="485" cy="225" rx="90" ry="38" fill="rgba(42,122,82,0.2)" stroke="#2A7A52" stroke-width="1.8"/>
+        <text x="485" y="220" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="12" fill="#4ACD90" font-weight="700">BEFEHL</text>
+        <text x="485" y="237" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#8FA0B0">Befehl / Lagemeldung</text>
+
+        <!-- Pfeil: Lage → Befehl (oben-rechts) -->
+        <path d="M380 72 Q460 72 475 188" fill="none" stroke="#C9A84C" stroke-width="2" marker-end="url(#fv-arr)"/>
+        <!-- Pfeil: Befehl → Planung (rechts → links) -->
+        <path d="M395 243 Q300 290 205 243" fill="none" stroke="#C9A84C" stroke-width="2" marker-end="url(#fv-arr)"/>
+        <!-- Pfeil: Planung → Lage (links → oben) -->
+        <path d="M125 188 Q125 72 215 60" fill="none" stroke="#C9A84C" stroke-width="2" marker-end="url(#fv-arr)"/>
+
+        <!-- Beschriftungen an Pfeilen -->
+        <text x="455" y="138" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080" text-anchor="middle">Erkundung</text>
+        <text x="300" y="308" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080" text-anchor="middle">Befehlsgebung · Lagemeldung</text>
+        <text x="147" y="138" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080" text-anchor="middle">Neu-Bewertung</text>
+      </svg>
+      <p class="diagram-caption">Führungskreislauf nach FwDV 100 – Hessische Landesfeuerwehrschule Kassel</p>
+    </div>
+
+    <!-- 1. LAGEFESTSTELLUNG / ERKUNDUNG -->
+    <h2 class="sec-h">1. Lagefeststellung – Erkundung</h2>
+    <div class="def-box"><div class="def-box-label">Was erkunde ich?</div><p>Die Erkundung gliedert sich in <strong>Gefahrenlage</strong> (Schaden, Schadenobjekt, Schadenumfang) und <strong>Gefahrenabwehr</strong> (Führung, Einsatzkräfte, Einsatzmittel). Beachte immer: Ort – Zeit – Wetter.</p></div>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Gefahrenlage</div>
+        <ul class="bl">
+          <li><strong>Schaden:</strong> Schadenart, Schadenursache</li>
+          <li><strong>Schadenobjekt:</strong> Art, Größe, Material, Konstruktion, Umgebung</li>
+          <li><strong>Schadenumfang:</strong> Betroffene (Menschen, Tiere, Umwelt, Sachwerte)</li>
+        </ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Gefahrenabwehr</div>
+        <ul class="bl">
+          <li><strong>Führung:</strong> Führungsorganisation, Führungsmittel</li>
+          <li><strong>Einsatzkräfte:</strong> Stärke, Verfügbarkeit, Leistungsvermögen, Gliederung</li>
+          <li><strong>Einsatzmittel:</strong> Fahrzeuge, Geräte, Löschmittel, Verbrauchsmaterial</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec-h">4 Phasen der Erkundung</h2>
+    <div class="step-stack">
+      <div class="step-item"><div class="step-letter">1</div><div><div class="step-title">Frontalansicht des Schadenobjektes</div><div class="step-desc">Eintreffmeldung (ggf. Nachalarmierung). Erste Lagebeurteilung aus sicherer Distanz. Rauchfarbe, -menge und -austrittsort beurteilen.</div></div></div>
+      <div class="step-item"><div class="step-letter">2</div><div><div class="step-title">Befragung anwesender Personen</div><div class="step-desc">Zugänge/Schlüssel? Personen im Objekt? Wie viele? Wo? Wie komme ich dorthin? → Abfrage weiterer Informationen zur Gefahrenbeurteilung.</div></div></div>
+      <div class="step-item"><div class="step-letter">3</div><div><div class="step-title">Innenansicht / Zugänge</div><div class="step-desc">Blick in Eingangsbereich, Treppenraum, Fahrzeuginnere. Erkundung bis zur Rauchgrenze. Absicherung beachten.</div></div></div>
+      <div class="step-item"><div class="step-letter">4</div><div><div class="step-title">Gesamtansicht</div><div class="step-desc">Erkundung um das gesamte Schadenobjekt. Auf weitere Personen, Zugänge und Gefahren achten! 6 Seiten der Einsatzstelle im Blick.</div></div></div>
+    </div>
+
+    <!-- SONDERREGELN -->
+    <div class="cg cg-2" style="margin-top:1rem;">
+      <div class="info-card" style="border-color:rgba(58,127,212,.3)">
+        <div class="info-card-title"><span class="dot dot-b"></span>Bei TH Verkehrsunfall – AUTO-Regel</div>
+        <ul class="bl">
+          <li><strong>A</strong> – Auslaufende Betriebsstoffe</li>
+          <li><strong>U</strong> – Unterboden erkunden</li>
+          <li><strong>T</strong> – Tankdeckel öffnen</li>
+          <li><strong>O</strong> – Oberflächen absuchen (Identifikation Fahrzeugantrieb)</li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-color:rgba(176,115,32,.3)">
+        <div class="info-card-title"><span class="dot dot-w"></span>Bei GABC-Einsätzen – EIMER-Regel</div>
+        <ul class="bl">
+          <li><strong>E</strong> – Ereignis (Warum/Was ist passiert?)</li>
+          <li><strong>I</strong> – Identifikation (Welcher Stoff?)</li>
+          <li><strong>M</strong> – Menge (Wieviel tritt aus?)</li>
+          <li><strong>E</strong> – Expansion (Wohin tritt der Stoff aus?)</li>
+          <li><strong>R</strong> – Richtigkeit (Wie plausibel sind die Ergebnisse?)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2. PLANUNG / 8 FRAGEN -->
+    <hr class="sec-div"/>
+    <h2 class="sec-h">2. Planung – Die 8 Fragen der Beurteilung</h2>
+    <div class="def-box"><div class="def-box-label">Gefahrenmatrix (4A – C – 4E)</div><p>Erkannte Gefahren werden in einer Matrix dargestellt: <strong>Gefahr durch 4A-C-4E</strong> → <strong>Gefahr für wen oder was</strong> (Menschen, Tiere, Umwelt, Sachwerte). Die 4A sind: Atemgifte, Angstreaktion, Ausbreitung, Atomare Stoffe. Die 4E: Einsturz/Absturz, Elektrizität, Erkrankung/Verletzung, Explosion. C = Chemische Stoffe.</p></div>
+
+    <div class="cg cg-2" style="margin-top:.75rem;">
+      <div class="info-card" style="border-color:rgba(165,0,0,.3)"><div class="info-card-title"><span class="dot dot-r"></span>Fragen 1–4 (Gefahr &amp; Schutz)</div>
+        <ul class="bl">
+          <li><strong>①</strong> Welche Gefahren für Menschen, Tiere, Umwelt, Sachwerte erkannt?</li>
+          <li><strong>②</strong> Welche Gefahr muss <em>zuerst</em> und an welcher Stelle bekämpft werden?</li>
+          <li><strong>③</strong> Welche Möglichkeiten bestehen? (taktisch → technisch)</li>
+          <li><strong>④</strong> Vor welchen Gefahren müssen sich die EK schützen?</li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-color:rgba(42,122,82,.3)"><div class="info-card-title"><span class="dot dot-ok"></span>Fragen 5–8 (Entschluss &amp; Ressourcen)</div>
+        <ul class="bl">
+          <li><strong>⑤</strong> Welche Vor- und Nachteile haben die verschiedenen Möglichkeiten?</li>
+          <li><strong>⑥</strong> Welche Möglichkeit ist die beste? (Kriterien: Sicherheit, Schnelligkeit, Erfolgsaussichten, Aufwand)</li>
+          <li><strong>⑦</strong> Welche Gefahr muss als nächstes bekämpft werden?</li>
+          <li><strong>⑧</strong> Welche freien EK und EM stehen zur Verfügung? → ggf. nachalarmieren</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="cg cg-2" style="margin-top:.75rem;">
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Taktische Möglichkeiten</div>
+        <ul class="bl">
+          <li><strong>Verteidigung</strong> – sichern, schützen, begrenzen</li>
+          <li><strong>Rettung / in Sicherheit bringen</strong> – räumen, evakuieren, bergen</li>
+          <li><strong>Angriff</strong> – löschen, ausschalten, beseitigen, vorgehen</li>
+          <li><strong>Rückzug</strong> – aufgeben, fliehen, opfern, abbrechen</li>
+        </ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Entschluss – Was lege ich fest?</div>
+        <ul class="bl">
+          <li>→ <strong>Ziele</strong> (Was will ich erreichen?)</li>
+          <li>→ <strong>Einsatzschwerpunkte</strong> (Wo?)</li>
+          <li>→ <strong>Einteilung der Kräfte</strong> (Wer macht was?)</li>
+          <li>→ <strong>Bewegungsabläufe</strong> (Abhängigkeiten?)</li>
+          <li>→ <strong>Ordnung des Raumes</strong> (Fahrzeugaufstellung, Bereitstellung?)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 3. BEFEHLSGEBUNG -->
+    <hr class="sec-div"/>
+    <h2 class="sec-h">3. Befehlsgebung</h2>
+    <div class="cg cg-2">
+      <div class="info-card" style="border-top:2px solid var(--c-gold)">
+        <div class="info-card-title"><span class="dot"></span>Befehl OHNE Bereitstellung</div>
+        <ul class="bl">
+          <li>Kurze Lageschilderung</li>
+          <li>Wasserentnahmestelle</li>
+          <li>Lage des Verteilers</li>
+          <li><strong>Einheit</strong></li>
+          <li><strong>Auftrag</strong></li>
+          <li><strong>Mittel</strong></li>
+          <li><strong>Ziel</strong></li>
+          <li><strong>Weg</strong></li>
+          <li>→ <strong style="color:var(--c-gold)">VOR!</strong></li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:2px solid var(--c-slate)">
+        <div class="info-card-title"><span class="dot dot-w"></span>Befehl MIT Bereitstellung</div>
+        <ul class="bl">
+          <li>(Kurze Lageschilderung)</li>
+          <li>Wasserentnahmestelle</li>
+          <li>Lage des Verteilers</li>
+          <li style="opacity:.5">— Einheit/Auftrag/Mittel/Ziel/Weg entfallen —</li>
+          <li>→ <strong style="color:#8FA0B0">ZUM EINSATZ FERTIG!</strong></li>
+          <li style="font-size:.75rem;color:var(--c-slate)">Übergabe an Einsatzstelle nach Zuständigkeit</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec-h">Lagemeldung (MELDEN-Schema)</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>MELDEN</div>
+        <ul class="bl">
+          <li><strong>M</strong> – Meldender</li>
+          <li><strong>E</strong> – Einsatzstelle</li>
+          <li><strong>L</strong> – Lage</li>
+          <li><strong>D</strong> – Durchgeführte Maßnahmen</li>
+          <li><strong>E</strong> – Einheiten im Einsatz</li>
+          <li><strong>N</strong> – Nachforderungen</li>
+        </ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Bei GABC-Einsätzen: GAMS-Regel</div>
+        <ul class="bl">
+          <li><strong>G</strong> – Gefahr erkennen</li>
+          <li><strong>A</strong> – Absperren</li>
+          <li><strong>M</strong> – Menschenrettung durchführen (unter Eigenschutz!)</li>
+          <li><strong>S</strong> – Spezialkräfte alarmieren</li>
+        </ul>
+        <div style="margin-top:.5rem;font-size:.75rem;color:var(--c-slate-l)">Ergänzende Maßnahmen: Verhaltensanweisungen · Löschangriff vorbereiten (3-fach Brandschutz) · Gefahrstoffinfo einholen · Behörden benachrichtigen · Löschwasserrückhaltung</div>
+      </div>
+    </div>
+
+    <!-- 4. KONTROLLE -->
+    <hr class="sec-div"/>
+    <h2 class="sec-h">4. Lagefeststellung – Kontrolle (neuer Kreislauf)</h2>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Kontrolle der Maßnahmen</div>
+        <ul class="bl">
+          <li>Führen die Maßnahmen zum Erfolg?</li>
+          <li>Kann ich noch mehr erkunden?</li>
+          <li>Sind neue Gefahren hinzugekommen?</li>
+        </ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Wenn neue Lage → Neustart</div>
+        <p>Bei veränderten Bedingungen startet der Führungskreislauf erneut: neue Lagefeststellung → neue Planung → neuer Befehl.</p>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>9. Abschließende Maßnahmen</div>
+        <ul class="bl">
+          <li>Übergabe an Eigentümer/Betreiber, Behörden, Polizei, Fachfirmen</li>
+          <li>Herstellen der Einsatzbereitschaft</li>
+          <li>Einsatznachbesprechung</li>
+          <li>PSNV (Psychosoziale Notfallversorgung)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="hint"><span>📌</span><p><strong>Merksatz Führungsvorgang:</strong> Der Kreislauf läuft kontinuierlich. <em>Lagefeststellung → Planung/Entschluss → Befehlsgebung</em> – und nach jeder Rückmeldung neu. Zeit beginnt erst bei „Lage auf Sicht"!</p></div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     HLFS · NEU – BILDUNG EINES STABS
+────────────────────────────────────────────────── -->
+<div id="v-hlfs-stab" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">HLFS Kassel · Thema 07</p>
+    <h1 class="page-title">Bildung eines <span class="accent">Stabs</span></h1>
+    <p class="page-lead">Führungsstab, Verwaltungsstab und Technische Einsatzleitung – Struktur, S-Funktionen und Zusammenwirken der Komponenten nach FwDV 100.</p>
+  </div></div>
+  <div class="pc">
+
+    <!-- 3 KOMPONENTEN -->
+    <h2 class="sec-h">Die drei Führungskomponenten</h2>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 580 180" xmlns="http://www.w3.org/2000/svg">
+        <!-- Übergeordnet: politisch -->
+        <rect x="190" y="8" width="200" height="44" rx="8" fill="rgba(165,0,0,0.2)" stroke="#A50000" stroke-width="1.5"/>
+        <text x="290" y="27" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E07070" font-weight="700">Politisch gesamt-</text>
+        <text x="290" y="42" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E07070" font-weight="700">verantwortliche Komponente</text>
+        <!-- Pfeile runter -->
+        <line x1="220" y1="52" x2="130" y2="100" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="360" y1="52" x2="450" y2="100" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <!-- Verbindungspfeil -->
+        <line x1="230" y1="130" x2="340" y2="130" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <!-- Admin-org -->
+        <rect x="20" y="100" width="210" height="50" rx="8" fill="rgba(58,127,212,0.15)" stroke="#3A7FD4" stroke-width="1.5"/>
+        <text x="125" y="121" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#6BAAD4" font-weight="700">Administrativ-organisa-</text>
+        <text x="125" y="137" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#6BAAD4" font-weight="700">torische Komponente</text>
+        <text x="125" y="161" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080">Verwaltungsstab (VwS)</text>
+        <!-- Operativ-taktisch -->
+        <rect x="350" y="100" width="210" height="50" rx="8" fill="rgba(42,122,82,0.15)" stroke="#2A7A52" stroke-width="1.5"/>
+        <text x="455" y="121" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#4ACD90" font-weight="700">Operativ-taktische</text>
+        <text x="455" y="137" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#4ACD90" font-weight="700">Komponente</text>
+        <text x="455" y="161" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080">Führungsstab / TEL</text>
+      </svg>
+      <p class="diagram-caption">Führungskomponenten nach FwDV 100 – Großschadenslage</p>
+    </div>
+
+    <!-- FÜHRUNGSSTUFEN -->
+    <h2 class="sec-h">Führungsstufen A–D (FwDV 100)</h2>
+    <table class="dt">
+      <thead><tr><th>Stufe</th><th>Führungseinheit</th><th>Fahrzeug / Mittel</th><th>Personen</th><th>Typische Lage</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge b-ok">A</span></td><td>Führen ohne FüEinheit (Gruppenführer)</td><td>Leitstelle</td><td>Gruppenführer</td><td>Kleineinsatz ≤ 2 Gruppen</td></tr>
+        <tr><td><span class="badge b-ok">B</span></td><td>Führungstrupp (ELW 1)</td><td>ELW 1</td><td>1 FüAssi, 2 FüHiPers</td><td>Zug/Verband an 1 ESt.</td></tr>
+        <tr><td><span class="badge b-w">C</span></td><td>Führungsstaffel (ELW 2)</td><td>Ortsfeste BSt.</td><td>3 FüAssi, 3 FüHiPers</td><td>Verband, mehrere Abschnitte</td></tr>
+        <tr><td><span class="badge b-err">D</span></td><td>Führungsstab</td><td>Ortsfester Stabsraum</td><td>S1–S6, Fachberater</td><td>Großschadenslage, Katastrophe</td></tr>
+      </tbody>
+    </table>
+
+    <!-- S-FUNKTIONEN -->
+    <hr class="sec-div"/>
+    <h2 class="sec-h">Die Sachgebiete S1 bis S6 (Führungsstab)</h2>
+    <div class="hint blue-h" style="margin-bottom:1.25rem;"><span>💡</span><p><strong>Hinweis:</strong> S4 kann mit S1, S2 mit S3 und S5 zu S2 bzw. S6 zu S3 zusammengefasst werden. S1, S4 und S6 können durch die Leiterin/den Leiter des Stabs (LtS) übernommen werden.</p></div>
+
+    <div class="cg cg-2">
+      <div class="info-card" style="border-top:3px solid var(--c-red)">
+        <div class="info-card-title"><span class="dot dot-r"></span>S1 – Personal / Innerer Dienst</div>
+        <ul class="bl">
+          <li>Alarmieren von Einsatzkräften, Hilfskräften und Behörden</li>
+          <li>Einrichten von Lotsenstellen für ortsunkundige Kräfte</li>
+          <li>Führen von Kräfteübersichten, Bereitstellen von Reserven</li>
+          <li>Einrichten und Sichern der Führungsräume, Ausstattung</li>
+          <li>Festlegen und Sicherstellen des Geschäftsablaufs</li>
+          <li><em>Auskunft: Wie viele EK seit wann und wo im Einsatz?</em></li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:3px solid var(--c-gold)">
+        <div class="info-card-title"><span class="dot"></span>S2 – Lage</div>
+        <ul class="bl">
+          <li>Lagefeststellung: Erkunder einsetzen, Lagemeldungen anfordern</li>
+          <li>Lagekarte führen, Einsatzübersichten erstellen</li>
+          <li>Lagevorträge vorbereiten, ETB (Einsatztagebuch) führen</li>
+          <li>Melden an übergeordnete Stellen, Bevölkerung unterrichten</li>
+          <li>Abschlussbericht erstellen</li>
+          <li><em>Lagekarte: Schadensgebiet, EK/EM, Abschnitte, Bereitstellungsräume</em></li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:3px solid #3A7FD4">
+        <div class="info-card-title"><span class="dot dot-b"></span>S3 – Einsatz (Kernfunktion!)</div>
+        <ul class="bl">
+          <li>Beurteilung der Lage, Entschluss über Einsatzdurchführung</li>
+          <li>Festlegen von Einsatzschwerpunkten, EAL-Einsatz</li>
+          <li>Ordnung des Schadengebiets (Bereitstellungsräume, Absperrung)</li>
+          <li>An-/Abmarschwege festlegen und freihalten</li>
+          <li>Befehle erteilen, Einsatzdurchführung überwachen</li>
+          <li>Lagebesprechungen durchführen</li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:3px solid var(--c-ok)">
+        <div class="info-card-title"><span class="dot dot-ok"></span>S4 – Versorgung (Logistik)</div>
+        <ul class="bl">
+          <li>5 W der Logistik: Was · Wo · Wieviel · Wann · Woher</li>
+          <li>Anfordern weiterer Einsatzmittel, Hilfsmittel</li>
+          <li>Wasserversorgung, Löschmittel, Atemschutz, Kraftstoffe</li>
+          <li>Verpflegung bereitstellen und zuführen</li>
+          <li>Materialerhaltung sicherstellen</li>
+          <li>Unterkünfte für Einsatzkräfte bereitstellen</li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:3px solid #8B5CF6">
+        <div class="info-card-title"><span class="dot" style="background:#8B5CF6"></span>S5 – Presse &amp; Medienarbeit</div>
+        <ul class="bl">
+          <li>Informationen sammeln, aufbereiten, Presseinformationen erstellen</li>
+          <li>Presse- und Medienvertreter führen und unterbringen</li>
+          <li>Pressekonferenzen vorbereiten und durchführen</li>
+          <li>Warn- und Suchhinweise für Bevölkerung veranlassen</li>
+          <li>Informationstelefone einrichten und betreuen</li>
+          <li>Koordination mit Pressesprechern anderer Behörden (bes. Polizei)</li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:3px solid #0D8080">
+        <div class="info-card-title"><span class="dot" style="background:#0D8080"></span>S6 – IuK (Information &amp; Kommunikation)</div>
+        <ul class="bl">
+          <li>Ist-Zustand Führungs- und Fernmeldeorganisation feststellen</li>
+          <li>Kanäle aufteilen, Sonderkanäle anfordern</li>
+          <li>Kommunikationskonzept inkl. Fernmeldeskizze erarbeiten</li>
+          <li>Gewährleisten der Kommunikationssicherheit (Redundanz)</li>
+          <li>Befehle, Meldungen und Informationen übermitteln</li>
+          <li>Bürokommunikation der Befehlsstellen ausstatten</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- TEL / VERWALTUNGSSTAB -->
+    <hr class="sec-div"/>
+    <h2 class="sec-h">Technische Einsatzleitung (TEL)</h2>
+    <div class="def-box"><div class="def-box-label">Operativ-taktische Komponente</div><p>Die TEL ist die operativ-taktische Führungseinheit. Sie gliedert sich nach den Sachgebieten S1–S6. Aufgabe: Koordination aller technisch-taktischen Maßnahmen. <strong>Leiter des Stabs ≠ Einsatzleiter!</strong> Der Einsatzleiter führt die Kräfte an der Einsatzstelle.</p></div>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Operativ-taktische Maßnahmen</div>
+        <ul class="bl">
+          <li>Ordnung des Raumes (Abschnittsbildung)</li>
+          <li>Ordnung der Kräfte (Bereitstellen von EK/Reserven)</li>
+          <li>Ordnung der Zeit (Reihenfolge, Ablösung)</li>
+          <li>Ordnung der Information (Kommunikationsstruktur)</li>
+        </ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Verwaltungsstab (VwS)</div>
+        <ul class="bl">
+          <li>Administrativ-organisatorische Komponente</li>
+          <li>KGS Innerer Dienst + KGS Lage &amp; Dokumentation</li>
+          <li>BuMA (Bevölkerungsinformation und Medienarbeit)</li>
+          <li>Ständige Mitglieder (SMS): Sicherheit &amp; Ordnung, Gesundheit, Polizei, Umwelt</li>
+          <li>Ereignisspezifische Mitglieder (EMS): nach Lage</li>
+        </ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Abschnittsstruktur (ab B-Dienst)</div>
+        <ul class="bl">
+          <li>Abschnitte: <strong>Struktur immer zuerst festlegen!</strong></li>
+          <li>Welche Abschnitte? Aufgabe? Wer führt? Welche EK dort?</li>
+          <li>Funkgruppen erstellen und Kanal bestimmen</li>
+          <li>30 Min. im Voraus denken (Gliederung ändert sich!)</li>
+          <li>LNA leitet keinen Abschnitt → das macht der OrgL</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="hint"><span>📌</span><p><strong>Wichtig:</strong> Der Führungsstab formell übernehmen: <em>„Ich übernehme die Einsatzstelle."</em> Bereitstellungsraum braucht Führung (ELW). Sprachnotiz von jedem Telefonat! Haltepunkt ≠ Bereitstellungsraum.</p></div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     HLFS · 02 – GABC FÜHREN
+────────────────────────────────────────────────── -->
+<div id="v-hlfs-gabc" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">HLFS Kassel · Thema 02</p>
+    <h1 class="page-title">GABC <span class="accent">Führen</span></h1>
+    <p class="page-lead">Taktische Führung beim Gefahrstoffeinsatz nach FwDV 500. GAMS-Regel, Dekon-Konzept und Messstrategien für Führungskräfte.</p>
+  </div></div>
+  <div class="pc">
+    <div class="def-box"><div class="def-box-label">Führungsaufgabe beim GABC-Einsatz</div><p>Die Führungskraft beim GABC-Einsatz muss die <strong>GAMS-Regel</strong> anwenden, die Gefahrengruppe bestimmen, das Dekon-Stufenkonzept anordnen und die richtigen Messstrategien beauftragen. Dabei gilt: <strong>Eigenschutz vor Gefahrenabwehr.</strong></p></div>
+
+    <h2 class="sec-h">Gefahrengruppen (nach FwDV 500)</h2>
+    <div class="cg cg-3">
+      <div class="info-card" style="border-top:2px solid var(--c-ok)"><div class="info-card-title"><span class="dot dot-ok"></span>Gefahrengruppe I</div><p>Ohne Sonderausrüstung, ggf. PA. Typisch: bekannte, geringe Gefährdung. Dekon: Stufe 1.</p></div>
+      <div class="info-card" style="border-top:2px solid var(--c-gold)"><div class="info-card-title"><span class="dot dot-w"></span>Gefahrengruppe II</div><p>Mit Sonderausrüstung mit Dekon. Erhöhte Gefährdung, unbekannte Stoffe, Kontaminationsgefahr. Dekon: Stufe 2.</p></div>
+      <div class="info-card" style="border-top:2px solid var(--c-red)"><div class="info-card-title"><span class="dot dot-r"></span>Gefahrengruppe III</div><p>Wie II + sachkundige Person vor Ort. Höchste Gefährdung. Transport: wie II. Anschlag: wie III. Dekon: Stufe 2–3.</p></div>
+    </div>
+
+    <h2 class="sec-h">Grundprinzipien beim GABC-Einsatz</h2>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Einwirkung minimieren</div><p>Einwirkung von Energie auf das Schutzgut ist so gering wie möglich zu halten. Mechanische Energie verhindern.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Kontamination verhindern</div><p>Kontamination ist zu vermeiden und Kontaminationsverschleppung ist zu verhindern!</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Inkorporation ausschließen</div><p>Aufnahme von Schadstoffen über Haut, Atemwege oder Mund ist vollständig auszuschließen.</p></div>
+    </div>
+
+    <!-- EIMER-REGEL -->
+    <h2 class="sec-h">EIMER-Regel (Erkundung GABC-Einsatz)</h2>
+    <div class="step-stack">
+      <div class="step-item"><div class="step-letter">E</div><div><div class="step-title">Ereignis – Was/Warum ist passiert?</div><div class="step-desc">Unfallhergang rekonstruieren. Zeugen befragen. Hergang dokumentieren. Gibt es weitere Gefahren? Wurden schon Maßnahmen ergriffen?</div></div></div>
+      <div class="step-item"><div class="step-letter">I</div><div><div class="step-title">Identifikation – Welcher Stoff?</div><div class="step-desc">Gefahrgutzettel, Gefahrenzettel, Transportdokumente, UN-Nummer, TUIS, ERICards. Aggregatzustand? Gasförmig, flüssig, fest?</div></div></div>
+      <div class="step-item"><div class="step-letter">M</div><div><div class="step-title">Menge – Wieviel tritt aus?</div><div class="step-desc">Wie groß ist die ausgetretene oder noch austretende Menge? Tankgröße? Leck? Druckverhältnisse? Zunahme oder Stagnation?</div></div></div>
+      <div class="step-item"><div class="step-letter">E</div><div><div class="step-title">Expansion – Wohin breitet er sich aus?</div><div class="step-desc">Windrichtung und -stärke. Geländetopographie. Kanalisation? Gewässer in der Nähe? Wohnbebauung? Ausbreitungsmodelle (ALOHA, CAMEO).</div></div></div>
+      <div class="step-item"><div class="step-letter">R</div><div><div class="step-title">Richtigkeit – Wie plausibel sind die Ergebnisse?</div><div class="step-desc">Messergebnisse und Informationen kritisch prüfen. Widersprechen sich Angaben? Gibt es versteckte Gefahren? Sachkundige Person hinzuziehen!</div></div></div>
+    </div>
+
+    <h2 class="sec-h">Absperrgrenzen &amp; Zoneneinteilung</h2>
+    <div class="cg cg-3">
+      <div class="info-card" style="border-top:3px solid var(--c-red)"><div class="info-card-title"><span class="dot dot-r"></span>Innenzone (heiß)</div>
+        <ul class="bl">
+          <li>Unmittelbarer Gefahrenbereich</li>
+          <li>Nur mit geeignetem Körperschutz (Form 2/3)</li>
+          <li>Mindestabstand unbekannter Stoff: <strong>50 m</strong></li>
+          <li>Bei Gasaustritt: <strong>100 m</strong> Mindestabstand</li>
+          <li>Bei Explosion/Einsturz: <strong>300 m</strong></li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:3px solid var(--c-gold)"><div class="info-card-title"><span class="dot dot-w"></span>Mittelzone (warm) – Dekon</div>
+        <ul class="bl">
+          <li>Dekon-Platz (Stufe 1–2)</li>
+          <li>PA-Ablegen erst nach Dekon</li>
+          <li>Windrichtung: Luvseite beachten!</li>
+          <li>Zugang nur für ausgerüstete EK</li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:3px solid var(--c-ok)"><div class="info-card-title"><span class="dot dot-ok"></span>Außenzone (kalt)</div>
+        <ul class="bl">
+          <li>Bereitstellungsraum, EL, Presse</li>
+          <li>Verletztensammelstelle / Patientenablage</li>
+          <li>Absperrbereich: <strong>25 mSv/h</strong> (Strahlenschutz)</li>
+          <li>Zuverlässige Absperrung durch Polizei</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec-h">Messstrategien</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Identifizierung</div>
+        <ul class="bl"><li>Welcher Stoff liegt vor?</li><li>Gefahrgutzettel, TUIS, ERICard</li><li>RICS-Code, UN-Nummer</li><li>Probenahme für Labor</li></ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Quantifizierung</div>
+        <ul class="bl"><li>Wie viel vom Stoff ist vorhanden?</li><li>Konzentrationsmessung</li><li>Ex-Bereich messen (UEG/OEG)</li><li>Dosisleistungsmessung (mSv/h)</li></ul>
+      </div>
+    </div>
+
+    <h2 class="sec-h">Spezialkräfte &amp; Ergänzende Maßnahmen</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Alarmierung Spezialkräfte</div>
+        <ul class="bl">
+          <li>ABC-Zug / CBRN-Einheiten</li>
+          <li>Feuerwehr-Rüstwagen mit Sonderausstattung</li>
+          <li>TUIS (Technischer Unfall-Informations- und Hilfeleistungs-System)</li>
+          <li>Landeskriminalamt (bei Verdacht auf Anschlag)</li>
+          <li>Sachkundige Personen des Betriebs</li>
+          <li>Zuständige Behörden (Umweltamt, Veterinäramt)</li>
+        </ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Ergänzende Maßnahmen</div>
+        <ul class="bl">
+          <li>Verhaltensanweisungen an gefährdete Personen geben</li>
+          <li>Löschangriff vorbereiten (<strong>3-facher Brandschutz</strong>)</li>
+          <li>Informationen über den Gefahrstoff einholen</li>
+          <li><strong>Löschwasserrückhaltung</strong> anordnen!</li>
+          <li>Verkehrsabsperrung mit Polizei koordinieren</li>
+          <li>Bei atomaren Stoffen: keine Freimessung durch öffentliche Fw</li>
+        </ul>
+      </div>
+    </div>
+    <div class="hint"><span>📌</span><p><strong>Führungsgrundsatz GABC:</strong> Lagefeststellung → EIMER-Regel → Gefahrengruppe bestimmen → Körperschutz festlegen → GAMS anwenden → Dekon-Stufe anordnen → Messauftrag geben → ständige Lagebeurteilung. Wechselwirkung Löschanlagen ↔ RWA beachten!</p></div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     HLFS · 02 – TUNNELSEMINAR
+────────────────────────────────────────────────── -->
+<div id="v-hlfs-tunnel" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">HLFS Kassel · Thema 02</p>
+    <h1 class="page-title">Tunnel<span class="accent">seminar</span></h1>
+    <p class="page-lead">Brandbekämpfung in unterirdischen Verkehrsanlagen – besondere Anforderungen an Führung, Taktik und Atemschutz.</p>
+  </div></div>
+  <div class="pc">
+    <div class="def-box"><div class="def-box-label">Besonderheit Tunnelbrand</div><p>Tunnel sind <strong>geschlossene Systeme</strong> mit eingeschränkter Zugänglichkeit, extremer Rauch- und Wärmeentwicklung, begrenzter Fluchtwegstruktur und erschwerter Rettungsmöglichkeit. Die Ventilation bestimmt maßgeblich die Taktik.</p></div>
+
+    <h2 class="sec-h">Besondere Gefährdungen im Tunnel</h2>
+    <div class="cg">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Rauch &amp; Temperatur</div><p>Extreme Temperaturen und dichte Verrauchung. Gegenstrom-Atmungsgift (CO, HCN). Eingeschränkte Sicht auf 0 m.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Eingeschränkte Zugänglichkeit</div><p>Nur ein oder zwei Portale. Fahrzeugstau verhindert schnelle Zufahrt. Einrichtungsverkehr.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Ventilation</div><p>Längsventilation (Strahlventilatoren) oder Querventilation. Die Strömungsrichtung bestimmt die Angriffsrichtung!</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Kommunikation &amp; Navigation</div><p>Funkkommunikation eingeschränkt. Leitsystem Schlauchleitung zwingend erforderlich. Tunnelkommunikationsanlagen nutzen.</p></div>
+    </div>
+
+    <h2 class="sec-h">Taktische Grundsätze Tunnelbrand</h2>
+    <div class="step-stack">
+      <div class="step-item"><div class="step-letter">1</div><div><div class="step-title">Lagebeurteilung Portal</div><div class="step-desc">Ventilationsrichtung bestimmen! Brandherd lokalisieren. Angriff immer von der Luvseite (entgegen der Strömungsrichtung).</div></div></div>
+      <div class="step-item"><div class="step-letter">2</div><div><div class="step-title">Selbstrettung &amp; Fremdrettung</div><div class="step-desc">Eigenrettung vor Fremdrettung. Querstollen und Notausgänge nutzen. Evakuierung über Fluchtwege koordinieren.</div></div></div>
+      <div class="step-item"><div class="step-letter">3</div><div><div class="step-title">Atemschutzvorgehungstrupp</div><div class="step-desc">Mindestens 4 Atemschutzträger (2 Angriff, 2 Sicherheitstrupp). Leinen und Richtungsweiser einsetzen. Doppel-Schlauchleitung als Rückwegsicherung.</div></div></div>
+      <div class="step-item"><div class="step-letter">4</div><div><div class="step-title">Wasserversorgung</div><div class="step-desc">Hydrantenversorgung im Tunnel (Wandhydranten nutzen). Wasserförderung langer Wegstrecke planen. Löschmittel: vorrangig Wasser (Stichflamme vermeiden).</div></div></div>
+      <div class="step-item"><div class="step-letter">5</div><div><div class="step-title">Einsatzabbruchkriterien</div><div class="step-desc">Mayday-Protokoll kennen und einüben. Rückzug bei Druckabfall unter 100 bar. Keine Einzelvorgeher!</div></div></div>
+    </div>
+
+    <h2 class="sec-h">Ventilationskonzepte</h2>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Längsventilation</div><p>Strahlventilatoren erzeugen Luftstrom in Längsrichtung. Rauch wird zur Lee-Seite gedrückt. Angriff von Luv-Seite.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Querventilation</div><p>Zu- und Abluftschächte quer zum Tunnel. Rauch wird nach oben abgesaugt. Gleichzeitiger Angriff von beiden Portalen möglich.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Natürliche Ventilation</div><p>Abhängig von Neigung, Wind und Thermik. Unberechenbar – immer Messungen und Beobachtung erforderlich.</p></div>
+    </div>
+    <div class="hint err-h"><span>⚠️</span><p><strong>Kritisch:</strong> Bei Ventilationsumkehr (z. B. durch Fahrtwind) sofortiger Rückzug! Die Ventilationsrichtung kann sich während des Einsatzes ändern. Ständige Kommunikation mit Einsatzleitung pflegen.</p></div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     HLFS · 03 – VORBEUGENDER BRANDSCHUTZ
+────────────────────────────────────────────────── -->
+<div id="v-hlfs-vb" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">HLFS Kassel · Thema 03</p>
+    <h1 class="page-title">Vorbeugender <span class="accent">Brandschutz</span></h1>
+    <p class="page-lead">Baulicher, anlagentechnischer und organisatorischer Brandschutz – Grundlagen für Führungskräfte im höheren Dienst.</p>
+  </div></div>
+  <div class="pc">
+
+    <div class="def-box"><div class="def-box-label">Ziel des vorbeugenden Brandschutzes</div><p>Entstehung von Bränden verhindern, Brandausbreitung begrenzen, Rettung von Personen und Tieren ermöglichen und wirksame Löschmaßnahmen sicherstellen.</p></div>
+
+    <h2 class="sec-h">3 Säulen des vorbeugenden Brandschutzes</h2>
+    <div class="cg cg-3">
+      <div class="info-card" style="border-top:3px solid #3A7FD4"><div class="info-card-title"><span class="dot dot-b"></span>Baulicher Brandschutz</div>
+        <ul class="bl">
+          <li>Feuerwiderstandsklassen (F30, F60, F90, F120)</li>
+          <li>Brandabschnitte und Brandwände</li>
+          <li>Rettungswege: 1. und 2. Rettungsweg</li>
+          <li>In Umkreis 75 m Lauflinie: Hydrant vom Gebäude</li>
+          <li>Pflicht zur Alarmnachverfolgung bei BMAs</li>
+          <li>Feuerwehrzufahrten und Aufstellflächen</li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:3px solid var(--c-gold)"><div class="info-card-title"><span class="dot"></span>Anlagentechnischer Brandschutz</div>
+        <ul class="bl">
+          <li>Brandmeldeanlagen (BMA) – Pflicht zur Alarmverfolgung</li>
+          <li>Sprinkleranlagen, Sprühwasserlöschanlagen</li>
+          <li>Rauch- und Wärmeabzugsanlagen (RWA)</li>
+          <li>Druckbelüftungsanlagen für Treppenhäuser</li>
+          <li>Feuerlöschanlagen (stationär, CO₂, Schaum)</li>
+          <li>Sicherheitsbeleuchtung, Notstromanlagen</li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:3px solid var(--c-ok)"><div class="info-card-title"><span class="dot dot-ok"></span>Organisatorischer Brandschutz</div>
+        <ul class="bl">
+          <li>Brandschutzordnung (Teil A, B, C)</li>
+          <li>Brandschutzhelfer / Brandschutzbeauftragter</li>
+          <li>Evakuierungsübungen (mind. 1× jährlich)</li>
+          <li>Flucht- und Rettungswegpläne</li>
+          <li>Feuerwehrlaufkarten</li>
+          <li>Betriebliche Brandschutzkonzepte</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Feuerwiderstandsklassen -->
+    <h2 class="sec-h">Feuerwiderstandsklassen &amp; Bauteile</h2>
+    <table class="dt">
+      <thead><tr><th>Klasse</th><th>Widerstandsdauer</th><th>Typische Bauteile</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge b-ok">F 30</span></td><td>30 Minuten</td><td>Wände in Einfamilienhäusern, Decken KG</td></tr>
+        <tr><td><span class="badge b-ok">F 60</span></td><td>60 Minuten</td><td>Tragende Wände Bürogebäude</td></tr>
+        <tr><td><span class="badge b-w">F 90</span></td><td>90 Minuten</td><td>Brandwände, Treppenraumwände, Hochhäuser</td></tr>
+        <tr><td><span class="badge b-err">F 120</span></td><td>120 Minuten</td><td>Sonderbauten, Tunnel, Parkhäuser</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Rettungswege -->
+    <h2 class="sec-h">Rettungswege</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>1. Rettungsweg</div><p>Über notwendige Treppen und Ausgänge ins Freie. Muss immer baulich vorhanden und rauchfrei haltbar sein. Max. Fluchtweglänge: i. d. R. 35 m.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>2. Rettungsweg</div><p>Über Fenster und Außenwandöffnungen mit Leiter der Feuerwehr (bis 8 m Brüstungshöhe) oder bauliche Rettungstreppe. Feuerwehraufstellfläche muss vorhanden sein!</p></div>
+    </div>
+
+    <!-- Brandschutzordnung -->
+    <h2 class="sec-h">Brandschutzordnung (DIN 14096)</h2>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Teil A – Aushang</div><p>Für alle Personen im Gebäude. Brandschutzordnung als Aushang an Fluchtwegen. Verhaltensregeln bei Brand in Kurzform.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Teil B – Unterrichtung</div><p>Für alle Beschäftigten des Betriebs. Detailliertere Verhaltensanweisungen, Alarmierungswege, Notausgänge.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Teil C – Führungskräfte</div><p>Für Brandschutzhelfer und Personen mit besonderen Aufgaben im Brandschutz (z. B. Brandschutzbeauftragte, Evakuierungshelfer).</p></div>
+    </div>
+    <div class="hint"><span>📌</span><p><strong>Für Führungskräfte im VB:</strong> Bei jeder Objektbegehung Rettungswege, Feuerwehrzufahrten, Hydrantenabstände (75 m Lauflinie) und Feuerwehrlaufkarten prüfen. BMAs: Pflicht zur Alarmverfolgung – kein Abschalten ohne Prüfung!</p></div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     HLFS · 04 – MANV & OLRD
+────────────────────────────────────────────────── -->
+<div id="v-hlfs-manv" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">HLFS Kassel · Thema 04</p>
+    <h1 class="page-title">MANV &amp; <span class="accent">OLRD</span></h1>
+    <p class="page-lead">Massenanfall von Verletzten und Erkrankten – Führung, Sichtung, Zusammenarbeit mit dem Rettungsdienst und dem Organisatorischen Leiter Rettungsdienst.</p>
+  </div></div>
+  <div class="pc">
+
+    <div class="def-box"><div class="def-box-label">Definition MANV</div><p>Ein Massenanfall von Verletzten und Erkrankten liegt vor, wenn die <strong>Zahl der Patienten die unmittelbar verfügbaren Ressourcen des Rettungsdienstes übersteigt</strong> und eine Sonderorganisation erforderlich wird. Ab wann ein MANV vorliegt, definieren die Länder unterschiedlich (i. d. R. ab 5–10 Patienten).</p></div>
+
+    <!-- SCHNELL-SICHTUNG -->
+    <h2 class="sec-h">Schnell-Sichtungssystem (START / mSTaRT)</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Sichtungskategorien</div>
+        <ul class="bl">
+          <li><strong>SK I (rot):</strong> Sofortbehandlung – lebensbedrohlich, behandelbar</li>
+          <li><strong>SK II (gelb):</strong> Aufgeschobene Behandlung – schwer verletzt, nicht sofortbedrohlich</li>
+          <li><strong>SK III (grün):</strong> Leichtverletzte – gehen können, ambulant behandelbar</li>
+          <li><strong>SK IV (blau/schwarz):</strong> Ohne Überlebenschance / tot</li>
+        </ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>mSTaRT-Algorithmus</div>
+        <ul class="bl">
+          <li>Kann Patient laufen? → SK III</li>
+          <li>Atmet Patient? Wenn nein: Atemwege freimachen → Atmet? → SK IV / SK I</li>
+          <li>Atemfrequenz: &lt;10 oder &gt;30/min → SK I</li>
+          <li>Radialpuls vorhanden? Nein → SK I</li>
+          <li>Bewusstsein: Einfachen Aufforderungen folgen? Nein → SK I. Ja → SK II</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FÜHRUNGSSTRUKTUR MANV -->
+    <h2 class="sec-h">Führungsstruktur beim MANV</h2>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Einsatzleiter Feuerwehr (ELF)</div><p>Gesamteinsatzleitung. Koordiniert alle Kräfte. Führt die Einsatzleitung gegenüber anderen Behörden.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Leitender Notarzt (LNA)</div><p>Medizinische Gesamtverantwortung. Entscheidet über Sichtungskategorien und Behandlungsprioritäten.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Org. Leiter Rettungsdienst (OLRD)</div><p>Organisatorische Leitung des Rettungsdienstes. Koordiniert Transportkapazitäten, Rettungsmittel und Krankenhauskapazitäten.</p></div>
+    </div>
+
+    <!-- ABSCHNITTE -->
+    <h2 class="sec-h">Organisationsstruktur MANV</h2>
+    <div class="step-stack">
+      <div class="step-item"><div class="step-letter">1</div><div><div class="step-title">Absperrung &amp; Zufahrt</div><div class="step-desc">Einsatzstelle absperren, Zu- und Abfahrtswege für Rettungsmittel freihalten. Bereitstellungsraum einrichten.</div></div></div>
+      <div class="step-item"><div class="step-letter">2</div><div><div class="step-title">Patientenablage (PA)</div><div class="step-desc">Zentraler Sammelplatz für alle Patienten. Nach Sichtungskategorien getrennte Bereiche einrichten. Witterungsschutz beachten.</div></div></div>
+      <div class="step-item"><div class="step-letter">3</div><div><div class="step-title">Behandlungsplatz (BHP)</div><div class="step-desc">Medizinische Versorgung nach Sichtungsergebnis. Aufbau durch Rettungsdienst und Sanitätsdienst. LNA koordiniert medizinische Maßnahmen.</div></div></div>
+      <div class="step-item"><div class="step-letter">4</div><div><div class="step-title">Transportorganisation</div><div class="step-desc">OLRD koordiniert Krankenhauskapazitäten und Transportreihenfolge. RTH einbinden. Dokumentation jedes Transports.</div></div></div>
+    </div>
+
+    <!-- SCHNITTSTELLEN -->
+    <h2 class="sec-h">Schnittstellen Feuerwehr – Rettungsdienst</h2>
+    <table class="dt">
+      <thead><tr><th>Aufgabe</th><th>Feuerwehr</th><th>Rettungsdienst</th></tr></thead>
+      <tbody>
+        <tr><td>Sicherheit &amp; Absperrung</td><td>✅ Feuerwehr</td><td>–</td></tr>
+        <tr><td>Patientenrettung (technisch)</td><td>✅ Feuerwehr</td><td>–</td></tr>
+        <tr><td>Erstversorgung am Ort</td><td>Ersthelfer-Maßnahmen</td><td>✅ Rettungsdienst (LNA/RettAss)</td></tr>
+        <tr><td>Sichtung</td><td>Schnell-Sichtung (initial)</td><td>✅ Ärztliche Sichtung (LNA)</td></tr>
+        <tr><td>Behandlungsplatz</td><td>Aufbau / Betreuung</td><td>✅ Medizinische Leitung</td></tr>
+        <tr><td>Transport</td><td>Zufahrten freihalten</td><td>✅ OLRD koordiniert</td></tr>
+        <tr><td>Gesamtführung</td><td>✅ Einsatzleiter Feuerwehr</td><td>Fachliche Führung (LNA/OLRD)</td></tr>
+      </tbody>
+    </table>
+    <div class="hint"><span>📌</span><p><strong>Führungsgrundsatz MANV:</strong> Alle Einsatzkräfte, die nicht unmittelbar mit der Versorgung beschäftigt sind, führen die schnelle Sichtung durch. LNA und OLRD sind frühzeitig zu alarmieren. Die Patientenablage ist klar zu benennen und zu beschildern.</p></div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     HLFS · 05 – ZUG- & VERBANDSFÜHRER
+────────────────────────────────────────────────── -->
+<div id="v-hlfs-zugfuehrer" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">HLFS Kassel · Thema 05</p>
+    <h1 class="page-title">Zug- &amp; <span class="accent">Verbandsführer</span></h1>
+    <p class="page-lead">Führung größerer Einheiten – Führungsstufen B und C, Abschnittsbildung, Verbands- und Zugführung nach FwDV 100.</p>
+  </div></div>
+  <div class="pc">
+
+    <div class="def-box"><div class="def-box-label">Zuführer (ZF) vs. Verbandsführer (VF)</div><p><strong>Zugführer</strong> führt einen Zug (Führungsstufe B). <strong>Verbandsführer</strong> führt einen Verband an einer Einsatzstelle (Führungsstufe C). Beide sind dem Einsatzleiter direkt unterstellt und koordinieren die untergeordneten Gruppenführer.</p></div>
+
+    <h2 class="sec-h">Führungsstufen im Überblick</h2>
+    <table class="dt">
+      <thead><tr><th>Stufe</th><th>Bezeichnung</th><th>Einheit an der ESt.</th><th>Führungsmittel</th><th>Führender</th></tr></thead>
+      <tbody>
+        <tr><td><strong>A</strong></td><td>Ohne Führungseinheit</td><td>Takt. Einheit bis 2 Gruppen</td><td>Führungseinrichtung (Leitstelle)</td><td>Gruppenführer</td></tr>
+        <tr><td><strong>B</strong></td><td>Mit örtlicher Führungseinheit</td><td>Zug oder Verband an ESt.</td><td>Führungstrupp/-staffel, Leitstelle</td><td>Zugführer</td></tr>
+        <tr><td><strong>C</strong></td><td>Mit Führungsgruppe</td><td>Verband an einer ESt.</td><td>Führungsgruppe, Leitstelle</td><td>Verbandsführer</td></tr>
+        <tr><td><strong>D</strong></td><td>Mit Führungsgruppe/-stab</td><td>Mehrere Verbände, mehrere ESt.</td><td>Führungsgruppe/-stab, IuK-Zentrale</td><td>EL (B VI)</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ABSCHNITTSBILDUNG -->
+    <h2 class="sec-h">Abschnittsbildung (2-5-Regel)</h2>
+    <div class="def-box"><div class="def-box-label">2-5-Regel</div><p>Bei 5 taktischen Einheiten an einer Einsatzstelle kann man <strong>Abschnitte bilden</strong>. Ein Abschnitt umfasst 2–5 taktische Einheiten. Der Abschnittsleiter (EAL) koordiniert die ihm unterstellten Gruppenführer und berichtet an den Einsatzleiter.</p></div>
+
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Führungsebenen (klein)</div>
+        <ul class="bl">
+          <li>Gruppe → GF (Melder)</li>
+          <li>Zug → ZF (Zugtrupp)</li>
+          <li>Einsatzleitung → EL (Führungshilfspersonal)</li>
+        </ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Führungsebenen (groß)</div>
+        <ul class="bl">
+          <li>Gruppe → GF (Me.)</li>
+          <li>Zug → ZF (Zugtrupp)</li>
+          <li>Einsatzabschnitt → EAL (Führungstrupp/-staffel)</li>
+          <li>Einsatzleitung → EL (Führungsstaffel/-gruppe)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FÜHRUNGSAUFGABEN ZF -->
+    <h2 class="sec-h">Aufgaben des Zugführers</h2>
+    <div class="cg">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Lagefeststellung</div><p>Eigene Lagefeststellung beim Eintreffen. Übergabe vom vorherigen ZF. Eigene Erkundung und Rückmeldung an EL.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Führung der Gruppen</div><p>Aufträge an Gruppenführer erteilen. Tätigkeiten koordinieren und überwachen. 2-5-Regel anwenden bei großen Einheiten.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Kommunikation</div><p>Regelmäßige Lagemeldungen an EL (MELDEN-Schema). Eigene Frequenz für Zugkräfte. Zugtrupp für Erkundung einsetzen.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Dokumentation</div><p>Lagetagebuch führen. Kräfte und Mittel dokumentieren. Alle Befehle und Meldungen protokollieren.</p></div>
+    </div>
+
+    <!-- TAKTISCHE ZEICHEN -->
+    <h2 class="sec-h">Taktische Zeichen (Grundprinzip)</h2>
+    <div class="def-box"><div class="def-box-label">Zweck taktischer Zeichen</div><p>Taktische Zeichen dienen der einheitlichen <strong>Lagedarstellung</strong> auf Karten und in Lageplänen. Sie ermöglichen eine schnelle Übersicht über Einsatzkräfte, Einheiten und Maßnahmen. Grundlage: DIN 14011 und FwDV 100.</p></div>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Taktische Zeichen Feuerwehr</div>
+        <ul class="bl">
+          <li>Quadrat = Einheit/Fahrzeug (Größe = Stärke)</li>
+          <li>Kreis = Person/Funktion</li>
+          <li>Linie = Grenze/Abschnitt</li>
+          <li>Pfeil = Bewegungsrichtung/Angriffsrichtung</li>
+          <li>Farbe Rot = Brandbekämpfung</li>
+          <li>Farbe Blau = technische Hilfeleistung</li>
+          <li>Farbe Gelb = ABC-Einsatz</li>
+        </ul>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Lagekartenführung</div>
+        <ul class="bl">
+          <li>Nordung beachten</li>
+          <li>Maßstab angeben</li>
+          <li>Zeitstempel für alle Einträge</li>
+          <li>Einsatzabschnitte farblich kennzeichnen</li>
+          <li>Änderungen nachführen (Lagetagebuch)</li>
+          <li>Erkunden vor Einzeichnen!</li>
+        </ul>
+      </div>
+    </div>
+    <div class="hint"><span>📌</span><p><strong>Verbandsführer-Checkliste:</strong> Eigene Lage beurteilen → Abschnitte einteilen → EALs einsetzen → Aufträge erteilen → Lagemeldung an EL → kontinuierliche Kontrolle → neue Meldungen auswerten → Befehlsanpassung.</p></div>
+
+    <!-- TETRA DIGITALFUNK -->
+    <hr class="sec-div"/>
+    <h2 class="sec-h">TETRA-Digitalfunk – TMO vs. DMO</h2>
+    <div class="def-box"><div class="def-box-label">BOS-Digitalfunk</div><p>TETRA (Terrestrial Trunked Radio) ist der Digitalfunk der Behörden und Organisationen mit Sicherheitsaufgaben (BOS). Zwei Betriebsarten: <strong>TMO</strong> (netzbetrieben, Normalfall) und <strong>DMO</strong> (direkt, ohne Netz).</p></div>
+
+    <div class="cg cg-2">
+      <div class="info-card" style="border-top:3px solid #3A7FD4">
+        <div class="info-card-title"><span class="dot dot-b"></span>TMO – Trunked Mode Operation (Netzfunk)</div>
+        <ul class="bl">
+          <li><strong>Funktionsprinzip:</strong> Kommunikation über Basisstationen (BOS-Netz)</li>
+          <li><strong>Reichweite:</strong> Netzdeckung (ca. 99% in DE im Freien)</li>
+          <li><strong>Kommunikationswege:</strong> Sprechtastengruppen (STG), Rufnummern, Kurzdatendienste</li>
+          <li><strong>Vorteile:</strong> Hohe Reichweite, Gruppenrufe, Notruffunktion, verschlüsselt</li>
+          <li><strong>Nachteile:</strong> Bei Netzausfall (z. B. Katastrophe) nicht nutzbar</li>
+          <li><strong>Gesprächsgruppen:</strong> BOS-weit organisiert (z. B. Zusammenarbeitsgruppen)</li>
+        </ul>
+      </div>
+      <div class="info-card" style="border-top:3px solid var(--c-gold)">
+        <div class="info-card-title"><span class="dot"></span>DMO – Direct Mode Operation (Direktfunk)</div>
+        <ul class="bl">
+          <li><strong>Funktionsprinzip:</strong> Direkte Funk-zu-Funk-Verbindung ohne Basisstation</li>
+          <li><strong>Reichweite:</strong> ca. 300–500 m im Gebäude, ca. 1–2 km im Freien</li>
+          <li><strong>Einsatzszenarien:</strong> Keller, Tunnel, Gebäude (Netz nicht verfügbar)</li>
+          <li><strong>Vorteile:</strong> Netzunabhängig, funktioniert immer</li>
+          <li><strong>Nachteile:</strong> Eingeschränkte Reichweite, kein Gruppenruf über Netz</li>
+          <li><strong>Hinweis:</strong> „Ich gehe in den Direktbetrieb" – immer ansagen!</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- GATEWAY-FUNKTION -->
+    <div class="diagram-wrap" style="margin-top:1rem;">
+      <svg viewBox="0 0 580 120" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="tg-arr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+            <polygon points="0 0,7 2.5,0 5" fill="#C9A84C" opacity=".8"/>
+          </marker>
+        </defs>
+        <!-- TMO Zone -->
+        <rect x="10" y="15" width="160" height="90" rx="8" fill="rgba(58,127,212,.1)" stroke="#3A7FD4" stroke-width="1.3"/>
+        <text x="90" y="38" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#6BAAD4" font-weight="700">TMO-Bereich</text>
+        <text x="90" y="56" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#8FA0B0">Basisstation vorhanden</text>
+        <text x="90" y="74" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#8FA0B0">z. B. Außenbereich ESt.</text>
+        <text x="90" y="94" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080">ELW, EL, Zugtrupp</text>
+        <!-- Gateway Gerät -->
+        <rect x="210" y="35" width="160" height="50" rx="8" fill="rgba(201,168,76,.12)" stroke="#C9A84C" stroke-width="1.5"/>
+        <text x="290" y="56" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="700">GATEWAY</text>
+        <text x="290" y="72" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#8FA0B0">TMO ↔ DMO Brücke</text>
+        <!-- Pfeile -->
+        <line x1="170" y1="60" x2="208" y2="60" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#tg-arr)"/>
+        <line x1="370" y1="60" x2="408" y2="60" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#tg-arr)"/>
+        <!-- DMO Zone -->
+        <rect x="410" y="15" width="160" height="90" rx="8" fill="rgba(176,115,32,.1)" stroke="#B07320" stroke-width="1.3"/>
+        <text x="490" y="38" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#D4903A" font-weight="700">DMO-Bereich</text>
+        <text x="490" y="56" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#8FA0B0">Kein Netz verfügbar</text>
+        <text x="490" y="74" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#8FA0B0">z. B. Innenangriff, Keller</text>
+        <text x="490" y="94" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080">AT, WT, SchT</text>
+      </svg>
+      <p class="diagram-caption">Gateway-Funktion – verbindet TMO und DMO bei Netzausfall im Einsatzbereich</p>
+    </div>
+
+    <div class="cg cg-3" style="margin-top:.75rem;">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Gateway-Funktion</div>
+        <p>Ein Endgerät mit Gateway-Funktion kann als <strong>Brücke zwischen TMO und DMO</strong> dienen. Es empfängt den DMO-Verkehr und leitet ihn ins TMO-Netz weiter. Einsatzbeispiel: Gruppenführer im Keller (DMO) ↔ Zugführer außen (TMO).</p>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Notruf (Notfall-Taste)</div>
+        <p>Hält im TETRA-Netz die Verbindung aufrecht und alarmiert die Leitstelle. Auch im DMO verfügbar. Im Atemschutzeinsatz: Mayday-Protokoll vor Notruf!</p>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Praxishinweise ZF</div>
+        <ul class="bl">
+          <li>Gesprächsgruppen vor dem Einsatz festlegen!</li>
+          <li>Funkrufnamen kennen (Dienststelle/FZ-Nr.)</li>
+          <li>Bei TMO-Ausfall: sofort auf DMO umschalten</li>
+          <li>Gateway-Gerät frühzeitig positionieren</li>
+        </ul>
+      </div>
+    </div>
+    <div class="hint"><span>📌</span><p><strong>Merksatz Funk:</strong> TMO = Telefon (Netz nötig). DMO = Walkie-Talkie (direkt). Gateway = Dolmetscher. Bei jedem Wechsel des Betriebsmodus ansagen!</p></div>
   </div>
 </div>
 
@@ -1376,7 +2806,7 @@
 ====================================================================== */
 const NAV = (function(){
   let stack = [];
-  const ALL = ['v-home','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-feuak','v-idf','v-simulator','v-vorschlaege'];
+  const ALL = ['v-home','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-feuak','v-idf','v-simulator','v-vorschlaege'];
 
   function show(id){
     ALL.forEach(v=>{ const e=document.getElementById(v); if(e) e.classList.toggle('active',v===id); });
