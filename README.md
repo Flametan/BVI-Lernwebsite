@@ -1,9 +1,5 @@
 # B VI – Lernwebsite für den höheren feuerwehrtechnischen Dienst
 
-> **Für den nächsten Chat:** Diese README beschreibt das Projekt vollständig. Claude kann damit sofort weiterarbeiten, ohne den alten Chatverlauf zu benötigen.
-
----
-
 ## Projektüberblick
 
 **Datei:** `index.html` (single-file SPA, ~3.410 Zeilen, kein Build-Schritt nötig)  
