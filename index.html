@@ -327,6 +327,60 @@
   @media(max-width:700px){.home-grid{grid-template-columns:repeat(2,1fr);}.cg-2,.cg-3{grid-template-columns:1fr!important;}.fb-layout{grid-template-columns:1fr;}.sim-menu{grid-template-columns:1fr;}.crumb{display:none;}.pc{padding:1.5rem 1rem 4rem;}.phi{padding:0 1rem;}}
   @media(max-width:480px){.home-grid{grid-template-columns:1fr;}.role-row{flex-direction:column;}.ph-step span{display:none;}}
   .hidden{display:none!important;}
+
+  /* ── SEARCH ─────────────────────────────────────────── */
+  .search-overlay{position:fixed;inset:0;z-index:200;background:rgba(8,15,28,0.93);backdrop-filter:blur(22px);display:flex;align-items:flex-start;justify-content:center;padding-top:12vh;animation:vIn .15s var(--ease) both;}
+  .search-overlay.hidden{display:none!important;}
+  .search-box{width:100%;max-width:640px;margin:0 1.25rem;background:var(--c-navy-2);border:1px solid var(--c-gold-rim);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--sh-lg);}
+  .search-input-wrap{display:flex;align-items:center;gap:.75rem;padding:.9rem 1.25rem;border-bottom:1px solid var(--glass-b);}
+  .search-input{flex:1;background:none;border:none;outline:none;font-family:var(--f-b);font-size:1rem;color:var(--c-text-b);caret-color:var(--c-gold);}
+  .search-input::placeholder{color:var(--c-slate);}
+  .search-results{max-height:420px;overflow-y:auto;}
+  .search-result{display:flex;gap:.75rem;padding:.65rem 1.25rem;cursor:pointer;transition:background var(--t);align-items:flex-start;border-bottom:1px solid rgba(255,255,255,.03);}
+  .search-result:hover,.search-result.sr-focus{background:var(--glass);}
+  .sr-section{font-size:.59rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--c-gold);min-width:82px;padding-top:.18rem;flex-shrink:0;line-height:1.4;}
+  .sr-title{font-size:.84rem;font-weight:600;color:var(--c-text-b);margin-bottom:.1rem;}
+  .sr-snippet{font-size:.74rem;color:var(--c-slate-l);line-height:1.5;}
+  .sr-snippet mark{background:rgba(201,168,76,.25);color:var(--c-gold-l);border-radius:2px;padding:0 2px;font-style:normal;}
+  .search-empty,.search-idle{text-align:center;padding:2.5rem;color:var(--c-slate);font-size:.85rem;line-height:1.8;}
+  .search-footer{padding:.5rem 1.25rem;font-size:.67rem;color:var(--c-slate);border-top:1px solid var(--glass-b);display:flex;gap:1.25rem;align-items:center;}
+  .search-footer kbd{font-family:var(--f-m);background:var(--glass);border:1px solid var(--glass-b);border-radius:3px;padding:.1rem .38rem;font-size:.63rem;color:var(--c-slate-l);}
+  .search-btn-hdr{display:flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:500;color:var(--c-slate-l);padding:.27rem .65rem;border-radius:var(--r-sm);border:1px solid var(--glass-b);background:var(--glass);cursor:pointer;transition:all var(--t);white-space:nowrap;margin-left:auto;flex-shrink:0;}
+  .search-btn-hdr:hover{border-color:var(--c-gold-rim);color:var(--c-gold);background:var(--c-gold-dim);}
+  .search-btn-hdr kbd{font-family:var(--f-m);font-size:.6rem;background:rgba(255,255,255,.06);border:1px solid var(--glass-b);border-radius:3px;padding:.05rem .3rem;color:var(--c-slate);}
+
+  /* ── PROGRESS ────────────────────────────────────────── */
+  .hdr-progress{position:fixed;top:58px;left:0;right:0;z-index:99;height:2px;background:transparent;pointer-events:none;}
+  .hdr-progress-fill{height:100%;background:linear-gradient(90deg,var(--c-gold),var(--c-gold-l));transition:width .6s var(--ease);width:0%;}
+  .tile-prog{position:absolute;top:.8rem;right:.8rem;font-family:var(--f-m);font-size:.57rem;font-weight:600;background:var(--c-gold-dim);border:1px solid var(--c-gold-rim);border-radius:10px;padding:.1rem .45rem;color:var(--c-gold);display:none;}
+  .tc-check{position:absolute;top:.65rem;right:.65rem;width:20px;height:20px;border-radius:50%;background:var(--c-ok-dim);border:1.5px solid rgba(42,122,82,.5);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#4ACD90;pointer-events:none;}
+
+  /* ── FLASHCARDS ──────────────────────────────────────── */
+  .fc-outer{perspective:1000px;width:100%;max-width:580px;margin:0 auto 1.25rem;height:250px;cursor:pointer;user-select:none;}
+  .fc-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .48s var(--ease);}
+  .fc-inner.flipped{transform:rotateY(180deg);}
+  .fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r-xl);padding:1.75rem;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+  .fc-front{background:var(--glass);border:1px solid var(--c-gold-rim);}
+  .fc-back{background:linear-gradient(135deg,rgba(201,168,76,.09),rgba(201,168,76,.03));border:1px solid var(--c-gold-rim);transform:rotateY(180deg);}
+  .fc-cat{font-size:.59rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--c-gold);margin-bottom:.6rem;opacity:.75;}
+  .fc-q{font-family:var(--f-d);font-size:1.3rem;font-weight:600;color:var(--c-text-b);line-height:1.3;}
+  .fc-tap{font-size:.68rem;color:var(--c-slate);margin-top:.85rem;}
+  .fc-a{font-size:.87rem;color:var(--c-text);line-height:1.75;}
+  .fc-a strong{color:var(--c-gold);}
+  .fc-controls{display:flex;gap:.6rem;justify-content:center;margin-top:.3rem;}
+  .fc-btn{flex:1;max-width:190px;padding:.58rem 1rem;border-radius:var(--r-md);font-family:var(--f-b);font-size:.81rem;font-weight:600;cursor:pointer;border:1px solid;transition:all var(--t);}
+  .fc-no{background:var(--c-err-dim);border-color:rgba(139,26,26,.4);color:#E07070;}.fc-no:hover{background:rgba(139,26,26,.22);}
+  .fc-yes{background:var(--c-ok-dim);border-color:rgba(42,122,82,.4);color:#4ACD90;}.fc-yes:hover{background:rgba(42,122,82,.22);}
+  .fc-nav{text-align:center;font-family:var(--f-m);font-size:.67rem;color:var(--c-slate);margin-bottom:.75rem;}
+  .fc-stats-row{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:.85rem;}
+  .fc-stat{font-size:.75rem;color:var(--c-slate-l);display:flex;align-items:center;gap:.3rem;}
+  .fc-filter-row{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.25rem;}
+  .fc-f-btn{font-size:.67rem;font-weight:500;padding:.25rem .65rem;border-radius:20px;border:1px solid var(--glass-b);background:var(--glass);color:var(--c-slate-l);cursor:pointer;transition:all var(--t);}
+  .fc-f-btn.active{border-color:var(--c-gold-rim);background:var(--c-gold-dim);color:var(--c-gold);}
+  .fc-end{text-align:center;padding:2.5rem 1rem;}
+  .fc-end-ico{font-size:2.5rem;margin-bottom:.7rem;}
+  .fc-end-title{font-family:var(--f-d);font-size:1.55rem;font-weight:600;color:var(--c-text-b);margin-bottom:.4rem;}
+  .fc-end-sub{font-size:.87rem;color:var(--c-slate-l);margin-bottom:1.5rem;line-height:1.7;}
   </style>
 </head>
 <body>
@@ -346,7 +400,25 @@
     </button>
     <nav class="crumb" id="breadcrumb"></nav>
   </div>
+  <button class="search-btn-hdr" onclick="SEARCH.open()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    Suchen <kbd>Ctrl+K</kbd>
+  </button>
 </header>
+<!-- SEARCH OVERLAY -->
+<div id="search-overlay" class="search-overlay hidden" onclick="if(event.target===this)SEARCH.close()">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--c-slate);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search-input" class="search-input" type="text" placeholder="Themen, Begriffe, Abkürzungen suchen…" oninput="SEARCH.query(this.value)" onkeydown="SEARCH.keydown(event)" autocomplete="off" spellcheck="false"/>
+      <kbd style="font-family:var(--f-m);font-size:.65rem;color:var(--c-slate);background:var(--glass);border:1px solid var(--glass-b);border-radius:4px;padding:.1rem .4rem;">Esc</kbd>
+    </div>
+    <div id="search-results" class="search-results"><div class="search-idle">Suchbegriff eingeben – z.&nbsp;B. <em>AVIVA</em>, <em>Glasl</em>, <em>MANV</em></div></div>
+    <div class="search-footer"><span><kbd>↑↓</kbd> navigieren</span><span><kbd>↵</kbd> öffnen</span><span><kbd>Esc</kbd> schließen</span></div>
+  </div>
+</div>
+<!-- PROGRESS BAR -->
+<div class="hdr-progress"><div class="hdr-progress-fill" id="prog-bar"></div></div>
 
 <!-- ============================================================ HOME ============================================================ -->
 <div id="v-home" class="view active">
@@ -358,21 +430,24 @@
       <div class="gold-rule"></div>
       <div class="home-grid">
         <!-- ── SFS REGENSBURG ───────────────────────────────────── -->
-        <div class="glass-tile" onclick="NAV.go('v-sfs','SFS Regensburg')">
+        <div class="glass-tile" onclick="NAV.go('v-sfs','SFS Regensburg')" style="position:relative">
+          <span id="prog-sfs" class="tile-prog">0/4</span>
           <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
           <div class="tile-name">SFS Regensburg</div>
           <div class="tile-desc">B3 Gruppenführer – FwDV 3/100, Taktik, Methodik, Ausbilden</div>
           <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
         <!-- ── HLFS KASSEL ──────────────────────────────────────── -->
-        <div class="glass-tile" onclick="NAV.go('v-hlfs','HLFS Kassel')">
+        <div class="glass-tile" onclick="NAV.go('v-hlfs','HLFS Kassel')" style="position:relative">
+          <span id="prog-hlfs" class="tile-prog">0/7</span>
           <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/><path d="M3.05 11a9 9 0 0 1 17.9 0"/></svg>
           <div class="tile-name">HLFS Kassel</div>
           <div class="tile-desc">Führungsvorgang, GABC, Tunnel, VB, MANV, Zug-/Verbandsführer, Stab</div>
           <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
         <!-- ── IBK ─────────────────────────────────────────────── -->
-        <div class="glass-tile" onclick="NAV.go('v-ibk','IBK Heyrothsberge')">
+        <div class="glass-tile" onclick="NAV.go('v-ibk','IBK Heyrothsberge')" style="position:relative">
+          <span id="prog-ibk" class="tile-prog">0/7</span>
           <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           <div class="tile-name">IBK Heyrothsberge</div>
           <div class="tile-desc">TA, Konflikt, Stress, PSNV, BGM, PM, Zeitmanagement</div>
@@ -385,6 +460,12 @@
           <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="22" y1="12" x2="19" y2="12"/><line x1="5" y1="12" x2="2" y2="12"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
           <div class="tile-name">Führungsdienstsimulator</div>
           <div class="tile-desc">8 Szenarien · verzweigter Entscheidungsbaum</div>
+          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="glass-tile" onclick="NAV.go('v-flashcards','Lernkarten')">
+          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="7" y1="10" x2="17" y2="10"/><line x1="7" y1="14" x2="13" y2="14"/></svg>
+          <div class="tile-name">Lernkarten</div>
+          <div class="tile-desc">61 Flashcards · SFS, HLFS, IBK · Lernstand gespeichert</div>
           <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
         <div class="glass-tile" onclick="NAV.go('v-vorschlaege','Verbesserungsvorschläge')">
@@ -2800,6 +2881,31 @@
   </div>
 </div>
 
+<!-- ============================================================ LERNKARTEN ============================================================ -->
+<div id="v-flashcards" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">Interaktives Lernen · LocalStorage</p>
+    <h1 class="page-title">Lern<span class="accent">karten</span></h1>
+    <p class="page-lead">61 Flashcards zu SFS, HLFS und IBK – tippe auf eine Karte, um die Antwort aufzudecken. Dein Lernstand wird gespeichert.</p>
+  </div></div>
+  <div class="pc">
+    <div class="fc-filter-row">
+      <button class="fc-f-btn active" data-filter="all" onclick="FC.setFilter('all')">Alle (61)</button>
+      <button class="fc-f-btn" data-filter="sfs" onclick="FC.setFilter('sfs')">SFS Regensburg</button>
+      <button class="fc-f-btn" data-filter="hlfs" onclick="FC.setFilter('hlfs')">HLFS Kassel</button>
+      <button class="fc-f-btn" data-filter="ibk" onclick="FC.setFilter('ibk')">IBK Heyrothsberge</button>
+    </div>
+    <div id="fc-container">
+      <div class="fc-end">
+        <div class="fc-end-ico">🎴</div>
+        <div class="fc-end-title">Bereit zum Lernen?</div>
+        <div class="fc-end-sub">61 Karten zu FwDV, Führung, Taktik, Psychologie und mehr.<br>Lernstand wird im Browser gespeichert.</div>
+        <button class="btn btn-gold" onclick="FC.start()">Karten starten →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ============================================================ VORSCHLÄGE ============================================================ -->
 <div id="v-vorschlaege" class="view detail-view">
   <div class="page-hero"><div class="phi"><p class="page-eyebrow">Community-Feature · GitHub Issues API</p><h1 class="page-title">Verbesserungs<span class="accent">vorschläge</span></h1><p class="page-lead">Vorschläge werden als GitHub Issues gespeichert – für alle sichtbar und bewertbar.</p></div></div>
@@ -2830,13 +2936,14 @@
 ====================================================================== */
 const NAV = (function(){
   let stack = [];
-  const ALL = ['v-home','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-feuak','v-idf','v-simulator','v-vorschlaege'];
+  const ALL = ['v-home','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-feuak','v-idf','v-simulator','v-flashcards','v-vorschlaege'];
 
   function show(id){
     ALL.forEach(v=>{ const e=document.getElementById(v); if(e) e.classList.toggle('active',v===id); });
     window.scrollTo({top:0,behavior:'instant'});
     updateHeader();
     if(id==='v-vorschlaege') loadProposals();
+    if(typeof PROGRESS!=='undefined') PROGRESS.track(id);
   }
 
   function updateHeader(){
@@ -3616,11 +3723,321 @@ function showFS(msg,cls){
 }
 
 /* ======================================================================
+   FLASHCARD-DATEN (61 Karten)
+====================================================================== */
+const FLASHCARD_DATA = [
+  {id:'f01',cat:'SFS · Taktik',q:'Was ist der Führungsvorgang nach FwDV 100?',a:'Ein <strong>kontinuierlicher Kreislauf</strong> aus Lagefeststellung → Planung (Entschluss/Beurteilung) → Befehlsgebung → Kontrolle. Nicht statisch – wird bei neuen Informationen erneut durchlaufen.'},
+  {id:'f02',cat:'SFS · Taktik',q:'Was bedeutet die Abkürzung MELDEN?',a:'<strong>M</strong>eldender · <strong>E</strong>insatzstelle · <strong>L</strong>age · <strong>D</strong>urchgeführte Maßnahmen · <strong>E</strong>inheiten im Einsatz · <strong>N</strong>achforderungen'},
+  {id:'f03',cat:'SFS · Taktik',q:'Was bedeutet STOP bei der Gefahrenabwehr?',a:'<strong>S</strong>ubstitution · <strong>T</strong>echnische Lösung · <strong>O</strong>rganisatorisch · <strong>P</strong>ersönliche Maßnahme (Priorität nimmt ab!)'},
+  {id:'f04',cat:'SFS · Taktik',q:'Was sind die 4A der Gefahrenmatrix (4A-C-4E)?',a:'<strong>A</strong>temgifte · <strong>A</strong>ngstreaktionen · <strong>A</strong>usbreitung · <strong>A</strong>tomare Gefahren (Gefahren für Personen, Tiere, Umwelt)'},
+  {id:'f05',cat:'SFS · Taktik',q:'Was sind die 4E der Gefahrenmatrix?',a:'<strong>E</strong>rkrankung/Verletzung · <strong>E</strong>xplosion · <strong>E</strong>lektrizität · <strong>E</strong>insturz (Gefahren für Kräfte & Geräte)'},
+  {id:'f06',cat:'SFS · Taktik',q:'Welche Stärke hat eine Gruppe nach FwDV 3?',a:'<strong>1/8 – 1/9</strong>: Gruppenführer, Melder, Maschinist, Angriffstrupp (2), Wassertrupp (2), Schlauchtrupp (2). Typisches Fahrzeug: LF 10 oder LF 20.'},
+  {id:'f07',cat:'SFS · Taktik',q:'Was sind die Führungsstufen A–D?',a:'<strong>A:</strong> Führen ohne Führungseinheit (bis 2 Gruppen) · <strong>B:</strong> Mit örtlicher Führungseinheit (Zug) · <strong>C:</strong> Mit Führungsgruppe (Verband) · <strong>D:</strong> Mit Führungsgruppe/-stab (B VI)'},
+  {id:'f08',cat:'SFS · Taktik',q:'Was sind die 3 Lagen bei der Lagefeststellung?',a:'<strong>Allgemeine Lage:</strong> Zeit, Ort, Wetter · <strong>Schadenslage:</strong> Schaden, Objekt, Umfang · <strong>Eigene Lage:</strong> Führung, Kräfte, Mittel'},
+  {id:'f09',cat:'SFS · Methodik',q:'Was sind die 5 Phasen des AVIVA-Modells?',a:'<strong>A</strong>nkommen & Einstimmen · <strong>V</strong>orwissen aktivieren · <strong>I</strong>nformieren · <strong>V</strong>erarbeiten · <strong>A</strong>uswerten'},
+  {id:'f10',cat:'SFS · Methodik',q:'Aus welchen Komponenten besteht ein Lernziel?',a:'Einer <strong>Handlungskomponente</strong> (messbares Verb) + einer <strong>Inhaltskomponente</strong> (Substantiv). Kein „können", „wissen" oder „kennen"!'},
+  {id:'f11',cat:'SFS · Methodik',q:'Was sind die 3 Lernzielbereiche nach Bloom?',a:'<strong>Kognitiv</strong> (Wissen/Verstehen) · <strong>Psychomotorisch</strong> (Praktische Fertigkeiten) · <strong>Affektiv</strong> (Einstellungen/Werte)'},
+  {id:'f12',cat:'SFS · Methodik',q:'Welche 4 Stufen hat die 4-Stufen-Methode?',a:'1. <strong>Vorbereiten</strong> (Lernziel nennen) · 2. <strong>Vorführen</strong> (Ausbilder zeigt & erklärt) · 3. <strong>Nachmachen</strong> (TN führt durch) · 4. <strong>Üben</strong> (selbstständige Anwendung)'},
+  {id:'f13',cat:'SFS · Methodik',q:'Was ist ein UVP?',a:'<strong>Unterrichtsvorbereitungsplan</strong> – strukturierter Plan mit Lernzielen, Methoden, Medien und Zeitplanung. Regelkreis: Analyse → Struktur → Durchführung → Kontrolle.'},
+  {id:'f14',cat:'SFS · Methodik',q:'Wie ist die Lernzielhierarchie aufgebaut?',a:'<strong>Leitziele</strong> (übergeordnet) → <strong>Richtziele</strong> (Lernbereich/Fach) → <strong>Grobziele</strong> (Unterrichtseinheit) → <strong>Feinziele</strong> (operationalisierbar & prüfbar)'},
+  {id:'f15',cat:'SFS · Recht',q:'Was besagt die Normenpyramide?',a:'Höherrangiges Recht bricht niederrangiges: <strong>EU-Recht > GG > Bundesgesetze > Landesgesetze > Rechtsverordnungen > Satzungen > Verwaltungsvorschriften</strong>'},
+  {id:'f16',cat:'SFS · Recht',q:'Was bedeuten „Muss", „Soll" und „Kann" im FW-Recht?',a:'<strong>Muss</strong> = zwingend · <strong>Soll</strong> = Regelfall, nur ausnahmsweise abweichbar · <strong>Kann</strong> = Ermessen des Handelnden'},
+  {id:'f17',cat:'SFS · Recht',q:'Wann liegt Einsatzleitung kraft Gesetzes vor?',a:'Der zuerst eintreffende Einheitsführer übernimmt automatisch die Einsatzleitung – ohne ausdrückliche Ernennung, solange kein ranghöherer Einsatzleiter eingetroffen ist.'},
+  {id:'f18',cat:'HLFS · Führung',q:'Was bedeutet GAMS?',a:'<strong>G</strong>efahr erkennen · <strong>A</strong>bsperrung einrichten · <strong>M</strong>enschen retten · <strong>S</strong>pezialkräfte anfordern (erste Maßnahmen an GABC-Einsatzstellen)'},
+  {id:'f19',cat:'HLFS · Führung',q:'Was ist die EIMER-Regel?',a:'<strong>E</strong>insatzgrenzen festlegen · <strong>I</strong>nformationen beschaffen · <strong>M</strong>aßnahmen abstimmen · <strong>E</strong>rkundung fortsetzen · <strong>R</strong>ückmeldung erstatten'},
+  {id:'f20',cat:'HLFS · Führung',q:'Was unterscheidet Zug- und Verbandsführer?',a:'<strong>Zugführer:</strong> Führt 2–3 Gruppen, Führungsstufe B · <strong>Verbandsführer:</strong> Führt mehrere Züge, Führungsstufe C, mit Führungsgruppe, zuständig für einen Einsatzabschnitt.'},
+  {id:'f21',cat:'HLFS · GABC',q:'Welche Schutzkleidungsstufen gibt es bei GABC?',a:'<strong>KS 1:</strong> Feuerschutzanzug + PA · <strong>KS 2:</strong> CSA (Chemikalienschutzanzug) · <strong>KS 3:</strong> Gasdichter Vollschutzanzug + PA · <strong>KS 4:</strong> Druckluftanzug'},
+  {id:'f22',cat:'HLFS · GABC',q:'Was sind die Absperrgrenzen bei GABC-Einsätzen?',a:'<strong>Innere Absperrung:</strong> Gefahrenbereich (nur Einsatzkräfte mit PSA) · <strong>Äußere Absperrung:</strong> Einsatzbereich (kein Publikum). Mindestabstand je nach Stoff.'},
+  {id:'f23',cat:'HLFS · GABC',q:'Was sind die 3 Dekontaminationsstufen?',a:'<strong>Dekon P:</strong> Personendekontamination · <strong>Dekon G:</strong> Gerätedekontamination · <strong>Dekon V:</strong> Verletzten-Dekontamination (ggf. Notdekon vorab)'},
+  {id:'f24',cat:'HLFS · MANV',q:'Was sind die MANV-Sichtungskategorien?',a:'<strong>SK I:</strong> Lebensrettende Sofortmaßnahmen · <strong>SK II:</strong> Schwerverletzt, Behandlung aufschiebbar · <strong>SK III:</strong> Leichtverletzt · <strong>SK IV:</strong> Ohne Überlebenschance'},
+  {id:'f25',cat:'HLFS · MANV',q:'Was ist der OLRD?',a:'<strong>Organisatorischer Leitender Rettungsdienst</strong> – koordiniert die medizinische Versorgung am MANV. Bildet mit dem LNA (Leitender Notarzt) die medizinische Einsatzleitung.'},
+  {id:'f26',cat:'HLFS · MANV',q:'Welche Bereiche werden am MANV eingerichtet?',a:'<strong>Patientenablage (PA)</strong> · <strong>Behandlungsplatz (BHP)</strong> mit SK I–IV-Bereichen · <strong>Verletztensammelstelle</strong> · <strong>Transportorganisation</strong>'},
+  {id:'f27',cat:'HLFS · Stab',q:'Was sind die Sachgebiete S1–S6 im Stab?',a:'<strong>S1:</strong> Personal · <strong>S2:</strong> Lage · <strong>S3:</strong> Einsatz · <strong>S4:</strong> Versorgung · <strong>S5:</strong> Presse/Medien · <strong>S6:</strong> IuK'},
+  {id:'f28',cat:'HLFS · Stab',q:'Ab welcher Führungsstufe wird ein Stab gebildet?',a:'Ab <strong>Führungsstufe D</strong> (mehrere Verbände / B VI). Besteht aus: Leiter des Stabs, S1–S6, Verbindungspersonen und Fachdienst-Verbindungsführer.'},
+  {id:'f29',cat:'HLFS · Stab',q:'Was ist eine TEL?',a:'<strong>Technische Einsatzleitung</strong> – mobile Führungseinrichtung ab Führungsstufe C/D. Besteht aus: Führungsfahrzeug/-container, IuK-Einheit und Stab (S1–S6).'},
+  {id:'f30',cat:'HLFS · Tunnel',q:'Warum sind Tunnelbrände besonders gefährlich?',a:'<strong>Kamineffekt/Druckdifferenz</strong> · Eingeschlossene Personen · Verrauchung über weite Strecken · Eingeschränkte Rettungswege · Hitzestau · Infrastrukturausfall.'},
+  {id:'f31',cat:'HLFS · Tunnel',q:'Welche Ventilationsstrategien gibt es im Tunnel?',a:'<strong>Longitudinal:</strong> Längsventilation (Strömung in Fahrtrichtung) · <strong>Transversal:</strong> Querventilation (Zuluft/Abluft getrennt) · Brandrauchverdünnung durch Überdruck.'},
+  {id:'f32',cat:'HLFS · Vorbeugen',q:'Was sind die 3 Säulen des vorbeugenden Brandschutzes?',a:'<strong>Baulich:</strong> Brandwände, Trennwände, Rettungswege · <strong>Anlagentechnisch:</strong> Sprinkler, RWA, BMA · <strong>Organisatorisch:</strong> Evakuierungsplan, Brandschutzbeauftragter'},
+  {id:'f33',cat:'HLFS · Führung',q:'Was sind die 8 Führungsfragen nach FwDV 100?',a:'Lage? – Auftrag? – Eigene Möglichkeiten? – Entschluss? – Befehl? – Rückmeldung? – Kontrolle? – Neue Lage? <strong>(Kreislauf!)</strong>'},
+  {id:'f34',cat:'IBK · TA',q:'Was sind die 3 Ich-Zustände nach Eric Berne?',a:'<strong>Eltern-Ich (EI):</strong> Kritisch kEI / fürsorglich fEI · <strong>Erwachsenen-Ich (ErI):</strong> Sachlich, rational · <strong>Kind-Ich (KI):</strong> Spontan, angepasst oder rebellisch'},
+  {id:'f35',cat:'IBK · TA',q:'Was ist eine komplementäre Transaktion?',a:'Kommunikation verläuft <strong>parallel</strong> – der angesprochene Ich-Zustand antwortet (z.B. ErI→ErI). Kann <strong>unbegrenzt</strong> weitergehen; kein Konflikt.'},
+  {id:'f36',cat:'IBK · TA',q:'Was ist eine gekreuzte Transaktion?',a:'Antwort aus einem <strong>anderen als dem angesprochenen</strong> Ich-Zustand → <strong>Kommunikationsabbruch</strong>. Beispiel: ErI-Frage → kEI-Antwort = Konflikt.'},
+  {id:'f37',cat:'IBK · TA',q:'Was sind die 4 Grundpositionen nach der TA?',a:'Ich OK / Du OK (gesund) · Ich OK / Du nicht OK · Ich nicht OK / Du OK · Ich nicht OK / Du nicht OK (tiefste Krise)'},
+  {id:'f38',cat:'IBK · TA',q:'Was sind die 5 „Antreiber" nach Taibi Kahler?',a:'<strong>Sei perfekt!</strong> · <strong>Beeil dich!</strong> · <strong>Streng dich an!</strong> · <strong>Mach es allen recht!</strong> · <strong>Sei stark!</strong> (unbewusste Glaubenssätze unter Stress)'},
+  {id:'f39',cat:'IBK · Konflikt',q:'Welche 9 Stufen hat Glasls Eskalationsmodell?',a:'Stufe 1–3: Win-win möglich · 4–6: Win-lose (Moderation nötig) · 7–9: Lose-lose (nur externe Machteingriffe helfen). Ab Stufe 4: Koalitionsbildung.'},
+  {id:'f40',cat:'IBK · Konflikt',q:'Was ist das Karpman-Dreieck?',a:'Dynamik zwischen 3 Rollen: <strong>Verfolger</strong> (Täter) · <strong>Retter</strong> (Helfer) · <strong>Opfer</strong>. Rollen sind austauschbar. Ziel: Alle in die Erwachsenenrolle führen.'},
+  {id:'f41',cat:'IBK · Konflikt',q:'Was besagen die 5 Axiome von Watzlawick?',a:'1. Man kann nicht nicht kommunizieren · 2. Inhalts- & Beziehungsaspekt · 3. Interpunktion der Ereignisfolge · 4. Digital & analog · 5. Symmetrisch & komplementär'},
+  {id:'f42',cat:'IBK · Konflikt',q:'Was ist die Mehrabian-Formel?',a:'Kommunikationswirkung: <strong>7% Worte</strong> · <strong>38% Tonfall/Stimme</strong> · <strong>55% Körpersprache</strong>. Gilt bei emotionalen/widersprüchlichen Nachrichten – nicht bei reiner Sachinformation!'},
+  {id:'f43',cat:'IBK · Konflikt',q:'Was sind die 4 Seiten einer Nachricht (Schulz von Thun)?',a:'<strong>Sachinhalt</strong> (Information) · <strong>Selbstoffenbarung</strong> (was ich von mir zeige) · <strong>Beziehungshinweis</strong> (wie ich zu dir stehe) · <strong>Appell</strong> (was ich will)'},
+  {id:'f44',cat:'IBK · Stress',q:'Was bedeutet das S-O-R-K-C-Modell?',a:'<strong>S</strong>timulus → <strong>O</strong>rganismus (intern) → <strong>R</strong>eaktion → <strong>K</strong>onsequenz → <strong>C</strong>ontingenz. Stress entsteht durch die interne Bewertung, nicht nur durch den Reiz!'},
+  {id:'f45',cat:'IBK · Stress',q:'Was ist der Flow-Kanal nach Csikszentmihalyi?',a:'Optimaler Zustand wenn <strong>Anforderungen = Fähigkeiten</strong>. Zu niedrig → Langeweile. Zu hoch → Angst/Stress. Flow: vollständige Absorption, Zeitverlust, hohe Leistung.'},
+  {id:'f46',cat:'IBK · Stress',q:'Was sind die 3 Ebenen des biopsychosozialen Modells?',a:'<strong>Biologisch:</strong> körperliche Belastung, Erkrankung · <strong>Psychologisch:</strong> kognitive Bewertung, Persönlichkeit · <strong>Sozial:</strong> Arbeitsklima, soziale Unterstützung'},
+  {id:'f47',cat:'IBK · Stress',q:'Was ist das JD-R-Modell?',a:'<strong>Job Demands-Resources:</strong> Hohe Anforderungen + geringe Ressourcen → Burnout-Risiko. Hohe Ressourcen puffern Anforderungen ab und fördern Engagement.'},
+  {id:'f48',cat:'IBK · PSNV',q:'Was ist die Alarmierungsformel im PSNV?',a:'<strong>Wer – Wo – Was – Wann – Wie viele – Warnung vor Gefahren</strong> (6 W). Strukturierte Kommunikation bei psychosozialer Notfallversorgung.'},
+  {id:'f49',cat:'IBK · PSNV',q:'Was ist Demobilisation?',a:'Strukturierter Abschluss nach Belastungseinsätzen: kurze Zusammenfassung, erste Verarbeitung im Team, Hinweis auf Normalreaktionen und weiterführende Hilfe. Kein Debriefing!'},
+  {id:'f50',cat:'IBK · PSNV',q:'Was besagt das BELLA-Konzept?',a:'<strong>B</strong>eziehung herstellen · <strong>E</strong>rfassen der Situation · <strong>L</strong>indern akuter Belastung · <strong>L</strong>angfristig stabilisieren · <strong>A</strong>bklären weiterer Hilfe'},
+  {id:'f51',cat:'IBK · BGM',q:'Was sind die 6 Dimensionen des PERMA-H-Modells?',a:'<strong>P</strong>ositive Emotionen · <strong>E</strong>ngagement · <strong>R</strong>elationships · <strong>M</strong>eaning (Sinn) · <strong>A</strong>ccomplishment · <strong>H</strong>ealth (Gesundheit)'},
+  {id:'f52',cat:'IBK · BGM',q:'Was ist Salutogenese nach Antonovsky?',a:'Fokus auf <strong>gesundheitserhaltende Faktoren</strong> statt Krankheitsursachen. Kernkonzept: <strong>Kohärenzgefühl</strong> (Verstehbarkeit + Handhabbarkeit + Bedeutsamkeit).'},
+  {id:'f53',cat:'IBK · BGM',q:'Was sind die 3 Dimensionen von Burnout nach Maslach?',a:'<strong>Emotionale Erschöpfung</strong> · <strong>Depersonalisation</strong> (Zynismus, innere Distanzierung) · <strong>Reduzierte persönliche Leistungsfähigkeit</strong>'},
+  {id:'f54',cat:'IBK · BGM',q:'Was sind die 3 Säulen des BGM?',a:'<strong>Betriebliche Gesundheitsförderung (BGF)</strong> · <strong>Arbeitsschutz/Arbeitssicherheit</strong> · <strong>Betriebliches Eingliederungsmanagement (BEM)</strong>'},
+  {id:'f55',cat:'IBK · PM',q:'Was ist der kritische Pfad (CPM)?',a:'Die längste Kette von Vorgängen im Netzplan <strong>ohne Puffer</strong>. Bestimmt die Gesamtprojektdauer. Jede Verzögerung am kritischen Pfad verzögert das gesamte Projekt.'},
+  {id:'f56',cat:'IBK · PM',q:'Was ist ein Stakeholder-Mapping?',a:'Analyse der Projektbeteiligten nach <strong>Einfluss (Macht)</strong> und <strong>Interesse</strong>. 4-Felder-Matrix: High/High = eng einbeziehen · Low/Low = beobachten.'},
+  {id:'f57',cat:'IBK · PM',q:'Was sind die 4 Felder der Risikomatrix?',a:'Eintrittswahrscheinlichkeit × Schadensausmaß: <strong>Hoch/Hoch:</strong> Sofortmaßnahme · <strong>Hoch/Niedrig:</strong> Prozess verbessern · <strong>Niedrig/Hoch:</strong> Notfallplan · <strong>Niedrig/Niedrig:</strong> Akzeptieren'},
+  {id:'f58',cat:'IBK · Zeit',q:'Was ist die ALPEN-Methode?',a:'<strong>A</strong>ufgaben aufschreiben · <strong>L</strong>änge schätzen · <strong>P</strong>uffer einplanen (60/40-Regel) · <strong>E</strong>ntscheidungen/Prioritäten · <strong>N</strong>achkontrollieren'},
+  {id:'f59',cat:'IBK · Zeit',q:'Was ist das Pareto-Prinzip im Zeitmanagement?',a:'<strong>80% des Ergebnisses</strong> wird mit <strong>20% des Aufwands</strong> erzielt. Fokus auf die wichtigsten 20% der Aufgaben statt alles gleichwertig zu behandeln.'},
+  {id:'f60',cat:'IBK · Zeit',q:'Was bedeutet „Eat the Frog"?',a:'Die <strong>unangenehmste, wichtigste Aufgabe zuerst</strong> erledigen. Verhindert Aufschieben und schafft mentale Freiheit für den Rest des Tages (nach Mark Twain).'},
+  {id:'f61',cat:'IBK · Zeit',q:'Was ist Deep Work nach Cal Newport?',a:'Zustand der <strong>ablenkungsfreien Konzentration</strong> auf kognitive Hochleistungsaufgaben. Gegenteil: Shallow Work (E-Mails, Meetings). Bestimmt professionelle Qualität.'},
+];
+
+/* ======================================================================
+   PROGRESS – Lernfortschritt in LocalStorage
+====================================================================== */
+const PROGRESS = (function(){
+  const GROUPS = {
+    sfs:  ['v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc'],
+    hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
+    ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
+  };
+  const LEAF_PARENT = {};
+  Object.keys(GROUPS).forEach(g => GROUPS[g].forEach(v => { LEAF_PARENT[v] = g; }));
+
+  function load(){ try{ return JSON.parse(localStorage.getItem('bvi_progress')||'{}'); }catch{ return {}; } }
+  function save(d){ try{ localStorage.setItem('bvi_progress',JSON.stringify(d)); }catch{} }
+
+  function track(viewId){
+    if(!LEAF_PARENT[viewId]) return;
+    const d = load(); d[viewId] = true; save(d);
+    updateUI();
+  }
+
+  function updateUI(){
+    const visited = load();
+    const allLeafs = [...GROUPS.sfs,...GROUPS.hlfs,...GROUPS.ibk];
+    const total = allLeafs.length;
+    const done = allLeafs.filter(v=>visited[v]).length;
+    const bar = document.getElementById('prog-bar');
+    if(bar) bar.style.width = (total ? Math.round(done/total*100) : 0) + '%';
+
+    ['sfs','hlfs','ibk'].forEach(g => {
+      const views = GROUPS[g];
+      const d = views.filter(v=>visited[v]).length;
+      const el = document.getElementById('prog-'+g);
+      if(!el) return;
+      el.textContent = d+'/'+views.length;
+      el.style.display = d > 0 ? 'block' : 'none';
+    });
+
+    document.querySelectorAll('.topic-card').forEach(card => {
+      const oc = card.getAttribute('onclick')||'';
+      const m = oc.match(/NAV\.go\('([^']+)'/);
+      if(!m) return;
+      const vid = m[1];
+      let chk = card.querySelector('.tc-check');
+      if(visited[vid]){
+        if(!chk){ chk = document.createElement('span'); chk.className='tc-check'; chk.textContent='✓'; card.style.position='relative'; card.appendChild(chk); }
+      } else { if(chk) chk.remove(); }
+    });
+  }
+
+  return { track, updateUI };
+})();
+
+/* ======================================================================
+   SEARCH – Volltext-Suche über alle Views
+====================================================================== */
+const SEARCH = (function(){
+  let idx = [], results = [], focusIdx = -1;
+
+  const VIEW_LABELS = {
+    'v-sfs-fwdv3':'SFS · Führung','v-sfs-methodik':'SFS · Methodik','v-sfs-rechtsgrundlagen':'SFS · Recht','v-sfs-abc':'SFS · Geräte/ABC',
+    'v-hlfs-fuehrungsvorgang':'HLFS · Führungsvorgang','v-hlfs-gabc':'HLFS · GABC','v-hlfs-tunnel':'HLFS · Tunnel',
+    'v-hlfs-vb':'HLFS · Vorbeugen','v-hlfs-manv':'HLFS · MANV','v-hlfs-zugfuehrer':'HLFS · Zugführer','v-hlfs-stab':'HLFS · Stab',
+    'v-ibk-ta':'IBK · TA','v-ibk-konflikt':'IBK · Konflikt','v-ibk-stress':'IBK · Stress',
+    'v-ibk-psnv':'IBK · PSNV','v-ibk-bgm':'IBK · BGM','v-ibk-pm':'IBK · PM','v-ibk-zeit':'IBK · Zeitmanagement',
+  };
+
+  function buildIndex(){
+    idx = [];
+    Object.keys(VIEW_LABELS).forEach(vid => {
+      const el = document.getElementById(vid); if(!el) return;
+      const lbl = VIEW_LABELS[vid];
+      el.querySelectorAll('.sec-h,.tc-name,.page-title,.def-box-label').forEach(h => {
+        const t = h.textContent.trim(); if(t.length < 3) return;
+        idx.push({vid, lbl, title:t, snippet:'', boost:3});
+      });
+      el.querySelectorAll('.def-box p,.info-card p,.bl li,.step-desc,.hint p,.tc-sub,.ant-desc,.pillar ul li').forEach(p => {
+        const t = p.textContent.trim(); if(t.length < 8) return;
+        const hdr = p.closest('.info-card,.def-box,.step-item');
+        const ttl = hdr ? (hdr.querySelector('.info-card-title,.def-box-label,.step-title')||{}).textContent||lbl : lbl;
+        idx.push({vid, lbl, title:ttl.trim(), snippet:t.slice(0,130), boost:1});
+      });
+    });
+  }
+
+  function hl(text, q){
+    const re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    return text.replace(re,'<mark>$1</mark>');
+  }
+
+  function doSearch(q){
+    if(!q || q.length < 2) return [];
+    const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+    const scored = idx.map(e => {
+      const hay = (e.title+' '+e.snippet+' '+e.lbl).toLowerCase();
+      const score = terms.reduce((s,t) => s + (hay.includes(t) ? e.boost : 0), 0);
+      return {...e, score};
+    }).filter(e => e.score > 0).sort((a,b) => b.score-a.score);
+    const seen = new Set();
+    return scored.filter(e => { const k=e.vid+'|'+e.title; if(seen.has(k)) return false; seen.add(k); return true; }).slice(0,12);
+  }
+
+  function render(q){
+    const el = document.getElementById('search-results');
+    if(!q){ el.innerHTML='<div class="search-idle">Suchbegriff eingeben – z.&nbsp;B. <em>AVIVA</em>, <em>Glasl</em>, <em>MANV</em></div>'; results=[]; focusIdx=-1; return; }
+    results = doSearch(q);
+    if(!results.length){ el.innerHTML='<div class="search-empty">Keine Treffer für <strong>'+xss(q)+'</strong></div>'; focusIdx=-1; return; }
+    el.innerHTML = results.map((r,i)=>`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${r.lbl}</span><div><div class="sr-title">${hl(xss(r.title),q)}</div>${r.snippet?`<div class="sr-snippet">${hl(xss(r.snippet),q)}</div>`:''}</div></div>`).join('');
+    focusIdx = -1;
+  }
+
+  function setFocus(i){
+    const items = document.querySelectorAll('#search-results .search-result');
+    items.forEach(e=>e.classList.remove('sr-focus'));
+    if(i>=0 && i<items.length){ items[i].classList.add('sr-focus'); items[i].scrollIntoView({block:'nearest'}); }
+    focusIdx = i;
+  }
+
+  return {
+    open(){
+      buildIndex();
+      document.getElementById('search-overlay').classList.remove('hidden');
+      const inp = document.getElementById('search-input');
+      inp.value = ''; inp.focus(); render('');
+    },
+    close(){ document.getElementById('search-overlay').classList.add('hidden'); results=[]; focusIdx=-1; },
+    query(q){ render(q.trim()); },
+    keydown(e){
+      if(e.key==='Escape'){ this.close(); return; }
+      if(e.key==='ArrowDown'){ e.preventDefault(); setFocus(Math.min(focusIdx+1,results.length-1)); return; }
+      if(e.key==='ArrowUp'){ e.preventDefault(); setFocus(Math.max(focusIdx-1,0)); return; }
+      if(e.key==='Enter' && focusIdx>=0){ this.go(focusIdx); return; }
+    },
+    go(i){
+      const r = results[i]; if(!r) return;
+      this.close();
+      const lbl = r.lbl.split('·').pop().trim();
+      NAV.go(r.vid, lbl);
+    }
+  };
+})();
+
+/* ======================================================================
+   FC – Flashcard-Engine
+====================================================================== */
+const FC = (function(){
+  let deck=[], curIdx=0, flipped=false, filter='all', sess={known:0,unknown:0};
+
+  function fcLoad(){ try{ return JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch{ return {}; } }
+  function fcSave(d){ try{ localStorage.setItem('bvi_fc',JSON.stringify(d)); }catch{} }
+
+  function getDeck(){
+    if(filter==='all') return [...FLASHCARD_DATA];
+    return FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(filter));
+  }
+  function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+  function renderCard(){
+    const box = document.getElementById('fc-container'); if(!box) return;
+    if(curIdx >= deck.length){ renderEnd(); return; }
+    const card = deck[curIdx];
+    const known = fcLoad();
+    const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
+    box.innerHTML = `
+      <div class="fc-stats-row">
+        <span class="fc-stat">🟢 ${sess.known} gewusst</span>
+        <span class="fc-stat">🔴 ${sess.unknown} nicht gewusst</span>
+        <span class="fc-stat">📚 ${knownCnt}/${FLASHCARD_DATA.length} gelernt</span>
+      </div>
+      <div class="fc-nav">${curIdx+1} / ${deck.length}</div>
+      <div class="fc-outer" onclick="FC.flip()">
+        <div class="fc-inner" id="fc-inner">
+          <div class="fc-face fc-front">
+            <div class="fc-cat">${card.cat}</div>
+            <div class="fc-q">${card.q}</div>
+            <div class="fc-tap">Tippen zum Aufdecken ↓</div>
+          </div>
+          <div class="fc-face fc-back">
+            <div class="fc-cat">${card.cat}</div>
+            <div class="fc-a">${card.a}</div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fc-controls" style="display:none">
+        <button class="fc-btn fc-no" onclick="FC.answer(false)">✗ Nicht gewusst</button>
+        <button class="fc-btn fc-yes" onclick="FC.answer(true)">✓ Gewusst</button>
+      </div>`;
+    flipped = false;
+  }
+
+  function renderEnd(){
+    const box = document.getElementById('fc-container'); if(!box) return;
+    const known = fcLoad();
+    const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
+    const pct = deck.length ? Math.round(sess.known/deck.length*100) : 0;
+    const ico = pct>=80?'🏆':pct>=50?'📖':'🔄';
+    const ttl = pct>=80?'Ausgezeichnet!':pct>=50?'Gut gemacht!':'Weiter üben!';
+    box.innerHTML = `
+      <div class="fc-end">
+        <div class="fc-end-ico">${ico}</div>
+        <div class="fc-end-title">${ttl}</div>
+        <div class="fc-end-sub">${sess.known} von ${deck.length} Karten gewusst (${pct}%).<br>Insgesamt <strong>${knownCnt}/${FLASHCARD_DATA.length}</strong> Begriffe dauerhaft gelernt.</div>
+        <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-gold" onclick="FC.start()">Neu mischen & wiederholen</button>
+          <button class="btn btn-ghost" onclick="FC.resetKnown()">Lernstand zurücksetzen</button>
+        </div>
+      </div>`;
+  }
+
+  return {
+    start(){
+      deck = shuffle(getDeck()); curIdx=0; flipped=false; sess={known:0,unknown:0};
+      renderCard();
+    },
+    flip(){
+      if(curIdx>=deck.length) return;
+      flipped=!flipped;
+      const inner=document.getElementById('fc-inner');
+      const ctrl=document.getElementById('fc-controls');
+      if(inner) inner.classList.toggle('flipped',flipped);
+      if(ctrl) ctrl.style.display=flipped?'flex':'none';
+    },
+    answer(knew){
+      if(!flipped) return;
+      const card=deck[curIdx];
+      const d=fcLoad();
+      if(knew){ d[card.id]=true; sess.known++; } else { delete d[card.id]; sess.unknown++; }
+      fcSave(d); curIdx++; renderCard();
+    },
+    setFilter(f){
+      filter=f;
+      document.querySelectorAll('.fc-f-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter===f));
+      this.start();
+    },
+    resetKnown(){ localStorage.removeItem('bvi_fc'); this.start(); }
+  };
+})();
+
+/* ======================================================================
    INITIALISIERUNG
 ====================================================================== */
 document.addEventListener('DOMContentLoaded',()=>{
   NAV.home();
-  console.log('%c B VI %c Lernwebsite v3.0 · flametan/BVI-Lernwebsite ',
+  PROGRESS.updateUI();
+  document.addEventListener('keydown', e => {
+    if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); SEARCH.open(); }
+    if(e.key==='Escape' && !document.getElementById('search-overlay').classList.contains('hidden')) SEARCH.close();
+  });
+  console.log('%c B VI %c Lernwebsite v3.1 · flametan/BVI-Lernwebsite ',
     'background:#A50000;color:#fff;padding:3px 8px;border-radius:4px 0 0 4px;font-family:"DM Mono",monospace;font-weight:700',
     'background:#0A192F;color:#C9A84C;padding:3px 8px;border-radius:0 4px 4px 0;font-family:"DM Mono",monospace');
 });
