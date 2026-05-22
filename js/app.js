@@ -1,0 +1,1128 @@
+/* ======================================================================
+   NAVIGATIONS-ENGINE
+   NAV.go(id, label) · NAV.back() · NAV.home() · NAV.jumpTo(idx)
+====================================================================== */
+const NAV = (function(){
+  let stack = [];
+  const ALL = ['v-home','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-feuak','v-idf','v-simulator','v-flashcards','v-vorschlaege'];
+
+  function show(id){
+    ALL.forEach(v=>{ const e=document.getElementById(v); if(e) e.classList.toggle('active',v===id); });
+    window.scrollTo({top:0,behavior:'instant'});
+    updateHeader();
+    if(id==='v-vorschlaege') loadProposals();
+    if(typeof PROGRESS!=='undefined') PROGRESS.track(id);
+  }
+
+  function updateHeader(){
+    const bb=document.getElementById('back-btn');
+    const fb=document.getElementById('float-back');
+    const cr=document.getElementById('breadcrumb');
+    const noStack = stack.length===0;
+
+    // Header back button (desktop)
+    bb.classList.toggle('hidden', noStack);
+
+    // Floating back button (mobile)
+    if(fb) fb.classList.toggle('hidden', noStack);
+
+    if(noStack){ cr.innerHTML=''; return; }
+
+    // Breadcrumb trail
+    const items=[{label:'Startseite',idx:-1},...stack.map((s,i)=>({label:s.label,idx:i}))];
+    cr.innerHTML=items.map((item,i)=>{
+      const last=i===items.length-1;
+      const cls=last?'crumb-item active':'crumb-item';
+      const click=last?'':(item.idx===-1?'onclick="NAV.home()"':`onclick="NAV.jumpTo(${item.idx})"`);
+      return `<span class="${cls}" ${click}>${item.label}</span>`;
+    }).join('');
+
+    // Float button label = previous page or Startseite
+    if(fb){
+      const prev = stack.length>=2 ? stack[stack.length-2].label : 'Startseite';
+      const lbl = fb.querySelector('.fb-label');
+      if(lbl) lbl.textContent = prev;
+    }
+  }
+
+  return {
+    go(id,label){ stack.push({id,label}); show(id); },
+    back(){ if(!stack.length) return; stack.pop(); show(stack.length?stack[stack.length-1].id:'v-home'); },
+    jumpTo(idx){ stack=stack.slice(0,idx+1); show(idx>=0?stack[idx].id:'v-home'); },
+    home(){ stack=[]; show('v-home'); }
+  };
+})();
+
+/* ======================================================================
+   SIMULATOR ENGINE – 4 SZENARIEN
+   ======================================================================
+   STRUKTUR EINES KNOTENS:
+     phase      {1-4}    – Phasenleiste
+     title      {string} – Szenentitel
+     scene      {string} – HTML-Situationsbeschreibung
+     question   {string} – Entscheidungsfrage
+     options    {Array}  – Auswahlmöglichkeiten:
+       letter     : Beschriftung
+       text       : Anzeigetext
+       quality    : 'good'|'neutral'|'bad'|'restart'
+       scoreDelta : Punktveränderung (±)
+       feedback   : Konsequenzbeschreibung
+       theory     : Theoretische Einordnung
+       next       : ID des nächsten Knotens
+     isEnd      {bool}   – Endknoten → Auswertungsscreen
+     endScore   {string} – 'good'|'neutral'|'bad'
+
+   UM EIN NEUES SZENARIO ZU ERGÄNZEN:
+     1. Im SCENARIOS-Objekt einen neuen Key anlegen
+     2. Startknoten definieren (wird automatisch als 'start' gesucht)
+     3. Knoten via next verketten · isEnd+endScore für Abschluss setzen
+====================================================================== */
+const SCENARIOS = {
+
+/* ------------------------------------------------------------------
+   SZENARIO 1: SCHMIDT / MÜLLER (Generationenkonflikt)
+------------------------------------------------------------------ */
+schmidt: {
+  label: 'Szenario 01 – Konflikt Schmidt / Müller',
+  start: 'start',
+  nodes: {
+    'start':{ phase:1, title:'🚨 08:15 – Büro des B-Dienstes',
+      scene:`<p>Dein Stellvertreter: <em>„OBM Fritz Schmidt (52 J., 30 Dienstjahre, Ausbilder) hat WAL Müller lautstark vor der Mannschaft konfrontiert. Thema: Monatelange RD-Einteilung trotz BrK-Qualifikation. Gespräch eskaliert, Schmidt gegangen. Heute: Eisstimmung."</em></p><div class="scene-ib"><strong>Deine Rolle:</strong> B-Dienst – Gesamtverantwortung für diese Wache.</div>`,
+      question:'Was ist dein erster Schritt?',
+      options:[
+        {letter:'A',text:'Faktenerhebung: Schichtpläne (3 Monate), Qualifikationen, Rücksprache WAL – vor jeder Handlung.',quality:'good',scoreDelta:+20,theory:'Führungsprinzip: Situationsanalyse vor Handlung. Erwachsenen-Ich (ErI) – sachliche Informationsbeschaffung.',feedback:'Proaktiv und faktenbasiert – der einzig richtige erste Schritt!',next:'p1_analyse'},
+        {letter:'B',text:'Müller sofort anrufen: „Schmidt kommt ab morgen zurück in BrK-Schichten – Ende."',quality:'bad',scoreDelta:-15,theory:'Kritisches EI (kEI→aKI): Symptombehandlung ohne Analyse. Müllers Autorität wird übergangen.',feedback:'Reaktives Handeln ohne Fakten – Führungsversagen.',next:'p1_schnellfix'},
+        {letter:'C',text:'Beide sofort gemeinsam ins Büro: „Das klären wir jetzt."',quality:'bad',scoreDelta:-10,theory:'Glasl: Konfrontation ohne Einzelgespräche eskaliert den Konflikt weiter.',feedback:'Ohne Vorbereitung eskaliert das sofort.',next:'p1_konfrontation'},
+        {letter:'D',text:'Abwarten – solche Spannungen lösen sich meist von selbst.',quality:'bad',scoreDelta:-20,theory:'Glasl: Passivität bei Stufe 2–3 führt sicher zu Koalitionsbildung (Stufe 4).',feedback:'Untätigkeit ist keine Führungsstrategie.',next:'p1_abwarten'}
+      ]},
+    'p1_schnellfix':{ phase:1, title:'⚡ Schnell-Lösung – Rebound-Effekt',
+      scene:`<p>Müller am Telefon: <em>„Das können Sie nicht einfach entscheiden! Drei Langzeitkranke – ich hatte keine andere Wahl!"</em></p><div class="scene-ib warn"><strong>Bewertung:</strong> Reaktion ohne Fakten untergräbt Müllers Autorität. Das Kernproblem bleibt ungelöst.</div>`,
+      question:'Du erkennst deinen Fehler. Was jetzt?',
+      options:[
+        {letter:'A',text:'Entschuldigung bei Müller, Rücknahme der Entscheidung, Neustart mit Faktenerhebung.',quality:'good',scoreDelta:+5,theory:'Fehlerkultur (BGM): Eigene Fehler korrigieren ist Führungsstärke.',feedback:'Mutige Korrektur – du rettest das Vertrauen.',next:'p1_analyse'},
+        {letter:'B',text:'An der Entscheidung festhalten – ich bin der B-Dienst.',quality:'bad',scoreDelta:-20,theory:'Glasl 4–5: Beharren aus Prestigegründen. Müller sucht Koalitionspartner.',feedback:'Führungskrise vorprogrammiert.',next:'p1_eskalation'}
+      ]},
+    'p1_abwarten':{ phase:1, title:'⏳ 48h später – Lager bilden sich',
+      scene:`<p>Schmidt: krankgemeldet. Zwei Kollegen offen hinter Schmidt, Jüngere hinter Müller. Dein Vorgesetzter: <em>„Was ist auf Wache 2 los?"</em></p><div class="scene-ib warn"><strong>Glasl-Stufe 4:</strong> Koalitionsbildung durch Untätigkeit. Externe Moderation empfohlen.</div>`,
+      question:'Du musst jetzt handeln.',
+      options:[{letter:'A',text:'Sofortige Sachverhaltserhebung, Einzelgespräche, ggf. Personalrat einbeziehen.',quality:'neutral',scoreDelta:-5,theory:'Spät aber richtig. Ab Glasl-Stufe 4 externe Moderation sinnvoll.',feedback:'Richtig – aber 48 Stunden zu spät.',next:'p1_analyse'}]},
+    'p1_konfrontation':{ phase:1, title:'💥 Unvorbereitetes Gespräch',
+      scene:`<p>Nach 45 Sekunden: Schmidt beginnt, Müller unterbricht. Dir fehlen Fakten und Regeln.</p><div class="scene-ib warn"><strong>TA:</strong> Beide im aKI – kein ErI in Sicht.</div>`,
+      question:'Wie reagierst du?',
+      options:[
+        {letter:'A',text:'Gespräch abbrechen: „Heute sind wir nicht bereit. Wir vertagen." Dann Fakten erheben.',quality:'good',scoreDelta:+5,theory:'Deeskalation: Bewusstes Stoppen ist Führungsstärke.',feedback:'Mutig und richtig gestoppt.',next:'p1_analyse'},
+        {letter:'B',text:'Als Moderator versuchen, das Gespräch auf die Sachebene zu zwingen.',quality:'bad',scoreDelta:-12,theory:'Ohne Vorbereitung und Regeln scheitert jede Moderation.',feedback:'Das Gespräch eskaliert vollends.',next:'p1_eskalation'}
+      ]},
+    'p1_eskalation':{ phase:1, title:'🔴 Eskalation – Glasl 4–5', isEnd:true, endScore:'bad',
+      scene:`<p>Situation außer Kontrolle. Schmidt krankgemeldet, Müller hat Beschwerde eingereicht. Du wirst einbestellt.</p><div class="scene-ib err"><strong>Spielende – Führungsversagen.</strong> Frühes, faktenbasiertes Handeln ist der Schlüssel.</div>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'start'}]},
+    'p1_analyse':{ phase:1, title:'🔍 Faktenerhebung – Ergebnis',
+      scene:`<p>Erkenntnisse:<ul class="scene-list"><li>Schmidt: <strong>78% im RD</strong> der letzten 3 Monate</li><li>Müller: <strong>drei Langzeitkranke</strong> gleichzeitig – operativer Engpass</li><li>Schmidt: Qualifikation GrF BrK, <strong>15 Jahre Ausbilder</strong></li><li>Schmidt wurde <strong>nie vorab informiert</strong></li><li>Kein MAG in dieser Dienstzeit</li></ul></p><div class="scene-ib"><strong>Schulz von Thun:</strong> Müller handelte sachlich korrekt, ignorierte die Beziehungsebene. Schmidt empfing: „Du bist mir egal."</div>`,
+      question:'Wie beginnst du Phase 2?',
+      options:[
+        {letter:'A',text:'Zuerst Einzelgespräch mit Schmidt: vollständig zuhören.',quality:'good',scoreDelta:+15,theory:'Goldstandard: Einzelgespräche vor Mediationsgespräch. Gibt jeder Partei Raum ohne Druck.',feedback:'Goldstandard der Konfliktmoderation!',next:'p2_schmidt'},
+        {letter:'B',text:'Zuerst Einzelgespräch mit Müller.',quality:'neutral',scoreDelta:+8,theory:'Vertretbar, aber Schmidt als verletzte Partei zuerst ist stärkeres Empathiesignal.',feedback:'In Ordnung – aber Schmidt wartet länger.',next:'p2_mueller_erst'}
+      ]},
+    'p2_mueller_erst':{ phase:2, title:'🗣️ Einzelgespräch – WAL Müller',
+      scene:`<p>Müller: <em>„Ich habe nach Bedarf gehandelt. Drei Kranke gleichzeitig – Schmidt ist für beides qualifiziert. Ich dachte, er versteht das."</em></p><div class="scene-ib"><strong>Watzlawick Axiom 2:</strong> Müller handelte sachlich (Inhaltsaspekt), ignorierte den Beziehungsaspekt vollständig.</div>`,
+      question:'Wie reagierst du?',
+      options:[
+        {letter:'A',text:'"Herr Müller, die sachliche Entscheidung war nachvollziehbar. Was wäre anders gewesen, wenn Sie Schmidt vorab kurz informiert hätten?"',quality:'good',scoreDelta:+12,theory:'ErI→ErI: Du würdigst die Sachentscheidung und öffnest Selbstreflexion ohne Beschämung.',feedback:'Sehr gut – du erzeugst Erkenntnis ohne Anklage.',next:'p2_schmidt'},
+        {letter:'B',text:'"Das war ein Führungsfehler. Sie hätten Schmidt informieren müssen."',quality:'bad',scoreDelta:-8,theory:'kEI: Beschämung führt zu Abwehrhaltung im Mediationsgespräch.',feedback:'Sachlich richtig, falscher Ton.',next:'p2_schmidt'}
+      ]},
+    'p2_schmidt':{ phase:2, title:'🗣️ Einzelgespräch – OBM Schmidt',
+      scene:`<p>Schmidt, Arme verschränkt: <em>„Ich nehme an, Sie wollen mir erklären, warum ich Unrecht habe."</em></p><div class="scene-ib"><strong>TA:</strong> Schmidt im aKI (rebellisch) – erwartet kEI. Diese Erwartung gilt es zu durchbrechen.</div>`,
+      question:'Wie eröffnest du?',
+      options:[
+        {letter:'A',text:'"Herr Schmidt, ich bin hier um zuzuhören. Erzählen Sie mir, was Sie in den letzten Monaten erlebt haben."',quality:'good',scoreDelta:+20,theory:'ErI→ErI: Offene Frage durchbricht aKI-Erwartung. Psychologische Sicherheit (BELLA-B).',feedback:'Perfekte Eröffnung. Schmidt öffnet sich.',next:'p2_zuhoeren'},
+        {letter:'B',text:'"Herr Schmidt, Ihr Verhalten gestern war problematisch – aber ich verstehe Ihre Frustration."',quality:'bad',scoreDelta:-10,theory:'Das „Aber" negiert die Empathie vollständig. Schmidt bleibt im aKI.',feedback:'„Aber" zerstört das Zuhörangebot.',next:'p2_verschlossen'},
+        {letter:'C',text:'"Machen Sie sich keine Sorgen – das kriegen wir hin."',quality:'bad',scoreDelta:-15,theory:'nEI: Bagatellisierung. Schmidts verletzter Berufsstolz nicht ernst genommen.',feedback:'Schmidt fühlt sich nicht ernst genommen.',next:'p2_verschlossen'}
+      ]},
+    'p2_verschlossen':{ phase:2, title:'🚪 Schmidt schließt sich ab',
+      scene:`<p>Einsilbige Antworten. Nach 12 Min: <em>„Wenn das alles ist…"</em></p><div class="scene-ib warn"><strong>Bewertung:</strong> Chance verpasst. Mediation wird deutlich schwieriger.</div>`,
+      question:'Wie rettest du das Gespräch?',
+      options:[
+        {letter:'A',text:'"Herr Schmidt – Stopp. Ich habe das falsch angefangen. Ich möchte wirklich verstehen, was Sie erlebt haben."',quality:'good',scoreDelta:+6,theory:'Selbstkorrektur in Echtzeit: Authentisches Eingestehen erzeugt Vertrauen.',feedback:'Mutig und richtig. Schmidt öffnet sich zögernd.',next:'p2_zuhoeren'},
+        {letter:'B',text:'Schmidt gehen lassen und Mediation trotzdem ansetzen.',quality:'bad',scoreDelta:-15,theory:'Ohne Vertrauen bleibt Mediation oberflächlich.',feedback:'Grundlage für echte Mediation fehlt.',next:'p3_schlecht'}
+      ]},
+    'p2_zuhoeren':{ phase:2, title:'👂 Schmidt öffnet sich',
+      scene:`<p>Schmidt: <em>„15 Jahre war ich Ausbilder. Letzte Woche hat mich ein Azubi im RD eingewiesen – vor der Mannschaft. Niemand hat mal ‚Fritz, wir brauchen dich kurz' gesagt. Ich wurde umgestellt wie ein Möbelstück."</em></p><div class="scene-ib"><strong>Schulz von Thun (4 Seiten):</strong><br>· Sache: „Zu viel RD-Einteilung"<br>· <em>Selbstoffenbarung (Kern):</em> „Ich bin entwürdigt und wertlos"<br>· Beziehung: „Du respektierst mich nicht"<br>· Appell: „Erkenne meinen Wert!"</div>`,
+      question:'Welche Ebene ist Schmidts Kernbotschaft?',
+      options:[
+        {letter:'A',text:'Sachebene: Schmidt will mehr BrK-Einsätze.',quality:'bad',scoreDelta:-5,theory:'Nur Oberfläche – Sachebene-Lösungen lösen den emotionalen Kern nicht.',feedback:'Zu oberflächlich.',next:'p2_vertiefung'},
+        {letter:'B',text:'Selbstoffenbarungsebene: Schmidts Identität als Fachkraft ist verletzt.',quality:'good',scoreDelta:+20,theory:'Schulz von Thun: Die Selbstoffenbarung trägt die emotionale Wahrheit. Erst wenn anerkannt, wirkt die Sachlösung.',feedback:'Exzellente Analyse – du hast das eigentliche Problem gefunden.',next:'p2_abschluss'},
+        {letter:'C',text:'Appell: Schmidt will Dienstplanänderung.',quality:'neutral',scoreDelta:+5,theory:'Appell sichtbar, aber Folge des verletzten Selbstwerts.',feedback:'Teilrichtig – nicht tief genug.',next:'p2_vertiefung'}
+      ]},
+    'p2_vertiefung':{ phase:2, title:'🔎 Vertiefung',
+      scene:`<p>Du hast die Oberfläche, aber nicht den Kern erfasst.</p><div class="scene-ib"><strong>Tipp:</strong> „Ich werde benachteiligt" bedeutet auf der Selbstoffenbarungsebene: „Ich fühle mich als Person nicht wertgeschätzt."</div>`,
+      question:'',
+      options:[{letter:'A',text:'"Ich höre die Einteilung. Aber ich höre auch: Sie fühlen sich als Person nicht wertgeschätzt – ist das richtig?"',quality:'good',scoreDelta:+12,theory:'Paraphrase der Selbstoffenbarungsebene: Schmidt fühlt sich verstanden.',feedback:'Gut nachgebessert. Schmidt: „Ja. Genau das."',next:'p2_abschluss'}]},
+    'p2_abschluss':{ phase:2, title:'✅ Basis gelegt',
+      scene:`<p>Schmidt: <em>„Ich bin nicht nachtragend. Wenn künftig kommuniziert wird – ziehe ich mit."</em></p><p>Schmidt agiert jetzt aus dem ErI. Basis für Mediation gelegt.</p>`,
+      question:'Wie bereitest du die Mediation vor?',
+      options:[
+        {letter:'A',text:'Drei klare Spielregeln (Ich-Botschaften, nicht unterbrechen, lösungsorientiert), neutraler Raum, beide vorab informiert.',quality:'good',scoreDelta:+15,theory:'Mediationsvorbereitung: Regeln schaffen psychologische Sicherheit.',feedback:'Professionelle Vorbereitung!',next:'p3_gut'},
+        {letter:'B',text:'Gute Stimmung nutzen und spontan einladen.',quality:'neutral',scoreDelta:+3,theory:'Ohne Regeln können alte Muster unter Druck zurückkehren.',feedback:'Möglich, aber riskant.',next:'p3_okay'}
+      ]},
+    'p3_gut':{ phase:3, title:'🤝 Mediation – Gut vorbereitet',
+      scene:`<p>Regeln bekannt, Atmosphäre respektvoll. Müller erklärt sachlich. Schmidt: <em>„Ein Gespräch vorher wäre drin gewesen!"</em></p><div class="scene-ib"><strong>Karpman:</strong> Schmidt tendiert zur Opferrolle, Müller unbewusst in die Verfolgerposition.</div>`,
+      question:'Schmidt spricht emotional. Wie moderierst du?',
+      options:[
+        {letter:'A',text:'"Herr Müller – was wäre konkret anders gewesen, wenn Sie Schmidt vorab informiert hätten?"',quality:'good',scoreDelta:+15,theory:'ErI-Frage ohne Anklage. Müller zur Selbsterkenntnis führen, ohne Partei zu ergreifen.',feedback:'Souveräne Moderation.',next:'p3_kernmoment'},
+        {letter:'B',text:'"Herr Schmidt hat recht – das war schlechte Kommunikation, Herr Müller."',quality:'bad',scoreDelta:-10,theory:'Parteinahme: Du verlässt die neutrale Moderatorenrolle.',feedback:'Müller geht in Abwehr.',next:'p3_schlecht'},
+        {letter:'C',text:'"Das können wir nicht mehr ändern – schauen wir nach vorne."',quality:'neutral',scoreDelta:+3,theory:'Zu hastig – Schmidts Bedürfnis nach Anerkennung übersprungen.',feedback:'Gespräch geht weiter, Schmidt nicht gehört.',next:'p3_kernmoment'}
+      ]},
+    'p3_okay':{ phase:3, title:'🤝 Spontaner Start',
+      scene:`<p>Schmidt unterbricht Müller ohne Regeln.</p>`,
+      question:'Schmidt unterbricht. Wie reagierst du?',
+      options:[{letter:'A',text:'Regeln jetzt einführen: „Einer redet, der andere hört zu – einverstanden?"',quality:'good',scoreDelta:+8,theory:'Nachträgliche Strukturgebung: besser jetzt als nie.',feedback:'Gut gerettet.',next:'p3_kernmoment'}]},
+    'p3_kernmoment':{ phase:3, title:'💬 Der entscheidende Moment',
+      scene:`<p>Müller nach einer Pause: <em>„Herr Schmidt… ich hätte Ihnen das erklären müssen. Das war mein Fehler."</em></p><p>Stille. Schmidt schaut auf.</p><div class="scene-ib"><strong>TA:</strong> Müller im ErI – übernimmt Verantwortung. Schmidt kann jetzt aus dem ErI antworten.</div>`,
+      question:'Wie nutzt du diesen Moment?',
+      options:[
+        {letter:'A',text:'"Herr Schmidt – was möchten Sie Herrn Müller darauf antworten?"',quality:'good',scoreDelta:+15,theory:'Minimalintervention: Dieser Moment gehört den Beteiligten.',feedback:'Brillant. Schmidt: „Danke. Das höre ich gerne."',next:'p3_vereinbarung'},
+        {letter:'B',text:'"Das ist ein wichtiger Schritt. Herr Müller hat Verantwortung übernommen."',quality:'neutral',scoreDelta:+5,theory:'Gut gemeint, unterbricht aber einen kostbaren Moment.',feedback:'Etwas zu viel Moderation.',next:'p3_vereinbarung'}
+      ]},
+    'p3_schlecht':{ phase:3, title:'💔 Mediation gescheitert',
+      scene:`<p>Eskaliert. Schmidt hat Büro verlassen. Glasl Stufe 5.</p><div class="scene-ib warn"><strong>Glasl 5:</strong> Externe Mediation jetzt zwingend.</div>`,
+      question:'Nächster Schritt?',
+      options:[{letter:'A',text:'Externe Mediation beauftragen (Personalrat, Betriebspsychologe).',quality:'neutral',scoreDelta:-5,theory:'Ab Glasl-Stufe 4–5 externe Intervention korrekt.',feedback:'Richtig erkannt – aber teuer erkauft.',next:'p4_massnahmen'}]},
+    'p3_vereinbarung':{ phase:3, title:'📋 Ergebnissicherung',
+      scene:`<p>Schmidt: „Wenn das künftig so läuft – bin ich dabei." Müller: „Ich werde künftig das Gespräch suchen."</p><div class="scene-ib"><strong>Glasl:</strong> Rückkehr zu Stufe 1 – Win-Win.</div>`,
+      question:'Wie sicherst du das Ergebnis?',
+      options:[
+        {letter:'A',text:'Schriftliche Vereinbarung: Maßnahmen, Zeitplan, Verantwortlichkeiten – beide unterschreiben.',quality:'good',scoreDelta:+15,theory:'Verbindlichkeit schafft Nachhaltigkeit. Mündliche Vereinbarungen verblassen.',feedback:'Professionelle Ergebnissicherung!',next:'p4_massnahmen'},
+        {letter:'B',text:'Handschlag reicht – beide sind Profis.',quality:'bad',scoreDelta:-8,theory:'Beim nächsten Stressor ohne externen Anker: alte Muster kehren zurück.',feedback:'Zu informell.',next:'p4_massnahmen'}
+      ]},
+    'p4_massnahmen':{ phase:4, title:'🏗️ Strukturelle Maßnahmen',
+      scene:`<p>Amtsleitung erwartet Konzept zur Prävention künftiger Konflikte.</p><div class="scene-ib"><strong>BGM:</strong> Konflikt ist Symptom systemischer Probleme – fehlende Kommunikationskultur, mangelnde Wertschätzung erfahrener Kräfte.</div>`,
+      question:'Dein Maßnahmenpaket?',
+      options:[
+        {letter:'A',text:'Monatliche Dienstbesprechungen einführen.',quality:'bad',scoreDelta:-12,theory:'Zu oberflächlich: Ein Instrument ohne strukturelle Tiefe.',feedback:'Das strukturelle Problem bleibt.',next:'p4_mittel'},
+        {letter:'B',text:'Umfassendes Paket: Mentoring-Rolle für Schmidt, transparenter Dienstplan-Review-Prozess, BGM-Stressprävention, Onboarding-Konzept mit Erfahrenen als Mentoren.',quality:'good',scoreDelta:+25,theory:'Alle 4 BGM-Säulen (Gesundheit, Werte, Arbeitsbedingungen, Kompetenz). Schmidt von Problem zu Ressource. SMART-Ziele anwendbar.',feedback:'Exzellentes nachhaltiges Konzept!',next:'p4_gut'},
+        {letter:'C',text:'PSNV-Schulungen als teambildende Maßnahme.',quality:'neutral',scoreDelta:+6,theory:'Sinnvoll, aber als alleinige Antwort unzureichend.',feedback:'Sinnvoll, allein nicht ausreichend.',next:'p4_mittel'}
+      ]},
+    'p4_gut':{ phase:4, isEnd:true, endScore:'good', title:'🏆 Hervorragend bestanden!',
+      scene:`<p>Amtsleitung nimmt das Konzept an. Schmidt übernimmt Mentoring-Rolle. Müller etabliert transparente Kommunikation. Drei Monate später: <em>„Seit ich die Neuen ausbilde, macht der Dienst wieder Spaß. Danke."</em></p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'start'}]},
+    'p4_mittel':{ phase:4, isEnd:true, endScore:'neutral', title:'🥈 Befriedigend – Potenzial vorhanden',
+      scene:`<p>Akuter Konflikt gelöst. Sechs Monate später: ähnliche Spannungen. Amtsleitung mahnt dauerhaftere Konzepte an.</p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'start'}]}
+  }
+},
+
+/* ------------------------------------------------------------------
+   SZENARIO 2: RESSOURCEN-DILEMMA
+------------------------------------------------------------------ */
+ressourcen: {
+  label: 'Szenario 02 – Ressourcen-Dilemma',
+  start: 'r_start',
+  nodes: {
+    'r_start':{ phase:1, title:'🔥 22:47 Uhr – Leitstelle meldet zwei simultane Großlagen',
+      scene:`<p><strong>Lage A:</strong> Wohnhausbrand, 4-geschossig, Vollbrand 3. OG, 2 Personen noch vermisst (Meldung Nachbar). <strong>Lage B:</strong> Gefahrgutunfall BAB, LKW mit Chlorgas-Behälter, Leck, 500m Sicherheitsbereich, keine Verletzten gemeldet.</p><p>Verfügbar: <strong>eine Staffel</strong>, <strong>ein HLF</strong>, kein TLF vor Ort, Nachbaralarmierung läuft (ETA 18 Min).</p><div class="scene-ib"><strong>Deine Rolle:</strong> Du bist der B-Dienst und einzige Führungsperson auf der Leitstelle. Entscheidung jetzt.</div>`,
+      question:'Welche Priorität setzt du?',
+      options:[
+        {letter:'A',text:'Staffel sofort zum Wohnhausbrand (Personenrettung Priorität). Gefahrgut: Nachbarn alarmieren, Sperrbereich durch Polizei sichern, eigene Kräfte erst bei Eintreffen Verstärkung.',quality:'good',scoreDelta:+25,theory:'Führungsprinzip: Leben vor Sachwerten. FwDV 3: Menschenrettung hat absoluten Vorrang. Gefahrgut ohne Leck-Progression und ohne bestätigte Verletzte kann mit Absperrung initial überbrückt werden.',feedback:'Richtig priorisiert – Menschen retten hat immer Vorrang.',next:'r_einsatz'},
+        {letter:'B',text:'Staffel aufteilen: 3 Mann zum Brand, 3 Mann Gefahrgut.',quality:'bad',scoreDelta:-15,theory:'FwDV: Staffel ist die kleinste taktische Einheit. Aufteilung gefährdet beide Gruppen und ist taktisch kontraproduktiv. Kein Angriffstrupp unter UPA.',feedback:'Gefährlich – unter Normbesatzung sind beide Gruppen nicht handlungsfähig.',next:'r_fehler'},
+        {letter:'C',text:'Gefahrgut zuerst – unkontrolliertes Chlorgas ist die größere Gefahr für viele Menschen.',quality:'bad',scoreDelta:-10,theory:'Nachvollziehbar, aber: 2 bestätigte Vermisste im Wohnhaus sind eine unmittelbare Lebensgefahr. Gefahrgut ist durch Sperrzone und Evakuierung initial beherrschbar.',feedback:'Die bestätigten Vermissten im Wohnhaus werden nicht gerettet – moralisch nicht vertretbar.',next:'r_fehler'}
+      ]},
+    'r_einsatz':{ phase:2, title:'🚒 Wohnhausbrand – erste Erkenntnisse',
+      scene:`<p>Staffel vor Ort. GF Bericht: <em>„Feuer im 3. OG, Treppenhaus verraucht. Nachbar meldet: zwei Kinder im 2. OG. Treppenhaus nicht begehbar."</em></p><p>Verstärkung ETA: noch 12 Minuten. Drehleiter: ETA 8 Minuten.</p>`,
+      question:'Deine Führungsanweisung?',
+      options:[
+        {letter:'A',text:'Rettung über Leiter an der Außenfassade 2. OG vorbereiten. Trupps sichern, Löschangriff parallel, Drehleiter Treffpunkt bestätigen. Gefahrgut: Polizei bestätigt Sperrzone, Fachberater-Anforderung läuft.',quality:'good',scoreDelta:+20,theory:'Parallele Führung: Aktive Maßnahmen für unmittelbare Lage + vorausschauende Planung für Lage B. Ressourcenmanagement unter Druck.',feedback:'Exzellente Führung unter Zeitdruck – parallele Maßnahmen optimal koordiniert.',next:'r_entscheidung'},
+        {letter:'B',text:'Alle Ressourcen auf Rettung. Gefahrgut komplett ausblenden bis Verstärkung da.',quality:'neutral',scoreDelta:+8,theory:'Vertretbar bei unmittelbarer Lebensgefahr, aber Gefahrgut kann sich entwickeln – Monitoring mindestens sicherstellen.',feedback:'Richtige Priorität, aber Gefahrgut vollständig ausblenden ist riskant.',next:'r_entscheidung'}
+      ]},
+    'r_fehler':{ phase:2, title:'⚠️ Führungsfehler – Kurskorrektur nötig',
+      scene:`<p>Deine initiale Entscheidung hat Probleme verursacht. Eine Korrektur ist nötig.</p><div class="scene-ib warn"><strong>Hinweis:</strong> Im Einsatz sind Kurskorrekturen möglich und manchmal notwendig – aber sie kosten Zeit.</div>`,
+      question:'Wie korrigierst du?',
+      options:[{letter:'A',text:'Sofortige Neubewertung: Staffel vollständig zum Wohnhausbrand, Gefahrgut über Polizei absichern.',quality:'neutral',scoreDelta:+5,theory:'Kurskorrektur kostet Zeit, ist aber der richtige Schritt.',feedback:'Richtige Korrektur – Zeit geht verloren.',next:'r_entscheidung'}]},
+    'r_entscheidung':{ phase:3, title:'⏱️ Verstärkung trifft ein – Gesamtlage bewerten',
+      scene:`<p>Kinder wurden gerettet (über externe Leiter). Brand unter Kontrolle. Gefahrgut: Chlorgas-Leck hat zugenommen, Windrichtung ungünstig – 200 weitere Bewohner betroffen.</p><div class="scene-ib"><strong>Führungsaufgabe jetzt:</strong> Ressourcenzuteilung für die nächste Phase.</div>`,
+      question:'Wie verteilst du die Einsatzkräfte?',
+      options:[
+        {letter:'A',text:'Brandbekämpfung: 1. Zug. Gefahrgut: 2. Zug (Spezialkräfte voraus). Evakuierung: Polizei + Rettungsdienst. Führung: klare Sektorenbildung mit eigenem Einsatzleiter je Abschnitt.',quality:'good',scoreDelta:+20,theory:'Führungsprinzip: Dezentralisierung unter klarer Gesamtkoordination. Sektorenführung entlastet den B-Dienst und ermöglicht parallele Handlungsfähigkeit.',feedback:'Professionelle Ressourcenzuteilung – Sektoren klar definiert.',next:'r_nachbereitung'},
+        {letter:'B',text:'Alle Kräfte erst Brand fertig löschen, dann Gefahrgut.',quality:'bad',scoreDelta:-10,theory:'Sequentielles Denken bei simultanen Lagen ist gefährlich. Gefahrgut kann exponentiell werden.',feedback:'Gefahrgut-Lage eskaliert während Brand bekämpft wird.',next:'r_nachbereitung'}
+      ]},
+    'r_nachbereitung':{ phase:4, title:'📋 Einsatznachbereitung',
+      scene:`<p>Beide Lagen beherrscht. Alle Personen gerettet. Gefahrgut gesichert. Keine eigenen Kräfte verletzt.</p>`,
+      question:'Was ist dein wichtigster nächster Schritt als Führungskraft?',
+      options:[
+        {letter:'A',text:'Strukturierte Nachbesprechung (Demobilisation) für alle Einsatzkräfte. Erkenntnisse dokumentieren. PSNV-Angebot für beteiligte Kräfte.',quality:'good',scoreDelta:+15,theory:'PSNV: Sekundäre PSNV für Einsatzkräfte nach belastenden Lagen. Lessons-Learned für Organisationslernen.',feedback:'Vorbildlich – technisch und psychosozial.',next:'r_ende_gut'},
+        {letter:'B',text:'Kurzen Dank aussprechen und Kräfte nach Hause schicken.',quality:'neutral',scoreDelta:+3,theory:'Menschlich verständlich, aber ohne strukturierte Nachbesprechung gehen Erkenntnisse verloren.',feedback:'Gut gemeint, aber Lernchance und PSNV verpasst.',next:'r_ende_mittel'}
+      ]},
+    'r_ende_gut':{ phase:4, isEnd:true, endScore:'good', title:'🏆 Exzellente Einsatzführung!',
+      scene:`<p>Beide Lagen erfolgreich bewältigt. Alle Personen gerettet. Strukturierte Nachbereitung abgeschlossen. Lessons Learned für künftige Paralleleinsätze dokumentiert.</p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'r_start'}]},
+    'r_ende_mittel':{ phase:4, isEnd:true, endScore:'neutral', title:'🥈 Befriedigend',
+      scene:`<p>Einsatz bewältigt, Verluste vermieden. Strukturelle Optimierungspotenziale nicht genutzt.</p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'r_start'}]}
+  }
+},
+
+/* ------------------------------------------------------------------
+   SZENARIO 3: FÜHRUNGSFEHLER IM STAB
+------------------------------------------------------------------ */
+stab: {
+  label: 'Szenario 03 – Führungsfehler im Stab',
+  start: 's_start',
+  nodes: {
+    's_start':{ phase:1, title:'🏛️ Stab – 14:30 Uhr – Chemieunfall · 3. Stunde',
+      scene:`<p>Großschadenslage: Chemiewerk, Ammoniakaustritt, 800 Verletzte, Massenanfall. Im Stabsraum eskaliert seit 20 Minuten ein Streit: S3 (OBM Kaufmann) und Einsatzleiter Rettungsdienst (Dr. Weber) sind offen in Konflikt über die Triage-Priorisierung.</p><p>Kaufmann: <em>„Wir brauchen die Rettungswagen für die T1-Patienten – nicht für diese sinnlosen T3-Transporte!"</em> Dr. Weber: <em>„Sie haben keine medizinische Ausbildung und haben hier rein gar nichts zu entscheiden!"</em></p><div class="scene-ib"><strong>Watzlawick Axiom 1:</strong> Beide kommunizieren – auch ihr Schweigen wäre eine Botschaft. Der Stab funktioniert gerade nicht.</div>`,
+      question:'Wie reagierst du als B-Dienst?',
+      options:[
+        {letter:'A',text:'Unmittelbar: laut und klar: „Stopp. Beide. Jetzt." – Ruhe herstellen, dann kurze Auszeit von 5 Minuten anordnen, beide separat kurz sprechen.',quality:'good',scoreDelta:+20,theory:'Watzlawick: „Man kann nicht nicht kommunizieren." Deine Intervention sendet sofort die Botschaft: Diese Führungskultur toleriere ich nicht. 5 Min Pause reduziert Kortisolspiegel.',feedback:'Richtig und mutig. Der Stab atmet durch.',next:'s_deeskalation'},
+        {letter:'B',text:'Das Gespräch weiter beobachten – vielleicht löst es sich von selbst.',quality:'bad',scoreDelta:-15,theory:'Glasl: Passivität bei Stufe 4–5 lässt den Konflikt weiter eskalieren. Im Stab ist das existenzgefährdend für die Einsatzführung.',feedback:'Der Stab ist dysfunktional. Führungsversagen.',next:'s_eskalation'},
+        {letter:'C',text:'Dr. Weber Recht geben – er hat die medizinische Expertise.',quality:'bad',scoreDelta:-10,theory:'Parteinahme zerstört die Neutralität der Stabsführung. Kaufmann verliert jede Legitimation.',feedback:'Parteinahme vergiftet das Stabsklima dauerhaft.',next:'s_fehler'}
+      ]},
+    's_deeskalation':{ phase:2, title:'⏸️ 5-Minuten-Auszeit',
+      scene:`<p>Du hast kurz mit beiden einzeln gesprochen. Kaufmann: <em>„Ich mache mir Sorgen, dass die falschen Patienten priorisiert werden."</em> Dr. Weber: <em>„Ich fühle mich in meiner Fachkompetenz übergangen."</em></p><div class="scene-ib"><strong>Schulz von Thun Selbstoffenbarung:</strong> Kaufmann → Sorge um Einsatzerfolg. Weber → verletzter Expertenstolz. Sachkonflikt als Deckmantel für Beziehungskonflikt.</div>`,
+      question:'Wie steuerst du das Gespräch beim Neustart?',
+      options:[
+        {letter:'A',text:'"Gentlemen – wir haben 800 Patienten. Ihre fachlichen Einschätzungen brauchen wir beide. Ich schlage vor: Dr. Weber definiert die medizinische Triage-Reihenfolge, Herr Kaufmann koordiniert die Fahrzeugzuteilung. Entscheidungsprozess klar?"',quality:'good',scoreDelta:+25,theory:'Rollenklarheit nach Watzlawick Axiom 2: Beziehungsaspekt klären (wer entscheidet was) bevor Sachfragen gelöst werden können. Beide Expertisen werden legitimiert.',feedback:'Exzellent. Klare Rollenverteilung – Stab funktioniert wieder.',next:'s_zusammenarbeit'},
+        {letter:'B',text:'"Bitte keine persönlichen Angriffe mehr – das ist eine Dienstanweisung."',quality:'neutral',scoreDelta:+8,theory:'Symptombehandlung: Der Rollenkonflikt bleibt ungelöst. Funktioniert kurzfristig, aber der Stab ist weiter fragil.',feedback:'Kurzfristig Ruhe, aber der Konflikt schwelt weiter.',next:'s_zusammenarbeit'}
+      ]},
+    's_fehler':{ phase:2, title:'⚠️ Parteinahme – Kurskorrektur',
+      scene:`<p>Kaufmann hat den Stabsraum verlassen. S3-Funktion unbesetzt. Einsatz läuft weiter.</p><div class="scene-ib warn"><strong>Glasl 5:</strong> Durch Parteinahme wurde der Konflikt eskaliert statt gelöst.</div>`,
+      question:'Sofortmaßnahme?',
+      options:[{letter:'A',text:'Kaufmann zurückholen, Entschuldigung für Parteinahme, klare Rollenverteilung definieren.',quality:'neutral',scoreDelta:+5,theory:'Korrektur ist möglich und notwendig. Kostet Zeit und Vertrauen.',feedback:'Richtige Korrektur – verzögert.',next:'s_zusammenarbeit'}]},
+    's_eskalation':{ phase:2, title:'💥 Stab dysfunktional',
+      scene:`<p>Der Streit greift auf andere Stabsmitglieder über. S4 und Fachberater Gesundheit schweigen aus Unsicherheit. Koordination bricht zusammen.</p><div class="scene-ib err"><strong>Mehrabian:</strong> Die nonverbale Eskalation (Lautstärke, Körpersprache) sendet an alle: Dieser Stab ist nicht sicher. 55% der Botschaft ist Körpersprache.</div>`,
+      question:'Notfall-Intervention?',
+      options:[{letter:'A',text:'"Stab – alle stoppen. Ich übernehme Gesamtleitung direkt bis wir Rollenklarheit haben." Beiden Streitenden Auszeit befehlen.',quality:'neutral',scoreDelta:-5,theory:'Autoritäre Übernahme als letztes Mittel. Verliert Vertrauen, ist aber besser als Dysfunktion.',feedback:'Notlösung – besser als Chaos, aber teuer.',next:'s_zusammenarbeit'}]},
+    's_zusammenarbeit':{ phase:3, title:'⚙️ Stab funktioniert – neue Herausforderung',
+      scene:`<p>Rollenverteilung klar. Stab arbeitet wieder. Neue Meldung: Ein weiterer Fachberater (FB Chemie, ext.) widerspricht der aktuellen Schutzmaßnahmenentscheidung öffentlich im Stabsraum.</p>`,
+      question:'Wie gehst du damit um?',
+      options:[
+        {letter:'A',text:'FB Chemie hat 2 Minuten, seinen Einwand sachlich zu begründen. Dann Entscheidung im Stabskreis. Dissens dokumentieren, aber Entscheidung fällen.',quality:'good',scoreDelta:+15,theory:'Partizipative Entscheidung mit klarem Zeitrahmen. Expertise einbeziehen, aber Handlungsfähigkeit erhalten.',feedback:'Professionell – Expertise gehört, Entscheidung getroffen.',next:'s_ende_gut'},
+        {letter:'B',text:'Einwand ignorieren – keine Zeit für Diskussionen.',quality:'bad',scoreDelta:-10,theory:'Expertise-Ignoranz: FB Chemie könnte einen lebensrettenden Hinweis haben. Arroganz des Führers.',feedback:'Riskant – der Hinweis könnte entscheidend gewesen sein.',next:'s_ende_mittel'}
+      ]},
+    's_ende_gut':{ phase:4, isEnd:true, endScore:'good', title:'🏆 Vorbildliche Stabsführung!',
+      scene:`<p>Einsatz erfolgreich koordiniert. Stab hat trotz interpersonellem Konflikt funktioniert. Deine Moderationsleistung hat die Einsatzführung gerettet. Lessons Learned: Rollenklärung zu Beginn jeder Stabsarbeit.</p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'s_start'}]},
+    's_ende_mittel':{ phase:4, isEnd:true, endScore:'neutral', title:'🥈 Befriedigend',
+      scene:`<p>Einsatz bewältigt. Stabskonflikt eskaliert, aber durch Intervention beendet. Entscheidungsqualität durch ignorierten Einwand möglicherweise beeinträchtigt.</p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'s_start'}]}
+  }
+},
+
+/* ------------------------------------------------------------------
+   SZENARIO 4: DISZIPLINARISCHER GRENZFALL
+------------------------------------------------------------------ */
+disziplin: {
+  label: 'Szenario 04 – Disziplinarischer Grenzfall',
+  start: 'd_start',
+  nodes: {
+    'd_start':{ phase:1, title:'🔍 Dienstag, 09:15 – Verdachtsmeldung',
+      scene:`<p>WAL Fischer meldet sich diskret: <em>„Ich muss Sie sprechen. OBM Klaus Berger (22 Dienstjahre, bisher tadellos, 2 Auszeichnungen, bekannt für Vorbildfunktion) soll in den letzten Wochen dreimal während der Dienstzeit in der Feuerwache Alkohol konsumiert haben. Ich selbst habe ihn gestern leicht benebelt wahrgenommen. Kein Einsatz war betroffen."</em></p><div class="scene-ib"><strong>Dilemma:</strong> Fürsorge gegenüber einem langjährigen, verdienten Mitarbeiter vs. gesetzliche Pflichten und Sicherheitsverantwortung. Du als B-Dienst trägst die Verantwortung.</div>`,
+      question:'Was ist dein unmittelbarer erster Schritt?',
+      options:[
+        {letter:'A',text:'Fischer genau befragen: Was hat er wann konkret wahrgenommen? Gibt es weitere Zeugen? Sachverhalt so präzise wie möglich dokumentieren, bevor jede Handlung.',quality:'good',scoreDelta:+20,theory:'Führungsprinzip: Verdacht ≠ Beweis. Vor Handlung genaue Faktenerhebung. Unschuldsvermutung. Keine voreiligen Schlüsse – auch bei Dienstpflichtverletzungen.',feedback:'Professionell – Fakten zuerst.',next:'d_fakten'},
+        {letter:'B',text:'Berger sofort in die Pause schicken und ankündigen: „Wir müssen reden."',quality:'bad',scoreDelta:-10,theory:'Ohne gesicherte Fakten ist eine Konfrontation unklug und rechtlich heikel. Vorwurf könnte nicht zutreffen.',feedback:'Vorschnell – ohne Fakten angreifbar.',next:'d_voreschnell'},
+        {letter:'C',text:'Abwarten und beobachten – ohne Beweis kann ich nicht handeln.',quality:'bad',scoreDelta:-15,theory:'Als Führungskraft hast du Fürsorgepflicht UND Sicherheitsverantwortung. Inaktivität bei konkretem Verdacht ist Pflichtverletzung.',feedback:'Untätigkeit ist hier keine Option.',next:'d_abwarten'}
+      ]},
+    'd_fakten':{ phase:1, title:'📋 Faktenerhebung',
+      scene:`<p>Fischer: <em>„Dreimal in 2 Wochen. Dienstag, Donnerstag, letzten Montag. Immer nachmittags. Ich habe Alkoholgeruch wahrgenommen. Kollege Krause hat ihn einmal schwankend gesehen."</em></p><p>Du sprichst diskret mit Krause – bestätigt Beobachtung vom Montag.</p><div class="scene-ib"><strong>Rechtslage:</strong> Alkohol im Dienst: Verstoß gegen Dienstpflichten (Beamtenrecht). Du als Vorgesetzter musst tätig werden. Gleichzeitig: § 84 SGB IX – bei Suchtproblemen Fürsorgepflicht und BEM-Option.</div>`,
+      question:'Wie gehst du weiter vor?',
+      options:[
+        {letter:'A',text:'Berger zu einem Vier-Augen-Gespräch einladen – noch heute, nicht morgen. Ton: besorgt, nicht anklagend. Beobachtungen nennen, Berger Möglichkeit zur Stellungnahme geben.',quality:'good',scoreDelta:+25,theory:'Führungsfürsorge: Erst das direkte Gespräch, bevor formale Verfahren eingeleitet werden. ErI-Kommunikation: Beobachtungen benennen (B4), keine Voraburteile.',feedback:'Mustergültig – Fürsorge und Pflicht in Balance.',next:'d_gespraech'},
+        {letter:'B',text:'Direkt Meldung an die Amtsleitung und Personalstelle mit allem was du weißt.',quality:'neutral',scoreDelta:+5,theory:'Formal korrekt, aber ohne vorheriges Fürsorgegespräch oft unverhältnismäßig bei erstem konkreten Verdacht.',feedback:'Formal richtig, aber die Chance auf frühzeitige Hilfe verpasst.',next:'d_gespraech'},
+        {letter:'C',text:'Berger zum freiwilligen Alkoholtest auffordern.',quality:'bad',scoreDelta:-10,theory:'Rechtlich äußerst heikel: Freiwilligkeit ist keine echte Freiwilligkeit in Hierarchien. Ohne klare Rechtsgrundlage angreifbar.',feedback:'Rechtlich heikel und vertrauensschädigend.',next:'d_gespraech'}
+      ]},
+    'd_voreschnell':{ phase:1, title:'⚠️ Vorschnelle Konfrontation',
+      scene:`<p>Berger ist verletzt und fühlt sich ungerecht behandelt: <em>„Ich verstehe das nicht – auf was stützen Sie das?"</em></p><div class="scene-ib warn"><strong>Führungsfehler:</strong> Ohne Fakten zu konfrontieren verletzt das Vertrauen und schwächt die spätere rechtliche Position.</div>`,
+      question:'Kurskorrektur?',
+      options:[{letter:'A',text:'Ehrlich eingestehen: „Ich habe zu wenig gesicherte Informationen. Lassen Sie uns das Gespräch formell und korrekt führen." Termin vereinbaren.',quality:'neutral',scoreDelta:+5,theory:'Selbstkorrektur rettet die Situation teilweise – Vertrauen ist beschädigt.',feedback:'Mutige Korrektur. Vertrauen beschädigt, aber besser als Eskalation.',next:'d_gespraech'}]},
+    'd_abwarten':{ phase:1, title:'⏳ Konsequenzen der Untätigkeit',
+      scene:`<p>3 Tage später: Berger fährt mit dem Einsatzfahrzeug unter Alkoholeinfluss. Kein Unfall, aber Kameraden berichten es sofort. Du wirst von der Amtsleitung einbestellt.</p><div class="scene-ib err"><strong>Führungsversagen:</strong> Bekannter Verdacht, keine Maßnahmen → Pflichtverletzung als Vorgesetzter.</div>`,
+      question:'Jetzt?',
+      options:[{letter:'A',text:'Vollständige Offenlegung gegenüber Amtsleitung. Eigenverantwortung eingestehen. Sofortmaßnahmen einleiten.',quality:'neutral',scoreDelta:-5,theory:'Konsequente Offenlegung rettet die rechtliche Position teilweise.',feedback:'Spät, aber der einzig richtige Schritt jetzt.',next:'d_gespraech'}]},
+    'd_gespraech':{ phase:2, title:'🗣️ Vier-Augen-Gespräch mit OBM Berger',
+      scene:`<p>Berger sitzt dir gegenüber, blass. Nach deiner ruhigen Schilderung der Beobachtungen: lange Pause. Dann: <em>„Meine Frau hat uns verlassen. Vor 6 Wochen. Ich… ich komme nicht gut damit klar."</em></p><div class="scene-ib"><strong>TA – Ichzustand Berger:</strong> Jetzt klar im verletzten Kind-Ich. Das Gespräch hat eine völlig andere Dimension bekommen. Fürsorgepflicht tritt stärker in den Vordergrund.</div>`,
+      question:'Wie reagierst du auf diese Offenbarung?',
+      options:[
+        {letter:'A',text:'Pause. Echte Empathie zeigen: „Das tut mir leid – das ist sehr viel für einen Menschen." Dann klar: „Ich muss Sie gleichzeitig auf meine Pflichten hinweisen. Und auf Hilfsangebote, die wir haben."',quality:'good',scoreDelta:+25,theory:'BELLA-E (Erfassen) + BELLA-L (Linderung): Menschliche Dimension erkennen, ohne die dienstliche Pflicht aufzugeben. Das ist der schwerste Moment in der Führung.',feedback:'Vorbildlich – menschlich und pflichtgemäß zugleich.',next:'d_hilfsangebote'},
+        {letter:'B',text:'Sofort: „Das ist schwerwiegend – ich muss das melden."',quality:'bad',scoreDelta:-10,theory:'Die menschliche Dimension vollständig ignorieren. Berger wird sich nicht öffnen und keine Hilfe annehmen.',feedback:'Berger schließt sich sofort wieder. Chance auf echte Hilfe vertan.',next:'d_formal'},
+        {letter:'C',text:'Das Gespräch auf reinen Trost beschränken und das Dienstliche später besprechen.',quality:'bad',scoreDelta:-8,theory:'Karpman-Retter: Das klingt mitfühlend, ist aber eine Vermeidung der Führungsverantwortung.',feedback:'Fürsorge ohne Pflicht schützt Berger und andere nicht.',next:'d_hilfsangebote'}
+      ]},
+    'd_hilfsangebote':{ phase:3, title:'🤝 Hilfsangebote und formale Schritte',
+      scene:`<p>Berger hört zu. Du hast gleichzeitig Verständnis gezeigt und Klarheit hergestellt. Er wirkt erleichtert, dass es ausgesprochen ist.</p>`,
+      question:'Was bietest du konkret an?',
+      options:[
+        {letter:'A',text:'EAP-Angebot vorstellen, Betriebsarzt empfehlen, temporäre Einschränkung von Fahrzeugführung bis zur Klärung, BEM-Gespräch anbieten, Amtsleitung informieren (mit Bergers Wissen). Alles dokumentieren.',quality:'good',scoreDelta:+20,theory:'Vollständiges Hilfspaket: EAP (niedrigschwellig), Betriebsarzt (professionell), BEM (§ 84 SGB IX), temporäre Maßnahme (Sicherheit), Transparenz (Pflicht). Suchtgefährdung ≠ sofortiges Disziplinarverfahren.',feedback:'Perfekte Balance aus Fürsorge und Pflicht.',next:'d_dokumentation'},
+        {letter:'B',text:'Berger sagen, das bleibt unter uns, wenn er aufhört.',quality:'bad',scoreDelta:-20,theory:'Vertuschen ist eine schwere Dienstpflichtverletzung und ignoriert die Sicherheitsverantwortung gegenüber Kameraden.',feedback:'Das ist eine Pflichtverletzung – und keine Fürsorge.',next:'d_dokumentation'}
+      ]},
+    'd_formal':{ phase:3, title:'📄 Formales Verfahren',
+      scene:`<p>Berger hat sich verschlossen. Formales Disziplinarverfahren läuft. Berger nimmt keine Hilfe an.</p><div class="scene-ib warn"><strong>Bewertung:</strong> Formal korrekt, menschlich eine verpasste Chance. Führung ist mehr als Regelanwendung.</div>`,
+      question:'Lässt sich noch etwas retten?',
+      options:[{letter:'A',text:'Parallel zum Verfahren: erneuter Kontakt, EAP-Info weitergeben, Betriebsarzt einschalten.',quality:'neutral',scoreDelta:+8,theory:'Spät, aber möglich. Fürsorge endet nicht mit dem Disziplinarverfahren.',feedback:'Noch möglich – Berger die Tür offen lassen.',next:'d_dokumentation'}]},
+    'd_dokumentation':{ phase:4, title:'📋 Dokumentation &amp; Abschluss',
+      scene:`<p>Du hast alle Schritte transparent dokumentiert. Amtsleitung ist informiert. Berger hat das EAP-Angebot angenommen und ist temporär vom Fahrzeugdienst entbunden.</p>`,
+      question:'Was ist deine abschließende Führungsreflexion?',
+      options:[
+        {letter:'A',text:'Lessons Learned: Für die Wache ein anonymes Beratungsangebot bekannter machen. Führungskräfte-Schulung zu Suchtproblematik und Frühintervention.',quality:'good',scoreDelta:+15,theory:'Organisationales Lernen: Aus dem Einzelfall systemische Maßnahmen ableiten. BGM-Prävention stärken.',feedback:'Exzellent – vom Einzelfall zur Systemverbesserung.',next:'d_ende_gut'},
+        {letter:'B',text:'Fall abschließen und hoffen, dass Berger sich erholt.',quality:'neutral',scoreDelta:+3,theory:'Reaktiv statt präventiv. Die nächste Situation kommt ohne Systemverbesserung.',feedback:'Verständlich, aber Chance zur Systemverbesserung ungenutzt.',next:'d_ende_mittel'}
+      ]},
+    'd_ende_gut':{ phase:4, isEnd:true, endScore:'good', title:'🏆 Vorbildliche Führungsfürsorge',
+      scene:`<p>Berger hat die Therapie begonnen. Die Wache hat ein neues anonymes EAP-Informationsformat. Du hast gezeigt: <strong>Fürsorge und Pflicht schließen sich nicht aus – sie bedingen einander.</strong></p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'d_start'}]},
+    'd_ende_mittel':{ phase:4, isEnd:true, endScore:'neutral', title:'🥈 Befriedigend – Potenzial ungenutzt',
+      scene:`<p>Berger ist in Behandlung. Formale Pflichten erfüllt. Systemische Prävention nicht gestärkt.</p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'d_start'}]}
+  }
+}
+
+,
+
+/* ------------------------------------------------------------------
+   SZENARIO 5: DER „ALPHA"-FACHBERATER
+   Anti-length-bias: Korrekte Antwort häufig die KÜRZERE
+------------------------------------------------------------------ */
+alpha: {
+  label: 'Szenario 05 – Der „Alpha"-Fachberater',
+  start: 'a_start',
+  nodes: {
+    'a_start':{ phase:1, title:'🧪 Chemiewerk – 11:22 Uhr – Lagebesprechung im Freien',
+      scene:`<p>Ammoniak-Austritt, 120 kg freigesetzt. Deine GAMS-Lagebewertung hat eine Absperrgrenze von 100 m ergeben. Du hältst gerade das Einsatz-Briefing vor zwei Staffeln, als Dipl.-Ing. Dr. Lehmann (werkseigener Sicherheitsingenieur, Schutzkleidung Stufe 2) dazwischenfährt:</p><p><em>„Stopp! Diese 100-Meter-Grenze ist völlig unzureichend. Bei diesem Windvektor und der Behältergröße brauchen wir mindestens 300 Meter. Ich kenne diese Anlage seit 15 Jahren – ich verlange, dass Sie das jetzt korrigieren."</em></p><div class="scene-ib"><strong>Deine Ausgangslage:</strong> 22 Einsatzkräfte warten. Medien sind 80 m entfernt. Der Werksleiter nickt Dr. Lehmann zu. Deine Staffeln warten auf deinen Befehl.</div>`,
+      question:'Wie reagierst du in den nächsten 30 Sekunden?',
+      options:[
+        {letter:'A',text:'„Dr. Lehmann – Einwand aufgenommen. Wir klären das sofort." Kurze Handgeste ans Team: Warteposition. Zwei Schritte zur Seite.',quality:'good',scoreDelta:+25,theory:'TA – Erwachsenen-Ich: Keine Eskalation, keine Kapitulation. Expertise wird gewürdigt, Führungshoheit bleibt. Watzlawick Axiom 2: Beziehungsaspekt (wer entscheidet) muss zuerst geklärt werden – aber nicht öffentlich.',feedback:'Exakt richtig: Kurz, klar, gesichtswahrend für beide Seiten.',next:'a_privat'},
+        {letter:'B',text:'Erklärst dem gesamten Team ruhig und detailliert: Nach GAMS-Regel und FwDV 500 sind 100 m für NH₃ der korrekte Ausgangswert. Du erläuterst die Windkorrektur, die Leckrate, den Konzentrationsgradient. Dr. Lehmann soll dann seine abweichende Einschätzung vor allen begründen.',quality:'bad',scoreDelta:-15,theory:'Öffentliche Fachdebatte während eines laufenden Einsatzes: bindet Zeit, beschädigt Führungsautorität (beide Seiten), verwirrt die Mannschaft. Kein Führungsformat für diese Situation.',feedback:'Sachlich vielleicht korrekt – situativ eine Katastrophe. Die Mannschaft braucht Entscheidung, keine Diskussion.',next:'a_privat'},
+        {letter:'C',text:'Ignorierst Dr. Lehmann und fährst mit dem Briefing fort: „Wir haben unsere Messung – weitermachen."',quality:'bad',scoreDelta:-20,theory:'Expertise-Ignoranz bei Gefahrstoffeinsatz: potentiell lebensbedrohlich. Fachberater wurden genau für diesen Zweck autorisiert. Arroganz der Führungskraft kann hier Menschen töten.',feedback:'Gefährlich und arrogant. Was, wenn er recht hat?',next:'a_privat'},
+        {letter:'D',text:'Bittest Dr. Lehmann, die restliche Einweisung selbst zu übernehmen, da er die Anlage besser kennt.',quality:'bad',scoreDelta:-18,theory:'Führungsabgabe an externen Experten ohne rechtliche Grundlage. Einsatzleitung kraft Gesetz (FwG) ist nicht delegierbar an Dritte außerhalb der Führungsstruktur.',feedback:'Einsatzleitung kraft Gesetz ist nicht übertragbar. Du gibst die Kontrolle auf.',next:'a_privat'}
+      ]},
+    'a_privat':{ phase:2, title:'🗣️ Unter vier Augen – 3 Minuten',
+      scene:`<p>Ihr steht 10 m vom Team entfernt. Dr. Lehmann legt dar: <em>„Das Leck ist im Druckbereich 3. Die Freisetzungsrate ist mindestens doppelt so hoch wie Ihr Ausgangswert. Ich habe die aktuellen Anlagendaten. 300 m ist das Minimum."</em></p><p>Du siehst: Er hat ein Tablet mit Anlagenschema und Messdaten. Sein Argument klingt technisch fundiert.</p><div class="scene-ib"><strong>Rechtliche Lage:</strong> Einsatzleitung liegt bei dir (FwG). Dr. Lehmann hat keine Befehlsgewalt – aber Expertise. Fachberater-Status muss formal festgestellt werden.</div>`,
+      question:'Wie gehst du mit seiner Expertise um?',
+      options:[
+        {letter:'A',text:'Hörst aufmerksam zu, prüfst das Tablet, fragst: „Wie sicher sind diese Messdaten?" Wenn plausibel: Absperrgrenze sofort auf 300 m erweitern und ihn als offiziellen Fachberater in die Führungsstruktur einbinden.',quality:'good',scoreDelta:+20,theory:'Partizipative Entscheidung unter Zeitdruck: Expertise prüfen und integrieren ist kein Zeichen von Schwäche, sondern von professioneller Urteilskraft. Fachberater-Einbindung ist in FwDV 100 vorgesehen.',feedback:'Richtig: Expertise eingeholt, Entscheidung selbst getroffen, Fachberater formal eingebunden.',next:'a_einbinden'},
+        {letter:'B',text:'Bleibst bei 100 m. Du bist der Einsatzleiter kraft Gesetzes. Seine Meinung ist interessant, aber du hast das GAMS-Schema korrekt angewandt. Wenn er weiter eskaliert, wird der Werksleiter angewiesen, ihn von der Einsatzstelle zu entfernen.',quality:'bad',scoreDelta:-15,theory:'Sturheit gegenüber valider Expertise bei Gefahrstoffeinsatz: die GAMS-Regel ist ein Einstiegspunkt, kein absoluter Wert. Fachberater-Einschätzungen zu ignorieren kann tödlich sein.',feedback:'Prinzipientreue ohne Urteilsvermögen ist Sturheit. Der Einsatz könnte eskalieren.',next:'a_einbinden'},
+        {letter:'C',text:'Übergibst ihm die Einsatzleitung vollständig: „Sie kennen die Anlage. Sie übernehmen."',quality:'bad',scoreDelta:-20,theory:'Einsatzleitung ist hoheitliche Aufgabe kraft FwG – nicht übertragbar an Externe. Haftung, Versicherungsschutz, Befehlsstruktur würden zusammenbrechen.',feedback:'Keine Option. Rechtlich unmöglich, praktisch chaotisch.',next:'a_einbinden'}
+      ]},
+    'a_einbinden':{ phase:3, title:'🔄 Neuausrichtung – zurück zur Mannschaft',
+      scene:`<p>Du hast die Daten geprüft. Dr. Lehmanns Argument ist stichhaltig. Absperrgrenze wird auf 300 m erweitert. Jetzt musst du das kommunizieren – mit 22 Kräften, die zugehört haben, und Medien im Blickfeld.</p>`,
+      question:'Wie kommunizierst du die Lageänderung?',
+      options:[
+        {letter:'A',text:'„Lagemeldung aktualisiert: Absperrbereich 300 Meter. Dr. Lehmann ist ab sofort Fachberater Chemie in meiner Führungsstruktur – technische Einschätzungen laufen über ihn zu mir. Taktische Entscheidungen treffe ich. Einsatzabschnitte wie besprochen – VOR!"',quality:'good',scoreDelta:+20,theory:'Klare Rollenverteilung: Fachberater berät, Einsatzleiter entscheidet. Keine Entschuldigung, keine Erklärung des Irrtums – sachliche Lageaktualisierung. Das ist Führungsstärke, nicht Schwäche.',feedback:'Professionell und präzise. Rollenklarheit für alle hergestellt.',next:'a_ende_gut'},
+        {letter:'B',text:'Erklärst ausführlich den Denkfehler in deiner ursprünglichen GAMS-Anwendung, lobst Dr. Lehmann öffentlich für die Korrektur, bittest die Mannschaft um Verständnis und sicherst zu, beim nächsten Einsatz den Werksingenieur früher einzubinden.',quality:'bad',scoreDelta:-10,theory:'Öffentliche Selbstzerfleischung schwächt die Führungsautorität dauerhaft. Kräfte brauchen Vertrauen in die Führung – nicht die Gewissheit, dass sie irrt und das zugibt.',feedback:'Gut gemeint, aber Autorität dauerhaft beschädigt. Kräfte zweifeln beim nächsten Befehl.',next:'a_ende_mittel'},
+        {letter:'C',text:'Gibst die neue Grenze bekannt ohne Erläuterung. Dr. Lehmann soll einfach schweigen.',quality:'bad',scoreDelta:-8,theory:'Fehlende Einbindung des Fachberaters in die Führungsstruktur: die Expertise wird genutzt, aber der Experte bleibt unklar positioniert – Konfliktpotenzial bleibt bestehen.',feedback:'Halbherzig. Die Spannung bleibt – beim nächsten Widerspruch eskaliert es wieder.',next:'a_ende_mittel'}
+      ]},
+    'a_ende_gut':{ phase:4, isEnd:true, endScore:'good', title:'🏆 Meisterklasse: Expertise integriert',
+      scene:`<p>Die Absperrzone hält. Keine Verletzten. Dr. Lehmann arbeitet effektiv als Fachberater. Einsatz abgeschlossen. Im Nachgespräch: <em>„Sie haben das richtig gemacht. Ich hatte erwartet, dass Sie sich querstellen."</em> – Dr. Lehmann.</p><p>Deine Führungsleistung: Expertise anerkannt ohne Führungshoheit abzugeben. Das ist der Unterschied zwischen Ego-Führung und professioneller Führung.</p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'a_start'}]},
+    'a_ende_mittel':{ phase:4, isEnd:true, endScore:'neutral', title:'🥈 Befriedigend – Lernpotenzial erkannt',
+      scene:`<p>Einsatz bewältigt. Dr. Lehmanns Expertise wurde genutzt, aber die Führungsdarstellung war suboptimal. Kräfte zeigen beim nächsten Einsatz leichte Unsicherheit.</p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'a_start'}]}
+  }
+},
+
+/* ------------------------------------------------------------------
+   SZENARIO 6: POLITISCHE DRUCKSITUATION
+   Anti-length-bias: Korrekte Antwort ist in Phase 1 die KÜRZESTE
+------------------------------------------------------------------ */
+politik: {
+  label: 'Szenario 06 – Politische Drucksituation',
+  start: 'pol_start',
+  nodes: {
+    'pol_start':{ phase:1, title:'🏛️ 16:40 Uhr – Wohnhausbrand mit Übergriff auf Rathaus',
+      scene:`<p>Vollbrand eines Altstadthauses. Feuer droht auf das angrenzende historische Rathaus (18. Jh., unlösbar, akute Einsturzgefahr im 1. OG) überzugreifen. Rettungsgasse freigehalten – aber: <strong>im Wohnhaus sind laut Nachbarin noch zwei Bewohner</strong>, deren Schicksal unklar ist.</p><p>Bürgermeister Hartmann (55, Kommunalwahl in 3 Wochen) steht 5 m hinter der Absperrung, sein Pressesprecher filmt. Er tritt auf dich zu:</p><p><em>„Herr Brandamtmann – ich verlange, dass Sie sofort alle verfügbaren Kräfte auf das Rathaus konzentrieren. Das ist 400 Jahre Geschichte. Das Wohnhaus ist versichert."</em></p>`,
+      question:'Deine unmittelbare Reaktion?',
+      options:[
+        {letter:'A',text:'Kurz und ohne Diskussion: „Menschenleben haben Vorrang. Alles andere danach." Dann Blickkontakt zum Pressesprecher: „Bitte verlassen Sie jetzt die Einsatzstelle – das ist eine Anweisung."',quality:'good',scoreDelta:+25,theory:'Einsatzleitung kraft Gesetz (FwG): Der Einsatzleiter hat vor Ort alle Weisungsbefugnisse – unabhängig von politischer Stellung. Klare Priorisierung nach FwDV 100: Menschenrettung vor Sachwertschutz. Keine inhaltliche Debatte mit Unbefugten während des laufenden Einsatzes.',feedback:'Richtig – kurz, klar, rechtssicher. Keine Diskussion nötig.',next:'pol_druck'},
+        {letter:'B',text:'Erklärst dem Bürgermeister geduldig die taktischen Überlegungen, die rechtliche Grundlage der Einsatzleitung, die Priorisierungsmatrix nach FwDV 100 und dass du sein Anliegen verstehst, aber gemäß Lagebeurteilung handeln musst.',quality:'neutral',scoreDelta:+5,theory:'Inhaltlich korrekt, situativ falsch: Jede Erklärungsminute ist eine Minute weniger für die Rettung. Außerdem: Erklärungen suggerieren, dass politischer Druck grundsätzlich diskutiert werden kann.',feedback:'Korrekt in der Substanz – aber du verlierst wertvolle Zeit und signalisierst Verhandlungsbereitschaft.',next:'pol_druck'},
+        {letter:'C',text:'Ignorierst ihn vollständig ohne Reaktion.',quality:'bad',scoreDelta:-12,theory:'Aktives Ignorieren eines Bürgermeisters am Einsatzort schafft politischen Flächenbrand. Die Situation eskaliert auf anderem Wege – Anrufe bei Vorgesetzten, Presseerklärungen.',feedback:'Der Politiker verschwindet nicht – er eskaliert auf anderem Wege.',next:'pol_druck'},
+        {letter:'D',text:'Lässt dich von der Situation unter Druck setzen und gibst zwei Trupps zur Rathaussicherung ab, um den Bürgermeister zu beruhigen – mit dem Gedanken, notfalls zurückzurufen.',quality:'bad',scoreDelta:-20,theory:'Politischem Druck nachgeben gefährdet die vermissten Bewohner direkt. Das ist kein Kompromiss – das ist Führungsversagen mit potentiell tödlichen Konsequenzen.',feedback:'Kapitulation unter Druck. Die zwei vermissten Bewohner zahlen den Preis.',next:'pol_druck'}
+      ]},
+    'pol_druck':{ phase:2, title:'📱 Eskalation – Anruf beim Amtsleiter',
+      scene:`<p>Bürgermeister Hartmann hat deinen Amtsleiter OBD Fischer auf dem Handy. Fischer ruft dich an: <em>„Hartmann macht Druck. Was ist die Lage? Er sagt, du weigerst dich, das Rathaus zu priorisieren."</em></p><p>Parallel: Truppmann Vogel meldet: <em>„Wir haben Bewegung im 2. OG Wohnhaus gesehen."</em></p>`,
+      question:'Wie managst du jetzt zwei Baustellen gleichzeitig?',
+      options:[
+        {letter:'A',text:'An Fischer: „Ich priorisiere die bestätigten Vermissten im Wohnhaus. Das Rathaus wird geschützt, soweit möglich. Ich rufe in 10 Minuten zurück." Dann sofort weiter: Truppmann Vogel nach Details fragen, Rettungsmaßnahmen koordinieren.',quality:'good',scoreDelta:+20,theory:'Führungsprinzip: Kurze Lagedarstellung an vorgesetzte Stelle, dann sofort zurück in den Einsatz. Keine ausgedehnte politische Kommunikation während aktiver Rettungsmaßnahme. Fischer kann Hartmann bremsen.',feedback:'Richtig priorisiert: Einsatz zuerst, Rückmeldung danach.',next:'pol_rettung'},
+        {letter:'B',text:'Nimmst dir 5 Minuten, um Fischer ein vollständiges Lagebild zu geben: aktuelle Kräftedisposition, Taktik, rechtliche Grundlage, Begründung der Priorisierung. Damit Fischer Hartmann vollständig informiert beruhigen kann.',quality:'bad',scoreDelta:-15,theory:'5 Minuten Kommunikation statt Einsatz während einer aktiven Personenrettung: Das kostet möglicherweise Menschenleben. Kurze Statusmeldung reicht – Details danach.',feedback:'Fünf Minuten – die Bewegung im 2. OG braucht sofort eine Reaktion.',next:'pol_rettung'},
+        {letter:'C',text:'Bittest Fischer, einen Pressesprecher zu entsenden, der den Bürgermeister betreut.',quality:'neutral',scoreDelta:+8,theory:'Sinnvolle Maßnahme – aber als alleinige Antwort unvollständig. Fischer muss wissen, wie du entscheidest und warum.',feedback:'Sinnvoll, aber Fischer braucht trotzdem ein Lagebild von dir.',next:'pol_rettung'}
+      ]},
+    'pol_rettung':{ phase:3, title:'🚒 Personenrettung abgeschlossen',
+      scene:`<p>Beide Bewohner aus dem 2. OG gerettet. Brandschutzriegelmaßnahmen: Rathaus zu 70% gesichert, Turm reparierbar. Bürgermeister Hartmann steht jetzt bei den Kameras: <em>„Ich bin froh, dass die Feuerwehr gute Arbeit geleistet hat. Ich hatte von Anfang an das Wohl der Menschen im Blick."</em></p><div class="scene-ib"><strong>Jetzt:</strong> Du wirst direkt von einem Journalisten befragt: „Stimmt es, dass der Bürgermeister Einfluss auf Ihre Entscheidungen genommen hat?"</div>`,
+      question:'Wie antwortest du dem Journalisten?',
+      options:[
+        {letter:'A',text:'„Die Einsatzentscheidungen liegen allein beim Einsatzleiter – das ist rechtlich so geregelt und so wurde hier gehandelt." Keine weitere Kommentierung politischer Vorgänge.',quality:'good',scoreDelta:+15,theory:'Mediale Reaktion: sachlich, korrekt, ohne politische Kontroverse. Keine Bestätigung, keine Dementi – nur der rechtliche Fakt. Das schützt dich und die Institution.',feedback:'Professionell, rechtssicher und unpolemisch.',next:'pol_nachbereitung'},
+        {letter:'B',text:'Nutzt die Gelegenheit, den öffentlichen Druck des Bürgermeisters transparent zu machen – die Öffentlichkeit sollte wissen, was Einsatzleiter tatsächlich aushalten.',quality:'bad',scoreDelta:-15,theory:'Öffentliche Kritik am politischen Auftraggeber durch den nachgeordneten Beamten: institutioneller Flächenbrand, Loyalitätsverletzung, schadet der Feuerwehr insgesamt.',feedback:'Verständlich menschlich – institutionell eine Katastrophe.',next:'pol_nachbereitung'},
+        {letter:'C',text:'Antwortest gar nicht und wende dich ab.',quality:'bad',scoreDelta:-8,theory:'Schweigen wird als Bestätigung der Frage interpretiert. In Mediensituationen: kurze, klare Positionierung ist Pflicht.',feedback:'Schweigen wirkt schuldbewusst – oder als Bestätigung.',next:'pol_nachbereitung'}
+      ]},
+    'pol_nachbereitung':{ phase:4, title:'📋 Nachbereitung – Dokumentation und Prävention',
+      scene:`<p>Amtsleiter Fischer bittet um Einsatzbericht. Gleichzeitig möchte er wissen: Wie verhindert man künftig, dass politischer Druck am Einsatzort eskaliert?</p>`,
+      question:'Dein Vorschlag für die Nachbereitung?',
+      options:[
+        {letter:'A',text:'Lückenlose Dokumentation des politischen Eingriffversuchs (Zeitpunkt, Wortlaut, Kontext). Vorschlag: SOP für Bürgermeister-Kontakt bei Großeinsätzen – dedizierter Verbindungsbeamter, der Politiker vom Einsatzleiter fernhält.',quality:'good',scoreDelta:+15,theory:'Dokumentation schützt die Einsatzleitung rechtlich. SOP für politische Kontakte ist internationaler Standard bei Großeinsätzen (NIMS, BOS-Empfehlungen). Präventiver Führungsansatz.',feedback:'Exzellent: Dokumentation + Systemlösung für die Zukunft.',next:'pol_ende_gut'},
+        {letter:'B',text:'Bericht schreiben ohne Erwähnung des politischen Drucks – das intern zu eskalieren schadet dem Betriebsfrieden.',quality:'bad',scoreDelta:-12,theory:'Fehlende Dokumentation schützt den nächsten Einsatzleiter nicht. Beim nächsten Einsatz wiederholt sich das Szenario ohne institutionelle Antwort.',feedback:'Kurzfristiger Frieden, langfristiges strukturelles Problem.',next:'pol_ende_mittel'},
+        {letter:'C',text:'Schuldigen-Analyse: Die politische Einmischung formal als Dienstaufsichtsbeschwerde einreichen.',quality:'neutral',scoreDelta:+5,theory:'Formal möglich, aber eskalativ und für die Führungsbeziehung kontraproduktiv. Dokumentation und SOP sind der bessere Weg.',feedback:'Rechtlich möglich – aber das Verhältnis zur Kommunalpolitik wird dauerhaft beschädigt.',next:'pol_ende_mittel'}
+      ]},
+    'pol_ende_gut':{ phase:4, isEnd:true, endScore:'good', title:'🏆 Politischer Druck – souverän bewältigt',
+      scene:`<p>Beide Bewohner gerettet. Rathaus teilweise erhalten. Einsatzführung war zu keinem Zeitpunkt kompromittiert. Deine Dokumentation und der SOP-Vorschlag werden als Best Practice übernommen. Bürgermeister Hartmann: kein weiteres Wort der Kritik.</p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'pol_start'}]},
+    'pol_ende_mittel':{ phase:4, isEnd:true, endScore:'neutral', title:'🥈 Einsatz bewältigt – Systemlücken offen',
+      scene:`<p>Menschen gerettet. Einsatz abgeschlossen. Aber der politische Druck wurde nicht dokumentiert und die strukturelle Lösung fehlt. Beim nächsten Einsatz wiederholt sich das Szenario.</p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'pol_start'}]}
+  }
+},
+
+/* ------------------------------------------------------------------
+   SZENARIO 7: INFORMATIONSBLOCKADE IM STAB (S3/S2)
+   Anti-length-bias: Korrekte Antwort in Phase 2 extrem kurz
+------------------------------------------------------------------ */
+stab2: {
+  label: 'Szenario 07 – Informationsblockade im Stab',
+  start: 'i_start',
+  nodes: {
+    'i_start':{ phase:1, title:'🌲 Waldbrand-Großlage – 3. Einsatzstunde – Stabsraum',
+      scene:`<p>Waldbrand, 340 ha, Windstärke zunehmt auf 6 Bft. Im Stabsraum: Dein S4 (Logistik) tritt zu dir: <em>„Ich kann meinen Job nicht machen. S3 Kraft und S2 Sommer reden nicht miteinander – seit heute Morgen. S2 aktualisiert die Lagekarte nicht mit Infos aus S3s Sektor. S3 meldet seine Kräftepositionen nur an mich, nicht an S2."</em></p><p>Du schaust auf die Lagekarte: Sie ist 40 Minuten alt. Der Wind dreht gerade. Das taktische Lagebild ist unvollständig – und das weiß nur du.</p><div class="scene-ib"><strong>Risikobewertung:</strong> Bei drehendem Wind + unvollständige Lagekarte = potentiell eingeschlossene Einsatzkräfte im Sektor 3. Zeit: kritisch.</div>`,
+      question:'Dein sofortiger erster Schritt?',
+      options:[
+        {letter:'A',text:'Holst S3 Kraft und S2 Sommer sofort gemeinsam an die Lagekarte. Direkte Ansage: „Ich brauche in 90 Sekunden ein vollständiges Lagebild. Jetzt." Dann selbst moderieren.',quality:'good',scoreDelta:+22,theory:'Zeitkritische Lage: Keine Einzelgespräche, keine Mediation – sofortige gemeinsame Lagerekonstruktion. Führungsprinzip FwDV 100: Kontrolle der Lagekarte ist Kernpflicht des Einsatzleiters.',feedback:'Richtig: 90 Sekunden für ein vollständiges Bild. Leben hängen davon ab.',next:'i_klärung'},
+        {letter:'B',text:'Rufst S3 und S2 einzeln zu dir, hörst beide Seiten an, versuchst den Hintergrund des persönlichen Konflikts zu verstehen, bevor du entscheidest wie du eingreifst.',quality:'bad',scoreDelta:-18,theory:'Einzelgespräche bei zeitkritischer Sicherheitslage: Die Lagekarte altert weiterhin. Jede Minute ohne valides Lagebild erhöht das Risiko für Einsatzkräfte im Außensektor.',feedback:'Der Wind dreht jetzt. Einzelgespräche sind Luxus, den du nicht hast.',next:'i_klärung'},
+        {letter:'C',text:'Übertragst die Lagebild-Pflicht vorübergehend an S4 – der soll alle Informationen zusammenführen.',quality:'bad',scoreDelta:-10,theory:'Lagebild ist Kernaufgabe S2 – S4 hat keine Ausbildung, Werkzeuge oder Kapazität dafür. Symptombehandlung statt Ursachenklärung.',feedback:'S4 ist überfordert. Das Lagebild bleibt unvollständig.',next:'i_klärung'}
+      ]},
+    'i_klärung':{ phase:2, title:'⚡ Konfrontation an der Lagekarte',
+      scene:`<p>Beide stehen vor dir. Lagekarte dazwischen. S3 Kraft: <em>„Ich gebe meine Positionsdaten nicht ein, wenn Sommer sie für seine eigenen Entscheidungen nutzt ohne mich."</em> S2 Sommer: <em>„Kraft hat mir heute Morgen vor allen eine Entscheidung weggenommen. Das mache ich nicht mit."</em></p><p>Die Lagekarte ist jetzt 52 Minuten alt. Im Sektor 3 sind 14 Einsatzkräfte ohne aktuelle Rückmeldung.</p>`,
+      question:'Was sagst du – in maximal zwei Sätzen?',
+      options:[
+        {letter:'A',text:'„Das klären wir nach dem Einsatz. Jetzt: S2 trägt alle verfügbaren Daten ein, S3 meldet Positionen alle 10 Minuten an S2. Sofort." Dann: Blickkontakt zu beiden – keine weiteren Worte.',quality:'good',scoreDelta:+25,theory:'Minimale Intervention, maximale Wirkung. Glasl: Bei zeitkritischer Lage ist Beziehungskonflikt-Mediation NICHT das Führungsformat – Aufgabendisziplin kommt zuerst. Konfliktklärung danach.',feedback:'Perfekt: zwei Sätze, klare Rollen, kein Wort zu viel.',next:'i_umsetzung'},
+        {letter:'B',text:'Nutzt die Situation, um beiden klarzumachen, was professionelles Stabsverhalten bedeutet: Du erklärst die Grundsätze der Stabsarbeit nach FwDV 100, zitierst Watzlawicks Axiom zur Beziehungsebene, erläuterst Glasls Eskalationsmodell, und machst deutlich, dass persönliche Konflikte in einer Stabsarbeit keinen Platz haben.',quality:'bad',scoreDelta:-18,theory:'Lehrervortrag bei Sicherheitsnotfall: Die 14 Kräfte in Sektor 3 brauchen kein Watzlawick – sie brauchen eine aktuelle Lagekarte. Führen bedeutet Prioritäten setzen.',feedback:'Bildungsarbeit im falschen Moment. 14 Kräfte warten auf das Lagebild.',next:'i_umsetzung'},
+        {letter:'C',text:'Versetzt S3 Kraft sofort in eine andere Funktion (S6 Kommunikation), bis der Konflikt gelöst ist.',quality:'bad',scoreDelta:-12,theory:'Personalmaßnahme in Hochphase einer Großlage: S3 ist für Einsatzführung unverzichtbar. Versetzung schafft ein größeres Problem als es löst.',feedback:'S3 an der kritischsten Stelle abzuziehen ist keine Lösung.',next:'i_umsetzung'}
+      ]},
+    'i_umsetzung':{ phase:3, title:'📡 Lagebild aktualisiert – neue Herausforderung',
+      scene:`<p>Lagekarte ist aktuell. Sektor 3 – Entwarnung: Kräfte repositioniert. Wind hat auf 7 Bft zugenommen. Jetzt meldet ein externer Fachberater (Sachverständiger Forst, Bayerische Forstverwaltung) eine abweichende Windprognose von der des DWD: Erwartete Windstärke 9 Bft in 40 Minuten. S3 Kraft lehnt die Einschätzung ab: „Unsere Wetterdaten sind aktuell. Der Forst liegt falsch."</p><div class="scene-ib"><strong>Implikation:</strong> Bei 9 Bft sind zwei Löschfahrzeuge in Sektor 2 möglicherweise exponiert. Frühzeitige Repositionierung kostet taktische Tiefe, aber schützt Einsatzkräfte.</div>`,
+      question:'Wie entscheidest du?',
+      options:[
+        {letter:'A',text:'Ordnest sofortige Repositionierung beider Fahrzeuge an. Der Fachberater Forst hat lokales Expertenwissen, das DWD-Daten nicht abbilden können. Im Zweifel: Kräfteschutz.',quality:'good',scoreDelta:+18,theory:'Fachberater-Einschätzung integrieren, im Zweifel zugunsten Kräfteschutz entscheiden. Führungsprinzip: Unsicherheit geht zu Lasten der Sicherheit, nie zu Lasten der Einsatzkräfte.',feedback:'Richtig: Im Zweifel für die Sicherheit der Kräfte.',next:'i_abschluss'},
+        {letter:'B',text:'Organisierst eine Kurzkonferenz mit S2 (Wetter), S3 (Taktik), Fachberater Forst und DWD-Kontakt, um die Datenlage zu klären, bevor du eine Entscheidung triffst.',quality:'neutral',scoreDelta:+5,theory:'Sorgfalt ist wichtig – aber 40 Minuten sind bei 7 Bft wenig Zeit. Konferenz bindet alle Schlüsselpersonen.',feedback:'Sorgfältig, aber zeitkritisch. In 40 Minuten kann viel passieren.',next:'i_abschluss'},
+        {letter:'C',text:'Stimmst S3 zu – eure eigenen DWD-Daten sind aktueller als die Einschätzung eines externen Forstexperten ohne Zugang zu euren Wetterstationen.',quality:'bad',scoreDelta:-15,theory:'Lokales Expertenwissen (Fachberater Forst) und meteorologische Modelle bilden Verschiedenes ab. Wer bei Fachberater-Warnungen auf eigene Einschätzung besteht, verletzt das Prinzip der Expertise-Integration.',feedback:'Wenn er recht hat: zwei Fahrzeuge, möglicherweise eingekesselt.',next:'i_abschluss'}
+      ]},
+    'i_abschluss':{ phase:4, title:'🔎 Einsatznachbesprechung – der Stabskonflikt',
+      scene:`<p>Waldbrand unter Kontrolle. Keine Kräfteverluste. Jetzt: die strukturelle Frage. S3 Kraft und S2 Sommer sitzen sich im Nachgespräch schweigend gegenüber. Amtsleiter fragt dich: „Was war da heute los, und wie verhinderst du das?"</p>`,
+      question:'Deine Antwort und dein Konzept?',
+      options:[
+        {letter:'A',text:'Sachliche Darstellung: Informationsblockade durch persönlichen Konflikt hat das Lagebild verzögert. Maßnahmen: 1. Pflichtgespräch beider Beteiligten mit Führungskraft. 2. Mediationsangebot. 3. SOP für Stabsarbeit: Informationspflichten sind nicht verhandelbar – schriftlich fixiert.',quality:'good',scoreDelta:+20,theory:'Systemische Antwort: Einzelkonflikt zum Anlass nehmen, Strukturen zu festigen. SOP für Informationspflichten ist Standard in professionellen Stabsorganisationen.',feedback:'Vollständig: Ursache, Konsequenz, Prävention.',next:'i_ende_gut'},
+        {letter:'B',text:'Gibst zu, dass du den Konflikt früher hätten erkennen müssen, und entschuldigst dich beim Amtsleiter für das verzögerte Lagebild.',quality:'neutral',scoreDelta:+3,theory:'Selbstkritik ist wertvoll – aber ohne Systemlösung ist es nur persönliche Buße. Der nächste Stab wird dasselbe Problem haben.',feedback:'Ehrlich, aber ohne Konsequenzen.',next:'i_ende_mittel'},
+        {letter:'C',text:'Empfiehlst dem Amtsleiter ein Rotationsprinzip: S2 und S3 werden künftig nie gemeinsam in einem Stab eingeteilt.',quality:'bad',scoreDelta:-8,theory:'Personalrotation als Dauerreaktion: begrenzt die Verfügbarkeit von qualifiziertem Personal und löst den Konflikt nicht.',feedback:'Dauerhaft unpraktisch und löst den Konflikt nicht.',next:'i_ende_mittel'}
+      ]},
+    'i_ende_gut':{ phase:4, isEnd:true, endScore:'good', title:'🏆 Stabsführung unter Extrembedingungen',
+      scene:`<p>Waldbrand bezwungen. Keine Kräfteverluste. Informationsblockade frühzeitig erkannt und beendet. SOP für Stabsinformationspflichten wird für alle BOS übernommen. Amtsleiter: <em>„Das war knapp. Aber Sie haben die richtigen Entscheidungen getroffen."</em></p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'i_start'}]},
+    'i_ende_mittel':{ phase:4, isEnd:true, endScore:'neutral', title:'🥈 Einsatz bewältigt – strukturelle Lücken',
+      scene:`<p>Einsatz ohne Kräfteverluste. Die Informationsblockade wurde beendet, aber die strukturelle Antwort bleibt unvollständig. Beim nächsten Einsatz: dasselbe Risiko.</p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'i_start'}]}
+  }
+},
+
+/* ------------------------------------------------------------------
+   SZENARIO 8: AKUTE BELASTUNGSREAKTION NACH EINSATZ
+   Anti-length-bias: Korrekte Antwort in Phase 2 die KÜRZESTE
+------------------------------------------------------------------ */
+belastung: {
+  label: 'Szenario 08 – Akute Belastungsreaktion',
+  start: 'bl_start',
+  nodes: {
+    'bl_start':{ phase:1, title:'🚗 VU mit Kindstod – Aufräumphase, 14:55 Uhr',
+      scene:`<p>Schwerer VU auf der B27, PKW-Transporter, zwei Kinder (4 und 7 Jahre) wurden trotz sofortiger Reanimation nicht gerettet. Einsatz dauerte 2:40 Stunden. Du bist der B-Dienst vor Ort.</p><p>Dein Stellvertreter tritt leise zu dir: <em>„ZF Haas – Hinterfahrzeug. Er sitzt neben dem Fahrzeug auf der Leitplanke. Ich habe ihn angesprochen, er sagt: er bleibt. Er zittert leicht. Er schaut ins Leere."</em></p><div class="scene-ib"><strong>ZF Haas:</strong> 18 Dienstjahre, zwei Auszeichnungen, bekannt als stabiler und ruhiger Führer. Keine psychische Auffälligkeit in der Vergangenheit.</div>`,
+      question:'Dein erster Schritt?',
+      options:[
+        {letter:'A',text:'Gehst selbst zu ihm. Setzt dich neben ihn auf die Leitplanke. Kein Befehl, keine Diagnose. Erstmal ankommen.',quality:'good',scoreDelta:+25,theory:'BELLA-Konzept Phase 1: Beobachten und Kontakt aufnehmen. Physisches Gleichsetzen (gleiche Höhe) signalisiert Augenhöhe, kein hierarchisches Gefälle. Keine sofortige Handlungsaufforderung.',feedback:'Richtig: Körpersprache vor Worten. Menschliche Präsenz ist die erste Intervention.',next:'bl_kontakt'},
+        {letter:'B',text:'Organisierst zunächst: PSNV-Team alarmieren, Dokumentation beginnen, Dienstgruppenleiter informieren, Ablösekräfte für die restliche Aufräumarbeit anfordern – dann zu Haas.',quality:'bad',scoreDelta:-12,theory:'Verwaltungshandeln vor menschlichem Kontakt: Haas wartet allein, während Bürokratie läuft. Akute Belastungsreaktion erfordert sofortige menschliche Präsenz – Bürokratie danach.',feedback:'Er sitzt allein auf der Leitplanke, während du organisierst.',next:'bl_kontakt'},
+        {letter:'C',text:'Rufst Haas direkt: „Haas – kommen Sie bitte sofort zu mir ins Fahrzeug."',quality:'bad',scoreDelta:-15,theory:'Befehlston bei akuter Belastungsreaktion: Der Befehlsreflex kann das letzte Stück Selbstkontrolle von Haas brüchig machen. Akute Stressreaktion ≠ Gehorsamkeitsproblem.',feedback:'Befehl in dieser Situation: er pariert ihn, zerbricht aber von innen.',next:'bl_kontakt'},
+        {letter:'D',text:'Schickst seinen direkten Kollegen Bruckner zu ihm – der kennt Haas besser als du.',quality:'neutral',scoreDelta:+5,theory:'Peer-Unterstützung ist wertvoll – aber als B-Dienst trägst du die Führungsverantwortung. Eine Delegation des Erstkontakts sendet das falsche Signal: die Führungskraft kommt nicht selbst.',feedback:'Gut gemeint – aber du als Führungskraft musst zuerst kommen.',next:'bl_kontakt'}
+      ]},
+    'bl_kontakt':{ phase:2, title:'🤝 Seite an Seite auf der Leitplanke',
+      scene:`<p>Du sitzt neben Haas. 30 Sekunden Schweigen. Dann: <em>„Ich kann nicht weg. Die anderen brauchen mich noch."</em></p><p>Sein Atem ist flach. Hände zittern minimal. Er schaut auf die Unfallstelle, nicht dich an.</p><div class="scene-ib"><strong>BELLA Phase 2 – Lauschen:</strong> Er kommuniziert nicht seinen Zustand, sondern seine Pflichtbindung. Das ist typisch für erfahrene Einsatzkräfte: Fürsorge für andere als Distanzierungsstrategie vom eigenen Erleben.</div>`,
+      question:'Was sagst du als nächstes?',
+      options:[
+        {letter:'A',text:'„Haas – ich sehe Sie. Ich übernehme jetzt."',quality:'good',scoreDelta:+25,theory:'BELLA Phase 3: Lindern durch klare Übernahme. Kein Mitleid, keine Diagnose – Führungsübernahme als Entlastungsangebot. Die kürzeste Aussage ist hier die stärkste. Haas muss wissen: er darf jetzt loslassen.',feedback:'Sechs Worte. Genau richtig. Er muss nicht mehr funktionieren.',next:'bl_ablösung'},
+        {letter:'B',text:'„Haas, ich verstehe Ihr Pflichtbewusstsein, und das zeichnet Sie aus. Aber ich muss Ihnen sagen, dass das, was Sie gerade zeigen, klassische Anzeichen einer akuten Belastungsreaktion sind. Forschung zeigt, dass frühzeitige Intervention Langzeitschäden deutlich reduziert. Es wäre das Beste für Sie und Ihre Kameraden, wenn Sie jetzt Abstand nehmen."',quality:'bad',scoreDelta:-15,theory:'Psychologischer Vortrag als Gesprächseinstieg: Haas hört nicht zu – er ist in einem Stressrespons-Zustand, der rationale Informationsverarbeitung einschränkt. Zahlen und Forschung erreichen ihn gerade nicht.',feedback:'Er hört nichts davon. Der Kortisol-Spiegel verhindert rationale Verarbeitung.',next:'bl_ablösung'},
+        {letter:'C',text:'„Was genau ist gerade passiert – können Sie es mir beschreiben?"',quality:'bad',scoreDelta:-10,theory:'Nachfragen zum Trauma: Retraumatisierungsrisiko. Bei akuter Belastungsreaktion ist das Ereignis wiederholen oder Beschreiben kontraindiziert. Stattdessen: Sicherheit und Orientierung.',feedback:'Er muss es nicht nochmals durchleben. Das schadet.',next:'bl_ablösung'},
+        {letter:'D',text:'„Haas, das war heute schwer. Für jeden von uns. Ich setze jetzt Bruckner als ZF ein – Sie können gehen."',quality:'neutral',scoreDelta:+8,theory:'Pragmatische Ablösung: korrekte Richtung, aber ohne echte Kontaktaufnahme fühlt sich die Ablösung nach Abschiebung an. Haas braucht das Gefühl: jemand sieht ihn, nicht nur seine Funktion.',feedback:'Richtige Entscheidung, falsche Ausführung. Er fühlt sich abgeschoben.',next:'bl_ablösung'}
+      ]},
+    'bl_ablösung':{ phase:3, title:'🏥 Ablösung – und das PSNV-Angebot',
+      scene:`<p>Haas steht auf. Er nickt. Du spürst: Er vertraut dir gerade. Dann, leise: <em>„Ich brauche keine Psychos."</em></p><p>Du hast jetzt einen Peer-Unterstützer (Kamerad Weinert, ausgebildeter PSNV-Ersthelfer) bereit. Wie bringst du das PSNV-Angebot?</p>`,
+      question:'Wie sorgst du für die Übergabe?',
+      options:[
+        {letter:'A',text:'„Das ist kein Zeichen von Schwäche – ich habe ihn selbst genutzt. Ich bitte Sie um ein erstes Gespräch mit Weinert. Danach entscheiden Sie selbst."',quality:'good',scoreDelta:+20,theory:'Selbstoffenbarung als Führungsinstrument: eigene Inanspruchnahme von PSNV normalisiert die Hilfe. Autonomie erhalten (danach entscheiden) reduziert Widerstand. PSNV-Stigma ist die größte Barriere.',feedback:'Richtig: Normalisierung + Autonomie. Er fühlt sich nicht pathologisiert.',next:'bl_nachsorge'},
+        {letter:'B',text:'Akzeptierst sein Nein: „Wenn Sie das so sehen – hier ist die Nummer des EAP, falls Sie später doch möchten." Und lässt ihn fahren.',quality:'bad',scoreDelta:-15,theory:'Akute Belastungsreaktion: Autonomierespekt ist wichtig, aber alleinige Heimfahrt nach psychischem Ausnahmezustand ist nicht vertretbar. Haas sollte nicht allein sein – auch wenn er das sagt.',feedback:'Er fährt allein nach Hause. Das ist nicht fürsorglich – das ist Wegschauen.',next:'bl_nachsorge'},
+        {letter:'C',text:'Erklärst ausführlich das PSNV-Programm: Kostenfreiheit, Vertraulichkeit, Forschungslage zu PTSD bei Ersthelfern, Unterschied zwischen akuter Belastungsreaktion und Posttraumatischer Belastungsstörung, Statistiken zu Langzeitfolgen und den Mehrwert von Frühintervention.',quality:'bad',scoreDelta:-10,theory:'Informationsflut bei Widerstand: Haas hat gerade entschieden NEIN gesagt. Jede Information, die jetzt kommt, ist Gegendruck – und stärkt seinen Widerstand.',feedback:'Mehr Information verstärkt seinen Widerstand.',next:'bl_nachsorge'},
+        {letter:'D',text:'Stellst Weinert einfach vor: „Das ist Weinert, er fährt jetzt mit dir." – ohne Erklärung.',quality:'neutral',scoreDelta:+8,theory:'Pragmatisch und schützt Haas vor der Heimfahrt allein – aber ohne Erklärung wirkt es wie Kontrolle, nicht Fürsorge.',feedback:'Schutz ohne Erklärung. Besser als allein – aber Haas fühlt sich nicht gehört.',next:'bl_nachsorge'}
+      ]},
+    'bl_nachsorge':{ phase:4, title:'📋 Nächste Schicht – Führungsfolgepflicht',
+      scene:`<p>Haas hat das Erstgespräch mit Weinert angenommen. Morgen beginnt seine nächste Schicht. Amtsarzt hat keine formale Einschränkung ausgesprochen. Wie gehst du vor?</p>`,
+      question:'Dein Nachsorgeprozess?',
+      options:[
+        {letter:'A',text:'Persönliches Check-in mit Haas vor Schichtbeginn – nicht im Beisein anderer. Kurze Rückmeldung: Wie geht es? Ist er dienstfähig? Kein Druck zur Antwort. Schickt ihm das EAP nochmals. Dokumentiert den Vorfall und Nachsorgemaßnahmen.',quality:'good',scoreDelta:+20,theory:'Führungsfolgepflicht: PSNV ist kein einmaliges Angebot. Persönliches Check-in unter vier Augen schützt vor Gesichtsverlust. Dokumentation schützt beide Seiten.',feedback:'Vollständig: menschlich, diskret, dokumentiert.',next:'bl_ende_gut'},
+        {letter:'B',text:'Wartest ab, ob Haas sich meldet – du willst ihn nicht unter Druck setzen.',quality:'bad',scoreDelta:-12,theory:'Passive Nachsorge: Erfahrene Einsatzkräfte melden sich oft nicht von selbst – der Antreiber „Sei stark" verhindert das. Aktive Führungsfolgepflicht ist notwendig.',feedback:'Er meldet sich nicht. Du hörst nichts – bis zum nächsten Einsatz.',next:'bl_ende_mittel'},
+        {letter:'C',text:'Informierst das gesamte Team in der Dienstbesprechung über den Vorfall und PSNV-Möglichkeiten – als kollektives Awareness-Erlebnis.',quality:'bad',scoreDelta:-15,theory:'Öffentliche Erwähnung ohne Haas Einwilligung: Datenschutzverstoß, Vertrauensbruch, Stigmatisierung. Haas verliert das Vertrauen in die Führung.',feedback:'Haas wird nie wieder offen mit dir sein.',next:'bl_ende_mittel'}
+      ]},
+    'bl_ende_gut':{ phase:4, isEnd:true, endScore:'good', title:'🏆 Führungsfürsorge auf höchstem Niveau',
+      scene:`<p>Haas nimmt eine kurze Auszeit in Absprache mit dem Betriebsarzt. Drei Wochen später kehrt er zurück – und spricht bei einer internen Fortbildung freiwillig über den Einsatz. Deine Fürsorge hat einen erfahrenen Einheitsführer gehalten. <em>„Ich hätte hingeschmissen, wenn Sie damals nicht gekommen wären."</em></p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'bl_start'}]},
+    'bl_ende_mittel':{ phase:4, isEnd:true, endScore:'neutral', title:'🥈 Einsatz bewältigt – Haas\' Zustand offen',
+      scene:`<p>Haas erscheint zur nächsten Schicht. Er wirkt distanziert. Kein weiteres Gespräch. Zwei Monate später: Krankmeldung wegen „Erschöpfung". Eine frühere Intervention hätte das möglicherweise verhindert.</p>`,
+      options:[{letter:'↺',text:'Szenario neu starten',quality:'restart',next:'bl_start'}]}
+  }
+}
+
+}; // Ende SCENARIOS
+
+/* ======================================================================
+   SIMULATOR CORE ENGINE
+====================================================================== */
+const SIM = {
+  score: 100,
+  nodeId: null,
+  currentScenario: null,
+
+  loadScenario(key){
+    this.currentScenario = key;
+    this.score = 100;
+    this.nodeId = SCENARIOS[key].start;
+    document.getElementById('sim-menu-wrap').classList.add('hidden');
+    document.getElementById('sim-game-wrap').classList.remove('hidden');
+    document.getElementById('sim-scenario-label').textContent = SCENARIOS[key].label;
+    this.renderNode(this.nodeId);
+    this.syncUI();
+  },
+
+  backToMenu(){
+    document.getElementById('sim-game-wrap').classList.add('hidden');
+    document.getElementById('sim-menu-wrap').classList.remove('hidden');
+    document.getElementById('sim-stage').innerHTML = '';
+    this.syncScore();
+    this.syncPhase(0);
+  },
+
+  restart(){
+    if(!this.currentScenario) return;
+    this.score = 100;
+    this.nodeId = SCENARIOS[this.currentScenario].start;
+    document.getElementById('sim-stage').innerHTML = '';
+    this.renderNode(this.nodeId);
+    this.syncUI();
+  },
+
+  renderNode(id){
+    const nodes = SCENARIOS[this.currentScenario].nodes;
+    const node = nodes[id];
+    if(!node){ console.warn('[SIM] Unbekannter Knoten:', id); return; }
+    this.nodeId = id;
+    this.syncPhase(node.phase);
+    const stage = document.getElementById('sim-stage');
+    stage.innerHTML = '';
+    if(node.isEnd){ this.renderEnd(node); return; }
+
+    const hdr = mk('div','scene-hdr');
+    hdr.innerHTML = `<span class="scene-title">${node.title}</span><span class="scene-ph">Phase ${node.phase}/4</span>`;
+
+    const body = mk('div','scene-body');
+    body.innerHTML = node.scene;
+
+    const q = mk('div','scene-q');
+    q.textContent = node.question;
+
+    const opts = mk('div','opts-wrap');
+    opts.id = 'sim-opts';
+    (node.options||[]).forEach(opt => {
+      const btn = mk('button',`opt-btn${opt.quality==='restart'?' restart':''}`);
+      btn.innerHTML = `<span class="opt-ltr">${opt.letter}</span><span>${xss(opt.text)}</span>`;
+      btn.addEventListener('click', () => this.pick(opt));
+      opts.appendChild(btn);
+    });
+
+    stage.append(hdr, body, q, opts);
+    stage.scrollIntoView({behavior:'smooth',block:'nearest'});
+  },
+
+  pick(opt){
+    if(opt.quality === 'restart'){ this.restart(); return; }
+    this.score = Math.max(0, Math.min(100, this.score + (opt.scoreDelta||0)));
+    this.syncScore();
+    document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+
+    const optsEl = document.getElementById('sim-opts');
+    if(optsEl){
+      const icons = {good:'✅',neutral:'⚠️',bad:'❌'};
+      const fb = mk('div',`fb-box ${opt.quality}`);
+      fb.innerHTML = `<strong>${icons[opt.quality]||''} ${xss(opt.feedback)}</strong>${opt.theory?`<div class="fb-theory">📚 ${xss(opt.theory)}</div>`:''}`;
+      optsEl.after(fb);
+      const cont = mk('button','cont-btn');
+      cont.textContent = 'Weiter →';
+      cont.addEventListener('click', () => { if(opt.next) this.renderNode(opt.next); });
+      fb.after(cont);
+    }
+  },
+
+  renderEnd(node){
+    const stage = document.getElementById('sim-stage');
+    const icons = {good:'🏆',neutral:'🥈',bad:'🔴'};
+    const score = node.endScore==='bad' ? Math.min(this.score,30) : this.score;
+    const wrap = mk('div','sim-end');
+    wrap.innerHTML = `
+      <div class="sim-end-icon">${icons[node.endScore]||'🎯'}</div>
+      <div class="sim-end-title">${node.title}</div>
+      <div class="scene-body" style="text-align:left;max-width:500px;margin:0 auto 1.5rem">${node.scene}</div>
+      <div class="score-big ${node.endScore}">${score}</div>
+      <div class="score-big-sub">Führungspunkte / 100</div>`;
+    (node.options||[]).forEach(opt => {
+      const btn = mk('button','btn btn-red');
+      btn.textContent = opt.text;
+      btn.style.marginTop = '.5rem';
+      btn.addEventListener('click',() => this.restart());
+      wrap.appendChild(btn);
+    });
+    stage.innerHTML = '';
+    stage.appendChild(wrap);
+  },
+
+  syncScore(){
+    const f=document.getElementById('score-fill');
+    const v=document.getElementById('score-val');
+    if(f) f.style.width = this.score+'%';
+    if(v) v.textContent = this.score;
+  },
+  syncPhase(cur){
+    for(let i=1;i<=4;i++){
+      const el=document.getElementById(`ps-${i}`);
+      if(!el) continue;
+      el.classList.remove('active','done');
+      if(i<cur) el.classList.add('done');
+      if(i===cur) el.classList.add('active');
+    }
+  },
+  syncUI(){ this.syncScore(); }
+};
+
+/* ======================================================================
+   HILFSFUNKTIONEN
+====================================================================== */
+function mk(tag,cls){ const e=document.createElement(tag); e.className=cls; return e; }
+function xss(s){ if(!s) return ''; const d=document.createElement('div'); d.appendChild(document.createTextNode(s)); return d.innerHTML; }
+
+/* ======================================================================
+   GITHUB ISSUES API – VORSCHLAGSWESEN
+   ⚠️ Token liegt im Quellcode – Fine-grained PAT (Issues: Read & Write)
+   Token rotieren: github.com → Settings → Developer Settings → PAT
+====================================================================== */
+const GH = {
+  token:'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',
+  owner:'flametan', repo:'BVI-Lernwebsite', label:'vorschlag', base:'https://api.github.com',
+  hdrs(){ return {'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Authorization':`Bearer ${this.token}`}; }
+};
+
+/* Blacklist – erweitern mit weiteren { pattern, msg } Einträgen */
+const BLACKLIST=[
+  {pattern:/nukular/i, msg:'☢️ <strong>„Nukular"</strong> ist kein gültiges deutsches Wort – korrekt ist <em>nuklear</em>. Vorschlag systemkonform abgelehnt. Bitte korrigieren und erneut einreichen.'}
+];
+function checkBL(text){ for(const e of BLACKLIST){ if(e.pattern.test(text)) return {blocked:true,msg:e.msg}; } return {blocked:false}; }
+
+let proposalsLoaded = false;
+
+async function loadProposals(){
+  if(proposalsLoaded) return;
+  const listEl=document.getElementById('proposals-list');
+  const loadEl=document.getElementById('proposals-loading');
+  const emptyEl=document.getElementById('proposals-empty');
+  const statusEl=document.getElementById('gh-status');
+  listEl.innerHTML=''; loadEl.classList.remove('hidden'); emptyEl.classList.add('hidden');
+  try{
+    const url=`${GH.base}/repos/${GH.owner}/${GH.repo}/issues?labels=${encodeURIComponent(GH.label)}&state=open&per_page=50&sort=created&direction=desc`;
+    const res=await fetch(url,{headers:{'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});
+    if(!res.ok) throw new Error(`GitHub API ${res.status}`);
+    const issues=await res.json();
+    statusEl.classList.add('hidden'); loadEl.classList.add('hidden');
+    if(!issues.length){ emptyEl.classList.remove('hidden'); return; }
+    const withR=await Promise.all(issues.map(async i=>({...i,react:await fetchReactions(i.number)})));
+    withR.forEach(i=>listEl.appendChild(buildCard(i)));
+    proposalsLoaded=true;
+  }catch(err){
+    statusEl.className='status-msg s-err'; statusEl.textContent=`⚠️ ${err.message}`; statusEl.classList.remove('hidden'); loadEl.classList.add('hidden');
+  }
+}
+
+async function fetchReactions(num){
+  try{
+    const res=await fetch(`${GH.base}/repos/${GH.owner}/${GH.repo}/issues/${num}/reactions`,{headers:{'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});
+    if(!res.ok) return {up:0,down:0};
+    const d=await res.json();
+    return {up:d.filter(r=>r.content==='+1').length,down:d.filter(r=>r.content==='-1').length};
+  }catch{ return {up:0,down:0}; }
+}
+
+function buildCard(issue){
+  const card=document.createElement('div'); card.className='pl-card';
+  const date=new Date(issue.created_at).toLocaleDateString('de-DE',{year:'numeric',month:'short',day:'numeric'});
+  const author=issue.body?.match(/Eingereicht von: (.+)/)?.[1]||issue.user.login;
+  const body=(issue.body||'').replace(/Eingereicht von:.*\n?/g,'').trim().slice(0,200);
+  card.innerHTML=`
+    <div class="pm"><span class="pm-num">#${issue.number}</span><span class="pm-auth">👤 ${xss(author)}</span><span class="pm-date">${date}</span></div>
+    <div class="pl-title">${xss(issue.title)}</div>
+    <div class="pl-body">${xss(body)}${(issue.body||'').length>200?'…':''}</div>
+    <div class="pl-votes">
+      <button class="vote-btn up" onclick="vote(${issue.number},'+1',this)">👍 ${issue.react?.up||0}</button>
+      <button class="vote-btn down" onclick="vote(${issue.number},'-1',this)">👎 ${issue.react?.down||0}</button>
+      <a href="${issue.html_url}" target="_blank" rel="noopener" class="pl-gh">GitHub ↗</a>
+    </div>`;
+  return card;
+}
+
+async function vote(num,reaction,btn){
+  btn.disabled=true;
+  const orig=btn.innerHTML;
+  btn.innerHTML='<span class="spinner" style="width:11px;height:11px;border-width:1.5px"></span>';
+  try{
+    const res=await fetch(`${GH.base}/repos/${GH.owner}/${GH.repo}/issues/${num}/reactions`,{method:'POST',headers:GH.hdrs(),body:JSON.stringify({content:reaction})});
+    if(res.status===200||res.status===201){ btn.classList.add('voted'); const n=parseInt(orig.match(/\d+/)?.[0]||'0'); btn.innerHTML=`${reaction==='+1'?'👍':'👎'} ${n+1}`; }
+    else btn.innerHTML=orig;
+  }catch{ btn.innerHTML=orig; }
+  finally{ btn.disabled=false; }
+}
+
+async function submitProposal(){
+  const authorEl=document.getElementById('p-author');
+  const titleEl=document.getElementById('p-title');
+  const bodyEl=document.getElementById('p-body');
+  const title=titleEl.value.trim();
+  const body=bodyEl.value.trim();
+  const author=authorEl.value.trim();
+  if(!title||!body){ showFS('Bitte Titel und Beschreibung ausfüllen.','s-err'); return; }
+  const bl=checkBL(title+' '+body);
+  if(bl.blocked){ showFS(bl.msg,'s-warn'); return; }
+  showFS('<span class="spinner"></span>&nbsp;Wird eingereicht…','s-load');
+  try{
+    const res=await fetch(`${GH.base}/repos/${GH.owner}/${GH.repo}/issues`,{method:'POST',headers:GH.hdrs(),body:JSON.stringify({title,body:`${body}\n\n---\n*Eingereicht von: ${author||'Anonym'} · B VI Lernwebsite*`,labels:[GH.label]})});
+    if(!res.ok){ const e=await res.json(); throw new Error(e.message||`Fehler ${res.status}`); }
+    showFS('✓ Vorschlag eingereicht!','s-ok');
+    authorEl.value=titleEl.value=bodyEl.value='';
+    proposalsLoaded=false;
+    setTimeout(loadProposals,1800);
+  }catch(err){ showFS(`⚠️ ${err.message}`,'s-err'); }
+}
+
+function showFS(msg,cls){
+  const el=document.getElementById('form-status');
+  el.className=`status-msg ${cls}`; el.innerHTML=msg; el.classList.remove('hidden');
+}
+
+/* ======================================================================
+   FLASHCARD-DATEN (61 Karten)
+====================================================================== */
+const FLASHCARD_DATA = [
+  {id:'f01',cat:'SFS · Taktik',q:'Was ist der Führungsvorgang nach FwDV 100?',a:'Ein <strong>kontinuierlicher Kreislauf</strong> aus Lagefeststellung → Planung (Entschluss/Beurteilung) → Befehlsgebung → Kontrolle. Nicht statisch – wird bei neuen Informationen erneut durchlaufen.'},
+  {id:'f02',cat:'SFS · Taktik',q:'Was bedeutet die Abkürzung MELDEN?',a:'<strong>M</strong>eldender · <strong>E</strong>insatzstelle · <strong>L</strong>age · <strong>D</strong>urchgeführte Maßnahmen · <strong>E</strong>inheiten im Einsatz · <strong>N</strong>achforderungen'},
+  {id:'f03',cat:'SFS · Taktik',q:'Was bedeutet STOP bei der Gefahrenabwehr?',a:'<strong>S</strong>ubstitution · <strong>T</strong>echnische Lösung · <strong>O</strong>rganisatorisch · <strong>P</strong>ersönliche Maßnahme (Priorität nimmt ab!)'},
+  {id:'f04',cat:'SFS · Taktik',q:'Was sind die 4A der Gefahrenmatrix (4A-C-4E)?',a:'<strong>A</strong>temgifte · <strong>A</strong>ngstreaktionen · <strong>A</strong>usbreitung · <strong>A</strong>tomare Gefahren (Gefahren für Personen, Tiere, Umwelt)'},
+  {id:'f05',cat:'SFS · Taktik',q:'Was sind die 4E der Gefahrenmatrix?',a:'<strong>E</strong>rkrankung/Verletzung · <strong>E</strong>xplosion · <strong>E</strong>lektrizität · <strong>E</strong>insturz (Gefahren für Kräfte & Geräte)'},
+  {id:'f06',cat:'SFS · Taktik',q:'Welche Stärke hat eine Gruppe nach FwDV 3?',a:'<strong>1/8 – 1/9</strong>: Gruppenführer, Melder, Maschinist, Angriffstrupp (2), Wassertrupp (2), Schlauchtrupp (2). Typisches Fahrzeug: LF 10 oder LF 20.'},
+  {id:'f07',cat:'SFS · Taktik',q:'Was sind die Führungsstufen A–D?',a:'<strong>A:</strong> Führen ohne Führungseinheit (bis 2 Gruppen) · <strong>B:</strong> Mit örtlicher Führungseinheit (Zug) · <strong>C:</strong> Mit Führungsgruppe (Verband) · <strong>D:</strong> Mit Führungsgruppe/-stab (B VI)'},
+  {id:'f08',cat:'SFS · Taktik',q:'Was sind die 3 Lagen bei der Lagefeststellung?',a:'<strong>Allgemeine Lage:</strong> Zeit, Ort, Wetter · <strong>Schadenslage:</strong> Schaden, Objekt, Umfang · <strong>Eigene Lage:</strong> Führung, Kräfte, Mittel'},
+  {id:'f09',cat:'SFS · Methodik',q:'Was sind die 5 Phasen des AVIVA-Modells?',a:'<strong>A</strong>nkommen & Einstimmen · <strong>V</strong>orwissen aktivieren · <strong>I</strong>nformieren · <strong>V</strong>erarbeiten · <strong>A</strong>uswerten'},
+  {id:'f10',cat:'SFS · Methodik',q:'Aus welchen Komponenten besteht ein Lernziel?',a:'Einer <strong>Handlungskomponente</strong> (messbares Verb) + einer <strong>Inhaltskomponente</strong> (Substantiv). Kein „können", „wissen" oder „kennen"!'},
+  {id:'f11',cat:'SFS · Methodik',q:'Was sind die 3 Lernzielbereiche nach Bloom?',a:'<strong>Kognitiv</strong> (Wissen/Verstehen) · <strong>Psychomotorisch</strong> (Praktische Fertigkeiten) · <strong>Affektiv</strong> (Einstellungen/Werte)'},
+  {id:'f12',cat:'SFS · Methodik',q:'Welche 4 Stufen hat die 4-Stufen-Methode?',a:'1. <strong>Vorbereiten</strong> (Lernziel nennen) · 2. <strong>Vorführen</strong> (Ausbilder zeigt & erklärt) · 3. <strong>Nachmachen</strong> (TN führt durch) · 4. <strong>Üben</strong> (selbstständige Anwendung)'},
+  {id:'f13',cat:'SFS · Methodik',q:'Was ist ein UVP?',a:'<strong>Unterrichtsvorbereitungsplan</strong> – strukturierter Plan mit Lernzielen, Methoden, Medien und Zeitplanung. Regelkreis: Analyse → Struktur → Durchführung → Kontrolle.'},
+  {id:'f14',cat:'SFS · Methodik',q:'Wie ist die Lernzielhierarchie aufgebaut?',a:'<strong>Leitziele</strong> (übergeordnet) → <strong>Richtziele</strong> (Lernbereich/Fach) → <strong>Grobziele</strong> (Unterrichtseinheit) → <strong>Feinziele</strong> (operationalisierbar & prüfbar)'},
+  {id:'f15',cat:'SFS · Recht',q:'Was besagt die Normenpyramide?',a:'Höherrangiges Recht bricht niederrangiges: <strong>EU-Recht > GG > Bundesgesetze > Landesgesetze > Rechtsverordnungen > Satzungen > Verwaltungsvorschriften</strong>'},
+  {id:'f16',cat:'SFS · Recht',q:'Was bedeuten „Muss", „Soll" und „Kann" im FW-Recht?',a:'<strong>Muss</strong> = zwingend · <strong>Soll</strong> = Regelfall, nur ausnahmsweise abweichbar · <strong>Kann</strong> = Ermessen des Handelnden'},
+  {id:'f17',cat:'SFS · Recht',q:'Wann liegt Einsatzleitung kraft Gesetzes vor?',a:'Der zuerst eintreffende Einheitsführer übernimmt automatisch die Einsatzleitung – ohne ausdrückliche Ernennung, solange kein ranghöherer Einsatzleiter eingetroffen ist.'},
+  {id:'f18',cat:'HLFS · Führung',q:'Was bedeutet GAMS?',a:'<strong>G</strong>efahr erkennen · <strong>A</strong>bsperrung einrichten · <strong>M</strong>enschen retten · <strong>S</strong>pezialkräfte anfordern (erste Maßnahmen an GABC-Einsatzstellen)'},
+  {id:'f19',cat:'HLFS · Führung',q:'Was ist die EIMER-Regel?',a:'<strong>E</strong>insatzgrenzen festlegen · <strong>I</strong>nformationen beschaffen · <strong>M</strong>aßnahmen abstimmen · <strong>E</strong>rkundung fortsetzen · <strong>R</strong>ückmeldung erstatten'},
+  {id:'f20',cat:'HLFS · Führung',q:'Was unterscheidet Zug- und Verbandsführer?',a:'<strong>Zugführer:</strong> Führt 2–3 Gruppen, Führungsstufe B · <strong>Verbandsführer:</strong> Führt mehrere Züge, Führungsstufe C, mit Führungsgruppe, zuständig für einen Einsatzabschnitt.'},
+  {id:'f21',cat:'HLFS · GABC',q:'Welche Schutzkleidungsstufen gibt es bei GABC?',a:'<strong>KS 1:</strong> Feuerschutzanzug + PA · <strong>KS 2:</strong> CSA (Chemikalienschutzanzug) · <strong>KS 3:</strong> Gasdichter Vollschutzanzug + PA · <strong>KS 4:</strong> Druckluftanzug'},
+  {id:'f22',cat:'HLFS · GABC',q:'Was sind die Absperrgrenzen bei GABC-Einsätzen?',a:'<strong>Innere Absperrung:</strong> Gefahrenbereich (nur Einsatzkräfte mit PSA) · <strong>Äußere Absperrung:</strong> Einsatzbereich (kein Publikum). Mindestabstand je nach Stoff.'},
+  {id:'f23',cat:'HLFS · GABC',q:'Was sind die 3 Dekontaminationsstufen?',a:'<strong>Dekon P:</strong> Personendekontamination · <strong>Dekon G:</strong> Gerätedekontamination · <strong>Dekon V:</strong> Verletzten-Dekontamination (ggf. Notdekon vorab)'},
+  {id:'f24',cat:'HLFS · MANV',q:'Was sind die MANV-Sichtungskategorien?',a:'<strong>SK I:</strong> Lebensrettende Sofortmaßnahmen · <strong>SK II:</strong> Schwerverletzt, Behandlung aufschiebbar · <strong>SK III:</strong> Leichtverletzt · <strong>SK IV:</strong> Ohne Überlebenschance'},
+  {id:'f25',cat:'HLFS · MANV',q:'Was ist der OLRD?',a:'<strong>Organisatorischer Leitender Rettungsdienst</strong> – koordiniert die medizinische Versorgung am MANV. Bildet mit dem LNA (Leitender Notarzt) die medizinische Einsatzleitung.'},
+  {id:'f26',cat:'HLFS · MANV',q:'Welche Bereiche werden am MANV eingerichtet?',a:'<strong>Patientenablage (PA)</strong> · <strong>Behandlungsplatz (BHP)</strong> mit SK I–IV-Bereichen · <strong>Verletztensammelstelle</strong> · <strong>Transportorganisation</strong>'},
+  {id:'f27',cat:'HLFS · Stab',q:'Was sind die Sachgebiete S1–S6 im Stab?',a:'<strong>S1:</strong> Personal · <strong>S2:</strong> Lage · <strong>S3:</strong> Einsatz · <strong>S4:</strong> Versorgung · <strong>S5:</strong> Presse/Medien · <strong>S6:</strong> IuK'},
+  {id:'f28',cat:'HLFS · Stab',q:'Ab welcher Führungsstufe wird ein Stab gebildet?',a:'Ab <strong>Führungsstufe D</strong> (mehrere Verbände / B VI). Besteht aus: Leiter des Stabs, S1–S6, Verbindungspersonen und Fachdienst-Verbindungsführer.'},
+  {id:'f29',cat:'HLFS · Stab',q:'Was ist eine TEL?',a:'<strong>Technische Einsatzleitung</strong> – mobile Führungseinrichtung ab Führungsstufe C/D. Besteht aus: Führungsfahrzeug/-container, IuK-Einheit und Stab (S1–S6).'},
+  {id:'f30',cat:'HLFS · Tunnel',q:'Warum sind Tunnelbrände besonders gefährlich?',a:'<strong>Kamineffekt/Druckdifferenz</strong> · Eingeschlossene Personen · Verrauchung über weite Strecken · Eingeschränkte Rettungswege · Hitzestau · Infrastrukturausfall.'},
+  {id:'f31',cat:'HLFS · Tunnel',q:'Welche Ventilationsstrategien gibt es im Tunnel?',a:'<strong>Longitudinal:</strong> Längsventilation (Strömung in Fahrtrichtung) · <strong>Transversal:</strong> Querventilation (Zuluft/Abluft getrennt) · Brandrauchverdünnung durch Überdruck.'},
+  {id:'f32',cat:'HLFS · Vorbeugen',q:'Was sind die 3 Säulen des vorbeugenden Brandschutzes?',a:'<strong>Baulich:</strong> Brandwände, Trennwände, Rettungswege · <strong>Anlagentechnisch:</strong> Sprinkler, RWA, BMA · <strong>Organisatorisch:</strong> Evakuierungsplan, Brandschutzbeauftragter'},
+  {id:'f33',cat:'HLFS · Führung',q:'Was sind die 8 Führungsfragen nach FwDV 100?',a:'Lage? – Auftrag? – Eigene Möglichkeiten? – Entschluss? – Befehl? – Rückmeldung? – Kontrolle? – Neue Lage? <strong>(Kreislauf!)</strong>'},
+  {id:'f34',cat:'IBK · TA',q:'Was sind die 3 Ich-Zustände nach Eric Berne?',a:'<strong>Eltern-Ich (EI):</strong> Kritisch kEI / fürsorglich fEI · <strong>Erwachsenen-Ich (ErI):</strong> Sachlich, rational · <strong>Kind-Ich (KI):</strong> Spontan, angepasst oder rebellisch'},
+  {id:'f35',cat:'IBK · TA',q:'Was ist eine komplementäre Transaktion?',a:'Kommunikation verläuft <strong>parallel</strong> – der angesprochene Ich-Zustand antwortet (z.B. ErI→ErI). Kann <strong>unbegrenzt</strong> weitergehen; kein Konflikt.'},
+  {id:'f36',cat:'IBK · TA',q:'Was ist eine gekreuzte Transaktion?',a:'Antwort aus einem <strong>anderen als dem angesprochenen</strong> Ich-Zustand → <strong>Kommunikationsabbruch</strong>. Beispiel: ErI-Frage → kEI-Antwort = Konflikt.'},
+  {id:'f37',cat:'IBK · TA',q:'Was sind die 4 Grundpositionen nach der TA?',a:'Ich OK / Du OK (gesund) · Ich OK / Du nicht OK · Ich nicht OK / Du OK · Ich nicht OK / Du nicht OK (tiefste Krise)'},
+  {id:'f38',cat:'IBK · TA',q:'Was sind die 5 „Antreiber" nach Taibi Kahler?',a:'<strong>Sei perfekt!</strong> · <strong>Beeil dich!</strong> · <strong>Streng dich an!</strong> · <strong>Mach es allen recht!</strong> · <strong>Sei stark!</strong> (unbewusste Glaubenssätze unter Stress)'},
+  {id:'f39',cat:'IBK · Konflikt',q:'Welche 9 Stufen hat Glasls Eskalationsmodell?',a:'Stufe 1–3: Win-win möglich · 4–6: Win-lose (Moderation nötig) · 7–9: Lose-lose (nur externe Machteingriffe helfen). Ab Stufe 4: Koalitionsbildung.'},
+  {id:'f40',cat:'IBK · Konflikt',q:'Was ist das Karpman-Dreieck?',a:'Dynamik zwischen 3 Rollen: <strong>Verfolger</strong> (Täter) · <strong>Retter</strong> (Helfer) · <strong>Opfer</strong>. Rollen sind austauschbar. Ziel: Alle in die Erwachsenenrolle führen.'},
+  {id:'f41',cat:'IBK · Konflikt',q:'Was besagen die 5 Axiome von Watzlawick?',a:'1. Man kann nicht nicht kommunizieren · 2. Inhalts- & Beziehungsaspekt · 3. Interpunktion der Ereignisfolge · 4. Digital & analog · 5. Symmetrisch & komplementär'},
+  {id:'f42',cat:'IBK · Konflikt',q:'Was ist die Mehrabian-Formel?',a:'Kommunikationswirkung: <strong>7% Worte</strong> · <strong>38% Tonfall/Stimme</strong> · <strong>55% Körpersprache</strong>. Gilt bei emotionalen/widersprüchlichen Nachrichten – nicht bei reiner Sachinformation!'},
+  {id:'f43',cat:'IBK · Konflikt',q:'Was sind die 4 Seiten einer Nachricht (Schulz von Thun)?',a:'<strong>Sachinhalt</strong> (Information) · <strong>Selbstoffenbarung</strong> (was ich von mir zeige) · <strong>Beziehungshinweis</strong> (wie ich zu dir stehe) · <strong>Appell</strong> (was ich will)'},
+  {id:'f44',cat:'IBK · Stress',q:'Was bedeutet das S-O-R-K-C-Modell?',a:'<strong>S</strong>timulus → <strong>O</strong>rganismus (intern) → <strong>R</strong>eaktion → <strong>K</strong>onsequenz → <strong>C</strong>ontingenz. Stress entsteht durch die interne Bewertung, nicht nur durch den Reiz!'},
+  {id:'f45',cat:'IBK · Stress',q:'Was ist der Flow-Kanal nach Csikszentmihalyi?',a:'Optimaler Zustand wenn <strong>Anforderungen = Fähigkeiten</strong>. Zu niedrig → Langeweile. Zu hoch → Angst/Stress. Flow: vollständige Absorption, Zeitverlust, hohe Leistung.'},
+  {id:'f46',cat:'IBK · Stress',q:'Was sind die 3 Ebenen des biopsychosozialen Modells?',a:'<strong>Biologisch:</strong> körperliche Belastung, Erkrankung · <strong>Psychologisch:</strong> kognitive Bewertung, Persönlichkeit · <strong>Sozial:</strong> Arbeitsklima, soziale Unterstützung'},
+  {id:'f47',cat:'IBK · Stress',q:'Was ist das JD-R-Modell?',a:'<strong>Job Demands-Resources:</strong> Hohe Anforderungen + geringe Ressourcen → Burnout-Risiko. Hohe Ressourcen puffern Anforderungen ab und fördern Engagement.'},
+  {id:'f48',cat:'IBK · PSNV',q:'Was ist die Alarmierungsformel im PSNV?',a:'<strong>Wer – Wo – Was – Wann – Wie viele – Warnung vor Gefahren</strong> (6 W). Strukturierte Kommunikation bei psychosozialer Notfallversorgung.'},
+  {id:'f49',cat:'IBK · PSNV',q:'Was ist Demobilisation?',a:'Strukturierter Abschluss nach Belastungseinsätzen: kurze Zusammenfassung, erste Verarbeitung im Team, Hinweis auf Normalreaktionen und weiterführende Hilfe. Kein Debriefing!'},
+  {id:'f50',cat:'IBK · PSNV',q:'Was besagt das BELLA-Konzept?',a:'<strong>B</strong>eziehung herstellen · <strong>E</strong>rfassen der Situation · <strong>L</strong>indern akuter Belastung · <strong>L</strong>angfristig stabilisieren · <strong>A</strong>bklären weiterer Hilfe'},
+  {id:'f51',cat:'IBK · BGM',q:'Was sind die 6 Dimensionen des PERMA-H-Modells?',a:'<strong>P</strong>ositive Emotionen · <strong>E</strong>ngagement · <strong>R</strong>elationships · <strong>M</strong>eaning (Sinn) · <strong>A</strong>ccomplishment · <strong>H</strong>ealth (Gesundheit)'},
+  {id:'f52',cat:'IBK · BGM',q:'Was ist Salutogenese nach Antonovsky?',a:'Fokus auf <strong>gesundheitserhaltende Faktoren</strong> statt Krankheitsursachen. Kernkonzept: <strong>Kohärenzgefühl</strong> (Verstehbarkeit + Handhabbarkeit + Bedeutsamkeit).'},
+  {id:'f53',cat:'IBK · BGM',q:'Was sind die 3 Dimensionen von Burnout nach Maslach?',a:'<strong>Emotionale Erschöpfung</strong> · <strong>Depersonalisation</strong> (Zynismus, innere Distanzierung) · <strong>Reduzierte persönliche Leistungsfähigkeit</strong>'},
+  {id:'f54',cat:'IBK · BGM',q:'Was sind die 3 Säulen des BGM?',a:'<strong>Betriebliche Gesundheitsförderung (BGF)</strong> · <strong>Arbeitsschutz/Arbeitssicherheit</strong> · <strong>Betriebliches Eingliederungsmanagement (BEM)</strong>'},
+  {id:'f55',cat:'IBK · PM',q:'Was ist der kritische Pfad (CPM)?',a:'Die längste Kette von Vorgängen im Netzplan <strong>ohne Puffer</strong>. Bestimmt die Gesamtprojektdauer. Jede Verzögerung am kritischen Pfad verzögert das gesamte Projekt.'},
+  {id:'f56',cat:'IBK · PM',q:'Was ist ein Stakeholder-Mapping?',a:'Analyse der Projektbeteiligten nach <strong>Einfluss (Macht)</strong> und <strong>Interesse</strong>. 4-Felder-Matrix: High/High = eng einbeziehen · Low/Low = beobachten.'},
+  {id:'f57',cat:'IBK · PM',q:'Was sind die 4 Felder der Risikomatrix?',a:'Eintrittswahrscheinlichkeit × Schadensausmaß: <strong>Hoch/Hoch:</strong> Sofortmaßnahme · <strong>Hoch/Niedrig:</strong> Prozess verbessern · <strong>Niedrig/Hoch:</strong> Notfallplan · <strong>Niedrig/Niedrig:</strong> Akzeptieren'},
+  {id:'f58',cat:'IBK · Zeit',q:'Was ist die ALPEN-Methode?',a:'<strong>A</strong>ufgaben aufschreiben · <strong>L</strong>änge schätzen · <strong>P</strong>uffer einplanen (60/40-Regel) · <strong>E</strong>ntscheidungen/Prioritäten · <strong>N</strong>achkontrollieren'},
+  {id:'f59',cat:'IBK · Zeit',q:'Was ist das Pareto-Prinzip im Zeitmanagement?',a:'<strong>80% des Ergebnisses</strong> wird mit <strong>20% des Aufwands</strong> erzielt. Fokus auf die wichtigsten 20% der Aufgaben statt alles gleichwertig zu behandeln.'},
+  {id:'f60',cat:'IBK · Zeit',q:'Was bedeutet „Eat the Frog"?',a:'Die <strong>unangenehmste, wichtigste Aufgabe zuerst</strong> erledigen. Verhindert Aufschieben und schafft mentale Freiheit für den Rest des Tages (nach Mark Twain).'},
+  {id:'f61',cat:'IBK · Zeit',q:'Was ist Deep Work nach Cal Newport?',a:'Zustand der <strong>ablenkungsfreien Konzentration</strong> auf kognitive Hochleistungsaufgaben. Gegenteil: Shallow Work (E-Mails, Meetings). Bestimmt professionelle Qualität.'},
+];
+
+/* ======================================================================
+   PROGRESS – Lernfortschritt in LocalStorage
+====================================================================== */
+const PROGRESS = (function(){
+  const GROUPS = {
+    sfs:  ['v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc'],
+    hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
+    ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
+  };
+  const LEAF_PARENT = {};
+  Object.keys(GROUPS).forEach(g => GROUPS[g].forEach(v => { LEAF_PARENT[v] = g; }));
+
+  function load(){ try{ return JSON.parse(localStorage.getItem('bvi_progress')||'{}'); }catch{ return {}; } }
+  function save(d){ try{ localStorage.setItem('bvi_progress',JSON.stringify(d)); }catch{} }
+
+  function track(viewId){
+    if(!LEAF_PARENT[viewId]) return;
+    const d = load(); d[viewId] = true; save(d);
+    updateUI();
+  }
+
+  function updateUI(){
+    const visited = load();
+    const allLeafs = [...GROUPS.sfs,...GROUPS.hlfs,...GROUPS.ibk];
+    const total = allLeafs.length;
+    const done = allLeafs.filter(v=>visited[v]).length;
+    const bar = document.getElementById('prog-bar');
+    if(bar) bar.style.width = (total ? Math.round(done/total*100) : 0) + '%';
+
+    ['sfs','hlfs','ibk'].forEach(g => {
+      const views = GROUPS[g];
+      const d = views.filter(v=>visited[v]).length;
+      const el = document.getElementById('prog-'+g);
+      if(!el) return;
+      el.textContent = d+'/'+views.length;
+      el.style.display = d > 0 ? 'block' : 'none';
+    });
+
+    document.querySelectorAll('.topic-card').forEach(card => {
+      const oc = card.getAttribute('onclick')||'';
+      const m = oc.match(/NAV\.go\('([^']+)'/);
+      if(!m) return;
+      const vid = m[1];
+      let chk = card.querySelector('.tc-check');
+      if(visited[vid]){
+        if(!chk){ chk = document.createElement('span'); chk.className='tc-check'; chk.textContent='✓'; card.style.position='relative'; card.appendChild(chk); }
+      } else { if(chk) chk.remove(); }
+    });
+  }
+
+  return { track, updateUI };
+})();
+
+/* ======================================================================
+   SEARCH – Volltext-Suche über alle Views
+====================================================================== */
+const SEARCH = (function(){
+  let idx = [], results = [], focusIdx = -1;
+
+  const VIEW_LABELS = {
+    'v-sfs-fwdv3':'SFS · Führung','v-sfs-methodik':'SFS · Methodik','v-sfs-rechtsgrundlagen':'SFS · Recht','v-sfs-abc':'SFS · Geräte/ABC',
+    'v-hlfs-fuehrungsvorgang':'HLFS · Führungsvorgang','v-hlfs-gabc':'HLFS · GABC','v-hlfs-tunnel':'HLFS · Tunnel',
+    'v-hlfs-vb':'HLFS · Vorbeugen','v-hlfs-manv':'HLFS · MANV','v-hlfs-zugfuehrer':'HLFS · Zugführer','v-hlfs-stab':'HLFS · Stab',
+    'v-ibk-ta':'IBK · TA','v-ibk-konflikt':'IBK · Konflikt','v-ibk-stress':'IBK · Stress',
+    'v-ibk-psnv':'IBK · PSNV','v-ibk-bgm':'IBK · BGM','v-ibk-pm':'IBK · PM','v-ibk-zeit':'IBK · Zeitmanagement',
+  };
+
+  function buildIndex(){
+    idx = [];
+    Object.keys(VIEW_LABELS).forEach(vid => {
+      const el = document.getElementById(vid); if(!el) return;
+      const lbl = VIEW_LABELS[vid];
+      el.querySelectorAll('.sec-h,.tc-name,.page-title,.def-box-label').forEach(h => {
+        const t = h.textContent.trim(); if(t.length < 3) return;
+        idx.push({vid, lbl, title:t, snippet:'', boost:3});
+      });
+      el.querySelectorAll('.def-box p,.info-card p,.bl li,.step-desc,.hint p,.tc-sub,.ant-desc,.pillar ul li').forEach(p => {
+        const t = p.textContent.trim(); if(t.length < 8) return;
+        const hdr = p.closest('.info-card,.def-box,.step-item');
+        const ttl = hdr ? (hdr.querySelector('.info-card-title,.def-box-label,.step-title')||{}).textContent||lbl : lbl;
+        idx.push({vid, lbl, title:ttl.trim(), snippet:t.slice(0,130), boost:1});
+      });
+    });
+  }
+
+  function hl(text, q){
+    const re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    return text.replace(re,'<mark>$1</mark>');
+  }
+
+  function doSearch(q){
+    if(!q || q.length < 2) return [];
+    const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+    const scored = idx.map(e => {
+      const hay = (e.title+' '+e.snippet+' '+e.lbl).toLowerCase();
+      const score = terms.reduce((s,t) => s + (hay.includes(t) ? e.boost : 0), 0);
+      return {...e, score};
+    }).filter(e => e.score > 0).sort((a,b) => b.score-a.score);
+    const seen = new Set();
+    return scored.filter(e => { const k=e.vid+'|'+e.title; if(seen.has(k)) return false; seen.add(k); return true; }).slice(0,12);
+  }
+
+  function render(q){
+    const el = document.getElementById('search-results');
+    if(!q){ el.innerHTML='<div class="search-idle">Suchbegriff eingeben – z.&nbsp;B. <em>AVIVA</em>, <em>Glasl</em>, <em>MANV</em></div>'; results=[]; focusIdx=-1; return; }
+    results = doSearch(q);
+    if(!results.length){ el.innerHTML='<div class="search-empty">Keine Treffer für <strong>'+xss(q)+'</strong></div>'; focusIdx=-1; return; }
+    el.innerHTML = results.map((r,i)=>`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${r.lbl}</span><div><div class="sr-title">${hl(xss(r.title),q)}</div>${r.snippet?`<div class="sr-snippet">${hl(xss(r.snippet),q)}</div>`:''}</div></div>`).join('');
+    focusIdx = -1;
+  }
+
+  function setFocus(i){
+    const items = document.querySelectorAll('#search-results .search-result');
+    items.forEach(e=>e.classList.remove('sr-focus'));
+    if(i>=0 && i<items.length){ items[i].classList.add('sr-focus'); items[i].scrollIntoView({block:'nearest'}); }
+    focusIdx = i;
+  }
+
+  return {
+    open(){
+      buildIndex();
+      document.getElementById('search-overlay').classList.remove('hidden');
+      const inp = document.getElementById('search-input');
+      inp.value = ''; inp.focus(); render('');
+    },
+    close(){ document.getElementById('search-overlay').classList.add('hidden'); results=[]; focusIdx=-1; },
+    query(q){ render(q.trim()); },
+    keydown(e){
+      if(e.key==='Escape'){ this.close(); return; }
+      if(e.key==='ArrowDown'){ e.preventDefault(); setFocus(Math.min(focusIdx+1,results.length-1)); return; }
+      if(e.key==='ArrowUp'){ e.preventDefault(); setFocus(Math.max(focusIdx-1,0)); return; }
+      if(e.key==='Enter' && focusIdx>=0){ this.go(focusIdx); return; }
+    },
+    go(i){
+      const r = results[i]; if(!r) return;
+      this.close();
+      const lbl = r.lbl.split('·').pop().trim();
+      NAV.go(r.vid, lbl);
+    }
+  };
+})();
+
+/* ======================================================================
+   FC – Flashcard-Engine
+====================================================================== */
+const FC = (function(){
+  let deck=[], curIdx=0, flipped=false, filter='all', sess={known:0,unknown:0};
+
+  function fcLoad(){ try{ return JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch{ return {}; } }
+  function fcSave(d){ try{ localStorage.setItem('bvi_fc',JSON.stringify(d)); }catch{} }
+
+  function getDeck(){
+    if(filter==='all') return [...FLASHCARD_DATA];
+    return FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(filter));
+  }
+  function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+  function renderCard(){
+    const box = document.getElementById('fc-container'); if(!box) return;
+    if(curIdx >= deck.length){ renderEnd(); return; }
+    const card = deck[curIdx];
+    const known = fcLoad();
+    const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
+    box.innerHTML = `
+      <div class="fc-stats-row">
+        <span class="fc-stat">🟢 ${sess.known} gewusst</span>
+        <span class="fc-stat">🔴 ${sess.unknown} nicht gewusst</span>
+        <span class="fc-stat">📚 ${knownCnt}/${FLASHCARD_DATA.length} gelernt</span>
+      </div>
+      <div class="fc-nav">${curIdx+1} / ${deck.length}</div>
+      <div class="fc-outer" onclick="FC.flip()">
+        <div class="fc-inner" id="fc-inner">
+          <div class="fc-face fc-front">
+            <div class="fc-cat">${card.cat}</div>
+            <div class="fc-q">${card.q}</div>
+            <div class="fc-tap">Tippen zum Aufdecken ↓</div>
+          </div>
+          <div class="fc-face fc-back">
+            <div class="fc-cat">${card.cat}</div>
+            <div class="fc-a">${card.a}</div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fc-controls" style="display:none">
+        <button class="fc-btn fc-no" onclick="FC.answer(false)">✗ Nicht gewusst</button>
+        <button class="fc-btn fc-yes" onclick="FC.answer(true)">✓ Gewusst</button>
+      </div>`;
+    flipped = false;
+  }
+
+  function renderEnd(){
+    const box = document.getElementById('fc-container'); if(!box) return;
+    const known = fcLoad();
+    const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
+    const pct = deck.length ? Math.round(sess.known/deck.length*100) : 0;
+    const ico = pct>=80?'🏆':pct>=50?'📖':'🔄';
+    const ttl = pct>=80?'Ausgezeichnet!':pct>=50?'Gut gemacht!':'Weiter üben!';
+    box.innerHTML = `
+      <div class="fc-end">
+        <div class="fc-end-ico">${ico}</div>
+        <div class="fc-end-title">${ttl}</div>
+        <div class="fc-end-sub">${sess.known} von ${deck.length} Karten gewusst (${pct}%).<br>Insgesamt <strong>${knownCnt}/${FLASHCARD_DATA.length}</strong> Begriffe dauerhaft gelernt.</div>
+        <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-gold" onclick="FC.start()">Neu mischen & wiederholen</button>
+          <button class="btn btn-ghost" onclick="FC.resetKnown()">Lernstand zurücksetzen</button>
+        </div>
+      </div>`;
+  }
+
+  return {
+    start(){
+      deck = shuffle(getDeck()); curIdx=0; flipped=false; sess={known:0,unknown:0};
+      renderCard();
+    },
+    flip(){
+      if(curIdx>=deck.length) return;
+      flipped=!flipped;
+      const inner=document.getElementById('fc-inner');
+      const ctrl=document.getElementById('fc-controls');
+      if(inner) inner.classList.toggle('flipped',flipped);
+      if(ctrl) ctrl.style.display=flipped?'flex':'none';
+    },
+    answer(knew){
+      if(!flipped) return;
+      const card=deck[curIdx];
+      const d=fcLoad();
+      if(knew){ d[card.id]=true; sess.known++; } else { delete d[card.id]; sess.unknown++; }
+      fcSave(d); curIdx++; renderCard();
+    },
+    setFilter(f){
+      filter=f;
+      document.querySelectorAll('.fc-f-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter===f));
+      this.start();
+    },
+    resetKnown(){ localStorage.removeItem('bvi_fc'); this.start(); }
+  };
+})();
+
+/* ======================================================================
+   INITIALISIERUNG
+====================================================================== */
+document.addEventListener('DOMContentLoaded',()=>{
+  NAV.home();
+  PROGRESS.updateUI();
+  document.addEventListener('keydown', e => {
+    if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); SEARCH.open(); }
+    if(e.key==='Escape' && !document.getElementById('search-overlay').classList.contains('hidden')) SEARCH.close();
+  });
+  console.log('%c B VI %c Lernwebsite v3.1 · flametan/BVI-Lernwebsite ',
+    'background:#A50000;color:#fff;padding:3px 8px;border-radius:4px 0 0 4px;font-family:"DM Mono",monospace;font-weight:700',
+    'background:#0A192F;color:#C9A84C;padding:3px 8px;border-radius:0 4px 4px 0;font-family:"DM Mono",monospace');
+});
