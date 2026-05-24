@@ -1,12 +1,35 @@
-# B VI – Lernwebsite für den höheren feuerwehrtechnischen Dienst
+# [B VI – Lernwebsite für den höheren feuerwehrtechnischen Dienst](https://flametan.github.io/BVI-Lernwebsite/)
+
+> **Prüfungsvorbereitung für den B VI-Lehrgang** (höherer feuerwehrtechnischer Dienst)  
+> Fachlich tiefgründige Wissensdatenbank zu GAL, SFS Regensburg, HLFS Kassel und IBK Heyrothsberge.
+
+---
 
 ## Projektüberblick
 
-**Datei:** `index.html` (single-file SPA, ~3.410 Zeilen, kein Build-Schritt nötig)  
-**Zweck:** Prüfungsvorbereitung für den höheren feuerwehrtechnischen Dienst (B VI)  
-**Sprache:** Deutsch  
-**GitHub-Repo:** `flametan/BVI-Lernwebsite`  
-**Deployment:** Direkt als statische HTML-Datei, z. B. über GitHub Pages
+| Eigenschaft | Wert |
+|---|---|
+| **Architektur** | Single-Page-App (SPA), kein Build-Schritt nötig |
+| **Dateien** | `index.html` (6.272 Zeilen), `css/style.css` (404 Zeilen), `js/app.js` (~1.200 Zeilen) |
+| **Sprache** | Deutsch |
+| **GitHub-Repo** | `flametan/BVI-Lernwebsite` |
+| **Live-URL** | [https://flametan.github.io/BVI-Lernwebsite/](https://flametan.github.io/BVI-Lernwebsite/) |
+| **Deployment** | GitHub Pages (statisch, automatisch beim Push auf `main`) |
+
+---
+
+## Features
+
+- **GAL Grundlehrgang** – 24 vollständige Lernthemen mit maximaler Informationstiefe (Gesetzesparagraphen, Formeln, Einsatztaktiken)
+- **SFS Regensburg** – 4 Unterthemen (Taktik/FwDV, Methodik, Rechtsgrundlagen, ABC)
+- **HLFS Kassel** – 7 Unterthemen (Führungsvorgang, GABC, Vorbeugen, MANV, Tunnel, Zug-/Verbandsführer, Stab)
+- **IBK Heyrothsberge** – 7 Unterthemen (TA, Konflikt, Stress, PSNV, BGM, PM, Zeitmanagement)
+- **121 Karteikarten** (Flashcards) – 61 SFS/HLFS/IBK + 60 GAL, mit 3D-Flip-Animation und persistentem Lernstand
+- **Fortschritts-Tracking** – Besuchte Themen werden per LocalStorage gespeichert; Badge-Anzeige auf Modul-Tiles
+- **Volltextsuche** – Ctrl+K öffnet Suchoverlay mit Live-Trefferhervorhebung
+- **Führungsdienstsimulator** – 4 verzweigte Entscheidungsszenarien mit Scoring
+- **Floating Back-Button** – position:fixed, mobilfreundlich
+- **Vorschlagswesen** – GitHub Issues API (Fine-grained PAT)
 
 ---
 
@@ -15,10 +38,24 @@
 | Bereich | Technologie |
 |---|---|
 | Framework | Vanilla HTML/CSS/JS (kein Framework, kein Build) |
-| Fonts | Google Fonts: Cormorant Garamond (Display), DM Sans (Body), DM Mono (Code) |
-| Icons / Grafiken | Inline SVG (keine externen Bibliotheken) |
+| Fonts | Google Fonts: Cormorant Garamond, DM Sans, DM Mono |
+| Icons / Grafiken | Inline SVG |
 | Externe API | GitHub Issues API (Vorschlagswesen) |
-| Hosting | Beliebig – reine statische Datei |
+| Persistenz | LocalStorage (Fortschritt, Karteikarten-Lernstand) |
+| Hosting | GitHub Pages |
+
+---
+
+## Dateistruktur
+
+```
+BVI-Lernwebsite/
+├── index.html        # Alle Views (6.272 Zeilen)
+├── css/
+│   └── style.css     # Design-System, alle Komponenten (404 Zeilen)
+└── js/
+    └── app.js        # NAV, PROGRESS, SEARCH, FC, SIM, GH (~1.200 Zeilen)
+```
 
 ---
 
@@ -36,11 +73,6 @@
 --c-warn:    #B07320   /* Amber (Warnhinweis) */
 --c-err:     #8B1A1A   /* Dunkelrot (Fehler) */
 --c-blue:    #3A7FD4   /* Blau (Info-Hinweise) */
-
-/* Typografie */
---f-d: 'Cormorant Garamond' (Serif, Überschriften, Seitentitel)
---f-b: 'DM Sans' (Body-Text)
---f-m: 'DM Mono' (Badges, Codes, Nummern)
 ```
 
 **Hintergrundgitter:** Feines Gold-Raster (25px × 25px, opacity 0.025) als `body::before`.  
@@ -52,7 +84,7 @@
 
 Die App hat **keine Routen / URLs**. Navigation erfolgt via JavaScript durch Ein-/Ausblenden von `div.view`-Containern.
 
-### NAV-Engine (JavaScript)
+### NAV-Engine
 
 ```javascript
 NAV.go(id, label)   // Navigiere zu View, push auf Stack
@@ -61,14 +93,19 @@ NAV.home()          // Zur Startseite (Stack leeren)
 NAV.jumpTo(idx)     // Breadcrumb-Sprung
 ```
 
-**Stack-Breadcrumb:** Wird im Header automatisch als Breadcrumb angezeigt.  
-**Back-Button:** `#back-btn` – wird ausgeblendet wenn Stack leer ist.
-
-### Vollständiges Array aller View-IDs
+### Vollständiges Array aller View-IDs (`js/app.js`, Zeile 7)
 
 ```javascript
 const ALL = [
   'v-home',
+  // GAL Grundlehrgang (24 Themen)
+  'v-gal',
+  'v-gal-organisation', 'v-gal-brandlehre', 'v-gal-fahrzeuge', 'v-gal-einsatz',
+  'v-gal-atemschutz', 'v-gal-beamtenrecht', 'v-gal-beihilferecht', 'v-gal-brandbekaempfung',
+  'v-gal-einsatztechnik', 'v-gal-erstehilfe', 'v-gal-grundlagen', 'v-gal-fahrzeugnormung',
+  'v-gal-fuehrung', 'v-gal-fwdven', 'v-gal-gabc', 'v-gal-geraetepruefung',
+  'v-gal-hbkg', 'v-gal-kartenkunde', 'v-gal-knoten', 'v-gal-staatsbuerger',
+  'v-gal-th-verkehr', 'v-gal-leitern', 'v-gal-uvv', 'v-gal-waermebildkamera',
   // SFS Regensburg
   'v-sfs', 'v-sfs-fwdv3', 'v-sfs-methodik', 'v-sfs-rechtsgrundlagen', 'v-sfs-abc',
   // HLFS Kassel
@@ -77,133 +114,91 @@ const ALL = [
   // IBK Heyrothsberge
   'v-ibk', 'v-ibk-ta', 'v-ibk-konflikt', 'v-ibk-stress',
   'v-ibk-psnv', 'v-ibk-bgm', 'v-ibk-pm', 'v-ibk-zeit',
-  // Platzhalter (noch nicht implementiert)
+  // Platzhalter
   'v-vak', 'v-feuak', 'v-idf',
   // Sonderfunktionen
-  'v-simulator', 'v-vorschlaege'
+  'v-simulator', 'v-flashcards', 'v-vorschlaege'
 ];
 ```
-
-> **Wichtig:** Bei jedem neuen View muss die ID hier eingetragen werden, sonst wird er beim View-Switch nicht korrekt aus-/eingeblendet.
 
 ---
 
 ## Inhaltsstruktur (alle Views)
 
-### 🏠 Startseite (`v-home`)
-Grid aus 8 Glass-Tiles. Tiles mit Klasse `.tp` sind gesperrt ("In Vorbereitung"). Tiles mit `.ts` haben rotes Farbschema (Simulator). Tile-Klick ruft `NAV.go(id, label)` auf.
+### GAL Grundlehrgang (`v-gal` → 24 Unterthemen)
 
----
+| Nr. | View-ID | Thema | Schlüsselinhalte |
+|-----|---------|-------|-----------------|
+| 01 | `v-gal-organisation` | Organisation der Feuerwehr | BF/FF/WF/Pflichtfw, Laufbahngruppen A7–B4, HBKG §§ 10–19, Behördenstruktur, HiOrg |
+| 02 | `v-gal-brandlehre` | Brandlehre & Löschmittel | Brandtetraeder, Klassen A–F (DIN EN 2), Flash-Over/Backdraft/BLEVE, Stefan-Boltzmann-Gesetz |
+| 03 | `v-gal-fahrzeuge` | Fahrzeug- & Gerätekunde | Normfahrzeuge (DIN 14530/EN 1846), FPN 10-1000/2000, DLK 23-12, Normbeladung |
+| 04 | `v-gal-einsatz` | Einsatzgrundlagen & FwDV | Einsatzprinzipien, Truppgrundsatz, FwDV-System (1–500), Gruppenfunktionen |
+| 05 | `v-gal-atemschutz` | Atemschutz | PA-Typen, Atemluftberechnung (1.800 Nl), Kehrtpunkt, FwDV 7, CO/HCN-Physiologie, G26 |
+| 06 | `v-gal-beamtenrecht` | Beamtenrecht | BeamtStG §§ 33–37, Beamtenarten, Besoldungstabelle, §42a BBesO Feuerwehrzulage |
+| 07 | `v-gal-beihilferecht` | Beihilferecht | BBhV §§ 10–26, Beihilfesätze 50/70/80 %, Kostendämpfungspauschale, PKV/GKV |
+| 08 | `v-gal-brandbekaempfung` | Brandbekämpfung | Innen-/Außenangriff, 3D-Löschangriff, HSR-Modi, Druckbelüftung, Sonderbrände |
+| 09 | `v-gal-einsatztechnik` | Einsatztechnik | Schlauchtypen, Δp = R·L·Q², Armaturen, Schaummittel/PFAS, Bernoulli |
+| 10 | `v-gal-erstehilfe` | Erste Hilfe | ABCDE-Schema, CPR (ERC 2021), AED, Schockformen, Verbrennung/9er-Regel, Parkland |
+| 11 | `v-gal-grundlagen` | Naturwiss. Grundlagen | Physik (Druck, Bernoulli), Verbrennungschemie, Baustoffklassen EN 13501, Elektrotechnik |
+| 12 | `v-gal-fahrzeugnormung` | Fahrzeugnormung | DIN EN 1846 Klassifizierung, Typbezeichnung, Prüffristen, WLF/AB-System |
+| 13 | `v-gal-fuehrung` | Führung | Führungsstile (Lewin/Hersey-Blanchard), Schulz von Thun, Tuckman-Phasen |
+| 14 | `v-gal-fwdven` | FwDVen – Überblick | Alle FwDV 1–500, Rechtliche Stellung (AFKzV/IMK), Verhältnis zu DIN/EN/DGUV |
+| 15 | `v-gal-gabc` | G-ABC Lehrgang | GHS (9 Piktogramme), ADR-Klassen 1–9, Kemler-Nummern, GAMS, KS 1–4, Dekon P/G/V |
+| 16 | `v-gal-geraetepruefung` | Geräteprüfung | DGUV V 49/50, Prüftabelle 9 Gerätearten, Befähigte Person vs. Sachkundiger |
+| 17 | `v-gal-hbkg` | HBKG Hessen | §§ 1–70 paragraphengenau, §61 mit 12 Kostenersatz-Fallgruppen, KatS §§ 20–29 |
+| 18 | `v-gal-kartenkunde` | Kartenkunde | TK 25/50, UTM (32U/33U), MGRS, GNSS/SBAS, Kreuzpeilung, Orientierung ohne GPS |
+| 19 | `v-gal-knoten` | Knoten, Stiche & Bunde | Achtknoten/Mastwurf/Pfahlstich, Knotenwirkungsgrade, Prüfregeln |
+| 20 | `v-gal-staatsbuerger` | Staatsbürgerkunde | GG Art. 1–33, Staatsorgane, Gewaltenteilung, Föderalismus, Feuerwehr im Staatsaufbau |
+| 21 | `v-gal-th-verkehr` | TH Verkehrsunfall | Hydraulisches Rettungsgerät, E-Fahrzeuge (HV/Thermal Runaway), Tramcar |
+| 22 | `v-gal-leitern` | Tragbare Leitern | Leiternarten (DIN 14094), Aufstellwinkel 65–75°, Fußsicherung, Prüffristen |
+| 23 | `v-gal-uvv` | UVV – Unfallverhütung | ArbSchG §5, DGUV V 1/49/50, PSA-Normen (EN 469/443/659), BK-Recht |
+| 24 | `v-gal-waermebildkamera` | Wärmebildkamera | LWIR-Physik (Wien/Stefan-Boltzmann), Emissionsgrade, Glasbarriere, Thermal Runaway |
 
-### 🔵 SFS Regensburg (`v-sfs` → Unterpunkte)
+### SFS Regensburg (`v-sfs` → 4 Unterthemen)
 
 | View-ID | Thema | Schlüsselinhalte |
-|---|---|---|
-| `v-sfs-fwdv3` | Führung & Taktik | FwDV 3, FwDV 100, Führungskreislauf-SVG, 4A-C-4E Gefahrenmatrix, Befehlsgebung, MELDEN-Schema |
-| `v-sfs-methodik` | Methodik & Didaktik | Regelkreis der Ausbildung, Lernziele (3 Bereiche), **Bloom-Taxonomie** (6 Stufen mit Tabelle), AVIVA-Modell, **4-Stufen-Methode** (4 Detailkarten), Feedback, UVP |
-| `v-sfs-rechtsgrundlagen` | Rechtsgrundlagen | Normenpyramide-SVG, Muss/Soll/Kann, Einsatzleitung kraft Gesetz/Übernahme/Übertragung, Gefahrenbegriffe (konkrete/Anscheins-/Scheingefahr) |
-| `v-sfs-abc` | Geräte, ABC & Atemschutz | Rettungsgeräte, Arbeitsgeräte, FwDV 7 Atemschutz, GAMS-Regel, 4 Körperschutzformen, 3 Dekon-Stufen, A-Referenzwerte Strahlenschutz |
+|---------|-------|-----------------|
+| `v-sfs-fwdv3` | Führung & Taktik | FwDV 3/100, Führungskreislauf, 4A-C-4E Gefahrenmatrix, MELDEN-Schema |
+| `v-sfs-methodik` | Methodik & Didaktik | Bloom-Taxonomie (6 Stufen), AVIVA-Modell, 4-Stufen-Methode, Lernziele, UVP |
+| `v-sfs-rechtsgrundlagen` | Rechtsgrundlagen | Normenpyramide, Muss/Soll/Kann, Einsatzleitung kraft Gesetz |
+| `v-sfs-abc` | Geräte, ABC & Atemschutz | Rettungsgeräte, GAMS-Regel, Körperschutzformen, Dekon-Stufen |
 
----
-
-### 🔴 HLFS Kassel (`v-hlfs` → Unterpunkte)
+### HLFS Kassel (`v-hlfs` → 7 Unterthemen)
 
 | View-ID | Thema | Schlüsselinhalte |
-|---|---|---|
-| `v-hlfs-fuehrungsvorgang` | **NEU: Führungsvorgang** | Großes 3-Knoten-SVG des Kreislaufs (mit glow), 4 Phasen der Erkundung, AUTO-Regel, **EIMER-Regel**, 8 Fragen der Beurteilung, Taktische Optionen (Verteidigung/Rettung/Angriff/Rückzug), Befehl mit/ohne Bereitstellung, MELDEN, GAMS, Abschließende Maßnahmen |
-| `v-hlfs-gabc` | GABC Führen | Gefahrengruppen I–III, 3 Grundprinzipien, **EIMER-Regel als Step-Stack**, **Absperrgrenzen** (50/100/300m, 25mSv/h), Zoneneinteilung (heiß/warm/kalt), Messstrategien, **Spezialkräfte** (TUIS, CBRN, LKA), Ergänzende Maßnahmen |
-| `v-hlfs-tunnel` | Tunnelseminar | Besondere Gefährdungen, Taktische Grundsätze (5 Schritte), 3 Ventilationskonzepte |
-| `v-hlfs-vb` | Vorbeugender Brandschutz | 3 Säulen (baulich/anlagentechnisch/organisatorisch), Feuerwiderstandsklassen F30–F120, Rettungswege 1./2., Brandschutzordnung DIN 14096 (Teil A/B/C) |
-| `v-hlfs-manv` | MANV & OLRD | Definition MANV, mSTaRT-Algorithmus (SK I–IV), Führungsstruktur (ELF/LNA/OLRD), 4-Schritte Organisationsstruktur, Schnittstellentabelle FW/RD |
-| `v-hlfs-zugfuehrer` | Zug- & Verbandsführer | Führungsstufen A–D (Tabelle), 2-5-Regel Abschnittsbildung, Aufgaben ZF (4 Karten), Taktische Zeichen, **TETRA Digitalfunk TMO vs. DMO** (Vergleichskarten + Gateway-SVG) |
-| `v-hlfs-stab` | **NEU: Bildung eines Stabs** | SVG der 3 Führungskomponenten, Führungsstufen-Tabelle A–D, **S1–S6 Aufgaben** (6 Detailkarten), TEL-Struktur, Verwaltungsstab (KGS/BuMA/SMS/EMS), Abschnittsstruktur |
+|---------|-------|-----------------|
+| `v-hlfs-fuehrungsvorgang` | Führungsvorgang | SVG-Kreislauf, 4 Erkundungsphasen, EIMER-Regel, 8 Beurteilungsfragen |
+| `v-hlfs-gabc` | GABC Führen | Gefahrengruppen I–III, Absperrgrenzen, Zoneneinteilung, Spezialkräfte |
+| `v-hlfs-vb` | Vorbeugender Brandschutz | 3 Säulen, Feuerwiderstandsklassen F30–F120, Brandschutzordnung DIN 14096 |
+| `v-hlfs-manv` | MANV & OLRD | mSTaRT-Algorithmus, SK I–IV, LNA/OLRD-Struktur |
+| `v-hlfs-tunnel` | Tunnelseminar | Besondere Gefährdungen, Ventilationskonzepte, Taktische Grundsätze |
+| `v-hlfs-zugfuehrer` | Zug- & Verbandsführer | Führungsstufen A–D, TETRA TMO vs. DMO, Taktische Zeichen |
+| `v-hlfs-stab` | Bildung eines Stabs | S1–S6 Aufgaben, TEL-Struktur, Verwaltungsstab, Führungsstufen A–D |
 
----
-
-### 🟡 IBK Heyrothsberge (`v-ibk` → Unterpunkte)
+### IBK Heyrothsberge (`v-ibk` → 7 Unterthemen)
 
 | View-ID | Thema | Schlüsselinhalte |
-|---|---|---|
-| `v-ibk-ta` | Transaktionsanalyse | Ich-Zustände SVG (Eltern-/Erwachsenen-/Kind-Ich), Transaktionstypen (komplementär/gekreuzt/verdeckt), 4 Lebensgrundpositionen, Antreiber (Miniskript) |
-| `v-ibk-konflikt` | Konfliktmanagement | Glasl 9-Stufen, Karpman-Dreieck, Schulz von Thun (4-Ohren), Watzlawick 5 Axiome, Mehrabian 7/38/55-Regel, B4-Methode |
-| `v-ibk-stress` | Stresstheorie | S-O-R-K-C-Schema, Flow-Kanal (Csikszentmihalyi), Biopsychosoziales Modell, JD-R-Modell |
-| `v-ibk-psnv` | PSNV | Alarmierungsformel (~30%), Demobilisation, BELLA-Konzept, Einsatznachsorge |
-| `v-ibk-bgm` | BGM | WHO-Definition, 6 Gesundheitsdimensionen, Salutogenese (SOC), PERMA-H (6 Karten + Tabelle), 3 Säulen BGM, Burnout-Phasen, Public-Health-Action-Cycle |
-| `v-ibk-pm` | Projektmanagement | SMART-Ziele, CPM/kritischer Pfad, Stakeholder-Mapping, Risikomatrix 2×2, Agiles PM im Stab |
-| `v-ibk-zeit` | Zeitmanagement | Eisenhower-Matrix, ALPEN-Methode, Pareto-Prinzip, Eat the Frog, Deep Work, Time-Blocking |
+|---------|-------|-----------------|
+| `v-ibk-ta` | Transaktionsanalyse | Ich-Zustände, Transaktionstypen, 4 Lebensgrundpositionen, Antreiber |
+| `v-ibk-konflikt` | Konfliktmanagement | Glasl 9-Stufen, Karpman-Dreieck, Schulz von Thun, Watzlawick 5 Axiome |
+| `v-ibk-stress` | Stresstheorie | S-O-R-K-C, Flow-Kanal (Csikszentmihalyi), JD-R-Modell |
+| `v-ibk-psnv` | PSNV | Demobilisation, BELLA-Konzept, Einsatznachsorge |
+| `v-ibk-bgm` | BGM | Salutogenese (SOC), PERMA-H, 3 Säulen BGM, Burnout-Phasen |
+| `v-ibk-pm` | Projektmanagement | SMART-Ziele, CPM/kritischer Pfad, Stakeholder-Mapping, Risikomatrix |
+| `v-ibk-zeit` | Zeitmanagement | Eisenhower-Matrix, ALPEN-Methode, Pareto, Deep Work |
 
 ---
 
-### ⚫ Platzhalter-Views (noch nicht implementiert)
+## Karteikarten (Flashcards)
 
-- `v-vak` – VAk Berlin (Verwaltungsakademie)
-- `v-feuak` – FeuAK Hamburg (Feuerwehrakademie)
-- `v-idf` – IdF Münster (Institut der Feuerwehr NRW)
+**121 Karteikarten** gesamt – 3D-Flip-Animation, Know/Don't-Know-Bewertung, LocalStorage-Persistenz.
 
-Alle drei zeigen einen `ph-view` Platzhalter-Screen. Tiles haben die Klasse `.tp` (nicht klickbar, gedimmt).
-
----
-
-### 🎮 Führungsdienstsimulator (`v-simulator`)
-
-Verzweigter Entscheidungsbaum mit 4 Szenarien, Scoring-System (0–100 Punkte).
-
-| Key | Szenario | Thema |
-|---|---|---|
-| `schmidt` | Konflikt Schmidt / Müller | Generationenkonflikt, TA, Glasl, Schulz von Thun |
-| `ressourcen` | Ressourcen-Dilemma | Zwei simultane Großlagen, Priorisierung |
-| `stab` | Führungsfehler im Stab | Stabsarbeit, Deeskalation, Watzlawick |
-| `disziplin` | Disziplinarischer Grenzfall | Dienstvergehen, Führungsfürsorge, Recht |
-
-**Node-Struktur eines Szenarios:**
-```javascript
-{
-  phase: 1-4,       // Phasenleiste (Analyse/Gespräche/Entscheidung/Maßnahmen)
-  title: '',        // Szenentitel
-  scene: '',        // HTML-Situationsbeschreibung
-  question: '',     // Entscheidungsfrage
-  options: [{
-    letter: 'A',
-    text: '',
-    quality: 'good|neutral|bad|restart',
-    scoreDelta: ±n,
-    feedback: '',   // Konsequenzbeschreibung
-    theory: '',     // Theoretische Einordnung (TA, Glasl, etc.)
-    next: 'nodeId'
-  }],
-  isEnd: bool,
-  endScore: 'good|neutral|bad'
-}
-```
-
-**Simulator starten:** `SIM.loadScenario('schmidt')` etc. (aus `sc-card`-Klick-Handler).
-
----
-
-### 💬 Vorschlagswesen (`v-vorschlaege`)
-
-GitHub Issues API – Vorschläge werden als Issues im Repo gespeichert und können mit 👍/👎 bewertet werden.
-
-**Konfiguration (in JavaScript):**
-```javascript
-const GH = {
-  token: 'github_pat_11CDHYT7A0ic...',  // Fine-grained PAT (Issues: Read & Write)
-  owner: 'flametan',
-  repo: 'BVI-Lernwebsite',
-  label: 'vorschlag',
-  base: 'https://api.github.com'
-};
-```
-
-> ⚠️ **Token-Sicherheit:** Der Token liegt im Klartext im Quellcode. Fine-grained PAT mit minimalen Rechten (nur Issues R/W). Beim Ablauf des Tokens: GitHub → Settings → Developer Settings → Fine-grained Personal Access Tokens → Token rotieren, dann neuen Wert in `GH.token` einsetzen.
-
-**Blacklist:** Das Wort `nukular` ist gesperrt (Regex `/nukular/i`). Einreichung wird blockiert mit Korrekturhinweis. Weitere Patterns können im `BLACKLIST`-Array ergänzt werden:
-```javascript
-const BLACKLIST = [
-  { pattern: /nukular/i, msg: '...' }
-  // hier weitere { pattern, msg } Einträge
-];
-```
+| Kategorie | IDs | Anzahl |
+|-----------|-----|--------|
+| GAL (alle 24 Themen) | g01–g60 | 60 |
+| SFS · Taktik/Methodik/Recht | f01–f17 | 17 |
+| HLFS · Führung/GABC/MANV/Stab/Tunnel/Vorbeugen | f18–f33 | 16 |
+| IBK · TA/Konflikt/Stress/PSNV/BGM/PM/Zeit | f34–f61 | 28 |
 
 ---
 
@@ -211,145 +206,84 @@ const BLACKLIST = [
 
 ### Layout-Container
 ```
-.view           – Jeder Screen (display:none/block)
-.detail-view    – Screen mit padding-top:58px (Header-Abstand)
-.page-hero      – Seitenkopf-Bereich mit Eyebrow/Titel/Lead
-.phi            – max-width:900px, horizontaler Padding
-.pc             – Haupt-Content-Bereich (max-width:900px, padding-bottom:6rem)
+.view / .detail-view    – Screen-Container
+.page-hero / .phi / .pc – Seitenkopf und Content-Bereich
 ```
 
 ### Inhalts-Komponenten
 ```
-.info-card          – Glasmorphismus-Karte (Standard-Inhaltsblock)
-.info-card-title    – Karten-Überschrift mit farbenem Punkt (.dot)
-.def-box            – Definition-Box mit goldenem linken Rand
-.hint               – Hinweis-Box (gold), .hint.blue-h (blau), .hint.err-h (rot)
-.step-stack         – Vertikale Schritt-Liste
-.step-item          – Einzelner Schritt mit Buchstaben-Indikator
-.sec-h              – Abschnittsüberschrift (goldener linker Strich)
-.sec-div            – Trennlinie (goldener Farbverlauf)
+.info-card / .info-card-title   – Glasmorphismus-Karte mit Header
+.def-box / .def-box-label       – Definition-Box (goldener Rand)
+.hint                           – Hinweis-Box (.blue-h / .err-h)
+.step-stack / .step-item / .step-letter  – Schrittfolge
+.sec-h / .sec-div               – Abschnittsüberschrift / Trenner
 ```
 
-### Raster-System
+### Raster & Tabellen
 ```
-.cg             – CSS Grid, auto-fit, minmax(200px, 1fr)
-.cg-2           – 2-spaltig erzwingen
-.cg-3           – 3-spaltig erzwingen
-.topic-grid     – Themen-Karten-Grid (minmax 220px)
-.home-grid      – Startseiten-Kacheln (3-spaltig)
+.cg / .cg-2 / .cg-3   – CSS Grid (auto-fit / 2-spaltig / 3-spaltig)
+.dt                    – Datentabelle mit Gold-Header
+.badge (.b-ok/.b-w/.b-err)  – Status-Label
 ```
 
-### Farbpunkte (Dot-System)
+### Farbpunkte
 ```
-.dot            – Gold (Standard)
-.dot-r          – Rot
-.dot-b          – Blau
-.dot-ok         – Grün
-.dot-w          – Amber/Warn
-```
-
-### Tabellen
-```
-.dt             – Datentabelle mit Gold-Header und Hover-Zeilen
-.badge          – Kleines Label  (.b-ok grün / .b-w amber / .b-err rot)
-```
-
-### Buttons & Status
-```
-.btn-red        – Primär-Button (dunkelrot)
-.btn-ghost      – Sekundär-Button (Glas)
-.btn-gold       – Gold-Button
-.s-ok / .s-err / .s-warn / .s-load  – Status-Messages
-.spinner        – Lade-Spinner (CSS-Animation)
-```
-
-### Diagramme
-```
-.diagram-wrap   – Container für SVG-Diagramme (dunkler Hintergrund)
-.diagram-caption – Bildunterschrift
+.dot / .dot-r / .dot-b / .dot-ok / .dot-w
 ```
 
 ---
 
 ## Neue Views hinzufügen – Schritt-für-Schritt
 
-1. **HTML-View anlegen:**
-```html
-<div id="v-mein-neuer-view" class="view detail-view">
-  <div class="page-hero"><div class="phi">
-    <p class="page-eyebrow">Standort · Thema XX</p>
-    <h1 class="page-title">Titel <span class="accent">Untertitel</span></h1>
-    <p class="page-lead">Kurzbeschreibung des Inhalts.</p>
-  </div></div>
-  <div class="pc">
-    <!-- Inhalt hier -->
-  </div>
-</div>
-```
-
-2. **View-ID in `const ALL` eintragen** (in der JavaScript-Sektion ganz unten):
-```javascript
-const ALL = [..., 'v-mein-neuer-view', ...];
-```
-
-3. **Navigation verlinken** (z. B. in einem `topic-card` auf der Übersichtsseite):
-```html
-<div class="topic-card" onclick="NAV.go('v-mein-neuer-view','Mein Thema')">
-  <div class="tc-num">XX</div>
-  <div class="tc-name">Titel</div>
-  <div class="tc-sub">Kurzbeschreibung</div>
-</div>
-```
+1. **HTML-View anlegen** in `index.html`
+2. **View-ID in `const ALL`** eintragen (`js/app.js`, Zeile 7)
+3. **PROGRESS-Gruppe erweitern** (GROUPS-Objekt in `js/app.js`)
+4. **VIEW_LABELS erweitern** (SEARCH-Modul in `js/app.js`)
+5. **Navigation verlinken** (Topic-Card oder Tile)
 
 ---
 
-## Terminologie-Regeln
+## Sonderfunktionen
 
-| ❌ Nicht verwenden | ✅ Verwenden |
-|---|---|
-| „(Klausurrelevant!)" | *(entfernt, wird nicht mehr verwendet)* |
-| „Klausurhinweis" | „Hinweis" |
+### Führungsdienstsimulator (`v-simulator`)
+4 Szenarien: `schmidt`, `ressourcen`, `stab`, `disziplin` – Scoring 0–100 Punkte, verzweigter Entscheidungsbaum.
 
----
-
-## Design-Konventionen
-
-- **Inline-SVG** für alle Diagramme (kein externer Chart-Service)
-- **Keine externen JS-Bibliotheken** (außer Google Fonts)
-- Sämtliche Farben über CSS-Variablen (nie Hardcoding)
-- `--c-gold` für primäre Akzente, `--c-red` für Aktionen/Warnungen
-- Neue komplexe Themen: SVG-Diagramm + info-cards + step-stack-Kombination
-- Jede neue Unterseite braucht den Header-Back-Button (funktioniert automatisch über die NAV-Engine)
+### Vorschlagswesen (`v-vorschlaege`)
+GitHub Issues API – Fine-grained PAT in `GH.token` (`js/app.js`).  
+> ⚠️ **Token-Rotation:** GitHub → Settings → Developer Settings → Fine-grained PATs → rotieren und neuen Wert in `js/app.js` eintragen.
 
 ---
 
-## Noch ausstehende Entwicklungen (In Vorbereitung)
+## Noch ausstehende Module
 
 | Standort | Status | Geplante Inhalte |
-|---|---|---|
+|----------|--------|-----------------|
 | VAk Berlin | Platzhalter (`v-vak`) | Verwaltungsakademie, Führung im öffentlichen Dienst |
 | FeuAK Hamburg | Platzhalter (`v-feuak`) | Feuerwehrakademie Hamburg |
 | IdF Münster | Platzhalter (`v-idf`) | Institut der Feuerwehr NRW |
 
-Um einen Platzhalter zu aktivieren: Klasse `.tp` vom `glass-tile` entfernen, `onclick`-Handler hinzufügen, View-Inhalt befüllen.
+Platzhalter aktivieren: `.tp`-Klasse entfernen, `onclick` hinzufügen, View befüllen, alle 4 JS-Stellen aktualisieren.
 
 ---
 
-## Changelog (letzte Version)
+## Changelog
 
-### v3.1 – aktuelle Version
-- ✅ Globale Terminologie: `(Klausurrelevant!)` entfernt, `Klausurhinweis` → `Hinweis`
-- ✅ **NEU View:** `v-hlfs-fuehrungsvorgang` – vollständiger Führungsvorgang mit SVG-Kreislauf, 4 Erkundungsphasen, EIMER-Regel, 8 Fragen, Befehlsgebung, GAMS
-- ✅ **NEU View:** `v-hlfs-stab` – Bildung eines Stabs (S1–S6, TEL, Verwaltungsstab, Führungsstufen A–D)
-- ✅ **Erweitert:** `v-hlfs-gabc` – EIMER-Regel Step-Stack, Absperrgrenzen mit Werten, Spezialkräfte, Ergänzende Maßnahmen
-- ✅ **Erweitert:** `v-hlfs-zugfuehrer` – TETRA TMO/DMO Gegenüberstellung, Gateway-SVG, Praxishinweise
-- ✅ **Erweitert:** `v-sfs-methodik` – Bloom-Taxonomie (6 Stufen + Tabelle), 4-Stufen-Methode mit 4 Detailkarten
-- ✅ HLFS-Übersicht um Thema 01 (Führungsvorgang) und 07 (Stab) ergänzt
+### v4.0 – aktuell
+- ✅ **GAL Grundlehrgang** – alle 24 Themen mit maximaler Informationstiefe vollständig neu geschrieben
+- ✅ **60 neue GAL-Karteikarten** (g01–g60) → 121 Karteikarten gesamt
+- ✅ `index.html` auf 6.272 Zeilen erweitert
 
-### v3.0 – Vorversion
-- SPA-Architektur mit NAV-Engine
-- Führungsdienstsimulator (4 Szenarien)
-- GitHub Issues API (Vorschlagswesen)
-- IBK-Modul vollständig (TA, Konflikt, Stress, PSNV, BGM, PM, Zeit)
-- SFS-Modul vollständig (FwDV 3/100, Methodik, Rechtsgrundlagen, ABC)
-- HLFS-Grundmodule (GABC, Tunnel, VB, MANV, Zug-/Verbandsführer)
+### v3.0 – GAL-Grundmodul & Refactoring
+- ✅ GAL-Modul als erstes Tile mit 24 Topic-Cards
+- ✅ Code-Refactoring: monolithische HTML-Datei aufgeteilt in `index.html` + `css/style.css` + `js/app.js`
+- ✅ Floating Back-Button (Mobile, `position:fixed`)
+- ✅ 61 Karteikarten (SFS/HLFS/IBK), Fortschritts-Tracking, Volltextsuche (Ctrl+K)
+
+### v2.0 – HLFS & IBK
+- ✅ HLFS Kassel: 7 Unterthemen (Führungsvorgang-SVG, Stab S1–S6, Tunnel, MANV)
+- ✅ IBK Heyrothsberge: 7 Unterthemen
+
+### v1.0 – Grundaufbau
+- ✅ SPA-Architektur mit NAV-Engine
+- ✅ SFS Regensburg: 4 Unterthemen
+- ✅ Führungsdienstsimulator, Vorschlagswesen (GitHub Issues API)
