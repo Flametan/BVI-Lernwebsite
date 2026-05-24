@@ -4,7 +4,7 @@
 ====================================================================== */
 const NAV = (function(){
   let stack = [];
-  const ALL = ['v-home','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-feuak','v-idf','v-simulator','v-flashcards','v-vorschlaege'];
+  const ALL = ['v-home','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-feuak','v-idf','v-simulator','v-flashcards','v-vorschlaege'];
 
   function show(id){
     ALL.forEach(v=>{ const e=document.getElementById(v); if(e) e.classList.toggle('active',v===id); });
@@ -879,6 +879,7 @@ const FLASHCARD_DATA = [
 ====================================================================== */
 const PROGRESS = (function(){
   const GROUPS = {
+    gal:  ['v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz'],
     sfs:  ['v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc'],
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
@@ -903,7 +904,7 @@ const PROGRESS = (function(){
     const bar = document.getElementById('prog-bar');
     if(bar) bar.style.width = (total ? Math.round(done/total*100) : 0) + '%';
 
-    ['sfs','hlfs','ibk'].forEach(g => {
+    ['gal','sfs','hlfs','ibk'].forEach(g => {
       const views = GROUPS[g];
       const d = views.filter(v=>visited[v]).length;
       const el = document.getElementById('prog-'+g);
@@ -934,6 +935,7 @@ const SEARCH = (function(){
   let idx = [], results = [], focusIdx = -1;
 
   const VIEW_LABELS = {
+    'v-gal-organisation':'GAL · Organisation','v-gal-brandlehre':'GAL · Brandlehre','v-gal-fahrzeuge':'GAL · Fahrzeuge','v-gal-einsatz':'GAL · Einsatz',
     'v-sfs-fwdv3':'SFS · Führung','v-sfs-methodik':'SFS · Methodik','v-sfs-rechtsgrundlagen':'SFS · Recht','v-sfs-abc':'SFS · Geräte/ABC',
     'v-hlfs-fuehrungsvorgang':'HLFS · Führungsvorgang','v-hlfs-gabc':'HLFS · GABC','v-hlfs-tunnel':'HLFS · Tunnel',
     'v-hlfs-vb':'HLFS · Vorbeugen','v-hlfs-manv':'HLFS · MANV','v-hlfs-zugfuehrer':'HLFS · Zugführer','v-hlfs-stab':'HLFS · Stab',
