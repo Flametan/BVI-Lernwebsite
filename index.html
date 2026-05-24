@@ -60,6 +60,14 @@
       <p class="hero-sub">Prüfungsvorbereitung für den höheren feuerwehrtechnischen Dienst – fundiert, strukturiert, prüfungsrelevant.</p>
       <div class="gold-rule"></div>
       <div class="home-grid">
+        <!-- ── GAL GRUNDLEHRGANG ─────────────────────────────── -->
+        <div class="glass-tile" onclick="NAV.go('v-gal','GAL Grundlehrgang')" style="position:relative">
+          <span id="prog-gal" class="tile-prog">0/4</span>
+          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <div class="tile-name">GAL Grundlehrgang</div>
+          <div class="tile-desc">Organisation, Brandlehre, Fahrzeugkunde, Einsatzgrundlagen</div>
+          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
         <!-- ── SFS REGENSBURG ───────────────────────────────────── -->
         <div class="glass-tile" onclick="NAV.go('v-sfs','SFS Regensburg')" style="position:relative">
           <span id="prog-sfs" class="tile-prog">0/4</span>
@@ -107,6 +115,255 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ============================================================ GAL – GRUNDLEHRGANG ÜBERSICHT ============================================================ -->
+<div id="v-gal" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">Grundlehrgang · Berufsfeuerwehr</p>
+    <h1 class="page-title">GAL <span class="accent">Grundlehrgang</span></h1>
+    <p class="page-lead">Fundament des feuerwehrtechnischen Dienstes – Organisation, Brandlehre, Fahrzeugkunde und die FwDV-Grundlagen für den operativen Einsatz.</p>
+  </div></div>
+  <div class="pc">
+    <div class="topic-grid">
+      <div class="topic-card" onclick="NAV.go('v-gal-organisation','Organisation der Feuerwehr')"><div class="tc-num">01</div><div class="tc-name">Organisation der Feuerwehr</div><div class="tc-sub">Arten (BF/FF/WF), Laufbahnen, Rechtsgrundlagen, Aufbau, Zuständigkeiten</div></div>
+      <div class="topic-card" onclick="NAV.go('v-gal-brandlehre','Brandlehre &amp; Löschmittel')"><div class="tc-num">02</div><div class="tc-name">Brandlehre &amp; Löschmittel</div><div class="tc-sub">Brandtetraeder, Brandklassen A–F, Löschmittelwirkung, Brandphasen, Wärmeübertragung</div></div>
+      <div class="topic-card" onclick="NAV.go('v-gal-fahrzeuge','Fahrzeug- &amp; Gerätekunde')"><div class="tc-num">03</div><div class="tc-name">Fahrzeug- &amp; Gerätekunde</div><div class="tc-sub">Normfahrzeuge (LF/TLF/DLK/RW), DIN-Normen, Pumpen, Geräteausstattung</div></div>
+      <div class="topic-card" onclick="NAV.go('v-gal-einsatz','Einsatzgrundlagen &amp; FwDV')"><div class="tc-num">04</div><div class="tc-name">Einsatzgrundlagen &amp; FwDV</div><div class="tc-sub">FwDV-System Überblick, Grundtätigkeiten, Einsatzprinzipien, Atemschutz Grundlagen</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     GAL · 01 – ORGANISATION DER FEUERWEHR
+────────────────────────────────────────────────── -->
+<div id="v-gal-organisation" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">GAL Grundlehrgang · Thema 01</p>
+    <h1 class="page-title">Organisation der <span class="accent">Feuerwehr</span></h1>
+    <p class="page-lead">Arten, Aufbau und Rechtsgrundlagen des deutschen Feuerwehrwesens – Basis für Führung, Recht und Verwaltung im höheren Dienst.</p>
+  </div></div>
+  <div class="pc">
+
+    <h2 class="sec-h">Arten der Feuerwehr</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Berufsfeuerwehr (BF)</div><ul class="bl"><li><strong>Pflichtaufgabe</strong> in kreisfreien Städten ab 100.000 EW (je nach Landesrecht)</li><li>Vollzeitliche hauptamtliche Kräfte im Schichtdienst (24/48h)</li><li>Laufbahngruppen: mittlerer, gehobener, höherer Dienst</li><li>Führung: Branddirektor (BD) bzw. Feuerwehrdirektor</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Freiwillige Feuerwehr (FF)</div><ul class="bl"><li>Ehrenamtliche Kräfte; Pflichtfeuerwehr als Auffang möglich</li><li>Stärkste Feuerwehrart in Deutschland (ca. 1 Mio. Aktive)</li><li>Führungspositionen: Wehrführer, Kreisbrandrat, Landesbranddirektor</li><li>Rechtsgrundlage: Landesfeuerwehrgesetze (LFwG)</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Werkfeuerwehr (WF)</div><ul class="bl"><li>Betriebliche Feuerwehr in Industrieanlagen mit besonderem Risiko</li><li>Anerkannte WF kann BF ergänzen oder ersetzen (§ 19 HBKG o.ä.)</li><li>Unterstehen dem Betriebsinhaber; ständige Einsatzbereitschaft</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Pflichtfeuerwehr (PflFw)</div><ul class="bl"><li>Wenn sich keine ausreichende FF bilden lässt, kann die Gemeinde Einwohner verpflichten</li><li>Selten in der Praxis; rechtliche Grundlage: LFwG der Länder</li></ul></div>
+    </div>
+
+    <hr class="sec-div"/>
+    <h2 class="sec-h">Laufbahnen im feuerwehrtechnischen Dienst</h2>
+    <table class="dt">
+      <thead><tr><th>Laufbahngruppe</th><th>Dienstgrade (Beispiel BF)</th><th>Zugang</th><th>Aufgaben</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mittlerer Dienst</strong></td><td>Feuerwehrmann – Hauptbrandmeister (HBM)</td><td>Ausbildung (18 Monate)</td><td>Operativer Einsatzdienst, Trupp-/Staffelführer</td></tr>
+        <tr><td><strong>Gehobener Dienst</strong></td><td>Brandinspektor (BI) – Oberbranddirektor (OBD)</td><td>Bachelor FH/Fachhochschule</td><td>Gruppenführer, Zugführer, Abteilungsleiter</td></tr>
+        <tr><td><strong>Höherer Dienst (B VI)</strong></td><td>Branddirektor (BD) – Ltd. Branddirektor (LBD)</td><td>Master / Aufstieg (B VI)</td><td>Verbandsführer, Amtsleiter, strategische Führung</td></tr>
+      </tbody>
+    </table>
+    <div class="hint"><span>📌</span><p><strong>B VI:</strong> Aufstiegslehrgang für den höheren Dienst. Dauer: ca. 6 Monate (SFS, HLFS, IBK, VAk). Abschluss: Laufbahnprüfung. Ernennung: Branddirektor (A14/A15).</p></div>
+
+    <hr class="sec-div"/>
+    <h2 class="sec-h">Rechtsgrundlagen des Feuerwehrwesens</h2>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Verfassungsrechtliche Ebene</div><p><strong>Art. 28 II GG:</strong> Kommunale Selbstverwaltung – Brandschutz als Pflichtaufgabe der Gemeinden.<br><strong>Art. 35 GG:</strong> Amtshilfe, Katastrophenhilfe zwischen Ländern und Bund.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Landesebene</div><p>Brandschutz ist <strong>Ländersache</strong> (Art. 70 GG). Jedes Bundesland hat ein eigenes FwG/BHKG/FwDVO. Beispiele:<br>Bayern: BayFwG · Hessen: HBKG · NRW: BHKG · Brandenburg: BbgBKG</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Bundesebene / FwDV</div><p><strong>FwDV:</strong> Feuerwehr-Dienstvorschriften – bundesweit einheitliche technische Richtlinien (kein formelles Gesetz, aber verbindlich durch Übernahme in Landesrecht). Herausgabe durch AGBF/IMK.</p></div>
+    </div>
+    <table class="dt" style="margin-top:1rem">
+      <thead><tr><th>FwDV</th><th>Titel</th><th>Inhalt (Kurzfassung)</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge b-ok">FwDV 1</span></td><td>Grundtätigkeiten – Lösch- und Hilfeleistungseinsatz</td><td>Atemschutz, Schläuche, Leitern, Absturzsicherung – Grundhandgriffe</td></tr>
+        <tr><td><span class="badge b-ok">FwDV 2</span></td><td>Ausbildung der Freiwilligen Feuerwehren</td><td>Truppmann/-führer, Sprechfunker, Atemschutz – Ausbildungsgrundsätze</td></tr>
+        <tr><td><span class="badge b-ok">FwDV 3</span></td><td>Einheiten im Lösch- und Hilfeleistungseinsatz</td><td>Taktische Einheiten, Aufgaben, Einsatzgrundsätze</td></tr>
+        <tr><td><span class="badge b-w">FwDV 7</span></td><td>Atemschutz</td><td>PA-Träger, Sicherheitstrupp, Überwachung, Einsatzgrenzen</td></tr>
+        <tr><td><span class="badge b-w">FwDV 10</span></td><td>Die Zusammenarbeit von Feuerwehr und Rettungsdienst</td><td>Schnittstellen, Zuständigkeiten, Einsatzleitung</td></tr>
+        <tr><td><span class="badge b-err">FwDV 100</span></td><td>Führung und Leitung im Einsatz</td><td>Führungsvorgang, Führungsorganisation, Führungsmittel (→ SFS)</td></tr>
+        <tr><td><span class="badge b-err">FwDV 500</span></td><td>Einheiten im ABC-Einsatz</td><td>Gefahrenabwehr, Schutzkleidung, Dekon (→ HLFS)</td></tr>
+      </tbody>
+    </table>
+
+    <hr class="sec-div"/>
+    <h2 class="sec-h">Aufbau &amp; Zuständigkeiten</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Kommunale Ebene (Träger)</div><ul class="bl"><li><strong>Gemeinde/Stadt</strong> = Aufgabenträger für abwehrenden Brandschutz &amp; allg. Hilfeleistung</li><li>Leiter der Feuerwehr: Führt die Feuerwehr, Sonderstellung im Organigramm</li><li>Wachleitung / Abteilungen / Sachgebiete (Technik, Einsatz, Ausbildung)</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Aufsichts- &amp; Fachbehörden</div><ul class="bl"><li><strong>Untere Brandschutzbehörde:</strong> Landkreis / kreisfreie Stadt</li><li><strong>Obere Brandschutzbehörde:</strong> Regierungspräsidium / Bezirksregierung</li><li><strong>Oberste Brandschutzbehörde:</strong> Innenministerium des Landes</li><li><strong>AGBF:</strong> Arbeitsgemeinschaft der Leiter der BF – berät IMK</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     GAL · 02 – BRANDLEHRE & LÖSCHMITTEL
+────────────────────────────────────────────────── -->
+<div id="v-gal-brandlehre" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">GAL Grundlehrgang · Thema 02</p>
+    <h1 class="page-title">Brandlehre &amp; <span class="accent">Löschmittel</span></h1>
+    <p class="page-lead">Physikalisch-chemische Grundlagen der Verbrennung, Brandklassen und die Wirkungsweisen der Löschmittel – unverzichtbares Fundament für jeden Einsatz.</p>
+  </div></div>
+  <div class="pc">
+
+    <h2 class="sec-h">Das Brandtetraeder</h2>
+    <div class="def-box"><div class="def-box-label">Definition Verbrennung</div><p>Verbrennung ist eine <strong>exotherme chemische Reaktion</strong> zwischen einem Brennstoff und Sauerstoff. Sie setzt Licht und Wärme frei. Für eine selbstständige Verbrennung müssen <strong>vier Faktoren</strong> gleichzeitig vorliegen (Brandtetraeder).</p></div>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Brennstoff</div><p>Fest (Holz, Papier, Kunststoff), flüssig (Benzin, Öl, Alkohol), gasförmig (Erdgas, Propan, Acetylen). Muss in <strong>Zündtemperatur</strong> und <strong>Zündkonzentration</strong> vorliegen.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Sauerstoff (Oxidationsmittel)</div><p>Mindestkonzentration für Verbrennung: <strong>ca. 14–17 Vol.-%</strong> (Luft: 21 Vol.-%). Unterhalb → Erstickungsgefahr für Menschen bereits ab ~16 Vol.-%.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Zündenergie</div><p>Muss Zündtemperatur des Brennstoffs erreichen (z.B. Papier: 233°C, Benzin: −20°C Flammpunkt). Quellen: Funken, Wärmestrahlung, heiße Oberflächen, offene Flamme.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Unbeeinflusste Kettenreaktion</div><p>Radikalketten-Mechanismus hält die Verbrennung aufrecht. Löschmittel wie Pulver unterbrechen die <strong>Kettenreaktion chemisch</strong> (Inhibition) ohne Kühlung oder Erstickung.</p></div>
+    </div>
+    <div class="hint blue-h"><span>💡</span><p><strong>Merkhilfe:</strong> Altes Dreieck (Brennstoff, Sauerstoff, Wärme) → Tetraeder: Die 4. Seite = ungehemmte Kettenreaktion. Löschstrategie = eine Seite entfernen.</p></div>
+
+    <hr class="sec-div"/>
+    <h2 class="sec-h">Brandklassen nach DIN EN 2</h2>
+    <table class="dt">
+      <thead><tr><th>Klasse</th><th>Bezeichnung</th><th>Beispiele</th><th>Geeignete Löschmittel</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge b-ok">A</span></td><td>Feste Stoffe (glutbildend)</td><td>Holz, Papier, Textilien, Kohle</td><td>Wasser (Kühlung + Durchdringung), ABC-Pulver, Schaum</td></tr>
+        <tr><td><span class="badge b-w">B</span></td><td>Flüssige &amp; schmelzende Stoffe</td><td>Benzin, Öl, Lacke, Fette (außer Speisefette), Wachs</td><td>Schaum, CO₂, ABC-Pulver, Fettbrandlöscher</td></tr>
+        <tr><td><span class="badge b-w">C</span></td><td>Gasförmige Stoffe</td><td>Erdgas, Propan, Acetylen, Wasserstoff</td><td>ABC-Pulver; Zufuhr absperren hat Priorität!</td></tr>
+        <tr><td><span class="badge b-err">D</span></td><td>Metalle</td><td>Aluminium, Magnesium, Natrium, Lithium</td><td>Metallbrandpulver (D-Pulver); kein Wasser!</td></tr>
+        <tr><td><span class="badge b-err">F</span></td><td>Speisefette/-öle</td><td>Frittierfett, Pflanzenöl in Küchengeräten</td><td>Fettbrandlöscher (Klasse F); kein Wasser (Fettexplosion!)</td></tr>
+      </tbody>
+    </table>
+    <div class="hint err-h"><span>⚠️</span><p><strong>Klasse E (elektrische Anlagen)</strong> ist keine eigenständige Brandklasse nach DIN EN 2, sondern ein Einsatzmerkmal. Nur spannungsfreigeschaltete Anlagen mit Klasse A/B löschen. CO₂ bis 1000 V Sicherheitsabstand 1 m, Pulver 1 m.</p></div>
+
+    <hr class="sec-div"/>
+    <h2 class="sec-h">Löschmittel &amp; ihre Wirkungsweisen</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Wasser</div><ul class="bl"><li><strong>Primärwirkung: Kühlung</strong> – Verdampfungswärme 2257 kJ/kg (enorm)</li><li>Sekundärwirkung: Erstickung durch Wasserdampf (1 l → ~1700 l Dampf)</li><li>Klassen A, begrenzt B (Schwerschaum/Sprühnebel)</li><li><strong>Nicht bei:</strong> Klasse D, F, spannungsführenden Anlagen, Metallbränden</li><li>Zusätze: Benetzungsmittel (Klasse A tiefer), Filmbildner (AFFF, FFFP)</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Schaum</div><ul class="bl"><li><strong>Wirkung: Erstickung + Kühlung + Abdeckung</strong> (verhindert Rückzündung)</li><li>Verschäumungszahlen: Leichtschaum (≥200:1), Mittelschaum (20–200:1), Schwerschaum (&lt;20:1)</li><li>AFFF (Aqueous Film-Forming Foam): bildet Wasserfilm auf Flüssigkeit</li><li>Klassen A und B · nicht bei Klasse D und F</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>CO₂ (Kohlendioxid)</div><ul class="bl"><li><strong>Wirkung: Erstickung</strong> (Sauerstoffverdrängung) + leichte Kühlung</li><li>Rückstandsfrei – ideal für Serverräume, Elektrik</li><li>Klassen B und C, elektrische Anlagen (Sicherheitsabstand beachten!)</li><li><strong>Achtung:</strong> Erstickungsgefahr in geschlossenen Räumen (CO₂ ist schwerer als Luft)</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Pulver (ABC / BC / D)</div><ul class="bl"><li><strong>ABC-Pulver:</strong> Ammoniumphosphat – Inhibition der Kettenreaktion + Erstickung</li><li><strong>BC-Pulver:</strong> Natriumbicarbonat – für Klasse B und C</li><li><strong>D-Pulver:</strong> Spezielle Zusammensetzung für Metallbrände (Klasse D)</li><li>Nachteil: Rückstände, Sichtbehinderung, Geräteschäden</li></ul></div>
+    </div>
+
+    <hr class="sec-div"/>
+    <h2 class="sec-h">Brandphasen &amp; Wärmeübertragung</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Brandphasen (Raumbrände)</div>
+        <div class="step-stack">
+          <div class="step-item"><div class="step-letter">1</div><div><div class="step-title">Entstehungsbrand</div><div class="step-desc">Lokaler Brand, noch beherrschbar mit Handfeuerlöscher. Rauchentwicklung beginnt.</div></div></div>
+          <div class="step-item"><div class="step-letter">2</div><div><div class="step-title">Schwelbrand / Vorflashover</div><div class="step-desc">Temperaturanstieg im Raum. Pyrolysegase sammeln sich an der Decke (Heiß-Gasschicht).</div></div></div>
+          <div class="step-item"><div class="step-letter">3</div><div><div class="step-title">Flashover (Übergang)</div><div class="step-desc">Spontane Entzündung aller brennbaren Oberflächen im Raum (~600°C). Keine Personenrettung mehr möglich.</div></div></div>
+          <div class="step-item"><div class="step-letter">4</div><div><div class="step-title">Vollbrand</div><div class="step-desc">Gesamter Raum in Vollbrand. Maximale Temperaturen (800–1200°C). Lösung von außen.</div></div></div>
+        </div>
+      </div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Wärmeübertragungsarten</div><ul class="bl"><li><strong>Wärmeleitung (Konduktion):</strong> durch direkten Kontakt – Materialabhängig (Metall leitet gut); Brandübergang über Metall-Träger möglich</li><li><strong>Wärmestrahlung (Strahlung/Radiation):</strong> elektromagnetische Wellen (IR) ohne Trägermedium – Hauptursache für Gebäude-zu-Gebäude-Brandübergang</li><li><strong>Konvektion:</strong> Wärmetransport durch Strömung (Luft, Wasser) – Heißgase steigen auf, Brandrauchdurchzündung (Backdraft) möglich</li><li><strong>Direkte Brandübertragung:</strong> Flugfeuer, brennende Partikel – bei Wind und trockenem Wetter kritisch</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     GAL · 03 – FAHRZEUG- & GERÄTEKUNDE
+────────────────────────────────────────────────── -->
+<div id="v-gal-fahrzeuge" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">GAL Grundlehrgang · Thema 03</p>
+    <h1 class="page-title">Fahrzeug- &amp; <span class="accent">Gerätekunde</span></h1>
+    <p class="page-lead">Systematischer Überblick über die genormten Feuerwehrfahrzeuge und ihre Beladung – von der Normierung nach DIN/EN bis zur taktischen Verwendung.</p>
+  </div></div>
+  <div class="pc">
+
+    <h2 class="sec-h">Normfahrzeuge nach DIN / EN</h2>
+    <div class="def-box"><div class="def-box-label">Normierungsprinzip</div><p>Feuerwehrfahrzeuge werden nach <strong>DIN EN 1846</strong> (Feuerwehrfahrzeuge allgemein) und spezifischen DIN-Normen (z. B. DIN 14530) genormt. Die Norm legt Beladung, Mindestleistung und Ausstattung fest – damit jede Feuerwehr bundesweit einheitlich auf Fremdfahrzeuge zurückgreifen kann.</p></div>
+
+    <h2 class="sec-h" style="margin-top:1.5rem">Löschfahrzeuge</h2>
+    <table class="dt">
+      <thead><tr><th>Kürzel</th><th>Fahrzeug</th><th>Normbeladung / Besonderheit</th><th>Stärke</th></tr></thead>
+      <tbody>
+        <tr><td><strong>LF 10</strong></td><td>Löschgruppenfahrzeug 10</td><td>FP 10/1000, mind. 1.000 l Wasser, Schaummittel, Gruppenstärke</td><td>1/8</td></tr>
+        <tr><td><strong>LF 20</strong></td><td>Löschgruppenfahrzeug 20</td><td>FP 20/2000, mind. 2.000 l Wasser, erweiterter Rollcontainer</td><td>1/8</td></tr>
+        <tr><td><strong>HLF 10 / 20</strong></td><td>Hilfeleistungs-LF</td><td>LF-Ausstattung + Hilfeleistungssatz (Hydraulik, Schere/Spreizer)</td><td>1/8</td></tr>
+        <tr><td><strong>TLF 2000 / 4000</strong></td><td>Tanklöschfahrzeug</td><td>Großtank (2.000 / 4.000 l), Schnellangriff, auch ohne Hydrant einsetzbar</td><td>1/2</td></tr>
+        <tr><td><strong>TSF / TSF-W</strong></td><td>Tragkraftspritzenfahrzeug</td><td>Tragkraftspritze (TS 8/8), leichtes Grundfahrzeug für FF</td><td>1/5–1/6</td></tr>
+        <tr><td><strong>KLF</strong></td><td>Kleines Löschfahrzeug</td><td>Kompakter Erstangreifer, Staffel- oder Truppbesatzung</td><td>1/2</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec-h" style="margin-top:1.5rem">Hubrettungsfahrzeuge &amp; Sonderfahrzeuge</h2>
+    <table class="dt">
+      <thead><tr><th>Kürzel</th><th>Fahrzeug</th><th>Hauptaufgabe</th><th>Rettungshöhe</th></tr></thead>
+      <tbody>
+        <tr><td><strong>DL/K 23-12</strong></td><td>Drehleiter mit Korb</td><td>Menschenrettung, Brandbekämpfung von oben, Abstützung</td><td>23 m (gem. DIN 14701)</td></tr>
+        <tr><td><strong>DL 18</strong></td><td>Drehleiter 18 m</td><td>Ersetzt DL 16; für Altstadtgassen geeignet</td><td>18 m</td></tr>
+        <tr><td><strong>TMF / TM 50</strong></td><td>Teleskopmast</td><td>Bis 50 m; Einsatz bei Hochhausbränden, senkrechter Arm</td><td>50 m</td></tr>
+        <tr><td><strong>RW</strong></td><td>Rüstwagen</td><td>Technische Hilfeleistung (THW/FW): Bergung, Öffnen, Heben</td><td>—</td></tr>
+        <tr><td><strong>GW-G / GW-L</strong></td><td>Gerätewagen Gefahrgut / Logistik</td><td>GABC-Ausstattung (Dekon, Messtechnik) / Nachschub</td><td>—</td></tr>
+        <tr><td><strong>ELW 1 / ELW 2</strong></td><td>Einsatzleitwagen</td><td>Führungsmittel, Funk, IuK; ELW 2 = für Stab ab FüSt B</td><td>—</td></tr>
+      </tbody>
+    </table>
+
+    <hr class="sec-div"/>
+    <h2 class="sec-h">Feuerlöschkreiselpumpen (FP)</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Nomenklatur: FP Q/p</div><p><strong>Q</strong> = Förderstrom in l/min (z.B. 1600 l/min), <strong>p</strong> = Nenndruck in bar (z.B. 8 bar). Beispiel: <strong>FP 16/8</strong> = 1600 l/min bei 8 bar Nenndruck.</p></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Gängige Pumpentypen</div><ul class="bl"><li><strong>FP 8/8:</strong> Einfache FF-Pumpe (TSF)</li><li><strong>FP 10/1000:</strong> LF 10</li><li><strong>FP 20/2000:</strong> LF 20, TLF 4000</li><li><strong>Tauchpumpen (TP):</strong> Wasserhaltung, Hochwasser</li><li><strong>Hochdruckpumpe (HDP):</strong> Hochdrucksprührohr bis 40 bar</li></ul></div>
+    </div>
+
+    <hr class="sec-div"/>
+    <h2 class="sec-h">Grundgeräte &amp; ihre Verwendung (Auswahl)</h2>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Rettungsgeräte</div><ul class="bl"><li><strong>Steckleiter:</strong> 4-teilig, 8,4 m; 2. Rettungsweg an Häusern</li><li><strong>Schiebleiter:</strong> 2-teilig, 9 m (für BF, taktisch)</li><li><strong>Sprungrettungsgerät:</strong> Sprungtuch, Rettungssprung bis 8 m</li><li><strong>Krankentrage / Schleifkorb</strong></li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Löschgeräte</div><ul class="bl"><li><strong>C-Rohr / B-Rohr / Hohlstrahlrohr</strong> (HSR): variable Durchflussmengen und Strahlarten</li><li><strong>Schaumrohr M4 / S4:</strong> 400 l/min Mittelschaum</li><li><strong>Verteiler B-CBC:</strong> teilt B-Leitung in 2×C</li><li><strong>Standrohr + Schlüssel:</strong> Hydrantenentnahme</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Technische Hilfeleistung</div><ul class="bl"><li><strong>Hydraulischer Spreizer:</strong> Türöffnung, Deformation bei VU</li><li><strong>Hydraulische Schere:</strong> Säulen/Dach abschneiden bei Einklemmung</li><li><strong>Rettungszylinder:</strong> Heben von Lasten bis 120 kN</li><li><strong>Trennschleifer / Säbelsäge:</strong> Öffnen von Bauteilen</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────────
+     GAL · 04 – EINSATZGRUNDLAGEN & FwDV
+────────────────────────────────────────────────── -->
+<div id="v-gal-einsatz" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">GAL Grundlehrgang · Thema 04</p>
+    <h1 class="page-title">Einsatzgrundlagen &amp; <span class="accent">FwDV</span></h1>
+    <p class="page-lead">Einsatzprinzipien, Grundtätigkeiten nach FwDV 1 sowie Atemschutz-Grundlagen nach FwDV 7 – die operative Basis für den feuerwehrtechnischen Dienst.</p>
+  </div></div>
+  <div class="pc">
+
+    <h2 class="sec-h">Einsatzprinzipien &amp; Grundsätze</h2>
+    <div class="def-box"><div class="def-box-label">Prioritätenreihenfolge im Einsatz</div><p><strong>1. Menschenrettung</strong> hat absoluten Vorrang vor Sachschutz. <strong>2. Brandbekämpfung</strong> schützt Leben und Eigentum. <strong>3. Umweltschutz</strong> – Kontamination verhindern. Die Reihenfolge ist nicht starr: bei offensichtlich tödlichem Brand können Maßnahmen parallel laufen.</p></div>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Menschenrettung</div><ul class="bl"><li>Sofortige Menschenrettung durch Angriffstrupp (AT)</li><li>Rettung vor Brandbekämpfung, solange Eigensicherung gewährleistet</li><li>Paralleleinsatz möglich wenn ausreichend Kräfte</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Eigensicherung</div><ul class="bl"><li><strong>Trupp bleibt zusammen</strong> (Truppgrundsatz)</li><li>Atemschutzüberwachung immer gewährleistet</li><li>Sicherheitstrupp bereithalten (FwDV 7)</li><li>Rückzugswege sichern und bekannt halten</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Brandbekämpfung</div><ul class="bl"><li>Innenangriff: bevorzugt (schnelle Wirkung)</li><li>Außenangriff: bei absturzgefährdeten Gebäuden, Flashover</li><li>Riegelstellung: Brandausbreitung verhindern</li></ul></div>
+    </div>
+
+    <hr class="sec-div"/>
+    <h2 class="sec-h">Grundtätigkeiten nach FwDV 1 (Auswahl)</h2>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Schlauchhandhabung</div><ul class="bl"><li><strong>B-Schlauch:</strong> 75 mm Ø, max. 200 m Förderstrecke je Schlauchleitung</li><li><strong>C-Schlauch:</strong> 42 mm Ø, Angriffsleitung bis Brandherd</li><li><strong>D-Schlauch:</strong> 25 mm Ø, Hochdrucklinie, Kleinbrände</li><li>Druckverlust beachten: 1 bar/100 m bei B-Leitung (Richtwert)</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>Leiterbenutzung</div><ul class="bl"><li>Steckleiter: mind. 3 Sprossen über Auflage, Aufstiegswinkel 65–75°</li><li>Sicherung durch zweiten Mann am Fuß</li><li>Drehleiter-Korb: Sicherungsgurt anlegen, max. Beladung beachten</li><li>Personenrettung: Feuerwehrstuhl oder Tragestuhl je nach Lage</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Absturzsicherung (FwDV 1)</div><ul class="bl"><li>Feuerwehrsicherheitsgurt (FSG) bei Absturzgefahr</li><li>Fangstich: Halbmastwurf-Sicherung, einfach und schnell</li><li>Sicherungspunkt: Karabiner am Anseilpunkt; mind. 12 kN</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-w"></span>Wasserentnahme</div><ul class="bl"><li><strong>Über-/Unterflurhydrant:</strong> Standrohr aufsetzen, B-Schlüssel öffnen</li><li><strong>Offene Gewässer:</strong> Saugbetrieb bis 8 m Saughöhe (Richtwert FP)</li><li><strong>Zisterne/Löschwasserteich:</strong> Entnahme per Saugleitung</li></ul></div>
+    </div>
+
+    <hr class="sec-div"/>
+    <h2 class="sec-h">Atemschutz – Grundlagen nach FwDV 7</h2>
+    <div class="def-box"><div class="def-box-label">Wann ist Atemschutz Pflicht?</div><p>Bei <strong>Atemgiften, Sauerstoffmangel oder unbekannter Atmosphäre</strong> ist Atemschutz zwingend. FwDV 7: Einsatzkräfte dürfen kontaminierte Bereiche nur mit <strong>umluftunabhängigem Atemschutzgerät (Pressluftatemschutz – PA)</strong> betreten.</p></div>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Pressluftatmer (PA)</div><ul class="bl"><li><strong>Systemdruck:</strong> 300 bar (Stahlflasche) oder 200 bar (Composite)</li><li>Atemluftvorrat: 6 l bei 300 bar = 1800 l (ca. 20–40 min je Belastung)</li><li><strong>Warneinrichtung:</strong> Pfeife/Alarm bei ca. 55 bar Restdruck</li><li>Prüfung: vor jedem Einsatz Atemschutzcheckliste</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot"></span>Atemschutzüberwachung</div><ul class="bl"><li>Pflicht ab 2 AS-Trägern im Einsatz</li><li>Eintrag: Namen, Eintrittsdruck, Eintrittszeit, Warndruckzeit</li><li>Rückrufsignal: 3× Klopfen oder Zug am Sicherheitsleine</li><li>Führt: Atemschutzüberwacher (i.d.R. Melder oder GF-Stellvertreter)</li></ul></div>
+      <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Sicherheitstrupp (ST)</div><ul class="bl"><li>Muss <strong>einsatzbereit am Eingang</strong> stehen, solange AS-Trupps drinnen sind</li><li>Ausrüstung: vollständig angelegter PA, Werkzeug, Rettungsmittel</li><li>Auftrag: Rettung von in Not geratenen AS-Trägern</li><li><strong>Kein Einsatz für andere Aufgaben!</strong></li></ul></div>
+    </div>
+
+    <hr class="sec-div"/>
+    <h2 class="sec-h">Überblick FwDV-System</h2>
+    <div class="hint"><span>📚</span><p><strong>Merksatz:</strong> FwDVs sind keine Gesetze, aber durch Übernahme in Landesrecht verbindlich. Sie bilden zusammen das technisch-taktische Regelwerk der deutschen Feuerwehr.</p></div>
+    <table class="dt" style="margin-top:.75rem">
+      <thead><tr><th>FwDV</th><th>Inhalt (Kurzfassung)</th><th>Relevanz B VI</th></tr></thead>
+      <tbody>
+        <tr><td><strong>FwDV 1</strong></td><td>Grundtätigkeiten: Leitern, Schläuche, Knoten, Absturzsicherung</td><td><span class="badge b-ok">GAL</span></td></tr>
+        <tr><td><strong>FwDV 2</strong></td><td>Ausbildung FF: Truppmann, Sprechfunker, Grundlehrgang</td><td><span class="badge b-ok">GAL</span></td></tr>
+        <tr><td><strong>FwDV 3</strong></td><td>Einheiten im Lösch-/HLF-Einsatz, Aufgaben je Funktion</td><td><span class="badge b-err">SFS</span></td></tr>
+        <tr><td><strong>FwDV 7</strong></td><td>Atemschutz: PA, Überwachung, Sicherheitstrupp</td><td><span class="badge b-ok">GAL</span> <span class="badge b-err">SFS</span></td></tr>
+        <tr><td><strong>FwDV 10</strong></td><td>Zusammenarbeit Feuerwehr und Rettungsdienst</td><td><span class="badge b-w">HLFS</span></td></tr>
+        <tr><td><strong>FwDV 100</strong></td><td>Führung und Leitung im Einsatz – Führungsvorgang</td><td><span class="badge b-err">SFS</span> <span class="badge b-w">HLFS</span></td></tr>
+        <tr><td><strong>FwDV 500</strong></td><td>Einheiten im ABC-Einsatz, GAMS, Dekon, Schutzkleidung</td><td><span class="badge b-w">HLFS</span></td></tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
