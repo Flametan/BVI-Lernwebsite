@@ -1188,4 +1188,4 @@ document.addEventListener('DOMContentLoaded',()=>{
   console.log('%c B VI %c Lernwebsite v3.1 · flametan/BVI-Lernwebsite ',
     'background:#A50000;color:#fff;padding:3px 8px;border-radius:4px 0 0 4px;font-family:"DM Mono",monospace;font-weight:700',
     'background:#0A192F;color:#C9A84C;padding:3px 8px;border-radius:0 4px 4px 0;font-family:"DM Mono",monospace');
-});'
+});
