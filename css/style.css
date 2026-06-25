@@ -402,3 +402,10 @@
   @media(max-width:700px){
     #back-btn{display:none!important;}
   }
+
+  /* ── PDF-Bilder ── */
+  .pdf-img{display:block;width:100%;max-width:720px;margin:1rem auto;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.35);}
+  .pdf-img-sm{display:block;width:100%;max-width:480px;margin:1rem auto;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.35);}
+  .pdf-img-caption{text-align:center;font-size:.78rem;opacity:.6;margin-top:-.5rem;margin-bottom:1rem;}
+  .pdf-img-row{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin:1rem 0;}
+  .pdf-img-row .pdf-img,.pdf-img-row .pdf-img-sm{margin:0;flex:1 1 300px;}
