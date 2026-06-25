@@ -151,6 +151,7 @@
       <div class="topic-card" onclick="NAV.go('v-gal-brandlehre','Brandlehre &amp; Löschmittel')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg><div class="tc-name">Brandlehre &amp; Löschmittel</div><div class="tc-sub">Brandtetraeder, Brandklassen A–F, Löschmittelwirkung, Brandphasen, Wärmeübertragung</div></div>
       <div class="topic-card" onclick="NAV.go('v-gal-fahrzeuge','Fahrzeug- &amp; Gerätekunde')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg><div class="tc-name">Fahrzeug- &amp; Gerätekunde</div><div class="tc-sub">Normfahrzeuge (LF/TLF/DLK/RW), DIN-Normen, Pumpen, Geräteausstattung</div></div>
       <div class="topic-card" onclick="NAV.go('v-gal-einsatz','Einsatzgrundlagen &amp; FwDV')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><div class="tc-name">Einsatzgrundlagen &amp; FwDV</div><div class="tc-sub">FwDV-System Überblick, Grundtätigkeiten, Einsatzprinzipien, Atemschutz Grundlagen</div></div>
+      <div class="topic-card" onclick="NAV.go('v-gal-atemgifte','Atemgifte')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg><div class="tc-name">Atemgifte</div><div class="tc-sub">Definition, 3 Wirkungsgruppen, Stickgase, Reiz-/Ätzgifte, Brandrauch, Messgrößen</div></div>
       <div class="topic-card" onclick="NAV.go('v-gal-atemschutz','Atemschutz')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg><div class="tc-name">Atemschutz</div><div class="tc-sub">PA-Typen, FwDV 7, Überwachung, Sicherheitstrupp, Physiologie, Wartung</div></div>
       <div class="topic-card" onclick="NAV.go('v-gal-beamtenrecht','Beamtenrecht')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg><div class="tc-name">Beamtenrecht</div><div class="tc-sub">Beamtenverhältnis, Pflichten, Rechte, Disziplinarmaßnahmen, Laufbahnrecht</div></div>
       <div class="topic-card" onclick="NAV.go('v-gal-beihilferecht','Beihilferecht')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><div class="tc-name">Beihilferecht</div><div class="tc-sub">BBhV/LBhV, Beihilfesätze, Kostendämpfungspauschale, PKV/GKV</div></div>
@@ -5877,6 +5878,352 @@
         <div style="display:flex;justify-content:flex-end;margin-top:.75rem"><button class="btn btn-red" onclick="submitProposal()">Einreichen →</button></div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ── GAL · 05 – ATEMGIFTE ─────────────────────────────────────────────────── -->
+<div id="v-gal-atemgifte" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">Grundausbildungslehrgang</p>
+      <h1 class="page-title">Atem<span class="accent">gifte</span></h1>
+      <p class="page-lead">Definition, physiologische Grundlagen, die drei Wirkungsgruppen, Brandrauch und Einheiten zur Konzentrationsmessung.</p>
+    </div>
+  </div>
+  <div class="pc">
+
+    <!-- Gruppen-Übersicht Banner -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:1rem;margin-bottom:2rem;">
+      <div style="background:rgba(100,149,237,.12);border:1px solid rgba(100,149,237,.3);border-radius:var(--r-lg);padding:1.25rem;">
+        <div style="font-weight:700;color:#6495ED;margin-bottom:.35rem;font-size:.9rem;">Gruppe 1</div>
+        <div style="font-size:.85rem;font-weight:600;">Erstickende Wirkung</div>
+        <div style="font-size:.77rem;color:var(--c-muted);margin-top:.3rem;">O₂ verdrängen · kein Sinnesorgan</div>
+        <div style="font-size:.75rem;margin-top:.5rem;color:#6495ED;">N₂ · CH₄ · Propan · Butan · Edelgase</div>
+      </div>
+      <div style="background:rgba(255,140,0,.1);border:1px solid rgba(255,140,0,.3);border-radius:var(--r-lg);padding:1.25rem;">
+        <div style="font-weight:700;color:#FF8C00;margin-bottom:.35rem;font-size:.9rem;">Gruppe 2</div>
+        <div style="font-size:.85rem;font-weight:600;">Reiz- &amp; Ätzwirkung</div>
+        <div style="font-size:.77rem;color:var(--c-muted);margin-top:.3rem;">Schleimhäute · Latenzzeit</div>
+        <div style="font-size:.75rem;margin-top:.5rem;color:#FF8C00;">NH₃ · Cl₂ · Nitrose Gase</div>
+      </div>
+      <div style="background:rgba(200,30,30,.1);border:1px solid rgba(200,30,30,.3);border-radius:var(--r-lg);padding:1.25rem;">
+        <div style="font-weight:700;color:#c81e1e;margin-bottom:.35rem;font-size:.9rem;">Gruppe 3</div>
+        <div style="font-size:.85rem;font-weight:600;">Blut, Nerven &amp; Zellen</div>
+        <div style="font-size:.77rem;color:var(--c-muted);margin-top:.3rem;">Systemisch · oft farblos/geruchlos</div>
+        <div style="font-size:.75rem;margin-top:.5rem;color:#c81e1e;">CO · HCN · CO₂ · Benzin · Acetylen</div>
+      </div>
+    </div>
+
+    <!-- Accordion 1: Definition & Grundlagen -->
+    <details class="acc-item">
+      <summary class="acc-head">
+        <span class="acc-num">1</span>
+        <span class="acc-title">Definition &amp; Grundlagen der Atmung</span>
+        <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="acc-body">
+        <div class="def-box">
+          <div class="def-box-label">Definition Atemgifte</div>
+          <p>In der Umluft enthaltene <strong>Gase, Nebel, Stäube oder Aerosole</strong>, die über die Atemwege in den Körper gelangen und dort schädigend wirken oder den Sauerstoffgehalt unter das notwendige Maß herabsetzen.</p>
+        </div>
+
+        <h3 style="margin-top:1.25rem;margin-bottom:.7rem;font-size:.9rem;font-weight:700;color:var(--c-gold);">Zusammensetzung der Einatemluft</h3>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+          <div style="flex:1;min-width:90px;background:rgba(100,149,237,.12);border:1px solid rgba(100,149,237,.3);border-radius:var(--r-md);padding:.7rem;text-align:center;">
+            <div style="font-size:1.4rem;font-weight:800;color:#6495ED;">78 %</div>
+            <div style="font-size:.75rem;color:var(--c-muted);">Stickstoff N₂</div>
+          </div>
+          <div style="flex:1;min-width:90px;background:rgba(72,199,142,.12);border:1px solid rgba(72,199,142,.3);border-radius:var(--r-md);padding:.7rem;text-align:center;">
+            <div style="font-size:1.4rem;font-weight:800;color:#48c78e;">21 %</div>
+            <div style="font-size:.75rem;color:var(--c-muted);">Sauerstoff O₂</div>
+          </div>
+          <div style="flex:1;min-width:90px;background:rgba(201,168,76,.1);border:1px solid var(--c-gold-rim);border-radius:var(--r-md);padding:.7rem;text-align:center;">
+            <div style="font-size:1.4rem;font-weight:800;color:var(--c-gold);">0,96 %</div>
+            <div style="font-size:.75rem;color:var(--c-muted);">Edelgase</div>
+          </div>
+          <div style="flex:1;min-width:90px;background:rgba(200,30,30,.1);border:1px solid rgba(200,30,30,.25);border-radius:var(--r-md);padding:.7rem;text-align:center;">
+            <div style="font-size:1.4rem;font-weight:800;color:#c81e1e;">0,04 %</div>
+            <div style="font-size:.75rem;color:var(--c-muted);">Kohlendioxid CO₂</div>
+          </div>
+        </div>
+        <div class="info-card" style="border-left:3px solid rgba(200,30,30,.5);background:rgba(200,30,30,.06);margin-bottom:1.25rem;">
+          <div class="info-card-title"><span class="dot dot-r"></span>Kritische Schwelle</div>
+          <p>Sinkt O₂ unter <strong>15 Vol.&nbsp;%</strong> → Körper nimmt Schaden. Der Mensch hat <strong>kein Sinnesorgan</strong> für Sauerstoffmangel – Nachweis nur mit Messgeräten möglich.</p>
+        </div>
+
+        <h3 style="margin-bottom:.7rem;font-size:.9rem;font-weight:700;color:var(--c-gold);">Äußere &amp; Innere Atmung</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+          <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:1rem;">
+            <div style="font-weight:700;font-size:.85rem;margin-bottom:.4rem;color:var(--c-gold);">Äußere Atmung</div>
+            <p style="font-size:.82rem;margin:0;">Lungenatmung – O₂-Aufnahme aus der Atemluft, CO₂-Abgabe. Gesteuert durch das Atemzentrum in der <em>Medulla oblongata</em> (verlängertes Rückenmark).</p>
+          </div>
+          <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:1rem;">
+            <div style="font-weight:700;font-size:.85rem;margin-bottom:.4rem;color:var(--c-gold);">Innere Atmung</div>
+            <p style="font-size:.82rem;margin:0;">Zell-/Gewebeatmung – biochemische Oxidation zur ATP-Gewinnung. Abfallprodukt CO₂ wird über das Blut zur Lunge transportiert und abgeatmet.</p>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Accordion 2: Atemwege & Atemminutenvolumen -->
+    <details class="acc-item">
+      <summary class="acc-head">
+        <span class="acc-num">2</span>
+        <span class="acc-title">Atemwege &amp; Atemminutenvolumen</span>
+        <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="acc-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem;">
+          <div style="background:rgba(100,149,237,.1);border:1px solid rgba(100,149,237,.25);border-radius:var(--r-md);padding:1rem;">
+            <div style="font-weight:700;font-size:.85rem;margin-bottom:.5rem;color:#6495ED;">Obere Atemwege</div>
+            <ul style="font-size:.82rem;margin:0;padding-left:1.1rem;line-height:1.75;">
+              <li>Mund-Rachen-Raum</li>
+              <li>Nase / Nasenhöhle / Nasenlöcher</li>
+              <li>Kehldeckel</li>
+            </ul>
+          </div>
+          <div style="background:rgba(72,199,142,.1);border:1px solid rgba(72,199,142,.25);border-radius:var(--r-md);padding:1rem;">
+            <div style="font-weight:700;font-size:.85rem;margin-bottom:.5rem;color:#48c78e;">Untere Atemwege</div>
+            <ul style="font-size:.82rem;margin:0;padding-left:1.1rem;line-height:1.75;">
+              <li>Kehlkopf</li>
+              <li>Luftröhre &amp; Luftröhrengabel</li>
+              <li>Hauptbronchus · Bronchien</li>
+              <li>li./re. Lunge (Ober-/Mittel-/Unterlappen)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="def-box" style="margin-bottom:1.25rem;">
+          <div class="def-box-label">Anatomischer Totraum (2 ml/kgKG)</div>
+          <p style="font-size:.84rem;">Bereich des Atemsystems, der <strong>nicht</strong> am Gasaustausch beteiligt ist, aber der Fortleitung des Gasgemisches dient (Mund-Nasen-Rachen-Raum, Luftröhre, Bronchien). Vergrößert sich z.&nbsp;B. durch einen Schnorchel.</p>
+        </div>
+
+        <h3 style="margin-bottom:.7rem;font-size:.9rem;font-weight:700;color:var(--c-gold);">Atemminutenvolumen</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem;">
+          <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:1rem;font-size:.83rem;">
+            <div style="font-weight:700;margin-bottom:.5rem;color:var(--c-gold);">Faustformeln</div>
+            <ul style="margin:0;padding-left:1.1rem;line-height:1.9;">
+              <li>AMV: <strong>80–100 ml/kgKG</strong></li>
+              <li>Atemzugvolumen: <strong>10 ml/kgKG</strong></li>
+              <li>Totraum: <strong>2 ml/kgKG</strong></li>
+            </ul>
+          </div>
+          <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:1rem;">
+            <table style="width:100%;font-size:.8rem;border-collapse:collapse;">
+              <thead><tr style="border-bottom:1px solid var(--glass-b);"><th style="text-align:left;padding:.3rem .2rem;color:var(--c-gold);">Tätigkeit</th><th style="text-align:right;padding:.3rem .2rem;color:var(--c-gold);">l/min</th></tr></thead>
+              <tbody>
+                <tr><td style="padding:.25rem .2rem;">Ruhe (Sitzen)</td><td style="text-align:right;">8–10</td></tr>
+                <tr><td style="padding:.25rem .2rem;">Gehen (mit Gerät)</td><td style="text-align:right;">15–20</td></tr>
+                <tr><td style="padding:.25rem .2rem;">Mittlere Arbeit</td><td style="text-align:right;">30–40</td></tr>
+                <tr><td style="padding:.25rem .2rem;">Schwere Arbeit</td><td style="text-align:right;">60–70</td></tr>
+                <tr><td style="padding:.25rem .2rem;">Spitzenleistung</td><td style="text-align:right;">90</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h3 style="margin-bottom:.5rem;font-size:.9rem;font-weight:700;color:var(--c-gold);">Störung der Atmung – Tachypnoe (Schnellatmung)</h3>
+        <ul style="font-size:.84rem;padding-left:1.25rem;line-height:1.8;margin:0;">
+          <li>Erhöhter O₂-Bedarf (körperliche Belastung, Fieber)</li>
+          <li>Störung des Säure-Basen-Haushalts</li>
+          <li>Erniedrigtes Sauerstoffangebot</li>
+          <li>Verminderte O₂-Aufnahme (Lungenerkrankungen, Hyperventilation)</li>
+          <li>Herzerkrankungen, massive Blutverluste oder Anämie</li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- Accordion 3: Schwebstoffe, Gase & Dämpfe -->
+    <details class="acc-item">
+      <summary class="acc-head">
+        <span class="acc-num">3</span>
+        <span class="acc-title">Schwebstoffe, Gase &amp; Dämpfe · Aggregatzustand</span>
+        <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="acc-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin-bottom:1.25rem;">
+          <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:1rem;">
+            <div style="font-weight:700;font-size:.85rem;margin-bottom:.4rem;color:var(--c-gold);">Schwebstoffe</div>
+            <p style="font-size:.8rem;margin:0;">Feste Teilchen → <strong>Staub/Rauch</strong><br>Flüssige Teilchen → <strong>Nebel/Aerosol</strong><br>Immer <em>schwerer als Luft</em>.</p>
+          </div>
+          <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:1rem;">
+            <div style="font-weight:700;font-size:.85rem;margin-bottom:.4rem;color:var(--c-gold);">Gase</div>
+            <p style="font-size:.8rem;margin:0;">Bei 1013 mbar und 20°C gasförmig. Siedepunkt <strong>unter</strong> Zimmertemperatur.</p>
+          </div>
+          <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:1rem;">
+            <div style="font-weight:700;font-size:.85rem;margin-bottom:.4rem;color:var(--c-gold);">Dämpfe</div>
+            <p style="font-size:.8rem;margin:0;">Gasförmige Anteile von Flüssigkeiten. Siedepunkt <strong>über</strong> 20°C. Keine feinstverteilten Tröpfchen.</p>
+          </div>
+        </div>
+
+        <h3 style="margin-bottom:.75rem;font-size:.9rem;font-weight:700;color:var(--c-gold);">Phasenübergänge des Aggregatzustands</h3>
+        <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-lg);padding:1.25rem;margin-bottom:1rem;">
+          <div style="display:flex;align-items:center;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem;">
+            <div style="text-align:center;">
+              <div style="background:rgba(100,149,237,.15);border:2px solid rgba(100,149,237,.4);border-radius:var(--r-md);padding:.6rem 1rem;font-weight:700;color:#6495ED;font-size:.9rem;">fest</div>
+            </div>
+            <div style="text-align:center;font-size:.72rem;color:var(--c-muted);line-height:1.8;">
+              <div>⟶ schmelzen</div>
+              <div>⟵ erstarren</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="background:rgba(72,199,142,.12);border:2px solid rgba(72,199,142,.4);border-radius:var(--r-md);padding:.6rem 1rem;font-weight:700;color:#48c78e;font-size:.9rem;">flüssig</div>
+            </div>
+            <div style="text-align:center;font-size:.72rem;color:var(--c-muted);line-height:1.8;">
+              <div>⟶ verdampfen</div>
+              <div>⟵ kondensieren</div>
+              <div style="font-size:.65rem;">(verdunsten unterhalb Siedepunkt)</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="background:rgba(201,168,76,.1);border:2px solid var(--c-gold-rim);border-radius:var(--r-md);padding:.6rem 1rem;font-weight:700;color:var(--c-gold);font-size:.9rem;">gasförmig</div>
+            </div>
+          </div>
+          <p style="font-size:.77rem;color:var(--c-muted);margin:0;text-align:center;"><strong>Sublimation:</strong> direkt fest → gasförmig &nbsp;|&nbsp; <strong>Resublimation:</strong> direkt gasförmig → fest</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title"><span class="dot dot-y"></span>Luftzahl = 29</div>
+          <p style="font-size:.84rem;">Molmasse des Gases <strong>&gt; 29</strong> → schwerer als Luft (sammelt sich in tiefen Lagen, Kellern).<br>Molmasse <strong>&lt; 29</strong> → leichter als Luft (steigt auf, sammelt sich in Decknähe).</p>
+        </div>
+        <p style="font-size:.83rem;margin-top:.9rem;"><strong>Physiologische Wirkung abhängig von:</strong> Art des Atemgiftes · Konzentration · Einwirkdauer &nbsp;|&nbsp; <strong>Erkennen:</strong> Sinnesorgane · Messgeräte</p>
+      </div>
+    </details>
+
+    <!-- Accordion 4: Gruppe 1 -->
+    <details class="acc-item">
+      <summary class="acc-head">
+        <span class="acc-num" style="background:rgba(100,149,237,.15);border-color:rgba(100,149,237,.4);color:#6495ED;">4</span>
+        <span class="acc-title">Gruppe 1 · Erstickende Wirkung (Stickgase)</span>
+        <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="acc-body">
+        <div style="background:rgba(100,149,237,.08);border:1px solid rgba(100,149,237,.25);border-radius:var(--r-lg);padding:1.25rem;margin-bottom:1rem;">
+          <p style="font-size:.85rem;margin:0 0 .6rem;">Wirken <strong>nicht direkt</strong> auf den Körper – <strong>verdrängen den Sauerstoff</strong> aus der Umluft.</p>
+          <ul style="font-size:.84rem;margin:0;padding-left:1.2rem;line-height:1.8;">
+            <li>O₂ &lt; <strong style="color:#c81e1e;">15 Vol.&nbsp;%</strong> → Körper nimmt Schaden</li>
+            <li>Kein Sinnesorgan vorhanden → keine Schutzreaktion des Körpers</li>
+            <li>Nachweis <strong>ausschließlich</strong> mit Messgeräten</li>
+          </ul>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem;">
+          <span style="background:rgba(100,149,237,.15);color:#6495ED;border:1px solid rgba(100,149,237,.35);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Edelgase</span>
+          <span style="background:rgba(100,149,237,.15);color:#6495ED;border:1px solid rgba(100,149,237,.35);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Stickstoff N₂</span>
+          <span style="background:rgba(100,149,237,.15);color:#6495ED;border:1px solid rgba(100,149,237,.35);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Methan CH₄</span>
+          <span style="background:rgba(100,149,237,.15);color:#6495ED;border:1px solid rgba(100,149,237,.35);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Propan C₃H₈</span>
+          <span style="background:rgba(100,149,237,.15);color:#6495ED;border:1px solid rgba(100,149,237,.35);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Butan C₄H₁₀</span>
+        </div>
+      </div>
+    </details>
+
+    <!-- Accordion 5: Gruppe 2 -->
+    <details class="acc-item">
+      <summary class="acc-head">
+        <span class="acc-num" style="background:rgba(255,140,0,.12);border-color:rgba(255,140,0,.4);color:#FF8C00;">5</span>
+        <span class="acc-title">Gruppe 2 · Reiz- &amp; Ätzwirkung</span>
+        <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="acc-body">
+        <div style="background:rgba(255,140,0,.08);border:1px solid rgba(255,140,0,.25);border-radius:var(--r-lg);padding:1.25rem;margin-bottom:1rem;">
+          <p style="font-size:.85rem;margin:0 0 .6rem;">Wirken <strong>unmittelbar</strong> auf den Organismus – lösen sich in der Feuchtigkeit der Schleimhäute auf → Reizung oder Verätzung.</p>
+          <p style="font-size:.85rem;margin:0;"><strong>Schwerer löslich</strong> = gelangt tiefer in die Lunge → Zersetzung der Lungenbläschen → <strong>Lungenödem</strong>.</p>
+        </div>
+        <div class="def-box" style="margin-bottom:1rem;">
+          <div class="def-box-label">Latenzzeit</div>
+          <p style="font-size:.84rem;margin-bottom:.5rem;">Zeitspanne zwischen Schadstoffaufnahme und Auftreten der ersten Symptome:</p>
+          <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+            <div style="flex:1;min-width:120px;background:rgba(72,199,142,.1);border:1px solid rgba(72,199,142,.3);border-radius:var(--r-sm);padding:.6rem;text-align:center;font-size:.82rem;"><strong>Leicht wasserlöslich</strong><br><span style="color:#48c78e;">→ kurze Latenzzeit</span></div>
+            <div style="flex:1;min-width:120px;background:rgba(200,30,30,.08);border:1px solid rgba(200,30,30,.25);border-radius:var(--r-sm);padding:.6rem;text-align:center;font-size:.82rem;"><strong>Schwer wasserlöslich</strong><br><span style="color:#c81e1e;">→ lange Latenzzeit</span></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem;">
+          <span style="background:rgba(255,140,0,.12);color:#FF8C00;border:1px solid rgba(255,140,0,.35);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Ammoniak NH₃</span>
+          <span style="background:rgba(255,140,0,.12);color:#FF8C00;border:1px solid rgba(255,140,0,.35);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Chlor Cl₂</span>
+          <span style="background:rgba(255,140,0,.12);color:#FF8C00;border:1px solid rgba(255,140,0,.35);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Nitrose Gase NO / NO₂</span>
+        </div>
+      </div>
+    </details>
+
+    <!-- Accordion 6: Gruppe 3 -->
+    <details class="acc-item">
+      <summary class="acc-head">
+        <span class="acc-num" style="background:rgba(200,30,30,.12);border-color:rgba(200,30,30,.4);color:#c81e1e;">6</span>
+        <span class="acc-title">Gruppe 3 · Wirkung auf Blut, Nerven &amp; Zellen</span>
+        <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="acc-body">
+        <div style="background:rgba(200,30,30,.08);border:1px solid rgba(200,30,30,.2);border-radius:var(--r-lg);padding:1.25rem;margin-bottom:1rem;">
+          <p style="font-size:.85rem;margin:0 0 .6rem;">Gelangen durch die Lunge ins <strong>Blut</strong> und wirken direkt auf Blut, Organe oder Nerven.</p>
+          <p style="font-size:.85rem;margin:0;">Können <strong>farb-, geruch- und geschmacklos</strong> sein, keine Reizwirkung. Wirkung oft erst erkennbar, wenn bereits eine kritische Menge aufgenommen wurde.</p>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem;">
+          <span style="background:rgba(200,30,30,.1);color:#c81e1e;border:1px solid rgba(200,30,30,.3);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Kohlenmonoxid CO</span>
+          <span style="background:rgba(200,30,30,.1);color:#c81e1e;border:1px solid rgba(200,30,30,.3);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Kohlendioxid CO₂</span>
+          <span style="background:rgba(200,30,30,.1);color:#c81e1e;border:1px solid rgba(200,30,30,.3);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Cyanwasserstoff (Blausäure)</span>
+          <span style="background:rgba(200,30,30,.1);color:#c81e1e;border:1px solid rgba(200,30,30,.3);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Acetylen</span>
+          <span style="background:rgba(200,30,30,.1);color:#c81e1e;border:1px solid rgba(200,30,30,.3);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Aceton</span>
+          <span style="background:rgba(200,30,30,.1);color:#c81e1e;border:1px solid rgba(200,30,30,.3);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Alkohol</span>
+          <span style="background:rgba(200,30,30,.1);color:#c81e1e;border:1px solid rgba(200,30,30,.3);border-radius:var(--r-sm);padding:.25rem .65rem;font-size:.8rem;font-weight:600;">Benzin</span>
+        </div>
+      </div>
+    </details>
+
+    <!-- Accordion 7: Brandrauch -->
+    <details class="acc-item">
+      <summary class="acc-head">
+        <span class="acc-num">7</span>
+        <span class="acc-title">Brandrauch – der Giftcocktail</span>
+        <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="acc-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.5rem;margin-bottom:1.25rem;">
+          <div style="background:rgba(20,20,20,.5);border:1px solid rgba(80,80,80,.5);border-radius:var(--r-md);padding:.7rem;text-align:center;"><strong style="color:#c81e1e;font-size:.9rem;">CO</strong><div style="font-size:.72rem;color:var(--c-muted);margin-top:.2rem;">Kohlenmonoxid</div></div>
+          <div style="background:rgba(20,20,20,.5);border:1px solid rgba(80,80,80,.5);border-radius:var(--r-md);padding:.7rem;text-align:center;"><strong style="color:#c81e1e;font-size:.9rem;">CO₂</strong><div style="font-size:.72rem;color:var(--c-muted);margin-top:.2rem;">Kohlendioxid</div></div>
+          <div style="background:rgba(20,20,20,.5);border:1px solid rgba(80,80,80,.5);border-radius:var(--r-md);padding:.7rem;text-align:center;"><strong style="color:#FF8C00;font-size:.9rem;">NOₓ</strong><div style="font-size:.72rem;color:var(--c-muted);margin-top:.2rem;">Stickoxide</div></div>
+          <div style="background:rgba(20,20,20,.5);border:1px solid rgba(80,80,80,.5);border-radius:var(--r-md);padding:.7rem;text-align:center;"><strong style="color:#FF8C00;font-size:.9rem;">SO₂</strong><div style="font-size:.72rem;color:var(--c-muted);margin-top:.2rem;">Schwefeldioxid</div></div>
+          <div style="background:rgba(20,20,20,.5);border:1px solid rgba(80,80,80,.5);border-radius:var(--r-md);padding:.7rem;text-align:center;"><strong style="color:#c81e1e;font-size:.9rem;">HCN</strong><div style="font-size:.72rem;color:var(--c-muted);margin-top:.2rem;">Blausäure</div></div>
+          <div style="background:rgba(20,20,20,.5);border:1px solid rgba(80,80,80,.5);border-radius:var(--r-md);padding:.7rem;text-align:center;"><strong style="color:var(--c-muted);font-size:.9rem;">Teer</strong><div style="font-size:.72rem;color:var(--c-muted);margin-top:.2rem;">Kondensate</div></div>
+          <div style="background:rgba(20,20,20,.5);border:1px solid rgba(80,80,80,.5);border-radius:var(--r-md);padding:.7rem;text-align:center;"><strong style="color:var(--c-muted);font-size:.9rem;">Ruß</strong><div style="font-size:.72rem;color:var(--c-muted);margin-top:.2rem;">Feinstpartikel</div></div>
+        </div>
+        <div class="info-card" style="border-left:3px solid rgba(200,30,30,.5);background:rgba(200,30,30,.06);">
+          <div class="info-card-title"><span class="dot dot-r"></span>Heiße Luft – ab 50 °C</div>
+          <p style="font-size:.84rem;">Heiße Luft (insbes. wenn feucht) kann Kreislauf- und Blutdruckstörungen verursachen. Das Einatmen heißer Luft kann <strong>Lungenschäden</strong> hervorrufen, die zum Tod durch Ersticken führen.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- Accordion 8: Einheiten & Beurteilungswerte -->
+    <details class="acc-item">
+      <summary class="acc-head">
+        <span class="acc-num">8</span>
+        <span class="acc-title">Einheiten, Messgrößen &amp; Beurteilungswerte</span>
+        <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="acc-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.5rem;margin-bottom:1.25rem;">
+          <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:.75rem;text-align:center;"><strong style="font-size:.95rem;">1 m³</strong><div style="font-size:.75rem;color:var(--c-muted);margin-top:.2rem;">= 100 Vol.&nbsp;%</div></div>
+          <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:.75rem;text-align:center;"><strong style="font-size:.95rem;">10 dm³</strong><div style="font-size:.75rem;color:var(--c-muted);margin-top:.2rem;">= 1 Vol.&nbsp;%</div></div>
+          <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:.75rem;text-align:center;"><strong style="font-size:.95rem;">10 l</strong><div style="font-size:.75rem;color:var(--c-muted);margin-top:.2rem;">= 1 Vol.&nbsp;%</div></div>
+          <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:.75rem;text-align:center;"><strong style="font-size:.95rem;">1 ppm</strong><div style="font-size:.75rem;color:var(--c-muted);margin-top:.2rem;">= 1 cm³/m³</div></div>
+          <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:.75rem;text-align:center;"><strong style="font-size:.95rem;">1 Vol.&nbsp;%</strong><div style="font-size:.75rem;color:var(--c-muted);margin-top:.2rem;">= 10.000 ppm</div></div>
+        </div>
+
+        <table style="width:100%;border-collapse:collapse;font-size:.83rem;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--glass-b);">
+              <th style="text-align:left;padding:.5rem .4rem;color:var(--c-gold);">Wert</th>
+              <th style="text-align:left;padding:.5rem .4rem;color:var(--c-gold);">Bedeutung</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--glass-b);"><td style="padding:.45rem .4rem;"><strong>ETW</strong></td><td style="padding:.45rem .4rem;">Einsatztoleranzwert – Grenzwert für Feuerwehreinsätze</td></tr>
+            <tr style="border-bottom:1px solid var(--glass-b);"><td style="padding:.45rem .4rem;"><strong>AGW</strong></td><td style="padding:.45rem .4rem;">Arbeitsplatzgrenzwert – arbeitstägliche Dauerbelastung</td></tr>
+            <tr style="border-bottom:1px solid var(--glass-b);"><td style="padding:.45rem .4rem;"><strong style="color:var(--c-gold);">AEGL-1</strong></td><td style="padding:.45rem .4rem;">Schwelle zum spürbaren Unwohlsein</td></tr>
+            <tr style="border-bottom:1px solid var(--glass-b);"><td style="padding:.45rem .4rem;"><strong style="color:#FF8C00;">AEGL-2</strong></td><td style="padding:.45rem .4rem;">Schwelle zu schwerwiegenden, lang andauernden oder Flucht behindernden Wirkungen</td></tr>
+            <tr><td style="padding:.45rem .4rem;"><strong style="color:#c81e1e;">AEGL-3</strong></td><td style="padding:.45rem .4rem;">Schwelle zu tödlichen Wirkungen</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
   </div>
 </div>
 
