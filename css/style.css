@@ -148,6 +148,8 @@
   .acc-body ul{list-style:none;margin:.4rem 0;display:flex;flex-direction:column;gap:.25rem;}
   .acc-body ul li{display:flex;gap:.6rem;align-items:flex-start;}
   .acc-body ul li::before{content:'▸';color:var(--c-gold);font-size:.6rem;margin-top:.38em;flex-shrink:0;}
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;margin:.75rem 0;}
+  .tbl-wrap>table{margin:0;min-width:max-content;width:100%;}
   .acc-body table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.75rem 0;}
   .acc-body table th{font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--c-gold);background:var(--c-gold-dim);padding:.4rem .65rem;text-align:left;border-bottom:1px solid var(--c-gold-rim);}
   .acc-body table td{padding:.4rem .65rem;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;}

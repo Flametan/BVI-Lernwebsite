@@ -1194,6 +1194,13 @@ const FC = (function(){
 document.addEventListener('DOMContentLoaded',()=>{
   NAV.home();
   PROGRESS.updateUI();
+  document.querySelectorAll('.pc table').forEach(t=>{
+    if(t.closest('.tbl-wrap')) return;
+    const w=document.createElement('div');
+    w.className='tbl-wrap';
+    t.parentNode.insertBefore(w,t);
+    w.appendChild(t);
+  });
   document.addEventListener('keydown', e => {
     if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); SEARCH.open(); }
     if(e.key==='Escape' && !document.getElementById('search-overlay').classList.contains('hidden')) SEARCH.close();
