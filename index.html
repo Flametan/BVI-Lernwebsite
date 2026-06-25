@@ -100,7 +100,14 @@
           <div class="tile-desc">Recht und Management – Verwaltungsrecht, Staatsrecht, Einsatzrecht, Dienstrecht</div>
           <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
-        <div class="glass-tile tp"><svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg><div class="tile-name">FeuAK Hamburg</div><div class="tile-desc">Feuerwehrakademie</div><span class="tile-soon">In Vorbereitung</span></div>
+        <!-- ── FeuAK HAMBURG ────────────────────────────────────── -->
+        <div class="glass-tile" onclick="NAV.go('v-feuak','FeuAK Hamburg')" style="position:relative">
+          <span id="prog-feuak" class="tile-prog">0/8</span>
+          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          <div class="tile-name">FeuAK Hamburg</div>
+          <div class="tile-desc">VWL, BWL, Haushalt, Vergabe, Rechnungswesen, Projektmanagement, Bedarfsplanung</div>
+          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
         <div class="glass-tile tp"><svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><div class="tile-name">IdF Münster</div><div class="tile-desc">Institut der Feuerwehr NRW</div><span class="tile-soon">In Vorbereitung</span></div>
         <div class="glass-tile ts" onclick="NAV.go('v-simulator','Führungsdienstsimulator')">
           <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="22" y1="12" x2="19" y2="12"/><line x1="5" y1="12" x2="2" y2="12"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
@@ -3421,7 +3428,1143 @@
   </div>
 </div>
 
-<div id="v-feuak" class="view detail-view"><div class="pc" style="padding-top:3rem;"><div class="ph-view"><div class="ph-icon">🔥</div><h2>FeuAK Hamburg</h2><p>Inhalte in Vorbereitung.</p></div></div></div>
+<!-- ============================================================ FeuAK HAMBURG OVERVIEW ============================================================ -->
+<div id="v-feuak" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">Feuerwehrakademie Hamburg · Recht und Management</p>
+      <h1 class="page-title">FeuAK <span class="accent">Hamburg</span></h1>
+      <p class="page-lead">VWL, BWL, Haushaltsrecht, Vergabe, Rechnungswesen, Strategisches Management und Bedarfsplanung – alle Prüfungsthemen des Hamburger Lehrgangsabschnitts.</p>
+    </div>
+  </div>
+  <div class="pc">
+    <div class="cg cg-2">
+      <div class="topic-card" onclick="NAV.go('v-feuak-vwl','VWL')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+        <div class="tc-name">VWL</div>
+        <div class="tc-desc">Volkswirtschaftliche Regeln, Mikro- und Makroökonomie, BIP, Marktversagen</div>
+      </div>
+      <div class="topic-card" onclick="NAV.go('v-feuak-bwl','BWL')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        <div class="tc-name">BWL</div>
+        <div class="tc-desc">Ökonomisches Prinzip, Unternehmertum, Business Plan, Beschaffung, Push-/Pullsystem</div>
+      </div>
+      <div class="topic-card" onclick="NAV.go('v-feuak-haushalt','Haushalt')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <div class="tc-name">Haushalt</div>
+        <div class="tc-desc">NSM, 3-Säulen-Modell, KLR, Haushaltsplan, Produktpyramide, Budgetierung</div>
+      </div>
+      <div class="topic-card" onclick="NAV.go('v-feuak-vergabe','Vergabe')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <div class="tc-name">Vergabe</div>
+        <div class="tc-desc">Vergaberecht, 8 Grundsätze, Ober-/Unterschwelle, Vergabeverfahren</div>
+      </div>
+      <div class="topic-card" onclick="NAV.go('v-feuak-rechnungswesen','Rechnungswesen')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <div class="tc-name">Rechnungswesen</div>
+        <div class="tc-desc">Externes/internes RW, GoB, Bilanzaufbau, Strömungsgrößen, Kostenrechnung</div>
+      </div>
+      <div class="topic-card" onclick="NAV.go('v-feuak-pm','Projektmanagement / Strategisches Management')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        <div class="tc-name">Projektmanagement / Strategisches Management</div>
+        <div class="tc-desc">Strategien, Stakeholder, Prozessanalyse, QM-Regelkreis, Controlling</div>
+      </div>
+      <div class="topic-card" onclick="NAV.go('v-feuak-bedarfsplanung','Bedarfsplanung')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <div class="tc-name">Bedarfsplanung</div>
+        <div class="tc-desc">Personalfaktor, Dienstplanung, Planungsziele, AGBF Bund, szenarienbasierte Bemessung</div>
+      </div>
+      <div class="topic-card" onclick="NAV.go('v-feuak-pruefung','Prüfungsleistung Lehrgang Hamburg')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <div class="tc-name">Prüfungsleistung Lehrgang Hamburg</div>
+        <div class="tc-desc">Prüfungsformat 2025, Eingrenzungen, 17 Groblernziele</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ FeuAK VWL ============================================================ -->
+<div id="v-feuak-vwl" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">FeuAK Hamburg · Volkswirtschaftslehre</p>
+      <h1 class="page-title">VWL</h1>
+      <p class="page-lead">Volkswirtschaftliche Grundregeln, Mikro- und Makroökonomie, Marktversagen und BIP.</p>
+    </div>
+  </div>
+  <div class="pc">
+
+    <h2 class="sec-h">Grundlagen der VWL</h2>
+    <div class="def-box">
+      <div class="def-box-label">Was ist VWL?</div>
+      Ökonomische Entscheidungen resultieren aus der <strong>Knappheit der Güter</strong>: Was wird woraus wie für wen produziert?<br><br>
+      Zwei Bestandteile: <strong>Mikroökonomie</strong> (einzelne Elemente der Wirtschaft) und <strong>Makroökonomie</strong> (Volkswirtschaft als Ganzes).
+    </div>
+
+    <h2 class="sec-h">10 Volkswirtschaftliche Regeln</h2>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div><strong>Menschen stehen vor Alternativen.</strong> Um etwas zu erhalten, muss etwas anderes aufgegeben werden. Entscheiden heißt: zwischen Alternativen, Handlungsmöglichkeiten oder Zielen zu wählen (Nahrung vs. Kleidung, Freizeit vs. Einkommen).</div></div>
+      <div class="step-item"><span class="step-letter">2</span><div><strong>Opportunitätskosten.</strong> Die Kosten für das, was man will, bestehen aus dem, was man dafür aufzugeben hat. Opportunitätskosten = das, was aufgegeben werden muss (Auto vs. Bahncard, Freizeit vs. Facharbeit).</div></div>
+      <div class="step-item"><span class="step-letter">3</span><div><strong>Rationale Menschen denken in Grenzbegriffen.</strong> Menschen fällen Entscheidungen, indem sie Kosten und Nutzen marginaler Veränderungen abwägen.</div></div>
+      <div class="step-item"><span class="step-letter">4</span><div><strong>Menschen reagieren auf Anreize.</strong> Marginale Veränderungen von Kosten und Nutzen motivieren Menschen, ihr Verhalten zu ändern.</div></div>
+      <div class="step-item"><span class="step-letter">5</span><div><strong>Durch Handel kann es jedem besser gehen.</strong> Menschen ziehen einen Nutzen aus den Möglichkeiten des Handels: wirtschaftlicher Aufschwung, Spezialisierung etc.</div></div>
+      <div class="step-item"><span class="step-letter">6</span><div><strong>Märkte sind effizient.</strong> Adam Smith = „unsichtbare Hand". Wettbewerb, Preismechanismen und gut funktionierende Märkte führen zu einer effizienten Allokation knapper Ressourcen.</div></div>
+      <div class="step-item"><span class="step-letter">7</span><div><strong>Regierungen können Marktergebnisse verbessern.</strong> Marktversagen oder ungerechte Verteilung begründen staatliche Eingriffe.</div></div>
+      <div class="step-item"><span class="step-letter">8</span><div><strong>Lebensstandard hängt von Produktivität ab.</strong> Der Lebensstandard hängt davon ab, wie gut Waren und Dienstleistungen hergestellt werden können.</div></div>
+      <div class="step-item"><span class="step-letter">9</span><div><strong>Inflation.</strong> Preise steigen, wenn die Zentralbank zu viel Geld in Umlauf setzt.</div></div>
+      <div class="step-item"><span class="step-letter">10</span><div><strong>Inflation vs. Arbeitslosigkeit.</strong> Eine Gesellschaft hat kurzfristig zwischen Inflation und Arbeitslosigkeit zu wählen.</div></div>
+    </div>
+
+    <div class="def-box" style="margin-top:1.5rem">
+      <div class="def-box-label">Wirtschaftssystem</div>
+      <strong>Soziale Marktwirtschaft</strong> – das Grundgesetz legt keine bestimmte Wirtschaftsordnung fest, setzt aber Grenzen für die Ausgestaltung.
+    </div>
+
+    <h2 class="sec-h">Mikroökonomie – Marktformen</h2>
+    <div class="cg cg-2">
+      <div class="info-card">
+        <div class="info-card-title">Polypol</div>
+        Vollständiger, perfekter Wettbewerb mit identischen Produkten sowie zahlreichen Käufern und Verkäufern. Kein Einfluss auf den Marktpreis → nur Mengenanpasser und Preisnehmer.
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Monopol</div>
+        Fehlender Wettbewerb – ein einziger Verkäufer beeinflusst den Marktpreis.
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Oligopol</div>
+        Geringer Wettbewerb unter Oligopolisten – wenige Anbieter, hohe Nachfrage.
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Monopolistische Konkurrenz</div>
+        Viele Anbieter, die den Preis ihrer differenzierten Produkte selbst beeinflussen können.
+      </div>
+    </div>
+
+    <h2 class="sec-h">Angebot und Nachfrage</h2>
+    <div class="cg cg-2">
+      <div class="info-card">
+        <div class="info-card-title">Gesetz der Nachfrage</div>
+        Die nachgefragte Menge sinkt, wenn der Preis steigt – sofern andere Faktoren unverändert bleiben.
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Gesetz des Angebots</div>
+        Die angebotene Menge steigt mit dem Preis.
+      </div>
+    </div>
+
+    <h2 class="sec-h">Marktversagen – 4 Ursachen</h2>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div><strong>Marktmacht:</strong> Käufer und Verkäufer sind in der Lage, Preise zu beeinflussen.</div></div>
+      <div class="step-item"><span class="step-letter">2</span><div><strong>Externalitäten:</strong> <em>Negativ:</em> Abgase, Zigarettenrauch, laute Musik. <em>Positiv:</em> Impfung, Erfindung, Restaurierung historischer Gebäude.</div></div>
+      <div class="step-item"><span class="step-letter">3</span><div><strong>Öffentliche Güter:</strong> Güter mit fehlender Ausschließbarkeit und/oder fehlender Nutzungsrivalität.</div></div>
+      <div class="step-item"><span class="step-letter">4</span><div><strong>Natürliche Monopole:</strong> Ein einzelnes Unternehmen kann die Marktnachfrage besser bedienen als viele (Elektrizität, Eisenbahn, Telekommunikation).</div></div>
+    </div>
+
+    <h2 class="sec-h">Gütertabelle (Ausschluss- vs. Konkurrenzprinzip)</h2>
+    <div class="def-box">
+      <table style="width:100%;border-collapse:collapse;font-size:.9rem">
+        <thead><tr style="background:var(--glass)">
+          <th style="padding:.5rem;border:1px solid var(--glass-b);text-align:left"></th>
+          <th style="padding:.5rem;border:1px solid var(--glass-b)">Ausschlussprinzip: Ja</th>
+          <th style="padding:.5rem;border:1px solid var(--glass-b)">Ausschlussprinzip: Nein</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:.5rem;border:1px solid var(--glass-b)"><strong>Konkurrenzprinzip: Ja</strong></td><td style="padding:.5rem;border:1px solid var(--glass-b)">Private Güter<br><em>Eiscreme, Kleidung</em></td><td style="padding:.5rem;border:1px solid var(--glass-b)">Gesellschaftliche Ressourcen<br><em>Fische im Meer, Umwelt</em></td></tr>
+          <tr><td style="padding:.5rem;border:1px solid var(--glass-b)"><strong>Konkurrenzprinzip: Nein</strong></td><td style="padding:.5rem;border:1px solid var(--glass-b)">Natürliche Monopole<br><em>Stromnetze, Fernsehen</em></td><td style="padding:.5rem;border:1px solid var(--glass-b)">Öffentliche Güter<br><em>Alarmsirene, Landesverteidigung</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec-h">Makroökonomie – BIP</h2>
+    <div class="def-box">
+      <div class="def-box-label">Bruttoinlandsprodukt (BIP)</div>
+      Misst das Einkommen oder die Ausgabe einer Volkswirtschaft. Entspricht dem <strong>Marktwert aller für den Endverbraucher bestimmten Güter und Dienstleistungen</strong>, die in einem Land in einem bestimmten Zeitraum hergestellt wurden.<br><br>
+      Das BIP ist das beste verfügbare Einzelmaß für den ökonomischen Wohlstand der Bevölkerung.
+    </div>
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1rem">3 Berechnungsseiten des BIP</h3>
+    <ul class="bl">
+      <li><strong>Entstehung:</strong> Wer produziert Güter?</li>
+      <li><strong>Verwendung:</strong> Gesamtausgaben der Haushalte (Konsum, Investitionen, Staatsausgaben, Nettoexporte)</li>
+      <li><strong>Verteilung:</strong> Gesamteinkommen der Haushalte</li>
+    </ul>
+    <div class="hint">Grenzen des BIP: Nicht enthalten sind Schwarzarbeit, Subsistenzproduktion, unbezahlte Tätigkeiten sowie Werte von Freizeit und Natur.</div>
+
+  </div>
+</div>
+
+<!-- ============================================================ FeuAK BWL ============================================================ -->
+<div id="v-feuak-bwl" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">FeuAK Hamburg · Betriebswirtschaftslehre</p>
+      <h1 class="page-title">BWL</h1>
+      <p class="page-lead">Ökonomisches Prinzip, Unternehmertum, Business Plan, Beschaffung und Materialwirtschaft.</p>
+    </div>
+  </div>
+  <div class="pc">
+
+    <h2 class="sec-h">Allgemeine Prinzipien der BWL</h2>
+    <div class="def-box">
+      Wirtschaftswissenschaften untersuchen die Wirtschaft als Gebiet menschlicher Tätigkeit, das der <strong>Bedürfnisbefriedigung</strong> dient. Das Spannungsfeld: Unbegrenztheit der Bedürfnisse versus Knappheit von Gütern und Ressourcen.
+    </div>
+    <div class="cg cg-2" style="margin-top:1rem">
+      <div class="info-card">
+        <div class="info-card-title">Maximalprinzip</div>
+        Mit gegebenem Mitteleinsatz ein maximales Ergebnis erzielen.
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Minimalprinzip</div>
+        Ein gegebenes Ergebnis mit minimalem Mitteleinsatz erzielen.
+      </div>
+    </div>
+
+    <h2 class="sec-h">Prozess des Unternehmertums</h2>
+    <p style="color:var(--c-slate);margin-bottom:1rem">Die Mischung aus bisherigen Geschäftskonzepten / Produkten und innovativen Ideen aus der Wissenschaft bildet oft die Grundlage:</p>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div>Bildung einer <strong>Geschäftsidee</strong></div></div>
+      <div class="step-item"><span class="step-letter">2</span><div>Prüfung der <strong>Geschäftsmöglichkeit</strong></div></div>
+      <div class="step-item"><span class="step-letter">3</span><div>Entwicklung und Konzeption eines <strong>Geschäftsmodells</strong></div></div>
+      <div class="step-item"><span class="step-letter">4</span><div>Erfolgreiche <strong>Platzierung des Produkts am Markt</strong></div></div>
+    </div>
+    <div class="hint">Nach einem bestimmten Zeitraum nimmt das Interesse am Produkt in der Regel ab. Ausnahmen bilden sogenannte „Evergreens".</div>
+
+    <h2 class="sec-h">Business Plan</h2>
+    <div class="def-box">
+      Ein Business Plan ist ein <strong>schriftliches Dokument</strong>, das das Konzept des neu zu gründenden Unternehmens beschreibt. Er umfasst Adressaten und Zielgruppen und muss:
+      <ul class="bl" style="margin-top:.75rem">
+        <li>Verständlich</li>
+        <li>Leserfreundlich</li>
+        <li>Prägnant geschrieben sein</li>
+      </ul>
+    </div>
+
+    <h2 class="sec-h">Beschaffung und Materialwirtschaft</h2>
+    <div class="def-box">
+      <div class="def-box-label">Definition</div>
+      Beschaffung umfasst alle Maßnahmen zur Versorgung des Unternehmens mit Roh-, Hilfs- und Betriebsstoffen, Zulieferteilen, Waren, Betriebsmitteln, Dienstleistungen, Personal, Informationen und Kapital in entsprechender Art, Menge und Qualität zum richtigen Zeitpunkt am richtigen Ort.
+    </div>
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">5 Schritte der Beschaffung</h3>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div><strong>Bedarfsermittlung</strong> – Feststellung des Bedarfs/Sortiments</div></div>
+      <div class="step-item"><span class="step-letter">2</span><div><strong>Beschaffungsmarktforschung</strong> – Sammlung, Analyse, Aufbereitung und Weiterleitung von Marktinformationen</div></div>
+      <div class="step-item"><span class="step-letter">3</span><div><strong>Make or Buy</strong> – Entscheidung über Eigenerstellung oder Fremdbezug unter Berücksichtigung von Kosten, Kompetenzen und Lieferangebot</div></div>
+      <div class="step-item"><span class="step-letter">4</span><div><strong>Bestellung und Abwicklung</strong> – Bestellmengen und -zeitpunkte, Lieferbedingungen</div></div>
+      <div class="step-item"><span class="step-letter">5</span><div><strong>Lieferantenmanagement</strong> – Bestimmung des Lieferantenkreises, Zusammenarbeit</div></div>
+    </div>
+
+    <h2 class="sec-h">Push- vs. Pullsystem</h2>
+    <div class="cg cg-2">
+      <div class="info-card">
+        <div class="info-card-title">Pushsystem</div>
+        Durch Planung bereitgestelltes Material „schiebt" die Fertigung. Abarbeitung der laufenden Aufträge, um Material aus der Werkstatt zu verbrauchen und Platz für neue Aufträge zu schaffen.
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Pullsystem</div>
+        Die Nachfrage „zieht" die Fertigung. Strategien wie „Just in Time" oder „Lean Production" streben eine möglichst lagerlose und bedarfssynchrone Bereitstellung von Materialien an.
+      </div>
+    </div>
+
+    <h2 class="sec-h">Weitere BWL-Themen</h2>
+    <ul class="bl">
+      <li>Prozess der Produkteinführung und -positionierung</li>
+      <li><strong>Marketing</strong></li>
+      <li><strong>Produktionspolitik</strong></li>
+      <li><strong>Preispolitik</strong></li>
+      <li><strong>Distributionspolitik</strong></li>
+      <li><strong>Kommunikationspolitik</strong></li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- ============================================================ FeuAK HAUSHALT ============================================================ -->
+<div id="v-feuak-haushalt" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">FeuAK Hamburg · Haushaltsrecht</p>
+      <h1 class="page-title">Haushalt</h1>
+      <p class="page-lead">Grundlagen des Haushaltsrechts, NSM, KLR, Haushaltsplan und Budgetierung für kommunale Feuerwehren.</p>
+    </div>
+  </div>
+  <div class="pc">
+
+    <h2 class="sec-h">Grundlagen des Haushaltsrechts</h2>
+    <div class="def-box">
+      <div class="def-box-label">Leitgedanke</div>
+      „Die öffentliche Hand operiert mit Fremdmitteln." Auch Feuerwehren brauchen eine <strong>Ermächtigung</strong>, um diese Mittel ausgeben zu dürfen und zu können.
+    </div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Funktion von Haushaltsplänen</h3>
+    <div class="cg cg-2">
+      <div class="info-card">
+        <div class="info-card-title">Für die Politik</div>
+        Entscheidungsgrundlage und Prioritätensetzung
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Für Bürger:innen</div>
+        Transparenz und Information
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Für Feuerwehren</div>
+        <ul class="bl" style="margin:0;padding-left:1rem">
+          <li>Ermächtigung von Leistung und Ausgaben</li>
+          <li>Verpflichtung zur Einnahmenerzielung</li>
+          <li>Verpflichtung zur Zielerreichung</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Politisches Instrument</div>
+        Haushaltspläne sind „Verträge" mit der politischen Ebene und ein geeignetes Druckmittel, um die politische Ebene zur Verantwortungsübernahme zu zwingen.
+      </div>
+    </div>
+
+    <h2 class="sec-h">Neues Steuerungsmodell (NSM)</h2>
+    <div class="def-box">
+      Das NSM verfolgt das Ziel der <strong>Steigerung der Leistungsfähigkeit der Verwaltung</strong> durch mehr Kostentransparenz, Wirtschaftlichkeit und Fokussierung auf Ergebnis/Qualität des Verwaltungshandelns.
+    </div>
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1rem">Ergänzende NSM-Ziele</h3>
+    <ul class="bl">
+      <li>Bürgernähe</li>
+      <li>Steigerung der Mitarbeitermotivation</li>
+      <li>Schaffung von politischen Handlungsspielräumen</li>
+    </ul>
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1rem">Zentrale NSM-Elemente</h3>
+    <ul class="bl">
+      <li>„Doppik" = Doppelte Buchführung in Konten</li>
+      <li>Produktorientierung</li>
+      <li>Budgetierung (Flexibilisierung des Haushaltsvollzugs)</li>
+      <li>Dezentrale Ressourcenverantwortung</li>
+      <li>Kosten- und Leistungsrechnung</li>
+      <li>Controlling (regelmäßiges Berichtswesen)</li>
+      <li>Prozessanalyse und -optimierung</li>
+      <li>Qualitätsmanagement</li>
+    </ul>
+
+    <h2 class="sec-h">Das 3-Säulen-Modell des NSM</h2>
+    <div class="cg cg-3">
+      <div class="info-card">
+        <div class="info-card-title">Liquiditätsrechnung</div>
+        Zusammenstellung tatsächlicher Geldflüsse (Einnahmen und Ausgaben). Reine Geldflussrechnung – vergleichbar mit der Kameralistik.
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Ergebnisrechnung</div>
+        Ressourcenverbrauch, ggf. Verrechnungen. Umfasst alle realisierten Aufwendungen und Erträge einer Rechnungsperiode.
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Bilanz (Vermögensrechnung)</div>
+        Darstellung der Vermögensverhältnisse. Gegenüberstellung von Vermögen (Aktiva) und Kapital (Passiva) zum Bilanzstichtag.
+      </div>
+    </div>
+
+    <h2 class="sec-h">Kosten- und Leistungsrechnung (KLR)</h2>
+    <div class="def-box">
+      Die KLR stellt die tatsächlichen Kosten einer Leistung unter Berücksichtigung von Sekundärkosten dar. Für die Feuerwehr relevant für die <strong>Gebührenkalkulation</strong>.
+    </div>
+    <div class="cg cg-3" style="margin-top:1rem">
+      <div class="info-card">
+        <div class="info-card-title">Kostenträgerrechnung</div>
+        Produkt-/Leistungsebene<br><em>Was kostet der Rettungsdienst?</em>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Kostenstellenrechnung</div>
+        Organisationsebene<br><em>Was kostet die Wache?</em>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Kostenartenrechnung</div>
+        Leitungsebene<br><em>Wie viel Geld kann aufgewendet werden für …?</em>
+      </div>
+    </div>
+
+    <h2 class="sec-h">Subsidiarität der Einnahmen – 4 Wege</h2>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div><strong>Allgemeine Deckungsmittel</strong> – Finanzausgleiche (Länder-/Kommunaler FA), Gemeindeanteil an der Bundessteuer, Mieten, Pachten, Bußgelder</div></div>
+      <div class="step-item"><span class="step-letter">2</span><div><strong>Leistungsgebundene Einnahmen</strong> – Gebühren und Entgelte (z.B. für Feuerwehr), zweckgebundene Zuschüsse von Bund und Land</div></div>
+      <div class="step-item"><span class="step-letter">3</span><div><strong>Gemeindesteuer</strong> – Steuer mit alleinigem Heberecht der Gemeinde (Gewerbesteuer, Grundsteuer, Hundesteuer)</div></div>
+      <div class="step-item"><span class="step-letter">4</span><div><strong>Kredite und kreditähnliche Geschäfte</strong> (nachrangig)</div></div>
+    </div>
+
+    <h2 class="sec-h">Bestandteile eines Haushaltsplans</h2>
+    <ul class="bl">
+      <li>Haushaltssatzung</li>
+      <li>Vorbericht</li>
+      <li>Ergebnishaushalt, Gesamtübersicht und Finanzhaushalt</li>
+      <li>Investitionsprogramm (geplante und laufende Investitionen)</li>
+      <li>Stellenplan (vom Parlament bereitgestellte Stellen)</li>
+      <li>Mittelfristige Finanzplanung</li>
+      <li>Übersicht über Rücklagen, Rückstellungen und Verbindlichkeiten</li>
+      <li>Übersicht über Fraktionsmittel</li>
+    </ul>
+
+    <h2 class="sec-h">Horizontale und vertikale Struktur</h2>
+    <div class="cg cg-2">
+      <div class="info-card">
+        <div class="info-card-title">Horizontale Struktur</div>
+        Produktgruppe / Produkt, Kostenstellenbereich / Kostenstelle<br><em>Wo und für welchen Zweck werden Ausgaben/Einnahmen getätigt?</em><br><br>
+        Feuerwehr: Produktgruppe „Öffentliche Sicherheit und Ordnung" mit Produkten Brandschutz, TH, Rettungsdienst
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Vertikale Struktur</div>
+        Erlösart / Kostenart<br><em>Welche Art von Ausgaben/Einnahmen entstehen?</em>
+      </div>
+    </div>
+
+    <h2 class="sec-h">Produktpyramide der Feuerwehr</h2>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div><strong>Produktbereich</strong> – Dezernat Öffentliche Sicherheit und Ordnung</div></div>
+      <div class="step-item"><span class="step-letter">2</span><div><strong>Produktgruppen</strong> – Gefahrenabwehr</div></div>
+      <div class="step-item"><span class="step-letter">3</span><div><strong>Produkte</strong> – Brandschutz, TH, Rettungsdienst</div></div>
+      <div class="step-item"><span class="step-letter">4</span><div><strong>Leistungen</strong> – z.B. vorbeugender Brandschutz, abwehrender Brandschutz, Brandschutzaufklärung / Notfallversorgung, Krankentransport</div></div>
+      <div class="step-item"><span class="step-letter">5</span><div><strong>Tätigkeiten</strong> – z.B. Bescheide erstellen</div></div>
+    </div>
+    <div class="hint">Ein Produkt MUSS steuerungsrelevant sein (finanzielles Volumen oder politische Dimension) und unter EINE Verantwortung gestellt werden.</div>
+
+    <h2 class="sec-h">Vorläufige Haushaltsführung</h2>
+    <div class="def-box">
+      Solange der Haushalt nicht veröffentlicht ist, gilt die <strong>vorläufige Haushaltsführung</strong>. In dieser Zeit darf die Feuerwehr:
+    </div>
+    <div class="cg cg-2" style="margin-top:1rem">
+      <div class="info-card">
+        <div class="info-card-title"><span class="dot dot-ok"></span> Was ist erlaubt</div>
+        <ul class="bl">
+          <li>Ausgaben, zu denen rechtliche Verpflichtungen bestehen (Verträge, Gehälter, Gefahrenabwehr)</li>
+          <li>Aufrechterhaltung des Dienstbetriebs (Kraftstoff, Büromaterial)</li>
+          <li>Ausgaben zur Vermeidung von Folgeschäden</li>
+          <li>Begonnene Investitionen fortführen</li>
+          <li>Einnahmen in beliebiger Höhe erzielen</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title"><span class="dot dot-r"></span> Was ist nicht erlaubt</div>
+        <ul class="bl">
+          <li>Sonstige Ausgaben</li>
+          <li>Neue, im Umfang erhebliche Investitionsmaßnahmen beginnen</li>
+          <li>Neue Stellen eines noch nicht rechtskräftigen Stellenplans besetzen</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec-h">Budgetierung und Mehrausgaben</h2>
+    <div class="def-box">
+      Budgetierung erlaubt:
+      <ul class="bl" style="margin-top:.75rem">
+        <li>Bei Bedarf Haushaltsmittel zu verschieben (z.B. Ersparte Mittel für Reparaturen zur Fahrzeugbeschaffung)</li>
+        <li>Übertragbarkeit von Restmitteln auf das nächste Haushaltsjahr</li>
+        <li>Verwendung von Mehreinnahmen zur Deckung von Mindereinnahmen oder Mehrausgaben</li>
+        <li>Entscheidung über Einsparung auf Fachbereichsebene</li>
+      </ul>
+    </div>
+    <div class="def-box" style="margin-top:1rem">
+      <div class="def-box-label">Mehrausgabe (Oberbegriff)</div>
+      <ul class="bl">
+        <li><strong>Überplanmäßige Ausgaben</strong> – Haushaltsansatz nicht ausreichend</li>
+        <li><strong>Außerplanmäßige Ausgaben</strong> – Ausgabe nicht im Haushalt vorgesehen</li>
+      </ul>
+      <br>Bedingungen für Genehmigung durch den Kämmerer:
+      <ul class="bl" style="margin-top:.5rem">
+        <li>Mehrausgabe war zum Zeitpunkt der Haushaltsplanung nicht vorhersehbar</li>
+        <li>Ausgabe muss in diesem Haushaltsjahr durchgeführt werden</li>
+        <li>Deckung muss gewährleistet sein</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================ FeuAK VERGABE ============================================================ -->
+<div id="v-feuak-vergabe" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">FeuAK Hamburg · Vergaberecht</p>
+      <h1 class="page-title">Vergabe</h1>
+      <p class="page-lead">Vergaberecht, öffentliche Aufträge, 8 Grundsätze, Ober- und Unterschwelle sowie Vergabeverfahren.</p>
+    </div>
+  </div>
+  <div class="pc">
+
+    <h2 class="sec-h">Vergaberecht – Grundlagen</h2>
+    <div class="def-box">
+      <div class="def-box-label">Definition</div>
+      Das Vergaberecht (auch: öffentliches Auftrags-, Beschaffungs-, Verdingungswesen und Recht der regulierenden Vergabe) umfasst alle Regeln, die ein Träger öffentlicher Gewalt bei der Beschaffung von Waren, Bau- und Dienstleistungen beachten muss.<br><br>
+      Es regelt <strong>nicht was</strong> zu beschaffen ist, sondern <strong>wie</strong> – als Vertragsanbahnungsrecht zu verstehen.
+    </div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Öffentliche Auftraggeber</h3>
+    <ul class="bl">
+      <li>Öffentliche Auftraggeber (Gebietskörperschaften, Verbände, Beliehene)</li>
+      <li>Sektorenauftraggeber</li>
+      <li>Konzessionsgeber</li>
+    </ul>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1rem">Auftragstypen</h3>
+    <div class="cg cg-3">
+      <div class="info-card"><div class="info-card-title">Lieferauftrag</div>Beschaffung von Waren</div>
+      <div class="info-card"><div class="info-card-title">Bauauftrag</div>Bauleistungen</div>
+      <div class="info-card"><div class="info-card-title">Dienstleistungsauftrag</div>Dienstleistungen</div>
+    </div>
+    <div class="hint">Bei mehreren Teilaspekten entscheidet derjenige, der den Gesamtcharakter am stärksten prägt.</div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1rem">Ausnahmen vom Vergaberecht</h3>
+    <ul class="bl">
+      <li>Allgemeine Ausnahmen: Arbeitsverträge, bestimmte Dienstleistungen, KatS, Zivilschutz, Gefahrenabwehr</li>
+      <li>Inhouse-Geschäfte</li>
+      <li>Ausnahmen wegen internationaler Verfahrensregeln</li>
+      <li>Besondere Ausnahmen</li>
+    </ul>
+
+    <h2 class="sec-h">Zweiteilung des Vergaberechts</h2>
+    <div class="cg cg-2">
+      <div class="info-card">
+        <div class="info-card-title">Oberschwellenbereich</div>
+        <strong>EU- und Bundesrecht</strong> – ab:<br>
+        <ul class="bl" style="margin-top:.5rem">
+          <li>Dienstleistungen / Lieferungen: &gt; 221.000 € (EU 2026: 216.000 €)</li>
+          <li>Bauleistungen: &gt; 5.538.000 € (EU 2026: 5.404.000 €)</li>
+          <li>Sicherheit / Verteidigung: EU 2026: 432.000 €</li>
+        </ul>
+        <div class="hint" style="margin-top:.5rem">ACHTUNG: Schwellenwerte ändern sich regelmäßig!</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Unterschwellenbereich</div>
+        <strong>Landesrecht</strong>
+      </div>
+    </div>
+
+    <h2 class="sec-h">8 Grundsätze des Vergaberechts</h2>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div><strong>Wettbewerbsgrundsatz</strong> – mindestens 3 Anbieter</div></div>
+      <div class="step-item"><span class="step-letter">2</span><div><strong>Transparenzgebot</strong></div></div>
+      <div class="step-item"><span class="step-letter">3</span><div><strong>Grundsatz der Verhältnismäßigkeit</strong></div></div>
+      <div class="step-item"><span class="step-letter">4</span><div><strong>Grundsatz der Gleichbehandlung</strong></div></div>
+      <div class="step-item"><span class="step-letter">5</span><div><strong>Berücksichtigung strategischer Ziele</strong></div></div>
+      <div class="step-item"><span class="step-letter">6</span><div><strong>Gebot der Mittelstandsfreundlichkeit</strong> – grundsätzlich Losaufteilung</div></div>
+      <div class="step-item"><span class="step-letter">7</span><div><strong>Gebot des Einsatzes elektronischer Mittel</strong></div></div>
+      <div class="step-item"><span class="step-letter">8</span><div><strong>Rechtsanspruch auf Einhaltung der Vergaberegeln</strong></div></div>
+    </div>
+
+    <h2 class="sec-h">Vorbereitung des Vergabeverfahrens</h2>
+    <p style="color:var(--c-slate);margin-bottom:1rem">Bedarfsträger definiert zunächst die Bedarfe:</p>
+    <ul class="bl">
+      <li>Standardbedarfe (z.B. Büromaterial)</li>
+      <li>Spezialbedarfe (z.B. Feuerwehrfahrzeug)</li>
+      <li>Ersatzbeschaffungen (Aussonderung, Abschreibung, geregeltes Verfahren)</li>
+      <li>Neubeschaffungen (Bedarfsbegründung, Neben- und Folgewirkungen beachten)</li>
+      <li>Dienstleistungen / freiberufliche Leistungen</li>
+    </ul>
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1rem">3 Schritte der Vorbereitung</h3>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div><strong>Markterkundung</strong> – fortlaufend / auftragsspezifisch</div></div>
+      <div class="step-item"><span class="step-letter">2</span><div><strong>Auftragswertschätzung</strong></div></div>
+      <div class="step-item"><span class="step-letter">3</span><div><strong>Vergabeunterlagen</strong> – Anschreiben, Bewerbungsbedingungen, Vertragsunterlagen</div></div>
+    </div>
+    <div class="hint">Zu klären: Haushalt/Budgetgrundlage (investiver oder konsumtiver Haushalt), Budgetplanung, Zuständigkeit.</div>
+
+    <h2 class="sec-h">Vergabeverfahren</h2>
+    <div class="cg cg-2">
+      <div class="info-card">
+        <div class="info-card-title">Unterschwellenvergabe</div>
+        <ul class="bl">
+          <li>Direktkauf (bis 1.000 €)</li>
+          <li>Verhandlungsvergabe (10.000–100.000 €) – mit oder ohne Teilnahmewettbewerb (mind. 3 Bieter)</li>
+          <li>Beschränkte Ausschreibung (&gt; 100.000 €) – mind. 3 Bieter anschreiben</li>
+          <li>Öffentliche Ausschreibung (&gt; 100.000 €)</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Oberschwellenvergabe</div>
+        <ul class="bl">
+          <li>Öffentliche Ausschreibung EU-weit (&gt; 221.000 €)</li>
+          <li>Verhandlungsverfahren</li>
+          <li>Rahmenvereinbarungen auf Grundlage des Gesamtwertes</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec-h">Nach der Lieferung</h2>
+    <ul class="bl">
+      <li>Mängelbeseitigung</li>
+      <li>Bestandsverwaltung</li>
+      <li>Bezahlungsmanagement</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- ============================================================ FeuAK RECHNUNGSWESEN ============================================================ -->
+<div id="v-feuak-rechnungswesen" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">FeuAK Hamburg · Rechnungswesen</p>
+      <h1 class="page-title">Rechnungswesen</h1>
+      <p class="page-lead">Externes und internes Rechnungswesen, GoB, Bilanzaufbau, Strömungsgrößen und Kostenrechnung.</p>
+    </div>
+  </div>
+  <div class="pc">
+
+    <h2 class="sec-h">Grundlagen</h2>
+    <div class="def-box">
+      Rechnungswesen bedeutet die <strong>Abbildung von Unternehmen und seinen Beziehungen in die Umwelt in monetären Größen</strong>. Es wird in zwei Bereiche aufgeteilt: <strong>externes</strong> und <strong>internes</strong> Rechnungswesen.
+    </div>
+
+    <h2 class="sec-h">Externes Rechnungswesen</h2>
+    <p style="color:var(--c-slate);margin-bottom:1rem">Dient der Außenwirkung (Staat, Finanzämter, Gläubiger, Geschäftspartner). Beinhaltet Buchführung und Jahresabschluss. Folgt gesetzlichen Vorschriften (HGB, EStG, AO) und dient der Ermittlung des zu versteuernden Gewinns.</p>
+
+    <h3 class="sec-h" style="font-size:1rem">4 Zentrale Aufgaben</h3>
+    <div class="cg cg-2">
+      <div class="info-card"><div class="info-card-title">Dokumentation</div>Zeitlich und sachlich geordnete Aufzeichnung aller Geschäftsvorgänge (Belege!)</div>
+      <div class="info-card"><div class="info-card-title">Information</div>Rechenschaftslegung aufgrund gesetzlicher Vorschriften</div>
+      <div class="info-card"><div class="info-card-title">Kontrolle</div>Überwachung der Wirtschaftlichkeit und Zahlungsfähigkeit</div>
+      <div class="info-card"><div class="info-card-title">Disposition</div>Zahlenmaterial als Grundlage für Planungen und Entscheidungen (Investitionen etc.)</div>
+    </div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Arten der Buchführung</h3>
+    <div class="cg cg-2">
+      <div class="info-card">
+        <div class="info-card-title">Kaufmännische Buchführung</div>
+        Einfache und <strong>doppelte Buchführung (Doppik)</strong>.<br>
+        Vorteil der Doppik: zukunftsgerechte Ausrichtung – zukünftige Ausgaben werden dargestellt (z.B. Pensionsrückstellungen).
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Kameralistik</div>
+        Hier werden nur Ein- und Auszahlungen betrachtet (kein Ressourcenverbrauch).
+      </div>
+    </div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Grundsätze der Buchführung (GoB / GoBD)</h3>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div><strong>Klar und übersichtlich</strong> – sachgerechte Organisation, keine Verrechnung von Vermögenswerten und Schulden, übersichtliche Gliederung des Jahresabschlusses</div></div>
+      <div class="step-item"><span class="step-letter">2</span><div><strong>Erfassung aller Geschäftsfälle</strong> – Buchungen müssen fortlaufend, vollständig, richtig, zeitgerecht und sachgerecht sein</div></div>
+      <div class="step-item"><span class="step-letter">3</span><div><strong>Keine Buchung ohne Beleg</strong> – Nachprüfbarkeit jederzeit anhand nummerierter und geordneter Belege (HGB)</div></div>
+      <div class="step-item"><span class="step-letter">4</span><div><strong>Aufbewahrung der Unterlagen: 10-Jahres-Frist</strong> für Buchungsbelege, Konten, Bücher, Inventare, Eröffnungsbilanzen, Jahresabschlüsse</div></div>
+    </div>
+    <div class="hint">Die GoB sind zum 01.01.2025 als GoBD („Grundsätze zur ordnungsgemäßen Führung und Aufbewahrung von Büchern, Aufzeichnungen und Unterlagen in elektronischer Form sowie zum Datenzugriff") in Kraft getreten.</div>
+
+    <h2 class="sec-h">Bilanzaufbau</h2>
+    <div class="def-box">
+      Die Bilanz ist ein Verzeichnis der Bestände an <strong>Vermögen (Aktiva)</strong> und <strong>Kapital (Passiva)</strong> zum Bilanzstichtag. Beide Seiten sind immer ausgeglichen.
+    </div>
+    <div class="def-box" style="margin-top:1rem">
+      <table style="width:100%;border-collapse:collapse;font-size:.9rem">
+        <thead>
+          <tr style="background:var(--glass)">
+            <th style="padding:.5rem .75rem;border:1px solid var(--glass-b);text-align:left">Aktiva (Mittelverwendung)</th>
+            <th style="padding:.5rem .75rem;border:1px solid var(--glass-b);text-align:left">Passiva (Mittelherkunft)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:.5rem .75rem;border:1px solid var(--glass-b);vertical-align:top">
+              <strong>Anlagevermögen</strong> (geringe Liquidität)<br>
+              1. Gebäude<br>2. Maschinen<br>3. …
+            </td>
+            <td style="padding:.5rem .75rem;border:1px solid var(--glass-b);vertical-align:top">
+              <strong>Eigenkapital</strong><br>
+              1. Kapitalrücklage<br>2. …<br><br>
+              → Gewinn-/Verlustrechnung
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:.5rem .75rem;border:1px solid var(--glass-b);vertical-align:top">
+              <strong>Umlaufvermögen</strong> (hohe Liquidität)<br>
+              1. Vorräte<br>2. Waren<br>3. Forderungen<br>4. Kassenbestand
+            </td>
+            <td style="padding:.5rem .75rem;border:1px solid var(--glass-b);vertical-align:top">
+              <strong>Fremdkapital</strong><br>
+              1. Verbindlichkeiten<br>2. Rückstellungen (z.B. Pensionsrückstellungen in der Doppik)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec-h">Internes Rechnungswesen</h2>
+    <p style="color:var(--c-slate);margin-bottom:1rem">Dient der inneren Organisation (z.B. Vorstand, Finanzplanung, Kostenbewusstsein). Instrumente: Kosten- und Leistungsrechnung, Erfolgs- und Investitionsrechnungen. Kann prospektiv (Planung) und retrospektiv (Auswertung) eingesetzt werden.</p>
+
+    <h3 class="sec-h" style="font-size:1rem">Strömungsgrößen</h3>
+    <div class="cg cg-2">
+      <div class="info-card">
+        <div class="info-card-title">Negative (abfließende) Wertströme</div>
+        Auszahlungen → Ausgaben → Aufwände → Kosten
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Positive (zufließende) Wertströme</div>
+        Einzahlungen → Einnahmen → Erträge → Leistungen / Erlöse
+      </div>
+    </div>
+    <div class="hint" style="margin-top:1rem">Einzahlungen erhöhen den Zahlungsmittelbestand, Auszahlungen verringern ihn.</div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Kostenkategorien</h3>
+    <div class="cg cg-2">
+      <div class="info-card">
+        <div class="info-card-title">Einzelkosten</div>
+        Direkt und willkürfrei zurechenbar nach dem Verursacherprinzip.<br>
+        <em>Beispiele: Material, Löhne, Entwicklungsstunden</em>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Gemeinkosten</div>
+        Indirekte und willkürliche Zurechenbarkeit.<br>
+        <em>Beispiele: Miete, Abschreibung für Maschinen, Kosten für Buchhaltung</em>
+      </div>
+    </div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Kostenverrechnungsmethoden</h3>
+    <ul class="bl">
+      <li><strong>Verursachungsgerecht</strong> – exakt nach Verursachung</li>
+      <li><strong>Durchschnittsprinzip</strong> – anteilsmäßige Verteilung</li>
+      <li><strong>Tragfähigkeitsprinzip</strong> – proportional zu Marktpreisen</li>
+    </ul>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">3-stufige Kostenrechnung</h3>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div><strong>Kostenartenrechnung</strong> – Welche Kosten sind insgesamt angefallen?</div></div>
+      <div class="step-item"><span class="step-letter">2</span><div><strong>Kostenstellenrechnung</strong> – Wo sind welche Kosten angefallen?</div></div>
+      <div class="step-item"><span class="step-letter">3</span><div><strong>Kostenträgerrechnung</strong> – Kostenträgerstückrechnung (Kalkulation) und Kostenträgerzeitrechnung (Betriebsergebnisrechnung)</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================ FeuAK PROJEKTMANAGEMENT / STRATEGISCHES MANAGEMENT ============================================================ -->
+<div id="v-feuak-pm" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">FeuAK Hamburg · Management</p>
+      <h1 class="page-title">Projektmanagement / Strategisches Management</h1>
+      <p class="page-lead">Strategisches Management, Stakeholderanalyse, Prozessanalyse, Qualitätsmanagement und Controlling.</p>
+    </div>
+  </div>
+  <div class="pc">
+
+    <h2 class="sec-h">Strategisches Management vs. Strategische Planung</h2>
+    <div class="def-box">
+      <table style="width:100%;border-collapse:collapse;font-size:.9rem">
+        <thead><tr style="background:var(--glass)">
+          <th style="padding:.5rem .75rem;border:1px solid var(--glass-b);text-align:left">Strategisches Management</th>
+          <th style="padding:.5rem .75rem;border:1px solid var(--glass-b);text-align:left">Strategische Planung</th>
+        </tr></thead>
+        <tbody><tr>
+          <td style="padding:.5rem .75rem;border:1px solid var(--glass-b);vertical-align:top">
+            Befasst sich mit der <strong>zielorientierten Gestaltung</strong> unter langfristigen, globalen, umweltbezogenen und entwicklungsorientierten Aspekten.<br><br>
+            Umfasst die Gestaltung und Koordination von:<br>
+            • Planung · Zielbildung · Kontrolle<br>
+            • Organisation · Information<br>
+            • Unternehmenskultur<br>
+            • Strategischen Leistungspotentialen<br>
+            • Strategische Kontrolle (Soll-Ist-Vergleich)
+          </td>
+          <td style="padding:.5rem .75rem;border:1px solid var(--glass-b);vertical-align:top">
+            Informationsverarbeitender Prozess zur Abstimmung von Unternehmenspotentialen auf die Umweltanforderungen, um den Erfolg langfristig zu sichern.<br><br>
+            Komponenten:<br>
+            • Umweltanalyse<br>
+            • Unternehmensanalyse<br>
+            • Strategiewahl<br>
+            • Strategieimplementierung
+          </td>
+        </tr></tbody>
+      </table>
+    </div>
+    <div class="hint">Zentrale Aufgabe der Planung: Minderung des Risikos von Fehlentscheidungen und Schaffung zukünftiger Handlungsspielräume.</div>
+
+    <h2 class="sec-h">3 Strategietypen</h2>
+    <div class="cg cg-3">
+      <div class="info-card">
+        <div class="info-card-title">Kostenführerstrategie</div>
+        Ziel: Preisgünstigster Wettbewerber sein
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Differenzierungsstrategie</div>
+        Ziel: Abhebung von Konkurrenzprodukten
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Nischenstrategie</div>
+        Ziel: Ausrichtung auf ein eng bestimmtes Käufersegment
+      </div>
+    </div>
+
+    <h2 class="sec-h">Stakeholderanalyse</h2>
+    <div class="def-box">
+      Stakeholder sind alle Anspruchsgruppen eines Betriebes, die in Beziehung zu dem Betrieb stehen und damit das Handeln des Betriebes beeinflussen und/oder von den Handlungen des Betriebs betroffen sind.
+    </div>
+    <div class="cg cg-2" style="margin-top:1rem">
+      <div class="info-card">
+        <div class="info-card-title">Interne Stakeholder</div>
+        <ul class="bl">
+          <li><strong>Eigenkapitalgeber:</strong> Mehrung des eingesetzten Kapitals, Einfluss auf strategische Entscheidungen</li>
+          <li><strong>Arbeitnehmer:</strong> Entlohnung, Arbeitsbedingungen, soziale Sicherheit</li>
+          <li><strong>Management:</strong> Gehalt, Einfluss, Prestige, schöpferische Verwirklichung</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Externe Stakeholder</div>
+        <ul class="bl">
+          <li><strong>Fremdkapitalgeber:</strong> Pünktliche Tilgung, Verzinsung, sichere Liquidierbarkeit</li>
+          <li><strong>Kunden:</strong> Preisgünstige und qualitative Güter, Service und Beratung</li>
+          <li><strong>Staat und Gesellschaft:</strong> Steuerzahlungen, Rechtsvorschriften, Umweltschonung, Arbeitsplätze</li>
+          <li><strong>Konkurrenten:</strong> Umfassende Informationen</li>
+        </ul>
+      </div>
+    </div>
+    <div class="hint"><strong>Shareholder</strong> sind die Eigenkapitalgeber (i.d.R. Aktionäre) einer Aktiengesellschaft – ein engerer Begriff als Stakeholder.</div>
+
+    <h2 class="sec-h">Prozessanalyse und Prozessmanagement</h2>
+    <div class="def-box">
+      Ziele des Prozessmanagements:
+      <ul class="bl" style="margin-top:.75rem">
+        <li>Kennen der eigenen Geschäftsprozesse</li>
+        <li>Gestalten und permanentes Optimieren der Prozesse</li>
+        <li>Festlegen klarer Schnittstellen</li>
+      </ul>
+    </div>
+    <div class="hint">Optimierung interner Prozesse hat immer Vorrang vor der Forderung nach zusätzlichen Ressourcen. Prozesse können durch Kennzahlensteuerung gemanagt und optimiert werden.</div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Steuerungsrelevante Kennzahlen (Beispiel Feuerwehr)</h3>
+    <ul class="bl">
+      <li>Notruf-Annahmequote nach mehreren Sekunden-Intervallen</li>
+      <li>Anteil Abfrage und Disposition unter x Sekunden nach Einsatzarten</li>
+      <li>Durchschnittliche Abfrage- und Dispositionszeit nach Einsatzarten</li>
+      <li>Anteil Ausrückezeit nach Einsatzarten unter x Sekunden</li>
+      <li>Durchschnittliche Ausrückezeit nach Einsatzarten</li>
+    </ul>
+
+    <h2 class="sec-h">Qualitätsmanagement</h2>
+    <div class="def-box">
+      <div class="def-box-label">Definition Qualität</div>
+      Die Güte oder der Umfang, mit dem Aufgaben (Ziele) abgearbeitet bzw. erreicht werden. Sie ist die <strong>objektiv messbare Wirkung des Handelns</strong> nach innen und außen.
+    </div>
+    <div class="cg cg-2" style="margin-top:1rem">
+      <div class="info-card"><div class="info-card-title">Effektivität</div>Tue ich die richtigen Dinge? Verfolge ich die richtigen Ziele?</div>
+      <div class="info-card"><div class="info-card-title">Effizienz</div>Sind die Dinge, die ich erledige, richtig ausgeführt?</div>
+    </div>
+    <div class="hint" style="margin-top:1rem">3 Blickwinkel auf Qualität: Sicht des Kunden/Bürgers – Sicht der Politik – Sicht der eigenen Organisation/Feuerwehr.</div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">QM-Regelkreis (4 Phasen)</h3>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div><strong>Planen – Interne Evaluation:</strong> Probleme identifizieren, Probleme analysieren</div></div>
+      <div class="step-item"><span class="step-letter">2</span><div><strong>Machen – Prozessgestaltung:</strong> Lösungen entwickeln, Lösungen realisieren</div></div>
+      <div class="step-item"><span class="step-letter">3</span><div><strong>Kontrolle – Umsetzung:</strong> Ergebnisse evaluieren – wurden die Ziele erreicht?</div></div>
+      <div class="step-item"><span class="step-letter">4</span><div><strong>Handeln – Ständige Verbesserung:</strong> Lösungen standardisieren und ständig verbessern</div></div>
+    </div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">10 Aufbauregeln des QM</h3>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div>Festlegen und Definieren von steuerungsrelevanten Produkten</div></div>
+      <div class="step-item"><span class="step-letter">2</span><div>Welche Qualitäten haben meine Produkte für wen?</div></div>
+      <div class="step-item"><span class="step-letter">3</span><div>Wie kann ich diese Qualität messen?</div></div>
+      <div class="step-item"><span class="step-letter">4</span><div>Welcher Aufwand entsteht, um messen zu können?</div></div>
+      <div class="step-item"><span class="step-letter">5</span><div>Die Zielsetzung – wo soll die Qualität warum verändert oder erhalten werden?</div></div>
+      <div class="step-item"><span class="step-letter">6</span><div>Beschreibung von Maßnahmen, die zur Erreichung des Ziels führen</div></div>
+      <div class="step-item"><span class="step-letter">7</span><div>Einbindung der Mitarbeitenden</div></div>
+      <div class="step-item"><span class="step-letter">8</span><div>Beschreibung der Ressourcen</div></div>
+      <div class="step-item"><span class="step-letter">9</span><div>Benennung der Verantwortlichen</div></div>
+      <div class="step-item"><span class="step-letter">10</span><div>Einbindung der politischen Gremien / Geschäftsführung mit Aufzeigen der Wechselwirkungen</div></div>
+    </div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">QM-Ziele</h3>
+    <ul class="bl">
+      <li>Sicherung und Verbesserung der Qualität</li>
+      <li>Einordnung der eigenen Qualität im Vergleich zu anderen Feuerwehren</li>
+      <li>Nachweise über die Umsetzung der politisch gesetzten Ziele im NSM</li>
+      <li>Durch Prozessmanagement klare Regelung der Zuständigkeiten und Abläufe</li>
+      <li>Schwachstellen aufdecken</li>
+      <li>Kommunikation und Teamfähigkeit verbessern</li>
+      <li>Entwicklung durch geregelte Dokumentation erkennen (Zeitreihenvergleich)</li>
+    </ul>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Steuern und Führen über Ziele</h3>
+    <ul class="bl">
+      <li>Wenige Ziele – nicht viele, dafür aber große</li>
+      <li>Bei Zielkonflikten oder Ressourcenengpässen muss der Vorgesetzte priorisieren (Priorisierung transparent machen)</li>
+      <li>Frage stellen: „Was will ich nicht mehr tun?"</li>
+      <li>Zielerreichung zeitlich durch Terminsetzung fixieren</li>
+    </ul>
+
+    <h2 class="sec-h">Controlling</h2>
+    <div class="def-box">
+      <div class="def-box-label">Begriffsklärung</div>
+      Controlling bedeutet <strong>nicht „Kontrolle"</strong>, sondern: <em>Planen, Koordinieren und (Nach-)Steuern.</em>
+    </div>
+    <div class="cg cg-2" style="margin-top:1rem">
+      <div class="info-card">
+        <div class="info-card-title">Externes Controlling</div>
+        Informationen für übergeordnete Hierarchieebenen (politische Gremien, Amtsleitungen).<br>
+        Hochaggregierte Informationen: Schutzzielerreichungsgrad, Budgetstand insgesamt.
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Internes Controlling</div>
+        Informationen für mittlere Führungsebene (Abteilungsleitungen, Wachleitungen).<br>
+        Feinteilige Informationen: Hilfsfristerreichungsgrad im Wachbereich, Ausrückverhalten der Dienstgruppe.
+      </div>
+    </div>
+    <div class="def-box" style="margin-top:1rem">
+      <div class="def-box-label">Für Feuerwehrführungskräfte</div>
+      <ul class="bl">
+        <li>Vorgeben, was an Informationen benötigt wird und in welcher Tiefe</li>
+        <li>Davon ausgehen, dass ALLE benötigten Informationen auch vorhanden sind</li>
+        <li>Davon ausgehen, dass nicht alle Informationen bekannt werden sollen</li>
+        <li><strong>KEINE INFORMATIONEN BESCHÖNIGEN</strong> (fahrlässig, da wir die Verantwortung dafür tragen!)</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================ FeuAK BEDARFSPLANUNG ============================================================ -->
+<div id="v-feuak-bedarfsplanung" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">FeuAK Hamburg · Bedarfsplanung</p>
+      <h1 class="page-title">Bedarfsplanung</h1>
+      <p class="page-lead">Personalfaktor, Dienstplanung, Planungsziele, AGBF-Bund-Empfehlungen und szenarienbasierte Bemessung.</p>
+    </div>
+  </div>
+  <div class="pc">
+
+    <h2 class="sec-h">Personalfaktor</h2>
+    <div class="def-box">
+      <div class="def-box-label">Definition</div>
+      Ein Personalfaktor benennt eine Anzahl von Mitarbeitenden, die zur Bewältigung einer Aufgabe, bezogen auf einen <strong>Arbeitsplatz (Funktion)</strong> benötigt werden.<br><br>
+      Es handelt sich <strong>NICHT</strong> um einen „Stellenfaktor" – es geht um notwendige Mitarbeitende, nicht um die Anzahl der bereitgestellten Stellen.
+    </div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Begriffsdefinition Funktion</h3>
+    <p style="color:var(--c-slate)">Eine Funktion ist eine Aufgabe innerhalb eines organisatorisch abgrenzbaren Bereichs, die gesichert für einen definierten Zeitraum erledigt werden muss und somit nicht von einer Person alleine bewältigt werden kann. Die Gesamtzahl der zu besetzenden Funktionen ergibt sich aus den Brandschutzbedarfs- und Bereichsplänen im Rettungsdienst.</p>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Faktoren</h3>
+    <ul class="bl">
+      <li><strong>Personal-Ist-Faktor</strong> – tatsächlicher Personalbedarf der Vergangenheit</li>
+      <li><strong>Aktueller Ist-Stellenfaktor</strong> – Verhältnis tatsächlich bewirtschafteter Stellen zu besetzenden Funktionen</li>
+      <li><strong>Politisch beschlossener Soll-Stellen-Faktor</strong> – beschlossene Zahl an Stellen (im Haushaltsplan)</li>
+    </ul>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Beispielrechnung</h3>
+    <div class="def-box">
+      Benötigte Arbeitsleistung je 24-Stunden-Funktion: 365 × 24 = <strong>8.760 Stunden</strong><br>
+      Wochenarbeitszeit: 48 h/Woche<br>
+      Theoretische Arbeitsleistung einer Person: 365 / 7 × 48 ≈ <strong>2.503 Stunden</strong><br><br>
+      Keine Deckelung der aktiven Arbeitszeiten für Einsätze, Fortbildungen und Arbeitsdienste.
+    </div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Ausfallgründe (erhöhen den Personalfaktor)</h3>
+    <ul class="bl">
+      <li>Krankheit</li>
+      <li>Urlaub</li>
+      <li>Abordnungen zur Aus- und Fortbildung</li>
+      <li>Mutterschutz und Elternzeit</li>
+      <li>Sonstige Fehlzeiten</li>
+    </ul>
+    <div class="hint">Jede Ausfallstunde erhöht den Personalfaktor. Für temporäre Ereignisse ist Mehrarbeit zulässig.</div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Bedeutung für Feuerwehrführungskräfte</h3>
+    <ul class="bl">
+      <li>Monitoring der Ist- und Sollfaktoren liefert wichtigste Personalkennzahlen</li>
+      <li>Grundvoraussetzung: geeignetes Dienstplanprogramm mit qualifiziertem Personal</li>
+      <li>Zusätzlich benötigt: Daten aus Personal- und Stellenmanagement (i.d.R. Verwaltungsbereich)</li>
+      <li>Datenerhebung mindestens 1× jährlich</li>
+      <li>Regelmäßige Information der politischen Gremien über Personalsituation</li>
+    </ul>
+
+    <h2 class="sec-h">Dienstplanung</h2>
+    <div class="def-box">
+      <div class="def-box-label">Anforderungen an eine Dienstplanung</div>
+      <ul class="bl">
+        <li>Gibt den organisatorischen Rahmen zur Sicherstellung der Aufgaben im Brandschutz, TH, Rettungsdienst und sonstigen hoheitlichen Aufgaben</li>
+        <li>Muss die Rahmenbedingungen für Arbeitszeit und Arbeits-/Gesundheitsschutz einhalten</li>
+        <li>Muss den Interessen und Belangen der Mitarbeitenden gerecht werden</li>
+        <li>Muss dauerhaft und kontinuierlich eine qualitative Besetzung aller erforderlichen Einsatzfunktionen sicherstellen</li>
+      </ul>
+    </div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Rechtliche Grundlage: EU-Arbeitszeitrichtlinie</h3>
+    <ul class="bl">
+      <li>Begrenzt die wöchentliche Arbeitszeit auf <strong>maximal 48 Stunden</strong> im Durchschnitt von 12 Monaten</li>
+      <li>Umsetzung für Beamte in den jeweiligen Arbeitszeitverordnungen des Bundes und der Länder</li>
+      <li>Von der Richtlinie kann unter bestimmten Bedingungen abgewichen werden (mit Einwilligung des Arbeitgebers <em>und</em> Zustimmung des Arbeitnehmers)</li>
+      <li>Bei Überschreitung der Wochenarbeitszeit: <strong>Opt-Out-Vereinbarung</strong> mit jedem einzelnen Arbeitnehmer erforderlich (Berücksichtigung bei Genehmigung von Nebentätigkeiten!)</li>
+    </ul>
+
+    <h2 class="sec-h">Planungsziele der Bedarfsplanung</h2>
+    <div class="def-box">
+      Auf der Grundlage von <strong>Bemessungsszenarien</strong> (zu Grunde gelegtes Einsatzszenario) müssen Planungsziele definiert werden:
+      <ul class="bl" style="margin-top:.75rem">
+        <li><strong>Planungsfristen</strong> – unterschiedliche Notrufe → Hilfeleistungszeiten</li>
+        <li><strong>Taktische Einheiten</strong> – Personen, Fahrzeuge und Geräte</li>
+        <li><strong>Erreichungsgrad</strong> – prozentualer Verschnitt von taktischen Einheiten und Planungsfristen</li>
+      </ul>
+    </div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">4 Einflussgrößen zur Festlegung der Planungsziele</h3>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div><strong>Gesetzliche/aufsichtsbehördliche Vorgaben,</strong> Hinweise, Empfehlungen</div></div>
+      <div class="step-item"><span class="step-letter">2</span><div><strong>Wissenschaftliche Erkenntnisse,</strong> technische Zusammenhänge</div></div>
+      <div class="step-item"><span class="step-letter">3</span><div><strong>Ethische Aspekte</strong></div></div>
+      <div class="step-item"><span class="step-letter">4</span><div><strong>Normative Kraft des Faktischen</strong></div></div>
+    </div>
+
+    <div class="hint">Zur Ableitung der Feuerwehrmerkmale müssen zusätzlich Gefahrenpotential, Einsatzgeschehen und Topografie / Siedlungsgeometrie beachtet werden (Organisation, Standorte, Fahrzeuge und Geräte, Personal).</div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Wirkungsorientierte Planung</h3>
+    <p style="color:var(--c-slate)">Fokus liegt auf einer <strong>schutzzielorientierten Bedarfsplanung</strong> zum Schutz des Lebens und der körperlichen Unversehrtheit. Bausteine:</p>
+    <ul class="bl">
+      <li>Selbsthilfe und -rettung</li>
+      <li>Rettung durch die Feuerwehr</li>
+      <li>Nachbarschaftliche Hilfe</li>
+    </ul>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Ethische Aspekte</h3>
+    <p style="color:var(--c-slate)">Die Entscheidung über den ethischen Fokus kann (sollte) an die Politik abgegeben werden (Variantenplanung):</p>
+    <ul class="bl">
+      <li><strong>Utilitarismus</strong> – größtes Glück für die größte Zahl</li>
+      <li><strong>Egalitarismus</strong> – gleiche Behandlung / gleiche Chancen für alle</li>
+      <li><strong>Libertarismus</strong> – Vorrang individueller Freiheitsrechte</li>
+    </ul>
+
+    <h2 class="sec-h">AGBF-Bund-Empfehlungen</h2>
+    <div class="def-box">
+      <div class="def-box-label">Planungsziele gemäß AGBF Bund</div>
+      <ul class="bl">
+        <li><strong>Erstangriff:</strong> 10 Funktionen, Eintreffzeit 8 Minuten</li>
+        <li><strong>Unterstützungseinheit:</strong> weitere 6 Funktionen nach weiteren 5 Minuten (= 13 Minuten Eintreffzeit)</li>
+        <li><strong>Erreichungsgrad:</strong> 95 % (AGBF 1998) / 90 % (AGBF 2015)</li>
+      </ul>
+    </div>
+    <div class="hint">Erst 1998 wurden diese Zahlen und Planungsziele im ersten Papier der AGBF Bund wissenschaftlich begründet. Die wissenschaftliche Begründung wurde stark kritisiert – 2015 entfiel sie.</div>
+
+    <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Kritik an den AGBF-Planungszielen</h3>
+    <ul class="bl">
+      <li>Gültigkeit der CO-Summenkurve</li>
+      <li>Unklare Datenbasis (aus den 13 Quellen lassen sich die Daten nicht reproduzieren)</li>
+      <li>Inkonsistenz und fehlende Akribie (unklare Begriffsverwendungen)</li>
+      <li>Keine einheitliche Aufteilung zur Ableitung der Stärke (wie kommt man auf 10+6 Funktionen?)</li>
+      <li>Keine einheitliche Aufteilung der Zeitabschnitte im Zeitstrahl</li>
+      <li>Ansatz willkürlicher Planungswerte im Zeitstrahl</li>
+      <li>Der kritische Wohnungsbrand als Leitszenario (im Vergleich mit anderen Lebensrisiken)</li>
+      <li>Anwendung bei Berufsfeuerwehren: 61 % wenden Qualitätskriterien nicht vollständig an; 21 % AGBF 2015; 18 % AGBF 1998</li>
+    </ul>
+    <div class="hint">Beiblatt 2023 zur AGBF 2015: Je höher und komplexer ein Gebäude, desto länger die Zeit zwischen Eintreffen und Beginn wirksamer Einsatzmaßnahmen. „8 Minuten städtisch sind genauso gut wie 13 Minuten ländlich."</div>
+
+    <h2 class="sec-h">Szenarienbasierte Bemessung</h2>
+    <div class="def-box">
+      Die Feuerwehr definiert relevante Szenarien und bildet die Personalbedarfe für eine 1. und 2. Eintreffzeit ab (z.B. feuerwehrtechnische Grundtätigkeiten im Brandeinsatz oder Kritischer Wohnungsbrand nach vfdb).
+    </div>
+    <div class="cg cg-2" style="margin-top:1rem">
+      <div class="info-card">
+        <div class="info-card-title"><span class="dot dot-ok"></span> Vorteile</div>
+        Berücksichtigung der individuellen Leistungsfähigkeit, Zuschnitt auf örtliche Gegebenheiten und besondere Fähigkeiten.
+      </div>
+      <div class="info-card">
+        <div class="info-card-title"><span class="dot dot-r"></span> Nachteile</div>
+        Wenige Grundlagen vorhanden, Szenarien müssen neu erarbeitet werden.
+      </div>
+    </div>
+
+    <h2 class="sec-h">Externe Sachverständige</h2>
+    <div class="def-box">
+      <table style="width:100%;border-collapse:collapse;font-size:.9rem">
+        <thead><tr style="background:var(--glass)">
+          <th style="padding:.5rem .75rem;border:1px solid var(--glass-b);text-align:left"><span class="dot dot-ok"></span> Gründe dafür</th>
+          <th style="padding:.5rem .75rem;border:1px solid var(--glass-b);text-align:left"><span class="dot dot-r"></span> Gründe dagegen</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)">Mangelnde Personalressourcen der eigenen Kommune</td><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)">Kosten</td></tr>
+          <tr><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)">Übernahme des Projektmanagements</td><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)">Ggf. unerwünschte Ergebnisse</td></tr>
+          <tr><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)">Sicherheit an fachlicher Ausführung</td><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)">Ziele und Ergebnisse ggf. nicht deckungsgleich mit den eigenen</td></tr>
+          <tr><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)">Aktuelles Fachwissen</td><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)">„Schwarze Schafe" in der Branche</td></tr>
+          <tr><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)">Quervergleich zu anderen Projekten und Kommunen</td><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)"></td></tr>
+          <tr><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)">Deckt ggf. „unbequeme" Sachverhalte auf</td><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)"></td></tr>
+          <tr><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)">Funktion als Sprachrohr zur Politik und Verwaltung</td><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)"></td></tr>
+          <tr><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)">Objektivität und Neutralität, frei von eigenen Interessen</td><td style="padding:.4rem .75rem;border:1px solid var(--glass-b)"></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================ FeuAK PRÜFUNGSLEISTUNG ============================================================ -->
+<div id="v-feuak-pruefung" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">FeuAK Hamburg · Prüfung</p>
+      <h1 class="page-title">Prüfungsleistung Lehrgang Hamburg</h1>
+      <p class="page-lead">Prüfungsformat 2025, Eingrenzungen der Dozierenden und alle 17 Groblernziele.</p>
+    </div>
+  </div>
+  <div class="pc">
+
+    <h2 class="sec-h">Prüfungsformat 2025</h2>
+    <div class="def-box">
+      Die Prüfungsleistung umfasste im Jahr 2025:
+      <ul class="bl" style="margin-top:.75rem">
+        <li>Zwei <strong>Gruppenarbeiten</strong> zum Thema Strategisches Management</li>
+        <li>Eine <strong>Klausur</strong> zu allen anderen Themen</li>
+      </ul>
+      <br>Gedächtnisprotokolle sind auf den bekannten Wegen abrufbar.
+    </div>
+
+    <h2 class="sec-h">Eingrenzungen der Dozierenden</h2>
+    <div class="cg cg-2">
+      <div class="info-card">
+        <div class="info-card-title">VWL</div>
+        <ul class="bl">
+          <li>Mikroökonomie – Markt und Gleichgewicht, Haushaltsnahe Tätigkeiten</li>
+          <li>BIP – Preis-Mengen-Diagramm, Was sagt das BIP aus?</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Rechnungswesen</div>
+        <ul class="bl">
+          <li>Aufbau Bilanz / Was ist eine Bilanz?</li>
+          <li>Wo Pensionsrückstellung? (Passiva)</li>
+          <li>Vorteil Doppik vs. Kameralistik</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Haushaltswesen</div>
+        <ul class="bl">
+          <li>Besonderheiten des kommunalen Haushaltswesens</li>
+          <li>Was tun, wenn Haushalte nicht rechtskräftig sind?</li>
+          <li>Checkliste zum Aufbau eines QM</li>
+          <li>Kennzahlen zur Steuerung von Feuerwehren</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">BWL</div>
+        <ul class="bl">
+          <li>Minimal- und Maximalprinzip</li>
+          <li>Rationalität</li>
+          <li>Legitimation durch Verfahren</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Bedarfsplanung</div>
+        <ul class="bl">
+          <li>Elemente des Planungszieles in der Bedarfsplanung</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec-h">17 Groblernziele</h2>
+    <div class="step-stack">
+      <div class="step-item"><span class="step-letter">1</span><div>Besonderheiten des Haushaltswesens – was müssen Führungskräfte der Feuerwehr wissen?</div></div>
+      <div class="step-item"><span class="step-letter">2</span><div>Die Spielregeln bei vorläufiger Haushaltsführung (Grenzen: Was darf die Feuerwehr? Was darf die Verwaltung?)</div></div>
+      <div class="step-item"><span class="step-letter">3</span><div>Balance-Score-Card in Bezug auf Qualität (Übungen dazu ansehen) – Blickrichtung und -winkel Qualität (Beteiligte)</div></div>
+      <div class="step-item"><span class="step-letter">4</span><div>Meilensteine des Qualitätsmanagements</div></div>
+      <div class="step-item"><span class="step-letter">5</span><div>Beispiele für Kennzahlen bei der Feuerwehr (Kennzahlen nennen und beschreiben können)</div></div>
+      <div class="step-item"><span class="step-letter">6</span><div>Grundsätze der Vergabe</div></div>
+      <div class="step-item"><span class="step-letter">7</span><div>Wertgrenzen und Fristen bei der Vergabe (Gebäude, Fahrzeuge, Mindestfristen bei EU-Verfahren)</div></div>
+      <div class="step-item"><span class="step-letter">8</span><div>Bausteine der Bedarfsplanung – Elemente des Planungszieles erklären</div></div>
+      <div class="step-item"><span class="step-letter">9</span><div>Marktstruktur Europa – Charakterisierung (Anbieter aus Nicht-Europa), Preis-/Mengendiagramm (Verschiebung bei verschiedenen Auswirkungen), ökonomische Auswirkungen</div></div>
+      <div class="step-item"><span class="step-letter">10</span><div>BIP – Was ist das?</div></div>
+      <div class="step-item"><span class="step-letter">11</span><div>Bilanz, Kameralistik, Doppik – Vor- und Nachteile der jeweiligen Systeme, Aufbau der Bilanz</div></div>
+      <div class="step-item"><span class="step-letter">12</span><div>Rückstellungen – Rückstellung Pension in der Doppik</div></div>
+      <div class="step-item"><span class="step-letter">13</span><div>Minimal-/Maximalprinzip – eigene Beispiele wählen</div></div>
+      <div class="step-item"><span class="step-letter">14</span><div>Einzelkosten, Gemeinkosten, Controlling – Erläuterung und Abgrenzung; Ist Controlling wirklich Kontrolle?</div></div>
+      <div class="step-item"><span class="step-letter">15</span><div>Volkswirtschaft / Marktwirtschaft</div></div>
+      <div class="step-item"><span class="step-letter">16</span><div>Meilensteine Beschaffung</div></div>
+      <div class="step-item"><span class="step-letter">17</span><div>Haushaltsarten</div></div>
+    </div>
+
+  </div>
+</div>
 <div id="v-idf" class="view detail-view"><div class="pc" style="padding-top:3rem;"><div class="ph-view"><div class="ph-icon">⚔️</div><h2>IdF Münster</h2><p>Inhalte in Vorbereitung.</p></div></div></div>
 
 <!-- ============================================================ SIMULATOR (4 SZENARIEN) ============================================================ -->
