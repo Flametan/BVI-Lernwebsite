@@ -2430,103 +2430,71 @@
   <div class="pc">
 
     <div class="def-box"><div class="def-box-label">Definition</div><p>Die Transaktionsanalyse (TA) ist ein psychologisches Modell zur Analyse von Kommunikation und Persönlichkeit. Sie geht davon aus, dass jeder Mensch drei <strong>Ich-Zustände</strong> besitzt, aus denen heraus er kommuniziert und dass die Qualität von Beziehungen davon abhängt, welche Zustände beim Austausch aktiviert werden.</p></div>
-    
- <!-- SVG: Ich-Zustände Strukturmodell -->
-    <h2 class="sec-heading">Die drei Ich-Zustände</h2>
-    <div class="diagram-wrap">
-      <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg" aria-label="Ich-Zustände Strukturmodell">
-        <!-- Person A -->
-        <text x="100" y="22" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#8FA0B0" font-weight="500">Person A</text>
-        <circle cx="100" cy="70"  r="44" fill="rgba(165,0,0,0.15)"    stroke="#A50000" stroke-width="1.5"/>
-        <text x="100" y="66"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#E8C97A" font-weight="600">Eltern-Ich</text>
-        <text x="100" y="80"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#8FA0B0">(EL)</text>
-        <circle cx="100" cy="160" r="44" fill="rgba(201,168,76,0.12)"  stroke="#C9A84C" stroke-width="1.5"/>
-        <text x="100" y="156" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="600">Erwachsenen-</text>
-        <text x="100" y="169" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="600">Ich (ER)</text>
-        <circle cx="100" cy="248" r="44" fill="rgba(74,144,217,0.12)"  stroke="#4A90D9" stroke-width="1.5"/>
-        <text x="100" y="244" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#6BAAD4" font-weight="600">Kind-Ich</text>
-        <text x="100" y="257" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#8FA0B0">(K)</text>
-
-        <!-- Person B -->
-        <text x="460" y="22" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#8FA0B0" font-weight="500">Person B</text>
-        <circle cx="460" cy="70"  r="44" fill="rgba(165,0,0,0.15)"    stroke="#A50000" stroke-width="1.5"/>
-        <text x="460" y="66"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#E8C97A" font-weight="600">Eltern-Ich</text>
-        <text x="460" y="80"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#8FA0B0">(EL)</text>
-        <circle cx="460" cy="160" r="44" fill="rgba(201,168,76,0.12)"  stroke="#C9A84C" stroke-width="1.5"/>
-        <text x="460" y="156" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="600">Erwachsenen-</text>
-        <text x="460" y="169" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="600">Ich (ER)</text>
-        <circle cx="460" cy="248" r="44" fill="rgba(74,144,217,0.12)"  stroke="#4A90D9" stroke-width="1.5"/>
-        <text x="460" y="244" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#6BAAD4" font-weight="600">Kind-Ich</text>
-        <text x="460" y="257" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#8FA0B0">(K)</text>
-
-        <!-- Komplementäre Transaktion ErI→ErI (gold) -->
-        <defs>
-          <marker id="arr-gold" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-            <polygon points="0 0, 8 3, 0 6" fill="#C9A84C"/>
-          </marker>
-          <marker id="arr-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-            <polygon points="0 0, 8 3, 0 6" fill="#A50000"/>
-          </marker>
-        </defs>
-        <line x1="144" y1="155" x2="416" y2="155" stroke="#C9A84C" stroke-width="1.8" marker-end="url(#arr-gold)" stroke-dasharray="0"/>
-        <line x1="416" y1="165" x2="144" y2="165" stroke="#C9A84C" stroke-width="1.8" marker-end="url(#arr-gold)"/>
-        <text x="280" y="148" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C">Komplementäre Transaktion (ER ↔ ER)</text>
-
-        <!-- Trennlinien zwischen Kreisen (gestrichelt, sehr dezent) -->
-        <line x1="56" y1="114" x2="144" y2="114" stroke="#1E3A68" stroke-width="1" stroke-dasharray="3,3"/>
-        <line x1="56" y1="204" x2="144" y2="204" stroke="#1E3A68" stroke-width="1" stroke-dasharray="3,3"/>
-        <line x1="416" y1="114" x2="504" y2="114" stroke="#1E3A68" stroke-width="1" stroke-dasharray="3,3"/>
-        <line x1="416" y1="204" x2="504" y2="204" stroke="#1E3A68" stroke-width="1" stroke-dasharray="3,3"/>
-
-        <!-- Legende rechts -->
-        <text x="215" y="240" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#607080">Gekreuzte Transakt.</text>
-        <line x1="160" y1="248" x2="400" y2="70" stroke="#A50000" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)" opacity="0.6"/>
-      </svg>
-      <p class="diagram-caption">Strukturmodell der Transaktionsanalyse nach Eric Berne</p>
-    </div>
-
-    <div class="card-grid">
-      <div class="info-card">
-        <div class="info-card-title"><span class="dot dot-red"></span>Eltern-Ich (EL)</div>
-        <p><strong>Kritisches Eltern-Ich (kEL):</strong> Bewertet, kritisiert, setzt Grenzen. Typisch: "Das macht man nicht so."<br><strong>Fürsorgliches Eltern-Ich (fEL):</strong> Fürsorglich, schützend. Typisch: "Ich helfe dir dabei."</p>
-      </div>
-      <div class="info-card">
-        <div class="info-card-title"><span class="dot"></span>Erwachsenen-Ich (ER)</div>
-        <p>Sachlich, rational, gegenwartsbezogen. Verarbeitet Fakten ohne Verzerrung. <strong>Ziel konstruktiver Führungskommunikation.</strong> Führungskraft spricht aus ER – und adressiert das ER des Gegenübers.</p>
-      </div>
-      <div class="info-card">
-        <div class="info-card-title"><span class="dot dot-blue"></span>Kind-Ich (K)</div>
-        <p><strong>natürliches Kind-Ich (nK):</strong> Spontan, kreativ, neugierig.<br><strong>Angepasstes Kind-Ich (aK):</strong> Fügsam oder rebellisch. Frühe Kindheitsprägungen bestimmen das Verhalten.</p>
-      </div>
-    </div>
-
-    <hr class="sec-divider"/>
-
-    <!-- Transaktionstypen -->
-    <h2 class="sec-heading">Transaktionstypen</h2>
-    <div class="card-grid">
-      <div class="info-card">
-        <div class="info-card-title"><span class="dot dot-ok"></span>Komplementär</div>
-        <p>Antwort entspricht der Erwartung des Senders. Kommunikation verläuft reibungslos und kann unbegrenzt fortgesetzt werden. Optimal: ER ↔ ER.</p>
-      </div>
-      <div class="info-card">
-        <div class="info-card-title"><span class="dot dot-red"></span>Gekreuzt</div>
-        <p>Antwort kommt aus einem unerwarteten Zustand. Führt zu Kommunikationsabbruch. Bewusst eingesetzt, kann sie Eskalations-Schleifen (kEL → aK) durchbrechen.</p>
-      </div>
-      <div class="info-card">
-        <div class="info-card-title"><span class="dot dot-blue"></span>Verdeckt</div>
-        <p>Gleichzeitig auf sozialer (offizieller) und psychologischer (versteckter) Ebene. Basis für Manipulationen und "Psycho-Spiele".</p>
-      </div>
-    </div>
-
-    <hr class="sec-divider"/>
-    
-	<hr class="sec-div"/>
 
     <div class="acc-list">
 
       <details class="acc-item">
-        <summary><span class="acc-num">01</span><span class="acc-title">4 Lebens-Grundpositionen</span><span class="acc-arrow">›</span></summary>
+        <summary><span class="acc-num">01</span><span class="acc-title">Die drei Ich-Zustände</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <div class="diagram-wrap">
+          <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg" aria-label="Ich-Zustände Strukturmodell">
+            <text x="100" y="22" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#8FA0B0" font-weight="500">Person A</text>
+            <circle cx="100" cy="70"  r="44" fill="rgba(165,0,0,0.15)"   stroke="#A50000" stroke-width="1.5"/>
+            <text x="100" y="66"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#E8C97A" font-weight="600">Eltern-Ich</text>
+            <text x="100" y="80"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#8FA0B0">(EL)</text>
+            <circle cx="100" cy="160" r="44" fill="rgba(201,168,76,0.12)" stroke="#C9A84C" stroke-width="1.5"/>
+            <text x="100" y="156" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="600">Erwachsenen-</text>
+            <text x="100" y="169" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="600">Ich (ER)</text>
+            <circle cx="100" cy="248" r="44" fill="rgba(74,144,217,0.12)" stroke="#4A90D9" stroke-width="1.5"/>
+            <text x="100" y="244" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#6BAAD4" font-weight="600">Kind-Ich</text>
+            <text x="100" y="257" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#8FA0B0">(K)</text>
+            <text x="460" y="22" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#8FA0B0" font-weight="500">Person B</text>
+            <circle cx="460" cy="70"  r="44" fill="rgba(165,0,0,0.15)"   stroke="#A50000" stroke-width="1.5"/>
+            <text x="460" y="66"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#E8C97A" font-weight="600">Eltern-Ich</text>
+            <text x="460" y="80"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#8FA0B0">(EL)</text>
+            <circle cx="460" cy="160" r="44" fill="rgba(201,168,76,0.12)" stroke="#C9A84C" stroke-width="1.5"/>
+            <text x="460" y="156" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="600">Erwachsenen-</text>
+            <text x="460" y="169" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="600">Ich (ER)</text>
+            <circle cx="460" cy="248" r="44" fill="rgba(74,144,217,0.12)" stroke="#4A90D9" stroke-width="1.5"/>
+            <text x="460" y="244" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#6BAAD4" font-weight="600">Kind-Ich</text>
+            <text x="460" y="257" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#8FA0B0">(K)</text>
+            <defs>
+              <marker id="arr-gold" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#C9A84C"/></marker>
+              <marker id="arr-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#A50000"/></marker>
+            </defs>
+            <line x1="144" y1="155" x2="416" y2="155" stroke="#C9A84C" stroke-width="1.8" marker-end="url(#arr-gold)"/>
+            <line x1="416" y1="165" x2="144" y2="165" stroke="#C9A84C" stroke-width="1.8" marker-end="url(#arr-gold)"/>
+            <text x="280" y="148" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C">Komplementäre Transaktion (ER ↔ ER)</text>
+            <line x1="56"  y1="114" x2="144" y2="114" stroke="#1E3A68" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="56"  y1="204" x2="144" y2="204" stroke="#1E3A68" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="416" y1="114" x2="504" y2="114" stroke="#1E3A68" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="416" y1="204" x2="504" y2="204" stroke="#1E3A68" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="215" y="240" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#607080">Gekreuzte Transakt.</text>
+            <line x1="160" y1="248" x2="400" y2="70" stroke="#A50000" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-red)" opacity="0.6"/>
+          </svg>
+          <p class="diagram-caption">Strukturmodell der Transaktionsanalyse nach Eric Berne</p>
+          </div>
+          <div class="cg cg-3">
+          <div class="info-card"><div class="info-card-title"><span class="dot dot-red"></span>Eltern-Ich (EL)</div><p><strong>Kritisches Eltern-Ich (kEL):</strong> Bewertet, kritisiert, setzt Grenzen. Typisch: „Das macht man nicht so."<br><strong>Fürsorgliches Eltern-Ich (fEL):</strong> Fürsorglich, schützend. Typisch: „Ich helfe dir dabei."</p></div>
+          <div class="info-card"><div class="info-card-title"><span class="dot"></span>Erwachsenen-Ich (ER)</div><p>Sachlich, rational, gegenwartsbezogen. Verarbeitet Fakten ohne Verzerrung. <strong>Ziel konstruktiver Führungskommunikation.</strong> Führungskraft spricht aus ER – und adressiert das ER des Gegenübers.</p></div>
+          <div class="info-card"><div class="info-card-title"><span class="dot dot-blue"></span>Kind-Ich (K)</div><p><strong>natürliches Kind-Ich (nK):</strong> Spontan, kreativ, neugierig.<br><strong>Angepasstes Kind-Ich (aK):</strong> Fügsam oder rebellisch. Frühe Kindheitsprägungen bestimmen das Verhalten.</p></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">02</span><span class="acc-title">Transaktionstypen</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <div class="cg cg-3">
+          <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Komplementär</div><p>Antwort entspricht der Erwartung des Senders. Kommunikation verläuft reibungslos und kann unbegrenzt fortgesetzt werden. Optimal: ER ↔ ER.</p></div>
+          <div class="info-card"><div class="info-card-title"><span class="dot dot-red"></span>Gekreuzt</div><p>Antwort kommt aus einem unerwarteten Zustand. Führt zu Kommunikationsabbruch. Bewusst eingesetzt, kann sie Eskalations-Schleifen (kEL → aK) durchbrechen.</p></div>
+          <div class="info-card"><div class="info-card-title"><span class="dot dot-blue"></span>Verdeckt</div><p>Gleichzeitig auf sozialer (offizieller) und psychologischer (versteckter) Ebene. Basis für Manipulationen und „Psycho-Spiele".</p></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">03</span><span class="acc-title">4 Lebens-Grundpositionen</span><span class="acc-arrow">›</span></summary>
         <div class="acc-body">
           <div class="cg cg-2">
           <div class="info-card" style="border-color:rgba(42,122,82,.3)"><div class="info-card-title"><span class="dot dot-ok"></span>Ich bin OK – Du bist OK</div><p>Kooperative Grundhaltung, partnerschaftliche Führung. <strong>Entwicklungsziel der TA.</strong></p></div>
@@ -2539,7 +2507,7 @@
       </details>
 
       <details class="acc-item">
-        <summary><span class="acc-num">02</span><span class="acc-title">Die 5 Antreiber nach Taibi Kahler</span><span class="acc-arrow">›</span></summary>
+        <summary><span class="acc-num">04</span><span class="acc-title">Die 5 Antreiber nach Taibi Kahler</span><span class="acc-arrow">›</span></summary>
         <div class="acc-body">
           <div class="ant-row">
           <div class="ant-card"><div class="ant-n">01</div><div class="ant-name">Sei gefällig!</div><div class="ant-desc">Eigene Bedürfnisse untergeordnet. „Nein" fast unmöglich.</div></div>
@@ -2826,31 +2794,21 @@
   <div class="page-hero"><div class="phi"><p class="page-eyebrow">IBK · Thema 03</p><h1 class="page-title">Stress<span class="accent">theorie</span></h1><p class="page-lead">Biopsychosoziales Modell, S-O-R-K-C, Flow-Kanal und das JD-R-Modell – aktuelle Stressforschung für Führungskräfte.</p></div></div>
   <div class="pc">
 
-
-	<!-- Distress und Eustress -->
-    <h2 class="sec-heading">Distress &amp; Eustress</h2>
-    <div class="def-box">
-      <div class="def-box-label">Kernaussage</div>
-      <p>Nicht jeder Stress ist schädlich. Hans Selye unterschied <strong>Distress</strong> (negativer, krankmachender Stress) und <strong>Eustress</strong> (positiver, motivierender Stress). Die entscheidende Variable ist die <strong>individuelle Bewertung</strong> durch den Organismus.</p>
-    </div>
-    <div class="card-grid card-grid-2">
-      <div class="info-card" style="border-color: rgba(139,26,26,0.3);">
-        <div class="info-card-title"><span class="dot dot-red"></span>Distress (negativ)</div>
-        <p>Erwartungshaltung übersteigt Ressourcen des Selbstbildes. <strong>Intern:</strong> Negative Gefühle, Überforderungserleben. <strong>Extern:</strong> Drohungen, chronischer Zeitdruck. → Leistungsabfall, Burnout, Erkrankungen.</p>
-      </div>
-      <div class="info-card" style="border-color: rgba(42,122,82,0.3);">
-        <div class="info-card-title"><span class="dot dot-ok"></span>Eustress (positiv)</div>
-        <p>Herausforderung entspricht/unterschreitet Ressourcen. <strong>Intern:</strong> Positive Gefühle, Selbstwirksamkeit. <strong>Extern:</strong> Lob, Erfolgserlebnisse. → Motivierend, leistungssteigernd, erfüllend.</p>
-      </div>
-    </div>
-
-    <hr class="sec-divider"/>
-	 <!-- Stressmodel -->
-
     <div class="acc-list">
 
       <details class="acc-item">
-        <summary><span class="acc-num">01</span><span class="acc-title">Biopsychosoziales Stressmodell (Engel / Lazarus)</span><span class="acc-arrow">›</span></summary>
+        <summary><span class="acc-num">01</span><span class="acc-title">Distress &amp; Eustress (Selye)</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <div class="def-box"><div class="def-box-label">Kernaussage</div><p>Nicht jeder Stress ist schädlich. Hans Selye unterschied <strong>Distress</strong> (negativer, krankmachender Stress) und <strong>Eustress</strong> (positiver, motivierender Stress). Die entscheidende Variable ist die <strong>individuelle Bewertung</strong> durch den Organismus.</p></div>
+          <div class="cg cg-2">
+          <div class="info-card" style="border-color: rgba(139,26,26,0.3);"><div class="info-card-title"><span class="dot dot-red"></span>Distress (negativ)</div><p>Erwartungshaltung übersteigt Ressourcen des Selbstbildes. <strong>Intern:</strong> Negative Gefühle, Überforderungserleben. <strong>Extern:</strong> Drohungen, chronischer Zeitdruck. → Leistungsabfall, Burnout, Erkrankungen.</p></div>
+          <div class="info-card" style="border-color: rgba(42,122,82,0.3);"><div class="info-card-title"><span class="dot dot-ok"></span>Eustress (positiv)</div><p>Herausforderung entspricht/unterschreitet Ressourcen. <strong>Intern:</strong> Positive Gefühle, Selbstwirksamkeit. <strong>Extern:</strong> Lob, Erfolgserlebnisse. → Motivierend, leistungssteigernd, erfüllend.</p></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">02</span><span class="acc-title">Biopsychosoziales Stressmodell (Engel / Lazarus)</span><span class="acc-arrow">›</span></summary>
         <div class="acc-body">
           <div class="def-box"><div class="def-box-label">Modernste Grundlage</div><p>Stress entsteht nicht im Reiz, sondern in der <strong>kognitiven Bewertung</strong> (Lazarus): primäre Bewertung (Ist die Situation bedrohlich?) und sekundäre Bewertung (Habe ich Ressourcen zur Bewältigung?). Dieser Prozess findet auf biologischer, psychologischer UND sozialer Ebene gleichzeitig statt.</p></div>
           <div class="diagram-wrap">
@@ -2881,7 +2839,7 @@
       </details>
 
       <details class="acc-item">
-        <summary><span class="acc-num">02</span><span class="acc-title">Flow-Kanal nach Csikszentmihalyi (korrekt)</span><span class="acc-arrow">›</span></summary>
+        <summary><span class="acc-num">03</span><span class="acc-title">Flow-Kanal nach Csikszentmihalyi (korrekt)</span><span class="acc-arrow">›</span></summary>
         <div class="acc-body">
           <div class="def-box"><div class="def-box-label">Präzise Darstellung</div><p>Flow entsteht, wenn <strong>Herausforderungsgrad (Challenge)</strong> und <strong>Fähigkeitsniveau (Skill)</strong> hoch und ausbalanciert sind. Bei geringem Skill UND geringer Challenge entsteht Apathie – nicht Flow. Der Kanal verläuft diagonal von unten-links nach oben-rechts.</p></div>
           <div class="diagram-wrap" style="max-width:480px;margin:1.5rem auto;">
@@ -2925,7 +2883,7 @@
       </details>
 
       <details class="acc-item">
-        <summary><span class="acc-num">03</span><span class="acc-title">S-O-R-K-C-Modell</span><span class="acc-arrow">›</span></summary>
+        <summary><span class="acc-num">04</span><span class="acc-title">S-O-R-K-C-Modell</span><span class="acc-arrow">›</span></summary>
         <div class="acc-body">
           <div class="diagram-wrap">
           <svg viewBox="0 0 620 100" xmlns="http://www.w3.org/2000/svg">
@@ -2958,7 +2916,7 @@
       </details>
 
       <details class="acc-item">
-        <summary><span class="acc-num">04</span><span class="acc-title">JD-R-Modell (Bakker &amp; Demerouti)</span><span class="acc-arrow">›</span></summary>
+        <summary><span class="acc-num">05</span><span class="acc-title">JD-R-Modell (Bakker &amp; Demerouti)</span><span class="acc-arrow">›</span></summary>
         <div class="acc-body">
           <div class="cg cg-2">
           <div class="info-card" style="border-color:rgba(139,26,26,.3)"><div class="info-card-title"><span class="dot dot-r"></span>Job Demands (Anforderungen)</div><p>Zeitdruck, Rollenambiguität, emotionale Belastung, Konflikte, ständige Erreichbarkeit, mangelnde Kontrolle. Dauerhaft → Burnout-Spirale.</p></div>
