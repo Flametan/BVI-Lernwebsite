@@ -133,6 +133,26 @@
   .tc-name{font-family:var(--f-d);font-size:1.15rem;font-weight:600;color:var(--c-text-b);margin-bottom:.3rem;line-height:1.2;}
   .tc-sub,.tc-desc{font-size:.73rem;color:var(--c-slate);line-height:1.55;}
 
+  /* ACCORDION */
+  .acc-item{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);margin-bottom:.5rem;overflow:hidden;transition:border-color var(--t),background var(--t);}
+  .acc-item[open]{border-color:var(--c-gold-rim);background:rgba(201,168,76,.03);}
+  .acc-item summary{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;cursor:pointer;list-style:none;user-select:none;}
+  .acc-item summary::-webkit-details-marker{display:none;}
+  .acc-item summary::marker{display:none;}
+  .acc-num{font-family:var(--f-m);font-size:.58rem;font-weight:600;color:var(--c-gold);background:var(--c-gold-dim);border:1px solid var(--c-gold-rim);border-radius:3px;padding:.15rem .45rem;flex-shrink:0;min-width:1.8rem;text-align:center;}
+  .acc-title{font-family:var(--f-d);font-size:.92rem;font-weight:600;color:var(--c-text-b);flex:1;line-height:1.35;}
+  .acc-arrow{color:var(--c-gold);font-size:.85rem;transition:transform var(--t);flex-shrink:0;}
+  .acc-item[open] .acc-arrow{transform:rotate(90deg);}
+  .acc-body{padding:.5rem 1.25rem 1.1rem;border-top:1px solid var(--glass-b);font-size:.84rem;color:var(--c-slate-l);line-height:1.75;}
+  .acc-body strong{color:var(--c-text);font-weight:500;}
+  .acc-body ul{list-style:none;margin:.4rem 0;display:flex;flex-direction:column;gap:.25rem;}
+  .acc-body ul li{display:flex;gap:.6rem;align-items:flex-start;}
+  .acc-body ul li::before{content:'▸';color:var(--c-gold);font-size:.6rem;margin-top:.38em;flex-shrink:0;}
+  .acc-body table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.75rem 0;}
+  .acc-body table th{font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--c-gold);background:var(--c-gold-dim);padding:.4rem .65rem;text-align:left;border-bottom:1px solid var(--c-gold-rim);}
+  .acc-body table td{padding:.4rem .65rem;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;}
+  .acc-sub{font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--c-gold);margin:1rem 0 .35rem;}
+
   /* DIAGRAM */
   .diagram-wrap{background:rgba(10,25,47,.5);border:1px solid var(--glass-b);border-radius:var(--r-lg);padding:1.5rem;margin:1.5rem 0;overflow:hidden;}
   .diagram-wrap svg{width:100%;height:auto;}
