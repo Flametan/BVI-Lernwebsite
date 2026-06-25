@@ -108,7 +108,13 @@
           <div class="tile-desc">VWL, BWL, Haushalt, Vergabe, Rechnungswesen, Projektmanagement, Bedarfsplanung</div>
           <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
-        <div class="glass-tile tp"><svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><div class="tile-name">IdF Münster</div><div class="tile-desc">Institut der Feuerwehr NRW</div><span class="tile-soon">In Vorbereitung</span></div>
+        <div class="glass-tile" onclick="NAV.go('v-idf','IdF Münster')" style="position:relative">
+          <span id="prog-idf" class="tile-prog">0/3</span>
+          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 8h10"/><path d="M7 12h6"/></svg>
+          <div class="tile-name">IdF Münster</div>
+          <div class="tile-desc">Vorbeugender Brandschutz, Stabsarbeit, Presse- &amp; Öffentlichkeitsarbeit</div>
+          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
         <div class="glass-tile ts" onclick="NAV.go('v-simulator','Führungsdienstsimulator')">
           <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="22" y1="12" x2="19" y2="12"/><line x1="5" y1="12" x2="2" y2="12"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
           <div class="tile-name">Führungsdienstsimulator</div>
@@ -5032,7 +5038,712 @@
 
   </div>
 </div>
-<div id="v-idf" class="view detail-view"><div class="pc" style="padding-top:3rem;"><div class="ph-view"><div class="ph-icon">⚔️</div><h2>IdF Münster</h2><p>Inhalte in Vorbereitung.</p></div></div></div>
+<!-- ============================================================ IdF MÜNSTER OVERVIEW ============================================================ -->
+<div id="v-idf" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">Institut der Feuerwehr NRW · Münster</p>
+      <h1 class="page-title">IdF <span class="accent">Münster</span></h1>
+      <p class="page-lead">Vorbeugender Brandschutz, Stabsarbeit und Presse- &amp; Öffentlichkeitsarbeit – die Kernthemen des Lehrgangsabschnitts am Institut der Feuerwehr NRW.</p>
+    </div>
+  </div>
+  <div class="pc">
+    <div class="cg cg-2">
+      <div class="topic-card" onclick="NAV.go('v-idf-brandschutz','Vorbeugender Brandschutz')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/><path d="M12 12v0"/></svg>
+        <div class="tc-name">Vorbeugender Brandschutz</div>
+        <div class="tc-desc">MBO, Gebäudeklassen, Schutzziele, Rettungswege, Sonderbauten (Hochhaus, Verkaufsstätte, Beherbergung, Industrie, Garage)</div>
+      </div>
+      <div class="topic-card" onclick="NAV.go('v-idf-stab','Stabsarbeit')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <div class="tc-name">Stabsarbeit</div>
+        <div class="tc-desc">Führungsstufe D, Zwei-Stäbe-Modell, S1–S6 Sachgebiete, 7-Punkte-Plan, Krisenstab, Einsatztagebuch</div>
+      </div>
+      <div class="topic-card" onclick="NAV.go('v-idf-presse','Presse- &amp; Öffentlichkeitsarbeit')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+        <div class="tc-name">Presse- &amp; Öffentlichkeitsarbeit</div>
+        <div class="tc-desc">Rechtliche Grundlagen, Grundsätze, S5, BuMA, Meldewesen</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ IdF · VORBEUGENDER BRANDSCHUTZ ============================================================ -->
+<div id="v-idf-brandschutz" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">IdF Münster</p>
+      <h1 class="page-title">Vorbeugender <span class="accent">Brandschutz</span></h1>
+      <p class="page-lead">Musterbauordnung (MBO), Gebäudeklassen, Schutzziele und bauordnungsrechtliche Anforderungen für Standard- und Sonderbauten.</p>
+    </div>
+  </div>
+  <div class="pc">
+
+    <!-- Bild: Vier Säulen des Brandschutzes -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-bottom:1.5rem;">
+      <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.75rem;text-align:center;">
+        <div style="color:var(--c-gold);font-size:1.4rem;margin-bottom:.35rem;">🏗️</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--c-text-b);">Baulicher<br>Brandschutz</div>
+      </div>
+      <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.75rem;text-align:center;">
+        <div style="color:var(--c-gold);font-size:1.4rem;margin-bottom:.35rem;">🔧</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--c-text-b);">Anlagentech.<br>Brandschutz</div>
+      </div>
+      <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.75rem;text-align:center;">
+        <div style="color:var(--c-gold);font-size:1.4rem;margin-bottom:.35rem;">📋</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--c-text-b);">Organisat.<br>Brandschutz</div>
+      </div>
+      <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.75rem;text-align:center;">
+        <div style="color:var(--c-gold);font-size:1.4rem;margin-bottom:.35rem;">🚒</div>
+        <div style="font-size:.72rem;font-weight:600;color:var(--c-text-b);">Abwehrender<br>Brandschutz</div>
+      </div>
+    </div>
+
+    <div class="acc-list">
+
+      <details class="acc-item">
+        <summary><span class="acc-num">01</span><span class="acc-title">Schutzziele des Brandschutzes (§14 MBO)</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p>§ 14 MBO definiert die vier bauordnungsrechtlichen Schutzziele, die beim Bau und Betrieb aller Anlagen einzuhalten sind:</p>
+          <ul>
+            <li><strong>Entstehung eines Brandes vorbeugen</strong> – konstruktive Maßnahmen zur Brandverhütung</li>
+            <li><strong>Ausbreitung von Feuer und Rauch vorbeugen</strong> – Brandabschnitte, Brandwände, Rauchabschnitte</li>
+            <li><strong>Rettung von Menschen und Tieren ermöglichen</strong> – Rettungswege, Breiten, Längen</li>
+            <li><strong>Wirksame Löschmaßnahmen ermöglichen</strong> – Zu-/Durchfahrten, Aufstellflächen, Löschwasser</li>
+          </ul>
+          <p class="acc-sub">§ 3 Abs. 1 MBO – Allgemeine Anforderungen</p>
+          <p>Anlagen sind so anzuordnen, zu errichten, zu ändern und instand zu halten, dass die öffentliche Sicherheit und Ordnung, insbesondere Leben, Gesundheit und die natürlichen Lebensgrundlagen, nicht gefährdet werden.</p>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">02</span><span class="acc-title">Gebäudeklassen GK1–GK5 (Prüfschema)</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <table>
+            <tr><th>GK</th><th>OKFF (oberste NE)</th><th>Besonderheit</th></tr>
+            <tr><td><strong>GK 1a</strong></td><td>≤ 7 m</td><td>Freistehend, max. 2 NE, ANE ≤ 400 m²</td></tr>
+            <tr><td><strong>GK 1b</strong></td><td>–</td><td>Freistehend, land-/forstwirtschaftlich genutzt</td></tr>
+            <tr><td><strong>GK 2</strong></td><td>≤ 7 m</td><td>Nicht freistehend, max. 2 NE, ANE ≤ 400 m²</td></tr>
+            <tr><td><strong>GK 3</strong></td><td>≤ 7 m</td><td>Sonstige Gebäude (nicht GK1/2)</td></tr>
+            <tr><td><strong>GK 4</strong></td><td>≤ 13 m</td><td>ANE ≤ 400 m², sonstige Gebäude</td></tr>
+            <tr><td><strong>GK 5</strong></td><td>&gt; 13 m</td><td>Sonstige Gebäude inkl. unterirdische Gebäude</td></tr>
+          </table>
+          <p class="acc-sub">Hinweise</p>
+          <ul>
+            <li>OKFF = Oberkante Fertigfußboden der obersten Nutzungseinheit mit Aufenthaltsräumen</li>
+            <li>Gebäude GK1 werden zu GK2, sobald sie nicht mehr freistehen (z.B. angebaute Garage)</li>
+            <li>Hochhäuser: OKFF oberste NE &gt; 22 m → MHHR anwendbar</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">03</span><span class="acc-title">Sonderbautatbestände (§2 Abs. 4 MBO)</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <table>
+            <tr><th>Nr.</th><th>Sonderbau</th><th>Tatbestand</th><th>Vorschrift</th></tr>
+            <tr><td>1</td><td>Hochhäuser</td><td>OKFF &gt; 22 m</td><td>MHHR</td></tr>
+            <tr><td>4</td><td>Verkaufsstätten</td><td>A &gt; 800 m² (ab 2000 m²: MVKVO)</td><td>MVKVO</td></tr>
+            <tr><td>6</td><td>Versammlungsstätten</td><td>n &gt; 100 Personen (ab 200: MVStättVO)</td><td>MVStättVO</td></tr>
+            <tr><td>9</td><td>Beherbergungsstätten</td><td>n &gt; 12 Gastbetten</td><td>MBeVO</td></tr>
+            <tr><td>10</td><td>Krankenhäuser</td><td>Nutzung</td><td>MKhVO</td></tr>
+            <tr><td>–</td><td>Industriebauten</td><td>Produktion/Lagerung</td><td>MIndBauRL</td></tr>
+            <tr><td>–</td><td>Garagen</td><td>Stellplätze &gt; 100 m²</td><td>M-GarVO</td></tr>
+          </table>
+          <p class="acc-sub">Prüfreihenfolge</p>
+          <p>1. Rechtsgrundlage prüfen → 2. Gebäudeklasse bestimmen → 3. Sonderbautatbestand prüfen → 4. Schutzziele anwenden</p>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">04</span><span class="acc-title">Standardgebäude · Rettungswege</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Grundsatz</p>
+          <p>Für jede Nutzungseinheit und jedes Geschoss müssen mindestens <strong>zwei voneinander unabhängige Rettungswege</strong> vorhanden sein (1. RW baulich, 2. RW i.d.R. Anleiterstelle).</p>
+          <p class="acc-sub">Rettungsweglängen (notwendiger Flur)</p>
+          <ul>
+            <li>Stichflure: max. <strong>15 m</strong> Länge</li>
+            <li>Rauchabschnitte in notwendigen Fluren: ≤ 30 m (RS-Türen)</li>
+          </ul>
+          <p class="acc-sub">Notwendige Flure – Türen</p>
+          <table>
+            <tr><th>Tür zu …</th><th>Anforderung</th></tr>
+            <tr><td>Nutzungseinheit</td><td>DS</td></tr>
+            <tr><td>Notwendigem Treppenraum</td><td>RS</td></tr>
+            <tr><td>Lagerbereichen im Keller</td><td>T30-DS</td></tr>
+            <tr><td>Kellergeschossen, Werkstätten, NE &gt;200 m²</td><td>T30-RS</td></tr>
+          </table>
+          <p class="acc-sub">Notwendige Treppenräume</p>
+          <ul>
+            <li>GK3: Wände feuerhemmend (F30)</li>
+            <li>GK4: hochfeuerhemmend mit mech. Beanspruchung (F60-M)</li>
+            <li>GK5: Bauart einer Brandwand</li>
+            <li>Müssen beleuchtet sein; GK5 ohne Fenster: Sicherheitsbeleuchtung</li>
+          </ul>
+          <p class="acc-sub">Abwehrender Brandschutz</p>
+          <ul>
+            <li>Bei OKFF &gt; 7 m: Zu-/Durchfahrten für Hubrettungsfahrzeuge</li>
+            <li>Aufstellflächen: ausreichend befestigt, tragfähig, dauerhaft freigehalten</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">05</span><span class="acc-title">Standardgebäude · Baulicher Brandschutz</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Tragende Wände, Stützen und Decken</p>
+          <table>
+            <tr><th>GK</th><th>Obergeschoss</th><th>Kellergeschoss</th></tr>
+            <tr><td>GK 1/2</td><td>keine Anforderungen</td><td>feuerhemmend (F30)</td></tr>
+            <tr><td>GK 3</td><td>feuerhemmend (F30)</td><td>feuerbeständig (F90)</td></tr>
+            <tr><td>GK 4</td><td>hochfeuerhemmend (F60)</td><td>feuerbeständig (F90)</td></tr>
+            <tr><td>GK 5</td><td>feuerbeständig (F90)</td><td>feuerbeständig (F90)</td></tr>
+          </table>
+          <p class="acc-sub">Brandwände</p>
+          <ul>
+            <li>Anforderung: <strong>REIM 90</strong> (F90-A-M)</li>
+            <li>Abstand ≥ 5 m zu Innenecken</li>
+            <li>Müssen 0,30 m über Bedachung gezogen oder beidseitig 0,50 m auskragen</li>
+          </ul>
+          <p class="acc-sub">Brandabschnitte</p>
+          <ul>
+            <li>Standard: i.d.R. 40 m × 40 m = 1.600 m²</li>
+            <li>Land-/forstwirtschaftliche Gebäude: max. 10.000 m³ Rauminhalt</li>
+          </ul>
+          <p class="acc-sub">Trennwände</p>
+          <ul>
+            <li>Mindestens Feuerwiderstandsfähigkeit der tragenden Bauteile des Geschosses, jedoch mind. F30</li>
+            <li>Türen: T30-DS</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">06</span><span class="acc-title">Hochhäuser (MHHR) – OKFF &gt; 22 m</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <!-- Visuelles Banner -->
+          <div style="background:rgba(201,168,76,.07);border-left:3px solid var(--c-gold);padding:.6rem .9rem;border-radius:0 var(--r-sm) var(--r-sm) 0;margin-bottom:.85rem;">
+            <span style="color:var(--c-gold);font-weight:700;font-size:.8rem;">MHHR · Muster-Hochhaus-Richtlinie</span>
+            &nbsp;·&nbsp; <span style="color:var(--c-slate-l);font-size:.78rem;">Anwendung ab OKFF oberste NE &gt; 22 m</span>
+          </div>
+          <p class="acc-sub">Rettungswege</p>
+          <ul>
+            <li>Zwei voneinander unabhängige bauliche Rettungswege je NE und Geschoss</li>
+            <li>Rettungsweglänge: von jeder Stelle max. <strong>35 m</strong> bis Treppenraum/Ausgang</li>
+            <li>Stichflure: max. <strong>15 m</strong>, müssen zu STR-Vorraum, Flur mit 2 Fluchtrichtungen oder offenem Gang führen</li>
+          </ul>
+          <p class="acc-sub">Sicherheitstreppenräume</p>
+          <ul>
+            <li>h ≤ 60 m: alternativ 1 Sicherheitstreppenraum statt 2 NTR möglich</li>
+            <li>h &gt; 60 m: alle NTR als Sicherheitstreppenräume ausbilden</li>
+            <li>Wände: F90 (h ≤ 60 m) bzw. F120 (h &gt; 60 m)</li>
+          </ul>
+          <p class="acc-sub">Besondere Einrichtungen</p>
+          <ul>
+            <li><strong>Feuerwehraufzüge</strong> – Haltestelle in jedem Geschoss, Vorraum mind. 6 m², Druckbelüftungsanlage</li>
+            <li><strong>Nasse Steigleitungen</strong> – mit Wandhydranten Typ F, gleichzeitig 3 × 200 l/min bei 4,5 bar</li>
+            <li><strong>BMA</strong> mit automatischen Meldern + Brandfallsteuerung Aufzüge</li>
+            <li><strong>Druckbelüftungsanlage</strong> – STR-Vorraum: 2,0 m/s, FA-Vorraum: 0,75 m/s</li>
+            <li><strong>ELA</strong> (elektrische Lautsprecheranlage) Pflicht</li>
+            <li><strong>Automatische Feuerlöschanlage</strong> – Ausnahmen nur bei NE ≤ 200 m² + F90-Trennwände</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">07</span><span class="acc-title">Verkaufsstätten (MVKVO) – A &gt; 2.000 m²</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <div style="background:rgba(201,168,76,.07);border-left:3px solid var(--c-gold);padding:.6rem .9rem;border-radius:0 var(--r-sm) var(--r-sm) 0;margin-bottom:.85rem;">
+            <span style="color:var(--c-gold);font-weight:700;font-size:.8rem;">MVKVO</span>&nbsp;·&nbsp;<span style="color:var(--c-slate-l);font-size:.78rem;">Verkaufsräume + Ladenstraßen &gt; 2.000 m²</span>
+          </div>
+          <p class="acc-sub">Rettungswege</p>
+          <ul>
+            <li>Je Verkaufsraum, Aufenthaltsraum und Ladenstraße: <strong>mind. 2 voneinander unabhängige RW</strong></li>
+            <li>Von jeder Stelle eines Verkaufsraums: max. <strong>25 m (Luftlinie)</strong> bis Ausgang/NTR</li>
+            <li>Sonstige Räume, Ladenstraßen: max. <strong>35 m</strong> (Lauflinie max. 35 m)</li>
+            <li>Mit Sprinkler + über NTR + 1. RW über Ladenstraße: max. <strong>105 m</strong></li>
+          </ul>
+          <p class="acc-sub">Rettungswegbreiten</p>
+          <ul>
+            <li>Ausgänge aus Verkaufsräumen: mind. 2,00 m (Ausnahme ≤ 500 m²: 1,00 m)</li>
+            <li>Hauptgänge: mind. 2,00 m; Ladenstraßen: mind. 5,00 m</li>
+          </ul>
+          <p class="acc-sub">Brandabschnitte</p>
+          <table>
+            <tr><th>Typ</th><th>ohne Sprinkler</th><th>mit Sprinkler</th></tr>
+            <tr><td>Erdgesch. Verkaufsstätte</td><td>≤ 3.000 m²</td><td>≤ 10.000 m²</td></tr>
+            <tr><td>Sonstige Verkaufsstätte</td><td>≤ 1.500 m²/Gesch.</td><td>≤ 5.000 m²/Gesch.</td></tr>
+          </table>
+          <p class="acc-sub">Besondere Einrichtungen</p>
+          <ul>
+            <li><strong>Sprinkleranlage Pflicht</strong> (Ausnahmen bei erdgesch. ≤ 3.000 m² ohne Sprinkler)</li>
+            <li>BMA mit automatischen Meldern, aufgeschaltet zur Feuerwehr</li>
+            <li>Rauch- und Wärmeabzug für Verkaufsräume &gt; 50 m², Lagerräume &gt; 200 m², Ladenstraßen</li>
+            <li>Wandhydranten Typ F in ausreichender Anzahl</li>
+            <li>Brandschutzbeauftragter Pflicht; ab &gt; 15.000 m² Selbsthilfekräfte</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">08</span><span class="acc-title">Beherbergungsstätten (MBeVO) – &gt; 12 Gastbetten</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <div style="background:rgba(201,168,76,.07);border-left:3px solid var(--c-gold);padding:.6rem .9rem;border-radius:0 var(--r-sm) var(--r-sm) 0;margin-bottom:.85rem;">
+            <span style="color:var(--c-gold);font-weight:700;font-size:.8rem;">MBeVO</span>&nbsp;·&nbsp;<span style="color:var(--c-slate-l);font-size:.78rem;">Anwendung ab mehr als 12 Gastbetten</span>
+          </div>
+          <p class="acc-sub">Rettungswege</p>
+          <ul>
+            <li>Je Beherbergungsraum zwei voneinander unabhängige RW</li>
+            <li>1. RW: notwendige Treppe (baulich)</li>
+            <li>2. RW: zweite notwendige Treppe/Außentreppe – bei ≤ 60 Gastbetten ges. und ≤ 30/Geschoss auch: durch Anleiterung (Feuerwehr)</li>
+            <li>Stichflure: max. 15 m bis NTR oder Ausgang</li>
+          </ul>
+          <p class="acc-sub">Türen in notwendigen Fluren</p>
+          <ul>
+            <li>Zu Beherbergungsräumen: RS; zu Gasträumen: RS; zu NTR: RS</li>
+            <li>Nicht versperrt; müssen von innen leicht zu öffnen sein</li>
+          </ul>
+          <p class="acc-sub">Anlagentechnischer Brandschutz</p>
+          <ul>
+            <li>Alarmierungseinrichtung (akustisch + optisch in barrierefreien Räumen)</li>
+            <li>BMA ab &gt; 60 Gastbetten (Rauchmelder in NF, HDM)</li>
+            <li>Sicherheitsbeleuchtung in NF, NTR, Sicherheitszeichen</li>
+          </ul>
+          <p class="acc-sub">Organisatorischer Brandschutz</p>
+          <ul>
+            <li>In jedem Beherbergungszimmer: Rettungswegplan + Hinweise (mehrsprachig)</li>
+            <li>Ab &gt; 60 Gastbetten: Brandschutzordnung + Feuerwehrpläne</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">09</span><span class="acc-title">Industriebau (MIndBauRL)</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <div style="background:rgba(201,168,76,.07);border-left:3px solid var(--c-gold);padding:.6rem .9rem;border-radius:0 var(--r-sm) var(--r-sm) 0;margin-bottom:.85rem;">
+            <span style="color:var(--c-gold);font-weight:700;font-size:.8rem;">MIndBauRL</span>&nbsp;·&nbsp;<span style="color:var(--c-slate-l);font-size:.78rem;">Produktion, Behandlung, Verwertung, Lagerung</span>
+          </div>
+          <p class="acc-sub">Rettungswege</p>
+          <ul>
+            <li>Ab Grundfläche &gt; 1.600 m² oder Ebenen &gt; 200 m²: mind. 2 entgegengesetzte bauliche RW</li>
+            <li>Rettungsweglängen (ohne Alarmierungsanlage): 35 m bei Raumhöhe 5 m; 50 m bei 10 m</li>
+            <li>Mit Alarmierungsanlage: 50 m (5 m hoch) / 70 m (10 m hoch)</li>
+            <li>Bis Hauptgang: max. 15 m von jeder Stelle; Hauptgangbreite: mind. 2,00 m</li>
+          </ul>
+          <p class="acc-sub">Brandabschnitte / Brandbekämpfungsabschnitte</p>
+          <ul>
+            <li>Brandabschnitt: Bereich zwischen Außenwänden und/oder Brandwänden über alle Geschosse</li>
+            <li>Brandbekämpfungsabschnitt (BBA): Unterbereich eines Brandabschnittes</li>
+            <li>Größe abhängig von Sicherheitskategorie K1–K4 (nach Abschnitt 6) oder Rechenverfahren (Abschnitt 7)</li>
+          </ul>
+          <p class="acc-sub">Sicherheitskategorien</p>
+          <table>
+            <tr><th>Kategorie</th><th>Merkmal</th></tr>
+            <tr><td>K 1</td><td>Keine besonderen Maßnahmen</td></tr>
+            <tr><td>K 2</td><td>Brandmeldeanlage</td></tr>
+            <tr><td>K 3.4</td><td>BMA + Werkfeuerwehr in Staffelstärke</td></tr>
+            <tr><td>K 4</td><td>BMA + automatische Feuerlöschanlage</td></tr>
+          </table>
+          <p class="acc-sub">Umfahrung</p>
+          <ul>
+            <li>Ab Grundfläche &gt; 5.000 m²: Umfahrung für Feuerwehrfahrzeuge erforderlich</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">10</span><span class="acc-title">Garagen (M-GarVO) – Typen und Anforderungen</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Garagentypen</p>
+          <table>
+            <tr><th>Typ</th><th>Nutzfläche</th><th>Hinweis</th></tr>
+            <tr><td>Kleingarage</td><td>bis 100 m²</td><td>Geringe Anforderungen</td></tr>
+            <tr><td>Mittelgarage</td><td>100–1.000 m²</td><td>ca. 40 Stellplätze ≈ Großgarage</td></tr>
+            <tr><td>Großgarage</td><td>&gt; 1.000 m²</td><td>Erhöhte Anforderungen</td></tr>
+          </table>
+          <p class="acc-sub">Rettungswege</p>
+          <ul>
+            <li>Mittel- und Großgaragen: mind. 2 unabhängige bauliche RW je Geschoss</li>
+            <li>Rettungsweglänge: offene Garagen 50 m; geschlossene 35 m (bis Ausgang/NTR)</li>
+            <li>Ausnahme: oberird. Garagen mit Ausgang ≤ 10 m → 1 RW ausreichend</li>
+          </ul>
+          <p class="acc-sub">Anlagentechnik</p>
+          <ul>
+            <li>Geschlossene Mittel-/Großgaragen: maschinelle Abluftanlage Pflicht</li>
+            <li>Großgaragen: natürliche oder maschinelle Entrauchung (mind. 10-facher Luftwechsel/h)</li>
+            <li>BMA: ab geschlossener Großgarage &gt; 2.500 m²</li>
+            <li>Trockene Löschwasserleitung: bei Stellplätzen &gt; 4 m unter oder &gt; 13 m über GOF</li>
+            <li>Objektfunkanlage in nichtautomatischen Großgaragen (Fußboden &lt; −4 m oder &gt; 22 m)</li>
+          </ul>
+          <p class="acc-sub">Brandabschnitte</p>
+          <ul>
+            <li>Oberird. geschlossene Garagen: max. 5.000 m² Nutzfläche</li>
+            <li>Sonstige geschlossene Garagen: max. 2.500 m² (Verdoppelung mit Sprinkler)</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ IdF · STABSARBEIT ============================================================ -->
+<div id="v-idf-stab" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">IdF Münster</p>
+      <h1 class="page-title"><span class="accent">Stabsarbeit</span></h1>
+      <p class="page-lead">Führungsstufe D, Zwei-Stäbe-Modell, Sachgebiete S1–S6, Krisenstab und Dokumentation bei Großeinsatzlagen und Katastrophen.</p>
+    </div>
+  </div>
+  <div class="pc">
+
+    <!-- Zwei-Stäbe-Modell Diagramm -->
+    <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-lg);padding:1.25rem;margin-bottom:1.25rem;">
+      <div style="text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.08em;color:var(--c-gold);text-transform:uppercase;margin-bottom:.85rem;">Zwei-Stäbe-Modell · Führungsstufe D</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:.5rem;">
+        <div style="background:rgba(201,168,76,.15);border:1px solid var(--c-gold-rim);border-radius:var(--r-sm);padding:.45rem 1.4rem;font-size:.78rem;font-weight:700;color:var(--c-gold);">Politisch Gesamtverantwortlicher (HVB)</div>
+        <div style="width:1px;height:1.2rem;background:var(--c-gold-rim);"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;width:100%;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:.4rem;">
+            <div style="background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);border-radius:var(--r-sm);padding:.4rem .8rem;font-size:.74rem;font-weight:600;color:#93c5fd;text-align:center;width:100%;">Operativ-taktische<br>Einsatzleitung (EL)</div>
+            <div style="font-size:.67rem;color:var(--c-slate);text-align:center;">Führt den Einsatz<br>operativ-taktisch</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:.4rem;">
+            <div style="background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);border-radius:var(--r-sm);padding:.4rem .8rem;font-size:.74rem;font-weight:600;color:#c4b5fd;text-align:center;width:100%;">Administrativ-organ.<br>Krisenstab (KS)</div>
+            <div style="font-size:.67rem;color:var(--c-slate);text-align:center;">Rechtliche, finanzielle<br>&amp; politische Aufgaben</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-list">
+
+      <details class="acc-item">
+        <summary><span class="acc-num">01</span><span class="acc-title">Begriffe: Großeinsatzlage, Katastrophe, Bereitstellungsraum</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Großeinsatzlage (BHKG)</p>
+          <p>Ein Geschehen, in dem Leben oder Gesundheit zahlreicher Menschen, Tiere oder erhebliche Sachwerte gefährdet sind und aufgrund eines erheblichen Koordinierungsbedarfs eine rückwärtige Unterstützung der Einsatzkräfte erforderlich ist, die von einer kreisangehörigen Gemeinde nicht mehr gewährleistet werden kann.</p>
+          <p class="acc-sub">Katastrophe (BHKG)</p>
+          <p>Ein Schadensereignis, welches das Leben, die Gesundheit oder die lebensnotwendige Versorgung zahlreicher Menschen, Tiere, natürliche Lebensgrundlagen oder erhebliche Sachwerte in so ungewöhnlichem Ausmaß gefährdet oder beeinträchtigt, dass nur durch einheitliche Gesamtleitung der zuständigen Katastrophenschutzbehörde wirksam begegnet werden kann.</p>
+          <p class="acc-sub">Bereitstellungsraum</p>
+          <p>Ein Ort, an dem Einsatzkräfte und -mittel für den unmittelbaren Einsatz oder vorsorglich gesammelt, gegliedert und bereitgestellt oder in Reserve gehalten werden. Anforderungen: Führungseinheit notwendig, Versorgung (Tankstelle nah, Sanitär, Wetterschutz, Strom, Wasser, Komm.-anbindung).</p>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">02</span><span class="acc-title">Einsatzleiter und Leiter des Stabes</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Einsatzleiter</p>
+          <ul>
+            <li>Gesamtverantwortung für die operative Einsatzdurchführung</li>
+            <li>Koordiniert die gesamte operative Einsatzdurchführung</li>
+            <li>Koordiniert Zusammenarbeit mit dem Krisenstab</li>
+            <li>Koordinierung der Pressearbeit (sofern kein Krisenstab einberufen)</li>
+            <li>Befehlsgewalt über alle unterstellten Einsatzkräfte der nPol-Gefahrenabwehr</li>
+          </ul>
+          <p class="acc-sub">Leiter des Stabes</p>
+          <ul>
+            <li>Koordiniert die Zusammenarbeit der Sachgebiete</li>
+            <li>Zuweisung von Personal zu Sachbereichen</li>
+            <li>Abwesenheitsvertretung des Einsatzleiters</li>
+            <li>Koordiniert Rückkehr zur Regeleinsatzorganisation und Einsatznachbereitung</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">03</span><span class="acc-title">S1 · Personal und Innerer Dienst</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Alarmierung (Zwiebelschalenmodell)</p>
+          <ul>
+            <li>Eigene Kräfte (Kreis/kreisfreie Stadt)</li>
+            <li>Gegenseitige Hilfe: EL → eigene LSt → Nachbar-LSt</li>
+            <li>Landesweite Hilfe: EL → eigene LSt → BezReg (→ andere BezReg)</li>
+          </ul>
+          <p class="acc-sub">Weitere Aufgaben</p>
+          <ul>
+            <li>Alarmieren und Anfordern von Ämtern, Behörden, Organisationen</li>
+            <li>Bereitstellen von Reserven; Einrichten von Lotsenstellen</li>
+            <li>Einrichten von Bereitstellungsräumen</li>
+            <li>Führen von Kräfteübersichten</li>
+            <li>Innerer Stabsdienst: Geschäftsablauf, Führungsräume, Zugangskontrolle, Ausstattung, Ablöseplanung, Verpflegung</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">04</span><span class="acc-title">S2 · Lage</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <ul>
+            <li>Beschaffen, Auswerten und Bewerten lagerelevanter Informationen</li>
+            <li>Führen der Lagekarte (inkl. Einsatzübersichten)</li>
+            <li>Vorbereiten von Lagebesprechungen und Lagemeldungen</li>
+            <li>Melden an vorgesetzte Stellen; Unterrichten nachgeordneter Stellen</li>
+            <li>Unterrichten der Bevölkerung (sofern nicht in Verantwortung des Krisenstabes)</li>
+            <li>Führen des <strong>Einsatztagebuches</strong></li>
+            <li>Sammeln, Registrieren und Sicherstellen aller Informationsträger</li>
+            <li>Erstellen des Abschlussberichts</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">05</span><span class="acc-title">S3 · Einsatz</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <ul>
+            <li>Durchführung der Lagebesprechungen</li>
+            <li>Beurteilen der Lage und Fassen des Entschlusses</li>
+            <li>Ordnen des Schadensgebietes (Führungsorganisation, Befehlsstelle, Bereitstellungsräume, Patientenablagen)</li>
+            <li>Anordnung von Absperrmaßnahmen; Festlegen von An- und Abmarschwegen</li>
+            <li>Erteilen der Befehle; Beaufsichtigen und Kontrollieren der Einsatzdurchführung</li>
+            <li>Veranlassen von Sofortmaßnahmen zum Schutz der Bevölkerung</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">06</span><span class="acc-title">S4 · Versorgung</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <ul>
+            <li>Bereitstellen und Zuführen der Verpflegung</li>
+            <li>Festlegen der Versorgungsorganisation (Raumordnung, Schnittstellen, Logistikkette, Finanzierung)</li>
+            <li>Bereitstellen von Unterkünften und Rettungsmitteln zum Eigenschutz</li>
+          </ul>
+          <p class="acc-sub">Eigenschutzarten</p>
+          <ul>
+            <li><strong>Technischer Eigenschutz</strong> – umgehende technische Rettung</li>
+            <li><strong>Medizinischer Eigenschutz</strong> – Sanitätsdienst</li>
+            <li><strong>Psychosozialer Eigenschutz</strong> – FB-PSNV-E</li>
+          </ul>
+          <ul>
+            <li>Anfordern weiterer Einsatzmittel (Baustoffe, LKW, Räum- und Hebegeräte)</li>
+            <li>Bereitstellen von Verbrauchsgütern (Wasser, Löschmittel, Atemschutz, Kraftstoff)</li>
+            <li>Sicherstellen der Materialerhaltung</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">07</span><span class="acc-title">S5 · Presse und Medienarbeit</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <ul>
+            <li>Erstellung von Presse- und Medieninformationen; Einsatz von VOST</li>
+            <li>Informieren, Führen und Unterbringen von Presse- und Medienvertretern</li>
+            <li>Vorbereitung und Durchführung von Presse- und Medienkonferenzen</li>
+            <li>Warnung/Information der Bevölkerung</li>
+          </ul>
+          <p class="acc-sub">Bei Arbeitsaufnahme des Krisenstabes</p>
+          <ul>
+            <li>Melde- und Berichtswesen geht auf die <strong>BuMA</strong> über</li>
+            <li>S5 untersteht dann der BuMA (Bevölkerungswarnung und Medienarbeit)</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">08</span><span class="acc-title">S6 · Informations- und Kommunikationswesen</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <ul>
+            <li>Planung der Fernmeldeorganisation und Erstellen des Kommunikationskonzepts</li>
+            <li>Bereitstellung und Inbetriebnahme der erforderlichen IuK-Technik</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">09</span><span class="acc-title">7-Punkte-Plan · Arbeitsaufnahme des Stabes</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <!-- Visuelle Schritt-Liste -->
+          <div style="display:flex;flex-direction:column;gap:.4rem;margin:.5rem 0 .85rem;">
+            <div style="display:flex;align-items:flex-start;gap:.65rem;"><div style="background:var(--c-gold);color:#000;border-radius:50%;width:1.4rem;height:1.4rem;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:.05rem;">1</div><div style="font-size:.83rem;color:var(--c-text-b);"><strong>Einsatzraum strukturieren</strong> – Führungsorganisation schaffen (S3)</div></div>
+            <div style="display:flex;align-items:flex-start;gap:.65rem;"><div style="background:var(--c-gold);color:#000;border-radius:50%;width:1.4rem;height:1.4rem;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:.05rem;">2</div><div style="font-size:.83rem;color:var(--c-text-b);"><strong>Bereitstellungsraum festlegen</strong> – BR EL oder BR EA (S1 &amp; S3)</div></div>
+            <div style="display:flex;align-items:flex-start;gap:.65rem;"><div style="background:var(--c-gold);color:#000;border-radius:50%;width:1.4rem;height:1.4rem;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:.05rem;">3</div><div style="font-size:.83rem;color:var(--c-text-b);"><strong>Eigenschutz veranlassen</strong> – zentral oder dezentral (S4)</div></div>
+            <div style="display:flex;align-items:flex-start;gap:.65rem;"><div style="background:var(--c-gold);color:#000;border-radius:50%;width:1.4rem;height:1.4rem;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:.05rem;">4</div><div style="font-size:.83rem;color:var(--c-text-b);"><strong>Grundschutz zuweisen</strong> – organisiert, Leitstelle schickt (S3)</div></div>
+            <div style="display:flex;align-items:flex-start;gap:.65rem;"><div style="background:var(--c-gold);color:#000;border-radius:50%;width:1.4rem;height:1.4rem;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:.05rem;">5</div><div style="font-size:.83rem;color:var(--c-text-b);"><strong>Kommunikation schaffen</strong> – vorgefertigte Kommunikationspläne (S3 oder S6)</div></div>
+            <div style="display:flex;align-items:flex-start;gap:.65rem;"><div style="background:var(--c-gold);color:#000;border-radius:50%;width:1.4rem;height:1.4rem;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:.05rem;">6</div><div style="font-size:.83rem;color:var(--c-text-b);"><strong>Vorhandene Kräfte einsetzen</strong> – Kräfteübersicht, örtliche Reserve (S1 &amp; S3)</div></div>
+            <div style="display:flex;align-items:flex-start;gap:.65rem;"><div style="background:var(--c-gold);color:#000;border-radius:50%;width:1.4rem;height:1.4rem;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:.05rem;">7</div><div style="font-size:.83rem;color:var(--c-text-b);"><strong>Nachforderung kalkulieren</strong> – Zeitstrahl, wann wo welche Kräfte (S1 &amp; S3)</div></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">10</span><span class="acc-title">Einsatztagebuch &amp; Vierfach-Nachrichtenvordruck</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Einsatztagebuch</p>
+          <ul>
+            <li>Urkundlicher, chronologischer Nachweis der einsatzbezogenen Entscheidungsprozesse, Anordnungen, Informationen und Maßnahmen</li>
+            <li>Gerichtsfeste Dokumentation für eventuelle Straf- und Gerichtsverfahren</li>
+            <li>Soll alles dokumentieren, das aus der Nachweisung nicht ersichtlich ist</li>
+          </ul>
+          <p class="acc-sub">Vierfach-Nachrichtenvordruck – Farbsystem</p>
+          <table>
+            <tr><th>Farbe</th><th>Eingang</th><th>Ausgang</th></tr>
+            <tr><td>🟡 Gelb</td><td>Nachweisung</td><td>verbleibt bei Nachweisung</td></tr>
+            <tr><td>🔴 Rot</td><td>immer S2</td><td>Bearbeitung Nachweisung → S2</td></tr>
+            <tr><td>⬜ Weiß</td><td>inhaltsbezogen</td><td>verbleibt beim Verfasser</td></tr>
+            <tr><td>🟢 Grün</td><td>inhaltsbezogen</td><td>zurück an Verfasser</td></tr>
+          </table>
+          <p style="font-size:.78rem;color:var(--c-slate);margin-top:.5rem;">Sichter erstellt Verteilungsplan; bei Gesprächsnotiz: Weiß beim Verfasser, Rot → S2, Gelb bei Nachweisung, Grün inhaltsbezogen.</p>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">11</span><span class="acc-title">Administrativ-organisatorischer Krisenstab (NRW)</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <ul>
+            <li>Gibt es nur in Kreisen und kreisfreien Städten</li>
+            <li>Stäbe in untergeordneten Kommunen: <strong>Stab für außergewöhnliche Ereignisse (SAE)</strong></li>
+            <li>Einberufung liegt beim HVB; bei Großeinsatzlage oder Katastrophe <em>muss</em> er einberufen werden</li>
+            <li>Krisenstab tagt als Konferenzstab (Arbeitsphasen in Fachämtern)</li>
+          </ul>
+          <p class="acc-sub">Struktur</p>
+          <table>
+            <tr><th>Organ</th><th>Aufgabe</th></tr>
+            <tr><td>Leiter des Stabes</td><td>Leitung, Koordination, Zielfestlegung, Entscheidung zur Ausweitung</td></tr>
+            <tr><td>BuMA</td><td>Aktive Presse-/Medienarbeit, Bevölkerungsinformation, Bürgertelefon</td></tr>
+            <tr><td>KGS (Koordinierungsgruppe)</td><td>Lage &amp; Dokumentation (ETB, GIS), Innerer Dienst (Alarmierung, Schichtplanung)</td></tr>
+          </table>
+          <p class="acc-sub">Ständige Mitglieder (SMS)</p>
+          <ul>
+            <li>Sicherheit und Ordnung · Umwelt · Führungsstab-Verbinder · Soziales · Gesundheit · Polizei</li>
+          </ul>
+          <p class="acc-sub">Zusammenarbeit EL ↔ Krisenstab</p>
+          <ul>
+            <li>S5 der EL untersteht bei eingesetztem KS der BuMA</li>
+            <li>Meldewesen und Warnung der Bevölkerung geht komplett auf KS über</li>
+            <li>Verbindungspersonen externer Stellen eher im KS als in der EL</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ IdF · PRESSE- & ÖFFENTLICHKEITSARBEIT ============================================================ -->
+<div id="v-idf-presse" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">IdF Münster</p>
+      <h1 class="page-title">Presse- &amp; <span class="accent">Öffentlichkeitsarbeit</span></h1>
+      <p class="page-lead">Rechtliche Grundlagen, Grundsätze der Pressearbeit, S5-Aufgaben und BuMA im Krisenstab.</p>
+    </div>
+  </div>
+  <div class="pc">
+
+    <!-- Visuelles Info-Banner -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem;">
+      <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.8rem 1rem;">
+        <div style="font-size:.7rem;font-weight:700;color:var(--c-gold);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.35rem;">Rechtsgrundlage</div>
+        <div style="font-size:.78rem;color:var(--c-text-b);">§ 4 Landespressegesetz<br>§ 43 Landesbeamtengesetz</div>
+      </div>
+      <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.8rem 1rem;">
+        <div style="font-size:.7rem;font-weight:700;color:var(--c-gold);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.35rem;">Zuständigkeit</div>
+        <div style="font-size:.78rem;color:var(--c-text-b);">Leitung der Behörde entscheidet, wer Auskünfte erteilt – kann delegiert werden (Pressesprecher, EL)</div>
+      </div>
+    </div>
+
+    <div class="acc-list">
+
+      <details class="acc-item">
+        <summary><span class="acc-num">01</span><span class="acc-title">Rechtliche Grundlagen der Pressearbeit</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">§ 4 Landespressegesetz (LPG)</p>
+          <p>Behörden sind verpflichtet, den Vertretern der Presse auf konkrete Anfragen auch zweckdienliche und erschöpfende Auskünfte zu erteilen.</p>
+          <p class="acc-sub">§ 43 Landesbeamtengesetz (LBG)</p>
+          <p>Die Leitung der Behörde entscheidet, wer den Medien und der Öffentlichkeit Auskünfte erteilt. Der HVB kann dies delegieren (z.B. Pressesprecher FW, Einsatzleiter).</p>
+          <p class="acc-sub">Auskunftspflicht vs. Auskunftsrecht</p>
+          <ul>
+            <li>Die Presse kann erst dann auf Auskünfte bestehen, wenn das Einsatzgeschehen eine Beurteilung und die Informationsweitergabe nach pflichtgemäßem Ermessen zulässt</li>
+            <li>Kein Anspruch auf sofortige Herausgabe von Messwerten (Rohdaten) nach Umweltinformationsgesetz – ausgewertete Informationen müssen innerhalb eines Monats zugänglich gemacht werden</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">02</span><span class="acc-title">8 Grundsätze der Pressearbeit</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin:.25rem 0 .75rem;">
+            <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-sm);padding:.45rem .65rem;font-size:.78rem;color:var(--c-text-b);"><span style="color:var(--c-gold);margin-right:.4rem;">✗</span>Keine Aussagen zu Schuldfragen</div>
+            <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-sm);padding:.45rem .65rem;font-size:.78rem;color:var(--c-text-b);"><span style="color:var(--c-gold);margin-right:.4rem;">✗</span>Keine Personalien preisgeben</div>
+            <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-sm);padding:.45rem .65rem;font-size:.78rem;color:var(--c-text-b);"><span style="color:var(--c-gold);margin-right:.4rem;">✗</span>Keine wertenden Aussagen</div>
+            <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-sm);padding:.45rem .65rem;font-size:.78rem;color:var(--c-text-b);"><span style="color:var(--c-gold);margin-right:.4rem;">≈</span>Vermutungen kennzeichnen</div>
+            <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-sm);padding:.45rem .65rem;font-size:.78rem;color:var(--c-text-b);"><span style="color:var(--c-gold);margin-right:.4rem;">✓</span>Wahrheitsgetreu antworten</div>
+            <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-sm);padding:.45rem .65rem;font-size:.78rem;color:var(--c-text-b);"><span style="color:var(--c-gold);margin-right:.4rem;">⏱</span>Statements erst wenn Einsatz es zulässt</div>
+            <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-sm);padding:.45rem .65rem;font-size:.78rem;color:var(--c-text-b);"><span style="color:var(--c-gold);margin-right:.4rem;">📷</span>Presse darf fotografieren (Pressekodex)</div>
+            <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-sm);padding:.45rem .65rem;font-size:.78rem;color:var(--c-text-b);"><span style="color:var(--c-gold);margin-right:.4rem;">⛔</span>Presse darf nicht behindern oder gefährden</div>
+          </div>
+          <p style="font-size:.78rem;color:var(--c-slate);">Die Presse darf Würde von Betroffenen nicht verletzen (Pressekodex). Sie darf sich innerhalb dieser Schranken an der Einsatzstelle bewegen und fotografieren.</p>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">03</span><span class="acc-title">S5 – Presse und Medienarbeit in der Einsatzleitung</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Aufgaben S5</p>
+          <ul>
+            <li><strong>Presse- und Medienarbeit</strong>
+              <ul>
+                <li>Erstellung von Presse- und Medieninformationen</li>
+                <li>Einsatz von VOST (Virtual Operations Support Team)</li>
+              </ul>
+            </li>
+            <li><strong>Presse- und Medienbetreuung</strong>
+              <ul>
+                <li>Informieren, Führen und Unterbringen von Presse- und Medienvertretern</li>
+                <li>Vorbereitung und Durchführung von Presse- und Medienkonferenzen</li>
+              </ul>
+            </li>
+            <li>Warnung und Information der Bevölkerung</li>
+          </ul>
+          <p class="acc-sub">Unterstellung bei Krisenstab</p>
+          <ul>
+            <li>Bei Arbeitsaufnahme des Krisenstabes: Melde- und Berichtswesen geht auf BuMA über</li>
+            <li>S5 untersteht dann der BuMA des Krisenstabes</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">04</span><span class="acc-title">BuMA – Bevölkerungswarnung und Medienarbeit im Krisenstab</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Aufgaben der BuMA</p>
+          <ul>
+            <li>Aktive Presse- und Medienarbeit</li>
+            <li>Information der Bevölkerung</li>
+            <li>Auswertung und Zusammenfassung aller medialen Informationen</li>
+            <li>Koordination der Informationen nach innen</li>
+            <li>Einrichtung eines <strong>Bürgertelefons</strong></li>
+          </ul>
+          <p class="acc-sub">Position im Krisenstab</p>
+          <p>Die BuMA übernimmt nach Einberufung des Krisenstabes das gesamte Meldewesen und die Warnung der Bevölkerung. S5 der Einsatzleitung untersteht der BuMA.</p>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">05</span><span class="acc-title">Meldewesen bei Großeinsatzlagen</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p>In Großeinsatzlagen und Katastrophen, aber auch im regulären Einsatzbetrieb, bestehen vielfältige Informationspflichten:</p>
+          <ul>
+            <li><strong>Vorgesetzte Stellen</strong> unterrichten</li>
+            <li><strong>Benachbarte Stellen</strong> informieren</li>
+            <li><strong>Nachgeordnete Stellen</strong> unterrichten</li>
+            <li><strong>Bevölkerung</strong> informieren</li>
+          </ul>
+          <p class="acc-sub">Meldeerlass NRW</p>
+          <p>Regelt die Meldung an vorgesetzte Stellen und definiert verschiedene Meldearten, die über Formblätter abzuhandeln sind.</p>
+          <p class="acc-sub">Zuständigkeit</p>
+          <ul>
+            <li>Bei eingesetztem Krisenstab: Meldewesen geht komplett auf KS über</li>
+            <li>Verbindungspersonen externer Stellen finden sich eher im KS als in der EL</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</div>
 
 <!-- ============================================================ SIMULATOR (4 SZENARIEN) ============================================================ -->
 <div id="v-simulator" class="view detail-view">
