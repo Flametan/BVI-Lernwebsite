@@ -1,7 +1,7 @@
 # [B VI – Lernwebsite für den höheren feuerwehrtechnischen Dienst](https://flametan.github.io/BVI-Lernwebsite/)
 
 > **Prüfungsvorbereitung für den B VI-Lehrgang** (höherer feuerwehrtechnischer Dienst)  
-> Fachlich tiefgründige Wissensdatenbank zu GAL, SFS Regensburg, HLFS Kassel und IBK Heyrothsberge.
+> Fachlich tiefgründige Wissensdatenbank zu GAL, SFS Regensburg, HLFS Kassel, IBK Heyrothsberge, VAk Berlin, FeuAK Hamburg und IdF Münster.
 
 ---
 
@@ -10,7 +10,7 @@
 | Eigenschaft | Wert |
 |---|---|
 | **Architektur** | Single-Page-App (SPA), kein Build-Schritt nötig |
-| **Dateien** | `index.html` (6.272 Zeilen), `css/style.css` (404 Zeilen), `js/app.js` (~1.200 Zeilen) |
+| **Dateien** | `index.html` (12.246 Zeilen), `css/style.css` (437 Zeilen), `js/app.js` (~1.390 Zeilen) |
 | **Sprache** | Deutsch |
 | **GitHub-Repo** | `flametan/BVI-Lernwebsite` |
 | **Live-URL** | [https://flametan.github.io/BVI-Lernwebsite/](https://flametan.github.io/BVI-Lernwebsite/) |
@@ -20,11 +20,14 @@
 
 ## Features
 
-- **GAL Grundlehrgang** – 24 vollständige Lernthemen mit maximaler Informationstiefe (Gesetzesparagraphen, Formeln, Einsatztaktiken)
+- **GAL Grundlehrgang** – 33 vollständige Lernthemen mit maximaler Informationstiefe (Gesetzesparagraphen, Formeln, Einsatztaktiken)
 - **SFS Regensburg** – 4 Unterthemen (Taktik/FwDV, Methodik, Rechtsgrundlagen, ABC)
 - **HLFS Kassel** – 7 Unterthemen (Führungsvorgang, GABC, Vorbeugen, MANV, Tunnel, Zug-/Verbandsführer, Stab)
 - **IBK Heyrothsberge** – 7 Unterthemen (TA, Konflikt, Stress, PSNV, BGM, PM, Zeitmanagement)
-- **121 Karteikarten** (Flashcards) – 61 SFS/HLFS/IBK + 60 GAL, mit 3D-Flip-Animation und persistentem Lernstand
+- **VAk Berlin** – 6 Unterthemen (Juristisches Denken, Verwaltungsrecht, Staatsrecht, Einsatzrecht, Dienstrecht, Lernzusammenfassung)
+- **FeuAK Hamburg** – 8 Unterthemen (VWL, BWL, Haushalt, Vergabe, Rechnungswesen, PM, Bedarfsplanung, Prüfungsleistung)
+- **IdF Münster** – 3 Unterthemen (Vorbeugender Brandschutz, Stabsarbeit, Presse- & Öffentlichkeitsarbeit)
+- **271 Karteikarten** (Flashcards) – GAL, SFS, HLFS, IBK, VAk, FeuAK, IdF; 3D-Flip-Animation, dynamische Kartenhöhe, persistenter Lernstand
 - **Fortschritts-Tracking** – Besuchte Themen werden per LocalStorage gespeichert; Badge-Anzeige auf Modul-Tiles
 - **Volltextsuche** – Ctrl+K öffnet Suchoverlay mit Live-Trefferhervorhebung
 - **Führungsdienstsimulator** – 4 verzweigte Entscheidungsszenarien mit Scoring
@@ -50,11 +53,11 @@
 
 ```
 BVI-Lernwebsite/
-├── index.html        # Alle Views (6.272 Zeilen)
+├── index.html        # Alle Views (12.246 Zeilen)
 ├── css/
-│   └── style.css     # Design-System, alle Komponenten (404 Zeilen)
+│   └── style.css     # Design-System, alle Komponenten (437 Zeilen)
 └── js/
-    └── app.js        # NAV, PROGRESS, SEARCH, FC, SIM, GH (~1.200 Zeilen)
+    └── app.js        # NAV, PROGRESS, SEARCH, FC, SIM, GH (~1.390 Zeilen)
 ```
 
 ---
@@ -98,14 +101,17 @@ NAV.jumpTo(idx)     // Breadcrumb-Sprung
 ```javascript
 const ALL = [
   'v-home',
-  // GAL Grundlehrgang (24 Themen)
+  // GAL Grundlehrgang (33 Themen)
   'v-gal',
   'v-gal-organisation', 'v-gal-brandlehre', 'v-gal-fahrzeuge', 'v-gal-einsatz',
-  'v-gal-atemschutz', 'v-gal-beamtenrecht', 'v-gal-beihilferecht', 'v-gal-brandbekaempfung',
+  'v-gal-atemgifte', 'v-gal-atemschutz', 'v-gal-vb', 'v-gal-loeschlehre',
+  'v-gal-loeschmittel-schaum', 'v-gal-loeschwasserversorgung',
+  'v-gal-beamtenrecht', 'v-gal-beihilferecht', 'v-gal-brandbekaempfung',
   'v-gal-einsatztechnik', 'v-gal-erstehilfe', 'v-gal-grundlagen', 'v-gal-fahrzeugnormung',
   'v-gal-fuehrung', 'v-gal-fwdven', 'v-gal-gabc', 'v-gal-geraetepruefung',
   'v-gal-hbkg', 'v-gal-kartenkunde', 'v-gal-knoten', 'v-gal-staatsbuerger',
   'v-gal-th-verkehr', 'v-gal-leitern', 'v-gal-uvv', 'v-gal-waermebildkamera',
+  'v-gal-armaturen', 'v-gal-maschinist', 'v-gal-psa', 'v-gal-personalvertretungsrecht',
   // SFS Regensburg
   'v-sfs', 'v-sfs-fwdv3', 'v-sfs-methodik', 'v-sfs-rechtsgrundlagen', 'v-sfs-abc',
   // HLFS Kassel
@@ -114,8 +120,14 @@ const ALL = [
   // IBK Heyrothsberge
   'v-ibk', 'v-ibk-ta', 'v-ibk-konflikt', 'v-ibk-stress',
   'v-ibk-psnv', 'v-ibk-bgm', 'v-ibk-pm', 'v-ibk-zeit',
-  // Platzhalter
-  'v-vak', 'v-feuak', 'v-idf',
+  // VAk Berlin
+  'v-vak', 'v-vak-lernzusammenfassung', 'v-vak-jur-denken',
+  'v-vak-verwaltungsrecht', 'v-vak-staatsrecht', 'v-vak-einsatzrecht', 'v-vak-dienstrecht',
+  // FeuAK Hamburg
+  'v-feuak', 'v-feuak-vwl', 'v-feuak-bwl', 'v-feuak-haushalt', 'v-feuak-vergabe',
+  'v-feuak-rechnungswesen', 'v-feuak-pm', 'v-feuak-bedarfsplanung', 'v-feuak-pruefung',
+  // IdF Münster
+  'v-idf', 'v-idf-brandschutz', 'v-idf-stab', 'v-idf-presse',
   // Sonderfunktionen
   'v-simulator', 'v-flashcards', 'v-vorschlaege'
 ];
@@ -125,7 +137,7 @@ const ALL = [
 
 ## Inhaltsstruktur (alle Views)
 
-### GAL Grundlehrgang (`v-gal` → 24 Unterthemen)
+### GAL Grundlehrgang (`v-gal` → 33 Unterthemen)
 
 | Nr. | View-ID | Thema | Schlüsselinhalte |
 |-----|---------|-------|-----------------|
@@ -133,26 +145,35 @@ const ALL = [
 | 02 | `v-gal-brandlehre` | Brandlehre & Löschmittel | Brandtetraeder, Klassen A–F (DIN EN 2), Flash-Over/Backdraft/BLEVE, Stefan-Boltzmann-Gesetz |
 | 03 | `v-gal-fahrzeuge` | Fahrzeug- & Gerätekunde | Normfahrzeuge (DIN 14530/EN 1846), FPN 10-1000/2000, DLK 23-12, Normbeladung |
 | 04 | `v-gal-einsatz` | Einsatzgrundlagen & FwDV | Einsatzprinzipien, Truppgrundsatz, FwDV-System (1–500), Gruppenfunktionen |
-| 05 | `v-gal-atemschutz` | Atemschutz | PA-Typen, Atemluftberechnung (1.800 Nl), Kehrtpunkt, FwDV 7, CO/HCN-Physiologie, G26 |
-| 06 | `v-gal-beamtenrecht` | Beamtenrecht | BeamtStG §§ 33–37, Beamtenarten, Besoldungstabelle, §42a BBesO Feuerwehrzulage |
-| 07 | `v-gal-beihilferecht` | Beihilferecht | BBhV §§ 10–26, Beihilfesätze 50/70/80 %, Kostendämpfungspauschale, PKV/GKV |
-| 08 | `v-gal-brandbekaempfung` | Brandbekämpfung | Innen-/Außenangriff, 3D-Löschangriff, HSR-Modi, Druckbelüftung, Sonderbrände |
-| 09 | `v-gal-einsatztechnik` | Einsatztechnik | Schlauchtypen, Δp = R·L·Q², Armaturen, Schaummittel/PFAS, Bernoulli |
-| 10 | `v-gal-erstehilfe` | Erste Hilfe | ABCDE-Schema, CPR (ERC 2021), AED, Schockformen, Verbrennung/9er-Regel, Parkland |
-| 11 | `v-gal-grundlagen` | Naturwiss. Grundlagen | Physik (Druck, Bernoulli), Verbrennungschemie, Baustoffklassen EN 13501, Elektrotechnik |
-| 12 | `v-gal-fahrzeugnormung` | Fahrzeugnormung | DIN EN 1846 Klassifizierung, Typbezeichnung, Prüffristen, WLF/AB-System |
-| 13 | `v-gal-fuehrung` | Führung | Führungsstile (Lewin/Hersey-Blanchard), Schulz von Thun, Tuckman-Phasen |
-| 14 | `v-gal-fwdven` | FwDVen – Überblick | Alle FwDV 1–500, Rechtliche Stellung (AFKzV/IMK), Verhältnis zu DIN/EN/DGUV |
-| 15 | `v-gal-gabc` | G-ABC Lehrgang | GHS (9 Piktogramme), ADR-Klassen 1–9, Kemler-Nummern, GAMS, KS 1–4, Dekon P/G/V |
-| 16 | `v-gal-geraetepruefung` | Geräteprüfung | DGUV V 49/50, Prüftabelle 9 Gerätearten, Befähigte Person vs. Sachkundiger |
-| 17 | `v-gal-hbkg` | HBKG Hessen | §§ 1–70 paragraphengenau, §61 mit 12 Kostenersatz-Fallgruppen, KatS §§ 20–29 |
-| 18 | `v-gal-kartenkunde` | Kartenkunde | TK 25/50, UTM (32U/33U), MGRS, GNSS/SBAS, Kreuzpeilung, Orientierung ohne GPS |
-| 19 | `v-gal-knoten` | Knoten, Stiche & Bunde | Achtknoten/Mastwurf/Pfahlstich, Knotenwirkungsgrade, Prüfregeln |
-| 20 | `v-gal-staatsbuerger` | Staatsbürgerkunde | GG Art. 1–33, Staatsorgane, Gewaltenteilung, Föderalismus, Feuerwehr im Staatsaufbau |
-| 21 | `v-gal-th-verkehr` | TH Verkehrsunfall | Hydraulisches Rettungsgerät, E-Fahrzeuge (HV/Thermal Runaway), Tramcar |
-| 22 | `v-gal-leitern` | Tragbare Leitern | Leiternarten (DIN 14094), Aufstellwinkel 65–75°, Fußsicherung, Prüffristen |
-| 23 | `v-gal-uvv` | UVV – Unfallverhütung | ArbSchG §5, DGUV V 1/49/50, PSA-Normen (EN 469/443/659), BK-Recht |
-| 24 | `v-gal-waermebildkamera` | Wärmebildkamera | LWIR-Physik (Wien/Stefan-Boltzmann), Emissionsgrade, Glasbarriere, Thermal Runaway |
+| 05 | `v-gal-atemgifte` | Atemgifte | 3 Wirkungsgruppen (erstickend/reizend/giftig), CO/HCN-Physiologie, Brandrauch, Konzentrationseinheiten ppm/mg·m⁻³ |
+| 06 | `v-gal-atemschutz` | Atemschutz | PA-Typen, Atemluftberechnung (1.800 Nl), Kehrtpunkt, FwDV 7, G26 |
+| 07 | `v-gal-vb` | Vorbeugender Brandschutz | §14 HBO-Schutzziele, Gebäudeklassen 1–5, Feuerwiderstandsklassen, Brandwände, Rettungswege, Flächen für die FW |
+| 08 | `v-gal-loeschlehre` | Löschlehre | Löscheffekte, Strahlformen, Löschwasser-Einsatzgrenzen, Löschpulver, CO₂, Halon |
+| 09 | `v-gal-loeschmittel-schaum` | Löschmittel Schaum | Schaumbestandteile, Verschäumungszahlen (NS/MS/HS), AFFF/AR-AFFF/PFAS, Einsatzbereiche |
+| 10 | `v-gal-loeschwasserversorgung` | Löschwasserversorgung | Grundschutz/Objektschutz, Rohrnetztypen, Hydranten (Unter-/Überflur), Steigleitungen, unabhängige LWV |
+| 11 | `v-gal-beamtenrecht` | Beamtenrecht | BeamtStG §§ 33–37, Beamtenarten, Besoldungstabelle, §42a BBesO Feuerwehrzulage |
+| 12 | `v-gal-beihilferecht` | Beihilferecht | BBhV §§ 10–26, Beihilfesätze 50/70/80 %, Kostendämpfungspauschale, PKV/GKV |
+| 13 | `v-gal-brandbekaempfung` | Brandbekämpfung | Innen-/Außenangriff, 3D-Löschangriff, HSR-Modi, Druckbelüftung, Sonderbrände |
+| 14 | `v-gal-einsatztechnik` | Einsatztechnik | Schlauchtypen, Δp = R·L·Q², Armaturen, Schaummittel/PFAS, Bernoulli |
+| 15 | `v-gal-erstehilfe` | Erste Hilfe | ABCDE-Schema, CPR (ERC 2021), AED, Schockformen, Verbrennung/9er-Regel, Parkland |
+| 16 | `v-gal-grundlagen` | Naturwiss. Grundlagen | Physik (Druck, Bernoulli), Verbrennungschemie, Baustoffklassen EN 13501, Elektrotechnik |
+| 17 | `v-gal-fahrzeugnormung` | Fahrzeugnormung | DIN EN 1846 Klassifizierung, Typbezeichnung, Prüffristen, WLF/AB-System |
+| 18 | `v-gal-fuehrung` | Führung | Führungsstile (Lewin/Hersey-Blanchard), Schulz von Thun, Tuckman-Phasen |
+| 19 | `v-gal-fwdven` | FwDVen – Überblick | Alle FwDV 1–500, Rechtliche Stellung (AFKzV/IMK), Verhältnis zu DIN/EN/DGUV |
+| 20 | `v-gal-gabc` | G-ABC Lehrgang | GHS (9 Piktogramme), ADR-Klassen 1–9, Kemler-Nummern, GAMS, KS 1–4, Dekon P/G/V |
+| 21 | `v-gal-geraetepruefung` | Geräteprüfung | DGUV V 49/50, Prüftabelle 9 Gerätearten, Befähigte Person vs. Sachkundiger |
+| 22 | `v-gal-hbkg` | HBKG Hessen | §§ 1–70 paragraphengenau, §61 mit 12 Kostenersatz-Fallgruppen, KatS §§ 20–29 |
+| 23 | `v-gal-kartenkunde` | Kartenkunde | TK 25/50, UTM (32U/33U), MGRS, GNSS/SBAS, Kreuzpeilung, Orientierung ohne GPS |
+| 24 | `v-gal-knoten` | Knoten, Stiche & Bunde | Achtknoten/Mastwurf/Pfahlstich, Knotenwirkungsgrade, Prüfregeln |
+| 25 | `v-gal-staatsbuerger` | Staatsbürgerkunde | GG Art. 1–33, Staatsorgane, Gewaltenteilung, Föderalismus, Feuerwehr im Staatsaufbau |
+| 26 | `v-gal-th-verkehr` | TH Verkehrsunfall | Hydraulisches Rettungsgerät, E-Fahrzeuge (HV/Thermal Runaway), Tramcar |
+| 27 | `v-gal-leitern` | Tragbare Leitern | Leiternarten (DIN 14094), Aufstellwinkel 65–75°, Fußsicherung, Prüffristen |
+| 28 | `v-gal-uvv` | UVV – Unfallverhütung | ArbSchG §5, DGUV V 1/49/50, PSA-Normen (EN 469/443/659), BK-Recht |
+| 29 | `v-gal-waermebildkamera` | Wärmebildkamera | LWIR-Physik (Wien/Stefan-Boltzmann), Emissionsgrade, Glasbarriere, Thermal Runaway |
+| 30 | `v-gal-armaturen` | Wasserführende Armaturen | Entnahme-/Fortleitungs-/Abgabearmaturen, Schlauchtypen, Kupplungen, Hohlstrahlrohr |
+| 31 | `v-gal-maschinist` | Maschinistendienst | Löschfahrzeugtypen, FLKP, Inbetriebnahme, Pumpenprüfung, Wasserförderung über lange Strecken |
+| 32 | `v-gal-psa` | Persönliche Schutzausrüstung | Mindestschutzausrüstung nach FwDV 1, Schutzanzugklassen, Normen EN 469/443/659 |
+| 33 | `v-gal-personalvertretungsrecht` | Personalvertretungsrecht | HPVG, §38 Freistellungsregelungen, Zusammensetzung des Personalrats |
 
 ### SFS Regensburg (`v-sfs` → 4 Unterthemen)
 
@@ -187,18 +208,53 @@ const ALL = [
 | `v-ibk-pm` | Projektmanagement | SMART-Ziele, CPM/kritischer Pfad, Stakeholder-Mapping, Risikomatrix |
 | `v-ibk-zeit` | Zeitmanagement | Eisenhower-Matrix, ALPEN-Methode, Pareto, Deep Work |
 
+### VAk Berlin (`v-vak` → 6 Unterthemen)
+
+| View-ID | Thema | Schlüsselinhalte |
+|---------|-------|-----------------|
+| `v-vak-lernzusammenfassung` | Lernzusammenfassung | Übergreifende Zusammenfassung aller VAk-Themen |
+| `v-vak-jur-denken` | Juristisches Denken | Öffentliches Recht vs. Privatrecht, Subsumtionstechnik, Auslegungsmethoden |
+| `v-vak-verwaltungsrecht` | Allgemeines Verwaltungsrecht | VwVfG, Verwaltungsakt (§35), Bestandskraft, Widerspruch/Klage |
+| `v-vak-staatsrecht` | Staatsrecht | GG-Grundstruktur, Grundrechte, Staatszielbestimmungen, Bundesstaatsprinzip |
+| `v-vak-einsatzrecht` | Einsatzrecht | Polizei- & Ordnungsrecht, Feuerwehrrecht, Amtshilfe (Art. 35 GG) |
+| `v-vak-dienstrecht` | Öffentliches Dienstrecht | BeamtStG, Laufbahnrecht, Disziplinarrecht, Personalvertretung |
+
+### FeuAK Hamburg (`v-feuak` → 8 Unterthemen)
+
+| View-ID | Thema | Schlüsselinhalte |
+|---------|-------|-----------------|
+| `v-feuak-vwl` | VWL | Mikro-/Makroökonomie, Marktversagen, öffentliche Güter, Konjunkturzyklus |
+| `v-feuak-bwl` | BWL | Organisationsformen, Controlling, Kostenrechnung, Wirtschaftlichkeitsprinzip |
+| `v-feuak-haushalt` | Haushaltsrecht | Kameralismus vs. Doppik, Haushaltsgrundsätze, Deckungsprinzip |
+| `v-feuak-vergabe` | Vergaberecht | UVgO/VgV, Schwellenwerte, nationale vs. EU-weite Ausschreibung |
+| `v-feuak-rechnungswesen` | Rechnungswesen | Doppelte Buchführung, Bilanz, GuV, Kostenarten/-stellen/-träger |
+| `v-feuak-pm` | Projektmanagement / Strat. Management | SMART, Stakeholder, kritischer Pfad, BSC, Strategieprozess |
+| `v-feuak-bedarfsplanung` | Bedarfsplanung | Qualitäts-/Quantitäts-/Zeitplanung, Risikoanalyse, Schutzzielerreichung |
+| `v-feuak-pruefung` | Prüfungsleistung Hamburg | Zusammenfassung aller FeuAK-Prüfungsthemen |
+
+### IdF Münster (`v-idf` → 3 Unterthemen)
+
+| View-ID | Thema | Schlüsselinhalte |
+|---------|-------|-----------------|
+| `v-idf-brandschutz` | Vorbeugender Brandschutz | §14 MBO-Schutzziele, Sonderbauvorschriften, bautechnische Begriffe |
+| `v-idf-stab` | Stabsarbeit | S1–S6-Funktion, Stabsarbeitsprozess, TEL-Struktur |
+| `v-idf-presse` | Presse- & Öffentlichkeitsarbeit | Krisenkommunikation, 30-70-100-Regel, Social Media, Pressekonferenz |
+
 ---
 
 ## Karteikarten (Flashcards)
 
-**121 Karteikarten** gesamt – 3D-Flip-Animation, Know/Don't-Know-Bewertung, LocalStorage-Persistenz.
+**271 Karteikarten** gesamt – 3D-Flip-Animation, dynamische Kartenhöhe (mobile-optimiert), Know/Don't-Know-Bewertung, LocalStorage-Persistenz.
 
 | Kategorie | IDs | Anzahl |
 |-----------|-----|--------|
-| GAL (alle 24 Themen) | g01–g60 | 60 |
+| GAL (alle 33 Themen) | g01–g90 | 90 |
 | SFS · Taktik/Methodik/Recht | f01–f17 | 17 |
 | HLFS · Führung/GABC/MANV/Stab/Tunnel/Vorbeugen | f18–f33 | 16 |
-| IBK · TA/Konflikt/Stress/PSNV/BGM/PM/Zeit | f34–f61 | 28 |
+| IBK · TA/Konflikt/Stress/PSNV/BGM/PM/Zeit | f34–f79 | 46 |
+| VAk Berlin | v01–v33 | 33 |
+| FeuAK Hamburg | h01–h41 | 41 |
+| IdF Münster | i01–i28 | 28 |
 
 ---
 
@@ -217,6 +273,7 @@ const ALL = [
 .hint                           – Hinweis-Box (.blue-h / .err-h)
 .step-stack / .step-item / .step-letter  – Schrittfolge
 .sec-h / .sec-div               – Abschnittsüberschrift / Trenner
+.acc-list / .acc-item           – Accordion (details/summary-basiert)
 ```
 
 ### Raster & Tabellen
@@ -254,21 +311,19 @@ GitHub Issues API – Fine-grained PAT in `GH.token` (`js/app.js`).
 
 ---
 
-## Noch ausstehende Module
-
-| Standort | Status | Geplante Inhalte |
-|----------|--------|-----------------|
-| VAk Berlin | Platzhalter (`v-vak`) | Verwaltungsakademie, Führung im öffentlichen Dienst |
-| FeuAK Hamburg | Platzhalter (`v-feuak`) | Feuerwehrakademie Hamburg |
-| IdF Münster | Platzhalter (`v-idf`) | Institut der Feuerwehr NRW |
-
-Platzhalter aktivieren: `.tp`-Klasse entfernen, `onclick` hinzufügen, View befüllen, alle 4 JS-Stellen aktualisieren.
-
----
-
 ## Changelog
 
-### v4.0 – aktuell
+### v5.0 – aktuell
+- ✅ **VAk Berlin** – 6 vollständige Unterthemen (Jur. Denken, VwR, Staatsrecht, Einsatzrecht, Dienstrecht, Lernzusammenfassung) mit 33 Karteikarten (v01–v33)
+- ✅ **FeuAK Hamburg** – 8 vollständige Unterthemen (VWL, BWL, Haushalt, Vergabe, Rechnungswesen, PM, Bedarfsplanung, Prüfungsleistung) mit 41 Karteikarten (h01–h41)
+- ✅ **IdF Münster** – 3 vollständige Unterthemen (Vorbeugender Brandschutz, Stabsarbeit, Presse) mit 28 Karteikarten (i01–i28)
+- ✅ **GAL-Erweiterung** auf 33 Unterthemen (+9 neue: Atemgifte, Vorbeugender Brandschutz, Löschlehre, Löschmittel Schaum, Löschwasserversorgung, Armaturen, Maschinistendienst, PSA, Personalvertretungsrecht)
+- ✅ **90 neue GAL-Karteikarten** (g01–g90) → 271 Karteikarten gesamt
+- ✅ **Accordion-Darstellung** für 6 weitere GAL-Views (Organisation, Atemschutz, Fahrzeugnormung, Führung, Knoten, Staatsbürgerkunde)
+- ✅ **Dynamische Kartenhöhe** – Flashcards passen sich mobilfreundlich dem Inhalt an (`scrollHeight`-basiert, max. 72 vh)
+- ✅ `index.html` auf 12.246 Zeilen erweitert
+
+### v4.0
 - ✅ **GAL Grundlehrgang** – alle 24 Themen mit maximaler Informationstiefe vollständig neu geschrieben
 - ✅ **60 neue GAL-Karteikarten** (g01–g60) → 121 Karteikarten gesamt
 - ✅ `index.html` auf 6.272 Zeilen erweitert
