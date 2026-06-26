@@ -1269,6 +1269,7 @@ const FC = (function(){
   function fcSave(d){ try{ localStorage.setItem('bvi_fc',JSON.stringify(d)); }catch{} }
 
   function getDeck(){
+    if(filter==='fokus'){ const known=fcLoad(); return FLASHCARD_DATA.filter(c=>!known[c.id]); }
     if(filter==='all') return [...FLASHCARD_DATA];
     return FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(filter));
   }
@@ -1321,6 +1322,10 @@ const FC = (function(){
     const box = document.getElementById('fc-container'); if(!box) return;
     const known = fcLoad();
     const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
+    if(filter==='fokus' && deck.length===0){
+      box.innerHTML=`<div class="fc-end"><div class="fc-end-ico">🏆</div><div class="fc-end-title">Alle Karten gelernt!</div><div class="fc-end-sub">Du hast alle <strong>${FLASHCARD_DATA.length}</strong> Karten als gewusst markiert.</div><div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap"><button class="btn btn-gold" onclick="FC.setFilter('all')">Alle Karten wiederholen</button><button class="btn btn-ghost" onclick="FC.resetKnown()">Lernstand zurücksetzen</button></div></div>`;
+      return;
+    }
     const pct = deck.length ? Math.round(sess.known/deck.length*100) : 0;
     const ico = pct>=80?'🏆':pct>=50?'📖':'🔄';
     const ttl = pct>=80?'Ausgezeichnet!':pct>=50?'Gut gemacht!':'Weiter üben!';
