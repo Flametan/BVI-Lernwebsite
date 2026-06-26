@@ -1263,15 +1263,29 @@ const SEARCH = (function(){
    FC – Flashcard-Engine
 ====================================================================== */
 const FC = (function(){
-  let deck=[], curIdx=0, flipped=false, filter='all', sess={known:0,unknown:0};
+  const CATS = ['gal','sfs','hlfs','ibk','vak','feuak','idf'];
+  let deck=[], curIdx=0, flipped=false, sess={known:0,unknown:0};
+  let activeFilters = new Set(CATS);
+  let focusMode = false;
 
   function fcLoad(){ try{ return JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch{ return {}; } }
   function fcSave(d){ try{ localStorage.setItem('bvi_fc',JSON.stringify(d)); }catch{} }
 
   function getDeck(){
-    if(filter==='fokus'){ const known=fcLoad(); return FLASHCARD_DATA.filter(c=>!known[c.id]); }
-    if(filter==='all') return [...FLASHCARD_DATA];
-    return FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(filter));
+    let base = activeFilters.size===CATS.length ? [...FLASHCARD_DATA]
+      : FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f)));
+    if(focusMode){ const known=fcLoad(); base=base.filter(c=>!known[c.id]); }
+    return base;
+  }
+
+  function updateFilterButtons(){
+    const allSel = CATS.every(c=>activeFilters.has(c));
+    document.querySelectorAll('.fc-f-btn').forEach(b=>{
+      const df=b.dataset.filter;
+      if(df==='all') b.classList.toggle('active', allSel);
+      else if(df==='fokus') b.classList.toggle('active', focusMode);
+      else b.classList.toggle('active', activeFilters.has(df));
+    });
   }
   function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
 
@@ -1322,7 +1336,7 @@ const FC = (function(){
     const box = document.getElementById('fc-container'); if(!box) return;
     const known = fcLoad();
     const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
-    if(filter==='fokus' && deck.length===0){
+    if(focusMode && deck.length===0){
       box.innerHTML=`<div class="fc-end"><div class="fc-end-ico">🏆</div><div class="fc-end-title">Alle Karten gelernt!</div><div class="fc-end-sub">Du hast alle <strong>${FLASHCARD_DATA.length}</strong> Karten als gewusst markiert.</div><div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap"><button class="btn btn-gold" onclick="FC.setFilter('all')">Alle Karten wiederholen</button><button class="btn btn-ghost" onclick="FC.resetKnown()">Lernstand zurücksetzen</button></div></div>`;
       return;
     }
@@ -1362,8 +1376,21 @@ const FC = (function(){
       fcSave(d); curIdx++; renderCard();
     },
     setFilter(f){
-      filter=f;
-      document.querySelectorAll('.fc-f-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter===f));
+      if(f==='fokus'){
+        focusMode=!focusMode;
+      } else if(f==='all'){
+        activeFilters=new Set(CATS);
+      } else {
+        if(activeFilters.size===CATS.length){
+          activeFilters=new Set([f]);
+        } else if(activeFilters.has(f)){
+          activeFilters.delete(f);
+          if(activeFilters.size===0) activeFilters=new Set(CATS);
+        } else {
+          activeFilters.add(f);
+        }
+      }
+      updateFilterButtons();
       this.start();
     },
     resetKnown(){ localStorage.removeItem('bvi_fc'); this.start(); },
