@@ -1298,6 +1298,57 @@ const FC = (function(){
     outer.style.height = capped + 'px';
   }
 
+  function setupSwipe(outer){
+    if(!outer) return;
+    let x0=0, y0=0, live=false, dx=0, pid=-1;
+    const THR=80;
+    const hOk=outer.querySelector('.fc-swipe-ok');
+    const hNo=outer.querySelector('.fc-swipe-no');
+
+    outer.addEventListener('pointerdown',e=>{
+      x0=e.clientX; y0=e.clientY; live=true; dx=0; pid=e.pointerId;
+      outer.setPointerCapture(e.pointerId);
+    });
+
+    outer.addEventListener('pointermove',e=>{
+      if(!live||e.pointerId!==pid) return;
+      dx=e.clientX-x0;
+      const dy=e.clientY-y0;
+      if(Math.abs(dy)>Math.abs(dx)+5){live=false;outer.style.transform='';return;}
+      if(Math.abs(dx)<5) return;
+      e.preventDefault();
+      outer.style.transition='none';
+      outer.style.transform=`translateX(${dx}px) rotate(${dx*0.06}deg)`;
+      if(flipped){
+        const p=Math.min(Math.abs(dx)/THR,1);
+        hOk.style.opacity=dx>0?p:0; hNo.style.opacity=dx<0?p:0;
+      }
+    },{passive:false});
+
+    outer.addEventListener('pointerup',e=>{
+      if(e.pointerId!==pid||!live) return;
+      live=false;
+      outer.style.transition='';
+      if(Math.abs(dx)<8){
+        outer.style.transform=''; FC.flip();
+      } else if(flipped&&Math.abs(dx)>=THR){
+        const dir=dx>0?1:-1;
+        outer.style.transition='transform .28s ease,opacity .28s ease';
+        outer.style.transform=`translateX(${dir*window.innerWidth}px) rotate(${dir*25}deg)`;
+        outer.style.opacity='0';
+        setTimeout(()=>FC.answer(dx>0),260);
+      } else {
+        outer.style.transform=''; hOk.style.opacity='0'; hNo.style.opacity='0';
+      }
+    });
+
+    outer.addEventListener('pointercancel',e=>{
+      if(e.pointerId!==pid) return;
+      live=false; outer.style.transform=''; outer.style.transition='';
+      hOk.style.opacity='0'; hNo.style.opacity='0';
+    });
+  }
+
   function renderCard(){
     const box = document.getElementById('fc-container'); if(!box) return;
     if(curIdx >= deck.length){ renderEnd(); return; }
@@ -1311,7 +1362,7 @@ const FC = (function(){
         <span class="fc-stat">📚 ${knownCnt}/${FLASHCARD_DATA.length} gelernt</span>
       </div>
       <div class="fc-nav">${curIdx+1} / ${deck.length}</div>
-      <div class="fc-outer" onclick="FC.flip()">
+      <div class="fc-outer">
         <div class="fc-inner" id="fc-inner">
           <div class="fc-face fc-front">
             <div class="fc-cat">${card.cat}</div>
@@ -1323,13 +1374,15 @@ const FC = (function(){
             <div class="fc-a">${card.a}</div>
           </div>
         </div>
+        <div class="fc-swipe-ok">✓ Gewusst</div>
+        <div class="fc-swipe-no">✗ Nicht gewusst</div>
       </div>
       <div class="fc-controls" id="fc-controls" style="display:none">
         <button class="fc-btn fc-no" onclick="FC.answer(false)">✗ Nicht gewusst</button>
         <button class="fc-btn fc-yes" onclick="FC.answer(true)">✓ Gewusst</button>
       </div>`;
     flipped = false;
-    requestAnimationFrame(sizeCard);
+    requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
   }
 
   function renderEnd(){
