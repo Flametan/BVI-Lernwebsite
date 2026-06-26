@@ -372,16 +372,16 @@
   .tc-check{position:absolute;top:.65rem;right:.65rem;width:20px;height:20px;border-radius:50%;background:var(--c-ok-dim);border:1.5px solid rgba(42,122,82,.5);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#4ACD90;pointer-events:none;}
 
   /* ── FLASHCARDS ──────────────────────────────────────── */
-  .fc-outer{perspective:1000px;width:100%;max-width:580px;margin:0 auto 1.25rem;height:250px;cursor:pointer;user-select:none;}
+  .fc-outer{perspective:1000px;width:100%;max-width:580px;margin:0 auto 1.25rem;height:250px;cursor:pointer;user-select:none;transition:height .25s ease;}
   .fc-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .48s var(--ease);}
   .fc-inner.flipped{transform:rotateY(180deg);}
-  .fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r-xl);padding:1.75rem;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+  .fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r-xl);padding:1.75rem;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;}
   .fc-front{background:var(--glass);border:1px solid var(--c-gold-rim);}
   .fc-back{background:linear-gradient(135deg,rgba(201,168,76,.09),rgba(201,168,76,.03));border:1px solid var(--c-gold-rim);transform:rotateY(180deg);}
   .fc-cat{font-size:.59rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--c-gold);margin-bottom:.6rem;opacity:.75;}
   .fc-q{font-family:var(--f-d);font-size:1.3rem;font-weight:600;color:var(--c-text-b);line-height:1.3;}
   .fc-tap{font-size:.68rem;color:var(--c-slate);margin-top:.85rem;}
-  .fc-a{font-size:.87rem;color:var(--c-text);line-height:1.75;}
+  .fc-a{font-size:.87rem;color:var(--c-text);line-height:1.75;text-align:left;width:100%;overflow-y:auto;max-height:100%;}
   .fc-a strong{color:var(--c-gold);}
   .fc-controls{display:flex;gap:.6rem;justify-content:center;margin-top:.3rem;}
   .fc-btn{flex:1;max-width:190px;padding:.58rem 1rem;border-radius:var(--r-md);font-family:var(--f-b);font-size:.81rem;font-weight:600;cursor:pointer;border:1px solid;transition:all var(--t);}

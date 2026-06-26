@@ -1274,6 +1274,15 @@ const FC = (function(){
   }
   function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
 
+  function sizeCard(){
+    const outer = document.querySelector('.fc-outer');
+    if(!outer) return;
+    let maxH = 0;
+    outer.querySelectorAll('.fc-face').forEach(f => { maxH = Math.max(maxH, f.scrollHeight); });
+    const capped = Math.max(Math.min(maxH, Math.floor(window.innerHeight * 0.72)), 180);
+    outer.style.height = capped + 'px';
+  }
+
   function renderCard(){
     const box = document.getElementById('fc-container'); if(!box) return;
     if(curIdx >= deck.length){ renderEnd(); return; }
@@ -1305,6 +1314,7 @@ const FC = (function(){
         <button class="fc-btn fc-yes" onclick="FC.answer(true)">✓ Gewusst</button>
       </div>`;
     flipped = false;
+    requestAnimationFrame(sizeCard);
   }
 
   function renderEnd(){
@@ -1351,13 +1361,18 @@ const FC = (function(){
       document.querySelectorAll('.fc-f-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter===f));
       this.start();
     },
-    resetKnown(){ localStorage.removeItem('bvi_fc'); this.start(); }
+    resetKnown(){ localStorage.removeItem('bvi_fc'); this.start(); },
+    resize(){ sizeCard(); }
   };
 })();
 
 /* ======================================================================
    INITIALISIERUNG
 ====================================================================== */
+window.addEventListener('resize', () => {
+  if(document.querySelector('.fc-outer')) FC.resize();
+});
+
 document.addEventListener('DOMContentLoaded',()=>{
   NAV.home();
   PROGRESS.updateUI();
