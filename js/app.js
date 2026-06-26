@@ -1156,7 +1156,7 @@ const PROGRESS = (function(){
     });
   }
 
-  return { track, updateUI };
+  return { track, updateUI, reset(){ localStorage.removeItem('bvi_progress'); updateUI(); } };
 })();
 
 /* ======================================================================
@@ -1255,6 +1255,25 @@ const SEARCH = (function(){
       this.close();
       const lbl = r.lbl.split('·').pop().trim();
       NAV.go(r.vid, lbl);
+    }
+  };
+})();
+
+/* ======================================================================
+   SETTINGS
+====================================================================== */
+const SETTINGS = (function(){
+  function overlay(){ return document.getElementById('settings-overlay'); }
+  return {
+    open(){ overlay().classList.remove('hidden'); },
+    close(){ overlay().classList.add('hidden'); },
+    resetTopics(){
+      if(!confirm('Themen-Fortschritt wirklich zurücksetzen? Alle besuchten Themen werden als ungelesen markiert.')) return;
+      PROGRESS.reset(); this.close();
+    },
+    resetCards(){
+      if(!confirm('Lernkarten-Lernstand wirklich zurücksetzen? Alle Karten gelten wieder als unbekannt.')) return;
+      FC.resetKnown(); this.close();
     }
   };
 })();
@@ -1471,6 +1490,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.addEventListener('keydown', e => {
     if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); SEARCH.open(); }
     if(e.key==='Escape' && !document.getElementById('search-overlay').classList.contains('hidden')) SEARCH.close();
+    if(e.key==='Escape' && !document.getElementById('settings-overlay').classList.contains('hidden')) SETTINGS.close();
   });
   console.log('%c B VI %c Lernwebsite v3.1 · flametan/BVI-Lernwebsite ',
     'background:#A50000;color:#fff;padding:3px 8px;border-radius:4px 0 0 4px;font-family:"DM Mono",monospace;font-weight:700',
