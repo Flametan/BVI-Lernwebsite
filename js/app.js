@@ -46,12 +46,24 @@ const NAV = (function(){
   }
 
   return {
-    go(id,label){ stack.push({id,label}); show(id); },
+    go(id,label){ stack.push({id,label}); history.pushState({stack:[...stack]},''); show(id); },
     back(){ if(!stack.length) return; stack.pop(); show(stack.length?stack[stack.length-1].id:'v-home'); },
-    jumpTo(idx){ stack=stack.slice(0,idx+1); show(idx>=0?stack[idx].id:'v-home'); },
-    home(){ stack=[]; show('v-home'); }
+    jumpTo(idx){ stack=stack.slice(0,idx+1); history.pushState({stack:[...stack]},''); show(idx>=0?stack[idx].id:'v-home'); },
+    home(){ stack=[]; history.pushState({home:true},''); show('v-home'); },
+    _restoreStack(s){ stack=s; show(s.length?s[s.length-1].id:'v-home'); }
   };
 })();
+
+history.replaceState({home:true},'');
+window.addEventListener('popstate',function(e){
+  if(e.state&&e.state.stack){
+    // Restore stack from state and show the top view
+    const s=e.state.stack;
+    NAV._restoreStack(s);
+  } else {
+    NAV._restoreStack([]);
+  }
+});
 
 /* ======================================================================
    SIMULATOR ENGINE – 4 SZENARIEN
