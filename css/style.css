@@ -18,7 +18,7 @@
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
   body{font-family:var(--f-b);background:var(--c-bg);color:var(--c-text);min-height:100vh;overflow-x:hidden;line-height:1.65;-webkit-font-smoothing:antialiased;}
-  body::before{content:'';position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(201,168,76,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.025) 1px,transparent 1px);background-size:56px 56px;pointer-events:none;}
+  body::before{content:none;}
   button{font-family:inherit;cursor:pointer;border:none;background:none;}
   ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--c-bg);}::-webkit-scrollbar-thumb{background:var(--c-navy-4);border-radius:3px;}::-webkit-scrollbar-thumb:hover{background:var(--c-gold);}
 
