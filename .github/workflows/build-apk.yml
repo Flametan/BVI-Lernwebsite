@@ -8,6 +8,9 @@ on:
       - '.github/workflows/build-apk.yml'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,9 +41,18 @@ jobs:
         working-directory: android
         run: gradle assembleDebug --no-daemon
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk bvi-lernwebsite.apk
+
+      - name: Publish to GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: bvi-lernwebsite-${{ github.run_number }}
-          path: android/app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 30
+          tag_name: android-latest
+          name: Android App
+          prerelease: false
+          make_latest: true
+          body: |
+            **B VI – Höherer Dienst** als Android-App.
+
+            Mindestanforderung: Android 8.0 (API 26)
+          files: bvi-lernwebsite.apk

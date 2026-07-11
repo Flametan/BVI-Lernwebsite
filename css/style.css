@@ -563,3 +563,13 @@
     .view{display:block!important;padding-top:0!important;}
     .pc{padding:1rem!important;}
   }
+
+  /* ── APK DOWNLOAD BANNER ── */
+  .apk-banner{display:flex;align-items:center;gap:1rem;margin-top:1.5rem;padding:.9rem 1.25rem;border-radius:var(--r-lg);border:1px solid rgba(201,168,76,.25);background:linear-gradient(135deg,rgba(10,25,47,.7),rgba(21,43,82,.5));color:var(--c-text);text-decoration:none;transition:all var(--t);backdrop-filter:blur(8px);}
+  .apk-banner:hover{border-color:rgba(201,168,76,.5);background:linear-gradient(135deg,rgba(10,25,47,.9),rgba(21,43,82,.7));transform:translateY(-1px);}
+  .apk-icon{width:2rem;height:2rem;color:var(--c-gold);flex-shrink:0;}
+  .apk-text{flex:1;display:flex;flex-direction:column;gap:.15rem;}
+  .apk-label{font-size:.9rem;font-weight:600;color:var(--c-gold);}
+  .apk-sub{font-size:.75rem;color:var(--c-slate-l);}
+  .apk-arr{width:1.2rem;height:1.2rem;color:var(--c-gold);flex-shrink:0;opacity:.7;}
+  .apk-banner:hover .apk-arr{opacity:1;transform:translateY(2px);}
