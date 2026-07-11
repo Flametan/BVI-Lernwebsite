@@ -1,4 +1,4 @@
-const CACHE = 'bvi-v1';
+const CACHE = 'bvi-v2';
 const ASSETS = ['./', './index.html', './css/style.css', './js/app.js', './manifest.json'];
 
 self.addEventListener('install', e => {
