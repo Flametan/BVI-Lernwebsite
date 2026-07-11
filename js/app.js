@@ -5,7 +5,7 @@
 const NAV = (function(){
   let stack = [];
   let _dir = 'forward';
-  const ALL = ['v-home','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-feuak','v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-idf','v-idf-brandschutz','v-idf-stab','v-idf-presse','v-simulator','v-flashcards','v-vorschlaege'];
+  const ALL = ['v-home','v-abkuerzungen','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-feuak','v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-idf','v-idf-brandschutz','v-idf-stab','v-idf-presse','v-simulator','v-flashcards','v-vorschlaege'];
 
   function show(id){
     ALL.forEach(v=>{
@@ -22,7 +22,10 @@ const NAV = (function(){
     window.scrollTo({top:0,behavior:'instant'});
     updateHeader();
     if(id==='v-vorschlaege') loadProposals();
+    if(id==='v-abkuerzungen') ABK.init();
     if(typeof PROGRESS!=='undefined') PROGRESS.track(id);
+    if(typeof TOC!=='undefined') TOC.build();
+    updateReadProgress();
   }
 
   function updateHeader(){
@@ -1285,18 +1288,45 @@ const SEARCH = (function(){
 /* ======================================================================
    SETTINGS
 ====================================================================== */
+/* ======================================================================
+   TOAST
+====================================================================== */
+const TOAST = (function(){
+  let wrap;
+  function container(){ if(!wrap){ wrap=document.createElement('div'); wrap.className='toast-wrap'; document.body.appendChild(wrap); } return wrap; }
+  return {
+    show(msg, {type='',undo=null,duration=4200}={}){
+      const t=document.createElement('div');
+      t.className='toast'+(type?' toast-'+type:'');
+      t.innerHTML=`<span class="toast-msg">${msg}</span>${undo?'<button class="toast-undo">Rückgängig</button>':''}`;
+      if(undo) t.querySelector('.toast-undo').addEventListener('click',()=>{ undo(); this.dismiss(t); });
+      container().appendChild(t);
+      t._timer=setTimeout(()=>this.dismiss(t),duration);
+    },
+    dismiss(t){
+      clearTimeout(t._timer);
+      t.classList.add('toast-out');
+      t.addEventListener('animationend',()=>t.remove(),{once:true});
+    }
+  };
+})();
+
 const SETTINGS = (function(){
   function overlay(){ return document.getElementById('settings-overlay'); }
   return {
     open(){ overlay().classList.remove('hidden'); },
     close(){ overlay().classList.add('hidden'); },
     resetTopics(){
-      if(!confirm('Themen-Fortschritt wirklich zurücksetzen? Alle besuchten Themen werden als ungelesen markiert.')) return;
+      const snap=localStorage.getItem('bvi_progress');
       PROGRESS.reset(); this.close();
+      TOAST.show('Themen-Fortschritt zurückgesetzt',{type:'ok',undo:()=>{ if(snap) localStorage.setItem('bvi_progress',snap); PROGRESS.updateUI(); }});
     },
     resetCards(){
-      if(!confirm('Lernkarten-Lernstand wirklich zurücksetzen? Alle Karten gelten wieder als unbekannt.')) return;
-      FC.resetKnown(); this.close();
+      const snap=localStorage.getItem('bvi_fc');
+      localStorage.removeItem('bvi_fc');
+      if(document.getElementById('v-flashcards').classList.contains('active')) FC.start();
+      this.close();
+      TOAST.show('Lernkarten zurückgesetzt',{type:'ok',undo:()=>{ if(snap) localStorage.setItem('bvi_fc',snap); }});
     }
   };
 })();
@@ -1319,6 +1349,52 @@ const DARKMODE = (function(){
     toggle(light){
       localStorage.setItem(KEY, light ? 'light' : 'dark');
       apply(light);
+    }
+  };
+})();
+
+/* ======================================================================
+   LESEFORTSCHRITT
+====================================================================== */
+const NO_PROG = new Set(['v-home','v-flashcards','v-simulator','v-vorschlaege','v-abkuerzungen']);
+function updateReadProgress(){
+  const bar = document.getElementById('read-prog');
+  const fill = document.getElementById('read-prog-fill');
+  if(!bar||!fill) return;
+  const active = document.querySelector('.view.active');
+  const show = active && !NO_PROG.has(active.id);
+  bar.classList.toggle('visible', show);
+  if(!show){ fill.style.width='0%'; return; }
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  fill.style.width = (total>0 ? Math.min(100, window.scrollY/total*100) : 0)+'%';
+}
+
+/* ======================================================================
+   TOC – Floating Dot Navigation
+====================================================================== */
+const TOC = (function(){
+  let el=null, sections=[];
+  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-vorschlaege','v-abkuerzungen']);
+  return {
+    build(){
+      if(!el){ el=document.createElement('nav'); el.className='toc-float'; document.body.appendChild(el); }
+      el.innerHTML=''; sections=[];
+      const active=document.querySelector('.view.active');
+      if(!active||SKIP.has(active.id)) return;
+      sections=Array.from(active.querySelectorAll('.sec-h')).filter(s=>s.textContent.trim());
+      el.innerHTML=sections.map((s,i)=>{
+        const title=s.textContent.replace(/[<>]/g,'').trim().substring(0,34);
+        return `<div class="toc-dot" data-idx="${i}" data-title="${title}" onclick="TOC.goto(${i})"></div>`;
+      }).join('');
+      this.update();
+    },
+    goto(i){ sections[i]?.scrollIntoView({behavior:'smooth',block:'start'}); },
+    update(){
+      if(!el||!sections.length) return;
+      const mid=window.scrollY+window.innerHeight*0.38;
+      let cur=0;
+      sections.forEach((s,i)=>{ if(s.getBoundingClientRect().top+window.scrollY<=mid) cur=i; });
+      el.querySelectorAll('.toc-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
     }
   };
 })();
@@ -1378,12 +1454,24 @@ const FC = (function(){
   }
 
   function updateFilterButtons(){
-    const allSel = CATS.every(c=>activeFilters.has(c));
+    const known=fcLoad();
+    const allSel=CATS.every(c=>activeFilters.has(c));
     document.querySelectorAll('.fc-f-btn').forEach(b=>{
       const df=b.dataset.filter;
-      if(df==='all') b.classList.toggle('active', allSel);
-      else if(df==='fokus') b.classList.toggle('active', focusMode);
-      else b.classList.toggle('active', activeFilters.has(df));
+      const base=b.dataset.label||'';
+      if(df==='all'){
+        b.classList.toggle('active',allSel);
+        b.textContent=`${base} (${FLASHCARD_DATA.length})`;
+      } else if(df==='fokus'){
+        const unk=FLASHCARD_DATA.filter(c=>!known[c.id]).length;
+        b.classList.toggle('active',focusMode);
+        b.textContent=`🎯 ${base} (${unk})`;
+      } else if(df){
+        const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df));
+        const knownCnt=cats.filter(c=>known[c.id]).length;
+        b.classList.toggle('active',!allSel&&activeFilters.has(df));
+        b.textContent=`${base} ${knownCnt}/${cats.length}`;
+      }
     });
   }
   function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -1536,9 +1624,16 @@ const FC = (function(){
     },
     answer(knew){
       if(!flipped) return;
+      if(navigator.vibrate) navigator.vibrate(knew ? [30] : [20,50,20]);
       const card=deck[curIdx];
       const d=fcLoad();
-      if(knew){ d[card.id]=true; sess.known++; } else { delete d[card.id]; sess.unknown++; }
+      if(knew){ d[card.id]=true; sess.known++; }
+      else {
+        delete d[card.id]; sess.unknown++;
+        // Spaced repetition: re-insert unknown card (max 2 extra rounds)
+        const reps=card._reps||0;
+        if(reps<2) deck.push(Object.assign({},card,{_reps:reps+1}));
+      }
       fcSave(d); curIdx++; renderCard();
     },
     setFilter(f){
@@ -1560,7 +1655,195 @@ const FC = (function(){
       this.start();
     },
     resetKnown(){ localStorage.removeItem('bvi_fc'); this.start(); },
-    resize(){ sizeCard(); }
+    resize(){ sizeCard(); },
+    print(){
+      const cards=[...new Map(getDeck().map(c=>[c.id,c])).values()];
+      const rows=cards.map(c=>`<div class="pc"><div class="cat">${c.cat}</div><div class="q">${c.q}</div><hr/><div class="a">${c.a}</div></div>`).join('');
+      const w=window.open('','_blank');
+      w.document.write(`<!DOCTYPE html><html><head><title>Lernkarten B VI</title><style>
+        *{box-sizing:border-box;margin:0;padding:0;}body{font-family:sans-serif;padding:1rem;}
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+        .pc{border:1px solid #ccc;border-radius:8px;padding:.85rem;page-break-inside:avoid;}
+        .cat{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;}
+        .q{font-weight:700;font-size:.88rem;margin-bottom:.45rem;line-height:1.4;}
+        hr{border:none;border-top:1px solid #eee;margin:.4rem 0;}
+        .a{font-size:.78rem;color:#333;line-height:1.6;}
+        @media print{.grid{grid-template-columns:1fr 1fr;}}
+      </style></head><body><div class="grid">${rows}</div></body></html>`);
+      w.document.close(); w.print();
+    }
+  };
+})();
+
+/* ======================================================================
+   ABKÜRZUNGEN
+====================================================================== */
+const ABK = (function(){
+  const DATA = [
+    // Ausbildungseinrichtungen
+    {s:'Ausbildungseinrichtungen',a:'GAL',f:'Grundausbildungslehrgang',d:'Basismodul der Laufbahnausbildung im höheren feuerwehrtechnischen Dienst'},
+    {s:'Ausbildungseinrichtungen',a:'SFS',f:'Staatliche Feuerwehrschule Regensburg',d:'Bayerische Landesfeuerwehrschule, u.a. Gruppenführerlehrgang B3'},
+    {s:'Ausbildungseinrichtungen',a:'HLFS',f:'Hessische Landesfeuerwehrschule',d:'Standort Kassel, Führungslehrgänge für BF und FF'},
+    {s:'Ausbildungseinrichtungen',a:'IBK',f:'Institut für Brand- und Katastrophenschutz Heyrothsberge',d:'Sachsen-Anhalt; Lehrgang Führung, PSNV, BGM, Kommunikation'},
+    {s:'Ausbildungseinrichtungen',a:'VAk',f:'Verwaltungsakademie Berlin',d:'Rechtliche und verwaltungsbezogene Ausbildungsmodule'},
+    {s:'Ausbildungseinrichtungen',a:'FeuAK',f:'Feuerwehrakademie Hamburg',d:'Wirtschafts- und Managementlehrgänge für Führungskräfte'},
+    {s:'Ausbildungseinrichtungen',a:'IdF',f:'Institut der Feuerwehr NRW',d:'Standort Münster; Brandschutz, Stabsarbeit, Öffentlichkeitsarbeit'},
+    {s:'Ausbildungseinrichtungen',a:'BF',f:'Berufsfeuerwehr',d:'Hauptamtliche kommunale Feuerwehr'},
+    {s:'Ausbildungseinrichtungen',a:'FF',f:'Freiwillige Feuerwehr',d:'Ehrenamtlich organisierte Feuerwehr'},
+    {s:'Ausbildungseinrichtungen',a:'WF',f:'Werkfeuerwehr',d:'Betriebliche Feuerwehr in Unternehmen'},
+    // Fahrzeuge
+    {s:'Fahrzeuge',a:'LF',f:'Löschfahrzeug',d:'Genormtes Löschfahrzeug nach DIN 14530'},
+    {s:'Fahrzeuge',a:'HLF',f:'Hilfeleistungslöschfahrzeug',d:'Kombinationsfahrzeug für Brand- und TH-Einsätze'},
+    {s:'Fahrzeuge',a:'TLF',f:'Tanklöschfahrzeug',d:'Fahrzeug mit großem Löschwassertank, für wasserarme Gebiete'},
+    {s:'Fahrzeuge',a:'DLK',f:'Drehleiter mit Korb',d:'Hubrettungsfahrzeug mit Rettungskorb, i.d.R. 23 m oder 32 m'},
+    {s:'Fahrzeuge',a:'TM',f:'Teleskopmast',d:'Hubrettungsfahrzeug als Alternative zur DLK'},
+    {s:'Fahrzeuge',a:'RW',f:'Rüstwagen',d:'Fahrzeug für technische Hilfeleistung, mit Seilwinde und Hebesatz'},
+    {s:'Fahrzeuge',a:'GW',f:'Gerätewagen',d:'Transportfahrzeug für spezifische Ausrüstung (z.B. GW-G, GW-L, GW-Öl)'},
+    {s:'Fahrzeuge',a:'ELW',f:'Einsatzleitwagen',d:'Führungsfahrzeug für den Einsatzleiter'},
+    {s:'Fahrzeuge',a:'KdoW',f:'Kommandowagen',d:'Führungsfahrzeug für Führungskräfte (Pkw)'},
+    {s:'Fahrzeuge',a:'MTW',f:'Mannschaftstransportwagen',d:'Transportfahrzeug für Personal und Material'},
+    {s:'Fahrzeuge',a:'WLF',f:'Wechselladerfahrzeug',d:'Trägerfahrzeug für Abrollbehälter'},
+    {s:'Fahrzeuge',a:'AB',f:'Abrollbehälter',d:'Wechselaufbau für WLF, z.B. AB-Schlauch, AB-Rüst, AB-Atemschutz'},
+    {s:'Fahrzeuge',a:'MZF',f:'Mehrzweckfahrzeug',d:'Kleines Einsatzfahrzeug für vielfältige Aufgaben'},
+    {s:'Fahrzeuge',a:'NEF',f:'Notarzteinsatzfahrzeug',d:'Pkw für den Notarzt zur schnellen Anfahrt'},
+    {s:'Fahrzeuge',a:'RTW',f:'Rettungswagen',d:'Rettungsfahrzeug mit Intensivtransportmöglichkeit'},
+    // Einsatztaktik
+    {s:'Einsatztaktik & Organisation',a:'FwDV',f:'Feuerwehr-Dienstvorschrift',d:'Bundesweit gültige Vorschriften für den Feuerwehrdienst'},
+    {s:'Einsatztaktik & Organisation',a:'FwDV 3',f:'FwDV 3 – Einheiten im Lösch- und Hilfeleistungseinsatz',d:'Regelt Taktik und Aufgaben von Staffel, Gruppe und Zug'},
+    {s:'Einsatztaktik & Organisation',a:'TH',f:'Technische Hilfeleistung',d:'Einsatzart für nicht brennende Notlagen, z.B. Verkehrsunfall'},
+    {s:'Einsatztaktik & Organisation',a:'MANV',f:'Massenanfall von Verletzten',d:'Besondere Einsatzlage mit vielen Verletzten; erfordert MANV-Konzept'},
+    {s:'Einsatztaktik & Organisation',a:'VB',f:'Verbandsführung / Verband',d:'Taktische Einheit aus mehreren Zügen unter einem Verbandsführer'},
+    {s:'Einsatztaktik & Organisation',a:'GABC',f:'Gefahren ABC',d:'Gefahrenklassen: Gefährliche Stoffe, Atomare, Biologische, Chemische Gefahren'},
+    {s:'Einsatztaktik & Organisation',a:'ABC',f:'Atomare, Biologische, Chemische Gefahren',d:'Klassifizierung von Sonderschadenslagen'},
+    {s:'Einsatztaktik & Organisation',a:'CBRN',f:'Chemical, Biological, Radiological, Nuclear',d:'Internationale Bezeichnung für ABC-Gefahrenlagen'},
+    {s:'Einsatztaktik & Organisation',a:'GF',f:'Gruppenführer',d:'Führt eine Gruppe (1:8) im Einsatz'},
+    {s:'Einsatztaktik & Organisation',a:'ZF',f:'Zugführer',d:'Führt einen Löschzug (mind. 2 Gruppen) im Einsatz'},
+    {s:'Einsatztaktik & Organisation',a:'StF',f:'Staffelführer',d:'Führt eine Staffel (1:5) im Einsatz'},
+    {s:'Einsatztaktik & Organisation',a:'Ma',f:'Maschinist',d:'Bedient und überwacht die feuerwehrtechnischen Geräte des Fahrzeugs'},
+    {s:'Einsatztaktik & Organisation',a:'A-Tr',f:'Angriffstrupp',d:'Trupp zur Brandbekämpfung und Menschenrettung (unter PA)'},
+    {s:'Einsatztaktik & Organisation',a:'W-Tr',f:'Wassertrupp',d:'Trupp zur Wasserversorgung und Sicherung des Angriffstrupps'},
+    {s:'Einsatztaktik & Organisation',a:'S-Tr',f:'Sicherheitstrupp',d:'Trupp zur Sicherung und Rettung des Angriffstrupps'},
+    {s:'Einsatztaktik & Organisation',a:'Schl-Tr',f:'Schlauchtrupp',d:'Trupp zur Herstellung der Wasserversorgung über längere Strecken'},
+    {s:'Einsatztaktik & Organisation',a:'BOS',f:'Behörden und Organisationen mit Sicherheitsaufgaben',d:'Nutzer des Digitalfunks: Feuerwehr, Polizei, Rettungsdienst'},
+    {s:'Einsatztaktik & Organisation',a:'ILS',f:'Integrierte Leitstelle',d:'Gemeinsame Leitstelle für Feuerwehr und Rettungsdienst'},
+    {s:'Einsatztaktik & Organisation',a:'TETRA',f:'Terrestrial Trunked Radio',d:'Standard für den digitalen Behördenfunk (BOS-Digitalfunk)'},
+    // Ausrüstung & Atemschutz
+    {s:'Ausrüstung & Atemschutz',a:'PSA',f:'Persönliche Schutzausrüstung',d:'Gesamtheit der Schutzkleidung und -ausrüstung des Einsatzkräfte'},
+    {s:'Ausrüstung & Atemschutz',a:'PA',f:'Pressluftatmer',d:'Atemschutzgerät mit Pressluft-Atemluft; Schutz gegen Atemgifte'},
+    {s:'Ausrüstung & Atemschutz',a:'CSA',f:'Chemikalienschutzanzug',d:'Gasdichter Vollschutzanzug für Gefahrstoffeinsätze'},
+    {s:'Ausrüstung & Atemschutz',a:'AS',f:'Atemschutz',d:'Oberbegriff für alle Maßnahmen zum Schutz der Atemwege'},
+    {s:'Ausrüstung & Atemschutz',a:'ÜAS',f:'Atemschutzüberwachung',d:'Pflicht zur Überwachung von PA-Trägern im Einsatz (FwDV 7)'},
+    {s:'Ausrüstung & Atemschutz',a:'UVV',f:'Unfallverhütungsvorschrift',d:'Vorschriften der Berufsgenossenschaften zur Unfallverhütung'},
+    {s:'Ausrüstung & Atemschutz',a:'DGUV',f:'Deutsche Gesetzliche Unfallversicherung',d:'Dachverband der Berufsgenossenschaften und Unfallkassen'},
+    // Brandlehre & Gefahrstoffe
+    {s:'Brandlehre & Gefahrstoffe',a:'UEG',f:'Untere Explosionsgrenze',d:'Mindestkonzentration eines brennbaren Gases für eine Zündung'},
+    {s:'Brandlehre & Gefahrstoffe',a:'OEG',f:'Obere Explosionsgrenze',d:'Maximalkonzentration eines brennbaren Gases für eine Zündung'},
+    {s:'Brandlehre & Gefahrstoffe',a:'BLEVE',f:'Boiling Liquid Expanding Vapour Explosion',d:'Explosion eines überhitzten Druckbehälters mit siedender Flüssigkeit'},
+    {s:'Brandlehre & Gefahrstoffe',a:'UVCE',f:'Unconfined Vapour Cloud Explosion',d:'Unkontrollierte Gaswolkenexplosion im Freien'},
+    {s:'Brandlehre & Gefahrstoffe',a:'GHS',f:'Globally Harmonized System',d:'Weltweites System zur Einstufung und Kennzeichnung von Gefahrstoffen'},
+    {s:'Brandlehre & Gefahrstoffe',a:'ADR',f:'Accord Dangereux Routier',d:'Europäisches Übereinkommen über den Straßentransport gefährlicher Güter'},
+    {s:'Brandlehre & Gefahrstoffe',a:'GGVSEB',f:'Gefahrgutverordnung Straße, Eisenbahn und Binnenschifffahrt',d:'Nationales Recht für den Gefahrguttransport'},
+    {s:'Brandlehre & Gefahrstoffe',a:'CO',f:'Kohlenmonoxid',d:'Farb- und geruchloses Atemgift; häufigstes Brandgas'},
+    {s:'Brandlehre & Gefahrstoffe',a:'HCN',f:'Cyanwasserstoff (Blausäure)',d:'Hochtoxisches Gas bei Bränden von Kunststoffen und Wolle'},
+    // Löschmittel
+    {s:'Löschmittel',a:'AFFF',f:'Aqueous Film-Forming Foam',d:'Filmbildendes Schaummittel; legt Schutzfilm auf Flüssigkeitsoberfläche'},
+    {s:'Löschmittel',a:'MBS',f:'Mehrbereichsschaummittel',d:'Universelles Schaummittel, erzeugt Leicht- bis Schwerschaum'},
+    {s:'Löschmittel',a:'EBS',f:'Einbereichsschaummittel',d:'Schaummittel für einen definierten Verschäumungsbereich'},
+    {s:'Löschmittel',a:'LP',f:'Leichtschaum',d:'Verschäumungszahl > 200; für Brandbekämpfung in geschlossenen Räumen'},
+    {s:'Löschmittel',a:'MP',f:'Mittelschaum',d:'Verschäumungszahl 20–200; vielseitig einsetzbar'},
+    {s:'Löschmittel',a:'SP',f:'Schwerschaum',d:'Verschäumungszahl < 20; für Flächenbrände (B-Brände)'},
+    // Vorbeugender Brandschutz
+    {s:'Vorbeugender Brandschutz',a:'MBO',f:'Musterbauordnung',d:'Modellbauordnung der Länder als Grundlage für die LBO'},
+    {s:'Vorbeugender Brandschutz',a:'LBO',f:'Landesbauordnung',d:'Landesrechtliche Bauordnung mit Brandschutzanforderungen'},
+    {s:'Vorbeugender Brandschutz',a:'BMA',f:'Brandmeldeanlage',d:'Automatische Anlage zur Branddetektion und Alarmierung'},
+    {s:'Vorbeugender Brandschutz',a:'RWA',f:'Rauch- und Wärmeabzugsanlage',d:'Anlage zur Entrauchung bei Bränden in Gebäuden'},
+    {s:'Vorbeugender Brandschutz',a:'SAA',f:'Sprachalarmanlage',d:'Anlage zur Evakuierungsdurchsage bei Brandgefahr'},
+    {s:'Vorbeugender Brandschutz',a:'BSO',f:'Brandschutzordnung',d:'Regelwerk für Verhalten vor, während und nach einem Brand (Teil A–C)'},
+    {s:'Vorbeugender Brandschutz',a:'VdS',f:'VdS Schadenverhütung',d:'Prüfinstitut für Brandschutz und Sicherheitstechnik'},
+    {s:'Vorbeugender Brandschutz',a:'MLAR',f:'Muster-Lüftungsanlagen-Richtlinie',d:'Technische Anforderungen an Lüftungsanlagen im Brandschutz'},
+    {s:'Vorbeugender Brandschutz',a:'VStättVO',f:'Versammlungsstättenverordnung',d:'Brandschutzanforderungen für Versammlungsstätten'},
+    // Recht & Verwaltung
+    {s:'Recht & Verwaltung',a:'GG',f:'Grundgesetz',d:'Verfassung der Bundesrepublik Deutschland'},
+    {s:'Recht & Verwaltung',a:'BBG',f:'Bundesbeamtengesetz',d:'Regelt das Beamtenverhältnis auf Bundesebene'},
+    {s:'Recht & Verwaltung',a:'BeamtStG',f:'Beamtenstatusgesetz',d:'Bundesrahmengesetz für den Status der Landesbeamten'},
+    {s:'Recht & Verwaltung',a:'BHO',f:'Bundeshaushaltsordnung',d:'Vorschriften zur Aufstellung und Ausführung des Bundeshaushalts'},
+    {s:'Recht & Verwaltung',a:'LHO',f:'Landeshaushaltsordnung',d:'Haushaltsrecht der Bundesländer'},
+    {s:'Recht & Verwaltung',a:'VOB',f:'Vergabe- und Vertragsordnung für Bauleistungen',d:'Regelwerk für die Vergabe und Abwicklung von Bauaufträgen'},
+    {s:'Recht & Verwaltung',a:'VgV',f:'Vergabeverordnung',d:'Umsetzung der EU-Vergaberichtlinien in nationales Recht'},
+    {s:'Recht & Verwaltung',a:'HOAI',f:'Honorarordnung für Architekten und Ingenieure',d:'Regelt die Vergütung von Planungsleistungen'},
+    {s:'Recht & Verwaltung',a:'TVöD',f:'Tarifvertrag für den öffentlichen Dienst',d:'Tarifrecht für Angestellte bei Bund und Kommunen'},
+    {s:'Recht & Verwaltung',a:'BPersVG',f:'Bundespersonalvertretungsgesetz',d:'Mitbestimmungsrechte der Personalräte auf Bundesebene'},
+    {s:'Recht & Verwaltung',a:'VwVfG',f:'Verwaltungsverfahrensgesetz',d:'Regelt das Verfahren der Behörden bei Verwaltungsentscheidungen'},
+    {s:'Recht & Verwaltung',a:'VwGO',f:'Verwaltungsgerichtsordnung',d:'Verfahrensrecht für verwaltungsgerichtliche Klagen'},
+    {s:'Recht & Verwaltung',a:'OVG',f:'Oberverwaltungsgericht',d:'Zweite Instanz der Verwaltungsgerichtsbarkeit der Länder'},
+    {s:'Recht & Verwaltung',a:'BVerwG',f:'Bundesverwaltungsgericht',d:'Höchstes Gericht der allgemeinen Verwaltungsgerichtsbarkeit'},
+    {s:'Recht & Verwaltung',a:'HBKG',f:'Hessisches Brand- und Katastrophenschutzgesetz',d:'Landesgesetz Hessen für Brandschutz und KatS (exemplarisch)'},
+    // Psychosoziales & Führung
+    {s:'Psychosoziales & Führung',a:'PSNV',f:'Psychosoziale Notfallversorgung',d:'Betreuung Betroffener und Einsatzkräfte nach belastenden Ereignissen'},
+    {s:'Psychosoziales & Führung',a:'SbE',f:'Stressbearbeitung nach belastenden Einsätzen',d:'Strukturiertes Nachsorgeverfahren für Einsatzkräfte (Debriefing)'},
+    {s:'Psychosoziales & Führung',a:'CISM',f:'Critical Incident Stress Management',d:'Internationales Konzept zur Einsatznachsorge und Prävention'},
+    {s:'Psychosoziales & Führung',a:'PTBS',f:'Posttraumatische Belastungsstörung',d:'Psychische Störung nach extremen Belastungsereignissen'},
+    {s:'Psychosoziales & Führung',a:'TA',f:'Transaktionsanalyse',d:'Psychologisches Modell zur Analyse von Kommunikation und Verhalten'},
+    {s:'Psychosoziales & Führung',a:'BGM',f:'Betriebliches Gesundheitsmanagement',d:'Systematische Förderung von Gesundheit und Wohlbefinden im Betrieb'},
+    {s:'Psychosoziales & Führung',a:'PM',f:'Projektmanagement',d:'Planung, Steuerung und Abschluss von zeitlich befristeten Vorhaben'},
+    {s:'Psychosoziales & Führung',a:'SWOT',f:'Strengths, Weaknesses, Opportunities, Threats',d:'Stärken-Schwächen-Chancen-Risiken-Analyse im strategischen Management'},
+    {s:'Psychosoziales & Führung',a:'SMART',f:'Spezifisch, Messbar, Attraktiv, Realistisch, Terminiert',d:'Methode zur Formulierung klarer Ziele'},
+    {s:'Psychosoziales & Führung',a:'KVP',f:'Kontinuierlicher Verbesserungsprozess',d:'Dauerhaftes Streben nach Optimierung von Abläufen und Ergebnissen'},
+    // Wirtschaft & Finanzen
+    {s:'Wirtschaft & Finanzen',a:'VWL',f:'Volkswirtschaftslehre',d:'Wissenschaft von den gesamtwirtschaftlichen Zusammenhängen'},
+    {s:'Wirtschaft & Finanzen',a:'BWL',f:'Betriebswirtschaftslehre',d:'Wissenschaft von den wirtschaftlichen Vorgängen in Unternehmen'},
+    {s:'Wirtschaft & Finanzen',a:'KLR',f:'Kosten- und Leistungsrechnung',d:'Internes Rechnungswesen zur Erfassung von Kosten und Erlösen'},
+    {s:'Wirtschaft & Finanzen',a:'ROI',f:'Return on Investment',d:'Kennzahl für die Rentabilität einer Investition'},
+    {s:'Wirtschaft & Finanzen',a:'TCO',f:'Total Cost of Ownership',d:'Gesamtkosten über den gesamten Lebenszyklus eines Investitionsguts'},
+    {s:'Wirtschaft & Finanzen',a:'EVA',f:'Earned Value Analysis',d:'Methode zur Projektfortschrittskontrolle durch Kostenwertanalyse'},
+    {s:'Wirtschaft & Finanzen',a:'KGSt',f:'Kommunale Gemeinschaftsstelle für Verwaltungsmanagement',d:'Beratungsorganisation für kommunale Verwaltungen'},
+    // Erste Hilfe & Rettung
+    {s:'Erste Hilfe & Rettungsdienst',a:'HLW',f:'Herz-Lungen-Wiederbelebung',d:'Maßnahme bei Herz-Kreislauf-Stillstand (Thoraxkompression + Beatmung)'},
+    {s:'Erste Hilfe & Rettungsdienst',a:'AED',f:'Automatischer Externer Defibrillator',d:'Gerät zur elektrischen Behandlung von Herzrhythmusstörungen'},
+    {s:'Erste Hilfe & Rettungsdienst',a:'ABCDE',f:'Atemweg, Beatmung, Circulation, Disability, Exposure',d:'Systematischer Erstcheck nach Trauma- und Notfallalgorithmus'},
+    {s:'Erste Hilfe & Rettungsdienst',a:'ERC',f:'European Resuscitation Council',d:'Europäischer Rat für Wiederbelebungsempfehlungen'},
+    {s:'Erste Hilfe & Rettungsdienst',a:'NAW',f:'Notarztwagen',d:'Fahrzeug mit Notarzt und Rettungsassistent besetzt'},
+    {s:'Erste Hilfe & Rettungsdienst',a:'KTW',f:'Krankentransportwagen',d:'Fahrzeug für nicht dringende Krankentransporte'},
+    // Kartenkunde & Navigation
+    {s:'Kartenkunde & Navigation',a:'UTM',f:'Universal Transverse Mercator',d:'Koordinatensystem für genaue Lageangaben auf topographischen Karten'},
+    {s:'Kartenkunde & Navigation',a:'MGRS',f:'Military Grid Reference System',d:'Gitterkennzahl-Referenzsystem auf UTM-Basis'},
+    {s:'Kartenkunde & Navigation',a:'GPS',f:'Global Positioning System',d:'US-amerikanisches satellitengestütztes Navigationssystem'},
+    {s:'Kartenkunde & Navigation',a:'GIS',f:'Geographisches Informationssystem',d:'System zur Erfassung, Verwaltung und Analyse räumlicher Daten'},
+  ];
+
+  let rendered = false;
+  return {
+    render(){
+      if(rendered) return;
+      rendered = true;
+      const body = document.getElementById('abk-body');
+      if(!body) return;
+      const sections = [...new Set(DATA.map(d=>d.s))];
+      body.innerHTML = sections.map(sec=>{
+        const rows = DATA.filter(d=>d.s===sec).sort((a,b)=>a.a.localeCompare(b.a));
+        return `<tr class="abk-sec-hdr" data-sec="${sec}"><td colspan="3">${sec}</td></tr>`
+          + rows.map(r=>`<tr class="abk-row" data-sec="${sec}" data-search="${(r.a+' '+r.f+' '+r.d).toLowerCase()}">
+            <td class="abk-abbr">${r.a}</td>
+            <td class="abk-full">${r.f}</td>
+            <td class="abk-desc">${r.d}</td>
+          </tr>`).join('');
+      }).join('');
+    },
+    filter(q){
+      const term = q.trim().toLowerCase();
+      const rows = document.querySelectorAll('#abk-body .abk-row');
+      let vis = 0;
+      rows.forEach(r=>{ const show = !term||r.dataset.search.includes(term); r.classList.toggle('hidden',!show); if(show) vis++; });
+      // Hide section headers if all their rows are hidden
+      document.querySelectorAll('#abk-body .abk-sec-hdr').forEach(h=>{
+        const sec=h.dataset.sec;
+        const hasVis=[...rows].some(r=>r.dataset.sec===sec&&!r.classList.contains('hidden'));
+        h.classList.toggle('hidden',!hasVis);
+      });
+      const cnt = document.getElementById('abk-count');
+      if(cnt) cnt.textContent = term ? `${vis} Treffer` : `${rows.length} Einträge`;
+    },
+    init(){ document.getElementById('abk-search').value=''; this.filter(''); }
   };
 })();
 
@@ -1583,11 +1866,22 @@ document.addEventListener('DOMContentLoaded',()=>{
     w.appendChild(t);
   });
   document.addEventListener('keydown', e => {
-    if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); SEARCH.open(); }
-    if(e.key==='Escape' && !document.getElementById('search-overlay').classList.contains('hidden')) SEARCH.close();
-    if(e.key==='Escape' && !document.getElementById('settings-overlay').classList.contains('hidden')) SETTINGS.close();
+    if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); SEARCH.open(); return; }
+    if(e.key==='Escape'){
+      if(!document.getElementById('search-overlay').classList.contains('hidden')){ SEARCH.close(); return; }
+      if(!document.getElementById('settings-overlay').classList.contains('hidden')){ SETTINGS.close(); return; }
+    }
+    // Lernkarten-Tastatursteuerung
+    if(document.getElementById('v-flashcards').classList.contains('active')){
+      if(e.key===' '||e.key==='ArrowUp'){ e.preventDefault(); FC.flip(); }
+      if((e.key==='ArrowRight'||e.key==='j')&&!e.ctrlKey&&!e.metaKey){ e.preventDefault(); FC.answer(true); }
+      if((e.key==='ArrowLeft'||e.key==='f')&&!e.ctrlKey&&!e.metaKey){ e.preventDefault(); FC.answer(false); }
+    }
   });
-  console.log('%c B VI %c Lernwebsite v3.1 · flametan/BVI-Lernwebsite ',
+  window.addEventListener('scroll',()=>{ updateReadProgress(); TOC.update(); },{passive:true});
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  ABK.render(); ABK.filter('');
+  console.log('%c B VI %c Lernwebsite v4.0 · flametan/BVI-Lernwebsite ',
     'background:#A50000;color:#fff;padding:3px 8px;border-radius:4px 0 0 4px;font-family:"DM Mono",monospace;font-weight:700',
     'background:#0A192F;color:#C9A84C;padding:3px 8px;border-radius:0 4px 4px 0;font-family:"DM Mono",monospace');
 });
