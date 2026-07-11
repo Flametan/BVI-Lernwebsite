@@ -1155,7 +1155,7 @@ const PROGRESS = (function(){
 
   function updateUI(){
     const visited = load();
-    const allLeafs = [...GROUPS.sfs,...GROUPS.hlfs,...GROUPS.ibk];
+    const allLeafs = Object.values(GROUPS).flat();
     const total = allLeafs.length;
     const done = allLeafs.filter(v=>visited[v]).length;
     const bar = document.getElementById('prog-bar');
