@@ -4,10 +4,21 @@
 ====================================================================== */
 const NAV = (function(){
   let stack = [];
+  let _dir = 'forward';
   const ALL = ['v-home','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-feuak','v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-idf','v-idf-brandschutz','v-idf-stab','v-idf-presse','v-simulator','v-flashcards','v-vorschlaege'];
 
   function show(id){
-    ALL.forEach(v=>{ const e=document.getElementById(v); if(e) e.classList.toggle('active',v===id); });
+    ALL.forEach(v=>{
+      const e=document.getElementById(v);
+      if(!e) return;
+      const active = v===id;
+      e.classList.toggle('active',active);
+      if(active){
+        e.classList.remove('nav-forward','nav-back');
+        void e.offsetWidth; // reflow to restart animation
+        e.classList.add(_dir==='back'?'nav-back':'nav-forward');
+      }
+    });
     window.scrollTo({top:0,behavior:'instant'});
     updateHeader();
     if(id==='v-vorschlaege') loadProposals();
@@ -46,11 +57,11 @@ const NAV = (function(){
   }
 
   return {
-    go(id,label){ stack.push({id,label}); history.pushState({stack:[...stack]},''); show(id); },
-    back(){ if(!stack.length) return; stack.pop(); show(stack.length?stack[stack.length-1].id:'v-home'); },
-    jumpTo(idx){ stack=stack.slice(0,idx+1); history.pushState({stack:[...stack]},''); show(idx>=0?stack[idx].id:'v-home'); },
-    home(){ stack=[]; history.pushState({home:true},''); show('v-home'); },
-    _restoreStack(s){ stack=s; show(s.length?s[s.length-1].id:'v-home'); }
+    go(id,label){ _dir='forward'; stack.push({id,label}); history.pushState({stack:[...stack]},''); show(id); },
+    back(){ if(!stack.length) return; _dir='back'; stack.pop(); show(stack.length?stack[stack.length-1].id:'v-home'); },
+    jumpTo(idx){ _dir=idx<stack.length-1?'back':'forward'; stack=stack.slice(0,idx+1); history.pushState({stack:[...stack]},''); show(idx>=0?stack[idx].id:'v-home'); },
+    home(){ _dir='back'; stack=[]; history.pushState({home:true},''); show('v-home'); },
+    _restoreStack(s){ _dir='back'; stack=s; show(s.length?s[s.length-1].id:'v-home'); }
   };
 })();
 
@@ -1291,6 +1302,63 @@ const SETTINGS = (function(){
 })();
 
 /* ======================================================================
+   DARKMODE
+====================================================================== */
+const DARKMODE = (function(){
+  const KEY = 'bvi_theme';
+  function apply(light){
+    document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
+    const cb = document.getElementById('dm-checkbox');
+    if(cb) cb.checked = light;
+  }
+  return {
+    init(){
+      const saved = localStorage.getItem(KEY);
+      apply(saved === 'light');
+    },
+    toggle(light){
+      localStorage.setItem(KEY, light ? 'light' : 'dark');
+      apply(light);
+    }
+  };
+})();
+
+/* ======================================================================
+   CONFETTI
+====================================================================== */
+function launchConfetti(){
+  let canvas = document.getElementById('confetti-canvas');
+  if(!canvas){ canvas=document.createElement('canvas'); canvas.id='confetti-canvas'; document.body.appendChild(canvas); }
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const colors = ['#C9A84C','#E8C97A','#4ACD90','#6BAAD4','#E07070','#D4903A','#fff'];
+  const particles = Array.from({length:120}, ()=>({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height - canvas.height,
+    r: 4 + Math.random()*5,
+    d: 2 + Math.random()*3,
+    color: colors[Math.floor(Math.random()*colors.length)],
+    tilt: Math.random()*10 - 5,
+    tiltSpeed: 0.12 + Math.random()*0.1
+  }));
+  let frame=0, raf;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      p.y += p.d; p.tilt += p.tiltSpeed; p.x += Math.sin(frame*0.02)*1.2;
+      ctx.beginPath(); ctx.fillStyle=p.color;
+      ctx.ellipse(p.x+p.tilt,p.y,p.r*0.6,p.r,p.tilt*0.05,0,Math.PI*2);
+      ctx.fill();
+      if(p.y>canvas.height) p.y=-12;
+    });
+    frame++;
+    if(frame<200) raf=requestAnimationFrame(draw); else { ctx.clearRect(0,0,canvas.width,canvas.height); canvas.remove(); }
+  }
+  if(raf) cancelAnimationFrame(raf);
+  draw();
+}
+
+/* ======================================================================
    FC – Flashcard-Engine
 ====================================================================== */
 const FC = (function(){
@@ -1380,6 +1448,18 @@ const FC = (function(){
     });
   }
 
+  function showSkeleton(){
+    const box = document.getElementById('fc-container'); if(!box) return;
+    box.innerHTML = `
+      <div class="fc-skeleton-line fc-skeleton-stats"></div>
+      <div class="fc-skeleton-line fc-skeleton-nav"></div>
+      <div class="fc-skeleton-card"></div>
+      <div class="fc-skeleton-ctrl">
+        <div class="fc-skeleton-btn"></div>
+        <div class="fc-skeleton-btn"></div>
+      </div>`;
+  }
+
   function renderCard(){
     const box = document.getElementById('fc-container'); if(!box) return;
     if(curIdx >= deck.length){ renderEnd(); return; }
@@ -1427,6 +1507,7 @@ const FC = (function(){
     const pct = deck.length ? Math.round(sess.known/deck.length*100) : 0;
     const ico = pct>=80?'🏆':pct>=50?'📖':'🔄';
     const ttl = pct>=80?'Ausgezeichnet!':pct>=50?'Gut gemacht!':'Weiter üben!';
+    if(pct>=80) launchConfetti();
     box.innerHTML = `
       <div class="fc-end">
         <div class="fc-end-ico">${ico}</div>
@@ -1442,7 +1523,8 @@ const FC = (function(){
   return {
     start(){
       deck = shuffle(getDeck()); curIdx=0; flipped=false; sess={known:0,unknown:0};
-      renderCard();
+      showSkeleton();
+      setTimeout(renderCard, 320);
     },
     flip(){
       if(curIdx>=deck.length) return;
@@ -1492,6 +1574,7 @@ window.addEventListener('resize', () => {
 document.addEventListener('DOMContentLoaded',()=>{
   NAV.home();
   PROGRESS.updateUI();
+  DARKMODE.init();
   document.querySelectorAll('.pc table').forEach(t=>{
     if(t.closest('.tbl-wrap')) return;
     const w=document.createElement('div');

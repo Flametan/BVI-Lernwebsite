@@ -63,6 +63,16 @@
       <p class="settings-desc">Setzt alle als „gewusst" markierten Lernkarten zurück. Alle 271 Karten gelten wieder als unbekannt.</p>
       <button class="btn btn-ghost" onclick="SETTINGS.resetCards()">Lernkarten-Lernstand zurücksetzen</button>
     </div>
+    <div class="dm-toggle-wrap">
+      <div>
+        <div class="dm-toggle-label">🌙 Erscheinungsbild</div>
+        <div class="dm-toggle-desc">Zwischen Hell- und Dunkel-Modus wechseln</div>
+      </div>
+      <label class="dm-switch" title="Hell/Dunkel-Modus">
+        <input type="checkbox" id="dm-checkbox" onchange="DARKMODE.toggle(this.checked)"/>
+        <span class="dm-track"><span class="dm-thumb"></span></span>
+      </label>
+    </div>
   </div>
 </div>
 <!-- PROGRESS BAR -->
