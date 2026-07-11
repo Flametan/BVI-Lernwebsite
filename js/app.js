@@ -1854,6 +1854,121 @@ window.addEventListener('resize', () => {
   if(document.querySelector('.fc-outer')) FC.resize();
 });
 
+/* ======================================================================
+   AURORA – WebGL shader background
+====================================================================== */
+(function(){
+  const canvas = document.getElementById('aurora-canvas');
+  if(!canvas) return;
+
+  // Respect prefers-reduced-motion
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    canvas.style.background='#080F1C';
+    return;
+  }
+
+  const gl = canvas.getContext('webgl',{alpha:false,antialias:false,powerPreference:'low-power'});
+  if(!gl){ canvas.style.background='#080F1C'; return; }
+
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  function resize(){
+    canvas.width  = window.innerWidth  * dpr;
+    canvas.height = window.innerHeight * dpr;
+    gl.viewport(0,0,canvas.width,canvas.height);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const VS = `attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0.,1.);}`;
+  const FS = `
+    precision mediump float;
+    uniform float u_t;
+    uniform vec2  u_res;
+
+    float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+    float noise(vec2 p){
+      vec2 i=floor(p),f=fract(p);
+      f=f*f*(3.-2.*f);
+      return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),
+                 mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);
+    }
+
+    void main(){
+      vec2 uv  = gl_FragCoord.xy / u_res;
+      vec2 p   = uv * 2. - 1.;
+      p.x     *= u_res.x / u_res.y;
+
+      /* Mobile (<800px logical) moves 2× faster */
+      float mob = u_res.x < 800. * (u_res.x / u_res.x) ? 2.0 : 1.0;
+      float spd = u_res.x < 800. ? 2.0 : 1.0;
+      float t   = u_t * 0.18 * spd;
+
+      float s=sin(t*.8), c=cos(t*.8);
+      vec2 rp = vec2(p.x*c - p.y*s, p.x*s + p.y*c);
+
+      float breath = sin(u_t * 0.5 * spd) * .5 + .5;
+      rp += sin(rp.y*2. + u_t*.6*spd) * .13 * breath;
+      rp += cos(rp.x*1.5 + u_t*.4*spd) * .10;
+
+      /* BVI palette */
+      vec3 dark  = vec3(.031,.059,.110);  /* #080F1C */
+      vec3 gold  = vec3(.788,.659,.298);  /* #C9A84C */
+      vec3 goldD = vec3(.45,.37,.14);
+      vec3 red   = vec3(.55,.10,.10);     /* #8B1A1A */
+      vec3 navy  = vec3(.082,.169,.322);  /* #152B52 */
+
+      float n1=length(rp - vec2(sin(u_t*.22*spd)*.85, cos(u_t*.17*spd)*.65));
+      float n2=length(rp - vec2(cos(u_t*.28*spd)*.75, sin(u_t*.20*spd)*.55));
+      float n3=length(rp - vec2(sin(u_t*.14*spd)*.55, cos(u_t*.16*spd)*.82));
+      float n4=length(rp - vec2(cos(u_t*.26*spd)*.62, sin(u_t*.23*spd)*.70));
+
+      vec3 col = dark;
+      col = mix(col, goldD, exp(-n1*n1*2.5)*.75);
+      col = mix(col, red,   exp(-n2*n2*3.0)*.55);
+      col = mix(col, navy,  exp(-n3*n3*2.0)*.65);
+      col = mix(col, gold,  exp(-n4*n4*3.5)*.60);
+
+      col += gold * sin(rp.x*3.+u_t*.5*spd)*sin(rp.y*3.-u_t*.4*spd) * .04 * breath;
+      col += noise(uv*80.+u_t) * .015;
+
+      float vig = smoothstep(0.,.8, 1.-length(uv-.5)*1.3);
+      col *= vig;
+      gl_FragColor = vec4(col,1.);
+    }
+  `;
+
+  function mkShader(type, src){
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, src); gl.compileShader(sh);
+    if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)){ console.error(gl.getShaderInfoLog(sh)); return null; }
+    return sh;
+  }
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, mkShader(gl.VERTEX_SHADER,   VS));
+  gl.attachShader(prog, mkShader(gl.FRAGMENT_SHADER, FS));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog,'a_pos');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+
+  const uT   = gl.getUniformLocation(prog,'u_t');
+  const uRes = gl.getUniformLocation(prog,'u_res');
+
+  function frame(now){
+    gl.uniform1f(uT,  now * .001);
+    gl.uniform2f(uRes, canvas.width, canvas.height);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
 document.addEventListener('DOMContentLoaded',()=>{
   NAV.home();
   PROGRESS.updateUI();
