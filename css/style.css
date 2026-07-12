@@ -351,9 +351,9 @@
   .hidden{display:none!important;}
 
   /* ── SEARCH ─────────────────────────────────────────── */
-  .search-overlay{position:fixed;inset:0;z-index:200;background:rgba(8,15,28,0.93);backdrop-filter:blur(22px);display:flex;align-items:flex-start;justify-content:center;padding-top:12vh;animation:vIn .15s var(--ease) both;}
+  .search-overlay{position:fixed;inset:0;z-index:200;background:rgba(3,6,14,0.88);backdrop-filter:blur(32px) saturate(160%);display:flex;align-items:flex-start;justify-content:center;padding-top:12vh;animation:vIn .15s var(--ease) both;}
   .search-overlay.hidden{display:none!important;}
-  .search-box{width:100%;max-width:640px;margin:0 1.25rem;background:var(--c-navy-2);border:1px solid var(--c-gold-rim);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--sh-lg);}
+  .search-box{width:100%;max-width:640px;margin:0 1.25rem;background:rgba(8,13,28,0.98);border:1px solid rgba(201,168,76,.28);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--sh-lg),0 0 60px rgba(201,168,76,.07);}
   .search-input-wrap{display:flex;align-items:center;gap:.75rem;padding:.9rem 1.25rem;border-bottom:1px solid var(--glass-b);}
   .search-input{flex:1;background:none;border:none;outline:none;font-family:var(--f-b);font-size:1rem;color:var(--c-text-b);caret-color:var(--c-gold);}
   .search-input::placeholder{color:var(--c-slate);}
@@ -470,37 +470,7 @@
   .view.nav-back{animation:slideInLeft .28s var(--ease) both;}
 
   /* ── DARK MODE TOGGLE ── */
-  .dm-toggle-wrap{display:flex;align-items:center;justify-content:space-between;padding:1.25rem;border-top:1px solid var(--glass-b);}
-  .dm-toggle-label{font-size:.85rem;font-weight:600;color:var(--c-text-b);}
-  .dm-toggle-desc{font-size:.75rem;color:var(--c-slate-l);margin-top:.15rem;}
-  .dm-switch{position:relative;width:44px;height:24px;flex-shrink:0;}
-  .dm-switch input{opacity:0;width:0;height:0;}
-  .dm-track{position:absolute;cursor:pointer;inset:0;background:var(--glass-b);border-radius:12px;transition:background .25s;border:1px solid var(--glass-b);}
-  .dm-switch input:checked~.dm-track{background:var(--c-gold-dim);border-color:var(--c-gold-rim);}
-  .dm-thumb{position:absolute;height:18px;width:18px;left:3px;top:3px;background:var(--c-slate-l);border-radius:50%;transition:transform .25s,background .25s;}
-  .dm-switch input:checked~.dm-track .dm-thumb{transform:translateX(20px);background:var(--c-gold);}
 
-  /* ── LIGHT MODE ── */
-  [data-theme="light"]{
-    --c-bg:#EFF3F8;--c-navy:#E2EAF4;--c-navy-2:#D4DFED;--c-navy-3:#C1D1E4;--c-navy-4:#A3BAD6;
-    --c-slate:#4A6A86;--c-slate-l:#2D4A65;--c-text:#1E3050;--c-text-b:#0C1D32;
-    --glass:rgba(0,0,0,0.04);--glass-h:rgba(0,0,0,0.07);--glass-b:rgba(0,0,0,0.10);
-    --sh:0 6px 28px rgba(0,0,0,0.10);--sh-lg:0 16px 56px rgba(0,0,0,0.16);
-    --c-gold-dim:rgba(201,168,76,0.14);--c-gold-rim:rgba(201,168,76,0.35);
-    --c-red-dim:rgba(165,0,0,0.08);--c-red-rim:rgba(165,0,0,0.22);
-    --c-ok-dim:rgba(42,122,82,0.10);--c-warn-dim:rgba(176,115,32,0.10);
-    --c-err-dim:rgba(139,26,26,0.10);--c-blue-dim:rgba(58,127,212,0.08);
-  }
-  [data-theme="light"] body{color:var(--c-text);}
-  [data-theme="light"] body::before{background-image:linear-gradient(rgba(10,25,47,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(10,25,47,0.04) 1px,transparent 1px);background-size:56px 56px;}
-  [data-theme="light"] #app-header{background:rgba(239,243,248,0.80);border-bottom-color:rgba(10,25,47,0.12);box-shadow:0 1px 24px rgba(0,0,0,0.08);}
-  [data-theme="light"] .fc-filter-row{background:rgba(239,243,248,.95);}
-  [data-theme="light"] ::-webkit-scrollbar-track{background:var(--c-bg);}
-  [data-theme="light"] ::-webkit-scrollbar-thumb{background:var(--c-navy-3);}
-  [data-theme="light"] .search-overlay,[data-theme="light"] #settings-overlay{background:rgba(239,243,248,0.92);}
-  [data-theme="light"] .search-box{background:var(--c-navy);}
-  [data-theme="light"] #float-back{background:rgba(226,234,244,0.95);color:var(--c-navy);border-color:rgba(10,25,47,0.18);}
-  [data-theme="light"] .acc-item[open]{background:rgba(201,168,76,0.05);}
 
   /* ── CONFETTI ── */
   #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999;}
@@ -563,13 +533,4 @@
     .pc{padding:1rem!important;}
   }
 
-  /* ── APK DOWNLOAD BANNER ── */
-  .apk-banner{display:flex;align-items:center;gap:1rem;margin-top:1.5rem;padding:.9rem 1.25rem;border-radius:var(--r-lg);border:1px solid rgba(201,168,76,.25);background:linear-gradient(135deg,rgba(10,25,47,.7),rgba(21,43,82,.5));color:var(--c-text);text-decoration:none;transition:all var(--t);backdrop-filter:blur(8px);}
-  .apk-banner:hover{border-color:rgba(201,168,76,.5);background:linear-gradient(135deg,rgba(10,25,47,.9),rgba(21,43,82,.7));transform:translateY(-1px);}
-  .apk-icon{width:2rem;height:2rem;color:var(--c-gold);flex-shrink:0;}
-  .apk-text{flex:1;display:flex;flex-direction:column;gap:.15rem;}
-  .apk-label{font-size:.9rem;font-weight:600;color:var(--c-gold);}
-  .apk-sub{font-size:.75rem;color:var(--c-slate-l);}
-  .apk-arr{width:1.2rem;height:1.2rem;color:var(--c-gold);flex-shrink:0;opacity:.7;}
-  .apk-banner:hover .apk-arr{opacity:1;transform:translateY(2px);}
 

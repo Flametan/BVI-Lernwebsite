@@ -1332,27 +1332,8 @@ const SETTINGS = (function(){
   };
 })();
 
-/* ======================================================================
-   DARKMODE
-====================================================================== */
-const DARKMODE = (function(){
-  const KEY = 'bvi_theme';
-  function apply(light){
-    document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
-    const cb = document.getElementById('dm-checkbox');
-    if(cb) cb.checked = light;
-  }
-  return {
-    init(){
-      const saved = localStorage.getItem(KEY);
-      apply(saved === 'light');
-    },
-    toggle(light){
-      localStorage.setItem(KEY, light ? 'light' : 'dark');
-      apply(light);
-    }
-  };
-})();
+/* DARKMODE removed – app is always dark */
+const DARKMODE = { init(){}, toggle(){} };
 
 /* ======================================================================
    LESEFORTSCHRITT
@@ -1964,7 +1945,7 @@ void main(void){
     blendVal += ((window._shaderContentMode || 0) - blendVal) * 0.025;
     const elapsed = (now - start) * 0.001;
     gl.uniform2f(uRes, canvas.width, canvas.height);
-    gl.uniform1f(uTime, elapsed * 0.26);
+    gl.uniform1f(uTime, elapsed * 0.143);
     gl.uniform1f(uRealTime, elapsed);
     gl.uniform1f(uBlend, blendVal);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
