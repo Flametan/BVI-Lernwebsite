@@ -1568,7 +1568,7 @@ const FC = (function(){
         <button class="fc-btn fc-yes" onclick="FC.answer(true)">✓ Gewusst</button>
       </div>`;
     flipped = false;
-    window._shaderContentMode = (curIdx === deck.length - 1) ? 1.0 : 0.0;
+    window._shaderContentMode = 1.0;
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
   }
 
