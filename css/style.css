@@ -379,6 +379,8 @@
   .settings-title{font-family:var(--f-d);font-size:1rem;font-weight:600;color:var(--c-text-b);}
   .settings-close{background:none;border:none;color:var(--c-slate);font-size:1rem;cursor:pointer;padding:.2rem .4rem;border-radius:4px;transition:color var(--t);}
   .settings-close:hover{color:var(--c-text-b);}
+  .search-close-btn{background:none;border:none;color:var(--c-slate);font-size:1rem;cursor:pointer;padding:.2rem .5rem;border-radius:4px;transition:color var(--t);flex-shrink:0;line-height:1;}
+  .search-close-btn:hover{color:var(--c-text-b);}
   .settings-section{padding:1.25rem;}
   .settings-sec-title{font-weight:600;font-size:.85rem;color:var(--c-text-b);margin-bottom:.4rem;}
   .settings-desc{font-size:.78rem;color:var(--c-slate-l);line-height:1.6;margin-bottom:.85rem;}

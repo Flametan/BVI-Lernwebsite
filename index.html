@@ -48,7 +48,7 @@
     <div class="search-input-wrap">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--c-slate);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input id="search-input" class="search-input" type="text" placeholder="Themen, Begriffe, Abkürzungen suchen…" oninput="SEARCH.query(this.value)" onkeydown="SEARCH.keydown(event)" autocomplete="off" spellcheck="false"/>
-      <kbd style="font-family:var(--f-m);font-size:.65rem;color:var(--c-slate);background:var(--glass);border:1px solid var(--glass-b);border-radius:4px;padding:.1rem .4rem;">Esc</kbd>
+      <button class="search-close-btn" onclick="SEARCH.close()" title="Schließen (Esc)">✕</button>
     </div>
     <div id="search-results" class="search-results"><div class="search-idle">Suchbegriff eingeben – z.&nbsp;B. <em>AVIVA</em>, <em>Glasl</em>, <em>MANV</em></div></div>
     <div class="search-footer"><span><kbd>↑↓</kbd> navigieren</span><span><kbd>↵</kbd> öffnen</span><span><kbd>Esc</kbd> schließen</span></div>
