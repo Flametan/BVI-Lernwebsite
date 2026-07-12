@@ -25,6 +25,18 @@ const NAV = (function(){
     document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
     const btnCards = document.getElementById('btn-reset-cards');
     if(btnCards) btnCards.classList.toggle('hidden', id !== 'v-flashcards');
+    // FAB buttons (Notes + Bookmark) – hidden on home/flashcards/simulator
+    const NO_FAB = new Set(['v-home','v-flashcards','v-simulator']);
+    const showFab = !NO_FAB.has(id);
+    const notesBtn = document.getElementById('notes-btn');
+    const bkBtn = document.getElementById('bookmark-btn');
+    if(notesBtn) notesBtn.classList.toggle('hidden', !showFab);
+    if(bkBtn){
+      bkBtn.classList.toggle('hidden', !showFab);
+      if(showFab){ bkBtn.dataset.id=id; bkBtn.dataset.label=stack.length?stack[stack.length-1].label:''; }
+    }
+    if(typeof NOTES!=='undefined') NOTES.setView(id);
+    if(typeof BOOKMARKS!=='undefined') BOOKMARKS.setView(id);
     updateHeader();
     if(id==='v-vorschlaege') loadProposals();
     if(id==='v-abkuerzungen') ABK.init();
@@ -1194,7 +1206,7 @@ const PROGRESS = (function(){
    SEARCH – Volltext-Suche über alle Views
 ====================================================================== */
 const SEARCH = (function(){
-  let idx = [], results = [], focusIdx = -1;
+  let idx = [], results = [], focusIdx = -1, _filter = 'all';
 
   const VIEW_LABELS = {
     'v-gal-organisation':'GAL · Organisation','v-gal-brandlehre':'GAL · Brandlehre','v-gal-fahrzeuge':'GAL · Fahrzeuge','v-gal-einsatz':'GAL · Einsatz','v-gal-atemgifte':'GAL · Atemgifte','v-gal-atemschutz':'GAL · Atemschutz','v-gal-vb':'GAL · Vorbeugender Brandschutz','v-gal-beamtenrecht':'GAL · Beamtenrecht','v-gal-beihilferecht':'GAL · Beihilferecht','v-gal-brandbekaempfung':'GAL · Brandbekämpfung','v-gal-einsatztechnik':'GAL · Einsatztechnik','v-gal-erstehilfe':'GAL · Erste Hilfe','v-gal-grundlagen':'GAL · Naturwiss. Grundlagen','v-gal-fahrzeugnormung':'GAL · Fahrzeugnormung','v-gal-fuehrung':'GAL · Führung','v-gal-fwdven':'GAL · FwDVen','v-gal-gabc':'GAL · G-ABC Einsatz','v-gal-loeschlehre':'GAL · Löschlehre','v-gal-loeschmittel-schaum':'GAL · Löschmittel Schaum','v-gal-loeschwasserversorgung':'GAL · Löschwasserversorgung','v-gal-geraetepruefung':'GAL · Geräteprüfung','v-gal-hbkg':'GAL · HBKG','v-gal-kartenkunde':'GAL · Kartenkunde','v-gal-knoten':'GAL · Knoten & Stiche','v-gal-staatsbuerger':'GAL · Staatsbürgerkunde','v-gal-th-verkehr':'GAL · TH Verkehrsunfall','v-gal-leitern':'GAL · Tragbare Leitern','v-gal-uvv':'GAL · UVV','v-gal-waermebildkamera':'GAL · Wärmebildkamera','v-gal-armaturen':'GAL · Wasserführende Armaturen','v-gal-maschinist':'GAL · Maschinist','v-gal-psa':'GAL · Persönliche Schutzausrüstung','v-gal-personalvertretungsrecht':'GAL · Personalvertretungsrecht',
@@ -1241,18 +1253,35 @@ const SEARCH = (function(){
   function doSearch(q){
     if(!q || q.length < 2) return [];
     const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
-    const scored = idx.map(e => {
+    let scored = idx.map(e => {
       const hay = (e.title+' '+e.snippet+' '+e.lbl).toLowerCase();
       const score = terms.reduce((s,t) => s + (hay.includes(t) ? e.boost : 0), 0);
       return {...e, score};
-    }).filter(e => e.score > 0).sort((a,b) => b.score-a.score);
+    }).filter(e => e.score > 0);
+    if(_filter !== 'all'){
+      scored = scored.filter(e => e.lbl.toLowerCase().split('·')[0].trim() === _filter.toLowerCase()
+        || e.lbl.toLowerCase().split('·')[0].trim().startsWith(_filter.toLowerCase()));
+    }
+    scored.sort((a,b) => b.score-a.score);
     const seen = new Set();
     return scored.filter(e => { const k=e.vid+'|'+e.title; if(seen.has(k)) return false; seen.add(k); return true; }).slice(0,12);
   }
 
+  function renderBookmarks(){
+    const el = document.getElementById('search-results'); if(!el) return;
+    const bks = (typeof BOOKMARKS!=='undefined') ? BOOKMARKS.getAll() : [];
+    if(!bks.length){ el.innerHTML='<div class="search-idle">Suchbegriff eingeben – z.&nbsp;B. <em>AVIVA</em>, <em>Glasl</em>, <em>MANV</em></div>'; return; }
+    el.innerHTML='<div class="bk-section"><div class="bk-section-title">⭐ Lesezeichen</div>'
+      +bks.map(b=>`<div class="bk-item" onclick="SEARCH.goBk(${JSON.stringify(b.id)},${JSON.stringify(b.label||b.id)})">`
+        +`<span class="bk-label">${xss(b.label||b.id)}</span>`
+        +`<button class="bk-del" onclick="event.stopPropagation();SEARCH.removeBk(${JSON.stringify(b.id)})">✕</button>`
+        +'</div>').join('')
+      +'</div>';
+  }
+
   function render(q){
     const el = document.getElementById('search-results');
-    if(!q){ el.innerHTML='<div class="search-idle">Suchbegriff eingeben – z.&nbsp;B. <em>AVIVA</em>, <em>Glasl</em>, <em>MANV</em></div>'; results=[]; focusIdx=-1; return; }
+    if(!q){ renderBookmarks(); results=[]; focusIdx=-1; return; }
     results = doSearch(q);
     if(!results.length){ el.innerHTML='<div class="search-empty">Keine Treffer für <strong>'+xss(q)+'</strong></div>'; focusIdx=-1; return; }
     el.innerHTML = results.map((r,i)=>`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${r.lbl}</span><div><div class="sr-title">${hl(xss(r.title),q)}</div>${r.snippet?`<div class="sr-snippet">${hl(xss(r.snippet),q)}</div>`:''}</div></div>`).join('');
@@ -1268,7 +1297,8 @@ const SEARCH = (function(){
 
   return {
     open(){
-      buildIndex();
+      buildIndex(); _filter='all';
+      document.querySelectorAll('.sf-btn').forEach(b=>b.classList.toggle('active',b.dataset.f==='all'));
       document.getElementById('search-overlay').classList.remove('hidden');
       const inp = document.getElementById('search-input');
       inp.value = ''; inp.focus(); render('');
@@ -1276,6 +1306,13 @@ const SEARCH = (function(){
     close(){ document.getElementById('search-overlay').classList.add('hidden'); results=[]; focusIdx=-1; },
     toggle(){ document.getElementById('search-overlay').classList.contains('hidden') ? this.open() : this.close(); },
     query(q){ render(q.trim()); },
+    setFilter(f){
+      _filter=f;
+      document.querySelectorAll('.sf-btn').forEach(b=>b.classList.toggle('active',b.dataset.f===f));
+      render(document.getElementById('search-input').value.trim());
+    },
+    goBk(id,label){ this.close(); NAV.go(id,label||id); },
+    removeBk(id){ if(typeof BOOKMARKS!=='undefined') BOOKMARKS.remove(id); renderBookmarks(); },
     keydown(e){
       if(e.key==='Escape'){ this.close(); return; }
       if(e.key==='ArrowDown'){ e.preventDefault(); setFocus(Math.min(focusIdx+1,results.length-1)); return; }
@@ -1340,6 +1377,66 @@ const SETTINGS = (function(){
 
 /* DARKMODE removed – app is always dark */
 const DARKMODE = { init(){}, toggle(){} };
+
+/* ======================================================================
+   NOTES – Seitennotizen (localStorage pro View)
+====================================================================== */
+const NOTES = (function(){
+  let _view = null;
+  function key(){ return 'bvi_note_'+(_view||'home'); }
+  function updateFab(){
+    const btn = document.getElementById('notes-btn');
+    if(!btn) return;
+    btn.classList.toggle('fab-active', !!localStorage.getItem(key()));
+  }
+  return {
+    setView(id){ _view = id; updateFab(); },
+    open(){
+      const ta = document.getElementById('notes-textarea');
+      if(ta) ta.value = localStorage.getItem(key())||'';
+      document.getElementById('notes-overlay').classList.remove('hidden');
+      if(ta) setTimeout(()=>ta.focus(),80);
+    },
+    close(){
+      const ta = document.getElementById('notes-textarea');
+      if(ta){ const v=ta.value.trim(); if(v) localStorage.setItem(key(),ta.value); else localStorage.removeItem(key()); }
+      document.getElementById('notes-overlay').classList.add('hidden');
+      updateFab();
+    },
+    toggle(){ document.getElementById('notes-overlay').classList.contains('hidden') ? this.open() : this.close(); },
+    clear(){
+      const ta=document.getElementById('notes-textarea'); if(ta) ta.value='';
+      localStorage.removeItem(key()); updateFab();
+    }
+  };
+})();
+
+/* ======================================================================
+   BOOKMARKS – Lesezeichen (localStorage)
+====================================================================== */
+const BOOKMARKS = (function(){
+  const KEY='bvi_bookmarks';
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch{ return []; } }
+  function save(d){ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch{} }
+  function syncFab(id){
+    const btn=document.getElementById('bookmark-btn');
+    if(!btn||!id) return;
+    btn.classList.toggle('fab-active', load().some(b=>b.id===id));
+  }
+  return {
+    setView(id){ syncFab(id); },
+    toggle(id,label){
+      if(!id) return;
+      const d=load();
+      const i=d.findIndex(b=>b.id===id);
+      if(i>=0){ d.splice(i,1); TOAST.show('Lesezeichen entfernt'); }
+      else { d.unshift({id,label:label||id}); TOAST.show('Lesezeichen gesetzt',{type:'ok'}); }
+      save(d); syncFab(id);
+    },
+    getAll(){ return load(); },
+    remove(id){ const d=load(),i=d.findIndex(b=>b.id===id); if(i>=0){d.splice(i,1);save(d);} }
+  };
+})();
 
 /* ======================================================================
    LESEFORTSCHRITT
@@ -1431,33 +1528,56 @@ const FC = (function(){
   let activeFilters = new Set(CATS);
   let focusMode = false;
 
-  function fcLoad(){ try{ return JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch{ return {}; } }
+  const SR_DAYS = [0,1,3,7,14,30]; // Leitner-Box → Tage bis nächste Wiederholung
+
+  function fcLoad(){
+    try{
+      const raw=JSON.parse(localStorage.getItem('bvi_fc')||'{}');
+      // migrate boolean format → {box, nextReview}
+      const out={};
+      for(const [k,v] of Object.entries(raw)){
+        if(v===true) out[k]={box:5,nextReview:0};
+        else out[k]=v;
+      }
+      return out;
+    }catch{ return {}; }
+  }
   function fcSave(d){ try{ localStorage.setItem('bvi_fc',JSON.stringify(d)); }catch{} }
 
   function getDeck(){
     let base = activeFilters.size===CATS.length ? [...FLASHCARD_DATA]
       : FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f)));
-    if(focusMode){ const known=fcLoad(); base=base.filter(c=>!known[c.id]); }
+    if(focusMode){
+      const known=fcLoad(); const now=Date.now();
+      base=base.filter(c=>{ const e=known[c.id]; return !e||(e.nextReview<=now); });
+    }
     return base;
   }
 
   function updateFilterButtons(){
     const known=fcLoad();
     const allSel=CATS.every(c=>activeFilters.has(c));
+    const PRUEFUNG_CATS=['ibk','vak','feuak','idf'];
+    const isPruefung=!focusMode&&PRUEFUNG_CATS.every(c=>activeFilters.has(c))&&activeFilters.size===PRUEFUNG_CATS.length;
+    const now=Date.now();
     document.querySelectorAll('.fc-f-btn').forEach(b=>{
       const df=b.dataset.filter;
       const base=b.dataset.label||'';
       if(df==='all'){
-        b.classList.toggle('active',allSel);
+        b.classList.toggle('active',allSel&&!focusMode&&!isPruefung);
         b.textContent=`${base} (${FLASHCARD_DATA.length})`;
       } else if(df==='fokus'){
-        const unk=FLASHCARD_DATA.filter(c=>!known[c.id]).length;
+        const due=FLASHCARD_DATA.filter(c=>{ const e=known[c.id]; return !e||(e.nextReview<=now); }).length;
         b.classList.toggle('active',focusMode);
-        b.textContent=`🎯 ${base} (${unk})`;
+        b.textContent=`🎯 ${base} (${due})`;
+      } else if(df==='pruefung'){
+        b.classList.toggle('active',isPruefung);
+      } else if(df==='plan'){
+        b.classList.remove('active');
       } else if(df){
         const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df));
         const knownCnt=cats.filter(c=>known[c.id]).length;
-        b.classList.toggle('active',!allSel&&activeFilters.has(df));
+        b.classList.toggle('active',!allSel&&!focusMode&&!isPruefung&&activeFilters.has(df));
         b.textContent=`${base} ${knownCnt}/${cats.length}`;
       }
     });
@@ -1542,11 +1662,14 @@ const FC = (function(){
     const card = deck[curIdx];
     const known = fcLoad();
     const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
+    const card_e = known[card.id];
+    const boxNum = card_e ? (card_e.box||0) : 0;
     box.innerHTML = `
       <div class="fc-stats-row">
         <span class="fc-stat">🟢 ${sess.known} gewusst</span>
         <span class="fc-stat">🔴 ${sess.unknown} nicht gewusst</span>
         <span class="fc-stat">📚 ${knownCnt}/${FLASHCARD_DATA.length} gelernt</span>
+        ${boxNum>0?`<span class="fc-stat" title="Leitner-Box ${boxNum}">🗂️ Box ${boxNum}</span>`:''}
       </div>
       <div class="fc-nav">${curIdx+1} / ${deck.length}</div>
       <div class="fc-outer">
@@ -1581,7 +1704,8 @@ const FC = (function(){
     const known = fcLoad();
     const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
     if(focusMode && deck.length===0){
-      box.innerHTML=`<div class="fc-end"><div class="fc-end-ico">🏆</div><div class="fc-end-title">Alle Karten gelernt!</div><div class="fc-end-sub">Du hast alle <strong>${FLASHCARD_DATA.length}</strong> Karten als gewusst markiert.</div><div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap"><button class="btn btn-gold" onclick="FC.setFilter('all')">Alle Karten wiederholen</button><button class="btn btn-ghost" onclick="FC.resetKnown()">Lernstand zurücksetzen</button></div></div>`;
+      const dueNow=FLASHCARD_DATA.filter(c=>{ const e=known[c.id]; return !e||(e.nextReview<=Date.now()); }).length;
+      box.innerHTML=`<div class="fc-end"><div class="fc-end-ico">🏆</div><div class="fc-end-title">Alle fälligen Karten gelernt!</div><div class="fc-end-sub">Keine weiteren Karten fällig. Insgesamt <strong>${knownCnt}/${FLASHCARD_DATA.length}</strong> Karten gelernt.</div><div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap"><button class="btn btn-gold" onclick="FC.setFilter('plan')">📅 Zeitplan anzeigen</button><button class="btn btn-ghost" onclick="FC.setFilter('all')">Alle Karten</button></div></div>`;
       return;
     }
     const pct = deck.length ? Math.round(sess.known/deck.length*100) : 0;
@@ -1595,6 +1719,7 @@ const FC = (function(){
         <div class="fc-end-sub">${sess.known} von ${deck.length} Karten gewusst (${pct}%).<br>Insgesamt <strong>${knownCnt}/${FLASHCARD_DATA.length}</strong> Begriffe dauerhaft gelernt.</div>
         <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">
           <button class="btn btn-gold" onclick="FC.start()">Neu mischen & wiederholen</button>
+          <button class="btn btn-ghost" onclick="FC.setFilter('plan')">📅 Zeitplan</button>
           <button class="btn btn-ghost" onclick="FC.resetKnown()">Lernstand zurücksetzen</button>
         </div>
       </div>`;
@@ -1619,10 +1744,14 @@ const FC = (function(){
       if(navigator.vibrate) navigator.vibrate(knew ? [30] : [20,50,20]);
       const card=deck[curIdx];
       const d=fcLoad();
-      if(knew){ d[card.id]=true; sess.known++; }
-      else {
+      const now=Date.now();
+      if(knew){
+        const prev=d[card.id]||{box:0};
+        const newBox=Math.min((prev.box||0)+1, SR_DAYS.length-1);
+        d[card.id]={box:newBox, nextReview: now + SR_DAYS[newBox]*86400000};
+        sess.known++;
+      } else {
         delete d[card.id]; sess.unknown++;
-        // Spaced repetition: re-insert unknown card (max 2 extra rounds)
         const reps=card._reps||0;
         if(reps<2) deck.push(Object.assign({},card,{_reps:reps+1}));
       }
@@ -1630,21 +1759,51 @@ const FC = (function(){
     },
     setFilter(f){
       if(f==='fokus'){
-        focusMode=!focusMode;
+        focusMode=!focusMode; if(focusMode) activeFilters=new Set(CATS);
       } else if(f==='all'){
-        activeFilters=new Set(CATS);
+        activeFilters=new Set(CATS); focusMode=false;
+      } else if(f==='pruefung'){
+        activeFilters=new Set(['ibk','vak','feuak','idf']); focusMode=false;
+        updateFilterButtons(); this.start(); return;
+      } else if(f==='plan'){
+        updateFilterButtons(); this.showPlan(); return;
       } else {
-        if(activeFilters.size===CATS.length){
-          activeFilters=new Set([f]);
-        } else if(activeFilters.has(f)){
-          activeFilters.delete(f);
-          if(activeFilters.size===0) activeFilters=new Set(CATS);
-        } else {
-          activeFilters.add(f);
-        }
+        focusMode=false;
+        if(activeFilters.size===CATS.length) activeFilters=new Set([f]);
+        else if(activeFilters.has(f)){ activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(CATS); }
+        else activeFilters.add(f);
       }
       updateFilterButtons();
       this.start();
+    },
+    showPlan(){
+      const box=document.getElementById('fc-container'); if(!box) return;
+      window._shaderContentMode=1.0; document.body.classList.add('mode-navy');
+      const known=fcLoad();
+      const now=Date.now();
+      const MS_DAY=86400000;
+      // Group cards by days until due
+      const groups={};
+      FLASHCARD_DATA.forEach(c=>{
+        const e=known[c.id];
+        const due = e ? Math.max(0, Math.round((e.nextReview-now)/MS_DAY)) : -1;
+        const key = due<0?'due': due===0?'due':`d${due}`;
+        groups[key]=(groups[key]||0)+1;
+      });
+      const dueNow=(groups['due']||0);
+      const rows=[{day:'Heute fällig',cnt:dueNow,today:true}];
+      for(let i=1;i<=30;i++){
+        const cnt=groups[`d${i}`]||0;
+        if(cnt>0) rows.push({day:`In ${i} Tag${i===1?'':'en'}`,cnt,today:false});
+      }
+      const notScheduled=FLASHCARD_DATA.length-Object.keys(known).length;
+      box.innerHTML=`<div class="fc-plan"><div class="fc-plan-title">📅 Wiederholungsplan</div>`
+        +rows.map(r=>`<div class="fc-plan-group${r.today?' fc-plan-today':''}"><span class="fc-plan-day">${r.day}</span><span class="fc-plan-cnt"><strong>${r.cnt}</strong> Karte${r.cnt===1?'':'n'}</span></div>`).join('')
+        +(notScheduled>0?`<div class="fc-plan-group"><span class="fc-plan-day">Noch nicht gelernt</span><span class="fc-plan-cnt"><strong>${notScheduled}</strong> Karte${notScheduled===1?'':'n'}</span></div>`:'')
+        +`<div style="text-align:center;margin-top:1.25rem;display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">`
+        +`<button class="btn btn-gold" onclick="FC.setFilter('fokus')">Fällige Karten lernen (${dueNow})</button>`
+        +`<button class="btn btn-ghost" onclick="FC.setFilter('all')">Alle Karten</button>`
+        +`</div></div>`;
     },
     resetKnown(){ localStorage.removeItem('bvi_fc'); this.start(); },
     resize(){ sizeCard(); },
@@ -1801,6 +1960,52 @@ const ABK = (function(){
     {s:'Kartenkunde & Navigation',a:'MGRS',f:'Military Grid Reference System',d:'Gitterkennzahl-Referenzsystem auf UTM-Basis'},
     {s:'Kartenkunde & Navigation',a:'GPS',f:'Global Positioning System',d:'US-amerikanisches satellitengestütztes Navigationssystem'},
     {s:'Kartenkunde & Navigation',a:'GIS',f:'Geographisches Informationssystem',d:'System zur Erfassung, Verwaltung und Analyse räumlicher Daten'},
+    // Führung & Stabsarbeit
+    {s:'Führung & Stabsarbeit',a:'FüGK',f:'Führungsgruppe Katastrophenschutz',d:'Führungsunterstützung auf Landkreisebene bei Großlagen'},
+    {s:'Führung & Stabsarbeit',a:'GS',f:'Gemeinsamer Stab',d:'Gemeinsamer Führungsstab von BF/FF und KatS bei großen Einsatzlagen'},
+    {s:'Führung & Stabsarbeit',a:'KatS',f:'Katastrophenschutz',d:'Staatliche Aufgabe: Schutz der Bevölkerung bei Großschadenlagen'},
+    {s:'Führung & Stabsarbeit',a:'THW',f:'Technisches Hilfswerk',d:'Bundesbehörde für technische Nothilfe; ergänzt Feuerwehren bei Großlagen'},
+    {s:'Führung & Stabsarbeit',a:'BBK',f:'Bundesamt für Bevölkerungsschutz und Katastrophenhilfe',d:'Koordiniert zivile Schutzmaßnahmen auf Bundesebene'},
+    {s:'Führung & Stabsarbeit',a:'ICS',f:'Incident Command System',d:'Amerikanisches Führungssystem für Großlagen; Basis des NIMS'},
+    {s:'Führung & Stabsarbeit',a:'NIMS',f:'National Incident Management System',d:'US-amerikanisches Rahmenwerk für standardisierte Einsatzführung'},
+    {s:'Führung & Stabsarbeit',a:'SbE',f:'Stab für außergewöhnliche Ereignisse',d:'Katastrophenschutzstab der kommunalen Ebene'},
+    {s:'Führung & Stabsarbeit',a:'UVP',f:'Umweltverträglichkeitsprüfung',d:'Behördliches Verfahren zur Bewertung von Umweltauswirkungen'},
+    {s:'Führung & Stabsarbeit',a:'LÜKEX',f:'Länder- und Ressortübergreifende Krisenmanagementübung',d:'Bundesweite Stabsrahmenübung zur Stärkung des Krisenmanagements'},
+    // Fahrzeuge (ergänzt)
+    {s:'Fahrzeuge',a:'GW-AS',f:'Gerätewagen Atemschutz/Strahlenschutz',d:'Fahrzeug mit Reservegeräten und Technik für AS-Großlagen'},
+    {s:'Fahrzeuge',a:'GW-L',f:'Gerätewagen Logistik',d:'Fahrzeug für Materialversorgung und Logistik im Einsatz'},
+    {s:'Fahrzeuge',a:'GW-G',f:'Gerätewagen Gefahrgut',d:'Fahrzeug mit Spezialmittel und -ausrüstung für Gefahrstoffeinsätze'},
+    {s:'Fahrzeuge',a:'ULF',f:'Unimog Löschfahrzeug',d:'Geländegängiges Löschfahrzeug auf Unimog-Basis'},
+    {s:'Fahrzeuge',a:'FwDL',f:'Feuerwehrdrehleiter',d:'Ältere Bezeichnung für Drehleiter ohne Korb'},
+    {s:'Fahrzeuge',a:'LF 10',f:'Löschfahrzeug 10',d:'Normiertes LF nach DIN EN 1846; 10 Personen, mind. 1600 l Tank'},
+    {s:'Fahrzeuge',a:'HLF 20',f:'Hilfeleistungslöschfahrzeug 20',d:'Kombinationsfahrzeug; 2000 l Tank, Hydraulischer Rettungssatz'},
+    // Ausrüstung & Atemschutz (ergänzt)
+    {s:'Ausrüstung & Atemschutz',a:'FwDV 7',f:'FwDV 7 – Atemschutz',d:'Dienstvorschrift für Atemschutzeinsätze und Überwachungspflichten'},
+    {s:'Ausrüstung & Atemschutz',a:'FwDV 1',f:'FwDV 1 – Grundtätigkeiten',d:'Dienstvorschrift für Lösch- und Hilfeleistungseinsätze (Truppmannausbildung)'},
+    {s:'Ausrüstung & Atemschutz',a:'WBK',f:'Wärmebildkamera',d:'Infrarotkamera zur Lokalisierung von Personen und Brandherden'},
+    {s:'Ausrüstung & Atemschutz',a:'PSA-ga',f:'PSA gegen Absturz',d:'Persönliche Schutzausrüstung gegen Absturz; Auffanggurt, Bandfalldämpfer'},
+    // Recht & Verwaltung (ergänzt)
+    {s:'Recht & Verwaltung',a:'BImSchG',f:'Bundesimmissionsschutzgesetz',d:'Schützt vor schädlichen Umwelteinwirkungen durch Luft, Lärm, Erschütterungen'},
+    {s:'Recht & Verwaltung',a:'WHG',f:'Wasserhaushaltsgesetz',d:'Regelt den Schutz der Gewässer; Grundlage für Gewässerschutzeinsätze'},
+    {s:'Recht & Verwaltung',a:'ChemG',f:'Chemikaliengesetz',d:'Regelwerk für Einstufung, Kennzeichnung und Schutzmaßnahmen bei Chemikalien'},
+    {s:'Recht & Verwaltung',a:'SGB VII',f:'Sozialgesetzbuch VII – Gesetzliche Unfallversicherung',d:'Rechtliche Grundlage für Unfall- und Berufskrankheitenversicherung im öD'},
+    {s:'Recht & Verwaltung',a:'GemO',f:'Gemeindeordnung',d:'Landesrechtliches Kommunalverfassungsgesetz; Grundlage kommunaler Feuerwehr'},
+    {s:'Recht & Verwaltung',a:'VwZG',f:'Verwaltungszustellungsgesetz',d:'Regelt Zustellung von Verwaltungsakten und Bescheiden'},
+    {s:'Recht & Verwaltung',a:'ROG',f:'Raumordnungsgesetz',d:'Bundesrahmengesetz für räumliche Gesamtplanung'},
+    // Psychosoziales & Führung (ergänzt)
+    {s:'Psychosoziales & Führung',a:'EAP',f:'Employee Assistance Program',d:'Betriebliches Hilfsangebot für psychische und soziale Belastungen'},
+    {s:'Psychosoziales & Führung',a:'FüSt',f:'Führungsstil',d:'Art und Weise der Führung; transaktional, transformational, laissez-faire'},
+    {s:'Psychosoziales & Führung',a:'MBO',f:'Management by Objectives',d:'Führungskonzept durch Zielvereinbarungen zwischen Führung und Mitarbeitenden'},
+    {s:'Psychosoziales & Führung',a:'OE',f:'Organisationsentwicklung',d:'Geplanter Wandel in Organisationen durch Lernprozesse und Partizipation'},
+    {s:'Psychosoziales & Führung',a:'TZI',f:'Themenzentrierte Interaktion',d:'Gruppenarbeitsmethode von Ruth Cohn; Ich – Wir – Es – Globe'},
+    // Einsatztaktik (ergänzt)
+    {s:'Einsatztaktik & Organisation',a:'AVIVA',f:'Ankommen, Verschaffen, Informieren, Vorgehen, Abschließen',d:'Phasenmodell für den Lehrauftrag/Unterrichtsplanung; auch Einsatzführung'},
+    {s:'Einsatztaktik & Organisation',a:'FüGr',f:'Führungsgruppe',d:'Stabselement zur Unterstützung der Einsatzleitung bei Großlagen'},
+    {s:'Einsatztaktik & Organisation',a:'ELW 2',f:'Einsatzleitwagen 2',d:'Größerer Führungskomponenten-Einsatzleitwagen für Großschadenslagen'},
+    {s:'Einsatztaktik & Organisation',a:'SEG',f:'Schnelleinsatzgruppe',d:'Vorbereitete Einheit für rasch verfügbaren Einsatz (z.B. SEG-San, SEG-Bet)'},
+    {s:'Einsatztaktik & Organisation',a:'KFZ',f:'Kraftfahrzeug',d:'Allgemeine Bezeichnung für motorisierte Fahrzeuge im Feuerwehrbereich'},
+    {s:'Einsatztaktik & Organisation',a:'TEL',f:'Technische Einsatzleitung',d:'Örtliche Führungsebene bei großen Schadenslagen'},
+    {s:'Einsatztaktik & Organisation',a:'FwDV 100',f:'FwDV 100 – Führung und Leitung im Einsatz',d:'Grundlegende Dienstvorschrift für Führungsorganisation und Führungsvorgang'},
   ];
 
   let rendered = false;
@@ -1981,6 +2186,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(e.key==='Escape'){
       if(!document.getElementById('search-overlay').classList.contains('hidden')){ SEARCH.close(); return; }
       if(!document.getElementById('settings-overlay').classList.contains('hidden')){ SETTINGS.close(); return; }
+      if(!document.getElementById('notes-overlay').classList.contains('hidden')){ NOTES.close(); return; }
     }
     // Lernkarten-Tastatursteuerung
     if(document.getElementById('v-flashcards').classList.contains('active')){
@@ -1989,7 +2195,11 @@ document.addEventListener('DOMContentLoaded',()=>{
       if((e.key==='ArrowLeft'||e.key==='f')&&!e.ctrlKey&&!e.metaKey){ e.preventDefault(); FC.answer(false); }
     }
   });
-  window.addEventListener('scroll',()=>{ updateReadProgress(); TOC.update(); },{passive:true});
+  window.addEventListener('scroll',()=>{
+    updateReadProgress(); TOC.update();
+    const sTop=document.getElementById('scroll-top-btn');
+    if(sTop) sTop.classList.toggle('visible', window.scrollY>300);
+  },{passive:true});
   if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
   ABK.render(); ABK.filter('');
   console.log('%c B VI %c Lernwebsite v4.0 · flametan/BVI-Lernwebsite ',

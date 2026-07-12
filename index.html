@@ -53,6 +53,16 @@
       <input id="search-input" class="search-input" type="text" placeholder="Themen, Begriffe, Abkürzungen suchen…" oninput="SEARCH.query(this.value)" onkeydown="SEARCH.keydown(event)" autocomplete="off" spellcheck="false"/>
       <button class="search-close-btn" onclick="SEARCH.close()" title="Schließen (Esc)">✕</button>
     </div>
+    <div class="search-filter-row">
+      <button class="sf-btn active" data-f="all" onclick="SEARCH.setFilter('all')">Alle</button>
+      <button class="sf-btn" data-f="gal" onclick="SEARCH.setFilter('gal')">GAL</button>
+      <button class="sf-btn" data-f="sfs" onclick="SEARCH.setFilter('sfs')">SFS</button>
+      <button class="sf-btn" data-f="hlfs" onclick="SEARCH.setFilter('hlfs')">HLFS</button>
+      <button class="sf-btn" data-f="ibk" onclick="SEARCH.setFilter('ibk')">IBK</button>
+      <button class="sf-btn" data-f="vak" onclick="SEARCH.setFilter('vak')">VAk</button>
+      <button class="sf-btn" data-f="feuak" onclick="SEARCH.setFilter('feuak')">FeuAK</button>
+      <button class="sf-btn" data-f="idf" onclick="SEARCH.setFilter('idf')">IdF</button>
+    </div>
     <div id="search-results" class="search-results"><div class="search-idle">Suchbegriff eingeben – z.&nbsp;B. <em>AVIVA</em>, <em>Glasl</em>, <em>MANV</em></div></div>
     <div class="search-footer"><span><kbd>↑↓</kbd> navigieren</span><span><kbd>↵</kbd> öffnen</span><span><kbd>Esc</kbd> schließen</span></div>
   </div>
@@ -85,6 +95,30 @@
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
   <span class="fb-label">Zurück</span>
 </button>
+<!-- FAB STACK: Lesezeichen + Notizen + Scroll-to-top -->
+<button id="bookmark-btn" class="fab-btn hidden" title="Lesezeichen setzen / entfernen" onclick="BOOKMARKS.toggle(this.dataset.id,this.dataset.label)">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+</button>
+<button id="notes-btn" class="fab-btn hidden" title="Notizen zu dieser Seite" onclick="NOTES.toggle()">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+</button>
+<button id="scroll-top-btn" title="Nach oben scrollen" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+<!-- NOTES OVERLAY -->
+<div id="notes-overlay" class="search-overlay hidden" onclick="if(event.target===this)NOTES.close()">
+  <div class="search-box notes-box" onclick="event.stopPropagation()">
+    <div class="notes-hdr">
+      <span class="settings-title">📝 Notizen</span>
+      <div style="display:flex;align-items:center;gap:.5rem">
+        <button class="btn btn-ghost" style="font-size:.73rem;padding:.3rem .7rem" onclick="NOTES.clear()">Löschen</button>
+        <button class="search-close-btn" onclick="NOTES.close()" title="Schließen (Esc)">✕</button>
+      </div>
+    </div>
+    <textarea id="notes-textarea" class="notes-area" placeholder="Deine Notizen zu dieser Seite – wird lokal gespeichert …"></textarea>
+    <div class="notes-footer">Gespeichert in deinem Browser · nur du kannst diese Notizen sehen</div>
+  </div>
+</div>
 
 <!-- ============================================================ HOME ============================================================ -->
 <div id="v-home" class="view active">
@@ -6593,6 +6627,8 @@
     <button class="fc-f-btn" data-filter="feuak" data-label="FeuAK Hamburg" onclick="FC.setFilter('feuak')">FeuAK Hamburg</button>
     <button class="fc-f-btn" data-filter="idf" data-label="IdF Münster" onclick="FC.setFilter('idf')">IdF Münster</button>
     <button class="fc-f-btn fc-fokus-btn" data-filter="fokus" data-label="Fokus" onclick="FC.setFilter('fokus')">🎯 Fokus-Modus</button>
+    <button class="fc-f-btn fc-pruefung-btn" data-filter="pruefung" data-label="Prüfung" onclick="FC.setFilter('pruefung')">🎓 Prüfung IBK/VAk/FeuAK/IdF</button>
+    <button class="fc-f-btn" data-filter="plan" data-label="Zeitplan" onclick="FC.setFilter('plan')">📅 Zeitplan</button>
   </div>
   <div class="pc">
     <div id="fc-container">
@@ -12292,7 +12328,7 @@
 <!-- ============================================================ ABKÜRZUNGEN ============================================================ -->
 <div id="v-abkuerzungen" class="view detail-view">
   <div class="page-hero"><div class="phi">
-    <p class="page-eyebrow">Nachschlagewerk · 100+ Einträge</p>
+    <p class="page-eyebrow">Nachschlagewerk · 170+ Einträge</p>
     <h1 class="page-title">Abkür<span class="accent">zungen</span></h1>
     <p class="page-lead">Alle auf dieser Lernplattform verwendeten Abkürzungen aus Feuerwehr, Recht, Verwaltung und Führung – alphabetisch und nach Kategorie filterbar.</p>
   </div></div>
