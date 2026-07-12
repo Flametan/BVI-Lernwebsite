@@ -20,6 +20,8 @@ const NAV = (function(){
       }
     });
     window.scrollTo({top:0,behavior:'instant'});
+    const _sbg=document.getElementById('shader-bg');
+    if(_sbg) _sbg.style.opacity=id.split('-').length>2?'0':'1';
     updateHeader();
     if(id==='v-vorschlaege') loadProposals();
     if(id==='v-abkuerzungen') ABK.init();
@@ -1890,9 +1892,9 @@ void main(void){
     uv+=.1*cos(i*vec2(.1+.01*i,.8)+i*i+T*.5+.1*uv.x);
     vec2 p=uv;
     float d=length(p);
-    col+=.00125/d*(cos(sin(i)*vec3(1,2,3))+1.);
+    col+=.0005/d*(cos(sin(i)*vec3(1,2,3))+1.);
     float b=noise(i+p+bg*1.731);
-    col+=.002*b/length(max(p,vec2(b*p.x*.02,p.y)));
+    col+=.0008*b/length(max(p,vec2(b*p.x*.02,p.y)));
     col=mix(col,vec3(bg*.25,bg*.137,bg*.05),d);
   }
   O=vec4(col,1);
