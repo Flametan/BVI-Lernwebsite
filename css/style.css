@@ -563,6 +563,24 @@
   .notes-area::placeholder{color:var(--c-slate);}
   .notes-footer{padding:.45rem 1.25rem;font-size:.65rem;color:var(--c-slate);border-top:1px solid var(--glass-b);}
 
+  /* ── APP-SEITE ── */
+  .section-h{font-family:var(--f-d);font-size:1.35rem;font-weight:700;color:var(--c-text-b);margin:2rem 0 .5rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
+  .badge-ok{font-family:var(--f-b);font-size:.65rem;font-weight:600;background:var(--c-ok-dim);color:#4ade80;border:1px solid rgba(42,122,82,.3);border-radius:20px;padding:.15rem .55rem;letter-spacing:.04em;}
+  .section-lead-txt{font-size:.88rem;color:var(--c-slate-l);line-height:1.65;margin-bottom:1.5rem;}
+  .app-platform-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2.5rem;}
+  @media(max-width:600px){.app-platform-grid{grid-template-columns:1fr;}}
+  .app-platform-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-lg);padding:1.25rem 1.4rem;}
+  .app-platform-hdr{margin-bottom:.9rem;}
+  .app-platform-os{font-size:.95rem;font-weight:700;color:var(--c-text-b);}
+  .app-steps{padding-left:1.2rem;display:flex;flex-direction:column;gap:.45rem;}
+  .app-steps li{font-size:.84rem;color:var(--c-slate-l);line-height:1.55;}
+  .app-steps strong{color:var(--c-text-b);}
+  .app-steps em{color:var(--c-slate);font-style:normal;font-size:.8rem;}
+  .apk-dl-block{border-top:1px solid var(--glass-b);padding-top:2rem;margin-top:.5rem;}
+  .apk-warn{font-size:.82rem;color:#fb923c;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.25);border-radius:var(--r-md);padding:.7rem 1rem;margin-bottom:1.25rem;}
+  .apk-dl-btn{display:inline-flex;align-items:center;gap:.55rem;background:var(--glass);border:1px solid var(--glass-b);color:var(--c-slate-l);border-radius:var(--r-md);padding:.8rem 1.4rem;font-size:.9rem;font-family:inherit;font-weight:500;text-decoration:none;transition:all var(--t);margin-top:.75rem;}
+  .apk-dl-btn:hover{border-color:var(--c-gold-rim);color:var(--c-gold);background:var(--c-gold-dim);}
+
   /* ── SEARCH FILTER CHIPS ── */
   .search-filter-row{display:flex;gap:.35rem;overflow-x:auto;padding:.5rem 1rem;border-bottom:1px solid var(--glass-b);scrollbar-width:none;}
   .search-filter-row::-webkit-scrollbar{display:none;}

@@ -5,7 +5,7 @@
 const NAV = (function(){
   let stack = [];
   let _dir = 'forward';
-  const ALL = ['v-home','v-abkuerzungen','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-feuak','v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-idf','v-idf-brandschutz','v-idf-stab','v-idf-presse','v-simulator','v-flashcards','v-vorschlaege'];
+  const ALL = ['v-home','v-abkuerzungen','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-feuak','v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-idf','v-idf-brandschutz','v-idf-stab','v-idf-presse','v-simulator','v-flashcards','v-vorschlaege','v-app'];
 
   function show(id){
     ALL.forEach(v=>{
@@ -20,7 +20,7 @@ const NAV = (function(){
       }
     });
     window.scrollTo({top:0,behavior:'instant'});
-    const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-vorschlaege']);
+    const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-vorschlaege','v-app']);
     window._shaderContentMode = (id.split('-').length > 2 || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
     document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
     const btnCards = document.getElementById('btn-reset-cards');
@@ -38,6 +38,10 @@ const NAV = (function(){
     updateHeader();
     if(id==='v-vorschlaege') loadProposals();
     if(id==='v-abkuerzungen') ABK.init();
+    if(id==='v-app' && window._isChromium){
+      const w = document.getElementById('apk-chromium-warn');
+      if(w) w.classList.remove('hidden');
+    }
     if(typeof PROGRESS!=='undefined') PROGRESS.track(id);
     if(typeof TOC!=='undefined') TOC.build();
     updateReadProgress();
@@ -1381,7 +1385,7 @@ const DARKMODE = { init(){}, toggle(){} };
 ====================================================================== */
 const NOTES = (function(){
   let _view = null;
-  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-vorschlaege','v-abkuerzungen']);
+  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-vorschlaege','v-abkuerzungen','v-app']);
   function key(){ return 'bvi_note_'+(_view||'home'); }
   function getBtn(){
     if(!_view) return null;
@@ -1460,7 +1464,7 @@ const BOOKMARKS = (function(){
 /* ======================================================================
    LESEFORTSCHRITT
 ====================================================================== */
-const NO_PROG = new Set(['v-home','v-flashcards','v-simulator','v-vorschlaege','v-abkuerzungen']);
+const NO_PROG = new Set(['v-home','v-flashcards','v-simulator','v-vorschlaege','v-abkuerzungen','v-app']);
 function updateReadProgress(){
   const bar = document.getElementById('read-prog');
   const fill = document.getElementById('read-prog-fill');
@@ -1478,7 +1482,7 @@ function updateReadProgress(){
 ====================================================================== */
 const TOC = (function(){
   let el=null, sections=[];
-  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-vorschlaege','v-abkuerzungen']);
+  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-vorschlaege','v-abkuerzungen','v-app']);
   return {
     build(){
       if(!el){ el=document.createElement('nav'); el.className='toc-float'; document.body.appendChild(el); }
@@ -2108,12 +2112,12 @@ const ABK = (function(){
 ====================================================================== */
 (function(){
   const ua = navigator.userAgent;
-  const isChromium = !!window.chrome && !ua.includes('SamsungBrowser') && !ua.includes('Edg/');
-  if(!isChromium) return;
-  const desc = document.getElementById('apk-desc');
+  window._isChromium = !!window.chrome && !ua.includes('SamsungBrowser') && !ua.includes('Edg/');
+  if(!window._isChromium) return;
+  // Warn on home tile
   const tile = document.getElementById('apk-tile');
-  if(desc) desc.textContent = 'Brave, Chrome oder anderen Chromiumbrowser erkannt – Wechsel zu Firefox oder Samsung Internet';
-  if(tile) tile.style.borderColor = 'rgba(249,115,22,0.5)';
+  if(tile) tile.querySelector('.tile-desc').textContent = 'Chromium erkannt – bitte Firefox oder Samsung Internet nutzen';
+  // Warn in v-app view (applied when view opens)
 })();
 
 /* ======================================================================
