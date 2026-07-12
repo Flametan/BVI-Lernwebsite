@@ -2104,6 +2104,19 @@ const ABK = (function(){
 })();
 
 /* ======================================================================
+   CHROMIUM-ERKENNUNG – Warnung beim APK-Download
+====================================================================== */
+(function(){
+  const ua = navigator.userAgent;
+  const isChromium = !!window.chrome && !ua.includes('SamsungBrowser') && !ua.includes('Edg/');
+  if(!isChromium) return;
+  const desc = document.getElementById('apk-desc');
+  const tile = document.getElementById('apk-tile');
+  if(desc) desc.textContent = 'Brave, Chrome oder anderen Chromiumbrowser erkannt – Wechsel zu Firefox oder Samsung Internet';
+  if(tile) tile.style.borderColor = 'rgba(249,115,22,0.5)';
+})();
+
+/* ======================================================================
    INITIALISIERUNG
 ====================================================================== */
 window.addEventListener('resize', () => {
