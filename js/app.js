@@ -1878,7 +1878,7 @@ void main(void){
     float d=length(p);
     col+=.0003/d*(cos(sin(i)*vec3(1,2,3))+1.);
     float b=noise(i+p+bg*1.731);
-    col+=.00048*b/max(length(p),.008);
+    col+=.00048*b/length(vec2(max(abs(p.x),abs(p.y)*.12+.004),p.y));
     col=mix(col,vec3(bg*.25,bg*.137,bg*.05),d);
   }
   // Navy-Modus: dunkles Navy + dezenter langsamer Radial-Puls auf Inhaltsseiten
