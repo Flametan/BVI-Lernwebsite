@@ -22,6 +22,7 @@ const NAV = (function(){
     window.scrollTo({top:0,behavior:'instant'});
     const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-vorschlaege']);
     window._shaderContentMode = (id.split('-').length > 2 || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
+    document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
     const btnCards = document.getElementById('btn-reset-cards');
     if(btnCards) btnCards.classList.toggle('hidden', id !== 'v-flashcards');
     updateHeader();
@@ -1569,11 +1570,13 @@ const FC = (function(){
       </div>`;
     flipped = false;
     window._shaderContentMode = 1.0;
+    document.body.classList.add('mode-navy');
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
   }
 
   function renderEnd(){
     window._shaderContentMode = 1.0;
+    document.body.classList.add('mode-navy');
     const box = document.getElementById('fc-container'); if(!box) return;
     const known = fcLoad();
     const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
