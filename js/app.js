@@ -1909,7 +1909,7 @@ window.addEventListener('resize', () => {
 
     for(let L=0;L<5;L++){
       const lr=L/5, col=PAL[L%PAL.length];
-      const alpha=(0.08+lr*.06)*breathe;
+      const alpha=(0.18+lr*.12)*breathe;
       const baseY=H*(0.3+lr*.4), amp=(60+L*30)*breathe;
       const freq=0.003-L*.0003, spd2=t*(0.15+L*.05);
       const rotAng=t*.025+L*.5;
