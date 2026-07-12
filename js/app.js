@@ -20,7 +20,8 @@ const NAV = (function(){
       }
     });
     window.scrollTo({top:0,behavior:'instant'});
-    window._shaderContentMode = id.split('-').length > 2 ? 1.0 : 0.0;
+    const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-vorschlaege']);
+    window._shaderContentMode = (id.split('-').length > 2 || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
     updateHeader();
     if(id==='v-vorschlaege') loadProposals();
     if(id==='v-abkuerzungen') ABK.init();
