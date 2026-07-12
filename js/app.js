@@ -2115,7 +2115,7 @@ const ABK = (function(){
   if(!window._isChromium) return;
   const tile = document.getElementById('apk-tile');
   if(tile){
-    tile.querySelector('.tile-desc').textContent = 'Chromiumbrowser entdeckt – Wechsel zum downloaden in Firefox und wende dich an die WhatsApp-Gruppe';
+    tile.querySelector('.tile-desc').textContent = 'Chromiumbrowser entdeckt – Wechsel zum downloaden in Firefox oder wende dich an die WhatsApp-Gruppe';
     tile.style.borderColor = 'rgba(249,115,22,0.5)';
   }
 })();
