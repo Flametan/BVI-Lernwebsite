@@ -1,4 +1,4 @@
-const CACHE = 'bvi-v9';
+const CACHE = 'bvi-v10';
 const PRECACHE = ['./icons/icon-192.svg', './icons/icon-512.svg', './manifest.json'];
 
 self.addEventListener('install', e => {
