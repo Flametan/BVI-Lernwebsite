@@ -35,8 +35,7 @@
   #app-header{position:fixed;top:0;left:0;right:0;z-index:100;height:58px;display:flex;align-items:center;padding:0 1.5rem;background:transparent;backdrop-filter:none;border-bottom:none;box-shadow:none;}
   #logo{display:flex;align-items:center;gap:.65rem;cursor:pointer;color:var(--c-text-b);transition:opacity var(--t);flex-shrink:0;}
   #logo:hover{opacity:.72;}
-  .logo-emblem{width:34px;height:34px;background:linear-gradient(135deg,var(--c-red) 0%,#6B0000 100%);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(165,0,0,.5),0 2px 10px rgba(165,0,0,.3);}
-  .logo-emblem-lg{width:40px;height:40px;border-radius:var(--r-md);box-shadow:0 0 0 1px rgba(165,0,0,.55),0 3px 14px rgba(165,0,0,.35);}
+  .logo-emblem{width:34px;height:34px;background:linear-gradient(135deg,#0A192F 0%,#152B52 100%);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(201,168,76,.25),0 2px 10px rgba(0,0,0,.4);}
   .logo-main{display:block;font-family:var(--f-d);font-size:1.05rem;font-weight:700;letter-spacing:.04em;color:var(--c-text-b);}
   .logo-sub{display:block;font-size:.58rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);margin-top:1px;}
   #nav-trail{display:flex;align-items:center;margin-left:1.5rem;flex:1;overflow:hidden;}
