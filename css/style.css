@@ -4,7 +4,7 @@
   ============================================================ */
   :root{
     --c-bg:#080F1C;--c-navy:#0A192F;--c-navy-2:#0D2140;--c-navy-3:#152B52;--c-navy-4:#1E3A68;
-    --c-slate:#607080;--c-slate-l:#8FA0B0;--c-text:#D8E4F0;--c-text-b:#EEF4FB;
+    --c-slate:#9AAAB8;--c-slate-l:#BCCAD5;--c-text:#D8E4F0;--c-text-b:#EEF4FB;
     --c-gold:#C9A84C;--c-gold-l:#E8C97A;--c-gold-dim:rgba(201,168,76,0.10);--c-gold-rim:rgba(201,168,76,0.22);
     --c-red:#A50000;--c-red-l:#CC1515;--c-red-dim:rgba(165,0,0,0.12);--c-red-rim:rgba(165,0,0,0.28);
     --c-ok:#2A7A52;--c-ok-dim:rgba(42,122,82,0.12);--c-warn:#B07320;--c-warn-dim:rgba(176,115,32,0.12);
