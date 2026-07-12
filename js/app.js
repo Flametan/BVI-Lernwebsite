@@ -20,8 +20,7 @@ const NAV = (function(){
       }
     });
     window.scrollTo({top:0,behavior:'instant'});
-    const _sbg=document.getElementById('shader-bg');
-    if(_sbg) _sbg.style.opacity=id.split('-').length>2?'0':'1';
+    window._shaderContentMode = id.split('-').length > 2 ? 1.0 : 0.0;
     updateHeader();
     if(id==='v-vorschlaege') loadProposals();
     if(id==='v-abkuerzungen') ABK.init();
@@ -1875,6 +1874,7 @@ precision highp float;
 out vec4 O;
 uniform vec2 resolution;
 uniform float time;
+uniform float blend;
 #define FC gl_FragCoord.xy
 #define T time
 #define R resolution
@@ -1897,6 +1897,10 @@ void main(void){
     col+=.0008*b/length(max(p,vec2(b*p.x*.02,p.y)));
     col=mix(col,vec3(bg*.25,bg*.137,bg*.05),d);
   }
+  // Dezenter Gold/Rot-Puls auf Inhaltsseiten
+  float pulse=sin(T*.9)*.5+.5;
+  vec3 warm=vec3(bg*.38+pulse*bg*.12, bg*.12+pulse*bg*.04, bg*.04+pulse*bg*.01);
+  col=mix(col,warm,blend*.9);
   O=vec4(col,1);
 }`;
 
@@ -1934,8 +1938,9 @@ void main(void){
   gl.enableVertexAttribArray(posLoc);
   gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
 
-  const uRes  = gl.getUniformLocation(prog, 'resolution');
-  const uTime = gl.getUniformLocation(prog, 'time');
+  const uRes   = gl.getUniformLocation(prog, 'resolution');
+  const uTime  = gl.getUniformLocation(prog, 'time');
+  const uBlend = gl.getUniformLocation(prog, 'blend');
 
   function resize(){
     canvas.width  = innerWidth;
@@ -1945,11 +1950,13 @@ void main(void){
   window.addEventListener('resize', resize);
   resize();
 
-  let start = 0;
+  let start = 0, blendVal = 0;
   function frame(now){
     if(!start) start = now;
+    blendVal += ((window._shaderContentMode || 0) - blendVal) * 0.025;
     gl.uniform2f(uRes, canvas.width, canvas.height);
     gl.uniform1f(uTime, (now - start) * 0.001);
+    gl.uniform1f(uBlend, blendVal);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     requestAnimationFrame(frame);
   }
