@@ -1885,7 +1885,7 @@ void main(void){
     col+=.0003/d*(cos(sin(i)*vec3(1,2,3))+1.)*fade;
     float b=noise(i+p+bg*1.731);
     col+=.00048*b/length(vec2(max(abs(p.x),abs(p.y)*.12+.004),p.y))*fade;
-    col=mix(col,vec3(bg*.25,bg*.137,bg*.05),d);
+    col=mix(col,vec3(bg*.25,bg*.137,bg*.05),clamp(d,0.,1.));
   }
   // Navy-Modus: dunkles Navy + dezenter langsamer Radial-Puls auf Inhaltsseiten
   float pulse=sin(realTime*0.6)*.5+.5;
