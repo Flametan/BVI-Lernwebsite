@@ -1875,6 +1875,7 @@ out vec4 O;
 uniform vec2 resolution;
 uniform float time;
 uniform float blend;
+uniform float realTime;
 #define FC gl_FragCoord.xy
 #define T time
 #define R resolution
@@ -1897,10 +1898,16 @@ void main(void){
     col+=.0008*b/length(max(p,vec2(b*p.x*.02,p.y)));
     col=mix(col,vec3(bg*.25,bg*.137,bg*.05),d);
   }
-  // Dezenter Gold/Rot-Puls auf Inhaltsseiten
-  float pulse=sin(T*.9)*.5+.5;
-  vec3 warm=vec3(bg*.38+pulse*bg*.12, bg*.12+pulse*bg*.04, bg*.04+pulse*bg*.01);
-  col=mix(col,warm,blend*.9);
+  // Navy-Modus: dunkles Navy + pulsierender Radial-Gradient auf Inhaltsseiten
+  float pulse=sin(realTime*2.0)*.5+.5;
+  vec2 ctr=(FC/R)-.5;
+  float glow=exp(-dot(ctr,ctr)*5.0)*(0.5+pulse*0.5);
+  vec3 navy=vec3(
+    0.031+bg*.02+glow*.02,
+    0.059+bg*.03+glow*(.06+pulse*.04),
+    0.110+bg*.08+glow*(.18+pulse*.10)
+  );
+  col=mix(col,navy,blend);
   O=vec4(col,1);
 }`;
 
@@ -1938,9 +1945,10 @@ void main(void){
   gl.enableVertexAttribArray(posLoc);
   gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
 
-  const uRes   = gl.getUniformLocation(prog, 'resolution');
-  const uTime  = gl.getUniformLocation(prog, 'time');
-  const uBlend = gl.getUniformLocation(prog, 'blend');
+  const uRes      = gl.getUniformLocation(prog, 'resolution');
+  const uTime     = gl.getUniformLocation(prog, 'time');
+  const uBlend    = gl.getUniformLocation(prog, 'blend');
+  const uRealTime = gl.getUniformLocation(prog, 'realTime');
 
   function resize(){
     canvas.width  = innerWidth;
@@ -1954,8 +1962,10 @@ void main(void){
   function frame(now){
     if(!start) start = now;
     blendVal += ((window._shaderContentMode || 0) - blendVal) * 0.025;
+    const elapsed = (now - start) * 0.001;
     gl.uniform2f(uRes, canvas.width, canvas.height);
-    gl.uniform1f(uTime, (now - start) * 0.0004);
+    gl.uniform1f(uTime, elapsed * 0.4);
+    gl.uniform1f(uRealTime, elapsed);
     gl.uniform1f(uBlend, blendVal);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     requestAnimationFrame(frame);
