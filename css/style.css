@@ -385,7 +385,7 @@
   .hdr-progress{position:fixed;top:58px;left:0;right:0;z-index:99;height:2px;background:transparent;pointer-events:none;}
   .hdr-progress-fill{height:100%;background:linear-gradient(90deg,var(--c-gold),var(--c-gold-l));transition:width .6s var(--ease);width:0%;}
   .tile-prog{position:absolute;top:.8rem;right:.8rem;font-family:var(--f-m);font-size:.57rem;font-weight:600;background:var(--c-gold-dim);border:1px solid var(--c-gold-rim);border-radius:10px;padding:.1rem .45rem;color:var(--c-gold);display:none;}
-  .tc-check{position:absolute;top:.65rem;right:.65rem;width:20px;height:20px;border-radius:50%;background:var(--c-ok-dim);border:1.5px solid rgba(42,122,82,.5);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#4ACD90;pointer-events:none;}
+  .tc-check{position:absolute;top:.65rem;right:.65rem;width:20px;height:20px;border-radius:50%;background:var(--c-gold-dim);border:1.5px solid var(--c-gold-rim);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--c-gold);pointer-events:none;}
 
   /* ── FLASHCARDS ──────────────────────────────────────── */
   .fc-outer{perspective:1000px;width:100%;max-width:580px;margin:0 auto 1.25rem;height:250px;cursor:pointer;user-select:none;transition:height .25s ease;position:relative;touch-action:pan-y;}
