@@ -1955,7 +1955,7 @@ void main(void){
     if(!start) start = now;
     blendVal += ((window._shaderContentMode || 0) - blendVal) * 0.025;
     gl.uniform2f(uRes, canvas.width, canvas.height);
-    gl.uniform1f(uTime, (now - start) * 0.001);
+    gl.uniform1f(uTime, (now - start) * 0.0004);
     gl.uniform1f(uBlend, blendVal);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     requestAnimationFrame(frame);
