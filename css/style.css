@@ -423,7 +423,7 @@
   /* ── FLOATING BACK BUTTON ─────────────────────────────── */
   #float-back{
     position:fixed;bottom:1.5rem;left:1.5rem;z-index:150;
-    display:flex;align-items:center;gap:.5rem;
+    display:none;align-items:center;gap:.5rem;
     background:rgba(13,33,64,0.92);
     border:1px solid var(--c-gold-rim);
     border-radius:40px;
@@ -442,10 +442,6 @@
   }
   #float-back.hidden{opacity:0;pointer-events:none;transform:translateY(6px);}
   #float-back svg{flex-shrink:0;}
-  /* auf Desktop den Header-Back-Button zeigen, float verstecken */
-  @media(min-width:701px){
-    #float-back{display:none;}
-  }
   /* auf Mobile den Header-Back-Button ausblenden */
   @media(max-width:700px){
     #back-btn{display:none!important;}
