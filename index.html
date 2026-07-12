@@ -43,8 +43,8 @@
   </button>
 </header>
 <!-- SEARCH OVERLAY -->
-<div id="search-overlay" class="search-overlay hidden" onclick="if(event.target===this)SEARCH.close()">
-  <div class="search-box">
+<div id="search-overlay" class="search-overlay hidden" onclick="SEARCH.close()">
+  <div class="search-box" onclick="event.stopPropagation()">
     <div class="search-input-wrap">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--c-slate);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input id="search-input" class="search-input" type="text" placeholder="Themen, Begriffe, Abkürzungen suchen…" oninput="SEARCH.query(this.value)" onkeydown="SEARCH.keydown(event)" autocomplete="off" spellcheck="false"/>
@@ -55,8 +55,8 @@
   </div>
 </div>
 <!-- SETTINGS OVERLAY -->
-<div id="settings-overlay" class="search-overlay hidden" onclick="if(event.target===this)SETTINGS.close()">
-  <div class="search-box settings-box">
+<div id="settings-overlay" class="search-overlay hidden" onclick="SETTINGS.close()">
+  <div class="search-box settings-box" onclick="event.stopPropagation()">
     <div class="settings-hdr">
       <span class="settings-title">Einstellungen</span>
       <button class="settings-close" onclick="SETTINGS.close()">✕</button>
