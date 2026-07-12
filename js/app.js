@@ -1854,6 +1854,159 @@ window.addEventListener('resize', () => {
   if(document.querySelector('.fc-outer')) FC.resize();
 });
 
+/* ======================================================================
+   AURORA – Canvas wave background, particles drawn on-canvas (no DOM divs)
+====================================================================== */
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  const c1=document.getElementById('aurora-c1');
+  const c2=document.getElementById('aurora-c2');
+  if(!c1||!c2) return;
+
+  const g1=c1.getContext('2d'), g2=c2.getContext('2d');
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const mob=()=>window.innerWidth<768;
+  let W=innerWidth, H=innerHeight;
+
+  function resize(){
+    W=innerWidth; H=innerHeight;
+    [c1,c2].forEach(c=>{
+      c.width=W*dpr; c.height=H*dpr;
+      c.style.width=W+'px'; c.style.height=H+'px';
+    });
+    g1.setTransform(dpr,0,0,dpr,0,0);
+    g2.setTransform(dpr,0,0,dpr,0,0);
+  }
+  window.addEventListener('resize',resize); resize();
+
+  const PAL=[
+    {r:201,g:168,b:76},
+    {r:184,g:134,b:11},
+    {r:218,g:165,b:32},
+    {r:139,g:30, b:30},
+    {r:244,g:196,b:48},
+    {r:220,g:185,b:100},
+  ];
+
+  let mx=.5, my=.5;
+  document.addEventListener('mousemove',e=>{mx=e.clientX/W; my=e.clientY/H;});
+
+  // Particles stored as data – drawn on canvas
+  const ptcs=[];
+  function spawnPtc(){
+    ptcs.push({x:Math.random()*W,y:Math.random()*H,
+      tx:(Math.random()-.5)*100, ty:-30-Math.random()*80,
+      sz:1+Math.random()*2.5, life:0, max:3+Math.random()*5});
+  }
+  for(let i=0;i<8;i++) spawnPtc();
+
+  function drawFrame(t, dt, spd){
+    // ── Canvas 1: waves + particles ──────────────────────────────
+    g1.clearRect(0,0,W,H);
+    g1.fillStyle='#080F1C'; g1.fillRect(0,0,W,H);
+
+    const breathe=Math.sin(t*.2)*.3+.7;
+
+    for(let L=0;L<5;L++){
+      const lr=L/5, col=PAL[L%PAL.length];
+      const alpha=(0.08+lr*.06)*breathe;
+      const baseY=H*(0.3+lr*.4), amp=(60+L*30)*breathe;
+      const freq=0.003-L*.0003, spd2=t*(0.15+L*.05);
+      const rotAng=t*.025+L*.5;
+      const cx=W*.5+Math.sin(t*.2+L)*W*.15;
+
+      g1.beginPath();
+      for(let x=-20;x<=W+20;x+=3){
+        const env=Math.exp(-((x-cx)/(W*.5))**2*.8);
+        const mi=Math.exp(-(x/W-mx)**2*8)*30*(my-.5);
+        const y=baseY
+          +Math.sin(x*freq+spd2)*amp*env
+          +Math.sin(x*freq*1.5+spd2*.7+rotAng)*amp*.5*env
+          +Math.cos(x*freq*.5+spd2*1.3)*amp*.3*env+mi;
+        x===-20?g1.moveTo(x,y):g1.lineTo(x,y);
+      }
+      g1.lineTo(W+20,H+20); g1.lineTo(-20,H+20); g1.closePath();
+      const gr=g1.createLinearGradient(0,baseY-amp,0,H);
+      gr.addColorStop(0,  `rgba(${col.r},${col.g},${col.b},${alpha*1.5})`);
+      gr.addColorStop(.4, `rgba(${col.r},${col.g},${col.b},${alpha*.8})`);
+      gr.addColorStop(1,  `rgba(${col.r},${col.g},${col.b},0)`);
+      g1.fillStyle=gr; g1.fill();
+    }
+
+    // Rotating organic rings
+    const ccx=W*.55+Math.sin(t*.1)*50, ccy=H*.45+Math.cos(t*.12)*30;
+    const maxR=Math.min(W,H)*.45;
+    for(let ring=0;ring<3;ring++){
+      const rr=maxR*(.5+ring*.2), ra=(.04-ring*.01)*breathe, col=PAL[ring+1];
+      g1.beginPath();
+      for(let a=0;a<Math.PI*2;a+=.02){
+        const wo=Math.sin(a*6+t*.4+ring*2)*20*breathe+Math.cos(a*3-t*.25+ring)*15*breathe;
+        const px=ccx+Math.cos(a+t*.05*(ring+1))*(rr+wo);
+        const py=ccy+Math.sin(a+t*.05*(ring+1))*(rr+wo);
+        a===0?g1.moveTo(px,py):g1.lineTo(px,py);
+      }
+      g1.closePath();
+      const rg=g1.createRadialGradient(ccx,ccy,0,ccx,ccy,rr*1.2);
+      rg.addColorStop(0,  `rgba(${col.r},${col.g},${col.b},${ra*2})`);
+      rg.addColorStop(.5, `rgba(${col.r},${col.g},${col.b},${ra})`);
+      rg.addColorStop(1,  `rgba(${col.r},${col.g},${col.b},0)`);
+      g1.fillStyle=rg; g1.fill();
+    }
+
+    // Central glow
+    const gg=g1.createRadialGradient(ccx,ccy,0,ccx,ccy,maxR*.6);
+    gg.addColorStop(0,  `rgba(201,168,76,${.06*breathe})`);
+    gg.addColorStop(.2, `rgba(244,196,48,${.04*breathe})`);
+    gg.addColorStop(.4, `rgba(218,165,32,${.03*breathe})`);
+    gg.addColorStop(1,  'rgba(0,0,0,0)');
+    g1.fillStyle=gg; g1.fillRect(0,0,W,H);
+
+    // Particles
+    for(let i=ptcs.length-1;i>=0;i--){
+      const p=ptcs[i]; p.life+=dt;
+      if(p.life>=p.max){ptcs.splice(i,1); continue;}
+      const prog=p.life/p.max;
+      const op=prog<.2?prog/.2:Math.max(0,1-(prog-.2)/.8);
+      if(op<=0) continue;
+      g1.beginPath();
+      g1.arc(p.x+p.tx*prog, p.y+p.ty*prog, p.sz/2, 0, Math.PI*2);
+      g1.fillStyle=`rgba(201,168,76,${.55*op})`;
+      g1.fill();
+    }
+
+    // ── Canvas 2: wireframe overlay ───────────────────────────────
+    g2.clearRect(0,0,W,H);
+    for(let i=0;i<18;i++){
+      const ratio=i/18, baseY=H*(.15+ratio*.7);
+      const alpha=.06+Math.sin(ratio*Math.PI)*.08;
+      g2.beginPath();
+      g2.strokeStyle=`rgba(201,168,76,${alpha*breathe})`;
+      g2.lineWidth=.5;
+      for(let x=0;x<=W;x+=4){
+        const amp=(25+ratio*40)*breathe, sp=t*(.25+ratio*.15);
+        const y=baseY+Math.sin(x*(.004+ratio*.001)+sp)*amp
+               +Math.cos(x*(.004+ratio*.001)*2.1-sp*.6)*amp*.3;
+        x===0?g2.moveTo(x,y):g2.lineTo(x,y);
+      }
+      g2.stroke();
+    }
+  }
+
+  const TICK=.008;
+  let t=0, ptcAcc=0, last=0;
+  function frame(now){
+    requestAnimationFrame(frame);
+    const dt=Math.min((now-last)*.001, .05)||TICK;
+    last=now;
+    const spd=mob()?1.8:1.0;
+    t+=TICK*spd;
+    ptcAcc+=dt;
+    if(ptcAcc>=.4){ptcAcc=0; spawnPtc();}
+    drawFrame(t,dt,spd);
+  }
+  requestAnimationFrame(frame);
+})();
+
 document.addEventListener('DOMContentLoaded',()=>{
   NAV.home();
   PROGRESS.updateUI();
