@@ -25,12 +25,10 @@ const NAV = (function(){
     document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
     const btnCards = document.getElementById('btn-reset-cards');
     if(btnCards) btnCards.classList.toggle('hidden', id !== 'v-flashcards');
-    // FAB buttons (Notes + Bookmark) – hidden on home/flashcards/simulator
+    // Bookmark FAB – hidden on home/flashcards/simulator
     const NO_FAB = new Set(['v-home','v-flashcards','v-simulator']);
     const showFab = !NO_FAB.has(id);
-    const notesBtn = document.getElementById('notes-btn');
     const bkBtn = document.getElementById('bookmark-btn');
-    if(notesBtn) notesBtn.classList.toggle('fab-off', !showFab);
     if(bkBtn){
       bkBtn.classList.toggle('fab-off', !showFab);
       if(showFab){ bkBtn.dataset.id=id; bkBtn.dataset.label=stack.length?stack[stack.length-1].label:''; }
@@ -1383,14 +1381,35 @@ const DARKMODE = { init(){}, toggle(){} };
 ====================================================================== */
 const NOTES = (function(){
   let _view = null;
+  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-vorschlaege','v-abkuerzungen']);
   function key(){ return 'bvi_note_'+(_view||'home'); }
-  function updateFab(){
-    const btn = document.getElementById('notes-btn');
+  function getBtn(){
+    if(!_view) return null;
+    const v = document.getElementById(_view);
+    return v ? v.querySelector('.page-notes-btn') : null;
+  }
+  function updateBtn(){
+    const btn = getBtn();
     if(!btn) return;
-    btn.classList.toggle('fab-active', !!localStorage.getItem(key()));
+    const note = localStorage.getItem(key());
+    btn.classList.toggle('pnb-active', !!note);
+    const preview = btn.querySelector('.pnb-preview');
+    if(preview) preview.textContent = note ? note.substring(0,80)+(note.length>80?'…':'') : 'Notiz hinzufügen…';
+  }
+  function ensureWidget(){
+    if(!_view || SKIP.has(_view)) return;
+    const viewEl = document.getElementById(_view);
+    if(!viewEl || viewEl.querySelector('.page-notes-widget')) return;
+    const w = document.createElement('div');
+    w.className = 'page-notes-widget';
+    w.innerHTML = '<button class="page-notes-btn" onclick="NOTES.toggle()">'
+      +'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>'
+      +'<div class="pnb-text"><span class="pnb-title">Notizen</span><span class="pnb-preview">Notiz hinzufügen…</span></div>'
+      +'</button>';
+    viewEl.appendChild(w);
   }
   return {
-    setView(id){ _view = id; updateFab(); },
+    setView(id){ _view = id; ensureWidget(); updateBtn(); },
     open(){
       const ta = document.getElementById('notes-textarea');
       if(ta) ta.value = localStorage.getItem(key())||'';
@@ -1401,12 +1420,12 @@ const NOTES = (function(){
       const ta = document.getElementById('notes-textarea');
       if(ta){ const v=ta.value.trim(); if(v) localStorage.setItem(key(),ta.value); else localStorage.removeItem(key()); }
       document.getElementById('notes-overlay').classList.add('hidden');
-      updateFab();
+      updateBtn();
     },
     toggle(){ document.getElementById('notes-overlay').classList.contains('hidden') ? this.open() : this.close(); },
     clear(){
       const ta=document.getElementById('notes-textarea'); if(ta) ta.value='';
-      localStorage.removeItem(key()); updateFab();
+      localStorage.removeItem(key()); updateBtn();
     }
   };
 })();
