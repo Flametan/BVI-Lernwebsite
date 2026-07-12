@@ -2104,6 +2104,21 @@ const ABK = (function(){
 })();
 
 /* ======================================================================
+   BRAVE-ERKENNUNG – Warnung beim APK-Download
+====================================================================== */
+(async function(){
+  if(!navigator.brave) return;
+  try{
+    const isBrave = await navigator.brave.isBrave();
+    if(!isBrave) return;
+    const desc = document.getElementById('apk-desc');
+    const tile = document.getElementById('apk-tile');
+    if(desc) desc.textContent = '⚠ Brave erkennt – bitte Firefox oder Samsung Internet nutzen';
+    if(tile) tile.style.borderColor = 'rgba(249,115,22,0.5)';
+  }catch{}
+})();
+
+/* ======================================================================
    INITIALISIERUNG
 ====================================================================== */
 window.addEventListener('resize', () => {
