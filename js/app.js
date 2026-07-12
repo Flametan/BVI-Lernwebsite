@@ -1981,21 +1981,6 @@ window.addEventListener('resize', () => {
     }
   }
 
-  // Floating particles
-  const ptc=document.getElementById('aurora-particles');
-  function mkParticle(){
-    if(!ptc) return;
-    const p=document.createElement('div');
-    const sz=1+Math.random()*2.5, dur=3+Math.random()*5;
-    p.style.cssText=`position:absolute;border-radius:50%;background:rgba(201,168,76,.55);pointer-events:none;`
-      +`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;`
-      +`--tx:${(Math.random()-.5)*100}px;--ty:${-30-Math.random()*80}px;`
-      +`animation:aurora-ptc ${dur}s ease-out forwards;opacity:0;`;
-    ptc.appendChild(p);
-    setTimeout(()=>p.remove(), dur*1000);
-  }
-  setInterval(mkParticle, 400);
-  for(let i=0;i<8;i++) setTimeout(mkParticle, i*200);
 
   let t=0;
   function frame(){
