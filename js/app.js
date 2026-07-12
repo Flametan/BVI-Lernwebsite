@@ -1865,6 +1865,13 @@ float rnd(vec2 p){p=fract(p*vec2(12.9898,78.233));p+=dot(p,p+34.56);return fract
 float noise(in vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);float a=rnd(i),b=rnd(i+vec2(1,0)),c=rnd(i+vec2(0,1)),d=rnd(i+1.);return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);}
 float fbm(vec2 p){float t=.0,a=1.;mat2 m=mat2(1.,-.5,.2,1.2);for(int i=0;i<5;i++){t+=a*noise(p);p*=2.*m;a*=.5;}return t;}
 float clouds(vec2 p){float d=1.,t=.0;for(float i=.0;i<3.;i++){float a=d*fbm(i*10.+p.x*.2+.2*(1.+i)*p.y+d+i*i+p);t=mix(t,d,a);d=a;p*=2./(i+1.);}return t;}
+float flame(vec2 p,float seed,float rt){
+  float h=clamp(-p.y*11.,0.,1.);
+  float wob=(noise(vec2(p.x*9.+seed,h*6.-rt*2.6))-.5)*.02*(1.-h);
+  float w=.022*(1.-.65*h);
+  float s=exp(-((p.x+wob)*(p.x+wob))/(w*w+.0001));
+  return s*h*(1.-h*h)*1.1;
+}
 void main(void){
   vec2 uv=(FC-.5*R)/MN,st=uv*vec2(2,1);
   vec3 col=vec3(0);
@@ -1874,9 +1881,10 @@ void main(void){
     uv+=.1*cos(i*vec2(.1+.01*i,.8)+i*i+T*.5+.1*uv.x);
     vec2 p=uv;
     float d=length(p);
-    col+=.0003/d*(cos(sin(i)*vec3(1,2,3))+1.);
-    float b=noise(i+p+bg*1.731);
-    col+=.00048*b/length(max(p,vec2(b*p.x*.02,p.y)));
+    float fl=flame(p,i*3.7,realTime);
+    float fh=clamp(-p.y*11.,0.,1.);
+    vec3 flameCol=mix(mix(vec3(.35,.03,.0),vec3(.80,.26,.02),fh),vec3(.90,.60,.05),fh*fh);
+    col+=fl*.022*flameCol*(1.-blend*.7);
     col=mix(col,vec3(bg*.25,bg*.137,bg*.05),d);
   }
   // Navy-Modus: dunkles Navy + dezenter langsamer Radial-Puls auf Inhaltsseiten
