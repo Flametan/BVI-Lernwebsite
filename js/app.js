@@ -1270,6 +1270,7 @@ const SEARCH = (function(){
       inp.value = ''; inp.focus(); render('');
     },
     close(){ document.getElementById('search-overlay').classList.add('hidden'); results=[]; focusIdx=-1; },
+    toggle(){ document.getElementById('search-overlay').classList.contains('hidden') ? this.open() : this.close(); },
     query(q){ render(q.trim()); },
     keydown(e){
       if(e.key==='Escape'){ this.close(); return; }
@@ -1317,6 +1318,7 @@ const SETTINGS = (function(){
   return {
     open(){ overlay().classList.remove('hidden'); },
     close(){ overlay().classList.add('hidden'); },
+    toggle(){ overlay().classList.contains('hidden') ? this.open() : this.close(); },
     resetTopics(){
       const snap=localStorage.getItem('bvi_progress');
       PROGRESS.reset(); this.close();
