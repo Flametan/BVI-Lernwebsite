@@ -1893,9 +1893,9 @@ void main(void){
     uv+=.1*cos(i*vec2(.1+.01*i,.8)+i*i+T*.5+.1*uv.x);
     vec2 p=uv;
     float d=length(p);
-    col+=.0005/d*(cos(sin(i)*vec3(1,2,3))+1.);
+    col+=.0003/d*(cos(sin(i)*vec3(1,2,3))+1.);
     float b=noise(i+p+bg*1.731);
-    col+=.0008*b/length(max(p,vec2(b*p.x*.02,p.y)));
+    col+=.00048*b/length(max(p,vec2(b*p.x*.02,p.y)));
     col=mix(col,vec3(bg*.25,bg*.137,bg*.05),d);
   }
   // Navy-Modus: dunkles Navy + dezenter langsamer Radial-Puls auf Inhaltsseiten
