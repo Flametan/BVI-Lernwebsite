@@ -1873,12 +1873,12 @@ void main(void){
   float bg=clouds(vec2(st.x+T*.5,-st.y));
   uv*=1.-.3*(sin(T*.2)*.5+.5);
   for(float i=1.;i<12.;i++){
-    uv+=.1*cos(i*vec2(.1+.01*i,.8)+i*i+T*.5+.1*uv.x);
+    uv+=.18*cos(i*vec2(.12+.013*i,.72)+i*i+T*.5);
     vec2 p=uv;
     float d=length(p);
     col+=.0003/d*(cos(sin(i)*vec3(1,2,3))+1.);
     float b=noise(i+p+bg*1.731);
-    col+=.00048*b/length(max(p,vec2(b*p.x*.02,p.y)));
+    col+=.00048*b/max(length(p),.008);
     col=mix(col,vec3(bg*.25,bg*.137,bg*.05),d);
   }
   // Navy-Modus: dunkles Navy + dezenter langsamer Radial-Puls auf Inhaltsseiten
