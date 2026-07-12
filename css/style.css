@@ -580,6 +580,7 @@
   .apk-warn{font-size:.82rem;color:#fb923c;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.25);border-radius:var(--r-md);padding:.7rem 1rem;margin-bottom:1.25rem;}
   .apk-dl-btn{display:inline-flex;align-items:center;gap:.55rem;background:var(--glass);border:1px solid var(--glass-b);color:var(--c-slate-l);border-radius:var(--r-md);padding:.8rem 1.4rem;font-size:.9rem;font-family:inherit;font-weight:500;text-decoration:none;transition:all var(--t);margin-top:.75rem;}
   .apk-dl-btn:hover{border-color:var(--c-gold-rim);color:var(--c-gold);background:var(--c-gold-dim);}
+  #apk-tile{border-color:rgba(249,115,22,0.45)!important;}
 
   /* ── SEARCH FILTER CHIPS ── */
   .search-filter-row{display:flex;gap:.35rem;overflow-x:auto;padding:.5rem 1rem;border-bottom:1px solid var(--glass-b);scrollbar-width:none;}
