@@ -2111,13 +2111,13 @@ const ABK = (function(){
    CHROMIUM-ERKENNUNG – Warnung beim APK-Download
 ====================================================================== */
 (function(){
-  const ua = navigator.userAgent;
-  window._isChromium = !!window.chrome && !ua.includes('SamsungBrowser') && !ua.includes('Edg/');
+  window._isChromium = !!window.chrome;
   if(!window._isChromium) return;
-  // Warn on home tile
   const tile = document.getElementById('apk-tile');
-  if(tile) tile.querySelector('.tile-desc').textContent = 'Chromium erkannt – bitte Firefox oder Samsung Internet nutzen';
-  // Warn in v-app view (applied when view opens)
+  if(tile){
+    tile.querySelector('.tile-desc').textContent = 'Chromiumbrowser entdeckt – Wechsel zum downloaden in Firefox und wende dich an die WhatsApp-Gruppe';
+    tile.style.borderColor = 'rgba(249,115,22,0.5)';
+  }
 })();
 
 /* ======================================================================
