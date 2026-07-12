@@ -30,9 +30,9 @@ const NAV = (function(){
     const showFab = !NO_FAB.has(id);
     const notesBtn = document.getElementById('notes-btn');
     const bkBtn = document.getElementById('bookmark-btn');
-    if(notesBtn) notesBtn.classList.toggle('hidden', !showFab);
+    if(notesBtn) notesBtn.classList.toggle('fab-off', !showFab);
     if(bkBtn){
-      bkBtn.classList.toggle('hidden', !showFab);
+      bkBtn.classList.toggle('fab-off', !showFab);
       if(showFab){ bkBtn.dataset.id=id; bkBtn.dataset.label=stack.length?stack[stack.length-1].label:''; }
     }
     if(typeof NOTES!=='undefined') NOTES.setView(id);

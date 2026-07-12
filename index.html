@@ -96,10 +96,10 @@
   <span class="fb-label">Zurück</span>
 </button>
 <!-- FAB STACK: Lesezeichen + Notizen + Scroll-to-top -->
-<button id="bookmark-btn" class="fab-btn hidden" title="Lesezeichen setzen / entfernen" onclick="BOOKMARKS.toggle(this.dataset.id,this.dataset.label)">
+<button id="bookmark-btn" class="fab-btn fab-off" title="Lesezeichen setzen / entfernen" onclick="BOOKMARKS.toggle(this.dataset.id,this.dataset.label)">
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
 </button>
-<button id="notes-btn" class="fab-btn hidden" title="Notizen zu dieser Seite" onclick="NOTES.toggle()">
+<button id="notes-btn" class="fab-btn fab-off" title="Notizen zu dieser Seite" onclick="NOTES.toggle()">
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
 </button>
 <button id="scroll-top-btn" title="Nach oben scrollen" onclick="window.scrollTo({top:0,behavior:'smooth'})">
