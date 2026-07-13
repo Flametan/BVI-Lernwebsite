@@ -1,5 +1,13 @@
-const CACHE = 'bvi-v19';
-const PRECACHE = ['./icons/icon-192.svg', './icons/icon-512.svg', './manifest.json'];
+const CACHE = 'bvi-v20';
+const PRECACHE = [
+  './',
+  './index.html',
+  './css/style.css',
+  './js/app.js',
+  './manifest.json',
+  './icons/icon-192.svg',
+  './icons/icon-512.svg',
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(PRECACHE)));
