@@ -23,15 +23,15 @@ const NAV = (function(){
     const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app']);
     window._shaderContentMode = (id.split('-').length > 2 || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
     document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
-    // FABs only on deep content pages (v-xxx-yyy pattern, 2+ hyphens)
+    // Header Notes + Bookmark buttons – only on deep content pages
     const isContentPage = id.split('-').length >= 3;
     const bkBtn = document.getElementById('bookmark-btn');
     if(bkBtn){
-      bkBtn.classList.toggle('fab-off', !isContentPage);
+      bkBtn.classList.toggle('hidden', !isContentPage);
       if(isContentPage){ bkBtn.dataset.id=id; bkBtn.dataset.label=stack.length?stack[stack.length-1].label:''; }
     }
     const notesFab = document.getElementById('notes-fab');
-    if(notesFab) notesFab.classList.toggle('fab-off', !isContentPage);
+    if(notesFab) notesFab.classList.toggle('hidden', !isContentPage);
     if(typeof NOTES!=='undefined') NOTES.setView(id);
     if(typeof BOOKMARKS!=='undefined') BOOKMARKS.setView(id);
     updateHeader();

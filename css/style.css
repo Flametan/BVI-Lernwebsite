@@ -522,18 +522,11 @@
   #scroll-top-btn.visible{opacity:1;transform:translateY(0);pointer-events:all;}
   #scroll-top-btn:hover{background:rgba(30,58,104,.95);}
 
-  /* ── FAB STACK (Notes + Bookmark) – bottom-left ── */
-  .fab-btn{position:fixed!important;left:1.5rem;z-index:499;width:38px;height:38px;border-radius:50%;background:rgba(13,33,64,0.88);border:1px solid var(--glass-b);color:var(--c-slate-l);display:flex;align-items:center;justify-content:center;transition:border-color var(--t),color var(--t),opacity var(--t),transform var(--t);backdrop-filter:blur(12px);box-shadow:0 4px 16px rgba(0,0,0,.4);}
-  .fab-btn:hover,.fab-btn.fab-active{border-color:var(--c-gold-rim);color:var(--c-gold);}
-  .fab-btn.fab-off{opacity:0;pointer-events:none;transform:scale(0.8);}
-  #notes-fab{bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));z-index:499;}
-  #bookmark-btn{bottom:calc(1.5rem + 48px + env(safe-area-inset-bottom,0px));z-index:499;}
-  @media(max-width:700px){
-    #scroll-top-btn{right:1rem;}
-    #notes-fab,#bookmark-btn{left:1rem;}
-    #scroll-top-btn{bottom:calc(5rem + env(safe-area-inset-bottom,0px));}
-    #notes-fab{bottom:calc(5rem + 46px + env(safe-area-inset-bottom,0px));}
-    #bookmark-btn{bottom:calc(5rem + 92px + env(safe-area-inset-bottom,0px));}
+  /* ── HEADER: Notes + Bookmark buttons ── */
+  .notes-btn-hdr,.bookmark-btn-hdr{display:flex;align-items:center;justify-content:center;width:32px;height:30px;border-radius:var(--r-sm);border:1px solid var(--glass-b);background:var(--glass);color:var(--c-slate-l);transition:color var(--t),background var(--t),border-color var(--t);flex-shrink:0;margin-left:.35rem;cursor:pointer;}
+  .notes-btn-hdr:hover,.bookmark-btn-hdr:hover,.notes-btn-hdr.fab-active,.bookmark-btn-hdr.fab-active{color:var(--c-gold);background:var(--c-gold-dim);border-color:var(--c-gold-rim);}
+  @media(max-width:600px){
+    .notes-btn-hdr,.bookmark-btn-hdr{width:28px;height:26px;margin-left:.2rem;}
   }
 
   /* ── PAGE NOTES WIDGET ── */
