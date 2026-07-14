@@ -1433,17 +1433,20 @@ const BOOKMARKS = (function(){
     const d=load();
     if(!d.length){ list.innerHTML=''; empty?.classList.remove('hidden'); return; }
     empty?.classList.add('hidden');
-    list.innerHTML=d.map(b=>{
-      const eid=JSON.stringify(b.id).replace(/"/g,'&quot;');
-      const elbl=JSON.stringify(b.label||b.id).replace(/"/g,'&quot;');
-      return `<div class="bm-card">
+    list.innerHTML=d.map(b=>`
+      <div class="bm-card">
         <div class="bm-card-label">${xss(b.label||b.id)}</div>
         <div class="bm-card-actions">
-          <button class="btn btn-gold" onclick="NAV.go(${eid},${elbl})">Öffnen →</button>
-          <button class="btn btn-ghost" onclick="BOOKMARKS.remove(${eid});BOOKMARKS.renderPage();BOOKMARKS.updateHomeTile();">✕ Entfernen</button>
+          <button class="btn btn-gold bm-open" data-id="${xss(b.id)}" data-label="${xss(b.label||b.id)}">Öffnen →</button>
+          <button class="btn btn-ghost bm-remove" data-id="${xss(b.id)}">✕ Entfernen</button>
         </div>
-      </div>`;
-    }).join('');
+      </div>`).join('');
+    list.querySelectorAll('.bm-open').forEach(btn=>{
+      btn.addEventListener('click',()=>NAV.go(btn.dataset.id, btn.dataset.label));
+    });
+    list.querySelectorAll('.bm-remove').forEach(btn=>{
+      btn.addEventListener('click',()=>{ remove(btn.dataset.id); renderPage(); updateHomeTile(); });
+    });
   }
   return {
     setView(id){ syncFab(id); if(id==='v-bookmarks') renderPage(); },
