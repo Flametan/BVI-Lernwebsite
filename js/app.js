@@ -23,8 +23,6 @@ const NAV = (function(){
     const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-quiz','v-abkuerzungen','v-vorschlaege','v-app']);
     window._shaderContentMode = (id.split('-').length > 2 || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
     document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
-    const btnCards = document.getElementById('btn-reset-cards');
-    if(btnCards) btnCards.classList.toggle('hidden', id !== 'v-flashcards');
     // Bookmark FAB – hidden on home/flashcards/simulator
     const NO_FAB = new Set(['v-home','v-flashcards','v-simulator']);
     const showFab = !NO_FAB.has(id);
@@ -1368,26 +1366,35 @@ const TOAST = (function(){
 })();
 
 const SETTINGS = (function(){
-  function overlay(){ return document.getElementById('settings-overlay'); }
+  function closeAllPanels(){
+    document.getElementById('fontsize-panel')?.classList.add('hidden');
+    document.getElementById('notif-panel')?.classList.add('hidden');
+  }
   return {
-    open(){
-      overlay().classList.remove('hidden');
-      if(typeof NOTIF!=='undefined') NOTIF.updateUI();
-      if(typeof AITUTOR!=='undefined') AITUTOR.updateKeyUI();
-      this._restoreFsUI();
+    toggleFontPanel(){
+      const p=document.getElementById('fontsize-panel');
+      const was=p?.classList.contains('hidden');
+      closeAllPanels();
+      if(was) p?.classList.remove('hidden');
     },
-    close(){ overlay().classList.add('hidden'); },
-    toggle(){ overlay().classList.contains('hidden') ? this.open() : this.close(); },
+    toggleNotifPanel(){
+      const p=document.getElementById('notif-panel');
+      const was=p?.classList.contains('hidden');
+      closeAllPanels();
+      if(was){ p?.classList.remove('hidden'); if(typeof NOTIF!=='undefined') NOTIF.updateUI(); }
+    },
+    closeAllPanels,
     resetTopics(){
       const snap=localStorage.getItem('bvi_progress');
-      PROGRESS.reset(); this.close();
+      if(!confirm('Lernfortschritt wirklich zurücksetzen?')) return;
+      PROGRESS.reset();
       TOAST.show('Themen-Fortschritt zurückgesetzt',{type:'ok',undo:()=>{ if(snap) localStorage.setItem('bvi_progress',snap); PROGRESS.updateUI(); }});
     },
     resetCards(){
       const snap=localStorage.getItem('bvi_fc');
+      if(!confirm('Lernkarten-Lernstand wirklich zurücksetzen?')) return;
       localStorage.removeItem('bvi_fc');
       if(document.getElementById('v-flashcards').classList.contains('active')) FC.start();
-      this.close();
       TOAST.show('Lernkarten zurückgesetzt',{type:'ok',undo:()=>{ if(snap) localStorage.setItem('bvi_fc',snap); }});
     },
     setFontSize(sz){
@@ -1400,6 +1407,8 @@ const SETTINGS = (function(){
     _restoreFsUI(){
       const sz=localStorage.getItem('bvi_font_size')||'md';
       document.querySelectorAll('.fs-opt').forEach(b=>b.classList.toggle('active',b.dataset.sz===sz));
+      const lbl=document.getElementById('fontsize-hdr-lbl');
+      if(lbl){const m={sm:'A−',md:'A',lg:'A+',xl:'A++'};lbl.textContent=m[sz]||'A';}
     },
     async toggleNotif(on){ if(typeof NOTIF!=='undefined') await NOTIF.setEnabled(on); },
     setNotifHour(h){ if(typeof NOTIF!=='undefined') NOTIF.setHour(h); }
@@ -1443,10 +1452,6 @@ const NOTES = (function(){
       +'<button class="page-tool-btn tts-page-btn" onclick="TTS.toggle()" title="Seite vorlesen">'
       +'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>'
       +'<span class="tts-lbl">Vorlesen</span>'
-      +'</button>'
-      +'<button class="page-tool-btn ai-tutor-btn" onclick="AITUTOR.open()" title="KI-Tutor fragen">'
-      +'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>'
-      +'<span>KI-Tutor</span>'
       +'</button>'
       +'</div>';
     viewEl.appendChild(w);
@@ -2424,65 +2429,6 @@ const TTS = (function(){
 })();
 
 /* ======================================================================
-   AITUTOR – KI-Lernassistent (Claude API)
-====================================================================== */
-const AITUTOR = (function(){
-  function getKey(){ return localStorage.getItem('bvi_ai_key')||''; }
-  const ov=()=>document.getElementById('aitutor-overlay');
-  const msgBox=()=>document.getElementById('ai-msgs');
-  return {
-    open(){
-      if(!getKey()){ TOAST.show('Bitte zuerst Claude API-Key in den Einstellungen eingeben'); SETTINGS.open(); return; }
-      ov()?.classList.remove('hidden');
-      const inp=document.getElementById('ai-input');if(inp) setTimeout(()=>inp.focus(),80);
-    },
-    close(){ ov()?.classList.add('hidden'); },
-    saveKey(){
-      const v=(document.getElementById('ai-key-input')?.value||'').trim();
-      if(!v){ TOAST.show('Bitte API-Key eingeben'); return; }
-      localStorage.setItem('bvi_ai_key',v);
-      TOAST.show('API-Key gespeichert',{type:'ok'});
-      document.getElementById('ai-key-input').value='';
-      this.updateKeyUI();
-    },
-    clearKey(){ localStorage.removeItem('bvi_ai_key'); this.updateKeyUI(); TOAST.show('API-Key entfernt'); },
-    updateKeyUI(){
-      const el=document.getElementById('ai-key-status');if(!el) return;
-      el.textContent=getKey()?'✓ Key gespeichert':'Kein Key hinterlegt';
-      el.style.color=getKey()?'var(--c-ok)':'var(--c-slate)';
-    },
-    async send(){
-      const inp=document.getElementById('ai-input');
-      const q=(inp?.value||'').trim(); if(!q) return;
-      const k=getKey(); if(!k){ TOAST.show('Kein API-Key'); return; }
-      inp.value='';
-      const m=msgBox(); if(!m) return;
-      m.insertAdjacentHTML('beforeend',`<div class="ai-msg ai-user">${xss(q)}</div>`);
-      const loadEl=document.createElement('div');
-      loadEl.className='ai-msg ai-bot ai-loading'; loadEl.textContent='…';
-      m.appendChild(loadEl); m.scrollTop=m.scrollHeight;
-      const active=document.querySelector('.view.active');
-      const pageText=active?(active.querySelector('.pc')?.innerText||'').slice(0,3000):'';
-      const sys=`Du bist ein präziser Lernassistent für angehende Feuerwehrbeamte im höheren Dienst (B VI). Antworte auf Deutsch, kurz und fachlich korrekt.${pageText?'\n\nAktueller Seiteninhalt:\n'+pageText:''}`;
-      try{
-        const r=await fetch('https://api.anthropic.com/v1/messages',{
-          method:'POST',
-          headers:{'x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','content-type':'application/json'},
-          body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:512,system:sys,messages:[{role:'user',content:q}]})
-        });
-        const data=await r.json();
-        loadEl.className='ai-msg ai-bot';
-        loadEl.textContent=data.content?.[0]?.text||data.error?.message||'Unbekannter Fehler';
-      }catch(e){
-        loadEl.className='ai-msg ai-bot ai-err';
-        loadEl.textContent='Fehler: '+(e.message||'Netzwerkfehler. Überprüfe deinen API-Key.');
-      }
-      m.scrollTop=m.scrollHeight;
-    }
-  };
-})();
-
-/* ======================================================================
    QUIZ – Multiple-Choice
 ====================================================================== */
 const QUIZ = (function(){
@@ -2494,13 +2440,25 @@ const QUIZ = (function(){
       :FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f)));
   }
   function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
+  function keyPhrase(raw){
+    const t=strip(raw);
+    const m=t.match(/^.{15,}?[.!?](?=\s|$)/);
+    const s=m?m[0].trim():t;
+    return s.length>130?s.slice(0,128)+'…':s||t.slice(0,130);
+  }
   function getWrong(card,pool){
-    const correct=strip(card.a);
-    const scored=pool.filter(c=>c.id!==card.id&&strip(c.a)!==correct)
-      .map(c=>({c,sc:(c.cat===card.cat?10:c.cat.split('·')[0]===card.cat.split('·')[0]?4:0)+Math.random()}))
+    const correctPhrase=keyPhrase(card.a);
+    const cLen=correctPhrase.length;
+    const scored=pool.filter(c=>c.id!==card.id&&keyPhrase(c.a)!==correctPhrase&&keyPhrase(c.a).length>12)
+      .map(c=>{
+        const phrase=keyPhrase(c.a);
+        const catSc=c.cat===card.cat?10:c.cat.split('·')[0]===card.cat.split('·')[0]?4:0;
+        const lenSim=1-Math.abs(phrase.length-cLen)/Math.max(phrase.length,cLen,1);
+        return {phrase,sc:catSc*2+lenSim*3+Math.random()};
+      })
       .sort((a,b)=>b.sc-a.sc);
     const out=[];
-    for(const {c} of scored){ if(out.length>=3) break; const a=strip(c.a); if(!out.includes(a)) out.push(a); }
+    for(const {phrase} of scored){ if(out.length>=3) break; if(!out.includes(phrase)) out.push(phrase); }
     return out;
   }
   function updateFilter(){
@@ -2511,7 +2469,7 @@ const QUIZ = (function(){
     const box=document.getElementById('quiz-container');if(!box) return;
     if(curIdx>=deck.length){ renderEnd(); return; }
     const card=deck[curIdx];
-    const correct=strip(card.a);
+    const correct=keyPhrase(card.a);
     const opts=shuffle([correct,...getWrong(card,FLASHCARD_DATA).slice(0,3)]);
     answered=false;
     const pct=Math.round(curIdx/deck.length*100);
@@ -2654,9 +2612,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); SEARCH.open(); return; }
     if(e.key==='Escape'){
       if(!document.getElementById('search-overlay').classList.contains('hidden')){ SEARCH.close(); return; }
-      if(!document.getElementById('settings-overlay').classList.contains('hidden')){ SETTINGS.close(); return; }
+      SETTINGS.closeAllPanels();
       if(document.getElementById('stats-overlay')&&!document.getElementById('stats-overlay').classList.contains('hidden')){ STATS.close(); return; }
-      if(document.getElementById('aitutor-overlay')&&!document.getElementById('aitutor-overlay').classList.contains('hidden')){ AITUTOR.close(); return; }
       if(!document.getElementById('notes-overlay').classList.contains('hidden')){ NOTES.close(); return; }
     }
     // Lernkarten-Tastatursteuerung
@@ -2671,9 +2628,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     const sTop=document.getElementById('scroll-top-btn');
     if(sTop) sTop.classList.toggle('visible', window.scrollY>300);
   },{passive:true});
+  document.addEventListener('click', e=>{
+    if(!e.target.closest('.fontsize-btn-hdr')&&!e.target.closest('#fontsize-panel'))
+      document.getElementById('fontsize-panel')?.classList.add('hidden');
+    if(!e.target.closest('.notif-btn-hdr')&&!e.target.closest('#notif-panel'))
+      document.getElementById('notif-panel')?.classList.add('hidden');
+  });
   if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
   ABK.render(); ABK.filter('');
-  console.log('%c B VI %c Lernwebsite v4.1 · flametan/BVI-Lernwebsite ',
+  console.log('%c B VI %c Lernwebsite v4.2 · flametan/BVI-Lernwebsite ',
     'background:#A50000;color:#fff;padding:3px 8px;border-radius:4px 0 0 4px;font-family:"DM Mono",monospace;font-weight:700',
     'background:#0A192F;color:#C9A84C;padding:3px 8px;border-radius:0 4px 4px 0;font-family:"DM Mono",monospace');
 });
