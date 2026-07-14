@@ -23,18 +23,15 @@ const NAV = (function(){
     const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app']);
     window._shaderContentMode = (id.split('-').length > 2 || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
     document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
-    // Bookmark FAB – hidden on home/flashcards/simulator
-    const NO_FAB = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks']);
-    const showFab = !NO_FAB.has(id);
+    // FABs only on deep content pages (v-xxx-yyy pattern, 2+ hyphens)
+    const isContentPage = id.split('-').length >= 3;
     const bkBtn = document.getElementById('bookmark-btn');
     if(bkBtn){
-      bkBtn.classList.toggle('fab-off', !showFab);
-      if(showFab){ bkBtn.dataset.id=id; bkBtn.dataset.label=stack.length?stack[stack.length-1].label:''; }
+      bkBtn.classList.toggle('fab-off', !isContentPage);
+      if(isContentPage){ bkBtn.dataset.id=id; bkBtn.dataset.label=stack.length?stack[stack.length-1].label:''; }
     }
-    // Notes FAB – hidden on home/flashcards/simulator/app
-    const NO_NOTES_FAB = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-app']);
     const notesFab = document.getElementById('notes-fab');
-    if(notesFab) notesFab.classList.toggle('fab-off', NO_NOTES_FAB.has(id));
+    if(notesFab) notesFab.classList.toggle('fab-off', !isContentPage);
     if(typeof NOTES!=='undefined') NOTES.setView(id);
     if(typeof BOOKMARKS!=='undefined') BOOKMARKS.setView(id);
     updateHeader();
