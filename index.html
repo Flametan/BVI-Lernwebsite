@@ -247,6 +247,12 @@
           <div class="tile-desc">100+ Fachbegriffe · Fahrzeuge, Recht, Taktik, Führung · durchsuchbar</div>
           <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
+        <div id="bm-tile" class="glass-tile hidden" onclick="NAV.go('v-bookmarks','Lesezeichen')">
+          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          <div class="tile-name">Lesezeichen</div>
+          <div class="tile-desc" id="bm-tile-desc">Gespeicherte Seiten</div>
+          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
         <div id="apk-tile" class="glass-tile" onclick="NAV.go('v-app','App')">
           <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>
           <div class="tile-name">App</div>
@@ -6559,6 +6565,23 @@
         </div>
       </details>
 
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ LESEZEICHEN ============================================================ -->
+<div id="v-bookmarks" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">Gespeicherte Seiten · Lokal im Browser</p>
+    <h1 class="page-title">Lese<span class="accent">zeichen</span></h1>
+    <p class="page-lead">Hier findest du alle Seiten, die du mit dem Lesezeichen-Button markiert hast.</p>
+  </div></div>
+  <div class="pc">
+    <div id="bm-list"></div>
+    <div id="bm-empty" class="hidden" style="text-align:center;padding:3rem 1rem;color:var(--c-slate);font-size:.9rem">
+      <div style="font-size:2rem;margin-bottom:.75rem">🔖</div>
+      Noch keine Lesezeichen gespeichert.<br>
+      <span style="font-size:.8rem">Nutze den Lesezeichen-Button <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> auf einer beliebigen Inhaltsseite.</span>
     </div>
   </div>
 </div>

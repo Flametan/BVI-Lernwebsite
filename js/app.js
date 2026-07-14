@@ -5,7 +5,7 @@
 const NAV = (function(){
   let stack = [];
   let _dir = 'forward';
-  const ALL = ['v-home','v-abkuerzungen','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-feuak','v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-idf','v-idf-brandschutz','v-idf-stab','v-idf-presse','v-simulator','v-flashcards','v-app'];
+  const ALL = ['v-home','v-abkuerzungen','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-feuak','v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-idf','v-idf-brandschutz','v-idf-stab','v-idf-presse','v-simulator','v-flashcards','v-bookmarks','v-app'];
 
   function show(id){
     ALL.forEach(v=>{
@@ -24,7 +24,7 @@ const NAV = (function(){
     window._shaderContentMode = (id.split('-').length > 2 || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
     document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
     // Bookmark FAB – hidden on home/flashcards/simulator
-    const NO_FAB = new Set(['v-home','v-flashcards','v-simulator']);
+    const NO_FAB = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks']);
     const showFab = !NO_FAB.has(id);
     const bkBtn = document.getElementById('bookmark-btn');
     if(bkBtn){
@@ -32,7 +32,7 @@ const NAV = (function(){
       if(showFab){ bkBtn.dataset.id=id; bkBtn.dataset.label=stack.length?stack[stack.length-1].label:''; }
     }
     // Notes FAB – hidden on home/flashcards/simulator/app
-    const NO_NOTES_FAB = new Set(['v-home','v-flashcards','v-simulator','v-app']);
+    const NO_NOTES_FAB = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-app']);
     const notesFab = document.getElementById('notes-fab');
     if(notesFab) notesFab.classList.toggle('fab-off', NO_NOTES_FAB.has(id));
     if(typeof NOTES!=='undefined') NOTES.setView(id);
@@ -1320,7 +1320,7 @@ const DARKMODE = { init(){}, toggle(){} };
 ====================================================================== */
 const NOTES = (function(){
   let _view = null;
-  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-abkuerzungen','v-app']);
+  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app']);
   function key(){ return 'bvi_note_'+(_view||'home'); }
   function getBtn(){
     if(!_view) return null;
@@ -1419,25 +1419,50 @@ const BOOKMARKS = (function(){
     if(!btn||!id) return;
     btn.classList.toggle('fab-active', load().some(b=>b.id===id));
   }
+  function updateHomeTile(){
+    const tile=document.getElementById('bm-tile');
+    const desc=document.getElementById('bm-tile-desc');
+    const d=load();
+    if(tile){ tile.classList.toggle('hidden', d.length===0); }
+    if(desc){ desc.textContent=d.length===1?'1 gespeicherte Seite':`${d.length} gespeicherte Seiten`; }
+  }
+  function renderPage(){
+    const list=document.getElementById('bm-list');
+    const empty=document.getElementById('bm-empty');
+    if(!list) return;
+    const d=load();
+    if(!d.length){ list.innerHTML=''; empty?.classList.remove('hidden'); return; }
+    empty?.classList.add('hidden');
+    list.innerHTML=d.map(b=>`
+      <div class="bm-card">
+        <div class="bm-card-label">${xss(b.label||b.id)}</div>
+        <div class="bm-card-actions">
+          <button class="btn btn-gold" onclick="NAV.go(${JSON.stringify(b.id)},${JSON.stringify(b.label||b.id)})">Öffnen →</button>
+          <button class="btn btn-ghost" onclick="BOOKMARKS.remove(${JSON.stringify(b.id)});BOOKMARKS.renderPage();BOOKMARKS.updateHomeTile();">✕ Entfernen</button>
+        </div>
+      </div>`).join('');
+  }
   return {
-    setView(id){ syncFab(id); },
+    setView(id){ syncFab(id); if(id==='v-bookmarks') renderPage(); },
     toggle(id,label){
       if(!id) return;
       const d=load();
       const i=d.findIndex(b=>b.id===id);
       if(i>=0){ d.splice(i,1); TOAST.show('Lesezeichen entfernt'); }
       else { d.unshift({id,label:label||id}); TOAST.show('Lesezeichen gesetzt',{type:'ok'}); }
-      save(d); syncFab(id);
+      save(d); syncFab(id); updateHomeTile();
     },
     getAll(){ return load(); },
-    remove(id){ const d=load(),i=d.findIndex(b=>b.id===id); if(i>=0){d.splice(i,1);save(d);} }
+    remove(id){ const d=load(),i=d.findIndex(b=>b.id===id); if(i>=0){d.splice(i,1);save(d);} },
+    renderPage,
+    updateHomeTile
   };
 })();
 
 /* ======================================================================
    LESEFORTSCHRITT
 ====================================================================== */
-const NO_PROG = new Set(['v-home','v-flashcards','v-simulator','v-abkuerzungen','v-app']);
+const NO_PROG = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app']);
 function updateReadProgress(){
   const bar = document.getElementById('read-prog');
   const fill = document.getElementById('read-prog-fill');
@@ -1455,7 +1480,7 @@ function updateReadProgress(){
 ====================================================================== */
 const TOC = (function(){
   let el=null, sections=[];
-  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-abkuerzungen','v-app']);
+  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app']);
   return {
     build(){
       if(!el){ el=document.createElement('nav'); el.className='toc-float'; document.body.appendChild(el); }
@@ -2382,6 +2407,7 @@ const STATS = (function(){
 document.addEventListener('DOMContentLoaded',()=>{
   NAV.home();
   PROGRESS.updateUI();
+  BOOKMARKS.updateHomeTile();
   SETTINGS.restoreFontSize();
   STREAK.render();
   NOTIF.check();
