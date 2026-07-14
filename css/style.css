@@ -63,6 +63,10 @@
   .hero-sub{font-size:clamp(.9rem,2vw,1.05rem);font-weight:300;color:var(--c-slate-l);max-width:500px;margin:0 auto 3.5rem;line-height:1.8;text-shadow:0 1px 8px rgba(0,0,0,.85);}
   .gold-rule{width:48px;height:1px;background:linear-gradient(90deg,transparent,var(--c-gold),transparent);margin:0 auto 3.5rem;}
   .home-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:900px;width:100%;margin:0 auto;}
+  .home-footer{text-align:center;padding:2rem 1rem 3rem;font-size:.75rem;color:var(--c-slate);display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap;}
+  .home-footer-sep{color:var(--c-slate);opacity:.4;}
+  .home-footer-link{background:none;border:none;color:var(--c-slate);font-size:.75rem;cursor:pointer;text-decoration:underline;text-underline-offset:2px;padding:0;font-family:inherit;}
+  .home-footer-link:hover{color:var(--c-gold);}
   .glass-tile{position:relative;background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-xl);padding:1.75rem 1.25rem;cursor:pointer;text-align:left;overflow:hidden;transition:border-color var(--t),background var(--t),transform var(--t),box-shadow var(--t);backdrop-filter:blur(12px) saturate(150%);}
   .glass-tile::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,transparent 60%);pointer-events:none;}
   .glass-tile:hover{border-color:var(--c-gold-rim);background:var(--glass-h);transform:translateY(-4px) scale(1.015);box-shadow:var(--sh),0 0 48px rgba(201,168,76,.1);}
