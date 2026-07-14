@@ -1338,22 +1338,33 @@ const NOTES = (function(){
   function ensureWidget(){
     if(!_view || SKIP.has(_view)) return;
     const viewEl = document.getElementById(_view);
-    if(!viewEl || viewEl.querySelector('.page-notes-widget')) return;
-    const w = document.createElement('div');
-    w.className = 'page-notes-widget';
-    w.innerHTML = '<div class="page-tools-row">'
-      +'<button class="page-notes-btn" onclick="NOTES.toggle()">'
-      +'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>'
-      +'<div class="pnb-text"><span class="pnb-title">Notizen</span><span class="pnb-preview">Notiz hinzufügen…</span></div>'
-      +'</button>'
-      +'<button class="page-tool-btn tts-page-btn" onclick="TTS.toggle()" title="Seite vorlesen">'
-      +'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>'
-      +'<span class="tts-lbl">Vorlesen</span>'
-      +'</button>'
-      +'</div>';
+    if(!viewEl) return;
     const pc = viewEl.querySelector('.pc');
-    if(pc) pc.insertBefore(w, pc.firstChild);
-    else viewEl.appendChild(w);
+    const isContentPage = _view.split('-').length >= 3;
+    // TTS row – top of .pc, always on non-skipped views
+    if(!viewEl.querySelector('.page-tts-widget')){
+      const tts = document.createElement('div');
+      tts.className = 'page-tts-widget';
+      tts.innerHTML = '<div class="page-tools-row">'
+        +'<button class="page-tool-btn tts-page-btn" onclick="TTS.toggle()" title="Seite vorlesen">'
+        +'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>'
+        +'<span class="tts-lbl">Vorlesen</span>'
+        +'</button>'
+        +'</div>';
+      if(pc) pc.insertBefore(tts, pc.firstChild);
+      else viewEl.insertBefore(tts, viewEl.firstChild);
+    }
+    // Notes button – bottom of .pc, only where pencil FAB is visible
+    if(isContentPage && !viewEl.querySelector('.page-notes-widget')){
+      const w = document.createElement('div');
+      w.className = 'page-notes-widget';
+      w.innerHTML = '<button class="page-notes-btn" onclick="NOTES.toggle()">'
+        +'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>'
+        +'<div class="pnb-text"><span class="pnb-title">Notizen</span><span class="pnb-preview">Notiz hinzufügen…</span></div>'
+        +'</button>';
+      if(pc) pc.appendChild(w);
+      else viewEl.appendChild(w);
+    }
   }
   return {
     setView(id){ _view = id; ensureWidget(); updateBtn(); },

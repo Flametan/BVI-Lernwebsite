@@ -537,7 +537,8 @@
   }
 
   /* ── PAGE NOTES WIDGET ── */
-  .page-notes-widget{padding:1.5rem 1.5rem 1rem;}
+  .page-tts-widget{padding:1rem 1.5rem .25rem;}
+  .page-notes-widget{padding:1.5rem 1.5rem 4rem;}
   .page-notes-btn{width:100%;display:flex;align-items:center;gap:.8rem;padding:.9rem 1.1rem;border-radius:var(--r-md);background:var(--glass);border:1px solid var(--glass-b);color:var(--c-slate-l);text-align:left;transition:all var(--t);cursor:pointer;font-family:inherit;}
   .page-notes-btn:hover,.page-notes-btn.pnb-active{border-color:var(--c-gold-rim);color:var(--c-gold);background:var(--c-gold-dim);}
   .pnb-text{display:flex;flex-direction:column;gap:.2rem;min-width:0;}
