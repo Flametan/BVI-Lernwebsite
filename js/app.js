@@ -5,7 +5,7 @@
 const NAV = (function(){
   let stack = [];
   let _dir = 'forward';
-  const ALL = ['v-home','v-abkuerzungen','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-feuak','v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-idf','v-idf-brandschutz','v-idf-stab','v-idf-presse','v-simulator','v-flashcards','v-vorschlaege','v-app'];
+  const ALL = ['v-home','v-abkuerzungen','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-feuak','v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-idf','v-idf-brandschutz','v-idf-stab','v-idf-presse','v-simulator','v-flashcards','v-quiz','v-vorschlaege','v-app'];
 
   function show(id){
     ALL.forEach(v=>{
@@ -20,7 +20,7 @@ const NAV = (function(){
       }
     });
     window.scrollTo({top:0,behavior:'instant'});
-    const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-vorschlaege','v-app']);
+    const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-quiz','v-abkuerzungen','v-vorschlaege','v-app']);
     window._shaderContentMode = (id.split('-').length > 2 || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
     document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
     const btnCards = document.getElementById('btn-reset-cards');
@@ -42,6 +42,7 @@ const NAV = (function(){
       const w = document.getElementById('apk-chromium-warn');
       if(w) w.classList.remove('hidden');
     }
+    if(id==='v-quiz') QUIZ.showStart();
     if(typeof PROGRESS!=='undefined') PROGRESS.track(id);
     if(typeof TOC!=='undefined') TOC.build();
     updateReadProgress();
@@ -1229,6 +1230,8 @@ const SEARCH = (function(){
     'v-idf-presse':'IdF · Presse- & Öffentlichkeitsarbeit',
   };
 
+  function stripHtml(s){ const d=document.createElement('div');d.innerHTML=s;return d.textContent||''; }
+
   function buildIndex(){
     idx = [];
     Object.keys(VIEW_LABELS).forEach(vid => {
@@ -1244,6 +1247,12 @@ const SEARCH = (function(){
         const ttl = hdr ? (hdr.querySelector('.info-card-title,.def-box-label,.step-title')||{}).textContent||lbl : lbl;
         idx.push({vid, lbl, title:ttl.trim(), snippet:t.slice(0,130), boost:1});
       });
+    });
+    // Lernkarten in den Index aufnehmen
+    FLASHCARD_DATA.forEach(c=>{
+      const lbl='Lernkarten · '+c.cat;
+      const aText=stripHtml(c.a);
+      idx.push({vid:'v-flashcards',lbl,title:c.q,snippet:aText.slice(0,130),boost:2,isCard:true});
     });
   }
 
@@ -1261,8 +1270,10 @@ const SEARCH = (function(){
       return {...e, score};
     }).filter(e => e.score > 0);
     if(_filter !== 'all'){
-      scored = scored.filter(e => e.lbl.toLowerCase().split('·')[0].trim() === _filter.toLowerCase()
-        || e.lbl.toLowerCase().split('·')[0].trim().startsWith(_filter.toLowerCase()));
+      if(_filter==='karten') scored=scored.filter(e=>e.isCard);
+      else scored=scored.filter(e=>!e.isCard&&(
+        e.lbl.toLowerCase().split('·')[0].trim()===_filter.toLowerCase()
+        ||e.lbl.toLowerCase().split('·')[0].trim().startsWith(_filter.toLowerCase())));
     }
     scored.sort((a,b) => b.score-a.score);
     const seen = new Set();
@@ -1359,7 +1370,12 @@ const TOAST = (function(){
 const SETTINGS = (function(){
   function overlay(){ return document.getElementById('settings-overlay'); }
   return {
-    open(){ overlay().classList.remove('hidden'); },
+    open(){
+      overlay().classList.remove('hidden');
+      if(typeof NOTIF!=='undefined') NOTIF.updateUI();
+      if(typeof AITUTOR!=='undefined') AITUTOR.updateKeyUI();
+      this._restoreFsUI();
+    },
     close(){ overlay().classList.add('hidden'); },
     toggle(){ overlay().classList.contains('hidden') ? this.open() : this.close(); },
     resetTopics(){
@@ -1373,7 +1389,20 @@ const SETTINGS = (function(){
       if(document.getElementById('v-flashcards').classList.contains('active')) FC.start();
       this.close();
       TOAST.show('Lernkarten zurückgesetzt',{type:'ok',undo:()=>{ if(snap) localStorage.setItem('bvi_fc',snap); }});
-    }
+    },
+    setFontSize(sz){
+      document.documentElement.classList.remove('fs-sm','fs-lg','fs-xl');
+      if(sz!=='md') document.documentElement.classList.add('fs-'+sz);
+      localStorage.setItem('bvi_font_size',sz);
+      this._restoreFsUI();
+    },
+    restoreFontSize(){ this.setFontSize(localStorage.getItem('bvi_font_size')||'md'); },
+    _restoreFsUI(){
+      const sz=localStorage.getItem('bvi_font_size')||'md';
+      document.querySelectorAll('.fs-opt').forEach(b=>b.classList.toggle('active',b.dataset.sz===sz));
+    },
+    async toggleNotif(on){ if(typeof NOTIF!=='undefined') await NOTIF.setEnabled(on); },
+    setNotifHour(h){ if(typeof NOTIF!=='undefined') NOTIF.setHour(h); }
   };
 })();
 
@@ -1385,7 +1414,7 @@ const DARKMODE = { init(){}, toggle(){} };
 ====================================================================== */
 const NOTES = (function(){
   let _view = null;
-  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-vorschlaege','v-abkuerzungen','v-app']);
+  const SKIP = new Set(['v-home','v-flashcards','v-quiz','v-simulator','v-vorschlaege','v-abkuerzungen','v-app']);
   function key(){ return 'bvi_note_'+(_view||'home'); }
   function getBtn(){
     if(!_view) return null;
@@ -1406,10 +1435,20 @@ const NOTES = (function(){
     if(!viewEl || viewEl.querySelector('.page-notes-widget')) return;
     const w = document.createElement('div');
     w.className = 'page-notes-widget';
-    w.innerHTML = '<button class="page-notes-btn" onclick="NOTES.toggle()">'
-      +'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>'
+    w.innerHTML = '<div class="page-tools-row">'
+      +'<button class="page-notes-btn" onclick="NOTES.toggle()">'
+      +'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>'
       +'<div class="pnb-text"><span class="pnb-title">Notizen</span><span class="pnb-preview">Notiz hinzufügen…</span></div>'
-      +'</button>';
+      +'</button>'
+      +'<button class="page-tool-btn tts-page-btn" onclick="TTS.toggle()" title="Seite vorlesen">'
+      +'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>'
+      +'<span class="tts-lbl">Vorlesen</span>'
+      +'</button>'
+      +'<button class="page-tool-btn ai-tutor-btn" onclick="AITUTOR.open()" title="KI-Tutor fragen">'
+      +'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>'
+      +'<span>KI-Tutor</span>'
+      +'</button>'
+      +'</div>';
     viewEl.appendChild(w);
   }
   return {
@@ -1493,7 +1532,7 @@ const BOOKMARKS = (function(){
 /* ======================================================================
    LESEFORTSCHRITT
 ====================================================================== */
-const NO_PROG = new Set(['v-home','v-flashcards','v-simulator','v-vorschlaege','v-abkuerzungen','v-app']);
+const NO_PROG = new Set(['v-home','v-flashcards','v-quiz','v-simulator','v-vorschlaege','v-abkuerzungen','v-app']);
 function updateReadProgress(){
   const bar = document.getElementById('read-prog');
   const fill = document.getElementById('read-prog-fill');
@@ -1511,7 +1550,7 @@ function updateReadProgress(){
 ====================================================================== */
 const TOC = (function(){
   let el=null, sections=[];
-  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-vorschlaege','v-abkuerzungen','v-app']);
+  const SKIP = new Set(['v-home','v-flashcards','v-quiz','v-simulator','v-vorschlaege','v-abkuerzungen','v-app']);
   return {
     build(){
       if(!el){ el=document.createElement('nav'); el.className='toc-float'; document.body.appendChild(el); }
@@ -1580,15 +1619,30 @@ const FC = (function(){
   let activeFilters = new Set(CATS);
   let focusMode = false;
 
-  const SR_DAYS = [0,1,3,7,14,30]; // Leitner-Box → Tage bis nächste Wiederholung
+  const SR_DAYS = [0,1,3,7,14,30];
+
+  function sm2(prev, quality){
+    // quality: 0=wieder, 1=schwer, 2=gewusst
+    let interval=prev.interval||1, ease=prev.ease||2.5, reps=prev.reps||0;
+    if(quality===0) return {interval:1,ease,reps:0,nextReview:Date.now()+86400000};
+    if(reps===0) interval=1;
+    else if(reps===1) interval=6;
+    else interval=Math.round(interval*ease);
+    reps++;
+    if(quality===1){ interval=Math.max(1,Math.round(interval*0.85)); ease=Math.max(1.3,ease-0.15); }
+    else { ease=Math.min(2.5,ease+0.1); }
+    interval=Math.max(1,Math.min(interval,365));
+    return {interval,ease,reps,nextReview:Date.now()+interval*86400000};
+  }
 
   function fcLoad(){
     try{
       const raw=JSON.parse(localStorage.getItem('bvi_fc')||'{}');
-      // migrate boolean format → {box, nextReview}
       const out={};
       for(const [k,v] of Object.entries(raw)){
-        if(v===true) out[k]={box:5,nextReview:0};
+        if(v===true) out[k]={interval:30,ease:2.5,reps:5,nextReview:0};
+        else if(v && v.box!==undefined && v.interval===undefined)
+          out[k]={interval:SR_DAYS[v.box]||1,ease:2.5,reps:v.box||0,nextReview:v.nextReview||0};
         else out[k]=v;
       }
       return out;
@@ -1715,13 +1769,17 @@ const FC = (function(){
     const known = fcLoad();
     const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
     const card_e = known[card.id];
-    const boxNum = card_e ? (card_e.box||0) : 0;
+    const iVal=card_e?(card_e.interval||1):0;
+    const ease_v=card_e?(card_e.ease||2.5):2.5;
+    const reps_v=card_e?(card_e.reps||0):0;
+    const iHard=Math.max(1,Math.round(Math.max(1,reps_v>=2?iVal*ease_v:reps_v>=1?6:1)*0.85));
+    const iGood=Math.max(1,reps_v>=2?Math.round(iVal*ease_v):reps_v>=1?6:1);
     box.innerHTML = `
       <div class="fc-stats-row">
         <span class="fc-stat">🟢 ${sess.known} gewusst</span>
         <span class="fc-stat">🔴 ${sess.unknown} nicht gewusst</span>
         <span class="fc-stat">📚 ${knownCnt}/${FLASHCARD_DATA.length} gelernt</span>
-        ${boxNum>0?`<span class="fc-stat" title="Leitner-Box ${boxNum}">🗂️ Box ${boxNum}</span>`:''}
+        ${iVal>0?`<span class="fc-stat" title="Letztes Intervall">📅 ${iVal}d</span>`:''}
       </div>
       <div class="fc-nav">${curIdx+1} / ${deck.length}</div>
       <div class="fc-outer">
@@ -1740,8 +1798,9 @@ const FC = (function(){
         <div class="fc-swipe-no">✗ Nicht gewusst</div>
       </div>
       <div class="fc-controls" id="fc-controls" style="display:none">
-        <button class="fc-btn fc-no" onclick="FC.answer(false)">✗ Nicht gewusst</button>
-        <button class="fc-btn fc-yes" onclick="FC.answer(true)">✓ Gewusst</button>
+        <button class="fc-btn fc-no" onclick="FC.answer(false)">✗ Wieder<span class="fc-hint">1d</span></button>
+        <button class="fc-btn fc-hard" onclick="FC.answer('hard')">～ Schwer<span class="fc-hint">${iHard}d</span></button>
+        <button class="fc-btn fc-yes" onclick="FC.answer(true)">✓ Gewusst<span class="fc-hint">${iGood}d</span></button>
       </div>`;
     flipped = false;
     window._shaderContentMode = 1.0;
@@ -1791,21 +1850,19 @@ const FC = (function(){
       if(inner) inner.classList.toggle('flipped',flipped);
       if(ctrl) ctrl.style.display=flipped?'flex':'none';
     },
-    answer(knew){
+    answer(quality){
       if(!flipped) return;
-      if(navigator.vibrate) navigator.vibrate(knew ? [30] : [20,50,20]);
+      const q=quality===true?2:quality===false?0:1; // true=gut, false=wieder, 'hard'=schwer
+      if(navigator.vibrate) navigator.vibrate(q>0?[30]:[20,50,20]);
       const card=deck[curIdx];
       const d=fcLoad();
-      const now=Date.now();
-      if(knew){
-        const prev=d[card.id]||{box:0};
-        const newBox=Math.min((prev.box||0)+1, SR_DAYS.length-1);
-        d[card.id]={box:newBox, nextReview: now + SR_DAYS[newBox]*86400000};
-        sess.known++;
-      } else {
+      if(q===0){
         delete d[card.id]; sess.unknown++;
         const reps=card._reps||0;
         if(reps<2) deck.push(Object.assign({},card,{_reps:reps+1}));
+      } else {
+        d[card.id]=sm2(d[card.id]||{},q); sess.known++;
+        if(typeof STREAK!=='undefined') STREAK.record();
       }
       fcSave(d); curIdx++; renderCard();
     },
@@ -2269,9 +2326,322 @@ void main(void){
   requestAnimationFrame(frame);
 })();
 
+/* ======================================================================
+   STREAK – tägliche Lernsträhne
+====================================================================== */
+const STREAK = (function(){
+  function load(){ try{return JSON.parse(localStorage.getItem('bvi_streak')||'{}');}catch{return{};} }
+  function save(d){ try{localStorage.setItem('bvi_streak',JSON.stringify(d));}catch{} }
+  function todayStr(){ const n=new Date();return n.getFullYear()+'-'+(n.getMonth()+1)+'-'+n.getDate(); }
+  function render(){
+    const d=load(),n=d.current||0;
+    const el=document.getElementById('streak-badge');
+    if(!el) return;
+    el.textContent=n>0?`🔥 ${n}`:'';
+    el.style.display=n>0?'':'none';
+    el.title=`Lernstreak: ${n} Tag${n===1?'':'e'} in Folge`;
+  }
+  return {
+    record(){
+      const d=load(),today=todayStr();
+      if(d.lastStudy===today){render();return;}
+      const prev=new Date();prev.setDate(prev.getDate()-1);
+      const yStr=prev.getFullYear()+'-'+(prev.getMonth()+1)+'-'+prev.getDate();
+      d.current=d.lastStudy===yStr?(d.current||0)+1:1;
+      d.longest=Math.max(d.longest||0,d.current);
+      d.lastStudy=today;
+      save(d); render();
+    },
+    render,
+    get(){ return load(); }
+  };
+})();
+
+/* ======================================================================
+   NOTIF – Browser-Benachrichtigungen
+====================================================================== */
+const NOTIF = (function(){
+  function prefs(){ try{return JSON.parse(localStorage.getItem('bvi_notif')||'{}');}catch{return{};} }
+  function savePrefs(p){ try{localStorage.setItem('bvi_notif',JSON.stringify(p));}catch{} }
+  return {
+    async setEnabled(on){
+      if(!('Notification' in window)){ TOAST.show('Benachrichtigungen nicht unterstützt'); return false; }
+      if(on){
+        const r=await Notification.requestPermission();
+        if(r!=='granted'){ TOAST.show('Benachrichtigungen wurden abgelehnt'); const t=document.getElementById('notif-toggle');if(t)t.checked=false; return false; }
+        savePrefs({...prefs(),enabled:true});
+        TOAST.show('Benachrichtigungen aktiviert',{type:'ok'}); return true;
+      } else { savePrefs({...prefs(),enabled:false}); return false; }
+    },
+    setHour(h){ savePrefs({...prefs(),hour:parseInt(h,10)}); },
+    isEnabled(){ const p=prefs();return !!p.enabled&&'Notification' in window&&Notification.permission==='granted'; },
+    check(){
+      const p=prefs(); if(!this.isEnabled()) return;
+      const today=new Date().toDateString(); if(p.lastShown===today) return;
+      if(new Date().getHours()<(p.hour||18)) return;
+      try{ new Notification('B VI Lernwebsite 📚',{body:'Heute schon gelernt? Kurz Karten wiederholen!',icon:'./icons/icon-192.svg',tag:'bvi-daily'}); }catch{}
+      savePrefs({...p,lastShown:today});
+    },
+    updateUI(){
+      const p=prefs();
+      const t=document.getElementById('notif-toggle');if(t) t.checked=this.isEnabled();
+      const h=document.getElementById('notif-hour');if(h) h.value=p.hour||18;
+    }
+  };
+})();
+
+/* ======================================================================
+   TTS – Text-to-Speech (Web Speech API)
+====================================================================== */
+const TTS = (function(){
+  let speaking=false;
+  function stop(){ if('speechSynthesis' in window) window.speechSynthesis.cancel(); speaking=false; updateBtns(); }
+  function updateBtns(){
+    document.querySelectorAll('.tts-page-btn').forEach(b=>{
+      b.classList.toggle('tts-active',speaking);
+      const l=b.querySelector('.tts-lbl');if(l) l.textContent=speaking?'Stop':'Vorlesen';
+    });
+  }
+  return {
+    toggle(){
+      if(speaking){ stop(); return; }
+      if(!('speechSynthesis' in window)){ TOAST.show('Text-to-Speech wird nicht unterstützt'); return; }
+      const active=document.querySelector('.view.active');
+      const pc=active&&active.querySelector('.pc');
+      if(!pc){ TOAST.show('Kein Inhalt zum Vorlesen'); return; }
+      const text=(pc.innerText||pc.textContent||'').replace(/\s+/g,' ').trim();
+      if(!text){ TOAST.show('Kein Text gefunden'); return; }
+      window.speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance(text);
+      u.lang='de-DE'; u.rate=0.92;
+      u.onend=()=>{ speaking=false; updateBtns(); };
+      u.onerror=()=>{ speaking=false; updateBtns(); };
+      window.speechSynthesis.speak(u);
+      speaking=true; updateBtns();
+    },
+    stop
+  };
+})();
+
+/* ======================================================================
+   AITUTOR – KI-Lernassistent (Claude API)
+====================================================================== */
+const AITUTOR = (function(){
+  function getKey(){ return localStorage.getItem('bvi_ai_key')||''; }
+  const ov=()=>document.getElementById('aitutor-overlay');
+  const msgBox=()=>document.getElementById('ai-msgs');
+  return {
+    open(){
+      if(!getKey()){ TOAST.show('Bitte zuerst Claude API-Key in den Einstellungen eingeben'); SETTINGS.open(); return; }
+      ov()?.classList.remove('hidden');
+      const inp=document.getElementById('ai-input');if(inp) setTimeout(()=>inp.focus(),80);
+    },
+    close(){ ov()?.classList.add('hidden'); },
+    saveKey(){
+      const v=(document.getElementById('ai-key-input')?.value||'').trim();
+      if(!v){ TOAST.show('Bitte API-Key eingeben'); return; }
+      localStorage.setItem('bvi_ai_key',v);
+      TOAST.show('API-Key gespeichert',{type:'ok'});
+      document.getElementById('ai-key-input').value='';
+      this.updateKeyUI();
+    },
+    clearKey(){ localStorage.removeItem('bvi_ai_key'); this.updateKeyUI(); TOAST.show('API-Key entfernt'); },
+    updateKeyUI(){
+      const el=document.getElementById('ai-key-status');if(!el) return;
+      el.textContent=getKey()?'✓ Key gespeichert':'Kein Key hinterlegt';
+      el.style.color=getKey()?'var(--c-ok)':'var(--c-slate)';
+    },
+    async send(){
+      const inp=document.getElementById('ai-input');
+      const q=(inp?.value||'').trim(); if(!q) return;
+      const k=getKey(); if(!k){ TOAST.show('Kein API-Key'); return; }
+      inp.value='';
+      const m=msgBox(); if(!m) return;
+      m.insertAdjacentHTML('beforeend',`<div class="ai-msg ai-user">${xss(q)}</div>`);
+      const loadEl=document.createElement('div');
+      loadEl.className='ai-msg ai-bot ai-loading'; loadEl.textContent='…';
+      m.appendChild(loadEl); m.scrollTop=m.scrollHeight;
+      const active=document.querySelector('.view.active');
+      const pageText=active?(active.querySelector('.pc')?.innerText||'').slice(0,3000):'';
+      const sys=`Du bist ein präziser Lernassistent für angehende Feuerwehrbeamte im höheren Dienst (B VI). Antworte auf Deutsch, kurz und fachlich korrekt.${pageText?'\n\nAktueller Seiteninhalt:\n'+pageText:''}`;
+      try{
+        const r=await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:{'x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true','content-type':'application/json'},
+          body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:512,system:sys,messages:[{role:'user',content:q}]})
+        });
+        const data=await r.json();
+        loadEl.className='ai-msg ai-bot';
+        loadEl.textContent=data.content?.[0]?.text||data.error?.message||'Unbekannter Fehler';
+      }catch(e){
+        loadEl.className='ai-msg ai-bot ai-err';
+        loadEl.textContent='Fehler: '+(e.message||'Netzwerkfehler. Überprüfe deinen API-Key.');
+      }
+      m.scrollTop=m.scrollHeight;
+    }
+  };
+})();
+
+/* ======================================================================
+   QUIZ – Multiple-Choice
+====================================================================== */
+const QUIZ = (function(){
+  const CATS=['gal','sfs','hlfs','ibk','vak','feuak','idf'];
+  let deck=[],curIdx=0,score=0,activeFilters=new Set(CATS),answered=false;
+  function strip(s){ const d=document.createElement('div');d.innerHTML=s;return d.textContent||''; }
+  function getDeck(){
+    return activeFilters.size===CATS.length?[...FLASHCARD_DATA]
+      :FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f)));
+  }
+  function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
+  function getWrong(card,pool){
+    const correct=strip(card.a);
+    const scored=pool.filter(c=>c.id!==card.id&&strip(c.a)!==correct)
+      .map(c=>({c,sc:(c.cat===card.cat?10:c.cat.split('·')[0]===card.cat.split('·')[0]?4:0)+Math.random()}))
+      .sort((a,b)=>b.sc-a.sc);
+    const out=[];
+    for(const {c} of scored){ if(out.length>=3) break; const a=strip(c.a); if(!out.includes(a)) out.push(a); }
+    return out;
+  }
+  function updateFilter(){
+    const all=CATS.every(c=>activeFilters.has(c));
+    document.querySelectorAll('.qz-f-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter==='all'?all:!all&&activeFilters.has(b.dataset.filter)));
+  }
+  function renderCard(){
+    const box=document.getElementById('quiz-container');if(!box) return;
+    if(curIdx>=deck.length){ renderEnd(); return; }
+    const card=deck[curIdx];
+    const correct=strip(card.a);
+    const opts=shuffle([correct,...getWrong(card,FLASHCARD_DATA).slice(0,3)]);
+    answered=false;
+    const pct=Math.round(curIdx/deck.length*100);
+    box.innerHTML=`
+      <div class="quiz-prog-row">
+        <div class="quiz-prog-bar"><div class="quiz-prog-fill" style="width:${pct}%"></div></div>
+        <span class="quiz-prog-info">${curIdx+1}/${deck.length} · ✓ ${score}</span>
+      </div>
+      <div class="quiz-cat">${xss(card.cat)}</div>
+      <div class="quiz-q">${card.q}</div>
+      <div class="quiz-opts" id="quiz-opts">
+        ${opts.map(o=>`<button class="quiz-opt" onclick="QUIZ.pick(${JSON.stringify(o)},${JSON.stringify(correct)},this)">${xss(o)}</button>`).join('')}
+      </div>
+      <div id="quiz-next" style="display:none;text-align:center;margin-top:1.25rem">
+        <button class="btn btn-gold" onclick="QUIZ.next()">Weiter →</button>
+      </div>`;
+  }
+  function renderEnd(){
+    const box=document.getElementById('quiz-container');if(!box) return;
+    const pct=deck.length?Math.round(score/deck.length*100):0;
+    const ico=pct>=80?'🏆':pct>=50?'📖':'🔄';
+    if(pct>=80) launchConfetti();
+    box.innerHTML=`
+      <div class="fc-end">
+        <div class="fc-end-ico">${ico}</div>
+        <div class="fc-end-title">${pct>=80?'Ausgezeichnet!':pct>=50?'Gut gemacht!':'Weiter üben!'}</div>
+        <div class="fc-end-sub">${score} von ${deck.length} richtig (${pct}%)</div>
+        <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:1.25rem">
+          <button class="btn btn-gold" onclick="QUIZ.start()">Nochmal</button>
+          <button class="btn btn-ghost" onclick="NAV.go('v-flashcards','Lernkarten')">Zu den Lernkarten</button>
+        </div>
+      </div>`;
+  }
+  return {
+    showStart(){
+      const box=document.getElementById('quiz-container');if(!box) return;
+      const total=getDeck().length;
+      box.innerHTML=`
+        <div class="fc-end">
+          <div class="fc-end-ico">🧠</div>
+          <div class="fc-end-title">Quiz-Modus</div>
+          <div class="fc-end-sub">Multiple-Choice aus ${total} Karten – je Runde bis zu 20 Fragen. Passende Antwortoptionen aus gleichem Themenbereich.</div>
+          <button class="btn btn-gold" onclick="QUIZ.start()">Quiz starten →</button>
+        </div>`;
+      updateFilter();
+    },
+    start(){
+      const pool=getDeck();
+      deck=shuffle([...pool]).slice(0,Math.min(20,pool.length));
+      curIdx=0; score=0; answered=false;
+      renderCard(); updateFilter();
+      if(typeof STREAK!=='undefined') STREAK.record();
+    },
+    pick(selected,correct,btn){
+      if(answered) return; answered=true;
+      document.querySelectorAll('.quiz-opt').forEach(b=>{ b.disabled=true; if(b.textContent===correct) b.classList.add('qo-correct'); });
+      if(selected===correct){ btn.classList.add('qo-correct'); score++; if(navigator.vibrate) navigator.vibrate([30]); }
+      else { btn.classList.add('qo-wrong'); if(navigator.vibrate) navigator.vibrate([20,50,20]); }
+      const n=document.getElementById('quiz-next');if(n) n.style.display='block';
+    },
+    next(){ curIdx++; renderCard(); },
+    setFilter(f){
+      if(f==='all') activeFilters=new Set(CATS);
+      else {
+        if(activeFilters.size===CATS.length) activeFilters=new Set([f]);
+        else if(activeFilters.has(f)){ activeFilters.delete(f); if(!activeFilters.size) activeFilters=new Set(CATS); }
+        else activeFilters.add(f);
+      }
+      updateFilter(); this.showStart();
+    }
+  };
+})();
+
+/* ======================================================================
+   STATS – Lernstatistiken
+====================================================================== */
+const STATS = (function(){
+  const GROUPS={
+    GAL:['v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht'],
+    SFS:['v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc'],
+    HLFS:['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
+    IBK:['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
+    VAk:['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht'],
+    FeuAK:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung'],
+    IdF:['v-idf-brandschutz','v-idf-stab','v-idf-presse']
+  };
+  function ov(){ return document.getElementById('stats-overlay'); }
+  function build(){
+    const c=document.getElementById('stats-content');if(!c) return;
+    const prog=JSON.parse(localStorage.getItem('bvi_progress')||'{}');
+    const fc=JSON.parse(localStorage.getItem('bvi_fc')||'{}');
+    const streak=STREAK.get();
+    const allViews=Object.values(GROUPS).flat();
+    const visited=allViews.filter(v=>prog[v]).length;
+    const known=Object.keys(fc).length;
+    const total=FLASHCARD_DATA.length;
+    const now=Date.now();
+    const due=Object.values(fc).filter(v=>v&&v.nextReview<=now).length;
+    const bars=Object.entries(GROUPS).map(([g,vs])=>{
+      const d=vs.filter(v=>prog[v]).length;
+      const pct=Math.round(d/vs.length*100);
+      return `<div class="stat-row"><span class="stat-row-lbl">${g}</span><div class="stat-bar-wrap"><div class="stat-bar-fill" style="width:${pct}%"></div></div><span class="stat-row-cnt">${d}/${vs.length}</span></div>`;
+    }).join('');
+    c.innerHTML=`
+      <div class="stat-tiles">
+        <div class="stat-tile"><div class="stat-val">${streak.current||0}</div><div class="stat-lbl">🔥 Streak (Tage)</div></div>
+        <div class="stat-tile"><div class="stat-val">${streak.longest||0}</div><div class="stat-lbl">⭐ Bester Streak</div></div>
+        <div class="stat-tile"><div class="stat-val">${Math.round(visited/allViews.length*100)}%</div><div class="stat-lbl">📚 Themen</div></div>
+        <div class="stat-tile"><div class="stat-val">${Math.round(known/total*100)}%</div><div class="stat-lbl">🎴 Karten</div></div>
+      </div>
+      <div class="stat-section-title">Themen-Fortschritt</div>
+      <div class="stat-bars">${bars}</div>
+      <div class="stat-section-title" style="margin-top:1.1rem">Lernkarten (${known}/${total})</div>
+      <div class="stat-bars">
+        <div class="stat-row"><span class="stat-row-lbl">Gelernt</span><div class="stat-bar-wrap"><div class="stat-bar-fill" style="width:${Math.round(known/total*100)}%"></div></div><span class="stat-row-cnt">${known}</span></div>
+        <div class="stat-row"><span class="stat-row-lbl">Heute fällig</span><div class="stat-bar-wrap"><div class="stat-bar-fill stat-bar-gold" style="width:${Math.min(100,Math.round(due/total*100))}%"></div></div><span class="stat-row-cnt">${due}</span></div>
+      </div>`;
+  }
+  return {
+    open(){ ov()?.classList.remove('hidden'); build(); },
+    close(){ ov()?.classList.add('hidden'); }
+  };
+})();
+
 document.addEventListener('DOMContentLoaded',()=>{
   NAV.home();
   PROGRESS.updateUI();
+  SETTINGS.restoreFontSize();
+  STREAK.render();
+  NOTIF.check();
   DARKMODE.init();
   document.querySelectorAll('.pc table').forEach(t=>{
     if(t.closest('.tbl-wrap')) return;
@@ -2285,6 +2655,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(e.key==='Escape'){
       if(!document.getElementById('search-overlay').classList.contains('hidden')){ SEARCH.close(); return; }
       if(!document.getElementById('settings-overlay').classList.contains('hidden')){ SETTINGS.close(); return; }
+      if(document.getElementById('stats-overlay')&&!document.getElementById('stats-overlay').classList.contains('hidden')){ STATS.close(); return; }
+      if(document.getElementById('aitutor-overlay')&&!document.getElementById('aitutor-overlay').classList.contains('hidden')){ AITUTOR.close(); return; }
       if(!document.getElementById('notes-overlay').classList.contains('hidden')){ NOTES.close(); return; }
     }
     // Lernkarten-Tastatursteuerung
@@ -2301,7 +2673,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   },{passive:true});
   if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
   ABK.render(); ABK.filter('');
-  console.log('%c B VI %c Lernwebsite v4.0 · flametan/BVI-Lernwebsite ',
+  console.log('%c B VI %c Lernwebsite v4.1 · flametan/BVI-Lernwebsite ',
     'background:#A50000;color:#fff;padding:3px 8px;border-radius:4px 0 0 4px;font-family:"DM Mono",monospace;font-weight:700',
     'background:#0A192F;color:#C9A84C;padding:3px 8px;border-radius:0 4px 4px 0;font-family:"DM Mono",monospace');
 });
