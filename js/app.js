@@ -1367,18 +1367,18 @@ const TOAST = (function(){
 
 const SETTINGS = (function(){
   function closeAllPanels(){
-    document.getElementById('fontsize-panel')?.classList.add('hidden');
-    document.getElementById('notif-panel')?.classList.add('hidden');
+    document.getElementById('fontsize-overlay')?.classList.add('hidden');
+    document.getElementById('notif-overlay')?.classList.add('hidden');
   }
   return {
     toggleFontPanel(){
-      const p=document.getElementById('fontsize-panel');
+      const p=document.getElementById('fontsize-overlay');
       const was=p?.classList.contains('hidden');
       closeAllPanels();
       if(was) p?.classList.remove('hidden');
     },
     toggleNotifPanel(){
-      const p=document.getElementById('notif-panel');
+      const p=document.getElementById('notif-overlay');
       const was=p?.classList.contains('hidden');
       closeAllPanels();
       if(was){ p?.classList.remove('hidden'); if(typeof NOTIF!=='undefined') NOTIF.updateUI(); }
@@ -1431,12 +1431,15 @@ const NOTES = (function(){
     return v ? v.querySelector('.page-notes-btn') : null;
   }
   function updateBtn(){
-    const btn = getBtn();
-    if(!btn) return;
     const note = localStorage.getItem(key());
-    btn.classList.toggle('pnb-active', !!note);
-    const preview = btn.querySelector('.pnb-preview');
-    if(preview) preview.textContent = note ? note.substring(0,80)+(note.length>80?'…':'') : 'Notiz hinzufügen…';
+    const btn = getBtn();
+    if(btn){
+      btn.classList.toggle('pnb-active', !!note);
+      const preview = btn.querySelector('.pnb-preview');
+      if(preview) preview.textContent = note ? note.substring(0,80)+(note.length>80?'…':'') : 'Notiz hinzufügen…';
+    }
+    const fab = document.getElementById('notes-fab');
+    if(fab) fab.classList.toggle('fab-active', !!(note && note.trim()));
   }
   function ensureWidget(){
     if(!_view || SKIP.has(_view)) return;
@@ -2629,10 +2632,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(sTop) sTop.classList.toggle('visible', window.scrollY>300);
   },{passive:true});
   document.addEventListener('click', e=>{
-    if(!e.target.closest('.fontsize-btn-hdr')&&!e.target.closest('#fontsize-panel'))
-      document.getElementById('fontsize-panel')?.classList.add('hidden');
-    if(!e.target.closest('.notif-btn-hdr')&&!e.target.closest('#notif-panel'))
-      document.getElementById('notif-panel')?.classList.add('hidden');
+    if(!e.target.closest('.fontsize-btn-hdr')&&!e.target.closest('#fontsize-overlay'))
+      document.getElementById('fontsize-overlay')?.classList.add('hidden');
+    if(!e.target.closest('.notif-btn-hdr')&&!e.target.closest('#notif-overlay'))
+      document.getElementById('notif-overlay')?.classList.add('hidden');
   });
   if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
   ABK.render(); ABK.filter('');

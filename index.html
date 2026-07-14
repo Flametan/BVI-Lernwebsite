@@ -74,27 +74,41 @@
     <div class="search-footer"><span><kbd>↑↓</kbd> navigieren</span><span><kbd>↵</kbd> öffnen</span><span><kbd>Esc</kbd> schließen</span></div>
   </div>
 </div>
-<!-- FONTSIZE PANEL -->
-<div id="fontsize-panel" class="hdr-panel hidden" onclick="event.stopPropagation()">
-  <div class="hdr-panel-title">Schriftgröße</div>
-  <div class="fs-opts-row">
-    <button class="fs-opt" data-sz="sm" onclick="SETTINGS.setFontSize('sm')">A−</button>
-    <button class="fs-opt active" data-sz="md" onclick="SETTINGS.setFontSize('md')">A</button>
-    <button class="fs-opt" data-sz="lg" onclick="SETTINGS.setFontSize('lg')">A+</button>
-    <button class="fs-opt" data-sz="xl" onclick="SETTINGS.setFontSize('xl')">A++</button>
+<!-- FONTSIZE OVERLAY -->
+<div id="fontsize-overlay" class="search-overlay hidden" onclick="if(event.target===this)SETTINGS.closeAllPanels()">
+  <div class="search-box mini-panel-box" onclick="event.stopPropagation()">
+    <div class="settings-hdr">
+      <span class="settings-title">Schriftgröße</span>
+      <button class="search-close-btn" onclick="SETTINGS.closeAllPanels()" title="Schließen">✕</button>
+    </div>
+    <div style="padding:.75rem 1.25rem .85rem">
+      <div class="fs-opts-row" style="margin-top:0">
+        <button class="fs-opt" data-sz="sm" onclick="SETTINGS.setFontSize('sm')">A−</button>
+        <button class="fs-opt active" data-sz="md" onclick="SETTINGS.setFontSize('md')">A</button>
+        <button class="fs-opt" data-sz="lg" onclick="SETTINGS.setFontSize('lg')">A+</button>
+        <button class="fs-opt" data-sz="xl" onclick="SETTINGS.setFontSize('xl')">A++</button>
+      </div>
+    </div>
   </div>
 </div>
-<!-- NOTIF PANEL -->
-<div id="notif-panel" class="hdr-panel hidden" onclick="event.stopPropagation()">
-  <div class="hdr-panel-title">🔔 Tägliche Erinnerung</div>
-  <label class="notif-label">
-    <input type="checkbox" id="notif-toggle" onchange="SETTINGS.toggleNotif(this.checked)"/>
-    <span>Benachrichtigungen aktiv</span>
-  </label>
-  <div class="notif-hour-row">
-    <label for="notif-hour" style="font-size:.73rem;color:var(--c-slate)">Um:</label>
-    <input type="number" id="notif-hour" min="6" max="23" value="18" class="notif-hour-inp" onchange="SETTINGS.setNotifHour(this.value)"/>
-    <span style="font-size:.73rem;color:var(--c-slate)">Uhr</span>
+<!-- NOTIF OVERLAY -->
+<div id="notif-overlay" class="search-overlay hidden" onclick="if(event.target===this)SETTINGS.closeAllPanels()">
+  <div class="search-box mini-panel-box" onclick="event.stopPropagation()">
+    <div class="settings-hdr">
+      <span class="settings-title">🔔 Tägliche Erinnerung</span>
+      <button class="search-close-btn" onclick="SETTINGS.closeAllPanels()" title="Schließen">✕</button>
+    </div>
+    <div style="padding:.75rem 1.25rem .85rem;display:flex;flex-direction:column;gap:.65rem">
+      <label class="notif-label">
+        <input type="checkbox" id="notif-toggle" onchange="SETTINGS.toggleNotif(this.checked)"/>
+        <span>Benachrichtigungen aktiv</span>
+      </label>
+      <div class="notif-hour-row">
+        <label for="notif-hour" style="font-size:.73rem;color:var(--c-slate)">Um:</label>
+        <input type="number" id="notif-hour" min="6" max="23" value="18" class="notif-hour-inp" onchange="SETTINGS.setNotifHour(this.value)"/>
+        <span style="font-size:.73rem;color:var(--c-slate)">Uhr</span>
+      </div>
+    </div>
   </div>
 </div>
 <!-- STATS OVERLAY -->
@@ -116,7 +130,10 @@
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
   <span class="fb-label">Zurück</span>
 </button>
-<!-- FAB STACK: Lesezeichen + Notizen + Scroll-to-top -->
+<!-- FAB STACK: Lesezeichen + Notizen-FAB + Scroll-to-top -->
+<button id="notes-fab" class="fab-btn" title="Notizen" onclick="NOTES.toggle()">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+</button>
 <button id="bookmark-btn" class="fab-btn fab-off" title="Lesezeichen setzen / entfernen" onclick="BOOKMARKS.toggle(this.dataset.id,this.dataset.label)">
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
 </button>
