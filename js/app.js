@@ -1335,24 +1335,7 @@ const NOTES = (function(){
     const fab = document.getElementById('notes-fab');
     if(fab) fab.classList.toggle('fab-active', !!(note && note.trim()));
   }
-  function ensureWidget(){
-    if(!_view || SKIP.has(_view)) return;
-    const viewEl = document.getElementById(_view);
-    if(!viewEl) return;
-    const pc = viewEl.querySelector('.pc');
-    const isContentPage = _view.split('-').length >= 3;
-    // Notes button – bottom of .pc, only where pencil FAB is visible
-    if(isContentPage && !viewEl.querySelector('.page-notes-widget')){
-      const w = document.createElement('div');
-      w.className = 'page-notes-widget';
-      w.innerHTML = '<button class="page-notes-btn" onclick="NOTES.toggle()">'
-        +'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>'
-        +'<div class="pnb-text"><span class="pnb-title">Notizen</span><span class="pnb-preview">Notiz hinzufügen…</span></div>'
-        +'</button>';
-      if(pc) pc.appendChild(w);
-      else viewEl.appendChild(w);
-    }
-  }
+  function ensureWidget(){}
   return {
     setView(id){ _view = id; ensureWidget(); updateBtn(); },
     open(){
