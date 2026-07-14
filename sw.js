@@ -1,4 +1,4 @@
-const CACHE = 'bvi-v25';
+const CACHE = 'bvi-v26';
 const PRECACHE = [
   './',
   './index.html',

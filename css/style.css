@@ -323,6 +323,17 @@
   /* RESPONSIVE */
   @media(max-width:700px){.home-grid{grid-template-columns:repeat(2,1fr);}.cg-2,.cg-3{grid-template-columns:1fr!important;}.sim-menu{grid-template-columns:1fr;}.crumb{display:none;}.pc{padding:1.5rem 1rem 4rem;}.phi{padding:0 1rem;}}
   @media(max-width:480px){.home-grid{grid-template-columns:1fr;}.role-row{flex-direction:column;}.ph-step span{display:none;}}
+  /* ── MOBILE HEADER ── */
+  @media(max-width:600px){
+    #app-header{padding:0 .75rem;gap:0;}
+    .logo-sub{display:none;}
+    .logo-emblem{width:28px;height:28px;}
+    #nav-trail{margin-left:.75rem;}
+    .search-btn-hdr.icon-only{width:28px;height:26px;margin-left:.25rem;}
+    .stats-btn-hdr,.notif-btn-hdr{width:28px;height:26px;margin-left:.2rem;}
+    .fontsize-btn-hdr{height:26px;padding:0 .35rem;font-size:.85rem;margin-left:.2rem;}
+    .streak-badge{font-size:.65rem;padding:.14rem .35rem;margin-left:.2rem;}
+  }
   .hidden{display:none!important;}
 
   /* ── SEARCH ─────────────────────────────────────────── */

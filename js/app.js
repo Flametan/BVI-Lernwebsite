@@ -31,6 +31,10 @@ const NAV = (function(){
       bkBtn.classList.toggle('fab-off', !showFab);
       if(showFab){ bkBtn.dataset.id=id; bkBtn.dataset.label=stack.length?stack[stack.length-1].label:''; }
     }
+    // Notes FAB – hidden on home/flashcards/simulator/app
+    const NO_NOTES_FAB = new Set(['v-home','v-flashcards','v-simulator','v-app']);
+    const notesFab = document.getElementById('notes-fab');
+    if(notesFab) notesFab.classList.toggle('fab-off', NO_NOTES_FAB.has(id));
     if(typeof NOTES!=='undefined') NOTES.setView(id);
     if(typeof BOOKMARKS!=='undefined') BOOKMARKS.setView(id);
     updateHeader();
@@ -1523,14 +1527,13 @@ const FC = (function(){
   const SR_DAYS = [0,1,3,7,14,30];
 
   function sm2(prev, quality){
-    // quality: 0=wieder, 1=schwer, 2=gewusst
+    // quality: 0=nicht gewusst, 1=schwer, 2=gewusst
     let interval=prev.interval||1, ease=prev.ease||2.5, reps=prev.reps||0;
     if(quality===0) return {interval:1,ease,reps:0,nextReview:Date.now()+86400000};
-    if(reps===0) interval=1;
-    else if(reps===1) interval=6;
+    if(reps<=1) interval = quality===1 ? 3 : 7;
     else interval=Math.round(interval*ease);
     reps++;
-    if(quality===1){ interval=Math.max(1,Math.round(interval*0.85)); ease=Math.max(1.3,ease-0.15); }
+    if(quality===1){ interval=Math.max(3,Math.round(interval*0.85)); ease=Math.max(1.3,ease-0.15); }
     else { ease=Math.min(2.5,ease+0.1); }
     interval=Math.max(1,Math.min(interval,365));
     return {interval,ease,reps,nextReview:Date.now()+interval*86400000};
@@ -1673,8 +1676,8 @@ const FC = (function(){
     const iVal=card_e?(card_e.interval||1):0;
     const ease_v=card_e?(card_e.ease||2.5):2.5;
     const reps_v=card_e?(card_e.reps||0):0;
-    const iHard=Math.max(1,Math.round(Math.max(1,reps_v>=2?iVal*ease_v:reps_v>=1?6:1)*0.85));
-    const iGood=Math.max(1,reps_v>=2?Math.round(iVal*ease_v):reps_v>=1?6:1);
+    const iGood=reps_v>=2?Math.round(iVal*ease_v):7;
+    const iHard=reps_v>=2?Math.max(3,Math.round(iVal*ease_v*0.85)):3;
     box.innerHTML = `
       <div class="fc-stats-row">
         <span class="fc-stat">🟢 ${sess.known} gewusst</span>
@@ -1699,7 +1702,7 @@ const FC = (function(){
         <div class="fc-swipe-no">✗ Nicht gewusst</div>
       </div>
       <div class="fc-controls" id="fc-controls" style="display:none">
-        <button class="fc-btn fc-no" onclick="FC.answer(false)">✗ Wieder<span class="fc-hint">1d</span></button>
+        <button class="fc-btn fc-no" onclick="FC.answer(false)">✗ Nicht gewusst<span class="fc-hint">1d</span></button>
         <button class="fc-btn fc-hard" onclick="FC.answer('hard')">～ Schwer<span class="fc-hint">${iHard}d</span></button>
         <button class="fc-btn fc-yes" onclick="FC.answer(true)">✓ Gewusst<span class="fc-hint">${iGood}d</span></button>
       </div>`;
