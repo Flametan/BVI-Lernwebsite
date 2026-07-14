@@ -5,7 +5,7 @@
 const NAV = (function(){
   let stack = [];
   let _dir = 'forward';
-  const ALL = ['v-home','v-abkuerzungen','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-feuak','v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-idf','v-idf-brandschutz','v-idf-stab','v-idf-presse','v-simulator','v-flashcards','v-quiz','v-vorschlaege','v-app'];
+  const ALL = ['v-home','v-abkuerzungen','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-feuak','v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-idf','v-idf-brandschutz','v-idf-stab','v-idf-presse','v-simulator','v-flashcards','v-app'];
 
   function show(id){
     ALL.forEach(v=>{
@@ -20,7 +20,7 @@ const NAV = (function(){
       }
     });
     window.scrollTo({top:0,behavior:'instant'});
-    const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-quiz','v-abkuerzungen','v-vorschlaege','v-app']);
+    const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app']);
     window._shaderContentMode = (id.split('-').length > 2 || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
     document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
     // Bookmark FAB – hidden on home/flashcards/simulator
@@ -34,13 +34,11 @@ const NAV = (function(){
     if(typeof NOTES!=='undefined') NOTES.setView(id);
     if(typeof BOOKMARKS!=='undefined') BOOKMARKS.setView(id);
     updateHeader();
-    if(id==='v-vorschlaege') loadProposals();
     if(id==='v-abkuerzungen') ABK.init();
     if(id==='v-app' && window._isChromium){
       const w = document.getElementById('apk-chromium-warn');
       if(w) w.classList.remove('hidden');
     }
-    if(id==='v-quiz') QUIZ.showStart();
     if(typeof PROGRESS!=='undefined') PROGRESS.track(id);
     if(typeof TOC!=='undefined') TOC.build();
     updateReadProgress();
@@ -746,112 +744,6 @@ const SIM = {
 function mk(tag,cls){ const e=document.createElement(tag); e.className=cls; return e; }
 function xss(s){ if(!s) return ''; const d=document.createElement('div'); d.appendChild(document.createTextNode(s)); return d.innerHTML; }
 
-/* ======================================================================
-   GITHUB ISSUES API – VORSCHLAGSWESEN
-   ⚠️ Token liegt im Quellcode – Fine-grained PAT (Issues: Read & Write)
-   Token rotieren: github.com → Settings → Developer Settings → PAT
-====================================================================== */
-const GH = {
-  token:'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',
-  owner:'flametan', repo:'BVI-Lernwebsite', label:'vorschlag', base:'https://api.github.com',
-  hdrs(){ return {'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Authorization':`Bearer ${this.token}`}; }
-};
-
-/* Blacklist – erweitern mit weiteren { pattern, msg } Einträgen */
-const BLACKLIST=[
-  {pattern:/nukular/i, msg:'☢️ <strong>„Nukular"</strong> ist kein gültiges deutsches Wort – korrekt ist <em>nuklear</em>. Vorschlag systemkonform abgelehnt. Bitte korrigieren und erneut einreichen.'}
-];
-function checkBL(text){ for(const e of BLACKLIST){ if(e.pattern.test(text)) return {blocked:true,msg:e.msg}; } return {blocked:false}; }
-
-let proposalsLoaded = false;
-
-async function loadProposals(){
-  if(proposalsLoaded) return;
-  const listEl=document.getElementById('proposals-list');
-  const loadEl=document.getElementById('proposals-loading');
-  const emptyEl=document.getElementById('proposals-empty');
-  const statusEl=document.getElementById('gh-status');
-  listEl.innerHTML=''; loadEl.classList.remove('hidden'); emptyEl.classList.add('hidden');
-  try{
-    const url=`${GH.base}/repos/${GH.owner}/${GH.repo}/issues?labels=${encodeURIComponent(GH.label)}&state=open&per_page=50&sort=created&direction=desc`;
-    const res=await fetch(url,{headers:{'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});
-    if(!res.ok) throw new Error(`GitHub API ${res.status}`);
-    const issues=await res.json();
-    statusEl.classList.add('hidden'); loadEl.classList.add('hidden');
-    if(!issues.length){ emptyEl.classList.remove('hidden'); return; }
-    const withR=await Promise.all(issues.map(async i=>({...i,react:await fetchReactions(i.number)})));
-    withR.forEach(i=>listEl.appendChild(buildCard(i)));
-    proposalsLoaded=true;
-  }catch(err){
-    statusEl.className='status-msg s-err'; statusEl.textContent=`⚠️ ${err.message}`; statusEl.classList.remove('hidden'); loadEl.classList.add('hidden');
-  }
-}
-
-async function fetchReactions(num){
-  try{
-    const res=await fetch(`${GH.base}/repos/${GH.owner}/${GH.repo}/issues/${num}/reactions`,{headers:{'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});
-    if(!res.ok) return {up:0,down:0};
-    const d=await res.json();
-    return {up:d.filter(r=>r.content==='+1').length,down:d.filter(r=>r.content==='-1').length};
-  }catch{ return {up:0,down:0}; }
-}
-
-function buildCard(issue){
-  const card=document.createElement('div'); card.className='pl-card';
-  const date=new Date(issue.created_at).toLocaleDateString('de-DE',{year:'numeric',month:'short',day:'numeric'});
-  const author=issue.body?.match(/Eingereicht von: (.+)/)?.[1]||issue.user.login;
-  const body=(issue.body||'').replace(/Eingereicht von:.*\n?/g,'').trim().slice(0,200);
-  card.innerHTML=`
-    <div class="pm"><span class="pm-num">#${issue.number}</span><span class="pm-auth">👤 ${xss(author)}</span><span class="pm-date">${date}</span></div>
-    <div class="pl-title">${xss(issue.title)}</div>
-    <div class="pl-body">${xss(body)}${(issue.body||'').length>200?'…':''}</div>
-    <div class="pl-votes">
-      <button class="vote-btn up" onclick="vote(${issue.number},'+1',this)">👍 ${issue.react?.up||0}</button>
-      <button class="vote-btn down" onclick="vote(${issue.number},'-1',this)">👎 ${issue.react?.down||0}</button>
-      <a href="${issue.html_url}" target="_blank" rel="noopener" class="pl-gh">GitHub ↗</a>
-    </div>`;
-  return card;
-}
-
-async function vote(num,reaction,btn){
-  btn.disabled=true;
-  const orig=btn.innerHTML;
-  btn.innerHTML='<span class="spinner" style="width:11px;height:11px;border-width:1.5px"></span>';
-  try{
-    const res=await fetch(`${GH.base}/repos/${GH.owner}/${GH.repo}/issues/${num}/reactions`,{method:'POST',headers:GH.hdrs(),body:JSON.stringify({content:reaction})});
-    if(res.status===200||res.status===201){ btn.classList.add('voted'); const n=parseInt(orig.match(/\d+/)?.[0]||'0'); btn.innerHTML=`${reaction==='+1'?'👍':'👎'} ${n+1}`; }
-    else btn.innerHTML=orig;
-  }catch{ btn.innerHTML=orig; }
-  finally{ btn.disabled=false; }
-}
-
-async function submitProposal(){
-  const authorEl=document.getElementById('p-author');
-  const titleEl=document.getElementById('p-title');
-  const bodyEl=document.getElementById('p-body');
-  const title=titleEl.value.trim();
-  const body=bodyEl.value.trim();
-  const author=authorEl.value.trim();
-  if(!title||!body){ showFS('Bitte Titel und Beschreibung ausfüllen.','s-err'); return; }
-  const bl=checkBL(title+' '+body);
-  if(bl.blocked){ showFS(bl.msg,'s-warn'); return; }
-  showFS('<span class="spinner"></span>&nbsp;Wird eingereicht…','s-load');
-  try{
-    const res=await fetch(`${GH.base}/repos/${GH.owner}/${GH.repo}/issues`,{method:'POST',headers:GH.hdrs(),body:JSON.stringify({title,body:`${body}\n\n---\n*Eingereicht von: ${author||'Anonym'} · B VI Lernwebsite*`,labels:[GH.label]})});
-    if(!res.ok){ const e=await res.json(); throw new Error(e.message||`Fehler ${res.status}`); }
-    showFS('✓ Vorschlag eingereicht!','s-ok');
-    authorEl.value=titleEl.value=bodyEl.value='';
-    proposalsLoaded=false;
-    setTimeout(loadProposals,1800);
-  }catch(err){ showFS(`⚠️ ${err.message}`,'s-err'); }
-}
-
-function showFS(msg,cls){
-  const el=document.getElementById('form-status');
-  el.className=`status-msg ${cls}`; el.innerHTML=msg; el.classList.remove('hidden');
-}
-
-/* ======================================================================
    FLASHCARD-DATEN (61 Karten)
 ====================================================================== */
 const FLASHCARD_DATA = [
@@ -1423,7 +1315,7 @@ const DARKMODE = { init(){}, toggle(){} };
 ====================================================================== */
 const NOTES = (function(){
   let _view = null;
-  const SKIP = new Set(['v-home','v-flashcards','v-quiz','v-simulator','v-vorschlaege','v-abkuerzungen','v-app']);
+  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-abkuerzungen','v-app']);
   function key(){ return 'bvi_note_'+(_view||'home'); }
   function getBtn(){
     if(!_view) return null;
@@ -1540,7 +1432,7 @@ const BOOKMARKS = (function(){
 /* ======================================================================
    LESEFORTSCHRITT
 ====================================================================== */
-const NO_PROG = new Set(['v-home','v-flashcards','v-quiz','v-simulator','v-vorschlaege','v-abkuerzungen','v-app']);
+const NO_PROG = new Set(['v-home','v-flashcards','v-simulator','v-abkuerzungen','v-app']);
 function updateReadProgress(){
   const bar = document.getElementById('read-prog');
   const fill = document.getElementById('read-prog-fill');
@@ -1558,7 +1450,7 @@ function updateReadProgress(){
 ====================================================================== */
 const TOC = (function(){
   let el=null, sections=[];
-  const SKIP = new Set(['v-home','v-flashcards','v-quiz','v-simulator','v-vorschlaege','v-abkuerzungen','v-app']);
+  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-abkuerzungen','v-app']);
   return {
     build(){
       if(!el){ el=document.createElement('nav'); el.className='toc-float'; document.body.appendChild(el); }
@@ -2431,120 +2323,6 @@ const TTS = (function(){
   };
 })();
 
-/* ======================================================================
-   QUIZ – Multiple-Choice
-====================================================================== */
-const QUIZ = (function(){
-  const CATS=['gal','sfs','hlfs','ibk','vak','feuak','idf'];
-  let deck=[],curIdx=0,score=0,activeFilters=new Set(CATS),answered=false;
-  function strip(s){ const d=document.createElement('div');d.innerHTML=s;return d.textContent||''; }
-  function getDeck(){
-    return activeFilters.size===CATS.length?[...FLASHCARD_DATA]
-      :FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f)));
-  }
-  function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
-  function keyPhrase(raw){
-    const t=strip(raw);
-    const m=t.match(/^.{15,}?[.!?](?=\s|$)/);
-    const s=m?m[0].trim():t;
-    return s.length>130?s.slice(0,128)+'…':s||t.slice(0,130);
-  }
-  function getWrong(card,pool){
-    const correctPhrase=keyPhrase(card.a);
-    const cLen=correctPhrase.length;
-    const scored=pool.filter(c=>c.id!==card.id&&keyPhrase(c.a)!==correctPhrase&&keyPhrase(c.a).length>12)
-      .map(c=>{
-        const phrase=keyPhrase(c.a);
-        const catSc=c.cat===card.cat?10:c.cat.split('·')[0]===card.cat.split('·')[0]?4:0;
-        const lenSim=1-Math.abs(phrase.length-cLen)/Math.max(phrase.length,cLen,1);
-        return {phrase,sc:catSc*2+lenSim*3+Math.random()};
-      })
-      .sort((a,b)=>b.sc-a.sc);
-    const out=[];
-    for(const {phrase} of scored){ if(out.length>=3) break; if(!out.includes(phrase)) out.push(phrase); }
-    return out;
-  }
-  function updateFilter(){
-    const all=CATS.every(c=>activeFilters.has(c));
-    document.querySelectorAll('.qz-f-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter==='all'?all:!all&&activeFilters.has(b.dataset.filter)));
-  }
-  function renderCard(){
-    const box=document.getElementById('quiz-container');if(!box) return;
-    if(curIdx>=deck.length){ renderEnd(); return; }
-    const card=deck[curIdx];
-    const correct=keyPhrase(card.a);
-    const opts=shuffle([correct,...getWrong(card,FLASHCARD_DATA).slice(0,3)]);
-    answered=false;
-    const pct=Math.round(curIdx/deck.length*100);
-    box.innerHTML=`
-      <div class="quiz-prog-row">
-        <div class="quiz-prog-bar"><div class="quiz-prog-fill" style="width:${pct}%"></div></div>
-        <span class="quiz-prog-info">${curIdx+1}/${deck.length} · ✓ ${score}</span>
-      </div>
-      <div class="quiz-cat">${xss(card.cat)}</div>
-      <div class="quiz-q">${card.q}</div>
-      <div class="quiz-opts" id="quiz-opts">
-        ${opts.map(o=>`<button class="quiz-opt" onclick="QUIZ.pick(${JSON.stringify(o)},${JSON.stringify(correct)},this)">${xss(o)}</button>`).join('')}
-      </div>
-      <div id="quiz-next" style="display:none;text-align:center;margin-top:1.25rem">
-        <button class="btn btn-gold" onclick="QUIZ.next()">Weiter →</button>
-      </div>`;
-  }
-  function renderEnd(){
-    const box=document.getElementById('quiz-container');if(!box) return;
-    const pct=deck.length?Math.round(score/deck.length*100):0;
-    const ico=pct>=80?'🏆':pct>=50?'📖':'🔄';
-    if(pct>=80) launchConfetti();
-    box.innerHTML=`
-      <div class="fc-end">
-        <div class="fc-end-ico">${ico}</div>
-        <div class="fc-end-title">${pct>=80?'Ausgezeichnet!':pct>=50?'Gut gemacht!':'Weiter üben!'}</div>
-        <div class="fc-end-sub">${score} von ${deck.length} richtig (${pct}%)</div>
-        <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:1.25rem">
-          <button class="btn btn-gold" onclick="QUIZ.start()">Nochmal</button>
-          <button class="btn btn-ghost" onclick="NAV.go('v-flashcards','Lernkarten')">Zu den Lernkarten</button>
-        </div>
-      </div>`;
-  }
-  return {
-    showStart(){
-      const box=document.getElementById('quiz-container');if(!box) return;
-      const total=getDeck().length;
-      box.innerHTML=`
-        <div class="fc-end">
-          <div class="fc-end-ico">🧠</div>
-          <div class="fc-end-title">Quiz-Modus</div>
-          <div class="fc-end-sub">Multiple-Choice aus ${total} Karten – je Runde bis zu 20 Fragen. Passende Antwortoptionen aus gleichem Themenbereich.</div>
-          <button class="btn btn-gold" onclick="QUIZ.start()">Quiz starten →</button>
-        </div>`;
-      updateFilter();
-    },
-    start(){
-      const pool=getDeck();
-      deck=shuffle([...pool]).slice(0,Math.min(20,pool.length));
-      curIdx=0; score=0; answered=false;
-      renderCard(); updateFilter();
-      if(typeof STREAK!=='undefined') STREAK.record();
-    },
-    pick(selected,correct,btn){
-      if(answered) return; answered=true;
-      document.querySelectorAll('.quiz-opt').forEach(b=>{ b.disabled=true; if(b.textContent===correct) b.classList.add('qo-correct'); });
-      if(selected===correct){ btn.classList.add('qo-correct'); score++; if(navigator.vibrate) navigator.vibrate([30]); }
-      else { btn.classList.add('qo-wrong'); if(navigator.vibrate) navigator.vibrate([20,50,20]); }
-      const n=document.getElementById('quiz-next');if(n) n.style.display='block';
-    },
-    next(){ curIdx++; renderCard(); },
-    setFilter(f){
-      if(f==='all') activeFilters=new Set(CATS);
-      else {
-        if(activeFilters.size===CATS.length) activeFilters=new Set([f]);
-        else if(activeFilters.has(f)){ activeFilters.delete(f); if(!activeFilters.size) activeFilters=new Set(CATS); }
-        else activeFilters.add(f);
-      }
-      updateFilter(); this.showStart();
-    }
-  };
-})();
 
 /* ======================================================================
    STATS – Lernstatistiken

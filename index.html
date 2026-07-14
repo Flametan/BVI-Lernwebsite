@@ -37,9 +37,6 @@
   <button class="search-btn-hdr icon-only" onclick="SEARCH.toggle()" title="Suchen (Ctrl+K)">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   </button>
-  <button class="reset-btn-hdr" onclick="SETTINGS.resetTopics()" title="Lernfortschritt zurücksetzen">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
-  </button>
   <button class="stats-btn-hdr" onclick="STATS.open()" title="Lernstatistiken">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
   </button>
@@ -116,7 +113,12 @@
   <div class="search-box stats-box" onclick="event.stopPropagation()">
     <div class="settings-hdr">
       <span class="settings-title">📊 Lernstatistiken</span>
-      <button class="search-close-btn" onclick="STATS.close()" title="Schließen">✕</button>
+      <div style="display:flex;align-items:center;gap:.5rem">
+        <button class="btn btn-ghost" style="font-size:.73rem;padding:.3rem .7rem" onclick="SETTINGS.resetTopics()" title="Lernfortschritt zurücksetzen">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>Zurücksetzen
+        </button>
+        <button class="search-close-btn" onclick="STATS.close()" title="Schließen">✕</button>
+      </div>
     </div>
     <div id="stats-content" style="padding:.25rem 0 .5rem"></div>
   </div>
@@ -239,22 +241,10 @@
           <div class="tile-desc">271 Flashcards · GAL, SFS, HLFS, IBK, VAk, FeuAK, IdF · Lernstand gespeichert</div>
           <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
-        <div class="glass-tile" onclick="NAV.go('v-quiz','Quiz')">
-          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <div class="tile-name">Quiz</div>
-          <div class="tile-desc">Multiple-Choice aus Lernkarten · Kategorie wählbar · Sofort-Feedback</div>
-          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
         <div class="glass-tile" onclick="NAV.go('v-abkuerzungen','Abkürzungen')">
           <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
           <div class="tile-name">Abkürzungen</div>
           <div class="tile-desc">100+ Fachbegriffe · Fahrzeuge, Recht, Taktik, Führung · durchsuchbar</div>
-          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-        <div class="glass-tile" onclick="NAV.go('v-vorschlaege','Verbesserungsvorschläge')">
-          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><path d="M12 18a6 6 0 0 0 0-12"/><path d="M12 18v4"/><path d="M8 22h8"/></svg>
-          <div class="tile-name">Vorschläge</div>
-          <div class="tile-desc">Verbesserungen einreichen &amp; bewerten</div>
           <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
         <div id="apk-tile" class="glass-tile" onclick="NAV.go('v-app','App')">
@@ -6692,104 +6682,6 @@
   </div>
 </div>
 
-
-<!-- ============================================================ QUIZ ============================================================ -->
-<div id="v-quiz" class="view detail-view">
-  <div class="page-hero"><div class="phi">
-    <p class="page-eyebrow">Multiple-Choice · Aus Lernkarten generiert</p>
-    <h1 class="page-title">Quiz<span class="accent">-Modus</span></h1>
-    <p class="page-lead">Teste dein Wissen mit Multiple-Choice-Fragen aus den Lernkarten. Die falschen Antwortoptionen kommen aus dem gleichen Themenbereich.</p>
-  </div></div>
-  <div class="fc-filter-row">
-    <button class="qz-f-btn fc-f-btn active" data-filter="all" onclick="QUIZ.setFilter('all')">Alle</button>
-    <button class="qz-f-btn fc-f-btn" data-filter="gal" onclick="QUIZ.setFilter('gal')">GAL</button>
-    <button class="qz-f-btn fc-f-btn" data-filter="sfs" onclick="QUIZ.setFilter('sfs')">SFS Regensburg</button>
-    <button class="qz-f-btn fc-f-btn" data-filter="hlfs" onclick="QUIZ.setFilter('hlfs')">HLFS Kassel</button>
-    <button class="qz-f-btn fc-f-btn" data-filter="ibk" onclick="QUIZ.setFilter('ibk')">IBK Heyrothsberge</button>
-    <button class="qz-f-btn fc-f-btn" data-filter="vak" onclick="QUIZ.setFilter('vak')">VAk Berlin</button>
-    <button class="qz-f-btn fc-f-btn" data-filter="feuak" onclick="QUIZ.setFilter('feuak')">FeuAK Hamburg</button>
-    <button class="qz-f-btn fc-f-btn" data-filter="idf" onclick="QUIZ.setFilter('idf')">IdF Münster</button>
-  </div>
-  <div class="pc">
-    <div id="quiz-container"></div>
-  </div>
-</div>
-<!-- ============================================================ APP ============================================================ -->
-<div id="v-app" class="view detail-view">
-  <div class="page-hero"><div class="phi">
-    <p class="page-eyebrow">iOS · Android · Offline</p>
-    <h1 class="page-title">B VI <span class="accent">App</span></h1>
-    <p class="page-lead">Installiere die Lernapp auf deinem Gerät – als PWA direkt aus dem Browser, oder als APK.</p>
-  </div></div>
-  <div class="pc">
-
-    <!-- PWA Section -->
-    <h2 class="section-h">Als App installieren</h2>
-    <p class="section-lead-txt">Öffnet sich im Vollbild, funktioniert offline und ist immer automatisch aktuell.</p>
-
-    <div class="app-platform-grid">
-      <!-- Android -->
-      <div class="app-platform-card">
-        <div class="app-platform-hdr">
-          <span class="app-platform-os">🤖 Android</span>
-        </div>
-        <ol class="app-steps">
-          <li>Menü <strong>⋮</strong> antippen</li>
-          <li><strong>„App installieren"</strong> oder „Zum Startbildschirm hinzufügen" wählen</li>
-          <li>Bestätigen – fertig ✓</li>
-        </ol>
-      </div>
-      <!-- iOS -->
-      <div class="app-platform-card">
-        <div class="app-platform-hdr">
-          <span class="app-platform-os">🍎 iPhone · iPad</span>
-        </div>
-        <ol class="app-steps">
-          <li>Teilen-Button <strong>⬆</strong> antippen</li>
-          <li><strong>„Zum Home-Bildschirm"</strong> wählen</li>
-          <li>„Hinzufügen" – fertig ✓</li>
-        </ol>
-      </div>
-    </div>
-
-    <!-- APK Section -->
-    <div class="apk-dl-block">
-      <h2 class="section-h" style="margin-bottom:.5rem">Android APK</h2>
-      <p class="section-lead-txt">Direkte Installation als App-Datei für Android.</p>
-      <div id="apk-chromium-warn" class="apk-warn hidden">
-        ⚠ Chromiumbrowser entdeckt – Wechsel zum downloaden in Firefox oder wende dich an die WhatsApp-Gruppe
-      </div>
-      <a class="apk-dl-btn" href="https://github.com/Flametan/BVI-Lernwebsite/releases/download/android-latest/bvi-lernwebsite.apk">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12m-4-4 4 4 4-4"/><path d="M4 20h16"/></svg>
-        APK herunterladen
-      </a>
-    </div>
-
-  </div>
-</div>
-
-<!-- ============================================================ VORSCHLÄGE ============================================================ -->
-<div id="v-vorschlaege" class="view detail-view">
-  <div class="page-hero"><div class="phi"><p class="page-eyebrow">Community-Feature · GitHub Issues API</p><h1 class="page-title">Verbesserungs<span class="accent">vorschläge</span></h1><p class="page-lead">Vorschläge werden als GitHub Issues gespeichert – für alle sichtbar und bewertbar.</p></div></div>
-  <div class="pc">
-    <div id="gh-status" class="status-msg s-load"><span class="spinner"></span>&nbsp;Verbinde mit GitHub…</div>
-    <div class="fb-layout">
-      <div>
-        <div id="proposals-list" class="pl-list"></div>
-        <div id="proposals-loading" style="text-align:center;padding:2rem;color:var(--c-slate);font-size:.83rem">Vorschläge werden geladen…</div>
-        <div id="proposals-empty" class="hidden" style="text-align:center;padding:2rem;color:var(--c-slate);font-size:.83rem">Noch keine Vorschläge. Sei der Erste!</div>
-      </div>
-      <div class="form-card">
-        <div class="form-card-title">📝 Vorschlag einreichen</div>
-        <div id="form-status" class="hidden"></div>
-        <div class="form-group"><label class="form-label" for="p-author">Name / Pseudonym</label><input type="text" id="p-author" class="form-input" placeholder="z. B. BM Mustermann" maxlength="50"/></div>
-        <div class="form-group"><label class="form-label" for="p-title">Titel</label><input type="text" id="p-title" class="form-input" placeholder="Kurze Überschrift" maxlength="80"/></div>
-        <div class="form-group"><label class="form-label" for="p-body">Beschreibung</label><textarea id="p-body" class="form-textarea" placeholder="Was fehlt? Was könnte besser sein?"></textarea></div>
-        <div style="display:flex;justify-content:flex-end;margin-top:.75rem"><button class="btn btn-red" onclick="submitProposal()">Einreichen →</button></div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ── GAL · 05 – ATEMGIFTE ─────────────────────────────────────────────────── -->
 <div id="v-gal-atemgifte" class="view detail-view">
