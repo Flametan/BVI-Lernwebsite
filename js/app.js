@@ -744,6 +744,7 @@ const SIM = {
 function mk(tag,cls){ const e=document.createElement(tag); e.className=cls; return e; }
 function xss(s){ if(!s) return ''; const d=document.createElement('div'); d.appendChild(document.createTextNode(s)); return d.innerHTML; }
 
+/* ======================================================================
    FLASHCARD-DATEN (61 Karten)
 ====================================================================== */
 const FLASHCARD_DATA = [
