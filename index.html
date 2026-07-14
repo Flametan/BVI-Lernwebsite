@@ -108,12 +108,20 @@
     <div class="notes-hdr">
       <span class="settings-title">📝 Notizen</span>
       <div style="display:flex;align-items:center;gap:.5rem">
+        <button class="btn btn-ghost" style="font-size:.73rem;padding:.3rem .7rem" onclick="NOTES.share()" title="Notiz teilen">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Teilen
+        </button>
         <button class="btn btn-ghost" style="font-size:.73rem;padding:.3rem .7rem" onclick="NOTES.clear()">Löschen</button>
         <button class="search-close-btn" onclick="NOTES.close()" title="Schließen (Esc)">✕</button>
       </div>
     </div>
     <textarea id="notes-textarea" class="notes-area" placeholder="Deine Notizen zu dieser Seite – wird lokal gespeichert …"></textarea>
-    <div class="notes-footer">Gespeichert in deinem Browser · nur du kannst diese Notizen sehen</div>
+    <div class="notes-footer" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;">
+      <span>Gespeichert in deinem Browser · nur du kannst diese Notizen sehen</span>
+      <button class="btn btn-ghost" style="font-size:.68rem;padding:.2rem .6rem;flex-shrink:0" onclick="NOTES.exportAll()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Alle exportieren
+      </button>
+    </div>
   </div>
 </div>
 

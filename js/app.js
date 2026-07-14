@@ -1430,6 +1430,35 @@ const NOTES = (function(){
     clear(){
       const ta=document.getElementById('notes-textarea'); if(ta) ta.value='';
       localStorage.removeItem(key()); updateBtn();
+    },
+    share(){
+      const ta = document.getElementById('notes-textarea');
+      const text = ta ? ta.value.trim() : '';
+      if(!text){ TOAST.show('Keine Notiz zum Teilen'); return; }
+      const title = 'Notiz – B VI Lernwebsite';
+      if(navigator.share){
+        navigator.share({title, text}).catch(()=>{});
+      } else {
+        navigator.clipboard.writeText(text)
+          .then(()=>TOAST.show('In Zwischenablage kopiert',{type:'ok'}))
+          .catch(()=>TOAST.show('Teilen nicht unterstützt'));
+      }
+    },
+    exportAll(){
+      const entries = [];
+      for(const [k,v] of Object.entries(localStorage)){
+        if(!k.startsWith('bvi_note_') || !v.trim()) continue;
+        const id = k.replace('bvi_note_','');
+        const label = id === 'home' ? 'Startseite' : id.replace(/^v-/,'').replace(/-/g,' ');
+        entries.push('### '+label+'\n'+v.trim());
+      }
+      if(!entries.length){ TOAST.show('Keine Notizen vorhanden'); return; }
+      const blob = new Blob([entries.join('\n\n---\n\n')], {type:'text/plain;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href=url; a.download='bvi-notizen.txt'; a.click();
+      URL.revokeObjectURL(url);
+      TOAST.show('Notizen exportiert',{type:'ok'});
     }
   };
 })();
