@@ -3,9 +3,6 @@ name: Build Android APK
 on:
   push:
     branches: [main]
-    paths:
-      - 'android/**'
-      - '.github/workflows/build-apk.yml'
   workflow_dispatch:
 
 permissions:
@@ -44,15 +41,23 @@ jobs:
       - name: Rename APK
         run: cp android/app/build/outputs/apk/debug/app-debug.apk bvi-lernwebsite.apk
 
+      - name: Delete old release and tag (if exists)
+        run: |
+          gh release delete android-latest --yes --cleanup-tag || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Publish to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: android-latest
-          name: Android App
+          name: Android App (aktuellste Version)
           prerelease: false
           make_latest: true
           body: |
             **B VI – Höherer Dienst** als Android-App.
 
             Mindestanforderung: Android 8.0 (API 26)
+
+            Diese APK wird bei jedem Update der Website automatisch neu gebaut.
           files: bvi-lernwebsite.apk

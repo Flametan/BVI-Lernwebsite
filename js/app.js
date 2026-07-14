@@ -1351,7 +1351,9 @@ const NOTES = (function(){
       +'<span class="tts-lbl">Vorlesen</span>'
       +'</button>'
       +'</div>';
-    viewEl.appendChild(w);
+    const pc = viewEl.querySelector('.pc');
+    if(pc) pc.insertBefore(w, pc.firstChild);
+    else viewEl.appendChild(w);
   }
   return {
     setView(id){ _view = id; ensureWidget(); updateBtn(); },
