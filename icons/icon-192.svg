@@ -7,7 +7,7 @@
       <stop offset="100%" stop-color="#152B52"/>
     </linearGradient>
   </defs>
-  <path d="M96 28C96 28 62 62 62 88C62 106 77 120 96 120C115 120 130 106 130 88C130 62 96 28 96 28Z" fill="#C9A84C" opacity="0.9"/>
-  <path d="M96 52C96 52 76 72 76 88C76 98 85 106 96 106C107 106 116 98 116 88C116 72 96 52 96 52Z" fill="#fff" opacity="0.85"/>
-  <text x="96" y="158" text-anchor="middle" font-family="Georgia,serif" font-size="28" font-weight="700" fill="#C9A84C" letter-spacing="2">B VI</text>
+  <path d="M96 38C96 38 62 72 62 98C62 116 77 130 96 130C115 130 130 116 130 98C130 72 96 38 96 38Z" fill="#C9A84C" opacity="0.9"/>
+  <path d="M96 62C96 62 76 82 76 98C76 108 85 116 96 116C107 116 116 108 116 98C116 82 96 62 96 62Z" fill="#fff" opacity="0.85"/>
+  <text x="96" y="162" text-anchor="middle" font-family="Georgia,serif" font-size="28" font-weight="700" fill="#C9A84C" letter-spacing="2">B VI</text>
 </svg>
