@@ -7,7 +7,6 @@
     </linearGradient>
   </defs>
   <rect width="512" height="512" rx="80" fill="url(#g)"/>
-  <path d="M256 97C256 97 164 189 164 255C164 303 205 341 256 341C307 341 348 303 348 255C348 189 256 97 256 97Z" fill="#C9A84C" opacity="0.9"/>
-  <path d="M256 161C256 161 204 213 204 255C204 281 228 301 256 301C284 301 308 281 308 255C308 213 256 161 256 161Z" fill="#fff" opacity="0.85"/>
-  <text x="256" y="438" text-anchor="middle" font-family="Georgia,serif" font-size="76" font-weight="700" fill="#C9A84C" letter-spacing="6">B VI</text>
+  <path d="M256 134C256 134 164 226 164 292C164 340 205 378 256 378C307 378 348 340 348 292C348 226 256 134 256 134Z" fill="#C9A84C" opacity="0.9"/>
+  <path d="M256 198C256 198 204 250 204 292C204 318 228 338 256 338C284 338 308 318 308 292C308 250 256 198 256 198Z" fill="#fff" opacity="0.85"/>
 </svg>
