@@ -2135,6 +2135,14 @@ const ABK = (function(){
    DATEI-DOWNLOAD – plattformübergreifend (Website, PWA, APK/WebView)
 ====================================================================== */
 function downloadFile(url, filename){
+  // Im WebView löst location.href den DownloadListener aus.
+  // Im Browser-Tab versuchen wir fetch+Blob; Fallback: direkte Navigation.
+  var isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+  var isAndroidApp = /wv/.test(navigator.userAgent) || (isStandalone && /Android/.test(navigator.userAgent));
+  if(isAndroidApp){
+    window.location.href = url;
+    return;
+  }
   fetch(url)
     .then(function(r){ if(!r.ok) throw new Error('fetch'); return r.blob(); })
     .then(function(blob){
@@ -2147,7 +2155,6 @@ function downloadFile(url, filename){
       setTimeout(function(){ URL.revokeObjectURL(blobUrl); a.remove(); }, 2000);
     })
     .catch(function(){
-      // Fallback: direkte Navigation (iOS Safari, ältere WebViews)
       window.location.href = url;
     });
 }
