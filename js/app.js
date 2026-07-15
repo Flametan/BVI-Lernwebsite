@@ -2132,6 +2132,27 @@ const ABK = (function(){
 })();
 
 /* ======================================================================
+   DATEI-DOWNLOAD – plattformübergreifend (Website, PWA, APK/WebView)
+====================================================================== */
+function downloadFile(url, filename){
+  fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('fetch'); return r.blob(); })
+    .then(function(blob){
+      var a = document.createElement('a');
+      var blobUrl = URL.createObjectURL(blob);
+      a.href = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function(){ URL.revokeObjectURL(blobUrl); a.remove(); }, 2000);
+    })
+    .catch(function(){
+      // Fallback: direkte Navigation (iOS Safari, ältere WebViews)
+      window.location.href = url;
+    });
+}
+
+/* ======================================================================
    CHROMIUM-ERKENNUNG – Warnung beim APK-Download
 ====================================================================== */
 (function(){
