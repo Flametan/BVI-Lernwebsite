@@ -1,18 +1,17 @@
 package de.bvi.lernwebsite
 
 import android.annotation.SuppressLint
-import android.app.DownloadManager
-import android.content.Context
-import android.net.Uri
+import android.content.ContentValues
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.webkit.DownloadListener
-import android.webkit.URLUtil
+import android.provider.MediaStore
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,29 +33,48 @@ class MainActivity : AppCompatActivity() {
 
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                val url = request.url.toString()
+                if (url.contains("BHKG_NRW_Kommentar.pdf")) {
+                    saveAssetToDownloads("BHKG_NRW_Kommentar.pdf")
+                    return true
+                }
                 return false
             }
         }
-
-        webView.setDownloadListener(DownloadListener { url, userAgent, contentDisposition, mimetype, _ ->
-            val filename = URLUtil.guessFileName(url, contentDisposition, mimetype)
-            val request = DownloadManager.Request(Uri.parse(url)).apply {
-                setMimeType(mimetype)
-                addRequestHeader("User-Agent", userAgent)
-                setTitle(filename)
-                setDescription("Wird heruntergeladen…")
-                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename)
-            }
-            val dm = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-            dm.enqueue(request)
-            Toast.makeText(applicationContext, "Download gestartet", Toast.LENGTH_SHORT).show()
-        })
 
         if (savedInstanceState != null) {
             webView.restoreState(savedInstanceState)
         } else {
             webView.loadUrl("https://flametan.github.io/BVI-Lernwebsite/")
+        }
+    }
+
+    private fun saveAssetToDownloads(filename: String) {
+        try {
+            val input = assets.open(filename)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val values = ContentValues().apply {
+                    put(MediaStore.Downloads.DISPLAY_NAME, filename)
+                    put(MediaStore.Downloads.MIME_TYPE, "application/pdf")
+                    put(MediaStore.Downloads.IS_PENDING, 1)
+                }
+                val uri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
+                uri?.let {
+                    contentResolver.openOutputStream(it)?.use { os -> input.copyTo(os) }
+                    values.clear()
+                    values.put(MediaStore.Downloads.IS_PENDING, 0)
+                    contentResolver.update(it, values, null, null)
+                }
+            } else {
+                val outFile = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                    filename
+                )
+                outFile.outputStream().use { input.copyTo(it) }
+            }
+            Toast.makeText(this, "PDF in Downloads gespeichert", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Fehler beim Speichern", Toast.LENGTH_SHORT).show()
         }
     }
 
