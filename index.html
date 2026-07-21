@@ -76,6 +76,54 @@
     <div class="search-footer"><span><kbd>↑↓</kbd> navigieren</span><span><kbd>↵</kbd> öffnen</span><span><kbd>Esc</kbd> schließen</span></div>
   </div>
 </div>
+<!-- ONBOARDING OVERLAY -->
+<div id="onboarding-overlay" class="search-overlay hidden">
+  <div class="search-box ob-box" onclick="event.stopPropagation()">
+    <div class="ob-steps">
+      <!-- Step 1 -->
+      <div class="ob-step active">
+        <div class="ob-icon">🔥</div>
+        <div class="ob-title">Willkommen bei B&nbsp;VI</div>
+        <div class="ob-desc">Deine Lernplattform für den Höheren Dienst — alles an einem Ort. In wenigen Schritten zeigen wir dir, was die App kann.</div>
+      </div>
+      <!-- Step 2 -->
+      <div class="ob-step">
+        <div class="ob-icon">📚</div>
+        <div class="ob-title">Lernmodule &amp; Fortschritt</div>
+        <div class="ob-desc">Die Kacheln auf der Startseite führen zu den Lernthemen. Besuchte Seiten erhalten automatisch ein grünes Häkchen — so siehst du immer, wie weit du bist.</div>
+      </div>
+      <!-- Step 3 -->
+      <div class="ob-step">
+        <div class="ob-icon">🔍</div>
+        <div class="ob-title">Suche &amp; Lernkarten</div>
+        <div class="ob-desc">Mit dem <strong>Suchen-Button</strong> (oder Strg+K) findest du jeden Begriff blitzschnell. Die <strong>Lernkarten</strong> (271 Karten) helfen dir beim gezielten Abfragen — erreichbar über die Startseite.</div>
+      </div>
+      <!-- Step 4 -->
+      <div class="ob-step">
+        <div class="ob-icon">📝</div>
+        <div class="ob-title">Notizen &amp; Lesezeichen</div>
+        <div class="ob-desc">Auf jeder Inhaltsseite kannst du über den <strong>Stift-Button</strong> im Header eigene Notizen hinterlegen — sie bleiben gespeichert. Mit dem <strong>Lesezeichen-Button</strong> merkst du dir Seiten für später.</div>
+      </div>
+      <!-- Step 5 -->
+      <div class="ob-step">
+        <div class="ob-icon">⚙️</div>
+        <div class="ob-title">Einstellungen &amp; Timer</div>
+        <div class="ob-desc">Im <strong>Einstellungen-Menü</strong> findest du den Pomodoro-Timer, deine Lernstatistik, Schriftgröße und mehr. Der Timer erscheint im Header, sobald er läuft.</div>
+      </div>
+    </div>
+    <div class="ob-dots">
+      <span class="ob-dot active" onclick="ONBOARD.goto(0)"></span>
+      <span class="ob-dot" onclick="ONBOARD.goto(1)"></span>
+      <span class="ob-dot" onclick="ONBOARD.goto(2)"></span>
+      <span class="ob-dot" onclick="ONBOARD.goto(3)"></span>
+      <span class="ob-dot" onclick="ONBOARD.goto(4)"></span>
+    </div>
+    <div class="ob-actions">
+      <button class="btn btn-ghost ob-skip" onclick="ONBOARD.close()">Überspringen</button>
+      <button class="btn btn-gold ob-next" onclick="ONBOARD.next()">Weiter →</button>
+    </div>
+  </div>
+</div>
 <!-- STATS OVERLAY -->
 <div id="stats-overlay" class="search-overlay hidden" onclick="if(event.target===this)STATS.close()">
   <div class="search-box stats-box" onclick="event.stopPropagation()">
