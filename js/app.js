@@ -2479,6 +2479,29 @@ const PERF=(function(){
 })();
 
 /* ======================================================================
+   SETTINGS2 – Einstellungs-Overlay (Reset, Schriftart)
+====================================================================== */
+const SETTINGS2=(function(){
+  function applyFont(ff){
+    document.documentElement.classList.remove('ff-serif','ff-mono');
+    if(ff==='serif') document.documentElement.classList.add('ff-serif');
+    else if(ff==='mono') document.documentElement.classList.add('ff-mono');
+    localStorage.setItem('bvi_font_family',ff||'sans');
+    document.querySelectorAll('.s2-font-btn').forEach(b=>b.classList.toggle('active',b.dataset.ff===(ff||'sans')));
+  }
+  return {
+    open(){
+      document.getElementById('settings2-overlay').classList.remove('hidden');
+      const ff=localStorage.getItem('bvi_font_family')||'sans';
+      document.querySelectorAll('.s2-font-btn').forEach(b=>b.classList.toggle('active',b.dataset.ff===ff));
+    },
+    close(){ document.getElementById('settings2-overlay').classList.add('hidden'); },
+    setFont(ff){ applyFont(ff); },
+    restoreFont(){ applyFont(localStorage.getItem('bvi_font_family')||'sans'); }
+  };
+})();
+
+/* ======================================================================
    SHARE – Direktlink kopieren
 ====================================================================== */
 const SHARE=(function(){
@@ -2536,6 +2559,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   STREAK.render();
   NOTIF.check();
   PERF.apply();
+  SETTINGS2.restoreFont();
   RECENT.render();
   DARKMODE.init();
   document.querySelectorAll('.pc table').forEach(t=>{
@@ -2547,8 +2571,15 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
   document.addEventListener('keydown', e => {
     if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); SEARCH.open(); return; }
+    if(e.key==='?'&&!e.target.matches('input,textarea')){
+      e.preventDefault();
+      document.getElementById('shortcuts-overlay').classList.toggle('hidden');
+      return;
+    }
     if(e.key==='Escape'){
       if(!document.getElementById('search-overlay').classList.contains('hidden')){ SEARCH.close(); return; }
+      if(!document.getElementById('shortcuts-overlay').classList.contains('hidden')){ document.getElementById('shortcuts-overlay').classList.add('hidden'); return; }
+      if(!document.getElementById('settings2-overlay').classList.contains('hidden')){ SETTINGS2.close(); return; }
       SETTINGS.closeAllPanels();
       if(document.getElementById('stats-overlay')&&!document.getElementById('stats-overlay').classList.contains('hidden')){ STATS.close(); return; }
       if(!document.getElementById('notes-overlay').classList.contains('hidden')){ NOTES.close(); return; }
