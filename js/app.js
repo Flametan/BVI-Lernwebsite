@@ -2730,7 +2730,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     },{passive:true});
   })();
   // Online/Offline-Indikator
-  function updateOnlineStatus(){ document.getElementById('offline-badge')?.classList.toggle('hidden',navigator.onLine); }
+  function updateOnlineStatus(){
+    document.getElementById('offline-badge')?.classList.toggle('hidden',navigator.onLine);
+    document.body.classList.toggle('offline',!navigator.onLine);
+  }
   window.addEventListener('offline', updateOnlineStatus);
   window.addEventListener('online', updateOnlineStatus);
   updateOnlineStatus();
