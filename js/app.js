@@ -2599,8 +2599,6 @@ const SETTINGS2=(function(){
   return {
     open(){
       document.getElementById('settings2-overlay').classList.remove('hidden');
-      const ff=localStorage.getItem('bvi_font_family')||'sans';
-      document.querySelectorAll('.s2-font-btn').forEach(b=>b.classList.toggle('active',b.dataset.ff===ff));
     },
     close(){ document.getElementById('settings2-overlay').classList.add('hidden'); },
     setFont(ff){ applyFont(ff); },
