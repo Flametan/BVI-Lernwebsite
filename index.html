@@ -139,18 +139,24 @@
         <button class="btn btn-ghost s2-btn" onclick="SETTINGS2.close();POMO.open()">Timer öffnen →</button>
       </div>
       <div class="s2-section">
-        <div class="s2-title">🔤 Schriftgröße</div>
-        <div class="fs-opts-row" style="margin-top:.4rem">
-          <button class="fs-opt" data-sz="sm" onclick="SETTINGS.setFontSize('sm')">A−</button>
-          <button class="fs-opt active" data-sz="md" onclick="SETTINGS.setFontSize('md')">A</button>
-          <button class="fs-opt" data-sz="lg" onclick="SETTINGS.setFontSize('lg')">A+</button>
-          <button class="fs-opt" data-sz="xl" onclick="SETTINGS.setFontSize('xl')">A++</button>
-        </div>
-      </div>
-      <div class="s2-section">
         <div class="s2-title">⚡ Performance-Modus</div>
         <p class="s2-desc">Reduziert Animationen und Blur-Effekte für flüssigeres Scrollen auf älteren Geräten.</p>
         <button id="perf-btn" class="btn btn-ghost s2-btn" onclick="PERF.toggle()">Aktivieren</button>
+      </div>
+      <div class="s2-section">
+        <div class="s2-title">📊 Lernstatistik</div>
+        <p class="s2-desc">Lernfortschritt, Streak und Lernkarten-Statistik im Überblick.</p>
+        <button class="btn btn-ghost s2-btn" onclick="SETTINGS2.close();STATS.open()">Statistik anzeigen →</button>
+      </div>
+      <div class="s2-section">
+        <div class="s2-title">🔄 Lernfortschritt zurücksetzen</div>
+        <p class="s2-desc">Setzt die grünen Häkchen auf allen Modul-Kacheln zurück.</p>
+        <button class="btn btn-ghost s2-btn" onclick="SETTINGS.resetTopics();SETTINGS2.close()">Zurücksetzen</button>
+      </div>
+      <div class="s2-section">
+        <div class="s2-title">🎴 Lernkarten-Lernstand</div>
+        <p class="s2-desc">Setzt alle als „gewusst" markierten Lernkarten zurück.</p>
+        <button class="btn btn-ghost s2-btn" onclick="SETTINGS.resetCards();SETTINGS2.close()">Lernkarten zurücksetzen</button>
       </div>
       <div class="s2-section">
         <div class="s2-title">🔔 Tägliche Erinnerung</div>
@@ -167,19 +173,13 @@
         </div>
       </div>
       <div class="s2-section">
-        <div class="s2-title">📊 Lernstatistik</div>
-        <p class="s2-desc">Lernfortschritt, Streak und Lernkarten-Statistik im Überblick.</p>
-        <button class="btn btn-ghost s2-btn" onclick="SETTINGS2.close();STATS.open()">Statistik anzeigen →</button>
-      </div>
-      <div class="s2-section">
-        <div class="s2-title">🔄 Lernfortschritt zurücksetzen</div>
-        <p class="s2-desc">Setzt die grünen Häkchen auf allen Modul-Kacheln zurück.</p>
-        <button class="btn btn-ghost s2-btn" onclick="SETTINGS.resetTopics();SETTINGS2.close()">Zurücksetzen</button>
-      </div>
-      <div class="s2-section">
-        <div class="s2-title">🎴 Lernkarten-Lernstand</div>
-        <p class="s2-desc">Setzt alle als „gewusst" markierten Lernkarten zurück.</p>
-        <button class="btn btn-ghost s2-btn" onclick="SETTINGS.resetCards();SETTINGS2.close()">Lernkarten zurücksetzen</button>
+        <div class="s2-title">🔤 Schriftgröße</div>
+        <div class="fs-opts-row" style="margin-top:.4rem">
+          <button class="fs-opt" data-sz="sm" onclick="SETTINGS.setFontSize('sm')">A−</button>
+          <button class="fs-opt active" data-sz="md" onclick="SETTINGS.setFontSize('md')">A</button>
+          <button class="fs-opt" data-sz="lg" onclick="SETTINGS.setFontSize('lg')">A+</button>
+          <button class="fs-opt" data-sz="xl" onclick="SETTINGS.setFontSize('xl')">A++</button>
+        </div>
       </div>
       <div class="s2-section">
         <div class="s2-title">🕐 Verlauf</div>
