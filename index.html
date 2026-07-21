@@ -57,6 +57,9 @@
   <button id="share-btn" class="share-btn-hdr hidden" onclick="SHARE.copy()" title="Link zu dieser Seite kopieren">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
   </button>
+  <button class="settings2-btn-hdr" onclick="SETTINGS2.open()" title="Einstellungen">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  </button>
   <button id="perf-btn" class="perf-btn-hdr" onclick="PERF.toggle()" title="Performance-Modus">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
   </button>
@@ -150,6 +153,58 @@
 <button id="scroll-top-btn" title="Nach oben scrollen" onclick="window.scrollTo({top:0,behavior:'smooth'})">
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
 </button>
+<!-- EINSTELLUNGS-OVERLAY (#13) -->
+<div id="settings2-overlay" class="search-overlay hidden" onclick="if(event.target===this)SETTINGS2.close()">
+  <div class="search-box settings2-box" onclick="event.stopPropagation()">
+    <div class="s2-header">
+      <span>Einstellungen</span>
+      <button class="s2-close" onclick="SETTINGS2.close()">✕</button>
+    </div>
+    <div class="s2-section">
+      <div class="s2-title">📊 Lernfortschritt</div>
+      <p class="s2-desc">Setzt die grünen Häkchen auf allen Modul-Kacheln zurück.</p>
+      <button class="btn btn-ghost s2-btn" onclick="SETTINGS.resetTopics();SETTINGS2.close()">Themen-Fortschritt zurücksetzen</button>
+    </div>
+    <div class="s2-section">
+      <div class="s2-title">🎴 Lernkarten-Lernstand</div>
+      <p class="s2-desc">Setzt alle als „gewusst" markierten Lernkarten zurück.</p>
+      <button class="btn btn-ghost s2-btn" onclick="SETTINGS.resetCards();SETTINGS2.close()">Lernkarten zurücksetzen</button>
+    </div>
+    <div class="s2-section">
+      <div class="s2-title">🕐 Verlauf</div>
+      <p class="s2-desc">Löscht „Zuletzt besucht"-Einträge und den Suchverlauf.</p>
+      <button class="btn btn-ghost s2-btn" onclick="RECENT.clear();SEARCH.clearHist();SETTINGS2.close();TOAST.show('Verlauf gelöscht',{type:'ok'})">Verlauf löschen</button>
+    </div>
+    <div class="s2-section">
+      <div class="s2-title">🔤 Schriftart</div>
+      <div class="s2-font-row">
+        <button class="s2-font-btn" data-ff="sans" onclick="SETTINGS2.setFont('sans')">Sans</button>
+        <button class="s2-font-btn" data-ff="serif" onclick="SETTINGS2.setFont('serif')">Serif</button>
+        <button class="s2-font-btn" data-ff="mono" onclick="SETTINGS2.setFont('mono')">Mono</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- SHORTCUTS-OVERLAY (#8) -->
+<div id="shortcuts-overlay" class="search-overlay hidden" onclick="if(event.target===this)document.getElementById('shortcuts-overlay').classList.add('hidden')">
+  <div class="search-box s2-box-wide" onclick="event.stopPropagation()">
+    <div class="s2-header">
+      <span>Tastaturkürzel</span>
+      <button class="s2-close" onclick="document.getElementById('shortcuts-overlay').classList.add('hidden')">✕</button>
+    </div>
+    <table class="sc-table">
+      <tr><td><kbd>Ctrl K</kbd></td><td>Suche öffnen</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>Overlay/Panel schließen</td></tr>
+      <tr><td><kbd>?</kbd></td><td>Diese Übersicht öffnen</td></tr>
+      <tr><td><kbd>↑ ↓</kbd></td><td>Suchergebnis navigieren</td></tr>
+      <tr><td><kbd>Enter</kbd></td><td>Suchergebnis öffnen</td></tr>
+      <tr class="sc-sep"><td colspan="2">Lernkarten</td></tr>
+      <tr><td><kbd>Leertaste</kbd> / <kbd>↑</kbd></td><td>Karte umdrehen</td></tr>
+      <tr><td><kbd>→</kbd> / <kbd>J</kbd></td><td>Gewusst</td></tr>
+      <tr><td><kbd>←</kbd> / <kbd>F</kbd></td><td>Nicht gewusst</td></tr>
+    </table>
+  </div>
+</div>
 <!-- NOTES OVERLAY -->
 <div id="notes-overlay" class="search-overlay hidden" onclick="if(event.target===this)NOTES.close()">
   <div class="search-box notes-box" onclick="event.stopPropagation()">
