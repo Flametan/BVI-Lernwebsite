@@ -38,6 +38,8 @@
   .logo-emblem{width:34px;height:34px;background:linear-gradient(135deg,#0A192F 0%,#152B52 100%);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(201,168,76,.25),0 2px 10px rgba(0,0,0,.4);}
   .logo-main{display:block;font-family:var(--f-d);font-size:1.05rem;font-weight:700;letter-spacing:.04em;color:var(--c-text-b);}
   .logo-sub{display:block;font-size:.58rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);margin-top:1px;}
+  body.offline .logo-emblem svg path:first-child{fill:#fff!important;}
+  body.offline .logo-emblem svg path:last-child{fill:#C9A84C!important;}
   #nav-trail{display:flex;align-items:center;margin-left:1.5rem;flex:1;overflow:hidden;}
   #back-btn{display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:500;color:var(--c-slate-l);padding:.3rem .6rem;border-radius:var(--r-sm);transition:color var(--t),background var(--t);white-space:nowrap;}
   #back-btn:hover{color:var(--c-gold);background:var(--c-gold-dim);}
@@ -335,6 +337,7 @@
     #nav-trail{margin-left:.75rem;}
     .search-btn-hdr.icon-only{width:28px;height:26px;margin-left:.2rem;}
     .stats-btn-hdr,.notes-btn-hdr,.bookmark-btn-hdr,.share-btn-hdr,.settings2-btn-hdr{width:28px;height:26px;margin-left:.2rem;}
+    .pomo-btn-hdr{height:26px;padding:0 .4rem;font-size:.65rem;margin-left:.2rem;}
     .streak-badge{font-size:.65rem;padding:.14rem .35rem;margin-left:.2rem;}
   }
   .hidden{display:none!important;}
@@ -606,6 +609,9 @@
   /* ── HEADER ADDITIONS ── */
   .stats-btn-hdr,.notes-btn-hdr,.bookmark-btn-hdr,.share-btn-hdr{display:flex;align-items:center;justify-content:center;width:32px;height:30px;border-radius:var(--r-sm);border:1px solid var(--glass-b);background:var(--glass);color:var(--c-slate-l);transition:color var(--t),background var(--t),border-color var(--t);flex-shrink:0;margin-left:.35rem;cursor:pointer;}
   .stats-btn-hdr:hover,.notes-btn-hdr:hover,.bookmark-btn-hdr:hover,.share-btn-hdr:hover,.notes-btn-hdr.fab-active,.bookmark-btn-hdr.fab-active{color:var(--c-gold);background:var(--c-gold-dim);border-color:var(--c-gold-rim);}
+  .pomo-btn-hdr{display:flex;align-items:center;gap:.3rem;height:30px;padding:0 .55rem;border-radius:var(--r-sm);border:1px solid var(--c-gold-rim);background:var(--c-gold-dim);color:var(--c-gold);font-size:.72rem;font-weight:600;font-family:var(--f-m);transition:color var(--t),background var(--t);flex-shrink:0;margin-left:.35rem;cursor:pointer;}
+  .pomo-btn-hdr:hover{background:rgba(201,168,76,.18);border-color:var(--c-gold);}
+  .pomo-btn-hdr.hidden{display:none!important;}
   .offline-badge{display:inline-flex;align-items:center;font-size:.55rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--c-red);border-radius:20px;padding:.1rem .5rem;margin-left:.5rem;flex-shrink:0;}
   .offline-badge.hidden{display:none;}
   /* ── POMODORO ── */

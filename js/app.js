@@ -2525,6 +2525,10 @@ const POMO=(function(){
   function render(){
     const d=document.getElementById('pomo-display'); if(d) d.textContent=fmt(_rem);
     const btn=document.getElementById('pomo-start'); if(btn) btn.textContent=_running?'⏸ Pause':'▶ Start';
+    const hdr=document.getElementById('pomo-hdr-btn');
+    if(hdr){ hdr.classList.toggle('hidden',!_running); }
+    const ht=document.getElementById('pomo-hdr-time');
+    if(ht) ht.textContent=fmt(_rem);
   }
   function done(){
     render();
@@ -2730,7 +2734,16 @@ document.addEventListener('DOMContentLoaded',()=>{
     },{passive:true});
   })();
   // Online/Offline-Indikator
-  function updateOnlineStatus(){ document.getElementById('offline-badge')?.classList.toggle('hidden',navigator.onLine); }
+  function updateOnlineStatus(){
+    const online = navigator.onLine;
+    document.getElementById('offline-badge')?.classList.toggle('hidden',online);
+    document.body.classList.toggle('offline',!online);
+    const paths = document.querySelectorAll('.logo-emblem svg path');
+    if(paths.length>=2){
+      paths[0].setAttribute('fill', online ? '#C9A84C' : '#fff');
+      paths[1].setAttribute('fill', online ? '#fff' : '#C9A84C');
+    }
+  }
   window.addEventListener('offline', updateOnlineStatus);
   window.addEventListener('online', updateOnlineStatus);
   updateOnlineStatus();
