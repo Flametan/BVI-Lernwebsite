@@ -44,9 +44,6 @@ const NAV = (function(){
     if(typeof TOC!=='undefined') TOC.build();
     updateReadProgress();
     CHECKS.init(id);
-    // Share button visibility
-    const shareBtn=document.getElementById('share-btn');
-    if(shareBtn) shareBtn.classList.toggle('hidden',!isContentPage);
     // Update URL for direct linking
     const url=new URL(location.href);
     if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
