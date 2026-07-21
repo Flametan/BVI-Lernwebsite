@@ -43,6 +43,15 @@ const NAV = (function(){
     if(typeof PROGRESS!=='undefined') PROGRESS.track(id);
     if(typeof TOC!=='undefined') TOC.build();
     updateReadProgress();
+    // Share button visibility
+    const shareBtn=document.getElementById('share-btn');
+    if(shareBtn) shareBtn.classList.toggle('hidden',!isContentPage);
+    // Update URL for direct linking
+    const url=new URL(location.href);
+    if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
+    history.replaceState(history.state,'',url.pathname+(url.search==='?'||url.search===''?'':url.search));
+    // Recently visited
+    if(typeof RECENT!=='undefined') RECENT.track(id);
   }
 
   function updateHeader(){
@@ -1103,6 +1112,9 @@ const PROGRESS = (function(){
 ====================================================================== */
 const SEARCH = (function(){
   let idx = [], results = [], focusIdx = -1, _filter = 'all';
+  const HIST_KEY='bvi_search_hist';
+  function loadHist(){ try{ return JSON.parse(localStorage.getItem(HIST_KEY)||'[]'); }catch{ return []; } }
+  function saveHist(q){ const h=loadHist().filter(x=>x!==q); h.unshift(q); localStorage.setItem(HIST_KEY,JSON.stringify(h.slice(0,5))); }
 
   const VIEW_LABELS = {
     'v-gal-organisation':'GAL · Organisation','v-gal-brandlehre':'GAL · Brandlehre','v-gal-fahrzeuge':'GAL · Fahrzeuge','v-gal-einsatz':'GAL · Einsatz','v-gal-atemgifte':'GAL · Atemgifte','v-gal-atemschutz':'GAL · Atemschutz','v-gal-vb':'GAL · Vorbeugender Brandschutz','v-gal-beamtenrecht':'GAL · Beamtenrecht','v-gal-beihilferecht':'GAL · Beihilferecht','v-gal-brandbekaempfung':'GAL · Brandbekämpfung','v-gal-einsatztechnik':'GAL · Einsatztechnik','v-gal-erstehilfe':'GAL · Erste Hilfe','v-gal-grundlagen':'GAL · Naturwiss. Grundlagen','v-gal-fahrzeugnormung':'GAL · Fahrzeugnormung','v-gal-fuehrung':'GAL · Führung','v-gal-fwdven':'GAL · FwDVen','v-gal-gabc':'GAL · G-ABC Einsatz','v-gal-loeschlehre':'GAL · Löschlehre','v-gal-loeschmittel-schaum':'GAL · Löschmittel Schaum','v-gal-loeschwasserversorgung':'GAL · Löschwasserversorgung','v-gal-geraetepruefung':'GAL · Geräteprüfung','v-gal-hbkg':'GAL · HBKG','v-gal-kartenkunde':'GAL · Kartenkunde','v-gal-knoten':'GAL · Knoten & Stiche','v-gal-staatsbuerger':'GAL · Staatsbürgerkunde','v-gal-th-verkehr':'GAL · TH Verkehrsunfall','v-gal-leitern':'GAL · Tragbare Leitern','v-gal-uvv':'GAL · UVV','v-gal-waermebildkamera':'GAL · Wärmebildkamera','v-gal-armaturen':'GAL · Wasserführende Armaturen','v-gal-maschinist':'GAL · Maschinist','v-gal-psa':'GAL · Persönliche Schutzausrüstung','v-gal-personalvertretungsrecht':'GAL · Personalvertretungsrecht',
@@ -1176,13 +1188,20 @@ const SEARCH = (function(){
   function renderBookmarks(){
     const el = document.getElementById('search-results'); if(!el) return;
     const bks = (typeof BOOKMARKS!=='undefined') ? BOOKMARKS.getAll() : [];
-    if(!bks.length){ el.innerHTML='<div class="search-idle">Suchbegriff eingeben – z.&nbsp;B. <em>AVIVA</em>, <em>Glasl</em>, <em>MANV</em></div>'; return; }
-    el.innerHTML='<div class="bk-section"><div class="bk-section-title">⭐ Lesezeichen</div>'
+    const hist = loadHist();
+    let html = '';
+    if(bks.length) html+='<div class="bk-section"><div class="bk-section-title">⭐ Lesezeichen</div>'
       +bks.map(b=>`<div class="bk-item" onclick="SEARCH.goBk(${JSON.stringify(b.id)},${JSON.stringify(b.label||b.id)})">`
         +`<span class="bk-label">${xss(b.label||b.id)}</span>`
         +`<button class="bk-del" onclick="event.stopPropagation();SEARCH.removeBk(${JSON.stringify(b.id)})">✕</button>`
-        +'</div>').join('')
-      +'</div>';
+        +'</div>').join('')+'</div>';
+    if(hist.length) html+='<div class="bk-section"><div class="bk-section-title">🕐 Zuletzt gesucht</div>'
+      +hist.map(q=>`<div class="bk-item" onclick="SEARCH.runHist(${JSON.stringify(q)})">`
+        +`<span class="bk-label">${xss(q)}</span>`
+        +`<button class="bk-del" onclick="event.stopPropagation();SEARCH.clearHist()">✕</button>`
+        +'</div>').join('')+'</div>';
+    if(!html) html='<div class="search-idle">Suchbegriff eingeben – z.&nbsp;B. <em>AVIVA</em>, <em>Glasl</em>, <em>MANV</em></div>';
+    el.innerHTML=html;
   }
 
   function render(q){
@@ -1227,10 +1246,16 @@ const SEARCH = (function(){
     },
     go(i){
       const r = results[i]; if(!r) return;
+      saveHist(document.getElementById('search-input').value.trim());
       this.close();
       const lbl = r.lbl.split('·').pop().trim();
       NAV.go(r.vid, lbl);
-    }
+    },
+    runHist(q){
+      const inp=document.getElementById('search-input');
+      if(inp){ inp.value=q; render(q); }
+    },
+    clearHist(){ localStorage.removeItem(HIST_KEY); renderBookmarks(); }
   };
 })();
 
@@ -2453,14 +2478,65 @@ const PERF=(function(){
   };
 })();
 
+/* ======================================================================
+   SHARE – Direktlink kopieren
+====================================================================== */
+const SHARE=(function(){
+  return {
+    copy(){
+      const url=location.href;
+      navigator.clipboard.writeText(url)
+        .then(()=>TOAST.show('Link kopiert',{type:'ok'}))
+        .catch(()=>TOAST.show('Kopieren nicht unterstützt'));
+    }
+  };
+})();
+
+/* ======================================================================
+   RECENT – Zuletzt besucht
+====================================================================== */
+const RECENT=(function(){
+  const KEY='bvi_recent'; const MAX=5;
+  const SKIP=new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz']);
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch{ return []; } }
+  function save(d){ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch{} }
+  return {
+    track(id){
+      if(SKIP.has(id)) return;
+      const label=document.querySelector('#'+id+' .page-title')?.textContent?.trim()||id;
+      const entries=load().filter(e=>e.id!==id);
+      entries.unshift({id,label});
+      save(entries.slice(0,MAX));
+      this.render();
+    },
+    render(){
+      const el=document.getElementById('recent-section'); if(!el) return;
+      const entries=load();
+      if(!entries.length){ el.classList.add('hidden'); return; }
+      el.classList.remove('hidden');
+      const list=el.querySelector('.recent-list');
+      if(list) list.innerHTML=entries.map(e=>`<button class="recent-item" onclick="NAV.go(${JSON.stringify(e.id)},${JSON.stringify(e.label)})">${e.label}</button>`).join('');
+    },
+    clear(){ save([]); this.render(); }
+  };
+})();
+
 document.addEventListener('DOMContentLoaded',()=>{
-  NAV.home();
+  // Deep-link on load
+  const initId=new URLSearchParams(location.search).get('id');
+  if(initId&&document.getElementById(initId)){
+    const lbl=document.querySelector('#'+initId+' .page-title')?.textContent?.trim()||initId;
+    NAV.go(initId,lbl);
+  } else {
+    NAV.home();
+  }
   PROGRESS.updateUI();
   BOOKMARKS.updateHomeTile();
   SETTINGS.restoreFontSize();
   STREAK.render();
   NOTIF.check();
   PERF.apply();
+  RECENT.render();
   DARKMODE.init();
   document.querySelectorAll('.pc table').forEach(t=>{
     if(t.closest('.tbl-wrap')) return;
@@ -2500,9 +2576,14 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(!e.target.closest('.notif-btn-hdr')&&!e.target.closest('#notif-overlay'))
       document.getElementById('notif-overlay')?.classList.add('hidden');
   });
+  // Online/Offline-Indikator
+  function updateOnlineStatus(){ document.getElementById('offline-badge')?.classList.toggle('hidden',navigator.onLine); }
+  window.addEventListener('offline', updateOnlineStatus);
+  window.addEventListener('online', updateOnlineStatus);
+  updateOnlineStatus();
   if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
   ABK.render(); ABK.filter('');
-  console.log('%c B VI %c Lernwebsite v4.2 · flametan/BVI-Lernwebsite ',
+  console.log('%c B VI %c Lernwebsite '+APP_VERSION+' · flametan/BVI-Lernwebsite ',
     'background:#A50000;color:#fff;padding:3px 8px;border-radius:4px 0 0 4px;font-family:"DM Mono",monospace;font-weight:700',
     'background:#0A192F;color:#C9A84C;padding:3px 8px;border-radius:0 4px 4px 0;font-family:"DM Mono",monospace');
 });
