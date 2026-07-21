@@ -43,9 +43,12 @@ const NAV = (function(){
     if(typeof PROGRESS!=='undefined') PROGRESS.track(id);
     if(typeof TOC!=='undefined') TOC.build();
     updateReadProgress();
-    // Share button visibility
+    CHECKS.init(id);
+    // Share + Print button visibility
     const shareBtn=document.getElementById('share-btn');
     if(shareBtn) shareBtn.classList.toggle('hidden',!isContentPage);
+    const printBtn=document.getElementById('print-btn');
+    if(printBtn) printBtn.classList.toggle('hidden',!isContentPage);
     // Update URL for direct linking
     const url=new URL(location.href);
     if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
@@ -1561,6 +1564,7 @@ const FC = (function(){
   let deck=[], curIdx=0, flipped=false, sess={known:0,unknown:0};
   let activeFilters = new Set(CATS);
   let focusMode = false;
+  let sortDifficult = false;
 
   const SR_DAYS = [0,1,3,7,14,30];
 
@@ -1599,7 +1603,7 @@ const FC = (function(){
       const known=fcLoad(); const now=Date.now();
       base=base.filter(c=>{ const e=known[c.id]; return !e||(e.nextReview<=now); });
     }
-    return base;
+    return sortDifficult ? sortByDiff(base) : shuffle(base);
   }
 
   function updateFilterButtons(){
@@ -1631,6 +1635,7 @@ const FC = (function(){
     });
   }
   function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
+  function sortByDiff(a){ const k=fcLoad(); return [...a].sort((x,y)=>{ const ex=k[x.id]; const ey=k[y.id]; return (ex?(ex.ease||2.5):2.5)-(ey?(ey.ease||2.5):2.5); }); }
 
   function sizeCard(){
     const outer = document.querySelector('.fc-outer');
@@ -1780,7 +1785,7 @@ const FC = (function(){
 
   return {
     start(){
-      deck = shuffle(getDeck()); curIdx=0; flipped=false; sess={known:0,unknown:0};
+      deck = getDeck(); curIdx=0; flipped=false; sess={known:0,unknown:0};
       showSkeleton();
       setTimeout(renderCard, 320);
     },
@@ -1807,6 +1812,12 @@ const FC = (function(){
         if(typeof STREAK!=='undefined') STREAK.record();
       }
       fcSave(d); curIdx++; renderCard();
+    },
+    toggleSort(){
+      sortDifficult=!sortDifficult;
+      const btn=document.getElementById('fc-sort-btn');
+      if(btn) btn.classList.toggle('active',sortDifficult);
+      this.start();
     },
     setFilter(f){
       if(f==='fokus'){
@@ -2142,9 +2153,10 @@ const ABK = (function(){
     },
     filter(q){
       const term = q.trim().toLowerCase();
+      const words = term ? term.split(/\s+/).filter(Boolean) : [];
       const rows = document.querySelectorAll('#abk-body .abk-row');
       let vis = 0;
-      rows.forEach(r=>{ const show = !term||r.dataset.search.includes(term); r.classList.toggle('hidden',!show); if(show) vis++; });
+      rows.forEach(r=>{ const show = !words.length||words.every(w=>r.dataset.search.includes(w)); r.classList.toggle('hidden',!show); if(show) vis++; });
       // Hide section headers if all their rows are hidden
       document.querySelectorAll('#abk-body .abk-sec-hdr').forEach(h=>{
         const sec=h.dataset.sec;
@@ -2432,7 +2444,15 @@ const STATS = (function(){
       <div class="stat-bars">
         <div class="stat-row"><span class="stat-row-lbl">Gelernt</span><div class="stat-bar-wrap"><div class="stat-bar-fill" style="width:${Math.round(known/total*100)}%"></div></div><span class="stat-row-cnt">${known}</span></div>
         <div class="stat-row"><span class="stat-row-lbl">Heute fällig</span><div class="stat-bar-wrap"><div class="stat-bar-fill stat-bar-gold" style="width:${Math.min(100,Math.round(due/total*100))}%"></div></div><span class="stat-row-cnt">${due}</span></div>
-      </div>`;
+      </div>
+      <div class="stat-section-title" style="margin-top:1.1rem">Lernkarten pro Kategorie</div>
+      <div class="stat-bars">${['gal','sfs','hlfs','ibk','vak','feuak','idf'].map(cat=>{
+        const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(cat));
+        const kn=cats.filter(c=>fc[c.id]).length;
+        const pct=Math.round(kn/cats.length*100);
+        const label={gal:'GAL',sfs:'SFS',hlfs:'HLFS',ibk:'IBK',vak:'VAk',feuak:'FeuAK',idf:'IdF'}[cat]||cat;
+        return `<div class="stat-row"><span class="stat-row-lbl">${label}</span><div class="stat-bar-wrap"><div class="stat-bar-fill" style="width:${pct}%"></div></div><span class="stat-row-cnt">${kn}/${cats.length}</span></div>`;
+      }).join('')}</div>`;
   }
   return {
     open(){ ov()?.classList.remove('hidden'); build(); },
@@ -2474,6 +2494,75 @@ const PERF=(function(){
         });
       },{rootMargin:'-30% 0px -70% 0px',threshold:0});
       sections.forEach(s=>_io.observe(s));
+    }
+  };
+})();
+
+/* ======================================================================
+   POMO – Pomodoro-Timer
+====================================================================== */
+const POMO=(function(){
+  let _total=25*60, _rem=25*60, _running=false, _iv=null;
+  function fmt(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+  function tick(){ if(!_running) return; _rem--; render(); if(_rem<=0){ clearInterval(_iv); _running=false; done(); } }
+  function render(){
+    const d=document.getElementById('pomo-display'); if(d) d.textContent=fmt(_rem);
+    const btn=document.getElementById('pomo-start'); if(btn) btn.textContent=_running?'⏸ Pause':'▶ Start';
+    const hdr=document.getElementById('pomo-hdr-btn');
+    if(hdr) hdr.classList.toggle('active',_running);
+  }
+  function done(){
+    render();
+    TOAST.show('⏰ Zeit! Mach eine Pause.',{duration:6000});
+    if(navigator.vibrate) navigator.vibrate([200,100,200]);
+  }
+  return {
+    open(){ document.getElementById('pomodoro-overlay').classList.remove('hidden'); render(); },
+    close(){ document.getElementById('pomodoro-overlay').classList.add('hidden'); },
+    toggle(){
+      if(_rem<=0) return;
+      _running=!_running;
+      if(_running) _iv=setInterval(tick,1000); else clearInterval(_iv);
+      render();
+    },
+    reset(){ clearInterval(_iv); _running=false; _rem=_total; render(); },
+    setPreset(min,btn){
+      clearInterval(_iv); _running=false;
+      _total=min*60; _rem=_total;
+      document.querySelectorAll('.pomo-preset').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      render();
+    }
+  };
+})();
+
+/* ======================================================================
+   CHECKS – Abschnitte abhaken
+====================================================================== */
+const CHECKS=(function(){
+  const SKIP=new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz']);
+  function key(id){ return 'bvi_checks_'+id; }
+  function load(id){ try{ return JSON.parse(localStorage.getItem(key(id))||'{}'); }catch{ return {}; } }
+  function save(id,d){ try{ localStorage.setItem(key(id),JSON.stringify(d)); }catch{} }
+  return {
+    init(id){
+      if(SKIP.has(id)) return;
+      const view=document.getElementById(id); if(!view) return;
+      const checks=load(id);
+      view.querySelectorAll('.acc-item summary').forEach((sum,idx)=>{
+        if(sum.querySelector('.acc-check')) return;
+        const btn=document.createElement('button');
+        btn.className='acc-check'+(checks[idx]?' checked':'');
+        btn.title='Abgehakt'; btn.type='button';
+        btn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+        btn.addEventListener('click',e=>{
+          e.stopPropagation(); e.preventDefault();
+          const d=load(id); d[idx]=!d[idx]; save(id,d);
+          btn.classList.toggle('checked',!!d[idx]);
+        });
+        const arrow=sum.querySelector('.acc-arrow');
+        if(arrow) sum.insertBefore(btn,arrow); else sum.appendChild(btn);
+      });
     }
   };
 })();
@@ -2607,6 +2696,23 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(!e.target.closest('.notif-btn-hdr')&&!e.target.closest('#notif-overlay'))
       document.getElementById('notif-overlay')?.classList.add('hidden');
   });
+  // Swipe-Back-Geste (Wischen vom linken Rand → zurück)
+  (function(){
+    let x0=0, y0=0, live=false;
+    document.addEventListener('touchstart',e=>{
+      if(e.touches.length!==1) return;
+      x0=e.touches[0].clientX; y0=e.touches[0].clientY;
+      live = x0 < 40; // nur vom linken Rand
+    },{passive:true});
+    document.addEventListener('touchend',e=>{
+      if(!live) return; live=false;
+      const dx=e.changedTouches[0].clientX-x0;
+      const dy=Math.abs(e.changedTouches[0].clientY-y0);
+      const active=document.querySelector('.view.active');
+      if(active&&active.id==='v-flashcards') return;
+      if(dx>70&&dy<60) NAV.back();
+    },{passive:true});
+  })();
   // Online/Offline-Indikator
   function updateOnlineStatus(){ document.getElementById('offline-badge')?.classList.toggle('hidden',navigator.onLine); }
   window.addEventListener('offline', updateOnlineStatus);
