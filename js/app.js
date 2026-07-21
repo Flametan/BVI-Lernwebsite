@@ -2654,6 +2654,34 @@ const RECENT=(function(){
   };
 })();
 
+/* ======================================================================
+   ONBOARD – Erste-Schritte-Overlay (einmalig)
+====================================================================== */
+const ONBOARD=(function(){
+  const KEY='bvi_onboarded';
+  let _step=0;
+  const TOTAL=5;
+  function setStep(n){
+    _step=Math.max(0,Math.min(TOTAL-1,n));
+    document.querySelectorAll('.ob-step').forEach((el,i)=>el.classList.toggle('active',i===_step));
+    document.querySelectorAll('.ob-dot').forEach((el,i)=>el.classList.toggle('active',i===_step));
+    const nextBtn=document.querySelector('.ob-next');
+    if(nextBtn) nextBtn.textContent=_step===TOTAL-1?'Los geht\'s!':'Weiter →';
+  }
+  return {
+    init(){
+      if(localStorage.getItem(KEY)) return;
+      document.getElementById('onboarding-overlay')?.classList.remove('hidden');
+    },
+    next(){ if(_step<TOTAL-1){ setStep(_step+1); } else { this.close(); } },
+    goto(n){ setStep(n); },
+    close(){
+      document.getElementById('onboarding-overlay')?.classList.add('hidden');
+      localStorage.setItem(KEY,'1');
+    }
+  };
+})();
+
 document.addEventListener('DOMContentLoaded',()=>{
   // Deep-link on load
   const initId=new URLSearchParams(location.search).get('id');
@@ -2671,6 +2699,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   PERF.apply();
   SETTINGS2.restoreFont();
   RECENT.render();
+  ONBOARD.init();
   DARKMODE.init();
   document.querySelectorAll('.pc table').forEach(t=>{
     if(t.closest('.tbl-wrap')) return;
