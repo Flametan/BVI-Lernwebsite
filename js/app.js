@@ -1480,6 +1480,7 @@ const TOC = (function(){
         return `<div class="toc-dot" data-idx="${i}" data-title="${title}" onclick="TOC.goto(${i})"></div>`;
       }).join('');
       this.update();
+      PERF.rebuildIO();
     },
     goto(i){ sections[i]?.scrollIntoView({behavior:'smooth',block:'start'}); },
     update(){
@@ -2414,6 +2415,44 @@ const STATS = (function(){
   };
 })();
 
+/* ======================================================================
+   PERF – Performance Mode
+====================================================================== */
+const PERF=(function(){
+  let _io=null;
+  return {
+    enabled:localStorage.getItem('bvi_perf')==='1',
+    toggle(){
+      this.enabled=!this.enabled;
+      localStorage.setItem('bvi_perf',this.enabled?'1':'0');
+      this.apply();
+    },
+    apply(){
+      document.body.classList.toggle('perf-mode',this.enabled);
+      const btn=document.getElementById('perf-btn');
+      if(btn) btn.classList.toggle('active',this.enabled);
+      if(this.enabled) this.rebuildIO(); else if(_io){_io.disconnect();_io=null;}
+    },
+    rebuildIO(){
+      if(!this.enabled) return;
+      if(_io){_io.disconnect();_io=null;}
+      const active=document.querySelector('.view.active');
+      if(!active) return;
+      const sections=Array.from(active.querySelectorAll('.sec-h'));
+      if(!sections.length) return;
+      _io=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            const idx=sections.indexOf(entry.target);
+            if(idx>=0) document.querySelectorAll('.toc-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+          }
+        });
+      },{rootMargin:'-30% 0px -70% 0px',threshold:0});
+      sections.forEach(s=>_io.observe(s));
+    }
+  };
+})();
+
 document.addEventListener('DOMContentLoaded',()=>{
   NAV.home();
   PROGRESS.updateUI();
@@ -2421,6 +2460,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   SETTINGS.restoreFontSize();
   STREAK.render();
   NOTIF.check();
+  PERF.apply();
   DARKMODE.init();
   document.querySelectorAll('.pc table').forEach(t=>{
     if(t.closest('.tbl-wrap')) return;
@@ -2444,10 +2484,15 @@ document.addEventListener('DOMContentLoaded',()=>{
       if((e.key==='ArrowLeft'||e.key==='f')&&!e.ctrlKey&&!e.metaKey){ e.preventDefault(); FC.answer(false); }
     }
   });
+  let _perfRafPending=false;
   window.addEventListener('scroll',()=>{
-    updateReadProgress(); TOC.update();
     const sTop=document.getElementById('scroll-top-btn');
-    if(sTop) sTop.classList.toggle('visible', window.scrollY>300);
+    if(sTop) sTop.classList.toggle('visible',window.scrollY>300);
+    if(PERF.enabled){
+      if(!_perfRafPending){_perfRafPending=true;requestAnimationFrame(()=>{updateReadProgress();_perfRafPending=false;});}
+    } else {
+      updateReadProgress();TOC.update();
+    }
   },{passive:true});
   document.addEventListener('click', e=>{
     if(!e.target.closest('.fontsize-btn-hdr')&&!e.target.closest('#fontsize-overlay'))
