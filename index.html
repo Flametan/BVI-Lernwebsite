@@ -44,18 +44,9 @@
   <button class="search-btn-hdr icon-only" onclick="SEARCH.toggle()" title="Suchen (Ctrl+K)">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   </button>
-  <button class="stats-btn-hdr" onclick="STATS.open()" title="Lernstatistiken">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-  </button>
   <span id="streak-badge" class="streak-badge" onclick="STATS.open()" title="Lernstreak" style="display:none"></span>
-  <button id="print-btn" class="share-btn-hdr hidden" onclick="window.print()" title="Seite drucken">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-  </button>
   <button id="share-btn" class="share-btn-hdr hidden" onclick="SHARE.copy()" title="Link zu dieser Seite kopieren">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-  </button>
-  <button id="pomo-hdr-btn" class="share-btn-hdr" onclick="POMO.open()" title="Pomodoro-Timer">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
   </button>
   <button class="settings2-btn-hdr" onclick="SETTINGS2.open()" title="Einstellungen">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -143,6 +134,11 @@
     </div>
     <div class="s2-body">
       <div class="s2-section">
+        <div class="s2-title">🍅 Pomodoro-Timer</div>
+        <p class="s2-desc">Lernphasen mit Countdown und automatischer Pause verwalten.</p>
+        <button class="btn btn-ghost s2-btn" onclick="SETTINGS2.close();POMO.open()">Timer öffnen →</button>
+      </div>
+      <div class="s2-section">
         <div class="s2-title">🔤 Schriftgröße</div>
         <div class="fs-opts-row" style="margin-top:.4rem">
           <button class="fs-opt" data-sz="sm" onclick="SETTINGS.setFontSize('sm')">A−</button>
@@ -171,9 +167,14 @@
         </div>
       </div>
       <div class="s2-section">
-        <div class="s2-title">📊 Lernfortschritt</div>
+        <div class="s2-title">📊 Lernstatistik</div>
+        <p class="s2-desc">Lernfortschritt, Streak und Lernkarten-Statistik im Überblick.</p>
+        <button class="btn btn-ghost s2-btn" onclick="SETTINGS2.close();STATS.open()">Statistik anzeigen →</button>
+      </div>
+      <div class="s2-section">
+        <div class="s2-title">🔄 Lernfortschritt zurücksetzen</div>
         <p class="s2-desc">Setzt die grünen Häkchen auf allen Modul-Kacheln zurück.</p>
-        <button class="btn btn-ghost s2-btn" onclick="SETTINGS.resetTopics();SETTINGS2.close()">Themen-Fortschritt zurücksetzen</button>
+        <button class="btn btn-ghost s2-btn" onclick="SETTINGS.resetTopics();SETTINGS2.close()">Zurücksetzen</button>
       </div>
       <div class="s2-section">
         <div class="s2-title">🎴 Lernkarten-Lernstand</div>
