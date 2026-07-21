@@ -2731,8 +2731,14 @@ document.addEventListener('DOMContentLoaded',()=>{
   })();
   // Online/Offline-Indikator
   function updateOnlineStatus(){
-    document.getElementById('offline-badge')?.classList.toggle('hidden',navigator.onLine);
-    document.body.classList.toggle('offline',!navigator.onLine);
+    const online = navigator.onLine;
+    document.getElementById('offline-badge')?.classList.toggle('hidden',online);
+    document.body.classList.toggle('offline',!online);
+    const paths = document.querySelectorAll('.logo-emblem svg path');
+    if(paths.length>=2){
+      paths[0].setAttribute('fill', online ? '#C9A84C' : '#fff');
+      paths[1].setAttribute('fill', online ? '#fff' : '#C9A84C');
+    }
   }
   window.addEventListener('offline', updateOnlineStatus);
   window.addEventListener('online', updateOnlineStatus);
