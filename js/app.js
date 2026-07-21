@@ -2736,7 +2736,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   // Online/Offline-Indikator
   function updateOnlineStatus(){
     const online = navigator.onLine;
-    document.getElementById('offline-badge')?.classList.toggle('hidden',online);
     document.body.classList.toggle('offline',!online);
     const paths = document.querySelectorAll('.logo-emblem svg path');
     if(paths.length>=2){
