@@ -44,11 +44,9 @@ const NAV = (function(){
     if(typeof TOC!=='undefined') TOC.build();
     updateReadProgress();
     CHECKS.init(id);
-    // Share + Print button visibility
+    // Share button visibility
     const shareBtn=document.getElementById('share-btn');
     if(shareBtn) shareBtn.classList.toggle('hidden',!isContentPage);
-    const printBtn=document.getElementById('print-btn');
-    if(printBtn) printBtn.classList.toggle('hidden',!isContentPage);
     // Update URL for direct linking
     const url=new URL(location.href);
     if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
@@ -2527,8 +2525,6 @@ const POMO=(function(){
   function render(){
     const d=document.getElementById('pomo-display'); if(d) d.textContent=fmt(_rem);
     const btn=document.getElementById('pomo-start'); if(btn) btn.textContent=_running?'⏸ Pause':'▶ Start';
-    const hdr=document.getElementById('pomo-hdr-btn');
-    if(hdr) hdr.classList.toggle('active',_running);
   }
   function done(){
     render();
