@@ -80,6 +80,9 @@
 <div id="stats-overlay" class="search-overlay hidden" onclick="if(event.target===this)STATS.close()">
   <div class="search-box stats-box" onclick="event.stopPropagation()">
     <div class="settings-hdr">
+      <button class="search-close-btn" onclick="STATS.close();SETTINGS2.open()" title="Zurück zu Einstellungen" style="margin-right:.5rem">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
       <span class="settings-title">📊 Lernstatistiken</span>
       <div style="display:flex;align-items:center;gap:.5rem">
         <button class="btn btn-ghost" style="font-size:.73rem;padding:.3rem .7rem" onclick="SETTINGS.resetTopics()" title="Lernfortschritt zurücksetzen">
