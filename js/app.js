@@ -2745,6 +2745,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
   window.addEventListener('offline', updateOnlineStatus);
   window.addEventListener('online', updateOnlineStatus);
+  document.addEventListener('visibilitychange', updateOnlineStatus);
   updateOnlineStatus();
   if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
   ABK.render(); ABK.filter('');
