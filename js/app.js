@@ -1348,8 +1348,6 @@ const SETTINGS = (function(){
     _restoreFsUI(){
       const sz=localStorage.getItem('bvi_font_size')||'md';
       document.querySelectorAll('.fs-opt').forEach(b=>b.classList.toggle('active',b.dataset.sz===sz));
-      const lbl=document.getElementById('fontsize-hdr-lbl');
-      if(lbl){const m={sm:'A−',md:'A',lg:'A+',xl:'A++'};lbl.textContent=m[sz]||'A';}
     },
     async toggleNotif(on){ if(typeof NOTIF!=='undefined') await NOTIF.setEnabled(on); },
     setNotifHour(h){ if(typeof NOTIF!=='undefined') NOTIF.setHour(h); }
@@ -2493,7 +2491,10 @@ const PERF=(function(){
     apply(){
       document.body.classList.toggle('perf-mode',this.enabled);
       const btn=document.getElementById('perf-btn');
-      if(btn) btn.classList.toggle('active',this.enabled);
+      if(btn){
+        btn.classList.toggle('active',this.enabled);
+        btn.textContent=this.enabled?'Deaktivieren':'Aktivieren';
+      }
       if(this.enabled) this.rebuildIO(); else if(_io){_io.disconnect();_io=null;}
     },
     rebuildIO(){
@@ -2599,6 +2600,9 @@ const SETTINGS2=(function(){
   return {
     open(){
       document.getElementById('settings2-overlay').classList.remove('hidden');
+      SETTINGS._restoreFsUI();
+      PERF.apply();
+      if(typeof NOTIF!=='undefined') NOTIF.updateUI();
     },
     close(){ document.getElementById('settings2-overlay').classList.add('hidden'); },
     setFont(ff){ applyFont(ff); },
