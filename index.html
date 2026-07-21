@@ -54,8 +54,14 @@
   <button class="notif-btn-hdr" onclick="SETTINGS.toggleNotifPanel()" title="Tägliche Erinnerung">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
   </button>
+  <button id="print-btn" class="share-btn-hdr hidden" onclick="window.print()" title="Seite drucken">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+  </button>
   <button id="share-btn" class="share-btn-hdr hidden" onclick="SHARE.copy()" title="Link zu dieser Seite kopieren">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+  </button>
+  <button id="pomo-hdr-btn" class="share-btn-hdr" onclick="POMO.open()" title="Pomodoro-Timer">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
   </button>
   <button class="settings2-btn-hdr" onclick="SETTINGS2.open()" title="Einstellungen">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -153,6 +159,27 @@
 <button id="scroll-top-btn" title="Nach oben scrollen" onclick="window.scrollTo({top:0,behavior:'smooth'})">
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
 </button>
+<!-- POMODORO-OVERLAY (#3) -->
+<div id="pomodoro-overlay" class="search-overlay hidden" onclick="if(event.target===this)POMO.close()">
+  <div class="search-box pomo-box" onclick="event.stopPropagation()">
+    <div class="s2-header">
+      <span>🍅 Pomodoro-Timer</span>
+      <button class="s2-close" onclick="POMO.close()">✕</button>
+    </div>
+    <div class="pomo-body">
+      <div class="pomo-presets">
+        <button class="pomo-preset active" data-min="25" onclick="POMO.setPreset(25,this)">25 min</button>
+        <button class="pomo-preset" data-min="5" onclick="POMO.setPreset(5,this)">5 min Pause</button>
+        <button class="pomo-preset" data-min="15" onclick="POMO.setPreset(15,this)">15 min</button>
+      </div>
+      <div class="pomo-display" id="pomo-display">25:00</div>
+      <div class="pomo-controls">
+        <button class="btn btn-gold" id="pomo-start" onclick="POMO.toggle()">▶ Start</button>
+        <button class="btn btn-ghost" onclick="POMO.reset()">↺ Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- EINSTELLUNGS-OVERLAY (#13) -->
 <div id="settings2-overlay" class="search-overlay hidden" onclick="if(event.target===this)SETTINGS2.close()">
   <div class="search-box settings2-box" onclick="event.stopPropagation()">
@@ -6977,6 +7004,7 @@
     <button class="fc-f-btn fc-fokus-btn" data-filter="fokus" data-label="Fokus" onclick="FC.setFilter('fokus')">🎯 Fokus-Modus</button>
     <button class="fc-f-btn fc-pruefung-btn" data-filter="pruefung" data-label="Prüfung" onclick="FC.setFilter('pruefung')">🎓 Prüfung IBK/VAk/FeuAK/IdF</button>
     <button class="fc-f-btn" data-filter="plan" data-label="Zeitplan" onclick="FC.setFilter('plan')">📅 Zeitplan</button>
+    <button id="fc-sort-btn" class="fc-f-btn" onclick="FC.toggleSort()" title="Schwierige Karten zuerst">📉 Schwer zuerst</button>
     <button class="fc-f-btn fc-reset-btn" onclick="SETTINGS.resetCards()" title="Lernstand zurücksetzen">↺ Zurücksetzen</button>
   </div>
   <div class="pc">
