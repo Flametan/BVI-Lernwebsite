@@ -2525,6 +2525,10 @@ const POMO=(function(){
   function render(){
     const d=document.getElementById('pomo-display'); if(d) d.textContent=fmt(_rem);
     const btn=document.getElementById('pomo-start'); if(btn) btn.textContent=_running?'⏸ Pause':'▶ Start';
+    const hdr=document.getElementById('pomo-hdr-btn');
+    if(hdr){ hdr.classList.toggle('hidden',!_running); }
+    const ht=document.getElementById('pomo-hdr-time');
+    if(ht) ht.textContent=fmt(_rem);
   }
   function done(){
     render();
