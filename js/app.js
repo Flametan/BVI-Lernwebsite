@@ -2688,6 +2688,7 @@ const ONBOARD=(function(){
 ────────────────────────────────────────────────── */
 const QUIZ=(function(){
   const KEY_BM='bvi_quiz_bm';
+  const KEY_MASTERY='bvi_quiz_mastery';
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
   const Q=[
@@ -2760,15 +2761,49 @@ const QUIZ=(function(){
     {id:67,cat:'Gefahrenabwehr / Feuerwehrrecht',type:'essay',q:'Fall: Es brennt im Keller eines Mehrfamilienhauses. Ein Trupp soll wegen der Rauchausbreitung die angrenzenden Kellerräume kontrollieren. Der Eigentümer verbietet den Zutritt zu einem vermieteten Kellerraum, weil der Mieter das Betreten nicht erlauben würde. Dürfen Sie den Kellerraum öffnen?',ref:'Ja. Bei einem Kellerbrand mit Rauchausbreitungsgefahr besteht eine konkrete Gefahr, die die Kontrolle aller betroffenen Kellerräume rechtfertigt, unabhängig davon, ob sie vermietet sind. Weder Eigentümer noch Mieter können der Gefahrenabwehr ein wirksames Zutrittsverbot entgegensetzen (§ 41 BHKG NRW).\nVorgehen: Raum verhältnismäßig, notfalls gewaltsam öffnen, kontrollieren, anschließend sichern und Eigentümer sowie Mieter informieren.'},
   ];
 
-  let _mode='learn',_order=[],_cur=0,_answered=false,_filter='all',_inited=false;
+  let _mode='learn',_order=[],_cur=0,_answered=false,_filter='all',_catFilter='all',_inited=false;
   let _bookmarks=new Set(),_examAnswers={},_examSubmitted=false;
+  let _masteryMap={},_sessionCorrect=0,_sessionWrong=0,_sessionSkipped=0,_retried=new Set();
+
+  const CAT_LABELS={'Staatsorganisationsrecht':'StaatsorgR','Allgemeines Verwaltungsrecht':'AllgVwR','Verwaltungsvollstreckung / Rechtsschutz':'Vollstr./RS','Beamten- und Disziplinarrecht':'BeamtR','Gefahrenabwehr / Feuerwehrrecht':'GefahrenabwR'};
 
   function loadBm(){try{const s=localStorage.getItem(KEY_BM);if(s)_bookmarks=new Set(JSON.parse(s));}catch(e){}}
   function saveBm(){try{localStorage.setItem(KEY_BM,JSON.stringify([..._bookmarks]));}catch(e){}}
+  function loadMastery(){try{const s=localStorage.getItem(KEY_MASTERY);if(s)_masteryMap=JSON.parse(s);}catch(e){}}
+  function saveMastery(){try{localStorage.setItem(KEY_MASTERY,JSON.stringify(_masteryMap));}catch(e){}}
   function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=0|Math.random()*(i+1);[r[i],r[j]]=[r[j],r[i]];}return r;}
-  function filteredIds(){return(_filter==='bookmarked'?Q.filter(q=>_bookmarks.has(q.id)):Q).map(q=>q.id);}
-  function buildOrder(){_order=shuffle(filteredIds());_cur=0;_answered=false;}
+  function filteredIds(){let p=_filter==='bookmarked'?Q.filter(q=>_bookmarks.has(q.id)):Q;if(_catFilter!=='all')p=p.filter(q=>q.cat===_catFilter);return p.map(q=>q.id);}
+  function buildOrder(){_order=shuffle(filteredIds());_cur=0;_answered=false;_sessionCorrect=0;_sessionWrong=0;_sessionSkipped=0;_retried=new Set();hideSummary();}
   function curQ(){return Q.find(q=>q.id===_order[_cur]);}
+
+  function renderCatBar(){
+    const bar=document.getElementById('quiz-cat-bar');if(!bar)return;
+    const cats=[...new Set(Q.map(q=>q.cat))];
+    bar.innerHTML='<button class="quiz-cat-filter-btn'+(_catFilter==='all'?' active':'')+'" data-cat="all">Alle</button>'
+      +cats.map(c=>'<button class="quiz-cat-filter-btn'+(_catFilter===c?' active':'')+'" data-cat="'+esc(c)+'">'+(CAT_LABELS[c]||esc(c))+'</button>').join('');
+    bar.querySelectorAll('.quiz-cat-filter-btn').forEach(btn=>{btn.addEventListener('click',()=>{QUIZ.setCatFilter(btn.dataset.cat);});});
+  }
+
+  function renderMastery(){
+    const grid=document.getElementById('quiz-mastery-grid');if(!grid)return;
+    grid.innerHTML=Q.map(q=>{const m=_masteryMap[q.id];return'<span class="qmd '+(m==='ok'?'qmd-ok':m==='err'?'qmd-err':'qmd-un')+'" title="'+esc(q.q.substring(0,60))+'"></span>';}).join('');
+  }
+
+  function showSummary(){
+    const inner=document.getElementById('quiz-learn-inner'),summary=document.getElementById('quiz-summary');
+    if(inner)inner.classList.add('hidden');
+    if(!summary)return;
+    const mc=_sessionCorrect+_sessionWrong||1;
+    const pct=Math.round((_sessionCorrect/mc)*100);
+    summary.innerHTML='<div class="quiz-summary-inner"><div class="quiz-summary-title">Runde abgeschlossen!</div><div class="quiz-summary-stats"><div class="quiz-stat quiz-stat-ok"><div class="quiz-stat-num">'+_sessionCorrect+'</div><div class="quiz-stat-label">Richtig</div></div><div class="quiz-stat quiz-stat-err"><div class="quiz-stat-num">'+_sessionWrong+'</div><div class="quiz-stat-label">Falsch</div></div><div class="quiz-stat quiz-stat-skip"><div class="quiz-stat-num">'+_sessionSkipped+'</div><div class="quiz-stat-label">Übersprungen</div></div></div><div class="quiz-summary-pct">'+pct+' % richtig (MC / R-F)</div><button class="quiz-next-btn quiz-new-round-btn" onclick="QUIZ.newRound()">Neue Runde ↻</button></div>';
+    summary.classList.remove('hidden');
+  }
+
+  function hideSummary(){
+    const inner=document.getElementById('quiz-learn-inner'),summary=document.getElementById('quiz-summary');
+    if(inner)inner.classList.remove('hidden');
+    if(summary)summary.classList.add('hidden');
+  }
 
   function renderLearn(){
     const q=curQ();
@@ -2798,7 +2833,8 @@ const QUIZ=(function(){
   function renderEmpty(){
     document.getElementById('quiz-cat').textContent='';document.getElementById('quiz-counter').textContent='';
     document.getElementById('quiz-type-badge').textContent='';
-    document.getElementById('quiz-q').textContent=_filter==='bookmarked'?'Keine gemerkten Fragen vorhanden.':'Alle Fragen beendet! Drücke „Mischen" für eine neue Runde.';
+    const msg=_filter==='bookmarked'?('Keine gemerkten Fragen'+(_catFilter!=='all'?' in dieser Kategorie':'')+'.'):(_catFilter!=='all'?'Keine Fragen in dieser Kategorie.':'Keine Fragen gefunden.');
+    document.getElementById('quiz-q').textContent=msg;
     document.getElementById('quiz-opts').innerHTML='';document.getElementById('quiz-exp').className='quiz-exp hidden';
     document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.add('hidden');
     document.getElementById('quiz-progress').style.width='100%';
@@ -2821,7 +2857,7 @@ const QUIZ=(function(){
   return {
     init(){
       if(_inited)return;_inited=true;
-      loadBm();buildOrder();renderLearn();
+      loadBm();loadMastery();buildOrder();renderCatBar();renderLearn();renderMastery();
     },
     setMode(m){
       _mode=m;
@@ -2829,15 +2865,19 @@ const QUIZ=(function(){
       document.getElementById('quiz-exam').classList.toggle('hidden',m!=='exam');
       document.getElementById('quiz-mode-learn').classList.toggle('active',m==='learn');
       document.getElementById('quiz-mode-exam').classList.toggle('active',m==='exam');
-      if(m==='exam')renderExam();else{buildOrder();renderLearn();}
+      if(m==='exam')renderExam();else{buildOrder();renderCatBar();renderLearn();renderMastery();}
     },
     _answer(idx){
       if(_answered)return;_answered=true;
-      const q=curQ();
+      const q=curQ();const ok=idx===q.correct;
       document.querySelectorAll('.quiz-opt').forEach((b,i)=>{b.disabled=true;if(i===q.correct)b.classList.add('correct');else if(i===idx)b.classList.add('wrong');});
       const exp=document.getElementById('quiz-exp');
-      exp.textContent=q.exp;exp.className=idx===q.correct?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';
+      exp.textContent=q.exp;exp.className=ok?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';
       document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.remove('hidden');
+      _masteryMap[q.id]=ok?'ok':'err';saveMastery();
+      if(!ok&&!_retried.has(q.id)){_retried.add(q.id);_order.push(q.id);}
+      if(ok)_sessionCorrect++;else _sessionWrong++;
+      renderMastery();
     },
     _revealEssay(){
       if(_answered)return;_answered=true;
@@ -2845,9 +2885,12 @@ const QUIZ=(function(){
       const exp=document.getElementById('quiz-exp');exp.textContent=q.ref;exp.className='quiz-exp quiz-exp-ref';
       document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.remove('hidden');
       const rb=document.querySelector('.quiz-reveal-btn');if(rb)rb.disabled=true;
+      if(!_masteryMap[q.id]||_masteryMap[q.id]==='err')_masteryMap[q.id]='ok';
+      saveMastery();renderMastery();
     },
-    next(){_cur++;if(_cur>=_order.length)buildOrder();renderLearn();},
-    skip(){_cur++;if(_cur>=_order.length)buildOrder();renderLearn();},
+    next(){_cur++;if(_cur>=_order.length){showSummary();return;}renderLearn();},
+    skip(){_sessionSkipped++;_cur++;if(_cur>=_order.length){showSummary();return;}renderLearn();},
+    newRound(){buildOrder();renderLearn();},
     toggleBookmark(){
       const q=curQ();if(!q)return;
       if(_bookmarks.has(q.id))_bookmarks.delete(q.id);else _bookmarks.add(q.id);
@@ -2859,7 +2902,9 @@ const QUIZ=(function(){
       document.getElementById('quiz-filter-bm').classList.toggle('active',f==='bookmarked');
       buildOrder();renderLearn();
     },
+    setCatFilter(cat){_catFilter=cat;renderCatBar();buildOrder();renderLearn();},
     reshuffle(){buildOrder();renderLearn();},
+    resetMastery(){_masteryMap={};saveMastery();renderMastery();},
     _examSel(qid,idx){_examAnswers[qid]=idx;},
     submitExam(){
       if(_examSubmitted)return;_examSubmitted=true;

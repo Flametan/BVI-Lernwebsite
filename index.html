@@ -4556,7 +4556,7 @@
     </div>
 
     <div id="quiz-learn" class="quiz-panel">
-      <div class="quiz-learn-inner">
+      <div class="quiz-learn-inner" id="quiz-learn-inner">
         <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress" style="width:0%"></div></div>
         <div class="quiz-meta">
           <span class="quiz-cat" id="quiz-cat"></span>
@@ -4572,10 +4572,24 @@
           <button class="quiz-next-btn hidden" id="quiz-next" onclick="QUIZ.next()">Nächste Frage →</button>
         </div>
       </div>
+      <div class="quiz-summary hidden" id="quiz-summary"></div>
       <div class="quiz-filter-bar">
         <button class="quiz-filter-btn active" id="quiz-filter-all" onclick="QUIZ.setFilter('all')">Alle</button>
         <button class="quiz-filter-btn" id="quiz-filter-bm" onclick="QUIZ.setFilter('bookmarked')">★ Gemerkte</button>
         <button class="quiz-shuffle-btn" onclick="QUIZ.reshuffle()">⇄ Mischen</button>
+      </div>
+      <div class="quiz-cat-bar" id="quiz-cat-bar"></div>
+      <div class="quiz-mastery-section" id="quiz-mastery-section">
+        <div class="quiz-mastery-header">
+          <span class="quiz-mastery-title">Lernstand</span>
+          <button class="quiz-mastery-reset" onclick="QUIZ.resetMastery()">Zurücksetzen</button>
+        </div>
+        <div class="quiz-mastery-grid" id="quiz-mastery-grid"></div>
+        <div class="quiz-mastery-legend">
+          <span class="qml qml-ok"></span>Richtig&nbsp;
+          <span class="qml qml-err"></span>Falsch&nbsp;
+          <span class="qml qml-un"></span>Noch nicht gesehen
+        </div>
       </div>
     </div>
 
