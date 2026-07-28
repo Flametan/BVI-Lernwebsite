@@ -868,9 +868,9 @@
 .qmd{display:inline-block;width:13px;height:13px;border-radius:3px;cursor:default;transition:opacity .15s;}
 .qmd-ok{background:#22c55e;}
 .qmd-err{background:#ef4444;}
-.qmd-un{background:var(--c-border);}
+.qmd-un{background:var(--c-bg);border:1.5px solid var(--c-border);box-sizing:border-box;}
 .quiz-mastery-legend{display:flex;gap:.75rem;flex-wrap:wrap;font-size:.71rem;color:var(--c-sub);align-items:center;}
 .qml{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:2px;vertical-align:middle;}
 .qml-ok{background:#22c55e;}
 .qml-err{background:#ef4444;}
-.qml-un{background:var(--c-border);}
+.qml-un{background:var(--c-bg);border:1.5px solid var(--c-border);box-sizing:border-box;}
