@@ -5,7 +5,7 @@
 const NAV = (function(){
   let stack = [];
   let _dir = 'forward';
-  const ALL = ['v-home','v-abkuerzungen','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-feuak','v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-idf','v-idf-brandschutz','v-idf-stab','v-idf-presse','v-simulator','v-flashcards','v-bookmarks','v-app','v-impressum','v-datenschutz'];
+  const ALL = ['v-home','v-abkuerzungen','v-gal','v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht','v-sfs','v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc','v-hlfs','v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-vb','v-hlfs-manv','v-hlfs-tunnel','v-hlfs-zugfuehrer','v-hlfs-stab','v-ibk','v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-vak','v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-altklausur','v-feuak','v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-idf','v-idf-brandschutz','v-idf-stab','v-idf-presse','v-simulator','v-flashcards','v-bookmarks','v-app','v-impressum','v-datenschutz'];
 
   function show(id){
     ALL.forEach(v=>{
@@ -36,6 +36,7 @@ const NAV = (function(){
     if(typeof BOOKMARKS!=='undefined') BOOKMARKS.setView(id);
     updateHeader();
     if(id==='v-abkuerzungen') ABK.init();
+    if(id==='v-vak-altklausur') QUIZ.init();
     if(id==='v-app' && window._isChromium){
       const w = document.getElementById('apk-chromium-warn');
       if(w) w.classList.remove('hidden');
@@ -2678,6 +2679,208 @@ const ONBOARD=(function(){
     close(){
       document.getElementById('onboarding-overlay')?.classList.add('hidden');
       localStorage.setItem(KEY,'1');
+    }
+  };
+})();
+
+/* ──────────────────────────────────────────────
+   QUIZ – Altklausur Quiz
+────────────────────────────────────────────────── */
+const QUIZ=(function(){
+  const KEY_BM='bvi_quiz_bm';
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  const Q=[
+    {id:1,cat:'Staatsorganisationsrecht',type:'essay',q:'Nennen Sie die Verfassungsorgane, die bei den einzelnen Phasen der Bundesgesetzgebung beteiligt sind oder beteiligt sein können (Gesetzesinitiative, Gesetzesberatung, Gesetzesbeschluss, Länderbeteiligung, Ausfertigung, Verkündung).',ref:'Gesetzesinitiative (Art. 76 I GG): Bundesregierung ✓, Bundesrat ✓, Bundestag ✓\nGesetzesberatung/1. Durchgang: Bundestag ✓, Bundesrat ✓ (Stellungnahme), Bundesregierung ✓\nGesetzesbeschluss (Art. 77 I GG): nur Bundestag ✓\nLänderbeteiligung/2. Durchgang (Art. 77 II ff.): Bundesrat ✓ (Zustimmung/Einspruch, ggf. Vermittlungsausschuss)\nAusfertigung (Art. 82 I GG): Bundespräsident ✓, Bundesregierung ✓ (Gegenzeichnung, Art. 58 GG)\nVerkündung im BGBl. (Art. 82 I GG): Bundespräsident ✓\nDas Bundesverfassungsgericht ist am regulären Gesetzgebungsverfahren nie beteiligt.'},
+    {id:2,cat:'Staatsorganisationsrecht',type:'essay',q:'Welche Auswirkungen haben Änderungen in den politischen Kräfteverhältnissen in den Landesparlamenten auf der Bundesebene? Erläutern Sie dies für die Wahl des Bundespräsidenten und für Grundgesetzänderungen.',ref:'Bundespräsidentenwahl: Die Bundesversammlung besteht zur Hälfte aus von den Landesparlamenten entsandten Mitgliedern (Art. 54 III GG); Mehrheitsverschiebungen in den Landtagen verschieben die Mehrheitsverhältnisse bei der Präsidentenwahl.\nGrundgesetzänderungen: Erforderlich sind zwei Drittel der Stimmen des Bundesrates (Art. 79 II GG); der Bundesrat besteht aus Mitgliedern der Landesregierungen (Art. 51 GG) – welche Koalitionen dort regieren, hängt von den Landtagswahlen ab.'},
+    {id:3,cat:'Staatsorganisationsrecht',type:'tf',q:'Grundrechte sind Abwehrrechte der Bürgerinnen und Bürger gegen den Staat.',opts:['Richtig','Falsch'],correct:0,exp:'Das ist ihre klassische Funktion gegenüber dem Staat.'},
+    {id:4,cat:'Staatsorganisationsrecht',type:'tf',q:'Gemeinderäte sind Bestandteile der vollziehenden Gewalt.',opts:['Richtig','Falsch'],correct:0,exp:'Trotz parlamentsähnlicher Struktur gehört die kommunale Selbstverwaltung nach Art. 28 II GG organisatorisch zur Exekutive, da es auf kommunaler Ebene keine eigene Gewaltenteilung gibt.'},
+    {id:5,cat:'Staatsorganisationsrecht',type:'tf',q:'Das Schulrecht fällt in die konkurrierende Gesetzgebungskompetenz des Bundes und der Länder.',opts:['Richtig','Falsch'],correct:1,exp:'Schulrecht ist Ländersache (Kulturhoheit der Länder); eine Bundeskompetenz nach Art. 70 ff. GG besteht dafür nicht.'},
+    {id:6,cat:'Staatsorganisationsrecht',type:'tf',q:'Der Bundeskanzler beziehungsweise die Bundeskanzlerin kann den Deutschen Bundestag auflösen.',opts:['Richtig','Falsch'],correct:1,exp:'Auflösen kann nur der Bundespräsident, und nur in den engen Fällen der Art. 63 IV oder Art. 68 GG.'},
+    {id:7,cat:'Staatsorganisationsrecht',type:'tf',q:'Der Bundeskanzler beziehungsweise die Bundeskanzlerin vertritt im Falle der Verhinderung den Bundespräsidenten.',opts:['Richtig','Falsch'],correct:1,exp:'Das übernimmt nach Art. 57 GG der Präsident des Bundesrates.'},
+    {id:8,cat:'Staatsorganisationsrecht',type:'tf',q:'Bundespräsident Steinmeier kann 2027 wiedergewählt werden.',opts:['Richtig','Falsch'],correct:1,exp:'Seine zweite Amtszeit endet am 18. März 2027, eine dritte Amtszeit in Folge schließt Art. 54 II GG aus.'},
+    {id:9,cat:'Staatsorganisationsrecht',type:'tf',q:'Autos sind vom Schutzbereich des Art. 13 Abs. 1 GG umfasst.',opts:['Richtig','Falsch'],correct:1,exp:'Art. 13 GG schützt die Wohnung; Kraftfahrzeuge fallen nach ständiger Rechtsprechung nicht darunter.'},
+    {id:10,cat:'Staatsorganisationsrecht',type:'tf',q:'Alle Grundrechte sind im Rahmen der Regelungen des Grundgesetzes einschränkbar.',opts:['Richtig','Falsch'],correct:1,exp:'Die Menschenwürde (Art. 1 I GG) ist nach Art. 79 III GG unantastbar; vorbehaltlos gewährleistete Grundrechte wie Art. 4 I GG sind nur durch verfassungsimmanente Schranken einschränkbar.'},
+    {id:11,cat:'Staatsorganisationsrecht',type:'tf',q:'Die Wahlrechtsgrundsätze lauten Allgemein, Unmittelbar, Frei und Geheim.',opts:['Richtig','Falsch'],correct:1,exp:'Art. 38 I 1 GG nennt fünf Grundsätze; es fehlt die Gleichheit der Wahl.'},
+    {id:12,cat:'Staatsorganisationsrecht',type:'tf',q:'Das Grundgesetz wurde am 23.05.1949 verkündet.',opts:['Richtig','Falsch'],correct:0,exp:'Verkündet wurde es am 23.05.1949. In Kraft getreten ist es erst am folgenden Tag, dem 24.05.1949.'},
+    {id:13,cat:'Staatsorganisationsrecht',type:'mc',q:'Was beschreibt das Entschließungsermessen?',opts:['Die Auswahl eines Mittels durch die Behörde','Die Entscheidung, ob die Behörde überhaupt tätig wird','Die Pflicht zur Anhörung des Betroffenen','Die Festlegung von Nebenbestimmungen'],correct:1,exp:'Das Entschließungsermessen betrifft nur die Frage, ob die Behörde tätig wird. Welches Mittel sie einsetzt, ist das davon zu unterscheidende Auswahlermessen.'},
+    {id:14,cat:'Staatsorganisationsrecht',type:'mc',q:'Welches Kriterium gehört nicht zur Verhältnismäßigkeitsprüfung?',opts:['Legitimer Zweck','Geeignetheit','Rechtmäßigkeit','Angemessenheit'],correct:2,exp:'Die Prüfung umfasst legitimen Zweck, Geeignetheit, Erforderlichkeit und Angemessenheit. Die Rechtmäßigkeit ist keine eigene Stufe, sondern das Ergebnis der Prüfung.'},
+    {id:15,cat:'Staatsorganisationsrecht',type:'mc',q:'Woran erkennt man in einer Norm typischerweise Ermessensspielräume?',opts:['An der Verwendung von „muss"','An der Verwendung von „kann" oder „darf"','An der Reihenfolge der Normabsätze','An der Länge des Gesetzestextes'],correct:1,exp:'„Kann" oder „darf" signalisieren Ermessen; „muss" oder „ist" weisen auf eine gebundene Entscheidung hin.'},
+    {id:16,cat:'Staatsorganisationsrecht',type:'mc',q:'Welche Aussage zur Konkurrenzgesetzgebung ist korrekt?',opts:['Der Bund darf nur tätig werden, wenn die Länder zustimmen','Die Länder sind zuständig, bis der Bund tätig wird','Der Bund ist immer zuständig','Konkurrenzgesetzgebung betrifft nur das Steuerrecht'],correct:1,exp:'Das folgt aus Art. 72 I GG: Die Länder haben die Gesetzgebungsbefugnis, solange und soweit der Bund von seiner Zuständigkeit nicht durch Gesetz Gebrauch gemacht hat.'},
+    {id:17,cat:'Staatsorganisationsrecht',type:'mc',q:'Was bedeutet das Rechtsstaatsprinzip?',opts:['Es verpflichtet den Staat zu wirtschaftlicher Neutralität','Es garantiert rechtliche Unabhängigkeit','Es verbietet Gewaltenteilung','Es erlaubt Verwaltungshandeln ohne Gesetz'],correct:1,exp:'Die richterliche Unabhängigkeit (Art. 97 GG) ist eine anerkannte Ausprägung des Rechtsstaatsprinzips. Es umfasst vor allem die Bindung an Gesetz und Recht, den Vorbehalt des Gesetzes, Rechtssicherheit und Rechtsschutz.'},
+    {id:18,cat:'Staatsorganisationsrecht',type:'mc',q:'Welche Aussage beschreibt das Prinzip der Gewaltenteilung im deutschen Grundgesetz zutreffend?',opts:['Die Legislative kontrolliert ausschließlich die Exekutive','Die Gewalten sind strikt getrennt und dürfen nicht zusammenwirken','Die Staatsgewalt ist in Legislative, Exekutive und Judikative gegliedert, mit funktionalen Überschneidungen','Die Judikative entscheidet nur über politische Fragen'],correct:2,exp:'Das deutsche Modell kennt keine strikte Trennung, sondern eine Gewaltenverschränkung mit wechselseitigen Kontrollmechanismen.'},
+    {id:19,cat:'Staatsorganisationsrecht',type:'mc',q:'Welche der folgenden Institutionen gehört nicht zu den (ständigen) Verfassungsorganen der Bundesrepublik Deutschland?',opts:['Der Bundesrat','Der Bundespräsident','Das Bundesverfassungsgericht','Die Bundesversammlung'],correct:3,exp:'Zu den fünf ständigen Verfassungsorganen zählen Bundestag, Bundesrat, Bundesregierung, Bundespräsident und Bundesverfassungsgericht. Die Bundesversammlung tritt nur bei Bedarf zur Präsidentenwahl zusammen.'},
+    {id:20,cat:'Staatsorganisationsrecht',type:'mc',q:'Welche Aussage zur Bundesrat-Mitwirkung im Gesetzgebungsverfahren ist korrekt?',opts:['Der Bundesrat wirkt nur bei Finanzgesetzen mit','Der Bundesrat hat bei Zustimmungsgesetzen ein Vetorecht, das der Bundestag nicht überstimmen kann','Der Bundesrat ist am Gesetzgebungsverfahren nie beteiligt','Der Bundesrat kann nur beratende Stellungnahmen abgeben'],correct:1,exp:'Bei Zustimmungsgesetzen kommt das Gesetz ohne Zustimmung des Bundesrates nicht zustande. Das unterscheidet sie von Einspruchsgesetzen, bei denen der Bundestag einen Einspruch zurückweisen kann (Art. 77 IV GG).'},
+    {id:21,cat:'Staatsorganisationsrecht',type:'mc',q:'Welche Aussage zum Wahlgrundsatz der Gleichheit ist zutreffend?',opts:['Jede Stimme hat den gleichen Zähl- und Erfolgswert','Der Erfolgswert darf unterschiedlich sein, solange alle wählen dürfen','Wahlgleichheit gilt nur für Bundestagswahlen','Wahlgleichheit verlangt zwingend Mehrheitswahl'],correct:0,exp:'Das folgt aus Art. 38 I 1 GG: Jede Stimme hat denselben Zählwert und denselben Erfolgswert.'},
+    {id:22,cat:'Allgemeines Verwaltungsrecht',type:'mc',q:'Was ist nach § 35 VwVfG ein Verwaltungsakt?',opts:['Eine Rechtsverordnung, die von einer obersten Bundesbehörde erlassen wird','Eine Maßnahme einer Behörde zur Regelung eines Einzelfalls auf dem Gebiet des öffentlichen Rechts mit Außenwirkung','Ein allgemeiner Erlass, der für eine unbestimmte Vielzahl von Fällen gilt','Eine innerdienstliche Anweisung ohne rechtliche Außenwirkung'],correct:1,exp:'So die Legaldefinition in § 35 S. 1 VwVfG.'},
+    {id:23,cat:'Allgemeines Verwaltungsrecht',type:'mc',q:'Welches der folgenden Merkmale muss ein Verwaltungsakt nach § 35 VwVfG erfüllen?',opts:['Er muss schriftlich erlassen sein','Er muss von einem Gericht stammen','Er muss eine Regelung enthalten','Er muss sich auf Zivilrecht beziehen'],correct:2,exp:'Der Regelungscharakter ist das zentrale Tatbestandsmerkmal des § 35 VwVfG.'},
+    {id:24,cat:'Allgemeines Verwaltungsrecht',type:'mc',q:'Welche Aussage trifft im Sinne des § 35 VwVfG am ehesten auf die „Außenwirkung" eines Verwaltungsaktes zu?',opts:['Der Verwaltungsakt muss für die allgemeine Öffentlichkeit bestimmt sein','Der Verwaltungsakt betrifft ausschließlich interne Verwaltungsabläufe','Der Verwaltungsakt muss gegenüber einer außerhalb der Verwaltung stehenden Person rechtliche Wirkung entfalten','Die Außenwirkung meint, dass der Verwaltungsakt öffentlich bekannt gemacht werden muss'],correct:2,exp:'Außenwirkung bedeutet Rechtswirkung gegenüber einer außerhalb der Verwaltung stehenden Person.'},
+    {id:25,cat:'Allgemeines Verwaltungsrecht',type:'mc',q:'Welche der folgenden Maßnahmen stellt typischerweise keinen Verwaltungsakt im Sinne des § 35 VwVfG dar?',opts:['Eine Baugenehmigung für ein Wohnhaus','Die Versetzung eines Beamten in eine andere Dienststelle','Eine Straßenverkehrsbehörde stellt ein Halteverbotsschild auf','Eine Ministerin kündigt auf einer Pressekonferenz ein neues Gesetzesvorhaben an'],correct:3,exp:'Der Ankündigung fehlt die Regelung eines Einzelfalls – sie ist eine politische Aussage ohne unmittelbare Rechtswirkung. Das Halteverbotsschild gilt als Allgemeinverfügung.'},
+    {id:26,cat:'Allgemeines Verwaltungsrecht',type:'mc',q:'Was ist vor dem Erlass eines belastenden Verwaltungsaktes grundsätzlich erforderlich?',opts:['Die Veröffentlichung im Amtsblatt','Die Genehmigung durch das Bundesministerium','Die Anhörung des Betroffenen','Die Zustimmung des Landtages'],correct:2,exp:'So § 28 I VwVfG.'},
+    {id:27,cat:'Allgemeines Verwaltungsrecht',type:'mc',q:'Wann kann auf eine Anhörung vor Erlass eines Verwaltungsaktes verzichtet werden?',opts:['Nie','Nur bei Gefahr im Verzug','Wenn dies durch Verwaltungsvorschriften vorgesehen ist','Wenn § 28 Abs. 2 VwVfG dies zulässt'],correct:3,exp:'§ 28 II VwVfG zählt mehrere Fallgruppen auf, etwa Gefahr im Verzug, Allgemeinverfügungen oder Massenverfahren – „nur bei Gefahr im Verzug" wäre zu eng.'},
+    {id:28,cat:'Allgemeines Verwaltungsrecht',type:'mc',q:'Was gilt, wenn eine erforderliche Anhörung unterblieben ist?',opts:['Der Verwaltungsakt ist automatisch nichtig','Die Anhörung kann nachgeholt werden','Der Verwaltungsakt bleibt dauerhaft unwirksam','Der Verwaltungsakt ist nur in Bayern gültig'],correct:1,exp:'Nach § 45 VwVfG ist dieser Verfahrensfehler heilbar.'},
+    {id:29,cat:'Allgemeines Verwaltungsrecht',type:'mc',q:'Welche Aussage ist richtig?',opts:['Jeder Verwaltungsakt muss durch die Polizei vollzogen werden','Verwaltungsakte werden durch das Grundgesetz definiert','Allgemeinverfügungen richten sich an eine unbestimmte Vielzahl von Personen','Ein Verwaltungsakt muss immer durch den Bundesrat bestätigt werden'],correct:2,exp:'So die Definition der Allgemeinverfügung in § 35 S. 2 VwVfG.'},
+    {id:30,cat:'Allgemeines Verwaltungsrecht',type:'mc',q:'Wann wird ein Verwaltungsakt wirksam?',opts:['Bei Unterschrift durch den Behördenleiter','Bei Veröffentlichung im Gesetzblatt','Mit seiner Bekanntgabe','Nach Zustimmung der betroffenen Person'],correct:2,exp:'So §§ 41, 43 VwVfG.'},
+    {id:31,cat:'Allgemeines Verwaltungsrecht',type:'mc',q:'Was ist eine Nebenbestimmung im Verwaltungsakt?',opts:['Ein unwesentlicher Zusatz ohne rechtliche Wirkung','Eine Regelung, die den Verwaltungsakt inhaltlich oder zeitlich einschränkt','Eine interne Dienstanweisung','Eine mündliche Erläuterung für den Bürger'],correct:1,exp:'So § 36 VwVfG.'},
+    {id:32,cat:'Allgemeines Verwaltungsrecht',type:'mc',q:'Was ist eine Bedingung im Sinne des § 36 VwVfG?',opts:['Eine sofort wirksame Einschränkung','Von einem künftigen ungewissen Ereignis abhängige Regelung','Eine interne Absprache','Eine Obliegenheit'],correct:1,exp:'Eine Bedingung macht den Eintritt oder Wegfall einer Vergünstigung oder Belastung vom ungewissen Eintritt eines künftigen Ereignisses abhängig (§ 36 II Nr. 2 VwVfG).'},
+    {id:33,cat:'Allgemeines Verwaltungsrecht',type:'essay',q:'Was ist eine Auflage gemäß § 36 VwVfG? Erläutern Sie den Unterschied zur Bedingung.',ref:'Eine Auflage (§ 36 II Nr. 4 VwVfG) verpflichtet die begünstigte Person zu einem zusätzlichen Tun, Dulden oder Unterlassen, ohne dass die Wirksamkeit des Verwaltungsakts selbst davon abhängt.\nUnterschied zur Bedingung: Bei der Bedingung steht die Wirksamkeit des Hauptverwaltungsakts infrage (er tritt erst ein oder entfällt bei Bedingungseintritt). Bei der Auflage bleibt der Hauptverwaltungsakt voll wirksam; die Auflage kann eigenständig durchgesetzt werden.'},
+    {id:34,cat:'Allgemeines Verwaltungsrecht',type:'mc',q:'Was ist ein Realakt?',opts:['Hoheitliche Aufgabe','Gesetz','Verwaltungsakt','Vertrag'],correct:0,exp:'Von den gegebenen Optionen kommt „Hoheitliche Aufgabe" am nächsten. Ein Realakt ist tatsächliches Verwaltungshandeln ohne eigenen Regelungscharakter – keine unmittelbare Rechtswirkung wie ein Verwaltungsakt, z. B. eine Auskunft oder eine Maßnahme vor Ort.'},
+    {id:35,cat:'Allgemeines Verwaltungsrecht',type:'mc',q:'Was sind Ampel- und Handzeichen der Polizei nach der Rechtsprechung?',opts:['Gesetz','Realakt','Allgemeinverfügung','Verordnung'],correct:2,exp:'Die Rechtsprechung behandelt Ampelzeichen als Verwaltungsakte in Form von Allgemeinverfügungen, gerichtet an die jeweils anwesenden Verkehrsteilnehmer. Gleiches gilt für Zeichen von Polizeibeamten nach § 36 StVO.'},
+    {id:36,cat:'Verwaltungsvollstreckung / Rechtsschutz',type:'mc',q:'Welche Zwangsmittel kennt das Verwaltungsvollstreckungsrecht typischerweise?',opts:['Bußgeld, Freiheitsentzug, Enteignung','Zwangsgeld, Ersatzvornahme, unmittelbarer Zwang','Ordnungsstrafe, Hausverbot, Verwarnung','Verwarnungsgeld, Bußgeld, Verhaftung'],correct:1,exp:'Nach dem Bundes-VwVG: Ersatzvornahme (§ 10), Zwangsgeld (§ 11), unmittelbarer Zwang (§ 12), zusammengefasst in § 9 VwVG.'},
+    {id:37,cat:'Verwaltungsvollstreckung / Rechtsschutz',type:'mc',q:'Was ist der wesentliche Unterschied zwischen Verwaltungsvollstreckung und Sofortvollzug?',opts:['Es gibt keinen Unterschied','Der Sofortvollzug kann ohne vorherigen Verwaltungsakt erfolgen','Die Verwaltungsvollstreckung ist nur für Steuerschulden möglich','Der Sofortvollzug darf nur bei Notstand angewendet werden'],correct:1,exp:'§ 6 II VwVG: Der Sofortvollzug ist zulässig, wenn die vorherige Bekanntgabe eines Verwaltungsakts den Zweck der Maßnahme vereiteln würde.'},
+    {id:38,cat:'Verwaltungsvollstreckung / Rechtsschutz',type:'mc',q:'Was muss vor dem Einsatz von Zwangsmitteln vorliegen?',opts:['Eine richterliche Genehmigung','Ein Gesetz zur Anordnung','Ein wirksamer Verwaltungsakt, der nicht befolgt wird','Eine Anzeige durch Dritte'],correct:2,exp:'So § 6 I VwVG des Bundes beziehungsweise § 55 I VwVG NRW.'},
+    {id:39,cat:'Verwaltungsvollstreckung / Rechtsschutz',type:'mc',q:'Welche Wirkung hat ein Widerspruch gegen einen belastenden Verwaltungsakt?',opts:['Keine','Er verzögert die Zustellung','Er hat aufschiebende Wirkung','Er macht den Verwaltungsakt nichtig'],correct:2,exp:'So § 80 I VwGO.'},
+    {id:40,cat:'Verwaltungsvollstreckung / Rechtsschutz',type:'mc',q:'Was muss die Behörde tun, wenn sie trotz Widerspruchs sofort vollziehen will?',opts:['Klage beim Verwaltungsgericht erheben','Eine Anhörung durchführen','Sofortige Vollziehung anordnen und begründen','Den Verwaltungsakt zurücknehmen'],correct:2,exp:'So § 80 II Nr. 4, § 80 III VwGO.'},
+    {id:41,cat:'Verwaltungsvollstreckung / Rechtsschutz',type:'mc',q:'Wie kann sich der Adressat gegen die Anordnung der sofortigen Vollziehung wehren?',opts:['Mit Dienstaufsichtsbeschwerde','Mit Gegenvorstellung bei der Behörde','Mit Eilantrag beim Verwaltungsgericht','Mit Antrag beim Bundesverfassungsgericht'],correct:2,exp:'So § 80 V VwGO.'},
+    {id:42,cat:'Beamten- und Disziplinarrecht',type:'mc',q:'Was regelt § 34 BeamtStG?',opts:['Dienstunfall','Pflicht zum vollen persönlichen Einsatz','Wahlrecht','Nebentätigkeiten'],correct:1,exp:'Beamtinnen und Beamte haben sich mit vollem persönlichem Einsatz ihrem Beruf zu widmen und ihr Verhalten muss der Achtung und dem Vertrauen gerecht werden, die ihr Beruf erfordert.'},
+    {id:43,cat:'Beamten- und Disziplinarrecht',type:'mc',q:'Welches Beamtenverhältnis gibt es nicht?',opts:['Beamter auf Probe','Beamter auf Widerruf','Beamter auf Lebenszeit','Beamter auf Abruf'],correct:3,exp:'Nach § 4 BeamtStG gibt es Beamte auf Lebenszeit, auf Probe, auf Widerruf und auf Zeit. Einen „Beamten auf Abruf" kennt das Beamtenrecht nicht.'},
+    {id:44,cat:'Beamten- und Disziplinarrecht',type:'mc',q:'Was ist die Voraussetzung für die Berufung in das Beamtenverhältnis?',opts:['10 Jahre Berufserfahrung','Deutsche oder EU-Staatsangehörigkeit','Privatrechtlicher Vertrag','Kirchenzugehörigkeit'],correct:1,exp:'Diese materielle Voraussetzung steht in § 7 BeamtStG. § 8 BeamtStG regelt die Ernennung als formalen Akt.'},
+    {id:45,cat:'Beamten- und Disziplinarrecht',type:'mc',q:'Welcher Zweck gehört nicht zu den klassischen Zielen des Disziplinarrechts?',opts:['Erziehungszweck','Schutzfunktion','Privatisierung der Ermittlungen','Reinigungsfunktion'],correct:2,exp:'Das Disziplinarverfahren ist und bleibt ein hoheitliches, staatliches Verfahren. Erziehungszweck, Schutzfunktion und Reinigungsfunktion sind anerkannte Zwecke.'},
+    {id:46,cat:'Beamten- und Disziplinarrecht',type:'mc',q:'Was ist der Zweck des Disziplinarrechts?',opts:['Bestrafung','Erziehung und Funktionssicherung','Politische Kontrolle','Gehaltskürzungen maximieren'],correct:1,exp:'Das Disziplinarrecht dient der Erziehung (Wiedereingliederung) und der Funktionssicherung des Berufsbeamtentums, nicht der Bestrafung im strafrechtlichen Sinne.'},
+    {id:47,cat:'Beamten- und Disziplinarrecht',type:'mc',q:'Wann muss ein Disziplinarverfahren eingeleitet werden?',opts:['Sobald der Personalrat zustimmt','Wenn eine anonyme Beschwerde eingeht','Bei zureichenden tatsächlichen Anhaltspunkten für ein Dienstvergehen','Wenn ein Strafbefehl rechtskräftig ist'],correct:2,exp:'Es gilt das Legalitätsprinzip – dem Dienstvorgesetzten steht kein Ermessen zu, ob er tätig wird, nur wie er das Verfahren führt.'},
+    {id:48,cat:'Beamten- und Disziplinarrecht',type:'mc',q:'Was versteht man unter einem „Dienstvergehen"?',opts:['Jegliches Verhalten außerhalb der Dienstzeit','Eine schuldhafte Verletzung dienstlicher Pflichten','Jede Form von Kritik an Vorgesetzten','Ein Verwaltungsverstoß nach dem Ordnungsrecht'],correct:1,exp:'So die Definition in § 47 BeamtStG.'},
+    {id:49,cat:'Beamten- und Disziplinarrecht',type:'mc',q:'Was gehört nicht zu den Dienstpflichten?',opts:['Pflicht zur wöchentlichen Fortbildung','Neutralitätsgebot','Folgepflicht','Verschwiegenheitspflicht'],correct:0,exp:'Neutralitätsgebot, Folgepflicht und Verschwiegenheitspflicht sind ausdrücklich normiert (§§ 33, 35, 37 BeamtStG). Eine eigenständige, gesetzlich fixierte Pflicht zur wöchentlichen Fortbildung gibt es dagegen nicht.'},
+    {id:50,cat:'Beamten- und Disziplinarrecht',type:'tf',q:'Eine Trunkenheitsfahrt in der Freizeit führt zu einem Disziplinarverfahren.',opts:['Richtig','Falsch'],correct:1,exp:'Rein außerdienstliches Verhalten ist nur dann relevant, wenn es in besonderem Maß geeignet ist, Achtung und Vertrauen in einer für das Amt bedeutsamen Weise zu beeinträchtigen (§ 34 S. 3 BeamtStG).'},
+    {id:51,cat:'Beamten- und Disziplinarrecht',type:'tf',q:'Das statusrechtliche Amt bezieht sich auf die tatsächlich wahrgenommenen Aufgaben.',opts:['Richtig','Falsch'],correct:1,exp:'Das statusrechtliche Amt meint die abstrakte Rechtsstellung (Laufbahn, Besoldungsgruppe, Amtsbezeichnung), nicht die konkret ausgeübte Tätigkeit – das wäre das Amt im konkret-funktionellen Sinn.'},
+    {id:52,cat:'Beamten- und Disziplinarrecht',type:'tf',q:'Für eine Ernennung zum 10.01.2025 kann die Urkunde bis zum Ende des Monats überreicht werden.',opts:['Richtig','Falsch'],correct:1,exp:'Eine Ernennung auf einen zurückliegenden Zeitpunkt ist unzulässig und unwirksam (§ 8 IV BeamtStG). Wirksam wird sie erst mit tatsächlicher Aushändigung der Urkunde.'},
+    {id:53,cat:'Beamten- und Disziplinarrecht',type:'tf',q:'Der Dienstherr muss bei Vorliegen tatsächlicher Anhaltspunkte über ein Dienstvergehen ein Disziplinarverfahren einleiten.',opts:['Richtig','Falsch'],correct:0,exp:'Legalitätsprinzip, kein Einleitungsermessen.'},
+    {id:54,cat:'Beamten- und Disziplinarrecht',type:'tf',q:'Leistung und Persönlichkeitsbild des Beamten oder der Beamtin sind alleiniger Grund für die Bemessung der Disziplinarmaßnahme.',opts:['Richtig','Falsch'],correct:1,exp:'Ausgangspunkt ist die Schwere des Dienstvergehens; Persönlichkeitsbild und bisherige Führung fließen nur ergänzend ein.'},
+    {id:55,cat:'Beamten- und Disziplinarrecht',type:'tf',q:'Die dienstliche Beurteilung ist das Hauptauswahlkriterium bei der Beförderung.',opts:['Richtig','Falsch'],correct:0,exp:'Im Rahmen der Bestenauslese nach Art. 33 II GG ist sie regelmäßig das zentrale Erkenntnismittel für Eignung, Befähigung und fachliche Leistung.'},
+    {id:56,cat:'Beamten- und Disziplinarrecht',type:'tf',q:'Maßgebliche Kriterien bei einer Ernennung von Beamten sind Eignung, Leistung, Befähigung und der Wohnsitz im Gebiet des jeweiligen Dienstherrn.',opts:['Richtig','Falsch'],correct:1,exp:'Art. 33 II GG nennt Eignung, Befähigung und fachliche Leistung; ein Wohnsitzerfordernis gehört nicht dazu.'},
+    {id:57,cat:'Beamten- und Disziplinarrecht',type:'tf',q:'Bei Bekanntwerden eines Dienstvergehens steht dem Dienstvorgesetzten Ermessen zu, ob ein Disziplinarverfahren eingeleitet wird oder nicht.',opts:['Richtig','Falsch'],correct:1,exp:'Legalitätsprinzip – kein Einleitungsermessen.'},
+    {id:58,cat:'Beamten- und Disziplinarrecht',type:'tf',q:'Das Disziplinarrecht ist abschließend durch das Bundesdisziplinargesetz geregelt.',opts:['Richtig','Falsch'],correct:1,exp:'Das Bundesdisziplinargesetz gilt nur für Bundesbeamte; für Landes- und Kommunalbeamte gilt das jeweilige Landesdisziplinargesetz.'},
+    {id:59,cat:'Beamten- und Disziplinarrecht',type:'tf',q:'Die Entfernung aus dem Beamtenverhältnis aufgrund von Verfehlungen muss im Rahmen einer Disziplinarklage vor dem Verwaltungsgericht erwirkt werden.',opts:['Richtig','Falsch'],correct:0,exp:'Diese schwerste Disziplinarmaßnahme kann die Behörde nicht selbst verfügen, sondern nur gerichtlich durchsetzen.'},
+    {id:60,cat:'Beamten- und Disziplinarrecht',type:'essay',q:'Was ist nach einer strafrechtlichen Verurteilung disziplinarisch nicht zulässig? (Die Antwortoptionen fehlen im Original-Protokoll.)',ref:'Einschlägig ist die Bindungswirkung strafgerichtlicher Feststellungen: Die Disziplinarbehörde bzw. das Disziplinargericht ist an die tatsächlichen Feststellungen eines rechtskräftigen Strafurteils grundsätzlich gebunden und darf davon nur unter engen Voraussetzungen abweichen (z. B. bei offenkundiger Unrichtigkeit).\nNicht zulässig ist es daher in aller Regel, eigene, den strafgerichtlichen Feststellungen widersprechende Tatsachenfeststellungen zu treffen.'},
+    {id:61,cat:'Gefahrenabwehr / Feuerwehrrecht',type:'essay',q:'Gegen welche drei „Personengruppen" können sich Maßnahmen der Gefahrenabwehr richten?',ref:'1. Verhaltensstörer (Handlungsstörer): verursacht die Gefahr durch eigenes Verhalten.\n2. Zustandsstörer: hat die tatsächliche Gewalt über eine gefahrverursachende Sache oder ist deren Eigentümer.\n3. Nichtstörer (Notstandspflichtiger): nicht verantwortliche Dritte – nur unter engen Voraussetzungen bei gegenwärtiger erheblicher Gefahr zulässig.'},
+    {id:62,cat:'Gefahrenabwehr / Feuerwehrrecht',type:'essay',q:'Erklären Sie den Unterschied zwischen einer konkreten Gefahr und einer Anscheinsgefahr. Was ist bei der Anscheinsgefahr besonders zu beachten?',ref:'Konkrete Gefahr: Bei ungehindertem Ablauf des objektiv zu erwartenden Geschehens ist mit hinreichender Wahrscheinlichkeit in absehbarer Zeit ein Schaden zu erwarten.\nAnscheinsgefahr: Nachträglich stellt sich heraus, dass keine Gefahr bestand – maßgeblich ist die Sicht im Zeitpunkt des Handelns (ex-ante-Betrachtung). Durfte eine besonnene Einsatzkraft von einer Gefahr ausgehen, war das Einschreiten rechtmäßig.\nBesonders zu beachten: Die Kostenfrage – wer trägt die Kosten einer sich als unbegründet herausstellenden Maßnahme?'},
+    {id:63,cat:'Gefahrenabwehr / Feuerwehrrecht',type:'essay',q:'Welche Aufgabe ergibt sich aus § 1 Abs. 1 Nr. 1 BHKG?',ref:'§ 1 Abs. 1 Nr. 1 BHKG definiert das Ziel des Gesetzes im Bereich Brandschutz: vorbeugende und abwehrende Maßnahmen bei Brandgefahren zum Schutz der Bevölkerung. Die Norm begründet die gesetzliche Grundlage für den vorbeugenden und abwehrenden Brandschutz als Pflichtaufgabe der Gemeinden.'},
+    {id:64,cat:'Gefahrenabwehr / Feuerwehrrecht',type:'mc',q:'Was ist ein Unglücksfall im Sinne des BHKG?',opts:['Langsamer Vorgang','Plötzliches Ereignis mit erheblicher Gefahr','Nur Explosionen','Nur Brände'],correct:1,exp:'Ein Unglücksfall ist ein plötzliches Ereignis, von dem eine erhebliche Gefahr für Menschen, Tiere, Sachen oder die Umwelt ausgeht.'},
+    {id:65,cat:'Gefahrenabwehr / Feuerwehrrecht',type:'essay',q:'Fall: Schornsteinbrand im Hinterhaus. Alarmierung zu einem Schornsteinbrand in einem Altbau, 3 OG. Der Einsatzleiter ordnet an, alle am Schornstein gelegenen Wohnungen auf Brandausbreitung zu kontrollieren. Im 3. OG lässt ein pensionierter Feuerwehrmann weder die Nachbarwohnung noch seine eigene Wohnung kontrollieren.\n\na) Dürfen Sie als Einsatzleiter die verschlossene Nachbarwohnung gewaltsam öffnen? Was ist zu beachten?\nb) Dürfen Sie die Wohnung gegen den Willen des Mieters betreten?\nc) Was beachten Sie beim Verlassen der Einsatzstelle?',ref:'a) Ja, gestützt auf § 41 BHKG NRW i. V. m. Art. 13 VII GG. Bei möglicher Rauch-/Brandausbreitung liegt zumindest eine Anscheinsgefahr vor. Zu beachten: Verhältnismäßigkeit – wenn zeitlich möglich, zunächst Schlüsseldienst; bei Gefahr im Verzug sofortiges gewaltsames Öffnen zulässig.\nb) Ja. Der widersprechende Mieter ist nicht Inhaber der zu kontrollierenden Nachbarwohnung und kann über deren Betretung nicht wirksam entscheiden. Sein Widerspruch ist rechtlich unbeachtlich.\nc) Geöffnete Wohnung sichern/wiederverschließen; Bewohner und Eigentümer informieren; Vorgang und Gründe dokumentieren; sicherstellen, dass keine Glutnester zurückbleiben.'},
+    {id:66,cat:'Gefahrenabwehr / Feuerwehrrecht',type:'essay',q:'Fall: Rauchmelder piept im 2. OG, Nachbarn alarmieren die Feuerwehr. Die Feuerwehr bricht die Tür auf – in der Wohnung kein Rauch, Melder hatte technischen Defekt. Der Mieter fordert Ersatz für die Tür. War die Türöffnung rechtmäßig?',ref:'Ja. Maßgeblich ist die Anscheinsgefahr: Beim Alarm eines Rauchmelders, auf den niemand reagiert, durfte die Feuerwehr ex-ante von einer konkreten Gefahr ausgehen (§ 41 BHKG NRW i. V. m. Art. 13 VII GG). Der nachträglich festgestellte technische Defekt ändert an der Rechtmäßigkeit nichts.\nEin Schadensersatzanspruch scheidet bei rechtmäßiger Maßnahme in der Regel aus; ein etwaiger Ausgleich richtet sich nach den landesrechtlichen Kostenerstattungsregelungen.'},
+    {id:67,cat:'Gefahrenabwehr / Feuerwehrrecht',type:'essay',q:'Fall: Es brennt im Keller eines Mehrfamilienhauses. Ein Trupp soll wegen der Rauchausbreitung die angrenzenden Kellerräume kontrollieren. Der Eigentümer verbietet den Zutritt zu einem vermieteten Kellerraum, weil der Mieter das Betreten nicht erlauben würde. Dürfen Sie den Kellerraum öffnen?',ref:'Ja. Bei einem Kellerbrand mit Rauchausbreitungsgefahr besteht eine konkrete Gefahr, die die Kontrolle aller betroffenen Kellerräume rechtfertigt, unabhängig davon, ob sie vermietet sind. Weder Eigentümer noch Mieter können der Gefahrenabwehr ein wirksames Zutrittsverbot entgegensetzen (§ 41 BHKG NRW).\nVorgehen: Raum verhältnismäßig, notfalls gewaltsam öffnen, kontrollieren, anschließend sichern und Eigentümer sowie Mieter informieren.'},
+  ];
+
+  let _mode='learn',_order=[],_cur=0,_answered=false,_filter='all',_inited=false;
+  let _bookmarks=new Set(),_examAnswers={},_examSubmitted=false;
+
+  function loadBm(){try{const s=localStorage.getItem(KEY_BM);if(s)_bookmarks=new Set(JSON.parse(s));}catch(e){}}
+  function saveBm(){try{localStorage.setItem(KEY_BM,JSON.stringify([..._bookmarks]));}catch(e){}}
+  function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=0|Math.random()*(i+1);[r[i],r[j]]=[r[j],r[i]];}return r;}
+  function filteredIds(){return(_filter==='bookmarked'?Q.filter(q=>_bookmarks.has(q.id)):Q).map(q=>q.id);}
+  function buildOrder(){_order=shuffle(filteredIds());_cur=0;_answered=false;}
+  function curQ(){return Q.find(q=>q.id===_order[_cur]);}
+
+  function renderLearn(){
+    const q=curQ();
+    if(!q){renderEmpty();return;}
+    document.getElementById('quiz-cat').textContent=q.cat;
+    document.getElementById('quiz-counter').textContent=(_cur+1)+' / '+_order.length;
+    document.getElementById('quiz-progress').style.width=((_cur/_order.length)*100)+'%';
+    document.getElementById('quiz-bm-btn').textContent=_bookmarks.has(q.id)?'★':'☆';
+    document.getElementById('quiz-q').textContent=q.q;
+    const tb=document.getElementById('quiz-type-badge');
+    tb.textContent=q.type==='mc'?'Multiple Choice':q.type==='tf'?'Richtig / Falsch':'Freitextfrage';
+    tb.className='quiz-type-badge quiz-type-'+q.type;
+    const opts=document.getElementById('quiz-opts');
+    if(q.type==='mc'){
+      opts.innerHTML='<div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt" onclick="QUIZ._answer('+i+')"><span class="quiz-opt-label">'+String.fromCharCode(97+i)+'</span><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div>';
+    }else if(q.type==='tf'){
+      opts.innerHTML='<div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt quiz-tf-opt" onclick="QUIZ._answer('+i+')"><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div>';
+    }else{
+      opts.innerHTML='<textarea class="quiz-textarea" id="quiz-ta" placeholder="Schreibe deine Antwort hier..." rows="4"></textarea><button class="quiz-reveal-btn" onclick="QUIZ._revealEssay()">Lösung anzeigen</button>';
+    }
+    const exp=document.getElementById('quiz-exp');exp.textContent='';exp.className='quiz-exp hidden';
+    document.getElementById('quiz-skip').classList.remove('hidden');
+    document.getElementById('quiz-next').classList.add('hidden');
+    _answered=false;
+  }
+
+  function renderEmpty(){
+    document.getElementById('quiz-cat').textContent='';document.getElementById('quiz-counter').textContent='';
+    document.getElementById('quiz-type-badge').textContent='';
+    document.getElementById('quiz-q').textContent=_filter==='bookmarked'?'Keine gemerkten Fragen vorhanden.':'Alle Fragen beendet! Drücke „Mischen" für eine neue Runde.';
+    document.getElementById('quiz-opts').innerHTML='';document.getElementById('quiz-exp').className='quiz-exp hidden';
+    document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.add('hidden');
+    document.getElementById('quiz-progress').style.width='100%';
+  }
+
+  function renderExam(){
+    _examAnswers={};_examSubmitted=false;
+    const el=document.getElementById('quiz-exam-questions');
+    el.innerHTML=Q.map((q,qi)=>{
+      const isE=q.type==='essay';
+      const optsH=isE
+        ?'<div class="quiz-exam-essay-note">Freitextfrage – fließt nicht in die Bewertung ein</div><textarea class="quiz-textarea quiz-exam-ta" id="qeta-'+q.id+'" placeholder="Notizen..." rows="3"></textarea>'
+        :q.opts.map((o,i)=>'<label class="quiz-exam-opt" id="qeol-'+q.id+'-'+i+'"><input type="radio" name="qe-'+q.id+'" value="'+i+'" onchange="QUIZ._examSel('+q.id+','+i+')"><span class="quiz-exam-opt-label">'+(q.type==='mc'?String.fromCharCode(97+i):(i===0?'R':'F'))+'</span><span>'+esc(o)+'</span></label>').join('');
+      return '<div class="quiz-exam-q" id="qeq-'+q.id+'"><div class="quiz-exam-q-header"><span class="quiz-exam-q-num" id="qeqn-'+q.id+'">Frage '+(qi+1)+'</span><span class="quiz-cat quiz-cat-sm">'+esc(q.cat)+'</span>'+(isE?'<span class="quiz-essay-tag">Freitext</span>':'')+'</div><div class="quiz-exam-q-text">'+esc(q.q)+'</div><div class="quiz-exam-opts" id="qeo-'+q.id+'">'+optsH+'</div><div class="quiz-exam-ref hidden" id="qee-'+q.id+'">'+esc(isE?q.ref:q.exp)+'</div></div>';
+    }).join('');
+    document.getElementById('quiz-exam-footer').classList.remove('hidden');
+    document.getElementById('quiz-result').classList.add('hidden');
+  }
+
+  return {
+    init(){
+      if(_inited)return;_inited=true;
+      loadBm();buildOrder();renderLearn();
+    },
+    setMode(m){
+      _mode=m;
+      document.getElementById('quiz-learn').classList.toggle('hidden',m!=='learn');
+      document.getElementById('quiz-exam').classList.toggle('hidden',m!=='exam');
+      document.getElementById('quiz-mode-learn').classList.toggle('active',m==='learn');
+      document.getElementById('quiz-mode-exam').classList.toggle('active',m==='exam');
+      if(m==='exam')renderExam();else{buildOrder();renderLearn();}
+    },
+    _answer(idx){
+      if(_answered)return;_answered=true;
+      const q=curQ();
+      document.querySelectorAll('.quiz-opt').forEach((b,i)=>{b.disabled=true;if(i===q.correct)b.classList.add('correct');else if(i===idx)b.classList.add('wrong');});
+      const exp=document.getElementById('quiz-exp');
+      exp.textContent=q.exp;exp.className=idx===q.correct?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';
+      document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.remove('hidden');
+    },
+    _revealEssay(){
+      if(_answered)return;_answered=true;
+      const q=curQ();
+      const exp=document.getElementById('quiz-exp');exp.textContent=q.ref;exp.className='quiz-exp quiz-exp-ref';
+      document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.remove('hidden');
+      const rb=document.querySelector('.quiz-reveal-btn');if(rb)rb.disabled=true;
+    },
+    next(){_cur++;if(_cur>=_order.length)buildOrder();renderLearn();},
+    skip(){_cur++;if(_cur>=_order.length)buildOrder();renderLearn();},
+    toggleBookmark(){
+      const q=curQ();if(!q)return;
+      if(_bookmarks.has(q.id))_bookmarks.delete(q.id);else _bookmarks.add(q.id);
+      saveBm();document.getElementById('quiz-bm-btn').textContent=_bookmarks.has(q.id)?'★':'☆';
+    },
+    setFilter(f){
+      _filter=f;
+      document.getElementById('quiz-filter-all').classList.toggle('active',f==='all');
+      document.getElementById('quiz-filter-bm').classList.toggle('active',f==='bookmarked');
+      buildOrder();renderLearn();
+    },
+    reshuffle(){buildOrder();renderLearn();},
+    _examSel(qid,idx){_examAnswers[qid]=idx;},
+    submitExam(){
+      if(_examSubmitted)return;_examSubmitted=true;
+      let correct=0,total=0;
+      Q.forEach(q=>{
+        const ee=document.getElementById('qee-'+q.id);if(ee)ee.classList.remove('hidden');
+        if(q.type==='essay')return;
+        total++;
+        const sel=_examAnswers[q.id],ok=sel===q.correct;
+        if(ok)correct++;
+        q.opts.forEach((o,i)=>{const l=document.getElementById('qeol-'+q.id+'-'+i);if(!l)return;if(i===q.correct)l.classList.add('exam-correct');else if(i===sel)l.classList.add('exam-wrong');});
+        const eo=document.getElementById('qeo-'+q.id);if(eo)eo.querySelectorAll('input').forEach(inp=>inp.disabled=true);
+        const qel=document.getElementById('qeq-'+q.id);if(qel)qel.classList.add(ok?'exam-q-correct':'exam-q-wrong');
+      });
+      const pct=Math.round((correct/total)*100);
+      const grade=pct>=90?'Sehr gut':pct>=75?'Gut':pct>=60?'Befriedigend':pct>=50?'Ausreichend':'Nicht bestanden';
+      const res=document.getElementById('quiz-result');
+      res.innerHTML='<div class="quiz-result-inner"><div class="quiz-result-title">Ergebnis</div><div class="quiz-result-score">'+correct+' / '+total+'</div><div class="quiz-result-pct '+(pct>=60?'grade-ok':'grade-fail')+'">'+pct+' %</div><div class="quiz-result-grade">'+grade+'</div><div class="quiz-result-bar"><div class="quiz-result-fill" style="width:'+pct+'%"></div></div><p class="quiz-result-note">'+total+' bewertete Fragen (MC + R/F). Freitextfragen nicht eingerechnet.<br>Scrolle nach oben, um alle Korrekturen zu sehen.</p><button class="quiz-retry-btn" onclick="QUIZ.setMode(\'exam\')">Nochmal versuchen</button></div>';
+      res.classList.remove('hidden');
+      document.getElementById('quiz-exam-footer').classList.add('hidden');
+      res.scrollIntoView({behavior:'smooth'});
     }
   };
 })();
