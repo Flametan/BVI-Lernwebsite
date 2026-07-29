@@ -4568,17 +4568,20 @@
         <div id="quiz-opts"></div>
         <div class="quiz-exp hidden" id="quiz-exp"></div>
         <div class="quiz-actions">
+          <button class="quiz-back-btn hidden" id="quiz-back" onclick="QUIZ.back()">← Zurück</button>
           <button class="quiz-skip-btn" id="quiz-skip" onclick="QUIZ.skip()">Überspringen →</button>
-          <button class="quiz-next-btn hidden" id="quiz-next" onclick="QUIZ.next()">Nächste Frage →</button>
+          <button class="quiz-next-btn hidden" id="quiz-next" onclick="QUIZ.next()">Weiter →</button>
         </div>
       </div>
       <div class="quiz-summary hidden" id="quiz-summary"></div>
       <div class="quiz-filter-bar">
         <button class="quiz-filter-btn active" id="quiz-filter-all" onclick="QUIZ.setFilter('all')">Alle</button>
         <button class="quiz-filter-btn" id="quiz-filter-bm" onclick="QUIZ.setFilter('bookmarked')">★ Gemerkte</button>
+        <button class="quiz-filter-btn" id="quiz-filter-wrong" onclick="QUIZ.setFilter('wrong')">✗ Falsche</button>
         <button class="quiz-shuffle-btn" onclick="QUIZ.reshuffle()">⇄ Mischen</button>
       </div>
       <div class="quiz-cat-bar" id="quiz-cat-bar"></div>
+      <div class="quiz-type-bar" id="quiz-type-bar"></div>
       <div class="quiz-mastery-section" id="quiz-mastery-section">
         <div class="quiz-mastery-header">
           <span class="quiz-mastery-title">Lernstand</span>
@@ -4590,6 +4593,7 @@
           <span class="qml qml-err"></span>Falsch&nbsp;
           <span class="qml qml-un"></span>Noch nicht gesehen
         </div>
+        <div class="quiz-mastery-cats" id="quiz-mastery-cats"></div>
       </div>
     </div>
 
