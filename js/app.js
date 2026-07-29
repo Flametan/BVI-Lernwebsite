@@ -2828,6 +2828,7 @@ const QUIZ=(function(){
 
   function initKeyboard(){
     document.addEventListener('keydown',e=>{
+      if(e.key==='Escape'){const m=document.getElementById('quiz-mastery-modal');if(m&&!m.classList.contains('hidden')){QUIZ.closeMastery();return;}}
       if(_mode!=='learn')return;
       const inText=e.target.matches('textarea,input,select,[contenteditable]');
       if(e.key==='Enter'&&!e.ctrlKey&&!e.metaKey&&!inText){
@@ -2938,7 +2939,7 @@ const QUIZ=(function(){
   return {
     init(){
       if(_inited)return;_inited=true;
-      loadBm();loadMastery();buildOrder();renderCatBar();renderTypeBar();renderLearn();renderMastery();renderMasteryCats();initKeyboard();initTouch();
+      loadBm();loadMastery();buildOrder();renderCatBar();renderTypeBar();renderLearn();initKeyboard();initTouch();
     },
     setMode(m){
       _mode=m;
@@ -2946,7 +2947,7 @@ const QUIZ=(function(){
       document.getElementById('quiz-exam').classList.toggle('hidden',m!=='exam');
       document.getElementById('quiz-mode-learn').classList.toggle('active',m==='learn');
       document.getElementById('quiz-mode-exam').classList.toggle('active',m==='exam');
-      if(m==='exam')renderExam();else{buildOrder();renderCatBar();renderTypeBar();renderLearn();renderMastery();renderMasteryCats();}
+      if(m==='exam')renderExam();else{buildOrder();renderCatBar();renderTypeBar();renderLearn();}
     },
     _answer(idx){
       if(_answered)return;_answered=true;
@@ -3004,6 +3005,15 @@ const QUIZ=(function(){
     },
     back(){if(_cur>0){_cur--;renderLearn();}},
     reshuffle(){buildOrder();renderLearn();},
+    openMastery(){
+      renderMastery();renderMasteryCats();
+      const m=document.getElementById('quiz-mastery-modal');
+      if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';}
+    },
+    closeMastery(){
+      const m=document.getElementById('quiz-mastery-modal');
+      if(m){m.classList.add('hidden');document.body.style.overflow='';}
+    },
     resetMastery(){
       if(!confirm('Lernstand für alle '+Q.length+' Fragen zurücksetzen?'))return;
       _masteryMap={};saveMastery();renderMastery();renderMasteryCats();
