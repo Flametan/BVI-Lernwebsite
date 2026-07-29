@@ -2764,6 +2764,7 @@ const QUIZ=(function(){
   let _mode='learn',_order=[],_cur=0,_answered=false,_filter='all',_catFilter='all',_inited=false;
   let _bookmarks=new Set(),_examAnswers={},_examSubmitted=false;
   let _masteryMap={},_sessionCorrect=0,_sessionWrong=0,_sessionSkipped=0,_retried=new Set();
+  let _typeFilter='all',_posHistory={};
 
   const CAT_LABELS={'Staatsorganisationsrecht':'StaatsorgR','Allgemeines Verwaltungsrecht':'AllgVwR','Verwaltungsvollstreckung / Rechtsschutz':'Vollstr./RS','Beamten- und Disziplinarrecht':'BeamtR','Gefahrenabwehr / Feuerwehrrecht':'GefahrenabwR'};
 
@@ -2772,8 +2773,8 @@ const QUIZ=(function(){
   function loadMastery(){try{const s=localStorage.getItem(KEY_MASTERY);if(s)_masteryMap=JSON.parse(s);}catch(e){}}
   function saveMastery(){try{localStorage.setItem(KEY_MASTERY,JSON.stringify(_masteryMap));}catch(e){}}
   function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=0|Math.random()*(i+1);[r[i],r[j]]=[r[j],r[i]];}return r;}
-  function filteredIds(){let p=_filter==='bookmarked'?Q.filter(q=>_bookmarks.has(q.id)):Q;if(_catFilter!=='all')p=p.filter(q=>q.cat===_catFilter);return p.map(q=>q.id);}
-  function buildOrder(){_order=shuffle(filteredIds());_cur=0;_answered=false;_sessionCorrect=0;_sessionWrong=0;_sessionSkipped=0;_retried=new Set();hideSummary();}
+  function filteredIds(){let p=_filter==='bookmarked'?Q.filter(q=>_bookmarks.has(q.id)):_filter==='wrong'?Q.filter(q=>_masteryMap[q.id]==='err'):Q;if(_catFilter!=='all')p=p.filter(q=>q.cat===_catFilter);if(_typeFilter!=='all')p=p.filter(q=>q.type===_typeFilter);return p.map(q=>q.id);}
+  function buildOrder(){_order=shuffle(filteredIds());_cur=0;_answered=false;_sessionCorrect=0;_sessionWrong=0;_sessionSkipped=0;_retried=new Set();_posHistory={};hideSummary();}
   function curQ(){return Q.find(q=>q.id===_order[_cur]);}
 
   function renderCatBar(){
@@ -2787,6 +2788,41 @@ const QUIZ=(function(){
   function renderMastery(){
     const grid=document.getElementById('quiz-mastery-grid');if(!grid)return;
     grid.innerHTML=Q.map(q=>{const m=_masteryMap[q.id];return'<span class="qmd '+(m==='ok'?'qmd-ok':m==='err'?'qmd-err':'qmd-un')+'" title="'+esc(q.q.substring(0,60))+'"></span>';}).join('');
+  }
+
+  function renderMasteryCats(){
+    const el=document.getElementById('quiz-mastery-cats');if(!el)return;
+    const cats=[...new Set(Q.map(q=>q.cat))];
+    el.innerHTML=cats.map(cat=>{
+      const qs=Q.filter(q=>q.cat===cat);
+      const ok=qs.filter(q=>_masteryMap[q.id]==='ok').length;
+      const err=qs.filter(q=>_masteryMap[q.id]==='err').length;
+      const pct=Math.round((ok/qs.length)*100);
+      return'<div class="quiz-mcat"><span class="quiz-mcat-name">'+(CAT_LABELS[cat]||esc(cat))+'</span><div class="quiz-mcat-bar"><div class="quiz-mcat-fill" style="width:'+pct+'%"></div></div><span class="quiz-mcat-stat"><span class="qmc-ok">'+ok+'✓</span> <span class="qmc-err">'+err+'✗</span> / '+qs.length+'</span></div>';
+    }).join('');
+  }
+
+  function renderTypeBar(){
+    const bar=document.getElementById('quiz-type-bar');if(!bar)return;
+    const types=[{k:'all',l:'Alle Typen'},{k:'mc',l:'Multiple Choice'},{k:'tf',l:'Richtig/Falsch'},{k:'essay',l:'Freitext'}];
+    bar.innerHTML=types.map(t=>'<button class="quiz-cat-filter-btn'+(_typeFilter===t.k?' active':'')+'" data-type="'+t.k+'">'+t.l+'</button>').join('');
+    bar.querySelectorAll('.quiz-cat-filter-btn').forEach(btn=>{btn.addEventListener('click',()=>{QUIZ.setTypeFilter(btn.dataset.type);});});
+  }
+
+  function initKeyboard(){
+    document.addEventListener('keydown',e=>{
+      if(_mode!=='learn')return;
+      const inText=e.target.matches('textarea,input,select,[contenteditable]');
+      if(e.key==='Enter'&&!e.ctrlKey&&!e.metaKey&&!inText){
+        const q=curQ();if(!q)return;
+        if(_answered)QUIZ.next();else if(q.type==='essay')QUIZ._revealEssay();
+      }else if(e.key==='Backspace'&&!inText){
+        if(_cur>0){e.preventDefault();QUIZ.back();}
+      }else if(!inText&&['1','2','3','4'].includes(e.key)){
+        const q=curQ();
+        if(!_answered&&q&&(q.type==='mc'||q.type==='tf')){const idx=+e.key-1;if(idx<q.opts.length)QUIZ._answer(idx);}
+      }
+    });
   }
 
   function showSummary(){
@@ -2825,15 +2861,30 @@ const QUIZ=(function(){
       opts.innerHTML='<textarea class="quiz-textarea" id="quiz-ta" placeholder="Schreibe deine Antwort hier..." rows="4"></textarea><button class="quiz-reveal-btn" onclick="QUIZ._revealEssay()">Lösung anzeigen</button>';
     }
     const exp=document.getElementById('quiz-exp');exp.textContent='';exp.className='quiz-exp hidden';
-    document.getElementById('quiz-skip').classList.remove('hidden');
-    document.getElementById('quiz-next').classList.add('hidden');
-    _answered=false;
+    const hist=_posHistory[_cur];
+    if(hist){
+      _answered=true;
+      if(q.type==='essay'){
+        exp.textContent=q.ref;exp.className='quiz-exp quiz-exp-ref';
+        const rb=document.querySelector('.quiz-reveal-btn');if(rb)rb.disabled=true;
+      }else{
+        document.querySelectorAll('.quiz-opt').forEach((b,i)=>{b.disabled=true;if(i===q.correct)b.classList.add('correct');else if(i===hist.userIdx)b.classList.add('wrong');});
+        exp.textContent=q.exp;exp.className=hist.correct?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';
+      }
+      document.getElementById('quiz-skip').classList.add('hidden');
+      document.getElementById('quiz-next').classList.remove('hidden');
+    }else{
+      document.getElementById('quiz-skip').classList.remove('hidden');
+      document.getElementById('quiz-next').classList.add('hidden');
+      _answered=false;
+    }
+    const bb=document.getElementById('quiz-back');if(bb)bb.classList.toggle('hidden',_cur===0);
   }
 
   function renderEmpty(){
     document.getElementById('quiz-cat').textContent='';document.getElementById('quiz-counter').textContent='';
     document.getElementById('quiz-type-badge').textContent='';
-    const msg=_filter==='bookmarked'?('Keine gemerkten Fragen'+(_catFilter!=='all'?' in dieser Kategorie':'')+'.'):(_catFilter!=='all'?'Keine Fragen in dieser Kategorie.':'Keine Fragen gefunden.');
+    const msg=_filter==='bookmarked'?'Keine gemerkten Fragen für diesen Filter.':_filter==='wrong'?'Keine falsch beantworteten Fragen für diesen Filter.':(_catFilter!=='all'||_typeFilter!=='all'?'Keine Fragen für diesen Filter.':'Keine Fragen gefunden.');
     document.getElementById('quiz-q').textContent=msg;
     document.getElementById('quiz-opts').innerHTML='';document.getElementById('quiz-exp').className='quiz-exp hidden';
     document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.add('hidden');
@@ -2857,7 +2908,7 @@ const QUIZ=(function(){
   return {
     init(){
       if(_inited)return;_inited=true;
-      loadBm();loadMastery();buildOrder();renderCatBar();renderLearn();renderMastery();
+      loadBm();loadMastery();buildOrder();renderCatBar();renderTypeBar();renderLearn();renderMastery();renderMasteryCats();initKeyboard();
     },
     setMode(m){
       _mode=m;
@@ -2865,7 +2916,7 @@ const QUIZ=(function(){
       document.getElementById('quiz-exam').classList.toggle('hidden',m!=='exam');
       document.getElementById('quiz-mode-learn').classList.toggle('active',m==='learn');
       document.getElementById('quiz-mode-exam').classList.toggle('active',m==='exam');
-      if(m==='exam')renderExam();else{buildOrder();renderCatBar();renderLearn();renderMastery();}
+      if(m==='exam')renderExam();else{buildOrder();renderCatBar();renderTypeBar();renderLearn();renderMastery();renderMasteryCats();}
     },
     _answer(idx){
       if(_answered)return;_answered=true;
@@ -2875,9 +2926,10 @@ const QUIZ=(function(){
       exp.textContent=q.exp;exp.className=ok?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';
       document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.remove('hidden');
       _masteryMap[q.id]=ok?'ok':'err';saveMastery();
+      _posHistory[_cur]={userIdx:idx,correct:ok};
       if(!ok&&!_retried.has(q.id)){_retried.add(q.id);_order.push(q.id);}
       if(ok)_sessionCorrect++;else _sessionWrong++;
-      renderMastery();
+      renderMastery();renderMasteryCats();
     },
     _revealEssay(){
       if(_answered)return;_answered=true;
@@ -2886,7 +2938,8 @@ const QUIZ=(function(){
       document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.remove('hidden');
       const rb=document.querySelector('.quiz-reveal-btn');if(rb)rb.disabled=true;
       if(!_masteryMap[q.id]||_masteryMap[q.id]==='err')_masteryMap[q.id]='ok';
-      saveMastery();renderMastery();
+      saveMastery();_posHistory[_cur]={userIdx:null,correct:true};
+      renderMastery();renderMasteryCats();
     },
     next(){_cur++;if(_cur>=_order.length){showSummary();return;}renderLearn();},
     skip(){_sessionSkipped++;_cur++;if(_cur>=_order.length){showSummary();return;}renderLearn();},
@@ -2900,11 +2953,14 @@ const QUIZ=(function(){
       _filter=f;
       document.getElementById('quiz-filter-all').classList.toggle('active',f==='all');
       document.getElementById('quiz-filter-bm').classList.toggle('active',f==='bookmarked');
+      document.getElementById('quiz-filter-wrong')?.classList.toggle('active',f==='wrong');
       buildOrder();renderLearn();
     },
     setCatFilter(cat){_catFilter=cat;renderCatBar();buildOrder();renderLearn();},
+    setTypeFilter(t){_typeFilter=t;renderTypeBar();buildOrder();renderLearn();},
+    back(){if(_cur>0){_cur--;renderLearn();}},
     reshuffle(){buildOrder();renderLearn();},
-    resetMastery(){_masteryMap={};saveMastery();renderMastery();},
+    resetMastery(){_masteryMap={};saveMastery();renderMastery();renderMasteryCats();},
     _examSel(qid,idx){_examAnswers[qid]=idx;},
     submitExam(){
       if(_examSubmitted)return;_examSubmitted=true;
