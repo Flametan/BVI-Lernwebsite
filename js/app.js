@@ -2764,7 +2764,7 @@ const QUIZ=(function(){
   let _mode='learn',_order=[],_cur=0,_answered=false,_filter='all',_catFilter='all',_inited=false;
   let _bookmarks=new Set(),_examAnswers={},_examSubmitted=false;
   let _masteryMap={},_sessionCorrect=0,_sessionWrong=0,_sessionSkipped=0,_retried=new Set();
-  let _typeFilter='all',_posHistory={},_retriedCount=0,_examPendingSubmit=false;
+  let _typeFilter='all',_posHistory={},_retriedCount=0,_examPendingSubmit=false,_filterOpen=false;
 
   const CAT_LABELS={'Staatsorganisationsrecht':'StaatsorgR','Allgemeines Verwaltungsrecht':'AllgVwR','Verwaltungsvollstreckung / Rechtsschutz':'Vollstr./RS','Beamten- und Disziplinarrecht':'BeamtR','Gefahrenabwehr / Feuerwehrrecht':'GefahrenabwR'};
 
@@ -2810,16 +2810,20 @@ const QUIZ=(function(){
   }
 
   function renderFilterStatus(){
-    const el=document.getElementById('quiz-filter-status');if(!el)return;
+    const el=document.getElementById('quiz-filter-status');
+    const tog=document.getElementById('qft-status');
     const count=filteredIds().length;
     const parts=[];
     if(_filter!=='all')parts.push(_filter==='bookmarked'?'★ Gemerkte':'✗ Falsche');
     if(_catFilter!=='all')parts.push(CAT_LABELS[_catFilter]||_catFilter);
     if(_typeFilter!=='all')parts.push(_typeFilter==='mc'?'Multiple Choice':_typeFilter==='tf'?'Richtig/Falsch':'Freitext');
     const hasFilter=parts.length>0;
-    el.innerHTML='<span class="qfs-count">'+count+' Frage'+(count!==1?'n':'')+'</span>'
-      +(parts.length?'<span class="qfs-sep">·</span><span class="qfs-chips">'+parts.map(p=>'<span class="qfs-chip">'+esc(p)+'</span>').join('')+'</span>':'')
-      +(hasFilter?'<button class="qfs-reset" onclick="QUIZ.clearFilters()">× leeren</button>':'');
+    if(el){
+      el.innerHTML='<span class="qfs-count">'+count+' Frage'+(count!==1?'n':'')+'</span>'
+        +(parts.length?'<span class="qfs-sep">·</span><span class="qfs-chips">'+parts.map(p=>'<span class="qfs-chip">'+esc(p)+'</span>').join('')+'</span>':'')
+        +(hasFilter?'<button class="qfs-reset" onclick="QUIZ.clearFilters()">× leeren</button>':'');
+    }
+    if(tog){tog.textContent=hasFilter?parts.join(' · '):count+' Fragen';tog.className='qft-status'+(hasFilter?' qft-active':'');}
   }
 
   function initKeyboard(){
@@ -2984,6 +2988,13 @@ const QUIZ=(function(){
     },
     setCatFilter(cat){_catFilter=cat;renderCatBar();buildOrder();renderFilterStatus();renderLearn();},
     setTypeFilter(t){_typeFilter=t;renderTypeBar();buildOrder();renderFilterStatus();renderLearn();},
+    toggleFilters(){
+      _filterOpen=!_filterOpen;
+      const body=document.getElementById('quiz-filter-body');
+      const chev=document.getElementById('qft-chevron');
+      if(body)body.classList.toggle('open',_filterOpen);
+      if(chev)chev.style.transform=_filterOpen?'rotate(180deg)':'';
+    },
     clearFilters(){
       _filter='all';_catFilter='all';_typeFilter='all';
       document.getElementById('quiz-filter-all').classList.add('active');

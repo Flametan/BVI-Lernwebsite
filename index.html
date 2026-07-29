@@ -4575,15 +4575,36 @@
         </div>
       </div>
       <div class="quiz-summary hidden" id="quiz-summary"></div>
-      <div class="quiz-filter-bar">
-        <button class="quiz-filter-btn active" id="quiz-filter-all" onclick="QUIZ.setFilter('all')">Alle</button>
-        <button class="quiz-filter-btn" id="quiz-filter-bm" onclick="QUIZ.setFilter('bookmarked')">★ Gemerkte</button>
-        <button class="quiz-filter-btn" id="quiz-filter-wrong" onclick="QUIZ.setFilter('wrong')">✗ Falsche</button>
-        <button class="quiz-shuffle-btn" onclick="QUIZ.reshuffle()">⇄ Mischen</button>
+      <div class="quiz-filter-panel" id="quiz-filter-panel">
+        <button class="quiz-filter-toggle" id="quiz-filter-toggle" onclick="QUIZ.toggleFilters()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+          <span class="qft-label">Filter</span>
+          <span class="qft-status" id="qft-status"></span>
+          <span class="qft-chevron" id="qft-chevron">▼</span>
+        </button>
+        <div class="quiz-filter-body" id="quiz-filter-body">
+          <div class="quiz-filter-group">
+            <div class="quiz-filter-group-label">Modus</div>
+            <div class="quiz-filter-bar-inner">
+              <button class="quiz-filter-btn active" id="quiz-filter-all" onclick="QUIZ.setFilter('all')">Alle</button>
+              <button class="quiz-filter-btn" id="quiz-filter-bm" onclick="QUIZ.setFilter('bookmarked')">★ Gemerkte</button>
+              <button class="quiz-filter-btn" id="quiz-filter-wrong" onclick="QUIZ.setFilter('wrong')">✗ Falsche</button>
+            </div>
+          </div>
+          <div class="quiz-filter-group">
+            <div class="quiz-filter-group-label">Kategorie</div>
+            <div class="quiz-cat-bar" id="quiz-cat-bar"></div>
+          </div>
+          <div class="quiz-filter-group">
+            <div class="quiz-filter-group-label">Typ</div>
+            <div class="quiz-type-bar" id="quiz-type-bar"></div>
+          </div>
+          <div class="quiz-filter-footer">
+            <div class="quiz-filter-status" id="quiz-filter-status"></div>
+            <button class="quiz-shuffle-btn" onclick="QUIZ.reshuffle()">⇄ Mischen</button>
+          </div>
+        </div>
       </div>
-      <div class="quiz-cat-bar" id="quiz-cat-bar"></div>
-      <div class="quiz-type-bar" id="quiz-type-bar"></div>
-      <div class="quiz-filter-status" id="quiz-filter-status"></div>
       <div class="quiz-mastery-section" id="quiz-mastery-section">
         <div class="quiz-mastery-header">
           <span class="quiz-mastery-title">Lernstand</span>
