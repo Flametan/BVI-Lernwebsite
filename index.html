@@ -4561,6 +4561,7 @@
         <div class="quiz-meta">
           <span class="quiz-cat" id="quiz-cat"></span>
           <span class="quiz-counter" id="quiz-counter"></span>
+          <span class="quiz-retry-tag" id="quiz-retry-tag"></span>
           <button class="quiz-bm-btn" id="quiz-bm-btn" onclick="QUIZ.toggleBookmark()" title="Frage merken">☆</button>
         </div>
         <div class="quiz-type-badge" id="quiz-type-badge"></div>
@@ -4572,6 +4573,7 @@
           <button class="quiz-skip-btn" id="quiz-skip" onclick="QUIZ.skip()">Überspringen →</button>
           <button class="quiz-next-btn hidden" id="quiz-next" onclick="QUIZ.next()">Weiter →</button>
         </div>
+        <div class="quiz-kbd-hint">Tastatur: <kbd>1</kbd>–<kbd>4</kbd> Antwort &nbsp;·&nbsp; <kbd>Enter</kbd> Weiter &nbsp;·&nbsp; <kbd>Backspace</kbd> Zurück</div>
       </div>
       <div class="quiz-summary hidden" id="quiz-summary"></div>
       <div class="quiz-filter-bar">
@@ -4582,6 +4584,7 @@
       </div>
       <div class="quiz-cat-bar" id="quiz-cat-bar"></div>
       <div class="quiz-type-bar" id="quiz-type-bar"></div>
+      <div class="quiz-filter-status" id="quiz-filter-status"></div>
       <div class="quiz-mastery-section" id="quiz-mastery-section">
         <div class="quiz-mastery-header">
           <span class="quiz-mastery-title">Lernstand</span>
@@ -4599,7 +4602,7 @@
 
     <div id="quiz-exam" class="quiz-panel hidden">
       <div id="quiz-exam-questions"></div>
-      <div id="quiz-exam-footer"><button class="quiz-submit-btn" onclick="QUIZ.submitExam()">Abgeben ✓</button></div>
+      <div id="quiz-exam-footer"><button class="quiz-submit-btn" onclick="QUIZ.submitExam()">Abgeben ✓</button><div class="quiz-exam-warn hidden" id="quiz-exam-warn"></div></div>
       <div class="quiz-result hidden" id="quiz-result"></div>
     </div>
   </div>
