@@ -3143,7 +3143,7 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
-    {v:'2.13.1',ts:'2026-07-30T16:40',items:[
+    {v:'2.13.1',ts:'2026-07-31T00:16',items:[
       'Desktop: „Inhalt"-Sidebar auf allen Seiten entfernt',
       'Layout: Fehlender Abstand vor Abschnittsüberschriften behoben (gilt für alle Seiten)'
     ]},
