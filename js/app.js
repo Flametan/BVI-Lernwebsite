@@ -3175,6 +3175,10 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
+    {v:'2.12.1',ts:'2026-07-30T13:00',items:[
+      'Bug-Fix: Lernstand-Modal im Quiz war auf Mobilgeräten nicht zentriert (Modal auf Body-Ebene verschoben)',
+      'Lernstand-Overlay: Hintergrund-Blur auf 50 % reduziert'
+    ]},
     {v:'2.12.0',ts:'2026-07-30T12:00',items:[
       'Desktop-Optimierung: schlankerer Hero, breitere Inhaltsspalten ab 1200 px',
       'Desktop-Optimierung: 4-spaltiges Kachel-Raster auf der Startseite ab 1000 px',
