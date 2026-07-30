@@ -1549,18 +1549,25 @@ function updateReadProgress(){
 ====================================================================== */
 const TOC = (function(){
   let el=null, sections=[];
-  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz']);
+  const SKIP = new Set(['v-home','v-jahr1','v-jahr2','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz']);
   return {
     build(){
       if(!el){ el=document.createElement('nav'); el.className='toc-float'; document.body.appendChild(el); }
       el.innerHTML=''; sections=[];
+      document.querySelectorAll('.view.has-toc').forEach(v=>{ v.classList.remove('has-toc'); v.querySelector('.toc-sidebar')?.remove(); });
       const active=document.querySelector('.view.active');
       if(!active||SKIP.has(active.id)) return;
       sections=Array.from(active.querySelectorAll('.sec-h')).filter(s=>s.textContent.trim());
+      if(!sections.length) return;
       el.innerHTML=sections.map((s,i)=>{
         const title=s.textContent.replace(/[<>]/g,'').trim().substring(0,34);
         return `<div class="toc-dot" data-idx="${i}" data-title="${title}" onclick="TOC.goto(${i})"></div>`;
       }).join('');
+      const sb=document.createElement('aside');
+      sb.className='toc-sidebar';
+      sb.innerHTML=`<p class="toc-sidebar-title">Inhalt</p>`+sections.map((s,i)=>`<div class="toc-sb-item" onclick="TOC.goto(${i})">${s.textContent.replace(/[<>]/g,'').trim()}</div>`).join('');
+      active.appendChild(sb);
+      active.classList.add('has-toc');
       this.update();
       PERF.rebuildIO();
     },
@@ -1571,6 +1578,7 @@ const TOC = (function(){
       let cur=0;
       sections.forEach((s,i)=>{ if(s.getBoundingClientRect().top+window.scrollY<=mid) cur=i; });
       el.querySelectorAll('.toc-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+      document.querySelectorAll('.toc-sb-item').forEach((d,i)=>d.classList.toggle('active',i===cur));
     }
   };
 })();
@@ -3167,6 +3175,11 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
+    {v:'2.12.0',ts:'2026-07-30T12:00',items:[
+      'Desktop-Optimierung: schlankerer Hero, breitere Inhaltsspalten ab 1200 px',
+      'Desktop-Optimierung: 4-spaltiges Kachel-Raster auf der Startseite ab 1000 px',
+      'Desktop-Optimierung: Text-Inhaltsverzeichnis als Seitenleiste auf breiten Bildschirmen (≥ 1300 px)'
+    ]},
     {v:'2.11.1',ts:'2026-07-30T10:52',items:[
       'Bug-Fix: 1. Jahr und 2. Jahr zeigten keinen Inhalt (fehlende Registrierung in der NAV-Liste)'
     ]},
