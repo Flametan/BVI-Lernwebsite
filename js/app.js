@@ -45,7 +45,6 @@ const NAV = (function(){
     if(typeof PROGRESS!=='undefined') PROGRESS.track(id);
     if(typeof HEATMAP!=='undefined') HEATMAP.record();
     if(typeof RELATED!=='undefined'&&RELATED[id]){const _v=document.getElementById(id);if(_v&&!_v.querySelector('.related-topics')){const _pc=_v.querySelector('.pc');if(_pc){const _d=document.createElement('div');_d.className='related-topics';_d.innerHTML='<div class="related-label">Verwandte Themen</div><div class="related-chips">'+RELATED[id].map(([rid,rl])=>'<button class="related-chip" onclick="NAV.go(\''+rid+'\',\''+rl+'\')">'+rl+'</button>').join('')+'</div>';_pc.appendChild(_d);}}}
-    if(typeof TOC!=='undefined') TOC.build();
     updateReadProgress();
     CHECKS.init(id);
     // Update URL for direct linking
@@ -1551,44 +1550,6 @@ function updateReadProgress(){
   fill.style.width = (total>0 ? Math.min(100, window.scrollY/total*100) : 0)+'%';
 }
 
-/* ======================================================================
-   TOC – Floating Dot Navigation
-====================================================================== */
-const TOC = (function(){
-  let el=null, sections=[];
-  const SKIP = new Set(['v-home','v-jahr1','v-jahr2','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz']);
-  return {
-    build(){
-      if(!el){ el=document.createElement('nav'); el.className='toc-float'; document.body.appendChild(el); }
-      el.innerHTML=''; sections=[];
-      document.querySelectorAll('.view.has-toc').forEach(v=>{ v.classList.remove('has-toc'); v.querySelector('.toc-sidebar')?.remove(); });
-      const active=document.querySelector('.view.active');
-      if(!active||SKIP.has(active.id)) return;
-      sections=Array.from(active.querySelectorAll('.sec-h')).filter(s=>s.textContent.trim());
-      if(!sections.length) return;
-      el.innerHTML=sections.map((s,i)=>{
-        const title=s.textContent.replace(/[<>]/g,'').trim().substring(0,34);
-        return `<div class="toc-dot" data-idx="${i}" data-title="${title}" onclick="TOC.goto(${i})"></div>`;
-      }).join('');
-      const sb=document.createElement('aside');
-      sb.className='toc-sidebar';
-      sb.innerHTML=`<p class="toc-sidebar-title">Inhalt</p>`+sections.map((s,i)=>`<div class="toc-sb-item" onclick="TOC.goto(${i})">${s.textContent.replace(/[<>]/g,'').trim()}</div>`).join('');
-      active.appendChild(sb);
-      active.classList.add('has-toc');
-      this.update();
-      PERF.rebuildIO();
-    },
-    goto(i){ sections[i]?.scrollIntoView({behavior:'smooth',block:'start'}); },
-    update(){
-      if(!el||!sections.length) return;
-      const mid=window.scrollY+window.innerHeight*0.38;
-      let cur=0;
-      sections.forEach((s,i)=>{ if(s.getBoundingClientRect().top+window.scrollY<=mid) cur=i; });
-      el.querySelectorAll('.toc-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
-      document.querySelectorAll('.toc-sb-item').forEach((d,i)=>d.classList.toggle('active',i===cur));
-    }
-  };
-})();
 
 /* ======================================================================
    CONFETTI
@@ -3182,6 +3143,10 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
+    {v:'2.13.1',ts:'2026-07-30T16:40',items:[
+      'Desktop: „Inhalt"-Sidebar auf allen Seiten entfernt',
+      'Layout: Fehlender Abstand vor Abschnittsüberschriften behoben (gilt für alle Seiten)'
+    ]},
     {v:'2.13.0',ts:'2026-07-30T16:21',items:[
       'Performance: Suchindex wird jetzt nur noch einmal aufgebaut (statt bei jedem Öffnen)',
       'Performance: Sucheingabe mit Debouncing – flüssigeres Tippen auf schwächeren Geräten',
@@ -3447,7 +3412,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   window.addEventListener('scroll',()=>{
     const sTop=document.getElementById('scroll-top-btn');
     if(sTop) sTop.classList.toggle('visible',window.scrollY>300);
-    if(!_perfRafPending){_perfRafPending=true;requestAnimationFrame(()=>{updateReadProgress();TOC.update();_perfRafPending=false;});}
+    if(!_perfRafPending){_perfRafPending=true;requestAnimationFrame(()=>{updateReadProgress();_perfRafPending=false;});}
   },{passive:true});
   document.addEventListener('click', e=>{
     if(!e.target.closest('.fontsize-btn-hdr')&&!e.target.closest('#fontsize-overlay'))
