@@ -3161,7 +3161,6 @@ const HEATMAP=(function(){
 ====================================================================== */
 const CHANGELOG=(function(){
   const KEY='bvi_seen_version';
-  let _openTs=0;
   const _MON=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
   function _fmtTs(ts){
     const d=new Date(ts);
@@ -3244,17 +3243,11 @@ const CHANGELOG=(function(){
       if(!m) return;
       _render();
       m.classList.remove('hidden');
-      document.body.classList.add('modal-open');
-      _openTs=Date.now();
       localStorage.setItem(KEY,APP_VERSION);
       _updateTile();
     },
     close(){
-      if(Date.now()-_openTs<300) return; // ghost-click guard: ignore close within 300ms of open
-      const m=document.getElementById('changelog-modal');
-      if(!m) return;
-      m.classList.add('hidden');
-      document.body.classList.remove('modal-open');
+      document.getElementById('changelog-modal').classList.add('hidden');
     },
     check(){
       _updateTile();
