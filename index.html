@@ -305,6 +305,26 @@
   </div>
 </div>
 
+<!-- QUIZ LERNSTAND MODAL (body-level so position:fixed isn't trapped by view animation) -->
+<div class="quiz-mastery-modal hidden" id="quiz-mastery-modal" onclick="if(event.target===this)QUIZ.closeMastery()">
+  <div class="quiz-mastery-modal-box">
+    <div class="quiz-mastery-modal-header">
+      <span class="quiz-mastery-title">Lernstand</span>
+      <div class="quiz-mastery-modal-actions">
+        <button class="quiz-mastery-reset" onclick="QUIZ.resetMastery()">Zurücksetzen</button>
+        <button class="quiz-mastery-close" onclick="QUIZ.closeMastery()" title="Schließen">✕</button>
+      </div>
+    </div>
+    <div class="quiz-mastery-grid" id="quiz-mastery-grid"></div>
+    <div class="quiz-mastery-legend">
+      <span class="qml qml-ok"></span>Richtig&nbsp;
+      <span class="qml qml-err"></span>Falsch&nbsp;
+      <span class="qml qml-un"></span>Noch nicht gesehen
+    </div>
+    <div class="quiz-mastery-cats" id="quiz-mastery-cats"></div>
+  </div>
+</div>
+
 <!-- ============================================================ HOME ============================================================ -->
 <div id="v-home" class="view active">
   <div class="hero">
@@ -4654,25 +4674,6 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="6" height="18" rx="1"/><rect x="9" y="8" width="6" height="13" rx="1"/><rect x="16" y="13" width="6" height="8" rx="1"/></svg>
           Lernstand
         </button>
-      </div>
-    </div>
-
-    <div class="quiz-mastery-modal hidden" id="quiz-mastery-modal" onclick="if(event.target===this)QUIZ.closeMastery()">
-      <div class="quiz-mastery-modal-box">
-        <div class="quiz-mastery-modal-header">
-          <span class="quiz-mastery-title">Lernstand</span>
-          <div class="quiz-mastery-modal-actions">
-            <button class="quiz-mastery-reset" onclick="QUIZ.resetMastery()">Zurücksetzen</button>
-            <button class="quiz-mastery-close" onclick="QUIZ.closeMastery()" title="Schließen">✕</button>
-          </div>
-        </div>
-        <div class="quiz-mastery-grid" id="quiz-mastery-grid"></div>
-        <div class="quiz-mastery-legend">
-          <span class="qml qml-ok"></span>Richtig&nbsp;
-          <span class="qml qml-err"></span>Falsch&nbsp;
-          <span class="qml qml-un"></span>Noch nicht gesehen
-        </div>
-        <div class="quiz-mastery-cats" id="quiz-mastery-cats"></div>
       </div>
     </div>
 
