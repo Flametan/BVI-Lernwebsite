@@ -22,26 +22,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Restore persistent release keystore
-        id: keystore-cache
-        uses: actions/cache@v4
-        with:
-          path: bvi-release.jks
-          key: bvi-release-keystore-v1
-
-      - name: Generate keystore if not cached
-        if: steps.keystore-cache.outputs.cache-hit != 'true'
-        run: |
-          keytool -genkeypair \
-            -alias bvi-release \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -keystore bvi-release.jks \
-            -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
-            -dname "CN=BVI Lernwebsite,OU=Feuerwehr,O=BVI,L=DE,ST=DE,C=DE" \
-            -noprompt
-
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
@@ -54,18 +34,12 @@ jobs:
         with:
           gradle-version: '8.5'
 
-      - name: Build release APK
+      - name: Build debug APK
         working-directory: android
-        run: |
-          gradle assembleRelease \
-            -Pandroid.injected.signing.store.file=${{ github.workspace }}/bvi-release.jks \
-            -Pandroid.injected.signing.store.password="${{ secrets.KEYSTORE_PASSWORD }}" \
-            -Pandroid.injected.signing.key.alias=bvi-release \
-            -Pandroid.injected.signing.key.password="${{ secrets.KEYSTORE_PASSWORD }}" \
-            --no-daemon
+        run: gradle assembleDebug --no-daemon
 
       - name: Rename APK
-        run: cp android/app/build/outputs/apk/release/app-release.apk bvi-lernwebsite.apk
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk bvi-lernwebsite.apk
 
       - name: Delete old release and tag (if exists)
         run: gh release delete android-latest --yes --cleanup-tag || true
