@@ -3175,17 +3175,20 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
-    {v:'2.12.3',ts:'2026-07-30T14:00',items:[
-      'Bug-Fix: Lernstand-Modal nutzt jetzt exakt dasselbe Layout wie Statistiken und Pomodoro-Timer (search-box + search-overlay)'
+    {v:'2.12.4',ts:'2026-07-30T12:30',items:[
+      'Bug-Fix: Lernstand-Modal auf Stand v2.12.0 zurückgesetzt – Zwischenstände 2.12.1–2.12.3 rückgängig gemacht',
+      'Changelog-Zeitstempel: alle Einträge zeigen jetzt die exakte Git-Merge-Zeit'
     ]},
-    {v:'2.12.2',ts:'2026-07-30T13:30',items:[
-      'Bug-Fix: Lernstand-Modal nutzt jetzt dasselbe Overlay wie Pomodoro-Timer und Statistiken (geblurrter Hintergrund, zentriert)'
+    {v:'2.12.3',ts:'2026-07-30T12:11',items:[
+      'Bug-Fix: Lernstand-Modal layout wie Statistiken/Pomodoro'
     ]},
-    {v:'2.12.1',ts:'2026-07-30T13:00',items:[
-      'Bug-Fix: Lernstand-Modal im Quiz war auf Mobilgeräten nicht zentriert (Modal auf Body-Ebene verschoben)',
-      'Lernstand-Overlay: Hintergrund-Blur auf 50 % reduziert'
+    {v:'2.12.2',ts:'2026-07-30T12:03',items:[
+      'Bug-Fix: Lernstand-Modal identisch zu Pomodoro/Statistiken'
     ]},
-    {v:'2.12.0',ts:'2026-07-30T12:00',items:[
+    {v:'2.12.1',ts:'2026-07-30T11:53',items:[
+      'Bug-Fix: Lernstand-Modal zentriert auf Mobilgeräten'
+    ]},
+    {v:'2.12.0',ts:'2026-07-30T11:43',items:[
       'Desktop-Optimierung: schlankerer Hero, breitere Inhaltsspalten ab 1200 px',
       'Desktop-Optimierung: 4-spaltiges Kachel-Raster auf der Startseite ab 1000 px',
       'Desktop-Optimierung: Text-Inhaltsverzeichnis als Seitenleiste auf breiten Bildschirmen (≥ 1300 px)'
