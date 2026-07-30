@@ -3162,36 +3162,39 @@ const HEATMAP=(function(){
 const CHANGELOG=(function(){
   const KEY='bvi_seen_version';
   const ENTRIES=[
-    {v:'6.2',date:'Juli 2026',items:[
+    {v:'6.2.1',date:'Juli 2026',items:[
+      'Semantic Versioning (MAJOR.MINOR.PATCH) eingeführt'
+    ]},
+    {v:'6.2.0',date:'Juli 2026',items:[
       'Neuigkeiten-Feed: Overlay-Design wie das Suchfeld (Blur, Header, Footer)'
     ]},
-    {v:'6.1',date:'Juli 2026',items:[
+    {v:'6.1.0',date:'Juli 2026',items:[
       'Neuigkeiten-Feed: automatisches Update-Modal bei neuer Version',
       'Neuigkeiten-Kachel auf der Startseite'
     ]},
-    {v:'6.0',date:'Juli 2026',items:[
+    {v:'6.0.0',date:'Juli 2026',items:[
       'Accordion-Tabs: doppelte Nummern aus Titeln entfernt (Badge zeigt bereits die Nummer)'
     ]},
-    {v:'5.9',date:'Juli 2026',items:[
+    {v:'5.9.0',date:'Juli 2026',items:[
       'Verwandte Themen: kontextbezogene Verlinkungen am Ende jeder Lernseite',
       'Aktivitäts-Heatmap: 13-Wochen-Übersicht in den Statistiken',
       'Suche: Kontext-Snippets zeigen die relevante Textstelle',
       'Offline-Banner: Hinweis bei fehlendem Netz',
       'Simulator: abgeschlossene Szenarien werden dauerhaft markiert'
     ]},
-    {v:'5.8',date:'Juli 2026',items:[
+    {v:'5.8.0',date:'Juli 2026',items:[
       'Prüfungs-Timer mit Countdown-Balken',
       'Kategorien-Auswertung nach der Klausur',
       'Service-Worker-Update-Erkennung zuverlässig verbessert'
     ]},
-    {v:'5.7',date:'Juli 2026',items:[
+    {v:'5.7.0',date:'Juli 2026',items:[
       'Lernstand-Modal: Backdrop-Blur wie beim Suchfeld',
       'Frage 62 (Anscheinsgefahr): fehlenden Inhalt ergänzt'
     ]},
-    {v:'5.6',date:'Juli 2026',items:[
+    {v:'5.6.0',date:'Juli 2026',items:[
       'Lernstand als zentriertes Modal-Fenster statt Seitenleiste'
     ]},
-    {v:'5.5',date:'Juli 2026',items:[
+    {v:'5.5.0',date:'Juli 2026',items:[
       'Filter-Panel als kollabierendes Akkordeon'
     ]}
   ];
