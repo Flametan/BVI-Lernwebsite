@@ -3162,6 +3162,9 @@ const HEATMAP=(function(){
 const CHANGELOG=(function(){
   const KEY='bvi_seen_version';
   const ENTRIES=[
+    {v:'6.2',date:'Juli 2026',items:[
+      'Neuigkeiten-Feed: Overlay-Design wie das Suchfeld (Blur, Header, Footer)'
+    ]},
     {v:'6.1',date:'Juli 2026',items:[
       'Neuigkeiten-Feed: automatisches Update-Modal bei neuer Version',
       'Neuigkeiten-Kachel auf der Startseite'
