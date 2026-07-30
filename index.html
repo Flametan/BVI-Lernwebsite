@@ -80,17 +80,18 @@
     <div class="search-footer"><span><kbd>↑↓</kbd> navigieren</span><span><kbd>↵</kbd> öffnen</span><span><kbd>Esc</kbd> schließen</span></div>
   </div>
 </div>
-<!-- CHANGELOG MODAL -->
+<!-- CHANGELOG OVERLAY -->
 <div id="changelog-modal" class="changelog-modal hidden" onclick="CHANGELOG.close()">
   <div class="changelog-box" onclick="event.stopPropagation()">
     <div class="changelog-header">
-      <div>
-        <div class="changelog-eyebrow">Was ist neu</div>
-        <h2 class="changelog-title">Update-Verlauf</h2>
+      <div class="changelog-eyebrow">Was ist neu</div>
+      <div class="changelog-title-row">
+        <h2 class="changelog-title">Neuigkeiten</h2>
+        <button class="changelog-close-btn" onclick="CHANGELOG.close()" title="Schließen (Esc)">✕</button>
       </div>
-      <button class="changelog-close-btn" onclick="CHANGELOG.close()" title="Schließen (Esc)">✕</button>
     </div>
     <div class="changelog-feed" id="changelog-feed"></div>
+    <div class="changelog-footer"><span><kbd>Esc</kbd> schließen</span></div>
   </div>
 </div>
 <!-- ONBOARDING OVERLAY -->
