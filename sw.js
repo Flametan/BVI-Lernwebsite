@@ -1,4 +1,4 @@
-importScripts('./js/version.js');
+const APP_VERSION = '5.8'; // keep in sync with js/version.js
 const CACHE = 'bvi-v' + APP_VERSION;
 const PRECACHE = [
   './',
