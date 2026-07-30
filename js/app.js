@@ -3163,8 +3163,11 @@ const CHANGELOG=(function(){
   const KEY='bvi_seen_version';
   let _openTs=0;
   const ENTRIES=[
+    {v:'6.2.3',date:'Juli 2026',items:[
+      'Bug-Fix: Neuigkeiten-Overlay öffnet zuverlässig – CSS-Animations-Neustart-Problem behoben'
+    ]},
     {v:'6.2.2',date:'Juli 2026',items:[
-      'Bug-Fix: Neuigkeiten-Overlay öffnet jetzt zuverlässig beim ersten Tippen (Ghost-Click-Schutz für Tablets)'
+      'Bug-Fix: Ghost-Click-Schutz für Tablets beim Öffnen des Overlays'
     ]},
     {v:'6.2.1',date:'Juli 2026',items:[
       'Semantic Versioning (MAJOR.MINOR.PATCH) eingeführt'
@@ -3230,7 +3233,6 @@ const CHANGELOG=(function(){
       if(!m) return;
       _render();
       m.classList.remove('hidden');
-      void m.offsetWidth; // force reflow so CSS animation restarts cleanly
       document.body.classList.add('modal-open');
       _openTs=Date.now();
       localStorage.setItem(KEY,APP_VERSION);
