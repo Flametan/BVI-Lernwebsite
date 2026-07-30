@@ -966,7 +966,7 @@ body.offline .offline-banner{display:flex;}
 .sim-back-btn{margin-top:.6rem;padding:.55rem 1.5rem;border-radius:var(--r-sm);border:1px solid var(--c-border);background:transparent;color:var(--c-sub);font-size:.88rem;font-weight:600;font-family:var(--f-m);cursor:pointer;}
 .sim-back-btn:hover{border-color:var(--c-text);color:var(--c-text);}
 /* Changelog Overlay (search-overlay Stil) */
-.changelog-modal{position:fixed;inset:0;z-index:900;background:rgba(18,10,3,0.50);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);display:flex;align-items:center;justify-content:center;padding:calc(58px + 1rem) 1.5rem 1.5rem;animation:overlay-fade .18s var(--ease) both;}
+.changelog-modal{position:fixed;inset:0;z-index:900;background:rgba(18,10,3,0.50);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);display:flex;align-items:center;justify-content:center;padding:calc(58px + 1rem) 1.5rem 1.5rem;}
 .changelog-modal.hidden{display:none!important;}
 .changelog-box{width:100%;max-width:640px;max-height:calc(100vh - 58px - 3rem);display:flex;flex-direction:column;background:rgba(20,11,4,1.0);border:1px solid rgba(201,168,76,.35);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--sh-lg),0 0 50px rgba(180,120,30,.10);animation:modal-in .2s var(--ease) both;}
 .changelog-header{padding:.85rem 1.25rem;border-bottom:1px solid var(--glass-b);flex-shrink:0;}
