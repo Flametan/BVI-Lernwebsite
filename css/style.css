@@ -24,6 +24,7 @@
   #app-header,#app-header~*{position:relative;z-index:3;}
   #search-overlay,#settings-overlay,#settings2-overlay,#pomodoro-overlay,#shortcuts-overlay,#notes-overlay,#stats-overlay,#aitutor-overlay,#onboarding-overlay,#changelog-modal,#quiz-mastery-modal{position:fixed!important;inset:0!important;z-index:200!important;}
   button{font-family:inherit;cursor:pointer;border:none;background:none;}
+  *:focus-visible{outline:2px solid var(--c-gold);outline-offset:2px;border-radius:3px;}
   ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--c-bg);}::-webkit-scrollbar-thumb{background:var(--c-navy-4);border-radius:3px;}::-webkit-scrollbar-thumb:hover{background:var(--c-gold);}
 
   /* VIEWS */
