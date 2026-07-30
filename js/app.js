@@ -3173,7 +3173,7 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
-    {v:'2.12.11',ts:'2026-07-30T15:45',items:[
+    {v:'2.12.11',ts:'2026-07-30T15:50',items:[
       'Lernstatistiken: Bereich „Lernaktivität" (Heatmap) entfernt'
     ]},
     {v:'2.12.10',ts:'2026-07-30T15:34',items:[
