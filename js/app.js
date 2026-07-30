@@ -3175,6 +3175,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
+    {v:'2.12.6',ts:'2026-07-30T12:30',items:[
+      'Lernstand: „Noch nicht gesehen"-Felder jetzt klar sichtbar in Blau-Grau statt fast unsichtbarem Hintergrund'
+    ]},
     {v:'2.12.5',ts:'2026-07-30T12:27',items:[
       'Bug-Fix: Lernstand-Modal auf iOS/Safari korrekt zentriert – Modal auf Body-Ebene verschoben, sodass position:fixed nicht vom View-Transform gefangen wird'
     ]},
