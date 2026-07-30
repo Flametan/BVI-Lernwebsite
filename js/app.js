@@ -3182,7 +3182,7 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
-    {v:'2.13.0',ts:'2026-07-30T16:30',items:[
+    {v:'2.13.0',ts:'2026-07-30T16:21',items:[
       'Performance: Suchindex wird jetzt nur noch einmal aufgebaut (statt bei jedem Öffnen)',
       'Performance: Sucheingabe mit Debouncing – flüssigeres Tippen auf schwächeren Geräten',
       'Performance: Scroll-Handler läuft jetzt immer über requestAnimationFrame',
