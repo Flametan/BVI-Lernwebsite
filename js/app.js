@@ -3173,7 +3173,7 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
-    {v:'2.12.12',ts:'2026-07-30T16:00',items:[
+    {v:'2.12.12',ts:'2026-07-30T16:03',items:[
       'Bug-Fix: Android-APK-Download funktioniert wieder (Build-Fehler durch abgelaufenen Keystore-Cache behoben)'
     ]},
     {v:'2.12.11',ts:'2026-07-30T15:50',items:[
