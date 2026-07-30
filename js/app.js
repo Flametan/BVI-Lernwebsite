@@ -3173,6 +3173,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
+    {v:'2.12.13',ts:'2026-07-30T16:10',items:[
+      'App-Seite: Hinweistext für Chromium-Browser angepasst'
+    ]},
     {v:'2.12.12',ts:'2026-07-30T16:03',items:[
       'Bug-Fix: Android-APK-Download funktioniert wieder (Build-Fehler durch abgelaufenen Keystore-Cache behoben)'
     ]},
