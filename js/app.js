@@ -3163,6 +3163,9 @@ const CHANGELOG=(function(){
   const KEY='bvi_seen_version';
   let _openTs=0;
   const ENTRIES=[
+    {v:'6.3.0',date:'Juli 2026',items:[
+      'Neuigkeiten von Startseite in die Einstellungen verschoben'
+    ]},
     {v:'6.2.3',date:'Juli 2026',items:[
       'Bug-Fix: Neuigkeiten-Overlay öffnet zuverlässig – CSS-Animations-Neustart-Problem behoben'
     ]},
