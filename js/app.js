@@ -1106,7 +1106,7 @@ const PROGRESS = (function(){
     sfs:  ['v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc'],
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
-    vak:  ['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht'],
+    vak:  ['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-altklausur'],
     feuak:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung'],
     idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse'],
   };
@@ -1158,12 +1158,13 @@ const PROGRESS = (function(){
    SEARCH – Volltext-Suche über alle Views
 ====================================================================== */
 const SEARCH = (function(){
-  let idx = [], results = [], focusIdx = -1, _filter = 'all';
+  let idx = [], results = [], focusIdx = -1, _filter = 'all', _indexBuilt = false, _debounceTimer = null;
   const HIST_KEY='bvi_search_hist';
   function loadHist(){ try{ return JSON.parse(localStorage.getItem(HIST_KEY)||'[]'); }catch{ return []; } }
   function saveHist(q){ const h=loadHist().filter(x=>x!==q); h.unshift(q); localStorage.setItem(HIST_KEY,JSON.stringify(h.slice(0,5))); }
 
   const VIEW_LABELS = {
+    'v-vak-altklausur':'VAk · Altklausur-Training',
     'v-gal-organisation':'GAL · Organisation','v-gal-brandlehre':'GAL · Brandlehre','v-gal-fahrzeuge':'GAL · Fahrzeuge','v-gal-einsatz':'GAL · Einsatz','v-gal-atemgifte':'GAL · Atemgifte','v-gal-atemschutz':'GAL · Atemschutz','v-gal-vb':'GAL · Vorbeugender Brandschutz','v-gal-beamtenrecht':'GAL · Beamtenrecht','v-gal-beihilferecht':'GAL · Beihilferecht','v-gal-brandbekaempfung':'GAL · Brandbekämpfung','v-gal-einsatztechnik':'GAL · Einsatztechnik','v-gal-erstehilfe':'GAL · Erste Hilfe','v-gal-grundlagen':'GAL · Naturwiss. Grundlagen','v-gal-fahrzeugnormung':'GAL · Fahrzeugnormung','v-gal-fuehrung':'GAL · Führung','v-gal-fwdven':'GAL · FwDVen','v-gal-gabc':'GAL · G-ABC Einsatz','v-gal-loeschlehre':'GAL · Löschlehre','v-gal-loeschmittel-schaum':'GAL · Löschmittel Schaum','v-gal-loeschwasserversorgung':'GAL · Löschwasserversorgung','v-gal-geraetepruefung':'GAL · Geräteprüfung','v-gal-hbkg':'GAL · HBKG','v-gal-kartenkunde':'GAL · Kartenkunde','v-gal-knoten':'GAL · Knoten & Stiche','v-gal-staatsbuerger':'GAL · Staatsbürgerkunde','v-gal-th-verkehr':'GAL · TH Verkehrsunfall','v-gal-leitern':'GAL · Tragbare Leitern','v-gal-uvv':'GAL · UVV','v-gal-waermebildkamera':'GAL · Wärmebildkamera','v-gal-armaturen':'GAL · Wasserführende Armaturen','v-gal-maschinist':'GAL · Maschinist','v-gal-psa':'GAL · Persönliche Schutzausrüstung','v-gal-personalvertretungsrecht':'GAL · Personalvertretungsrecht',
     'v-sfs-fwdv3':'SFS · Führung','v-sfs-methodik':'SFS · Methodik','v-sfs-rechtsgrundlagen':'SFS · Recht','v-sfs-abc':'SFS · Geräte/ABC',
     'v-hlfs-fuehrungsvorgang':'HLFS · Führungsvorgang','v-hlfs-gabc':'HLFS · GABC','v-hlfs-tunnel':'HLFS · Tunnel',
@@ -1185,6 +1186,8 @@ const SEARCH = (function(){
   function stripHtml(s){ const d=document.createElement('div');d.innerHTML=s;return d.textContent||''; }
 
   function buildIndex(){
+    if(_indexBuilt) return;
+    _indexBuilt = true;
     idx = [];
     Object.keys(VIEW_LABELS).forEach(vid => {
       const el = document.getElementById(vid); if(!el) return;
@@ -1288,7 +1291,7 @@ const SEARCH = (function(){
     },
     close(){ document.getElementById('search-overlay').classList.add('hidden'); results=[]; focusIdx=-1; },
     toggle(){ document.getElementById('search-overlay').classList.contains('hidden') ? this.open() : this.close(); },
-    query(q){ render(q.trim()); },
+    query(q){ clearTimeout(_debounceTimer); _debounceTimer = setTimeout(()=>render(q.trim()), 150); },
     setFilter(f){
       _filter=f;
       document.querySelectorAll('.sf-btn').forEach(b=>b.classList.toggle('active',b.dataset.f===f));
@@ -1434,8 +1437,12 @@ const NOTES = (function(){
     },
     toggle(){ document.getElementById('notes-overlay').classList.contains('hidden') ? this.open() : this.close(); },
     clear(){
-      const ta=document.getElementById('notes-textarea'); if(ta) ta.value='';
-      localStorage.removeItem(key()); updateBtn();
+      const ta=document.getElementById('notes-textarea'); if(!ta) return;
+      const prev=ta.value;
+      ta.value=''; localStorage.removeItem(key()); updateBtn();
+      TOAST.show('Notiz gelöscht',{type:'ok',undo:()=>{
+        ta.value=prev; localStorage.setItem(key(),prev); updateBtn();
+      }});
     },
     share(){
       const ta = document.getElementById('notes-textarea');
@@ -2617,16 +2624,18 @@ const CHECKS=(function(){
       if(SKIP.has(id)) return;
       const view=document.getElementById(id); if(!view) return;
       const checks=load(id);
-      view.querySelectorAll('.acc-item summary').forEach((sum,idx)=>{
+      view.querySelectorAll('.acc-item summary').forEach((sum)=>{
         if(sum.querySelector('.acc-check')) return;
+        const titleEl=sum.querySelector('.acc-title,.acc-h');
+        const ck=(titleEl?titleEl.textContent:sum.textContent).trim().slice(0,80);
         const btn=document.createElement('button');
-        btn.className='acc-check'+(checks[idx]?' checked':'');
+        btn.className='acc-check'+(checks[ck]?' checked':'');
         btn.title='Abgehakt'; btn.type='button';
         btn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
         btn.addEventListener('click',e=>{
           e.stopPropagation(); e.preventDefault();
-          const d=load(id); d[idx]=!d[idx]; save(id,d);
-          btn.classList.toggle('checked',!!d[idx]);
+          const d=load(id); d[ck]=!d[ck]; save(id,d);
+          btn.classList.toggle('checked',!!d[ck]);
         });
         const arrow=sum.querySelector('.acc-arrow');
         if(arrow) sum.insertBefore(btn,arrow); else sum.appendChild(btn);
@@ -3173,6 +3182,17 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
+    {v:'2.13.0',ts:'2026-07-30T16:30',items:[
+      'Performance: Suchindex wird jetzt nur noch einmal aufgebaut (statt bei jedem Öffnen)',
+      'Performance: Sucheingabe mit Debouncing – flüssigeres Tippen auf schwächeren Geräten',
+      'Performance: Scroll-Handler läuft jetzt immer über requestAnimationFrame',
+      'Bug-Fix: Altklausur-Training (VAk) erscheint jetzt in der Suche und im Fortschritts-Tracking',
+      'Bug-Fix: Escape-Taste schließt jetzt auch Pomodoro-Timer, Onboarding und Lernstand-Modal',
+      'Bug-Fix: Accordion-Häkchen bleiben korrekt gesetzt, auch wenn Inhalte umstrukturiert werden',
+      'UX: Notiz löschen zeigt jetzt einen Undo-Button im Toast',
+      'Barrierefreiheit: Alle Navigations-Kacheln sind jetzt per Tastatur (Tab + Enter) erreichbar',
+      'Barrierefreiheit: Fokus-Indikator für Tastaturnavigation hinzugefügt'
+    ]},
     {v:'2.12.13',ts:'2026-07-30T16:10',items:[
       'App-Seite: Hinweistext für Chromium-Browser angepasst'
     ]},
@@ -3388,6 +3408,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     t.parentNode.insertBefore(w,t);
     w.appendChild(t);
   });
+  // Keyboard-Navigation für Kacheln und Topic-Cards
+  document.querySelectorAll('.glass-tile,.topic-card').forEach(el=>{
+    el.setAttribute('tabindex','0');
+    el.setAttribute('role','button');
+    el.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); }
+    });
+  });
+
   document.addEventListener('keydown', e => {
     if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); SEARCH.open(); return; }
     if(e.key==='?'&&!e.target.matches('input,textarea')){
@@ -3399,6 +3428,9 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(!document.getElementById('search-overlay').classList.contains('hidden')){ SEARCH.close(); return; }
       if(!document.getElementById('shortcuts-overlay').classList.contains('hidden')){ document.getElementById('shortcuts-overlay').classList.add('hidden'); return; }
       if(!document.getElementById('settings2-overlay').classList.contains('hidden')){ SETTINGS2.close(); return; }
+      if(!document.getElementById('pomodoro-overlay').classList.contains('hidden')){ POMODORO.close(); return; }
+      if(!document.getElementById('onboarding-overlay')?.classList.contains('hidden')){ ONBOARDING.close(); return; }
+      if(!document.getElementById('quiz-mastery-modal').classList.contains('hidden')){ QUIZ.closeMastery(); return; }
       SETTINGS.closeAllPanels();
       if(document.getElementById('stats-overlay')&&!document.getElementById('stats-overlay').classList.contains('hidden')){ STATS.close(); return; }
       if(!document.getElementById('notes-overlay').classList.contains('hidden')){ NOTES.close(); return; }
@@ -3415,11 +3447,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   window.addEventListener('scroll',()=>{
     const sTop=document.getElementById('scroll-top-btn');
     if(sTop) sTop.classList.toggle('visible',window.scrollY>300);
-    if(PERF.enabled){
-      if(!_perfRafPending){_perfRafPending=true;requestAnimationFrame(()=>{updateReadProgress();_perfRafPending=false;});}
-    } else {
-      updateReadProgress();TOC.update();
-    }
+    if(!_perfRafPending){_perfRafPending=true;requestAnimationFrame(()=>{updateReadProgress();TOC.update();_perfRafPending=false;});}
   },{passive:true});
   document.addEventListener('click', e=>{
     if(!e.target.closest('.fontsize-btn-hdr')&&!e.target.closest('#fontsize-overlay'))
