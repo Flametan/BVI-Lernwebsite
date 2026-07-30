@@ -18,6 +18,10 @@
   <link rel="apple-touch-icon" href="icons/icon-192.svg"/>
 </head>
 <body>
+<div class="offline-banner" id="offline-banner">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.56 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+  Offline – du siehst die zwischengespeicherte Version
+</div>
 <canvas id="shader-bg" aria-hidden="true"></canvas>
 
 <!-- HEADER -->
@@ -7092,49 +7096,49 @@
     <div id="sim-menu-wrap">
       <h2 class="sec-h">Szenario wählen</h2>
       <div class="sim-menu">
-        <div class="sc-card" onclick="SIM.loadScenario('schmidt')">
+        <div class="sc-card" data-scenario="schmidt" onclick="SIM.loadScenario('schmidt')">
           <div class="sc-num">Szenario 01</div>
           <div class="sc-title">Konflikt Schmidt / Müller</div>
           <div class="sc-desc">OBM Fritz Schmidt (52 J., Ausbilder) fühlt sich durch monatelange RD-Einteilung degradiert und konfrontiert WAL Müller öffentlich. Du bist der B-Dienst.</div>
           <span class="sc-tag sc-tag-ok">Generationenkonflikt · TA · Schulz von Thun</span>
         </div>
-        <div class="sc-card" onclick="SIM.loadScenario('ressourcen')">
+        <div class="sc-card" data-scenario="ressourcen" onclick="SIM.loadScenario('ressourcen')">
           <div class="sc-num">Szenario 02</div>
           <div class="sc-title">Ressourcen-Dilemma</div>
           <div class="sc-desc">Zwei simultane Großlagen: Wohnhausbrand mit Personenrettung UND Gefahrgutunfall auf der BAB. Nur eine Staffel verfügbar. Du entscheidest unter Zeitdruck.</div>
           <span class="sc-tag sc-tag-err">Priorisierung · Ressourcenmangel · Lagedruck</span>
         </div>
-        <div class="sc-card" onclick="SIM.loadScenario('stab')">
+        <div class="sc-card" data-scenario="stab" onclick="SIM.loadScenario('stab')">
           <div class="sc-num">Szenario 03</div>
           <div class="sc-title">Führungsfehler im Stab</div>
           <div class="sc-desc">Während einer komplexen Großschadenslage eskaliert ein Fachberater-Gespräch. S3 und der Einsatzleiter Rettungsdienst sind offen in Konflikt. Du moderierst.</div>
           <span class="sc-tag sc-tag-warn">Stabsarbeit · Deeskalation · Watzlawick</span>
         </div>
-        <div class="sc-card" onclick="SIM.loadScenario('disziplin')">
+        <div class="sc-card" data-scenario="disziplin" onclick="SIM.loadScenario('disziplin')">
           <div class="sc-num">Szenario 04</div>
           <div class="sc-title">Disziplinarischer Grenzfall</div>
           <div class="sc-desc">Verdacht auf wiederholtes Dienstpflichtvergehen bei OBM Berger (22 Jahre, bisher tadellos). Fürsorge vs. rechtliche Pflicht – eine Führungsentscheidung mit Konsequenzen.</div>
           <span class="sc-tag sc-tag-err">Dienstvergehen · Führungsfürsorge · Recht</span>
         </div>
-        <div class="sc-card" onclick="SIM.loadScenario('alpha')">
+        <div class="sc-card" data-scenario="alpha" onclick="SIM.loadScenario('alpha')">
           <div class="sc-num">Szenario 05</div>
           <div class="sc-title">Der „Alpha"-Fachberater</div>
           <div class="sc-desc">Chemie-Ingenieur Dr. Lehmann widerspricht deiner Absperrplanung lautstark vor versammelter Mannschaft. Kompetenzhierarchie und Expertise – ein klassischer Führungstest.</div>
           <span class="sc-tag sc-tag-warn">Kompetenzhierarchie · TA · Expertenmacht</span>
         </div>
-        <div class="sc-card" onclick="SIM.loadScenario('politik')">
+        <div class="sc-card" data-scenario="politik" onclick="SIM.loadScenario('politik')">
           <div class="sc-num">Szenario 06</div>
           <div class="sc-title">Politische Drucksituation</div>
           <div class="sc-desc">Der Bürgermeister fordert am Einsatzort eine sofortige Priorisierung des historischen Rathauses. Taktisch falsch – politisch heiß. Wie hältst du die Einsatzleitung?</div>
           <span class="sc-tag sc-tag-err">Einsatzleitung kraft Gesetz · FwDV 100 · Politik</span>
         </div>
-        <div class="sc-card" onclick="SIM.loadScenario('stab2')">
+        <div class="sc-card" data-scenario="stab2" onclick="SIM.loadScenario('stab2')">
           <div class="sc-num">Szenario 07</div>
           <div class="sc-title">Informationsblockade im Stab</div>
           <div class="sc-desc">S3 und S2 verweigern sich gegenseitig Lagedaten – aus persönlichen Differenzen. Das taktische Lagebild ist unvollständig. Während einer Waldbrand-Großlage.</div>
           <span class="sc-tag sc-tag-err">Stabsführung · Glasl · Informationsmanagement</span>
         </div>
-        <div class="sc-card" onclick="SIM.loadScenario('belastung')">
+        <div class="sc-card" data-scenario="belastung" onclick="SIM.loadScenario('belastung')">
           <div class="sc-num">Szenario 08</div>
           <div class="sc-title">Akute Belastungsreaktion</div>
           <div class="sc-desc">ZF Haas (18 Dienstjahre) zeigt nach einem VU mit Kindstod klare Zeichen einer Belastungsreaktion – will aber nicht gehen. Das Fürsorgegespräch unter Einsatzbedingungen.</div>

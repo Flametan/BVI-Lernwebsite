@@ -942,3 +942,26 @@ body.mode-navy .quiz-mastery-modal-box{background:rgba(8,13,28,1.0);border-color
 .quiz-rcat-fill{height:100%;background:var(--c-gold);border-radius:3px;transition:width .5s ease;}
 .qrf-fail{background:#ef4444;}
 .quiz-rcat-stat{width:2.8rem;text-align:right;color:var(--c-sub);font-family:var(--f-m);flex-shrink:0;}
+/* Offline-Banner */
+.offline-banner{display:none;align-items:center;justify-content:center;gap:.5rem;padding:.45rem 1rem;background:rgba(239,68,68,.12);border-bottom:1px solid rgba(239,68,68,.3);color:#ef4444;font-size:.78rem;font-weight:600;font-family:var(--f-m);position:sticky;top:0;z-index:300;}
+body.offline .offline-banner{display:flex;}
+/* Verwandte Themen */
+.related-topics{margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--c-border);}
+.related-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--c-sub);margin-bottom:.6rem;}
+.related-chips{display:flex;flex-wrap:wrap;gap:.4rem;}
+.related-chip{padding:.32rem .75rem;border-radius:100px;border:1px solid var(--c-border);background:var(--glass);color:var(--c-sub);font-size:.78rem;font-weight:600;font-family:var(--f-b);cursor:pointer;transition:border-color .15s,color .15s,background .15s;}
+.related-chip:hover{border-color:var(--c-gold-rim);color:var(--c-gold);background:var(--c-gold-dim);}
+/* Heatmap */
+.hm-grid{display:grid;grid-template-columns:repeat(13,1fr);grid-auto-rows:auto;gap:3px;margin-bottom:.55rem;}
+.hm-cell{display:block;aspect-ratio:1;border-radius:2px;background:var(--c-bg2);cursor:default;}
+.hm-0{background:var(--c-bg2);border:1px solid var(--c-border);}
+.hm-1{background:rgba(201,168,76,.2);}
+.hm-2{background:rgba(201,168,76,.45);}
+.hm-3{background:rgba(201,168,76,.7);}
+.hm-4{background:var(--c-gold);}
+.hm-legend{display:flex;align-items:center;gap:3px;font-size:.68rem;color:var(--c-sub);}
+.hm-lbl-l{padding:0 .3rem;}
+/* Simulator Completion */
+.sc-done-badge{font-size:.7rem;font-weight:700;color:#22c55e;font-family:var(--f-m);margin-top:.45rem;}
+.sim-back-btn{margin-top:.6rem;padding:.55rem 1.5rem;border-radius:var(--r-sm);border:1px solid var(--c-border);background:transparent;color:var(--c-sub);font-size:.88rem;font-weight:600;font-family:var(--f-m);cursor:pointer;}
+.sim-back-btn:hover{border-color:var(--c-text);color:var(--c-text);}
