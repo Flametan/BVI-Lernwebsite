@@ -2515,9 +2515,7 @@ const STATS = (function(){
         const label={gal:'GAL',sfs:'SFS',hlfs:'HLFS',ibk:'IBK',vak:'VAk',feuak:'FeuAK',idf:'IdF'}[cat]||cat;
         return `<div class="stat-row"><span class="stat-row-lbl">${label}</span><div class="stat-bar-wrap"><div class="stat-bar-fill" style="width:${pct}%"></div></div><span class="stat-row-cnt">${kn}/${cats.length}</span></div>`;
       }).join('')}</div>
-      <div class="stat-section-title" style="margin-top:1.1rem">Lernaktivität</div>
-      <div id="stats-heatmap-container"></div>`;
-    if(typeof HEATMAP!=='undefined') HEATMAP.render(c.querySelector('#stats-heatmap-container'));
+      `;
   }
   return {
     open(){ ov()?.classList.remove('hidden'); build(); },
@@ -3175,6 +3173,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
+    {v:'2.12.11',ts:'2026-07-30T15:45',items:[
+      'Lernstatistiken: Bereich „Lernaktivität" (Heatmap) entfernt'
+    ]},
     {v:'2.12.10',ts:'2026-07-30T15:34',items:[
       'Bug-Fix: Lernstand-Modal zentriert sich jetzt korrekt auf iOS/Safari, auch wenn die Seite gescrollt ist (Modal auf Body-Ebene verschoben)'
     ]},
