@@ -3167,6 +3167,16 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
+    {v:'2.11.1',ts:'2026-07-30T10:52',items:[
+      'Bug-Fix: 1. Jahr und 2. Jahr zeigten keinen Inhalt (fehlende Registrierung in der NAV-Liste)'
+    ]},
+    {v:'2.11.0',ts:'2026-07-30T10:50',items:[
+      'Startseite nach Ausbildungsjahren gegliedert: 1. Jahr (GAL, SFS, HLFS) und 2. Jahr (IBK, VAk, FeuAK, IdF)'
+    ]},
+    {v:'2.10.1',ts:'2026-07-30T10:40',items:[
+      'Neuigkeiten-Overlay: Verhalten identisch zum Pomodoro-Timer – funktioniert jetzt auf allen Geräten zuverlässig',
+      'Zeitstempel im Changelog: zeigt jetzt die echten Git-Commit-Zeiten'
+    ]},
     {v:'2.10.0',ts:'2026-07-30T10:23',items:[
       'Neuigkeiten-Overlay öffnet jetzt immer zuverlässig beim Antippen',
       'Kein automatisches Öffnen beim App-Start mehr',
