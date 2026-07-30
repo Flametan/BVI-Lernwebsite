@@ -82,7 +82,7 @@
 </div>
 <!-- CHANGELOG OVERLAY -->
 <div id="changelog-modal" class="search-overlay hidden" onclick="if(event.target===this)CHANGELOG.close()">
-  <div class="changelog-box">
+  <div class="changelog-box" onclick="event.stopPropagation()">
     <div class="changelog-header">
       <div class="changelog-eyebrow">Was ist neu</div>
       <div class="changelog-title-row">

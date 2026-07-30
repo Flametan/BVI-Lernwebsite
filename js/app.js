@@ -3175,7 +3175,10 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
-    {v:'2.12.8',ts:'2026-07-30T12:40',items:[
+    {v:'2.12.9',ts:'2026-07-30T12:50',items:[
+      'Bug-Fix: Neuigkeiten-Overlay öffnet jetzt zuverlässig im Quiz (fehlende position:fixed!important-Regel und stopPropagation ergänzt)'
+    ]},
+    {v:'2.12.8',ts:'2026-07-30T12:42',items:[
       'Lernstand: „Noch nicht gesehen" in Blau-Grau (#4b6180) für bessere Sichtbarkeit'
     ]},
     {v:'2.12.7',ts:'2026-07-30T12:33',items:[
