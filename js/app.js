@@ -2765,6 +2765,28 @@ const QUIZ=(function(){
   let _bookmarks=new Set(),_examAnswers={},_examSubmitted=false;
   let _masteryMap={},_sessionCorrect=0,_sessionWrong=0,_sessionSkipped=0,_retried=new Set();
   let _typeFilter='all',_posHistory={},_retriedCount=0,_examPendingSubmit=false,_filterOpen=false;
+  let _examTimerInterval=null,_examTimeLeft=0;
+
+  function startTimer(){
+    _examTimeLeft=60*60;
+    const bar=document.getElementById('quiz-exam-timer-bar');
+    if(bar)bar.classList.remove('hidden');
+    updateTimerDisplay();
+    clearInterval(_examTimerInterval);
+    _examTimerInterval=setInterval(()=>{_examTimeLeft--;updateTimerDisplay();if(_examTimeLeft<=0){clearInterval(_examTimerInterval);QUIZ.submitExam();}},1000);
+  }
+  function updateTimerDisplay(){
+    const el=document.getElementById('quiz-exam-time');if(!el)return;
+    const m=Math.floor(_examTimeLeft/60),s=_examTimeLeft%60;
+    el.textContent=m+':'+String(s).padStart(2,'0');
+    const bar=document.getElementById('quiz-exam-timer-bar');
+    if(bar)bar.classList.toggle('qetb-urgent',_examTimeLeft<=300);
+  }
+  function stopTimer(){
+    clearInterval(_examTimerInterval);_examTimerInterval=null;
+    const bar=document.getElementById('quiz-exam-timer-bar');
+    if(bar)bar.classList.add('hidden');
+  }
 
   const CAT_LABELS={'Staatsorganisationsrecht':'StaatsorgR','Allgemeines Verwaltungsrecht':'AllgVwR','Verwaltungsvollstreckung / Rechtsschutz':'Vollstr./RS','Beamten- und Disziplinarrecht':'BeamtR','Gefahrenabwehr / Feuerwehrrecht':'GefahrenabwR'};
 
@@ -2934,6 +2956,7 @@ const QUIZ=(function(){
     }).join('');
     document.getElementById('quiz-exam-footer').classList.remove('hidden');
     document.getElementById('quiz-result').classList.add('hidden');
+    startTimer();
   }
 
   return {
@@ -2947,7 +2970,7 @@ const QUIZ=(function(){
       document.getElementById('quiz-exam').classList.toggle('hidden',m!=='exam');
       document.getElementById('quiz-mode-learn').classList.toggle('active',m==='learn');
       document.getElementById('quiz-mode-exam').classList.toggle('active',m==='exam');
-      if(m==='exam')renderExam();else{buildOrder();renderCatBar();renderTypeBar();renderLearn();}
+      if(m==='exam')renderExam();else{stopTimer();buildOrder();renderCatBar();renderTypeBar();renderLearn();}
     },
     _answer(idx){
       if(_answered)return;_answered=true;
@@ -3030,7 +3053,7 @@ const QUIZ=(function(){
         if(first)first.scrollIntoView({behavior:'smooth',block:'center'});
         _examPendingSubmit=true;return;
       }
-      _examSubmitted=true;_examPendingSubmit=false;
+      _examSubmitted=true;_examPendingSubmit=false;stopTimer();
       let correct=0,total=0;
       Q.forEach(q=>{
         const ee=document.getElementById('qee-'+q.id);if(ee)ee.classList.remove('hidden');
@@ -3044,8 +3067,14 @@ const QUIZ=(function(){
       });
       const pct=Math.round((correct/total)*100);
       const grade=pct>=90?'Sehr gut':pct>=75?'Gut':pct>=60?'Befriedigend':pct>=50?'Ausreichend':'Nicht bestanden';
+      const catBreakdown=[...new Set(Q.filter(q=>q.type!=='essay').map(q=>q.cat))].map(cat=>{
+        const cq=Q.filter(q=>q.cat===cat&&q.type!=='essay');
+        const cok=cq.filter(q=>_examAnswers[q.id]===q.correct).length;
+        const cp=Math.round((cok/cq.length)*100);
+        return'<div class="quiz-rcat"><span class="quiz-rcat-name">'+(CAT_LABELS[cat]||esc(cat))+'</span><div class="quiz-rcat-bar"><div class="quiz-rcat-fill'+(cp<60?' qrf-fail':'')+'" style="width:'+cp+'%"></div></div><span class="quiz-rcat-stat">'+cok+'/'+cq.length+'</span></div>';
+      }).join('');
       const res=document.getElementById('quiz-result');
-      res.innerHTML='<div class="quiz-result-inner"><div class="quiz-result-title">Ergebnis</div><div class="quiz-result-score">'+correct+' / '+total+'</div><div class="quiz-result-pct '+(pct>=60?'grade-ok':'grade-fail')+'">'+pct+' %</div><div class="quiz-result-grade">'+grade+'</div><div class="quiz-result-bar"><div class="quiz-result-fill" style="width:'+pct+'%"></div></div><p class="quiz-result-note">'+total+' bewertete Fragen (MC + R/F). Freitextfragen nicht eingerechnet.<br>Scrolle nach oben, um alle Korrekturen zu sehen.</p><button class="quiz-retry-btn" onclick="QUIZ.setMode(\'exam\')">Nochmal versuchen</button></div>';
+      res.innerHTML='<div class="quiz-result-inner"><div class="quiz-result-title">Ergebnis</div><div class="quiz-result-score">'+correct+' / '+total+'</div><div class="quiz-result-pct '+(pct>=60?'grade-ok':'grade-fail')+'">'+pct+' %</div><div class="quiz-result-grade">'+grade+'</div><div class="quiz-result-bar"><div class="quiz-result-fill" style="width:'+pct+'%"></div></div><div class="quiz-result-cats">'+catBreakdown+'</div><p class="quiz-result-note">'+total+' bewertete Fragen (MC + R/F). Freitextfragen nicht eingerechnet.<br>Scrolle nach oben, um alle Korrekturen zu sehen.</p><button class="quiz-retry-btn" onclick="QUIZ.setMode(\'exam\')">Nochmal versuchen</button></div>';
       res.classList.remove('hidden');
       document.getElementById('quiz-exam-footer').classList.add('hidden');
       res.scrollIntoView({behavior:'smooth'});
