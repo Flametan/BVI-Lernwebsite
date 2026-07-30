@@ -37,11 +37,14 @@ const NAV = (function(){
     updateHeader();
     if(id==='v-abkuerzungen') ABK.init();
     if(id==='v-vak-altklausur') QUIZ.init();
+    if(id==='v-simulator') SIM._refreshCards();
     if(id==='v-app' && window._isChromium){
       const w = document.getElementById('apk-chromium-warn');
       if(w) w.classList.remove('hidden');
     }
     if(typeof PROGRESS!=='undefined') PROGRESS.track(id);
+    if(typeof HEATMAP!=='undefined') HEATMAP.record();
+    if(typeof RELATED!=='undefined'&&RELATED[id]){const _v=document.getElementById(id);if(_v&&!_v.querySelector('.related-topics')){const _pc=_v.querySelector('.pc');if(_pc){const _d=document.createElement('div');_d.className='related-topics';_d.innerHTML='<div class="related-label">Verwandte Themen</div><div class="related-chips">'+RELATED[id].map(([rid,rl])=>'<button class="related-chip" onclick="NAV.go(\''+rid+'\',\''+rl+'\')">'+rl+'</button>').join('')+'</div>';_pc.appendChild(_d);}}}
     if(typeof TOC!=='undefined') TOC.build();
     updateReadProgress();
     CHECKS.init(id);
@@ -639,12 +642,29 @@ const SIM = {
     this.syncUI();
   },
 
+  _simLoad(){ try{return JSON.parse(localStorage.getItem('bvi_sim')||'{}');}catch{return{};} },
+  _simSave(d){ try{localStorage.setItem('bvi_sim',JSON.stringify(d));}catch{} },
+
   backToMenu(){
     document.getElementById('sim-game-wrap').classList.add('hidden');
     document.getElementById('sim-menu-wrap').classList.remove('hidden');
     document.getElementById('sim-stage').innerHTML = '';
     this.syncScore();
     this.syncPhase(0);
+    this._refreshCards();
+  },
+
+  _refreshCards(){
+    const data=this._simLoad();
+    document.querySelectorAll('.sc-card[data-scenario]').forEach(card=>{
+      const key=card.dataset.scenario;
+      const d=data[key];
+      let badge=card.querySelector('.sc-done-badge');
+      if(d&&d.plays>0){
+        if(!badge){badge=mk('div','sc-done-badge');card.appendChild(badge);}
+        badge.textContent='✓ '+d.plays+'× · Beste: '+d.best+' Pkt';
+      }
+    });
   },
 
   restart(){
@@ -725,8 +745,18 @@ const SIM = {
       btn.addEventListener('click',() => this.restart());
       wrap.appendChild(btn);
     });
+    const menuBtn = mk('button','btn sim-back-btn');
+    menuBtn.textContent = '← Zur Übersicht';
+    menuBtn.addEventListener('click',() => this.backToMenu());
+    wrap.appendChild(menuBtn);
     stage.innerHTML = '';
     stage.appendChild(wrap);
+    // Track completion
+    const data=this._simLoad();
+    const key=this.currentScenario;
+    if(!data[key])data[key]={plays:0,best:0};
+    data[key].plays++;data[key].best=Math.max(data[key].best,score);
+    this._simSave(data);
   },
 
   syncScore(){
@@ -1167,20 +1197,31 @@ const SEARCH = (function(){
         const t = p.textContent.trim(); if(t.length < 8) return;
         const hdr = p.closest('.info-card,.def-box,.step-item');
         const ttl = hdr ? (hdr.querySelector('.info-card-title,.def-box-label,.step-title')||{}).textContent||lbl : lbl;
-        idx.push({vid, lbl, title:ttl.trim(), snippet:t.slice(0,130), boost:1});
+        idx.push({vid, lbl, title:ttl.trim(), snippet:t.slice(0,400), boost:1});
       });
     });
     // Lernkarten in den Index aufnehmen
     FLASHCARD_DATA.forEach(c=>{
       const lbl='Lernkarten · '+c.cat;
       const aText=stripHtml(c.a);
-      idx.push({vid:'v-flashcards',lbl,title:c.q,snippet:aText.slice(0,130),boost:2,isCard:true});
+      idx.push({vid:'v-flashcards',lbl,title:c.q,snippet:aText.slice(0,400),boost:2,isCard:true});
     });
   }
 
   function hl(text, q){
     const re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
     return text.replace(re,'<mark>$1</mark>');
+  }
+  function contextSnippet(text, q, len=160){
+    if(!text) return '';
+    const terms=q.toLowerCase().split(/\s+/).filter(Boolean);
+    const lower=text.toLowerCase();
+    let best=-1;
+    for(const t of terms){const p=lower.indexOf(t);if(p>=0&&(best<0||p<best))best=p;}
+    if(best<0) return text.slice(0,len)+(text.length>len?'…':'');
+    const start=Math.max(0,best-55);
+    const end=Math.min(text.length,start+len);
+    return(start>0?'…':'')+text.slice(start,end)+(end<text.length?'…':'');
   }
 
   function doSearch(q){
@@ -1226,7 +1267,7 @@ const SEARCH = (function(){
     if(!q){ renderBookmarks(); results=[]; focusIdx=-1; return; }
     results = doSearch(q);
     if(!results.length){ el.innerHTML='<div class="search-empty">Keine Treffer für <strong>'+xss(q)+'</strong></div>'; focusIdx=-1; return; }
-    el.innerHTML = results.map((r,i)=>`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${r.lbl}</span><div><div class="sr-title">${hl(xss(r.title),q)}</div>${r.snippet?`<div class="sr-snippet">${hl(xss(r.snippet),q)}</div>`:''}</div></div>`).join('');
+    el.innerHTML = results.map((r,i)=>`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${r.lbl}</span><div><div class="sr-title">${hl(xss(r.title),q)}</div>${r.snippet?`<div class="sr-snippet">${hl(xss(contextSnippet(r.snippet,q)),q)}</div>`:''}</div></div>`).join('');
     focusIdx = -1;
   }
 
@@ -2465,7 +2506,10 @@ const STATS = (function(){
         const pct=Math.round(kn/cats.length*100);
         const label={gal:'GAL',sfs:'SFS',hlfs:'HLFS',ibk:'IBK',vak:'VAk',feuak:'FeuAK',idf:'IdF'}[cat]||cat;
         return `<div class="stat-row"><span class="stat-row-lbl">${label}</span><div class="stat-bar-wrap"><div class="stat-bar-fill" style="width:${pct}%"></div></div><span class="stat-row-cnt">${kn}/${cats.length}</span></div>`;
-      }).join('')}</div>`;
+      }).join('')}</div>
+      <div class="stat-section-title" style="margin-top:1.1rem">Lernaktivität</div>
+      <div id="stats-heatmap-container"></div>`;
+    if(typeof HEATMAP!=='undefined') HEATMAP.render(c.querySelector('#stats-heatmap-container'));
   }
   return {
     open(){ ov()?.classList.remove('hidden'); build(); },
@@ -3081,6 +3125,81 @@ const QUIZ=(function(){
     }
   };
 })();
+
+/* ======================================================================
+   HEATMAP – Tägliche Lernaktivität
+====================================================================== */
+const HEATMAP=(function(){
+  const KEY='bvi_heatmap';
+  function load(){try{return JSON.parse(localStorage.getItem(KEY)||'{}');}catch{return{};}}
+  function save(d){try{localStorage.setItem(KEY,JSON.stringify(d));}catch{}}
+  function pad(n){return String(n).padStart(2,'0');}
+  function todayStr(){const n=new Date();return n.getFullYear()+'-'+pad(n.getMonth()+1)+'-'+pad(n.getDate());}
+  return{
+    record(){const d=load(),t=todayStr();d[t]=(d[t]||0)+1;save(d);},
+    render(el){
+      if(!el)return;
+      const d=load();const weeks=13;const today=new Date();const days=[];
+      for(let i=(weeks*7)-1;i>=0;i--){
+        const dt=new Date(today);dt.setDate(today.getDate()-i);
+        const k=dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate());
+        days.push({k,count:d[k]||0,dt});
+      }
+      const max=Math.max(1,...days.map(x=>x.count));
+      el.innerHTML='<div class="hm-grid">'+days.map(({k,count,dt})=>{
+        const lvl=count===0?0:count<=max*.25?1:count<=max*.5?2:count<=max*.75?3:4;
+        const lbl=dt.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'})+(count?' · '+count+' Besuche':'');
+        return'<span class="hm-cell hm-'+lvl+'" title="'+lbl+'"></span>';
+      }).join('')+'</div>'
+      +'<div class="hm-legend"><span class="hm-lbl-l">Weniger</span><span class="hm-cell hm-0"></span><span class="hm-cell hm-1"></span><span class="hm-cell hm-2"></span><span class="hm-cell hm-3"></span><span class="hm-cell hm-4"></span><span class="hm-lbl-l">Mehr</span></div>';
+    }
+  };
+})();
+
+/* ======================================================================
+   RELATED – Themenübergreifende Verlinkung
+====================================================================== */
+const RELATED={
+  'v-hlfs-fuehrungsvorgang':[['v-sfs-fwdv3','SFS Führung/FwDV3'],['v-ibk-konflikt','IBK Konflikt'],['v-ibk-ta','IBK TA']],
+  'v-hlfs-gabc':[['v-gal-atemgifte','GAL Atemgifte'],['v-gal-gabc','GAL G-ABC'],['v-sfs-abc','SFS Geräte/ABC']],
+  'v-hlfs-vb':[['v-gal-vb','GAL Vorbeugen'],['v-idf-brandschutz','IdF VB']],
+  'v-hlfs-manv':[['v-gal-erstehilfe','GAL Erste Hilfe'],['v-ibk-psnv','IBK PSNV']],
+  'v-hlfs-zugfuehrer':[['v-sfs-fwdv3','SFS FwDV3/Führung'],['v-hlfs-fuehrungsvorgang','HLFS Führungsvorgang'],['v-ibk-zeit','IBK Zeitmanagement']],
+  'v-hlfs-stab':[['v-idf-stab','IdF Stabsarbeit'],['v-ibk-pm','IBK PM'],['v-ibk-zeit','IBK Zeitmanagement']],
+  'v-hlfs-tunnel':[['v-gal-atemschutz','GAL Atemschutz']],
+  'v-ibk-ta':[['v-ibk-konflikt','IBK Konflikt'],['v-sfs-methodik','SFS Methodik'],['v-ibk-stress','IBK Stress']],
+  'v-ibk-konflikt':[['v-ibk-ta','IBK TA'],['v-ibk-stress','IBK Stress'],['v-hlfs-fuehrungsvorgang','HLFS Führung']],
+  'v-ibk-stress':[['v-ibk-psnv','IBK PSNV'],['v-ibk-bgm','IBK BGM'],['v-ibk-konflikt','IBK Konflikt']],
+  'v-ibk-psnv':[['v-ibk-stress','IBK Stress'],['v-hlfs-manv','HLFS MANV']],
+  'v-ibk-bgm':[['v-ibk-stress','IBK Stress'],['v-ibk-psnv','IBK PSNV']],
+  'v-ibk-pm':[['v-hlfs-stab','HLFS Stab'],['v-idf-stab','IdF Stabsarbeit'],['v-ibk-zeit','IBK Zeitmanagement'],['v-feuak-pm','FeuAK PM']],
+  'v-ibk-zeit':[['v-ibk-pm','IBK PM'],['v-hlfs-zugfuehrer','HLFS Zugführer']],
+  'v-vak-verwaltungsrecht':[['v-vak-staatsrecht','Staatsrecht'],['v-vak-einsatzrecht','Einsatzrecht'],['v-vak-dienstrecht','Dienstrecht'],['v-vak-altklausur','Altklausur-Quiz']],
+  'v-vak-staatsrecht':[['v-vak-verwaltungsrecht','Verwaltungsrecht'],['v-gal-staatsbuerger','GAL Staatsbürgerkunde']],
+  'v-vak-einsatzrecht':[['v-vak-verwaltungsrecht','Verwaltungsrecht'],['v-gal-hbkg','GAL HBKG'],['v-vak-altklausur','Altklausur-Quiz']],
+  'v-vak-dienstrecht':[['v-vak-verwaltungsrecht','Verwaltungsrecht'],['v-gal-beamtenrecht','GAL Beamtenrecht'],['v-vak-altklausur','Altklausur-Quiz']],
+  'v-vak-altklausur':[['v-vak-verwaltungsrecht','Verwaltungsrecht'],['v-vak-einsatzrecht','Einsatzrecht'],['v-vak-dienstrecht','Dienstrecht'],['v-vak-staatsrecht','Staatsrecht']],
+  'v-vak-jur-denken':[['v-vak-verwaltungsrecht','Verwaltungsrecht'],['v-vak-einsatzrecht','Einsatzrecht']],
+  'v-feuak-vwl':[['v-feuak-bwl','FeuAK BWL'],['v-feuak-haushalt','FeuAK Haushalt']],
+  'v-feuak-bwl':[['v-feuak-vwl','FeuAK VWL'],['v-feuak-rechnungswesen','Rechnungswesen'],['v-feuak-pm','Projektmanagement']],
+  'v-feuak-haushalt':[['v-feuak-vergabe','FeuAK Vergabe'],['v-feuak-bwl','FeuAK BWL']],
+  'v-feuak-vergabe':[['v-feuak-haushalt','Haushalt']],
+  'v-feuak-pm':[['v-ibk-pm','IBK PM'],['v-ibk-zeit','IBK Zeitmanagement'],['v-feuak-bwl','FeuAK BWL']],
+  'v-feuak-rechnungswesen':[['v-feuak-bwl','FeuAK BWL'],['v-feuak-haushalt','Haushalt']],
+  'v-idf-brandschutz':[['v-hlfs-vb','HLFS VB'],['v-gal-vb','GAL Vorbeugen']],
+  'v-idf-stab':[['v-hlfs-stab','HLFS Stab'],['v-ibk-pm','IBK PM']],
+  'v-idf-presse':[['v-ibk-konflikt','IBK Konflikt'],['v-ibk-ta','IBK TA']],
+  'v-sfs-fwdv3':[['v-hlfs-zugfuehrer','HLFS Zugführer'],['v-hlfs-fuehrungsvorgang','HLFS Führungsvorgang']],
+  'v-sfs-methodik':[['v-ibk-ta','IBK TA'],['v-ibk-stress','IBK Stress'],['v-hlfs-fuehrungsvorgang','HLFS Führung']],
+  'v-sfs-rechtsgrundlagen':[['v-vak-verwaltungsrecht','VAk Verwaltungsrecht'],['v-vak-einsatzrecht','VAk Einsatzrecht']],
+  'v-gal-beamtenrecht':[['v-vak-dienstrecht','VAk Dienstrecht'],['v-gal-beihilferecht','GAL Beihilferecht']],
+  'v-gal-hbkg':[['v-vak-einsatzrecht','VAk Einsatzrecht']],
+  'v-gal-vb':[['v-hlfs-vb','HLFS VB'],['v-idf-brandschutz','IdF VB']],
+  'v-gal-staatsbuerger':[['v-vak-staatsrecht','VAk Staatsrecht']],
+  'v-gal-gabc':[['v-hlfs-gabc','HLFS GABC'],['v-sfs-abc','SFS ABC']],
+  'v-gal-atemschutz':[['v-hlfs-tunnel','HLFS Tunnel']],
+  'v-gal-erstehilfe':[['v-hlfs-manv','HLFS MANV']],
+};
 
 document.addEventListener('DOMContentLoaded',()=>{
   // Deep-link on load
