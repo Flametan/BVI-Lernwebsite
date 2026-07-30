@@ -868,12 +868,12 @@
 .qmd{display:inline-block;width:13px;height:13px;border-radius:3px;cursor:default;transition:opacity .15s;}
 .qmd-ok{background:#22c55e;}
 .qmd-err{background:#ef4444;}
-.qmd-un{background:var(--c-bg);border:1.5px solid var(--c-border);box-sizing:border-box;}
+.qmd-un{background:#4b6180;box-sizing:border-box;}
 .quiz-mastery-legend{display:flex;gap:.75rem;flex-wrap:wrap;font-size:.71rem;color:var(--c-sub);align-items:center;}
 .qml{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:2px;vertical-align:middle;}
 .qml-ok{background:#22c55e;}
 .qml-err{background:#ef4444;}
-.qml-un{background:var(--c-bg);border:1.5px solid var(--c-border);box-sizing:border-box;}
+.qml-un{background:#4b6180;box-sizing:border-box;}
 .quiz-back-btn{padding:.65rem 1rem;border-radius:var(--r-sm);border:1px solid var(--c-border);background:transparent;color:var(--c-sub);font-size:.85rem;font-weight:600;font-family:var(--f-m);cursor:pointer;transition:all .15s;}
 .quiz-back-btn:hover{border-color:var(--c-gold-rim);color:var(--c-gold);}
 .quiz-back-btn.hidden{display:none;}
