@@ -3175,6 +3175,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
+    {v:'2.12.3',ts:'2026-07-30T14:00',items:[
+      'Bug-Fix: Lernstand-Modal nutzt jetzt exakt dasselbe Layout wie Statistiken und Pomodoro-Timer (search-box + search-overlay)'
+    ]},
     {v:'2.12.2',ts:'2026-07-30T13:30',items:[
       'Bug-Fix: Lernstand-Modal nutzt jetzt dasselbe Overlay wie Pomodoro-Timer und Statistiken (geblurrter Hintergrund, zentriert)'
     ]},
