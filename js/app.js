@@ -3157,6 +3157,90 @@ const HEATMAP=(function(){
 })();
 
 /* ======================================================================
+   CHANGELOG – Update-Feed mit Auto-Open bei neuer Version
+====================================================================== */
+const CHANGELOG=(function(){
+  const KEY='bvi_seen_version';
+  const ENTRIES=[
+    {v:'6.1',date:'Juli 2026',items:[
+      'Neuigkeiten-Feed: automatisches Update-Modal bei neuer Version',
+      'Neuigkeiten-Kachel auf der Startseite'
+    ]},
+    {v:'6.0',date:'Juli 2026',items:[
+      'Accordion-Tabs: doppelte Nummern aus Titeln entfernt (Badge zeigt bereits die Nummer)'
+    ]},
+    {v:'5.9',date:'Juli 2026',items:[
+      'Verwandte Themen: kontextbezogene Verlinkungen am Ende jeder Lernseite',
+      'Aktivitäts-Heatmap: 13-Wochen-Übersicht in den Statistiken',
+      'Suche: Kontext-Snippets zeigen die relevante Textstelle',
+      'Offline-Banner: Hinweis bei fehlendem Netz',
+      'Simulator: abgeschlossene Szenarien werden dauerhaft markiert'
+    ]},
+    {v:'5.8',date:'Juli 2026',items:[
+      'Prüfungs-Timer mit Countdown-Balken',
+      'Kategorien-Auswertung nach der Klausur',
+      'Service-Worker-Update-Erkennung zuverlässig verbessert'
+    ]},
+    {v:'5.7',date:'Juli 2026',items:[
+      'Lernstand-Modal: Backdrop-Blur wie beim Suchfeld',
+      'Frage 62 (Anscheinsgefahr): fehlenden Inhalt ergänzt'
+    ]},
+    {v:'5.6',date:'Juli 2026',items:[
+      'Lernstand als zentriertes Modal-Fenster statt Seitenleiste'
+    ]},
+    {v:'5.5',date:'Juli 2026',items:[
+      'Filter-Panel als kollabierendes Akkordeon'
+    ]}
+  ];
+  function _render(){
+    const el=document.getElementById('changelog-feed');
+    if(!el) return;
+    const seen=localStorage.getItem(KEY);
+    el.innerHTML=ENTRIES.map((e,i)=>{
+      const isNew=i===0&&e.v!==seen;
+      return`<div class="cl-entry${isNew?' cl-new':''}"><div class="cl-meta"><span class="cl-version">v${e.v}</span>${isNew?'<span class="cl-new-badge">Neu</span>':''}<span class="cl-date">${e.date}</span></div><ul class="cl-items">${e.items.map(it=>`<li>${it}</li>`).join('')}</ul></div>`;
+    }).join('');
+  }
+  function _updateTile(){
+    const badge=document.getElementById('changelog-badge');
+    const desc=document.getElementById('changelog-tile-desc');
+    if(!badge) return;
+    const seen=localStorage.getItem(KEY);
+    if(seen!==APP_VERSION){
+      badge.classList.remove('hidden');
+      if(desc) desc.textContent='Neu in v'+APP_VERSION+' · Update-Verlauf';
+    } else {
+      badge.classList.add('hidden');
+      if(desc) desc.textContent='Update-Verlauf · Was ist neu';
+    }
+  }
+  return{
+    open(){
+      const m=document.getElementById('changelog-modal');
+      if(!m) return;
+      _render();
+      m.classList.remove('hidden');
+      document.body.classList.add('modal-open');
+      localStorage.setItem(KEY,APP_VERSION);
+      _updateTile();
+    },
+    close(){
+      const m=document.getElementById('changelog-modal');
+      if(!m) return;
+      m.classList.add('hidden');
+      document.body.classList.remove('modal-open');
+    },
+    check(){
+      _updateTile();
+      const seen=localStorage.getItem(KEY);
+      if(seen&&seen!==APP_VERSION){
+        setTimeout(()=>this.open(),900);
+      }
+    }
+  };
+})();
+
+/* ======================================================================
    RELATED – Themenübergreifende Verlinkung
 ====================================================================== */
 const RELATED={
@@ -3220,6 +3304,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   RECENT.render();
   ONBOARD.init();
   DARKMODE.init();
+  CHANGELOG.check();
   document.querySelectorAll('.pc table').forEach(t=>{
     if(t.closest('.tbl-wrap')) return;
     const w=document.createElement('div');
@@ -3241,6 +3326,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       SETTINGS.closeAllPanels();
       if(document.getElementById('stats-overlay')&&!document.getElementById('stats-overlay').classList.contains('hidden')){ STATS.close(); return; }
       if(!document.getElementById('notes-overlay').classList.contains('hidden')){ NOTES.close(); return; }
+      if(!document.getElementById('changelog-modal').classList.contains('hidden')){ CHANGELOG.close(); return; }
     }
     // Lernkarten-Tastatursteuerung
     if(document.getElementById('v-flashcards').classList.contains('active')){

@@ -80,6 +80,19 @@
     <div class="search-footer"><span><kbd>↑↓</kbd> navigieren</span><span><kbd>↵</kbd> öffnen</span><span><kbd>Esc</kbd> schließen</span></div>
   </div>
 </div>
+<!-- CHANGELOG MODAL -->
+<div id="changelog-modal" class="changelog-modal hidden" onclick="CHANGELOG.close()">
+  <div class="changelog-box" onclick="event.stopPropagation()">
+    <div class="changelog-header">
+      <div>
+        <div class="changelog-eyebrow">Was ist neu</div>
+        <h2 class="changelog-title">Update-Verlauf</h2>
+      </div>
+      <button class="changelog-close-btn" onclick="CHANGELOG.close()" title="Schließen (Esc)">✕</button>
+    </div>
+    <div class="changelog-feed" id="changelog-feed"></div>
+  </div>
+</div>
 <!-- ONBOARDING OVERLAY -->
 <div id="onboarding-overlay" class="search-overlay hidden">
   <div class="search-box ob-box" onclick="event.stopPropagation()">
@@ -372,6 +385,13 @@
           <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
           <div class="tile-name">Lesezeichen</div>
           <div class="tile-desc" id="bm-tile-desc">Gespeicherte Seiten</div>
+          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="glass-tile" onclick="CHANGELOG.open()">
+          <span id="changelog-badge" class="tile-prog hidden">Neu</span>
+          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div class="tile-name">Neuigkeiten</div>
+          <div class="tile-desc" id="changelog-tile-desc">Update-Verlauf · Was ist neu</div>
           <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
         <div id="apk-tile" class="glass-tile" onclick="NAV.go('v-app','App')">
