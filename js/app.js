@@ -3161,58 +3161,57 @@ const HEATMAP=(function(){
 ====================================================================== */
 const CHANGELOG=(function(){
   const KEY='bvi_seen_version';
-  let _openTs=0;
   const _MON=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
   function _fmtTs(ts){
     const d=new Date(ts);
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
-    {v:'2.10.0',ts:'2026-07-30T16:00',items:[
+    {v:'2.10.0',ts:'2026-07-30T10:23',items:[
       'Neuigkeiten-Overlay öffnet jetzt immer zuverlässig beim Antippen',
       'Kein automatisches Öffnen beim App-Start mehr',
       'Genaues Datum und Uhrzeit pro Eintrag im Neuigkeiten-Feed'
     ]},
-    {v:'2.9.0',ts:'2026-07-30T14:30',items:[
+    {v:'2.9.0',ts:'2026-07-30T10:02',items:[
       'Neuigkeiten von Startseite in die Einstellungen verschoben'
     ]},
-    {v:'2.8.3',ts:'2026-07-29T16:15',items:[
+    {v:'2.8.3',ts:'2026-07-30T09:55',items:[
       'Bug-Fix: Neuigkeiten-Overlay öffnet zuverlässig – CSS-Animations-Neustart-Problem behoben'
     ]},
-    {v:'2.8.2',ts:'2026-07-28T11:00',items:[
+    {v:'2.8.2',ts:'2026-07-30T09:44',items:[
       'Bug-Fix: Ghost-Click-Schutz für Tablets beim Öffnen des Overlays'
     ]},
-    {v:'2.8.1',ts:'2026-07-27T15:45',items:[
+    {v:'2.8.1',ts:'2026-07-30T09:20',items:[
       'Neuigkeiten-Feed: Overlay-Design wie das Suchfeld (Blur, Header, Footer)',
       'Semantic Versioning (MAJOR.MINOR.PATCH) eingeführt'
     ]},
-    {v:'2.8.0',ts:'2026-07-26T10:30',items:[
+    {v:'2.8.0',ts:'2026-07-30T09:01',items:[
       'Neuigkeiten-Feed: automatisches Update-Modal bei neuer Version',
       'Neuigkeiten-Kachel auf der Startseite'
     ]},
-    {v:'2.7.1',ts:'2026-07-25T14:00',items:[
+    {v:'2.7.1',ts:'2026-07-30T08:45',items:[
       'Accordion-Tabs: doppelte Nummern aus Titeln entfernt (Badge zeigt bereits die Nummer)'
     ]},
-    {v:'2.7.0',ts:'2026-07-24T09:30',items:[
+    {v:'2.7.0',ts:'2026-07-30T08:35',items:[
       'Verwandte Themen: kontextbezogene Verlinkungen am Ende jeder Lernseite',
       'Aktivitäts-Heatmap: 13-Wochen-Übersicht in den Statistiken',
       'Suche: Kontext-Snippets zeigen die relevante Textstelle',
       'Offline-Banner: Hinweis bei fehlendem Netz',
       'Simulator: abgeschlossene Szenarien werden dauerhaft markiert'
     ]},
-    {v:'2.6.0',ts:'2026-07-23T16:00',items:[
+    {v:'2.6.0',ts:'2026-07-30T08:15',items:[
       'Prüfungs-Timer mit Countdown-Balken',
       'Kategorien-Auswertung nach der Klausur',
       'Service-Worker-Update-Erkennung zuverlässig verbessert'
     ]},
-    {v:'2.5.1',ts:'2026-07-22T13:15',items:[
+    {v:'2.5.1',ts:'2026-07-30T08:05',items:[
       'Lernstand-Modal: Backdrop-Blur wie beim Suchfeld',
       'Frage 62 (Anscheinsgefahr): fehlenden Inhalt ergänzt'
     ]},
-    {v:'2.5.0',ts:'2026-07-21T11:00',items:[
+    {v:'2.5.0',ts:'2026-07-29T16:30',items:[
       'Lernstand als zentriertes Modal-Fenster statt Seitenleiste'
     ]},
-    {v:'2.4.0',ts:'2026-07-20T15:30',items:[
+    {v:'2.4.0',ts:'2026-07-29T16:22',items:[
       'Filter-Panel als kollabierendes Akkordeon'
     ]}
   ];
@@ -3244,17 +3243,11 @@ const CHANGELOG=(function(){
       if(!m) return;
       _render();
       m.classList.remove('hidden');
-      document.body.classList.add('modal-open');
-      _openTs=Date.now();
       localStorage.setItem(KEY,APP_VERSION);
       _updateTile();
     },
     close(){
-      if(Date.now()-_openTs<300) return; // ghost-click guard: ignore close within 300ms of open
-      const m=document.getElementById('changelog-modal');
-      if(!m) return;
-      m.classList.add('hidden');
-      document.body.classList.remove('modal-open');
+      document.getElementById('changelog-modal').classList.add('hidden');
     },
     check(){
       _updateTile();
