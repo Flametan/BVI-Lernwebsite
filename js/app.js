@@ -3175,7 +3175,7 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
-    {v:'2.12.6',ts:'2026-07-30T12:30',items:[
+    {v:'2.12.6',ts:'2026-07-30T12:29',items:[
       'Lernstand: „Noch nicht gesehen"-Felder jetzt klar sichtbar in Blau-Grau statt fast unsichtbarem Hintergrund'
     ]},
     {v:'2.12.5',ts:'2026-07-30T12:27',items:[
