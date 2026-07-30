@@ -3175,6 +3175,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
+    {v:'2.12.8',ts:'2026-07-30T12:40',items:[
+      'Lernstand: „Noch nicht gesehen" in Blau-Grau (#4b6180) für bessere Sichtbarkeit'
+    ]},
     {v:'2.12.7',ts:'2026-07-30T12:33',items:[
       'Lernstand auf Stand v2.12.4 zurückgesetzt'
     ]},
