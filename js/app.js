@@ -3161,7 +3161,11 @@ const HEATMAP=(function(){
 ====================================================================== */
 const CHANGELOG=(function(){
   const KEY='bvi_seen_version';
+  let _openTs=0;
   const ENTRIES=[
+    {v:'6.2.2',date:'Juli 2026',items:[
+      'Bug-Fix: Neuigkeiten-Overlay öffnet jetzt zuverlässig beim ersten Tippen (Ghost-Click-Schutz für Tablets)'
+    ]},
     {v:'6.2.1',date:'Juli 2026',items:[
       'Semantic Versioning (MAJOR.MINOR.PATCH) eingeführt'
     ]},
@@ -3226,11 +3230,14 @@ const CHANGELOG=(function(){
       if(!m) return;
       _render();
       m.classList.remove('hidden');
+      void m.offsetWidth; // force reflow so CSS animation restarts cleanly
       document.body.classList.add('modal-open');
+      _openTs=Date.now();
       localStorage.setItem(KEY,APP_VERSION);
       _updateTile();
     },
     close(){
+      if(Date.now()-_openTs<300) return; // ghost-click guard: ignore close within 300ms of open
       const m=document.getElementById('changelog-modal');
       if(!m) return;
       m.classList.add('hidden');
