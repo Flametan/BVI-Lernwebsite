@@ -3149,7 +3149,7 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
-    {v:'2.13.2',ts:'2026-07-31T00:30',items:[
+    {v:'2.13.2',ts:'2026-08-01T21:06',items:[
       'Notizen: Undo-Button erscheint jetzt direkt im Notiz-Overlay nach dem Löschen'
     ]},
     {v:'2.13.1',ts:'2026-07-31T00:16',items:[
