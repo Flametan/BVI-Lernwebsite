@@ -296,6 +296,10 @@
       </div>
     </div>
     <textarea id="notes-textarea" class="notes-area" placeholder="Deine Notizen zu dieser Seite – wird lokal gespeichert …"></textarea>
+    <div id="notes-undo-bar" class="hidden" style="display:flex;align-items:center;justify-content:space-between;padding:.55rem .85rem;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-sm);font-size:.82rem;color:var(--c-slate-l);margin-top:.5rem;">
+      <span>Notiz gelöscht</span>
+      <button onclick="NOTES.undoClear()" style="font-size:.78rem;font-weight:600;color:var(--c-gold);background:none;border:none;cursor:pointer;font-family:inherit;padding:0;">Rückgängig</button>
+    </div>
     <div class="notes-footer" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;">
       <span>Gespeichert in deinem Browser · nur du kannst diese Notizen sehen</span>
       <button class="btn btn-ghost" style="font-size:.68rem;padding:.2rem .6rem;flex-shrink:0" onclick="NOTES.exportAll()">
