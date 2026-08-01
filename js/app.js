@@ -1400,7 +1400,7 @@ const DARKMODE = { init(){}, toggle(){} };
    NOTES – Seitennotizen (localStorage pro View)
 ====================================================================== */
 const NOTES = (function(){
-  let _view = null;
+  let _view = null, _prevNote = '', _undoTimer = null;
   const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz']);
   function key(){ return 'bvi_note_'+(_view||'home'); }
   function getBtn(){
@@ -1437,11 +1437,17 @@ const NOTES = (function(){
     toggle(){ document.getElementById('notes-overlay').classList.contains('hidden') ? this.open() : this.close(); },
     clear(){
       const ta=document.getElementById('notes-textarea'); if(!ta) return;
-      const prev=ta.value;
+      _prevNote=ta.value;
       ta.value=''; localStorage.removeItem(key()); updateBtn();
-      TOAST.show('Notiz gelöscht',{type:'ok',undo:()=>{
-        ta.value=prev; localStorage.setItem(key(),prev); updateBtn();
-      }});
+      const bar=document.getElementById('notes-undo-bar');
+      if(bar){ bar.style.display='flex'; bar.classList.remove('hidden'); clearTimeout(_undoTimer); _undoTimer=setTimeout(()=>bar.style.display='none',6000); }
+    },
+    undoClear(){
+      const ta=document.getElementById('notes-textarea');
+      const bar=document.getElementById('notes-undo-bar');
+      if(ta&&_prevNote){ ta.value=_prevNote; localStorage.setItem(key(),_prevNote); updateBtn(); }
+      if(bar) bar.style.display='none';
+      clearTimeout(_undoTimer);
     },
     share(){
       const ta = document.getElementById('notes-textarea');
@@ -3143,6 +3149,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
   }
   const ENTRIES=[
+    {v:'2.13.2',ts:'2026-07-31T00:30',items:[
+      'Notizen: Undo-Button erscheint jetzt direkt im Notiz-Overlay nach dem Löschen'
+    ]},
     {v:'2.13.1',ts:'2026-07-31T00:16',items:[
       'Desktop: „Inhalt"-Sidebar auf allen Seiten entfernt',
       'Layout: Fehlender Abstand vor Abschnittsüberschriften behoben (gilt für alle Seiten)'
