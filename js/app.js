@@ -3146,10 +3146,13 @@ const CHANGELOG=(function(){
   const _MON=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
   function _fmtTs(ts){
     const d=new Date(ts);
-    return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} Uhr`;
+    return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
-    {v:'2.13.2',ts:'2026-07-31T00:30',items:[
+    {v:'2.13.3',ts:'2026-08-01',items:[
+      'Neuigkeiten: Zeitanzeige entfernt – nur noch Datum wird angezeigt'
+    ]},
+    {v:'2.13.2',ts:'2026-08-01T21:06',items:[
       'Notizen: Undo-Button erscheint jetzt direkt im Notiz-Overlay nach dem Löschen'
     ]},
     {v:'2.13.1',ts:'2026-07-31T00:16',items:[
