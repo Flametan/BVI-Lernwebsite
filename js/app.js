@@ -3162,7 +3162,7 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
-    {v:'2.14.0',ts:'2026-08-02',items:[
+    {v:'2.14.0',ts:'2026-08-02T18:39',items:[
       'VAk: 12 neue Quizfragen aus Gedächtnisprotokoll 04.08.2023 (Ermessen, Anscheinsgefahr, VA-Tenor/Begründung, Zwangsmittel, Widerspruch/Vollzug, Gesetzgebungskompetenzen, Ernennung, Dienstvergehen)',
       'VAk: Neue Seite „Klausurhinweise" – Lernübersicht zu Prüfungsthemen und Definitionen',
       'VAk: Neue Seite „Klausurfälle" – drei komplexe Fallbearbeitungen mit Musterlösung aus der Klausur 04.08.2023'
