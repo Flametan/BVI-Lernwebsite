@@ -3167,7 +3167,7 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
-    {v:'2.14.2',ts:'2026-08-02',items:[
+    {v:'2.14.2',ts:'2026-08-02T19:46',items:[
       'VAk Quiz: 5 neue Fragen zum Gesetzgebungsverfahren – Initiativrecht, BVerfG-Beteiligung, Gesetzesbeschluss, Bundesrat 2. Durchgang, Ausfertigung (jetzt 84 Fragen)'
     ]},
     {v:'2.14.1',ts:'2026-08-02T18:50',items:[
