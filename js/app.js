@@ -3167,6 +3167,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.15.1',ts:'2026-08-03T12:23',items:[
+      'VAk Rettungsdienstrecht: KTW-B (Notfalltransport) ergänzt, Fahrzeugtabelle korrigiert; Weiterführende Quellen mit klickbaren Hyperlinks versehen'
+    ]},
     {v:'2.15.0',ts:'2026-08-03T12:12',items:[
       'VAk: Neue Seite „Rettungsdienstrecht" – Normenhierarchie, RDG Berlin (§§ 5/5a/8/9/23), Fahrzeugbesetzung (§ 9 + RDAbweichV 2025), Trägermodelle (Hoheits-/Submissions-/Konzessionsmodell), Leitstelle/ProQA, NAIK, Hilfsfrist/Schutzziele, KatRetter, Notfallversorgungsreform 2023–2027 und Vorbeugender Rettungsdienst'
     ]},
