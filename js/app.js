@@ -3167,6 +3167,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.15.4',ts:'2026-08-03T12:58',items:[
+      'VAk Rettungsdienstrecht: Akkordion-Nummern korrigiert (01–10)'
+    ]},
     {v:'2.15.3',ts:'2026-08-03T12:53',items:[
       'VAk Rettungsdienstrecht: UI an andere Tabs angeglichen – info-card statt Goldrahmen-Kästchen, class="dt"-Tabellen, Normenhierarchie und Quellen ins Akkordion (00/09)'
     ]},
