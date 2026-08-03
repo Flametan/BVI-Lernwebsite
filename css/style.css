@@ -107,6 +107,8 @@
   .def-box-label{font-size:.6rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--c-gold);margin-bottom:.35rem;}
   .def-box p{font-size:.88rem;color:var(--c-text);line-height:1.75;}
   .def-box strong{color:var(--c-text-b);font-weight:600;}
+  .pc a,.acc-body a{color:var(--c-gold);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;}
+  .pc a:hover,.acc-body a:hover{color:var(--c-gold-l);text-decoration:none;}
   .info-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:1.1rem;}
   .info-card-title{display:flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:600;color:var(--c-text-b);margin-bottom:.4rem;}
   .dot{width:8px;height:8px;border-radius:50%;background:var(--c-gold);flex-shrink:0;}
