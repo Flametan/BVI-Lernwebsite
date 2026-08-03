@@ -3167,6 +3167,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.15.3',ts:'2026-08-03T12:53',items:[
+      'VAk Rettungsdienstrecht: UI an andere Tabs angeglichen – info-card statt Goldrahmen-Kästchen, class="dt"-Tabellen, Normenhierarchie und Quellen ins Akkordion (00/09)'
+    ]},
     {v:'2.15.2',ts:'2026-08-03T12:30',items:[
       'VAk Rettungsdienstrecht: KTW-B → RTW-B (Notfalltransport) korrigiert; vollständige Besetzung nach § 9 Abs. 2 Buchst. b + § 23 RDG ergänzt (Fahrer RettSan, Betreuung RettSan ≥ 2 J./2.000 h + ÄLRD-Zusatzqual.)'
     ]},
