@@ -3167,6 +3167,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.15.5',ts:'2026-08-03T13:08',items:[
+      'CSS: Hyperlinks in Akkordion-Inhalten jetzt in Gold statt Browser-Blau – bessere Lesbarkeit auf dunklem Hintergrund'
+    ]},
     {v:'2.15.4',ts:'2026-08-03T12:58',items:[
       'VAk Rettungsdienstrecht: Akkordion-Nummern korrigiert (01–10)'
     ]},
