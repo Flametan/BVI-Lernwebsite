@@ -36,7 +36,8 @@ const NAV = (function(){
     updateHeader();
     if(id==='v-abkuerzungen') ABK.init();
     if(id==='v-vak-altklausur') QUIZ.init();
-    if(id==='v-vak-fallbearbeitung') FALLBEARBEITUNG.init();
+    if(id==='v-vak-fallbearbeitung','v-vak-uebungsklausur') FALLBEARBEITUNG.init();
+    if(id==='v-vak-uebungsklausur') UEBUNGSKLAUSUR.init();
     if(id==='v-simulator') SIM._refreshCards();
     if(id==='v-app' && window._isChromium){
       const w = document.getElementById('apk-chromium-warn');
@@ -1167,7 +1168,7 @@ const SEARCH = (function(){
     'v-vak-lernzusammenfassung':'VAk · Lernzusammenfassung','v-vak-jur-denken':'VAk · Juristisches Denken',
     'v-vak-verwaltungsrecht':'VAk · Allgemeines Verwaltungsrecht','v-vak-staatsrecht':'VAk · Staatsrecht',
     'v-vak-einsatzrecht':'VAk · Einsatzrecht','v-vak-dienstrecht':'VAk · Öffentliches Dienstrecht',
-    'v-vak-klausurhinweise':'VAk · Klausurhinweise','v-vak-rettungsdienstrecht':'VAk · Rettungsdienstrecht','v-vak-fallbearbeitung':'VAk · Fallbearbeitung',
+    'v-vak-klausurhinweise':'VAk · Klausurhinweise','v-vak-rettungsdienstrecht':'VAk · Rettungsdienstrecht','v-vak-fallbearbeitung':'VAk · Fallbearbeitung','v-vak-uebungsklausur':'VAk · Übungsklausur',
     'v-feuak-vwl':'FeuAK · VWL','v-feuak-bwl':'FeuAK · BWL','v-feuak-haushalt':'FeuAK · Haushalt',
     'v-feuak-vergabe':'FeuAK · Vergabe','v-feuak-rechnungswesen':'FeuAK · Rechnungswesen',
     'v-feuak-pm':'FeuAK · Projektmanagement / Strategisches Management',
@@ -3622,6 +3623,212 @@ const FALLBEARBEITUNG = (function(){
     }
   };
 })();
+
+
+/* ══════════════════════════════════════════════════════════════
+   UEBUNGSKLAUSUR – Interaktive Übungsklausur Einsatzrecht
+══════════════════════════════════════════════════════════════ */
+const UEBUNGSKLAUSUR = (function(){
+  const KEY = 'bvi_uk_scores';
+  let _step=0, _revealed=false, _timerOn=false, _timeLeft=3600, _timerRef=null;
+  let _scores={};
+
+  const CONTEXTS = {
+    bhkg27:'<div class="uk-context"><span class="uk-ctx-label">§ 27 BHKG – Brandsicherheitswachen (Abs. 1):</span> Veranstaltungen, bei denen eine erhöhte Brandgefahr besteht und bei Ausbruch eines Brandes eine große Anzahl von Personen gefährdet ist, sind der Gemeinde rechtzeitig anzuzeigen. Die Gemeinde entscheidet über eine Brandsicherheitswache und kann Auflagen erteilen.<br><br><span class="uk-ctx-label">Situation:</span> Als Mitarbeiter der Gemeinde bearbeiten Sie den Antrag von Herrn Meyer (Veranstaltung fällt unter §27 Abs. 1 BHKG). Ergebnis: Herr Meyer muss 3 Brandsicherheitswachen stellen. Herr Meyer wurde angehört und hat Widerspruch angekündigt.</div>',
+    pkw:'<div class="uk-context"><span class="uk-ctx-label">Sachverhalt:</span> Bei Tiefbauarbeiten im öffentlichen Straßenland rutscht durch abgleitendes Erdreich ein falsch parkender PKW in die Baugrube. Es befinden sich keine Personen mehr im PKW. Nach Erkundung: Keine auslaufenden Betriebsstoffe.</div>',
+    brand:'<div class="uk-context"><span class="uk-ctx-label">Sachverhalt:</span> Alarmierung zu einem Wohn- und Geschäftshaus wegen intensivem Brandrauchgeruch. Im Keller zwei Türen: <strong>Links</strong> – stark gesicherte Kellertür einer geschlossenen Wein- und Zigarrenhandlung (kein Ansprechpartner). <strong>Rechts</strong> – Keller des meldenden Mieters. Dieser verweigert den Zutritt mit der Begründung, er habe seinen Keller bereits kontrolliert. Der Geruch wird im Keller stärker.</div>'
+  };
+
+  const QUESTIONS = [
+    {
+      id:1, nr:'Frage 1', punkte:1, ctx:'bhkg27',
+      text:'Welche Form des Verwaltungshandelns wählen Sie, um Herrn Meyer über Ihre Entscheidung zu informieren?',
+      answer:'<strong>Verwaltungsakt mit Nebenbestimmung</strong> – konkret eine <strong>Auflage</strong> gem. §36 Abs. 2 Nr. 4 VwVfG i.V.m. §27 Abs. 1 S. 2–3 BHKG.<br><br>Die Gemeinde erlässt einen schriftlichen Bescheid (§37 Abs. 3 VwVfG), der die Zulassung der Veranstaltung mit der Auflage verbindet, drei Brandsicherheitswachen zu stellen. Die Auflage begründet eine selbstständige, vollstreckbare Pflicht.'
+    },
+    {
+      id:2, nr:'Frage 2', punkte:5, ctx:'bhkg27',
+      text:'Was sind die wesentlichen Merkmale der gewählten Handlungsform?',
+      answer:'Ein <strong>Verwaltungsakt (§35 VwVfG)</strong> muss alle 6 Merkmale kumulativ erfüllen:<ol><li><strong>Hoheitliche Maßnahme</strong> – Die Gemeinde handelt einseitig mit Entscheidungscharakter (Verfügung/Bescheid), nicht auf Augenhöhe wie bei einem Vertrag.</li><li><strong>Einer Behörde</strong> – Die Gemeinde ist Träger öffentlicher Verwaltung und handelt als zuständige Behörde nach BHKG.</li><li><strong>Auf dem Gebiet des öffentlichen Rechts</strong> – Die Maßnahme stützt sich auf §27 BHKG (öffentliches Sonderrecht), nicht auf Zivilrecht.</li><li><strong>Regelung</strong> – Die Auflage begründet unmittelbar eine Pflicht für Herrn Meyer; bloße Auskünfte ohne Bindungswirkung sind keine Regelung.</li><li><strong>Eines Einzelfalls</strong> – Die Auflage richtet sich konkret-individuell an Herrn Meyer (nicht generell-abstrakt wie ein Gesetz).</li><li><strong>Mit Außenwirkung</strong> – Die Auflage trifft Herrn Meyer direkt als Bürger; behördeninterne Weisungen haben keine Außenwirkung und sind kein VA.</li></ol>'
+    },
+    {
+      id:3, nr:'Frage 3', punkte:4, ctx:'bhkg27',
+      text:'Welche Möglichkeit haben Sie bei der Erteilung Ihrer Auflage, die eine Umsetzung trotz des angekündigten Widerspruchs sicherstellt? Was müssen Sie dabei beachten?',
+      answer:'<strong>Anordnung der sofortigen Vollziehung</strong> gem. §80 Abs. 2 Nr. 4 VwGO.<br><br><strong>Ausgangslage:</strong> Widerspruch und Anfechtungsklage haben grundsätzlich aufschiebende Wirkung (§80 Abs. 1 VwGO). Der angekündigte Widerspruch würde die Auflage zunächst nicht vollziehbar machen.<br><br><strong>Zu beachten:</strong><ul><li><strong>Besonderes öffentliches Interesse</strong> muss vorliegen (hier: Brandschutz und Sicherheit der Veranstaltungsbesucher).</li><li><strong>Schriftliche Begründung</strong> zwingend erforderlich (§80 Abs. 3 S. 1 VwGO) – das besondere Vollziehungsinteresse muss konkret dargelegt werden; Formeln genügen nicht.</li><li>Die Anordnung kann direkt in den Bescheid aufgenommen werden.</li><li>Herr Meyer kann beim Verwaltungsgericht Antrag auf <strong>Wiederherstellung der aufschiebenden Wirkung</strong> stellen (§80 Abs. 5 VwGO).</li></ul>'
+    },
+    {
+      id:4, nr:'Frage 4', punkte:5, ctx:null,
+      text:'Wann liegt eine Gefahr im Sinne des Gefahrenabwehrrechts vor?',
+      answer:'Eine <strong>Gefahr</strong> liegt vor, wenn bei <strong>ungehindertem Fortgang der Ereignisse</strong> mit <strong>hinreichender Wahrscheinlichkeit</strong> ein <strong>Schaden</strong> für ein polizeiliches Schutzgut (öffentliche Sicherheit/Ordnung – insbes. Leben, Gesundheit, Eigentum) eintreten wird.<br><br>Maßgeblich ist eine <strong>ex-ante-Betrachtung</strong> aus Sicht eines sorgfältigen, sachkundigen Beamten zum Zeitpunkt des Handelns – nicht die nachträgliche Beurteilung.<br><br>Das erforderliche Maß der Wahrscheinlichkeit richtet sich nach der <strong>Schwere des drohenden Schadens</strong> (umgekehrt proportionales Verhältnis): Je gewichtiger das bedrohte Rechtsgut, desto geringere Wahrscheinlichkeit genügt.'
+    },
+    {
+      id:5, nr:'Frage 5', punkte:5, ctx:null,
+      text:'Erklären Sie den Unterschied zwischen einer konkreten Gefahr und einer Anscheinsgefahr und erläutern Sie kurz, was bei der Anscheinsgefahr zu beachten ist.',
+      answer:'<strong>Konkrete Gefahr:</strong> Eine auf den tatsächlichen Umständen des Einzelfalls beruhende, hinreichend wahrscheinliche Schädigung eines Schutzguts – sowohl ex-ante als auch ex-post liegt die gefährliche Sachlage tatsächlich vor.<br><br><strong>Anscheinsgefahr:</strong> Eine Sachlage, die bei verständiger ex-ante-Beurteilung als konkrete Gefahr erscheint, sich aber ex-post als ungefährlich herausstellt (die Gefahr war nur scheinbar vorhanden).<br><br><strong>Bei der Anscheinsgefahr zu beachten:</strong><ul><li>Die Maßnahme bleibt <strong>rechtmäßig</strong>, wenn die ex-ante-Einschätzung des sorgfältigen, sachkundigen Beamten vertretbar war.</li><li>Maßgeblich ist ausschließlich die <strong>ex-ante-Perspektive</strong>; ex-post-Erkenntnisse ändern die Rechtmäßigkeit nicht.</li><li>Liegt eine <strong>Putativgefahr</strong> vor (Behörde hätte bei sorgfältiger Prüfung erkannt, dass keine Gefahr bestand), ist die Maßnahme rechtswidrig.</li></ul>'
+    },
+    {
+      id:6, nr:'Frage 6', punkte:10, ctx:null,
+      text:'Welche Funktion haben die Grundrechte? Mit welchen Grundrechten haben Sie es ggf. im Feuerwehreinsatz zu tun? Unter welchen Voraussetzungen können Grundrechte eingeschränkt werden? Gilt das für alle Grundrechte?',
+      answer:'<strong>Funktionen der Grundrechte:</strong><ul><li><strong>Abwehrrechte</strong> (primäre Funktion): Schutz des Bürgers vor staatlichen Eingriffen</li><li><strong>Staatliche Schutzpflichten</strong>: Staat muss Bürger vor Grundrechtsverletzungen durch Dritte schützen</li><li><strong>Institutionelle Garantien</strong>: Schutz von Einrichtungen (z.B. Ehe und Familie, Art. 6 GG)</li><li><strong>Objektive Wertordnung</strong>: Grundrechte strahlen auf die gesamte Rechtsordnung aus</li></ul><strong>Im Feuerwehreinsatz relevant:</strong><ul><li><strong>Art. 2 Abs. 2 S. 1 GG</strong>: Recht auf Leben und körperliche Unversehrtheit</li><li><strong>Art. 13 GG</strong>: Unverletzlichkeit der Wohnung – Eingriff gem. §44 Abs. 2 BHKG i.V.m. Art. 13 Abs. 7 GG</li><li><strong>Art. 14 GG</strong>: Eigentumsgarantie (Inanspruchnahme von Sachen)</li><li><strong>Art. 2 Abs. 1 GG</strong>: Allgemeine Handlungsfreiheit</li></ul><strong>Voraussetzungen der Einschränkung:</strong><ul><li><strong>Gesetzesvorbehalt</strong>: Nur durch Gesetz oder aufgrund eines Gesetzes (Art. 19 Abs. 1 S. 1 GG)</li><li><strong>Verhältnismäßigkeit</strong>: Legitimer Zweck, Geeignetheit, Erforderlichkeit, Angemessenheit</li><li><strong>Wesensgehaltsgarantie</strong>: Kernbestand darf nicht angetastet werden (Art. 19 Abs. 2 GG)</li><li><strong>Zitiergebot</strong>: Das eingeschränkte Grundrecht muss im Gesetz benannt sein (Art. 19 Abs. 1 S. 2 GG)</li></ul><strong>Gilt nicht für alle:</strong> Nein – Art. 1 Abs. 1 GG (<strong>Menschenwürde</strong>) ist absolutes, einschränkungsfestes Grundrecht.'
+    },
+    {
+      id:7, nr:'Frage 7', punkte:4, ctx:null,
+      text:'Nennen Sie die vier Gründe, aus denen entsprechend der Festlegungen des BVerfG eine Nebentätigkeit untersagt werden kann.',
+      answer:'Entsprechend den Festlegungen des BVerfG kann eine Nebentätigkeit untersagt werden, wenn:<ol><li>Die <strong>Arbeitskraft</strong> des Beamten beeinträchtigt wird (zeitliche oder körperliche Überlastung)</li><li>Eine <strong>Pflichtenkollision</strong> besteht (die Nebentätigkeit steht im Widerspruch zu dienstlichen Pflichten)</li><li>Das <strong>Ansehen des Berufsbeamtentums</strong> geschädigt wird</li><li><strong>Staatliche oder fiskalische Interessen</strong> berührt werden</li></ol>'
+    },
+    {
+      id:8, nr:'Frage 8', punkte:9, ctx:'pkw',
+      text:'Prüfen Sie, ob hier eine Gefahr vorliegt, deren Beseitigung in den Aufgabenbereich der Feuerwehr fällt. Sofern nicht: Skizzieren Sie kurz, worauf Sie beim Verlassen der Einsatzstelle achten sollten.',
+      answer:'<strong>Prüfung gem. §1 Abs. 1 BHKG:</strong><ul><li>Keine Personen im PKW → keine Menschenrettung erforderlich</li><li>Keine auslaufenden Betriebsstoffe → keine Umweltgefährdung</li><li>Kein Brand und kein Brandrisiko erkennbar</li><li>PKW in Baugrube → reiner Sachschaden ohne akute Gefahr für öffentliche Sicherheit</li></ul><strong>Ergebnis:</strong> Kein Feuerwehreinsatz. Das Bergen des PKW fällt nicht in den Aufgabenbereich der Feuerwehr. Zuständig: Eigentümer/Versicherung (Abschleppunternehmer), Polizei, Ordnungsamt, Straßenverkehrsbehörde.<br><br><strong>Beim Verlassen zu beachten:</strong><ul><li><strong>Absicherung</strong>: Gefahrenbereich absperren (offene Baugrube = Gefahrenstelle für Verkehr und Fußgänger)</li><li><strong>Zuständige Stellen informieren</strong>: Polizei, Ordnungsamt, Straßenverkehrsbehörde</li><li><strong>Verantwortliche benachrichtigen</strong>: Bauherr/Bauleitung, ggf. Fahrzeugeigentümer</li><li><strong>Dokumentation</strong>: Einsatzbericht mit Feststellungen und Begründung</li><li>Übergabe an zuständige Stelle sicherstellen, bevor die Feuerwehr abrückt</li></ul>'
+    },
+    {
+      id:9, nr:'Frage 9 (a–c)', punkte:9, ctx:'brand',
+      text:'a) Dürfen Sie den Keller der Gewerbeeinheit (links) gewaltsam öffnen? Welche Voraussetzungen müssen vorliegen? b) Dürfen Sie den Keller des Mieters (rechts) gegen seinen Willen betreten? c) Was müssen Sie beim Verlassen beachten?',
+      answer:'<strong>a) Gewerbekeller (links) gewaltsam öffnen – Ja</strong>, gem. §44 Abs. 2 BHKG i.V.m. Art. 13 Abs. 7 GG.<br>Voraussetzungen: <strong>Anscheinsgefahr</strong> liegt vor – intensiver, stärker werdender Brandrauchgeruch ergibt ex-ante die begründete Annahme einer konkreten Brandgefahr. Art. 13 GG gilt auch für Geschäftsräume; Art. 13 Abs. 7 GG erlaubt den Eingriff durch Gesetz (§44 Abs. 2 BHKG). Da die Gewerbeeinheit geschlossen und kein Adressat vorhanden ist, handelt die Feuerwehr als <strong>Realakt</strong>. Verhältnismäßigkeit: gewalt. Öffnung als einzig verfügbares Erkundungsmittel – geeignet, erforderlich, angemessen.<br><br><strong>b) Keller des Mieters (rechts) – Ja</strong>, gem. §44 Abs. 2 BHKG i.V.m. Art. 13 Abs. 7 GG.<br>Die Aussage des Mieters reicht nicht aus, die Anscheinsgefahr auszuschließen. Mündliche <strong>Duldungsanordnung</strong> (VA gem. §35 VwVfG): „Sie dulden das Betreten Ihres Kellers nach §44 Abs. 2 BHKG." Bei weiterer Weigerung: unmittelbarer Zwang gem. §44 Abs. 2 BHKG.<br><br><strong>c) Beim Verlassen:</strong><ul><li>Geöffnete Räume sichern und wieder provisorisch verschließen</li><li>Eigentümer/Vermieter/Hausverwaltung benachrichtigen (insb. für den Gewerbekeller)</li><li>Vollständige Dokumentation im Einsatzbericht (Maßnahmen, Rechtsgrundlagen, Gründe, Zeitpunkte)</li><li>Sicherstellen, dass keine Gefahrenursache zurückbleibt (Glutnester, techn. Defekte)</li><li>Meldenden Mieter über das Ergebnis informieren</li></ul>'
+    }
+  ];
+
+  const TOTAL_PTS = QUESTIONS.reduce(function(s,q){return s+q.punkte;},0);
+
+  function loadScores(){ try{ return JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ return {}; } }
+  function saveScores(d){ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){} }
+  function scoreKey(id){ return 'q'+id; }
+  function fmtTime(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+
+  function startTimer(){
+    if(_timerRef) return;
+    _timerOn=true;
+    _timerRef=setInterval(function(){
+      if(_timeLeft>0){ _timeLeft--; updateTimerDisplay(); }
+      else{ stopTimer(); var el=document.getElementById('uk-timer'); if(el) el.style.color='#ef4444'; }
+    },1000);
+    updateTimerDisplay();
+  }
+
+  function stopTimer(){
+    if(_timerRef){ clearInterval(_timerRef); _timerRef=null; }
+    _timerOn=false;
+  }
+
+  function updateTimerDisplay(){
+    var el=document.getElementById('uk-timer-val'); if(el) el.textContent=fmtTime(_timeLeft);
+    var el2=document.getElementById('uk-timer-val2'); if(el2) el2.textContent=fmtTime(_timeLeft);
+    var btn=document.getElementById('uk-timer-btn'); if(btn) btn.textContent=_timerOn?'⏸ Pausieren':'▶ Timer starten';
+  }
+
+  function dotsHtml(){
+    return QUESTIONS.map(function(q,i){
+      var sc=_scores[scoreKey(q.id)];
+      var cls='fb-dot'+(i===_step?' fb-dot-active':sc!==undefined?' fb-dot-done':'');
+      return '<span class="'+cls+'" onclick="UEBUNGSKLAUSUR.goToQ('+i+')" title="Zu Frage '+(i+1)+' springen">'+(i+1)+'</span>';
+    }).join('');
+  }
+
+  function renderStart(){
+    var el=document.getElementById('uk-content'); if(!el) return;
+    _scores=loadScores();
+    var scored=QUESTIONS.filter(function(q){return _scores[scoreKey(q.id)]!==undefined;});
+    var totalScored=scored.reduce(function(s,q){return s+(_scores[scoreKey(q.id)]||0);},0);
+    var progress=scored.length;
+    var overviewRows=QUESTIONS.map(function(q){
+      var pts=_scores[scoreKey(q.id)];
+      var done=pts!==undefined;
+      var ptsHtml=done?('<span class="uk-q-pts-got">'+pts+'/'+q.punkte+'</span>'):'<span class="uk-q-pts-open">–</span>';
+      return '<div class="uk-q-row'+(done?' uk-q-done':'')+'" onclick="UEBUNGSKLAUSUR.goToQ('+(q.id-1)+')"><span class="uk-q-nr">'+q.nr+'</span><span class="uk-q-pts-max">'+q.punkte+' Pkt.</span>'+ptsHtml+'</div>';
+    }).join('');
+    var progressHtml=progress>0?('<div class="uk-progress-row"><span>Fortschritt: '+progress+'/'+QUESTIONS.length+' bewertet</span><span>'+totalScored+'/'+TOTAL_PTS+' Punkte ('+Math.round(totalScored/TOTAL_PTS*100)+' %)</span></div>'):'';
+    var resetBtn=progress>0?'<button class="uk-timer-reset" style="margin-left:auto" onclick="UEBUNGSKLAUSUR.resetAll()">↺ Neu beginnen</button>':'';
+    var resultBtn=progress===QUESTIONS.length?'<button class="uk-result-btn" onclick="UEBUNGSKLAUSUR.showResult()">Auswertung anzeigen</button>':'';
+    var timerResetBtn=_timeLeft<3600?'<button class="uk-timer-reset" onclick="UEBUNGSKLAUSUR.resetTimer()">↺ Zurücksetzen</button>':'';
+    el.innerHTML='<div class="uk-start"><div class="uk-intro-box"><div class="uk-intro-title">Übungsklausur · Einsatzrecht</div><div class="uk-intro-meta">'+QUESTIONS.length+' Fragen · '+TOTAL_PTS+' Punkte · Bearbeitungszeit: 60 Min.</div><div class="uk-intro-desc">Bearbeite jede Frage im Freitextfeld, zeige dann die Musterlösung an und bewerte dich selbst. Am Ende erhältst du deine Gesamtpunktzahl.</div></div><div class="uk-timer-box"><span id="uk-timer">⏱ <span id="uk-timer-val">'+fmtTime(_timeLeft)+'</span></span><button id="uk-timer-btn" class="uk-timer-toggle" onclick="UEBUNGSKLAUSUR.toggleTimer()">'+(_timerOn?'⏸ Pausieren':'▶ Timer starten')+'</button>'+timerResetBtn+resetBtn+'</div><div class="uk-q-overview">'+overviewRows+'</div>'+progressHtml+'<button class="uk-start-btn" onclick="UEBUNGSKLAUSUR.goToQ(0)">'+(progress>0?'Klausur fortsetzen →':'Klausur beginnen →')+'</button>'+resultBtn+'</div>';
+  }
+
+  function renderQuestion(){
+    var el=document.getElementById('uk-content'); if(!el) return;
+    _scores=loadScores();
+    var q=QUESTIONS[_step];
+    var savedTa=_scores['ta_q'+q.id]||'';
+    var myPts=_scores[scoreKey(q.id)];
+    var scoreBtns=Array.from({length:q.punkte+1},function(_,i){return '<button class="uk-score-btn'+(myPts===i?' uk-score-active':'')+'" onclick="UEBUNGSKLAUSUR.setScore('+i+')">'+i+'</button>';}).join('');
+    var scoreGot=myPts!==undefined?('<span class="uk-score-got">'+myPts+'/'+q.punkte+' Pkt. gespeichert</span>'):'';
+    var ctxHtml=q.ctx?CONTEXTS[q.ctx]:'';
+    var prevBtn=_step===0?'':'<button class="fb-prev-btn" onclick="UEBUNGSKLAUSUR.prevQ()">← Zurück</button>';
+    var nextLabel=_step===QUESTIONS.length-1?'Auswertung →':'Nächste Frage →';
+    var nextFn=_step===QUESTIONS.length-1?'UEBUNGSKLAUSUR.showResult()':'UEBUNGSKLAUSUR.nextQ()';
+    el.innerHTML='<div class="uk-q-header"><button class="uk-back-btn" onclick="UEBUNGSKLAUSUR.showStart()">← Übersicht</button><span class="uk-q-badge">'+q.nr+' · '+q.punkte+(q.punkte===1?' Punkt':' Punkte')+'</span><span class="uk-timer-inline">⏱ <span id="uk-timer-val2">'+fmtTime(_timeLeft)+'</span></span></div>'+ctxHtml+'<div class="uk-question"><p>'+q.text+'</p></div><textarea class="fb-textarea" id="uk-ta" placeholder="Schreibe deine Antwort hier…" rows="6">'+savedTa+'</textarea><button class="fb-reveal-btn'+(_revealed?' hidden':'')+'" id="uk-reveal" onclick="UEBUNGSKLAUSUR.reveal()">Musterlösung anzeigen</button><div class="fb-answer'+(_revealed?'':' hidden')+'" id="uk-answer">'+q.answer+'</div><div class="uk-score-row'+(_revealed?'':' hidden')+'" id="uk-score-row"><span class="uk-score-label">Meine Punkte:</span><div class="uk-score-btns">'+scoreBtns+'</div>'+scoreGot+'</div><div class="fb-step-actions">'+prevBtn+'<button class="fb-next-btn" onclick="'+nextFn+'">'+nextLabel+'</button></div><div class="fb-step-dots">'+dotsHtml()+'</div>';
+  }
+
+  function renderResult(){
+    var el=document.getElementById('uk-content'); if(!el) return;
+    stopTimer();
+    _scores=loadScores();
+    var total=QUESTIONS.reduce(function(s,q){return s+(_scores[scoreKey(q.id)]||0);},0);
+    var pct=Math.round(total/TOTAL_PTS*100);
+    var grade=pct>=90?'Sehr gut':pct>=80?'Gut':pct>=70?'Befriedigend':pct>=60?'Ausreichend':'Nicht bestanden';
+    var gradeCol=pct>=60?'#4ACD90':'#ef4444';
+    var rows=QUESTIONS.map(function(q){
+      var got=_scores[scoreKey(q.id)];
+      var done=got!==undefined;
+      var col=done?(got===q.punkte?'#4ACD90':got>0?'var(--c-gold)':'#ef4444'):'var(--c-slate-l)';
+      return '<tr><td>'+q.nr+'</td><td>'+q.punkte+'</td><td style="color:'+col+';">'+(done?got:'–')+'</td><td><button class="uk-jump-btn" onclick="UEBUNGSKLAUSUR.goToQ('+(q.id-1)+')">→</button></td></tr>';
+    }).join('');
+    el.innerHTML='<div class="uk-result"><div class="uk-result-header">Auswertung</div><div class="uk-result-score" style="color:'+gradeCol+';">'+total+' / '+TOTAL_PTS+' Punkte</div><div class="uk-result-pct" style="color:'+gradeCol+';">'+pct+' % – '+grade+'</div><div class="uk-result-bar"><div class="uk-result-fill" style="width:'+pct+'%;background:'+gradeCol+';"></div></div><table class="uk-result-table"><thead><tr><th>Frage</th><th>Max.</th><th>Erreicht</th><th></th></tr></thead><tbody>'+rows+'</tbody></table><div class="uk-result-actions"><button class="uk-start-btn" onclick="UEBUNGSKLAUSUR.showStart()">← Zur Übersicht</button><button class="uk-reset-btn" onclick="UEBUNGSKLAUSUR.resetAll()">Neu beginnen</button></div></div>';
+  }
+
+  return {
+    init:function(){
+      _scores=loadScores();
+      this.showStart();
+    },
+    showStart:function(){
+      _step=0; _revealed=false;
+      renderStart();
+    },
+    goToQ:function(i){
+      var ta=document.getElementById('uk-ta');
+      if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
+      _step=i; _revealed=false;
+      renderQuestion();
+    },
+    nextQ:function(){
+      var ta=document.getElementById('uk-ta');
+      if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
+      if(_step<QUESTIONS.length-1){_step++;_revealed=false;renderQuestion();}
+    },
+    prevQ:function(){
+      var ta=document.getElementById('uk-ta');
+      if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
+      if(_step>0){_step--;_revealed=true;renderQuestion();}
+    },
+    reveal:function(){
+      var ta=document.getElementById('uk-ta');
+      if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
+      _revealed=true;
+      document.getElementById('uk-reveal')?.classList.add('hidden');
+      document.getElementById('uk-answer')?.classList.remove('hidden');
+      document.getElementById('uk-score-row')?.classList.remove('hidden');
+    },
+    setScore:function(pts){
+      var d=loadScores();d[scoreKey(QUESTIONS[_step].id)]=pts;saveScores(d);_scores=d;
+      renderQuestion();
+      _revealed=true;
+      document.getElementById('uk-answer')?.classList.remove('hidden');
+      document.getElementById('uk-score-row')?.classList.remove('hidden');
+    },
+    showResult:function(){renderResult();},
+    toggleTimer:function(){
+      if(_timerOn) stopTimer(); else startTimer();
+      updateTimerDisplay();
+    },
+    resetTimer:function(){stopTimer();_timeLeft=3600;renderStart();},
+    resetAll:function(){
+      if(!confirm('Alle Antworten und Punkte zurücksetzen?')) return;
+      localStorage.removeItem(KEY);_scores={};_step=0;_revealed=false;
+      stopTimer();_timeLeft=3600;
+      renderStart();
+    }
+  };
+})();
+
 
 document.addEventListener('DOMContentLoaded',()=>{
   // Deep-link on load
