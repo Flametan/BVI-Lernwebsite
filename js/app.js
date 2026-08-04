@@ -36,6 +36,7 @@ const NAV = (function(){
     updateHeader();
     if(id==='v-abkuerzungen') ABK.init();
     if(id==='v-vak-altklausur') QUIZ.init();
+    if(id==='v-vak-fallbearbeitung') FALLBEARBEITUNG.init();
     if(id==='v-simulator') SIM._refreshCards();
     if(id==='v-app' && window._isChromium){
       const w = document.getElementById('apk-chromium-warn');
