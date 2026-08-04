@@ -853,6 +853,7 @@
 .quiz-stat-skip .quiz-stat-num{color:var(--c-sub);}
 .quiz-summary-pct{font-size:.95rem;font-weight:600;color:var(--c-gold);margin-bottom:.25rem;}
 .quiz-new-round-btn{display:inline-block;width:auto;padding:.6rem 1.75rem;margin-top:.75rem;}
+.quiz-summary-cmp{font-size:.8rem;color:var(--c-slate-l);margin:.35rem 0 .5rem;}
 .quiz-cat-bar{display:flex;flex-wrap:wrap;gap:.4rem;padding:.6rem 0 0;}
 .quiz-cat-filter-btn{padding:.28rem .65rem;border-radius:100px;border:1px solid var(--c-border);background:transparent;color:var(--c-sub);font-size:.73rem;font-weight:600;font-family:var(--f-m);cursor:pointer;transition:all .12s;white-space:nowrap;}
 .quiz-cat-filter-btn.active{border-color:var(--c-gold-rim);background:var(--c-gold-dim);color:var(--c-gold);}
@@ -939,42 +940,6 @@ body.mode-navy .quiz-mastery-modal-box{background:rgba(8,13,28,1.0);border-color
 .quiz-rcat-fill{height:100%;background:var(--c-gold);border-radius:3px;transition:width .5s ease;}
 .qrf-fail{background:#ef4444;}
 .quiz-rcat-stat{width:2.8rem;text-align:right;color:var(--c-sub);font-family:var(--f-m);flex-shrink:0;}
-/* Quiz Stats */
-.qs-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;margin-bottom:1.5rem;}
-.qs-stat-box{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:1rem;text-align:center;}
-.qs-stat-num{font-size:1.6rem;font-weight:700;font-family:var(--f-d);color:var(--c-gold);line-height:1;}
-.qsn-ok{color:#22c55e!important;}
-.qsn-fail{color:var(--c-red-l)!important;}
-.qs-stat-lbl{font-size:.65rem;color:var(--c-slate);margin-top:.3rem;}
-.qs-section{margin-bottom:1.5rem;}
-.qs-section-title{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--c-gold);margin-bottom:.7rem;padding-bottom:.35rem;border-bottom:1px solid var(--c-gold-rim);}
-.qs-bar-chart{display:flex;align-items:flex-end;gap:4px;height:60px;padding:6px;background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);}
-.qs-bar{flex:1;display:flex;align-items:flex-end;height:100%;}
-.qs-bar-fill{width:100%;background:var(--c-gold);border-radius:2px 2px 0 0;min-height:3px;transition:height .35s ease;}
-.qs-exam-row{display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;background:var(--glass);border-radius:var(--r-sm);margin-bottom:.3rem;font-size:.82rem;}
-.qs-exam-date{color:var(--c-slate);font-size:.7rem;font-family:var(--f-m);min-width:78px;}
-.qs-exam-score{font-weight:600;color:var(--c-text-b);flex:1;}
-.qs-exam-pct{font-weight:700;font-family:var(--f-m);min-width:40px;text-align:right;}
-.qsp-ok{color:#22c55e;}
-.qsp-fail{color:var(--c-red-l);}
-.qs-exam-grade{font-size:.7rem;color:var(--c-slate);}
-.qs-cat-row{display:flex;align-items:center;gap:.55rem;padding:.38rem 0;border-bottom:1px solid rgba(255,255,255,.04);}
-.qs-cat-name{font-size:.75rem;color:var(--c-slate-l);min-width:90px;flex-shrink:0;}
-.qs-cat-bar{flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
-.qs-cat-fill{height:100%;background:var(--c-gold);border-radius:3px;transition:width .4s ease;}
-.qcf-fail{background:var(--c-red-l);}
-.qs-cat-stat{font-size:.68rem;color:var(--c-slate);font-family:var(--f-m);min-width:80px;text-align:right;}
-.qs-empty{font-size:.82rem;color:var(--c-slate);text-align:center;padding:.75rem 0;font-style:italic;}
-.qs-reset-btn{margin-top:.75rem;padding:.38rem .8rem;border-radius:var(--r-sm);border:1px solid rgba(165,0,0,.28);background:rgba(165,0,0,.07);color:var(--c-red-l);font-size:.75rem;cursor:pointer;font-family:var(--f-b);}
-.qs-reset-btn:hover{background:rgba(165,0,0,.14);}
-@media(max-width:600px){
-  .qs-overview{grid-template-columns:repeat(2,1fr);gap:.5rem;}
-  .qs-stat-num{font-size:1.35rem;}
-  .qs-exam-row{flex-wrap:wrap;gap:.3rem;}
-  .qs-exam-score{min-width:100%;}
-  .qs-cat-name{min-width:70px;font-size:.7rem;}
-  .qs-cat-stat{min-width:0;font-size:.64rem;}
-}
 /* Offline-Banner */
 .offline-banner{display:none;align-items:center;justify-content:center;gap:.5rem;padding:.45rem 1rem;background:rgba(239,68,68,.12);border-bottom:1px solid rgba(239,68,68,.3);color:#ef4444;font-size:.78rem;font-weight:600;font-family:var(--f-m);position:sticky;top:0;z-index:300;}
 body.offline .offline-banner{display:flex;}
