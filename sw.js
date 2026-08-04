@@ -1,10 +1,11 @@
-const APP_VERSION = '2.15.5'; // keep in sync with js/version.js
+const APP_VERSION = '2.16.0'; // keep in sync with js/version.js
 const CACHE = 'bvi-v' + APP_VERSION;
 const PRECACHE = [
   './',
   './index.html',
   './css/style.css',
   './js/app.js',
+  './js/quiz-data.json',
   './js/version.js',
   './manifest.json',
   './icons/icon-192.svg',
