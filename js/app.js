@@ -2763,44 +2763,6 @@ const QUIZ=(function(){
     if(d.exams.length>20)d.exams=d.exams.slice(-20);
     saveStats(d);
   }
-  function renderStats(){
-    const panel=document.getElementById('quiz-stats');if(!panel)return;
-    const d=loadStats();const sess=d.sessions,exams=d.exams;
-    const totOk=sess.reduce((s,x)=>s+(x.ok||0),0),totErr=sess.reduce((s,x)=>s+(x.err||0),0);
-    const totAns=totOk+totErr,overallPct=totAns?Math.round(totOk/totAns*100):0;
-    const pctCls=overallPct>=60?'qsn-ok':overallPct>0?'qsn-fail':'';
-    const recent=sess.slice(-10);
-    const bars=recent.length?recent.map(s=>{
-      const tot=(s.ok||0)+(s.err||0);const p=tot?Math.round(s.ok/tot*100):0;
-      return'<div class="qs-bar" title="'+s.ts.slice(0,10)+': '+p+'%"><div class="qs-bar-fill" style="height:'+p+'%"></div></div>';
-    }).join(''):'';
-    const examRows=exams.length?exams.slice(-5).reverse().map(e=>
-      '<div class="qs-exam-row"><span class="qs-exam-date">'+e.ts.slice(0,10)+'</span><span class="qs-exam-score">'+e.ok+'/'+e.total+'</span><span class="qs-exam-pct '+(e.pct>=60?'qsp-ok':'qsp-fail')+'">'+e.pct+'%</span><span class="qs-exam-grade">'+esc(e.grade)+'</span></div>'
-    ).join(''):'<p class="qs-empty">Noch keine Klausuren absolviert.</p>';
-    const catMap={};
-    Object.entries(_masteryMap).forEach(([id,s])=>{
-      const q=Q?Q.find(x=>x.id===+id):null;if(!q)return;
-      if(!catMap[q.cat])catMap[q.cat]={ok:0,err:0};
-      if(s==='ok')catMap[q.cat].ok++;else if(s==='err')catMap[q.cat].err++;
-    });
-    const catRows=Object.keys(catMap).length?Object.entries(catMap).sort(([,a],[,b])=>{
-      const pa=(a.ok+a.err)?a.ok/(a.ok+a.err):0,pb=(b.ok+b.err)?b.ok/(b.ok+b.err):0;return pb-pa;
-    }).map(([cat,c])=>{
-      const t=c.ok+c.err,p=t?Math.round(c.ok/t*100):0;
-      return'<div class="qs-cat-row"><span class="qs-cat-name">'+(CAT_LABELS[cat]||esc(cat))+'</span><div class="qs-cat-bar"><div class="qs-cat-fill'+(p<60?' qcf-fail':'')+'" style="width:'+p+'%"></div></div><span class="qs-cat-stat">'+c.ok+'/'+t+' ('+p+'%)</span></div>';
-    }).join(''):'<p class="qs-empty">Noch keine Antworten gespeichert.</p>';
-    panel.innerHTML='<div class="qs-overview">'
-      +'<div class="qs-stat-box"><div class="qs-stat-num">'+sess.length+'</div><div class="qs-stat-lbl">Sessions</div></div>'
-      +'<div class="qs-stat-box"><div class="qs-stat-num">'+totAns+'</div><div class="qs-stat-lbl">Fragen beantwortet</div></div>'
-      +'<div class="qs-stat-box"><div class="qs-stat-num '+pctCls+'">'+overallPct+'%</div><div class="qs-stat-lbl">Gesamtquote</div></div>'
-      +'</div>'
-      +'<div class="qs-section"><h3 class="qs-section-title">Letzte Sessions (Richtig-Quote)</h3>'
-      +'<div class="qs-bar-chart">'+(recent.length?bars:'<p class="qs-empty" style="margin:0">Noch keine Sessions.</p>')+'</div></div>'
-      +'<div class="qs-section"><h3 class="qs-section-title">Klausur-Historie</h3>'+examRows+'</div>'
-      +'<div class="qs-section"><h3 class="qs-section-title">Kategorien (Lernstand)</h3>'+catRows+'</div>'
-      +'<button class="qs-reset-btn" onclick="QUIZ.resetStats()">Statistiken zurücksetzen</button>';
-  }
-
   function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=0|Math.random()*(i+1);[r[i],r[j]]=[r[j],r[i]];}return r;}
   function filteredIds(){let p=_filter==='bookmarked'?Q.filter(q=>_bookmarks.has(q.id)):_filter==='wrong'?Q.filter(q=>_masteryMap[q.id]==='err'):Q;if(_catFilter!=='all')p=p.filter(q=>q.cat===_catFilter);if(_typeFilter!=='all')p=p.filter(q=>q.type===_typeFilter);return p.map(q=>q.id);}
   function buildOrder(){_order=shuffle(filteredIds());_cur=0;_answered=false;_sessionCorrect=0;_sessionWrong=0;_sessionSkipped=0;_retried=new Set();_retriedCount=0;_posHistory={};hideSummary();renderFilterStatus();}
@@ -2891,7 +2853,19 @@ const QUIZ=(function(){
     if(!summary)return;
     const mc=_sessionCorrect+_sessionWrong||1;
     const pct=Math.round((_sessionCorrect/mc)*100);
-    summary.innerHTML='<div class="quiz-summary-inner"><div class="quiz-summary-title">Runde abgeschlossen!</div><div class="quiz-summary-stats"><div class="quiz-stat quiz-stat-ok"><div class="quiz-stat-num">'+_sessionCorrect+'</div><div class="quiz-stat-label">Richtig</div></div><div class="quiz-stat quiz-stat-err"><div class="quiz-stat-num">'+_sessionWrong+'</div><div class="quiz-stat-label">Falsch</div></div><div class="quiz-stat quiz-stat-skip"><div class="quiz-stat-num">'+_sessionSkipped+'</div><div class="quiz-stat-label">Übersprungen</div></div></div><div class="quiz-summary-pct">'+pct+' % richtig (MC / R-F)</div><button class="quiz-next-btn quiz-new-round-btn" onclick="QUIZ.newRound()">Neue Runde ↻</button></div>';
+    const d=loadStats();
+    const past=d.sessions.slice(0,-1);
+    let cmpHtml='';
+    if(past.length>0){
+      const pastOk=past.reduce((s,x)=>s+(x.ok||0),0);
+      const pastAns=past.reduce((s,x)=>s+(x.ok||0)+(x.err||0),0);
+      const avg=pastAns?Math.round(pastOk/pastAns*100):0;
+      const diff=pct-avg;
+      const arrow=diff>0?'↑':diff<0?'↓':'→';
+      const col=diff>0?'#22c55e':diff<0?'#ef4444':'var(--c-sub)';
+      cmpHtml='<div class="quiz-summary-cmp"><span style="color:'+col+'">'+arrow+' '+(diff>0?'+':'')+diff+'%</span> zum Schnitt ('+avg+'%)</div>';
+    }
+    summary.innerHTML='<div class="quiz-summary-inner"><div class="quiz-summary-title">Runde abgeschlossen!</div><div class="quiz-summary-stats"><div class="quiz-stat quiz-stat-ok"><div class="quiz-stat-num">'+_sessionCorrect+'</div><div class="quiz-stat-label">Richtig</div></div><div class="quiz-stat quiz-stat-err"><div class="quiz-stat-num">'+_sessionWrong+'</div><div class="quiz-stat-label">Falsch</div></div><div class="quiz-stat quiz-stat-skip"><div class="quiz-stat-num">'+_sessionSkipped+'</div><div class="quiz-stat-label">Übersprungen</div></div></div><div class="quiz-summary-pct">'+pct+' % richtig (MC / R-F)</div>'+cmpHtml+'<button class="quiz-next-btn quiz-new-round-btn" onclick="QUIZ.newRound()">Neue Runde ↻</button></div>';
     summary.classList.remove('hidden');
   }
 
@@ -2976,12 +2950,9 @@ const QUIZ=(function(){
       _mode=m;
       document.getElementById('quiz-learn').classList.toggle('hidden',m!=='learn');
       document.getElementById('quiz-exam').classList.toggle('hidden',m!=='exam');
-      const se=document.getElementById('quiz-stats');if(se)se.classList.toggle('hidden',m!=='stats');
       document.getElementById('quiz-mode-learn').classList.toggle('active',m==='learn');
       document.getElementById('quiz-mode-exam').classList.toggle('active',m==='exam');
-      const smb=document.getElementById('quiz-mode-stats');if(smb)smb.classList.toggle('active',m==='stats');
       if(m==='exam')renderExam();
-      else if(m==='stats'){stopTimer();renderStats();}
       else{stopTimer();buildOrder();renderCatBar();renderTypeBar();renderLearn();}
     },
     _answer(idx){
@@ -3054,7 +3025,6 @@ const QUIZ=(function(){
       _masteryMap={};saveMastery();renderMastery();renderMasteryCats();
     },
     _examSel(qid,idx){_examAnswers[qid]=idx;},
-    resetStats(){if(!confirm('Quiz-Statistiken (Sessions + Klausuren) zurücksetzen?'))return;localStorage.removeItem(KEY_STATS);renderStats();},
     submitExam(){
       if(_examSubmitted)return;
       const unanswered=Q.filter(q=>q.type!=='essay'&&_examAnswers[q.id]===undefined);
