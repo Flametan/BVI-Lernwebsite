@@ -3155,7 +3155,7 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
-    {v:'2.16.0',ts:'2026-08-04T12:00',items:[
+    {v:'2.16.0',ts:'2026-08-04T11:46',items:[
       'Performance: Navigation von O(90) auf O(2) DOM-Operationen beschleunigt – deutlich flüssiger auf Tablet',
       'Fortschritt: Modul-Kacheln zeigen animierte Mini-Fortschrittsbalken statt einfachem Text',
       'Quiz: 84 Fragen in externe Datei (quiz-data.json) ausgelagert – app.js ~80 KB kleiner, Quiz lädt beim ersten Öffnen aus SW-Cache',
