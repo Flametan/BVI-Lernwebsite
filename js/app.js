@@ -3566,7 +3566,7 @@ const FALLBEARBEITUNG = (function(){
             <button class="fb-next-btn${_revealed?'':' hidden'}" id="fb-next" onclick="FALLBEARBEITUNG.nextStep()">${_step===7?'Fall abschließen ✓':'Nächster Punkt →'}</button>
           </div>
         </div>
-        <div class="fb-step-dots">${STEPS.map((_,i)=>`<span class="fb-dot${i===_step?' fb-dot-active':i<_step?' fb-dot-done':''}">${i+1}</span>`).join('')}</div>
+        <div class="fb-step-dots">${STEPS.map((_,i)=>`<span class="fb-dot${i===_step?' fb-dot-active':i<_step?' fb-dot-done':''}" onclick="FALLBEARBEITUNG.goToStep(${i})" title="Zu Punkt ${i+1} springen">${i+1}</span>`).join('')}</div>
       `;
       const ta=document.getElementById('fb-ta');
       if(ta) ta.addEventListener('input',()=>{
@@ -3610,6 +3610,14 @@ const FALLBEARBEITUNG = (function(){
     },
     prevStep(){
       if(_step>0){ _step--;_revealed=true;renderCasesTab(); }
+    },
+    goToStep(i){
+      if(i>=0&&i<STEPS.length){
+        // Aktuelle Antwort speichern bevor Wechsel
+        const ta=document.getElementById('fb-ta');
+        if(ta){ _answers[answerKey(_case,_step)]=ta.value; saveAnswers(_answers); }
+        _step=i;_revealed=false;renderCasesTab();
+      }
     }
   };
 })();

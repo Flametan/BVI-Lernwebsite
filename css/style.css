@@ -998,7 +998,8 @@ body.mode-navy .quiz-mastery-modal-box{background:rgba(8,13,28,1.0);border-color
 .fb-next-btn{padding:.6rem 1.25rem;border-radius:var(--r-sm);border:1px solid var(--c-gold-rim);background:var(--c-gold-dim);color:var(--c-gold);font-size:.85rem;font-weight:600;font-family:var(--f-m);cursor:pointer;flex:1;max-width:220px;transition:background var(--t);}
 .fb-next-btn:hover{background:rgba(201,168,76,.2);}
 .fb-step-dots{display:flex;gap:.3rem;justify-content:center;margin-top:.6rem;flex-wrap:wrap;}
-.fb-dot{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:.6rem;font-weight:700;font-family:var(--f-m);border:1.5px solid var(--glass-b);color:var(--c-slate);background:var(--glass);}
+.fb-dot{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:.6rem;font-weight:700;font-family:var(--f-m);border:1.5px solid var(--glass-b);color:var(--c-slate);background:var(--glass);cursor:pointer;transition:border-color .15s,background .15s;}
+.fb-dot:hover{border-color:var(--c-gold-l);color:var(--c-gold-l);}
 .fb-dot-active{border-color:var(--c-gold);background:var(--c-gold-dim);color:var(--c-gold);}
 .fb-dot-done{border-color:rgba(42,122,82,.4);background:rgba(42,122,82,.12);color:#4ACD90;}
 @media(max-width:600px){.fb-step-law-badge{margin-left:0;flex-basis:100%;}.fb-step-actions{flex-direction:column-reverse;}.fb-next-btn{max-width:100%;}}
