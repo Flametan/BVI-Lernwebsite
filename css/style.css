@@ -756,8 +756,9 @@
 
 
 /* ─── ALTKLAUSUR QUIZ ─────────────────────────────── */
-.quiz-mode-bar{display:flex;gap:.5rem;margin-bottom:1.5rem;}
-.quiz-mode-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.65rem 1rem;border-radius:var(--r-sm);border:1px solid var(--c-border);background:var(--c-bg2);color:var(--c-sub);font-size:.85rem;font-weight:600;font-family:var(--f-m);cursor:pointer;transition:all .15s;}
+.quiz-mode-bar{display:flex;gap:.5rem;margin-bottom:1.5rem;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.quiz-mode-bar::-webkit-scrollbar{display:none;}
+.quiz-mode-btn{flex:none;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.65rem 1rem;border-radius:var(--r-sm);border:1px solid var(--c-border);background:var(--c-bg2);color:var(--c-sub);font-size:.85rem;font-weight:600;font-family:var(--f-m);cursor:pointer;transition:all .15s;}
 .quiz-mode-btn.active{background:var(--c-gold-dim);border-color:var(--c-gold-rim);color:var(--c-gold);}
 .quiz-mode-btn svg{flex-shrink:0;}
 .quiz-learn-inner{background:var(--c-bg2);border:1px solid var(--c-border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;}
