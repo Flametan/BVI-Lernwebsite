@@ -1104,7 +1104,7 @@ const PROGRESS = (function(){
     sfs:  ['v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc'],
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
-    vak:  ['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-altklausur','v-vak-klausurhinweise','v-vak-klausurfaelle'],
+    vak:  ['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-altklausur','v-vak-klausurhinweise','v-vak-klausurfaelle','v-vak-fallbearbeitung'],
     feuak:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung'],
     idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse'],
   };
@@ -1166,7 +1166,7 @@ const SEARCH = (function(){
     'v-vak-lernzusammenfassung':'VAk · Lernzusammenfassung','v-vak-jur-denken':'VAk · Juristisches Denken',
     'v-vak-verwaltungsrecht':'VAk · Allgemeines Verwaltungsrecht','v-vak-staatsrecht':'VAk · Staatsrecht',
     'v-vak-einsatzrecht':'VAk · Einsatzrecht','v-vak-dienstrecht':'VAk · Öffentliches Dienstrecht',
-    'v-vak-klausurhinweise':'VAk · Klausurhinweise','v-vak-klausurfaelle':'VAk · Klausurfälle','v-vak-rettungsdienstrecht':'VAk · Rettungsdienstrecht',
+    'v-vak-klausurhinweise':'VAk · Klausurhinweise','v-vak-klausurfaelle':'VAk · Klausurfälle','v-vak-rettungsdienstrecht':'VAk · Rettungsdienstrecht','v-vak-fallbearbeitung':'VAk · Fallbearbeitung',
     'v-feuak-vwl':'FeuAK · VWL','v-feuak-bwl':'FeuAK · BWL','v-feuak-haushalt':'FeuAK · Haushalt',
     'v-feuak-vergabe':'FeuAK · Vergabe','v-feuak-rechnungswesen':'FeuAK · Rechnungswesen',
     'v-feuak-pm':'FeuAK · Projektmanagement / Strategisches Management',
@@ -3354,6 +3354,235 @@ const RELATED={
   'v-gal-erstehilfe':[['v-hlfs-manv','HLFS MANV']],
 };
 
+
+/* ══════════════════════════════════════════════════════════════
+   FALLBEARBEITUNG – 8-Punkte-Schema + Übungsfälle
+══════════════════════════════════════════════════════════════ */
+const FALLBEARBEITUNG = (function(){
+  const KEY = 'bvi_fb_answers';
+
+  const STEPS = [
+    {
+      title:'Ermächtigungsgrundlage',
+      law:'§34 Abs.2 S.1 BHKG · §44 Abs.2 BHKG · §48 BHKG · §35 VwVfG',
+      prompt:'Auf welche Rechtsgrundlage stützt die Feuerwehr ihr Handeln? Handelt es sich um einen Verwaltungsakt oder einen Realakt?',
+      schema:'<p><strong>Verwaltungsakt (§35 VwVfG):</strong> Alle 6 Merkmale müssen erfüllt sein (hoheitlich, einseitig, verbindlich, Regelung im Einzelfall, auf unmittelbare Rechtswirkung nach außen gerichtet, durch Behörde). Auch Anweisungen an Störer sind VAs.</p><p><strong>Realakt:</strong> Schlichtes Verwaltungshandeln ohne Regelungscharakter – es werden nur die Punkte 1–3 (materiell) geprüft.</p><p><strong>Wichtige Normen:</strong></p><ul><li>§34 Abs.2 S.1 BHKG – Hilfeleistung bei anderen Notlagen (Menschenrettung, Schutz bedeutender Sachwerte)</li><li>§44 Abs.2 BHKG – Betretungsrecht, Anordnungsbefugnis, Inanspruchnahme von Sachen, unmittelbarer Zwang</li><li>§48 BHKG – Kostenersatz (bei vorsätzlicher oder grob fahrlässiger Herbeiführung des Einsatzes)</li></ul>'
+    },
+    {
+      title:'Zuständigkeit',
+      law:'§1 Abs.1 BHKG · §3 Abs.1 S.1 BHKG · §28 Abs.2 Nr.1 VwVfG · §37 Abs.2 VwVfG · §39 Abs.1 S.1 VwVfG · §41 Abs.1 VwVfG',
+      prompt:'Ist die handelnde Feuerwehr sachlich, örtlich und instanziell zuständig? Welche Verfahrensanforderungen gelten?',
+      schema:'<p><strong>1. Sachliche Zuständigkeit:</strong> §1 Abs.1 BHKG i.V.m. §3 Abs.1 S.1 BHKG → Feuerwehr ist zuständig für Brandschutz und Hilfeleistung.</p><p><strong>2. Örtliche Zuständigkeit:</strong> §3 Abs.1 S.1 BHKG → Feuerwehr ist zuständig im Gebiet der Gemeinde.</p><p><strong>3. Instanzielle Zuständigkeit:</strong> §3 Abs.1 S.1 BHKG → Feuerwehr als behördliche Einrichtung der Gemeinde.</p><p><strong>Verfahren (bei VA mit mind. Anscheinsgefahr):</strong></p><ul><li>Verzicht auf Anhörung: §28 Abs.2 Nr.1 VwVfG (Gefahr im Verzug)</li><li>Form: mündlich nach §37 Abs.2 VwVfG</li><li>Begründung: nicht erforderlich bei mündlichem VA (§39 Abs.1 S.1 VwVfG)</li><li>Bekanntgabe: mündlich nach §41 Abs.1 VwVfG</li></ul>'
+    },
+    {
+      title:'Vorliegen einer Gefahr',
+      law:'§34 Abs.2 S.1 BHKG – Gefahrenbegriff',
+      prompt:'Liegt eine Gefahr im Sinne des BHKG vor? Welche Art von Gefahr (konkret, abstrakt, Anscheinsgefahr)?',
+      schema:'<p><strong>Konkrete Gefahr:</strong> Hinreichende Wahrscheinlichkeit eines Schadenseintritts im Einzelfall. Je gewichtiger das bedrohte Rechtsgut, desto geringer die erforderliche Wahrscheinlichkeit.</p><p><strong>Abstrakte Gefahr:</strong> Typischerweise gefährliche Situation, unabhängig vom konkreten Einzelfall. Grundlage für generell-abstrakte Regelungen, nicht für Einzelfallmaßnahmen.</p><p><strong>Anscheinsgefahr:</strong> Ex-ante erscheint eine konkrete Gefahr als hinreichend wahrscheinlich; ex-post stellt sich heraus, dass keine reale Gefahr bestand. Die Maßnahme bleibt rechtmäßig, wenn die Gefahrenprognose ex-ante vertretbar war. Maßgeblich ist die Beurteilung durch einen sorgfältigen, sachkundigen Beobachter zum Zeitpunkt des Handelns.</p>'
+    },
+    {
+      title:'Störerauswahl',
+      law:'§44 Abs.2 BHKG · §45 BHKG',
+      prompt:'Wer ist Störer? Verhaltensstörer, Zustandsstörer oder Nichtstörer? Wer ist Adressat der Maßnahme?',
+      schema:'<p><strong>Verhaltensstörer:</strong> Person, die durch ihr Verhalten (Tun oder Unterlassen) die Gefahr unmittelbar verursacht oder aufrechthält.</p><p><strong>Zustandsstörer:</strong> Person, von deren Sache die Gefahr ausgeht (Eigentümer oder Inhaber der tatsächlichen Gewalt).</p><p><strong>Nichtstörer (§45 BHKG):</strong> Person, die weder Verhaltens- noch Zustandsstörer ist. Inanspruchnahme zulässig, wenn: (1) Störer nicht rechtzeitig erreichbar oder Maßnahme unzureichend, (2) Gefahr anders nicht abwendbar, (3) Nichtstörer so wenig wie möglich belastet. → Entschädigungsanspruch gem. §45 Abs.2 BHKG.</p><p><strong>Auswahlermessen:</strong> Bei mehreren Störern richtet sich die Auswahl nach Effektivität und Verhältnismäßigkeit.</p>'
+    },
+    {
+      title:'Ermessen',
+      law:'§44 Abs.2 BHKG – Ermessen',
+      prompt:'Welches Ermessen steht der Behörde zu? Ist das Entschließungsermessen auf Null reduziert?',
+      schema:'<p><strong>Entschließungsermessen</strong> (ob die Behörde tätig wird?): Grundsätzlich hat die Feuerwehr Ermessen. Bei hochrangigen Rechtsgütern (Leib, Leben) ist das Ermessen auf Null reduziert → Einschreiten ist zwingend.</p><p><strong>Auswahlermessen</strong> (wie tätig?): Auswahl zwischen mehreren geeigneten Maßnahmen. Zu berücksichtigen: Wirksamkeit, Zumutbarkeit für den Betroffenen, Verhältnismäßigkeit.</p><p><strong>Reduktion auf Null:</strong> Je höherwertiger das bedrohte Rechtsgut (insbes. Menschenleben), desto eher verdichtet sich das Ermessen zur Pflicht zum Einschreiten.</p>'
+    },
+    {
+      title:'Verhältnismäßigkeit',
+      law:'§15 Abs.2 OBG · §44 Abs.2 S.4 BHKG',
+      prompt:'Ist die gewählte Maßnahme verhältnismäßig? Prüfe: Legitimer Zweck, Geeignetheit, Erforderlichkeit, Angemessenheit.',
+      schema:'<p><strong>Legitimer Zweck:</strong> Die Maßnahme muss einem legitimen Zweck (Gefahrenabwehr, Schutz von Rechtsgütern) dienen.</p><p><strong>Geeignetheit (G):</strong> Die Maßnahme muss geeignet sein, den Zweck zu fördern.</p><p><strong>Erforderlichkeit (E):</strong> Es darf kein milderes, gleich wirksames Mittel geben (mildestes Mittel).</p><p><strong>Angemessenheit (A):</strong> Die Maßnahme darf nicht zu einem Nachteil führen, der außer Verhältnis zum angestrebten Erfolg steht (§15 Abs.2 OBG; §44 Abs.2 S.4 BHKG). Abwägung: Schwere des Eingriffs ↔ Bedeutung des abzuwehrenden Schadens.</p>'
+    },
+    {
+      title:'Rechtsfolge',
+      law:'§35 VwVfG · §44 Abs.2 BHKG · §37 Abs.2 VwVfG',
+      prompt:'Was ist die Rechtsfolge? Formuliere ggf. den Inhalt des Verwaltungsakts anhand der W-Fragen.',
+      schema:'<p><strong>Verwaltungsakt:</strong> Einseitige, verbindliche, hoheitliche Maßnahme, die etwas anordnet, untersagt, gewährt oder feststellt (§35 VwVfG).</p><p><strong>Inhalt – W-Fragen:</strong></p><ul><li><strong>Wer</strong> muss handeln/dulden?</li><li><strong>Was</strong> ist zu tun/zu unterlassen?</li><li><strong>Wann</strong> (Zeitpunkt/Frist)?</li><li><strong>Wohin</strong> (Ort)?</li><li><strong>Wie (lang)</strong> (Dauer)?</li></ul><p>Mündliche Anordnungen sind nach §37 Abs.2 VwVfG zulässig. Bei Weigerung: <strong>Unmittelbarer Zwang</strong> gem. §44 Abs.2 BHKG (sofortiger Vollzug ohne vorherige Androhung bei Gefahr im Verzug).</p>'
+    },
+    {
+      title:'Kosten- und Entschädigungsfragen',
+      law:'§45 BHKG · §48 BHKG · §839 BGB i.V.m. Art. 34 GG',
+      prompt:'Wer trägt die Kosten? Bestehen Entschädigungsansprüche? Kommt Schadensersatz in Betracht?',
+      schema:'<p><strong>§48 BHKG – Kostenersatz:</strong> Der Verursacher (Störer) muss der Gemeinde die Kosten des Feuerwehreinsatzes ersetzen, wenn er die Gefahr vorsätzlich oder grob fahrlässig herbeigeführt hat.</p><p><strong>§45 Abs.2 BHKG – Entschädigung für Nichtstörer:</strong> Wer als Nichtstörer in Anspruch genommen wurde, hat Anspruch auf angemessene Entschädigung durch die Gemeinde. Der Entschädigungsanspruch besteht auch bei rechtmäßiger Inanspruchnahme.</p><p><strong>Amtshaftung (§839 BGB i.V.m. Art. 34 GG):</strong> Schadensersatz nur bei rechtswidrigem und schuldhaftem Handeln der Behörde. Bei rechtmäßiger Maßnahme (auch bei Anscheinsgefahr, solange ex-ante vertretbar) scheidet Amtshaftung aus.</p>'
+    }
+  ];
+
+  const CASES = [
+    {
+      id:1,
+      title:'Fall 1 – Wohnungsöffnung nach ausgelöstem Heimrauchmelder',
+      sachverhalt:'Um 02:15 Uhr wird die Feuerwehr zu einem Mehrfamilienhaus alarmiert. Ein Heimrauchmelder im 3. OG piept seit Längerem. Kein Rauch oder Brandgeruch im Treppenhaus. Klingeln und Klopfen bleiben erfolglos. Ein Nachbar berichtet, der Wohnungsinhaber sei älter und lebe allein. Der Einsatzleiter ordnet die gewaltsame Türöffnung an. In der Wohnung befindet sich niemand; der Rauchmelder wurde durch eine leere Batterie ausgelöst. Der Eigentümer verlangt Ersatz der beschädigten Tür.',
+      answers:[
+        'Ermächtigungsgrundlage: §34 Abs.2 S.1 BHKG (Hilfeleistung bei anderen Notlagen) i.V.m. §44 Abs.2 BHKG (Betreten und gewaltsames Öffnen von Wohnungen). Da zum Zeitpunkt der Maßnahme niemand anwesend ist, dem eine Anordnung erteilt werden könnte, liegt ein <strong>Realakt</strong> vor – keine VA-Prüfung (Punkte 1–3 genügen materiell).',
+        'Sachlich: §1 Abs.1 i.V.m. §3 Abs.1 S.1 BHKG (Brandschutz und Hilfeleistung als Gemeindeaufgabe). Örtlich: §3 Abs.1 S.1 BHKG (Gemeindegebiet). Instanziell: §3 Abs.1 S.1 BHKG (Feuerwehr als behördliche Einrichtung). Da niemand anwesend ist, entfällt eine Anhörung von vornherein; im Übrigen wäre §28 Abs.2 Nr.1 VwVfG (Gefahr im Verzug) einschlägig.',
+        '<strong>Anscheinsgefahr:</strong> Ex-ante-Betrachtung durch einen sorgfältigen, sachkundigen Einsatzleiter: Piepender Rauchmelder um 02:15 Uhr + älterer alleinlebender Bewohner + keine Reaktion auf Klingeln/Klopfen → hinreichend wahrscheinlich, dass eine hilflose oder bewusstlose Person in der Wohnung ist oder ein Brandgeschehen vorliegt. Die ex-ante-Annahme einer konkreten Gefahr war objektiv vertretbar. Ex-post (leere Batterie, niemand anwesend) ändert die rechtliche Bewertung nicht – maßgeblich bleibt die ex-ante-Perspektive.',
+        'Kein Störer identifizierbar: Niemand ist vor Ort, dem die Gefahr durch Verhalten oder Sachherrschaft zuzurechnen wäre. Die Feuerwehr handelt ohne Adressat direkt als Realakt (Öffnen der Tür). Der abwesende Eigentümer/Mieter ist nicht Störer im polizeirechtlichen Sinne.',
+        'Entschließungsermessen auf Null reduziert: Mögliche hilflose Person in der Wohnung → Rechtsgut Leben/körperliche Unversehrtheit → Einschreiten zwingend. Auswahlermessen: Gewaltsame Öffnung war die einzig verbleibende Option nach Ausschöpfung milderer Mittel (Klingeln, Klopfen, Nachbarbefragung, kein Schlüsseldienst in vertretbarer Zeit erreichbar).',
+        'Legitimer Zweck: Rettung einer möglicherweise hilflosen Person. Geeignet: Wohnungsöffnung ermöglicht die Nachschau → geeignet. Erforderlich: Kein milderes, gleich wirksames Mittel verfügbar (kein Ersatzschlüssel zugänglich um 02:15 Uhr) → erforderlich. Angemessen: Potenzielle Rettung eines Menschenlebens überwiegt den Schaden an der Wohnungstür bei weitem → angemessen.',
+        'Die Wohnungsöffnung war rechtmäßig. Rechtsgrundlage: §44 Abs.2 BHKG. Eine förmliche Anordnung war nicht erforderlich (kein Adressat). Die Anscheinsgefahr legitimierte das unmittelbare Handeln.',
+        '<strong>Kein Schadensersatz für den Eigentümer:</strong> Die Maßnahme war rechtmäßig → Amtshaftung (§839 BGB i.V.m. Art. 34 GG) scheidet mangels Rechtswidrigkeit aus. §45 BHKG (Entschädigung für Nichtstörer) greift nicht, da keine Person in Anspruch genommen wurde. §48 BHKG (Kostenersatz vom Störer) ebenfalls nicht einschlägig. Der Eigentümer trägt den Schaden an der Tür selbst.'
+      ]
+    },
+    {
+      id:2,
+      title:'Fall 2 – Gasgeruch im Gewerbebetrieb',
+      sachverhalt:'Während der Öffnungszeiten eines Supermarkts melden mehrere Kunden starken Gasgeruch. Die Feuerwehr stellt vor Ort ebenfalls deutlichen Gasgeruch fest. Der Filialleiter verweigert die Räumung: „Heute ist Samstag. Wenn wir jetzt schließen, verlieren wir mehrere zehntausend Euro Umsatz."',
+      answers:[
+        'Ermächtigungsgrundlage: §34 Abs.2 S.1 BHKG i.V.m. §44 Abs.2 BHKG. Die Räumungsanordnung gegenüber dem Filialleiter ist ein <strong>Verwaltungsakt</strong> gem. §35 VwVfG: hoheitlich, einseitig, verbindlich, regelt einen Einzelfall (Räumung dieses Marktes), auf unmittelbare Rechtswirkung gerichtet, durch Behörde (Feuerwehr) erlassen.',
+        'Sachlich: §1 Abs.1 i.V.m. §3 Abs.1 S.1 BHKG. Örtlich: §3 Abs.1 S.1 BHKG. Instanziell: §3 Abs.1 S.1 BHKG. Anhörungsverzicht: §28 Abs.2 Nr.1 VwVfG (Gefahr im Verzug – Gasgeruch erfordert sofortiges Handeln). Form: mündlich §37 Abs.2 VwVfG. Begründung entbehrlich (§39 Abs.1 S.1 VwVfG). Bekanntgabe: mündlich §41 Abs.1 VwVfG.',
+        '<strong>Konkrete Gefahr:</strong> Starker Gasgeruch, sensorisch von Feuerwehrkräften bestätigt → hinreichende Wahrscheinlichkeit einer Explosion, Verpuffung oder Gasvergiftung im konkreten Einzelfall. Es handelt sich nicht mehr um einen bloßen Verdacht, sondern um eine objektivierte Feststellung. Die Gefahr für Leib und Leben der anwesenden Kunden und des Personals ist konkret und akut.',
+        '<strong>Verhaltensstörer:</strong> Der Filialleiter, der die Räumung aktiv verweigert und dadurch Kunden und Personal in der Gefahrenzone hält (Störung durch Unterlassen einer gebotenen Handlung). <strong>Zustandsstörer:</strong> Eigentümer/Betreiber des Supermarkts als Inhaber der gasführenden Anlage. Primärer Adressat der Anordnung: der Filialleiter als vor Ort anwesende, handlungs- und weisungsbefugte Person (Auswahlermessen nach Effektivität).',
+        'Entschließungsermessen auf Null reduziert: Konkrete Explosionsgefahr → unmittelbare Gefahr für Leib und Leben zahlreicher Personen → Einschreiten zwingend. Auswahlermessen: Vollständige Räumung als verhältnismäßigste Maßnahme. Wirtschaftliche Interessen des Filialleiters (Umsatzverlust am Samstag) sind rechtlich ohne Belang – sie können das Einschreiten weder verhindern noch verzögern.',
+        'Legitimer Zweck: Schutz von Leib und Leben der Kunden und Mitarbeiter. Geeignet: Räumung beseitigt die Gefährdung der Personen im Gefahrenbereich → geeignet. Erforderlich: Kein milderes, gleich wirksames Mittel (bei diffusem Gasgeruch im gesamten Markt ist eine Teilräumung unzureichend) → erforderlich. Angemessen: Der Umsatzverlust des Betreibers tritt hinter dem Schutz von Menschenleben zurück (§15 Abs.2 OBG) → angemessen.',
+        'Mündliche Räumungsanordnung als VA gem. §44 Abs.2 BHKG: „Sie räumen diesen Markt sofort und vollständig – alle Kunden und Mitarbeiter verlassen jetzt das Gebäude." (Wer? = alle Personen im Markt; Was? = Verlassen des Gebäudes; Wann? = sofort; Wohin? = außerhalb des Gefahrenbereichs; Wie lange? = bis zur Freigabe durch die Feuerwehr). Bei weiterer Weigerung: <strong>Unmittelbarer Zwang</strong> gem. §44 Abs.2 BHKG zulässig (Gefahr im Verzug, kein Aufschub möglich).',
+        '<strong>§48 BHKG – Kostenersatz:</strong> Gegenüber dem Betreiber/Eigentümer des Supermarkts, sofern die Gasgefahr auf vorsätzliches oder grob fahrlässiges Handeln zurückzuführen ist (z.B. unterlassene Wartung der Gasanlage). Dem Filialleiter steht keine Entschädigung zu – er ist Störer. <strong>Amtshaftung</strong> scheidet aus (Maßnahme war rechtmäßig).'
+      ]
+    },
+    {
+      id:3,
+      title:'Fall 3 – Brennendes Elektrofahrzeug in Tiefgarage',
+      sachverhalt:'In einer Tiefgarage gerät ein Elektrofahrzeug in Brand. Zur Brandbekämpfung muss die Feuerwehr mehrere weitere Fahrzeuge mit Seilwinden aus der Tiefgarage ziehen, um Zugang zum Brandherd zu erhalten. Die Eigentümer der anderen Fahrzeuge widersprechen und befürchten Lackschäden.',
+      answers:[
+        'Ermächtigungsgrundlage: §34 Abs.1 BHKG (Brandbekämpfung) i.V.m. §44 Abs.2 BHKG (Entfernung von Hindernissen, Inanspruchnahme von Sachen Dritter) und §45 BHKG (Inanspruchnahme von Nichtstörern). Das Versetzen der Fahrzeuge ist ein <strong>Realakt</strong>. Soweit Duldungsanordnungen an anwesende Eigentümer ergehen, liegt jeweils ein VA gem. §35 VwVfG vor.',
+        'Sachlich: §1 Abs.1 BHKG (Brandschutz), §3 Abs.1 S.1 BHKG. Örtlich: §3 Abs.1 S.1 BHKG. Instanziell: §3 Abs.1 S.1 BHKG. Anhörungsverzicht: §28 Abs.2 Nr.1 VwVfG (Brand = Gefahr im Verzug). Mündlicher VA §37 Abs.2 VwVfG, Bekanntgabe §41 Abs.1 VwVfG.',
+        '<strong>Konkrete Gefahr:</strong> Brennendes Elektrofahrzeug in geschlossener Tiefgarage → erhöhte thermische Belastung, Rauchentwicklung, erhöhte Brandausbreitungsgefahr (EV-Brände sind schwer zu löschen und neigen zum thermal runaway) → hinreichende Wahrscheinlichkeit eines Schadens für weitere Fahrzeuge, die Gebäudestruktur und ggf. Personen.',
+        '<strong>Zustandsstörer:</strong> Eigentümer des brennenden EV – von seiner Sache geht die Gefahr aus. <strong>Nichtstörer:</strong> Eigentümer der anderen Fahrzeuge – sie haben die Gefahr nicht verursacht; ihre Fahrzeuge stehen der Brandbekämpfung lediglich im Weg. Inanspruchnahme als Nichtstörer gem. §45 BHKG zulässig, wenn: (1) Störer nicht rechtzeitig erreichbar oder Maßnahme gegen ihn unzureichend, (2) Gefahr sonst nicht abwendbar, (3) Nichtstörer so wenig wie möglich belastet.',
+        'Entschließungsermessen auf Null reduziert: Brandbekämpfung in geschlossener Tiefgarage → erheblicher Sachschaden und potenzielle Personengefährdung → Einschreiten zwingend. Auswahlermessen: Umsetzung der Fahrzeuge mit Seilwinden als einzig verfügbares Mittel, um den Löschzugang freizumachen.',
+        'Legitimer Zweck: Brandbekämpfung und Verhinderung der Ausbreitung. Geeignet: Umsetzung der Fahrzeuge schafft den erforderlichen Zugang → geeignet. Erforderlich: Kein schonenderes Mittel zur Freimachung des Löschzugangs → erforderlich. Angemessen: Mögliche Lackschäden sind geringfügig gegenüber dem drohenden Brand- und Strukturschaden (§44 Abs.2 S.4 BHKG, §15 Abs.2 OBG) → angemessen.',
+        'Umsetzung der Fahrzeuge durch die Feuerwehr gem. §44 Abs.2 i.V.m. §45 BHKG (Realakt). Ggf. mündliche Duldungsanordnung an anwesende Eigentümer: „Wir versetzen Ihr Fahrzeug zur Brandbekämpfung – Sie dulden dies nach §45 BHKG." Bei Widerspruch ist die Maßnahme dennoch zulässig (Nichtstörer haben zu dulden).',
+        '<strong>Zustandsstörer (EV-Eigentümer):</strong> Kostenersatz für den Feuerwehreinsatz gem. §48 BHKG, soweit er den Brand vorsätzlich oder grob fahrlässig verursacht hat. <strong>Nichtstörer (Eigentümer der umgesetzten Fahrzeuge):</strong> Anspruch auf angemessene Entschädigung für etwaige Schäden durch die Umsetzung gem. §45 Abs.2 BHKG (Entschädigung durch die Gemeinde). Die Eigentümer haben keinen Schadensersatz-, sondern einen Entschädigungsanspruch.'
+      ]
+    },
+    {
+      id:4,
+      title:'Fall 4 – Umgestürzter Gefahrgut-Lkw',
+      sachverhalt:'Ein Tanklastzug mit Salzsäure kippt nach einem Verkehrsunfall auf einer Bundesstraße um. Zur Einrichtung einer Sicherheitszone ordnet die Einsatzleitung an, ein angrenzendes Privatgrundstück zu nutzen. Der Eigentümer verweigert den Zutritt.',
+      answers:[
+        'Ermächtigungsgrundlage: §34 Abs.2 S.1 BHKG (Hilfeleistung bei anderen Notlagen) i.V.m. §44 Abs.2 BHKG (Betreten von Grundstücken) und §45 BHKG (Inanspruchnahme von Nichtstörern). Die Duldungsanordnung gegenüber dem Eigentümer ist ein <strong>Verwaltungsakt</strong> gem. §35 VwVfG (hoheitlich, einseitig, verbindlich, regelt Einzelfall, auf unmittelbare Rechtswirkung gerichtet).',
+        'Sachlich: §1 Abs.1 BHKG (Hilfeleistung bei Gefahrgutunfall), §3 Abs.1 S.1 BHKG. Örtlich: §3 Abs.1 S.1 BHKG. Instanziell: §3 Abs.1 S.1 BHKG. Anhörungsverzicht: §28 Abs.2 Nr.1 VwVfG (akute Gefahrlage durch auslaufende Salzsäure). Mündlicher VA §37 Abs.2 VwVfG; Bekanntgabe §41 Abs.1 VwVfG.',
+        '<strong>Konkrete Gefahr:</strong> Auslaufende Salzsäure aus umgestürztem Tanklastzug → akute Gefahr für Leib und Leben von Verkehrsteilnehmern, Anwohnern und Einsatzkräften durch Verätzung und Einatmen von Dämpfen; Umweltgefährdung (Boden, Grundwasser) → hinreichende Wahrscheinlichkeit eines Schadens im konkreten Einzelfall.',
+        '<strong>Verhaltensstörer:</strong> Fahrer des Lkw (hat durch den Unfall die Gefahr kausal verursacht). <strong>Zustandsstörer:</strong> Halter/Eigentümer des Lkw und Ladungseigentümer (von deren Sache – auslaufende Salzsäure – geht die Gefahr aus). <strong>Nichtstörer:</strong> Grundstückseigentümer – hat die Gefahr nicht verursacht; sein Grundstück wird ausschließlich für die Sicherheitszone benötigt. Inanspruchnahme als Nichtstörer gem. §45 BHKG zulässig, wenn die drei Voraussetzungen (Störer nicht rechtzeitig erreichbar/unzureichend; Gefahr nicht anders abwendbar; geringstmögliche Belastung) erfüllt sind.',
+        'Entschließungsermessen auf Null reduziert: Auslaufende Salzsäure auf Bundesstraße → unmittelbare Gefahr für Leib und Leben → Einschreiten zwingend. Auswahlermessen: Nutzung des angrenzenden Privatgrundstücks als einzig verfügbare geeignete Fläche für die Sicherheitszone (keine ausreichend große öffentliche Fläche in der nötigen Entfernung verfügbar).',
+        'Legitimer Zweck: Einrichtung einer Sicherheitszone zum Schutz von Einsatzkräften und Bevölkerung. Geeignet: Nutzung des Grundstücks schafft den nötigen Sicherheitsabstand → geeignet. Erforderlich: Keine andere geeignete Fläche in der Nähe verfügbar → erforderlich. Angemessen: Temporäre Grundstücksnutzung steht nicht außer Verhältnis zur Abwehr schwerer Gesundheitsgefahren durch Salzsäure (§44 Abs.2 S.4 BHKG) → angemessen.',
+        'Mündliche Duldungsanordnung als VA gem. §44 Abs.2 i.V.m. §45 BHKG: „Wir nutzen Ihr Grundstück als Sicherheitszone – Sie dulden das nach §45 BHKG." (Wer? = Einsatzkräfte; Was? = Betreten und Nutzen der Grundstücksfläche; Wann? = sofort; Wohin? = bezeichneter Bereich; Wie lange? = bis zur Freigabe durch den Einsatzleiter). Bei weiterer Weigerung: <strong>Unmittelbarer Zwang</strong> gem. §44 Abs.2 BHKG – die Feuerwehr betritt das Grundstück auch gegen den ausdrücklichen Willen des Eigentümers.',
+        '<strong>Grundstückseigentümer (Nichtstörer):</strong> Anspruch auf angemessene Entschädigung für etwaige Schäden durch die Grundstücksnutzung gem. §45 Abs.2 BHKG (Entschädigung durch die Gemeinde). Es handelt sich um einen Entschädigungsanspruch, nicht um Schadensersatz. <strong>Lkw-Fahrer/-Eigentümer (Störer):</strong> Kostenersatz für den Feuerwehreinsatz gem. §48 BHKG. Der Grundstückseigentümer trägt keine Kosten des Einsatzes.'
+      ]
+    }
+  ];
+
+  const KEY_STORAGE = 'bvi_fb_answers';
+  let _tab='schema', _case=null, _step=0, _revealed=false;
+  let _answers={};
+
+  function loadAnswers(){ try{ return JSON.parse(localStorage.getItem(KEY_STORAGE)||'{}'); }catch{ return {}; } }
+  function saveAnswers(d){ try{ localStorage.setItem(KEY_STORAGE,JSON.stringify(d)); }catch{} }
+  function answerKey(c,s){ return 'c'+c+'s'+s; }
+
+  function renderSchemaTab(){
+    const el=document.getElementById('fb-schema-content');if(!el)return;
+    el.innerHTML=STEPS.map((s,i)=>`
+      <div class="fb-schema-item">
+        <div class="fb-schema-head" onclick="this.parentElement.classList.toggle('fb-open')">
+          <span class="fb-schema-num">${i+1}</span>
+          <span class="fb-schema-title">${s.title}</span>
+          <span class="fb-schema-law">${s.law}</span>
+          <span class="fb-chevron">›</span>
+        </div>
+        <div class="fb-schema-body">${s.schema}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderCasesTab(){
+    const el=document.getElementById('fb-cases-content');if(!el)return;
+    _answers=loadAnswers();
+    if(_case===null){
+      el.innerHTML=`<p class="fb-cases-intro">Wähle einen Fall aus, um ihn nach dem 8-Punkte-Schema zu bearbeiten:</p>
+      <div class="fb-case-cards">`+CASES.map(c=>`
+        <div class="fb-case-card" onclick="FALLBEARBEITUNG.selectCase(${c.id-1})">
+          <div class="fb-case-num">Fall ${c.id}</div>
+          <div class="fb-case-title">${c.title.replace(/^Fall \d+ – /,'')}</div>
+        </div>`).join('')+`</div>`;
+    } else {
+      const c=CASES[_case];
+      const s=STEPS[_step];
+      const savedKey=answerKey(_case,_step);
+      const savedText=(_answers[savedKey]||'');
+      el.innerHTML=`
+        <div class="fb-case-nav">
+          <button class="fb-back-case" onclick="FALLBEARBEITUNG.backToList()">← Fallauswahl</button>
+          <span class="fb-case-badge">Fall ${c.id} · Schritt ${_step+1}/8</span>
+        </div>
+        <div class="fb-sachverhalt"><strong>Sachverhalt:</strong> ${c.sachverhalt}</div>
+        <div class="fb-step-progress"><div class="fb-step-fill" style="width:${((_step)/8)*100}%"></div></div>
+        <div class="fb-step-block">
+          <div class="fb-step-header">
+            <span class="fb-step-num">${_step+1}</span>
+            <span class="fb-step-name">${s.title}</span>
+            <span class="fb-step-law-badge">${s.law}</span>
+          </div>
+          <p class="fb-step-prompt">${s.prompt}</p>
+          <textarea class="fb-textarea" id="fb-ta" placeholder="Schreibe deine Antwort hier…" rows="5">${savedText}</textarea>
+          <button class="fb-reveal-btn${_revealed?' hidden':''}" onclick="FALLBEARBEITUNG.reveal()" id="fb-reveal">Musterlösung anzeigen</button>
+          <div class="fb-answer${_revealed?'':' hidden'}" id="fb-answer">${c.answers[_step]}</div>
+          <div class="fb-step-actions">
+            <button class="fb-prev-btn${_step===0?' hidden':''}" onclick="FALLBEARBEITUNG.prevStep()">← Zurück</button>
+            <button class="fb-next-btn${_revealed?'':' hidden'}" id="fb-next" onclick="FALLBEARBEITUNG.nextStep()">${_step===7?'Fall abschließen ✓':'Nächster Punkt →'}</button>
+          </div>
+        </div>
+        <div class="fb-step-dots">${STEPS.map((_,i)=>`<span class="fb-dot${i===_step?' fb-dot-active':i<_step?' fb-dot-done':''}">${i+1}</span>`).join('')}</div>
+      `;
+      const ta=document.getElementById('fb-ta');
+      if(ta) ta.addEventListener('input',()=>{
+        const d=loadAnswers();d[savedKey]=ta.value;saveAnswers(d);
+      });
+    }
+  }
+
+  return {
+    init(){
+      this.setTab('schema');
+    },
+    setTab(t){
+      _tab=t;
+      document.getElementById('fb-tab-schema')?.classList.toggle('active',t==='schema');
+      document.getElementById('fb-tab-cases')?.classList.toggle('active',t==='cases');
+      document.getElementById('fb-schema-content')?.classList.toggle('hidden',t!=='schema');
+      document.getElementById('fb-cases-content')?.classList.toggle('hidden',t!=='cases');
+      if(t==='schema') renderSchemaTab();
+      else renderCasesTab();
+    },
+    selectCase(idx){
+      _case=idx;_step=0;_revealed=false;
+      renderCasesTab();
+    },
+    backToList(){
+      _case=null;_step=0;_revealed=false;
+      renderCasesTab();
+    },
+    reveal(){
+      const ta=document.getElementById('fb-ta');
+      if(ta){ const d=loadAnswers();d[answerKey(_case,_step)]=ta.value;saveAnswers(d);_answers=d; }
+      _revealed=true;
+      document.getElementById('fb-reveal')?.classList.add('hidden');
+      document.getElementById('fb-answer')?.classList.remove('hidden');
+      document.getElementById('fb-next')?.classList.remove('hidden');
+    },
+    nextStep(){
+      if(_step<7){ _step++;_revealed=false;renderCasesTab(); }
+      else { _case=null;_step=0;_revealed=false;renderCasesTab(); }
+    },
+    prevStep(){
+      if(_step>0){ _step--;_revealed=true;renderCasesTab(); }
+    }
+  };
+})();
+
 document.addEventListener('DOMContentLoaded',()=>{
   // Deep-link on load
   const initId=new URLSearchParams(location.search).get('id');
@@ -3374,6 +3603,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   ONBOARD.init();
   DARKMODE.init();
   CHANGELOG.check();
+  if(typeof FALLBEARBEITUNG!=='undefined') { document.querySelectorAll('#v-vak-fallbearbeitung').forEach(()=>{}); }
   document.querySelectorAll('.pc table').forEach(t=>{
     if(t.closest('.tbl-wrap')) return;
     const w=document.createElement('div');
