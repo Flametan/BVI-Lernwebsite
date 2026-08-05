@@ -2824,7 +2824,8 @@ const QUIZ=(function(){
       if(e.key==='Escape'){const m=document.getElementById('quiz-mastery-modal');if(m&&!m.classList.contains('hidden')){QUIZ.closeMastery();return;}}
       if(_mode!=='learn')return;
       const inText=e.target.matches('textarea,input,select,[contenteditable]');
-      if(e.key==='Enter'&&!e.ctrlKey&&!e.metaKey&&!inText){
+      if(e.key===' '&&!e.ctrlKey&&!e.metaKey&&!inText){
+        e.preventDefault();
         const q=curQ();if(!q)return;
         if(_answered)QUIZ.next();else if(q.type==='essay')QUIZ._revealEssay();
       }else if(e.key==='Backspace'&&!inText){
