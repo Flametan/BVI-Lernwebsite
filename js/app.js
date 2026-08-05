@@ -3113,6 +3113,26 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.17.5',ts:'2026-08-05T11:30',items:[
+      'Quiz: Wahlrechtsgrundsätze-Erklärung um Öffentlichkeit ergänzt (BVerfG aus Art. 38 i.V.m. Art. 20 GG)'
+    ]},
+    {v:'2.17.4',ts:'2026-08-05T11:10',items:[
+      'Quiz: Leertaste statt Enter zum Weiterblättern im Lernmodus'
+    ]},
+    {v:'2.17.3',ts:'2026-08-05T10:45',items:[
+      'Fallbearbeitung Step 4 – Störerauswahl: Verhaltensstörer (§17 OBG), Zustandsstörer (§18 OBG), Nichtstörer (§19 OBG)',
+      'Fallbearbeitung Step 8 – Kosten: nur §45 BHKG (Entschädigung Nichtstörer); §48 BHKG und §839 BGB entfernt'
+    ]},
+    {v:'2.17.2',ts:'2026-08-05T10:15',items:[
+      'Fallbearbeitung Fall 6 (Schornsteinbrand) Step 2: §41 VwVfG → §44 Abs.2 BHKG i.V.m. Art. 13 Abs.7 GG'
+    ]},
+    {v:'2.17.1',ts:'2026-08-05T09:45',items:[
+      'Quiz: Ergänzungs-Notizen für einzelne Fragen – erste Notiz bei Art.-13-GG-Frage (Wohnmobile-Ausnahme)'
+    ]},
+    {v:'2.17.0',ts:'2026-08-05T09:00',items:[
+      'VAk: Neue Seite „Übungsklausur – Einsatzrecht" – 9 Fragen, 43 Punkte, §27 BHKG, VA, Gefahrenbegriff, Grundrechte; 60-Min.-Timer und Selbstbewertung',
+      'VAk: Tab-Reihenfolge neu – Klausurhinweise, Fallbearbeitung, Übungsklausur direkt nach Altklausur-Quiz; Lernzusammenfassung ans Ende'
+    ]},
     {v:'2.16.0',ts:'2026-08-04T11:46',items:[
       'Performance: Navigation von O(90) auf O(2) DOM-Operationen beschleunigt – deutlich flüssiger auf Tablet',
       'Fortschritt: Modul-Kacheln zeigen animierte Mini-Fortschrittsbalken statt einfachem Text',
