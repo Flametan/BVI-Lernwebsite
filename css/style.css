@@ -794,6 +794,9 @@
 .quiz-exp-ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);}
 .quiz-exp-err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);}
 .quiz-exp-ref{background:var(--c-bg2);border:1px solid var(--c-gold-rim);border-left:3px solid var(--c-gold);}
+.quiz-note{padding:.6rem 1rem;border-radius:var(--r-sm);font-size:.82rem;line-height:1.5;margin-bottom:.9rem;background:rgba(201,168,76,.07);border:1px solid var(--c-gold-rim);border-left:3px solid var(--c-gold);white-space:pre-wrap;}
+.quiz-note::before{content:'📝 Ergänzung: ';font-weight:700;color:var(--c-gold);}
+.quiz-note.hidden{display:none;}
 .quiz-actions{display:flex;gap:.5rem;margin-top:.25rem;}
 .quiz-skip-btn,.quiz-next-btn{flex:1;padding:.65rem;border-radius:var(--r-sm);font-size:.85rem;font-weight:600;font-family:var(--f-m);cursor:pointer;}
 .quiz-skip-btn{border:1px solid var(--c-border);background:transparent;color:var(--c-sub);}
