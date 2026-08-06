@@ -3113,6 +3113,11 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.18.0',ts:'2026-08-06T12:00',items:[
+      'Fallbearbeitung: 8-Punkte-Schema auf 9-Punkte-Schema erweitert – neuer Punkt 9 „Dokumentation u. Sicherung" (§34 Abs.1 BHKG · §24 Abs.1 Nr.2 OBG · §43 Nr.1 PolG NRW)',
+      'Alle Steps: Gesetzesfelder aus Handnotizen ergänzt (§§ OBG, Art. 19 GG, Art. 28 Abs.2 GG u.a.)',
+      'Alle 6 Fallbeispiele: 9. Musterlösung (Dokumentation u. Sicherung) hinzugefügt'
+    ]},
     {v:'2.17.9',ts:'2026-08-06T11:30',items:[
       'Fall 5 – Betonhalle: Absperrung korrigiert von Realakt zu Allgemeinverfügung (§35 S.2 VwVfG) – Steps 1, 2, 4 und 8 angepasst'
     ]},
@@ -3402,13 +3407,13 @@ const FALLBEARBEITUNG = (function(){
   const STEPS = [
     {
       title:'Ermächtigungsgrundlage',
-      law:'§34 Abs.2 S.1 BHKG · §44 Abs.2 BHKG · §48 BHKG · §35 VwVfG',
+      law:'§1 Abs.1 Nr.1 BHKG · §3 Abs.1 BHKG · §1 Abs.1 OBG · §34 Abs.2 BHKG · §44 Abs.2 BHKG · §48 BHKG · Art. 19 GG · §35 VwVfG',
       prompt:'Auf welche Rechtsgrundlage stützt die Feuerwehr ihr Handeln? Handelt es sich um einen Verwaltungsakt oder einen Realakt?',
       schema:'<p><strong>Verwaltungsakt (§35 VwVfG):</strong> Alle 6 Merkmale müssen erfüllt sein: hoheitliche Maßnahme, einer Behörde, auf dem Gebiet des öffentlichen Rechts, Regelung, eines Einzelfalls, mit Außenwirkung. Auch Anweisungen an Störer sind VAs.</p><p><strong>Realakt:</strong> Schlichtes Verwaltungshandeln ohne Regelungscharakter – es werden nur die Punkte 1–3 (materiell) geprüft.</p><p><strong>Wichtige Normen:</strong></p><ul><li>§34 Abs.2 S.1 BHKG – Hilfeleistung bei anderen Notlagen (Menschenrettung, Schutz bedeutender Sachwerte)</li><li>§44 Abs.2 BHKG – Betretungsrecht, Anordnungsbefugnis, Inanspruchnahme von Sachen, unmittelbarer Zwang</li><li>§48 BHKG – Einschränkung von Grundrechten (Art. 2 Abs. 1 i.V.m. Art. 1 Abs. 1, Art. 2 Abs. 2 S. 1+2, Art. 13 GG – Zitiergebot nach Art. 19 Abs. 1 S. 2 GG)</li></ul>'
     },
     {
       title:'Zuständigkeit',
-      law:'§1 Abs.1 BHKG · §3 Abs.1 S.1 BHKG · §28 Abs.2 Nr.1 VwVfG · §37 Abs.2 VwVfG · §39 Abs.1 S.1 VwVfG · §41 Abs.1 VwVfG',
+      law:'§1 Abs.1 BHKG · §3 Abs.1 S.1 BHKG · §4 Abs.1 OBG · §5 Abs.1 OBG · Art. 28 Abs.2 GG · §28 Abs.2 Nr.1 VwVfG · §37 Abs.2 VwVfG · §39 Abs.1 S.1 VwVfG · §41 Abs.1 VwVfG',
       prompt:'Ist die handelnde Feuerwehr sachlich, örtlich und instanziell zuständig? Welche Verfahrensanforderungen gelten?',
       schema:'<p><strong>1. Sachliche Zuständigkeit:</strong> §1 Abs.1 BHKG i.V.m. §3 Abs.1 S.1 BHKG → Feuerwehr ist zuständig für Brandschutz und Hilfeleistung.</p><p><strong>2. Örtliche Zuständigkeit:</strong> §3 Abs.1 S.1 BHKG → Feuerwehr ist zuständig im Gebiet der Gemeinde.</p><p><strong>3. Instanzielle Zuständigkeit:</strong> §3 Abs.1 S.1 BHKG → Feuerwehr als behördliche Einrichtung der Gemeinde.</p><p><strong>Verfahren (bei VA mit mind. Anscheinsgefahr):</strong></p><ul><li>Verzicht auf Anhörung: §28 Abs.2 Nr.1 VwVfG (Gefahr im Verzug)</li><li>Form: mündlich nach §37 Abs.2 VwVfG</li><li>Begründung: nicht erforderlich bei mündlichem VA (§39 Abs.1 S.1 VwVfG)</li><li>Bekanntgabe: mündlich nach §41 Abs.1 VwVfG</li></ul>'
     },
@@ -3420,13 +3425,13 @@ const FALLBEARBEITUNG = (function(){
     },
     {
       title:'Störerauswahl',
-      law:'§17 OBG · §18 OBG · §19 OBG',
+      law:'§17 OBG · §18 OBG · §19 OBG · Art. 19 Abs.4 GG · §48 BHKG',
       prompt:'Wer ist Störer? Verhaltensstörer, Zustandsstörer oder Nichtstörer? Wer ist Adressat der Maßnahme?',
       schema:'<p><strong>Verhaltensstörer (§17 OBG):</strong> Person, die durch ihr Verhalten (Tun oder Unterlassen) die Gefahr unmittelbar verursacht oder aufrechthält.</p><p><strong>Zustandsstörer (§18 OBG):</strong> Person, von deren Sache die Gefahr ausgeht (Eigentümer oder Inhaber der tatsächlichen Gewalt).</p><p><strong>Nichtstörer (§19 OBG):</strong> Person, die weder Verhaltens- noch Zustandsstörer ist. Inanspruchnahme zulässig, wenn: (1) Störer nicht rechtzeitig erreichbar oder Maßnahme unzureichend, (2) Gefahr anders nicht abwendbar, (3) Nichtstörer so wenig wie möglich belastet. → Entschädigungsanspruch gem. §45 Abs.2 BHKG.</p><p><strong>Auswahlermessen:</strong> Bei mehreren Störern richtet sich die Auswahl nach Effektivität und Verhältnismäßigkeit.</p>'
     },
     {
       title:'Ermessen',
-      law:'§44 Abs.2 BHKG – Ermessen',
+      law:'§1 Abs.1 Nr.1 BHKG · §1 Abs.1 OBG · §1 Abs.2 OBG · §34 Abs.2 BHKG · §44 Abs.2 BHKG',
       prompt:'Welches Ermessen steht der Behörde zu? Ist das Entschließungsermessen auf Null reduziert?',
       schema:'<p><strong>Entschließungsermessen</strong> (ob die Behörde tätig wird?): Grundsätzlich hat die Feuerwehr Ermessen. Bei hochrangigen Rechtsgütern (Leib, Leben) ist das Ermessen auf Null reduziert → Einschreiten ist zwingend.</p><p><strong>Auswahlermessen</strong> (wie tätig?): Auswahl zwischen mehreren geeigneten Maßnahmen. Zu berücksichtigen: Wirksamkeit, Zumutbarkeit für den Betroffenen, Verhältnismäßigkeit.</p><p><strong>Reduktion auf Null:</strong> Je höherwertiger das bedrohte Rechtsgut (insbes. Menschenleben), desto eher verdichtet sich das Ermessen zur Pflicht zum Einschreiten.</p>'
     },
@@ -3444,9 +3449,15 @@ const FALLBEARBEITUNG = (function(){
     },
     {
       title:'Kosten- und Entschädigungsfragen',
-      law:'§45 BHKG',
+      law:'§45 Abs.1 BHKG',
       prompt:'Wurde ein Nichtstörer in Anspruch genommen? Besteht ein Entschädigungsanspruch nach §45 BHKG?',
       schema:'<p><strong>§45 Abs.2 BHKG – Entschädigung für Nichtstörer:</strong> Wer als Nichtstörer (§19 OBG) in Anspruch genommen wurde, hat Anspruch auf angemessene Entschädigung durch die Gemeinde. Der Entschädigungsanspruch besteht auch bei rechtmäßiger Inanspruchnahme.</p><p>Liegt kein Nichtstörer vor (kein Dritter wurde in Anspruch genommen), findet §45 BHKG keine Anwendung.</p>'
+    },
+    {
+      title:'Dokumentation u. Sicherung',
+      law:'§34 Abs.1 BHKG · §24 Abs.1 Nr.2 OBG · §43 Nr.1 PolG NRW',
+      prompt:'Wurden alle Maßnahmen dokumentiert? Ist die Einsatzstelle gesichert und an die zuständige Stelle übergeben?',
+      schema:'<p><strong>Dokumentationspflicht (§34 Abs.1 BHKG):</strong> Alle getroffenen Maßnahmen, Rechtsgrundlagen, Gründe und Zeitpunkte sind im Einsatzbericht vollständig festzuhalten (quis, quid, quando, ubi, cur).</p><p><strong>Sicherung der Einsatzstelle:</strong> Beim Verlassen muss die Einsatzstelle gesichert oder an eine zuständige Stelle übergeben werden.</p><ul><li>Einschaltung der <strong>Polizei</strong> gem. §43 Nr.1 PolG NRW (bei Straftatverdacht oder wenn Ordnungsbehörde nicht erreichbar)</li><li>Benachrichtigung des <strong>Ordnungsamts / OB</strong> gem. §24 Abs.1 Nr.2 OBG (Weiterleitungspflicht bei fortbestehender Gefahr)</li><li>Eigentümer/Verwalter informieren; beschädigte Zugänge provisorisch sichern</li></ul>'
     }
   ];
 
@@ -3463,7 +3474,8 @@ const FALLBEARBEITUNG = (function(){
         'Entschließungsermessen auf Null reduziert: Mögliche hilflose Person in der Wohnung → Rechtsgut Leben/körperliche Unversehrtheit → Einschreiten zwingend. Auswahlermessen: Gewaltsame Öffnung war die einzig verbleibende Option nach Ausschöpfung milderer Mittel (Klingeln, Klopfen, Nachbarbefragung, kein Schlüsseldienst in vertretbarer Zeit erreichbar).',
         'Legitimer Zweck: Rettung einer möglicherweise hilflosen Person. Geeignet: Wohnungsöffnung ermöglicht die Nachschau → geeignet. Erforderlich: Kein milderes, gleich wirksames Mittel verfügbar (kein Ersatzschlüssel zugänglich um 02:15 Uhr) → erforderlich. Angemessen: Potenzielle Rettung eines Menschenlebens überwiegt den Schaden an der Wohnungstür bei weitem → angemessen.',
         'Die Wohnungsöffnung war rechtmäßig. Rechtsgrundlage: §44 Abs.2 BHKG. Eine förmliche Anordnung war nicht erforderlich (kein Adressat). Die Anscheinsgefahr legitimierte das unmittelbare Handeln.',
-        '§45 BHKG liegt nicht vor: Es wurde kein Nichtstörer (§19 OBG) in Anspruch genommen – die Feuerwehr hat als Realakt ohne Adressat gehandelt. Ein Entschädigungsanspruch nach §45 BHKG scheidet daher aus.'
+        '§45 BHKG liegt nicht vor: Es wurde kein Nichtstörer (§19 OBG) in Anspruch genommen – die Feuerwehr hat als Realakt ohne Adressat gehandelt. Ein Entschädigungsanspruch nach §45 BHKG scheidet daher aus.',
+        'Einsatzbericht (§34 Abs.1 BHKG): Alarmzeit, Anscheinsgefahr (piepender Rauchmelder, keine Reaktion), durchgeführte Maßnahmen (gewaltsame Türöffnung), Ergebnis (leere Wohnung, leere Batterie) und Rechtsgrundlage (§44 Abs.2 BHKG) dokumentieren. Sicherung: Beschädigte Tür provisorisch sichern; Eigentümer/Hausverwaltung benachrichtigen (§24 Abs.1 Nr.2 OBG). Keine Einschaltung der Polizei erforderlich (keine strafrechtlich relevante Lage).'
       ]
     },
     {
@@ -3478,7 +3490,8 @@ const FALLBEARBEITUNG = (function(){
         'Entschließungsermessen auf Null reduziert: Konkrete Explosionsgefahr → unmittelbare Gefahr für Leib und Leben zahlreicher Personen → Einschreiten zwingend. Auswahlermessen: Vollständige Räumung als verhältnismäßigste Maßnahme. Wirtschaftliche Interessen des Filialleiters (Umsatzverlust am Samstag) sind rechtlich ohne Belang – sie können das Einschreiten weder verhindern noch verzögern.',
         'Legitimer Zweck: Schutz von Leib und Leben der Kunden und Mitarbeiter. Geeignet: Räumung beseitigt die Gefährdung der Personen im Gefahrenbereich → geeignet. Erforderlich: Kein milderes, gleich wirksames Mittel (bei diffusem Gasgeruch im gesamten Markt ist eine Teilräumung unzureichend) → erforderlich. Angemessen: Der Umsatzverlust des Betreibers tritt hinter dem Schutz von Menschenleben zurück (§15 Abs.2 OBG) → angemessen.',
         'Mündliche Räumungsanordnung als VA gem. §44 Abs.2 BHKG: „Sie räumen diesen Markt sofort und vollständig – alle Kunden und Mitarbeiter verlassen jetzt das Gebäude." (Wer? = alle Personen im Markt; Was? = Verlassen des Gebäudes; Wann? = sofort; Wohin? = außerhalb des Gefahrenbereichs; Wie lange? = bis zur Freigabe durch die Feuerwehr). Bei weiterer Weigerung: <strong>Unmittelbarer Zwang</strong> gem. §44 Abs.2 BHKG zulässig (Gefahr im Verzug, kein Aufschub möglich).',
-        '§45 BHKG liegt nicht vor: Filialleiter und Betreiber sind Störer (§§17, 18 OBG) – Störer haben keinen Entschädigungsanspruch nach §45 BHKG. Ein Nichtstörer wurde nicht in Anspruch genommen.'
+        '§45 BHKG liegt nicht vor: Filialleiter und Betreiber sind Störer (§§17, 18 OBG) – Störer haben keinen Entschädigungsanspruch nach §45 BHKG. Ein Nichtstörer wurde nicht in Anspruch genommen.',
+        'Einsatzbericht (§34 Abs.1 BHKG): Gasgeruch (Feststellung, Zeitpunkt), Räumungsanordnung (Inhalt, Adressat, Zeitpunkt), Maßnahmen der Gasfirma und Freigabe durch Fachkraft dokumentieren. Sicherung: Übergabe der Einsatzstelle an Gasfirma und Betreiber; Polizei einschalten (§43 Nr.1 PolG NRW) bis zur vollständigen Beseitigung der Gefahrenquelle. Betreiber über Rechtslage informieren (§24 Abs.1 Nr.2 OBG).'
       ]
     },
     {
@@ -3493,7 +3506,8 @@ const FALLBEARBEITUNG = (function(){
         'Entschließungsermessen auf Null reduziert: Brandbekämpfung in geschlossener Tiefgarage → erheblicher Sachschaden und potenzielle Personengefährdung → Einschreiten zwingend. Auswahlermessen: Umsetzung der Fahrzeuge mit Seilwinden als einzig verfügbares Mittel, um den Löschzugang freizumachen.',
         'Legitimer Zweck: Brandbekämpfung und Verhinderung der Ausbreitung. Geeignet: Umsetzung der Fahrzeuge schafft den erforderlichen Zugang → geeignet. Erforderlich: Kein schonenderes Mittel zur Freimachung des Löschzugangs → erforderlich. Angemessen: Mögliche Lackschäden sind geringfügig gegenüber dem drohenden Brand- und Strukturschaden (§44 Abs.2 S.4 BHKG, §15 Abs.2 OBG) → angemessen.',
         'Umsetzung der Fahrzeuge durch die Feuerwehr gem. §44 Abs.2 i.V.m. §45 BHKG (Realakt). Ggf. mündliche Duldungsanordnung an anwesende Eigentümer: „Wir versetzen Ihr Fahrzeug zur Brandbekämpfung – Sie dulden dies nach §45 BHKG." Bei Widerspruch ist die Maßnahme dennoch zulässig (Nichtstörer haben zu dulden).',
-        '§45 BHKG liegt vor: Die Eigentümer der umgesetzten Fahrzeuge sind Nichtstörer (§19 OBG) – sie wurden für die Brandbekämpfung in Anspruch genommen, ohne die Gefahr verursacht zu haben. Sie haben Anspruch auf angemessene Entschädigung durch die Gemeinde gem. §45 Abs.2 BHKG.'
+        '§45 BHKG liegt vor: Die Eigentümer der umgesetzten Fahrzeuge sind Nichtstörer (§19 OBG) – sie wurden für die Brandbekämpfung in Anspruch genommen, ohne die Gefahr verursacht zu haben. Sie haben Anspruch auf angemessene Entschädigung durch die Gemeinde gem. §45 Abs.2 BHKG.',
+        'Einsatzbericht (§34 Abs.1 BHKG): Umgesetzte Fahrzeuge (Kennzeichen, Eigentümer, Schäden), Rechtsgrundlage der Inanspruchnahme (§19 OBG i.V.m. §45 BHKG) und Löschmaßnahmen dokumentieren. Sicherung: Fahrzeuge sicher abstellen; Eigentümer informieren und auf Entschädigungsanspruch (§45 Abs.2 BHKG) hinweisen (§24 Abs.1 Nr.2 OBG). Tiefgarage an Betreiber/Eigentümer übergeben; Polizei (§43 Nr.1 PolG NRW) bei Verdacht auf Brandstiftung einschalten.'
       ]
     },
     {
@@ -3508,7 +3522,8 @@ const FALLBEARBEITUNG = (function(){
         'Entschließungsermessen auf Null reduziert: Auslaufende Salzsäure auf Bundesstraße → unmittelbare Gefahr für Leib und Leben → Einschreiten zwingend. Auswahlermessen: Nutzung des angrenzenden Privatgrundstücks als einzig verfügbare geeignete Fläche für die Sicherheitszone (keine ausreichend große öffentliche Fläche in der nötigen Entfernung verfügbar).',
         'Legitimer Zweck: Einrichtung einer Sicherheitszone zum Schutz von Einsatzkräften und Bevölkerung. Geeignet: Nutzung des Grundstücks schafft den nötigen Sicherheitsabstand → geeignet. Erforderlich: Keine andere geeignete Fläche in der Nähe verfügbar → erforderlich. Angemessen: Temporäre Grundstücksnutzung steht nicht außer Verhältnis zur Abwehr schwerer Gesundheitsgefahren durch Salzsäure (§44 Abs.2 S.4 BHKG) → angemessen.',
         'Mündliche Duldungsanordnung als VA gem. §44 Abs.2 i.V.m. §45 BHKG: „Wir nutzen Ihr Grundstück als Sicherheitszone – Sie dulden das nach §45 BHKG." (Wer? = Einsatzkräfte; Was? = Betreten und Nutzen der Grundstücksfläche; Wann? = sofort; Wohin? = bezeichneter Bereich; Wie lange? = bis zur Freigabe durch den Einsatzleiter). Bei weiterer Weigerung: <strong>Unmittelbarer Zwang</strong> gem. §44 Abs.2 BHKG – die Feuerwehr betritt das Grundstück auch gegen den ausdrücklichen Willen des Eigentümers.',
-        '§45 BHKG liegt vor: Der Grundstückseigentümer ist Nichtstörer (§19 OBG) – er hat die Gefahr nicht verursacht, sein Grundstück wurde für die Sicherheitszone in Anspruch genommen. Er hat Anspruch auf angemessene Entschädigung durch die Gemeinde gem. §45 Abs.2 BHKG.'
+        '§45 BHKG liegt vor: Der Grundstückseigentümer ist Nichtstörer (§19 OBG) – er hat die Gefahr nicht verursacht, sein Grundstück wurde für die Sicherheitszone in Anspruch genommen. Er hat Anspruch auf angemessene Entschädigung durch die Gemeinde gem. §45 Abs.2 BHKG.',
+        'Einsatzbericht (§34 Abs.1 BHKG): Gefahrgutstoff, Maßnahmen, Grundstücksinanspruchnahme (Eigentümer, Dauer, entstandene Schäden) und Übergabe an zuständige Behörden dokumentieren. Sicherung: Grundstück räumen und in ursprünglichem Zustand übergeben; Eigentümer über Entschädigungsanspruch informieren (§24 Abs.1 Nr.2 OBG). Übergabe an Polizei (§43 Nr.1 PolG NRW) und Straßenverkehrsbehörde sicherstellen.'
       ]
     }
     ,
@@ -3524,7 +3539,8 @@ const FALLBEARBEITUNG = (function(){
         'Entschließungsermessen auf Null reduziert: Einsturzgefahr → konkrete Lebensgefahr für potenzielle Betretende und Einsatzkräfte → Handeln zwingend. Auswahlermessen: Die Feuerwehr kann die Einsturzgefahr selbst <strong>nicht beseitigen</strong> (keine Zuständigkeit/Mittel für Tragwerksicherung). Einzig verhältnismäßige Maßnahme: Absperrung und sofortige Benachrichtigung der zuständigen Fachbehörden (Bauaufsicht, THW).',
         'Legitimer Zweck: Schutz von Leib und Leben. Geeignet: Absperrung des Gefahrenbereichs verhindert Annäherung an den einsturzgefährdeten Bereich → geeignet. Erforderlich: Kein milderes gleich wirksames Mittel bei unmittelbar drohenden Einsturz → erforderlich. Angemessen: Temporäre Absperrung und Nutzungsuntersagung stehen nicht außer Verhältnis zu der abgewehrten Lebensgefahr → angemessen.',
         'Sofortmaßnahmen der Feuerwehr: (1) Absperrung des Gefahrenbereichs mit Sicherheitsabstand (mind. 1,5-fache Gebäudehöhe). (2) Sicherung <strong>beider Zugänge</strong> (Haupteingang und Lieferantenzufahrt). (3) Benachrichtigung der <strong>Bauaufsichtsbehörde</strong> (Nutzungsuntersagung und Absicherung). (4) Anforderung <strong>THW</strong> (Fachberater Statik). (5) Übergabe des Einsatzes an die zuständige Ordnungsbehörde. Beim Verlassen: Absperrung kontrolliert übergeben, keine eigene Maßnahme zur Gefahrenbeseitigung durchführen.',
-        '§45 BHKG liegt nicht vor: Es wurde kein Nichtstörer (§19 OBG) in Anspruch genommen – die Absperrung als Allgemeinverfügung richtete sich gegen alle potenziell Betretenden, nicht gegen einen herangezogenen Dritten. Ein Entschädigungsanspruch nach §45 BHKG scheidet aus.'
+        '§45 BHKG liegt nicht vor: Es wurde kein Nichtstörer (§19 OBG) in Anspruch genommen – die Absperrung als Allgemeinverfügung richtete sich gegen alle potenziell Betretenden, nicht gegen einen herangezogenen Dritten. Ein Entschädigungsanspruch nach §45 BHKG scheidet aus.',
+        'Einsatzbericht (§34 Abs.1 BHKG): Einsturzgefahr (Feststellungen), Absperrmaßnahmen und benachrichtigte Behörden (Bauaufsicht, THW) dokumentieren. Sicherung: Absperrung an Ordnungsbehörde/Polizei übergeben (§43 Nr.1 PolG NRW); Bauaufsicht als zuständige Fachbehörde informieren (§24 Abs.1 Nr.2 OBG). Hallenbesitzer/Eigentümer benachrichtigen. Feuerwehr darf nach gesicherter Übergabe abrücken.'
       ]
     },
     {
@@ -3539,7 +3555,8 @@ const FALLBEARBEITUNG = (function(){
         'Entschließungsermessen auf Null reduziert: Schornsteinbrand mit konkreter Ausbreitungsgefahr → öffentliche Sicherheit (Gebäudeintegrität, Gesundheit der Bewohner) → Einschreiten zwingend. Auswahlermessen: Zutritt zu <em>allen</em> angrenzenden Wohnungen im Brandgeschoss und darüber/darunter ist zur Gefahrenerkundung und Brandbekämpfung erforderlich; keine milderen Alternativen verfügbar (kein Ersatzschlüssel zugänglich, Ausbreitung eilt).',
         'Legitimer Zweck: Brandbekämpfung und Verhinderung der Brandausbreitung im Altbau. Geeignet: Betreten der Wohnungen ermöglicht Kontrolle, Absicherung und ggf. direkte Brandbekämpfung vom Innenraum → geeignet. Erforderlich: Kein milderes gleich wirksames Mittel (keine Schlüssel verfügbar, Zeitdruck) → erforderlich. Angemessen: Art. 13 Abs.7 GG lässt den Eingriff bei dringender Gefahr für die öffentliche Sicherheit ausdrücklich zu; mögliche Sachschäden an der Wohnungstür stehen nicht außer Verhältnis → angemessen.',
         'a) <strong>Nachbarwohnung:</strong> Gewaltsames Öffnen gem. §44 Abs.2 BHKG i.V.m. Art. 13 Abs.7 GG als Realakt – zulässig. Ankündigung an den anwesenden Nachbarmieter nicht rechtlich erforderlich, aber empfehlenswert. b) <strong>Eigene Wohnung:</strong> Mündliche Duldungsanordnung (VA): „Wir betreten Ihre Wohnung zur Brandbekämpfung – Sie dulden dies nach §44 Abs.2 BHKG." Bei fortgesetzter Weigerung: <strong>unmittelbarer Zwang</strong> gem. §44 Abs.2 BHKG (Betreten gegen den Willen, ggf. Zurückhalten des Mieters durch körperlichen Zwang).',
-        '§45 BHKG liegt bei dem anwesenden Mieter nicht vor: Der Mieter ist kein Nichtstörer im Sinne des §19 OBG i.V.m. §45 BHKG – er wurde nicht als unbeteiligter Dritter für die Gefahrenabwehr in Anspruch genommen, sondern hat lediglich die rechtmäßige Maßnahme zu dulden. Ein Entschädigungsanspruch nach §45 BHKG scheidet aus.'
+        '§45 BHKG liegt bei dem anwesenden Mieter nicht vor: Der Mieter ist kein Nichtstörer im Sinne des §19 OBG i.V.m. §45 BHKG – er wurde nicht als unbeteiligter Dritter für die Gefahrenabwehr in Anspruch genommen, sondern hat lediglich die rechtmäßige Maßnahme zu dulden. Ein Entschädigungsanspruch nach §45 BHKG scheidet aus.',
+        'Einsatzbericht (§34 Abs.1 BHKG): Geöffnete Wohnungen (Anschrift, Rechtsgrundlage, Zeitpunkt), Ergebnis der Kontrolle, entstandene Schäden und Verhalten des verweigernden Mieters dokumentieren. Sicherung: Geöffnete Wohnungen provisorisch verschließen; Eigentümer/Hausverwaltung und Vermieter benachrichtigen (§24 Abs.1 Nr.2 OBG). Polizei (§43 Nr.1 PolG NRW) einschalten, wenn der verweigernd auftretende Mieter weitere Maßnahmen behindert oder Straftatverdacht besteht.'
       ]
     }
   ];
@@ -3585,10 +3602,10 @@ const FALLBEARBEITUNG = (function(){
       el.innerHTML=`
         <div class="fb-case-nav">
           <button class="fb-back-case" onclick="FALLBEARBEITUNG.backToList()">← Fallauswahl</button>
-          <span class="fb-case-badge">Fall ${c.id} · Schritt ${_step+1}/8</span>
+          <span class="fb-case-badge">Fall ${c.id} · Schritt ${_step+1}/${STEPS.length}</span>
         </div>
         <div class="fb-sachverhalt"><strong>Sachverhalt:</strong> ${c.sachverhalt}</div>
-        <div class="fb-step-progress"><div class="fb-step-fill" style="width:${((_step)/8)*100}%"></div></div>
+        <div class="fb-step-progress"><div class="fb-step-fill" style="width:${((_step)/STEPS.length)*100}%"></div></div>
         <div class="fb-step-block">
           <div class="fb-step-header">
             <span class="fb-step-num">${_step+1}</span>
@@ -3601,7 +3618,7 @@ const FALLBEARBEITUNG = (function(){
           <div class="fb-answer${_revealed?'':' hidden'}" id="fb-answer">${c.answers[_step]}</div>
           <div class="fb-step-actions">
             <button class="fb-prev-btn${_step===0?' hidden':''}" onclick="FALLBEARBEITUNG.prevStep()">← Zurück</button>
-            <button class="fb-next-btn${_revealed?'':' hidden'}" id="fb-next" onclick="FALLBEARBEITUNG.nextStep()">${_step===7?'Fall abschließen ✓':'Nächster Punkt →'}</button>
+            <button class="fb-next-btn${_revealed?'':' hidden'}" id="fb-next" onclick="FALLBEARBEITUNG.nextStep()">${_step===STEPS.length-1?'Fall abschließen ✓':'Nächster Punkt →'}</button>
           </div>
         </div>
         <div class="fb-step-dots">${STEPS.map((_,i)=>`<span class="fb-dot${i===_step?' fb-dot-active':i<_step?' fb-dot-done':''}" onclick="FALLBEARBEITUNG.goToStep(${i})" title="Zu Punkt ${i+1} springen">${i+1}</span>`).join('')}</div>
