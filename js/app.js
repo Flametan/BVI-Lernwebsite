@@ -3660,7 +3660,7 @@ const FALLBEARBEITUNG = (function(){
       document.getElementById('fb-next')?.classList.remove('hidden');
     },
     nextStep(){
-      if(_step<7){ _step++;_revealed=false;renderCasesTab(); }
+      if(_step<STEPS.length-1){ _step++;_revealed=false;renderCasesTab(); }
       else { _case=null;_step=0;_revealed=false;renderCasesTab(); }
     },
     prevStep(){
