@@ -1,4 +1,4 @@
-const APP_VERSION = '2.18.5'; // keep in sync with js/version.js
+const APP_VERSION = '2.18.6'; // keep in sync with js/version.js
 const CACHE = 'bvi-v' + APP_VERSION;
 const PRECACHE = [
   './',
