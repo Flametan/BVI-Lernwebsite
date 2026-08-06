@@ -3992,7 +3992,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   window.addEventListener('online', updateOnlineStatus);
   document.addEventListener('visibilitychange', updateOnlineStatus);
   updateOnlineStatus();
-  if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    // Seite automatisch neu laden, wenn ein neuer SW übernimmt
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{ window.location.reload(); });
+  }
   ABK.render(); ABK.filter('');
   console.log('%c B VI %c Lernwebsite '+APP_VERSION+' · flametan/BVI-Lernwebsite ',
     'background:#A50000;color:#fff;padding:3px 8px;border-radius:4px 0 0 4px;font-family:"DM Mono",monospace;font-weight:700',
