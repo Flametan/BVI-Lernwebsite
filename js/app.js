@@ -1031,21 +1031,6 @@ const FLASHCARD_DATA = [
   {id:'v48',cat:'VAk · Dienstrecht',q:'Welche 5 Disziplinarmaßnahmen gibt es aufsteigend nach Schwere?',a:'<strong>1. Verweis:</strong> leichtes Dienstvergehen, keine/geringe Vertrauenseinschränkung.<br><strong>2. Geldbuße:</strong> leichtes bis mittelschweres Vergehen.<br><strong>3. Kürzung der Dienstbezüge:</strong> mittelschweres Vergehen, erhebliche Vertrauensbeeinträchtigung.<br><strong>4. Zurückstufung:</strong> mittelschweres bis schweres Vergehen, Vertrauen nachhaltig erschüttert.<br><strong>5. Entfernung aus dem Beamtenverhältnis:</strong> schweres Vergehen, Vertrauen endgültig verloren.'},
   {id:'v49',cat:'VAk · Dienstrecht',q:'Wie läuft ein Disziplinarverfahren in 4 Schritten ab?',a:'<strong>1. Verdacht:</strong> Vorermittlungen, Kenntnis durch Vorgesetzte/Beschwerde; Einleitung von Amts wegen oder auf Antrag des Beamten.<br><strong>2. Einleitungsverfügung:</strong> Unterrichtung und Belehrung des Betroffenen, Anhörung, Rechtsbeistand.<br><strong>3. Ermittlung:</strong> Ermittlungsführer erhebt Beweis; Aussetzung bei laufendem Strafverfahren.<br><strong>4. Abschluss:</strong> Einstellung (mit/ohne Dienstvergehen), Disziplinarverfügung, ggf. Klage beim VG.'},
 
-  /* ── VAk Berlin – 9-Punkte-Schema (Batch 3) ── */
-  {id:'v50',cat:'VAk · Einsatzrecht',q:'Was sind die 9 Schritte des Fallbearbeitungsschemas für den Feuerwehreinsatz (BHKG/OBG NRW)?',a:'<strong>1. Ermächtigungsgrundlage</strong> – Auf welche Rechtsgrundlage stützt die Feuerwehr ihr Handeln? VA oder Realakt?<br><strong>2. Zuständigkeit</strong> – sachlich, örtlich, instanziell; Verfahrensanforderungen.<br><strong>3. Gefahr</strong> – Vorliegen einer konkreten, abstrakten oder Anscheinsgefahr.<br><strong>4. Störerauswahl</strong> – Verhaltensstörer (§17 OBG), Zustandsstörer (§18 OBG), Nichtstörer (§19 OBG).<br><strong>5. Ermessen</strong> – Entschließungs- und Auswahlermessen; Reduktion auf Null?<br><strong>6. Verhältnismäßigkeit</strong> – legitimer Zweck, Geeignetheit, Erforderlichkeit, Angemessenheit.<br><strong>7. Rechtsfolge</strong> – Inhalt des VA (W-Fragen) oder des Realakts.<br><strong>8. Kosten- und Entschädigungsfragen</strong> – §45 BHKG (Nichtstörer).<br><strong>9. Dokumentation u. Sicherung</strong> – §34 Abs.1 BHKG; Übergabe an zuständige Stelle.'},
-  {id:'v51',cat:'VAk · Einsatzrecht',q:'Wie unterscheiden sich VA und Realakt in der Fallprüfung des 9-Punkte-Schemas?',a:'<strong>Verwaltungsakt (VA, §35 VwVfG):</strong> Alle 6 Merkmale prüfen (hoheitlich, Behörde, öffentliches Recht, Regelung, Einzelfall, Außenwirkung) → alle 9 Prüfungsschritte.<br><strong>Realakt:</strong> Schlichtes Verwaltungshandeln ohne Regelungscharakter (z.B. löschen, Türöffnung ohne Adressat) → Schritte 1–3 materiell ausreichend; Schritte 4–7 (Störer, Ermessen, Verhältnismäßigkeit, Rechtsfolge) entfallen. Schritte 8–9 gelten immer.<br><strong>Abgrenzung:</strong> Wird eine Person angesprochen und etwas angeordnet? → VA. Kein Adressat vorhanden oder möglich? → Realakt.<br><strong>Sonderfall Allgemeinverfügung (§35 S.2 VwVfG):</strong> VA an unbestimmten Personenkreis – z.B. Absperrung einer Zone.'},
-  {id:'v52',cat:'VAk · Einsatzrecht',q:'Welche Verfahrensrechte entfallen bei Gefahr im Verzug (§28 Abs.2 Nr.1 VwVfG)?',a:'Im Regelfall gilt vor jedem belastenden VA eine <strong>Anhörungspflicht</strong> (§28 Abs.1 VwVfG).<br><strong>Bei Gefahr im Verzug (§28 Abs.2 Nr.1 VwVfG)</strong> kann die Anhörung entfallen – Gründe sind zu dokumentieren.<br>Außerdem zulässig im Feuerwehreinsatz:<br>• <strong>Mündlicher VA</strong> (§37 Abs.2 VwVfG)<br>• <strong>Keine Begründungspflicht</strong> (§39 Abs.1 S.1 VwVfG – bei mündlichem VA)<br>• <strong>Mündliche Bekanntgabe</strong> (§41 Abs.1 VwVfG)<br><strong>Merke:</strong> Formale Anforderungen reduzieren sich bei Gefahr – materielle Anforderungen (Verhältnismäßigkeit, Rechtsgrundlage) bleiben unverändert bestehen.'},
-  {id:'v53',cat:'VAk · Einsatzrecht',q:'Was ist eine Anscheinsgefahr und wie wirkt sie auf die Rechtmäßigkeit der Maßnahme?',a:'<strong>Anscheinsgefahr:</strong> Ex-ante erscheint eine konkrete Gefahr als hinreichend wahrscheinlich; ex-post stellt sich heraus, dass keine reale Gefahr bestand.<br><strong>Beispiel:</strong> Türöffnung wegen piependen Rauchmelders um 02:15 Uhr + älterer alleinlebender Bewohner – Wohnung leer, leere Batterie.<br><strong>Maßstab:</strong> sorgfältiger, sachkundiger Beamter zum Zeitpunkt des Handelns (ex-ante-Perspektive).<br><strong>Rechtsfolge:</strong> Maßnahme bleibt <strong>rechtmäßig</strong>, wenn Gefahrenprognose ex-ante vertretbar war.<br><strong>Abgrenzung Scheingefahr:</strong> Nur subjektiv angenommen, nicht objektivierbar → Maßnahme rechtswidrig.'},
-  {id:'v54',cat:'VAk · Einsatzrecht',q:'Wann verdichtet sich das Entschließungsermessen der Feuerwehr zur Handlungspflicht (Null-Reduktion)?',a:'Entschließungsermessen (ob tätig werden?) ist grundsätzlich frei, verdichtet sich zur Pflicht wenn:<br><strong>1.</strong> Hochrangiges Rechtsgut bedroht (Leben, körperliche Unversehrtheit).<br><strong>2.</strong> Konkrete Gefahr (nicht bloß abstrakt) besteht.<br><strong>3.</strong> Keine zumutbaren Alternativen vorhanden.<br><strong>Rechtsgrundlagen:</strong> §1 Abs.1 Nr.1 BHKG (Pflichtaufgabe Brandschutz/Hilfeleistung), §1 Abs.1 OBG, §34 Abs.2 BHKG.<br><strong>Praktisch:</strong> Menschenleben in Gefahr = immer Handlungspflicht. Wirtschaftliche Interessen des Störers (z.B. Umsatzverlust) sind rechtlich ohne Belang.'},
-  {id:'v55',cat:'VAk · Einsatzrecht',q:'Welche 3 Voraussetzungen braucht die Inanspruchnahme eines Nichtstörers (§19 OBG)?',a:'Ein <strong>Nichtstörer</strong> (weder §17- noch §18-OBG-Störer) darf nur in Anspruch genommen werden, wenn:<br><strong>1.</strong> Störer nicht rechtzeitig erreichbar oder Maßnahmen gegen ihn unzureichend.<br><strong>2.</strong> Gefahr sonst nicht abwendbar (keine andere zumutbare Maßnahme).<br><strong>3.</strong> Nichtstörer wird so wenig wie möglich belastet (Verhältnismäßigkeit besonders streng).<br><strong>Rechtsfolge:</strong> Entschädigungsanspruch gem. §45 Abs.2 BHKG gegen die Gemeinde – auch bei rechtmäßiger Inanspruchnahme.<br><strong>Beispiel:</strong> Nachbargrundstück als Aufstellfläche bei Gefahrgutunfall → Entschädigungsanspruch.'},
-  {id:'v56',cat:'VAk · Einsatzrecht',q:'Was regelt §45 Abs.2 BHKG zum Entschädigungsanspruch des Nichtstörers?',a:'<strong>§45 Abs.2 BHKG:</strong> Wer als Nichtstörer (§19 OBG) in Anspruch genommen wurde, hat Anspruch auf <strong>angemessene Entschädigung</strong> durch die Gemeinde.<br><strong>Besonderheit:</strong> Anspruch besteht auch bei <strong>rechtmäßigem</strong> Handeln der Feuerwehr – verschuldensunabhängiger Aufopferungsanspruch.<br><strong>Kein Anspruch nach §45 BHKG</strong> bei: Störern (§§17, 18 OBG), Realakt ohne Adressat, fehlendem Nichtstörer-Status.<br><strong>Anspruchsgegner:</strong> Gemeinde (als Trägerin der Feuerwehr), nicht der Einsatzleiter persönlich.<br><strong>Merke:</strong> Störer haften; Nichtstörer werden entschädigt.'},
-  {id:'v57',cat:'VAk · Verwaltungsrecht',q:'Was ist eine Allgemeinverfügung (§35 S.2 VwVfG) und wann liegt sie im Feuerwehreinsatz vor?',a:'<strong>§35 S.1 VwVfG:</strong> Individueller VA – bestimmter Adressat (z.B. Anordnung an konkrete Person).<br><strong>§35 S.2 VwVfG – Allgemeinverfügung:</strong> VA, der sich an einen nach allgemeinen Merkmalen bestimmten oder bestimmbaren Personenkreis richtet oder die öffentlich-rechtliche Eigenschaft einer Sache regelt.<br><strong>Beispiel Feuerwehreinsatz:</strong> Absperrung einer Gefahrenzone – richtet sich an alle Personen, die den Bereich betreten wollen → unbestimmter Personenkreis → Allgemeinverfügung.<br><strong>Bekanntgabe:</strong> mündlich an anwesende Personen oder durch sichtbare Absperrung.<br><strong>Merke:</strong> Absperren = Allgemeinverfügung; Anordnung an Einzelperson = individueller VA.'},
-  {id:'v58',cat:'VAk · Einsatzrecht',q:'Wie wird ein mündlicher Verwaltungsakt im Einsatz nach den W-Fragen formuliert?',a:'Mündliche VAs (§37 Abs.2 VwVfG) müssen hinreichend bestimmt sein. Die <strong>W-Fragen</strong> strukturieren den Inhalt:<br><strong>Wer</strong> muss handeln/dulden? (Adressat)<br><strong>Was</strong> ist zu tun/zu unterlassen? (Inhalt)<br><strong>Wann</strong> / in welcher Frist? (Zeitpunkt)<br><strong>Wohin</strong> / wo? (Ort)<br><strong>Wie lange?</strong> (Dauer)<br>Beispiel: <em>„Sie verlassen jetzt sofort das Gebäude und begeben sich hinter die Absperrung – bis zur Freigabe durch die Feuerwehr."</em><br>Bei Weigerung: <strong>Unmittelbarer Zwang</strong> gem. §44 Abs.2 BHKG ohne vorherige Androhung zulässig (Gefahr im Verzug).'},
-  {id:'v59',cat:'VAk · Einsatzrecht',q:'Was regelt §34 Abs.1 BHKG zur Dokumentationspflicht der Feuerwehr?',a:'<strong>§34 Abs.1 BHKG</strong> verpflichtet zur vollständigen Dokumentation jedes Einsatzes im <strong>Einsatzbericht</strong>.<br>Zu dokumentieren: Alarmierung, Lage, Maßnahmen mit Begründung, eingesetzte Rechtsgrundlagen, Zeitpunkte, handelnde Kräfte.<br><strong>Merkhilfe (latein):</strong> quis (Wer), quid (Was), quando (Wann), ubi (Wo), cur (Warum).<br><strong>Zweck:</strong><br>• Nachvollziehbarkeit und Rechtssicherheit<br>• Grundlage für Kostenersatz (§45 BHKG) und Entschädigungsansprüche<br>• Beweismittel bei Haftungsfragen<br>• Grundlage für Widerspruchs- und Klageverfahren<br><strong>Merke:</strong> Gute Dokumentation = Rechtssicherheit für Einsatzleiter und Gemeinde.'},
-  {id:'v60',cat:'VAk · Einsatzrecht',q:'Was ist beim Verlassen der Einsatzstelle (Schritt 9: Sicherung) zu beachten?',a:'Beim Verlassen der Einsatzstelle gilt die Sicherungspflicht (§34 Abs.1 BHKG):<br><strong>§24 Abs.1 Nr.2 OBG:</strong> Weiterleitungspflicht bei fortbestehender Gefahr an die zuständige Behörde (Ordnungsamt, Baurechtsamt etc.).<br><strong>§43 Nr.1 PolG NRW:</strong> Polizei einschalten bei Straftatverdacht oder wenn keine andere Ordnungsbehörde rechtzeitig erreichbar ist.<br><strong>Praktische Maßnahmen:</strong><br>• Eigentümer/Betreiber benachrichtigen<br>• Beschädigte Zugänge provisorisch sichern<br>• Übergabe dokumentieren (§34 Abs.1 BHKG)<br>• Eigentümer auf Entschädigungsanspruch hinweisen (§45 BHKG)<br><strong>Merke:</strong> Keine Einsatzstelle ohne gesicherte Übergabe verlassen.'},
-  {id:'v61',cat:'VAk · Einsatzrecht',q:'Wann ist unmittelbarer Zwang (§44 Abs.2 BHKG) ohne vorherige Androhung zulässig?',a:'Grundsatz Verwaltungsvollstreckung: <strong>Androhung → Festsetzung → Durchführung</strong>.<br><strong>Ausnahme – sofortiger Vollzug ohne Androhung:</strong> wenn Gefahr im Verzug vorliegt, d.h. das Zuwarten den Zweck gefährden würde.<br><strong>§44 Abs.2 BHKG</strong> ermächtigt die Feuerwehr zum unmittelbaren Zwang, wenn der VA nicht befolgt wird und Gefahr im Verzug besteht.<br><strong>Zulässige Mittel:</strong> körperliche Gewalt, Hilfsmittel (Brecheisen, Seilwinde), Schutzmaßnahmen – stets verhältnismäßig.<br><strong>Beispiel:</strong> Filialleiter verweigert Räumung trotz Gasgeruch → Feuerwehr räumt zwangsweise gem. §44 Abs.2 BHKG.<br><strong>Merke:</strong> Verhältnismäßigkeit gilt auch beim unmittelbaren Zwang.'},
-  {id:'v62',cat:'VAk · Einsatzrecht',q:'Wie unterscheiden sich Verhaltensstörer (§17 OBG) und Zustandsstörer (§18 OBG) an Einsatzbeispielen?',a:'<strong>Verhaltensstörer (§17 OBG):</strong> Person, die durch aktives Tun oder pflichtwidriges Unterlassen die Gefahr unmittelbar verursacht.<br>Beispiele:<br>• Filialleiter verweigert Räumung (Unterlassen einer gebotenen Handlung)<br>• Fahrer des umgestürzten Lkw (hat durch Unfall die Gefahr kausal verursacht)<br><strong>Zustandsstörer (§18 OBG):</strong> Eigentümer oder Inhaber der tatsächlichen Gewalt über eine Sache, von der die Gefahr ausgeht.<br>Beispiele:<br>• Eigentümer des brennenden EV in der Tiefgarage<br>• Halter des Gefahrgut-Lkw (auslaufende Salzsäure)<br>• Betreiber des Supermarkts (gasführende Anlage)<br><strong>Auswahlermessen:</strong> Bei mehreren Störern richtet sich die Auswahl nach Effektivität – i.d.R. der vor Ort anwesende, handlungsfähige Störer.'},
-
   /* ── FeuAK Hamburg – Zusatzkarten ── */
   {id:'h26',cat:'FeuAK · VWL',q:'Wie funktioniert der Preismechanismus über Angebot und Nachfrage?',a:'<strong>Nachfragekurve:</strong> fallend – je höher der Preis, desto weniger wird nachgefragt.<br><strong>Angebotskurve:</strong> steigend – je höher der Preis, desto mehr wird angeboten.<br><strong>Gleichgewichtspreis:</strong> Schnittpunkt; Markt räumt sich selbst.<br>Verschiebungen: Einkommenszunahme → Nachfrage↑ → P↑ und Q↑; Kostensenkung → Angebot↑ → P↓ und Q↑.'},
   {id:'h27',cat:'FeuAK · VWL',q:'Welche 4 Phasen hat ein Konjunkturzyklus?',a:'<strong>1. Aufschwung (Expansion):</strong> wachsende Produktion, sinkende Arbeitslosigkeit, steigende Investitionen.<br><strong>2. Hochkonjunktur (Boom):</strong> Vollauslastung, Preissteigerungen, Inflationsdruck.<br><strong>3. Abschwung (Rezession):</strong> sinkendes BIP (mind. 2 Quartale), steigende Arbeitslosigkeit.<br><strong>4. Tiefstand (Depression):</strong> niedrigste Auslastung, maximale Arbeitslosigkeit.'},
@@ -1610,7 +1595,8 @@ const FC = (function(){
   const CATS = ['gal','sfs','hlfs','ibk','vak','feuak','idf'];
   let deck=[], curIdx=0, flipped=false, sess={known:0,unknown:0};
   let activeFilters = new Set(CATS);
-  let _seen = [], _reviewPos = -1;
+  let focusMode = false;
+  let sortDifficult = false;
 
   const SR_DAYS = [0,1,3,7,14,30];
 
@@ -1641,47 +1627,47 @@ const FC = (function(){
     }catch{ return {}; }
   }
   function fcSave(d){ try{ localStorage.setItem('bvi_fc',JSON.stringify(d)); }catch{} }
-  function fcLoadStars(){ try{ return new Set(JSON.parse(localStorage.getItem('bvi_fc_stars')||'[]')); }catch{ return new Set(); } }
-  function fcSaveStars(s){ try{ localStorage.setItem('bvi_fc_stars',JSON.stringify([...s])); }catch{} }
-  function fcToggleStar(id){ const s=fcLoadStars(); if(s.has(id)) s.delete(id); else s.add(id); fcSaveStars(s); return s.has(id); }
 
   function getDeck(){
-    if(activeFilters.has('starred')){
-      const stars=fcLoadStars();
-      return shuffle(FLASHCARD_DATA.filter(c=>stars.has(c.id)));
-    }
-    const base = activeFilters.size===CATS.length ? [...FLASHCARD_DATA]
+    let base = activeFilters.size===CATS.length ? [...FLASHCARD_DATA]
       : FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f)));
-    return shuffle(base);
+    if(focusMode){
+      const known=fcLoad(); const now=Date.now();
+      base=base.filter(c=>{ const e=known[c.id]; return !e||(e.nextReview<=now); });
+    }
+    return sortDifficult ? sortByDiff(base) : shuffle(base);
   }
 
   function updateFilterButtons(){
     const known=fcLoad();
-    const stars=fcLoadStars();
-    const isStarred=activeFilters.has('starred');
     const allSel=CATS.every(c=>activeFilters.has(c));
     const PRUEFUNG_CATS=['ibk','vak','feuak','idf'];
-    const isPruefung=!isStarred&&PRUEFUNG_CATS.every(c=>activeFilters.has(c))&&activeFilters.size===PRUEFUNG_CATS.length;
+    const isPruefung=!focusMode&&PRUEFUNG_CATS.every(c=>activeFilters.has(c))&&activeFilters.size===PRUEFUNG_CATS.length;
+    const now=Date.now();
     document.querySelectorAll('.fc-f-btn').forEach(b=>{
       const df=b.dataset.filter;
       const base=b.dataset.label||'';
       if(df==='all'){
-        b.classList.toggle('active',allSel&&!isPruefung&&!isStarred);
+        b.classList.toggle('active',allSel&&!focusMode&&!isPruefung);
         b.textContent=`${base} (${FLASHCARD_DATA.length})`;
-      } else if(df==='starred'){
-        b.classList.toggle('active',isStarred);
-        b.textContent=`⭐ ${base} (${stars.size})`;
+      } else if(df==='fokus'){
+        const due=FLASHCARD_DATA.filter(c=>{ const e=known[c.id]; return !e||(e.nextReview<=now); }).length;
+        b.classList.toggle('active',focusMode);
+        b.textContent=`🎯 ${base} (${due})`;
       } else if(df==='pruefung'){
         b.classList.toggle('active',isPruefung);
+      } else if(df==='plan'){
+        b.classList.remove('active');
       } else if(df){
         const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df));
         const knownCnt=cats.filter(c=>known[c.id]).length;
-        b.classList.toggle('active',!allSel&&!isPruefung&&!isStarred&&activeFilters.has(df));
+        b.classList.toggle('active',!allSel&&!focusMode&&!isPruefung&&activeFilters.has(df));
         b.textContent=`${base} ${knownCnt}/${cats.length}`;
       }
     });
   }
   function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
+  function sortByDiff(a){ const k=fcLoad(); return [...a].sort((x,y)=>{ const ex=k[x.id]; const ey=k[y.id]; return (ex?(ex.ease||2.5):2.5)-(ey?(ey.ease||2.5):2.5); }); }
 
   function sizeCard(){
     const outer = document.querySelector('.fc-outer');
@@ -1767,8 +1753,6 @@ const FC = (function(){
     const reps_v=card_e?(card_e.reps||0):0;
     const iGood=reps_v>=2?Math.round(iVal*ease_v):7;
     const iHard=reps_v>=2?Math.max(3,Math.round(iVal*ease_v*0.85)):3;
-    const stars=fcLoadStars();
-    const isStarred=stars.has(card.id);
     box.innerHTML = `
       <div class="fc-stats-row">
         <span class="fc-stat">🟢 ${sess.known} gewusst</span>
@@ -1776,11 +1760,7 @@ const FC = (function(){
         <span class="fc-stat">📚 ${knownCnt}/${FLASHCARD_DATA.length} gelernt</span>
         ${iVal>0?`<span class="fc-stat" title="Letztes Intervall">📅 ${iVal}d</span>`:''}
       </div>
-      <div class="fc-nav">
-        <button class="fc-back-btn" onclick="FC.back()" ${_seen.length===0?'disabled':''}>← Zurück</button>
-        <span>${curIdx+1} / ${deck.length}</span>
-        <button class="fc-star-btn${isStarred?' starred':''}" onclick="FC.toggleStar('${card.id}')" title="${isStarred?'Markierung entfernen':'Markieren'}">⭐</button>
-      </div>
+      <div class="fc-nav">${curIdx+1} / ${deck.length}</div>
       <div class="fc-outer">
         <div class="fc-inner" id="fc-inner">
           <div class="fc-face fc-front">
@@ -1813,8 +1793,9 @@ const FC = (function(){
     const box = document.getElementById('fc-container'); if(!box) return;
     const known = fcLoad();
     const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
-    if(deck.length===0){
-      box.innerHTML=`<div class="fc-end"><div class="fc-end-ico">⭐</div><div class="fc-end-title">Keine Karten in dieser Auswahl</div><div class="fc-end-sub">Wähle eine andere Kategorie oder markiere zuerst Karten.</div><div style="display:flex;gap:.6rem;justify-content:center"><button class="btn btn-gold" onclick="FC.setFilter('all')">Alle Karten</button></div></div>`;
+    if(focusMode && deck.length===0){
+      const dueNow=FLASHCARD_DATA.filter(c=>{ const e=known[c.id]; return !e||(e.nextReview<=Date.now()); }).length;
+      box.innerHTML=`<div class="fc-end"><div class="fc-end-ico">🏆</div><div class="fc-end-title">Alle fälligen Karten gelernt!</div><div class="fc-end-sub">Keine weiteren Karten fällig. Insgesamt <strong>${knownCnt}/${FLASHCARD_DATA.length}</strong> Karten gelernt.</div><div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap"><button class="btn btn-gold" onclick="FC.setFilter('plan')">📅 Zeitplan anzeigen</button><button class="btn btn-ghost" onclick="FC.setFilter('all')">Alle Karten</button></div></div>`;
       return;
     }
     const pct = deck.length ? Math.round(sess.known/deck.length*100) : 0;
@@ -1828,40 +1809,15 @@ const FC = (function(){
         <div class="fc-end-sub">${sess.known} von ${deck.length} Karten gewusst (${pct}%).<br>Insgesamt <strong>${knownCnt}/${FLASHCARD_DATA.length}</strong> Begriffe dauerhaft gelernt.</div>
         <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">
           <button class="btn btn-gold" onclick="FC.start()">Neu mischen & wiederholen</button>
+          <button class="btn btn-ghost" onclick="FC.setFilter('plan')">📅 Zeitplan</button>
           <button class="btn btn-ghost" onclick="FC.resetKnown()">Lernstand zurücksetzen</button>
         </div>
-      </div>`;
-  }
-  function renderReviewCard(){
-    const box=document.getElementById('fc-container'); if(!box) return;
-    const card=_seen[_reviewPos];
-    const stars=fcLoadStars();
-    const isStarred=stars.has(card.id);
-    box.innerHTML=`
-      <div class="fc-review-nav">
-        <button class="fc-review-nav-btn" onclick="FC.back()" ${_reviewPos===0?'disabled':''}>← Ältere</button>
-        <span class="fc-review-pos">Rückblick ${_reviewPos+1} / ${_seen.length}</span>
-        <button class="fc-review-nav-btn" onclick="FC.forward()">Weiter →</button>
-      </div>
-      <div class="fc-review-card">
-        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
-          <span class="fc-review-badge">↩ Rückblick</span>
-          <button class="fc-star-btn${isStarred?' starred':''}" onclick="FC.toggleStar('${card.id}')" title="${isStarred?'Markierung entfernen':'Markieren'}">⭐</button>
-        </div>
-        <div class="fc-cat">${card.cat}</div>
-        <div class="fc-review-q">${card.q}</div>
-        <hr class="fc-review-hr">
-        <div class="fc-review-a">${card.a}</div>
-      </div>
-      <div style="text-align:center">
-        <button class="btn btn-ghost" onclick="FC.forward()">↩ Zurück zur aktuellen Karte</button>
       </div>`;
   }
 
   return {
     start(){
       deck = getDeck(); curIdx=0; flipped=false; sess={known:0,unknown:0};
-      _seen=[]; _reviewPos=-1;
       showSkeleton();
       setTimeout(renderCard, 320);
     },
@@ -1878,7 +1834,6 @@ const FC = (function(){
       const q=quality===true?2:quality===false?0:1; // true=gut, false=wieder, 'hard'=schwer
       if(navigator.vibrate) navigator.vibrate(q>0?[30]:[20,50,20]);
       const card=deck[curIdx];
-      _seen.push(card); _reviewPos=-1;
       const d=fcLoad();
       if(q===0){
         delete d[card.id]; sess.unknown++;
@@ -1890,16 +1845,24 @@ const FC = (function(){
       }
       fcSave(d); curIdx++; renderCard();
     },
+    toggleSort(){
+      sortDifficult=!sortDifficult;
+      const btn=document.getElementById('fc-sort-btn');
+      if(btn) btn.classList.toggle('active',sortDifficult);
+      this.start();
+    },
     setFilter(f){
-      if(f==='starred'){
-        activeFilters=activeFilters.has('starred')?new Set(CATS):new Set(['starred']);
+      if(f==='fokus'){
+        focusMode=!focusMode; if(focusMode) activeFilters=new Set(CATS);
       } else if(f==='all'){
-        activeFilters=new Set(CATS);
+        activeFilters=new Set(CATS); focusMode=false;
       } else if(f==='pruefung'){
-        activeFilters=new Set(['ibk','vak','feuak','idf']);
+        activeFilters=new Set(['ibk','vak','feuak','idf']); focusMode=false;
         updateFilterButtons(); this.start(); return;
+      } else if(f==='plan'){
+        updateFilterButtons(); this.showPlan(); return;
       } else {
-        activeFilters.delete('starred');
+        focusMode=false;
         if(activeFilters.size===CATS.length) activeFilters=new Set([f]);
         else if(activeFilters.has(f)){ activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(CATS); }
         else activeFilters.add(f);
@@ -1907,24 +1870,34 @@ const FC = (function(){
       updateFilterButtons();
       this.start();
     },
-    back(){
-      if(_seen.length===0) return;
-      if(_reviewPos===-1) _reviewPos=_seen.length-1;
-      else if(_reviewPos>0) _reviewPos--;
-      else return;
-      renderReviewCard();
-    },
-    forward(){
-      if(_reviewPos===-1) return;
-      _reviewPos++;
-      if(_reviewPos>=_seen.length){ _reviewPos=-1; renderCard(); }
-      else renderReviewCard();
-    },
-    toggleStar(id){
-      const starred=fcToggleStar(id);
-      const btn=document.querySelector('.fc-star-btn');
-      if(btn) btn.classList.toggle('starred',starred);
-      updateFilterButtons();
+    showPlan(){
+      const box=document.getElementById('fc-container'); if(!box) return;
+      window._shaderContentMode=1.0; document.body.classList.add('mode-navy');
+      const known=fcLoad();
+      const now=Date.now();
+      const MS_DAY=86400000;
+      // Group cards by days until due
+      const groups={};
+      FLASHCARD_DATA.forEach(c=>{
+        const e=known[c.id];
+        const due = e ? Math.max(0, Math.round((e.nextReview-now)/MS_DAY)) : -1;
+        const key = due<0?'due': due===0?'due':`d${due}`;
+        groups[key]=(groups[key]||0)+1;
+      });
+      const dueNow=(groups['due']||0);
+      const rows=[{day:'Heute fällig',cnt:dueNow,today:true}];
+      for(let i=1;i<=30;i++){
+        const cnt=groups[`d${i}`]||0;
+        if(cnt>0) rows.push({day:`In ${i} Tag${i===1?'':'en'}`,cnt,today:false});
+      }
+      const notScheduled=FLASHCARD_DATA.length-Object.keys(known).length;
+      box.innerHTML=`<div class="fc-plan"><div class="fc-plan-title">📅 Wiederholungsplan</div>`
+        +rows.map(r=>`<div class="fc-plan-group${r.today?' fc-plan-today':''}"><span class="fc-plan-day">${r.day}</span><span class="fc-plan-cnt"><strong>${r.cnt}</strong> Karte${r.cnt===1?'':'n'}</span></div>`).join('')
+        +(notScheduled>0?`<div class="fc-plan-group"><span class="fc-plan-day">Noch nicht gelernt</span><span class="fc-plan-cnt"><strong>${notScheduled}</strong> Karte${notScheduled===1?'':'n'}</span></div>`:'')
+        +`<div style="text-align:center;margin-top:1.25rem;display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">`
+        +`<button class="btn btn-gold" onclick="FC.setFilter('fokus')">Fällige Karten lernen (${dueNow})</button>`
+        +`<button class="btn btn-ghost" onclick="FC.setFilter('all')">Alle Karten</button>`
+        +`</div></div>`;
     },
     resetKnown(){ localStorage.removeItem('bvi_fc'); this.start(); },
     resize(){ sizeCard(); },
@@ -3140,20 +3113,6 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
-    {v:'2.18.5',ts:'2026-08-06T17:30',items:[
-      'Fallbearbeitung: Realakt/VA-Kohärenz in Fall 3 (Tiefgarage) und Fall 6 (Schornsteinbrand) korrigiert – Schritt 2 differenziert nun klar zwischen Realakt (VwVfG entfällt) und VA (§28/§37/§41 VwVfG)',
-      'Lernkarten-Kachel: Kartenanzahl auf 284 aktualisiert (war: 271)'
-    ]},
-    {v:'2.18.4',ts:'2026-08-06T16:00',items:[
-      'Lernkarten: Zurück-Button zum Blättern durch bereits beantwortete Karten (Rückblick-Modus)',
-      'Lernkarten: Karten mit ⭐ markieren – markierte Karten erscheinen im eigenen „Markiert"-Tab',
-      'Lernkarten: Fokus-Modus, Schwer-zuerst und Zeitplan entfernt (vereinfacht)',
-      'VAk Berlin: 13 neue Karteikarten zum 9-Punkte-Schema (Fallbearbeitung, §§ BHKG/OBG NRW) – v50–v62',
-      'Lernkarten: Gesamtanzahl 271 → 284 Karten'
-    ]},
-    {v:'2.18.3',ts:'2026-08-06T15:00',items:[
-      'Fallbearbeitung: Anzahl der Übungsfälle in Tab-Untertitel und Seitenbeschreibung auf 6 korrigiert (war: 4)'
-    ]},
     {v:'2.18.1',ts:'2026-08-06T13:30',items:[
       'Fallbearbeitung Schema: neue §§ in Schematext eingebaut (Steps 1/2/4/5/9) – OBG, Art. 28 Abs.2 GG, Art. 19 Abs.4 GG, §34 Abs.2 BHKG u.a.'
     ]},
@@ -3512,7 +3471,7 @@ const FALLBEARBEITUNG = (function(){
       sachverhalt:'Um 02:15 Uhr wird die Feuerwehr zu einem Mehrfamilienhaus alarmiert. Ein Heimrauchmelder im 3. OG piept seit Längerem. Kein Rauch oder Brandgeruch im Treppenhaus. Klingeln und Klopfen bleiben erfolglos. Ein Nachbar berichtet, der Wohnungsinhaber sei älter und lebe allein. Der Einsatzleiter ordnet die gewaltsame Türöffnung an. In der Wohnung befindet sich niemand; der Rauchmelder wurde durch eine leere Batterie ausgelöst. Der Eigentümer verlangt Ersatz der beschädigten Tür.',
       answers:[
         'Ermächtigungsgrundlage: §34 Abs.2 S.1 BHKG (Hilfeleistung bei anderen Notlagen) i.V.m. §44 Abs.2 BHKG (Betreten und gewaltsames Öffnen von Wohnungen). Da zum Zeitpunkt der Maßnahme niemand anwesend ist, dem eine Anordnung erteilt werden könnte, liegt ein <strong>Realakt</strong> vor – keine VA-Prüfung (Punkte 1–3 genügen materiell).',
-        'Sachlich: §1 Abs.1 i.V.m. §3 Abs.1 S.1 BHKG (Brandschutz und Hilfeleistung als Gemeindeaufgabe). Örtlich: §3 Abs.1 S.1 BHKG (Gemeindegebiet). Instanziell: §3 Abs.1 S.1 BHKG (Feuerwehr als behördliche Einrichtung). Da die Maßnahme ein <strong>Realakt</strong> ist, entfallen die VA-spezifischen Verfahrensanforderungen des VwVfG vollständig (keine Anhörungspflicht nach §28 VwVfG, keine Formvorschriften nach §37 VwVfG, keine förmliche Bekanntgabe nach §41 VwVfG). Die drei Zuständigkeiten genügen zur materiellen Legitimation.',
+        'Sachlich: §1 Abs.1 i.V.m. §3 Abs.1 S.1 BHKG (Brandschutz und Hilfeleistung als Gemeindeaufgabe). Örtlich: §3 Abs.1 S.1 BHKG (Gemeindegebiet). Instanziell: §3 Abs.1 S.1 BHKG (Feuerwehr als behördliche Einrichtung). Da niemand anwesend ist, entfällt eine Anhörung von vornherein; im Übrigen wäre §28 Abs.2 Nr.1 VwVfG (Gefahr im Verzug) einschlägig.',
         '<strong>Anscheinsgefahr:</strong> Ex-ante-Betrachtung durch einen sorgfältigen, sachkundigen Einsatzleiter: Piepender Rauchmelder um 02:15 Uhr + älterer alleinlebender Bewohner + keine Reaktion auf Klingeln/Klopfen → hinreichend wahrscheinlich, dass eine hilflose oder bewusstlose Person in der Wohnung ist oder ein Brandgeschehen vorliegt. Die ex-ante-Annahme einer konkreten Gefahr war objektiv vertretbar. Ex-post (leere Batterie, niemand anwesend) ändert die rechtliche Bewertung nicht – maßgeblich bleibt die ex-ante-Perspektive.',
         'Kein Störer identifizierbar (§§17, 18 OBG): Niemand ist vor Ort, dem die Gefahr durch Verhalten oder Sachherrschaft zuzurechnen wäre. Die Feuerwehr handelt ohne Adressat direkt als Realakt (Öffnen der Tür). Der abwesende Eigentümer/Mieter ist nicht Störer im Sinne des OBG.',
         'Entschließungsermessen auf Null reduziert: Mögliche hilflose Person in der Wohnung → Rechtsgut Leben/körperliche Unversehrtheit → Einschreiten zwingend. Auswahlermessen: Gewaltsame Öffnung war die einzig verbleibende Option nach Ausschöpfung milderer Mittel (Klingeln, Klopfen, Nachbarbefragung, kein Schlüsseldienst in vertretbarer Zeit erreichbar).',
@@ -3544,7 +3503,7 @@ const FALLBEARBEITUNG = (function(){
       sachverhalt:'In einer Tiefgarage gerät ein Elektrofahrzeug in Brand. Zur Brandbekämpfung muss die Feuerwehr mehrere weitere Fahrzeuge mit Seilwinden aus der Tiefgarage ziehen, um Zugang zum Brandherd zu erhalten. Die Eigentümer der anderen Fahrzeuge widersprechen und befürchten Lackschäden.',
       answers:[
         'Ermächtigungsgrundlage: §34 Abs.1 BHKG (Brandbekämpfung) i.V.m. §44 Abs.2 BHKG (Entfernung von Hindernissen, Inanspruchnahme von Sachen Dritter) und §45 BHKG (Inanspruchnahme von Nichtstörern). Das Versetzen der Fahrzeuge ist ein <strong>Realakt</strong>. Soweit Duldungsanordnungen an anwesende Eigentümer ergehen, liegt jeweils ein VA gem. §35 VwVfG vor.',
-        'Sachlich: §1 Abs.1 BHKG (Brandschutz), §3 Abs.1 S.1 BHKG. Örtlich: §3 Abs.1 S.1 BHKG. Instanziell: §3 Abs.1 S.1 BHKG. <strong>Für den Realakt</strong> (Versetzen der Fahrzeuge mit Seilwinden): VwVfG-Verfahrensanforderungen entfallen vollständig – keine Anhörungspflicht (§28 VwVfG), keine Formvorschriften (§37 VwVfG), keine förmliche Bekanntgabe (§41 VwVfG). <strong>Für etwaige Duldungsanordnungen (VA)</strong> an anwesende Eigentümer: Anhörungsverzicht §28 Abs.2 Nr.1 VwVfG (Brand = Gefahr im Verzug); mündliche Form §37 Abs.2 VwVfG; Bekanntgabe §41 Abs.1 VwVfG.',
+        'Sachlich: §1 Abs.1 BHKG (Brandschutz), §3 Abs.1 S.1 BHKG. Örtlich: §3 Abs.1 S.1 BHKG. Instanziell: §3 Abs.1 S.1 BHKG. Anhörungsverzicht: §28 Abs.2 Nr.1 VwVfG (Brand = Gefahr im Verzug). Mündlicher VA §37 Abs.2 VwVfG, Bekanntgabe §41 Abs.1 VwVfG.',
         '<strong>Konkrete Gefahr:</strong> Brennendes Elektrofahrzeug in geschlossener Tiefgarage → erhöhte thermische Belastung, Rauchentwicklung, erhöhte Brandausbreitungsgefahr (EV-Brände sind schwer zu löschen und neigen zum thermal runaway) → hinreichende Wahrscheinlichkeit eines Schadens für weitere Fahrzeuge, die Gebäudestruktur und ggf. Personen.',
         '<strong>Zustandsstörer (§18 OBG):</strong> Eigentümer des brennenden EV – von seiner Sache geht die Gefahr aus. <strong>Nichtstörer (§19 OBG):</strong> Eigentümer der anderen Fahrzeuge – sie haben die Gefahr nicht verursacht; ihre Fahrzeuge stehen der Brandbekämpfung lediglich im Weg. Inanspruchnahme als Nichtstörer gem. §19 OBG i.V.m. §45 BHKG zulässig, wenn: (1) Störer nicht rechtzeitig erreichbar oder Maßnahme gegen ihn unzureichend, (2) Gefahr sonst nicht abwendbar, (3) Nichtstörer so wenig wie möglich belastet.',
         'Entschließungsermessen auf Null reduziert: Brandbekämpfung in geschlossener Tiefgarage → erheblicher Sachschaden und potenzielle Personengefährdung → Einschreiten zwingend. Auswahlermessen: Umsetzung der Fahrzeuge mit Seilwinden als einzig verfügbares Mittel, um den Löschzugang freizumachen.',
@@ -3593,7 +3552,7 @@ const FALLBEARBEITUNG = (function(){
       sachverhalt:'Alarmierung zu einem Schornsteinbrand im Altbau (Seitenflügel, 5 Geschosse, je 2 Wohnungen). EG bis 2. OG lassen die Einsatzkräfte anstandslos herein. Im 3. OG: Die Nachbarwohnung ist nicht besetzt (Bewohner kommen erst morgen wieder). Der anwesende Mieter (pensionierter Feuerwehrmann) verweigert sowohl den Zutritt zu seiner Wohnung als auch jede Hilfe beim Öffnen der Nachbarwohnung. Fragen: a) Darf die verschlossene Nachbarwohnung gewaltsam geöffnet werden? b) Darf die eigene Wohnung gegen den Willen des Mieters betreten werden? c) Was ist beim Verlassen zu beachten?',
       answers:[
         'Ermächtigungsgrundlage: §34 Abs.1 BHKG (Brandbekämpfung, Verhinderung von Brandausbreitung) i.V.m. §44 Abs.2 BHKG (Betreten und gewaltsames Öffnen von Wohnungen, Art. 13 Abs.7 GG). Das gewaltsame Öffnen der <em>unbesetzten</em> Nachbarwohnung ist ein <strong>Realakt</strong> (kein Adressat vorhanden). Das Betreten der <em>besetzten</em> Wohnung gegen den Willen des Mieters ist ein <strong>Verwaltungsakt</strong> (Duldungsanordnung gem. §35 VwVfG).',
-        'Sachlich: §1 Abs.1 i.V.m. §3 Abs.1 S.1 BHKG (Brandbekämpfung). Örtlich: §3 Abs.1 S.1 BHKG. Instanziell: §3 Abs.1 S.1 BHKG. <strong>Für den Realakt</strong> (gewaltsames Öffnen der unbesetzten Nachbarwohnung): VwVfG-Verfahrensanforderungen entfallen vollständig – kein Anhörungs-, Form- oder Bekanntgabeerfordernis (kein Adressat vorhanden). <strong>Für den VA</strong> (Duldungsanordnung gegenüber dem anwesenden Mieter): Anhörungsverzicht §28 Abs.2 Nr.1 VwVfG (Schornsteinbrand mit Ausbreitungsgefahr = Gefahr im Verzug); mündliche Form §37 Abs.2 VwVfG; Betretungsrecht §44 Abs.2 BHKG i.V.m. Art. 13 Abs.7 GG.',
+        'Sachlich: §1 Abs.1 i.V.m. §3 Abs.1 S.1 BHKG (Brandbekämpfung). Örtlich: §3 Abs.1 S.1 BHKG. Instanziell: §3 Abs.1 S.1 BHKG. Anhörungsverzicht: §28 Abs.2 Nr.1 VwVfG (Schornsteinbrand mit Ausbreitungsgefahr = Gefahr im Verzug). Mündliche Duldungsanordnung gem. §37 Abs.2 VwVfG; Betretungsrecht gem. §44 Abs.2 BHKG i.V.m. Art. 13 Abs.7 GG. Bei Realakt (Nachbarwohnung) entfällt Anhörung von vornherein.',
         '<strong>Konkrete Gefahr:</strong> Schornsteinbrand im Altbau → erhöhte Brandausbreitungsgefahr auf Holzbalkendecken der oberen Geschosse; Rauchgasbelastung für Bewohner → hinreichende Wahrscheinlichkeit einer Schädigung von Sachwerten und Gesundheit der Hausbewohner im konkreten Einzelfall. Nicht bloßer Verdacht, sondern festgestellter Brand mit objektiver Ausbreitungsgefahr.',
         'a) <strong>Nachbarwohnung (unbesetzt):</strong> Kein Adressat vorhanden → Realakt. Der anwesende Nachbarmieter ist für die fremde Wohnung <strong>nicht verfügungsberechtigt</strong> – seine Weigerung, beim Öffnen zu helfen, ist rechtlich ohne Belang. b) <strong>Eigene Wohnung:</strong> Adressat ist der Mieter als Inhaber des Hausrechts. Sein Status als pensionierter Feuerwehrmann ist rechtlich irrelevant – §44 Abs.2 BHKG sieht keine Ausnahmen nach Berufsstand vor. Er ist kein Störer; die Feuerwehr nimmt ihn als Wohnungsinhaber in Anspruch.',
         'Entschließungsermessen auf Null reduziert: Schornsteinbrand mit konkreter Ausbreitungsgefahr → öffentliche Sicherheit (Gebäudeintegrität, Gesundheit der Bewohner) → Einschreiten zwingend. Auswahlermessen: Zutritt zu <em>allen</em> angrenzenden Wohnungen im Brandgeschoss und darüber/darunter ist zur Gefahrenerkundung und Brandbekämpfung erforderlich; keine milderen Alternativen verfügbar (kein Ersatzschlüssel zugänglich, Ausbreitung eilt).',
