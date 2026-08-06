@@ -3113,6 +3113,12 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.17.8',ts:'2026-08-06T11:10',items:[
+      'Fallbearbeitung Step 1 – Ermächtigungsgrundlage: §48 BHKG korrigiert zu „Einschränkung von Grundrechten" (statt Kostenersatz)'
+    ]},
+    {v:'2.17.7',ts:'2026-08-05T12:30',items:[
+      'Fallbearbeitung Schema-Karte: Gesetzestext wird bei Überlänge mit Ellipsis (…) abgeschnitten – alle 8 Karten einheitlich einzeilig'
+    ]},
     {v:'2.17.6',ts:'2026-08-05T12:00',items:[
       'VAk Einsatzrecht Karteikarte & Übungsklausur Frage 6: Grundrechtsliste auf §48 BHKG aktualisiert (Art. 2 Abs. 1 i.V.m. Art. 1 Abs. 1, Art. 2 Abs. 2 S. 1, Art. 2 Abs. 2 S. 2, Art. 13 GG); Art. 11 GG und Art. 14 GG entfernt'
     ]},
@@ -3395,7 +3401,7 @@ const FALLBEARBEITUNG = (function(){
       title:'Ermächtigungsgrundlage',
       law:'§34 Abs.2 S.1 BHKG · §44 Abs.2 BHKG · §48 BHKG · §35 VwVfG',
       prompt:'Auf welche Rechtsgrundlage stützt die Feuerwehr ihr Handeln? Handelt es sich um einen Verwaltungsakt oder einen Realakt?',
-      schema:'<p><strong>Verwaltungsakt (§35 VwVfG):</strong> Alle 6 Merkmale müssen erfüllt sein: hoheitliche Maßnahme, einer Behörde, auf dem Gebiet des öffentlichen Rechts, Regelung, eines Einzelfalls, mit Außenwirkung. Auch Anweisungen an Störer sind VAs.</p><p><strong>Realakt:</strong> Schlichtes Verwaltungshandeln ohne Regelungscharakter – es werden nur die Punkte 1–3 (materiell) geprüft.</p><p><strong>Wichtige Normen:</strong></p><ul><li>§34 Abs.2 S.1 BHKG – Hilfeleistung bei anderen Notlagen (Menschenrettung, Schutz bedeutender Sachwerte)</li><li>§44 Abs.2 BHKG – Betretungsrecht, Anordnungsbefugnis, Inanspruchnahme von Sachen, unmittelbarer Zwang</li><li>§48 BHKG – Kostenersatz (bei vorsätzlicher oder grob fahrlässiger Herbeiführung des Einsatzes)</li></ul>'
+      schema:'<p><strong>Verwaltungsakt (§35 VwVfG):</strong> Alle 6 Merkmale müssen erfüllt sein: hoheitliche Maßnahme, einer Behörde, auf dem Gebiet des öffentlichen Rechts, Regelung, eines Einzelfalls, mit Außenwirkung. Auch Anweisungen an Störer sind VAs.</p><p><strong>Realakt:</strong> Schlichtes Verwaltungshandeln ohne Regelungscharakter – es werden nur die Punkte 1–3 (materiell) geprüft.</p><p><strong>Wichtige Normen:</strong></p><ul><li>§34 Abs.2 S.1 BHKG – Hilfeleistung bei anderen Notlagen (Menschenrettung, Schutz bedeutender Sachwerte)</li><li>§44 Abs.2 BHKG – Betretungsrecht, Anordnungsbefugnis, Inanspruchnahme von Sachen, unmittelbarer Zwang</li><li>§48 BHKG – Einschränkung von Grundrechten (Art. 2 Abs. 1 i.V.m. Art. 1 Abs. 1, Art. 2 Abs. 2 S. 1+2, Art. 13 GG – Zitiergebot nach Art. 19 Abs. 1 S. 2 GG)</li></ul>'
     },
     {
       title:'Zuständigkeit',
