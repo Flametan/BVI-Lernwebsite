@@ -3206,6 +3206,9 @@ const FEUAK_QUIZ=(function(){
     const aEl=document.getElementById('fq-a');
     if(aEl){aEl.innerHTML=q.a;aEl.classList.add('hidden');}
 
+    const ta=document.getElementById('fq-textarea');
+    if(ta)ta.value='';
+
     const btnShow=document.getElementById('fq-btn-show');
     const btnHide=document.getElementById('fq-btn-hide');
     if(btnShow)btnShow.classList.remove('hidden');
@@ -3289,6 +3292,14 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.18.9',ts:'2026-08-07T12:00',items:[
+      'FeuAK Altklausur-Training: Freitext-Eingabefeld – eigene Antwort formulieren, bevor die Musterlösung aufgedeckt wird'
+    ]},
+    {v:'2.18.8',ts:'2026-08-07T11:00',items:[
+      'Neuer Tab: FeuAK Altklausur-Training – 22 Essay-Fragen aus Gedächtnisprotokollen Hamburg Aug 2025 &amp; Feb 2026 mit vollständigen Musterlösungen',
+      '19 neue FeuAK-Lernkarten h42–h60: BSC, Haushalt, Vergabe, AGBF 1998/2015, KTW-Kurve, IST-Analysen RD, Doppik, Rechnungswesen',
+      'Lernkarten gesamt: 284 → 303'
+    ]},
     {v:'2.18.5',ts:'2026-08-06T17:30',items:[
       'Fallbearbeitung: Realakt/VA-Kohärenz in Fall 3 (Tiefgarage) und Fall 6 (Schornsteinbrand) korrigiert – Schritt 2 differenziert nun klar zwischen Realakt (VwVfG entfällt) und VA (§28/§37/§41 VwVfG)',
       'Lernkarten-Kachel: Kartenanzahl auf 284 aktualisiert (war: 271)'

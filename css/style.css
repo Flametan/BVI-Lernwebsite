@@ -1164,3 +1164,8 @@ body.offline .offline-banner{display:flex;}
 .fq-nb:hover:not(:disabled){background:rgba(255,255,255,.1);}
 .fq-nb:disabled{opacity:.35;cursor:default;}
 .fq-src{font-size:.72rem;color:var(--c-sub);text-align:center;margin-top:.25rem;}
+.fq-input-wrap{display:flex;flex-direction:column;gap:.45rem;margin:.25rem 0 .85rem;}
+.fq-input-label{font-size:.76rem;font-weight:600;color:var(--c-slate-l);letter-spacing:.03em;}
+.fq-textarea{width:100%;box-sizing:border-box;background:rgba(255,255,255,.04);border:1px solid var(--glass-b);border-radius:var(--r);color:var(--c-text);font-size:.92rem;font-family:var(--f-s);line-height:1.6;padding:.7rem .9rem;resize:vertical;min-height:6rem;transition:border-color .15s,background .15s;outline:none;}
+.fq-textarea::placeholder{color:var(--c-sub);}
+.fq-textarea:focus{border-color:rgba(201,168,76,.45);background:rgba(255,255,255,.06);}
