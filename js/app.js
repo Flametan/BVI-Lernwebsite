@@ -36,6 +36,7 @@ const NAV = (function(){
     updateHeader();
     if(id==='v-abkuerzungen') ABK.init();
     if(id==='v-vak-altklausur') QUIZ.init();
+    if(id==='v-feuak-altklausur') FEUAK_QUIZ.init();
     if(id==='v-vak-fallbearbeitung','v-vak-uebungsklausur') FALLBEARBEITUNG.init();
     if(id==='v-vak-uebungsklausur') UEBUNGSKLAUSUR.init();
     if(id==='v-simulator') SIM._refreshCards();
@@ -1064,6 +1065,27 @@ const FLASHCARD_DATA = [
   {id:'h40',cat:'FeuAK · Bedarfsplanung',q:'Was ist die Schutzzielfestlegung und welche Rolle spielt die Hilfsfrist?',a:'<strong>Schutzziel:</strong> Mindeststandard, z.B. 8 Personen in 8–10 Minuten (je nach Bundesland).<br><strong>Hilfsfrist:</strong> Zeit von der Alarmierung bis zum Eintreffen der ersten Kräfte.<br><strong>Schutzzielerfüllungsgrad:</strong> Erreichung in mind. X % der Einsätze (typisch 80–90 %).<br>Basis für: Standortplanung, Fahrzeugausstattung, Personalstärke.'},
   {id:'h41',cat:'FeuAK · Bedarfsplanung',q:'Was umfasst die Personalbedarfsplanung im öffentlichen Dienst?',a:'<strong>Quantitativ:</strong> wie viele Stellen? (Aufgaben-, Zeitbedarfs-, Personalbestandsanalyse)<br><strong>Qualitativ:</strong> welche Qualifikationen werden benötigt?<br><strong>Zeitlich:</strong> kurzfristig (Urlaub/Krankheit), mittelfristig (Fluktuation), langfristig (Demografie).<br>Instrumente: Stellenplan, Nachfolgeplanung, Ausbildungsplanung, Beurteilungswesen.'},
 
+  /* ── FeuAK – Altklausur-Karten h42–h60 ── */
+  {id:'h42',cat:'FeuAK · BSC/QM',q:'Nennen Sie die 4 Perspektiven der Balanced Scorecard (BSC) und je ein FW-Beispiel.',a:'<strong>1. Finanzperspektive:</strong> Budgettreue, Kosten/Einsatz (Träger-Sicht).<br><strong>2. Kundenperspektive:</strong> Hilfsfristerfüllung, Bevölkerungszufriedenheit.<br><strong>3. Interne Prozessperspektive:</strong> Ausrückzeit, Fahrzeugverfügbarkeit, Ausbildungsstand.<br><strong>4. Lern-/Entwicklungsperspektive:</strong> Fortbildungsquote, Personalentwicklung, Innovation.<br>Alle 4 Perspektiven sind durch Ursache-Wirkungs-Ketten verknüpft.'},
+  {id:'h43',cat:'FeuAK · Haushalt',q:'Was ist vorläufige Haushaltsführung – was ist erlaubt, was verboten?',a:'Greift, wenn der Haushalt nicht rechtzeitig beschlossen wurde.<br><strong>Erlaubt:</strong> Erfüllung rechtlicher Verpflichtungen · Fortsetzung laufender Aufgaben · Ausgaben wie im Vorjahreshaushalt.<br><strong>Verboten:</strong> Neue freiwillige Leistungen · Neue Investitionen ohne Rechtspflicht · Neue Stellen im Stellenplan.'},
+  {id:'h44',cat:'FeuAK · Vergabe',q:'Welche EU-Schwellenwerte gelten für Kommunen und welche Fristen im offenen Verfahren?',a:'<strong>Lieferungen & Dienstleistungen (Kommunen):</strong> 221.000 €.<br><strong>Bauleistungen:</strong> 5.538.000 €.<br><strong>Fristen offenes Verfahren:</strong> Standard 52 Tage · bei elektronischer Einreichung 30 Tage · Dringlichtkeit 15 Tage.<br>Bekanntmachung: EU-Amtsblatt (TED). Kein Vorinformationsverfahren nötig.'},
+  {id:'h45',cat:'FeuAK · Vergabe',q:'Nennen Sie 5 Grundsätze des Vergaberechts.',a:'<strong>1. Wettbewerb:</strong> offener, fairer Wettbewerb.<br><strong>2. Transparenz:</strong> nachvollziehbares Verfahren, dokumentiert.<br><strong>3. Gleichbehandlung:</strong> alle Bieter gleich behandeln, keine Diskriminierung.<br><strong>4. Verhältnismäßigkeit:</strong> Anforderungen angemessen zum Auftragsgegenstand.<br><strong>5. Wirtschaftlichkeit:</strong> wirtschaftlichstes Angebot erhält Zuschlag (MEAT-Prinzip).'},
+  {id:'h46',cat:'FeuAK · VWL',q:'Erläutern Sie Minimal- und Maximalprinzip und ordnen Sie beide dem ökonomischen Prinzip zu.',a:'Beide sind Ausprägungen des <strong>ökonomischen Prinzips (Rationalprinzip)</strong>.<br><strong>Minimalprinzip (Sparprinzip):</strong> vorgegebenes Ziel mit geringstmöglichem Mitteleinsatz erreichen.<br>&nbsp; → FW-Beispiel: Löscherfolg mit minimalem Wassereinsatz.<br><strong>Maximalprinzip (Ertragsprinzip):</strong> mit gegebenem Mitteleinsatz das maximale Ergebnis erzielen.<br>&nbsp; → FW-Beispiel: Aus dem Jahresbudget die beste Einsatzfähigkeit erzielen.'},
+  {id:'h47',cat:'FeuAK · Rechnungswesen',q:'Was unterscheidet Doppik und Kameralistik?',a:'<strong>Kameralistik:</strong> reine Einnahmen-/Ausgabenrechnung · geldfluss-orientiert · keine Bilanz · kein Ressourcenverbrauchskonzept.<br><strong>Doppik:</strong> doppelte Buchführung mit Bilanz · Ergebnisrechnung + Finanzrechnung · erfasst Ressourcenverbrauch periodengerecht · Abschreibungen + Rückstellungen ausgewiesen.<br><strong>Vorteil Doppik:</strong> vollständige Vermögens- und Schuldentransparenz, bessere Steuerungsgrundlage.'},
+  {id:'h48',cat:'FeuAK · Rechnungswesen',q:'Warum sind Pensionsrückstellungen in der kommunalen Doppik-Bilanz besonders wichtig?',a:'In der kommunalen Doppik müssen Pensionsansprüche von Beamten als <strong>Rückstellung in der Bilanz</strong> ausgewiesen werden (Ressourcenverbrauchskonzept).<br>In der Kameralistik erscheinen sie erst beim tatsächlichen Zahlungsausfluss.<br>Bedeutung: Pensionslasten sind oft größte Passivposition → beeinflusst Eigenkapital und Schuldenquote stark · Transparenz für künftige Haushaltsbelastungen.'},
+  {id:'h49',cat:'FeuAK · Rechnungswesen',q:'Was unterscheidet Einzel- von Gemeinkosten? Wie werden Gemeinkosten verteilt?',a:'<strong>Einzelkosten:</strong> direkt einem Kostenträger zurechenbar, kein Schlüssel nötig.<br>&nbsp; → FW-Beispiel: Kraftstoff eines Fahrzeugs, Löschmittel eines Einsatzes.<br><strong>Gemeinkosten:</strong> für mehrere Kostenträger, müssen über Schlüssel verteilt werden.<br>&nbsp; → FW-Beispiel: Leitstellenkosten, Wachgebäude-Abschreibung, Verwaltungsoverhead.<br><strong>Schlüssel:</strong> Einsatzstunden, Fahrzeuganzahl, Fläche, Umsatzanteil → <strong>Zuschlagskalkulation</strong>.'},
+  {id:'h50',cat:'FeuAK · Rechnungswesen',q:'Was unterscheidet Controlling von Kontrolle?',a:'<strong>Kontrolle:</strong> vergangenheitsorientierter Soll-Ist-Vergleich nach Abschluss einer Handlung → reaktiv.<br><strong>Controlling:</strong> zukunftsorientierte Steuerung und Führungsunterstützung.<br>Regelkreis: Ziele setzen → Planen → Umsetzen → Kontrollieren → Gegensteuern.<br>Instrumente: Kostenrechnung, KPI-Dashboard, BSC, Budgetplanung, Abweichungsanalyse.<br>FW-Relevanz: Steuerung anhand Hilfsfristerfüllung, Kosten/Einsatz, Fortbildungsquote.'},
+  {id:'h51',cat:'FeuAK · VWL',q:'Was erfasst das BIP nicht – und welche Alternativen gibt es?',a:'Das BIP misst nicht: <strong>Einkommensverteilung</strong> · <strong>Ehrenamt & Hausarbeit</strong> · <strong>Schwarzarbeit</strong> · <strong>Umweltschäden/Ressourcenverbrauch</strong> · <strong>Lebensqualität & Wohlbefinden</strong> · <strong>Generationengerechtigkeit</strong>.<br>Ein hohes BIP-Wachstum kann mit wachsender Ungleichheit oder Umweltzerstörung einhergehen.<br><strong>Alternativen:</strong> HDI (Human Development Index) · Genuine Progress Indicator · OECD Better Life Index.'},
+  {id:'h52',cat:'FeuAK · Bedarfsplanung',q:'Welche wesentliche Änderung brachten die AGBF-Qualitätskriterien 2015 gegenüber 1998?',a:'Zentrale Änderung: <strong>Erreichungsgrad</strong><br>→ 1998: <strong>80 %</strong> aller Einsätze müssen Hilfsfrist + Funktionsstärke erfüllen.<br>→ 2015: <strong>90 %</strong> – erhöhtes Schutzniveau (TIBRO-Studie belegt Notwendigkeit).<br>Weitere Änderung 2015: Klarstellung des <strong>Additionsverfahrens</strong> – die 10 Einsatzfunktionen der 1. TE können auf mehrere Fahrzeuge unterschiedlicher Standorte aufgeteilt werden.'},
+  {id:'h53',cat:'FeuAK · Bedarfsplanung',q:'Aus welchen 4 Elementen setzt sich das Planungsziel der AGBF-Qualitätskriterien zusammen?',a:'<strong>1. Standardschadensereignis:</strong> Kritischer Wohnungsbrand im Obergeschoss (Referenzszenario).<br><strong>2. Hilfsfrist:</strong> 1,5 Min. Gesprächsführung + 8 Min. Ausrücke-/Anfahrtszeit = 9,5 Min. gesamt.<br><strong>3. Funktionsstärke:</strong> 1. TE: 10 Kräfte nach 8 Min. / 2. TE: weitere 6 Kräfte nach 13 Min. → gesamt 16 Kräfte.<br><strong>4. Erreichungsgrad:</strong> 90 % (AGBF 2015) – Anteil der Einsätze, bei dem Hilfsfrist UND Funktionsstärke eingehalten werden.'},
+  {id:'h54',cat:'FeuAK · VWL',q:'Was sind die 4 Marktformen und nach welchem Kriterium werden sie unterschieden?',a:'Kriterium: Anzahl der Anbieter und Nachfrager.<br><strong>Polypol:</strong> viele Anbieter, viele Nachfrager (z.B. Lebensmittelmarkt).<br><strong>Oligopol:</strong> wenige Anbieter, viele Nachfrager (z.B. HLF-Markt in Deutschland).<br><strong>Monopol:</strong> ein Anbieter, viele Nachfrager (z.B. DB Netz AG).<br><strong>Monopson:</strong> viele Anbieter, ein Nachfrager (z.B. staatliche Rüstungsbeschaffung).<br>Sonderfall: Duopol (2 Anbieter), Bilateral-Monopol.'},
+  {id:'h55',cat:'FeuAK · BSC/QM',q:'Was sind die 3 Säulen des Neuen Steuerungsmodells (NSM)?',a:'<strong>1. Dezentralisierung:</strong> Ressourcenverantwortung dorthin, wo Leistung erbracht wird (Fachbereich trägt eigene Kosten).<br><strong>2. Outputorientierung:</strong> Steuerung nicht nach Inputbudgets, sondern nach definierten Produkten und Leistungen mit Qualitätsstandards.<br><strong>3. Wettbewerb / Benchmarking:</strong> Leistungsvergleich intern und mit anderen Kommunen; Kontraktmanagement (Leistungsvereinbarungen).<br>Ziel: mehr Effizienz, Transparenz und Qualität im öffentlichen Sektor.'},
+  {id:'h56',cat:'FeuAK · Haushalt',q:'Was bedeutet das Fremdmittelprinzip im kommunalen Haushaltswesen?',a:'Das Fremdmittelprinzip (Subsidiaritätsprinzip der Finanzierung) besagt: Kommunen sollen Investitionen vorrangig aus <strong>Eigenmitteln</strong> finanzieren, bevor sie Kredite aufnehmen (Fremdmittel).<br>Reihenfolge: Zuschüsse → Eigenmittel → Rücklagen → Kreditaufnahme.<br>Zweck: Haushaltsdisziplin, Generationengerechtigkeit, Begrenzung der Verschuldung.<br>Vgl. auch den Grundsatz der <strong>Sparsamkeit und Wirtschaftlichkeit</strong> (§ 75 GO NRW).'},
+  {id:'h57',cat:'FeuAK · BWL',q:'Was unterscheidet Effektivität von Effizienz?',a:'<strong>Effektivität</strong> = die <em>richtigen</em> Dinge tun → Zielerreichung (Wirksamkeit).<br>Beispiel FW: Hilfsfristerfüllung 90 % erreicht → effektiv.<br><strong>Effizienz</strong> = die Dinge <em>richtig</em> tun → Wirtschaftlichkeit, Verhältnis Input/Output.<br>Beispiel FW: Einsatz mit geringstem Mitteleinsatz erfolgreich → effizient.<br>Merkhilfe: <strong>Do the right things (Effektivität)</strong> · <strong>Do things right (Effizienz)</strong>.<br>Ideale: effektiv UND effizient. Möglich: effektiv aber ineffizient (Ziel erreicht, aber zu teuer).'},
+  {id:'h58',cat:'FeuAK · Bedarfsplanung',q:'Welche zwei IST-Analysen werden in der Rettungsdienstbedarfsplanung eingesetzt?',a:'<strong>1. Frequenzanalyse:</strong> Auswertung der Einsatzhäufigkeit aus Leitstellendaten (3–5 Jahre). Differenzierung nach Tagesgang, Wochengang, Jahresgang und Einsatzart (RTW-Notfall vs. KTW-Transport). Ergebnis: KTW-Frequenzkurve → frequenzabhängige Vorhaltungsplanung.<br><strong>2. Versorgungszeitanalyse (Hilfsfristanalyse):</strong> Auswertung tatsächlicher Eintreffzeiten (Ist-Hilfsfristen) aus Einsatzdaten. SOLL-IST-Vergleich mit gesetzlichem Schutzziel. Identifikation von Versorgungslücken → Grundlage für Standortoptimierung.'},
+  {id:'h59',cat:'FeuAK · Bedarfsplanung',q:'Was zeigt das KTW-Frequenzkurven-Diagramm und wie wird es genutzt?',a:'<strong>X-Achse:</strong> Tageszeit (00:00–24:00 Uhr, stündlich). <strong>Y-Achse:</strong> Anzahl rechnerisch gleichzeitig benötigter KTW.<br><strong>Kurvenform:</strong> Nachttal (0–6 Uhr) → Morgenanstieg (6–9 Uhr) → Tagespeak (9–16 Uhr) → Abendabfall (16–20 Uhr).<br><strong>Formel:</strong> Einsatzhäufigkeit × Einsatzdauer / 60 = benötigte KTW-Anzahl pro Stunde.<br><strong>Nutzung:</strong> zeitabhängiger Dienstplan (Schichtbesetzung); KTW frequenzabhängig (planbare Transporte) vs. RTW risikoabhängig (Erlang-Formel).'},
+  {id:'h60',cat:'FeuAK · Rechnungswesen',q:'Warum ist Eigenkapital nicht gleich verfügbares Geld?',a:'Eigenkapital = <strong>bilanzielles Residuum</strong>: EK = Gesamtvermögen (Aktiva) − Schulden (Fremdkapital).<br>Das EK gibt an, was dem Träger/Eigentümer gehört – <strong>nicht wie viel Bargeld vorhanden ist</strong>.<br>Großer EK-Anteil kann in Sachanlagen gebunden sein (Gebäude, Fahrzeuge) → <strong>illiquid</strong>.<br>Liquidität = kurzfristig verfügbare Zahlungsmittel (Kasse, Bank, Forderungen).<br>Praxisbeispiel: Feuerwehr mit hohem Gebäudevermögen (EK hoch), aber leerer Kasse → zahlungsunfähig möglich.'},
+
   /* ── IdF Münster – Zusatzkarten ── */
   {id:'i18',cat:'IdF · Brandschutz',q:'Was bedeuten die Feuerwiderstandsklassen F30/60/90/120 und die Kennbuchstaben R, E, I?',a:'Zahl = Mindestdauer der Feuerwiderstandsfähigkeit in Minuten.<br><strong>R (Resistance):</strong> Tragfähigkeit/Standsicherheit.<br><strong>E (Integrity):</strong> Raumabschluss (kein Feuer-/Rauchdurchgang).<br><strong>I (Insulation):</strong> Wärmedämmung (keine Übertragung auf Kaltseite).<br>Beispiel: REI 90 = alle drei Eigenschaften für mind. 90 min.'},
   {id:'i19',cat:'IdF · Brandschutz',q:'Was sind die Anforderungen an 1. und 2. Rettungsweg?',a:'<strong>1. Rettungsweg:</strong> baulich gesicherter Weg (Treppenraum, notwendiger Flur) → führt ins Freie.<br><strong>2. Rettungsweg:</strong> über Rettungsgeräte der FW (Leiter), Außentreppe oder zweiten baulichen RW.<br><strong>Grundsatz:</strong> 2 voneinander unabhängige RW je Nutzungseinheit.<br>Max. Länge notwendiger Flur: 35 m.'},
@@ -1122,7 +1144,7 @@ const PROGRESS = (function(){
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung'],
-    feuak:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung'],
+    feuak:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-feuak-altklausur'],
     idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse'],
   };
   const LEAF_PARENT = {};
@@ -1188,6 +1210,7 @@ const SEARCH = (function(){
     'v-feuak-vergabe':'FeuAK · Vergabe','v-feuak-rechnungswesen':'FeuAK · Rechnungswesen',
     'v-feuak-pm':'FeuAK · Projektmanagement / Strategisches Management',
     'v-feuak-bedarfsplanung':'FeuAK · Bedarfsplanung','v-feuak-pruefung':'FeuAK · Prüfungsleistung Hamburg',
+    'v-feuak-altklausur':'FeuAK · Altklausur-Training',
     'v-idf-brandschutz':'IdF · Vorbeugender Brandschutz',
     'v-idf-stab':'IdF · Stabsarbeit',
     'v-idf-presse':'IdF · Presse- & Öffentlichkeitsarbeit',
@@ -2470,7 +2493,7 @@ const STATS = (function(){
     HLFS:['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     IBK:['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     VAk:['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht'],
-    FeuAK:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung'],
+    FeuAK:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-feuak-altklausur'],
     IdF:['v-idf-brandschutz','v-idf-stab','v-idf-presse']
   };
   function ov(){ return document.getElementById('stats-overlay'); }
@@ -3096,6 +3119,132 @@ const QUIZ=(function(){
       document.getElementById('quiz-exam-footer').classList.add('hidden');
       res.scrollIntoView({behavior:'smooth'});
     }
+  };
+})();
+
+/* ======================================================================
+   FEUAK_QUIZ – Altklausur-Training FeuAK Hamburg (22 Essay-Fragen)
+====================================================================== */
+const FEUAK_QUIZ=(function(){
+  const Q=[
+    {id:1,cat:'Haushalt',q:'Nennen Sie die wesentlichen Besonderheiten des kommunalen Haushaltswesens im Vergleich zur Privatwirtschaft.',
+     a:'<strong>Kein Gewinnziel:</strong> öffentlicher Auftrag der Daseinsvorsorge, nicht Gewinnmaximierung.<br><strong>Demokratische Legitimation:</strong> Haushalt als Satzung beschlossen (Gemeindeordnung).<br><strong>6 Haushaltsgrundsätze:</strong> Vollständigkeit · Einheit · Öffentlichkeit · Jährlichkeit · Sparsamkeit/Wirtschaftlichkeit · Vorherigkeit.<br><strong>Haushaltskreislauf:</strong> Aufstellung → Beratung → Beschluss → Vollzug → Jahresabschluss → Prüfung.<br><strong>Doppik-Struktur:</strong> Ergebnishaushalt (Ressourcenverbrauch, inkl. Abschreibungen + Pensionsrückstellungen) + Finanzhaushalt (Zahlungsströme).<br><strong>Haushaltssicherungskonzept</strong> bei strukturellem Defizit (z.B. § 76 GO NRW).'},
+    {id:2,cat:'Haushalt',q:'Was ist vorläufige Haushaltsführung und welche Ausgaben sind während dieser Phase zulässig bzw. unzulässig?',
+     a:'Greift, wenn der Haushaltsplan nicht vor Beginn des neuen Haushaltsjahres rechtswirksam beschlossen wurde.<br><strong>Zulässig:</strong> Erfüllung rechtlicher Verpflichtungen (z.B. Gehälter, laufende Verträge) · Fortsetzung laufender Aufgaben zur Betriebsaufrechterhaltung · Ausgaben in Höhe des Vorjahresplans.<br><strong>Nicht zulässig:</strong> Neue freiwillige Leistungen · Neue Investitionen ohne Rechtspflicht · Beschluss neuer Stellen im Stellenplan · Kreditaufnahme für neue Maßnahmen.<br>Rechtsgrundlage: § 82 GO NRW (Vorläufige Haushaltsführung).'},
+    {id:3,cat:'BSC / QM',q:'Nennen Sie die 4 Perspektiven der Balanced Scorecard (BSC) und erläutern Sie diese für die Feuerwehr.',
+     a:'<strong>1. Finanzperspektive:</strong> Blick des Trägers/Haushalts. FW: Budgettreue, Kosten je Einsatz, Investitionsquote.<br><strong>2. Kundenperspektive:</strong> Blick der Bevölkerung/Politik. FW: Hilfsfristerfüllungsquote, Kundenzufriedenheit, Sicherheitsgefühl.<br><strong>3. Interne Prozessperspektive:</strong> Kernprozesse. FW: Ausrückzeit, Fahrzeugverfügbarkeit, Einsatzqualität, Ausbildungsstand.<br><strong>4. Lern- und Entwicklungsperspektive:</strong> Zukunftsfähigkeit. FW: Fortbildungsquote, Personalentwicklung, Digitalisierung.<br>Die 4 Perspektiven sind durch <strong>Ursache-Wirkungs-Ketten</strong> verknüpft; strategische Ziele werden als <strong>KPI mit Zielwerten</strong> definiert.'},
+    {id:4,cat:'BSC / QM',q:'Nennen Sie 5 Grundsätze/Prinzipien des Qualitätsmanagements (QM) nach ISO 9001.',
+     a:'Nach ISO 9001:2015 gibt es 7 QM-Grundsätze; die 5 prüfungsrelevanten sind:<br><strong>1. Kundenorientierung:</strong> Bedürfnisse der Bevölkerung/Kunden erkennen und übertreffen.<br><strong>2. Führung:</strong> Führungskräfte schaffen gemeinsame Ziele, Ausrichtung und Engagement.<br><strong>3. Einbeziehung der Mitarbeiter:</strong> Mitarbeiter auf allen Ebenen befähigen und einbinden.<br><strong>4. Prozessorientierung:</strong> Aktivitäten als zusammenhängende Prozesse verstehen und steuern.<br><strong>5. Kontinuierliche Verbesserung (KVP):</strong> Ständige Verbesserung als dauerhaftes Organisationsziel.'},
+    {id:5,cat:'BSC / QM',q:'Was sind Produkte, Kunden und Qualitätsmerkmale der Feuerwehr im Sinne des QM?',
+     a:'<strong>Produkte der FW:</strong> Abwehrender Brandschutz (Einsatz) · Vorbeugender Brandschutz (Beratung, Genehmigung) · Technische Hilfeleistung · Rettungsdienst · Aus- und Fortbildung.<br><strong>Kunden:</strong> Bevölkerung (direkte Hilfeempfänger) · Betriebe und Institutionen · Kommunalpolitik (intern) · andere Behörden · Versicherungen.<br><strong>Qualitätsmerkmale:</strong> Hilfsfristerfüllungsquote (90 % AGBF) · Funktionsstärke (10/16 Kräfte) · Fachgerechtigkeit des Einsatzes · Schadensminimierung · Kundenzufriedenheit.'},
+    {id:6,cat:'BSC / QM',q:'Welche Kennzahlen eignen sich für die Steuerung einer Berufsfeuerwehr mittels BSC?',
+     a:'<strong>Finanzen:</strong> Kosten/Einsatz · Kostendeckungsgrad · Investitionsquote.<br><strong>Kunden:</strong> Hilfsfristerfüllungsquote (%) · Beschwerden · Zufriedenheitsbefragung.<br><strong>Prozesse:</strong> Ausrückzeit (Sek.) · Eintreffzeit (Min.) · Fahrzeugverfügbarkeit (%) · Einsatzdauer · Alarmierungsquote.<br><strong>Lernen/Entwicklung:</strong> Fortbildungsstunden/Mitarbeiter · AS-Geräteträgerquote (%) · Krankheitsquote (%) · Personalfluktuation · Beförderungsquote.'},
+    {id:7,cat:'BSC / QM',q:'Was umfasst die strategische Personalplanung und welche Instrumente stehen zur Verfügung?',
+     a:'Langfristige (5–10 Jahre) quantitative und qualitative Sicherung des Personalbedarfs.<br><strong>Bestandsanalyse:</strong> Altersstrukturanalyse · Qualifikationsmatrix · Laufbahnentwicklung.<br><strong>Bedarfsanalyse:</strong> künftiger Bedarf nach Schutzziel, Risikoentwicklung, gesetzliche Mindestbesetzung.<br><strong>Lückenanalyse:</strong> Differenz Ist vs. Soll → Handlungsbedarf identifizieren.<br><strong>Maßnahmen:</strong> Einstellungsplanung · Ausbildung · Beförderung · Versetzung · Ruhestandsplanung.<br><strong>Instrumente:</strong> Stellenplan · Personalentwicklungskonzept · Nachfolgeplanung · Mentoring · Potenzialbeurteilung.'},
+    {id:8,cat:'Vergabe',q:'Nennen Sie die 5 Grundsätze des Vergaberechts und erläutern Sie diese kurz.',
+     a:'<strong>1. Wettbewerb:</strong> Offener, fairer Wettbewerb unter allen geeigneten Bietern.<br><strong>2. Transparenz:</strong> Das Verfahren ist nachvollziehbar, offen und vollständig dokumentiert.<br><strong>3. Gleichbehandlung:</strong> Alle Bieter werden gleich behandelt – keine Diskriminierung.<br><strong>4. Verhältnismäßigkeit:</strong> Anforderungen sind angemessen zum Auftragsgegenstand und -wert.<br><strong>5. Wirtschaftlichkeit:</strong> Den Zuschlag erhält das wirtschaftlichste Angebot (MEAT – Most Economically Advantageous Tender), nicht zwingend das billigste.'},
+    {id:9,cat:'Vergabe',q:'Ab welchen EU-Schwellenwerten gilt das europäische Vergaberecht für Kommunen und welche Angebotsfristen gelten beim offenen Verfahren?',
+     a:'<strong>EU-Schwellenwerte 2024/2025 (Kommunen):</strong><br>· Liefer- und Dienstleistungsaufträge: <strong>221.000 €</strong><br>· Bauaufträge: <strong>5.538.000 €</strong><br><br><strong>Fristen – Offenes Verfahren:</strong><br>· Standard: <strong>52 Tage</strong> Angebotsfrist ab EU-Bekanntmachung.<br>· Bei elektronischer Einreichung (eSub): mind. <strong>30 Tage</strong>.<br>· Dringlich und begründet: mind. <strong>15 Tage</strong>.<br>Bekanntmachung: verpflichtend im <strong>EU-Amtsblatt (TED – Tenders Electronic Daily)</strong>.'},
+    {id:10,cat:'Bedarfsplanung',q:'Aus welchen 4 Elementen besteht das Schutzziel (Planungsziel) nach den AGBF-Qualitätskriterien?',
+     a:'<strong>1. Standardschadensereignis:</strong> Kritischer Wohnungsbrand im Obergeschoss eines mehrgeschossigen Wohngebäudes (Referenzszenario für die Planung).<br><strong>2. Hilfsfrist:</strong> 1,5 Min. Gesprächsführungszeit + 8 Min. Ausrücke- und Anfahrtszeit = 9,5 Minuten gesamt ab Notrufeingang.<br><strong>3. Funktionsstärke:</strong> 1. Taktische Einheit: 10 Einsatzkräfte nach 8 Min. / 2. TE: weitere 6 Kräfte nach 13 Min. → gesamt <strong>16 Einsatzkräfte</strong>.<br><strong>4. Erreichungsgrad:</strong> <strong>90 %</strong> aller Einsätze müssen Hilfsfrist UND Funktionsstärke gleichzeitig erfüllen (AGBF 2015).'},
+    {id:11,cat:'Bedarfsplanung',q:'Welche strategischen Beschaffungsalternativen (Make-or-Buy) gibt es beim Erwerb eines HLF 20 und welche Bewertungskriterien sind relevant?',
+     a:'<strong>Alternativen:</strong><br>1. <strong>Kauf (Eigentumserwerb):</strong> hohe Anschaffungskosten, volle Verfügbarkeit, lange Nutzungsdauer (15–25 J.).<br>2. <strong>Leasing:</strong> niedrige Kapitalbelastung, Ratenzahlung, am Ende Rückgabe oder Kauf.<br>3. <strong>Interkommunale Zusammenarbeit:</strong> gemeinsame Beschaffung/Nutzung mit Nachbarkommunen → Skaleneffekte.<br>4. <strong>Nutzungsgemeinschaft/Poolmodell:</strong> gemeinsame Vorhaltung, Kostenaufteilung nach Nutzung.<br><strong>Bewertungskriterien:</strong> Anschaffungskosten · Betriebskosten · Lebenszykluskosten (LCC) · Verfügbarkeit · Normkonformität (DIN EN 1846) · strategische Abhängigkeit · Refinanzierungszeitraum.'},
+    {id:12,cat:'Bedarfsplanung',q:'Welche zwei IST-Analysen werden in der Rettungsdienstbedarfsplanung eingesetzt und was liefern sie jeweils?',
+     a:'<strong>1. Frequenzanalyse (Einsatzhäufigkeitsanalyse):</strong> Auswertung der Einsatzhäufigkeit aus Leitstellendaten der letzten 3–5 Jahre. Differenzierung nach Tages-, Wochen- und Jahresgang sowie nach Einsatzart (RTW-Notfall vs. KTW-Transport). <em>Ergebnis:</em> KTW-Frequenzkurve → frequenzabhängige Vorhaltungsplanung.<br><br><strong>2. Versorgungszeitanalyse (Hilfsfristanalyse):</strong> Auswertung der tatsächlichen Eintreffzeiten (Ist-Hilfsfristen) aus Einsatzdaten. SOLL-IST-Vergleich mit dem gesetzlichen Schutzziel (z.B. 95 % innerhalb 10 Min.). <em>Ergebnis:</em> Identifikation von Versorgungslücken → Grundlage für Standortoptimierung und Fahrzeugvorhaltungsplanung.'},
+    {id:13,cat:'Bedarfsplanung',q:'Welcher wesentliche Unterschied besteht zwischen den AGBF-Qualitätskriterien von 1998 und der Fortschreibung von 2015?',
+     a:'<strong>Zentraler Unterschied: Erreichungsgrad</strong><br>→ AGBF <strong>1998:</strong> Erreichungsgrad <strong>80 %</strong> – bei 4 von 5 Einsätzen müssen Hilfsfrist und Funktionsstärke erfüllt werden.<br>→ AGBF <strong>2015:</strong> Erreichungsgrad <strong>90 %</strong> – erhöhtes Schutzniveau, begründet durch TIBRO-Studie (vfdb).<br><br><strong>Weitere Neuerung 2015:</strong> Klarstellung des <strong>Additionsverfahrens</strong> – die 10 Einsatzfunktionen der 1. TE können auf mehrere Fahrzeuge verschiedener Standorte aufgeteilt werden (keine Einzelfahrzeugpflicht).<br><br><strong>Unverändert geblieben:</strong> Standardschadensereignis · Hilfsfrist 9,5 Min. · Funktionsstärke 10/16 Kräfte · CO-Summenkurve als medizinische Grundlage.'},
+    {id:14,cat:'Bedarfsplanung',q:'Was zeigt das KTW-Frequenzkurven-Diagramm und wie wird es in der Rettungsdienstbedarfsplanung eingesetzt?',
+     a:'Das Diagramm visualisiert die <strong>zeitliche Nachfrageentwicklung</strong> nach Krankentransport:<br><strong>X-Achse:</strong> Tageszeit (00:00–24:00 Uhr, stündlich) · <strong>Y-Achse:</strong> Anzahl gleichzeitig benötigter KTW.<br><strong>Typischer Tagesgang:</strong> Nachttal (0–6 Uhr) → Morgenanstieg (6–9 Uhr) → Tagespeak/Plateau (9–16 Uhr) → Abendabfall (16–20 Uhr).<br><strong>Formel:</strong> Einsatzhäufigkeit (Anz./h) × mittlere Einsatzdauer (Min.) / 60 = benötigte KTW-Zahl.<br><strong>Einsatz:</strong> Ableitung eines zeitabhängigen Dienstplans (schichtgenaue Vorhaltung) → wann wie viele KTW-Besatzungen benötigt werden.<br><strong>Abgrenzung:</strong> KTW = frequenzabhängig (planbare Transporte); RTW = risikoabhängig (stochastische Notfälle, Erlang-Formel).'},
+    {id:15,cat:'VWL',q:'Städtische Haushaltsmittel werden durch den Gesetzgeber gekürzt. Analysieren Sie die Auswirkungen auf den HLF-20-Markt.',
+     a:'<strong>Direkte Wirkung (Nachfrageseite):</strong> Kommunale Beschaffungsbudgets sinken → Nachfrage nach HLF 20 sinkt → Nachfragekurve verschiebt sich nach <strong>links</strong>.<br><strong>Neues Gleichgewicht:</strong> Gleichgewichtspreis sinkt, Gleichgewichtsmenge sinkt (c.p.).<br><strong>Angebotsseite:</strong> Hersteller reduzieren Produktion; schwächere Anbieter könnten den Markt verlassen → mittelfristig Marktkonzentration (Oligopolisierung).<br><strong>Sekundäreffekte:</strong> Beschäftigungsrückgang in der Fahrzeugbranche · geringere Steuereinnahmen · Preisdruck kann Qualität beeinflussen.<br><strong>Besonderheit FW-Markt:</strong> Nachfrage relativ <strong>preisinelastisch</strong> (Pflichtaufgabe), aber volumenmäßig durch Budgetdeckelung begrenzt.'},
+    {id:16,cat:'VWL',q:'Ein chinesischer Hersteller bietet HLF 20 deutlich günstiger auf dem deutschen Markt an. Analysieren Sie die Markteffekte.',
+     a:'<strong>Angebotsseite:</strong> Neuer Anbieter → Gesamtangebotskurve verschiebt sich nach <strong>rechts</strong>.<br><strong>Neues Gleichgewicht:</strong> Gleichgewichtspreis sinkt, Gleichgewichtsmenge steigt → Kommunen profitieren (niedrigere Beschaffungskosten).<br><strong>Heimische Hersteller:</strong> Wettbewerbsdruck steigt → Margendruck, ggf. Produktionsverlagerungen oder Marktaustritt schwacher Anbieter.<br><strong>Qualitätsfrage:</strong> Normenkonformität nach DIN EN 1846, CE-Zulassung, Sicherheitsstandards – europäische Ausschreibungen können Normerfüllung vorschreiben.<br><strong>Strategische Abhängigkeit:</strong> Risiko bei Konzentration auf einen ausländischen Lieferanten (Versorgungssicherheit, Lieferzeiten).<br><strong>Politische Reaktion:</strong> EU-Antidumping-Maßnahmen möglich; Lieferzeit und Wartungsservice als Zuschlagskriterien in Ausschreibungen.'},
+    {id:17,cat:'VWL',q:'Welche Kritikpunkte gibt es am Bruttoinlandsprodukt (BIP) als Wohlstandsmaß?',
+     a:'Das BIP misst den monetären Wert aller in einer Periode produzierten Güter/Dienstleistungen. <strong>Kritikpunkte:</strong><br><strong>1. Verteilung:</strong> Hohes BIP kann mit großer Einkommensungleichheit einhergehen.<br><strong>2. Ehrenamt und Hausarbeit:</strong> Unbezahlte Tätigkeiten (FW-Ehrenamt, Pflege, Kindererziehung) fließen nicht ein.<br><strong>3. Schwarzarbeit:</strong> Informelle Wirtschaft nicht erfasst.<br><strong>4. Umweltschäden:</strong> Ressourcenverbrauch und Umweltbelastung erhöhen das BIP (Reparatur nach Katastrophen).<br><strong>5. Nachhaltigkeit:</strong> Kein Indikator für Generationengerechtigkeit.<br><strong>6. Lebensqualität:</strong> Gesundheit, Bildung, Sicherheitsgefühl nicht abgebildet.<br><strong>Alternativen:</strong> HDI (Human Development Index) · Genuine Progress Indicator · OECD Better Life Index.'},
+    {id:18,cat:'VWL',q:'Erläutern Sie Minimal- und Maximalprinzip und ordnen Sie beide dem ökonomischen Prinzip zu.',
+     a:'Beide sind Ausprägungen des <strong>ökonomischen Prinzips (Rationalprinzip)</strong>:<br><br><strong>Minimalprinzip (Sparprinzip):</strong> Ein vorgegebenes Ziel wird mit dem <em>geringstmöglichen Mitteleinsatz</em> erreicht.<br>Beispiel FW: Löscherfolg mit minimalem Wassereinsatz; kürzeste Eintreffzeit mit geringstem Treibstoffverbrauch.<br><br><strong>Maximalprinzip (Ertragsprinzip):</strong> Mit einem <em>gegebenen Mitteleinsatz</em> wird das <em>maximale Ergebnis</em> erzielt.<br>Beispiel FW: Aus dem Jahresbudget die bestmögliche Einsatzfähigkeit (Fahrzeuge, Personal, Ausbildung) erzielen.<br><br>Im öffentlichen Bereich (FW) dominiert das <strong>Minimalprinzip</strong> (Daseinsvorsorge zum geringstmöglichen Aufwand), kombiniert mit dem Maximalprinzip im Qualitätsbereich.'},
+    {id:19,cat:'Rechnungswesen',q:'Skizzieren Sie den Aufbau einer Bilanz nach HGB. Welche Unterschiede bestehen zur Doppik und zur Kameralistik?',
+     a:'<strong>Bilanz nach HGB:</strong><br>Aktiva (Mittelverwendung): Anlagevermögen (Sachanlagen, immaterielle VG, Finanzanlagen) + Umlaufvermögen (Vorräte, Forderungen, Kassenbestand) = Gesamtvermögen.<br>Passiva (Mittelherkunft): Eigenkapital + Rückstellungen + Verbindlichkeiten = Gesamtkapital. Aktiva = Passiva (Bilanzgleichheit).<br><br><strong>Kommunale Doppik:</strong> Ähnlicher Aufbau; Besonderheiten: <em>Pflichtmäßige Pensionsrückstellungen</em>, öffentliches Eigenkapital; Ergebnisrechnung (Ressourcenverbrauch, inkl. Abschreibungen) + Finanzrechnung (Zahlungsströme).<br><br><strong>Kameralistik:</strong> <em>Keine Bilanz</em>, nur Einnahmen-/Ausgabenrechnung (geldfluss-orientiert, nicht periodengerecht); keine Abschreibungen, keine Rückstellungen → begrenzte Transparenz über Vermögen und Schulden.'},
+    {id:20,cat:'Rechnungswesen',q:'Ein Kollege sagt: „Unser Eigenkapital ist gestiegen – wir haben jetzt mehr Geld." Kommentieren Sie diese Aussage fachlich.',
+     a:'Die Aussage ist <strong>falsch</strong>.<br><strong>Eigenkapital</strong> ist eine <em>bilanzielle Restgröße</em>: EK = Gesamtvermögen (Aktiva) − Schulden (Fremdkapital).<br>EK gibt an, welcher Anteil des Vermögens den Eigentümern/dem Träger gehört – <strong>nicht wie viel Bargeld vorhanden ist</strong>.<br>Ein gestiegenes EK kann durch Wertzunahme von Sachanlagen (Gebäude, Fahrzeuge) entstehen, ohne dass ein Euro mehr auf dem Konto liegt.<br><strong>Liquidität</strong> = kurzfristig verfügbare Zahlungsmittel (Kasse, Bankguthaben, kurzfristige Forderungen) – unabhängig vom EK.<br>Praxisbeispiel: Eine FW mit hohem Gebäudevermögen (EK hoch) kann zahlungsunfähig sein, wenn das Geld fehlt, um laufende Rechnungen zu bezahlen.'},
+    {id:21,cat:'Rechnungswesen',q:'Erklären Sie den Unterschied zwischen Einzel- und Gemeinkosten und beschreiben Sie, wie Gemeinkosten verteilt werden.',
+     a:'<strong>Einzelkosten:</strong> können eindeutig einem Kostenträger zugeordnet werden – kein Verteilungsschlüssel nötig.<br>Beispiele FW: Kraftstoff eines konkreten Fahrzeugs · Löschmittel für einen Einsatz · Materialeinsatz direkt je Einsatz.<br><br><strong>Gemeinkosten:</strong> entstehen für mehrere Kostenträger und müssen über einen Schlüssel verteilt werden (indirekte Zurechnung).<br>Beispiele FW: Leitstellenkosten · Wachgebäude-Abschreibung · Verwaltungsoverhead · Führungspersonalkosten.<br><br><strong>Verteilungsschlüssel:</strong> Einsatzstunden · Fahrzeuganzahl · Fläche · Umsatzanteil.<br><strong>Methode: Zuschlagskalkulation:</strong> Einzelkosten + Gemeinkostenzuschlag (%) = Gesamtkosten je Kostenträger (z.B. je Einsatztyp Brand/TH/RD).'},
+    {id:22,cat:'Rechnungswesen',q:'Was unterscheidet Controlling von Kontrolle? Erläutern Sie die Bedeutung des Controllings für die Feuerwehr.',
+     a:'<strong>Kontrolle:</strong> <em>Vergangenheitsorientierter</em> Soll-Ist-Vergleich nach Abschluss einer Handlung → reaktiv, punktuell.<br><br><strong>Controlling:</strong> <em>Zukunftsorientierte</em> Führungsunterstützung durch Planung, Steuerung, Kontrolle und Informationsversorgung im Regelkreis:<br>Ziele setzen → Planen → Umsetzen → Kontrollieren → Gegensteuern.<br><br><strong>Instrumente:</strong> Kostenrechnung · KPI-Dashboard · Balanced Scorecard · Budgetplanung · Abweichungsanalyse.<br><br><strong>FW-Relevanz:</strong> Steuerung anhand von Kennzahlen wie Hilfsfristerfüllungsquote, Kosten je Einsatz, Fortbildungsquote und Fahrzeugverfügbarkeit – um Schutzziele bei minimalem Ressourceneinsatz dauerhaft zu erfüllen.'},
+  ];
+
+  const CAT_ORDER=['Alle','Haushalt','BSC / QM','Vergabe','Bedarfsplanung','VWL','Rechnungswesen'];
+  let _cur=0, _cat='Alle', _filtered=[], _shown=false, _inited=false;
+
+  function getFiltered(){
+    return _cat==='Alle'?Q:Q.filter(q=>q.cat===_cat);
+  }
+
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+  function renderCatBar(){
+    const bar=document.getElementById('fq-cat-bar');if(!bar)return;
+    bar.innerHTML=CAT_ORDER.map(c=>'<button class="fq-cat-btn'+(c===_cat?' active':'')+'" onclick="FEUAK_QUIZ.setCat(\''+c+'\')">'+(c==='Alle'?'Alle (22)':c+'&nbsp;<span class="fq-cat-count">'+Q.filter(q=>q.cat===c).length+'</span>')+'</button>').join('');
+  }
+
+  function render(){
+    _filtered=getFiltered();
+    if(!_filtered.length)return;
+    if(_cur>=_filtered.length)_cur=0;
+    const q=_filtered[_cur];
+    _shown=false;
+
+    const badge=document.getElementById('fq-badge');
+    if(badge)badge.textContent=q.cat;
+
+    const pos=document.getElementById('fq-pos');
+    if(pos)pos.textContent=(_cur+1)+' / '+_filtered.length;
+
+    const qEl=document.getElementById('fq-q');
+    if(qEl)qEl.textContent=q.q;
+
+    const aEl=document.getElementById('fq-a');
+    if(aEl){aEl.innerHTML=q.a;aEl.classList.add('hidden');}
+
+    const btnShow=document.getElementById('fq-btn-show');
+    const btnHide=document.getElementById('fq-btn-hide');
+    if(btnShow)btnShow.classList.remove('hidden');
+    if(btnHide)btnHide.classList.add('hidden');
+
+    const prev=document.getElementById('fq-btn-prev');
+    const next=document.getElementById('fq-btn-next');
+    if(prev)prev.disabled=(_cur===0);
+    if(next)next.disabled=(_cur===_filtered.length-1);
+  }
+
+  return {
+    init(){
+      if(!_inited){_inited=true;}
+      renderCatBar();
+      _filtered=getFiltered();
+      _cur=0;
+      render();
+    },
+    setCat(c){
+      _cat=c;
+      _cur=0;
+      renderCatBar();
+      render();
+    },
+    showAnswer(){
+      _shown=true;
+      const aEl=document.getElementById('fq-a');if(aEl)aEl.classList.remove('hidden');
+      const btnShow=document.getElementById('fq-btn-show');if(btnShow)btnShow.classList.add('hidden');
+      const btnHide=document.getElementById('fq-btn-hide');if(btnHide)btnHide.classList.remove('hidden');
+    },
+    hideAnswer(){
+      _shown=false;
+      const aEl=document.getElementById('fq-a');if(aEl)aEl.classList.add('hidden');
+      const btnShow=document.getElementById('fq-btn-show');if(btnShow)btnShow.classList.remove('hidden');
+      const btnHide=document.getElementById('fq-btn-hide');if(btnHide)btnHide.classList.add('hidden');
+    },
+    prev(){if(_cur>0){_cur--;render();}},
+    next(){if(_cur<_filtered.length-1){_cur++;render();}}
   };
 })();
 
