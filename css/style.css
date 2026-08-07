@@ -1134,36 +1134,3 @@ body.offline .offline-banner{display:flex;}
   .phi{max-width:1140px;padding:0 3rem;}
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   FEUAK_QUIZ – Altklausur-Training FeuAK
-───────────────────────────────────────────────────────────────── */
-.fq-wrap{display:flex;flex-direction:column;gap:1.2rem;max-width:860px;margin:0 auto;}
-.fq-cat-bar{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.5rem;}
-.fq-cat-btn{font-size:.78rem;font-family:var(--f-m);background:rgba(255,255,255,.05);border:1px solid var(--glass-b);color:var(--c-slate-l);border-radius:999px;padding:.3rem .85rem;cursor:pointer;transition:background .15s,color .15s,border-color .15s;}
-.fq-cat-btn:hover{background:rgba(255,255,255,.1);color:var(--c-text);}
-.fq-cat-btn.active{background:rgba(201,168,76,.15);border-color:rgba(201,168,76,.5);color:var(--c-gold);}
-.fq-cat-count{font-size:.72rem;opacity:.75;}
-.fq-card{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-lg);overflow:hidden;}
-.fq-head{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.1rem;border-bottom:1px solid var(--glass-b);}
-.fq-badge{font-size:.72rem;font-family:var(--f-m);font-weight:600;background:rgba(201,168,76,.12);color:var(--c-gold);border:1px solid rgba(201,168,76,.3);border-radius:999px;padding:.2rem .6rem;}
-.fq-pos{font-size:.72rem;color:var(--c-sub);font-family:var(--f-m);}
-.fq-body{padding:1.35rem 1.5rem;}
-.fq-q{font-size:1.05rem;line-height:1.6;color:var(--c-text);font-weight:500;margin-bottom:1.1rem;}
-.fq-sep{border:none;border-top:1px solid var(--glass-b);margin:.35rem 0 1rem;}
-.fq-a{font-size:.92rem;line-height:1.7;color:var(--c-slate-l);}
-.fq-a strong{color:var(--c-text);}
-.fq-a.hidden{display:none;}
-.fq-mbtns{display:flex;gap:.65rem;flex-wrap:wrap;padding:0 1.5rem 1.35rem;}
-.fq-btn-show{display:flex;align-items:center;gap:.4rem;font-size:.82rem;font-family:var(--f-m);background:rgba(58,127,212,.15);border:1px solid rgba(58,127,212,.4);color:#5fa8e8;border-radius:var(--r);padding:.5rem 1.1rem;cursor:pointer;transition:background .15s,color .15s;}
-.fq-btn-show:hover{background:rgba(58,127,212,.28);color:#7fbff5;}
-.fq-btn-hide{display:flex;align-items:center;gap:.4rem;font-size:.82rem;font-family:var(--f-m);background:rgba(255,255,255,.05);border:1px solid var(--glass-b);color:var(--c-slate);border-radius:var(--r);padding:.5rem 1.1rem;cursor:pointer;transition:background .15s,color .15s;}
-.fq-btn-hide:hover{background:rgba(255,255,255,.1);color:var(--c-text);}
-.fq-btn-show.hidden,.fq-btn-hide.hidden{display:none;}
-.fq-nav{display:flex;align-items:center;justify-content:center;gap:.75rem;}
-.fq-nb{font-size:.9rem;font-family:var(--f-m);background:rgba(255,255,255,.05);border:1px solid var(--glass-b);color:var(--c-text);border-radius:var(--r);padding:.55rem 1.4rem;cursor:pointer;transition:background .15s,color .15s;}
-.fq-nb:hover:not(:disabled){background:rgba(255,255,255,.1);}
-.fq-nb:disabled{opacity:.35;cursor:default;}
-.fq-src{font-size:.72rem;color:var(--c-sub);text-align:center;margin-top:.25rem;}
-.fq-input-wrap{display:flex;flex-direction:column;gap:.45rem;margin:.25rem 0 .85rem;}
-.fq-input-label{font-size:.76rem;font-weight:600;color:var(--c-slate-l);letter-spacing:.03em;}
-/* fq-textarea uses .fb-textarea from VAk Übungsfälle */
