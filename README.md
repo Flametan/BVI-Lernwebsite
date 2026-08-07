@@ -16,17 +16,17 @@
 | 🏫 HLFS Kassel | 7 | 16 |
 | 🧠 IBK Heyrothsberge | 7 | 46 |
 | ⚖️ VAk Berlin | 6 | 33 |
-| 📊 FeuAK Hamburg | 8 | 41 |
+| 📊 FeuAK Hamburg | 9 | 60 |
 | 🏛️ IdF Münster | 3 | 28 |
-| **Gesamt** | **68** | **284** |
+| **Gesamt** | **69** | **303** |
 
 ---
 
 ## Features
 
-- **284 Lernkarten** – 3D-Flip-Animation, Know/Don't-Know-Bewertung, LocalStorage-Persistenz
+- **303 Lernkarten** – 3D-Flip-Animation, Know/Don't-Know-Bewertung, LocalStorage-Persistenz
 - **Fallbearbeitung** – 6 juristische Übungsfälle mit 9-Punkte-Schema (Realakt/VA-Differenzierung)
-- **Altklausur-Training** – VAk Berlin Prüfungsvorbereitung
+- **Altklausur-Training** – VAk Berlin + FeuAK Hamburg Prüfungsvorbereitung
 - **Führungsdienstsimulator** – 4 verzweigte Entscheidungsszenarien mit Scoring
 - **Abkürzungsverzeichnis** – Feuerwehr-Fachbegriffe A–Z
 - **Volltextsuche** – `Ctrl+K` / `Cmd+K`, Live-Trefferhervorhebung
@@ -111,15 +111,15 @@ Wichtige CSS-Klassen: `.info-card`, `.def-box`, `.hint`, `.step-stack`, `.acc-li
 
 ## Version
 
-Aktuelle Version: **2.18.7**  
+Aktuelle Version: **2.18.8**  
 `js/version.js` und `sw.js` müssen immer synchron gehalten werden.
 
 ```javascript
 // js/version.js
-const APP_VERSION = '2.18.7';
+const APP_VERSION = '2.18.8';
 
 // sw.js (erste Zeile)
-const APP_VERSION = '2.18.7'; // keep in sync with js/version.js
+const APP_VERSION = '2.18.8'; // keep in sync with js/version.js
 ```
 
 ---
