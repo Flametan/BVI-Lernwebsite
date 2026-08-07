@@ -3206,9 +3206,6 @@ const FEUAK_QUIZ=(function(){
     const aEl=document.getElementById('fq-a');
     if(aEl){aEl.innerHTML=q.a;aEl.classList.add('hidden');}
 
-    const ta=document.getElementById('fq-textarea');
-    if(ta)ta.value='';
-
     const btnShow=document.getElementById('fq-btn-show');
     const btnHide=document.getElementById('fq-btn-hide');
     if(btnShow)btnShow.classList.remove('hidden');
@@ -3292,6 +3289,11 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.18.10',ts:'2026-08-07T13:00',items:[
+      'FeuAK Altklausur: Design des Textfeldes identisch mit den VAk-Übungsfällen',
+      'FeuAK Altklausur: Textfeld bleibt beim Vor-/Zurück-Blättern erhalten (kein automatisches Löschen)',
+      'FeuAK Übersicht: „Altklausur-Training" steht jetzt an erster Stelle'
+    ]},
     {v:'2.18.9',ts:'2026-08-07T12:00',items:[
       'FeuAK Altklausur-Training: Freitext-Eingabefeld – eigene Antwort formulieren, bevor die Musterlösung aufgedeckt wird'
     ]},
