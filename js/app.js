@@ -3404,7 +3404,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'2.18.16',ts:'2026-08-10T14:00',items:[
-      'VWL-Tab umbenannt in „VWL – Vollständig": enthält jetzt Modul 3.3 (aktuelle Vorlesung) + klausurrelevante Grundlagen',
+      'VWL-Tab: Titel bleibt „VWL"; Eyebrow auf „FeuAK Hamburg · Volkswirtschaftslehre" aktualisiert',
       'Neue Section 08: Marktformen &amp; Preis-Mengen-Diagramm (Polypol/Oligopol/Monopol, Kurvenverschiebungen, Altklausur F15/F16) – als „nicht in Modul 3.3" gekennzeichnet',
       'Neue Section 09: Bruttoinlandsprodukt (BIP) mit Definition, 3 Berechnungsseiten, 6 Kritikpunkten, Alternativen (Altklausur F17) – als „nicht in Modul 3.3" gekennzeichnet',
       'Flashcard h27 (Konjunkturzyklus) gelöscht',
