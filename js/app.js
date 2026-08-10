@@ -3393,6 +3393,10 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.18.14',ts:'2026-08-10T12:00',items:[
+      'FeuAK VWL-Tab komplett neu nach Modul 3.3 der Vorlesung: 7 Kapitel – Swiftonomics/Multiplikatoreffekt, VWL-Grundlagen &amp; VWL vs. BWL, Knappheit &amp; Opportunitätskosten, Marktversagen &amp; Staatsrolle, Feuerwehr im Wirtschaftskreislauf, Ressourcenmanagement &amp; Effizienz (TCO, Skaleneffekte, Personalökonomie), Kosten-Nutzen-Analysen (KNA, Grenzkosten der Sicherheit)',
+      'Vorherige Inhalte (10 VWL-Regeln, Marktformen, BIP, Gütertabelle) durch vorlesungsrelevante Inhalte ersetzt'
+    ]},
     {v:'2.18.13',ts:'2026-08-07T16:00',items:[
       '9 neue FeuAK-Lernkarten h61–h69: Haushaltsgrundsätze, QM ISO 9001, Produkte/Kunden/Merkmale FW, BSC-Kennzahlen, Strategische Personalplanung, Beschaffungsalternativen HLF 20, VWL Nachfrageeffekte, VWL Angebotseffekte, Bilanz HGB vollständig',
       'Lernkarten gesamt: 303 → 312',
