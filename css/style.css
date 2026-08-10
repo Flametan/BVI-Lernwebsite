@@ -123,7 +123,7 @@
   .bl li::before{content:'▸';color:var(--c-gold);font-size:.6rem;position:absolute;left:0;top:.35em;}
   .bl li strong{color:var(--c-text);font-weight:500;}
   .hint{background:var(--c-gold-dim);border:1px solid var(--c-gold-rim);border-radius:var(--r-md);padding:.9rem 1rem;margin-top:1.25rem;display:flex;gap:.75rem;}
-  .hint p{font-size:.81rem;color:var(--c-text);line-height:1.7;}
+  .hint p{font-size:.81rem;color:var(--c-text);line-height:1.7;flex:1;min-width:0;}
   .hint strong{color:var(--c-gold);font-weight:600;}
   .hint.blue-h{background:var(--c-blue-dim);border-color:rgba(58,127,212,.25);}
   .hint.blue-h strong{color:#6BAAD4;}
