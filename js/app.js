@@ -3404,8 +3404,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'2.18.17',ts:'2026-08-10T15:00',items:[
-      'VWL-Tab: Hinweisboxen in Section 08 & 09 lesbar gemacht (inline border-color-Override entfernt, Standard-Hint-Styling)',
-      'Gendering entfernt: durchgängig generisches Maskulinum (Bürger, Mitarbeiter, Konzertbesucher etc.)'
+      'VWL-Tab: Hinweisboxen in Section 08 & 09 lesbar gemacht (inline border-color-Override entfernt, Standard-Hint-Styling)'
     ]},
     {v:'2.18.16',ts:'2026-08-10T14:00',items:[
       'VWL-Tab: Titel bleibt „VWL"; Eyebrow auf „FeuAK Hamburg · Volkswirtschaftslehre" aktualisiert',
