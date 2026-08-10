@@ -1049,7 +1049,7 @@ const FLASHCARD_DATA = [
 
   /* ── FeuAK Hamburg – Zusatzkarten ── */
   {id:'h26',cat:'FeuAK · VWL',q:'Wie funktioniert der Preismechanismus über Angebot und Nachfrage?',a:'<strong>Nachfragekurve:</strong> fallend – je höher der Preis, desto weniger wird nachgefragt.<br><strong>Angebotskurve:</strong> steigend – je höher der Preis, desto mehr wird angeboten.<br><strong>Gleichgewichtspreis:</strong> Schnittpunkt; Markt räumt sich selbst.<br>Verschiebungen: Einkommenszunahme → Nachfrage↑ → P↑ und Q↑; Kostensenkung → Angebot↑ → P↓ und Q↑.'},
-  {id:'h27',cat:'FeuAK · VWL',q:'Welche 4 Phasen hat ein Konjunkturzyklus?',a:'<strong>1. Aufschwung (Expansion):</strong> wachsende Produktion, sinkende Arbeitslosigkeit, steigende Investitionen.<br><strong>2. Hochkonjunktur (Boom):</strong> Vollauslastung, Preissteigerungen, Inflationsdruck.<br><strong>3. Abschwung (Rezession):</strong> sinkendes BIP (mind. 2 Quartale), steigende Arbeitslosigkeit.<br><strong>4. Tiefstand (Depression):</strong> niedrigste Auslastung, maximale Arbeitslosigkeit.'},
+
   {id:'h28',cat:'FeuAK · VWL',q:'Was versteht man unter dem Modell „Staat als Nachtwächter" und welche Rolle spielt die Feuerwehr darin?',a:'<strong>Nachtwächterstaat:</strong> Klassisches VWL-Modell; der Staat beschränkt sich primär auf den Schutz der Bürger*innen (innere Sicherheit, Eigentumsschutz).<br><strong>Rolle der Feuerwehr:</strong> Sie ist – wie Polizei und Justiz – eine Kernkompetenz dieser Staatsform.<br><strong>Basis für Wirtschaft:</strong> Unternehmen investieren nur dort, wo Eigentum vor Bränden und Katastrophen geschützt ist.<br><strong>Standortvorteil:</strong> Funktionierender Brandschutz schafft Vertrauen und wirtschaftliche Stabilität.'},
   {id:'h29',cat:'FeuAK · BWL',q:'Was ist die ABC-Analyse und wie wird sie in der Beschaffung eingesetzt?',a:'Priorisierungsinstrument nach dem 80/20-Prinzip:<br><strong>A-Güter:</strong> ≈ 80 % des Beschaffungswertes, ≈ 20 % der Positionen → intensives Management, Rahmenverträge.<br><strong>B-Güter:</strong> mittlere Bedeutung, Standardprozesse.<br><strong>C-Güter:</strong> ≈ 5 % des Wertes, ≈ 50 % der Positionen → vereinfachte Sammelbestellungen.<br>Ziel: Ressourceneinsatz auf das Wesentliche konzentrieren.'},
   {id:'h30',cat:'FeuAK · BWL',q:'Was sind die 5 Grundprinzipien von Lean Management?',a:'<strong>1. Wert definieren</strong> (aus Kundensicht).<br><strong>2. Wertstrom identifizieren</strong> (alle wertschöpfenden Schritte).<br><strong>3. Fließprinzip</strong> (unterbrechungsfreier Ablauf).<br><strong>4. Pullprinzip</strong> (Produktion nur auf tatsächliche Nachfrage).<br><strong>5. Perfektion anstreben</strong> (KVP/Kaizen).<br>Ziel: Verschwendung (Muda) eliminieren.'},
@@ -3403,6 +3403,13 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.18.16',ts:'2026-08-10T14:00',items:[
+      'VWL-Tab umbenannt in „VWL – Vollständig": enthält jetzt Modul 3.3 (aktuelle Vorlesung) + klausurrelevante Grundlagen',
+      'Neue Section 08: Marktformen &amp; Preis-Mengen-Diagramm (Polypol/Oligopol/Monopol, Kurvenverschiebungen, Altklausur F15/F16) – als „nicht in Modul 3.3" gekennzeichnet',
+      'Neue Section 09: Bruttoinlandsprodukt (BIP) mit Definition, 3 Berechnungsseiten, 6 Kritikpunkten, Alternativen (Altklausur F17) – als „nicht in Modul 3.3" gekennzeichnet',
+      'Flashcard h27 (Konjunkturzyklus) gelöscht',
+      'Lernkarten gesamt: 320 → 319'
+    ]},
     {v:'2.18.15',ts:'2026-08-10T13:00',items:[
       'FeuAK VWL-Tab komplett neu nach Modul 3.3 der Vorlesung: 7 Kapitel – Swiftonomics/Multiplikatoreffekt, VWL-Grundlagen &amp; VWL vs. BWL, Knappheit &amp; Opportunitätskosten, Marktversagen &amp; Staatsrolle, Feuerwehr im Wirtschaftskreislauf, Ressourcenmanagement &amp; Effizienz (TCO, Skaleneffekte, Personalökonomie), Kosten-Nutzen-Analysen (KNA, Grenzkosten der Sicherheit)',
       'Vorherige Inhalte (10 VWL-Regeln, Marktformen, BIP, Gütertabelle) durch vorlesungsrelevante Inhalte ersetzt',
