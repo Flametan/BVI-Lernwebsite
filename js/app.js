@@ -3422,6 +3422,10 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.19.6',ts:'2026-08-11T17:00',items:[
+      'PM-Tab: Reihenfolge an PDF-Gliederung angepasst – PDF 1 (Kap.1–3) komplett vor PDF 2 (Stakeholder)',
+      'PM-Tab: Neue Nummerierung 01–10 (Strategie→Entscheidung→Mintzberg→VUKA→Stakeholder→Prozess→QM→Controlling→Risiko)'
+    ]},
     {v:'2.19.5',ts:'2026-08-11T16:00',items:[
       'PM-Tab: Section 06 und 09 getauscht – Reihenfolge entspricht jetzt Skript-Gliederung (Kap. 1 → 2 → 3)'
     ]},
