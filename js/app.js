@@ -3422,6 +3422,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.19.5',ts:'2026-08-11T16:00',items:[
+      'PM-Tab: Section 06 und 09 getauscht – Reihenfolge entspricht jetzt Skript-Gliederung (Kap. 1 → 2 → 3)'
+    ]},
     {v:'2.19.4',ts:'2026-08-11T15:00',items:[
       'Lernkarten: 17 neue PM-Karten h78–h94 (VUKA, BANI, Entscheidungstheorie, Mintzberg, Clausewitz, Gälweiler, Strategiehierarchie, 8 Handlungsfelder, Risikoanalyse, Wohlfahrtsdreieck, Prosumption, Porter)'
     ]},
