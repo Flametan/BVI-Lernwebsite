@@ -3403,6 +3403,14 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.19.3',ts:'2026-08-11T14:00',items:[
+      'PM-Tab: Prolog-Inhalte (Wohlfahrtsdreieck + SVG-Grafik, Prosumption, 4 Dienstleistungstypen) in Section 01 integriert',
+      'PM-Tab: Section 11 entfernt (Inhalte in Section 01 zusammengeführt)',
+      'PM-Tab: Section 01 – Titel zu „Grundlagen: Feuerwehr & Strategisches Management" aktualisiert'
+    ]},
+    {v:'2.19.2',ts:'2026-08-11T13:30',items:[
+      'PM-Tab: 3 Strategietypen in Section 01 integriert, Nummerierung 02–11 angepasst'
+    ]},
     {v:'2.19.1',ts:'2026-08-11T13:00',items:[
       'PM-Tab: Gälweiler-Definition + „Strat. Mgmt. ohne Markt" in Section 10 ergänzt',
       'PM-Tab: Neue Section 12 – Wohlfahrtsdreieck, Prosumption & 4 Dienstleistungstypen',
