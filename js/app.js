@@ -3403,6 +3403,16 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.19.1',ts:'2026-08-11T13:00',items:[
+      'PM-Tab: Gälweiler-Definition + „Strat. Mgmt. ohne Markt" in Section 10 ergänzt',
+      'PM-Tab: Neue Section 12 – Wohlfahrtsdreieck, Prosumption & 4 Dienstleistungstypen',
+      'PM-Tab: Section 08 – 6 Entscheidungsarten der Unternehmensleitung ergänzt',
+      'PM-Tab: Section 03 – Stakeholder- vs. Shareholder-Ansatz Vollvergleich (4 Kriterien)'
+    ]},
+    {v:'2.19.0',ts:'2026-08-11T12:00',items:[
+      'PM-Tab: 5 neue Sektionen aus FeuAK-Skripten (VUKA/BANI, Entscheidungstheorie, Mintzberg, Strategiehierarchie, Prospektive Risikoanalyse)',
+      'PM-Tab: Stakeholderanalyse erweitert (Etzioni-Bindungsgründe, Macht/Legitimität/Dringlichkeit, 7 Stakeholder-Typen, Einfluss-Interessen-Matrix, 10 Schlüsselfragen)'
+    ]},
     {v:'2.18.17',ts:'2026-08-10T15:00',items:[
       'VWL-Tab: Hinweisboxen in Section 08 & 09 lesbar gemacht (inline border-color-Override entfernt, Standard-Hint-Styling)'
     ]},
