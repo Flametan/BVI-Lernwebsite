@@ -1116,7 +1116,7 @@ body.offline .offline-banner{display:flex;}
 .cl-new-badge{font-size:.62rem;font-weight:700;background:rgba(201,168,76,.18);color:var(--c-gold);border:1px solid rgba(201,168,76,.4);border-radius:999px;padding:.08rem .45rem;letter-spacing:.05em;text-transform:uppercase;}
 .cl-date{font-size:.73rem;color:var(--c-sub);margin-left:auto;}
 .cl-items{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:.25rem;}
-.cl-items li{font-size:.865rem;color:var(--c-slate-l);line-height:1.5;}
+.cl-items li{font-size:.865rem;color:var(--c-slate-l);line-height:1.5;overflow-wrap:break-word;word-break:break-word;}
 /* Neuigkeiten badge in Einstellungen */
 #changelog-badge{background:rgba(201,168,76,.18);color:var(--c-gold);border:1px solid rgba(201,168,76,.4);font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:.08rem .45rem;vertical-align:middle;margin-left:.35rem;}
 #changelog-badge.hidden{display:none;}
