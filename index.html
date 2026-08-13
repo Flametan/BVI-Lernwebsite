@@ -514,7 +514,7 @@
         <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
       <div class="glass-tile" onclick="NAV.go('v-feuak','FeuAK Hamburg')" style="position:relative">
-        <span id="prog-feuak" class="tile-prog">0/8</span>
+        <span id="prog-feuak" class="tile-prog">0/9</span>
         <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
         <div class="tile-name">FeuAK Hamburg</div>
         <div class="tile-desc">VWL, BWL, Haushalt, Vergabe, Rechnungswesen, Projektmanagement, Bedarfsplanung</div>
@@ -5421,7 +5421,7 @@
     <div class="phi">
       <p class="page-eyebrow">Feuerwehrakademie Hamburg · Recht und Management</p>
       <h1 class="page-title">FeuAK <span class="accent">Hamburg</span></h1>
-      <p class="page-lead">VWL, BWL, Haushaltsrecht, Vergabe, Rechnungswesen, Strategisches Management und Bedarfsplanung – alle Prüfungsthemen des Hamburger Lehrgangsabschnitts.</p>
+      <p class="page-lead">VWL, BWL, Haushaltsrecht, Vergabe, Rechnungswesen, Strategisches Management, Stakeholder-Analyse und Bedarfsplanung – alle Prüfungsthemen des Hamburger Lehrgangsabschnitts.</p>
     </div>
   </div>
   <div class="pc">
@@ -5465,6 +5465,11 @@
         <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
         <div class="tc-name">Projektmanagement / Strategisches Management</div>
         <div class="tc-desc">Strategien, Stakeholder, Prozessanalyse, QM-Regelkreis, Controlling</div>
+      </div>
+      <div class="topic-card" onclick="NAV.go('v-feuak-stakeholder','Stakeholder-Analyse')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <div class="tc-name">Stakeholder-Analyse</div>
+        <div class="tc-desc">Freeman, Power-Interest-Matrix, Salience-Modell, Strategien &amp; Anwendung bei der Feuerwehr</div>
       </div>
       <div class="topic-card" onclick="NAV.go('v-feuak-bedarfsplanung','Bedarfsplanung')">
         <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -7142,6 +7147,378 @@
             <div class="step-item"><span class="step-letter">4</span><div><strong>Ergebnisermittlung:</strong> Note × Gewichtung = Ergebnis. Indikatoren ≥ 11 Punkte: sehr bedenklich → Fragen an die Geschäftsleitung. Indikatoren &lt; 4 Punkte: relativ unbedenklich.</div></div>
           </div>
           <div class="hint"><p>Das Ergebnis der Risikoanalyse wird grafisch dargestellt. Kritische Indikatoren bilden die Grundlage für die <strong>Maßnahmen-Matrix</strong> und die <strong>Priorisierung</strong> strategischer Themen.</p></div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ============================================================ FeuAK STAKEHOLDER ============================================================ -->
+<div id="v-feuak-stakeholder" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">FeuAK Hamburg · Strategisches Management</p>
+      <h1 class="page-title">Stakeholder<span class="accent">analyse</span></h1>
+      <p class="page-lead">Theorie, Modelle und Anwendung der Stakeholder-Analyse für kommunale Feuerwehren – von Freeman bis zur Power-Interest-Matrix.</p>
+    </div>
+  </div>
+  <div class="pc">
+    <div class="acc-list">
+
+      <details class="acc-item">
+        <summary><span class="acc-num">01</span><span class="acc-title">Grundlagen &amp; Definition</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <div class="def-box">
+            <div class="def-box-label">Definition nach Freeman (1984)</div>
+            Ein <strong>Stakeholder</strong> ist jede Gruppe oder Einzelperson, die die Erreichung der Organisationsziele beeinflussen kann oder von ihr beeinflusst wird.
+          </div>
+          <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Stakeholder vs. Shareholder</h3>
+          <div class="cg cg-2">
+            <div class="info-card">
+              <div class="info-card-title">Shareholder</div>
+              Anteilseigner, die primär ein finanzielles Interesse an der Organisation haben. Im privaten Sektor: Aktionäre. Bei der Feuerwehr (öffentlich): nicht anwendbar.
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Stakeholder</div>
+              Alle Akteure mit einem legitimen Interesse – unabhängig davon, ob sie formal beteiligt sind. Umfasst interne und externe Gruppen.
+            </div>
+          </div>
+          <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Warum Stakeholder-Analyse?</h3>
+          <ul class="bl">
+            <li><strong>Konflikte frühzeitig erkennen:</strong> Widerstände identifizieren, bevor sie zum Problem werden</li>
+            <li><strong>Akzeptanz sichern:</strong> Entscheidungen durch frühzeitige Einbindung legitimieren</li>
+            <li><strong>Ressourcen gezielt einsetzen:</strong> Kommunikations- und Einbindungsaufwand priorisieren</li>
+            <li><strong>Risiken reduzieren:</strong> Machtkonstellationen und Abhängigkeiten sichtbar machen</li>
+            <li><strong>Strategische Ausrichtung:</strong> Interessen der wichtigsten Akteure bei der Planung berücksichtigen</li>
+          </ul>
+          <div class="hint" style="margin-top:1rem">
+            <strong>Kontext:</strong> Die Stakeholder-Analyse ist kein einmaliges Instrument, sondern ein kontinuierlicher Prozess – Interessen und Machtverhältnisse ändern sich über die Zeit.
+          </div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">02</span><span class="acc-title">Stakeholder-Typen</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <h3 class="sec-h" style="font-size:1rem;margin-top:0">Intern vs. Extern</h3>
+          <div class="cg cg-2">
+            <div class="info-card">
+              <div class="info-card-title">Interne Stakeholder</div>
+              Akteure innerhalb der Organisation: Führungskräfte, Einsatzpersonal, Verwaltung, Betriebsrat/Personalrat, interne Fachbereiche
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Externe Stakeholder</div>
+              Akteure außerhalb der Organisation: Politik, Bürger, Medien, Hilfsorganisationen, Lieferanten, Verbände, Behörden
+            </div>
+          </div>
+          <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Primär vs. Sekundär</h3>
+          <div class="cg cg-2">
+            <div class="info-card">
+              <div class="info-card-title">Primäre Stakeholder</div>
+              Stehen in direkter Austauschbeziehung zur Organisation. Ohne ihre Mitwirkung kann die Organisation nicht funktionieren (z. B. Personal, Auftraggeber, Finanzgeber).
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Sekundäre Stakeholder</div>
+              Keine direkte Austauschbeziehung, aber indirekt betroffen oder einflussreich (z. B. Medien, Interessenverbände, Nachbarkommunen).
+            </div>
+          </div>
+          <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Weitere Differenzierungen</h3>
+          <div class="cg cg-3">
+            <div class="info-card">
+              <div class="info-card-title">Unterstützende Stakeholder</div>
+              Befürworten die Ziele der Organisation aktiv – können als Verbündete eingesetzt werden
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Neutrale Stakeholder</div>
+              Keine klare Positionierung – durch gezielte Information und Einbindung zu Unterstützern entwickelbar
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Kritische Stakeholder</div>
+              Widerstehen aktiv – erfordern besondere Aufmerksamkeit, Dialog und ggf. Kompromissbereitschaft
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">03</span><span class="acc-title">Prozess: 4 Schritte der Stakeholder-Analyse</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <div class="step-stack">
+            <div class="step-item">
+              <div class="step-letter">1</div>
+              <div>
+                <strong>Identifizieren</strong>
+                <p style="margin:.35rem 0 0;font-size:.88rem;color:var(--c-text)">Wer ist betroffen? Wer hat Einfluss? Brainstorming im Team, Checklisten, Kategorisierung nach intern/extern. Leitfragen: <em>Wer finanziert? Wer entscheidet? Wer ist betroffen? Wer kann blockieren?</em></p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-letter">2</div>
+              <div>
+                <strong>Analysieren</strong>
+                <p style="margin:.35rem 0 0;font-size:.88rem;color:var(--c-text)">Für jeden Stakeholder: Welche Interessen hat er? Welche Macht besitzt er? Welche Einstellung hat er zur Organisation? Bewertung anhand von Macht (hoch/niedrig), Interesse (hoch/niedrig) und ggf. Legitimität &amp; Dringlichkeit.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-letter">3</div>
+              <div>
+                <strong>Priorisieren</strong>
+                <p style="margin:.35rem 0 0;font-size:.88rem;color:var(--c-text)">Einordnung in die Power-Interest-Matrix oder das Salience-Modell. Welche Stakeholder erfordern aktives Management? Wer wird nur informiert? Wer wird beobachtet?</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-letter">4</div>
+              <div>
+                <strong>Maßnahmen ableiten</strong>
+                <p style="margin:.35rem 0 0;font-size:.88rem;color:var(--c-text)">Kommunikationsplan erstellen, Einbindungsformate festlegen (Informieren / Konsultieren / Kooperieren), Verantwortlichkeiten zuweisen, Stakeholder-Register pflegen.</p>
+              </div>
+            </div>
+          </div>
+          <div class="hint" style="margin-top:1rem">
+            <strong>Praxistipp:</strong> Die Stakeholder-Analyse ist kein einmaliges Projekt. Stakeholder-Register und Kommunikationsplan müssen regelmäßig aktualisiert werden – besonders bei Veränderungen im Umfeld (politische Wechsel, Krisen, neue Projekte).
+          </div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">04</span><span class="acc-title">Power-Interest-Matrix (Mendelow)</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p style="font-size:.88rem;color:var(--c-text);margin-bottom:1.25rem">Die <strong>Power-Interest-Matrix</strong> (Mendelow, 1991) ordnet Stakeholder anhand von zwei Dimensionen ein und leitet daraus eine Kommunikations- und Managementstrategie ab.</p>
+
+          <!-- Matrix Grid -->
+          <div style="display:grid;grid-template-columns:auto 1fr 1fr;grid-template-rows:auto 1fr 1fr;gap:4px;max-width:560px;margin:0 auto 1.5rem">
+            <!-- Achsenbeschriftung oben -->
+            <div></div>
+            <div style="text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c-slate-l);padding-bottom:.4rem">Interesse niedrig</div>
+            <div style="text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c-slate-l);padding-bottom:.4rem">Interesse hoch</div>
+            <!-- Zeile: Macht hoch -->
+            <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c-slate-l);padding-right:.4rem;display:flex;align-items:center">Macht hoch</div>
+            <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:1rem;min-height:90px">
+              <div style="font-size:.75rem;font-weight:700;color:var(--c-gold);margin-bottom:.35rem">KEEP SATISFIED</div>
+              <div style="font-size:.82rem;color:var(--c-text)">Zufriedenstellen – regelmäßig informieren, Interessen berücksichtigen, Widerstand vermeiden</div>
+            </div>
+            <div style="background:rgba(204,21,21,.08);border:1px solid rgba(204,21,21,.3);border-radius:var(--r-md);padding:1rem;min-height:90px">
+              <div style="font-size:.75rem;font-weight:700;color:var(--c-red-l);margin-bottom:.35rem">MANAGE CLOSELY</div>
+              <div style="font-size:.82rem;color:var(--c-text)">Aktiv managen – eng einbinden, regelmäßiger Dialog, Schlüsselakteure für den Erfolg</div>
+            </div>
+            <!-- Zeile: Macht niedrig -->
+            <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c-slate-l);padding-right:.4rem;display:flex;align-items:center">Macht niedrig</div>
+            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:var(--r-md);padding:1rem;min-height:90px">
+              <div style="font-size:.75rem;font-weight:700;color:var(--c-slate-l);margin-bottom:.35rem">MONITOR</div>
+              <div style="font-size:.82rem;color:var(--c-text)">Beobachten – minimaler Aufwand, bei Veränderungen neu einordnen</div>
+            </div>
+            <div style="background:rgba(74,144,217,.07);border:1px solid rgba(74,144,217,.22);border-radius:var(--r-md);padding:1rem;min-height:90px">
+              <div style="font-size:.75rem;font-weight:700;color:#7BB3E0;margin-bottom:.35rem">KEEP INFORMED</div>
+              <div style="font-size:.82rem;color:var(--c-text)">Informieren – transparent kommunizieren, Bedenken ernst nehmen</div>
+            </div>
+          </div>
+
+          <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Strategien je Quadrant</h3>
+          <div class="cg cg-2">
+            <div class="info-card">
+              <div class="info-card-title">Manage Closely (Macht↑ Interesse↑)</div>
+              Schlüsselstakeholder: aktiv einbinden, Entscheidungen abstimmen, regelmäßige Feedbackschleifen, Vertrauen aufbauen
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Keep Satisfied (Macht↑ Interesse↓)</div>
+              Schläfer mit Eskalationspotenzial: nicht vernachlässigen, über Meilensteine informieren, keine unangenehmen Überraschungen
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Keep Informed (Macht↓ Interesse↑)</div>
+              Engagierte Beobachter: transparent informieren, Bedenken ernst nehmen, als Fürsprecher entwickeln
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Monitor (Macht↓ Interesse↓)</div>
+              Periphere Stakeholder: mit minimalem Aufwand beobachten, bei Änderung der Machtsituation neu bewerten
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">05</span><span class="acc-title">Salience-Modell (Mitchell, Agle &amp; Wood, 1997)</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p style="font-size:.88rem;color:var(--c-text);margin-bottom:1.25rem">Das Salience-Modell erweitert die 2-dimensionale Power-Interest-Matrix um eine dritte Dimension. Manager sollen Stakeholder anhand von drei Attributen priorisieren.</p>
+          <div class="cg cg-3">
+            <div class="info-card">
+              <div class="info-card-title">Macht (Power)</div>
+              Fähigkeit, die Entscheidungen und Handlungen der Organisation zu beeinflussen – formell (Weisungsrecht, Finanzhoheit) oder informell (öffentlicher Druck, Medienreichweite)
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Legitimität (Legitimacy)</div>
+              Gesellschaftlich anerkannte Berechtigung, Ansprüche zu stellen – durch Vertrag, Gesetz, Moral oder gesellschaftliche Erwartung begründet
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Dringlichkeit (Urgency)</div>
+              Ausmaß, in dem Forderungen sofortiges Handeln erfordern – zeitkritische oder stark emotional aufgeladene Ansprüche
+            </div>
+          </div>
+          <h3 class="sec-h" style="font-size:1rem;margin-top:1.5rem">7 Stakeholder-Typen</h3>
+          <div class="cg cg-2" style="margin-bottom:.75rem">
+            <div class="info-card">
+              <div class="info-card-title">Latente Stakeholder (1 Attribut)</div>
+              <ul class="bl" style="margin:.5rem 0 0;padding-left:1rem">
+                <li><strong>Dormant (nur Macht):</strong> Mächtig, aber kein aktuelles Interesse/keine Legitimität – könnten jederzeit aktiviert werden</li>
+                <li><strong>Discretionary (nur Legitimität):</strong> Legitimer Anspruch, aber kein Einfluss – oft philanthropische Akteure</li>
+                <li><strong>Demanding (nur Dringlichkeit):</strong> Fordernd, aber ohne Macht oder Legitimität – oft als „lästig" wahrgenommen</li>
+              </ul>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Erwartende Stakeholder (2 Attribute)</div>
+              <ul class="bl" style="margin:.5rem 0 0;padding-left:1rem">
+                <li><strong>Dominant (Macht + Legitimität):</strong> Erwartungen werden in der Regel erfüllt – formal anerkannte Schlüsselakteure</li>
+                <li><strong>Dangerous (Macht + Dringlichkeit):</strong> Können ohne legitime Basis Druck ausüben – potenziell destruktiv</li>
+                <li><strong>Dependent (Legitimität + Dringlichkeit):</strong> Angewiesene Stakeholder – keine eigene Macht, brauchen Fürsprecher</li>
+              </ul>
+            </div>
+          </div>
+          <div class="def-box">
+            <div class="def-box-label">Definitive Stakeholder (alle 3 Attribute)</div>
+            Höchste Salience – Macht, Legitimität <em>und</em> Dringlichkeit gleichzeitig vorhanden. Sofortiger Handlungsbedarf, höchste Priorität. Manager müssen diese Gruppe aktiv und unmittelbar managen.
+          </div>
+          <div class="hint" style="margin-top:.75rem">
+            <strong>Dynamik:</strong> Stakeholder können zwischen Typen wechseln. Ein latenter „Dormant"-Stakeholder (z. B. Innenministerium bei Routinebetrieb) kann durch eine Krise zum „Definitive"-Stakeholder werden.
+          </div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">06</span><span class="acc-title">Strategien &amp; Kommunikation</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <h3 class="sec-h" style="font-size:1rem;margin-top:0">Einbindungsgrade (aufsteigend)</h3>
+          <div class="step-stack">
+            <div class="step-item">
+              <div class="step-letter" style="background:rgba(255,255,255,.06)">I</div>
+              <div>
+                <strong>Informieren</strong>
+                <p style="margin:.25rem 0 0;font-size:.85rem;color:var(--c-text)">Einseitige Kommunikation – Stakeholder werden über Entscheidungen in Kenntnis gesetzt. Kein Feedback vorgesehen. Geeignet für periphere Stakeholder (Monitor/Keep Informed).</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-letter" style="background:rgba(255,255,255,.06)">II</div>
+              <div>
+                <strong>Konsultieren</strong>
+                <p style="margin:.25rem 0 0;font-size:.85rem;color:var(--c-text)">Stakeholder werden um Meinung gefragt – Ergebnisse fließen in die Entscheidung ein, Entscheidungshoheit bleibt bei der Organisation.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-letter" style="background:rgba(255,255,255,.06)">III</div>
+              <div>
+                <strong>Einbeziehen</strong>
+                <p style="margin:.25rem 0 0;font-size:.85rem;color:var(--c-text)">Aktive Mitgestaltung ermöglichen – Stakeholder arbeiten in Arbeitsgruppen oder Gremien mit. Geeignet für Schlüsselakteure (Manage Closely).</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-letter" style="background:rgba(255,255,255,.06)">IV</div>
+              <div>
+                <strong>Kooperieren</strong>
+                <p style="margin:.25rem 0 0;font-size:.85rem;color:var(--c-text)">Gemeinsame Entscheidungsfindung und geteilte Verantwortung – z. B. in Projekten mit Partnerbehörden oder Hilfsorganisationen.</p>
+              </div>
+            </div>
+          </div>
+          <h3 class="sec-h" style="font-size:1rem;margin-top:1.5rem">Stakeholder-Register</h3>
+          <p style="font-size:.88rem;color:var(--c-text);margin-bottom:.75rem">Ein Stakeholder-Register dokumentiert alle identifizierten Stakeholder strukturiert. Typische Felder:</p>
+          <div class="cg cg-3">
+            <div class="info-card"><div class="info-card-title">Stammdaten</div>Name, Funktion, Kontakt, Gruppe (intern/extern)</div>
+            <div class="info-card"><div class="info-card-title">Bewertung</div>Macht (1–5), Interesse (1–5), Einstellung (positiv/neutral/kritisch)</div>
+            <div class="info-card"><div class="info-card-title">Maßnahmen</div>Einbindungsgrad, Kommunikationskanal, Frequenz, Verantwortlicher</div>
+          </div>
+          <div class="hint" style="margin-top:1rem">
+            <strong>Kommunikationsplan:</strong> Aus dem Stakeholder-Register wird ein Kommunikationsplan abgeleitet – wer wird wann, wie oft, über welchen Kanal und mit welcher Botschaft angesprochen.
+          </div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">07</span><span class="acc-title">Anwendung bei der Feuerwehr</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p style="font-size:.88rem;color:var(--c-text);margin-bottom:1.25rem">Die kommunale Feuerwehr agiert in einem komplexen Stakeholder-Umfeld: Sie ist hoheitlich tätig, politisch eingebunden, gesellschaftlich sichtbar und operativ auf Kooperation angewiesen.</p>
+
+          <h3 class="sec-h" style="font-size:1rem;margin-top:0">Typische Stakeholder-Gruppen</h3>
+          <div class="cg cg-2">
+            <div class="info-card">
+              <div class="info-card-title">Interne Stakeholder</div>
+              <ul class="bl" style="margin:.5rem 0 0;padding-left:1rem">
+                <li><strong>Einsatzpersonal</strong> (Beamte, Freiwillige) – Hauptakteure, hohes Interesse, hohe Bedeutung</li>
+                <li><strong>Amtsleitung / Führungskräfte</strong> – strategische Entscheider</li>
+                <li><strong>Personalrat / Betriebsrat</strong> – Mitbestimmungsrecht, hohe formale Macht</li>
+                <li><strong>Verwaltung / Haushalt</strong> – Ressourcensteuerung</li>
+                <li><strong>Werkstätten / Technik</strong> – operative Abhängigkeit</li>
+              </ul>
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Externe Stakeholder</div>
+              <ul class="bl" style="margin:.5rem 0 0;padding-left:1rem">
+                <li><strong>Politik</strong> (Innenministerium, Bürgerschaft, Senat) – Budgethoheit, strategische Vorgaben</li>
+                <li><strong>Bürger / Bevölkerung</strong> – Leistungsempfänger, öffentliche Erwartungshaltung</li>
+                <li><strong>Medien</strong> – Meinungsbildner, Sichtbarkeit von Krisen</li>
+                <li><strong>Gewerkschaft</strong> (ver.di, dbb) – Tarif- und Arbeitsbedingungen</li>
+                <li><strong>Hilfsorganisationen</strong> (DRK, THW, DLRG, ASB) – operative Partner</li>
+                <li><strong>Verbände</strong> (DFV, vfdb, AGBF) – fachliche Standards</li>
+                <li><strong>Bundesbehörden</strong> (BBK, BABS) – Konzeptvorgaben, Katastrophenschutz</li>
+                <li><strong>Lieferanten / Industrie</strong> – Fahrzeuge, Schutzausrüstung, Technik</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 class="sec-h" style="font-size:1rem;margin-top:1.5rem">Power-Interest-Matrix – Feuerwehr</h3>
+          <div style="display:grid;grid-template-columns:auto 1fr 1fr;grid-template-rows:auto 1fr 1fr;gap:4px;max-width:600px;margin:0 auto 1.5rem">
+            <div></div>
+            <div style="text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--c-slate-l);padding-bottom:.4rem">Interesse niedrig</div>
+            <div style="text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--c-slate-l);padding-bottom:.4rem">Interesse hoch</div>
+            <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--c-slate-l);padding-right:.4rem;display:flex;align-items:center">Macht hoch</div>
+            <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.85rem;min-height:100px">
+              <div style="font-size:.7rem;font-weight:700;color:var(--c-gold);margin-bottom:.4rem">KEEP SATISFIED</div>
+              <div style="font-size:.8rem;color:var(--c-text);line-height:1.5">Innenministerium (Routinebetrieb)<br>Bundesbehörden (BBK)<br>Vergabestellen / Haushalt</div>
+            </div>
+            <div style="background:rgba(204,21,21,.08);border:1px solid rgba(204,21,21,.3);border-radius:var(--r-md);padding:.85rem;min-height:100px">
+              <div style="font-size:.7rem;font-weight:700;color:var(--c-red-l);margin-bottom:.4rem">MANAGE CLOSELY</div>
+              <div style="font-size:.8rem;color:var(--c-text);line-height:1.5">Amtsleitung<br>Personalrat<br>Gewerkschaft (ver.di)<br>Senat / Bürgerschaft</div>
+            </div>
+            <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--c-slate-l);padding-right:.4rem;display:flex;align-items:center">Macht niedrig</div>
+            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:var(--r-md);padding:.85rem;min-height:100px">
+              <div style="font-size:.7rem;font-weight:700;color:var(--c-slate-l);margin-bottom:.4rem">MONITOR</div>
+              <div style="font-size:.8rem;color:var(--c-text);line-height:1.5">Lieferanten / Industrie<br>Nachbarkommunen<br>Versicherungen</div>
+            </div>
+            <div style="background:rgba(74,144,217,.07);border:1px solid rgba(74,144,217,.22);border-radius:var(--r-md);padding:.85rem;min-height:100px">
+              <div style="font-size:.7rem;font-weight:700;color:#7BB3E0;margin-bottom:.4rem">KEEP INFORMED</div>
+              <div style="font-size:.8rem;color:var(--c-text);line-height:1.5">Einsatzpersonal<br>Bürger / Bevölkerung<br>Hilfsorganisationen (THW, DRK)<br>Verbände (DFV, vfdb)</div>
+            </div>
+          </div>
+
+          <div class="hint">
+            <strong>Hinweis:</strong> Die Einordnung ist kontextabhängig. In einer Krise (z. B. Großschadenlage) wechselt die Bevölkerung von „Keep Informed" zu „Manage Closely" – die Matrix muss situativ angepasst werden.
+          </div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">08</span><span class="acc-title">Kritische Reflexion</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <div class="cg cg-2">
+            <div class="info-card">
+              <div class="info-card-title">Subjektivität</div>
+              Die Einordnung in Macht und Interesse basiert auf subjektiven Einschätzungen. Verschiedene Personen im selben Team können denselben Stakeholder unterschiedlich bewerten – regelmäßige Teamdiskussionen sind notwendig.
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Statik vs. Dynamik</div>
+              Die Matrix bildet einen Zeitpunkt ab. Machtverhältnisse, Interessen und Einstellungen ändern sich – besonders bei Personalwechseln in der Politik oder nach Medienberichterstattung.
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Unvollständigkeit</div>
+              Es ist unmöglich, alle Stakeholder vollständig zu identifizieren. Besonders marginalisierte oder schlecht vernetzte Gruppen werden systematisch übersehen (z. B. Bürger ohne Lobby).
+            </div>
+            <div class="info-card">
+              <div class="info-card-title">Machtdynamiken</div>
+              „Macht" ist nicht immer sichtbar. Informelle Macht (persönliche Netzwerke, Vertrauen) wird in formalen Modellen oft unterschätzt – besonders in politischen Organisationen wie Behörden.
+            </div>
+          </div>
+          <div class="def-box" style="margin-top:1.25rem">
+            <div class="def-box-label">Fazit für die Praxis</div>
+            Die Stakeholder-Analyse ist kein exaktes Instrument, sondern ein <strong>strukturiertes Denkwerkzeug</strong>. Ihr Wert liegt nicht in der Präzision der Einordnung, sondern darin, dass Organisationen überhaupt systematisch über ihr Umfeld nachdenken – und Kommunikationsressourcen gezielt einsetzen statt nach Bauchgefühl.
+          </div>
         </div>
       </details>
 
