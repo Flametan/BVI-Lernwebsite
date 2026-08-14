@@ -94,7 +94,8 @@
   .phi{max-width:900px;margin:0 auto;padding:0 2rem;}
   .page-eyebrow{font-size:.65rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--c-gold);margin-bottom:.6rem;}
   .page-title{font-family:var(--f-d);font-size:clamp(2rem,5vw,3rem);font-weight:600;color:var(--c-text-b);line-height:1.1;margin-bottom:.6rem;text-shadow:0 1px 10px rgba(0,0,0,.85);}
-  .page-title .accent{background:linear-gradient(90deg,var(--c-text-b) 50%,var(--c-red-l) 50%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .page-title .accent{color:var(--c-red-l);}
+  .page-title .accent.accent-solo{background:linear-gradient(90deg,var(--c-text-b) 50%,var(--c-red-l) 50%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;color:unset;}
   .page-lead{font-size:.9rem;color:var(--c-slate-l);max-width:580px;line-height:1.75;text-shadow:0 1px 6px rgba(0,0,0,.8);}
   .pc{max-width:900px;margin:0 auto;padding:2.5rem 2rem 6rem;min-width:0;overflow-x:hidden;}
 
