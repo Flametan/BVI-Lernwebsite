@@ -2436,8 +2436,12 @@ const STREAK = (function(){
     const d=load(),n=d.current||0;
     const el=document.getElementById('streak-badge');
     if(!el) return;
-    el.textContent=n>0?`🔥 ${n}`:'';
-    el.style.display=n>0?'':'none';
+    const today=todayStr();
+    const prevD=new Date();prevD.setDate(prevD.getDate()-1);
+    const yStr=prevD.getFullYear()+'-'+(prevD.getMonth()+1)+'-'+prevD.getDate();
+    const active=n>0&&(d.lastStudy===today||d.lastStudy===yStr);
+    el.textContent=active?`🔥 ${n}`:'';
+    el.style.display=active?'':'none';
     el.title=`Lernstreak: ${n} Tag${n===1?'':'e'} in Folge`;
   }
   return {
@@ -4311,6 +4315,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     w.className='tbl-wrap';
     t.parentNode.insertBefore(w,t);
     w.appendChild(t);
+  });
+  // Accent-Solo-Erkennung: Wenn .accent den gesamten Titel ausmacht → Gradient, sonst Vollrot
+  document.querySelectorAll('.page-title .accent').forEach(acc=>{
+    if(acc.parentNode.textContent.trim()===acc.textContent.trim()) acc.classList.add('accent-solo');
   });
   // Keyboard-Navigation für Kacheln und Topic-Cards
   document.querySelectorAll('.glass-tile,.topic-card').forEach(el=>{
