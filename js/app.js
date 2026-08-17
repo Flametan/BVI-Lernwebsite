@@ -3437,6 +3437,12 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.20.4',ts:'2026-08-17T22:00',items:[
+      'HLFS Kassel MANV & OLRD: 2 neue Akkordeons – OLRD Aufgaben/Qualifikation/Fahrzeug (Fg 21 HLFS, § 18 DVO HRDG) und Med. EL LNA+OLRD Abgrenzung+Alarmierung (§ 8 HRDG)',
+      'HLFS MANV: Akkordeon 02 Führungsstruktur erweitert (med. EL, Fachautonomie LNA, kommissarische Übernahme)',
+      'HLFS MANV: Akkordeon 03 um Verletztensammelstelle (VSt) ergänzt, Schnittstelle FW→RD an der PA präzisiert',
+      'HLFS MANV: Page-Lead und MANV-Definition um Hessische Stufenfolge (MANV-0→1000) ergänzt'
+    ]},
     {v:'2.20.3',ts:'2026-08-17T20:00',items:[
       'FeuAK Haushalt: 11 neue Lernkarten h95–h105 (Finanzausgleich, Produktpyramide, VE/IP/Stellenplan, investiv/konsumtiv, Mehrausgaben, Kameralistik vs. Doppik, Controlling, Prozessmanagement, PDCA/BEP, Markterkundung, Rechnungsprüfung)',
       'Lernkartenzahl auf 364 aktualisiert'
