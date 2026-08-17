@@ -3426,6 +3426,17 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.20.1',ts:'2026-08-17T16:00',items:[
+      'FeuAK Haushalt: Reihenfolge aller 20 Akkordeons nach Jackel-Skript-Struktur korrigiert (Teil 1 Grundlagen → Teil 2 NSM → Teil 3 Beschaffung & Kontrolle)',
+      'FeuAK Haushalt: Dopplung 3-Säulen-Modell entfernt (war in Akk 05 und 11 – jetzt nur in 11)',
+      'FeuAK Haushalt: Dopplung Produktpyramide entfernt (stand zweimal in Akk 14 – zu einer Sektion zusammengeführt)'
+    ]},
+    {v:'2.20.0',ts:'2026-08-17T14:00',items:[
+      'FeuAK Haushalt: 5 neue Akkordeons aus Skript Jackel (FL 3.3b, FeuAK Hamburg 08/2026) – Finanzausgleich, Investitionsprogramm & Stellenplan, Controlling, Prozessmanagement, QM & Brandschutzbedarfsplan',
+      'FeuAK Haushalt: 5 Badges „nicht im Skript" → „Skript Jackel" (Akk 11–15 alle im Jackel-Skript enthalten)',
+      'FeuAK Haushalt: Akk 05 (Doppik) um Aufwand/Ertrag-Definition ergänzt; Akk 09 (Budgetierung) um Restmittel-Übertragbarkeit und „Todsünden"; Akk 11 (NSM) alle 8 Elemente als Cards; Akk 12 (KLR) Gebührenbezug und Steuerungsebenen; Akk 14 (Haushaltsstruktur) Produktpyramide 5 Ebenen + 2 Steuerungsebenen; Akk 15 (Vorläufige HF) 18-Monate-Prozess und Praxis-Hinweis',
+      'FeuAK Haushalt: Untertitel auf Skript Jackel als Quelle aktualisiert'
+    ]},
     {v:'2.19.8',ts:'2026-08-11T19:00',items:[
       'PM Entscheidungstheorie: Ambiguitätstoleranz nach Skript 1 S. 22 ergänzt (hint-Box nach 3 Rationalitäten)',
       'Lernkarte h85: Frage und Antwort um Ambiguitätstoleranz erweitert'
