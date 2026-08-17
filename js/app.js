@@ -3426,6 +3426,11 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.20.2',ts:'2026-08-17T18:00',items:[
+      'FeuAK Haushalt: 4 Akkordeon-Paare zusammengefasst – 20 → 16 Akkordeons',
+      'FeuAK Haushalt: Akk 03+04 → „Einnahmequellen & Finanzausgleich"; Akk 06+07 → „Haushaltspläne – Aufbau, VE, IP & Stellenplan"',
+      'FeuAK Haushalt: Akk 17+18 → „Beschaffung: Markterkundung & Vertragsmanagement"; Akk 19+20 → „Kontrolle & Rechnungsprüfung"'
+    ]},
     {v:'2.20.1',ts:'2026-08-17T16:00',items:[
       'FeuAK Haushalt: Reihenfolge aller 20 Akkordeons nach Jackel-Skript-Struktur korrigiert (Teil 1 Grundlagen → Teil 2 NSM → Teil 3 Beschaffung & Kontrolle)',
       'FeuAK Haushalt: Dopplung 3-Säulen-Modell entfernt (war in Akk 05 und 11 – jetzt nur in 11)',
