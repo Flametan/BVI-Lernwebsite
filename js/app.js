@@ -1259,7 +1259,7 @@ const SEARCH = (function(){
     'v-vak-klausurhinweise':'VAk · Klausurhinweise','v-vak-rettungsdienstrecht':'VAk · Rettungsdienstrecht','v-vak-fallbearbeitung':'VAk · Fallbearbeitung','v-vak-uebungsklausur':'VAk · Übungsklausur',
     'v-feuak-vwl':'FeuAK · VWL','v-feuak-bwl':'FeuAK · BWL','v-feuak-haushalt':'FeuAK · Haushalt',
     'v-feuak-vergabe':'FeuAK · Vergabe','v-feuak-rechnungswesen':'FeuAK · Rechnungswesen',
-    'v-feuak-pm':'FeuAK · Projektmanagement / Strategisches Management',
+    'v-feuak-pm':'FeuAK · Strategisches Management',
     'v-feuak-bedarfsplanung':'FeuAK · Bedarfsplanung','v-feuak-pruefung':'FeuAK · Prüfungsleistung Hamburg',
     'v-feuak-altklausur':'FeuAK · Altklausur-Training',
     'v-feuak-planspiel':'FeuAK · Planspiel MANV',
@@ -3438,6 +3438,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.20.6',ts:'2026-08-18T10:30',items:[
+      'FeuAK: Tab „Projektmanagement / Strategisches Management" umbenannt in „Strategisches Management" (Topic-Card, Seitenüberschrift, Kategorie-Map)'
+    ]},
     {v:'2.20.5',ts:'2026-08-18T10:00',items:[
       'FeuAK: Neuer Tab Planspiel MANV – Berliner Platz (Polizeilage / LebEL)',
       'Planspiel: 8 Akkordeons – Fahrzeugführer, Zugführer, Verbandsführer, Oberste Führungsebene (Direktionsdienst), MANV-Grundlagen & Sichtung, HEIKAT & Besonderheiten, Organigramm (SVG), Lagekarte (SVG)',
