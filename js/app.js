@@ -1195,7 +1195,7 @@ const PROGRESS = (function(){
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung'],
-    feuak:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-feuak-altklausur','v-feuak-planspiel'],
+    feuak:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
     idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse'],
   };
   const LEAF_PARENT = {};
@@ -1259,10 +1259,11 @@ const SEARCH = (function(){
     'v-vak-klausurhinweise':'VAk · Klausurhinweise','v-vak-rettungsdienstrecht':'VAk · Rettungsdienstrecht','v-vak-fallbearbeitung':'VAk · Fallbearbeitung','v-vak-uebungsklausur':'VAk · Übungsklausur',
     'v-feuak-vwl':'FeuAK · VWL','v-feuak-bwl':'FeuAK · BWL','v-feuak-haushalt':'FeuAK · Haushalt',
     'v-feuak-vergabe':'FeuAK · Vergabe','v-feuak-rechnungswesen':'FeuAK · Rechnungswesen',
-    'v-feuak-pm':'FeuAK · Projektmanagement / Strategisches Management',
+    'v-feuak-pm':'FeuAK · Strategisches Management',
     'v-feuak-bedarfsplanung':'FeuAK · Bedarfsplanung','v-feuak-pruefung':'FeuAK · Prüfungsleistung Hamburg',
     'v-feuak-altklausur':'FeuAK · Altklausur-Training',
     'v-feuak-planspiel':'FeuAK · Planspiel MANV',
+    'v-feuak-qm':'FeuAK · Qualitätsmanagement',
     'v-idf-brandschutz':'IdF · Vorbeugender Brandschutz',
     'v-idf-stab':'IdF · Stabsarbeit',
     'v-idf-presse':'IdF · Presse- & Öffentlichkeitsarbeit',
@@ -2549,7 +2550,7 @@ const STATS = (function(){
     HLFS:['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     IBK:['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     VAk:['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht'],
-    FeuAK:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-feuak-altklausur','v-feuak-planspiel'],
+    FeuAK:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
     IdF:['v-idf-brandschutz','v-idf-stab','v-idf-presse']
   };
   function ov(){ return document.getElementById('stats-overlay'); }
@@ -3438,6 +3439,13 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.20.7',ts:'2026-08-18T12:00',items:[
+      'FeuAK: Neuer Tab „Qualitätsmanagement" (Skript Jackel, FL 3.3b) – 13 Akkordeons: Einnahmequellen/Finanzausgleich, Haushaltsstruktur, Haushaltspläne, Vorläufige Haushaltsführung, NSM & 3-Säulen-Modell, KLR, Controlling, Prozessmanagement, QM & Brandschutzbedarfsplan, Management-Instrumente, QM nach BF-Bereichen, Personalfaktor, Dienstplanung & Dienstplanmodelle',
+      'FeuAK: Haushalt-Tab bereinigt – alle Jackel-markierten Inhalte (Acc 03–05, 08–09, 11–14) ausgelagert in neuen QM-Tab, restliche Akkordeons neu nummeriert'
+    ]},
+    {v:'2.20.6',ts:'2026-08-18T10:30',items:[
+      'FeuAK: Tab „Projektmanagement / Strategisches Management" umbenannt in „Strategisches Management" (Topic-Card, Seitenüberschrift, Kategorie-Map)'
+    ]},
     {v:'2.20.5',ts:'2026-08-18T10:00',items:[
       'FeuAK: Neuer Tab Planspiel MANV – Berliner Platz (Polizeilage / LebEL)',
       'Planspiel: 8 Akkordeons – Fahrzeugführer, Zugführer, Verbandsführer, Oberste Führungsebene (Direktionsdienst), MANV-Grundlagen & Sichtung, HEIKAT & Besonderheiten, Organigramm (SVG), Lagekarte (SVG)',
@@ -3827,7 +3835,8 @@ const RELATED={
   'v-vak-jur-denken':[['v-vak-verwaltungsrecht','Verwaltungsrecht'],['v-vak-einsatzrecht','Einsatzrecht']],
   'v-feuak-vwl':[['v-feuak-bwl','FeuAK BWL'],['v-feuak-haushalt','FeuAK Haushalt']],
   'v-feuak-bwl':[['v-feuak-vwl','FeuAK VWL'],['v-feuak-rechnungswesen','Rechnungswesen'],['v-feuak-pm','Projektmanagement']],
-  'v-feuak-haushalt':[['v-feuak-vergabe','FeuAK Vergabe'],['v-feuak-bwl','FeuAK BWL']],
+  'v-feuak-haushalt':[['v-feuak-vergabe','FeuAK Vergabe'],['v-feuak-qm','Qualitätsmanagement']],
+  'v-feuak-qm':[['v-feuak-haushalt','Haushalt'],['v-feuak-bedarfsplanung','Bedarfsplanung'],['v-feuak-bwl','FeuAK BWL']],
   'v-feuak-vergabe':[['v-feuak-haushalt','Haushalt']],
   'v-feuak-pm':[['v-ibk-pm','IBK PM'],['v-ibk-zeit','IBK Zeitmanagement'],['v-feuak-bwl','FeuAK BWL']],
   'v-feuak-rechnungswesen':[['v-feuak-bwl','FeuAK BWL'],['v-feuak-haushalt','Haushalt']],
