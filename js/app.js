@@ -3439,6 +3439,10 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.24.0',ts:'2026-08-18T19:30',items:[
+      'Planspiel MANV: OLRD-Akkordeon von acc09 auf acc05 verschoben – direkt nach Oberste Führungsebene',
+      'Reihenfolge: MANV-Grundlagen→06, HEIKAT→07, Organigramm→08, Lagekarte→09'
+    ]},
     {v:'2.23.0',ts:'2026-08-18T19:00',items:[
       'Planspiel MANV: Acc09 „OLRD – Rolle im Planspiel" neu ergänzt',
       'Ablauf Berliner Platz: 4 Schritte kommissarische Übernahme → Lagemeldung → Abschnitte → Transport',
