@@ -3439,6 +3439,15 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.22.0',ts:'2026-08-18T18:00',items:[
+      'Dezentes Farbschema auf der gesamten Lernwebsite – semantisch begründete Farbakzente in allen Haupttabs',
+      'Neue CSS-Klasse ic-r (rot) für Gefahren/Verbote – löst alle inline-Styles ab',
+      'HLFS Führungsvorgang: AUTO-Regel (blau) vs. EIMER-Regel (amber), Gefahr (rot) vs. Entschluss (grün)',
+      'IBK Stress: JD-R-Modell – Job Demands (rot) vs. Job Resources (grün); BGM-Gesundheitsdimensionen + Salutogenese-Trias eingefärbt',
+      'FeuAK VWL: Skaleneffekte Vorteile (grün) / Nachteile (amber)',
+      'Bedarfsplanung: Szenarien + Externe Sachverständige – dafür (grün) vs. dagegen (amber)',
+      'IdF Auftragstaktik: Vorteile (grün) / Voraussetzungen (blau)'
+    ]},
     {v:'2.21.0',ts:'2026-08-18T16:30',items:[
       'FeuAK QM: Farbakzente auf nötigstes reduziert – nur noch 5 semantisch begründete Stellen',
       'Acc04 Vorläufige HHF: Erlaubt (grün) / Nicht erlaubt (rot) – weiterhin eingefärbt',
