@@ -3439,6 +3439,14 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.21.0',ts:'2026-08-18T16:30',items:[
+      'FeuAK QM: Farbakzente auf nötigstes reduziert – nur noch 5 semantisch begründete Stellen',
+      'Acc04 Vorläufige HHF: Erlaubt (grün) / Nicht erlaubt (rot) – weiterhin eingefärbt',
+      'Acc05 NSM: Kameralistik (amber) vs. Doppik (blau) – direkter Systemvergleich',
+      'Acc09 PDCA: P=blau, D=grün, C=amber – Phasenzyklus farblich markiert',
+      'Acc10 Stakeholder-Matrix: 4 Quadranten (grün/amber/blau/neutral) + Risikoanalyse (grün/blau/amber/rot)',
+      'Acc13 24h-Dienst: Vorteile (grün) / Nachteile (amber); 2WA (blau) / 3WA (amber) / 4WA (grün)'
+    ]},
     {v:'2.20.9',ts:'2026-08-18T15:30',items:[
       'FeuAK QM: Farbliche Akzente im gesamten QM-Tab – semantische Farb-Varianten (blau/grün/amber) für info-card, def-box und step-letter',
       'Acc01: Einnahmequellen-Schritte (2=blau, 3=amber, 4=rot), Finanzausgleich-Cards (blau/grün), Haushaltsgrundsätze (blau/amber/grün)',
