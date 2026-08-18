@@ -119,6 +119,8 @@
   .info-card.ic-g .info-card-title{color:#4ACD90;}
   .info-card.ic-o{border-color:rgba(176,115,32,.28);border-left:2px solid #B07320;background:rgba(176,115,32,.05);}
   .info-card.ic-o .info-card-title{color:#D4903A;}
+  .info-card.ic-r{border-color:rgba(165,0,0,.28);border-left:2px solid var(--c-red-l);background:rgba(165,0,0,.05);}
+  .info-card.ic-r .info-card-title{color:var(--c-red-l);}
   /* def-box color variants */
   .def-box.db-b{border-left-color:#3A7FD4;border-color:rgba(58,127,212,.22);background:rgba(58,127,212,.05);}
   .def-box.db-b .def-box-label{color:#6BAAD4;}
