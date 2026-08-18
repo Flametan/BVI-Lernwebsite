@@ -3439,6 +3439,21 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.20.9',ts:'2026-08-18T15:30',items:[
+      'FeuAK QM: Farbliche Akzente im gesamten QM-Tab – semantische Farb-Varianten (blau/grün/amber) für info-card, def-box und step-letter',
+      'Acc01: Einnahmequellen-Schritte (2=blau, 3=amber, 4=rot), Finanzausgleich-Cards (blau/grün), Haushaltsgrundsätze (blau/amber/grün)',
+      'Acc03: VE-Schritte (blau/amber/grün), Deckungsfähigkeit/Übertragbarkeit/Mittelbindung, IP/Stellenplan',
+      'Acc04: Erlaubt (grün) / Nicht erlaubt (rot)',
+      'Acc05: NSM 8 Elemente abwechselnd blau/grün/amber, 3-Säulen (blau/amber/grün), Kameralistik (amber) vs. Doppik (blau)',
+      'Acc06: KLR 3 Ebenen – Kostenträger (grün), Kostenstelle (blau), Kostenart (amber)',
+      'Acc07: Internes (blau) / Externes Controlling (grün), Absolut (amber) / Verhältnis-KZ (blau)',
+      'Acc08: Primär (blau) / Sekundärprozesse (amber), Teilprozess-Cards',
+      'Acc09: PDCA P=blau, D=grün, C=amber, A=gold; Fehlerkultur def-box grün; BEP-Cards, Schutzziele/Mengenbezugsgrößen/Maßnahmen',
+      'Acc10: Stakeholder-Matrix 4 Quadranten (grün/amber/blau/neutral), Risikoanalyse (grün/blau/amber/rot)',
+      'Acc11: Produkte (blau), Qualitätsansprüche (grün), Stakeholder (amber) durch alle BF-Bereiche',
+      'Acc12: Personal-Ist (blau), Soll (amber), Ist-Stellen (grün), Mehrarbeit-Cards, Transferleistungen/Funktionsunterschreitungen',
+      'Acc13: Anforderungen (blau) / Voraussetzungen (grün), EU-RL (amber) / ArbSchG (blau), 24h Vorteile (grün) / Nachteile (amber), 2WA (blau) / 3WA (amber) / 4WA (grün)'
+    ]},
     {v:'2.20.8',ts:'2026-08-18T14:00',items:[
       'FeuAK QM: Lückenanalyse – fehlende Inhalte aus Jackel-Skript nachgetragen',
       'QM Acc01: Haushaltsgrundsätze (Wirtschaftlichkeit & Sparsamkeit, Vollständigkeit & Einheit, Jährlichkeit, Gesamtdeckungsprinzip) und Schlüsselzuweisungen ergänzt',
