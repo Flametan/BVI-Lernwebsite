@@ -3439,6 +3439,12 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.23.0',ts:'2026-08-18T19:00',items:[
+      'Planspiel MANV: Acc09 „OLRD – Rolle im Planspiel" neu ergänzt',
+      'Ablauf Berliner Platz: 4 Schritte kommissarische Übernahme → Lagemeldung → Abschnitte → Transport',
+      'OLRD (grün) vs. LNA (blau): Aufgabenteilung auf einen Blick',
+      'Hinweiskarte: Schnittstelle Verbandsführer ↔ OLRD – wer spricht wen für was an'
+    ]},
     {v:'2.22.0',ts:'2026-08-18T18:00',items:[
       'Dezentes Farbschema auf der gesamten Lernwebsite – semantisch begründete Farbakzente in allen Haupttabs',
       'Neue CSS-Klasse ic-r (rot) für Gefahren/Verbote – löst alle inline-Styles ab',
