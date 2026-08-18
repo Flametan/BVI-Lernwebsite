@@ -3439,6 +3439,13 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.20.8',ts:'2026-08-18T14:00',items:[
+      'FeuAK QM: Lückenanalyse – fehlende Inhalte aus Jackel-Skript nachgetragen',
+      'QM Acc01: Haushaltsgrundsätze (Wirtschaftlichkeit & Sparsamkeit, Vollständigkeit & Einheit, Jährlichkeit, Gesamtdeckungsprinzip) und Schlüsselzuweisungen ergänzt',
+      'QM Acc07: Kennzahlensystematik (Absolut- vs. Verhältnis-Kennzahlen) vor Benchmarking eingefügt',
+      'QM Acc09: Fehlerkultur als QM-Element und BEP-Inhalte Funktionssoll & Standortplanung ergänzt',
+      'QM Acc13: Schichtfolge-Beispiele inkl. Bremer Modell (D–N–F–F–F), 2/3-Wechsel und RD-taugliche Varianten hinzugefügt'
+    ]},
     {v:'2.20.7',ts:'2026-08-18T12:00',items:[
       'FeuAK: Neuer Tab „Qualitätsmanagement" (Skript Jackel, FL 3.3b) – 13 Akkordeons: Einnahmequellen/Finanzausgleich, Haushaltsstruktur, Haushaltspläne, Vorläufige Haushaltsführung, NSM & 3-Säulen-Modell, KLR, Controlling, Prozessmanagement, QM & Brandschutzbedarfsplan, Management-Instrumente, QM nach BF-Bereichen, Personalfaktor, Dienstplanung & Dienstplanmodelle',
       'FeuAK: Haushalt-Tab bereinigt – alle Jackel-markierten Inhalte (Acc 03–05, 08–09, 11–14) ausgelagert in neuen QM-Tab, restliche Akkordeons neu nummeriert'
