@@ -3439,6 +3439,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.24.1',ts:'2026-08-18T20:00',items:[
+      'Planspiel MANV: Bugfix – fehlende </details>-Tags im OLRD-Akkordeon ergänzt, nachfolgende Akkordeons wieder eigenständig'
+    ]},
     {v:'2.24.0',ts:'2026-08-18T19:30',items:[
       'Planspiel MANV: OLRD-Akkordeon von acc09 auf acc05 verschoben – direkt nach Oberste Führungsebene',
       'Reihenfolge: MANV-Grundlagen→06, HEIKAT→07, Organigramm→08, Lagekarte→09'
