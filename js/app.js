@@ -3439,6 +3439,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.25.0',ts:'2026-08-19T12:00',items:[
+      'QM: Vergleichsabschnitt „Personal-Ist-Faktor vs. Ist-Stellenfaktor" ergänzt – mit Kernunterschied, Visualisierung und Realdaten FW Frankfurt 2023'
+    ]},
     {v:'2.24.1',ts:'2026-08-18T20:00',items:[
       'Planspiel MANV: Bugfix – fehlende </details>-Tags im OLRD-Akkordeon ergänzt, nachfolgende Akkordeons wieder eigenständig'
     ]},
