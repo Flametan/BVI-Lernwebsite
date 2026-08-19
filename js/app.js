@@ -37,6 +37,8 @@ const NAV = (function(){
     if(id==='v-abkuerzungen') ABK.init();
     if(id==='v-vak-altklausur') QUIZ.init();
     if(id==='v-feuak-altklausur') FEUAK_QUIZ.init();
+    if(id==='v-eingrenzung-klausur') EINGRENZUNG_QUIZ.init();
+    if(id==='v-klausur') KLAUSUR_HUB.render();
     if(id==='v-vak-fallbearbeitung','v-vak-uebungsklausur') FALLBEARBEITUNG.init();
     if(id==='v-vak-uebungsklausur') UEBUNGSKLAUSUR.init();
     if(id==='v-simulator') SIM._refreshCards();
@@ -3398,6 +3400,209 @@ const FEUAK_QUIZ = (function(){
   };
 })();
 
+/* ══════════════════════════════════════════════════════════════
+   EINGRENZUNG_QUIZ – Klausur 08/2026 & Münster 2026 (8 Fragen, 30 Min)
+══════════════════════════════════════════════════════════════ */
+const EINGRENZUNG_QUIZ = (function(){
+  const KEY = 'bvi_eq_scores';
+  const TIMER_TOTAL = 1800; // 30 Minuten
+  let _step=0, _revealed=false, _timerOn=false, _timeLeft=TIMER_TOTAL, _timerRef=null;
+  let _scores={};
+
+  const QUESTIONS = [
+    {id:1,nr:'Frage 1',punkte:7,cat:'Haushalt',
+     text:'Nennen Sie die 6 Haushaltsgrundsätze der Kommunalverwaltung und beschreiben Sie die Phasen des kommunalen Haushaltskreislaufs.',
+     answer:'<strong>6 Haushaltsgrundsätze:</strong><br>1. <strong>Vollständigkeit:</strong> Alle Einnahmen und Ausgaben sind vollständig im Haushalt zu veranschlagen.<br>2. <strong>Einheit:</strong> Alle Einnahmen und Ausgaben werden in einem einzigen Haushalt zusammengefasst.<br>3. <strong>Öffentlichkeit:</strong> Der Haushalt wird öffentlich bekannt gemacht (demokratische Transparenz).<br>4. <strong>Jährlichkeit:</strong> Der Haushalt gilt für ein Haushaltsjahr (Ausnahme: Doppelhaushalt = zwei getrennte Pläne).<br>5. <strong>Sparsamkeit und Wirtschaftlichkeit:</strong> Mittel sind sparsam und wirtschaftlich einzusetzen (Minimalprinzip).<br>6. <strong>Vorherigkeit:</strong> Der Haushalt muss vor Beginn des Haushaltsjahres beschlossen sein.<br><br><strong>Phasen des Haushaltskreislaufs:</strong><br>① <strong>Aufstellung:</strong> Fachbereiche melden Bedarfe an, Kämmerei erstellt Entwurf.<br>② <strong>Beratung:</strong> Haushaltsausschuss und Fachausschüsse beraten, Änderungsanträge.<br>③ <strong>Beschluss:</strong> Rat/Gemeinderat beschließt Haushaltssatzung (demokratische Legitimation).<br>④ <strong>Vollzug:</strong> Fachbereiche bewirtschaften Mittel, Kämmerei überwacht Einhaltung.<br>⑤ <strong>Jahresabschluss:</strong> Jahresergebnis feststellen, Rechenschaftsbericht.<br>⑥ <strong>Prüfung:</strong> Rechnungsprüfungsamt (RPA) und ggf. überörtliche Prüfung (Bezirksregierung).'},
+    {id:2,nr:'Frage 2',punkte:4,cat:'Haushalt',
+     text:'Was ist vorläufige Haushaltsführung? Nennen Sie je zwei zulässige und unzulässige Ausgaben in dieser Phase.',
+     answer:'Greift, wenn der Haushaltsplan <strong>nicht vor Beginn des neuen Haushaltsjahres rechtswirksam beschlossen</strong> wurde (z.B. bei politischen Verhandlungen oder fehlender Genehmigung).<br><br><strong>Zulässig:</strong><br>① Erfüllung rechtlicher Verpflichtungen (Gehälter, laufende Verträge, Betriebskosten).<br>② Fortsetzung laufender Aufgaben zur Aufrechterhaltung des Feuerwehrbetriebs (bis zur Höhe des Vorjahresplans).<br><br><strong>Nicht zulässig:</strong><br>① Neue freiwillige Leistungen oder neue Investitionen ohne Rechtspflicht.<br>② Kreditaufnahme für neue Maßnahmen oder Beschluss neuer Stellen im Stellenplan.<br><br>Rechtsgrundlage: § 82 GO NRW bzw. entsprechende Gemeindeordnung des jeweiligen Bundeslandes.'},
+    {id:3,nr:'Frage 3',punkte:6,cat:'BSC / QM',
+     text:'Nennen Sie für zwei Feuerwehrbereiche (Berufsfeuerwehr und Freiwillige Feuerwehr) je zwei Produkte und die entsprechenden Kunden.',
+     answer:'<strong>Berufsfeuerwehr (BF):</strong><br><u>Produkte:</u><br>① Abwehrender Brandschutz – Einsatzleistung bei Bränden<br>② Technische Hilfeleistung und Rettungsdienst – Notfallversorgung<br><u>Kunden:</u><br>① Bevölkerung (direkte Hilfeempfänger bei Notfällen)<br>② Kommunalpolitik/Träger (Auftraggeber, finanziert über Haushalt)<br><br><strong>Freiwillige Feuerwehr (FF):</strong><br><u>Produkte:</u><br>① Abwehrender Brandschutz und TH im Einzugsbereich der Löschzüge<br>② Ehrenamtliche Unterstützung der BF bei Großschadenlagen<br><u>Kunden:</u><br>① Bevölkerung im ländlichen/stadtrandlichen Versorgungsbereich<br>② Kommunalpolitik (kostengünstige Sicherstellung des gesetzlichen Brandschutzes)<br><br><strong>Kernunterschied:</strong> BF = hauptamtliche Vollzeitorganisation mit Rettungsdienst; FF = bürgerschaftliches Ehrenamt, ergänzt oder ersetzt hauptamtliche Kräfte in strukturschwachen Gebieten.'},
+    {id:4,nr:'Frage 4',punkte:6,cat:'BSC / QM',
+     text:'Nennen Sie die 4 Perspektiven der Balanced Scorecard und erläutern Sie jede mit einem feuerwehrspezifischen Beispiel.',
+     answer:'<strong>1. Finanzperspektive</strong> – Blick des Haushaltsträgers:<br>Frage: Wie sieht uns der Geldgeber? Steuern wir wirtschaftlich?<br>Beispiel FW: Kosten je Einsatz, Budgettreue, Investitionsquote, Deckungsgrad.<br><br><strong>2. Kundenperspektive</strong> – Blick der Bürgerinnen und Bürger:<br>Frage: Wie sehen uns unsere Kunden/die Bevölkerung?<br>Beispiel FW: Hilfsfristerfüllungsquote (90 % AGBF), Kundenzufriedenheit, Sicherheitsgefühl.<br><br><strong>3. Interne Prozessperspektive</strong> – Kernprozesse und Abläufe:<br>Frage: In welchen Prozessen müssen wir exzellent sein?<br>Beispiel FW: Ausrückzeit (Sekunden), Fahrzeugverfügbarkeit (%), Einsatzqualität, Ausbildungsstand.<br><br><strong>4. Lern- und Entwicklungsperspektive</strong> – Zukunftsfähigkeit:<br>Frage: Wie sichern wir unsere Fähigkeit zur Weiterentwicklung?<br>Beispiel FW: Fortbildungsquote, Digitalisierung, Personalentwicklung, Nachwuchsgewinnung.<br><br><em>Die 4 Perspektiven sind durch Ursache-Wirkungs-Ketten verknüpft. Strategische Ziele werden als KPI mit Zielwerten und Maßnahmen definiert.</em>'},
+    {id:5,nr:'Frage 5',punkte:5,cat:'BSC / QM',
+     text:'Nennen Sie je zwei strategische Kennzahlen für jede der vier BSC-Perspektiven einer Berufsfeuerwehr.',
+     answer:'<strong>Finanzperspektive:</strong><br>① Kosten je Einsatz (€/Einsatz) – Wirtschaftlichkeitssteuerung<br>② Investitionsquote (%) – Anteil Investitionen am Gesamtbudget<br><br><strong>Kundenperspektive:</strong><br>① Hilfsfristerfüllungsquote (%) – Anteil Einsätze innerhalb 9,5 Min. (Ziel: ≥ 90 %)<br>② Beschwerdequote (Anz./Jahr) – Kundenzufriedenheitsindikator<br><br><strong>Interne Prozessperspektive:</strong><br>① Ausrückzeit (Sekunden) – von Alarm bis Abfahrt (Ziel: ≤ 60 Sek.)<br>② Fahrzeugverfügbarkeit (%) – Anteil einsatzbereiter Fahrzeuge<br><br><strong>Lern- und Entwicklungsperspektive:</strong><br>① Fortbildungsstunden je Mitarbeiter (Std./Jahr) – Qualifikationsniveau<br>② Krankheitsquote (%) – Indikator für Arbeitsbelastung und Fürsorge<br><br><em>Kennzahlen werden mit Zielwerten (Soll) hinterlegt und in regelmäßigen Intervallen mit dem Ist-Wert verglichen (Soll-Ist-Abgleich).</em>'},
+    {id:6,nr:'Frage 6',punkte:6,cat:'Vergabe',
+     text:'Die Feuerwehr plant die Beschaffung eines HLF 20. Welche strategischen Beschaffungsalternativen (Make-or-Buy) gibt es und wie wird die Entscheidung methodisch vorbereitet?',
+     answer:'<strong>Beschaffungsalternativen (Make-or-Buy):</strong><br>1. <strong>Kauf (Eigentumserwerb):</strong> Einmalige Investition, volle Verfügbarkeit, lange Nutzungsdauer (15–25 J.), hohe Kapitalbindung.<br>2. <strong>Leasing:</strong> Niedrige Anfangsliquiditätsbelastung, Ratenzahlung, am Ende Rückgabe oder Kauf – aber langfristige Vertragsbindung.<br>3. <strong>Interkommunale Zusammenarbeit (IKZ):</strong> Gemeinsame Beschaffung oder Nutzung mit Nachbarkommunen → Skaleneffekte, geringere Einzelkosten.<br>4. <strong>Poolmodell/Nutzungsgemeinschaft:</strong> Fahrzeug im Verbund gemeinsam vorhalten, Kosten nach tatsächlicher Nutzung aufteilen.<br><br><strong>Methodische Vorbereitung:</strong><br>→ <strong>Nutzwertanalyse (NWA):</strong> Nicht-monetäre Kriterien (Verfügbarkeit, Normkonformität, Lieferzeit, Service) werden gewichtet und bewertet → Gesamtnutzwert je Alternative.<br>→ <strong>Risikoanalyse:</strong> Risiken je Alternative identifizieren und bewerten (z.B. Lieferantenabhängigkeit, Ausfallrisiko, Preissteigerungen).<br>→ <strong>Lebenszykluskosten (LCC):</strong> Gesamtkosten über die Nutzungsdauer (Kauf + Betrieb + Wartung + Entsorgung) vergleichen.'},
+    {id:7,nr:'Frage 7',punkte:8,cat:'BSC / QM',
+     text:'Erläutern Sie die 6 Schritte der Nutzwertanalyse (NWA) am Beispiel der HLF-20-Beschaffung.',
+     answer:'Die <strong>Nutzwertanalyse (NWA)</strong> ist ein Verfahren zur strukturierten Bewertung von Handlungsalternativen nach mehreren gewichteten Kriterien (auch nicht-monetäre).<br><br><strong>Schritt 1 – Ziele und Kriterien festlegen:</strong><br>Welche Eigenschaften soll das HLF 20 erfüllen? Beispiel: Beschaffungskosten, Betriebskosten, Verfügbarkeit, Normkonformität (DIN EN 1846), Lieferzeit, Servicequalität.<br><br><strong>Schritt 2 – Kriterien gewichten:</strong><br>Jedem Kriterium wird ein Gewichtungsfaktor zugewiesen (Summe = 100 %). Beispiel: Beschaffungskosten 30 %, Verfügbarkeit 25 %, Normkonformität 20 %, Betriebskosten 15 %, Lieferzeit 10 %.<br><br><strong>Schritt 3 – Alternativen definieren:</strong><br>Z.B. Alternative A: Kauf, Alternative B: Leasing, Alternative C: IKZ.<br><br><strong>Schritt 4 – Alternativen je Kriterium bewerten:</strong><br>Jede Alternative erhält je Kriterium eine Punktzahl (z.B. 1–10). Beispiel: Alternative A bei Verfügbarkeit = 9 Punkte, Alternative B = 7 Punkte.<br><br><strong>Schritt 5 – Teilnutzwerte berechnen:</strong><br>Teilnutzwert = Gewicht (%) × Punktzahl. Für jede Alternative wird der Teilnutzwert je Kriterium berechnet.<br><br><strong>Schritt 6 – Gesamtnutzwert summieren und entscheiden:</strong><br>Summe aller Teilnutzwerte = Gesamtnutzwert. Die Alternative mit dem <strong>höchsten Gesamtnutzwert</strong> wird empfohlen.<br><br><em>Vorteil der NWA: Transparente, nachvollziehbare und dokumentierbare Entscheidungsgrundlage – besonders wichtig im öffentlichen Bereich (Vergaberecht, Rechenschaftspflicht).</em>'},
+    {id:8,nr:'Frage 8',punkte:8,cat:'BSC / QM',
+     text:'Erläutern Sie die Schritte der prospektiven Risikoanalyse und beschreiben Sie die Risikomatrix. Welche Behandlungsstrategien gibt es?',
+     answer:'Die <strong>prospektive Risikoanalyse</strong> identifiziert und bewertet Risiken <em>vor</em> einer Entscheidung (zukunftsgerichtet), um Maßnahmen frühzeitig einzuleiten.<br><br><strong>Schritt 1 – Risikoidentifikation:</strong><br>Alle relevanten Risiken werden systematisch erfasst (Risikoinventar). Methoden: Brainstorming, Checklisten, Erfahrungsdatenbanken. Für HLF-Beschaffung z.B.: Lieferantenausfall, Preissteigerungen, Normänderungen, Fahrzeugausfall.<br><br><strong>Schritt 2 – Risikobewertung:</strong><br>Jedes Risiko wird in zwei Dimensionen bewertet:<br>→ <strong>Eintrittswahrscheinlichkeit (EW):</strong> 1 (sehr selten) bis 5 (sehr wahrscheinlich)<br>→ <strong>Schadensausmaß (SA):</strong> 1 (vernachlässigbar) bis 5 (katastrophal)<br>→ <strong>Risikowert = EW × SA</strong> (1–25)<br><br><strong>Schritt 3 – Risikomatrix (2D-Ampelmatrix):</strong><br>Die Matrix ordnet alle Risiken nach EW (Y-Achse) und SA (X-Achse) ein:<br>🟢 <strong>Grün</strong> (1–4): akzeptables Restrisiko<br>🟡 <strong>Gelb</strong> (5–12): Maßnahmen prüfen<br>🔴 <strong>Rot</strong> (15–25): Handlung erforderlich / Alternative überdenken<br><br><strong>Schritt 4 – Risikobehandlung:</strong><br>① <strong>Vermeiden:</strong> Risikobehaftete Alternative nicht wählen.<br>② <strong>Reduzieren:</strong> Eintrittswahrscheinlichkeit oder Schadensausmaß durch Maßnahmen senken (z.B. Wartungsvertrag, Redundanz).<br>③ <strong>Transferieren:</strong> Risiko an Dritte übertragen (z.B. Versicherung, vertragliche Haftungsklauseln).<br>④ <strong>Akzeptieren:</strong> Bewusstes Tragen des Restrisikos – nur bei niedrigem Risikowert sinnvoll.<br><br><strong>Schritt 5 – Monitoring:</strong><br>Laufende Überwachung der identifizierten Risiken und Wirksamkeit der Maßnahmen.'},
+  ];
+
+  const EQ_TOTAL_PTS = QUESTIONS.reduce(function(s,q){return s+q.punkte;},0);
+
+  function loadScores(){ try{ return JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ return {}; } }
+  function saveScores(d){ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){} }
+  function scoreKey(id){ return 'q'+id; }
+  function fmtTime(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+
+  function startTimer(){
+    if(_timerRef) return;
+    _timerOn=true;
+    _timerRef=setInterval(function(){
+      if(_timeLeft>0){ _timeLeft--; updateTimerDisplay(); }
+      else{ stopTimer(); var el=document.getElementById('eq-timer'); if(el) el.style.color='#ef4444'; }
+    },1000);
+    updateTimerDisplay();
+  }
+
+  function stopTimer(){
+    if(_timerRef){ clearInterval(_timerRef); _timerRef=null; }
+    _timerOn=false;
+  }
+
+  function updateTimerDisplay(){
+    var el=document.getElementById('eq-timer-val'); if(el) el.textContent=fmtTime(_timeLeft);
+    var el2=document.getElementById('eq-timer-val2'); if(el2) el2.textContent=fmtTime(_timeLeft);
+    var btn=document.getElementById('eq-timer-btn'); if(btn) btn.textContent=_timerOn?'⏸ Pausieren':'▶ Timer starten';
+  }
+
+  function dotsHtml(){
+    return QUESTIONS.map(function(q,i){
+      var sc=_scores[scoreKey(q.id)];
+      var cls='fb-dot'+(i===_step?' fb-dot-active':sc!==undefined?' fb-dot-done':'');
+      return '<span class="'+cls+'" onclick="EINGRENZUNG_QUIZ.goToQ('+i+')" title="Zu Frage '+(i+1)+' springen">'+(i+1)+'</span>';
+    }).join('');
+  }
+
+  function renderStart(){
+    var el=document.getElementById('eq-content'); if(!el) return;
+    _scores=loadScores();
+    var scored=QUESTIONS.filter(function(q){return _scores[scoreKey(q.id)]!==undefined;});
+    var totalScored=scored.reduce(function(s,q){return s+(_scores[scoreKey(q.id)]||0);},0);
+    var progress=scored.length;
+    var overviewRows=QUESTIONS.map(function(q){
+      var pts=_scores[scoreKey(q.id)];
+      var done=pts!==undefined;
+      var ptsHtml=done?('<span class="uk-q-pts-got">'+pts+'/'+q.punkte+'</span>'):'<span class="uk-q-pts-open">–</span>';
+      return '<div class="uk-q-row'+(done?' uk-q-done':'')+'" onclick="EINGRENZUNG_QUIZ.goToQ('+(q.id-1)+')"><span class="uk-q-nr">'+q.nr+'</span><span class="uk-q-pts-max">'+q.punkte+' Pkt.</span>'+ptsHtml+'</div>';
+    }).join('');
+    var progressHtml=progress>0?('<div class="uk-progress-row"><span>Fortschritt: '+progress+'/'+QUESTIONS.length+' bewertet</span><span>'+totalScored+'/'+EQ_TOTAL_PTS+' Punkte ('+Math.round(totalScored/EQ_TOTAL_PTS*100)+' %)</span></div>'):'';
+    var resetBtn=progress>0?'<button class="uk-timer-reset" style="margin-left:auto" onclick="EINGRENZUNG_QUIZ.resetAll()">↺ Neu beginnen</button>':'';
+    var resultBtn=progress===QUESTIONS.length?'<button class="uk-result-btn" onclick="EINGRENZUNG_QUIZ.showResult()">Auswertung anzeigen</button>':'';
+    var timerResetBtn=_timeLeft<TIMER_TOTAL?'<button class="uk-timer-reset" onclick="EINGRENZUNG_QUIZ.resetTimer()">↺ Zurücksetzen</button>':'';
+    el.innerHTML='<div class="uk-start"><div class="uk-intro-box"><div class="uk-intro-title">Eingrenzung · Klausur 08/2026 &amp; Münster 2026</div><div class="uk-intro-meta">'+QUESTIONS.length+' Fragen · '+EQ_TOTAL_PTS+' Punkte · Bearbeitungszeit: 30 Min.</div><div class="uk-intro-desc">Schreib deine Antwort, zeige dann die Musterlösung an und bewerte dich selbst. Die Fragen stammen direkt aus der Dozenten-Eingrenzung für den Führungslehrgang 3.3b.</div></div><div class="uk-timer-box"><span id="eq-timer">⏱ <span id="eq-timer-val">'+fmtTime(_timeLeft)+'</span></span><button id="eq-timer-btn" class="uk-timer-toggle" onclick="EINGRENZUNG_QUIZ.toggleTimer()">'+(_timerOn?'⏸ Pausieren':'▶ Timer starten')+'</button>'+timerResetBtn+resetBtn+'</div><div class="uk-q-overview">'+overviewRows+'</div>'+progressHtml+'<button class="uk-start-btn" onclick="EINGRENZUNG_QUIZ.goToQ(0)">'+(progress>0?'Klausur fortsetzen →':'Klausur beginnen →')+'</button>'+resultBtn+'</div>';
+  }
+
+  function renderQuestion(){
+    var el=document.getElementById('eq-content'); if(!el) return;
+    _scores=loadScores();
+    var q=QUESTIONS[_step];
+    var savedTa=_scores['ta_q'+q.id]||'';
+    var myPts=_scores[scoreKey(q.id)];
+    var scoreBtns=Array.from({length:q.punkte+1},function(_,i){return '<button class="uk-score-btn'+(myPts===i?' uk-score-active':'')+'" onclick="EINGRENZUNG_QUIZ.setScore('+i+')">'+i+'</button>';}).join('');
+    var scoreGot=myPts!==undefined?('<span class="uk-score-got">'+myPts+'/'+q.punkte+' Pkt. gespeichert</span>'):'';
+    var prevBtn=_step===0?'':'<button class="fb-prev-btn" onclick="EINGRENZUNG_QUIZ.prevQ()">← Zurück</button>';
+    var nextLabel=_step===QUESTIONS.length-1?'Auswertung →':'Nächste Frage →';
+    var nextFn=_step===QUESTIONS.length-1?'EINGRENZUNG_QUIZ.showResult()':'EINGRENZUNG_QUIZ.nextQ()';
+    el.innerHTML='<div class="uk-q-header"><button class="uk-back-btn" onclick="EINGRENZUNG_QUIZ.showStart()">← Übersicht</button><span class="uk-q-badge">'+q.nr+' · '+q.punkte+(q.punkte===1?' Punkt':' Punkte')+'</span><span class="uk-timer-inline">⏱ <span id="eq-timer-val2">'+fmtTime(_timeLeft)+'</span></span></div><div class="uk-question"><p>'+q.text+'</p></div><textarea class="fb-textarea" id="eq-ta" placeholder="Schreibe deine Antwort hier…" rows="6">'+savedTa+'</textarea><button class="fb-reveal-btn'+(_revealed?' hidden':'')+'" id="eq-reveal" onclick="EINGRENZUNG_QUIZ.reveal()">Musterlösung anzeigen</button><div class="fb-answer'+(_revealed?'':' hidden')+'" id="eq-answer">'+q.answer+'</div><div class="uk-score-row'+(_revealed?'':' hidden')+'" id="eq-score-row"><span class="uk-score-label">Meine Punkte:</span><div class="uk-score-btns">'+scoreBtns+'</div>'+scoreGot+'</div><div class="fb-step-actions">'+prevBtn+'<button class="fb-next-btn" onclick="'+nextFn+'">'+nextLabel+'</button></div><div class="fb-step-dots">'+dotsHtml()+'</div>';
+  }
+
+  function renderResult(){
+    var el=document.getElementById('eq-content'); if(!el) return;
+    stopTimer();
+    _scores=loadScores();
+    var total=QUESTIONS.reduce(function(s,q){return s+(_scores[scoreKey(q.id)]||0);},0);
+    var pct=Math.round(total/EQ_TOTAL_PTS*100);
+    var grade=pct>=90?'Sehr gut':pct>=80?'Gut':pct>=70?'Befriedigend':pct>=60?'Ausreichend':'Nicht bestanden';
+    var gradeCol=pct>=60?'#4ACD90':'#ef4444';
+    var rows=QUESTIONS.map(function(q){
+      var got=_scores[scoreKey(q.id)];
+      var done=got!==undefined;
+      var col=done?(got===q.punkte?'#4ACD90':got>0?'var(--c-gold)':'#ef4444'):'var(--c-slate-l)';
+      return '<tr><td>'+q.nr+'</td><td>'+q.punkte+'</td><td style="color:'+col+';">'+(done?got:'–')+'</td><td><button class="uk-jump-btn" onclick="EINGRENZUNG_QUIZ.goToQ('+(q.id-1)+')">→</button></td></tr>';
+    }).join('');
+    el.innerHTML='<div class="uk-result"><div class="uk-result-header">Auswertung</div><div class="uk-result-score" style="color:'+gradeCol+';">'+total+' / '+EQ_TOTAL_PTS+' Punkte</div><div class="uk-result-pct" style="color:'+gradeCol+';">'+pct+' % – '+grade+'</div><div class="uk-result-bar"><div class="uk-result-fill" style="width:'+pct+'%;background:'+gradeCol+';"></div></div><table class="uk-result-table"><thead><tr><th>Frage</th><th>Max.</th><th>Erreicht</th><th></th></tr></thead><tbody>'+rows+'</tbody></table><div class="uk-result-actions"><button class="uk-start-btn" onclick="EINGRENZUNG_QUIZ.showStart()">← Zur Übersicht</button><button class="uk-reset-btn" onclick="EINGRENZUNG_QUIZ.resetAll()">Neu beginnen</button></div></div>';
+  }
+
+  return {
+    init:function(){
+      _scores=loadScores();
+      this.showStart();
+    },
+    showStart:function(){
+      _step=0; _revealed=false;
+      renderStart();
+    },
+    goToQ:function(i){
+      var ta=document.getElementById('eq-ta');
+      if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
+      _step=i; _revealed=false;
+      renderQuestion();
+    },
+    nextQ:function(){
+      var ta=document.getElementById('eq-ta');
+      if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
+      if(_step<QUESTIONS.length-1){_step++;_revealed=false;renderQuestion();}
+    },
+    prevQ:function(){
+      var ta=document.getElementById('eq-ta');
+      if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
+      if(_step>0){_step--;_revealed=true;renderQuestion();}
+    },
+    reveal:function(){
+      var ta=document.getElementById('eq-ta');
+      if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
+      _revealed=true;
+      document.getElementById('eq-reveal')?.classList.add('hidden');
+      document.getElementById('eq-answer')?.classList.remove('hidden');
+      document.getElementById('eq-score-row')?.classList.remove('hidden');
+    },
+    setScore:function(pts){
+      var d=loadScores();d[scoreKey(QUESTIONS[_step].id)]=pts;saveScores(d);_scores=d;
+      renderQuestion();
+      _revealed=true;
+      document.getElementById('eq-answer')?.classList.remove('hidden');
+      document.getElementById('eq-score-row')?.classList.remove('hidden');
+    },
+    showResult:function(){renderResult();},
+    toggleTimer:function(){
+      if(_timerOn) stopTimer(); else startTimer();
+      updateTimerDisplay();
+    },
+    resetTimer:function(){stopTimer();_timeLeft=TIMER_TOTAL;renderStart();},
+    resetAll:function(){
+      if(!confirm('Alle Antworten und Punkte zurücksetzen?')) return;
+      localStorage.removeItem(KEY);_scores={};_step=0;_revealed=false;
+      stopTimer();_timeLeft=TIMER_TOTAL;
+      renderStart();
+    }
+  };
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   KLAUSUR_HUB – Live-Fortschritt für den Klausuren-Übersichtstab
+══════════════════════════════════════════════════════════════ */
+const KLAUSUR_HUB = (function(){
+  function getInfo(key, totalQ, maxPts){
+    try{
+      var sc=JSON.parse(localStorage.getItem(key)||'{}');
+      var scored=Object.keys(sc).filter(function(k){return /^q\d+$/.test(k);});
+      var pts=scored.reduce(function(s,k){return s+(parseInt(sc[k])||0);},0);
+      return {done:scored.length, totalQ:totalQ, pts:pts, maxPts:maxPts};
+    }catch(e){return {done:0,totalQ:totalQ,pts:0,maxPts:maxPts};}
+  }
+  function fmt(info){
+    if(info.done===0) return 'Noch nicht gestartet';
+    return info.done+'/'+info.totalQ+' bewertet · '+info.pts+'/'+info.maxPts+' Pkt.';
+  }
+  return {
+    render:function(){
+      var eq=document.getElementById('klh-eq-progress');
+      var fq=document.getElementById('klh-fq-progress');
+      if(eq) eq.textContent=fmt(getInfo('bvi_eq_scores',8,44));
+      if(fq) fq.textContent=fmt(getInfo('bvi_fq_scores',22,110));
+    }
+  };
+})();
+
 /* ======================================================================
    HEATMAP – Tägliche Lernaktivität
 ====================================================================== */
@@ -3439,6 +3644,11 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.26.0',ts:'2026-08-19T14:00',items:[
+      'Neu: Tab „Eingrenzung – Klausur 08/2026 & Münster 2026" mit 8 Dozenten-Klausurfragen und 30-Min.-Timer (EINGRENZUNG_QUIZ)',
+      'Neu: Hub-Tab „Klausuren" fasst Eingrenzung, Altklausur-Training und Prüfungsleistung in einer Übersicht zusammen',
+      'FeuAK-Übersicht: Zwei Einzelkacheln durch eine „Klausuren"-Kachel ersetzt'
+    ]},
     {v:'2.25.0',ts:'2026-08-19T12:00',items:[
       'QM: Vergleichsabschnitt „Personal-Ist-Faktor vs. Ist-Stellenfaktor" ergänzt – mit Kernunterschied, Visualisierung und Realdaten FW Frankfurt 2023'
     ]},

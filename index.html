@@ -5492,15 +5492,10 @@
   </div>
   <div class="pc">
     <div class="cg cg-2">
-      <div class="topic-card" onclick="NAV.go('v-feuak-altklausur','Altklausur-Training FeuAK')">
-        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        <div class="tc-name">Altklausur-Training</div>
-        <div class="tc-desc">22 Prüfungsfragen aus Gedächtnisprotokollen Aug 2025 &amp; Feb 2026 mit Musterlösungen</div>
-      </div>
-      <div class="topic-card" onclick="NAV.go('v-feuak-pruefung','Prüfungsleistung Lehrgang Hamburg')">
+      <div class="topic-card" onclick="NAV.go('v-klausur','Klausuren')">
         <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        <div class="tc-name">Prüfungsleistung Lehrgang Hamburg</div>
-        <div class="tc-desc">Prüfungsformat 2025, Eingrenzungen, 17 Groblernziele</div>
+        <div class="tc-name">Klausuren</div>
+        <div class="tc-desc">Eingrenzung 08/2026 · Altklausur-Training · Prüfungsformat &amp; Groblernziele</div>
       </div>
       <div class="topic-card" onclick="NAV.go('v-feuak-vwl','VWL')">
         <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
@@ -9697,6 +9692,55 @@
     <div id="fq-content"></div>
   </div>
 </div>
+<!-- ============================================================ EINGRENZUNG KLAUSUR 08/2026 ============================================================ -->
+<div id="v-eingrenzung-klausur" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">Führungslehrgang 3.3b · Dozenten-Eingrenzung</p>
+    <h1 class="page-title">Eingrenzung – <span class="accent">Klausur 08/2026</span> &amp; Münster 2026</h1>
+    <p class="page-lead">8 Klausurfragen direkt aus der Dozenten-Eingrenzung · 44 Punkte · 30-Min.-Timer · Freitext + Selbstbewertung.</p>
+  </div></div>
+  <div class="pc">
+    <div id="eq-content"></div>
+  </div>
+</div>
+
+<!-- ============================================================ KLAUSUREN HUB ============================================================ -->
+<div id="v-klausur" class="view detail-view">
+  <div class="page-hero"><div class="phi">
+    <p class="page-eyebrow">FeuAK Hamburg · Klausurvorbereitung</p>
+    <h1 class="page-title">Klausur – <span class="accent">Training</span></h1>
+    <p class="page-lead">Alle Klausur-Trainingstabs auf einen Blick – Eingrenzung, Altklausuren und Prüfungsformat.</p>
+  </div></div>
+  <div class="pc">
+    <div class="cg cg-3" style="margin-top:.5rem">
+
+      <!-- Kachel 1: Eingrenzung -->
+      <div class="topic-card" onclick="NAV.go('v-eingrenzung-klausur','Eingrenzung – Klausur 08/2026 &amp; Münster 2026')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <div class="tc-name">Eingrenzung 08/2026 &amp; Münster</div>
+        <div class="tc-sub">8 Dozenten-Klausurfragen · 44 Punkte · 30 Min.</div>
+        <div class="tc-sub" id="klh-eq-progress" style="margin-top:.4rem;color:var(--c-gold)">–</div>
+      </div>
+
+      <!-- Kachel 2: Altklausur-Training -->
+      <div class="topic-card" onclick="NAV.go('v-feuak-altklausur','Altklausur-Training FeuAK')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <div class="tc-name">Altklausur-Training FeuAK</div>
+        <div class="tc-sub">22 Prüfungsfragen aus Gedächtnisprotokollen Aug 2025 &amp; Feb 2026 · 90 Min.</div>
+        <div class="tc-sub" id="klh-fq-progress" style="margin-top:.4rem;color:var(--c-gold)">–</div>
+      </div>
+
+      <!-- Kachel 3: Prüfungsleistung -->
+      <div class="topic-card" onclick="NAV.go('v-feuak-pruefung','Prüfungsleistung Lehrgang Hamburg')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        <div class="tc-name">Prüfungsleistung Lehrgang Hamburg</div>
+        <div class="tc-sub">Prüfungsformat 2025, Eingrenzungen der Dozierenden, 17 Groblernziele</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- ============================================================ FeuAK PLANSPIEL ============================================================ -->
 <div id="v-feuak-planspiel" class="view detail-view">
   <div class="page-hero"><div class="phi">
