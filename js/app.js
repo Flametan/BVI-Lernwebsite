@@ -3644,6 +3644,10 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.28.0',ts:'2026-08-20T12:00',items:[
+      'Neuer FeuAK-Tab „Beschaffungspraxis": 10 Akkordeons zu Ausgangslage, Bedarfsermittlung & Investitionsplanung, Vergaberecht & Schwellenwerte, Vergabegrundsätze & Verfahrensarten, Vorplanung & Markterkundung, Haushaltsmittel & Lebenszykluskosten, Vergabeunterlagen & Leistungsbeschreibung, Losbildung & Blockbeschaffung, Abnahme sowie Inbetriebnahme & Verwertung',
+      'Inhalte aus Demtröder 2026 (Fahrzeugbeschaffung HLF 20, FeuAK HH) und Reinstorf 2026 (Grundlagenwissen öffentliche Beschaffungen)'
+    ]},
     {v:'2.27.1',ts:'2026-08-19T17:00',items:[
       'Eingrenzung F3: Alle 8 Feuerwehr-Bereiche vollständig ausgearbeitet (je Produkte, Beteiligte, Indikatoren) – Ausbildung, Fortbildung, Vorbeugender Brandschutz, Rettungsdienst, Technik, IuK neu hinzugefügt'
     ]},
