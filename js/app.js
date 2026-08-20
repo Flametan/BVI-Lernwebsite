@@ -3679,6 +3679,10 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.28.8',ts:'2026-08-20T20:00',items:[
+      'Acc 03 (Beschaffungspraxis): Digitaler Marktplatz Deutschland & KI-Einsatz + Strategische Aspekte WGM aus Acc 10 hierher verschoben',
+      'Reinstorf-Badges im Inneren von Acc 03 und Acc 04 entfernt – Badge verbleibt nur in der Akkordeon-Überschrift (Summary)'
+    ]},
     {v:'2.28.7',ts:'2026-08-20T19:00',items:[
       'Reinstorf-2026-Badge auf Akkordeon-Ebene: Acc 03 (Vergaberecht: Grundlagen & Schwellenwerte) und Acc 04 (Vergabegrundsätze & Verfahrensarten) im Tab Beschaffungspraxis – beide vollständig aus Reinstorf 2026'
     ]},
