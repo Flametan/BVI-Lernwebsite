@@ -3679,6 +3679,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.28.6',ts:'2026-08-20T18:00',items:[
+      '12 weitere Reinstorf-2026-Badges (gold) im Tab Beschaffungspraxis: Definition Vergaberecht, Zweiteilung, EU-Schwellenwerte, Ausnahmen (Acc 03), Grundsätze, Verfahrensarten, Angebotswertung (Acc 04), Markterkundung (Acc 05), Bestandteile VU, Ablauf Vergabeprozess, Zuschlagskriterien (Acc 07), Strategische Aspekte WGM (Acc 10)'
+    ]},
     {v:'2.28.5',ts:'2026-08-20T17:00',items:[
       '3 neue Lernkarten: h130 (Herausforderungen + Anwendungsbereich §98–105 GWB), h131 (Teilnehmer am Vergabeverfahren / Bietergemeinschaft §43 VgV), h132 (Digitaler Marktplatz Deutschland / KI-Einsatz)',
       'Reinstorf-2026-Badge (golden) an 4 Acc-Sub-Überschriften im Tab Beschaffungspraxis ergänzt'
