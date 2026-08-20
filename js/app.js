@@ -3669,6 +3669,16 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.28.2',ts:'2026-08-20T14:00',items:[
+      'FeuAK-Tab Beschaffungspraxis: 9 Inhaltslücken aus Demtröder-PDF geschlossen',
+      'Acc 01: Schäden-Liste auf 12 laufzeitrelevante Schadensbilder erweitert',
+      'Acc 02: Ziele eines Fahrzeugbeschaffungsprogramms und Exkurs Zivilschutzausstattung des Bundes ergänzt',
+      'Acc 03: §3-VgV-Zeitpunkt (Tag der Auftragsbekanntmachung) und Einbeziehung von Optionen ergänzt',
+      'Acc 05: Besondere Ausstattungsmerkmale, technische Faktoren Wattiefe und Bedarfsplan als Förderbedingung ergänzt',
+      'Acc 07: Vergabeprozess-Ablauf (7 Schritte) und Vertragsstrafe/Garantieansprüche ergänzt',
+      'Acc 09: Vertragsstrafe, Garantieansprüche und Reklamationsbeseitigung ergänzt',
+      'Acc 10: Presse- und Medienarbeit, abschließende Projektdokumentation und nachträgliche Mängelabarbeitung ergänzt'
+    ]},
     {v:'2.28.1',ts:'2026-08-20T13:00',items:[
       '19 neue Lernkarten: FeuAK Beschaffungspraxis (h106–h117), Stakeholder-Analyse (h118–h121), Risikoanalyse (h122–h124)',
       'h44 aktualisiert: EU-Schwellenwerte auf Stand 1.1.2026 (216.000 € statt 221.000 €, Bau 5.404.000 €)'
