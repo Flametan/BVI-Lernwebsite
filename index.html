@@ -5517,6 +5517,11 @@
         <div class="tc-name">Qualitätsmanagement</div>
         <div class="tc-desc">NSM, KLR, Controlling, PDCA-Regelkreis, QM nach BF-Bereichen, Personalfaktor, Dienstplanung</div>
       </div>
+      <div class="topic-card" onclick="NAV.go('v-feuak-beschaffung','Beschaffungspraxis')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <div class="tc-name">Beschaffungspraxis</div>
+        <div class="tc-desc">Fahrzeugbeschaffung, Vergaberecht, Leistungsbeschreibung, Abnahme, Verwertung</div>
+      </div>
       <div class="topic-card" onclick="NAV.go('v-feuak-bedarfsplanung','Bedarfsplanung')">
         <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         <div class="tc-name">Bedarfsplanung</div>
@@ -8969,6 +8974,406 @@
   </div>
 </div>
 
+
+<!-- ============================================================ FeuAK BESCHAFFUNGSPRAXIS ============================================================ -->
+<div id="v-feuak-beschaffung" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">FeuAK Hamburg · Beschaffungspraxis</p>
+      <h1 class="page-title">Beschaffungs<span class="accent">praxis</span></h1>
+      <p class="page-lead">Strategische Ersatzbeschaffungsplanung · Vergaberecht · Leistungsbeschreibung · Abnahme · Verwertung – am Beispiel HLF 20 (Quellen: Demtröder 2026, Reinstorf 2026)</p>
+    </div>
+  </div>
+  <div class="pc">
+    <div class="acc-list">
+
+      <details class="acc-item">
+        <summary><span class="acc-num">01</span><span class="acc-title">Ausgangslage: Warum Fahrzeugbeschaffung?</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <div class="def-box">
+            <div class="def-box-label">Anlass für eine Ersatzbeschaffung</div>
+            <ul class="bl" style="margin-top:.5rem">
+              <li><strong>Alter</strong> des Fahrzeugs</li>
+              <li><strong>Laufleistung</strong> und technischer Zustand</li>
+              <li><strong>Instandhaltungsaufwand</strong> – steigende Reparaturkosten</li>
+              <li><strong>Einsatztaktische Anforderungen</strong> – neue Normen, Technik, Hygiene</li>
+            </ul>
+          </div>
+          <p class="acc-sub">Kostensteigerungen bei Löschfahrzeugen</p>
+          <div class="def-box">
+            <p>LF-Grundfahrzeug für die <strong>Freiwillige Feuerwehr:</strong></p>
+            <ul class="bl" style="margin-top:.5rem">
+              <li>Jahr 2000: ca. <strong>230.000 €</strong></li>
+              <li>Jahr 2020: ca. <strong>460.000 €</strong></li>
+              <li>Aktuell (2026): ca. <strong>650.000 €</strong></li>
+            </ul>
+            <p style="margin-top:.5rem"><em>Ursachen: Technologie (kraftunterstützte Fahrtragen, Ergonomie), Corona-Pandemie, Ukraine-Krieg → Rohstoffe, Lohn, Energie, Transport. Preissteigerungen werden kommunal i. d. R. nicht durch Mehrbudget ausgeglichen → Investitionsstau.</em></p>
+          </div>
+          <p class="acc-sub">Risiken bei verzögerter Ersatzbeschaffung</p>
+          <ul>
+            <li>Korrosionsschäden an Rahmen, Aufbau, Mannschaftskabine, Radläufen</li>
+            <li>Risse in Löschpumpenhalterung, Hecktraverse, Konstruktion</li>
+            <li>Ersatzteilversorgung wird mit steigendem Alter schwieriger (Laufzeiten FW &gt; Gewerbe)</li>
+            <li>Lieferzeiten von Feuerwehrfahrzeugen: <strong>2 bis 3,5 Jahre</strong></li>
+            <li>Häufigere Ausfälle → mehr Reservefahrzeuge nötig → höhere Stellplatz- und Betriebskosten</li>
+            <li>Fehlende Fahrsicherheitssysteme, unzureichende Abgasreduzierung</li>
+          </ul>
+          <p class="acc-sub">Praxisbeispiele Feuerwehr Hamburg (außerplanmäßige Instandhaltungskosten)</p>
+          <ul>
+            <li><strong>Drehleiter Bj. 1999</strong> (Nutzung bis 2014 geplant, keine Ersatzbeschaffung möglich): Instandsetzung Podest, Rahmen, Hilfsrahmen, Leiterpark → <strong>110.000 €</strong></li>
+            <li><strong>ELW (PKW-Klasse) Bj. 2010</strong> (Nutzung bis 2022 geplant): Getriebe und Abgasaufbereitung → <strong>10.000 €</strong></li>
+            <li><strong>Löschfahrzeuge Bj. 1997</strong> (Nutzung bis 2012 geplant, Instandsetzungsaufwand ab 2008): Grundinstandsetzung, Motorschäden (ab 2010 keine Ersatzmotoren verfügbar) → <strong>200.000 €</strong>, Ausfallzeit pro Fahrzeug 3–4 Monate, ein Fahrzeug stillgelegt</li>
+          </ul>
+          <div class="hint"><p>Mittelfristige Beschaffungsplanungen müssen wegen unvorhersehbarer Unfälle, technischer Ausfälle, geänderter Bedarfslagen oder Haushaltsansätze häufig angepasst werden.</p></div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">02</span><span class="acc-title">Bedarfsermittlung &amp; Investitionsplanung</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p>Die Fahrzeugausstattung gliedert sich in <strong>Grundschutzkomponenten</strong> (abgeleitet aus Planungsszenarien und Funktionsvorhaltungen) und <strong>Sonderfahrzeuge</strong> (orientiert am Gefahrenpotenzial). Ergänzend: technische Reserve, taktische Reserve, strategische Reserve und Ausbildungsfahrzeuge.</p>
+          <p class="acc-sub">Preisbeispiele gängiger Fahrzeugtypen (2026 inkl. Beladung, brutto)</p>
+          <div style="overflow-x:auto">
+            <table style="border-collapse:collapse;font-size:.82rem;width:100%;margin:.5rem 0">
+              <thead><tr style="background:rgba(201,168,76,.15)">
+                <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Fahrzeugtyp</th>
+                <th style="padding:.3rem .6rem;text-align:right;border:1px solid rgba(255,255,255,.1)">Kosten (brutto)</th>
+                <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Fahrzeugtyp</th>
+                <th style="padding:.3rem .6rem;text-align:right;border:1px solid rgba(255,255,255,.1)">Kosten (brutto)</th>
+              </tr></thead>
+              <tbody>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">KdoW</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">70.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">WLF mit LK</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">400.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">ELW1</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">200.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">AB-Dekon</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">700.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">HLF 20</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">700.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">AB-Schaum</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">260.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">LF 20 KatS</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">550.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">MTW</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">60.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">DLK</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">900.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">RTW</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">400.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">RW</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">700.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">NEF</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">200.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">GW-Hygiene</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">650.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">STW</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">600.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">GW-Versorgung</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">750.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">GRTW</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">950.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">GW-Wasserrettung</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">650.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">FwK</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">1.200.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">LUV</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">350.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">TGM 50</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">1.500.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">RTB 2</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">150.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">AB-Logistik</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">100.000 €</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="acc-sub">Planmäßige Nutzungsdauern (Erfahrungswerte FW Hamburg)</p>
+          <div style="overflow-x:auto">
+            <table style="border-collapse:collapse;font-size:.82rem;width:100%;margin:.5rem 0">
+              <thead><tr style="background:rgba(201,168,76,.15)">
+                <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Fahrzeugtyp</th>
+                <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">BF</th>
+                <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">FF</th>
+                <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Bemerkungen</th>
+              </tr></thead>
+              <tbody>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">ELW / KdoW</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">12 Jahre</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">–</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Trend: max. 10–12 Jahre (BF)</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">HLF</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">15 Jahre</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">20 Jahre</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Trend BF: max. 10–12 Jahre</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">DLK</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">15 Jahre</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">–</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">–</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Sonderfahrzeuge</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">15–20 Jahre</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">–</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">typenabhängig; AB bis 30 Jahre</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">RTW</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">7 Jahre</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">–</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Trend: max. 5 Jahre</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">NEF</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">4 Jahre</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">–</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Trend: oft schon nach 3 Jahren</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="hint"><p><strong>Zeitlicher Vorlauf: ca. 5 Jahre</strong> für die Projektierung bis zur Verfügbarkeit. → Bei Großfahrzeugen soll <strong>im Jahr 12 der Nutzungsdauer</strong> mit der Beschaffungs- und Investitionsmittelplanung begonnen werden. Alle fahrzeugbezogenen Daten idealerweise in einem Verwaltungs-Management-Tool hinterlegen und regelmäßig auswerten.</p></div>
+          <p class="acc-sub">Exkurs: Reservekonzept (Feuerwehr Hamburg)</p>
+          <ul>
+            <li><strong>Technische Reserve:</strong> Fahrzeuge in der Werkstatt / sofort verfügbar nach Reparatur</li>
+            <li><strong>Taktische Reserve:</strong> Fahrzeuge für vorhersehbare Mehrbedarfe (Großlagen)</li>
+            <li><strong>Strategische Reserve:</strong> Fahrzeuge für unvorhersehbare, langfristige Ausfälle</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">03</span><span class="acc-title">Vergaberecht: Grundlagen &amp; Schwellenwerte</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <div class="def-box">
+            <div class="def-box-label">Definition Vergaberecht</div>
+            <p>Das Vergaberecht umfasst alle Regeln, die ein Träger öffentlicher Gewalt bei der Beschaffung von Waren, Bau- und Dienstleistungen beachten muss. Es regelt <strong>nicht was</strong> beschafft wird, sondern <strong>wie</strong> – es ist als <strong>Vertragsanbahnungsrecht</strong> zu verstehen.</p>
+            <p style="margin-top:.5rem;font-style:italic">Das Vergabeverfahren ist nur das Mittel, der Zweck ist immer der Vertrag!</p>
+          </div>
+          <p class="acc-sub">Zweiteilung des Vergaberechts</p>
+          <ul>
+            <li><strong>Oberschwellenbereich:</strong> Kartellvergaberecht = EU- und Bundesrecht (GWB, VgV)</li>
+            <li><strong>Unterschwellenbereich:</strong> Haushaltsvergaberecht = Landesrecht (UVgO, Landesvergabegesetze)</li>
+          </ul>
+          <p class="acc-sub">EU-Schwellenwerte ab 1.1.2026 (§106 GWB)</p>
+          <div style="overflow-x:auto">
+            <table style="border-collapse:collapse;font-size:.82rem;width:100%;margin:.5rem 0">
+              <thead><tr style="background:rgba(201,168,76,.15)">
+                <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Auftragsart</th>
+                <th style="padding:.3rem .6rem;text-align:right;border:1px solid rgba(255,255,255,.1)">ab 1.1.2026</th>
+                <th style="padding:.3rem .6rem;text-align:right;border:1px solid rgba(255,255,255,.1)">bis 31.12.2025</th>
+              </tr></thead>
+              <tbody>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Liefer- und Dienstleistungsaufträge (sonstige öAG)</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08);font-weight:700;color:var(--c-gold)">216.000 €</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">221.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Liefer- und DL (obere/oberste Bundesbehörden)</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">140.000 €</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">143.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Liefer- und DL (Sektorenauftraggeber)</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">432.000 €</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">443.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Verteidigungs- und sicherheitsrelevante L/DL</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">432.000 €</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">443.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Soziale und andere besondere Dienstleistungen</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">750.000 €</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">750.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Bauaufträge / Konzessionen</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">5.404.000 €</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">5.538.000 €</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="hint"><p><strong>Auftragswertschätzung (§3 VgV):</strong> Maßgeblich ist der voraussichtliche <strong>Gesamtwert ohne USt.</strong> Bei Blockbeschaffungen (mehrere Lose gleichen Typs) ist der <strong>Gesamtwert aller Lose</strong> zugrunde zu legen. Bei den meisten Feuerwehrgroßfahrzeugen (HLF, DLK, RW …) liegt der Auftragswert stets oberhalb des Schwellenwerts → <strong>EU-weites offenes Verfahren</strong> ist die Regel.</p></div>
+          <p class="acc-sub">Ausnahmen vom Vergaberecht (§107 GWB)</p>
+          <ul>
+            <li>§107 Abs. 1 Nr. 4 GWB: Notfallversorgung und Rettungsdienst (ausführende Organisationen: gemeinnützige Hilfsorganisationen, Zivil- und Katastrophenschutzorganisationen) – mit Ausnahme des Einsatzes von Krankenwagen zur Patientenbeförderung</li>
+            <li>§108 GWB: Inhouse-Geschäfte</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">04</span><span class="acc-title">Vergabegrundsätze &amp; Verfahrensarten</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Grundsätze des Vergaberechts (§97 GWB) – „rote Fäden"</p>
+          <ul>
+            <li><strong>Wettbewerbsgrundsatz:</strong> Primär öffentliche Ausschreibung; Wettbewerb aktiv fördern</li>
+            <li><strong>Transparenzgebot:</strong> Zuschlagskriterien genauestens festlegen, Veröffentlichungspflichten, keine willkürliche Vergabe</li>
+            <li><strong>Gleichbehandlung:</strong> Alle Verfahrensteilnehmer gleich behandeln (Bieterkommunikation)</li>
+            <li><strong>Wirtschaftlichkeit:</strong> Zuschlag auf das wirtschaftlichste Angebot = bestes Preis-Leistungs-Verhältnis (§127 GWB)</li>
+            <li><strong>Verhältnismäßigkeit:</strong> Eignungs- und Zuschlagskriterien müssen in angemessenem Verhältnis zum Auftragsgegenstand stehen (§122, 127 GWB)</li>
+            <li><strong>Mittelstandsschutz:</strong> Losbildungspflicht (§97 Abs. 4 GWB)</li>
+            <li><strong>Strategische Ziele:</strong> Nachhaltigkeit, Innovationsförderung, Mindestlohn, sozialverträgliche Beschaffung</li>
+          </ul>
+          <p class="acc-sub">Verfahrensarten (§119 GWB – EU-weite Vergabe)</p>
+          <ul>
+            <li><strong>Offenes Verfahren</strong> – Regelfall für Feuerwehrfahrzeuge; öffentliche Ausschreibung für alle Bieter</li>
+            <li><strong>Nicht offenes Verfahren</strong> – nur vorab ausgewählte Bieter werden aufgefordert</li>
+            <li><strong>Verhandlungsverfahren</strong> (mit oder ohne Teilnahmewettbewerb) – Verhandlungen über alle Aspekte des Auftrags</li>
+            <li><strong>Wettbewerblicher Dialog</strong> – bei besonders komplexen Aufträgen</li>
+            <li><strong>Innovationspartnerschaft</strong> – Entwicklung und Kauf innovativer Lösungen in einem Verfahren</li>
+          </ul>
+          <p class="acc-sub">Angebotswertung – 4 Stufen</p>
+          <ol>
+            <li><strong>Formale Angebotsprüfung</strong> – Vollständigkeit, Fristen, Form</li>
+            <li><strong>Eignungsprüfung</strong> – Fachkunde, Leistungsfähigkeit, Zuverlässigkeit</li>
+            <li><strong>Angemessener Preis</strong> – Preis nicht unangemessen niedrig oder hoch</li>
+            <li><strong>Wirtschaftlichstes Angebot</strong> – bestes Preis-Leistungs-Verhältnis nach Zuschlagskriterien</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">05</span><span class="acc-title">Vorplanung: Anforderungsprofil &amp; Markterkundung</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Anforderungsprofil: Was braucht die Feuerwehr?</p>
+          <p>Vor jeder Neubeschaffung sind zu prüfen:</p>
+          <ul>
+            <li><strong>Örtliche Belange</strong> (Topographie, Straßenverkehr, Gefahrenpotenziale)</li>
+            <li><strong>Länderspezifische Vorgaben</strong></li>
+            <li><strong>Taktische Konzepte</strong> – was soll das Fahrzeug leisten können?</li>
+            <li><strong>Technische Konzepte</strong> – Stand der Atemschutz-, Rettungsgeräte-, Beleuchtungs- und Akkutechnologie</li>
+          </ul>
+          <div class="hint"><p>Taktisch-technische Änderungen können in der Regel nur alle 15–20 Jahre im Rahmen einer Neubeschaffung erfolgen. Nachträgliche Umbauten sind kosten-, zeit- und personalintensiv.</p></div>
+          <p class="acc-sub">Praxisbeispiele Feuerwehr Hamburg</p>
+          <ul>
+            <li><strong>HLF mit 2.000 l Löschwassertank</strong> und eingebautem Schaummitteltank (120 l) + FireDos für Netzmittelbeimischung</li>
+            <li><strong>Schmales HLF auf Straßenfahrgestell</strong> (Baubreite 2,35 m) → bessere Erreichbarkeit, Aussteigen und Geräteentnahme in verdichteten Straßen</li>
+            <li><strong>Ergänzende Wasserrettungsausstattung:</strong> RTB2 (aufblasbares Schlauchboot), Stechpaddel, Schwimmflossen, Rettungsweste – wegen vieler Wasserflächen im Stadtgebiet</li>
+          </ul>
+          <p class="acc-sub">Watfähigkeit: Anforderungen an Fahrzeugtypen</p>
+          <div style="overflow-x:auto">
+            <table style="border-collapse:collapse;font-size:.82rem;width:100%;margin:.5rem 0">
+              <thead><tr style="background:rgba(201,168,76,.15)">
+                <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Fahrzeug</th>
+                <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Kat. 1<br><small>Straßenfähig (ca. 20 cm)</small></th>
+                <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Kat. 2<br><small>Geländefähig (60 cm)</small></th>
+                <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Kat. 3<br><small>Geländegängig (100 cm)</small></th>
+              </tr></thead>
+              <tbody>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">ELW / DLK / RTW</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">HLF Straßenfahrgestell</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">HLF Allradfahrgestell</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">GW1 (KLEF)</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">RW / GW-R</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="acc-sub">Markterkundung (§28 VgV)</p>
+          <p>Der öffentliche Auftraggeber darf <strong>vor Einleitung eines Vergabeverfahrens</strong> Markterkundungen durchführen. Unzulässig: Vergabeverfahren <em>nur</em> zur Marktpreisermittlung.</p>
+          <ul>
+            <li>Besuche bei anderen Feuerwehren mit vergleichbaren Fahrzeugen</li>
+            <li>Unverbindliche Angebotseinholung, Produktpräsentationen, Messen, Fachzeitschriften</li>
+            <li>Auftragnehmer-Gespräche und Interessentenkonferenzen</li>
+            <li>Internet-Recherche, Statistiken, Markttrends</li>
+          </ul>
+          <div class="hint"><p><strong>Praxistipp:</strong> Beim Gespräch mit Bietern deutlich machen, dass es sich nur um eine unverbindliche Markterkundung handelt. Wichtige Informationen allen potenziellen Bietern zur Verfügung stellen. Gesprächsergebnisse dokumentieren.</p></div>
+          <p class="acc-sub">Preissteigerungsreserve</p>
+          <p>Zwischen Ausschreibung und Auslieferung liegen <strong>12–24 Monate</strong>. 2020–2024 entstanden Preissteigerungen von bis zu <strong>35 %</strong>. Bei der Haushaltsplanung sind daher <strong>Preissteigerungsraten vorsorglich zu berücksichtigen.</strong></p>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">06</span><span class="acc-title">Haushaltsmittel &amp; Lebenszykluskosten</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <div class="def-box">
+            <div class="def-box-label">Grundsatz</div>
+            <p>Vergabeunterlagen sind erst zu veröffentlichen, wenn Haushaltsmittel <strong>sicher verfügbar</strong> sind oder die Gesamtfinanzierung sichergestellt ist. Bei mehrjährigen Maßnahmen: Anmeldung über eine <strong>Verpflichtungsermächtigung.</strong></p>
+          </div>
+          <p class="acc-sub">Investitionsprogramm (mittelfristige Finanzplanung)</p>
+          <ul>
+            <li>5-Jahres-Darstellung mit Gesamtvolumen und Jahresabflüssen</li>
+            <li>Grundlage: abgeschlossene Bedarfsanalyse (idealerweise aus einem ratifizierten Brandschutzbedarfsplan)</li>
+            <li>Vorläufiger Meilensteinplan zur Realisierung erforderlich</li>
+            <li>Kontinuierliche Marktbeobachtung zur Erkennung von Preistendenzen</li>
+            <li>Preissteigerungsraten vorsorglich einrechnen</li>
+          </ul>
+          <p class="acc-sub">Lebenszykluskosten</p>
+          <ul>
+            <li>Jährliche Inspektionen für Fahrgestell und Aufbau</li>
+            <li>Kraftstoff, AdBlue bzw. Stromverbrauch (bei eHLF)</li>
+            <li>Betriebskosten für Standregenerationen und Bewegungsfahrten</li>
+            <li>Reparaturkosten (steigen sukzessive mit Nutzungsdauer)</li>
+            <li>IuK-Betriebskosten (ELW): Software-Pflege, Patches, Updates, Upgrades</li>
+            <li>Turnusmäßige Windenwartung (RW, HLF)</li>
+            <li>Drehleitern: zusätzliche <strong>5-Jahres-Wartung</strong> und <strong>10-Jahres-Wartung</strong></li>
+          </ul>
+          <div class="hint"><p>Lebenszykluskosten sind in den ersten Jahren (Gewährleistungszeitraum) relativ gering und steigen im Laufe der Nutzungsdauer. Dies muss bei der Haushaltsplanung und Abschreibungsberechnung berücksichtigt werden.</p></div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">07</span><span class="acc-title">Vergabeunterlagen &amp; Leistungsbeschreibung</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Bestandteile der Vergabeunterlagen (§29 VgV)</p>
+          <ol>
+            <li><strong>Anschreiben</strong> – Aufforderung zur Abgabe eines Angebots oder Teilnahmeantrags</li>
+            <li><strong>Bewerbungsbedingungen</strong> – Fristen, Eignungs- und Zuschlagskriterien</li>
+            <li><strong>Vertragsunterlagen</strong> = Leistungsbeschreibung + Vertragsbedingungen</li>
+          </ol>
+          <p class="acc-sub">Projektteam</p>
+          <p>Für die Leistungsbeschreibung empfiehlt sich ein <strong>Projektteam</strong> aus:</p>
+          <ul>
+            <li>Projektleitung (Verantwortung, Koordination)</li>
+            <li>Technische Kompetenz (Fahrzeugtechnik, Gerätetechnik)</li>
+            <li>Einsatzerfahrung</li>
+            <li>Gerätewart / Werkstatt (Atemschutz, Funk, Hydraulik, Feuerlöscher – vorhandene Prüfeinrichtungen berücksichtigen)</li>
+          </ul>
+          <p class="acc-sub">Leistungsbeschreibung – das „Herzstück"</p>
+          <p><strong>DIN 14530-27 (HLF 20, Ausgabe 11/2019)</strong> – Gliederung:</p>
+          <ol>
+            <li>Maße, Masse</li>
+            <li>Allgemeine Anforderungen</li>
+            <li>Anforderungen Fahrgestell</li>
+            <li>Fahrerraum und Mannschaftsraum</li>
+            <li>Aufbau</li>
+            <li>Dach</li>
+            <li>Löschtechnische Einrichtungen</li>
+            <li>Technische Einrichtungen (Funk, Navigation)</li>
+            <li>Farbgebung</li>
+            <li>Feuerwehrtechnische Beladung (Schutzkleidung, Lösch-, Rettungs-, Sanitäts-, Beleuchtungs-, Arbeitsgeräte, Handwerkszeug, Sondergerät)</li>
+          </ol>
+          <div class="hint"><p><strong>Pflichtangaben Normenwerk:</strong> In der LB sind stets <strong>DIN EN 1846 (Teile 1–3)</strong> – Anforderungen an Sicherheit und Leistung – und <strong>DIN SPEC 14502-2</strong> als einzuhaltende technische Regeln zu benennen.</p></div>
+          <p class="acc-sub">Spannungsfeld: Produktneutralität vs. Leistungsbestimmungsrecht</p>
+          <p>Die Vergabestelle hat ein <strong>Leistungsbestimmungsrecht</strong>, darf aber keine Bieter willkürlich diskriminieren oder den Wettbewerb durch überspezifische Anforderungen einschränken.</p>
+          <p class="acc-sub">Zuschlagskriterien (§127 GWB, §58 VgV)</p>
+          <ul>
+            <li>Zuschlag auf das <strong>wirtschaftlichste Angebot</strong> = bestes Preis-Leistungs-Verhältnis</li>
+            <li>Neben dem Preis können berücksichtigt werden: Qualität, technischer Wert, Umwelteigenschaften, Kundendienst, Lieferbedingungen</li>
+            <li>Reine Preiswertung ist bei abschließender Leistungsbeschreibung möglich</li>
+            <li><strong>Zuschlagskriterien und ihre Gewichtung müssen in der Auftragsbekanntmachung veröffentlicht sein</strong> (Transparenzgebot)</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">08</span><span class="acc-title">Losbildung &amp; Blockbeschaffung</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Losbildung (§97 Abs. 4 GWB)</p>
+          <p>Leistungen sind grundsätzlich aufgeteilt zu vergeben – in <strong>Teillose</strong> (nach Menge) und <strong>Fachlose</strong> (nach Art oder Fachgebiet). Bei Fahrzeugbeschaffungen kommen vor allem Fachlose infrage:</p>
+          <ul>
+            <li>Los 1: <strong>Fahrgestell</strong></li>
+            <li>Los 2: <strong>Feuerwehrtechnischer Aufbau</strong></li>
+            <li>Los 3: <strong>Feuerwehrtechnische Beladung</strong> (ggf. separates Fachlos)</li>
+          </ul>
+          <p>Zusammenfassung mehrerer Fachlose zulässig, wenn wirtschaftliche oder technische Gründe vorliegen (§97 Abs. 4 S. 3 GWB) – insbesondere bei der <strong>Schnittstellenproblematik.</strong></p>
+          <div class="hint"><p><strong>Praxisempfehlung DFV-AGBF:</strong> Mindestens Fahrgestell und Aufbau dürfen als Gesamtlos vergeben werden, wenn getrennte Ausschreibungen das Risiko bergen, technisch nicht kompatible Teilleistungen zu erhalten.</p></div>
+          <p class="acc-sub">Blockbeschaffung aus Rahmenverträgen</p>
+          <ul>
+            <li>Rahmenvertrag mit Laufzeit bis zu <strong>4 Jahren</strong>; Fahrzeuge werden bedarfsgerecht abgerufen</li>
+            <li><strong>Vorteile:</strong> einheitliche Aus-/Fortbildung, einfachere Wartung und Ersatzteilhaltung, günstigere Preise durch Stückzahleffekte</li>
+            <li><strong>Risiko:</strong> bauartbedingte Mängel oder Konstruktionsfehler betreffen die <em>gesamte</em> Charge</li>
+            <li>Ausschreibungen werden durch die zentrale Vergabestelle (ZVST) durchgeführt</li>
+            <li>Lieferzeiten stehen erst nach Zuschlagserteilung fest → kurzfristige Beschaffungsplanung ggf. anpassen</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">09</span><span class="acc-title">Abnahme: Konstruktionsgespräch, Zwischen- &amp; Endabnahme</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Auftragsklärungs- &amp; Konstruktionsgespräch</p>
+          <ul>
+            <li>Nach Vertragsschluss (= Zuschlag): <strong>Auftragsklärungsgespräch</strong> zur Abstimmung offener Punkte</li>
+            <li><strong>Konstruktionsgespräch:</strong> AN legt Konstruktionspläne und Fahrzeugaufbauzeichnungen vor – <strong>mind. 1 Woche vorher</strong> zur Vorbereitung des AG</li>
+            <li>Sonderwünsche nach Zuschlag nur noch in „geringem Umfang" im Rahmen des vergaberechtlich Zulässigen möglich (§132 GWB)</li>
+            <li>Auftragsbestätigung nach Erhalt genau prüfen – nicht abgestimmte Änderungen sofort dokumentiert reklamieren</li>
+          </ul>
+          <p class="acc-sub">Zwischenabnahme / Rohbauabnahme</p>
+          <p>Von <strong>Teilabnahmen wird abgeraten</strong> (Gewährleistungsfrist beginnt zu laufen). Dennoch üblich:</p>
+          <ul>
+            <li><strong>Fahrgestellabnahme</strong> bei Auslieferung an den Aufbauer</li>
+            <li><strong>Rohbauabnahme des Aufbaus</strong> – erste praktische Überprüfung; noch Korrekturen möglich</li>
+          </ul>
+          <p class="acc-sub">Endabnahme</p>
+          <ul>
+            <li>Abschließende Überprüfung der Auftragserfüllung → löst Zahlungspflicht aus</li>
+            <li><strong>Unabhängige Prüfstelle</strong> vor der Endabnahme einbinden (DIN EN 1846-2 sehr komplex)</li>
+            <li>Abnahmeteam: <strong>4–6 Personen</strong> (Projektleitung, Fahrzeug-/Gerätewerkstatt, Einsatzdienst)</li>
+            <li>Gesamtes Fahrzeug entladen, Beladung prüfen, Fahrzeug beladen und achsweise wiegen</li>
+            <li>Alle festgestellten Mängel dokumentieren (LB/Projektbuch + Fotos)</li>
+            <li>Fahrzeugeinweisung erst nach mangelfreier Abnahme</li>
+          </ul>
+          <div class="hint"><p><strong>Achtung:</strong> Auch die gewissenhafteste Abnahme kann nicht alles aufdecken – die intensive Ausbildung der Einsatzkräfte am Standort ist der wirksamste Test. Nacharbeiten im Werk des Herstellers können notwendig werden.</p></div>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary><span class="acc-num">10</span><span class="acc-title">Inbetriebnahme, Aussonderung &amp; strategische Aspekte</span><span class="acc-arrow">›</span></summary>
+        <div class="acc-body">
+          <p class="acc-sub">Maßnahmen nach Anlieferung</p>
+          <p><strong>Am Technik-Standort:</strong></p>
+          <ul>
+            <li>Finale Mängelbehebung durch Hersteller-Service vor Ort</li>
+            <li>Geräteprüfung (Gerätetechnik Feuerwehr)</li>
+            <li>Funkgeräteeinbau und UDS-Einbau/-Prüfung (sofern als Eigenleistung vorgesehen)</li>
+            <li>Ergänzende Beladung (Verbrauchsmaterial, PA-Geräte, Schläuche)</li>
+            <li>Inventarisierung im Bewirtschaftungs-Management-System (z. B. COSware)</li>
+          </ul>
+          <p><strong>Übergabe an den Einsatzdienst:</strong></p>
+          <ul>
+            <li>Dokumentation IST-/SOLL-Bestand bei Übergabe</li>
+            <li>Herausgabe Technische Information und Beladeliste</li>
+            <li><strong>Multiplikatorenschulung / Einweisung</strong> der Einsatzkräfte und Werkstätten</li>
+            <li>Standortspezifische Beklebung (Wachen-/Wehrwappen) gemäß Designkonzept</li>
+            <li>Überführung ins Flottenmanagement</li>
+            <li>Ggf. offizielle Fahrzeugübergabe mit Amtsleitung, Politik, Fördermittelgebern</li>
+          </ul>
+          <p class="acc-sub">Aussonderung &amp; Verwertung des Altfahrzeugs</p>
+          <p>Ersetzte Einsatzfahrzeuge sind <strong>kommunale Vermögenswerte</strong> und unterliegen dem Wirtschaftlichkeitsprinzip. Die Veräußerung soll den <strong>höchstmöglichen Erlös</strong> erzielen.</p>
+          <ul>
+            <li><strong>Öffentliche Auktionen</strong> – selbst organisiert oder über spezialisierte Plattformen (z. B. www.zoll-auktion.de)</li>
+            <li><strong>Direktverkauf</strong> zu Schätzpreis / Restwertgutachten an andere Kommune → Ratsbeschluss erforderlich</li>
+            <li><strong>Spende</strong> als humanitäre Hilfe (z. B. Ukraine, Partnerstädte) → ebenfalls Ratsbeschluss</li>
+            <li>Ertüchtigung als Reservefahrzeug als Alternative</li>
+          </ul>
+          <p class="acc-sub">Strategische Aspekte der Beschaffung (Warengruppenmanagement)</p>
+          <ul>
+            <li><strong>Wettbewerb stärken:</strong> Marktgerechte Leistungsbeschreibungen, lösungsoffene Zuschlagskriterien, Teilnahmehürden senken, Ausschreibungen aktiv bewerben, Marktfeedback einholen</li>
+            <li><strong>Standardisierung:</strong> Mustervorlagen für LB und Vertragsklauseln, messbare Qualitätskriterien, Vergabeprozesse verschlanken</li>
+            <li><strong>Dienstleistersteuerung:</strong> SLAs, Zielvereinbarungen, Meilensteinberichte; Feedbackgespräche; strukturiertes Leistungscontrolling</li>
+            <li><strong>Qualität sichern / Abhängigkeiten vermeiden:</strong> Leistungs-KPIs vertraglich verankern, Exit-Strategien vereinbaren, Lock-in-Effekte vermeiden</li>
+            <li><strong>Know-how-Transfer:</strong> Dienstleister verpflichten, Wissen aktiv zu übertragen; Lessons-Learned-Workshops; Wissenspool aufbauen</li>
+          </ul>
+        </div>
+      </details>
+
+    </div><!-- /acc-list -->
+  </div><!-- /pc -->
+</div>
 
 <!-- ============================================================ FeuAK BEDARFSPLANUNG ============================================================ -->
 <div id="v-feuak-bedarfsplanung" class="view detail-view">
