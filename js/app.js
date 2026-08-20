@@ -3679,6 +3679,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.28.7',ts:'2026-08-20T19:00',items:[
+      'Reinstorf-2026-Badge auf Akkordeon-Ebene: Acc 03 (Vergaberecht: Grundlagen & Schwellenwerte) und Acc 04 (Vergabegrundsätze & Verfahrensarten) im Tab Beschaffungspraxis – beide vollständig aus Reinstorf 2026'
+    ]},
     {v:'2.28.6',ts:'2026-08-20T18:00',items:[
       '12 weitere Reinstorf-2026-Badges (gold) im Tab Beschaffungspraxis: Definition Vergaberecht, Zweiteilung, EU-Schwellenwerte, Ausnahmen (Acc 03), Grundsätze, Verfahrensarten, Angebotswertung (Acc 04), Markterkundung (Acc 05), Bestandteile VU, Ablauf Vergabeprozess, Zuschlagskriterien (Acc 07), Strategische Aspekte WGM (Acc 10)'
     ]},
