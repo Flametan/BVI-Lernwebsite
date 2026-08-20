@@ -3679,6 +3679,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.28.9',ts:'2026-08-20T21:00',items:[
+      'Acc 07 (Beschaffungspraxis): Reinstorf-Badge bei „Ablauf des Vergabeprozesses (offenes Verfahren)" entfernt – Inhalt nicht im Reinstorf-Skript nachweisbar'
+    ]},
     {v:'2.28.8',ts:'2026-08-20T20:00',items:[
       'Acc 03 (Beschaffungspraxis): Digitaler Marktplatz Deutschland & KI-Einsatz + Strategische Aspekte WGM aus Acc 10 hierher verschoben',
       'Reinstorf-Badges im Inneren von Acc 03 und Acc 04 entfernt – Badge verbleibt nur in der Akkordeon-Überschrift (Summary)'
