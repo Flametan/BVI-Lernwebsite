@@ -3675,6 +3675,13 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.28.4',ts:'2026-08-20T16:00',items:[
+      'Acc 03: Aktuelle Herausforderungen öffentlicher Vergabe (Bietermangel, EU-Rechnungshof 2023 „verlorenes Jahrzehnt") ergänzt',
+      'Acc 03: Anwendungsbereich des Vergaberechts §98–105 GWB (persönlich + sachlich) ergänzt',
+      'Acc 03: HmbTG – Hamburger Transparenzgesetz als Hinweis ergänzt',
+      'Acc 04: Teilnehmer am Vergabeverfahren (Bewerber, Bieter, Bietergemeinschaft §43 VgV, Unterauftragnehmer) ergänzt',
+      'Acc 10: Digitaler Marktplatz Deutschland & KI-Einsatz bei Vergaben (Koalitionsvertrag 2025, M150/M151, KI-Anwendungsfälle) ergänzt'
+    ]},
     {v:'2.28.3',ts:'2026-08-20T15:00',items:[
       '5 neue Lernkarten FeuAK · Beschaffungspraxis: h125 (12 Schadensbilder), h126 (Ziele + Zivilschutzausstattung Bund), h127 (Sonderausstattung + Wattiefe-Faktoren), h128 (Vergabeprozess-Ablauf 7 Schritte + Vertragsstrafe), h129 (Inbetriebnahme + Presse + Projektdokumentation + Mängelabarbeitung)',
       'h109 aktualisiert: §3 VgV Zeitpunkt (Tag der Auftragsbekanntmachung) + Optionen/Verlängerungen einbeziehen'
