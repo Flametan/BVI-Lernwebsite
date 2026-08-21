@@ -3650,6 +3650,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.14',ts:'2026-08-21T00:00',items:[
+      'Impressum: §5 TMG → §5 DDG aktualisiert'
+    ]},
     {v:'2.29.13',ts:'2026-08-21T00:00',items:[
       'Eingrenzung F9: vereinfacht – nur noch die zwei EU-Schwellenwerte (Liefer-/DL und Bauleistungen), kein Nennen-Sie-außerdem-Block'
     ]},
