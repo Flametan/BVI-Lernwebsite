@@ -37,6 +37,7 @@ const NAV = (function(){
     if(id==='v-abkuerzungen') ABK.init();
     if(id==='v-vak-altklausur') QUIZ.init();
     if(id==='v-feuak-altklausur') FEUAK_QUIZ.init();
+    if(id==='v-klausurfragen') KF_QUIZ.init();
     if(id==='v-eingrenzung-klausur') EINGRENZUNG_QUIZ.init();
     if(id==='v-klausur') KLAUSUR_HUB.render();
     if(id==='v-vak-fallbearbeitung','v-vak-uebungsklausur') FALLBEARBEITUNG.init();
@@ -3401,6 +3402,343 @@ const FEUAK_QUIZ = (function(){
 })();
 
 /* ══════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═
+   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+═ */
+const KF_QUIZ = (function(){
+  const KEY = 'bvi_kf_scores';
+  const TIMER_TOTAL = 5400; // 90 Minuten
+  let _step=0, _revealed=false, _shortRevealed=false, _timerOn=false, _timeLeft=TIMER_TOTAL, _timerRef=null;
+  let _scores={};
+
+  const QUESTIONS = [
+    {id:1,nr:'Frage 1',punkte:4,cat:'Haushalt',
+     text:'Welche Ausgaben dürfen geleistet werden, solange der Haushalt noch nicht rechtskräftig ist? Wo liegen die Grenzen? (Thema: vorläufige Haushaltsführung)',
+     answer:'Die <strong>vorläufige Haushaltführung</strong> gilt, solange kein rechtskräftiger Haushalt beschlossen ist.<br><br><strong>Zulässig für die Feuerwehr (F 24):</strong><br>① Ausgaben, zu denen die FW <strong>rechtlich verpflichtet</strong> ist: Löhne, Verträge, Brandschutz/Rettungsdienst im Rahmen der Bedarfspläne.<br>② Ausgaben zur <strong>Aufrechterhaltung des Dienstbetriebes</strong>: Kraftstoff, Büromaterial, laufender Unterhalt.<br><br><strong>Zulässig allgemein (F 25):</strong><br>③ Ausgaben zur <strong>Vermeidung von Folgeschäden</strong> oder höheren Folgekosten.<br>④ <strong>Fortführung begonnener Investitionen.</strong><br>⑤ Einnahmen in beliebiger Höhe erzielen.<br>→ Fazit: Faktisch <strong>keine Einschränkungen für den laufenden Dienstbetrieb.</strong><br><br><strong>Nicht zulässig (F 26):</strong><br>① Ausgaben außerhalb der oben genannten Kategorien.<br>② <strong>Beginn neuer, im Umfang erheblicher Investitionsmaßnahmen.</strong><br>③ <strong>Besetzung neuer Stellen</strong> aus noch nicht rechtskräftigem Stellenplan.',
+     short:'<strong>Vorläufige Haushaltsführung</strong> = kein rechtskräftiger Haushalt.<br><br><strong>✓ Zulässig:</strong> Pflichtausgaben (Löhne, Verträge), laufender Betrieb (Kraftstoff, Material), Schadensabwehr, begonnene Investitionen, Einnahmen unbegrenzt.<br><br><strong>✗ Nicht zulässig:</strong> Neue erhebliche Investitionen; neue Stellen besetzen.<br>→ Laufender FW-Betrieb faktisch <strong>unbeschränkt.</strong>'},
+    {id:2,nr:'Frage 2',punkte:6,cat:'BSC / QM',
+     text:'A) Nennen Sie aus zwei typischen Bereichen der Feuerwehr jeweils wesentliche Produkte.\nB) Nennen Sie die an diesen Produkten beteiligten Kunden/Stakeholder.\nC) Nennen Sie mindestens eine Qualität aus Sicht eines beteiligten Stakeholders.\nD) Nennen Sie Indikatoren, anhand derer eine Qualitätsveränderung nachgewiesen werden kann.',
+     answer:'<strong>Vorgehensweise (F 98):</strong> Produkte → Beteiligte → Qualität aus Sicht eines Beteiligten → messbarer Indikator.<br><em style="font-size:.85rem;opacity:.75">Für die Klausur genügen zwei Bereiche.</em><br><br><strong>Bereich 1 – Abwehrender Brandschutz (F 105)</strong><br>Produkte: Brandbekämpfung, TH. | Beteiligte: Bürger → <strong>Hilfsfristerreichungsgrad</strong>, Eintreffzeit; Politik → <strong>Kosten je Risikokategorie</strong>.<br><br><strong>Bereich 2 – Leitstelle (F 109)</strong><br>Produkte: Annahme &amp; Disposition von Notrufen. | Beteiligte: Bürger → <strong>Quote angenommener Notrufe</strong>; Kostenträger → <strong>Rettungsdienstgebühr</strong>.<br><br><strong>Bereich 3 – Ausbildung (F 102)</strong><br>Produkte: Grundausbildung, Spezialausbildung (Atemschutz, FzF). | Beteiligte: Mitarbeiter → <strong>Ausbildungsquote je Stufe</strong>; BGU → <strong>Anteil vorschriftsmäßig qualifizierter EK</strong>.<br><br><strong>Bereich 4 – Rettungsdienst (F 106)</strong><br>Produkte: Notfallrettung, Krankentransport. | Beteiligte: Patienten → <strong>Hilfsfristerreichungsgrad RD</strong>; Kostenträger → <strong>Kosten je Einsatz</strong>.<br><br><strong>Bereich 5 – Vorbeugender Brandschutz (F 104)</strong><br>Produkte: Brandschutzprüfungen, Beratungen. | Beteiligte: Bauherren → <strong>Bearbeitungszeit je Antrag</strong>; Genehmigungsbehörde → <strong>Mängelquote Folgeprüfungen</strong>.',
+     short:'Struktur: <strong>Bereich → Produkte → Beteiligte → Kennzahl</strong> (mind. 2 Bereiche)<br><br><strong>Abwehrender Brandschutz:</strong> Brandbekämpfung, TH. Bürger → <em>Hilfsfristerreichungsgrad;</em> Politik → <em>Kosten je Risikokategorie.</em><br><strong>Leitstelle:</strong> Notrufannahme &amp; Disposition. Bürger → <em>Quote angenommener Notrufe;</em> Kostenträger → <em>RD-Gebühr.</em><br><strong>Ausbildung:</strong> Grund-/Spezialausbildung. Mitarbeiter → <em>Ausbildungsquote;</em> BGU → <em>qual. EK-Anteil.</em><br><strong>Rettungsdienst:</strong> Notfallrettung, KTW. Patient → <em>Hilfsfristerreichungsgrad RD;</em> Kostenträger → <em>Kosten je Einsatz.</em>'},
+    {id:3,nr:'Frage 3',punkte:6,cat:'BSC / QM',
+     text:'Stellen Sie die Betrachtung aus den verschiedenen Blickwinkeln (Perspektiven) des Balanced-Scorecard-Ansatzes dar.',
+     answer:'<strong>Die 4 BSC-Perspektiven (Kaplan/Norton):</strong><br>① <strong>Finanzperspektive:</strong> Blick des Trägers/Haushalts. FW: Budgettreue, Kosten je Einsatz, Investitionsquote.<br>② <strong>Kundenperspektive:</strong> Blick der Bevölkerung/Politik. FW: Hilfsfristerfüllungsquote, Sicherheitsgefühl.<br>③ <strong>Interne Prozessperspektive:</strong> Kernprozesse. FW: Ausrückzeit, Fahrzeugverfügbarkeit, Ausbildungsstand.<br>④ <strong>Lern- und Entwicklungsperspektive:</strong> Zukunftsfähigkeit. FW: Fortbildungsquote, Personalentwicklung, Digitalisierung.<br><br><strong>Blickwinkel im FW-Kontext (F 93):</strong><br>① <strong>Sicht des Kunden / der Bevölkerung</strong> – Schnelle Hilfe, kompetente Notfallversorgung.<br>② <strong>Sicht der Geschäftsführung / Magistrat / SVV</strong> – Wirtschaftlichkeit, Budgettreue, politische Ziele.<br>③ <strong>Sicht der eigenen Organisation</strong> – Arbeitssicherheit, Entwicklung, angemessene Ressourcen.<br><br><strong>Warum mehrperspektivisch? (F 46)</strong><br>→ Dieselbe Leistung hat je Beteiligtem andere Qualitätsansprüche und andere Indikatoren.<br>→ Steuerung auf zwei Ebenen: stadtgesamt (politisch/strategisch) und Ausrückbereich/Dienstgruppe (taktisch/operativ).',
+     short:'<strong>4 BSC-Perspektiven:</strong><br>① Finanzen (Budgettreue, Kosten/Einsatz)<br>② Kunden (Hilfsfristerfüllungsquote, Sicherheitsgefühl)<br>③ Interne Prozesse (Ausrückzeit, Verfügbarkeit, Ausbildung)<br>④ Lernen/Entwicklung (Fortbildungsquote, Digitalisierung)<br><br><strong>FW-Blickwinkel (F93):</strong> Kunden/Bevölkerung · Geschäftsführung/Politik · eigene Organisation.<br><strong>Warum?</strong> Gleiche Leistung = unterschiedliche Indikatoren je Beteiligtem; Steuerung politisch + operativ.'},
+    {id:4,nr:'Frage 4',punkte:7,cat:'Bedarfsplanung',
+     text:'Welche Informationen und Kennzahlen sind für die strategische Personalplanung und die daraus resultierenden Entscheidungen erforderlich?',
+     answer:'<strong>Grundbegriffe (F 111, 114)</strong><br><em>Funktion</em> = Aufgabe, gesichert für 365/24 h; 1 HLF = 6 Funktionen. Jahresbesetztzeit = <strong>8.760 h</strong>. Stellen erbringen keine Arbeitsleistung – nur physisch Anwesende (F 111).<br><br><strong>Die drei zentralen Kennzahlen (F 115–118)</strong><br>① <strong>Ist-Personalfaktor:</strong> 8.760 h ÷ Netto-JAZ je MA (JAZ minus alle Ausfälle).<br>② <strong>Ist-Stellenfaktor:</strong> Planstellen (Art 01) ÷ zu besetzende Funktionen.<br>③ <strong>Soll-Stellenfaktor:</strong> politisch beschlossen; 100 % Besetzung unterstellt, fester Besetzungsgrad (∼95 %, F 128).<br><br><strong>Zu erhebende Ausfallgründe (F 123)</strong><br>Krankheit · Urlaub · Aus-/Fortbildung · Verwendung außerhalb Einsatzdienst · Mutterschutz/Elternzeit · Sonstiges.<br><br><strong>Weitere Einflussgrößen</strong><br>→ <strong>Mehrarbeit (F 124/125):</strong> Aufbau erhöht, Abbau verringert den Faktor. Nicht abbaubar = Organisationsverschulden (F 120).<br>→ <strong>Transferleistungen (F 126):</strong> Integrationsdienst, Wachpraktikanten – verringern den Faktor.<br>→ <strong>Funktionsunterschreitungsstunden (F 127):</strong> erhöhen den Faktor; keine Verrechnung mit Überschreitungen.<br><br><strong>Strategische Nutzung (F 136, 137)</strong><br>Zeitreihenvergleiche · Risikoerkennung · Argumente für Stellenplanverfahren · Erhebung mind. 1× jährlich.',
+     short:'<strong>3 Kennzahlen (F115–118):</strong><br>① <strong>Ist-Personalfaktor:</strong> 8.760 h ÷ Netto-JAZ (= JAZ minus alle Ausfälle)<br>② <strong>Ist-Stellenfaktor:</strong> Planstellen ÷ zu besetzende Funktionen<br>③ <strong>Soll-Stellenfaktor:</strong> politisch beschlossen; Besetzungsgrad ~95 %<br><br><strong>Ausfallgründe (F123):</strong> Krankheit · Urlaub · Aus-/Fortbildung · außerhalb Einsatzdienst · MuSch/Elternzeit · Sonstiges.<br><br><strong>Einflussgrößen:</strong> Mehrarbeit-Aufbau erhöht, -Abbau verringert Faktor; Transferleistungen verringern; Funktionsunterschreitungsstunden erhöhen (keine Verrechnung).<br><strong>Nutzung:</strong> Zeitreihenvergleich · Stellenplanverfahren · mind. 1×/Jahr.'},
+    {id:5,nr:'Frage 5',punkte:8,cat:'Vergabe',
+     text:'Wie würden Sie bei der Beschaffung einer neuen Fahrzeuggeneration strategisch vorgehen, damit der Vergabevorschlag gleichzeitig rechtssicher und zielorientiert ist?\n\nBerücksichtigen Sie: (1) richtiger Zeitpunkt, (2) notwendige Voraussetzungen, (3) worauf besonders zu achten ist, (4) Vor- und Nachteile einer Tranche vs. mehrerer Tranchen, (5) Begründung von Nutzungsdauer und technischer Reserve.',
+     answer:'<strong>1. Richtiger Zeitpunkt (F 17, 26, 28)</strong><br>Vergabe erst anstoßen, wenn <strong>Haushaltsmittel bereitstehen</strong>. In der vorläufigen Haushaltsführung: keine neuen erheblichen Investitionen. Zeit vorher nutzen: <strong>Vergabeunterlagen vorbereiten.</strong><br><br><strong>2. Notwendige Voraussetzungen (F 20, 90)</strong><br>→ Haushaltsmittel rechtskräftig bewilligt.<br>→ Maßnahme im <strong>Investitionsprogramm</strong> (5-Jahres-Darstellung mit Gesamtvolumen und Jahresabflüssen).<br>→ <strong>Wertungsmatrix</strong> mit Ausschreibung veröffentlicht; Preis mind. 40 %.<br>→ Fahrzeuge → <strong>Vermögenshaushalt</strong> (einzige Kreditfinanzierung möglich).<br><br><strong>3. Worauf besonders zu achten (F 28, 50, 51)</strong><br>→ <strong>EU-Schwellenwerte</strong> prüfen, Rechtsstreitrisiko einkalkulieren.<br>→ <strong>Rahmenverträge</strong> nutzen – mehrjährig, erleichtern Beschaffungen.<br>→ Feste <strong>Jahresraten</strong> ansparen, Restmittel-Übertragbarkeit sicherstellen.<br><br><strong>4. Eine Tranche vs. mehrere Tranchen (F 51)</strong><br><u>Eine Tranche:</u> einheitliche Ausbildung, gleiche Ersatzteile, Skaleneffekte, eine Ausschreibung. <u>Nachteil:</u> Systemfehler treffen <strong>alle Fahrzeuge</strong>.<br><u>Mehrere Tranchen:</u> Risiko gestreut – Nachteil: höhere Einzelkosten, getrennte Ausschreibungen.<br><br><strong>5. Nutzungsdauer und technische Reserve (F 7, 39, 41, 107)</strong><br>→ Nutzungsdauer nach <strong>AfA-Tabelle</strong> (Anlageverzeichnis: Anschaffungswert, Restwert, Nutzungsdauer).<br>→ Technische Reserve: <strong>ausreichend bemessen</strong>, Indikator: Fahrzeugverfügbarkeit.',
+     short:'<strong>1. Zeitpunkt:</strong> Haushaltsmittel bereit → Vergabe starten. Vorher Unterlagen vorbereiten.<br><strong>2. Voraussetzungen:</strong> Mittel rechtskräftig; Investitionsprogramm; Wertungsmatrix (Preis ≥ 40 %) mit Ausschreibung; Fahrzeuge → Vermögenshaushalt.<br><strong>3. Achten auf:</strong> EU-Schwellen prüfen; Rahmenverträge; Jahresraten ansparen.<br><strong>4. Tranche(n):</strong><br>→ <em>Eine:</em> einheitl. Ausbildung + Ersatzteile, Skaleneffekte. ⚠ Systemfehler trifft alle.<br>→ <em>Mehrere:</em> Risiko gestreut. ⚠ Höhere Kosten, mehr Ausschreibungen.<br><strong>5. Nutzungsdauer:</strong> AfA-Tabelle; techn. Reserve = Fahrzeugverfügbarkeit sicherstellen.'},
+    {id:6,nr:'Frage 6',punkte:6,cat:'Bedarfsplanung',
+     text:'Zweigleisige Analyse des Ist-Zustandes im Rahmen einer Rettungsdienstbedarfsplanung. Welche zwei Ist-Analysen werden eingesetzt und was liefern sie?',
+     answer:'<strong>1. Frequenzanalyse (Einsatzhäufigkeitsanalyse):</strong> Auswertung der Einsatzhäufigkeit aus Leitstellendaten der letzten 3–5 Jahre. Differenzierung nach Tages-, Wochen- und Jahresgang sowie nach Einsatzart (RTW-Notfall vs. KTW-Transport). <em>Ergebnis:</em> KTW-Frequenzkurve → frequenzabhängige Vorhaltungsplanung.<br><br><strong>2. Versorgungszeitanalyse (Hilfsfristanalyse):</strong> Auswertung der tatsächlichen Eintreffzeiten (Ist-Hilfsfristen) aus Einsatzdaten. SOLL-IST-Vergleich mit dem gesetzlichen Schutzziel (z.B. 95 % innerhalb 10 Min.). <em>Ergebnis:</em> Identifikation von Versorgungslücken → Grundlage für Standortoptimierung und Fahrzeugvorhaltungsplanung.',
+     short:'<strong>Zweigleisige IST-Analyse RD-Bedarfsplanung:</strong><br><br><strong>① Frequenzanalyse:</strong> Einsatzhäufigkeit aus Leitstellendaten (3–5 J.) nach Tages-, Wochen-, Jahresgang + Einsatzart (RTW/KTW).<br><em>Ergebnis:</em> KTW-Frequenzkurve → frequenzabhängige Vorhaltung.<br><br><strong>② Versorgungszeitanalyse:</strong> Ist-Eintreffzeiten aus Einsatzdaten. SOLL-IST-Vergleich mit gesetzlichem Schutzziel.<br><em>Ergebnis:</em> Versorgungslücken → Standortoptimierung + Vorhaltungsplanung.'},
+    {id:7,nr:'Frage 7',punkte:5,cat:'Bedarfsplanung',
+     text:'Phasenmodell der Katastrophenschutzbedarfsplanung. Beschreiben Sie die wesentlichen Phasen.',
+     answer:'<strong>Phasenmodell der KatS-Bedarfsplanung (4 Phasen):</strong><br><br><strong>Phase 1 – Risikoanalyse / Gefahrenanalyse</strong><br>Systematische Identifikation und Bewertung aller relevanten Schadensereignisse im Zuständigkeitsbereich (Naturereignisse, technische Großschadenlagen, MANV, Infrastrukturausfälle). Ergebnis: Risikokataster mit Eintrittswahrscheinlichkeit und Schadensausmaß.<br><br><strong>Phase 2 – Schutzzielfestlegung / Ressourcenplanung (SOLL)</strong><br>Ableitung des Versorgungsbedarfs aus den Szenarien: Welche Kräfte, Mittel und Strukturen werden benötigt? (Funktionen, Fahrzeuge, Führungseinrichtungen, Material). Politische Festlegung des angestrebten Schutzziels.<br><br><strong>Phase 3 – Bestandsaufnahme (IST)</strong><br>Erhebung der tatsächlich vorhandenen Ressourcen: Personal (inkl. Ehrenamt, THW, Hilfsorganisationen), Fahrzeuge, Führungsmittel, Logistik, Alarmierungs- und Kommunikationsmittel.<br><br><strong>Phase 4 – Bedarfsdeckung / Maßnahmenplanung</strong><br>IST-SOLL-Abgleich → Identifikation von Defiziten → Planung und Priorisierung von Abhilfemaßnahmen (Beschaffung, Ausbildung, interkommunale Kooperation, Rahmenvereinbarungen). Fortschreibung: regelmäßige Überprüfung und Anpassung des Plans, Einsatz von Übungen zur Validierung.',
+     short:'<strong>4 Phasen KatS-Bedarfsplanung:</strong><br>① <strong>Risikoanalyse</strong> – Szenarien identifizieren, Eintrittswahrscheinlichkeit × Schadensausmaß bewerten.<br>② <strong>Ressourcenplanung SOLL</strong> – Kräfte, Mittel, Strukturen ableiten; Schutzziel politisch festlegen.<br>③ <strong>Bestandsaufnahme IST</strong> – Personal (BF, FF, THW, HiOrg), Fahrzeuge, Führungsmittel, Logistik erfassen.<br>④ <strong>Bedarfsdeckung / Maßnahmen</strong> – IST-SOLL-Abgleich → Defizite schließen; regelmäßige Fortschreibung und Übungsvalidierung.'},
+    {id:8,nr:'Frage 8',punkte:6,cat:'Rechnungswesen',
+     text:'Grenzen Sie die Begrifflichkeiten Kameralistik und Doppik voneinander ab und nennen Sie jeweils vier charakteristische Eigenschaften.',
+     answer:'<strong>Kameralistik</strong> – traditionelles kamerales Buchführungssystem:<br>① <strong>Einnahmen-/Ausgabenrechnung:</strong> zahlungsorientiert – nur tatsächliche Geldflüsse werden erfasst.<br>② <strong>Keine Abschreibungen:</strong> Ressourcenverbrauch (Wertminderung von Vermögen) wird nicht sichtbar.<br>③ <strong>Jährlichkeitsprinzip:</strong> nicht verausgabte Mittel verfallen am Jahresende (keine periodengerechte Zuordnung).<br>④ <strong>Keine Bilanz / kein Vermögensnachweis:</strong> Schulden und Vermögen sind nicht vollständig abgebildet – begrenzte Transparenz.<br><br><strong>Doppik</strong> (Doppelte Buchführung, NKF/NKHR):<br>① <strong>Periodengerechte kaufmännische Buchführung:</strong> Ressourcenverbrauchskonzept – Aufwand und Ertrag werden dem Entstehungsjahr zugeordnet.<br>② <strong>Abschreibungen:</strong> planmäßiger Werteverzehr von Anlagevermögen wird als Aufwand gebucht – Ressourcenverbrauch sichtbar.<br>③ <strong>Bilanz (Vermögensrechnung):</strong> vollständiger Ausweis von Vermögen, Schulden und Eigenkapital; Pensionsrückstellungen verpflichtend.<br>④ <strong>Drei Rechnungskomponenten:</strong> Ergebnisrechnung (Aufwand/Ertrag) + Finanzrechnung (Zahlungsströme) + Bilanz (Vermögen/Schulden).',
+     short:'<strong>Kameralistik:</strong><br>① Einnahmen-/Ausgabenrechnung (nur Geldflüsse)<br>② Keine Abschreibungen (Ressourcenverbrauch unsichtbar)<br>③ Jährlichkeitsprinzip (Mittel verfallen zum Jahresende)<br>④ Keine Bilanz / kein Vermögensnachweis<br><br><strong>Doppik:</strong><br>① Periodengerechte kaufm. Buchführung (Ressourcenverbrauchskonzept)<br>② Abschreibungen (Werteverzehr als Aufwand sichtbar)<br>③ Bilanz: vollst. Vermögens-, Schulden-, Eigenkapitalausweis (inkl. Pensionsrückst.)<br>④ Drei Komponenten: Ergebnisrechnung + Finanzrechnung + Bilanz'},
+    {id:9,nr:'Frage 9',punkte:4,cat:'Vergabe',
+     text:'Ein neutrales Leistungsverzeichnis ist für eine Beschaffung von zentraler Bedeutung. Nennen Sie vier Aspekte eines neutralen Leistungsverzeichnisses.',
+     answer:'Ein <strong>neutrales Leistungsverzeichnis (LV)</strong> beschreibt den Beschaffungsgegenstand ohne Bevorzugung bestimmter Hersteller oder Produkte (§ 31 VgV, § 7 VOB/A).<br><br><strong>① Produktneutralität:</strong><br>Keine Nennung von Markennamen, Herstellern, Typenbezeichnungen oder Ursprungsorten. Die Anforderungen müssen diskriminierungsfrei formuliert sein, sodass alle geeigneten Anbieter ein Angebot abgeben können.<br><br><strong>② Technisch-funktionale Beschreibung:</strong><br>Leistungen werden durch messbare, nachprüfbare technische Anforderungen beschrieben – orientiert an anerkannten Normen (z.B. DIN EN 1846 für Feuerwehrfahrzeuge) und objektiven Leistungsmerkmalen.<br><br><strong>③ Gleichwertigkeitsklausel:</strong><br>Wenn ein Verweis auf Normen, Typen oder Hersteller unvermeidlich ist, muss der Zusatz „oder gleichwertig" eingefügt werden. Bieter können dann gleichwertige Produkte anbieten und deren Gleichwertigkeit nachweisen.<br><br><strong>④ Vollständigkeit und Eindeutigkeit:</strong><br>Das LV muss so vollständig und eindeutig sein, dass alle Bieter dieselbe Leistung bepreisen. Lücken oder Mehrdeutigkeiten führen zu nicht vergleichbaren Angeboten und gefährden die Rechtssicherheit des Verfahrens.',
+     short:'<strong>4 Aspekte des neutralen Leistungsverzeichnisses:</strong><br>① <strong>Produktneutralität</strong> – keine Marken, Hersteller, Typen (§31 VgV); diskriminierungsfreie Formulierung.<br>② <strong>Technisch-funktionale Beschreibung</strong> – messbare, normbasierte Anforderungen (z.B. DIN EN 1846).<br>③ <strong>Gleichwertigkeitsklausel</strong> – bei unvermeidlichen Referenzen Zusatz „oder gleichwertig" erforderlich.<br>④ <strong>Vollständigkeit und Eindeutigkeit</strong> – alle Bieter müssen dieselbe Leistung bepreisen; Lücken gefährden Rechtssicherheit.'},
+    {id:10,nr:'Frage 10',punkte:4,cat:'Haushalt',
+     text:'Beschreiben Sie den „Weg eines Haushalts" in vier Schritten.',
+     answer:'Der Haushalt durchläuft einen mehrstufigen Kreislauf (Gesamtdauer bis zu <strong>18 Monate</strong>, F 22):<br><br><strong>Schritt 1 – Aufstellung (Anmeldung)</strong><br>Alle Fachbereiche und Ämter melden ihren Finanzbedarf an. Die Feuerwehr erarbeitet eine begründete Anmeldung mit Investitionsprogramm (5-Jahres-Planung), Stellenplan und laufenden Kosten. Die Kämmerei konsolidiert die Anmeldungen und erstellt den Haushaltsentwurf.<br><br><strong>Schritt 2 – Beratung und Beschluss</strong><br>Der Entwurf wird in den Fachausschüssen und im Stadtrat/Gemeinderat beraten und ggf. angepasst. Nach dem Beschluss der Stadtvertretung tritt der Haushalt als <strong>Satzung</strong> in Kraft. Ggf. ist eine Genehmigung der Aufsichtsbehörde erforderlich (Haushaltssicherungskonzept).<br><br><strong>Schritt 3 – Vollzug</strong><br>Die bewilligten Mittel werden im Haushaltsjahr umgesetzt: Ausgaben werden angeordnet, Einnahmen erzielt, Verträge geschlossen, Personal eingestellt. Änderungen des Haushalts nur durch Nachtragshaushalt. Vergaberecht: <strong>keine Vergabe ohne bereitstehende Haushaltsmittel.</strong><br><br><strong>Schritt 4 – Jahresabschluss und Prüfung</strong><br>Am Jahresende: Rechnungslegung (Ergebnisrechnung, Finanzrechnung, Bilanz). Das Rechnungsprüfungsamt bzw. die Gemeindeprüfungsanstalt prüft den Abschluss. Das Ergebnis wird der Gemeindevertretung vorgelegt (Entlastung).',
+     short:'<strong>4 Schritte – Weg eines Haushalts (bis 18 Monate, F22):</strong><br>① <strong>Aufstellung:</strong> Ämter melden Bedarf an → Kämmerei konsolidiert → Haushaltsentwurf.<br>② <strong>Beratung &amp; Beschluss:</strong> Ausschüsse + Stadtrat beraten → Beschluss als Satzung → ggf. Genehmigung Aufsichtsbehörde.<br>③ <strong>Vollzug:</strong> Mittelumsetzung im Haushaltsjahr – Ausgaben, Einnahmen, Verträge; keine Vergabe ohne Haushaltsmittel.<br>④ <strong>Jahresabschluss &amp; Prüfung:</strong> Rechnungslegung → Prüfung durch Rechnungsprüfungsamt → Entlastung durch Stadtvertretung.'},
+    {id:11,nr:'Frage 11',punkte:5,cat:'Haushalt',
+     text:'Erläutern Sie das Argument der indirekten Wertschöpfung im Rahmen der Haushaltsaufstellung anhand von vier Kategorien.',
+     answer:'Das Argument der <strong>indirekten Wertschöpfung</strong> zeigt, dass Feuerwehrausgaben nicht nur Kosten sind, sondern gesamtwirtschaftlichen Nutzen erzeugen – wichtiges Argument in Haushaltsverhandlungen:<br><br><strong>① Schadenverhütung und Schadenbegrenzung</strong><br>Eine gut aufgestellte Feuerwehr verhindert oder begrenzt wirtschaftliche Schäden: Gebäudeschäden, Betriebsunterbrechungen, Umweltschäden. Jeder verhinderte Schaden spart volkswirtschaftliche Folgekosten (Wiederherstellung, Versicherungsleistungen, Produktionsausfall).<br><br><strong>② Standortfaktor und Investitionsattraktivität</strong><br>Öffentliche Sicherheit ist ein Standortvorteil: Unternehmen siedeln sich dort an, wo Brandschutz und Rettungsdienst zuverlässig funktionieren. Eine leistungsstarke Feuerwehr sichert Gewerbesteuereinnahmen und die Attraktivität der Kommune für Bevölkerung und Wirtschaft.<br><br><strong>③ Beschäftigungs- und Wirtschaftseffekte</strong><br>Die Feuerwehr ist direkter Arbeitgeber (Beamte, Tarifbeschäftigte) und löst durch Beschaffung (Fahrzeuge, Ausrüstung, Bau) regionale Wertschöpfungs- und Beschäftigungseffekte aus. Die Ausgaben fließen zu erheblichen Teilen in die lokale und regionale Wirtschaft zurück.<br><br><strong>④ Versicherungseffekte</strong><br>Eine nachweislich leistungsfähige Feuerwehr kann die kommunale und private Brandversicherungsprämien senken. Versicherer berücksichtigen die Schutzklasse (Feuerwehrbedarfsplan) bei der Risikoeinschätzung – geringere Prämien für Bürger und Unternehmen entlasten den Wirtschaftsstandort.',
+     short:'<strong>4 Kategorien indirekter Wertschöpfung:</strong><br>① <strong>Schadenverhütung/-begrenzung</strong> – verhinderte Gebäude-, Betriebs-, Umweltschäden sparen volkswirtschaftliche Folgekosten.<br>② <strong>Standortfaktor</strong> – Sicherheit = Ansiedlungsvoraussetzung für Unternehmen → Gewerbesteuer, kommunale Attraktivität.<br>③ <strong>Beschäftigungs-/Wirtschaftseffekte</strong> – direkte Arbeitsplätze + regionale Wertschöpfung durch Beschaffung (Fahrzeuge, Ausrüstung).<br>④ <strong>Versicherungseffekte</strong> – leistungsfähige FW senkt Schutzklasse → niedrigere Brandversicherungsprämien für Bürger und Betriebe.'},
+    {id:12,nr:'Frage 12',punkte:5,cat:'Haushalt',
+     text:'Die Kosten-Nutzen-Analyse ist kein Allheilmittel. Was verbirgt sich hinter diesem Begriff? Nennen Sie fünf Kategorien.',
+     answer:'Die <strong>Kosten-Nutzen-Analyse (KNA)</strong> ist ein betriebswirtschaftliches und volkswirtschaftliches Instrument, bei dem alle Kosten und Nutzen eines Projekts oder einer Maßnahme systematisch erfasst, bewertet und gegenübergestellt werden. Überwiegt der Nutzen, gilt die Maßnahme als wirtschaftlich.<br><br><strong>Warum kein Allheilmittel? – Fünf Grenzen der KNA:</strong><br><br><strong>① Monetarisierungsproblem</strong><br>Nicht alle Kosten und Nutzen lassen sich in Geld ausdrücken. Menschenleben, Lebensqualität, Sicherheitsgefühl und Umweltwerte sind schwer oder gar nicht monetär bewertbar. Je nach Bewertungsansatz können die Ergebnisse stark schwanken.<br><br><strong>② Verteilungsneutralität</strong><br>Die KNA betrachtet nur den Gesamtsaldo, nicht die Verteilung. Wer trägt die Kosten, wer profitiert vom Nutzen? Soziale Gerechtigkeit und regionale Verteilungswirkungen bleiben unberücksichtigt.<br><br><strong>③ Diskontierungsproblem</strong><br>Zukünftige Kosten und Nutzen werden auf den Gegenwartswert abgezinst. Die Wahl des Zinssatzes (Diskontrate) beeinflusst das Ergebnis erheblich – ein hoher Zinssatz benachteiligt langfristige Nutzen.<br><br><strong>④ Bewertungs- und Prognoseunsicherheit</strong><br>Kosten und Nutzen in der Zukunft sind unsicher und müssen geschätzt werden. Fehlannahmen oder absichtliche Manipulationen einzelner Parameter können das Ergebnis grundlegend verändern.<br><br><strong>⑤ Intangible Güter und externe Effekte</strong><br>Nicht quantifizierbare Güter (Sicherheitsgefühl, Sozialkapital, Biodiversität) sowie externe Effekte (gesellschaftliche Folgekosten, Umweltbelastungen) fließen häufig nicht vollständig in die KNA ein.',
+     short:'<strong>KNA:</strong> Systematischer Vergleich aller Kosten und Nutzen einer Maßnahme; überwiegt der Nutzen → wirtschaftlich sinnvoll.<br><br><strong>5 Grenzen der KNA:</strong><br>① <strong>Monetarisierungsproblem</strong> – Menschenleben, Lebensqualität, Sicherheitsgefühl nicht verlässlich in Geld ausdrückbar.<br>② <strong>Verteilungsneutralität</strong> – Gesamtsaldo verdeckt, wer Kosten trägt und wer profitiert.<br>③ <strong>Diskontierungsproblem</strong> – Wahl des Zinssatzes beeinflusst Ergebnis stark; hoher Zinssatz benachteiligt Langfristnutzen.<br>④ <strong>Bewertungs-/Prognoseunsicherheit</strong> – Schätzungen der Zukunft anfällig für Fehler und Manipulation.<br>⑤ <strong>Intangible Güter / externe Effekte</strong> – Sicherheitsgefühl, Umweltschäden, Sozialkapital oft nicht vollst. erfasst.'}
+  ];
+
+  const KF_TOTAL_PTS = QUESTIONS.reduce(function(s,q){return s+q.punkte;},0);
+
+  function loadScores(){ try{ return JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ return {}; } }
+  function saveScores(d){ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){} }
+  function scoreKey(id){ return 'q'+id; }
+  function fmtTime(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+
+  function startTimer(){
+    if(_timerRef) return;
+    _timerOn=true;
+    _timerRef=setInterval(function(){
+      if(_timeLeft>0){ _timeLeft--; updateTimerDisplay(); }
+      else{ stopTimer(); var el=document.getElementById('kf-timer'); if(el) el.style.color='#ef4444'; }
+    },1000);
+    updateTimerDisplay();
+  }
+
+  function stopTimer(){
+    if(_timerRef){ clearInterval(_timerRef); _timerRef=null; }
+    _timerOn=false;
+  }
+
+  function updateTimerDisplay(){
+    var el=document.getElementById('kf-timer-val'); if(el) el.textContent=fmtTime(_timeLeft);
+    var el2=document.getElementById('kf-timer-val2'); if(el2) el2.textContent=fmtTime(_timeLeft);
+    var btn=document.getElementById('kf-timer-btn'); if(btn) btn.textContent=_timerOn?'⏸ Pausieren':'▶ Timer starten';
+  }
+
+  function dotsHtml(){
+    return QUESTIONS.map(function(q,i){
+      var sc=_scores[scoreKey(q.id)];
+      var cls='fb-dot'+(i===_step?' fb-dot-active':sc!==undefined?' fb-dot-done':'');
+      return '<span class="'+cls+'" onclick="KF_QUIZ.goToQ('+i+')" title="Zu Frage '+(i+1)+' springen">'+(i+1)+'</span>';
+    }).join('');
+  }
+
+  function renderStart(){
+    var el=document.getElementById('kf-content'); if(!el) return;
+    _scores=loadScores();
+    var scored=QUESTIONS.filter(function(q){return _scores[scoreKey(q.id)]!==undefined;});
+    var totalScored=scored.reduce(function(s,q){return s+(_scores[scoreKey(q.id)]||0);},0);
+    var progress=scored.length;
+    var overviewRows=QUESTIONS.map(function(q){
+      var pts=_scores[scoreKey(q.id)];
+      var done=pts!==undefined;
+      var ptsHtml=done?('<span class="uk-q-pts-got">'+pts+'/'+q.punkte+'</span>'):'<span class="uk-q-pts-open">–</span>';
+      return '<div class="uk-q-row'+(done?' uk-q-done':'')+'" onclick="KF_QUIZ.goToQ('+(q.id-1)+')">'+'<span class="uk-q-nr">'+q.nr+'</span><span class="uk-q-pts-max">'+q.punkte+' Pkt.</span>'+ptsHtml+'</div>';
+    }).join('');
+    var progressHtml=progress>0?('<div class="uk-progress-row"><span>Fortschritt: '+progress+'/'+QUESTIONS.length+' bewertet</span><span>'+totalScored+'/'+KF_TOTAL_PTS+' Punkte ('+Math.round(totalScored/KF_TOTAL_PTS*100)+' %)</span></div>'):''
+;    var resetBtn=progress>0?'<button class="uk-timer-reset" style="margin-left:auto" onclick="KF_QUIZ.resetAll()">↺ Neu beginnen</button>':'';
+    var resultBtn=progress===QUESTIONS.length?'<button class="uk-result-btn" onclick="KF_QUIZ.showResult()">Auswertung anzeigen</button>':'';
+    var timerResetBtn=_timeLeft<TIMER_TOTAL?'<button class="uk-timer-reset" onclick="KF_QUIZ.resetTimer()">↺ Zurücksetzen</button>':'';
+    el.innerHTML='<div class="uk-start"><div class="uk-intro-box"><div class="uk-intro-title">Klausurfragen · FeuAK Hamburg</div>'+'<div class="uk-intro-meta">'+QUESTIONS.length+' Fragen · '+KF_TOTAL_PTS+' Punkte · Bearbeitungszeit: 90 Min.</div>'+'<div class="uk-intro-desc">Schreib deine Antwort, zeige dann die Musterlösung an und bewerte dich selbst. Die Fragen basieren auf der offiziellen Fragenliste der Dozenten für den Führungslehrgang.</div></div>'+'<div class="uk-timer-box"><span id="kf-timer">⏱ <span id="kf-timer-val">'+fmtTime(_timeLeft)+'</span></span>'+'<button id="kf-timer-btn" class="uk-timer-toggle" onclick="KF_QUIZ.toggleTimer()">'+(_timerOn?'⏸ Pausieren':'▶ Timer starten')+'</button>'+timerResetBtn+resetBtn+'</div>'+'<div class="uk-q-overview">'+overviewRows+'</div>'+progressHtml+'<button class="uk-start-btn" onclick="KF_QUIZ.goToQ(0)">'+(progress>0?'Klausur fortsetzen →':'Klausur beginnen →')+'</button>'+resultBtn+'</div>';
+  }
+
+  function renderQuestion(){
+    var el=document.getElementById('kf-content'); if(!el) return;
+    _scores=loadScores();
+    var q=QUESTIONS[_step];
+    var savedTa=_scores['ta_q'+q.id]||'';
+    var myPts=_scores[scoreKey(q.id)];
+    var scoreBtns=Array.from({length:q.punkte+1},function(_,i){return '<button class="uk-score-btn'+(myPts===i?' uk-score-active':'')+'" onclick="KF_QUIZ.setScore('+i+')">'+i+'</button>';}).join('');
+    var scoreGot=myPts!==undefined?('<span class="uk-score-got">'+myPts+'/'+q.punkte+' Pkt. gespeichert</span>'):'';
+    var prevBtn=_step===0?'':'<button class="fb-prev-btn" onclick="KF_QUIZ.prevQ()">← Zurück</button>';
+    var nextLabel=_step===QUESTIONS.length-1?'Auswertung →':'Nächste Frage →';
+    var nextFn=_step===QUESTIONS.length-1?'KF_QUIZ.showResult()':'KF_QUIZ.nextQ()';
+    el.innerHTML='<div class="uk-q-header"><button class="uk-back-btn" onclick="KF_QUIZ.showStart()">← Übersicht</button>'+'<span class="uk-q-badge">'+q.nr+' · '+q.punkte+(q.punkte===1?' Punkt':' Punkte')+'</span>'+'<span class="uk-timer-inline">⏱ <span id="kf-timer-val2">'+fmtTime(_timeLeft)+'</span></span></div>'+'<div class="uk-question"><p>'+q.text+'</p></div>'+'<textarea class="fb-textarea" id="kf-ta" placeholder="Schreibe deine Antwort hier…" rows="6">'+savedTa+'</textarea>'+'<div class="eq-reveal-row" id="kf-reveal-row">'+'<button class="fb-reveal-btn" id="kf-reveal-btn" onclick="KF_QUIZ.reveal()">Musterlösung anzeigen</button>'+'<button class="eq-short-btn" id="kf-short-btn" onclick="KF_QUIZ.revealShort()">Kurzantwort</button></div>'+'<div class="fb-answer'+(_revealed?'':' hidden')+'" id="kf-answer">'+q.answer+'</div>'+'<div class="fb-answer eq-short-answer'+(_shortRevealed?'':' hidden')+'" id="kf-short">'+(q.short||q.answer)+'</div>'+'<div class="uk-score-row'+((_revealed||_shortRevealed)?'':' hidden')+'" id="kf-score-row">'+'<span class="uk-score-label">Meine Punkte:</span><div class="uk-score-btns">'+scoreBtns+'</div>'+scoreGot+'</div>'+'<div class="fb-step-actions">'+prevBtn+'<button class="fb-next-btn" onclick="'+nextFn+'">'+nextLabel+'</button></div>'+'<div class="fb-step-dots">'+dotsHtml()+'</div>';
+  }
+
+  function renderResult(){
+    var el=document.getElementById('kf-content'); if(!el) return;
+    stopTimer();
+    _scores=loadScores();
+    var total=QUESTIONS.reduce(function(s,q){return s+(_scores[scoreKey(q.id)]||0);},0);
+    var pct=Math.round(total/KF_TOTAL_PTS*100);
+    var grade=pct>=90?'Sehr gut':pct>=80?'Gut':pct>=70?'Befriedigend':pct>=60?'Ausreichend':'Nicht bestanden';
+    var gradeCol=pct>=60?'#4ACD90':'#ef4444';
+    var rows=QUESTIONS.map(function(q){
+      var got=_scores[scoreKey(q.id)];
+      var done=got!==undefined;
+      var col=done?(got===q.punkte?'#4ACD90':got>0?'var(--c-gold)':'#ef4444'):'var(--c-slate-l)';
+      return '<tr><td>'+q.nr+'</td><td>'+q.punkte+'</td><td style="color:'+col+'">'+(done?got:'–')+'</td><td><button class="uk-jump-btn" onclick="KF_QUIZ.goToQ('+(q.id-1)+')">→</button></td></tr>';
+    }).join('');
+    el.innerHTML='<div class="uk-result"><div class="uk-result-header">Auswertung</div>'+'<div class="uk-result-score" style="color:'+gradeCol+';">'+total+' / '+KF_TOTAL_PTS+' Punkte</div>'+'<div class="uk-result-pct" style="color:'+gradeCol+';">'+pct+' % – '+grade+'</div>'+'<div class="uk-result-bar"><div class="uk-result-fill" style="width:'+pct+'%;background:'+gradeCol+';"></div></div>'+'<table class="uk-result-table"><thead><tr><th>Frage</th><th>Max.</th><th>Erreicht</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>'+'<div class="uk-result-actions">'+'<button class="uk-start-btn" onclick="KF_QUIZ.showStart()">← Zur Übersicht</button>'+'<button class="uk-reset-btn" onclick="KF_QUIZ.resetAll()">Neu beginnen</button></div></div>';
+  }
+
+  return {
+    init:function(){
+      _scores=loadScores();
+      this.showStart();
+    },
+    showStart:function(){
+      _step=0; _revealed=false;
+      renderStart();
+    },
+    goToQ:function(i){
+      var ta=document.getElementById('kf-ta');
+      if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
+      _step=i; _revealed=false; _shortRevealed=false;
+      renderQuestion();
+    },
+    nextQ:function(){
+      var ta=document.getElementById('kf-ta');
+      if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
+      if(_step<QUESTIONS.length-1){_step++;_revealed=false;_shortRevealed=false;renderQuestion();}
+    },
+    prevQ:function(){
+      var ta=document.getElementById('kf-ta');
+      if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
+      if(_step>0){_step--;_revealed=true;_shortRevealed=false;renderQuestion();}
+    },
+    reveal:function(){
+      var ta=document.getElementById('kf-ta');
+      if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
+      _revealed=!_revealed;
+      var ans=document.getElementById('kf-answer');
+      if(ans){if(_revealed){ans.classList.remove('hidden');}else{ans.classList.add('hidden');}}
+      var sr=document.getElementById('kf-score-row');
+      if(sr){if(_revealed||_shortRevealed){sr.classList.remove('hidden');}else{sr.classList.add('hidden');}}
+      var btn=document.getElementById('kf-reveal-btn');
+      if(btn){if(_revealed){btn.classList.add('eq-btn-active');}else{btn.classList.remove('eq-btn-active');}}
+    },
+    revealShort:function(){
+      var ta=document.getElementById('kf-ta');
+      if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
+      _shortRevealed=!_shortRevealed;
+      var sh=document.getElementById('kf-short');
+      if(sh){if(_shortRevealed){sh.classList.remove('hidden');}else{sh.classList.add('hidden');}}
+      var sr=document.getElementById('kf-score-row');
+      if(sr){if(_revealed||_shortRevealed){sr.classList.remove('hidden');}else{sr.classList.add('hidden');}}
+      var btn=document.getElementById('kf-short-btn');
+      if(btn){if(_shortRevealed){btn.classList.add('eq-short-btn-active');}else{btn.classList.remove('eq-short-btn-active');}}
+    },
+    setScore:function(pts){
+      var d=loadScores();d[scoreKey(QUESTIONS[_step].id)]=pts;saveScores(d);_scores=d;
+      renderQuestion();
+      _revealed=true;
+      document.getElementById('kf-answer')?.classList.remove('hidden');
+      document.getElementById('kf-score-row')?.classList.remove('hidden');
+    },
+    showResult:function(){renderResult();},
+    toggleTimer:function(){
+      if(_timerOn) stopTimer(); else startTimer();
+      updateTimerDisplay();
+    },
+    resetTimer:function(){stopTimer();_timeLeft=TIMER_TOTAL;renderStart();},
+    resetAll:function(){
+      localStorage.removeItem(KEY);_scores={};_step=0;_revealed=false;_shortRevealed=false;
+      stopTimer();_timeLeft=TIMER_TOTAL;
+      renderStart();
+    }
+  };
+})();
+
+/* ══════════════════════════════════════════════════════════════
    EINGRENZUNG_QUIZ – Klausur 08/2026 & Münster 2026 (8 Fragen, 30 Min)
 ══════════════════════════════════════════════════════════════ */
 const EINGRENZUNG_QUIZ = (function(){
@@ -3634,6 +3972,8 @@ const KLAUSUR_HUB = (function(){
     render:function(){
       var eq=document.getElementById('klh-eq-progress');
       var fq=document.getElementById('klh-fq-progress');
+      var kf=document.getElementById('klh-kf-progress');
+      if(kf) kf.textContent=fmt(getInfo('bvi_kf_scores',12,66));
       if(eq) eq.textContent=fmt(getInfo('bvi_eq_scores',8,50));
       if(fq) fq.textContent=fmt(getInfo('bvi_fq_scores',22,110));
     }
@@ -3681,6 +4021,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.26',ts:'2026-08-24T00:00',items:[
+      'Neuer Tab „Klausurfragen": 12 Fragen aus Dozenten-Fragenliste · 66 Punkte · 90-Min.-Timer · Musterlösung + Kurzantwort; platziert vor den Eingrenzungen im Klausur-Hub'
+    ]},
     {v:'2.29.25',ts:'2026-08-24T00:00',items:[
       'AGBF 1998 vs. 2015: Erreichungsgrad korrigiert (95 % → 90 %, nicht 80 % → 90 %); Antwortinhalt auf Basis Lindemann-Folie vollständig überarbeitet – 6 Änderungspunkte (Herleitung entfallen, Einsatzmittel ergänzt, Erreichungsgrad, Szenario, Formulierung Funktionsstärke, mind. 50 Einsätze); betrifft Eingrenzung F12, FeuAK F13 und Lernkarte h52'
     ]},
