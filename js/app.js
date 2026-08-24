@@ -3518,7 +3518,7 @@ const EINGRENZUNG_QUIZ = (function(){
     var prevBtn=_step===0?'':'<button class="fb-prev-btn" onclick="EINGRENZUNG_QUIZ.prevQ()">← Zurück</button>';
     var nextLabel=_step===QUESTIONS.length-1?'Auswertung →':'Nächste Frage →';
     var nextFn=_step===QUESTIONS.length-1?'EINGRENZUNG_QUIZ.showResult()':'EINGRENZUNG_QUIZ.nextQ()';
-    el.innerHTML='<div class="uk-q-header"><button class="uk-back-btn" onclick="EINGRENZUNG_QUIZ.showStart()">← Übersicht</button><span class="uk-q-badge">'+q.nr+' · '+q.punkte+(q.punkte===1?' Punkt':' Punkte')+'</span><span class="uk-timer-inline">⏱ <span id="eq-timer-val2">'+fmtTime(_timeLeft)+'</span></span></div><div class="uk-question"><p>'+q.text+'</p></div><textarea class="fb-textarea" id="eq-ta" placeholder="Schreibe deine Antwort hier…" rows="6">'+savedTa+'</textarea><div class="eq-reveal-row'+((_revealed||_shortRevealed)?' hidden':'')+' " id="eq-reveal-row"><button class="fb-reveal-btn" onclick="EINGRENZUNG_QUIZ.reveal()">Musterlösung anzeigen</button><button class="eq-short-btn" onclick="EINGRENZUNG_QUIZ.revealShort()">Kurzantwort</button></div><div class="fb-answer'+(_revealed?'':' hidden')+'" id="eq-answer">'+q.answer+'</div><div class="fb-answer eq-short-answer'+(_shortRevealed?'':' hidden')+'" id="eq-short">'+(q.short||q.answer)+'</div><div class="uk-score-row'+((_revealed||_shortRevealed)?'':' hidden')+'" id="eq-score-row"><span class="uk-score-label">Meine Punkte:</span><div class="uk-score-btns">'+scoreBtns+'</div>'+scoreGot+'</div><div class="fb-step-actions">'+prevBtn+'<button class="fb-next-btn" onclick="'+nextFn+'">'+nextLabel+'</button></div><div class="fb-step-dots">'+dotsHtml()+'</div>';
+    el.innerHTML='<div class="uk-q-header"><button class="uk-back-btn" onclick="EINGRENZUNG_QUIZ.showStart()">← Übersicht</button><span class="uk-q-badge">'+q.nr+' · '+q.punkte+(q.punkte===1?' Punkt':' Punkte')+'</span><span class="uk-timer-inline">⏱ <span id="eq-timer-val2">'+fmtTime(_timeLeft)+'</span></span></div><div class="uk-question"><p>'+q.text+'</p></div><textarea class="fb-textarea" id="eq-ta" placeholder="Schreibe deine Antwort hier…" rows="6">'+savedTa+'</textarea><div class="eq-reveal-row" id="eq-reveal-row"><button class="fb-reveal-btn" onclick="EINGRENZUNG_QUIZ.reveal()">Musterlösung anzeigen</button><button class="eq-short-btn" onclick="EINGRENZUNG_QUIZ.revealShort()">Kurzantwort</button></div><div class="fb-answer'+(_revealed?'':' hidden')+'" id="eq-answer">'+q.answer+'</div><div class="fb-answer eq-short-answer'+(_shortRevealed?'':' hidden')+'" id="eq-short">'+(q.short||q.answer)+'</div><div class="uk-score-row'+((_revealed||_shortRevealed)?'':' hidden')+'" id="eq-score-row"><span class="uk-score-label">Meine Punkte:</span><div class="uk-score-btns">'+scoreBtns+'</div>'+scoreGot+'</div><div class="fb-step-actions">'+prevBtn+'<button class="fb-next-btn" onclick="'+nextFn+'">'+nextLabel+'</button></div><div class="fb-step-dots">'+dotsHtml()+'</div>';
   }
 
   function renderResult(){
@@ -3567,7 +3567,6 @@ const EINGRENZUNG_QUIZ = (function(){
       var ta=document.getElementById('eq-ta');
       if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
       _revealed=true;
-      document.getElementById('eq-reveal-row')?.classList.add('hidden');
       document.getElementById('eq-answer')?.classList.remove('hidden');
       document.getElementById('eq-score-row')?.classList.remove('hidden');
     },
@@ -3575,7 +3574,6 @@ const EINGRENZUNG_QUIZ = (function(){
       var ta=document.getElementById('eq-ta');
       if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
       _shortRevealed=true;
-      document.getElementById('eq-reveal-row')?.classList.add('hidden');
       document.getElementById('eq-short')?.classList.remove('hidden');
       document.getElementById('eq-score-row')?.classList.remove('hidden');
     },
@@ -3668,6 +3666,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.16',ts:'2026-08-24T00:00',items:[
+      'Eingrenzungs-Quiz: Musterlösung- und Kurzantwort-Button bleiben sichtbar; beide Antworten gleichzeitig anzeigbar'
+    ]},
     {v:'2.29.15',ts:'2026-08-24T00:00',items:[
       'Eingrenzungs-Quiz: Kurzantwort-Button neben Musterlösung – kompakte Lernversion aller 10 Antworten'
     ]},
