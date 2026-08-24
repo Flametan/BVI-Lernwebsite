@@ -3591,7 +3591,7 @@ const EINGRENZUNG_QUIZ = (function(){
       var sr=document.getElementById('eq-score-row');
       if(sr){if(_revealed||_shortRevealed){sr.classList.remove('hidden');}else{sr.classList.add('hidden');}}
       var btn=document.getElementById('eq-short-btn');
-      if(btn){if(_shortRevealed){btn.classList.add('eq-btn-active');}else{btn.classList.remove('eq-btn-active');}}
+      if(btn){if(_shortRevealed){btn.classList.add('eq-short-btn-active');}else{btn.classList.remove('eq-short-btn-active');}}
     },
     setScore:function(pts){
       var d=loadScores();d[scoreKey(QUESTIONS[_step].id)]=pts;saveScores(d);_scores=d;
@@ -3681,6 +3681,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.22',ts:'2026-08-24T00:00',items:[
+      'Eingrenzungs-Quiz: Musterlösung-Button leuchtet gold, Kurzantwort-Button silber'
+    ]},
     {v:'2.29.21',ts:'2026-08-24T00:00',items:[
       'Eingrenzungs-Quiz: aktive Buttons in wärmerem Goldton (#D4923A)'
     ]},
