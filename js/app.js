@@ -3681,6 +3681,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.21',ts:'2026-08-24T00:00',items:[
+      'Eingrenzungs-Quiz: aktive Buttons in wärmerem Goldton (#D4923A)'
+    ]},
     {v:'2.29.20',ts:'2026-08-24T00:00',items:[
       'Eingrenzungs-Quiz: Fragen 11+12 (AGBF) an richtiger Position (Doppelkomma-Fix); aktive Buttons leuchten golden'
     ]},
