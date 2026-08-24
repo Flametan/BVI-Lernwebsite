@@ -3450,6 +3450,15 @@ const EINGRENZUNG_QUIZ = (function(){
      text:'Nennen Sie mindestens 5 der 9 Grundsätze des Vergaberechts (§97 GWB).',
      answer:'Die 9 Grundsätze des Vergaberechts (§97 GWB) – mind. 5 nennen:<br><br>1. Wettbewerbsgrundsatz<br>2. Transparenzgebot<br>3. Grundsatz der Wirtschaftlichkeit<br>4. Grundsatz der Verhältnismäßigkeit<br>5. Grundsatz der Gleichbehandlung<br>6. Berücksichtigung strategischer Ziele<br>7. Gebot der Mittelstandsfreundlichkeit<br>8. Gebot des Einsatzes elektronischer Mittel<br>9. Rechtsanspruch auf Einhaltung der Vergaberegeln',
      short:'9 Grundsätze §97 GWB – mind. 5 nennen:<br>1. Wettbewerb · 2. Transparenz · 3. Wirtschaftlichkeit · 4. Verhältnismäßigkeit · 5. Gleichbehandlung · 6. Strategische Ziele · 7. Mittelstandsfreundlichkeit · 8. Elektronische Mittel · 9. Rechtsanspruch auf Einhaltung'},
+,
+    {id:11,nr:'Frage 11',punkte:6,cat:'Bedarfsplanung',
+     text:'Aus welchen 4 Elementen besteht das Schutzziel (Planungsziel) nach den AGBF-Qualitätskriterien?',
+     answer:'<strong>1. Standardschadensereignis:</strong> Kritischer Wohnungsbrand im Obergeschoss eines mehrgeschossigen Wohngebäudes (Referenzszenario für die Planung).<br><strong>2. Hilfsfrist:</strong> 1,5 Min. Gesprächsführungszeit + 8 Min. Ausrücke- und Anfahrtszeit = 9,5 Minuten gesamt ab Notrufeingang.<br><strong>3. Funktionsstärke:</strong> 1. Taktische Einheit: 10 Einsatzkräfte nach 8 Min. / 2. TE: weitere 6 Kräfte nach 13 Min. → gesamt <strong>16 Einsatzkräfte</strong>.<br><strong>4. Erreichungsgrad:</strong> <strong>90 %</strong> aller Einsätze müssen Hilfsfrist UND Funktionsstärke gleichzeitig erfüllen (AGBF 2015).',
+     short:'<strong>4 Elemente des Schutzziels (AGBF):</strong><br>① <strong>Standardschadensereignis:</strong> Krit. Wohnungsbrand im OG eines mehrgesch. Wohngebäudes.<br>② <strong>Hilfsfrist:</strong> 1,5 Min. Gesprächsführung + 8 Min. Ausrücken/Anfahrt = <strong>9,5 Min.</strong> gesamt.<br>③ <strong>Funktionsstärke:</strong> 1. TE: 10 EK nach 8 Min. · 2. TE: +6 EK nach 13 Min. = <strong>16 EK.</strong><br>④ <strong>Erreichungsgrad:</strong> <strong>90 %</strong> aller Einsätze müssen Hilfsfrist + Funktionsstärke gleichzeitig erfüllen (AGBF 2015).'},
+    {id:12,nr:'Frage 12',punkte:5,cat:'Bedarfsplanung',
+     text:'Welcher wesentliche Unterschied besteht zwischen den AGBF-Qualitätskriterien von 1998 und der Fortschreibung von 2015?',
+     answer:'<strong>Zentraler Unterschied: Erreichungsgrad</strong><br>→ AGBF <strong>1998:</strong> Erreichungsgrad <strong>80 %</strong> – bei 4 von 5 Einsätzen müssen Hilfsfrist und Funktionsstärke erfüllt werden.<br>→ AGBF <strong>2015:</strong> Erreichungsgrad <strong>90 %</strong> – erhöhtes Schutzniveau, begründet durch TIBRO-Studie (vfdb).<br><br><strong>Weitere Neuerung 2015:</strong> Klarstellung des <strong>Additionsverfahrens</strong> – die 10 Einsatzfunktionen der 1. TE können auf mehrere Fahrzeuge verschiedener Standorte aufgeteilt werden (keine Einzelfahrzeugpflicht).<br><br><strong>Unverändert geblieben:</strong> Standardschadensereignis · Hilfsfrist 9,5 Min. · Funktionsstärke 10/16 Kräfte · CO-Summenkurve als medizinische Grundlage.',
+     short:'<strong>Zentraler Unterschied: Erreichungsgrad</strong><br>→ 1998: <strong>80 %</strong><br>→ 2015: <strong>90 %</strong> (TIBRO-Studie / vfdb)<br><br><strong>Neu 2015:</strong> Additionsverfahren – 10 Funktionen der 1. TE dürfen auf mehrere Fahrzeuge/Standorte aufgeteilt werden.<br><strong>Unverändert:</strong> Standardschadensereignis · Hilfsfrist 9,5 Min. · Funktionsstärke 10/16 EK.'}
   ];
 
   const EQ_TOTAL_PTS = QUESTIONS.reduce(function(s,q){return s+q.punkte;},0);
@@ -3673,6 +3682,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.19',ts:'2026-08-24T00:00',items:[
+      'Eingrenzungs-Quiz: Frage 11 (AGBF 4 Elemente Schutzziel) und Frage 12 (AGBF 1998 vs. 2015) aus Altklausur-Training übernommen, je mit Musterlösung und Kurzantwort'
+    ]},
     {v:'2.29.18',ts:'2026-08-24T00:00',items:[
       'Eingrenzungs-Quiz: aktive Buttons farblich hervorgehoben; Neu-beginnen-Button funktioniert jetzt (confirm()-Dialog entfernt)'
     ]},
