@@ -3566,16 +3566,20 @@ const EINGRENZUNG_QUIZ = (function(){
     reveal:function(){
       var ta=document.getElementById('eq-ta');
       if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
-      _revealed=true;
-      document.getElementById('eq-answer')?.classList.remove('hidden');
-      document.getElementById('eq-score-row')?.classList.remove('hidden');
+      _revealed=!_revealed;
+      var ans=document.getElementById('eq-answer');
+      if(ans){if(_revealed){ans.classList.remove('hidden');}else{ans.classList.add('hidden');}}
+      var sr=document.getElementById('eq-score-row');
+      if(sr){if(_revealed||_shortRevealed){sr.classList.remove('hidden');}else{sr.classList.add('hidden');}}
     },
     revealShort:function(){
       var ta=document.getElementById('eq-ta');
       if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
-      _shortRevealed=true;
-      document.getElementById('eq-short')?.classList.remove('hidden');
-      document.getElementById('eq-score-row')?.classList.remove('hidden');
+      _shortRevealed=!_shortRevealed;
+      var sh=document.getElementById('eq-short');
+      if(sh){if(_shortRevealed){sh.classList.remove('hidden');}else{sh.classList.add('hidden');}}
+      var sr=document.getElementById('eq-score-row');
+      if(sr){if(_revealed||_shortRevealed){sr.classList.remove('hidden');}else{sr.classList.add('hidden');}}
     },
     setScore:function(pts){
       var d=loadScores();d[scoreKey(QUESTIONS[_step].id)]=pts;saveScores(d);_scores=d;
@@ -3666,6 +3670,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.17',ts:'2026-08-24T00:00',items:[
+      'Eingrenzungs-Quiz: Musterlösung- und Kurzantwort-Button als Toggle – beliebig ein- und ausblendbar, Wechsel jederzeit möglich'
+    ]},
     {v:'2.29.16',ts:'2026-08-24T00:00',items:[
       'Eingrenzungs-Quiz: Musterlösung- und Kurzantwort-Button bleiben sichtbar; beide Antworten gleichzeitig anzeigbar'
     ]},
