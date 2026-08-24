@@ -1035,6 +1035,8 @@ body.mode-navy .quiz-mastery-modal-box{background:rgba(8,13,28,1.0);border-color
 .eq-short-btn:hover{background:rgba(255,255,255,.08);color:var(--c-text);}
 .eq-btn-active{background:#D4923A !important;color:#1a1a1a !important;border-color:#D4923A !important;}
 .eq-btn-active:hover{background:#c07d2e !important;}
+.eq-short-btn-active{background:#9EAAB4 !important;color:#1a1a1a !important;border-color:#9EAAB4 !important;}
+.eq-short-btn-active:hover{background:#8a97a2 !important;}
 .eq-short-answer{border-left-color:var(--c-slate-l);}
 .fb-answer{background:rgba(42,122,82,.08);border:1px solid rgba(42,122,82,.25);border-left:3px solid #3BAA70;border-radius:var(--r-sm) var(--r-md) var(--r-md) var(--r-sm);padding:.9rem 1.1rem;font-size:.84rem;color:var(--c-text);line-height:1.75;margin-bottom:.85rem;animation:vIn .25s var(--ease) both;}
 .fb-answer strong{color:var(--c-text-b);font-weight:600;}
