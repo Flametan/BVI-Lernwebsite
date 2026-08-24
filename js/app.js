@@ -3450,7 +3450,6 @@ const EINGRENZUNG_QUIZ = (function(){
      text:'Nennen Sie mindestens 5 der 9 Grundsätze des Vergaberechts (§97 GWB).',
      answer:'Die 9 Grundsätze des Vergaberechts (§97 GWB) – mind. 5 nennen:<br><br>1. Wettbewerbsgrundsatz<br>2. Transparenzgebot<br>3. Grundsatz der Wirtschaftlichkeit<br>4. Grundsatz der Verhältnismäßigkeit<br>5. Grundsatz der Gleichbehandlung<br>6. Berücksichtigung strategischer Ziele<br>7. Gebot der Mittelstandsfreundlichkeit<br>8. Gebot des Einsatzes elektronischer Mittel<br>9. Rechtsanspruch auf Einhaltung der Vergaberegeln',
      short:'9 Grundsätze §97 GWB – mind. 5 nennen:<br>1. Wettbewerb · 2. Transparenz · 3. Wirtschaftlichkeit · 4. Verhältnismäßigkeit · 5. Gleichbehandlung · 6. Strategische Ziele · 7. Mittelstandsfreundlichkeit · 8. Elektronische Mittel · 9. Rechtsanspruch auf Einhaltung'},
-,
     {id:11,nr:'Frage 11',punkte:6,cat:'Bedarfsplanung',
      text:'Aus welchen 4 Elementen besteht das Schutzziel (Planungsziel) nach den AGBF-Qualitätskriterien?',
      answer:'<strong>1. Standardschadensereignis:</strong> Kritischer Wohnungsbrand im Obergeschoss eines mehrgeschossigen Wohngebäudes (Referenzszenario für die Planung).<br><strong>2. Hilfsfrist:</strong> 1,5 Min. Gesprächsführungszeit + 8 Min. Ausrücke- und Anfahrtszeit = 9,5 Minuten gesamt ab Notrufeingang.<br><strong>3. Funktionsstärke:</strong> 1. Taktische Einheit: 10 Einsatzkräfte nach 8 Min. / 2. TE: weitere 6 Kräfte nach 13 Min. → gesamt <strong>16 Einsatzkräfte</strong>.<br><strong>4. Erreichungsgrad:</strong> <strong>90 %</strong> aller Einsätze müssen Hilfsfrist UND Funktionsstärke gleichzeitig erfüllen (AGBF 2015).',
@@ -3682,6 +3681,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.20',ts:'2026-08-24T00:00',items:[
+      'Eingrenzungs-Quiz: Fragen 11+12 (AGBF) an richtiger Position (Doppelkomma-Fix); aktive Buttons leuchten golden'
+    ]},
     {v:'2.29.19',ts:'2026-08-24T00:00',items:[
       'Eingrenzungs-Quiz: Frage 11 (AGBF 4 Elemente Schutzziel) und Frage 12 (AGBF 1998 vs. 2015) aus Altklausur-Training übernommen, je mit Musterlösung und Kurzantwort'
     ]},
