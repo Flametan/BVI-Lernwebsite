@@ -1029,6 +1029,11 @@ body.mode-navy .quiz-mastery-modal-box{background:rgba(8,13,28,1.0);border-color
 .fb-textarea::placeholder{color:var(--c-slate);}
 .fb-reveal-btn{padding:.55rem 1.25rem;border-radius:var(--r-sm);border:1px solid var(--c-gold-rim);background:var(--c-gold-dim);color:var(--c-gold);font-size:.85rem;font-weight:600;font-family:var(--f-m);cursor:pointer;margin-bottom:.85rem;transition:background var(--t);}
 .fb-reveal-btn:hover{background:rgba(201,168,76,.2);}
+.eq-reveal-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.85rem;}
+.eq-reveal-row .fb-reveal-btn{margin-bottom:0;}
+.eq-short-btn{padding:.55rem 1.25rem;border-radius:var(--r-sm);border:1px solid var(--glass-b);background:var(--glass);color:var(--c-slate-l);font-size:.85rem;font-weight:600;font-family:var(--f-m);cursor:pointer;transition:all var(--t);}
+.eq-short-btn:hover{background:rgba(255,255,255,.08);color:var(--c-text);}
+.eq-short-answer{border-left-color:var(--c-slate-l);}
 .fb-answer{background:rgba(42,122,82,.08);border:1px solid rgba(42,122,82,.25);border-left:3px solid #3BAA70;border-radius:var(--r-sm) var(--r-md) var(--r-md) var(--r-sm);padding:.9rem 1.1rem;font-size:.84rem;color:var(--c-text);line-height:1.75;margin-bottom:.85rem;animation:vIn .25s var(--ease) both;}
 .fb-answer strong{color:var(--c-text-b);font-weight:600;}
 .fb-step-actions{display:flex;gap:.6rem;justify-content:space-between;}
