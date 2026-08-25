@@ -3993,6 +3993,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.37',ts:'2026-08-25T00:00',items:[
+      'Haushalt-Tab ergänzt: Produktorientierter Haushalt (Zeilen/Ansätze/Reste/Ermächtigungsübertragungen), Verpflichtungsermächtigungen (VE) mit Praxis-Beispiel, Deckungsfähigkeit/Übertragbarkeit/Mittelbindung als def-box; Kameralistik + Doppik um Effektivitäts-Abgrenzung erweitert; Broken-Link zum gelöschten Vergabe-Tab in Acc 06 korrigiert'
+    ]},
     {v:'2.29.36',ts:'2026-08-25T00:00',items:[
       'VWL-Tab ergänzt: Allokation mit Etymologie-Klammer; Produktivitäts-Hebel in Effizienz-Karte; Statistischer Wert eines Menschenlebens auf 4 Punkte erweitert (Investitionsbasis + Risikominimierung)'
     ]},
