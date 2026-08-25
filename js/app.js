@@ -3993,6 +3993,10 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.35',ts:'2026-08-25T00:00',items:[
+      'FeuAK Struktur: Tabs Vergabe, Rechnungswesen und BWL entfernt (Karten + Views gelöscht); „Bedarfsplanung" umbenannt zu „Brandschutzbedarfsplanung"; neuer Hub-Tab „Bedarfsplanung" mit 3 Unterbereichen (Brandschutz-, RD- und KatS-Bedarfsplanung)'
+    ]},
+    
     {v:'2.29.34',ts:'2026-08-25T00:00',items:[
       'KF_QUIZ: Neue Frage 1 – Besonderheiten & Konsequenzen des Haushaltswesens für FW-Führungskräfte (5 Punkte, 5 Abschnitte: langer Weg/18 Monate, Konsequenzen, FW-Konflikte, Vergaberecht, Steuerungsauftrag); alle bisherigen Fragen 1–12 zu Fragen 2–13 verschoben; Gesamtpunkte 60→65, Fragenanzahl 12→13'
     ]},
