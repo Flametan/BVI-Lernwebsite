@@ -38,8 +38,7 @@ const NAV = (function(){
     if(id==='v-vak-altklausur') QUIZ.init();
     if(id==='v-klausurfragen') KF_QUIZ.init();
     if(id==='v-klausur') KLAUSUR_HUB.render();
-    if(id==='v-vak-fallbearbeitung','v-vak-uebungsklausur') FALLBEARBEITUNG.init();
-    if(id==='v-vak-uebungsklausur') UEBUNGSKLAUSUR.init();
+    if(id==='v-vak-fallbearbeitung') FALLBEARBEITUNG.init();
     if(id==='v-simulator') SIM._refreshCards();
     if(id==='v-app' && window._isChromium){
       const w = document.getElementById('apk-chromium-warn');
@@ -1195,7 +1194,7 @@ const PROGRESS = (function(){
     sfs:  ['v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc'],
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
-    vak:  ['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung'],
+    vak:  ['v-vak-klausurvorbereitung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung'],
     feuak:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
     idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse'],
   };
@@ -1254,10 +1253,10 @@ const SEARCH = (function(){
     'v-hlfs-vb':'HLFS · Vorbeugen','v-hlfs-manv':'HLFS · MANV','v-hlfs-zugfuehrer':'HLFS · Zugführer','v-hlfs-stab':'HLFS · Stab',
     'v-ibk-ta':'IBK · TA','v-ibk-konflikt':'IBK · Konflikt','v-ibk-stress':'IBK · Stress',
     'v-ibk-psnv':'IBK · PSNV','v-ibk-bgm':'IBK · BGM','v-ibk-pm':'IBK · PM','v-ibk-zeit':'IBK · Zeitmanagement',
-    'v-vak-lernzusammenfassung':'VAk · Lernzusammenfassung','v-vak-jur-denken':'VAk · Juristisches Denken',
+    'v-vak-klausurvorbereitung':'VAk · Klausurvorbereitung','v-vak-jur-denken':'VAk · Juristisches Denken',
     'v-vak-verwaltungsrecht':'VAk · Allgemeines Verwaltungsrecht','v-vak-staatsrecht':'VAk · Staatsrecht',
     'v-vak-einsatzrecht':'VAk · Einsatzrecht','v-vak-dienstrecht':'VAk · Öffentliches Dienstrecht',
-    'v-vak-klausurhinweise':'VAk · Klausurhinweise','v-vak-rettungsdienstrecht':'VAk · Rettungsdienstrecht','v-vak-fallbearbeitung':'VAk · Fallbearbeitung','v-vak-uebungsklausur':'VAk · Übungsklausur',
+    'v-vak-klausurhinweise':'VAk · Klausurhinweise','v-vak-rettungsdienstrecht':'VAk · Rettungsdienstrecht','v-vak-fallbearbeitung':'VAk · Fallbearbeitung',
     'v-feuak-vwl':'FeuAK · VWL','v-feuak-bwl':'FeuAK · BWL','v-feuak-haushalt':'FeuAK · Haushalt',
     'v-feuak-vergabe':'FeuAK · Vergabe','v-feuak-rechnungswesen':'FeuAK · Rechnungswesen',
     'v-feuak-pm':'FeuAK · Strategisches Management',
@@ -3557,6 +3556,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.41',ts:'2026-08-25T00:00',items:[
+      'VAk Berlin: Tabs Lernzusammenfassung und Übungsklausur gelöscht; neuer Hub-Tab „Klausurvorbereitung" mit Altklausur-Quiz, Fallbearbeitung und Klausurhinweise; Fallbearbeitung-Init-Bug (Comma-Operator) behoben'
+    ]},
     {v:'2.29.40',ts:'2026-08-25T00:00',items:[
       'KF_QUIZ: falscher Array-Index in Übersicht und Auswertung behoben (q.id-1 → i); Klick auf Frage 1 öffnet jetzt korrekt Frage 1'
     ]},
