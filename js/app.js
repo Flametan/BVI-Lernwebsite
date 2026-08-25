@@ -1195,7 +1195,7 @@ const PROGRESS = (function(){
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-klausurvorbereitung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung'],
-    feuak:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
+    feuak:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
     idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse'],
   };
   const LEAF_PARENT = {};
@@ -1260,7 +1260,7 @@ const SEARCH = (function(){
     'v-feuak-vwl':'FeuAK · VWL','v-feuak-bwl':'FeuAK · BWL','v-feuak-haushalt':'FeuAK · Haushalt',
     'v-feuak-vergabe':'FeuAK · Vergabe','v-feuak-rechnungswesen':'FeuAK · Rechnungswesen',
     'v-feuak-pm':'FeuAK · Strategisches Management',
-    'v-feuak-bedarfsplanung':'FeuAK · Bedarfsplanung','v-feuak-pruefung':'FeuAK · Prüfungsleistung Hamburg',
+    'v-feuak-bedarfsplanung':'FeuAK · Bedarfsplanung',
     'v-feuak-altklausur':'FeuAK · Altklausur-Training',
     'v-feuak-planspiel':'FeuAK · Planspiel MANV',
     'v-feuak-qm':'FeuAK · Qualitätsmanagement',
@@ -2550,7 +2550,7 @@ const STATS = (function(){
     HLFS:['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     IBK:['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     VAk:['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht'],
-    FeuAK:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-pruefung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
+    FeuAK:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
     IdF:['v-idf-brandschutz','v-idf-stab','v-idf-presse']
   };
   function ov(){ return document.getElementById('stats-overlay'); }
@@ -3556,6 +3556,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.43',ts:'2026-08-25T00:00',items:[
+      'FeuAK: Tab „Prüfungsleistung Lehrgang Hamburg" komplett gelöscht (Karte + View)'
+    ]},
     {v:'2.29.42',ts:'2026-08-25T00:00',items:[
       'FeuAK: Klausuren-Karte zu „Klausurenvorbereitung" umbenannt und als Gold-Hub-Karte (volle Breite) gestaltet'
     ]},
