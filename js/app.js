@@ -3384,11 +3384,11 @@ const KF_QUIZ = (function(){
     var scored=QUESTIONS.filter(function(q){return _scores[scoreKey(q.id)]!==undefined;});
     var totalScored=scored.reduce(function(s,q){return s+(_scores[scoreKey(q.id)]||0);},0);
     var progress=scored.length;
-    var overviewRows=QUESTIONS.map(function(q){
+    var overviewRows=QUESTIONS.map(function(q,i){
       var pts=_scores[scoreKey(q.id)];
       var done=pts!==undefined;
       var ptsHtml=done?('<span class="uk-q-pts-got">'+pts+'/'+q.punkte+'</span>'):'<span class="uk-q-pts-open">–</span>';
-      return '<div class="uk-q-row'+(done?' uk-q-done':'')+'" onclick="KF_QUIZ.goToQ('+(q.id-1)+')">'+'<span class="uk-q-nr">'+q.nr+'</span><span class="uk-q-pts-max">'+q.punkte+' Pkt.</span>'+ptsHtml+'</div>';
+      return '<div class="uk-q-row'+(done?' uk-q-done':'')+'" onclick="KF_QUIZ.goToQ('+i+')">'+'<span class="uk-q-nr">'+q.nr+'</span><span class="uk-q-pts-max">'+q.punkte+' Pkt.</span>'+ptsHtml+'</div>';
     }).join('');
     var progressHtml=progress>0?('<div class="uk-progress-row"><span>Fortschritt: '+progress+'/'+QUESTIONS.length+' bewertet</span><span>'+totalScored+'/'+KF_TOTAL_PTS+' Punkte ('+Math.round(totalScored/KF_TOTAL_PTS*100)+' %)</span></div>'):''
 ;    var resetBtn=progress>0?'<button class="uk-timer-reset" style="margin-left:auto" onclick="KF_QUIZ.resetAll()">↺ Neu beginnen</button>':'';
@@ -3417,11 +3417,11 @@ const KF_QUIZ = (function(){
     var pct=Math.round(total/KF_TOTAL_PTS*100);
     var grade=pct>=90?'Sehr gut':pct>=80?'Gut':pct>=70?'Befriedigend':pct>=60?'Ausreichend':'Nicht bestanden';
     var gradeCol=pct>=60?'#4ACD90':'#ef4444';
-    var rows=QUESTIONS.map(function(q){
+    var rows=QUESTIONS.map(function(q,i){
       var got=_scores[scoreKey(q.id)];
       var done=got!==undefined;
       var col=done?(got===q.punkte?'#4ACD90':got>0?'var(--c-gold)':'#ef4444'):'var(--c-slate-l)';
-      return '<tr><td>'+q.nr+'</td><td>'+q.punkte+'</td><td style="color:'+col+'">'+(done?got:'–')+'</td><td><button class="uk-jump-btn" onclick="KF_QUIZ.goToQ('+(q.id-1)+')">→</button></td></tr>';
+      return '<tr><td>'+q.nr+'</td><td>'+q.punkte+'</td><td style="color:'+col+'">'+(done?got:'–')+'</td><td><button class="uk-jump-btn" onclick="KF_QUIZ.goToQ('+i+')">→</button></td></tr>';
     }).join('');
     el.innerHTML='<div class="uk-result"><div class="uk-result-header">Auswertung</div>'+'<div class="uk-result-score" style="color:'+gradeCol+';">'+total+' / '+KF_TOTAL_PTS+' Punkte</div>'+'<div class="uk-result-pct" style="color:'+gradeCol+';">'+pct+' % – '+grade+'</div>'+'<div class="uk-result-bar"><div class="uk-result-fill" style="width:'+pct+'%;background:'+gradeCol+';"></div></div>'+'<table class="uk-result-table"><thead><tr><th>Frage</th><th>Max.</th><th>Erreicht</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>'+'<div class="uk-result-actions">'+'<button class="uk-start-btn" onclick="KF_QUIZ.showStart()">← Zur Übersicht</button>'+'<button class="uk-reset-btn" onclick="KF_QUIZ.resetAll()">Neu beginnen</button></div></div>';
   }
@@ -3557,6 +3557,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.40',ts:'2026-08-25T00:00',items:[
+      'KF_QUIZ: falscher Array-Index in Übersicht und Auswertung behoben (q.id-1 → i); Klick auf Frage 1 öffnet jetzt korrekt Frage 1'
+    ]},
     {v:'2.29.39',ts:'2026-08-25T00:00',items:[
       'Klausurfragen und Übungsklausur: nach Fragen-Sprung (goToQ, nextQ, prevQ) wird jetzt automatisch an den Seitenanfang gescrollt'
     ]},
