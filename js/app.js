@@ -3556,6 +3556,15 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.30.1',ts:'2026-08-25T00:00',items:[
+      'FeuAK Klausurvorbereitung: Grid-Fehler behoben – „Eingrenzung 08/2026 & Münster" und „Altklausur-Training FeuAK" füllen jetzt gemeinsam die volle Breite (cg-3 → cg-2)'
+    ]},
+    {v:'2.30.0',ts:'2026-08-25T00:00',items:[
+      'Startseite: Kachel-Grid auf 2 Spalten umgestellt (war 3/4) und füllt jetzt die volle Bildschirmbreite',
+      'Startseite: App-Kachel alleine in voller Breite ganz unten',
+      'Startseite: „2. Jahr" als primärer Call-to-Action hervorgehoben – goldener Rahmen, Gold-Glow und goldener Titel',
+      'Startseite: „B" im Hero-Logo mit dezenter Schatten-Ebene für mehr Tiefe und Kontrast'
+    ]},
     {v:'2.29.48',ts:'2026-08-25T00:00',items:[
       'Global: abschließende hr.sec-div vor </details> entfernt (42 Akkordeons) – kein unnötiger Bodenabstand mehr in offenen Akkordeons'
     ]},
