@@ -3439,17 +3439,17 @@ const KF_QUIZ = (function(){
       var ta=document.getElementById('kf-ta');
       if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
       _step=i; _revealed=false; _shortRevealed=false;
-      renderQuestion();
+      renderQuestion(); window.scrollTo({top:0,behavior:'instant'});
     },
     nextQ:function(){
       var ta=document.getElementById('kf-ta');
       if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
-      if(_step<QUESTIONS.length-1){_step++;_revealed=false;_shortRevealed=false;renderQuestion();}
+      if(_step<QUESTIONS.length-1){_step++;_revealed=false;_shortRevealed=false;renderQuestion();window.scrollTo({top:0,behavior:'instant'});}
     },
     prevQ:function(){
       var ta=document.getElementById('kf-ta');
       if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
-      if(_step>0){_step--;_revealed=true;_shortRevealed=false;renderQuestion();}
+      if(_step>0){_step--;_revealed=true;_shortRevealed=false;renderQuestion();window.scrollTo({top:0,behavior:'instant'});}
     },
     reveal:function(){
       var ta=document.getElementById('kf-ta');
@@ -3557,6 +3557,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.39',ts:'2026-08-25T00:00',items:[
+      'Klausurfragen und Übungsklausur: nach Fragen-Sprung (goToQ, nextQ, prevQ) wird jetzt automatisch an den Seitenanfang gescrollt'
+    ]},
     {v:'2.29.38',ts:'2026-08-25T00:00',items:[
       'Altklausur-Training FeuAK (22 Fragen) und Eingrenzung 08/2026 & Münster (12 Fragen) von Quiz-Struktur auf Akkordeon-Format umgebaut; FEUAK_QUIZ und EINGRENZUNG_QUIZ IIFEs entfernt (~440 Zeilen)'
     ]},
@@ -4652,17 +4655,17 @@ const UEBUNGSKLAUSUR = (function(){
       var ta=document.getElementById('uk-ta');
       if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
       _step=i; _revealed=false;
-      renderQuestion();
+      renderQuestion(); window.scrollTo({top:0,behavior:'instant'});
     },
     nextQ:function(){
       var ta=document.getElementById('uk-ta');
       if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
-      if(_step<QUESTIONS.length-1){_step++;_revealed=false;renderQuestion();}
+      if(_step<QUESTIONS.length-1){_step++;_revealed=false;renderQuestion();window.scrollTo({top:0,behavior:'instant'});}
     },
     prevQ:function(){
       var ta=document.getElementById('uk-ta');
       if(ta){var d=loadScores();d['ta_q'+QUESTIONS[_step].id]=ta.value;saveScores(d);_scores=d;}
-      if(_step>0){_step--;_revealed=true;renderQuestion();}
+      if(_step>0){_step--;_revealed=true;renderQuestion();window.scrollTo({top:0,behavior:'instant'});}
     },
     reveal:function(){
       var ta=document.getElementById('uk-ta');
