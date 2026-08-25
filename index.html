@@ -517,7 +517,7 @@
         <span id="prog-feuak" class="tile-prog">0/10</span>
         <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
         <div class="tile-name">FeuAK Hamburg</div>
-        <div class="tile-desc">VWL, BWL, Haushalt, Vergabe, Rechnungswesen, Projektmanagement, Bedarfsplanung</div>
+        <div class="tile-desc">VWL, Haushalt, Projektmanagement, Bedarfsplanung, Qualitätsmanagement, Beschaffungspraxis</div>
         <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
       <div class="glass-tile" onclick="NAV.go('v-idf','IdF Münster')" style="position:relative">
@@ -5487,7 +5487,7 @@
     <div class="phi">
       <p class="page-eyebrow">Feuerwehrakademie Hamburg · Recht und Management</p>
       <h1 class="page-title">FeuAK <span class="accent">Hamburg</span></h1>
-      <p class="page-lead">VWL, BWL, Haushaltsrecht, Vergabe, Rechnungswesen, Strategisches Management, Stakeholder-Analyse, Prospektive Risikoanalyse, Bedarfsplanung, RD-Bedarfsplanung und KatS-Bedarfsplanung – alle Prüfungsthemen des Hamburger Lehrgangsabschnitts.</p>
+      <p class="page-lead">VWL, Haushaltsrecht, Strategisches Management, Qualitätsmanagement, Beschaffungspraxis, Stakeholder-Analyse, Prospektive Risikoanalyse sowie Brand-, RD- und KatS-Bedarfsplanung – alle Prüfungsthemen des Hamburger Lehrgangsabschnitts.</p>
     </div>
   </div>
   <div class="pc">
@@ -5522,9 +5522,39 @@
         <div class="tc-name">Beschaffungspraxis</div>
         <div class="tc-desc">Fahrzeugbeschaffung, Vergaberecht, Leistungsbeschreibung, Abnahme, Verwertung</div>
       </div>
-      <div class="topic-card" onclick="NAV.go('v-feuak-bedarfsplanung','Bedarfsplanung')">
-        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <div class="topic-card" onclick="NAV.go('v-feuak-bp-hub','Bedarfsplanung')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         <div class="tc-name">Bedarfsplanung</div>
+        <div class="tc-desc">Brandschutz-, Rettungsdienst- und KatS-Bedarfsplanung</div>
+      </div>
+      <div class="topic-card" onclick="NAV.go('v-feuak-analyse','Analyse')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        <div class="tc-name">Analyse</div>
+        <div class="tc-desc">Stakeholder-Analyse · Prospektive Risikoanalyse</div>
+      </div>
+      <div class="topic-card" onclick="NAV.go('v-feuak-planspiel','Planspiel MANV')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1.5"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+        <div class="tc-name">Planspiel MANV</div>
+        <div class="tc-desc">Führungsstruktur bei MANV &amp; Polizeilage – Fahrzeugführer, Zugführer, Verbandsführer, Direktionsdienst, HEIKAT, Organigramm &amp; Lagekarte</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ FeuAK BEDARFSPLANUNG HUB ============================================================ -->
+<div id="v-feuak-bp-hub" class="view detail-view">
+  <div class="page-hero">
+    <div class="phi">
+      <p class="page-eyebrow">FeuAK Hamburg · Bedarfsplanung</p>
+      <h1 class="page-title">Bedarfs<span class="accent">planung</span></h1>
+      <p class="page-lead">Brand-, Rettungsdienst- und Katastrophenschutz-Bedarfsplanung – alle drei Planungsbereiche des FeuAK-Lehrgangsabschnitts.</p>
+    </div>
+  </div>
+  <div class="pc">
+    <div class="cg cg-2">
+      <div class="topic-card" onclick="NAV.go('v-feuak-bedarfsplanung','Brandschutzbedarfsplanung')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <div class="tc-name">Brandschutzbedarfsplanung</div>
         <div class="tc-desc">Personalfaktor, Dienstplanung, Planungsziele, AGBF Bund, szenarienbasierte Bemessung</div>
       </div>
       <div class="topic-card" onclick="NAV.go('v-feuak-rdbp','RD-Bedarfsplanung')">
@@ -5536,31 +5566,6 @@
         <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         <div class="tc-name">KatS-Bedarfsplanung</div>
         <div class="tc-desc">Katastrophenschutzbedarfsplanung · Lülf+ · 5 Phasen, Szenarien, Fähigkeiten, Planungsziele</div>
-      </div>
-      <div class="topic-card" onclick="NAV.go('v-feuak-vergabe','Vergabe')">
-        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        <div class="tc-name">Vergabe</div>
-        <div class="tc-desc">Vergaberecht, 8 Grundsätze, Ober-/Unterschwelle, Vergabeverfahren</div>
-      </div>
-      <div class="topic-card" onclick="NAV.go('v-feuak-rechnungswesen','Rechnungswesen')">
-        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        <div class="tc-name">Rechnungswesen</div>
-        <div class="tc-desc">Externes/internes RW, GoB, Bilanzaufbau, Strömungsgrößen, Kostenrechnung</div>
-      </div>
-      <div class="topic-card" onclick="NAV.go('v-feuak-bwl','BWL')">
-        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-        <div class="tc-name">BWL</div>
-        <div class="tc-desc">Ökonomisches Prinzip, Unternehmertum, Business Plan, Beschaffung, Push-/Pullsystem</div>
-      </div>
-      <div class="topic-card" onclick="NAV.go('v-feuak-analyse','Analyse')">
-        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-        <div class="tc-name">Analyse</div>
-        <div class="tc-desc">Stakeholder-Analyse · Prospektive Risikoanalyse</div>
-      </div>
-      <div class="topic-card" onclick="NAV.go('v-feuak-planspiel','Planspiel MANV')">
-        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1.5"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
-        <div class="tc-name">Planspiel MANV</div>
-        <div class="tc-desc">Führungsstruktur bei MANV &amp; Polizeilage – Fahrzeugführer, Zugführer, Verbandsführer, Direktionsdienst, HEIKAT, Organigramm &amp; Lagekarte</div>
       </div>
     </div>
   </div>
@@ -5875,117 +5880,6 @@
           <li><strong>OECD Better Life Index:</strong> 11 Dimensionen Lebensqualität</li>
           </ul>
           </div>
-        </div>
-      </details>
-
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ FeuAK BWL ============================================================ -->
-<div id="v-feuak-bwl" class="view detail-view">
-  <div class="page-hero">
-    <div class="phi">
-      <p class="page-eyebrow">FeuAK Hamburg · Betriebswirtschaftslehre</p>
-      <h1 class="page-title"><span class="accent">BWL</span></h1>
-      <p class="page-lead">Ökonomisches Prinzip, Unternehmertum, Business Plan, Beschaffung und Materialwirtschaft.</p>
-    </div>
-  </div>
-  <div class="pc">
-    <div class="acc-list">
-
-      <details class="acc-item">
-        <summary><span class="acc-num">01</span><span class="acc-title">Allgemeine Prinzipien der BWL</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <div class="def-box">
-          Wirtschaftswissenschaften untersuchen die Wirtschaft als Gebiet menschlicher Tätigkeit, das der <strong>Bedürfnisbefriedigung</strong> dient. Das Spannungsfeld: Unbegrenztheit der Bedürfnisse versus Knappheit von Gütern und Ressourcen.
-          </div>
-          <div class="cg cg-2" style="margin-top:1rem">
-          <div class="info-card">
-          <div class="info-card-title">Maximalprinzip</div>
-          Mit gegebenem Mitteleinsatz ein maximales Ergebnis erzielen.
-          </div>
-          <div class="info-card">
-          <div class="info-card-title">Minimalprinzip</div>
-          Ein gegebenes Ergebnis mit minimalem Mitteleinsatz erzielen.
-          </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="acc-item">
-        <summary><span class="acc-num">02</span><span class="acc-title">Prozess des Unternehmertums</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <p style="color:var(--c-slate);margin-bottom:1rem">Die Mischung aus bisherigen Geschäftskonzepten / Produkten und innovativen Ideen aus der Wissenschaft bildet oft die Grundlage:</p>
-          <div class="step-stack">
-          <div class="step-item"><span class="step-letter">1</span><div>Bildung einer <strong>Geschäftsidee</strong></div></div>
-          <div class="step-item"><span class="step-letter">2</span><div>Prüfung der <strong>Geschäftsmöglichkeit</strong></div></div>
-          <div class="step-item"><span class="step-letter">3</span><div>Entwicklung und Konzeption eines <strong>Geschäftsmodells</strong></div></div>
-          <div class="step-item"><span class="step-letter">4</span><div>Erfolgreiche <strong>Platzierung des Produkts am Markt</strong></div></div>
-          </div>
-          <div class="hint"><p>Nach einem bestimmten Zeitraum nimmt das Interesse am Produkt in der Regel ab. Ausnahmen bilden sogenannte „Evergreens".</p></div>
-        </div>
-      </details>
-
-      <details class="acc-item">
-        <summary><span class="acc-num">03</span><span class="acc-title">Business Plan</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <div class="def-box">
-          Ein Business Plan ist ein <strong>schriftliches Dokument</strong>, das das Konzept des neu zu gründenden Unternehmens beschreibt. Er umfasst Adressaten und Zielgruppen und muss:
-          <ul class="bl" style="margin-top:.75rem">
-          <li>Verständlich</li>
-          <li>Leserfreundlich</li>
-          <li>Prägnant geschrieben sein</li>
-          </ul>
-          </div>
-        </div>
-      </details>
-
-      <details class="acc-item">
-        <summary><span class="acc-num">04</span><span class="acc-title">Beschaffung und Materialwirtschaft</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <div class="def-box">
-          <div class="def-box-label">Definition</div>
-          Beschaffung umfasst alle Maßnahmen zur Versorgung des Unternehmens mit Roh-, Hilfs- und Betriebsstoffen, Zulieferteilen, Waren, Betriebsmitteln, Dienstleistungen, Personal, Informationen und Kapital in entsprechender Art, Menge und Qualität zum richtigen Zeitpunkt am richtigen Ort.
-          </div>
-          <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">5 Schritte der Beschaffung</h3>
-          <div class="step-stack">
-          <div class="step-item"><span class="step-letter">1</span><div><strong>Bedarfsermittlung</strong> – Feststellung des Bedarfs/Sortiments</div></div>
-          <div class="step-item"><span class="step-letter">2</span><div><strong>Beschaffungsmarktforschung</strong> – Sammlung, Analyse, Aufbereitung und Weiterleitung von Marktinformationen</div></div>
-          <div class="step-item"><span class="step-letter">3</span><div><strong>Make or Buy</strong> – Entscheidung über Eigenerstellung oder Fremdbezug unter Berücksichtigung von Kosten, Kompetenzen und Lieferangebot</div></div>
-          <div class="step-item"><span class="step-letter">4</span><div><strong>Bestellung und Abwicklung</strong> – Bestellmengen und -zeitpunkte, Lieferbedingungen</div></div>
-          <div class="step-item"><span class="step-letter">5</span><div><strong>Lieferantenmanagement</strong> – Bestimmung des Lieferantenkreises, Zusammenarbeit</div></div>
-          </div>
-        </div>
-      </details>
-
-      <details class="acc-item">
-        <summary><span class="acc-num">05</span><span class="acc-title">Push- vs. Pullsystem</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <div class="cg cg-2">
-          <div class="info-card">
-          <div class="info-card-title">Pushsystem</div>
-          Durch Planung bereitgestelltes Material „schiebt" die Fertigung. Abarbeitung der laufenden Aufträge, um Material aus der Werkstatt zu verbrauchen und Platz für neue Aufträge zu schaffen.
-          </div>
-          <div class="info-card">
-          <div class="info-card-title">Pullsystem</div>
-          Die Nachfrage „zieht" die Fertigung. Strategien wie „Just in Time" oder „Lean Production" streben eine möglichst lagerlose und bedarfssynchrone Bereitstellung von Materialien an.
-          </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="acc-item">
-        <summary><span class="acc-num">06</span><span class="acc-title">Weitere BWL-Themen</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <ul class="bl">
-          <li>Prozess der Produkteinführung und -positionierung</li>
-          <li><strong>Marketing</strong></li>
-          <li><strong>Produktionspolitik</strong></li>
-          <li><strong>Preispolitik</strong></li>
-          <li><strong>Distributionspolitik</strong></li>
-          <li><strong>Kommunikationspolitik</strong></li>
-          </ul>
         </div>
       </details>
 
@@ -6996,252 +6890,6 @@
     </div>
   </div>
 </div>
-
-<!-- ============================================================ FeuAK VERGABE ============================================================ -->
-<div id="v-feuak-vergabe" class="view detail-view">
-  <div class="page-hero">
-    <div class="phi">
-      <p class="page-eyebrow">FeuAK Hamburg · Vergaberecht</p>
-      <h1 class="page-title"><span class="accent">Vergabe</span></h1>
-      <p class="page-lead">Vergaberecht, öffentliche Aufträge, 8 Grundsätze, Ober- und Unterschwelle sowie Vergabeverfahren.</p>
-    </div>
-  </div>
-  <div class="pc">
-    <div class="acc-list">
-
-      <details class="acc-item">
-        <summary><span class="acc-num">01</span><span class="acc-title">Vergaberecht – Grundlagen</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <div class="def-box">
-          <div class="def-box-label">Definition</div>
-          Das Vergaberecht (auch: öffentliches Auftrags-, Beschaffungs-, Verdingungswesen und Recht der regulierenden Vergabe) umfasst alle Regeln, die ein Träger öffentlicher Gewalt bei der Beschaffung von Waren, Bau- und Dienstleistungen beachten muss.<br><br>
-          Es regelt <strong>nicht was</strong> zu beschaffen ist, sondern <strong>wie</strong> – als Vertragsanbahnungsrecht zu verstehen.
-          </div>
-          <h3 class="sec-h" style="font-size:1rem;margin-top:1.25rem">Öffentliche Auftraggeber</h3>
-          <ul class="bl">
-          <li>Öffentliche Auftraggeber (Gebietskörperschaften, Verbände, Beliehene)</li>
-          <li>Sektorenauftraggeber</li>
-          <li>Konzessionsgeber</li>
-          </ul>
-          <h3 class="sec-h" style="font-size:1rem;margin-top:1rem">Auftragstypen</h3>
-          <div class="cg cg-3">
-          <div class="info-card"><div class="info-card-title">Lieferauftrag</div>Beschaffung von Waren</div>
-          <div class="info-card"><div class="info-card-title">Bauauftrag</div>Bauleistungen</div>
-          <div class="info-card"><div class="info-card-title">Dienstleistungsauftrag</div>Dienstleistungen</div>
-          </div>
-          <div class="hint"><p>Bei mehreren Teilaspekten entscheidet derjenige, der den Gesamtcharakter am stärksten prägt.</p></div>
-          <h3 class="sec-h" style="font-size:1rem;margin-top:1rem">Ausnahmen vom Vergaberecht</h3>
-          <ul class="bl">
-          <li>Allgemeine Ausnahmen: Arbeitsverträge, bestimmte Dienstleistungen, KatS, Zivilschutz, Gefahrenabwehr</li>
-          <li>Inhouse-Geschäfte</li>
-          <li>Ausnahmen wegen internationaler Verfahrensregeln</li>
-          <li>Besondere Ausnahmen</li>
-          </ul>
-        </div>
-      </details>
-
-      <details class="acc-item">
-        <summary><span class="acc-num">02</span><span class="acc-title">Zweiteilung des Vergaberechts</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <div class="cg cg-2">
-          <div class="info-card">
-          <div class="info-card-title">Oberschwellenbereich</div>
-          <strong>EU- und Bundesrecht</strong> – ab:<br>
-          <ul class="bl" style="margin-top:.5rem">
-            <li>Dienstleistungen / Lieferungen: &gt; <strong>216.000 €</strong> (ab 1.1.2026)</li>
-            <li>Bauleistungen: &gt; <strong>5.404.000 €</strong> (ab 1.1.2026)</li>
-            <li>Sicherheit / Verteidigung: EU 2026: 432.000 €</li>
-          </ul>
-          <div class="hint" style="margin-top:.5rem"><p>ACHTUNG: Schwellenwerte ändern sich regelmäßig!</p></div>
-          </div>
-          <div class="info-card">
-          <div class="info-card-title">Unterschwellenbereich</div>
-          <strong>Landesrecht</strong>
-          </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="acc-item">
-        <summary><span class="acc-num">03</span><span class="acc-title">8 Grundsätze des Vergaberechts</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <div class="step-stack">
-          <div class="step-item"><span class="step-letter">1</span><div><strong>Wettbewerbsgrundsatz</strong> – mindestens 3 Anbieter</div></div>
-          <div class="step-item"><span class="step-letter">2</span><div><strong>Transparenzgebot</strong></div></div>
-          <div class="step-item"><span class="step-letter">3</span><div><strong>Grundsatz der Verhältnismäßigkeit</strong></div></div>
-          <div class="step-item"><span class="step-letter">4</span><div><strong>Grundsatz der Gleichbehandlung</strong></div></div>
-          <div class="step-item"><span class="step-letter">5</span><div><strong>Berücksichtigung strategischer Ziele</strong></div></div>
-          <div class="step-item"><span class="step-letter">6</span><div><strong>Gebot der Mittelstandsfreundlichkeit</strong> – grundsätzlich Losaufteilung</div></div>
-          <div class="step-item"><span class="step-letter">7</span><div><strong>Gebot des Einsatzes elektronischer Mittel</strong></div></div>
-          <div class="step-item"><span class="step-letter">8</span><div><strong>Rechtsanspruch auf Einhaltung der Vergaberegeln</strong></div></div>
-          </div>
-        </div>
-      </details>
-
-      <details class="acc-item">
-        <summary><span class="acc-num">04</span><span class="acc-title">Vorbereitung des Vergabeverfahrens</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <p style="color:var(--c-slate);margin-bottom:1rem">Bedarfsträger definiert zunächst die Bedarfe:</p>
-          <ul class="bl">
-          <li>Standardbedarfe (z. B. Büromaterial)</li>
-          <li>Spezialbedarfe (z. B. Feuerwehrfahrzeug)</li>
-          <li>Ersatzbeschaffungen (Aussonderung, Abschreibung, geregeltes Verfahren)</li>
-          <li>Neubeschaffungen (Bedarfsbegründung, Neben- und Folgewirkungen beachten)</li>
-          <li>Dienstleistungen / freiberufliche Leistungen</li>
-          </ul>
-          <h3 class="sec-h" style="font-size:1rem;margin-top:1rem">3 Schritte der Vorbereitung</h3>
-          <div class="step-stack">
-          <div class="step-item"><span class="step-letter">1</span><div><strong>Markterkundung</strong> – fortlaufend / auftragsspezifisch</div></div>
-          <div class="step-item"><span class="step-letter">2</span><div><strong>Auftragswertschätzung</strong></div></div>
-          <div class="step-item"><span class="step-letter">3</span><div><strong>Vergabeunterlagen</strong> – Anschreiben, Bewerbungsbedingungen, Vertragsunterlagen</div></div>
-          </div>
-          <div class="hint"><p>Zu klären: Haushalt/Budgetgrundlage (investiver oder konsumtiver Haushalt), Budgetplanung, Zuständigkeit.</p></div>
-        </div>
-      </details>
-
-      <details class="acc-item">
-        <summary><span class="acc-num">05</span><span class="acc-title">Vergabeverfahren</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <div class="cg cg-2">
-          <div class="info-card">
-          <div class="info-card-title">Unterschwellenvergabe</div>
-          <ul class="bl">
-            <li>Direktkauf (bis 1.000 €)</li>
-            <li>Verhandlungsvergabe (10.000–100.000 €) – mit oder ohne Teilnahmewettbewerb (mind. 3 Bieter)</li>
-            <li>Beschränkte Ausschreibung (&gt; 100.000 €) – mind. 3 Bieter anschreiben</li>
-            <li>Öffentliche Ausschreibung (&gt; 100.000 €)</li>
-          </ul>
-          </div>
-          <div class="info-card">
-          <div class="info-card-title">Oberschwellenvergabe</div>
-          <ul class="bl">
-            <li>Öffentliche Ausschreibung EU-weit (&gt; 216.000 € ab 1.1.2026)</li>
-            <li>Verhandlungsverfahren</li>
-            <li>Rahmenvereinbarungen auf Grundlage des Gesamtwertes</li>
-          </ul>
-          </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="acc-item">
-        <summary><span class="acc-num">06</span><span class="acc-title">Nach der Lieferung</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <ul class="bl">
-          <li>Mängelbeseitigung</li>
-          <li>Bestandsverwaltung</li>
-          <li>Bezahlungsmanagement</li>
-          </ul>
-        </div>
-      </details>
-
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ FeuAK RECHNUNGSWESEN ============================================================ -->
-<div id="v-feuak-rechnungswesen" class="view detail-view">
-  <div class="page-hero">
-    <div class="phi">
-      <p class="page-eyebrow">FeuAK Hamburg · Rechnungswesen</p>
-      <h1 class="page-title">Rechnungs<span class="accent">wesen</span></h1>
-      <p class="page-lead">Externes und internes Rechnungswesen, GoB, Bilanzaufbau, Strömungsgrößen und Kostenrechnung.</p>
-    </div>
-  </div>
-  <div class="pc">
-    <div class="acc-list">
-
-      <details class="acc-item">
-        <summary><span class="acc-num">01</span><span class="acc-title">Grundlagen des Rechnungswesens</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <div class="def-box"><div class="def-box-label">Definition</div><p>Rechnungswesen bedeutet die <strong>Abbildung von Unternehmen und seinen Beziehungen in die Umwelt in monetären Größen</strong>. Es wird in zwei Bereiche aufgeteilt: <strong>externes</strong> und <strong>internes</strong> Rechnungswesen.</p></div>
-        </div>
-      </details>
-
-      <details class="acc-item">
-        <summary><span class="acc-num">02</span><span class="acc-title">Externes Rechnungswesen</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <p>Dient der Außenwirkung (Staat, Finanzämter, Gläubiger, Geschäftspartner). Beinhaltet Buchführung und Jahresabschluss. Folgt gesetzlichen Vorschriften (HGB, EStG, AO) und dient der Ermittlung des zu versteuernden Gewinns.</p>
-          <p class="acc-sub">4 Zentrale Aufgaben</p>
-          <div class="cg cg-2">
-            <div class="info-card"><div class="info-card-title">Dokumentation</div><p>Zeitlich und sachlich geordnete Aufzeichnung aller Geschäftsvorgänge (Belege!)</p></div>
-            <div class="info-card"><div class="info-card-title">Information</div><p>Rechenschaftslegung aufgrund gesetzlicher Vorschriften</p></div>
-            <div class="info-card"><div class="info-card-title">Kontrolle</div><p>Überwachung der Wirtschaftlichkeit und Zahlungsfähigkeit</p></div>
-            <div class="info-card"><div class="info-card-title">Disposition</div><p>Zahlenmaterial als Grundlage für Planungen und Entscheidungen (Investitionen etc.)</p></div>
-          </div>
-          <p class="acc-sub">Arten der Buchführung</p>
-          <div class="cg cg-2">
-            <div class="info-card"><div class="info-card-title">Kaufmännische Buchführung</div><p>Einfache und <strong>doppelte Buchführung (Doppik)</strong>.<br>Vorteil der Doppik: zukunftsgerechte Ausrichtung – zukünftige Ausgaben werden dargestellt (z. B. Pensionsrückstellungen).</p></div>
-            <div class="info-card"><div class="info-card-title">Kameralistik</div><p>Hier werden nur Ein- und Auszahlungen betrachtet (kein Ressourcenverbrauch).</p></div>
-          </div>
-          <p class="acc-sub">Grundsätze der Buchführung (GoB / GoBD)</p>
-          <div class="step-stack">
-            <div class="step-item"><span class="step-letter">1</span><div><strong>Klar und übersichtlich</strong> – sachgerechte Organisation, keine Verrechnung von Vermögenswerten und Schulden, übersichtliche Gliederung des Jahresabschlusses</div></div>
-            <div class="step-item"><span class="step-letter">2</span><div><strong>Erfassung aller Geschäftsfälle</strong> – Buchungen müssen fortlaufend, vollständig, richtig, zeitgerecht und sachgerecht sein</div></div>
-            <div class="step-item"><span class="step-letter">3</span><div><strong>Keine Buchung ohne Beleg</strong> – Nachprüfbarkeit jederzeit anhand nummerierter und geordneter Belege (HGB)</div></div>
-            <div class="step-item"><span class="step-letter">4</span><div><strong>Aufbewahrung der Unterlagen: 10-Jahres-Frist</strong> für Buchungsbelege, Konten, Bücher, Inventare, Eröffnungsbilanzen, Jahresabschlüsse</div></div>
-          </div>
-          <div class="hint"><p>Die GoB sind zum 01.01.2025 als GoBD in Kraft getreten (Grundsätze zur ordnungsgemäßen Führung und Aufbewahrung von Büchern, Aufzeichnungen und Unterlagen in elektronischer Form sowie zum Datenzugriff).</p></div>
-        </div>
-      </details>
-
-      <details class="acc-item">
-        <summary><span class="acc-num">03</span><span class="acc-title">Bilanzaufbau</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <div class="def-box"><p>Die Bilanz ist ein Verzeichnis der Bestände an <strong>Vermögen (Aktiva)</strong> und <strong>Kapital (Passiva)</strong> zum Bilanzstichtag. Beide Seiten sind immer ausgeglichen.</p></div>
-          <div class="cg cg-2" style="margin-top:1rem">
-            <div class="info-card">
-              <div class="info-card-title">Aktiva (Mittelverwendung)</div>
-              <ul class="bl">
-                <li><strong>Anlagevermögen</strong> (geringe Liquidität)<br>Gebäude · Maschinen · …</li>
-                <li><strong>Umlaufvermögen</strong> (hohe Liquidität)<br>Vorräte · Waren · Forderungen · Kassenbestand</li>
-              </ul>
-            </div>
-            <div class="info-card">
-              <div class="info-card-title">Passiva (Mittelherkunft)</div>
-              <ul class="bl">
-                <li><strong>Eigenkapital</strong><br>Kapitalrücklage · … → Gewinn-/Verlustrechnung</li>
-                <li><strong>Fremdkapital</strong><br>Verbindlichkeiten · Rückstellungen (z. B. Pensionsrückstellungen in der Doppik)</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="acc-item">
-        <summary><span class="acc-num">04</span><span class="acc-title">Internes Rechnungswesen &amp; Kostenrechnung</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body">
-          <p>Dient der inneren Organisation (z. B. Vorstand, Finanzplanung, Kostenbewusstsein). Instrumente: Kosten- und Leistungsrechnung, Erfolgs- und Investitionsrechnungen. Kann prospektiv (Planung) und retrospektiv (Auswertung) eingesetzt werden.</p>
-          <p class="acc-sub">Strömungsgrößen</p>
-          <div class="cg cg-2">
-            <div class="info-card"><div class="info-card-title">Negative (abfließende) Wertströme</div><p>Auszahlungen → Ausgaben → Aufwände → Kosten</p></div>
-            <div class="info-card"><div class="info-card-title">Positive (zufließende) Wertströme</div><p>Einzahlungen → Einnahmen → Erträge → Leistungen / Erlöse</p></div>
-          </div>
-          <div class="hint"><p>Einzahlungen erhöhen den Zahlungsmittelbestand, Auszahlungen verringern ihn.</p></div>
-          <p class="acc-sub">Kostenkategorien</p>
-          <div class="cg cg-2">
-            <div class="info-card"><div class="info-card-title">Einzelkosten</div><p>Direkt und willkürfrei zurechenbar nach dem Verursacherprinzip.<br><em>Beispiele: Material, Löhne, Entwicklungsstunden</em></p></div>
-            <div class="info-card"><div class="info-card-title">Gemeinkosten</div><p>Indirekte und willkürliche Zurechenbarkeit.<br><em>Beispiele: Miete, Abschreibung für Maschinen, Kosten für Buchhaltung</em></p></div>
-          </div>
-          <p class="acc-sub">Kostenverrechnungsmethoden</p>
-          <ul>
-            <li><strong>Verursachungsgerecht</strong> – exakt nach Verursachung</li>
-            <li><strong>Durchschnittsprinzip</strong> – anteilsmäßige Verteilung</li>
-            <li><strong>Tragfähigkeitsprinzip</strong> – proportional zu Marktpreisen</li>
-          </ul>
-          <p class="acc-sub">3-stufige Kostenrechnung</p>
-          <div class="step-stack">
-            <div class="step-item"><span class="step-letter">1</span><div><strong>Kostenartenrechnung</strong> – Welche Kosten sind insgesamt angefallen?</div></div>
-            <div class="step-item"><span class="step-letter">2</span><div><strong>Kostenstellenrechnung</strong> – Wo sind welche Kosten angefallen?</div></div>
-            <div class="step-item"><span class="step-letter">3</span><div><strong>Kostenträgerrechnung</strong> – Kostenträgerstückrechnung (Kalkulation) und Kostenträgerzeitrechnung (Betriebsergebnisrechnung)</div></div>
-          </div>
-        </div>
-      </details>
-
-    </div>
-  </div>
-</div>
-
 
 <!-- ============================================================ FeuAK PROJEKTMANAGEMENT / STRATEGISCHES MANAGEMENT ============================================================ -->
 <div id="v-feuak-pm" class="view detail-view">
@@ -9533,8 +9181,8 @@
 <div id="v-feuak-bedarfsplanung" class="view detail-view">
   <div class="page-hero">
     <div class="phi">
-      <p class="page-eyebrow">FeuAK Hamburg · Bedarfsplanung</p>
-      <h1 class="page-title">Bedarfs<span class="accent">planung</span></h1>
+      <p class="page-eyebrow">FeuAK Hamburg · Brandschutzbedarfsplanung</p>
+      <h1 class="page-title">Brandschutz<span class="accent">bedarfsplanung</span></h1>
       <p class="page-lead">Personalfaktor, Dienstplanung, Planungsziele, AGBF-Bund-Empfehlungen und szenarienbasierte Bemessung.</p>
     </div>
   </div>
