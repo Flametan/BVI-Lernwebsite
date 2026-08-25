@@ -3993,6 +3993,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.36',ts:'2026-08-25T00:00',items:[
+      'VWL-Tab ergänzt: Allokation mit Etymologie-Klammer; Produktivitäts-Hebel in Effizienz-Karte; Statistischer Wert eines Menschenlebens auf 4 Punkte erweitert (Investitionsbasis + Risikominimierung)'
+    ]},
     {v:'2.29.35',ts:'2026-08-25T00:00',items:[
       'FeuAK Struktur: Tabs Vergabe, Rechnungswesen und BWL entfernt (Karten + Views gelöscht); „Bedarfsplanung" umbenannt zu „Brandschutzbedarfsplanung"; neuer Hub-Tab „Bedarfsplanung" mit 3 Unterbereichen (Brandschutz-, RD- und KatS-Bedarfsplanung)'
     ]},
