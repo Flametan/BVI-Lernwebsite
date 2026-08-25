@@ -3556,6 +3556,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.46',ts:'2026-08-25T00:00',items:[
+      'GAL UVV (v-gal-uvv): doppelte Zahlen in 5 Akkordeon-Titeln entfernt; hr.sec-div-Leerraum beim Öffnen behoben'
+    ]},
     {v:'2.29.45',ts:'2026-08-25T00:00',items:[
       'GAL Wärmebildkamera: doppelte Zahlen in Akkordeon-Titeln entfernt (\"1 · Physikalische Grundlagen\" → \"Physikalische Grundlagen\"); trennende hr.sec-div aus acc-body entfernt (Leerraum beim Öffnen)'
     ]},
