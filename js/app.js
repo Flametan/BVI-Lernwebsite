@@ -19,8 +19,9 @@ const NAV = (function(){
       _activeEl = next;
     }
     window.scrollTo({top:0,behavior:'instant'});
-    const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app']);
-    window._shaderContentMode = (id.split('-').length > 2 || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
+    const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app','v-klausurfragen']);
+    const GOLD_VIEWS = new Set(['v-vak-klausurvorbereitung','v-feuak-bp-hub','v-feuak-analyse']);
+    window._shaderContentMode = ((id.split('-').length > 2 && !GOLD_VIEWS.has(id)) || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
     document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
     // Header Notes + Bookmark buttons – only on deep content pages
     const isContentPage = id.split('-').length >= 3;
@@ -3549,6 +3550,11 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.30.6',ts:'2026-08-25T00:00',items:[
+      'Navigation: Hintergrundfarbe (Gold/Blau) jetzt konsistent – Leaf-Seiten blau, Hub-Seiten gold',
+      'Fix: „Klausurfragen – Übungsmodus" (FeuAK) zeigt nun blauen Hintergrund statt gold',
+      'Fix: VAk Klausurvorbereitung-Hub, FeuAK Bedarfsplanungs-Hub und FeuAK Analyse-Hub zeigen nun goldenen Hintergrund'
+    ]},
     {v:'2.30.5',ts:'2026-08-25T00:00',items:[
       'Lernkarten FeuAK: 24 Karten aus gelöschten Tabs entfernt – BWL (6 Karten: h06–h08, h29, h30, h57) und Rechnungswesen (14 Karten: h18–h22, h36–h38, h47–h50, h60, h69)',
       'Lernkarten FeuAK · Vergabe: 4 veraltete/redundante Karten gelöscht (h14 Definition, h15 alte Schwellenwerte, h17 Unterschwellen-Verfahren, h45 Grundsätze-Duplikat) – 5 Karten bleiben'
