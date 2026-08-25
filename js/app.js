@@ -3989,6 +3989,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.32',ts:'2026-08-25T00:00',items:[
+      'Neuer Tab „KatS-Bedarfsplanung" in FeuAK: 6 Accordion-Abschnitte auf Basis der Lülf+-Präsentation – Grundlagen & Methodik, Katastrophenkreislauf & Zuständigkeiten, Relevanz der KatSBP, Die 5 Phasen (Brainstorming → Szenarienauswahl → Folgenbetrachtung → Planungsziele → Maßnahmenableitung), Allokation & Modulverschränkung, Abgrenzung KatS vs. Alltag'
+    ]},
     {v:'2.29.31',ts:'2026-08-25T00:00',items:[
       'Neuer Tab „RD-Bedarfsplanung" in FeuAK: 7 Accordion-Abschnitte auf Basis der Lülf+-Präsentation – Rahmenbedingungen & Akteure, Zeitabschnitte & Hilfsfrist, IST-Analyse (Hilfsfristerreichung + Problemfeldanalyse), Standortstruktur von Rettungswachen, Vorhaltebemessung (KTW/RTW/NEF), Aktuelle Entwicklungen, Abgrenzung BEP vs. RDBP'
     ]},
