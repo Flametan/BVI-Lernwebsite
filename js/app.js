@@ -3556,6 +3556,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.42',ts:'2026-08-25T00:00',items:[
+      'FeuAK: Klausuren-Karte zu „Klausurenvorbereitung" umbenannt und als Gold-Hub-Karte (volle Breite) gestaltet'
+    ]},
     {v:'2.29.41',ts:'2026-08-25T00:00',items:[
       'VAk Berlin: Tabs Lernzusammenfassung und Übungsklausur gelöscht; neuer Hub-Tab „Klausurvorbereitung" mit Altklausur-Quiz, Fallbearbeitung und Klausurhinweise; Fallbearbeitung-Init-Bug (Comma-Operator) behoben'
     ]},
