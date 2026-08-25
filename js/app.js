@@ -3556,6 +3556,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.44',ts:'2026-08-25T00:00',items:[
+      'FeuAK Klausurvorbereitung (v-klausur): Überschrift „Klausur – Training" → „Klausurenvorbereitung"; Klausurfragen-Karte als Gold-Hub-Karte (volle Breite)'
+    ]},
     {v:'2.29.43',ts:'2026-08-25T00:00',items:[
       'FeuAK: Tab „Prüfungsleistung Lehrgang Hamburg" komplett gelöscht (Karte + View)'
     ]},
