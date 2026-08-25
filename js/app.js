@@ -3556,6 +3556,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.29.48',ts:'2026-08-25T00:00',items:[
+      'Global: abschließende hr.sec-div vor </details> entfernt (42 Akkordeons) – kein unnötiger Bodenabstand mehr in offenen Akkordeons'
+    ]},
     {v:'2.29.47',ts:'2026-08-25T00:00',items:[
       'Global: hr.sec-div als erstes Element in acc-body entfernt (31 Akkordeons quer durch alle Tabs) – kein Leerraum mehr beim Öffnen'
     ]},
