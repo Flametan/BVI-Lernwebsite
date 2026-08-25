@@ -4765,6 +4765,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('.page-title .accent').forEach(acc=>{
     if(acc.parentNode.textContent.trim()===acc.textContent.trim()) acc.classList.add('accent-solo');
   });
+  // Dekorative SVGs für Screenreader ausblenden
+  document.querySelectorAll('.tile-icon,.tile-arr,.tc-icon').forEach(el=>el.setAttribute('aria-hidden','true'));
   // Keyboard-Navigation für Kacheln und Topic-Cards
   document.querySelectorAll('.glass-tile,.topic-card').forEach(el=>{
     el.setAttribute('tabindex','0');
