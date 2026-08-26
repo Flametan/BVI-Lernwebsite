@@ -3173,129 +3173,129 @@ const QUIZ=(function(){
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═ */
 const KF_QUIZ = (function(){
   const KEY = 'bvi_kf_scores';
@@ -3354,7 +3354,11 @@ const KF_QUIZ = (function(){
     {id:12,nr:'Frage 13',punkte:5,cat:'VWL',
      text:'Was ist die Kosten-Nutzen-Analyse (KNA)? Nennen Sie fünf Kategorien des Instruments.',
      answer:'Die <strong>Kosten-Nutzen-Analyse (KNA)</strong> ist ein Bewertungsinstrument, das alle anfallenden Kosten und erwarteten Nutzen eines Projekts oder einer Maßnahme systematisch erfasst, bewertet und gegenüberstellt. Im öffentlichen Haushaltsrecht ist sie gesetzlich verankerte Grundlage für finanzwirksame Entscheidungen (HGrG).<br><br><strong>① Bewertungstool</strong><br>Die KNA <strong>vergleicht alle anfallenden Kosten und erwarteten Nutzen</strong> eines Projekts in Geldwerten. Überwiegt der Nutzen, gilt die Maßnahme als wirtschaftlich vertretbar.<br><br><strong>② Entscheidungshilfe</strong><br>Die KNA <strong>objektiviert die Auswahl zwischen verschiedenen Investitionsalternativen</strong> (z. B. Fahrzeugtypen, Standortalternativen) und macht Entscheidungen rational begründbar und für Dritte nachvollziehbar.<br><br><strong>③ Wirtschaftlichkeitsnachweis</strong><br>Die KNA ist <strong>gesetzlich vorgeschriebene Grundlage</strong> bei finanzwirksamen Maßnahmen im öffentlichen Bereich (Haushaltsgrundsätzegesetz = HGrG). Ohne Wirtschaftlichkeitsnachweis sind Ausgaben formal nicht zulässig.<br><br><strong>④ Makro-Blick</strong><br>Im Gegensatz zu rein betriebswirtschaftlichen Kalkulationen <strong>erfasst die KNA auch gesellschaftliche Wohlfahrtseffekte</strong> – z. B. verhinderte Umweltschäden, öffentliche Sicherheit, Lebensqualität – die über direkte Ausgaben hinausgehen.<br><br><strong>⑤ Priorisierung</strong><br>Die KNA <strong>verhindert Fehlinvestitionen</strong>, indem sie den langfristigen Mehrwert einer Maßnahme nachweist und eine fundierte Priorisierung konkurrierender Ausgaben (z. B. Fahrzeug A vs. Fahrzeug B) ermöglicht.',
-     short:'<strong>KNA:</strong> Systematischer Vergleich aller Kosten und Nutzen einer Maßnahme in Geldwerten; gesetzlich vorgeschrieben (HGrG).<br><br><strong>5 Kategorien der KNA (VWL S.42):</strong><br>① <strong>Bewertungstool</strong> – vergleicht Kosten und Nutzen eines Projekts in Geldwerten.<br>② <strong>Entscheidungshilfe</strong> – objektiviert Auswahl zwischen verschiedenen Investitionsalternativen.<br>③ <strong>Wirtschaftlichkeitsnachweis</strong> – gesetzlich vorgeschrieben bei finanzwirksamen Maßnahmen (HGrG).<br>④ <strong>Makro-Blick</strong> – erfasst auch gesellschaftliche Wohlfahrtseffekte über direkte Ausgaben hinaus.<br>⑤ <strong>Priorisierung</strong> – verhindert Fehlinvestitionen durch Nachweis des langfristigen Mehrwerts.'}
+     short:'<strong>KNA:</strong> Systematischer Vergleich aller Kosten und Nutzen einer Maßnahme in Geldwerten; gesetzlich vorgeschrieben (HGrG).<br><br><strong>5 Kategorien der KNA (VWL S.42):</strong><br>① <strong>Bewertungstool</strong> – vergleicht Kosten und Nutzen eines Projekts in Geldwerten.<br>② <strong>Entscheidungshilfe</strong> – objektiviert Auswahl zwischen verschiedenen Investitionsalternativen.<br>③ <strong>Wirtschaftlichkeitsnachweis</strong> – gesetzlich vorgeschrieben bei finanzwirksamen Maßnahmen (HGrG).<br>④ <strong>Makro-Blick</strong> – erfasst auch gesellschaftliche Wohlfahrtseffekte über direkte Ausgaben hinaus.<br>⑤ <strong>Priorisierung</strong> – verhindert Fehlinvestitionen durch Nachweis des langfristigen Mehrwerts.'},
+    {id:14,nr:'Frage 14',punkte:5,cat:'Bedarfsplanung',
+     text:'Was ist ein Planungsziel in der Feuerwehrbedarfsplanung, und woraus besteht es?',
+     answer:'<strong>Definition Planungsziel</strong><br>Ein <strong>Planungsziel</strong> definiert den angestrebten Leistungsstand, den eine Feuerwehr im Einsatzfall erreichen soll. Es bildet den <strong>normativen Kern des Bedarfsplans</strong> und macht die geforderte Leistungsfähigkeit quantifizierbar und damit politisch beschließbar.<br><br><strong>Funktion</strong><br>Das Planungsziel operationalisiert das <strong>Schutzziel</strong> (z. B. „Menschenrettung vor Flashover") in mess- und überprüfbare Kenngrößen. Nur so kann die Zielerreichung später per Hilfsfristerreichungsanalyse bewertet und ggf. nachgesteuert werden.<br><br><strong>Die drei Zieldimensionen</strong><br>① <strong>Hilfsfrist (Planungsfrist)</strong><br>Zeitspanne zwischen Eingang des Notrufes und Eintreffen der ersten taktischen Einheit an der Einsatzstelle.<br>→ Üblicherweise <strong>8 Minuten</strong> für die erste und <strong>13 Minuten</strong> für die Ergänzungskraft (Empfehlung AGBF).<br><br>② <strong>Taktische Einheit (Funktionsstärke)</strong><br>Qualitative und quantitative Stärke der Kräfte, die innerhalb der Hilfsfrist ankommen müssen.<br>→ Üblicherweise <strong>1/9 = 10 Einsatzkräfte</strong> für den Kritischen Wohnungsbrand als Referenzszenario (AGBF-Grundsätze).<br><br>③ <strong>Erreichungsgrad</strong><br>Anteil aller relevanten Einsätze, bei denen Hilfsfrist <em>und</em> Funktionsstärke gleichzeitig erreicht werden.<br>→ AGBF-Empfehlung: <strong>mindestens 90 %</strong> aller Einsätze der Schutzzielkategorie.<br><br><strong>Zusammenhang</strong><br>Das Planungsziel bildet die Grundlage für die <strong>Hilfsfristerreichungsanalyse</strong> (Ist-Analyse), aus der Rückschlüsse auf Standorte, Fahrzeugvorhaltung und Personalstärke abgeleitet werden. Eine strukturelle Unterschreitung löst die Pflicht zur Anpassung des Bedarfsplans aus.',
+     short:'<strong>Planungsziel:</strong> Definiert den angestrebten Leistungsstand der Feuerwehr im Einsatzfall; normativer Kern des Bedarfsplans; macht Leistungsfähigkeit messbar.<br><br><strong>3 Zieldimensionen:</strong><br>① <strong>Hilfsfrist (Planungsfrist)</strong> – Zeit zwischen Notruf und Eintreffen der 1. taktischen Einheit (Standard: 8 min / Ergänzung: 13 min).<br>② <strong>Taktische Einheit (Funktionsstärke)</strong> – Stärke der fristgerecht eintreffenden Kräfte (Standard: 1/9 = 10 EK für Kritischen Wohnungsbrand).<br>③ <strong>Erreichungsgrad</strong> – Anteil der Einsätze, bei denen Hilfsfrist + Funktionsstärke gleichzeitig erreicht werden (AGBF: mind. <strong>90 %</strong>).'}
   ];
 
   const KF_TOTAL_PTS = QUESTIONS.reduce(function(s,q){return s+q.punkte;},0);
@@ -3549,6 +3553,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.30.10',ts:'2026-08-26T00:00',items:[
+      'Klausurfragen FeuAK: Neue Frage 14 – „Planungsziel in der Feuerwehrbedarfsplanung" mit Musterlösung und Kurzantwort (5 Punkte) · Gesamtpunkte 65 → 70'
+    ]},
     {v:'2.30.9',ts:'2026-08-26T00:00',items:[
       'FeuAK · Klausurfragen: Seite umbenannt in „Klausurfragen" (war „Klausurfragen – Übungsmodus"), Kachel im Hub bereinigt',
       'FeuAK: Ghost-Views (BWL, Vergabe, Rechnungswesen) aus Fortschritts-Tracking und Verwandten-Chips entfernt – FeuAK-Fortschritt zeigt jetzt korrekte 7 statt 10 Module',
