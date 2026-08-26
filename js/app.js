@@ -1189,7 +1189,7 @@ const PROGRESS = (function(){
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-klausurvorbereitung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung'],
-    feuak:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
+    feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
     idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse'],
   };
   const LEAF_PARENT = {};
@@ -1251,8 +1251,7 @@ const SEARCH = (function(){
     'v-vak-verwaltungsrecht':'VAk · Allgemeines Verwaltungsrecht','v-vak-staatsrecht':'VAk · Staatsrecht',
     'v-vak-einsatzrecht':'VAk · Einsatzrecht','v-vak-dienstrecht':'VAk · Öffentliches Dienstrecht',
     'v-vak-klausurhinweise':'VAk · Klausurhinweise','v-vak-rettungsdienstrecht':'VAk · Rettungsdienstrecht','v-vak-fallbearbeitung':'VAk · Fallbearbeitung',
-    'v-feuak-vwl':'FeuAK · VWL','v-feuak-bwl':'FeuAK · BWL','v-feuak-haushalt':'FeuAK · Haushalt',
-    'v-feuak-vergabe':'FeuAK · Vergabe','v-feuak-rechnungswesen':'FeuAK · Rechnungswesen',
+    'v-feuak-vwl':'FeuAK · VWL','v-feuak-haushalt':'FeuAK · Haushalt',
     'v-feuak-pm':'FeuAK · Strategisches Management',
     'v-feuak-bedarfsplanung':'FeuAK · Bedarfsplanung',
     'v-feuak-altklausur':'FeuAK · Altklausur-Training',
@@ -2544,7 +2543,7 @@ const STATS = (function(){
     HLFS:['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     IBK:['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     VAk:['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht'],
-    FeuAK:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
+    FeuAK:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
     IdF:['v-idf-brandschutz','v-idf-stab','v-idf-presse']
   };
   function ov(){ return document.getElementById('stats-overlay'); }
@@ -3550,6 +3549,16 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.30.9',ts:'2026-08-26T00:00',items:[
+      'FeuAK · Klausurfragen: Seite umbenannt in „Klausurfragen" (war „Klausurfragen – Übungsmodus"), Kachel im Hub bereinigt',
+      'FeuAK: Ghost-Views (BWL, Vergabe, Rechnungswesen) aus Fortschritts-Tracking und Verwandten-Chips entfernt – FeuAK-Fortschritt zeigt jetzt korrekte 7 statt 10 Module',
+      'HLFS: Thema-Nummern korrigiert – Tunnel→03, Vorbeugl. Brandschutz→04, MANV→05, Zug-/Verbandsführer→06',
+      'Simulator: Szenario-Anzahl auf Seite korrigiert (war „4 Szenarien", korrekt: 8)',
+      'Startseite: Lernkarten-Zahl aktualisiert (364→319), Abkürzungen-Beschreibung aktualisiert',
+      'IBK-Kachel: „Simulator" aus der Beschreibung entfernt (Simulator ist kein Lernmodul im Fortschritt)',
+      'HLFS-Hub: Standort „Kassel" in Überschrift ergänzt',
+      'CSS: .acc-list als eigene Klasse definiert; tote Regel .ai-tutor-btn{} entfernt'
+    ]},
     {v:'2.30.8',ts:'2026-08-25T00:00',items:[
       'Notizen- und Lesezeichen-Button im Header jetzt auf allen Leaf-Pages sichtbar (gleiche Logik wie Gold/Blau-Hintergrund) – u. a. auch auf Klausurfragen-Übungsmodus'
     ]},
@@ -4241,13 +4250,10 @@ const RELATED={
   'v-vak-dienstrecht':[['v-vak-verwaltungsrecht','Verwaltungsrecht'],['v-gal-beamtenrecht','GAL Beamtenrecht'],['v-vak-altklausur','Altklausur-Quiz']],
   'v-vak-altklausur':[['v-vak-verwaltungsrecht','Verwaltungsrecht'],['v-vak-einsatzrecht','Einsatzrecht'],['v-vak-dienstrecht','Dienstrecht'],['v-vak-staatsrecht','Staatsrecht']],
   'v-vak-jur-denken':[['v-vak-verwaltungsrecht','Verwaltungsrecht'],['v-vak-einsatzrecht','Einsatzrecht']],
-  'v-feuak-vwl':[['v-feuak-bwl','FeuAK BWL'],['v-feuak-haushalt','FeuAK Haushalt']],
-  'v-feuak-bwl':[['v-feuak-vwl','FeuAK VWL'],['v-feuak-rechnungswesen','Rechnungswesen'],['v-feuak-pm','Projektmanagement']],
-  'v-feuak-haushalt':[['v-feuak-vergabe','FeuAK Vergabe'],['v-feuak-qm','Qualitätsmanagement']],
-  'v-feuak-qm':[['v-feuak-haushalt','Haushalt'],['v-feuak-bedarfsplanung','Bedarfsplanung'],['v-feuak-bwl','FeuAK BWL']],
-  'v-feuak-vergabe':[['v-feuak-haushalt','Haushalt']],
-  'v-feuak-pm':[['v-ibk-pm','IBK PM'],['v-ibk-zeit','IBK Zeitmanagement'],['v-feuak-bwl','FeuAK BWL']],
-  'v-feuak-rechnungswesen':[['v-feuak-bwl','FeuAK BWL'],['v-feuak-haushalt','Haushalt']],
+  'v-feuak-vwl':[['v-feuak-haushalt','FeuAK Haushalt'],['v-feuak-pm','Strategisches Management']],
+  'v-feuak-haushalt':[['v-feuak-vwl','FeuAK VWL'],['v-feuak-qm','Qualitätsmanagement']],
+  'v-feuak-qm':[['v-feuak-haushalt','Haushalt'],['v-feuak-bedarfsplanung','Bedarfsplanung']],
+  'v-feuak-pm':[['v-ibk-pm','IBK PM'],['v-ibk-zeit','IBK Zeitmanagement'],['v-feuak-bedarfsplanung','Bedarfsplanung']],
   'v-feuak-planspiel':[['v-hlfs-manv','HLFS MANV & OLRD'],['v-feuak-altklausur','Altklausur']],
   'v-idf-brandschutz':[['v-hlfs-vb','HLFS VB'],['v-gal-vb','GAL Vorbeugen']],
   'v-idf-stab':[['v-hlfs-stab','HLFS Stab'],['v-ibk-pm','IBK PM']],

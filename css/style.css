@@ -177,6 +177,7 @@
   .tc-sub{font-size:.73rem;color:var(--c-slate);line-height:1.55;text-shadow:0 1px 6px rgba(0,0,0,.8);}
 
   /* ACCORDION */
+  .acc-list{display:flex;flex-direction:column;gap:.5rem;}
   .acc-item{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);margin-bottom:.5rem;overflow:hidden;transition:border-color var(--t),background var(--t);}
   .acc-item[open]{border-color:var(--c-gold-rim);background:rgba(201,168,76,.03);}
   .acc-item summary{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;cursor:pointer;list-style:none;user-select:none;}
@@ -791,7 +792,6 @@
   .page-tool-btn{display:flex;align-items:center;gap:.4rem;font-size:.73rem;font-weight:500;padding:.32rem .75rem;border-radius:var(--r-sm);border:1px solid var(--glass-b);background:var(--glass);color:var(--c-slate-l);transition:all var(--t);}
   .page-tool-btn:hover{border-color:var(--c-gold-rim);color:var(--c-gold);background:var(--c-gold-dim);}
   .tts-active{border-color:var(--c-gold-rim)!important;color:var(--c-gold)!important;background:var(--c-gold-dim)!important;}
-  .ai-tutor-btn{}
 
 
 
