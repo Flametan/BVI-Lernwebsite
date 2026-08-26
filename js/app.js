@@ -1189,7 +1189,7 @@ const PROGRESS = (function(){
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-klausurvorbereitung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung'],
-    feuak:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
+    feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
     idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse'],
   };
   const LEAF_PARENT = {};
@@ -1251,8 +1251,7 @@ const SEARCH = (function(){
     'v-vak-verwaltungsrecht':'VAk · Allgemeines Verwaltungsrecht','v-vak-staatsrecht':'VAk · Staatsrecht',
     'v-vak-einsatzrecht':'VAk · Einsatzrecht','v-vak-dienstrecht':'VAk · Öffentliches Dienstrecht',
     'v-vak-klausurhinweise':'VAk · Klausurhinweise','v-vak-rettungsdienstrecht':'VAk · Rettungsdienstrecht','v-vak-fallbearbeitung':'VAk · Fallbearbeitung',
-    'v-feuak-vwl':'FeuAK · VWL','v-feuak-bwl':'FeuAK · BWL','v-feuak-haushalt':'FeuAK · Haushalt',
-    'v-feuak-vergabe':'FeuAK · Vergabe','v-feuak-rechnungswesen':'FeuAK · Rechnungswesen',
+    'v-feuak-vwl':'FeuAK · VWL','v-feuak-haushalt':'FeuAK · Haushalt',
     'v-feuak-pm':'FeuAK · Strategisches Management',
     'v-feuak-bedarfsplanung':'FeuAK · Bedarfsplanung',
     'v-feuak-altklausur':'FeuAK · Altklausur-Training',
@@ -2544,7 +2543,7 @@ const STATS = (function(){
     HLFS:['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     IBK:['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     VAk:['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht'],
-    FeuAK:['v-feuak-vwl','v-feuak-bwl','v-feuak-haushalt','v-feuak-vergabe','v-feuak-rechnungswesen','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
+    FeuAK:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
     IdF:['v-idf-brandschutz','v-idf-stab','v-idf-presse']
   };
   function ov(){ return document.getElementById('stats-overlay'); }
@@ -3174,129 +3173,129 @@ const QUIZ=(function(){
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═
-   KF_QUIZ – Klausurfragen Übersicht (12 Fragen, 90 Min)
+   KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
 ═ */
 const KF_QUIZ = (function(){
   const KEY = 'bvi_kf_scores';
@@ -3355,7 +3354,11 @@ const KF_QUIZ = (function(){
     {id:12,nr:'Frage 13',punkte:5,cat:'VWL',
      text:'Was ist die Kosten-Nutzen-Analyse (KNA)? Nennen Sie fünf Kategorien des Instruments.',
      answer:'Die <strong>Kosten-Nutzen-Analyse (KNA)</strong> ist ein Bewertungsinstrument, das alle anfallenden Kosten und erwarteten Nutzen eines Projekts oder einer Maßnahme systematisch erfasst, bewertet und gegenüberstellt. Im öffentlichen Haushaltsrecht ist sie gesetzlich verankerte Grundlage für finanzwirksame Entscheidungen (HGrG).<br><br><strong>① Bewertungstool</strong><br>Die KNA <strong>vergleicht alle anfallenden Kosten und erwarteten Nutzen</strong> eines Projekts in Geldwerten. Überwiegt der Nutzen, gilt die Maßnahme als wirtschaftlich vertretbar.<br><br><strong>② Entscheidungshilfe</strong><br>Die KNA <strong>objektiviert die Auswahl zwischen verschiedenen Investitionsalternativen</strong> (z. B. Fahrzeugtypen, Standortalternativen) und macht Entscheidungen rational begründbar und für Dritte nachvollziehbar.<br><br><strong>③ Wirtschaftlichkeitsnachweis</strong><br>Die KNA ist <strong>gesetzlich vorgeschriebene Grundlage</strong> bei finanzwirksamen Maßnahmen im öffentlichen Bereich (Haushaltsgrundsätzegesetz = HGrG). Ohne Wirtschaftlichkeitsnachweis sind Ausgaben formal nicht zulässig.<br><br><strong>④ Makro-Blick</strong><br>Im Gegensatz zu rein betriebswirtschaftlichen Kalkulationen <strong>erfasst die KNA auch gesellschaftliche Wohlfahrtseffekte</strong> – z. B. verhinderte Umweltschäden, öffentliche Sicherheit, Lebensqualität – die über direkte Ausgaben hinausgehen.<br><br><strong>⑤ Priorisierung</strong><br>Die KNA <strong>verhindert Fehlinvestitionen</strong>, indem sie den langfristigen Mehrwert einer Maßnahme nachweist und eine fundierte Priorisierung konkurrierender Ausgaben (z. B. Fahrzeug A vs. Fahrzeug B) ermöglicht.',
-     short:'<strong>KNA:</strong> Systematischer Vergleich aller Kosten und Nutzen einer Maßnahme in Geldwerten; gesetzlich vorgeschrieben (HGrG).<br><br><strong>5 Kategorien der KNA (VWL S.42):</strong><br>① <strong>Bewertungstool</strong> – vergleicht Kosten und Nutzen eines Projekts in Geldwerten.<br>② <strong>Entscheidungshilfe</strong> – objektiviert Auswahl zwischen verschiedenen Investitionsalternativen.<br>③ <strong>Wirtschaftlichkeitsnachweis</strong> – gesetzlich vorgeschrieben bei finanzwirksamen Maßnahmen (HGrG).<br>④ <strong>Makro-Blick</strong> – erfasst auch gesellschaftliche Wohlfahrtseffekte über direkte Ausgaben hinaus.<br>⑤ <strong>Priorisierung</strong> – verhindert Fehlinvestitionen durch Nachweis des langfristigen Mehrwerts.'}
+     short:'<strong>KNA:</strong> Systematischer Vergleich aller Kosten und Nutzen einer Maßnahme in Geldwerten; gesetzlich vorgeschrieben (HGrG).<br><br><strong>5 Kategorien der KNA (VWL S.42):</strong><br>① <strong>Bewertungstool</strong> – vergleicht Kosten und Nutzen eines Projekts in Geldwerten.<br>② <strong>Entscheidungshilfe</strong> – objektiviert Auswahl zwischen verschiedenen Investitionsalternativen.<br>③ <strong>Wirtschaftlichkeitsnachweis</strong> – gesetzlich vorgeschrieben bei finanzwirksamen Maßnahmen (HGrG).<br>④ <strong>Makro-Blick</strong> – erfasst auch gesellschaftliche Wohlfahrtseffekte über direkte Ausgaben hinaus.<br>⑤ <strong>Priorisierung</strong> – verhindert Fehlinvestitionen durch Nachweis des langfristigen Mehrwerts.'},
+    {id:14,nr:'Frage 14',punkte:5,cat:'Bedarfsplanung',
+     text:'Was ist ein Planungsziel in der Feuerwehrbedarfsplanung, und woraus besteht es?',
+     answer:'<strong>Definition Planungsziel</strong><br>Ein <strong>Planungsziel</strong> definiert den angestrebten Leistungsstand, den eine Feuerwehr im Einsatzfall erreichen soll. Es bildet den <strong>normativen Kern des Bedarfsplans</strong> und macht die geforderte Leistungsfähigkeit quantifizierbar und damit politisch beschließbar.<br><br><strong>Funktion</strong><br>Das Planungsziel operationalisiert das <strong>Schutzziel</strong> (z. B. „Menschenrettung vor Flashover") in mess- und überprüfbare Kenngrößen. Nur so kann die Zielerreichung später per Hilfsfristerreichungsanalyse bewertet und ggf. nachgesteuert werden.<br><br><strong>Die drei Zieldimensionen</strong><br>① <strong>Hilfsfrist (Planungsfrist)</strong><br>Zeitspanne zwischen Eingang des Notrufes und Eintreffen der ersten taktischen Einheit an der Einsatzstelle.<br>→ Üblicherweise <strong>8 Minuten</strong> für die erste und <strong>13 Minuten</strong> für die Ergänzungskraft (Empfehlung AGBF).<br><br>② <strong>Taktische Einheit (Funktionsstärke)</strong><br>Qualitative und quantitative Stärke der Kräfte, die innerhalb der Hilfsfrist ankommen müssen.<br>→ Üblicherweise <strong>1/9 = 10 Einsatzkräfte</strong> für den Kritischen Wohnungsbrand als Referenzszenario (AGBF-Grundsätze).<br><br>③ <strong>Erreichungsgrad</strong><br>Anteil aller relevanten Einsätze, bei denen Hilfsfrist <em>und</em> Funktionsstärke gleichzeitig erreicht werden.<br>→ AGBF-Empfehlung: <strong>mindestens 90 %</strong> aller Einsätze der Schutzzielkategorie.<br><br><strong>Zusammenhang</strong><br>Das Planungsziel bildet die Grundlage für die <strong>Hilfsfristerreichungsanalyse</strong> (Ist-Analyse), aus der Rückschlüsse auf Standorte, Fahrzeugvorhaltung und Personalstärke abgeleitet werden. Eine strukturelle Unterschreitung löst die Pflicht zur Anpassung des Bedarfsplans aus.',
+     short:'<strong>Planungsziel:</strong> Definiert den angestrebten Leistungsstand der Feuerwehr im Einsatzfall; normativer Kern des Bedarfsplans; macht Leistungsfähigkeit messbar.<br><br><strong>3 Zieldimensionen:</strong><br>① <strong>Hilfsfrist (Planungsfrist)</strong> – Zeit zwischen Notruf und Eintreffen der 1. taktischen Einheit (Standard: 8 min / Ergänzung: 13 min).<br>② <strong>Taktische Einheit (Funktionsstärke)</strong> – Stärke der fristgerecht eintreffenden Kräfte (Standard: 1/9 = 10 EK für Kritischen Wohnungsbrand).<br>③ <strong>Erreichungsgrad</strong> – Anteil der Einsätze, bei denen Hilfsfrist + Funktionsstärke gleichzeitig erreicht werden (AGBF: mind. <strong>90 %</strong>).'}
   ];
 
   const KF_TOTAL_PTS = QUESTIONS.reduce(function(s,q){return s+q.punkte;},0);
@@ -3550,6 +3553,19 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.30.10',ts:'2026-08-26T00:00',items:[
+      'Klausurfragen FeuAK: Neue Frage 14 – „Planungsziel in der Feuerwehrbedarfsplanung" mit Musterlösung und Kurzantwort (5 Punkte) · Gesamtpunkte 65 → 70'
+    ]},
+    {v:'2.30.9',ts:'2026-08-26T00:00',items:[
+      'FeuAK · Klausurfragen: Seite umbenannt in „Klausurfragen" (war „Klausurfragen – Übungsmodus"), Kachel im Hub bereinigt',
+      'FeuAK: Ghost-Views (BWL, Vergabe, Rechnungswesen) aus Fortschritts-Tracking und Verwandten-Chips entfernt – FeuAK-Fortschritt zeigt jetzt korrekte 7 statt 10 Module',
+      'HLFS: Thema-Nummern korrigiert – Tunnel→03, Vorbeugl. Brandschutz→04, MANV→05, Zug-/Verbandsführer→06',
+      'Simulator: Szenario-Anzahl auf Seite korrigiert (war „4 Szenarien", korrekt: 8)',
+      'Startseite: Lernkarten-Zahl aktualisiert (364→319), Abkürzungen-Beschreibung aktualisiert',
+      'IBK-Kachel: „Simulator" aus der Beschreibung entfernt (Simulator ist kein Lernmodul im Fortschritt)',
+      'HLFS-Hub: Standort „Kassel" in Überschrift ergänzt',
+      'CSS: .acc-list als eigene Klasse definiert; tote Regel .ai-tutor-btn{} entfernt'
+    ]},
     {v:'2.30.8',ts:'2026-08-25T00:00',items:[
       'Notizen- und Lesezeichen-Button im Header jetzt auf allen Leaf-Pages sichtbar (gleiche Logik wie Gold/Blau-Hintergrund) – u. a. auch auf Klausurfragen-Übungsmodus'
     ]},
@@ -4241,13 +4257,10 @@ const RELATED={
   'v-vak-dienstrecht':[['v-vak-verwaltungsrecht','Verwaltungsrecht'],['v-gal-beamtenrecht','GAL Beamtenrecht'],['v-vak-altklausur','Altklausur-Quiz']],
   'v-vak-altklausur':[['v-vak-verwaltungsrecht','Verwaltungsrecht'],['v-vak-einsatzrecht','Einsatzrecht'],['v-vak-dienstrecht','Dienstrecht'],['v-vak-staatsrecht','Staatsrecht']],
   'v-vak-jur-denken':[['v-vak-verwaltungsrecht','Verwaltungsrecht'],['v-vak-einsatzrecht','Einsatzrecht']],
-  'v-feuak-vwl':[['v-feuak-bwl','FeuAK BWL'],['v-feuak-haushalt','FeuAK Haushalt']],
-  'v-feuak-bwl':[['v-feuak-vwl','FeuAK VWL'],['v-feuak-rechnungswesen','Rechnungswesen'],['v-feuak-pm','Projektmanagement']],
-  'v-feuak-haushalt':[['v-feuak-vergabe','FeuAK Vergabe'],['v-feuak-qm','Qualitätsmanagement']],
-  'v-feuak-qm':[['v-feuak-haushalt','Haushalt'],['v-feuak-bedarfsplanung','Bedarfsplanung'],['v-feuak-bwl','FeuAK BWL']],
-  'v-feuak-vergabe':[['v-feuak-haushalt','Haushalt']],
-  'v-feuak-pm':[['v-ibk-pm','IBK PM'],['v-ibk-zeit','IBK Zeitmanagement'],['v-feuak-bwl','FeuAK BWL']],
-  'v-feuak-rechnungswesen':[['v-feuak-bwl','FeuAK BWL'],['v-feuak-haushalt','Haushalt']],
+  'v-feuak-vwl':[['v-feuak-haushalt','FeuAK Haushalt'],['v-feuak-pm','Strategisches Management']],
+  'v-feuak-haushalt':[['v-feuak-vwl','FeuAK VWL'],['v-feuak-qm','Qualitätsmanagement']],
+  'v-feuak-qm':[['v-feuak-haushalt','Haushalt'],['v-feuak-bedarfsplanung','Bedarfsplanung']],
+  'v-feuak-pm':[['v-ibk-pm','IBK PM'],['v-ibk-zeit','IBK Zeitmanagement'],['v-feuak-bedarfsplanung','Bedarfsplanung']],
   'v-feuak-planspiel':[['v-hlfs-manv','HLFS MANV & OLRD'],['v-feuak-altklausur','Altklausur']],
   'v-idf-brandschutz':[['v-hlfs-vb','HLFS VB'],['v-gal-vb','GAL Vorbeugen']],
   'v-idf-stab':[['v-hlfs-stab','HLFS Stab'],['v-ibk-pm','IBK PM']],
