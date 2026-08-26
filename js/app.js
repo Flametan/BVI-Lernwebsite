@@ -23,8 +23,8 @@ const NAV = (function(){
     const GOLD_VIEWS = new Set(['v-vak-klausurvorbereitung','v-feuak-bp-hub','v-feuak-analyse']);
     window._shaderContentMode = ((id.split('-').length > 2 && !GOLD_VIEWS.has(id)) || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
     document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
-    // Header Notes + Bookmark buttons – only on deep content pages
-    const isContentPage = id.split('-').length >= 3;
+    // Header Notes + Bookmark buttons – on all leaf pages (same logic as gold/blue background)
+    const isContentPage = (id.split('-').length > 2 && !GOLD_VIEWS.has(id)) || NAVY_VIEWS.has(id);
     const bkBtn = document.getElementById('bookmark-btn');
     if(bkBtn){
       bkBtn.classList.toggle('hidden', !isContentPage);
@@ -3550,6 +3550,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.30.8',ts:'2026-08-25T00:00',items:[
+      'Notizen- und Lesezeichen-Button im Header jetzt auf allen Leaf-Pages sichtbar (gleiche Logik wie Gold/Blau-Hintergrund) – u. a. auch auf Klausurfragen-Übungsmodus'
+    ]},
     {v:'2.30.6',ts:'2026-08-25T00:00',items:[
       'Navigation: Hintergrundfarbe (Gold/Blau) jetzt konsistent – Leaf-Seiten blau, Hub-Seiten gold',
       'Fix: „Klausurfragen – Übungsmodus" (FeuAK) zeigt nun blauen Hintergrund statt gold',
