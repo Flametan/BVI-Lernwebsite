@@ -19,7 +19,7 @@ const NAV = (function(){
       _activeEl = next;
     }
     window.scrollTo({top:0,behavior:'instant'});
-    const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app','v-klausurfragen']);
+    const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app','v-klausurfragen','v-klausur-0826']);
     const GOLD_VIEWS = new Set(['v-vak-klausurvorbereitung','v-feuak-bp-hub','v-feuak-analyse']);
     window._shaderContentMode = ((id.split('-').length > 2 && !GOLD_VIEWS.has(id)) || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
     document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
@@ -3553,6 +3553,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.30.11',ts:'2026-08-27T00:00',items:[
+      'FeuAK · Klausurvorbereitung: Neuer Tab „Klausur 08/2026" – alle 14 Originalfragen des Führungslehrgangs mit Musterlösungen im Akkordeon'
+    ]},
     {v:'2.30.10',ts:'2026-08-26T00:00',items:[
       'Klausurfragen FeuAK: Neue Frage 14 – „Planungsziel in der Feuerwehrbedarfsplanung" mit Musterlösung und Kurzantwort (5 Punkte) · Gesamtpunkte 65 → 70'
     ]},
