@@ -10209,7 +10209,7 @@
   </div></div>
   <div class="pc">
 
-    <div class="def-box" style="margin-bottom:1.5rem"><div class="def-box-label">Klausurhinweise</div><p>Notieren Sie Ihren Namen auf jedem Klausurbogen, den Sie nutzen. &nbsp;·&nbsp; Vermerken Sie bei jeder Antwort die Nummer der Aufgabe, die Sie bearbeiten. &nbsp;·&nbsp; Jede der 14 Aufgaben wird mit 5 Punkten bewertet.</p></div>
+    <div class="def-box" style="margin-bottom:1.5rem"><div class="def-box-label">Klausurhinweise</div><p>Vermerken Sie bei jeder Antwort die Nummer der Aufgabe, die Sie bearbeiten. &nbsp;·&nbsp; Jede der 14 Aufgaben wird mit 5 Punkten bewertet.</p></div>
 
     <div class="acc-list">
 
@@ -10367,29 +10367,28 @@
   <div class="pc">
     <div class="cg cg-2" style="margin-top:.5rem">
 
-      <!-- Kachel 0: Klausurfragen -->
-      <div class="topic-card" onclick="NAV.go('v-klausurfragen','Klausurfragen')" style="grid-column:1/-1;border-color:var(--glass-b)"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><div class="tc-name">Klausurfragen</div><div class="tc-sub">14 Fragen aus Dozenten-Fragenliste · 70 Punkte</div><div class="tc-sub" id="klh-kf-progress" style="margin-top:.4rem">–</div></div>
-
-      <!-- Kachel 1: Eingrenzung -->
-      <div class="topic-card" onclick="NAV.go('v-eingrenzung-klausur','Eingrenzung – Klausur 08/2026 &amp; Münster 2026')">
-        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        <div class="tc-name">Eingrenzung 08/2026 &amp; Münster</div>
-        <div class="tc-sub">12 Fragen aus Dozenten-Eingrenzung · Kurzantwort + Musterlösung</div>
-
-      </div>
-
-      <!-- Kachel 2: Altklausur-Training -->
-      <div class="topic-card" onclick="NAV.go('v-feuak-altklausur','Altklausur-Training FeuAK')">
-        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        <div class="tc-name">Altklausur-Training FeuAK</div>
-        <div class="tc-sub">22 Fragen aus Gedächtnisprotokollen Aug 2025 &amp; Feb 2026 · Musterlösung</div>
-      </div>
-
-      <!-- Kachel 3: Originalklausur 08/2026 -->
+      <!-- Kachel 0: Originalklausur 08/2026 -->
       <div class="topic-card" onclick="NAV.go('v-klausur-0826','Klausur 08/2026')" style="grid-column:1/-1">
         <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         <div class="tc-name">Klausur 08/2026</div>
         <div class="tc-sub">14 Originalfragen des Führungslehrgangs · 70 Punkte · mit Musterlösungen</div>
+      </div>
+
+      <!-- Kachel 1: Klausurfragen Übungsmodus -->
+      <div class="topic-card" onclick="NAV.go('v-klausurfragen','Klausurfragen')" style="grid-column:1/-1;border-color:var(--glass-b)"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><div class="tc-name">Klausurfragen</div><div class="tc-sub">14 Fragen aus Dozenten-Fragenliste · 70 Punkte</div><div class="tc-sub" id="klh-kf-progress" style="margin-top:.4rem">–</div></div>
+
+      <!-- Kachel 2: Eingrenzung -->
+      <div class="topic-card" onclick="NAV.go('v-eingrenzung-klausur','Eingrenzung – Klausur 08/2026 &amp; Münster 2026')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <div class="tc-name">Eingrenzung 08/2026 &amp; Münster</div>
+        <div class="tc-sub">12 Fragen aus Dozenten-Eingrenzung · Kurzantwort + Musterlösung</div>
+      </div>
+
+      <!-- Kachel 3: Altklausur-Training -->
+      <div class="topic-card" onclick="NAV.go('v-feuak-altklausur','Altklausur-Training FeuAK')">
+        <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <div class="tc-name">Altklausur-Training FeuAK</div>
+        <div class="tc-sub">22 Fragen aus Gedächtnisprotokollen Aug 2025 &amp; Feb 2026 · Musterlösung</div>
       </div>
 
     </div>
