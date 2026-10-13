@@ -178,7 +178,7 @@
 
   /* ACCORDION */
   .acc-list{display:flex;flex-direction:column;gap:.5rem;}
-  .acc-item{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);margin-bottom:.5rem;overflow:hidden;transition:border-color var(--t),background var(--t);}
+  .acc-item{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);overflow:hidden;transition:border-color var(--t),background var(--t);}
   .acc-item[open]{border-color:var(--c-gold-rim);background:rgba(201,168,76,.03);}
   .acc-item summary{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;cursor:pointer;list-style:none;user-select:none;}
   .acc-item summary::-webkit-details-marker{display:none;}
@@ -627,14 +627,6 @@
   /* ── PRINT ── */
   .fc-print-btn{font-size:.67rem;font-weight:500;padding:.25rem .65rem;border-radius:20px;border:1px solid var(--glass-b);background:var(--glass);color:var(--c-slate-l);cursor:pointer;transition:all var(--t);}
   .fc-print-btn:hover{border-color:var(--c-gold-rim);color:var(--c-gold);background:var(--c-gold-dim);}
-  @media print{
-    #app-header,#float-back,.hdr-progress,#read-prog,.fc-filter-row,.toast-wrap,
-    #search-overlay,#settings-overlay,#notes-overlay,.fab-btn,#scroll-top-btn,.fc-swipe-ok,.fc-swipe-no,.btn,.fc-controls,
-    .fc-stats-row,.fc-nav,.page-hero,.fc-end>*:not(.print-only){display:none!important;}
-    body{background:#fff!important;color:#000!important;}
-    .view{display:block!important;padding-top:0!important;}
-    .pc{padding:1rem!important;}
-  }
 
   /* ── BOOKMARKS VIEW ── */
   .bm-card{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-md);padding:.9rem 1.1rem;margin-bottom:.6rem;transition:border-color var(--t);}
@@ -711,11 +703,14 @@
   /* ── DRUCKANSICHT ── */
   @media print{
     #app-header,#read-prog,#float-back,#scroll-top-btn,canvas,
-    .search-overlay,.notes-overlay,#settings2-overlay,#shortcuts-overlay,
-    #stats-overlay,.toast-wrap,
-    .fc-filter-row,.page-tools-row,.page-notes-btn{display:none!important;}
+    .hdr-progress,.search-overlay,.notes-overlay,#settings-overlay,#settings2-overlay,#shortcuts-overlay,
+    #stats-overlay,.toast-wrap,.fab-btn,
+    .fc-filter-row,.fc-swipe-ok,.fc-swipe-no,.fc-controls,.fc-stats-row,.fc-nav,
+    .page-tools-row,.page-notes-btn,.fc-end>*:not(.print-only){display:none!important;}
     body,html{background:#fff!important;color:#000!important;}
-    .view.active{display:block!important;padding-top:0!important;}
+    .view{display:block!important;padding-top:0!important;}
+    .view.active{display:block!important;}
+    .pc{padding:1rem!important;}
     .acc-body{display:block!important;}
     .acc-item{border:1px solid #ccc!important;margin-bottom:4pt!important;background:#fff!important;}
     .acc-arrow,.acc-check{display:none!important;}
@@ -1160,8 +1155,6 @@ body.offline .offline-banner{display:flex;}
 @media(min-width:900px){
   .hero{min-height:auto;padding:5rem 2rem 3rem;}
   #nav-trail{font-size:.85rem;}
-}
-@media(min-width:1000px){
 }
 @media(min-width:1200px){
   .pc{max-width:1140px;}
