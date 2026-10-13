@@ -2,6 +2,9 @@
    NAVIGATIONS-ENGINE
    NAV.go(id, label) · NAV.back() · NAV.home() · NAV.jumpTo(idx)
 ====================================================================== */
+const _NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app','v-klausurfragen','v-klausur-0826']);
+const _GOLD_VIEWS = new Set(['v-vak-klausurvorbereitung','v-feuak-bp-hub','v-feuak-analyse']);
+
 const NAV = (function(){
   let stack = [];
   let _dir = 'forward';
@@ -19,12 +22,9 @@ const NAV = (function(){
       _activeEl = next;
     }
     window.scrollTo({top:0,behavior:'instant'});
-    const NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app','v-klausurfragen','v-klausur-0826']);
-    const GOLD_VIEWS = new Set(['v-vak-klausurvorbereitung','v-feuak-bp-hub','v-feuak-analyse']);
-    window._shaderContentMode = ((id.split('-').length > 2 && !GOLD_VIEWS.has(id)) || NAVY_VIEWS.has(id)) ? 1.0 : 0.0;
-    document.body.classList.toggle('mode-navy', window._shaderContentMode === 1.0);
-    // Header Notes + Bookmark buttons – on all leaf pages (same logic as gold/blue background)
-    const isContentPage = (id.split('-').length > 2 && !GOLD_VIEWS.has(id)) || NAVY_VIEWS.has(id);
+    const isContentPage = (id.split('-').length > 2 && !_GOLD_VIEWS.has(id)) || _NAVY_VIEWS.has(id);
+    window._shaderContentMode = isContentPage ? 1.0 : 0.0;
+    document.body.classList.toggle('mode-navy', isContentPage);
     const bkBtn = document.getElementById('bookmark-btn');
     if(bkBtn){
       bkBtn.classList.toggle('hidden', !isContentPage);
@@ -110,7 +110,7 @@ window.addEventListener('popstate',function(e){
 });
 
 /* ======================================================================
-   SIMULATOR ENGINE – 4 SZENARIEN
+   SIMULATOR ENGINE – 8 SZENARIEN
    ======================================================================
    STRUKTUR EINES KNOTENS:
      phase      {1-4}    – Phasenleiste
@@ -1189,7 +1189,7 @@ const PROGRESS = (function(){
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-klausurvorbereitung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung'],
-    feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
+    feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse'],
     idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse'],
   };
   const LEAF_PARENT = {};
@@ -1253,10 +1253,15 @@ const SEARCH = (function(){
     'v-vak-klausurhinweise':'VAk · Klausurhinweise','v-vak-rettungsdienstrecht':'VAk · Rettungsdienstrecht','v-vak-fallbearbeitung':'VAk · Fallbearbeitung',
     'v-feuak-vwl':'FeuAK · VWL','v-feuak-haushalt':'FeuAK · Haushalt',
     'v-feuak-pm':'FeuAK · Strategisches Management',
-    'v-feuak-bedarfsplanung':'FeuAK · Bedarfsplanung',
+    'v-feuak-bedarfsplanung':'FeuAK · Brandschutzbedarfsplanung',
+    'v-feuak-rdbp':'FeuAK · RD-Bedarfsplanung',
+    'v-feuak-katsbp':'FeuAK · KatS-Bedarfsplanung',
     'v-feuak-altklausur':'FeuAK · Altklausur-Training',
     'v-feuak-planspiel':'FeuAK · Planspiel MANV',
     'v-feuak-qm':'FeuAK · Qualitätsmanagement',
+    'v-feuak-beschaffung':'FeuAK · Beschaffungspraxis',
+    'v-feuak-stakeholder':'FeuAK · Stakeholder-Analyse',
+    'v-feuak-risikoanalyse':'FeuAK · Prospektive Risikoanalyse',
     'v-idf-brandschutz':'IdF · Vorbeugender Brandschutz',
     'v-idf-stab':'IdF · Stabsarbeit',
     'v-idf-presse':'IdF · Presse- & Öffentlichkeitsarbeit',
@@ -1473,8 +1478,6 @@ const SETTINGS = (function(){
   };
 })();
 
-/* DARKMODE removed – app is always dark */
-const DARKMODE = { init(){}, toggle(){} };
 
 /* ======================================================================
    NOTES – Seitennotizen (localStorage pro View)
@@ -2543,7 +2546,7 @@ const STATS = (function(){
     HLFS:['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     IBK:['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     VAk:['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht'],
-    FeuAK:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm'],
+    FeuAK:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse'],
     IdF:['v-idf-brandschutz','v-idf-stab','v-idf-presse']
   };
   function ov(){ return document.getElementById('stats-overlay'); }
@@ -4784,7 +4787,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   SETTINGS2.restoreFont();
   RECENT.render();
   ONBOARD.init();
-  DARKMODE.init();
   CHANGELOG.check();
   if(typeof FALLBEARBEITUNG!=='undefined') { document.querySelectorAll('#v-vak-fallbearbeitung').forEach(()=>{}); }
   document.querySelectorAll('.pc table').forEach(t=>{
@@ -4820,8 +4822,8 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(!document.getElementById('search-overlay').classList.contains('hidden')){ SEARCH.close(); return; }
       if(!document.getElementById('shortcuts-overlay').classList.contains('hidden')){ document.getElementById('shortcuts-overlay').classList.add('hidden'); return; }
       if(!document.getElementById('settings2-overlay').classList.contains('hidden')){ SETTINGS2.close(); return; }
-      if(!document.getElementById('pomodoro-overlay').classList.contains('hidden')){ POMODORO.close(); return; }
-      if(!document.getElementById('onboarding-overlay')?.classList.contains('hidden')){ ONBOARDING.close(); return; }
+      if(!document.getElementById('pomodoro-overlay').classList.contains('hidden')){ POMO.close(); return; }
+      if(!document.getElementById('onboarding-overlay')?.classList.contains('hidden')){ ONBOARD.close(); return; }
       if(!document.getElementById('quiz-mastery-modal').classList.contains('hidden')){ QUIZ.closeMastery(); return; }
       SETTINGS.closeAllPanels();
       if(document.getElementById('stats-overlay')&&!document.getElementById('stats-overlay').classList.contains('hidden')){ STATS.close(); return; }
