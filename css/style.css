@@ -1096,6 +1096,7 @@ body.offline .offline-banner{display:flex;}
 .m-page{padding:1.4rem 16px 1rem;display:flex;flex-direction:column;gap:1rem;}
 .m-hello{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;}
 .m-hello h1{font-family:var(--f-b);font-size:1.9rem;font-weight:700;margin:0;line-height:1.1;color:var(--m-fg);text-wrap:balance;}
+.m-quip{margin:8px 0 0;font-size:1rem;line-height:1.45;color:#cfcfcf;max-width:52ch;text-wrap:pretty;}
 .m-date{color:var(--m-muted);font-size:.9rem;margin-top:4px;}
 .m-streak{display:inline-flex;align-items:center;gap:6px;background:var(--m-accent-dim);color:var(--m-accent);font-weight:700;border-radius:20px;padding:6px 12px;font-size:.88rem;white-space:nowrap;}
 .m-streak svg{width:15px;height:15px;}
