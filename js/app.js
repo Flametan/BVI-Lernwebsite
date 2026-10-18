@@ -35,6 +35,7 @@ const NAV = (function(){
     if(typeof NOTES!=='undefined') NOTES.setView(id);
     if(typeof BOOKMARKS!=='undefined') BOOKMARKS.setView(id);
     updateHeader();
+    if(id==='v-idf') IDF_PLAN.render();
     if(id==='v-abkuerzungen') ABK.init();
     if(id==='v-vak-altklausur') QUIZ.init();
     if(id==='v-klausurfragen') KF_QUIZ.init();
@@ -3556,6 +3557,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'2.31.0',ts:'2026-10-18T00:00',items:[
+      'IdF Münster: Stundenplan Modul 3.5 (KW 44–52, Gruppe 1 & 2) direkt im Übersichtstab – Tageskarten-Ansicht mit Wochennavigation, automatischer Wochenerkennung und Gruppen-Toggle'
+    ]},
     {v:'2.30.11',ts:'2026-08-27T00:00',items:[
       'FeuAK · Klausurvorbereitung: Neuer Tab „Klausur 08/2026" – alle 14 Originalfragen des Führungslehrgangs mit Musterlösungen im Akkordeon'
     ]},
@@ -4768,6 +4772,232 @@ const UEBUNGSKLAUSUR = (function(){
   };
 })();
 
+/* ── IdF Münster Stundenplan Modul 3.5 ──────────────────────────────────── */
+const IDF_PLAN = (function(){
+  // Item type: 'hi'=Schlüsseltermin(gold) 'ex'=Exkursion(green) 'ar'=Anreise/Abreise(grey) 'std'=Standard(blue)
+  const W = [ // [kw, woche, thema, start(YYYY-MM-DD), gruppe(g1|g2|both), tage[5][items[{t,c}]]]
+    [44,1,'Vorbeugender Brandschutz 1','2026-10-26','g1',[
+      [{t:'Anreise',c:'ar'},{t:'Begrüßung & Einführung TM VB',c:'hi'},{t:'Rechtsgrundlagen Baurecht',c:'std'},{t:'Gebäudeklassen',c:'std'}],
+      [{t:'Baustoffnormung',c:'std'},{t:'Bauliche Trennung',c:'std'},{t:'Löschwasserversorgung',c:'std'}],
+      [{t:'System Rettungswege',c:'std'},{t:'Brandmeldeanlagen',c:'std'}],
+      [{t:'Einführung Sonderbau',c:'std'},{t:'Beherbergungsstätten',c:'std'},{t:'Brandschutznachweis',c:'std'}],
+      [{t:'Versammlungsstätten',c:'std'},{t:'Löschanlagen',c:'std'},{t:'Abreise ab 14:00',c:'ar'}],
+    ]],
+    [45,2,'Vorbeugender Brandschutz 2','2026-11-02','g1',[
+      [{t:'Anreise',c:'ar'},{t:'Verkaufsstätten',c:'std'},{t:'Einführung Stellungnahme',c:'std'}],
+      [{t:'Stellungnahme Übung',c:'hi'},{t:'Garagen',c:'std'},{t:'Hochhäuser',c:'std'}],
+      [{t:'Industriebau',c:'std'},{t:'Brandschutzsachverständige',c:'std'}],
+      [{t:'Stellungnahme Übung',c:'hi'},{t:'Aktuelles aus der Forschung',c:'std'}],
+      [{t:'EU-Katastrophenschutz (beide HG)',c:'hi'},{t:'Abreise',c:'ar'}],
+    ]],
+    [46,3,'Vorbeugender Brandschutz 3','2026-11-09','g1',[
+      [{t:'Anreise',c:'ar'},{t:'Pflege- und Betreuung',c:'std'},{t:'Stellungnahme Übung',c:'hi'}],
+      [{t:'Einführung Brandverhütungsschau',c:'std'},{t:'BVS praktisch (IdF NRW)',c:'hi'}],
+      [{t:'Exkursion Brandverhütungsschau',c:'ex'},{t:'BVS-Bericht',c:'std'}],
+      [{t:'Veranstaltungssicherheit',c:'std'},{t:'Einsatzplanung',c:'std'}],
+      [{t:'Leitung Brandschutzdienststelle',c:'std'},{t:'Verabschiedung',c:'std'},{t:'Abreise',c:'ar'}],
+    ]],
+    [47,4,'Stab 1','2026-11-16','g1',[
+      [{t:'Anreise',c:'ar'},{t:'Begrüßung & Organisation',c:'std'},{t:'Führungslehre',c:'std'},{t:'Kommunikation',c:'std'}],
+      [{t:'Führungslehre',c:'std'},{t:'Stationsausbildung',c:'hi'},{t:'Sachgebiete 1–4 (rollierend)',c:'std'}],
+      [{t:'Innerer Dienst / Übernahme EL',c:'hi'},{t:'Stabsrahmenübung »Waldbrand«',c:'hi'},{t:'Übungsauswertung',c:'std'}],
+      [{t:'Sachgebiete 5 & 6 (Halbgruppen)',c:'std'},{t:'Mars, Venus & Saturn — in zivil',c:'std'}],
+      [{t:'(Fortsetzung in zivil)',c:'std'},{t:'Rekapitulation',c:'std'},{t:'Abreise',c:'ar'}],
+    ]],
+    [48,5,'Stab 2','2026-11-23','g1',[
+      [{t:'Anreise',c:'ar'},{t:'Krisenstäbe',c:'std'}],
+      [{t:'Krisenstäbe — in zivil',c:'std'},{t:'Exkursion SAR-Leitstelle 13:30',c:'ex'}],
+      [{t:'Wiederholung & Aufbau',c:'std'},{t:'Stabsrahmenübung »Auswärtsspiel«',c:'hi'},{t:'Zusammenarbeit mit THW',c:'std'}],
+      [{t:'Stabsrahmenübung »Zugunglück«',c:'hi'},{t:'Übungsauswertung & Rückbau',c:'std'},{t:'Abreise',c:'ar'}],
+      [{t:'Selbststudium — Inhalt & Ort eigenem Ermessen',c:'ar'}],
+    ]],
+    [49,6,'Presse & Öffentlichkeitsarbeit','2026-11-30','g1',[
+      [{t:'Anreise',c:'ar'},{t:'Begrüßung',c:'std'},{t:'Presserecht',c:'std'}],
+      [{t:'Einführung Pressearbeit',c:'std'},{t:'Medien im Wandel',c:'std'},{t:'Exkursion Villa ten Hompel 13:30',c:'ex'}],
+      [{t:'Gr.A: Pressearbeit in der Krise',c:'hi'},{t:'Gr.B: Kameratraining',c:'hi'},{t:'Gruppenwechsel',c:'std'}],
+      [{t:'(Fortsetzung)',c:'std'},{t:'Exkursion WDR-Studio 13:30',c:'ex'}],
+      [{t:'Spontanhelfende',c:'std'},{t:'VOST',c:'std'},{t:'Krisenkommunikation Privatwirtschaft',c:'std'},{t:'Abreise',c:'ar'}],
+    ]],
+    [44,1,'Stab 1','2026-10-26','g2',[
+      [{t:'Anreise',c:'ar'},{t:'Begrüßung & Organisation',c:'std'},{t:'Führungslehre',c:'std'},{t:'Kommunikation',c:'std'}],
+      [{t:'Führungslehre',c:'std'},{t:'Stationsausbildung',c:'hi'},{t:'Sachgebiete 1–4',c:'std'}],
+      [{t:'Innerer Dienst / Übernahme EL',c:'hi'},{t:'Stabsrahmenübung »Waldbrand«',c:'hi'},{t:'Übungsauswertung',c:'std'}],
+      [{t:'Sachgebiete 5 & 6 (Halbgruppen)',c:'std'},{t:'Mars, Venus & Saturn',c:'std'}],
+      [{t:'(Fortsetzung in zivil)',c:'std'},{t:'Rekapitulation',c:'std'},{t:'Abreise',c:'ar'}],
+    ]],
+    [45,2,'Stab 2','2026-11-02','g2',[
+      [{t:'Anreise',c:'ar'},{t:'Krisenstäbe',c:'std'}],
+      [{t:'Krisenstäbe',c:'std'},{t:'Exkursion SAR-Leitstelle 13:30',c:'ex'}],
+      [{t:'Wiederholung & Aufbau',c:'std'},{t:'Stabsrahmenübung »Auswärtsspiel«',c:'hi'},{t:'Zusammenarbeit THW',c:'std'}],
+      [{t:'Stabsrahmenübung »Zugunglück«',c:'hi'},{t:'EVA EU-Katastrophenschutz',c:'std'},{t:'Abreise',c:'ar'}],
+      [{t:'EU-Katastrophenschutz (beide HG)',c:'hi'},{t:'Selbststudium',c:'ar'}],
+    ]],
+    [46,3,'Presse & Öffentlichkeitsarbeit','2026-11-09','g2',[
+      [{t:'Anreise',c:'ar'},{t:'Begrüßung',c:'std'},{t:'Presserecht',c:'std'}],
+      [{t:'Einführung Pressearbeit',c:'std'},{t:'Medien im Wandel',c:'std'},{t:'Exkursion Villa ten Hompel 13:30',c:'ex'}],
+      [{t:'Pressearbeit in der Krise',c:'hi'},{t:'Kameratraining',c:'hi'},{t:'Exkursion WDR-Studio',c:'ex'}],
+      [{t:'(Fortsetzung)',c:'std'},{t:'Gruppenwechsel',c:'std'}],
+      [{t:'Spontanhelfende',c:'std'},{t:'VOST',c:'std'},{t:'Krisenkommunikation',c:'std'},{t:'Abreise',c:'ar'}],
+    ]],
+    [47,4,'Vorbeugender Brandschutz 1','2026-11-16','g2',[
+      [{t:'Anreise',c:'ar'},{t:'Einführung TM VB',c:'hi'},{t:'Rechtsgrundlagen Baurecht',c:'std'},{t:'Gebäudeklassen',c:'std'}],
+      [{t:'Baustoffnormung',c:'std'},{t:'Bauliche Trennung',c:'std'},{t:'Löschwasserversorgung',c:'std'}],
+      [{t:'System Rettungswege',c:'std'},{t:'Brandmeldeanlagen',c:'std'}],
+      [{t:'Einführung Sonderbau',c:'std'},{t:'Beherbergungsstätten',c:'std'},{t:'Brandschutznachweis',c:'std'}],
+      [{t:'Versammlungsstätten',c:'std'},{t:'Löschanlagen',c:'std'},{t:'Abreise',c:'ar'}],
+    ]],
+    [48,5,'Vorbeugender Brandschutz 2','2026-11-23','g2',[
+      [{t:'Anreise',c:'ar'},{t:'Verkaufsstätten',c:'std'},{t:'Einführung Stellungnahme',c:'std'}],
+      [{t:'Stellungnahme Übung',c:'hi'},{t:'Garagen',c:'std'},{t:'Hochhäuser',c:'std'}],
+      [{t:'Industriebau',c:'std'},{t:'Brandschutzsachverständige',c:'std'}],
+      [{t:'Stellungnahme Übung',c:'hi'},{t:'Aktuelles aus der Forschung',c:'std'},{t:'Abreise',c:'ar'}],
+      [{t:'Selbststudium',c:'ar'}],
+    ]],
+    [49,6,'Vorbeugender Brandschutz 3','2026-11-30','g2',[
+      [{t:'Anreise',c:'ar'},{t:'Pflege- und Betreuung',c:'std'},{t:'Stellungnahme Übung',c:'hi'}],
+      [{t:'Einführung Brandverhütungsschau',c:'std'},{t:'BVS praktisch',c:'hi'}],
+      [{t:'Exkursion Brandverhütungsschau',c:'ex'},{t:'Einsatzplanung',c:'std'}],
+      [{t:'Veranstaltungssicherheit',c:'std'}],
+      [{t:'Leitung Brandschutzdienststelle',c:'std'},{t:'Verabschiedung',c:'std'},{t:'Abreise',c:'ar'}],
+    ]],
+    [50,7,'Zivile Verteidigung (Ahrweiler)','2026-12-07','both',[
+      [{t:'Anreise / BABZ-Programm',c:'std'}],
+      [{t:'BABZ-Programm',c:'std'}],
+      [{t:'BABZ-Programm',c:'std'}],
+      [{t:'BABZ-Programm',c:'std'}],
+      [{t:'BABZ-Programm / Abreise',c:'ar'}],
+    ]],
+    [51,8,'Stab 3','2026-12-14','both',[
+      [{t:'Anreise',c:'ar'},{t:'Leistungsnachweis §13',c:'hi'},{t:'MoFüSt NRW',c:'std'},{t:'SRÜ »Unwetter« ab 18:15',c:'hi'}],
+      [{t:'unterrichtsfrei',c:'ar'},{t:'Übungsauswertung',c:'std'}],
+      [{t:'Fachtagung Stabsarbeit (ab 8:00)',c:'hi'},{t:'Get Together · Hemd/Krawatte',c:'hi'}],
+      [{t:'Konzepterarbeitung Großveranstaltung',c:'std'},{t:'Gr.A: SRÜ Großveranstaltung',c:'hi'}],
+      [{t:'Gr.B: SRÜ Großveranstaltung',c:'hi'},{t:'Übungsauswertung beide Gruppen',c:'hi'},{t:'Rückbau & Abreise',c:'ar'}],
+    ]],
+    [52,9,'Klausuren','2026-12-21','both',[
+      [{t:'Anreise',c:'ar'},{t:'Klausur §21 — 4 Zeitstunden',c:'hi'}],
+      [{t:'Klausur §21 — 4 Zeitstunden',c:'hi'},{t:'Verabschiedung durch Direktor (Hemd/Krawatte)',c:'hi'}],
+      [{t:'Ende des Moduls',c:'ar'}],
+      [],
+      [],
+    ]],
+  ];
+
+  const DAYS=['Mo','Di','Mi','Do','Fr'];
+  const MONS=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+  let _grp='g1', _wi=0, _weeks=[];
+
+  function _isoWeek(d){
+    const t=new Date(d);
+    t.setHours(0,0,0,0);
+    t.setDate(t.getDate()+3-(t.getDay()||7)-1+1);
+    const w1=new Date(t.getFullYear(),0,4);
+    return 1+Math.round((t-w1)/604800000);
+  }
+
+  function _buildWeeks(){
+    return W.filter(w=>w[4]==='both'||w[4]===_grp)
+             .sort((a,b)=>new Date(a[3])-new Date(b[3]));
+  }
+
+  function _autoIdx(){
+    const today=new Date();today.setHours(0,0,0,0);
+    const first=new Date(_weeks[0][3]);
+    if(today<first) return 0;
+    for(let i=_weeks.length-1;i>=0;i--){
+      if(new Date(_weeks[i][3])<=today) return i;
+    }
+    return 0;
+  }
+
+  function _getDates(w){
+    const base=new Date(w[3]);
+    return DAYS.map((_,i)=>{ const d=new Date(base);d.setDate(base.getDate()+i);return d; });
+  }
+
+  function _draw(){
+    const el=document.getElementById('idf-plan-inner');
+    if(!el) return;
+    const wk=_weeks[_wi];
+    if(!wk){ el.innerHTML='<p style="color:var(--c-slate);font-size:.8rem;padding:.5rem 0">Kein Eintrag.</p>'; return; }
+    const isBoth=wk[4]==='both';
+    const dates=_getDates(wk);
+    const today=new Date();today.setHours(0,0,0,0);
+
+    // header
+    let h=`<div class="idf-plan-hdr">`;
+    h+=`<div class="idf-plan-row1">`;
+    h+=`<div class="idf-plan-kw">KW ${wk[0]} <small>Woche ${wk[1]} / 9</small></div>`;
+    h+=`<div style="display:flex;align-items:center;gap:.4rem">`;
+    h+=`<div class="idf-prog">${_weeks.map((_,i)=>`<div class="idf-pip${i<_wi?' done':i===_wi?' cur':''}"></div>`).join('')}</div>`;
+    h+=`<div class="idf-plan-nav">`;
+    h+=`<button class="idf-nav-btn" onclick="IDF_PLAN._nav(-1)"${_wi===0?' disabled':''}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>`;
+    h+=`<button class="idf-nav-btn" onclick="IDF_PLAN._nav(1)"${_wi===_weeks.length-1?' disabled':''}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>`;
+    h+=`</div></div></div>`;
+    h+=`<div class="idf-plan-row2"><span class="idf-thema">${wk[2]}</span>`;
+    if(isBoth){
+      h+=`<span style="font-size:.7rem;color:var(--c-gold)">beide Gruppen</span>`;
+    } else {
+      h+=`<div class="idf-grp-toggle">`;
+      h+=`<button class="idf-grp-btn${_grp==='g1'?' active':''}" onclick="IDF_PLAN._grp('g1')">Gruppe 1</button>`;
+      h+=`<button class="idf-grp-btn${_grp==='g2'?' active':''}" onclick="IDF_PLAN._grp('g2')">Gruppe 2</button>`;
+      h+=`</div>`;
+    }
+    h+=`</div></div>`;
+
+    // special note for Ahrweiler
+    if(wk[0]===50){
+      h+=`<div class="idf-plan-note"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:.1rem"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Veranstaltungsort: Ahrweiler (BABZ). Detailprogramm wird separat geteilt.</div>`;
+    }
+
+    // day cards
+    h+=`<div class="idf-day-wrap"><div class="idf-days">`;
+    wk[5].forEach((items,di)=>{
+      const d=dates[di];
+      const isToday=d.getTime()===today.getTime();
+      const isEmpty=items.length===0;
+      h+=`<div class="idf-day"${isToday?' style="background:rgba(201,168,76,.05);"':''}>`;
+      h+=`<div class="idf-dc">`;
+      h+=`<div class="idf-dow" style="${isToday?'color:var(--c-gold)':''}">${DAYS[di]}</div>`;
+      h+=`<div class="idf-dnum" style="${isToday?'color:var(--c-gold)':''}">${d.getDate()}</div>`;
+      h+=`<div class="idf-dmo">${MONS[d.getMonth()]}.</div>`;
+      h+=`</div>`;
+      h+=`<div class="idf-dvr"></div>`;
+      h+=`<div class="idf-items">`;
+      if(isEmpty){
+        h+=`<div class="idf-empty">—</div>`;
+      } else {
+        items.forEach(it=>{ h+=`<div class="idf-item ${it.c}">${it.t}</div>`; });
+      }
+      h+=`</div></div>`;
+    });
+    h+=`</div></div>`;
+
+    el.innerHTML=h;
+  }
+
+  function render(){
+    try{ _grp=localStorage.getItem('idf_plan_grp')||'g1'; }catch(e){}
+    _weeks=_buildWeeks();
+    _wi=_autoIdx();
+    _draw();
+  }
+
+  function _nav(d){
+    _wi=Math.max(0,Math.min(_weeks.length-1,_wi+d));
+    _draw();
+  }
+
+  function _setGrp(g){
+    _grp=g;
+    try{ localStorage.setItem('idf_plan_grp',g); }catch(e){}
+    _weeks=_buildWeeks();
+    _wi=_autoIdx();
+    _draw();
+  }
+
+  return { render, _nav, _grp:_setGrp };
+})();
 
 document.addEventListener('DOMContentLoaded',()=>{
   // Deep-link on load
