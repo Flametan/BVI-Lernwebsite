@@ -23,25 +23,15 @@ const NAV = (function(){
     }
     window.scrollTo({top:0,behavior:'instant'});
     const isContentPage = (id.split('-').length > 2 && !_GOLD_VIEWS.has(id)) || _NAVY_VIEWS.has(id);
-    window._shaderContentMode = isContentPage ? 1.0 : 0.0;
-    document.body.classList.toggle('mode-navy', isContentPage);
-    const bkBtn = document.getElementById('bookmark-btn');
-    if(bkBtn){
-      bkBtn.classList.toggle('hidden', !isContentPage);
-      if(isContentPage){ bkBtn.dataset.id=id; bkBtn.dataset.label=stack.length?stack[stack.length-1].label:''; }
-    }
-    const notesFab = document.getElementById('notes-fab');
-    if(notesFab) notesFab.classList.toggle('hidden', !isContentPage);
     if(typeof NOTES!=='undefined') NOTES.setView(id);
     if(typeof BOOKMARKS!=='undefined') BOOKMARKS.setView(id);
-    updateHeader();
-    MOBILE.onShow(id, isContentPage, stack);
-    if(id==='v-idf') IDF_PLAN.render('idf-plan-inner');
-    if(id==='v-plan') IDF_PLAN.render('plan-inner');
-    if(id==='v-home') MOBILE.renderHome();
-    if(id==='v-pruefung') MOBILE.renderExam();
-    if(id==='v-settings') MOBILE.syncSettings();
-    if(id==='v-notizen') MOBILE.renderNotes();
+    SHELL.onShow(id, isContentPage, stack);
+    if(id==='v-plan') IDF_PLAN.render();
+    if(id==='v-flashcards') SHELL.renderFcSide();
+    if(id==='v-home') SHELL.renderHome();
+    if(id==='v-pruefung') SHELL.renderExam();
+    if(id==='v-settings') SHELL.syncSettings();
+    if(id==='v-notizen') SHELL.renderNotes();
     if(id==='v-abkuerzungen') ABK.init();
     if(id==='v-vak-altklausur') QUIZ.init();
     if(id==='v-klausurfragen') KF_QUIZ.init();
@@ -63,37 +53,6 @@ const NAV = (function(){
     history.replaceState(history.state,'',url.pathname+(url.search==='?'||url.search===''?'':url.search));
     // Recently visited
     if(typeof RECENT!=='undefined') RECENT.track(id);
-  }
-
-  function updateHeader(){
-    const bb=document.getElementById('back-btn');
-    const fb=document.getElementById('float-back');
-    const cr=document.getElementById('breadcrumb');
-    const noStack = stack.length===0;
-
-    // Header back button (desktop)
-    bb.classList.toggle('hidden', noStack);
-
-    // Floating back button (mobile)
-    if(fb) fb.classList.toggle('hidden', noStack);
-
-    if(noStack){ cr.innerHTML=''; return; }
-
-    // Breadcrumb trail
-    const items=[{label:'Startseite',idx:-1},...stack.map((s,i)=>({label:s.label,idx:i}))];
-    cr.innerHTML=items.map((item,i)=>{
-      const last=i===items.length-1;
-      const cls=last?'crumb-item active':'crumb-item';
-      const click=last?'':(item.idx===-1?'onclick="NAV.home()"':`onclick="NAV.jumpTo(${item.idx})"`);
-      return `<span class="${cls}" ${click}>${item.label}</span>`;
-    }).join('');
-
-    // Float button label = previous page or Startseite
-    if(fb){
-      const prev = stack.length>=2 ? stack[stack.length-2].label : 'Startseite';
-      const lbl = fb.querySelector('.fb-label');
-      if(lbl) lbl.textContent = prev;
-    }
   }
 
   return {
@@ -1219,8 +1178,6 @@ const PROGRESS = (function(){
     const allLeafs = Object.values(GROUPS).flat();
     const total = allLeafs.length;
     const done = allLeafs.filter(v=>visited[v]).length;
-    const bar = document.getElementById('prog-bar');
-    if(bar) bar.style.width = (total ? Math.round(done/total*100) : 0) + '%';
 
     if(!_cardCache) _cardCache = document.querySelectorAll('.topic-card');
     _cardCache.forEach(card => {
@@ -1440,24 +1397,7 @@ const TOAST = (function(){
 })();
 
 const SETTINGS = (function(){
-  function closeAllPanels(){
-    document.getElementById('fontsize-overlay')?.classList.add('hidden');
-    document.getElementById('notif-overlay')?.classList.add('hidden');
-  }
   return {
-    toggleFontPanel(){
-      const p=document.getElementById('fontsize-overlay');
-      const was=p?.classList.contains('hidden');
-      closeAllPanels();
-      if(was) p?.classList.remove('hidden');
-    },
-    toggleNotifPanel(){
-      const p=document.getElementById('notif-overlay');
-      const was=p?.classList.contains('hidden');
-      closeAllPanels();
-      if(was){ p?.classList.remove('hidden'); if(typeof NOTIF!=='undefined') NOTIF.updateUI(); }
-    },
-    closeAllPanels,
     resetTopics(){
       const snap=localStorage.getItem('bvi_progress');
       if(!confirm('Lernfortschritt wirklich zurücksetzen?')) return;
@@ -1509,7 +1449,6 @@ const NOTES = (function(){
       if(preview) preview.textContent = note ? note.substring(0,80)+(note.length>80?'…':'') : 'Notiz hinzufügen…';
     }
     const has = !!(note && note.trim());
-    document.getElementById('notes-fab')?.classList.toggle('fab-active', has);
     document.getElementById('m-note')?.classList.toggle('fab-active', has);
   }
   function ensureWidget(){}
@@ -1585,15 +1524,7 @@ const BOOKMARKS = (function(){
   function syncFab(id){
     if(!id) return;
     const on=load().some(b=>b.id===id);
-    document.getElementById('bookmark-btn')?.classList.toggle('fab-active', on);
     document.getElementById('m-bm')?.classList.toggle('fab-active', on);
-  }
-  function updateHomeTile(){
-    const tile=document.getElementById('bm-tile');
-    const desc=document.getElementById('bm-tile-desc');
-    const d=load();
-    if(tile){ tile.classList.toggle('hidden', d.length===0); }
-    if(desc){ desc.textContent=d.length===1?'1 gespeicherte Seite':`${d.length} gespeicherte Seiten`; }
   }
   function renderPage(){
     const list=document.getElementById('bm-list');
@@ -1614,7 +1545,7 @@ const BOOKMARKS = (function(){
       btn.addEventListener('click',()=>NAV.go(btn.dataset.id, btn.dataset.label));
     });
     list.querySelectorAll('.bm-remove').forEach(btn=>{
-      btn.addEventListener('click',()=>{ removeBk(btn.dataset.id); renderPage(); updateHomeTile(); });
+      btn.addEventListener('click',()=>{ removeBk(btn.dataset.id); renderPage(); });
     });
   }
   return {
@@ -1625,12 +1556,11 @@ const BOOKMARKS = (function(){
       const i=d.findIndex(b=>b.id===id);
       if(i>=0){ d.splice(i,1); TOAST.show('Lesezeichen entfernt'); }
       else { d.unshift({id,label:label||id}); TOAST.show('Lesezeichen gesetzt',{type:'ok'}); }
-      save(d); syncFab(id); updateHomeTile();
+      save(d); syncFab(id);
     },
     getAll(){ return load(); },
     remove(id){ removeBk(id); },
-    renderPage,
-    updateHomeTile
+    renderPage
   };
 })();
 
@@ -1885,14 +1815,10 @@ const FC = (function(){
         <button class="fc-btn fc-yes" onclick="FC.answer(true)">✓ Gewusst<span class="fc-hint">${iGood}d</span></button>
       </div>`;
     flipped = false;
-    window._shaderContentMode = 1.0;
-    document.body.classList.add('mode-navy');
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
   }
 
   function renderEnd(){
-    window._shaderContentMode = 1.0;
-    document.body.classList.add('mode-navy');
     const box = document.getElementById('fc-container'); if(!box) return;
     const known = fcLoad();
     const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
@@ -1971,7 +1897,7 @@ const FC = (function(){
         d[card.id]=sm2(d[card.id]||{},q); sess.known++;
         if(typeof STREAK!=='undefined') STREAK.record();
       }
-      fcSave(d); curIdx++; renderCard();
+      fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide();
     },
     setFilter(f){
       if(f==='starred'){
@@ -2327,156 +2253,23 @@ window.addEventListener('resize', () => {
 });
 
 /* ======================================================================
-   SHADER BG – WebGL2 fractal noise nebula (based on shader by Matthias Hurrle)
-====================================================================== */
-(function(){
-  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
-  if(window.matchMedia('(max-width:700px)').matches) return;
-  const canvas = document.getElementById('shader-bg');
-  if(!canvas) return;
-  const gl = canvas.getContext('webgl2');
-  if(!gl){ canvas.style.display='none'; return; }
-
-  const VS = `#version 300 es
-in vec2 position;
-void main(){gl_Position=vec4(position,0,1);}`;
-
-  const FS = `#version 300 es
-precision highp float;
-out vec4 O;
-uniform vec2 resolution;
-uniform float time;
-uniform float blend;
-uniform float realTime;
-#define FC gl_FragCoord.xy
-#define T time
-#define R resolution
-#define MN min(R.x,R.y)
-float rnd(vec2 p){p=fract(p*vec2(12.9898,78.233));p+=dot(p,p+34.56);return fract(p.x*p.y);}
-float noise(in vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);float a=rnd(i),b=rnd(i+vec2(1,0)),c=rnd(i+vec2(0,1)),d=rnd(i+1.);return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);}
-float fbm(vec2 p){float t=.0,a=1.;mat2 m=mat2(1.,-.5,.2,1.2);for(int i=0;i<5;i++){t+=a*noise(p);p*=2.*m;a*=.5;}return t;}
-float clouds(vec2 p){float d=1.,t=.0;for(float i=.0;i<3.;i++){float a=d*fbm(i*10.+p.x*.2+.2*(1.+i)*p.y+d+i*i+p);t=mix(t,d,a);d=a;p*=2./(i+1.);}return t;}
-void main(void){
-  vec2 uv=(FC-.5*R)/MN,st=uv*vec2(2,1);
-  vec3 col=vec3(0);
-  float bg=clouds(vec2(st.x+T*.5,-st.y));
-  uv*=1.-.3*(sin(T*.2)*.5+.5);
-  for(float i=1.;i<12.;i++){
-    uv+=.18*cos(i*vec2(.12+.013*i,.72)+i*i+T*.5);
-    vec2 p=uv;
-    float d=length(p);
-    float fade=smoothstep(1.3,0.25,d);
-    col+=.0003/d*(cos(sin(i)*vec3(1,2,3))+1.)*fade;
-    float b=noise(i+p+bg*1.731);
-    col+=.00048*b/length(vec2(max(abs(p.x),abs(p.y)*.12+.004),p.y))*fade;
-    col=mix(col,vec3(bg*.25,bg*.137,bg*.05),clamp(d,0.,1.));
-  }
-  // Navy-Modus: dunkles Navy + dezenter langsamer Radial-Puls auf Inhaltsseiten
-  float pulse=sin(realTime*0.6)*.5+.5;
-  vec2 ctr=(FC/R)-.5;
-  float glow=exp(-dot(ctr,ctr)*6.0)*(0.22+pulse*0.12);
-  vec3 navy=vec3(
-    0.031+bg*.02+glow*.015,
-    0.059+bg*.025+glow*.04,
-    0.110+bg*.07+glow*.11
-  );
-  col=mix(col,navy,blend);
-  O=vec4(col,1);
-}`;
-
-  function makeShader(type, src){
-    const sh = gl.createShader(type);
-    gl.shaderSource(sh, src);
-    gl.compileShader(sh);
-    if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)){
-      console.warn('Shader compile:', gl.getShaderInfoLog(sh));
-      return null;
-    }
-    return sh;
-  }
-
-  const vs = makeShader(gl.VERTEX_SHADER, VS);
-  const fs = makeShader(gl.FRAGMENT_SHADER, FS);
-  if(!vs || !fs){ canvas.style.display='none'; return; }
-
-  const prog = gl.createProgram();
-  gl.attachShader(prog, vs);
-  gl.attachShader(prog, fs);
-  gl.linkProgram(prog);
-  if(!gl.getProgramParameter(prog, gl.LINK_STATUS)){
-    console.warn('Program link:', gl.getProgramInfoLog(prog));
-    canvas.style.display='none'; return;
-  }
-  gl.useProgram(prog);
-
-  const vao = gl.createVertexArray();
-  gl.bindVertexArray(vao);
-  const buf = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-  const posLoc = gl.getAttribLocation(prog, 'position');
-  gl.enableVertexAttribArray(posLoc);
-  gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
-
-  const uRes      = gl.getUniformLocation(prog, 'resolution');
-  const uTime     = gl.getUniformLocation(prog, 'time');
-  const uBlend    = gl.getUniformLocation(prog, 'blend');
-  const uRealTime = gl.getUniformLocation(prog, 'realTime');
-
-  function resize(){
-    canvas.width  = innerWidth;
-    canvas.height = innerHeight;
-    gl.viewport(0, 0, canvas.width, canvas.height);
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  let start = 0, blendVal = 0;
-  function frame(now){
-    if(!start) start = now;
-    blendVal += ((window._shaderContentMode || 0) - blendVal) * 0.025;
-    const elapsed = (now - start) * 0.001;
-    gl.uniform2f(uRes, canvas.width, canvas.height);
-    gl.uniform1f(uTime, elapsed * 0.143);
-    gl.uniform1f(uRealTime, elapsed);
-    gl.uniform1f(uBlend, blendVal);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-})();
-
-/* ======================================================================
    STREAK – tägliche Lernsträhne
 ====================================================================== */
 const STREAK = (function(){
   function load(){ try{return JSON.parse(localStorage.getItem('bvi_streak')||'{}');}catch{return{};} }
   function save(d){ try{localStorage.setItem('bvi_streak',JSON.stringify(d));}catch{} }
   function todayStr(){ const n=new Date();return n.getFullYear()+'-'+(n.getMonth()+1)+'-'+n.getDate(); }
-  function render(){
-    const d=load(),n=d.current||0;
-    const el=document.getElementById('streak-badge');
-    if(!el) return;
-    const today=todayStr();
-    const prevD=new Date();prevD.setDate(prevD.getDate()-1);
-    const yStr=prevD.getFullYear()+'-'+(prevD.getMonth()+1)+'-'+prevD.getDate();
-    const active=n>0&&(d.lastStudy===today||d.lastStudy===yStr);
-    el.textContent=active?`🔥 ${n}`:'';
-    el.style.display=active?'':'none';
-    el.title=`Lernstreak: ${n} Tag${n===1?'':'e'} in Folge`;
-  }
   return {
     record(){
       const d=load(),today=todayStr();
-      if(d.lastStudy===today){render();return;}
+      if(d.lastStudy===today) return;
       const prev=new Date();prev.setDate(prev.getDate()-1);
       const yStr=prev.getFullYear()+'-'+(prev.getMonth()+1)+'-'+prev.getDate();
       d.current=d.lastStudy===yStr?(d.current||0)+1:1;
       d.longest=Math.max(d.longest||0,d.current);
       d.lastStudy=today;
-      save(d); render();
+      save(d);
     },
-    render,
     get(){ return load(); }
   };
 })();
@@ -2492,7 +2285,7 @@ const NOTIF = (function(){
       if(!('Notification' in window)){ TOAST.show('Benachrichtigungen nicht unterstützt'); return false; }
       if(on){
         const r=await Notification.requestPermission();
-        if(r!=='granted'){ TOAST.show('Benachrichtigungen wurden abgelehnt'); const t=document.getElementById('notif-toggle');if(t)t.checked=false; return false; }
+        if(r!=='granted'){ TOAST.show('Benachrichtigungen wurden abgelehnt'); return false; }
         savePrefs({...prefs(),enabled:true});
         TOAST.show('Benachrichtigungen aktiviert',{type:'ok'}); return true;
       } else { savePrefs({...prefs(),enabled:false}); return false; }
@@ -2506,11 +2299,6 @@ const NOTIF = (function(){
       if(new Date().getHours()<(p.hour||18)) return;
       try{ new Notification('B VI Lernwebsite 📚',{body:'Heute schon gelernt? Kurz Karten wiederholen!',icon:'./icons/icon-192.svg',tag:'bvi-daily'}); }catch{}
       savePrefs({...p,lastShown:today});
-    },
-    updateUI(){
-      const p=prefs();
-      const t=document.getElementById('notif-toggle');if(t) t.checked=this.isEnabled();
-      const h=document.getElementById('notif-hour');if(h) h.value=p.hour||18;
     }
   };
 })();
@@ -2619,10 +2407,7 @@ const POMO=(function(){
   function render(){
     const d=document.getElementById('pomo-display'); if(d) d.textContent=fmt(_rem);
     const btn=document.getElementById('pomo-start'); if(btn) btn.textContent=_running?'⏸ Pause':'▶ Start';
-    document.getElementById('pomo-hdr-btn')?.classList.toggle('hidden',!_running);
     document.getElementById('m-pomo')?.classList.toggle('hidden',!_running);
-    const ht=document.getElementById('pomo-hdr-time');
-    if(ht) ht.textContent=fmt(_rem);
     const mt=document.getElementById('m-pomo-time');
     if(mt) mt.textContent=fmt(_rem);
   }
@@ -2696,12 +2481,6 @@ const SETTINGS2=(function(){
     document.querySelectorAll('.s2-font-btn').forEach(b=>b.classList.toggle('active',b.dataset.ff===(ff||'sans')));
   }
   return {
-    open(){
-      document.getElementById('settings2-overlay').classList.remove('hidden');
-      SETTINGS._restoreFsUI();
-      if(typeof NOTIF!=='undefined') NOTIF.updateUI();
-    },
-    close(){ document.getElementById('settings2-overlay').classList.add('hidden'); },
     setFont(ff){ applyFont(ff); },
     restoreFont(){ applyFont(localStorage.getItem('bvi_font_family')||'sans'); }
   };
@@ -2736,20 +2515,8 @@ const RECENT=(function(){
       const entries=load().filter(e=>e.id!==id);
       entries.unshift({id,label});
       save(entries.slice(0,MAX));
-      this.render();
     },
-    render(){
-      const el=document.getElementById('recent-section'); if(!el) return;
-      const entries=load();
-      if(!entries.length){ el.classList.add('hidden'); return; }
-      el.classList.remove('hidden');
-      const list=el.querySelector('.recent-list');
-      if(list){
-        list.innerHTML=entries.map(e=>`<button class="recent-item" data-id="${e.id}" data-label="${e.label.replace(/"/g,'&quot;')}">${e.label}</button>`).join('');
-        list.querySelectorAll('.recent-item').forEach(b=>b.addEventListener('click',()=>NAV.go(b.dataset.id,b.dataset.label)));
-      }
-    },
-    clear(){ save([]); this.render(); },
+    clear(){ save([]); },
     list(){ return load(); }
   };
 })();
@@ -3531,6 +3298,14 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.1.0',ts:'2026-10-18T18:00',items:[
+      'Neues Design jetzt auch auf Tablet und Desktop: Tablet mit Tab-Leiste und zwei Spalten, Desktop mit Seitenleiste links',
+      'Startseite als Dashboard mit Kennzahlen, Wochenaktivität, Weiterlernen, nächster Klausur und Modul-Kacheln',
+      'Plan: auf dem Desktop die ganze Woche nebeneinander',
+      'Lernseiten: Inhaltsverzeichnis „Auf dieser Seite“ am rechten Rand (große Bildschirme)',
+      'Lernkarten: Spalte „Dein Stand“ mit Fortschritt pro Modul',
+      'Header, bewegter Hintergrund und altes Einstellungs-Fenster entfernt – alles liegt jetzt in den Tabs'
+    ]},
     {v:'3.0.0',ts:'2026-10-18T12:00',items:[
       'Neue Mobil-Ansicht im App-Stil: Tab-Leiste unten mit Start, Plan, Prüfung, Einstellungen und Lernen – der Header entfällt auf dem Handy',
       'Startseite (Handy): Streak, gelesene Themen, Lernkarten, Aktivität der Woche, Weiterlernen und alle Module mit Fortschritt',
@@ -4868,7 +4643,7 @@ const IDF_PLAN = (function(){
 
   const DAYS=['Mo','Di','Mi','Do','Fr'];
   const MONS=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
-  let _grp='g1', _wi=0, _weeks=[], _target='idf-plan-inner';
+  let _grp='g1', _wi=0, _weeks=[];
 
   function _isoWeek(d){
     const t=new Date(d);
@@ -4899,7 +4674,7 @@ const IDF_PLAN = (function(){
   }
 
   function _draw(){
-    const el=document.getElementById(_target);
+    const el=document.getElementById('plan-inner');
     if(!el) return;
     const wk=_weeks[_wi];
     if(!wk){ el.innerHTML='<p style="color:var(--c-slate);font-size:.8rem;padding:.5rem 0">Kein Eintrag.</p>'; return; }
@@ -4959,8 +4734,7 @@ const IDF_PLAN = (function(){
     el.innerHTML=h;
   }
 
-  function render(target){
-    if(target) _target=target;
+  function render(){
     _grp=_savedGrp();
     _weeks=_buildWeeks();
     _wi=_autoIdx();
@@ -5020,8 +4794,7 @@ const ACCENT=(function(){
 ACCENT.init();
 
 /* ── Mobil-Ansicht: Tab-Leiste, Startseite, Prüfung, Einstellungen ──────── */
-const MOBILE=(function(){
-  const mq=window.matchMedia('(max-width:700px)');
+const SHELL=(function(){
   const ROOTS={'v-home':'start','v-plan':'plan','v-pruefung':'exam','v-settings':'settings','v-flashcards':'learn'};
   const MODS=[
     ['gal','GAL','Grundlehrgang','v-gal','GAL Grundlehrgang',1],
@@ -5053,6 +4826,8 @@ const MOBILE=(function(){
     sim:'<path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z"/>',
     cal:'<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
     cloud:'<path d="M18 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7"/><path d="M15 3h6v6M10 14 21 3"/>',
+    exam:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+    cards:'<rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/>',
     play:'<path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z" fill="currentColor" stroke="none"/>',
     flame:'<path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z" fill="currentColor" stroke="none"/>'
   };
@@ -5090,48 +4865,103 @@ const MOBILE=(function(){
     return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Aufgerufene Lernseiten pro Tag in dieser Woche, insgesamt ${sum}">${g}</svg>`;
   }
 
+  function daysToExam(){
+    const t=new Date(); t.setHours(0,0,0,0);
+    return Math.round((new Date('2026-12-21T00:00')-t)/864e5);
+  }
+
   function renderHome(){
     const el=document.getElementById('m-home');
-    if(!el||!mq.matches) return;
+    if(!el) return;
     const now=new Date(), h=now.getHours();
     const hi=h<11?'Guten Morgen':h<18?'Guten Tag':'Guten Abend';
     const streak=streakDays(), cnt=PROGRESS.counts();
     const done=Object.values(cnt).reduce((a,c)=>a+c.done,0), total=Object.values(cnt).reduce((a,c)=>a+c.total,0);
-    const cs=cardStats(), recent=RECENT.list()[0], idf=IDF_PLAN.summary();
+    const cs=cardStats(), recent=RECENT.list()[0], idf=IDF_PLAN.summary(), exam=daysToExam();
+    const pct=c=>c.total?Math.round(c.done/c.total*100):0;
     const modRow=m=>{
-      const c=cnt[m[0]]||{done:0,total:0}, pct=c.total?Math.round(c.done/c.total*100):0;
-      return `<button class="m-row m-go" onclick="${goJs(m[3],m[4])}"><span class="m-ic">${m[1]}</span><span class="m-tx"><span class="m-t1">${m[1]}</span><span class="m-t2">${esc(m[2])}</span><span class="m-bar"><i style="width:${pct}%"></i></span></span><span class="m-val">${c.done}/${c.total}</span></button>`;
+      const c=cnt[m[0]]||{done:0,total:0};
+      return `<button class="m-row m-go" onclick="${goJs(m[3],m[4])}"><span class="m-ic">${m[1]}</span><span class="m-tx"><span class="m-t1">${m[1]}</span><span class="m-t2">${esc(m[2])}</span><span class="m-bar"><i style="width:${pct(c)}%"></i></span></span><span class="m-val">${c.done}/${c.total}</span></button>`;
+    };
+    const modCard=m=>{
+      const c=cnt[m[0]]||{done:0,total:0};
+      return `<button class="m-modcard" onclick="${goJs(m[3],m[4])}"><span class="m-mc-top"><span class="m-ic">${m[1]}</span><span class="m-val">${c.done}/${c.total}</span></span><b>${m[1]}</b><span class="m-t2">${esc(m[2])}</span><span class="m-bar"><i style="width:${pct(c)}%"></i></span></button>`;
+    };
+    const year=y=>{
+      const ms=MODS.filter(m=>m[5]===y);
+      return `<div class="m-sec">${y}. Ausbildungsjahr</div><div class="m-list m-only-s">${ms.map(modRow).join('')}</div><div class="m-modgrid">${ms.map(modCard).join('')}</div>`;
     };
     let cont='';
     if(recent&&document.getElementById(recent.id)){
       const eb=document.querySelector('#'+recent.id+' .page-eyebrow')?.textContent?.trim()||'';
       cont=`<div class="m-card m-cont"><div class="m-tx"><span class="m-eyebrow">Weiterlernen</span><span class="m-t1" style="margin-top:4px">${esc(recent.label)}</span>${eb?`<span class="m-t2">${esc(eb)}</span>`:''}</div><button class="m-play" aria-label="${esc(recent.label)} öffnen" onclick="${goJs(recent.id,recent.label)}">${svg('play')}</button></div>`;
     }
+    const extra=(exam>=0?row({ic:ic('exam'),t1:'Nächste Klausur',t2:`Klausur § 21 · ${exam===0?'heute':exam===1?'morgen':'noch '+exam+' Tage'}`,on:"NAV.tab('v-pruefung','Prüfung')"}):'')
+      +row({ic:ic('cards'),t1:'Lernkarten wiederholen',t2:cs.due?`${cs.due} Karten heute fällig`:'Heute nichts fällig',on:"NAV.tab('v-flashcards','Lernen')"});
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${streak?`<span class="m-streak">${svg('flame')}${streak} ${streak===1?'Tag':'Tage'}</span>`:''}</div>
-      <div class="m-stats3">
-        <div class="m-stat"><b>${done}/${total}</b><span>Themen gelesen</span></div>
-        <div class="m-stat"><b>${cs.known}</b><span>von ${cs.total} Karten gewusst</span></div>
-        <div class="m-stat"><b>${cs.due}</b><span>Karten heute fällig</span></div>
+      <div class="m-g2 m-home-top">
+        <div class="m-col">
+          <div class="m-stats3">
+            <div class="m-stat"><b>${done}/${total}</b><span>Themen gelesen</span></div>
+            <div class="m-stat"><b>${cs.known}</b><span>von ${cs.total} Karten gewusst</span></div>
+            <div class="m-stat"><b>${cs.due}</b><span>Karten heute fällig</span></div>
+          </div>
+          <div class="m-card m-chart"><div class="m-chart-h"><b>Aktivität diese Woche</b><span>aufgerufene Seiten</span></div>${chart(HEATMAP.week())}</div>
+        </div>
+        <div class="m-col">
+          ${cont}
+          ${idf.over?'':`<div class="m-list">${row({ic:ic('cal'),t1:'Diese Woche am IdF',t2:`KW ${idf.kw} · ${idf.thema}`,on:"NAV.tab('v-plan','Plan')"})}</div>`}
+          <div class="m-list m-only-l">${extra}</div>
+        </div>
       </div>
-      <div class="m-card m-chart"><div class="m-chart-h"><b>Aktivität diese Woche</b><span>aufgerufene Seiten</span></div>${chart(HEATMAP.week())}</div>
-      ${cont}
-      ${idf.over?'':`<div class="m-list">${row({ic:ic('cal'),t1:'Diese Woche am IdF',t2:`KW ${idf.kw} · ${idf.thema}`,on:"NAV.tab('v-plan','Plan')"})}</div>`}
-      <div class="m-sec">1. Ausbildungsjahr</div>
-      <div class="m-list">${MODS.filter(m=>m[5]===1).map(modRow).join('')}</div>
-      <div class="m-sec">2. Ausbildungsjahr</div>
-      <div class="m-list">${MODS.filter(m=>m[5]===2).map(modRow).join('')}
-        <a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2">Passwort steht in der WhatsApp-Gruppe</span></span></a>
-      </div>`;
+      ${year(1)}${year(2)}
+      <div class="m-list"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
   }
 
   function renderExam(){
     const cd=document.getElementById('m-countdown'), list=document.getElementById('m-exam-list');
     if(!cd||!list) return;
-    const t=new Date(); t.setHours(0,0,0,0);
-    const days=Math.round((new Date('2026-12-21T00:00')-t)/864e5);
+    const days=daysToExam();
     cd.innerHTML=days<0?'':`<div class="m-card m-count"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">Klausur § 21 · IdF Münster</span><span class="m-t2">Mo, 21. Dezember 2026 · 08:30 Uhr</span></div></div>`;
-    list.innerHTML=EXAMS.map(([sec,items])=>`<div class="m-sec">${esc(sec)}</div><div class="m-list">${items.map(([id,t1,t2,k])=>row({ic:ic(k),t1,t2,on:goJs(id,t1)})).join('')}</div>`).join('');
+    const sec=([name,items])=>`<div class="m-col"><div class="m-sec">${esc(name)}</div><div class="m-list">${items.map(([id,t1,t2,k])=>row({ic:ic(k),t1,t2,on:goJs(id,t1)})).join('')}</div></div>`;
+    list.innerHTML=`<div class="m-g2">${sec(EXAMS[0])}${sec(EXAMS[1])}</div>${sec(EXAMS[2])}`;
+  }
+
+  function renderFcSide(){
+    const el=document.getElementById('m-fc-side'); if(!el) return;
+    let fc={}; try{ fc=JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch(e){}
+    const cats=[['gal','GAL'],['sfs','SFS'],['hlfs','HLFS'],['ibk','IBK'],['vak','VAk'],['feuak','FeuAK'],['idf','IdF']];
+    const rows=cats.map(([k,l])=>{
+      const cs=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(k));
+      const p=cs.length?Math.round(cs.filter(c=>fc[c.id]).length/cs.length*100):0;
+      return `<div class="m-fc-row"><span>${l}</span><span class="m-bar"><i style="width:${p}%"></i></span><span class="m-val">${p} %</span></div>`;
+    }).join('');
+    const known=FLASHCARD_DATA.filter(c=>fc[c.id]).length;
+    el.innerHTML=`<div class="m-card"><div class="m-t1">Dein Stand</div>${rows}<div class="m-t2" style="margin-top:12px">${known} von ${FLASHCARD_DATA.length} Karten gewusst</div></div>
+      <div class="m-card m-kbd"><div class="m-t1">Tastatur</div><div class="m-t2" style="line-height:2.1"><kbd>Leertaste</kbd> aufdecken<br><kbd>→</kbd> gewusst · <kbd>←</kbd> nicht gewusst</div></div>`;
+  }
+
+  let _tocIO=null;
+  function buildToc(id,isContent){
+    const toc=document.getElementById('m-toc'); if(!toc) return;
+    if(_tocIO){ _tocIO.disconnect(); _tocIO=null; }
+    const v=document.getElementById(id);
+    let heads=isContent&&v?[...v.querySelectorAll('.pc .sec-h')]:[];
+    if(heads.length<2&&isContent&&v) heads=[...v.querySelectorAll('.pc .acc-item > summary')];
+    heads=heads.slice(0,24);
+    const on=heads.length>=2;
+    toc.classList.toggle('hidden',!on);
+    document.body.classList.toggle('has-toc',on);
+    if(!on){ toc.innerHTML=''; return; }
+    const label=h=>((h.querySelector('.acc-title,.acc-h')||h).textContent||'').replace(/\s+/g,' ').trim().slice(0,70);
+    toc.innerHTML='<div class="m-toc-h">Auf dieser Seite</div>'+heads.map((h,i)=>`<button data-i="${i}">${esc(label(h))}</button>`).join('');
+    toc.onclick=e=>{ const b=e.target.closest('button[data-i]'); if(b) heads[+b.dataset.i].scrollIntoView({behavior:'smooth',block:'start'}); };
+    const btns=[...toc.querySelectorAll('button')];
+    _tocIO=new IntersectionObserver(es=>{
+      es.forEach(en=>{ if(en.isIntersecting){ const i=heads.indexOf(en.target); btns.forEach((b,k)=>b.classList.toggle('on',k===i)); } });
+    },{rootMargin:'-15% 0px -75% 0px'});
+    heads.forEach(h=>_tocIO.observe(h));
   }
 
   function notes(){
@@ -5175,7 +5005,11 @@ const MOBILE=(function(){
 
   function onShow(id,isContent,stack){
     const tab=stack.length&&ROOTS[stack[0].id]?ROOTS[stack[0].id]:'start';
-    document.querySelectorAll('#m-tabbar .m-tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+    document.querySelectorAll('#m-tabbar [data-tab],#m-rail [data-tab]').forEach(b=>{
+      const on=b.dataset.tab===tab;
+      b.classList.toggle('on',on);
+      if(on) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+    });
     const isRoot=!stack.length||(stack.length===1&&!!ROOTS[id]);
     document.getElementById('m-topbar')?.classList.toggle('hidden',isRoot);
     if(!isRoot){
@@ -5183,14 +5017,11 @@ const MOBILE=(function(){
       if(lbl) lbl.textContent=stack.length>=2?stack[stack.length-2].label:'Start';
     }
     document.getElementById('m-tb-actions')?.classList.toggle('hidden',!isContent);
+    buildToc(id,isContent);
   }
 
-  mq.addEventListener?.('change',e=>{ if(e.matches&&document.getElementById('v-home')?.classList.contains('active')) renderHome(); });
-  if(mq.matches) document.querySelector('meta[name="theme-color"]')?.setAttribute('content','#121212');
-
   return {
-    isMobile:()=>mq.matches,
-    onShow, renderHome, renderExam, renderNotes, syncSettings,
+    onShow, renderHome, renderExam, renderNotes, renderFcSide, syncSettings,
     bookmark(){
       const v=document.querySelector('.view.active'); if(!v) return;
       BOOKMARKS.toggle(v.id, v.querySelector('.page-title')?.textContent?.trim()||v.id);
@@ -5214,12 +5045,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     NAV.home();
   }
   PROGRESS.updateUI();
-  BOOKMARKS.updateHomeTile();
   SETTINGS.restoreFontSize();
-  STREAK.render();
   NOTIF.check();
   SETTINGS2.restoreFont();
-  RECENT.render();
   ONBOARD.init();
   CHANGELOG.check();
   if(typeof FALLBEARBEITUNG!=='undefined') { document.querySelectorAll('#v-vak-fallbearbeitung').forEach(()=>{}); }
@@ -5255,11 +5083,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(e.key==='Escape'){
       if(!document.getElementById('search-overlay').classList.contains('hidden')){ SEARCH.close(); return; }
       if(!document.getElementById('shortcuts-overlay').classList.contains('hidden')){ document.getElementById('shortcuts-overlay').classList.add('hidden'); return; }
-      if(!document.getElementById('settings2-overlay').classList.contains('hidden')){ SETTINGS2.close(); return; }
       if(!document.getElementById('pomodoro-overlay').classList.contains('hidden')){ POMO.close(); return; }
       if(!document.getElementById('onboarding-overlay')?.classList.contains('hidden')){ ONBOARD.close(); return; }
       if(!document.getElementById('quiz-mastery-modal').classList.contains('hidden')){ QUIZ.closeMastery(); return; }
-      SETTINGS.closeAllPanels();
       if(document.getElementById('stats-overlay')&&!document.getElementById('stats-overlay').classList.contains('hidden')){ STATS.close(); return; }
       if(!document.getElementById('notes-overlay').classList.contains('hidden')){ NOTES.close(); return; }
       if(!document.getElementById('changelog-modal').classList.contains('hidden')){ CHANGELOG.close(); return; }
@@ -5277,12 +5103,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(sTop) sTop.classList.toggle('visible',window.scrollY>300);
     if(!_perfRafPending){_perfRafPending=true;requestAnimationFrame(()=>{updateReadProgress();_perfRafPending=false;});}
   },{passive:true});
-  document.addEventListener('click', e=>{
-    if(!e.target.closest('.fontsize-btn-hdr')&&!e.target.closest('#fontsize-overlay'))
-      document.getElementById('fontsize-overlay')?.classList.add('hidden');
-    if(!e.target.closest('.notif-btn-hdr')&&!e.target.closest('#notif-overlay'))
-      document.getElementById('notif-overlay')?.classList.add('hidden');
-  });
   // Swipe-Back-Geste (Wischen vom linken Rand → zurück)
   (function(){
     let x0=0, y0=0, live=false;
@@ -5304,11 +5124,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   function updateOnlineStatus(){
     const online = navigator.onLine;
     document.body.classList.toggle('offline',!online);
-    const paths = document.querySelectorAll('.logo-emblem svg path');
-    if(paths.length>=2){
-      paths[0].setAttribute('fill', online ? '#C9A84C' : '#fff');
-      paths[1].setAttribute('fill', online ? '#fff' : '#C9A84C');
-    }
   }
   window.addEventListener('offline', updateOnlineStatus);
   window.addEventListener('online', updateOnlineStatus);
