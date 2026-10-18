@@ -27,7 +27,7 @@ const NAV = (function(){
     if(typeof BOOKMARKS!=='undefined') BOOKMARKS.setView(id);
     SHELL.onShow(id, isContentPage, stack);
     if(id==='v-plan') IDF_PLAN.render();
-    if(id==='v-flashcards') SHELL.renderFcSide();
+    if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); }
     if(id==='v-home') SHELL.renderHome();
     if(id==='v-pruefung') SHELL.renderExam();
     if(id==='v-settings') SHELL.syncSettings();
@@ -1680,17 +1680,18 @@ const FC = (function(){
       const base=b.dataset.label||'';
       if(df==='all'){
         b.classList.toggle('active',allSel&&!isPruefung&&!isStarred);
-        b.textContent=`${base} (${FLASHCARD_DATA.length})`;
+        b.innerHTML=`<b>${base}</b><small>${FLASHCARD_DATA.length}</small>`;
       } else if(df==='starred'){
         b.classList.toggle('active',isStarred);
-        b.textContent=`⭐ ${base} (${stars.size})`;
+        b.classList.toggle('hidden',stars.size===0&&!isStarred);
+        b.innerHTML=`<b>★ ${base}</b><small>${stars.size}</small>`;
       } else if(df==='pruefung'){
         b.classList.toggle('active',isPruefung);
       } else if(df){
         const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df));
         const knownCnt=cats.filter(c=>known[c.id]).length;
         b.classList.toggle('active',!allSel&&!isPruefung&&!isStarred&&activeFilters.has(df));
-        b.textContent=`${base} ${knownCnt}/${cats.length}`;
+        b.innerHTML=`<b>${base}</b><small>${knownCnt}/${cats.length}</small>`;
       }
     });
   }
@@ -1773,7 +1774,6 @@ const FC = (function(){
     if(curIdx >= deck.length){ renderEnd(); return; }
     const card = deck[curIdx];
     const known = fcLoad();
-    const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
     const card_e = known[card.id];
     const iVal=card_e?(card_e.interval||1):0;
     const ease_v=card_e?(card_e.ease||2.5):2.5;
@@ -1783,23 +1783,19 @@ const FC = (function(){
     const stars=fcLoadStars();
     const isStarred=stars.has(card.id);
     box.innerHTML = `
-      <div class="fc-stats-row">
-        <span class="fc-stat">🟢 ${sess.known} gewusst</span>
-        <span class="fc-stat">🔴 ${sess.unknown} nicht gewusst</span>
-        <span class="fc-stat">📚 ${knownCnt}/${FLASHCARD_DATA.length} gelernt</span>
-        ${iVal>0?`<span class="fc-stat" title="Letztes Intervall">📅 ${iVal}d</span>`:''}
-      </div>
       <div class="fc-nav">
-        <button class="fc-back-btn" onclick="FC.back()" ${_seen.length===0?'disabled':''}>← Zurück</button>
-        <span>${curIdx+1} / ${deck.length}</span>
-        <button class="fc-star-btn${isStarred?' starred':''}" onclick="FC.toggleStar('${card.id}')" title="${isStarred?'Markierung entfernen':'Markieren'}">⭐</button>
+        <button class="fc-back-btn" onclick="FC.back()" ${_seen.length===0?'disabled':''} aria-label="Vorherige Karte"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+        <span class="fc-pos">Karte ${curIdx+1} von ${deck.length}</span>
+        <span class="fc-score">${sess.known} gewusst · ${sess.unknown} nochmal</span>
+        <button class="fc-star-btn${isStarred?' starred':''}" onclick="FC.toggleStar('${card.id}')" aria-label="${isStarred?'Markierung entfernen':'Karte markieren'}"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
       </div>
+      <div class="fc-progress"><i style="width:${deck.length?Math.round(curIdx/deck.length*100):0}%"></i></div>
       <div class="fc-outer">
         <div class="fc-inner" id="fc-inner">
           <div class="fc-face fc-front">
             <div class="fc-cat">${card.cat}</div>
             <div class="fc-q">${card.q}</div>
-            <div class="fc-tap">Tippen zum Aufdecken ↓</div>
+            <div class="fc-tap">Tippen zum Aufdecken</div>
           </div>
           <div class="fc-face fc-back">
             <div class="fc-cat">${card.cat}</div>
@@ -1810,9 +1806,9 @@ const FC = (function(){
         <div class="fc-swipe-no">✗ Nicht gewusst</div>
       </div>
       <div class="fc-controls" id="fc-controls" style="display:none">
-        <button class="fc-btn fc-no" onclick="FC.answer(false)">✗ Nicht gewusst<span class="fc-hint">1d</span></button>
-        <button class="fc-btn fc-hard" onclick="FC.answer('hard')">～ Schwer<span class="fc-hint">${iHard}d</span></button>
-        <button class="fc-btn fc-yes" onclick="FC.answer(true)">✓ Gewusst<span class="fc-hint">${iGood}d</span></button>
+        <button class="fc-btn fc-no" onclick="FC.answer(false)">Nochmal<span class="fc-hint">gleich wieder</span></button>
+        <button class="fc-btn fc-hard" onclick="FC.answer('hard')">Schwer<span class="fc-hint">in ${iHard} Tagen</span></button>
+        <button class="fc-btn fc-yes" onclick="FC.answer(true)">Gewusst<span class="fc-hint">in ${iGood} Tagen</span></button>
       </div>`;
     flipped = false;
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
@@ -1936,6 +1932,7 @@ const FC = (function(){
       updateFilterButtons();
     },
     resetKnown(){ localStorage.removeItem('bvi_fc'); this.start(); },
+    syncFilters(){ updateFilterButtons(); },
     resize(){ sizeCard(); },
     print(){
       const cards=[...new Map(getDeck().map(c=>[c.id,c])).values()];
@@ -3304,6 +3301,10 @@ const CHANGELOG=(function(){
       'Plan: auf dem Desktop die ganze Woche nebeneinander',
       'Lernseiten: Inhaltsverzeichnis „Auf dieser Seite“ am rechten Rand (große Bildschirme)',
       'Lernkarten: Spalte „Dein Stand“ mit Fortschritt pro Modul',
+      'Lernkarten im neuen Design: alle Modul-Filter auf einen Blick, Karte links ausgerichtet, Knöpfe Nochmal/Schwer/Gewusst, lange Antworten werden nicht mehr abgeschnitten',
+      'Filter „Markiert“ erscheint erst, wenn du eine Karte markierst – dann ganz vorne',
+      'Stundenplan: Uhrzeiten, Räume und Hinweise zu jeder Einheit, Telefonnummern der Woche; alle Wochen mit dem PDF abgeglichen und korrigiert',
+      'Stundenplan: Pfeile bleiben im Kasten, beim Gruppenwechsel bleibt die Woche gleich',
       'Header, bewegter Hintergrund und altes Einstellungs-Fenster entfernt – alles liegt jetzt in den Tabs'
     ]},
     {v:'3.0.0',ts:'2026-10-18T12:00',items:[
@@ -4532,205 +4533,145 @@ const UEBUNGSKLAUSUR = (function(){
 
 /* ── IdF Münster Stundenplan Modul 3.5 ──────────────────────────────────── */
 const IDF_PLAN = (function(){
-  // Item type: 'hi'=Schlüsseltermin(gold) 'ex'=Exkursion(green) 'ar'=Anreise/Abreise(grey) 'std'=Standard(blue)
-  const W = [ // [kw, woche, thema, start(YYYY-MM-DD), gruppe(g1|g2|both), tage[5][items[{t,c}]]]
-    [44,1,'Vorbeugender Brandschutz 1','2026-10-26','g1',[
-      [{t:'Anreise',c:'ar'},{t:'Begrüßung & Einführung TM VB',c:'hi'},{t:'Rechtsgrundlagen Baurecht',c:'std'},{t:'Gebäudeklassen',c:'std'}],
-      [{t:'Baustoffnormung',c:'std'},{t:'Bauliche Trennung',c:'std'},{t:'Löschwasserversorgung',c:'std'}],
-      [{t:'System Rettungswege',c:'std'},{t:'Brandmeldeanlagen',c:'std'}],
-      [{t:'Einführung Sonderbau',c:'std'},{t:'Beherbergungsstätten',c:'std'},{t:'Brandschutznachweis',c:'std'}],
-      [{t:'Versammlungsstätten',c:'std'},{t:'Löschanlagen',c:'std'},{t:'Abreise ab 14:00',c:'ar'}],
-    ]],
-    [45,2,'Vorbeugender Brandschutz 2','2026-11-02','g1',[
-      [{t:'Anreise',c:'ar'},{t:'Verkaufsstätten',c:'std'},{t:'Einführung Stellungnahme',c:'std'}],
-      [{t:'Stellungnahme Übung',c:'hi'},{t:'Garagen',c:'std'},{t:'Hochhäuser',c:'std'}],
-      [{t:'Industriebau',c:'std'},{t:'Brandschutzsachverständige',c:'std'}],
-      [{t:'Stellungnahme Übung',c:'hi'},{t:'Aktuelles aus der Forschung',c:'std'}],
-      [{t:'EU-Katastrophenschutz (beide HG)',c:'hi'},{t:'Abreise',c:'ar'}],
-    ]],
-    [46,3,'Vorbeugender Brandschutz 3','2026-11-09','g1',[
-      [{t:'Anreise',c:'ar'},{t:'Pflege- und Betreuung',c:'std'},{t:'Stellungnahme Übung',c:'hi'}],
-      [{t:'Einführung Brandverhütungsschau',c:'std'},{t:'BVS praktisch (IdF NRW)',c:'hi'}],
-      [{t:'Exkursion Brandverhütungsschau',c:'ex'},{t:'BVS-Bericht',c:'std'}],
-      [{t:'Veranstaltungssicherheit',c:'std'},{t:'Einsatzplanung',c:'std'}],
-      [{t:'Leitung Brandschutzdienststelle',c:'std'},{t:'Verabschiedung',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [47,4,'Stab 1','2026-11-16','g1',[
-      [{t:'Anreise',c:'ar'},{t:'Begrüßung & Organisation',c:'std'},{t:'Führungslehre',c:'std'},{t:'Kommunikation',c:'std'}],
-      [{t:'Führungslehre',c:'std'},{t:'Stationsausbildung',c:'hi'},{t:'Sachgebiete 1–4 (rollierend)',c:'std'}],
-      [{t:'Innerer Dienst / Übernahme EL',c:'hi'},{t:'Stabsrahmenübung »Waldbrand«',c:'hi'},{t:'Übungsauswertung',c:'std'}],
-      [{t:'Sachgebiete 5 & 6 (Halbgruppen)',c:'std'},{t:'Mars, Venus & Saturn — in zivil',c:'std'}],
-      [{t:'(Fortsetzung in zivil)',c:'std'},{t:'Rekapitulation',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [48,5,'Stab 2','2026-11-23','g1',[
-      [{t:'Anreise',c:'ar'},{t:'Krisenstäbe',c:'std'}],
-      [{t:'Krisenstäbe — in zivil',c:'std'},{t:'Exkursion SAR-Leitstelle 13:30',c:'ex'}],
-      [{t:'Wiederholung & Aufbau',c:'std'},{t:'Stabsrahmenübung »Auswärtsspiel«',c:'hi'},{t:'Zusammenarbeit mit THW',c:'std'}],
-      [{t:'Stabsrahmenübung »Zugunglück«',c:'hi'},{t:'Übungsauswertung & Rückbau',c:'std'},{t:'Abreise',c:'ar'}],
-      [{t:'Selbststudium — Inhalt & Ort eigenem Ermessen',c:'ar'}],
-    ]],
-    [49,6,'Presse & Öffentlichkeitsarbeit','2026-11-30','g1',[
-      [{t:'Anreise',c:'ar'},{t:'Begrüßung',c:'std'},{t:'Presserecht',c:'std'}],
-      [{t:'Einführung Pressearbeit',c:'std'},{t:'Medien im Wandel',c:'std'},{t:'Exkursion Villa ten Hompel 13:30',c:'ex'}],
-      [{t:'Gr.A: Pressearbeit in der Krise',c:'hi'},{t:'Gr.B: Kameratraining',c:'hi'},{t:'Gruppenwechsel',c:'std'}],
-      [{t:'(Fortsetzung)',c:'std'},{t:'Exkursion WDR-Studio 13:30',c:'ex'}],
-      [{t:'Spontanhelfende',c:'std'},{t:'VOST',c:'std'},{t:'Krisenkommunikation Privatwirtschaft',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [44,1,'Stab 1','2026-10-26','g2',[
-      [{t:'Anreise',c:'ar'},{t:'Begrüßung & Organisation',c:'std'},{t:'Führungslehre',c:'std'},{t:'Kommunikation',c:'std'}],
-      [{t:'Führungslehre',c:'std'},{t:'Stationsausbildung',c:'hi'},{t:'Sachgebiete 1–4',c:'std'}],
-      [{t:'Innerer Dienst / Übernahme EL',c:'hi'},{t:'Stabsrahmenübung »Waldbrand«',c:'hi'},{t:'Übungsauswertung',c:'std'}],
-      [{t:'Sachgebiete 5 & 6 (Halbgruppen)',c:'std'},{t:'Mars, Venus & Saturn',c:'std'}],
-      [{t:'(Fortsetzung in zivil)',c:'std'},{t:'Rekapitulation',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [45,2,'Stab 2','2026-11-02','g2',[
-      [{t:'Anreise',c:'ar'},{t:'Krisenstäbe',c:'std'}],
-      [{t:'Krisenstäbe',c:'std'},{t:'Exkursion SAR-Leitstelle 13:30',c:'ex'}],
-      [{t:'Wiederholung & Aufbau',c:'std'},{t:'Stabsrahmenübung »Auswärtsspiel«',c:'hi'},{t:'Zusammenarbeit THW',c:'std'}],
-      [{t:'Stabsrahmenübung »Zugunglück«',c:'hi'},{t:'EVA EU-Katastrophenschutz',c:'std'},{t:'Abreise',c:'ar'}],
-      [{t:'EU-Katastrophenschutz (beide HG)',c:'hi'},{t:'Selbststudium',c:'ar'}],
-    ]],
-    [46,3,'Presse & Öffentlichkeitsarbeit','2026-11-09','g2',[
-      [{t:'Anreise',c:'ar'},{t:'Begrüßung',c:'std'},{t:'Presserecht',c:'std'}],
-      [{t:'Einführung Pressearbeit',c:'std'},{t:'Medien im Wandel',c:'std'},{t:'Exkursion Villa ten Hompel 13:30',c:'ex'}],
-      [{t:'Pressearbeit in der Krise',c:'hi'},{t:'Kameratraining',c:'hi'},{t:'Exkursion WDR-Studio',c:'ex'}],
-      [{t:'(Fortsetzung)',c:'std'},{t:'Gruppenwechsel',c:'std'}],
-      [{t:'Spontanhelfende',c:'std'},{t:'VOST',c:'std'},{t:'Krisenkommunikation',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [47,4,'Vorbeugender Brandschutz 1','2026-11-16','g2',[
-      [{t:'Anreise',c:'ar'},{t:'Einführung TM VB',c:'hi'},{t:'Rechtsgrundlagen Baurecht',c:'std'},{t:'Gebäudeklassen',c:'std'}],
-      [{t:'Baustoffnormung',c:'std'},{t:'Bauliche Trennung',c:'std'},{t:'Löschwasserversorgung',c:'std'}],
-      [{t:'System Rettungswege',c:'std'},{t:'Brandmeldeanlagen',c:'std'}],
-      [{t:'Einführung Sonderbau',c:'std'},{t:'Beherbergungsstätten',c:'std'},{t:'Brandschutznachweis',c:'std'}],
-      [{t:'Versammlungsstätten',c:'std'},{t:'Löschanlagen',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [48,5,'Vorbeugender Brandschutz 2','2026-11-23','g2',[
-      [{t:'Anreise',c:'ar'},{t:'Verkaufsstätten',c:'std'},{t:'Einführung Stellungnahme',c:'std'}],
-      [{t:'Stellungnahme Übung',c:'hi'},{t:'Garagen',c:'std'},{t:'Hochhäuser',c:'std'}],
-      [{t:'Industriebau',c:'std'},{t:'Brandschutzsachverständige',c:'std'}],
-      [{t:'Stellungnahme Übung',c:'hi'},{t:'Aktuelles aus der Forschung',c:'std'},{t:'Abreise',c:'ar'}],
-      [{t:'Selbststudium',c:'ar'}],
-    ]],
-    [49,6,'Vorbeugender Brandschutz 3','2026-11-30','g2',[
-      [{t:'Anreise',c:'ar'},{t:'Pflege- und Betreuung',c:'std'},{t:'Stellungnahme Übung',c:'hi'}],
-      [{t:'Einführung Brandverhütungsschau',c:'std'},{t:'BVS praktisch',c:'hi'}],
-      [{t:'Exkursion Brandverhütungsschau',c:'ex'},{t:'Einsatzplanung',c:'std'}],
-      [{t:'Veranstaltungssicherheit',c:'std'}],
-      [{t:'Leitung Brandschutzdienststelle',c:'std'},{t:'Verabschiedung',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [50,7,'Zivile Verteidigung (Ahrweiler)','2026-12-07','both',[
-      [{t:'Anreise / BABZ-Programm',c:'std'}],
-      [{t:'BABZ-Programm',c:'std'}],
-      [{t:'BABZ-Programm',c:'std'}],
-      [{t:'BABZ-Programm',c:'std'}],
-      [{t:'BABZ-Programm / Abreise',c:'ar'}],
-    ]],
+  // Eintrag: "Zeit|Titel|Art|Raum|Hinweis" · Zeit = UE ("1-2") oder Uhrzeit ("09:00-09:15", "19:00", "EVA")
+  // Art: hi = Schlüsseltermin, ex = Exkursion, ar = Anreise/Abreise/frei
+  const UE_S=['07:45','08:30','09:45','10:30','11:30','12:15','14:00','14:45'];
+  const UE_E=['08:30','09:15','10:30','11:15','12:15','13:00','14:45','15:30'];
+  const TEL={
+    langer:[['Jörn Ruschenburg','-3202'],['Daniel Langer','-3210']],
+    schoene:[['Jörn Ruschenburg','-3202'],['Malte Schönefeld','-3221']],
+    spahl:[['Jörn Ruschenburg','-3202'],['Frank Spahlholz','-3223']],
+    babz:[['Christoph Schaaf (BABZ)','0228 99550-5205'],['Thorsten Ohm (BABZ)','-5206']]
+  };
+  const SG='Sachgebiete 1 bis 4|hi|C-205, C-213, C-214, C-215|in vier Gruppen rollierend';
+  const VB1_G1=[
+    ['1-2|Anreise|ar','3|Begrüßung|hi|C-1|Begrüßung durch den Direktor · Hemd/Krawatte','4|Einführung in das Teilmodul VB||B1-106','5-6|Rechtsgrundlagen Baurecht||B1-106','7-8|Gebäudeklassen||B1-106'],
+    ['1-2|Baustoffnormung||B1-106','3-6|Bauliche Trennung||B1-106','7-8|Löschwasserversorgung||B1-106'],
+    ['1-6|System Rettungswege||B1-106','7-8|Brandmeldeanlagen||B1-106','19:00|Vortrag @fire|hi|C-1|freiwillig'],
+    ['1-2|Einführung Sonderbau||B1-106','3-6|Beherbergungsstätten||B1-106','7-8|Brandschutznachweis||B1-106'],
+    ['1-4|Versammlungsstätten||B1-106','5-6|Löschanlagen||B1-106','7|Abreise|ar']];
+  const VB1_G2=[
+    ['1-2|Anreise|ar','3|Einführung in das Teilmodul VB||B1-106','4-5|Rechtsgrundlagen Baurecht||B1-106','6-7|Gebäudeklassen||B1-106','8|Baustoffnormung||B1-106'],
+    ['1-4|Baustoffnormung||B1-106','5-6|Bauliche Trennung||B1-106','7-8|Löschwasserversorgung||B1-106'],
+    VB1_G1[2].slice(0,2), VB1_G1[3], VB1_G1[4]];
+  const VB2=(mi,doLast,fr)=>[
+    ['1-2|Anreise|ar','3-6|Verkaufsstätten||B1-106','7-8|Einführung Stellungnahme||B1-106'],
+    ['1-2|Stellungnahme Übung|hi|B1-106','3-5|Garagen||B1-106','6-8|Hochhäuser||B1-106'],
+    ['1-4|Industriebau||B1-106','5-8|Brandschutzsachverständige||B1-106',...mi],
+    ['07:45-ca. 11:00|Stellungnahme Übung|hi|B1-106','ca. 11:00-13:00|Aktuelles aus der Forschung||B1-106',doLast],
+    fr];
+  const SELBST=['ganztägig|Selbststudium|ar||Inhalt und Ort nach eigenem Ermessen'];
+  const VB3_FR=['1-4|Leitung einer Brandschutzdienststelle||B1-106','5-6|Verabschiedung||B1-106|Evaluation der vergangenen drei Wochen','7|Abreise|ar'];
+  const VB3_MO=['1-2|Anreise|ar','3-4|Pflege- und Betreuung||B1-106','5-8|Stellungnahme Übung|hi|B1-106','EVA|Vorbereitung Einsatzplanung'];
+  const VB3_DI=['1-4|Einführung Brandverhütungsschau||B1-106','5-8|Brandverhütungsschau praktisch|hi||IdF NRW','EVA|Vorbereitung Exkursion anhand BSK'];
+  const VB3_DO=['1-8|Veranstaltungssicherheit||B1-106|Orientierungsrahmen für Veranstaltungen im Freien'];
+  const STAB1=(g)=>[
+    g===1?['1-2|Anreise|ar','3|Begrüßung & Organisation||C-205','4-7|Führungslehre||C-205|Zwei-Stäbe-Modell · FwDV 100 · Führungsstufe D · Rollenverständnis','8|Kommunikation|||Nachrichtenvordruck · Lagedarstellung · Lagevortrag · Einsatztagebuch','EVA|Sachgebiet 4']
+         :['1-2|Anreise|ar','3|Begrüßung|hi|C-1|Begrüßung durch den Direktor · Hemd/Krawatte · Vorstellungsrunde','4|Wochenorganisation||C-205','5-7|Führungslehre||C-205|Zwei-Stäbe-Modell · FwDV 100 · Führungsstufe D · Rollenverständnis · Lagedarstellung NRW','8|Kommunikation|||Nachrichtenvordruck · Lagedarstellung · Lagevortrag · Einsatztagebuch','EVA|Sachgebiet 4'],
+    ['07:45-09:00|Führungslehre||C-205|'+(g===1?'Wiederholung Vortrag · Meldewesen · FB & Verbinder':'Meldewesen · Fachberater & Verbinder'),'09:00-09:15|Stationsausbildung|||gemeinsame Lageeinweisung','09:30-10:30|'+SG,'10:45-11:45|'+SG,'12:00-13:00|'+SG,'14:00-15:00|'+SG,'15:00-15:30|Aufbau|||Stabsräume „klein“','EVA|Sichter/Sichterin'],
+    ['07:45-08:30|Innerer Dienst / Übernahme der EL|||gleitender Übergang zur Übung','08:30-12:15|Stabsrahmenübung »Waldbrand«|hi|'+(g===1?'C-204, C-205':'C-205, C-215')+'|Küchenwagen mitbringen','6|Übungsauswertung','14:00-15:00|Waldbrände||C-205|Einsatztaktiken · Einsatzmittel · Kooperation mit Forstbehörden','15:00-15:30|Rückbau|||Stabsräume „klein“',...(g===2?['19:00|Vortrag @fire|hi|C-1|freiwillig']:[]),'EVA|Führungsgrundsätze'],
+    ['1-2|Sachgebiete 5 und 6||'+(g===1?'C-204, A3-28':'C-204, C-205')+'|in Halbgruppen im Wechsel · in zivil','3-8|Mars, Venus & Saturn||C-215|in zivil','EVA|Fayol'],
+    ['1-5|Mars, Venus & Saturn (Fortsetzung)|||in zivil','6|Rekapitulation & Organisatorisches||'+(g===1?'C-215':'C-205'),'7|Abreise|ar']];
+  const STAB2=(g)=>[
+    ['1-2|Anreise|ar','3-8|Krisenstäbe||C-205|in zivil · Zuständigkeiten · Struktur · Methoden · Kooperation mit EL','EVA|Web-GIS||C-205'],
+    ['07:45-12:30|Krisenstäbe||C-1|in zivil · Aufbau · Anwendungstraining · Nachbesprechung','13:30-17:00|Exkursion zur SAR-Leitstelle|ex||Hemd/Krawatte, ggf. Wetterschutz · fußläufig · Abmarsch 13:30 vor Gebäude C','EVA|KatS-Konzepte'],
+    ['1|Wiederholung & Aufbau||C-205|Stabsraum „groß“','2-5|Stabsrahmenübung »Auswärtsspiel«|hi|C-205|Küchenwagen mitbringen','6|Übungsauswertung||C-205','7-8|Zusammenarbeit mit dem THW||C-205','EVA|Sachgebiet 3'],
+    g===1?['1-5|Stabsrahmenübung »Zugunglück«|hi|C-205|Küchenwagen mitbringen','6|Übungsauswertung & Rückbau','7|Abreise|ar','EVA|LdS']
+         :['1-5|Stabsrahmenübung »Zugunglück«|hi|C-205|Küchenwagen mitbringen','6|Übungsauswertung & Rückbau','7-8|EVA: EU-Katastrophenschutz','EVA|LdS'],
+    g===1?SELBST:['1-6|EU-Katastrophenschutz|hi|C-205|beide Halbgruppen gemeinsam','7|Abreise|ar']];
+  const PRESSE=(g)=>{
+    const r=g===1?'C-215':'C-205';
+    const wdr='13:30-ca. 17:00|Exkursion zum WDR-Studio|ex||zivil · Fahrt mit MTFs · Abfahrt 13:30, Parkplatz 2 · Ende in Dortmund';
+    return [
+      ['1-2|Anreise|ar','3|Begrüßung, Vorstellung der Woche||'+r,'4-8|Presserecht||'+r,...(g===2?['18:00|Kaminabend in Präsenz|hi||Gebäude C · zivil/leger · inkl. Catering']:[])],
+      ['1|Einführung in die Pressearbeit||'+r,'2|Strategische Pressearbeit','3|Medien im Wandel||'+r,'4|Öffentlichkeitsarbeit','5|Wie arbeitet Presse?','6|Erwartungen eines Journalisten','13:30-18:00|Exkursion zur Villa ten Hompel|ex||zivil · fußläufig · Abmarsch 13:30 vor Gebäude C'],
+      g===1?['1-7|Gr. A: Pressearbeit in der Krise, Pressekonferenzen|hi|C-215','1-7|Gr. B: Kameratraining|hi|C-204','8|Gruppenwechsel|||Fortsetzung']
+           :['1-6|Gr. A: Pressearbeit in der Krise, Pressekonferenzen|hi|C-205','1-6|Gr. B: Kameratraining|hi|C-204',wdr],
+      g===1?['1-6|Pressearbeit in der Krise / Kameratraining (Fortsetzung)',wdr]
+           :['1|Pressearbeit in der Krise / Kameratraining (Fortsetzung)','2-8|Gruppenwechsel|||Fortsetzung'],
+      ['1-2|Spontanhelfende||'+r,'3-4|Virtual Operations Support Team (VOST)||'+r,'5-6|Krisenkommunikation in der Privatwirtschaft||'+r+'|Evaluation der Woche','7|Abreise|ar']];
+  };
+  const W = [ // [KW, Woche, Thema, Montag, Gruppe, Tage Mo–Fr, Telefon, Hinweis]
+    [44,1,'Vorbeugender Brandschutz 1','2026-10-26','g1',VB1_G1],
+    [45,2,'Vorbeugender Brandschutz 2','2026-11-02','g1',VB2([],'EVA|EU-Katastrophenschutz',['1-6|EU-Katastrophenschutz|hi|C-205|beide Halbgruppen gemeinsam','7|Abreise|ar'])],
+    [46,3,'Vorbeugender Brandschutz 3','2026-11-09','g1',[[...VB3_MO,'18:00|Kaminabend in Präsenz|hi||Gebäude C · zivil/leger · inkl. Catering'],VB3_DI,
+      ['1-3|Exkursion Brandverhütungsschau praktisch|ex||extern · Poloshirt, Büroschuhe genügen','4-6|Brandverhütungsschaubericht||A3-25','7-8|Einsatzplanung||A3-25'],VB3_DO,VB3_FR]],
+    [47,4,'Stab 1','2026-11-16','g1',STAB1(1),TEL.langer],
+    [48,5,'Stab 2','2026-11-23','g1',STAB2(1),TEL.schoene],
+    [49,6,'Presse & Öffentlichkeitsarbeit','2026-11-30','g1',PRESSE(1),TEL.schoene],
+    [44,1,'Stab 1','2026-10-26','g2',STAB1(2),TEL.langer],
+    [45,2,'Stab 2','2026-11-02','g2',STAB2(2),TEL.schoene],
+    [46,3,'Presse & Öffentlichkeitsarbeit','2026-11-09','g2',PRESSE(2),TEL.schoene],
+    [47,4,'Vorbeugender Brandschutz 1','2026-11-16','g2',VB1_G2],
+    [48,5,'Vorbeugender Brandschutz 2','2026-11-23','g2',VB2(['EVA|Vorbereitung Stellungnahme für Freitag anhand Unterlagen'],'7|Abreise|ar',SELBST)],
+    [49,6,'Vorbeugender Brandschutz 3','2026-11-30','g2',[VB3_MO,VB3_DI,
+      ['1-6|Exkursion Brandverhütungsschau praktisch|ex||Poloshirt, Büroschuhe genügen · inkl. Brandverhütungsschaubericht','7-8|Einsatzplanung||B1-106'],VB3_DO,VB3_FR]],
+    [50,7,'Zivile Verteidigung','2026-12-07','both',Array(5).fill(['ganztägig|Programm der BABZ|||Ahrweiler']),TEL.babz,
+      'Die ganze Woche gestaltet die BABZ in Ahrweiler. Der genaue Stundenplan und Hinweise zu Anreise, Unterkunft, Verpflegung und Kleidung kommen als separates Dokument.'],
     [51,8,'Stab 3','2026-12-14','both',[
-      [{t:'Anreise',c:'ar'},{t:'Leistungsnachweis §13',c:'hi'},{t:'MoFüSt NRW',c:'std'},{t:'SRÜ »Unwetter« ab 18:15',c:'hi'}],
-      [{t:'unterrichtsfrei',c:'ar'},{t:'Übungsauswertung',c:'std'}],
-      [{t:'Fachtagung Stabsarbeit (ab 8:00)',c:'hi'},{t:'Get Together · Hemd/Krawatte',c:'hi'}],
-      [{t:'Konzepterarbeitung Großveranstaltung',c:'std'},{t:'Gr.A: SRÜ Großveranstaltung',c:'hi'}],
-      [{t:'Gr.B: SRÜ Großveranstaltung',c:'hi'},{t:'Übungsauswertung beide Gruppen',c:'hi'},{t:'Rückbau & Abreise',c:'ar'}],
-    ]],
+      ['1-2|Anreise|ar','3|Leistungsnachweis nach § 13 Abs. 3|hi|C-1|siehe Prüfungsleitfaden','11:00-11:30|MoFüSt NRW||C-1','11:30-13:00|Historie der Stabsarbeit & Stabsarbeit international||C-1','13:30-14:45|Historie der Stabsarbeit (Fortsetzung)','8|Lageeinweisung||C-1','18:15|Stabsrahmenübung »Unwetter«|hi||Lunchpaket packen · spätes Ende · Küchenwagen mitbringen'],
+      ['1-6|unterrichtsfrei|ar','7-8|Übungsauswertung||C-205'],
+      ['08:00-16:30|Fachtagung Stabsarbeit|hi|C-1|Get Together 08:00 · Beginn 08:45 · Hemd/Krawatte','EVA|Übungsbedarf'],
+      ['1-5|Konzepterarbeitung Großveranstaltung||C-205','6|Aufbau||C-205|Stabsraum „groß“','14:00-17:00|Gr. A: Stabsrahmenübung »Großveranstaltung«|hi|C-205|Küchenwagen mitbringen'],
+      ['07:45-ca. 11:00|Gr. B: Stabsrahmenübung »Großveranstaltung«|hi|C-205|Küchenwagen mitbringen','ca. 11:15-12:15|Übungsauswertung beider Gruppen||C-205','6|Rückbau & Organisatorisches|||Evaluation der drei Wochen Stab','7|Abreise|ar']],TEL.spahl],
     [52,9,'Klausuren','2026-12-21','both',[
-      [{t:'Anreise',c:'ar'},{t:'Klausur §21 — 4 Zeitstunden',c:'hi'}],
-      [{t:'Klausur §21 — 4 Zeitstunden',c:'hi'},{t:'Verabschiedung durch Direktor (Hemd/Krawatte)',c:'hi'}],
-      [{t:'Ende des Moduls',c:'ar'}],
-      [],
-      [],
-    ]],
+      ['1|Anreise|ar','08:30-12:30|Klausur nach § 21|hi|B1-106, A3-25|4 Zeitstunden','7-8|unterrichtsfrei|ar'],
+      ['1|unterrichtsfrei|ar','08:30-12:30|Klausur nach § 21|hi|B1-106, A3-25|4 Zeitstunden','7-8|Verabschiedung durch den Direktor|hi|A2-1|Hemd/Krawatte'],
+      [],['nachmittags|Heiligabend|ar'],['ganztägig|1. Weihnachtstag|ar']],TEL.spahl]
   ];
 
   const DAYS=['Mo','Di','Mi','Do','Fr'];
   const MONS=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   let _grp='g1', _wi=0, _weeks=[];
 
-  function _isoWeek(d){
-    const t=new Date(d);
-    t.setHours(0,0,0,0);
-    t.setDate(t.getDate()+3-(t.getDay()||7)-1+1);
-    const w1=new Date(t.getFullYear(),0,4);
-    return 1+Math.round((t-w1)/604800000);
+  function _time(spec){
+    const m=/^(\d)(?:-(\d))?$/.exec(spec);
+    if(m) return [UE_S[m[1]-1], UE_E[(m[2]||m[1])-1]];
+    const i=spec.indexOf('-');
+    return i<0?[spec,'']:[spec.slice(0,i),spec.slice(i+1)];
   }
-
+  function _item(s){
+    const [t,title,cls='',room='',note='']=s.split('|');
+    const [a,b]=_time(t);
+    const meta=[note,room?'Raum '+room:''].filter(Boolean).join(' · ');
+    return `<div class="idf-item ${cls}"><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${esc(title)}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
+  }
   function _buildWeeks(g=_grp){
-    return W.filter(w=>w[4]==='both'||w[4]===g)
-             .sort((a,b)=>new Date(a[3])-new Date(b[3]));
+    return W.filter(w=>w[4]==='both'||w[4]===g).sort((a,b)=>a[3]<b[3]?-1:1);
   }
-
   function _autoIdx(ws=_weeks){
-    const today=new Date();today.setHours(0,0,0,0);
-    for(let i=ws.length-1;i>=0;i--){
-      if(new Date(ws[i][3]+'T00:00')<=today) return i;
-    }
+    const today=new Date(); today.setHours(0,0,0,0);
+    for(let i=ws.length-1;i>=0;i--) if(new Date(ws[i][3]+'T00:00')<=today) return i;
     return 0;
   }
-
   function _savedGrp(){ try{ return localStorage.getItem('idf_plan_grp')||'g1'; }catch(e){ return 'g1'; } }
 
-  function _getDates(w){
-    const base=new Date(w[3]+'T00:00');
-    return DAYS.map((_,i)=>{ const d=new Date(base);d.setDate(base.getDate()+i);return d; });
-  }
-
   function _draw(){
-    const el=document.getElementById('plan-inner');
-    if(!el) return;
-    const wk=_weeks[_wi];
-    if(!wk){ el.innerHTML='<p style="color:var(--c-slate);font-size:.8rem;padding:.5rem 0">Kein Eintrag.</p>'; return; }
-    const isBoth=wk[4]==='both';
-    const dates=_getDates(wk);
-    const today=new Date();today.setHours(0,0,0,0);
-
-    // header
-    let h=`<div class="idf-plan-hdr">`;
-    h+=`<div class="idf-plan-row1">`;
-    h+=`<div class="idf-plan-kw">KW ${wk[0]} <small>Woche ${wk[1]} / 9</small></div>`;
-    h+=`<div style="display:flex;align-items:center;gap:.4rem">`;
-    h+=`<div class="idf-prog">${_weeks.map((_,i)=>`<div class="idf-pip${i<_wi?' done':i===_wi?' cur':''}"></div>`).join('')}</div>`;
-    h+=`<div class="idf-plan-nav">`;
-    h+=`<button class="idf-nav-btn" onclick="IDF_PLAN._nav(-1)"${_wi===0?' disabled':''}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>`;
-    h+=`<button class="idf-nav-btn" onclick="IDF_PLAN._nav(1)"${_wi===_weeks.length-1?' disabled':''}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>`;
-    h+=`</div></div></div>`;
-    h+=`<div class="idf-plan-row2"><span class="idf-thema">${wk[2]}</span>`;
-    if(isBoth){
-      h+=`<span style="font-size:.7rem;color:var(--c-gold)">beide Gruppen</span>`;
-    } else {
-      h+=`<div class="idf-grp-toggle">`;
-      h+=`<button class="idf-grp-btn${_grp==='g1'?' active':''}" onclick="IDF_PLAN._grp('g1')">Gruppe 1</button>`;
-      h+=`<button class="idf-grp-btn${_grp==='g2'?' active':''}" onclick="IDF_PLAN._grp('g2')">Gruppe 2</button>`;
-      h+=`</div>`;
-    }
-    h+=`</div></div>`;
-
-    // special note for Ahrweiler
-    if(wk[0]===50){
-      h+=`<div class="idf-plan-note"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:.1rem"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Veranstaltungsort: Ahrweiler (BABZ). Detailprogramm wird separat geteilt.</div>`;
-    }
-
-    // day cards
-    h+=`<div class="idf-day-wrap"><div class="idf-days">`;
-    wk[5].forEach((items,di)=>{
-      const d=dates[di];
+    const el=document.getElementById('plan-inner'); if(!el) return;
+    const wk=_weeks[_wi]; if(!wk) return;
+    const [kw,nr,thema,start,grp,days,tel,info]=wk;
+    const today=new Date(); today.setHours(0,0,0,0);
+    const base=new Date(start+'T00:00');
+    const notStarted=today<new Date(_weeks[0][3]+'T00:00');
+    const icon=d=>`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+    let h=`<div class="m-card idf-head">
+      <div class="idf-row"><div><b class="idf-kw">KW ${kw}</b><span class="m-t2">Woche ${nr} von 9${grp==='both'?' · beide Gruppen':''}</span></div>
+        <div class="idf-nav"><button onclick="IDF_PLAN._nav(-1)" aria-label="Vorherige Woche"${_wi===0?' disabled':''}>${icon('m15 18-6-6 6-6')}</button><button onclick="IDF_PLAN._nav(1)" aria-label="Nächste Woche"${_wi===_weeks.length-1?' disabled':''}>${icon('m9 18 6-6-6-6')}</button></div></div>
+      <div class="idf-pips">${_weeks.map((_,i)=>`<i class="${i<_wi?'done':i===_wi?'cur':''}"></i>`).join('')}</div>
+      <div class="idf-row idf-row2"><span class="idf-thema">${esc(thema)}</span>
+        <span class="m-seg" role="group" aria-label="Gruppe">${['g1','g2'].map(g=>`<button class="${_grp===g?'active':''}" onclick="IDF_PLAN._grp('${g}')">Gruppe ${g[1]}</button>`).join('')}</span></div>
+    </div>`;
+    if(notStarted&&_wi===0) h+=`<div class="idf-note">Das Modul beginnt am 26. Oktober. Bis dahin zeigt der Plan die erste Woche.</div>`;
+    if(info) h+=`<div class="idf-note">${esc(info)}</div>`;
+    h+='<div class="idf-days">'+days.map((items,i)=>{
+      const d=new Date(base); d.setDate(base.getDate()+i);
       const isToday=d.getTime()===today.getTime();
-      const isEmpty=items.length===0;
-      h+=`<div class="idf-day"${isToday?' style="background:color-mix(in srgb,var(--c-gold) 5%,transparent);"':''}>`;
-      h+=`<div class="idf-dc">`;
-      h+=`<div class="idf-dow" style="${isToday?'color:var(--c-gold)':''}">${DAYS[di]}</div>`;
-      h+=`<div class="idf-dnum" style="${isToday?'color:var(--c-gold)':''}">${d.getDate()}</div>`;
-      h+=`<div class="idf-dmo">${MONS[d.getMonth()]}.</div>`;
-      h+=`</div>`;
-      h+=`<div class="idf-dvr"></div>`;
-      h+=`<div class="idf-items">`;
-      if(isEmpty){
-        h+=`<div class="idf-empty">—</div>`;
-      } else {
-        items.forEach(it=>{ h+=`<div class="idf-item ${it.c}">${it.t}</div>`; });
-      }
-      h+=`</div></div>`;
-    });
-    h+=`</div></div>`;
-
+      return `<div class="idf-day${isToday?' today':''}"><div class="idf-dc"><span class="idf-dow">${DAYS[i]}</span><span class="idf-dnum">${d.getDate()}</span><span class="idf-dmo">${MONS[d.getMonth()]}</span></div>
+        <div class="idf-items">${items.length?items.map(_item).join(''):'<div class="idf-empty">frei</div>'}</div></div>`;
+    }).join('')+'</div>';
+    if(tel) h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${[...tel,['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><span>${esc(t)}</span></div>`).join('')}</div>`;
+    h+='<div class="idf-legend"><span><i class="hi"></i>Schlüsseltermin</span><span><i class="ex"></i>Exkursion</span><span><i class="ar"></i>An-/Abreise, frei</span><span>EVA = eigenverantwortliches Arbeiten</span></div>';
     el.innerHTML=h;
   }
 
@@ -4740,20 +4681,16 @@ const IDF_PLAN = (function(){
     _wi=_autoIdx();
     _draw();
   }
-
-  function _nav(d){
-    _wi=Math.max(0,Math.min(_weeks.length-1,_wi+d));
-    _draw();
-  }
-
+  function _nav(d){ _wi=Math.max(0,Math.min(_weeks.length-1,_wi+d)); _draw(); }
   function _setGrp(g){
     _grp=g;
     try{ localStorage.setItem('idf_plan_grp',g); }catch(e){}
+    const kw=_weeks[_wi]&&_weeks[_wi][0];
     _weeks=_buildWeeks();
-    _wi=_autoIdx();
+    const keep=_weeks.findIndex(w=>w[0]===kw);
+    _wi=keep>=0?keep:_autoIdx();
     _draw();
   }
-
   function summary(){
     const ws=_buildWeeks(_savedGrp()), w=ws[_autoIdx(ws)];
     const end=new Date(ws[ws.length-1][3]+'T00:00'); end.setDate(end.getDate()+5);

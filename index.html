@@ -10598,48 +10598,6 @@
   </div>
 </div>
 <!-- ============================================================ IdF MÜNSTER OVERVIEW ============================================================ -->
-<style>
-#idf-plan{margin-top:1.5rem;}
-.idf-plan-hdr{display:flex;flex-direction:column;gap:.55rem;padding:.9rem 1rem .75rem;background:var(--c-navy-2);border:1px solid color-mix(in srgb,var(--c-gold) 15%,transparent);border-radius:var(--r-md);margin-bottom:.75rem;}
-.idf-plan-row1{display:flex;align-items:center;justify-content:space-between;gap:.5rem;}
-.idf-plan-kw{font-size:.95rem;font-weight:700;color:var(--c-text);}
-.idf-plan-kw small{font-size:.68rem;font-weight:400;color:var(--c-slate);margin-left:.4rem;}
-.idf-plan-nav{display:flex;gap:.3rem;}
-.idf-nav-btn{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:var(--c-slate);display:grid;place-items:center;cursor:pointer;font-family:inherit;transition:background .12s,color .12s;}
-.idf-nav-btn:hover:not(:disabled){background:var(--c-gold-dim);color:var(--c-gold);}
-.idf-nav-btn:disabled{opacity:.3;cursor:default;}
-.idf-plan-row2{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap;}
-.idf-thema{display:inline-flex;align-items:center;gap:.35rem;font-size:.72rem;font-weight:600;padding:.22rem .65rem;border-radius:20px;background:var(--c-gold-dim);border:1px solid var(--c-gold-rim);color:var(--c-gold);}
-.idf-grp-toggle{display:flex;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-sm);padding:2px;}
-.idf-grp-btn{padding:.25rem .75rem;border-radius:calc(var(--r-sm) - 1px);font-size:.72rem;font-weight:600;cursor:pointer;color:var(--c-slate);border:none;background:transparent;font-family:inherit;transition:background .12s,color .12s;}
-.idf-grp-btn.active{background:var(--c-gold);color:var(--m-on-accent,#000);}
-.idf-days{display:flex;flex-direction:column;gap:0;}
-.idf-day{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;border-bottom:1px solid rgba(255,255,255,.06);transition:background .12s;}
-.idf-day:last-child{border-bottom:none;border-radius:0 0 var(--r-md) var(--r-md);}
-.idf-day:first-child{border-radius:var(--r-md) var(--r-md) 0 0;}
-.idf-day-wrap{border:1px solid rgba(255,255,255,.07);border-radius:var(--r-md);background:var(--c-navy);overflow:hidden;}
-.idf-dc{flex-shrink:0;width:36px;text-align:center;}
-.idf-dow{font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--c-slate);}
-.idf-dnum{font-size:1.1rem;font-weight:700;line-height:1;color:var(--c-text);}
-.idf-dmo{font-size:.58rem;color:var(--c-slate);}
-.idf-dvr{width:1px;background:rgba(255,255,255,.07);align-self:stretch;flex-shrink:0;}
-.idf-items{flex:1;min-width:0;display:flex;flex-direction:column;gap:.22rem;padding:.05rem 0;}
-.idf-item{display:flex;align-items:flex-start;gap:.4rem;font-size:.78rem;line-height:1.4;color:var(--c-slate-l);}
-.idf-item::before{content:'';width:5px;height:5px;border-radius:50%;margin-top:.42em;flex-shrink:0;}
-.idf-item.hi{color:var(--c-gold);}
-.idf-item.hi::before{background:var(--c-gold);}
-.idf-item.ex{color:#5dcfa0;}
-.idf-item.ex::before{background:#5dcfa0;}
-.idf-item.ar{color:var(--c-slate);font-style:italic;}
-.idf-item.ar::before{background:rgba(255,255,255,.2);}
-.idf-item.std::before{background:rgba(58,127,212,.7);}
-.idf-empty{color:var(--c-slate);font-style:italic;font-size:.78rem;padding:.1rem 0;}
-.idf-plan-note{display:flex;align-items:flex-start;gap:.5rem;font-size:.73rem;color:var(--c-slate);background:rgba(58,127,212,.08);border:1px solid rgba(58,127,212,.18);border-radius:var(--r-sm);padding:.6rem .8rem;margin-bottom:.75rem;}
-.idf-prog{display:flex;gap:.28rem;align-items:center;margin-top:.1rem;}
-.idf-pip{width:18px;height:3px;border-radius:2px;background:rgba(255,255,255,.1);}
-.idf-pip.done{background:var(--c-gold);opacity:.7;}
-.idf-pip.cur{background:var(--c-gold);}
-</style>
 <div id="v-idf" class="view detail-view">
   <div class="page-hero">
     <div class="phi">
@@ -11667,28 +11625,27 @@
 <!-- ============================================================ LERNKARTEN ============================================================ -->
 <div id="v-flashcards" class="view detail-view">
   <div class="page-hero"><div class="phi">
-    <p class="page-eyebrow">Interaktives Lernen · LocalStorage</p>
-    <h1 class="page-title">Lern<span class="accent">karten</span></h1>
-    <p class="page-lead">319 Flashcards zu GAL, SFS Regensburg, HLFS Kassel, IBK Heyrothsberge, VAk Berlin, FeuAK Hamburg und IdF Münster – tippe auf eine Karte, um die Antwort aufzudecken. Dein Lernstand wird gespeichert.</p>
+    <p class="page-eyebrow">Wiederholung nach Lernstand</p>
+    <h1 class="page-title">Lernkarten</h1>
+    <p class="page-lead">Tippe auf eine Karte, um die Antwort aufzudecken. Dein Lernstand wird auf diesem Gerät gespeichert.</p>
   </div></div>
-  <div class="fc-filter-row">
-    <button class="fc-f-btn active" data-filter="all" data-label="Alle" onclick="FC.setFilter('all')">Alle (319)</button>
+  <div class="fc-filter-row" role="group" aria-label="Lernkarten filtern">
+    <button class="fc-f-btn fc-star-filter-btn hidden" data-filter="starred" data-label="Markiert" onclick="FC.setFilter('starred')">Markiert</button>
+    <button class="fc-f-btn active" data-filter="all" data-label="Alle" onclick="FC.setFilter('all')">Alle</button>
     <button class="fc-f-btn" data-filter="gal" data-label="GAL" onclick="FC.setFilter('gal')">GAL</button>
-    <button class="fc-f-btn" data-filter="sfs" data-label="SFS Regensburg" onclick="FC.setFilter('sfs')">SFS Regensburg</button>
-    <button class="fc-f-btn" data-filter="hlfs" data-label="HLFS Kassel" onclick="FC.setFilter('hlfs')">HLFS Kassel</button>
-    <button class="fc-f-btn" data-filter="ibk" data-label="IBK Heyrothsberge" onclick="FC.setFilter('ibk')">IBK Heyrothsberge</button>
-    <button class="fc-f-btn" data-filter="vak" data-label="VAk Berlin" onclick="FC.setFilter('vak')">VAk Berlin</button>
-    <button class="fc-f-btn" data-filter="feuak" data-label="FeuAK Hamburg" onclick="FC.setFilter('feuak')">FeuAK Hamburg</button>
-    <button class="fc-f-btn" data-filter="idf" data-label="IdF Münster" onclick="FC.setFilter('idf')">IdF Münster</button>
-    <button class="fc-f-btn fc-star-filter-btn" data-filter="starred" data-label="Markiert" onclick="FC.setFilter('starred')">⭐ Markiert (0)</button>
-    <button class="fc-f-btn fc-reset-btn" onclick="SETTINGS.resetCards()" title="Lernstand zurücksetzen">↺ Zurücksetzen</button>
+    <button class="fc-f-btn" data-filter="sfs" data-label="SFS" onclick="FC.setFilter('sfs')">SFS</button>
+    <button class="fc-f-btn" data-filter="hlfs" data-label="HLFS" onclick="FC.setFilter('hlfs')">HLFS</button>
+    <button class="fc-f-btn" data-filter="ibk" data-label="IBK" onclick="FC.setFilter('ibk')">IBK</button>
+    <button class="fc-f-btn" data-filter="vak" data-label="VAk" onclick="FC.setFilter('vak')">VAk</button>
+    <button class="fc-f-btn" data-filter="feuak" data-label="FeuAK" onclick="FC.setFilter('feuak')">FeuAK</button>
+    <button class="fc-f-btn" data-filter="idf" data-label="IdF" onclick="FC.setFilter('idf')">IdF</button>
   </div>
   <div class="pc">
     <div id="fc-container">
       <div class="fc-end">
-        <div class="fc-end-ico">🎴</div>
+        <span class="fc-end-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></svg></span>
         <div class="fc-end-title">Bereit zum Lernen?</div>
-        <div class="fc-end-sub">284 Karten zu GAL, SFS Regensburg, HLFS Kassel, IBK Heyrothsberge, VAk Berlin, FeuAK Hamburg und IdF Münster.<br>Lernstand wird im Browser gespeichert.</div>
+        <div class="fc-end-sub">Wähle oben ein Modul oder lerne alle Karten gemischt.</div>
         <button class="btn btn-gold" onclick="FC.start()">Karten starten →</button>
       </div>
     </div>
