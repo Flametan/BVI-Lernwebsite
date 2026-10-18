@@ -3531,11 +3531,12 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
-    {v:'2.32.0',ts:'2026-10-18T12:00',items:[
+    {v:'3.0.0',ts:'2026-10-18T12:00',items:[
       'Neue Mobil-Ansicht im App-Stil: Tab-Leiste unten mit Start, Plan, Prüfung, Einstellungen und Lernen – der Header entfällt auf dem Handy',
       'Startseite (Handy): Streak, gelesene Themen, Lernkarten, Aktivität der Woche, Weiterlernen und alle Module mit Fortschritt',
       'Neue Tabs: Plan (IdF-Stundenplan), Prüfung (alle Klausur-Werkzeuge mit Countdown) und Einstellungen (Suche, Notizen, Lesezeichen, Pomodoro, Statistik)',
       'Einstellungen: Akzentfarbe wählbar – 5 Vorgaben oder eigene Farbe über den Farbkreis',
+      'Rahmen, Tönungen und Grafiken auf allen Lernseiten übernehmen jetzt die gewählte Akzentfarbe',
       'Performance-Modus entfernt',
       'Stundenplan: heutiger Tag wird jetzt korrekt hervorgehoben'
     ]},
@@ -4938,7 +4939,7 @@ const IDF_PLAN = (function(){
       const d=dates[di];
       const isToday=d.getTime()===today.getTime();
       const isEmpty=items.length===0;
-      h+=`<div class="idf-day"${isToday?' style="background:rgba(201,168,76,.05);"':''}>`;
+      h+=`<div class="idf-day"${isToday?' style="background:color-mix(in srgb,var(--c-gold) 5%,transparent);"':''}>`;
       h+=`<div class="idf-dc">`;
       h+=`<div class="idf-dow" style="${isToday?'color:var(--c-gold)':''}">${DAYS[di]}</div>`;
       h+=`<div class="idf-dnum" style="${isToday?'color:var(--c-gold)':''}">${d.getDate()}</div>`;

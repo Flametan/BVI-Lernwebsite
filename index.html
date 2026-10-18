@@ -335,7 +335,7 @@
       </div>
     </div>
     <textarea id="notes-textarea" class="notes-area" placeholder="Deine Notizen zu dieser Seite – wird lokal gespeichert …"></textarea>
-    <div id="notes-undo-bar" class="hidden" style="display:flex;align-items:center;justify-content:space-between;padding:.55rem .85rem;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-sm);font-size:.82rem;color:var(--c-slate-l);margin-top:.5rem;">
+    <div id="notes-undo-bar" class="hidden" style="display:flex;align-items:center;justify-content:space-between;padding:.55rem .85rem;background:color-mix(in srgb,var(--c-gold) 8%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 25%,transparent);border-radius:var(--r-sm);font-size:.82rem;color:var(--c-slate-l);margin-top:.5rem;">
       <span>Notiz gelöscht</span>
       <button onclick="NOTES.undoClear()" style="font-size:.78rem;font-weight:600;color:var(--c-gold);background:none;border:none;cursor:pointer;font-family:inherit;padding:0;">Rückgängig</button>
     </div>
@@ -570,7 +570,7 @@
         <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </div>
-    <a href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" class="glass-tile" style="display:flex;align-items:center;gap:1rem;text-decoration:none;margin-top:.75rem;border-color:rgba(201,168,76,.25);background:rgba(201,168,76,.04);">
+    <a href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" class="glass-tile" style="display:flex;align-items:center;gap:1rem;text-decoration:none;margin-top:.75rem;border-color:color-mix(in srgb,var(--c-gold) 25%,transparent);background:color-mix(in srgb,var(--c-gold) 4%,transparent);">
       <svg class="tile-icon" style="flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       <div style="flex:1;min-width:0;">
         <div class="tile-name" style="color:var(--c-gold);">Lehrgangs-Cloud</div>
@@ -1197,11 +1197,11 @@
           <div class="diagram-wrap">
           <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <marker id="arr-g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#C9A84C"/></marker>
+            <marker id="arr-g" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" style="fill:var(--c-gold)"/></marker>
           </defs>
           <!-- Zentrales Label -->
-          <rect x="195" y="105" width="130" height="50" rx="8" fill="rgba(201,168,76,0.08)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
-          <text x="260" y="127" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C" font-weight="600">Lage/Auftrag</text>
+          <rect x="195" y="105" width="130" height="50" rx="8" stroke-width="1" style="fill:color-mix(in srgb,var(--c-gold) 8%,transparent);stroke:color-mix(in srgb,var(--c-gold) 30%,transparent)"/>
+          <text x="260" y="127" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" font-weight="600" style="fill:var(--c-gold)">Lage/Auftrag</text>
           <text x="260" y="143" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080">Kontrolle/Überwachung</text>
            <!-- 3 Phasen-Kreise -->
           <!-- LAGEFESTSTELLUNG -->
@@ -1217,9 +1217,9 @@
           <text x="380" y="193" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#4ACD90" font-weight="700">BEFEHL</text>
           <text x="380" y="207" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Befehl/Lagemeldung</text>
            <!-- Pfeile im Uhrzeigersinn -->
-          <path d="M290 80 Q350 80 365 160" fill="none" stroke="#C9A84C" stroke-width="1.8" marker-end="url(#arr-g)"/>
-          <path d="M340 210 Q260 245 175 210" fill="none" stroke="#C9A84C" stroke-width="1.8" marker-end="url(#arr-g)"/>
-          <path d="M107 173 Q90 100 222 68" fill="none" stroke="#C9A84C" stroke-width="1.8" marker-end="url(#arr-g)"/>
+          <path d="M290 80 Q350 80 365 160" fill="none" stroke-width="1.8" marker-end="url(#arr-g)" style="stroke:var(--c-gold)"/>
+          <path d="M340 210 Q260 245 175 210" fill="none" stroke-width="1.8" marker-end="url(#arr-g)" style="stroke:var(--c-gold)"/>
+          <path d="M107 173 Q90 100 222 68" fill="none" stroke-width="1.8" marker-end="url(#arr-g)" style="stroke:var(--c-gold)"/>
           </svg>
           <p class="diagram-caption">Führungsvorgang nach FwDV 100 – zyklischer Prozess</p>
           </div>
@@ -1371,23 +1371,23 @@
         <div class="acc-body">
           <div class="diagram-wrap">
           <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
-          <defs><marker id="arw" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#C9A84C"/></marker></defs>
+          <defs><marker id="arw" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" style="fill:var(--c-gold)"/></marker></defs>
           <!-- Kreissegmente -->
-          <circle cx="280" cy="100" r="70" fill="none" stroke="rgba(201,168,76,0.15)" stroke-width="40"/>
+          <circle cx="280" cy="100" r="70" fill="none" stroke-width="40" style="stroke:color-mix(in srgb,var(--c-gold) 15%,transparent)"/>
           <!-- Labels im Kreis -->
-          <text x="280" y="44"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C" font-weight="600">Analyse</text>
-          <text x="340" y="90"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C" font-weight="600">Struktur</text>
-          <text x="310" y="155" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C" font-weight="600">Durchführung</text>
-          <text x="220" y="155" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C" font-weight="600">Kontrolle</text>
+          <text x="280" y="44"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" font-weight="600" style="fill:var(--c-gold)">Analyse</text>
+          <text x="340" y="90"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" font-weight="600" style="fill:var(--c-gold)">Struktur</text>
+          <text x="310" y="155" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" font-weight="600" style="fill:var(--c-gold)">Durchführung</text>
+          <text x="220" y="155" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" font-weight="600" style="fill:var(--c-gold)">Kontrolle</text>
           <!-- Außen: Beschriftungen -->
           <text x="280" y="16"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Ausbildende &amp; Teilnehmer · Rahmenbedingung · Lernziele</text>
           <text x="430" y="100" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Zeit · UVP</text>
           <text x="280" y="190" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Methode · Medien · Ankommen &amp; Einstimmen</text>
           <text x="120" y="100" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Kontrolle d. Lernziele</text>
           <!-- Pfeil -->
-          <circle cx="280" cy="100" r="25" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
-          <text x="280" y="97"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#E8C97A" font-weight="600">Regel-</text>
-          <text x="280" y="108" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#E8C97A" font-weight="600">kreis</text>
+          <circle cx="280" cy="100" r="25" stroke-width="1" style="fill:color-mix(in srgb,var(--c-gold) 6%,transparent);stroke:color-mix(in srgb,var(--c-gold) 25%,transparent)"/>
+          <text x="280" y="97"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" font-weight="600" style="fill:var(--c-gold-l)">Regel-</text>
+          <text x="280" y="108" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" font-weight="600" style="fill:var(--c-gold-l)">kreis</text>
           </svg>
           <p class="diagram-caption">Regelkreis der guten Ausbildung – Grundlage für jeden Übungsdienst</p>
           </div>
@@ -1432,16 +1432,16 @@
           <div class="def-box"><div class="def-box-label">Anwendungsbereich</div><p>Die 4-Stufen-Methode ist die klassische Unterweisungsmethode für <strong>praktische Fertigkeiten</strong> im Feuerwehrdienst. Optimal für Gerätekunde, Atemschutzübungen und Einsatztaktik.</p></div>
           <div class="diagram-wrap">
           <svg viewBox="0 0 540 80" xmlns="http://www.w3.org/2000/svg">
-          <defs><marker id="a2" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#C9A84C" opacity=".7"/></marker></defs>
+          <defs><marker id="a2" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" opacity=".7" style="fill:var(--c-gold)"/></marker></defs>
           <!-- 4 Felder -->
           <rect x="5"   y="10" width="115" height="60" rx="6" fill="rgba(165,0,0,.15)" stroke="#A50000" stroke-width="1.2"/>
           <rect x="140" y="10" width="115" height="60" rx="6" fill="rgba(176,115,32,.15)" stroke="#B07320" stroke-width="1.2"/>
           <rect x="275" y="10" width="115" height="60" rx="6" fill="rgba(58,127,212,.12)" stroke="#3A7FD4" stroke-width="1.2"/>
           <rect x="410" y="10" width="125" height="60" rx="6" fill="rgba(42,122,82,.15)" stroke="#2A7A52" stroke-width="1.2"/>
           <!-- Pfeile -->
-          <line x1="120" y1="40" x2="138" y2="40" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#a2)" opacity=".7"/>
-          <line x1="255" y1="40" x2="273" y2="40" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#a2)" opacity=".7"/>
-          <line x1="390" y1="40" x2="408" y2="40" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#a2)" opacity=".7"/>
+          <line x1="120" y1="40" x2="138" y2="40" stroke-width="1.5" marker-end="url(#a2)" opacity=".7" style="stroke:var(--c-gold)"/>
+          <line x1="255" y1="40" x2="273" y2="40" stroke-width="1.5" marker-end="url(#a2)" opacity=".7" style="stroke:var(--c-gold)"/>
+          <line x1="390" y1="40" x2="408" y2="40" stroke-width="1.5" marker-end="url(#a2)" opacity=".7" style="stroke:var(--c-gold)"/>
           <!-- Texte -->
           <text x="62"  y="33" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#E07070" font-weight="700">1. Vorbereiten</text>
           <text x="62"  y="50" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7.5" fill="#8FA0B0">Lernziel nennen</text>
@@ -1610,17 +1610,17 @@
         <div class="acc-body">
           <div class="diagram-wrap">
           <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="200,10 10,210 390,210" fill="rgba(10,25,47,0.6)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <polygon points="200,10 10,210 390,210" fill="rgba(10,25,47,0.6)" stroke-width="1" style="stroke:color-mix(in srgb,var(--c-gold) 30%,transparent)"/>
           <!-- Schichten -->
-          <line x1="127" y1="86"  x2="273" y2="86"  stroke="rgba(201,168,76,.2)" stroke-width="1"/>
-          <line x1="82"  y1="127" x2="318" y2="127" stroke="rgba(201,168,76,.2)" stroke-width="1"/>
-          <line x1="51"  y1="163" x2="349" y2="163" stroke="rgba(201,168,76,.2)" stroke-width="1"/>
+          <line x1="127" y1="86"  x2="273" y2="86"  stroke-width="1" style="stroke:color-mix(in srgb,var(--c-gold) 20%,transparent)"/>
+          <line x1="82"  y1="127" x2="318" y2="127" stroke-width="1" style="stroke:color-mix(in srgb,var(--c-gold) 20%,transparent)"/>
+          <line x1="51"  y1="163" x2="349" y2="163" stroke-width="1" style="stroke:color-mix(in srgb,var(--c-gold) 20%,transparent)"/>
           <!-- Labels -->
-          <text x="200" y="55"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#E8C97A" font-weight="700">GG</text>
+          <text x="200" y="55"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" font-weight="700" style="fill:var(--c-gold-l)">GG</text>
           <text x="200" y="72"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8"  fill="#8FA0B0">Bundes- &amp; Landesgesetze</text>
           <text x="200" y="110" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#D4903A" font-weight="600">Rechtsverordnung</text>
           <text x="200" y="122" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7.5" fill="#607080">← Gruppenführer-Ebene</text>
-          <text x="200" y="148" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#C9A84C">Satzung</text>
+          <text x="200" y="148" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" style="fill:var(--c-gold)" >Satzung</text>
           <text x="200" y="185" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#4ACD90">Verwaltungsvorschriften (FwDV)</text>
           <text x="200" y="205" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7"  fill="#607080">niedrigste Norm – trotzdem bindend!</text>
           </svg>
@@ -1864,14 +1864,14 @@
       <svg viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg" aria-label="Führungskreislauf FwDV 100">
         <defs>
           <marker id="fv-arr" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto">
-            <polygon points="0 0,9 3.5,0 7" fill="#C9A84C"/>
+            <polygon points="0 0,9 3.5,0 7" style="fill:var(--c-gold)"/>
           </marker>
           <filter id="fv-glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
         </defs>
 
         <!-- Zentrum: Lage/Auftrag -->
-        <rect x="220" y="130" width="160" height="60" rx="10" fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
-        <text x="300" y="155" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#E8C97A" font-weight="700">Lage / Auftrag</text>
+        <rect x="220" y="130" width="160" height="60" rx="10" stroke-width="1.5" style="fill:color-mix(in srgb,var(--c-gold) 12%,transparent);stroke:color-mix(in srgb,var(--c-gold) 50%,transparent)"/>
+        <text x="300" y="155" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" font-weight="700" style="fill:var(--c-gold-l)">Lage / Auftrag</text>
         <text x="300" y="173" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#607080">Kontrolle / Überwachung</text>
 
         <!-- LAGEFESTSTELLUNG (oben) -->
@@ -1890,11 +1890,11 @@
         <text x="485" y="237" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#8FA0B0">Befehl / Lagemeldung</text>
 
         <!-- Pfeil: Lage → Befehl (oben-rechts) -->
-        <path d="M380 72 Q460 72 475 188" fill="none" stroke="#C9A84C" stroke-width="2" marker-end="url(#fv-arr)"/>
+        <path d="M380 72 Q460 72 475 188" fill="none" stroke-width="2" marker-end="url(#fv-arr)" style="stroke:var(--c-gold)"/>
         <!-- Pfeil: Befehl → Planung (rechts → links) -->
-        <path d="M395 243 Q300 290 205 243" fill="none" stroke="#C9A84C" stroke-width="2" marker-end="url(#fv-arr)"/>
+        <path d="M395 243 Q300 290 205 243" fill="none" stroke-width="2" marker-end="url(#fv-arr)" style="stroke:var(--c-gold)"/>
         <!-- Pfeil: Planung → Lage (links → oben) -->
-        <path d="M125 188 Q125 72 215 60" fill="none" stroke="#C9A84C" stroke-width="2" marker-end="url(#fv-arr)"/>
+        <path d="M125 188 Q125 72 215 60" fill="none" stroke-width="2" marker-end="url(#fv-arr)" style="stroke:var(--c-gold)"/>
 
         <!-- Beschriftungen an Pfeilen -->
         <text x="455" y="138" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080" text-anchor="middle">Erkundung</text>
@@ -2129,10 +2129,10 @@
           <text x="290" y="27" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E07070" font-weight="700">Politisch gesamt-</text>
           <text x="290" y="42" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E07070" font-weight="700">verantwortliche Komponente</text>
           <!-- Pfeile runter -->
-          <line x1="220" y1="52" x2="130" y2="100" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4,3"/>
-          <line x1="360" y1="52" x2="450" y2="100" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="220" y1="52" x2="130" y2="100" stroke-width="1.5" stroke-dasharray="4,3" style="stroke:var(--c-gold)"/>
+          <line x1="360" y1="52" x2="450" y2="100" stroke-width="1.5" stroke-dasharray="4,3" style="stroke:var(--c-gold)"/>
           <!-- Verbindungspfeil -->
-          <line x1="230" y1="130" x2="340" y2="130" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="230" y1="130" x2="340" y2="130" stroke-width="1.5" stroke-dasharray="4,3" style="stroke:var(--c-gold)"/>
           <!-- Admin-org -->
           <rect x="20" y="100" width="210" height="50" rx="8" fill="rgba(58,127,212,0.15)" stroke="#3A7FD4" stroke-width="1.5"/>
           <text x="125" y="121" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#6BAAD4" font-weight="700">Administrativ-organisa-</text>
@@ -2860,7 +2860,7 @@
           <svg viewBox="0 0 580 120" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="tg-arr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
-              <polygon points="0 0,7 2.5,0 5" fill="#C9A84C" opacity=".8"/>
+              <polygon points="0 0,7 2.5,0 5" opacity=".8" style="fill:var(--c-gold)"/>
             </marker>
           </defs>
           <!-- TMO Zone -->
@@ -2870,12 +2870,12 @@
           <text x="90" y="74" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#8FA0B0">z. B. Außenbereich ESt.</text>
           <text x="90" y="94" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080">ELW, EL, Zugtrupp</text>
           <!-- Gateway Gerät -->
-          <rect x="210" y="35" width="160" height="50" rx="8" fill="rgba(201,168,76,.12)" stroke="#C9A84C" stroke-width="1.5"/>
-          <text x="290" y="56" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="700">GATEWAY</text>
+          <rect x="210" y="35" width="160" height="50" rx="8" stroke-width="1.5" style="fill:color-mix(in srgb,var(--c-gold) 12%,transparent);stroke:var(--c-gold)"/>
+          <text x="290" y="56" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" font-weight="700" style="fill:var(--c-gold-l)">GATEWAY</text>
           <text x="290" y="72" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#8FA0B0">TMO ↔ DMO Brücke</text>
           <!-- Pfeile -->
-          <line x1="170" y1="60" x2="208" y2="60" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#tg-arr)"/>
-          <line x1="370" y1="60" x2="408" y2="60" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#tg-arr)"/>
+          <line x1="170" y1="60" x2="208" y2="60" stroke-width="1.5" marker-end="url(#tg-arr)" style="stroke:var(--c-gold)"/>
+          <line x1="370" y1="60" x2="408" y2="60" stroke-width="1.5" marker-end="url(#tg-arr)" style="stroke:var(--c-gold)"/>
           <!-- DMO Zone -->
           <rect x="410" y="15" width="160" height="90" rx="8" fill="rgba(176,115,32,.1)" stroke="#B07320" stroke-width="1.3"/>
           <text x="490" y="38" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#D4903A" font-weight="700">DMO-Bereich</text>
@@ -2942,31 +2942,31 @@
           <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg" aria-label="Ich-Zustände Strukturmodell">
             <text x="100" y="22" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#8FA0B0" font-weight="500">Person A</text>
             <circle cx="100" cy="70"  r="44" fill="rgba(165,0,0,0.15)"   stroke="#A50000" stroke-width="1.5"/>
-            <text x="100" y="66"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#E8C97A" font-weight="600">Eltern-Ich</text>
+            <text x="100" y="66"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" font-weight="600" style="fill:var(--c-gold-l)">Eltern-Ich</text>
             <text x="100" y="80"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#8FA0B0">(EL)</text>
-            <circle cx="100" cy="160" r="44" fill="rgba(201,168,76,0.12)" stroke="#C9A84C" stroke-width="1.5"/>
-            <text x="100" y="156" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="600">Erwachsenen-</text>
-            <text x="100" y="169" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="600">Ich (ER)</text>
+            <circle cx="100" cy="160" r="44" stroke-width="1.5" style="fill:color-mix(in srgb,var(--c-gold) 12%,transparent);stroke:var(--c-gold)"/>
+            <text x="100" y="156" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" font-weight="600" style="fill:var(--c-gold-l)">Erwachsenen-</text>
+            <text x="100" y="169" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" font-weight="600" style="fill:var(--c-gold-l)">Ich (ER)</text>
             <circle cx="100" cy="248" r="44" fill="rgba(74,144,217,0.12)" stroke="#4A90D9" stroke-width="1.5"/>
             <text x="100" y="244" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#6BAAD4" font-weight="600">Kind-Ich</text>
             <text x="100" y="257" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#8FA0B0">(K)</text>
             <text x="460" y="22" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#8FA0B0" font-weight="500">Person B</text>
             <circle cx="460" cy="70"  r="44" fill="rgba(165,0,0,0.15)"   stroke="#A50000" stroke-width="1.5"/>
-            <text x="460" y="66"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#E8C97A" font-weight="600">Eltern-Ich</text>
+            <text x="460" y="66"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" font-weight="600" style="fill:var(--c-gold-l)">Eltern-Ich</text>
             <text x="460" y="80"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#8FA0B0">(EL)</text>
-            <circle cx="460" cy="160" r="44" fill="rgba(201,168,76,0.12)" stroke="#C9A84C" stroke-width="1.5"/>
-            <text x="460" y="156" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="600">Erwachsenen-</text>
-            <text x="460" y="169" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="600">Ich (ER)</text>
+            <circle cx="460" cy="160" r="44" stroke-width="1.5" style="fill:color-mix(in srgb,var(--c-gold) 12%,transparent);stroke:var(--c-gold)"/>
+            <text x="460" y="156" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" font-weight="600" style="fill:var(--c-gold-l)">Erwachsenen-</text>
+            <text x="460" y="169" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" font-weight="600" style="fill:var(--c-gold-l)">Ich (ER)</text>
             <circle cx="460" cy="248" r="44" fill="rgba(74,144,217,0.12)" stroke="#4A90D9" stroke-width="1.5"/>
             <text x="460" y="244" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#6BAAD4" font-weight="600">Kind-Ich</text>
             <text x="460" y="257" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9"  fill="#8FA0B0">(K)</text>
             <defs>
-              <marker id="arr-gold" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#C9A84C"/></marker>
+              <marker id="arr-gold" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" style="fill:var(--c-gold)"/></marker>
               <marker id="arr-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#A50000"/></marker>
             </defs>
-            <line x1="144" y1="155" x2="416" y2="155" stroke="#C9A84C" stroke-width="1.8" marker-end="url(#arr-gold)"/>
-            <line x1="416" y1="165" x2="144" y2="165" stroke="#C9A84C" stroke-width="1.8" marker-end="url(#arr-gold)"/>
-            <text x="280" y="148" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C">Komplementäre Transaktion (ER ↔ ER)</text>
+            <line x1="144" y1="155" x2="416" y2="155" stroke-width="1.8" marker-end="url(#arr-gold)" style="stroke:var(--c-gold)"/>
+            <line x1="416" y1="165" x2="144" y2="165" stroke-width="1.8" marker-end="url(#arr-gold)" style="stroke:var(--c-gold)"/>
+            <text x="280" y="148" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" style="fill:var(--c-gold)">Komplementäre Transaktion (ER ↔ ER)</text>
             <line x1="56"  y1="114" x2="144" y2="114" stroke="#1E3A68" stroke-width="1" stroke-dasharray="3,3"/>
             <line x1="56"  y1="204" x2="144" y2="204" stroke="#1E3A68" stroke-width="1" stroke-dasharray="3,3"/>
             <line x1="416" y1="114" x2="504" y2="114" stroke="#1E3A68" stroke-width="1" stroke-dasharray="3,3"/>
@@ -3183,21 +3183,21 @@
           <!-- 7% Worte -->
           <rect x="10" y="50" width="33" height="44" rx="6" fill="rgba(165,0,0,0.7)" stroke="#A50000" stroke-width="1"/>
           <text x="26" y="78" text-anchor="middle" font-family="'DM Mono',monospace" font-size="14" fill="white" font-weight="700">7%</text>
-          <text x="26" y="108" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#E8C97A">Worte</text>
+          <text x="26" y="108" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" style="fill:var(--c-gold-l)">Worte</text>
           <text x="26" y="118" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080">(Inhalt)</text>
           <!-- 38% Stimme -->
           <rect x="58" y="28" width="180" height="66" rx="6" fill="rgba(58,127,212,0.55)" stroke="#3A7FD4" stroke-width="1"/>
           <text x="148" y="67" text-anchor="middle" font-family="'DM Mono',monospace" font-size="18" fill="white" font-weight="700">38%</text>
-          <text x="148" y="108" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#E8C97A">Paraverbal</text>
+          <text x="148" y="108" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" style="fill:var(--c-gold-l)">Paraverbal</text>
           <text x="148" y="118" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080">Stimme · Tempo · Tonfall</text>
           <!-- 55% Körper -->
-          <rect x="253" y="10" width="260" height="84" rx="6" fill="rgba(201,168,76,0.55)" stroke="#C9A84C" stroke-width="1"/>
+          <rect x="253" y="10" width="260" height="84" rx="6" stroke-width="1" style="fill:color-mix(in srgb,var(--c-gold) 55%,transparent);stroke:var(--c-gold)"/>
           <text x="383" y="59" text-anchor="middle" font-family="'DM Mono',monospace" font-size="24" fill="white" font-weight="700">55%</text>
-          <text x="383" y="108" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#E8C97A">Nonverbal</text>
+          <text x="383" y="108" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" style="fill:var(--c-gold-l)">Nonverbal</text>
           <text x="383" y="118" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080">Körpersprache · Mimik · Gestik</text>
           <!-- Verbindungspfeil/Führungshinweis -->
-          <rect x="10" y="140" width="540" height="50" rx="8" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.22)" stroke-width="1"/>
-          <text x="280" y="160" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C" font-weight="600">Führungsrelevanz: Stimme und Körpersprache dominieren die Beziehungsbotschaft</text>
+          <rect x="10" y="140" width="540" height="50" rx="8" stroke-width="1" style="fill:color-mix(in srgb,var(--c-gold) 6%,transparent);stroke:color-mix(in srgb,var(--c-gold) 22%,transparent)"/>
+          <text x="280" y="160" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" font-weight="600" style="fill:var(--c-gold)">Führungsrelevanz: Stimme und Körpersprache dominieren die Beziehungsbotschaft</text>
           <text x="280" y="174" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#8FA0B0">„Was du tust, spricht so laut, dass ich nicht höre, was du sagst." – Watzlawick/Emerson</text>
           </svg>
           <p class="diagram-caption">7-38-55-Regel nach Mehrabian (bei inkonsistenten emotionalen Botschaften)</p>
@@ -3243,10 +3243,10 @@
           <div class="diagram-wrap" style="max-width: 380px; margin: 1.5rem auto;">
           <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" aria-label="Vier-Seiten-Modell">
           <!-- Rotiertes Quadrat -->
-          <polygon points="150,20 280,150 150,280 20,150" fill="rgba(13,33,64,0.7)" stroke="#C9A84C" stroke-width="1.5"/>
+          <polygon points="150,20 280,150 150,280 20,150" fill="rgba(13,33,64,0.7)" stroke-width="1.5" style="stroke:var(--c-gold)"/>
           <!-- Innenkreis (Nachricht) -->
-          <circle cx="150" cy="150" r="40" fill="rgba(201,168,76,0.1)" stroke="#C9A84C" stroke-width="1.2"/>
-          <text x="150" y="146" text-anchor="middle" font-size="9.5" fill="#C9A84C" font-weight="600" font-family="'DM Sans',sans-serif">Nachricht</text>
+          <circle cx="150" cy="150" r="40" stroke-width="1.2" style="fill:color-mix(in srgb,var(--c-gold) 10%,transparent);stroke:var(--c-gold)"/>
+          <text x="150" y="146" text-anchor="middle" font-size="9.5" font-weight="600" font-family="'DM Sans',sans-serif" style="fill:var(--c-gold)">Nachricht</text>
           <text x="150" y="159" text-anchor="middle" font-size="8"   fill="#8FA0B0" font-family="'DM Sans',sans-serif">(Sender → Empf.)</text>
           <!-- Seiten-Labels -->
           <text x="150" y="14"  text-anchor="middle" font-size="10.5" fill="#D8E4F0" font-weight="600" font-family="'DM Sans',sans-serif">Sachebene</text>
@@ -3314,14 +3314,14 @@
           <div class="def-box"><div class="def-box-label">Modernste Grundlage</div><p>Stress entsteht nicht im Reiz, sondern in der <strong>kognitiven Bewertung</strong> (Lazarus): primäre Bewertung (Ist die Situation bedrohlich?) und sekundäre Bewertung (Habe ich Ressourcen zur Bewältigung?). Dieser Prozess findet auf biologischer, psychologischer UND sozialer Ebene gleichzeitig statt.</p></div>
           <div class="diagram-wrap">
           <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg">
-          <defs><marker id="ab" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#C9A84C"/></marker></defs>
+          <defs><marker id="ab" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" style="fill:var(--c-gold)"/></marker></defs>
           <!-- Drei Kreise Biopsychosozial -->
           <circle cx="150" cy="95" r="75" fill="rgba(165,0,0,0.12)" stroke="#A50000" stroke-width="1.5"/>
           <text x="140" y="85" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E07070" font-weight="600">BIOLOGISCH</text>
           <text x="140" y="100" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Genetik · HormonSystem</text>
           <text x="140" y="112" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Schlaf · Ernährung</text>
-          <circle cx="290" cy="95" r="75" fill="rgba(201,168,76,0.12)" stroke="#C9A84C" stroke-width="1.5"/>
-          <text x="290" y="85" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" fill="#E8C97A" font-weight="600">PSYCHOLOGISCH</text>
+          <circle cx="290" cy="95" r="75" stroke-width="1.5" style="fill:color-mix(in srgb,var(--c-gold) 12%,transparent);stroke:var(--c-gold)"/>
+          <text x="290" y="85" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="10" font-weight="600" style="fill:var(--c-gold-l)">PSYCHOLOGISCH</text>
           <text x="290" y="100" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Bewertung · Coping</text>
           <text x="290" y="112" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Selbstwirksamkeit</text>
           <circle cx="430" cy="95" r="75" fill="rgba(58,127,212,0.12)" stroke="#3A7FD4" stroke-width="1.5"/>
@@ -3330,7 +3330,7 @@
           <text x="440" y="112" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#8FA0B0">Führungsklima · Kultur</text>
           <text x="220" y="95" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080">Bewertung</text>
           <text x="360" y="95" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#607080">Ressourcen</text>
-          <text x="290" y="185" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" fill="#C9A84C" font-weight="600">STRESS entsteht im Zusammenspiel aller drei Ebenen</text>
+          <text x="290" y="185" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9" font-weight="600" style="fill:var(--c-gold)">STRESS entsteht im Zusammenspiel aller drei Ebenen</text>
           </svg>
           <p class="diagram-caption">Biopsychosoziales Modell – Stress als Wechselspiel biologischer, psychologischer und sozialer Faktoren</p>
           </div>
@@ -3373,8 +3373,8 @@
           <text x="215" y="155" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="13" fill="#4ACD90" font-weight="700">FLOW</text>
           <text x="215" y="170" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#8FA0B0">optimale Leistung</text>
           <!-- Kontrollpunkt -->
-          <circle cx="295" cy="105" r="5" fill="#C9A84C" opacity="0.8"/>
-          <text x="300" y="100" font-family="'DM Sans',sans-serif" font-size="8" fill="#C9A84C">Ziel Führung</text>
+          <circle cx="295" cy="105" r="5" opacity="0.8" style="fill:var(--c-gold)"/>
+          <text x="300" y="100" font-family="'DM Sans',sans-serif" font-size="8" style="fill:var(--c-gold)">Ziel Führung</text>
           </svg>
           <p class="diagram-caption">Flow-Kanal (Csikszentmihalyi): Beide Achsen = hoch nötig für echten Flow. Nicht zu verwechseln mit „niedrige Challenge → Flow"</p>
           </div>
@@ -3388,19 +3388,19 @@
         <div class="acc-body">
           <div class="diagram-wrap">
           <svg viewBox="0 0 620 100" xmlns="http://www.w3.org/2000/svg">
-          <defs><marker id="as" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#C9A84C"/></marker></defs>
+          <defs><marker id="as" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" style="fill:var(--c-gold)"/></marker></defs>
           <rect x="10"  y="25" width="88" height="50" rx="8" fill="rgba(165,0,0,0.15)"   stroke="#A50000" stroke-width="1.2"/>
-          <rect x="130" y="25" width="88" height="50" rx="8" fill="rgba(201,168,76,0.12)" stroke="#C9A84C" stroke-width="1.2"/>
+          <rect x="130" y="25" width="88" height="50" rx="8" stroke-width="1.2" style="fill:color-mix(in srgb,var(--c-gold) 12%,transparent);stroke:var(--c-gold)"/>
           <rect x="250" y="25" width="88" height="50" rx="8" fill="rgba(74,144,217,0.12)" stroke="#4A90D9" stroke-width="1.2"/>
           <rect x="370" y="25" width="88" height="50" rx="8" fill="rgba(42,122,82,0.12)"  stroke="#2A7A52" stroke-width="1.2"/>
           <rect x="490" y="25" width="88" height="50" rx="8" fill="rgba(176,115,32,0.12)" stroke="#B07320" stroke-width="1.2"/>
-          <line x1="98"  y1="50" x2="128" y2="50" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#as)"/>
-          <line x1="218" y1="50" x2="248" y2="50" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#as)"/>
-          <line x1="338" y1="50" x2="368" y2="50" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#as)"/>
-          <line x1="458" y1="50" x2="488" y2="50" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#as)"/>
+          <line x1="98"  y1="50" x2="128" y2="50" stroke-width="1.5" marker-end="url(#as)" style="stroke:var(--c-gold)"/>
+          <line x1="218" y1="50" x2="248" y2="50" stroke-width="1.5" marker-end="url(#as)" style="stroke:var(--c-gold)"/>
+          <line x1="338" y1="50" x2="368" y2="50" stroke-width="1.5" marker-end="url(#as)" style="stroke:var(--c-gold)"/>
+          <line x1="458" y1="50" x2="488" y2="50" stroke-width="1.5" marker-end="url(#as)" style="stroke:var(--c-gold)"/>
           <text x="54"  y="48" text-anchor="middle" font-size="14" fill="#E07070" font-weight="700" font-family="'DM Mono',monospace">S</text>
           <text x="54"  y="63" text-anchor="middle" font-size="8"  fill="#8FA0B0" font-family="'DM Sans',sans-serif">Stimulus</text>
-          <text x="174" y="48" text-anchor="middle" font-size="14" fill="#E8C97A" font-weight="700" font-family="'DM Mono',monospace">O</text>
+          <text x="174" y="48" text-anchor="middle" font-size="14" font-weight="700" font-family="'DM Mono',monospace" style="fill:var(--c-gold-l)">O</text>
           <text x="174" y="63" text-anchor="middle" font-size="8"  fill="#8FA0B0" font-family="'DM Sans',sans-serif">Organismus</text>
           <text x="294" y="48" text-anchor="middle" font-size="14" fill="#6BAAD4" font-weight="700" font-family="'DM Mono',monospace">R</text>
           <text x="294" y="63" text-anchor="middle" font-size="8"  fill="#8FA0B0" font-family="'DM Sans',sans-serif">Reaktion</text>
@@ -3589,7 +3589,7 @@
         <div class="acc-body">
           <div class="burnout-row">
           <div class="bo-stage" style="background:rgba(42,122,82,.15)"><div class="bo-num" style="color:#4ACD90">1</div><div class="bo-title" style="color:var(--c-text-b)">Enthusiasmus</div><div class="bo-desc" style="color:var(--c-slate-l)">Hoher Einsatz, Idealisierung, Überengagement – Warnsignale übersehen</div></div>
-          <div class="bo-stage" style="background:rgba(201,168,76,.12)"><div class="bo-num" style="color:var(--c-gold)">2</div><div class="bo-title" style="color:var(--c-text-b)">Stagnation</div><div class="bo-desc" style="color:var(--c-slate-l)">Enttäuschung, erste Frustration, nachlassende Energie</div></div>
+          <div class="bo-stage" style="background:color-mix(in srgb,var(--c-gold) 12%,transparent)"><div class="bo-num" style="color:var(--c-gold)">2</div><div class="bo-title" style="color:var(--c-text-b)">Stagnation</div><div class="bo-desc" style="color:var(--c-slate-l)">Enttäuschung, erste Frustration, nachlassende Energie</div></div>
           <div class="bo-stage" style="background:rgba(176,115,32,.15)"><div class="bo-num" style="color:#D4903A">3</div><div class="bo-title" style="color:var(--c-text-b)">Frustration</div><div class="bo-desc" style="color:var(--c-slate-l)">Hilflosigkeit, Zynismus, emotionale Erschöpfung, Rückzug</div></div>
           <div class="bo-stage" style="background:rgba(139,26,26,.15)"><div class="bo-num" style="color:#E07070">4</div><div class="bo-title" style="color:var(--c-text-b)">Apathie</div><div class="bo-desc" style="color:var(--c-slate-l)">Innere Kündigung, emotionale Verarmung, Gleichgültigkeit</div></div>
           <div class="bo-stage" style="background:rgba(139,26,26,.25)"><div class="bo-num" style="color:#FF5555">5</div><div class="bo-title" style="color:var(--c-text-b)">Burnout</div><div class="bo-desc" style="color:var(--c-slate-l)">Vollständiger Zusammenbruch, AU, psychiatrische Behandlung</div></div>
@@ -3654,10 +3654,10 @@
           <div class="def-box"><div class="def-box-label">Top-Level Werkzeug</div><p>CPM identifiziert die <strong>längste Kette abhängiger Aufgaben</strong> – der „kritische Pfad". Verzögerungen auf diesem Pfad verzögern das gesamte Projekt. Nicht-kritische Aufgaben haben „Puffer" (Float/Slack).</p></div>
           <div class="diagram-wrap">
           <svg viewBox="0 0 580 180" xmlns="http://www.w3.org/2000/svg">
-          <defs><marker id="acp" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#C9A84C"/></marker><marker id="acp2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#607080"/></marker></defs>
+          <defs><marker id="acp" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" style="fill:var(--c-gold)"/></marker><marker id="acp2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#607080"/></marker></defs>
           <!-- Start -->
-          <circle cx="40" cy="90" r="22" fill="rgba(201,168,76,0.2)" stroke="#C9A84C" stroke-width="1.5"/>
-          <text x="40" y="87" text-anchor="middle" font-family="'DM Mono',monospace" font-size="9" fill="#E8C97A">START</text>
+          <circle cx="40" cy="90" r="22" stroke-width="1.5" style="fill:color-mix(in srgb,var(--c-gold) 20%,transparent);stroke:var(--c-gold)"/>
+          <text x="40" y="87" text-anchor="middle" font-family="'DM Mono',monospace" font-size="9" style="fill:var(--c-gold-l)">START</text>
           <text x="40" y="99" text-anchor="middle" font-family="'DM Mono',monospace" font-size="8" fill="#8FA0B0">T=0</text>
           <!-- Kritischer Pfad: Start → A → C → E → End (ROT) -->
           <rect x="80"  y="60" width="80" height="36" rx="6" fill="rgba(165,0,0,0.2)" stroke="#A50000" stroke-width="1.5"/>
@@ -3814,7 +3814,7 @@
           <text x="94"  y="82"  text-anchor="middle" font-size="7.5" fill="#607080" font-family="'DM Sans',sans-serif">Anteil langfristig minimieren!</text>
           <text x="248" y="42"  text-anchor="middle" font-size="10" fill="#4ACD90" font-weight="700" font-family="'DM Sans',sans-serif">PLANEN</text>
           <text x="248" y="56"  text-anchor="middle" font-size="8"  fill="#8FA0B0" font-family="'DM Sans',sans-serif">Strategie · Entwicklung · Prävention</text>
-          <text x="248" y="78"  text-anchor="middle" font-size="8"  fill="#C9A84C" font-family="'DM Sans',sans-serif" font-weight="600">← Hier Zeit investieren!</text>
+          <text x="248" y="78"  text-anchor="middle" font-size="8"  font-family="'DM Sans',sans-serif" font-weight="600" style="fill:var(--c-gold)">← Hier Zeit investieren!</text>
           <text x="94"  y="195" text-anchor="middle" font-size="10" fill="#6BAAD4" font-weight="700" font-family="'DM Sans',sans-serif">DELEGIEREN</text>
           <text x="94"  y="209" text-anchor="middle" font-size="8"  fill="#8FA0B0" font-family="'DM Sans',sans-serif">Routineaufgaben · Verwaltung</text>
           <text x="248" y="195" text-anchor="middle" font-size="10" fill="#8FA0B0" font-weight="700" font-family="'DM Sans',sans-serif">ELIMINIEREN</text>
@@ -4750,7 +4750,7 @@
           <div style="overflow-x:auto;">
             <table style="width:100%;border-collapse:collapse;font-size:.83rem;">
               <thead>
-                <tr style="background:rgba(201,168,76,.12);">
+                <tr style="background:color-mix(in srgb,var(--c-gold) 12%,transparent);">
                   <th style="padding:.5rem .7rem;text-align:left;border:1px solid var(--c-gold-rim);color:var(--c-gold);">Phase</th>
                   <th style="padding:.5rem .7rem;text-align:center;border:1px solid var(--c-gold-rim);">Bundestag</th>
                   <th style="padding:.5rem .7rem;text-align:center;border:1px solid var(--c-gold-rim);">Bundesrat</th>
@@ -7416,7 +7416,7 @@
             <div style="text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c-slate-l);padding-bottom:.4rem">Interesse hoch</div>
             <!-- Zeile: Macht hoch -->
             <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c-slate-l);padding-right:.4rem;display:flex;align-items:center">Macht hoch</div>
-            <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:1rem;min-height:90px">
+            <div style="background:color-mix(in srgb,var(--c-gold) 8%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 25%,transparent);border-radius:var(--r-md);padding:1rem;min-height:90px">
               <div style="font-size:.75rem;font-weight:700;color:var(--c-gold);margin-bottom:.35rem">KEEP SATISFIED</div>
               <div style="font-size:.82rem;color:var(--c-text)">Zufriedenstellen – regelmäßig informieren, Interessen berücksichtigen, Widerstand vermeiden</div>
             </div>
@@ -7590,7 +7590,7 @@
             <div style="text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--c-slate-l);padding-bottom:.4rem">Interesse niedrig</div>
             <div style="text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--c-slate-l);padding-bottom:.4rem">Interesse hoch</div>
             <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--c-slate-l);padding-right:.4rem;display:flex;align-items:center">Macht hoch</div>
-            <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.85rem;min-height:100px">
+            <div style="background:color-mix(in srgb,var(--c-gold) 8%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 25%,transparent);border-radius:var(--r-md);padding:.85rem;min-height:100px">
               <div style="font-size:.7rem;font-weight:700;color:var(--c-gold);margin-bottom:.4rem">KEEP SATISFIED</div>
               <div style="font-size:.8rem;color:var(--c-text);line-height:1.5">Innenministerium (Routinebetrieb)<br>Bundesbehörden (BBK)<br>Vergabestellen / Haushalt</div>
             </div>
@@ -7684,7 +7684,7 @@
           <div style="overflow-x:auto">
           <table style="width:100%;border-collapse:collapse;font-size:.82rem">
             <thead>
-              <tr style="border-bottom:2px solid rgba(201,168,76,.3)">
+              <tr style="border-bottom:2px solid color-mix(in srgb,var(--c-gold) 30%,transparent)">
                 <th style="text-align:left;padding:.5rem .75rem;color:var(--c-gold);font-weight:700">Stakeholder</th>
                 <th style="text-align:center;padding:.5rem .5rem;color:var(--c-slate-l);font-weight:600">M (×0,6)</th>
                 <th style="text-align:center;padding:.5rem .5rem;color:var(--c-slate-l);font-weight:600">I (×0,4)</th>
@@ -7752,7 +7752,7 @@
           <div style="overflow-x:auto;margin-bottom:1.25rem">
           <table style="width:100%;border-collapse:collapse;font-size:.82rem;min-width:560px">
             <thead>
-              <tr style="border-bottom:2px solid rgba(201,168,76,.3)">
+              <tr style="border-bottom:2px solid color-mix(in srgb,var(--c-gold) 30%,transparent)">
                 <th style="text-align:left;padding:.5rem .75rem;color:var(--c-gold);font-weight:700">Stakeholder</th>
                 <th style="text-align:center;padding:.5rem .5rem;color:var(--c-slate-l)">Score</th>
                 <th style="text-align:left;padding:.5rem .75rem;color:var(--c-slate-l)">Einbindungsgrad</th>
@@ -8081,22 +8081,22 @@
           <!-- Wertkette Visual -->
           <div style="margin:1.25rem 0">
             <!-- Unterstützungsaktivitäten -->
-            <div style="border:1px solid rgba(201,168,76,.3);border-radius:var(--r-md);padding:.75rem 1rem;margin-bottom:.5rem;background:rgba(201,168,76,.04)">
+            <div style="border:1px solid color-mix(in srgb,var(--c-gold) 30%,transparent);border-radius:var(--r-md);padding:.75rem 1rem;margin-bottom:.5rem;background:color-mix(in srgb,var(--c-gold) 4%,transparent)">
               <div style="font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--c-gold);margin-bottom:.6rem">Unterstützungsaktivitäten</div>
               <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem">
-                <div style="background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18);border-radius:var(--r-sm);padding:.5rem .75rem;font-size:.82rem;color:var(--c-text)">
+                <div style="background:color-mix(in srgb,var(--c-gold) 7%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 18%,transparent);border-radius:var(--r-sm);padding:.5rem .75rem;font-size:.82rem;color:var(--c-text)">
                   <strong style="color:var(--c-text-b);display:block;margin-bottom:.2rem">Infrastruktur</strong>
                   Feuerwachen, Leitstelle, Fahrzeuge, IT-Systeme, Gebäude
                 </div>
-                <div style="background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18);border-radius:var(--r-sm);padding:.5rem .75rem;font-size:.82rem;color:var(--c-text)">
+                <div style="background:color-mix(in srgb,var(--c-gold) 7%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 18%,transparent);border-radius:var(--r-sm);padding:.5rem .75rem;font-size:.82rem;color:var(--c-text)">
                   <strong style="color:var(--c-text-b);display:block;margin-bottom:.2rem">Personal &amp; Ausbildung</strong>
                   Personalgewinnung, Qualifikation, AGT-Mindestbesetzung, G26-Vorsorge
                 </div>
-                <div style="background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18);border-radius:var(--r-sm);padding:.5rem .75rem;font-size:.82rem;color:var(--c-text)">
+                <div style="background:color-mix(in srgb,var(--c-gold) 7%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 18%,transparent);border-radius:var(--r-sm);padding:.5rem .75rem;font-size:.82rem;color:var(--c-text)">
                   <strong style="color:var(--c-text-b);display:block;margin-bottom:.2rem">Technik &amp; Wartung</strong>
                   Fahrzeugunterhaltung, PSA-Prüfung, Atemschutzwerkstatt, WBK
                 </div>
-                <div style="background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18);border-radius:var(--r-sm);padding:.5rem .75rem;font-size:.82rem;color:var(--c-text)">
+                <div style="background:color-mix(in srgb,var(--c-gold) 7%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 18%,transparent);border-radius:var(--r-sm);padding:.5rem .75rem;font-size:.82rem;color:var(--c-text)">
                   <strong style="color:var(--c-text-b);display:block;margin-bottom:.2rem">Beschaffung &amp; Haushalt</strong>
                   Vergabeverfahren, Budgetplanung, Normfahrzeuge, Sonderbeschaffungen
                 </div>
@@ -8436,7 +8436,7 @@
           <div style="overflow-x:auto">
           <table style="width:100%;border-collapse:collapse;font-size:.82rem;min-width:480px">
             <thead>
-              <tr style="border-bottom:2px solid rgba(201,168,76,.3)">
+              <tr style="border-bottom:2px solid color-mix(in srgb,var(--c-gold) 30%,transparent)">
                 <th style="text-align:left;padding:.5rem .75rem;color:var(--c-gold);font-weight:700">Methode</th>
                 <th style="text-align:left;padding:.5rem .75rem;color:var(--c-slate-l)">Formel</th>
                 <th style="text-align:left;padding:.5rem .75rem;color:var(--c-slate-l)">Vorteil</th>
@@ -8599,7 +8599,7 @@
           <p class="acc-sub">Preisbeispiele gängiger Fahrzeugtypen (2026 inkl. Beladung, brutto)</p>
           <div style="overflow-x:auto">
             <table style="border-collapse:collapse;font-size:.82rem;width:100%;margin:.5rem 0">
-              <thead><tr style="background:rgba(201,168,76,.15)">
+              <thead><tr style="background:color-mix(in srgb,var(--c-gold) 15%,transparent)">
                 <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Fahrzeugtyp</th>
                 <th style="padding:.3rem .6rem;text-align:right;border:1px solid rgba(255,255,255,.1)">Kosten (brutto)</th>
                 <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Fahrzeugtyp</th>
@@ -8623,7 +8623,7 @@
           <p class="acc-sub">Planmäßige Nutzungsdauern (Erfahrungswerte FW Hamburg)</p>
           <div style="overflow-x:auto">
             <table style="border-collapse:collapse;font-size:.82rem;width:100%;margin:.5rem 0">
-              <thead><tr style="background:rgba(201,168,76,.15)">
+              <thead><tr style="background:color-mix(in srgb,var(--c-gold) 15%,transparent)">
                 <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Fahrzeugtyp</th>
                 <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">BF</th>
                 <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">FF</th>
@@ -8704,7 +8704,7 @@
           <p class="acc-sub">EU-Schwellenwerte ab 1.1.2026 (§106 GWB)</p>
           <div style="overflow-x:auto">
             <table style="border-collapse:collapse;font-size:.82rem;width:100%;margin:.5rem 0">
-              <thead><tr style="background:rgba(201,168,76,.15)">
+              <thead><tr style="background:color-mix(in srgb,var(--c-gold) 15%,transparent)">
                 <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Auftragsart</th>
                 <th style="padding:.3rem .6rem;text-align:right;border:1px solid rgba(255,255,255,.1)">ab 1.1.2026</th>
                 <th style="padding:.3rem .6rem;text-align:right;border:1px solid rgba(255,255,255,.1)">bis 31.12.2025</th>
@@ -8825,7 +8825,7 @@
           <p class="acc-sub">Watfähigkeit: Anforderungen an Fahrzeugtypen</p>
           <div style="overflow-x:auto">
             <table style="border-collapse:collapse;font-size:.82rem;width:100%;margin:.5rem 0">
-              <thead><tr style="background:rgba(201,168,76,.15)">
+              <thead><tr style="background:color-mix(in srgb,var(--c-gold) 15%,transparent)">
                 <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Fahrzeug</th>
                 <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Kat. 1<br><small>Straßenfähig (ca. 20 cm)</small></th>
                 <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Kat. 2<br><small>Geländefähig (60 cm)</small></th>
@@ -10172,7 +10172,7 @@
               <p class="acc-sub" style="margin-top:1rem">Kurzantwort</p>
               <div class="def-box"><strong>NWA (F88):</strong> Alternativen anhand gewichteter Kriterien → höchster Gesamtnutzwert = rechtssichere Entscheidung.<br><br><strong>Vorgehen:</strong> Kriterien festlegen → gewichten (Preis ≥ 40 %) → Punkte je Anbieter → gewichtet summieren → Höchstwert gewinnt.<br><br><strong>Rechtliche Pflichten (F90):</strong> Haushaltsmittel vorhanden · Preis ≥ 40 % · Wertungsmatrix mit Ausschreibung veröffentlichen.</div>
               <p class="acc-sub" style="margin-top:1rem">Ausführliche Antwort</p>
-              <div><strong>Instrument: Nutzwertanalyse (NWA) (F 88)</strong><br>Vergleich mehrerer Alternativen anhand <strong>gewichteter Kriterien</strong>; höchster Gesamtnutzwert = rechtssichere Entscheidungsgrundlage (F 89).<br><br><strong>Beispiel HLF-Vergabe (F 89)</strong><br><table style="border-collapse:collapse;font-size:.82rem;margin:.5rem 0;width:100%"><thead><tr style="background:rgba(201,168,76,.15)"><th style="padding:.25rem .5rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Kriterium</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Gewicht</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Anbieter A (Punkte)</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">A gewichtet</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Anbieter B (Punkte)</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">B gewichtet</th></tr></thead><tbody><tr><td style="padding:.2rem .5rem;border:1px solid rgba(255,255,255,.08)">Preis</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">40 %</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">4</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">1,6</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">2</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">0,8</td></tr><tr><td style="padding:.2rem .5rem;border:1px solid rgba(255,255,255,.08)">Unterhaltung</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">30 %</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">3</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">0,9</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">3</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">0,9</td></tr><tr><td style="padding:.2rem .5rem;border:1px solid rgba(255,255,255,.08)">Zuladungsreserve</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">30 %</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">3</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">0,9</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">4</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">1,2</td></tr><tr style="font-weight:700"><td style="padding:.2rem .5rem;border:1px solid rgba(255,255,255,.08)">Gesamtnutzwert</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">100 %</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">—</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08);color:#4ACD90">3,4</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">—</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">2,9</td></tr></tbody></table><br>→ Anbieter A gewinnt (3,4 vs. 2,9).<br><br><strong>Rechtliche Pflichten (F 90)</strong><br>① Haushaltsrechtliche Voraussetzungen vor Vergabestart.<br>② <strong>Preis mind. 40 %</strong> werten.<br>③ <strong>Wertungsmatrix mit Ausschreibung veröffentlichen.</strong></div>
+              <div><strong>Instrument: Nutzwertanalyse (NWA) (F 88)</strong><br>Vergleich mehrerer Alternativen anhand <strong>gewichteter Kriterien</strong>; höchster Gesamtnutzwert = rechtssichere Entscheidungsgrundlage (F 89).<br><br><strong>Beispiel HLF-Vergabe (F 89)</strong><br><table style="border-collapse:collapse;font-size:.82rem;margin:.5rem 0;width:100%"><thead><tr style="background:color-mix(in srgb,var(--c-gold) 15%,transparent)"><th style="padding:.25rem .5rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Kriterium</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Gewicht</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Anbieter A (Punkte)</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">A gewichtet</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Anbieter B (Punkte)</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">B gewichtet</th></tr></thead><tbody><tr><td style="padding:.2rem .5rem;border:1px solid rgba(255,255,255,.08)">Preis</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">40 %</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">4</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">1,6</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">2</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">0,8</td></tr><tr><td style="padding:.2rem .5rem;border:1px solid rgba(255,255,255,.08)">Unterhaltung</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">30 %</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">3</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">0,9</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">3</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">0,9</td></tr><tr><td style="padding:.2rem .5rem;border:1px solid rgba(255,255,255,.08)">Zuladungsreserve</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">30 %</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">3</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">0,9</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">4</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">1,2</td></tr><tr style="font-weight:700"><td style="padding:.2rem .5rem;border:1px solid rgba(255,255,255,.08)">Gesamtnutzwert</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">100 %</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">—</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08);color:#4ACD90">3,4</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">—</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">2,9</td></tr></tbody></table><br>→ Anbieter A gewinnt (3,4 vs. 2,9).<br><br><strong>Rechtliche Pflichten (F 90)</strong><br>① Haushaltsrechtliche Voraussetzungen vor Vergabestart.<br>② <strong>Preis mind. 40 %</strong> werten.<br>③ <strong>Wertungsmatrix mit Ausschreibung veröffentlichen.</strong></div>
         </div>
       </details>
 
@@ -10752,7 +10752,7 @@
 <!-- ============================================================ IdF MÜNSTER OVERVIEW ============================================================ -->
 <style>
 #idf-plan{margin-top:1.5rem;}
-.idf-plan-hdr{display:flex;flex-direction:column;gap:.55rem;padding:.9rem 1rem .75rem;background:var(--c-navy-2);border:1px solid rgba(201,168,76,.15);border-radius:var(--r-md);margin-bottom:.75rem;}
+.idf-plan-hdr{display:flex;flex-direction:column;gap:.55rem;padding:.9rem 1rem .75rem;background:var(--c-navy-2);border:1px solid color-mix(in srgb,var(--c-gold) 15%,transparent);border-radius:var(--r-md);margin-bottom:.75rem;}
 .idf-plan-row1{display:flex;align-items:center;justify-content:space-between;gap:.5rem;}
 .idf-plan-kw{font-size:.95rem;font-weight:700;color:var(--c-text);}
 .idf-plan-kw small{font-size:.68rem;font-weight:400;color:var(--c-slate);margin-left:.4rem;}
@@ -10846,19 +10846,19 @@
 
     <!-- Bild: Vier Säulen des Brandschutzes -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem;margin-bottom:1.5rem;">
-      <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.75rem;text-align:center;">
+      <div style="background:color-mix(in srgb,var(--c-gold) 8%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 25%,transparent);border-radius:var(--r-md);padding:.75rem;text-align:center;">
         <div style="color:var(--c-gold);font-size:1.4rem;margin-bottom:.35rem;">🏗️</div>
         <div style="font-size:.72rem;font-weight:600;color:var(--c-text-b);">Baulicher<br>Brandschutz</div>
       </div>
-      <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.75rem;text-align:center;">
+      <div style="background:color-mix(in srgb,var(--c-gold) 8%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 25%,transparent);border-radius:var(--r-md);padding:.75rem;text-align:center;">
         <div style="color:var(--c-gold);font-size:1.4rem;margin-bottom:.35rem;">🔧</div>
         <div style="font-size:.72rem;font-weight:600;color:var(--c-text-b);">Anlagentech.<br>Brandschutz</div>
       </div>
-      <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.75rem;text-align:center;">
+      <div style="background:color-mix(in srgb,var(--c-gold) 8%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 25%,transparent);border-radius:var(--r-md);padding:.75rem;text-align:center;">
         <div style="color:var(--c-gold);font-size:1.4rem;margin-bottom:.35rem;">📋</div>
         <div style="font-size:.72rem;font-weight:600;color:var(--c-text-b);">Organisat.<br>Brandschutz</div>
       </div>
-      <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.75rem;text-align:center;">
+      <div style="background:color-mix(in srgb,var(--c-gold) 8%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 25%,transparent);border-radius:var(--r-md);padding:.75rem;text-align:center;">
         <div style="color:var(--c-gold);font-size:1.4rem;margin-bottom:.35rem;">🚒</div>
         <div style="font-size:.72rem;font-weight:600;color:var(--c-text-b);">Abwehrender<br>Brandschutz</div>
       </div>
@@ -10987,7 +10987,7 @@
         <summary><span class="acc-num">06</span><span class="acc-title">Hochhäuser (MHHR) – OKFF &gt; 22 m</span><span class="acc-arrow">›</span></summary>
         <div class="acc-body">
           <!-- Visuelles Banner -->
-          <div style="background:rgba(201,168,76,.07);border-left:3px solid var(--c-gold);padding:.6rem .9rem;border-radius:0 var(--r-sm) var(--r-sm) 0;margin-bottom:.85rem;">
+          <div style="background:color-mix(in srgb,var(--c-gold) 7%,transparent);border-left:3px solid var(--c-gold);padding:.6rem .9rem;border-radius:0 var(--r-sm) var(--r-sm) 0;margin-bottom:.85rem;">
             <span style="color:var(--c-gold);font-weight:700;font-size:.8rem;">MHHR · Muster-Hochhaus-Richtlinie</span>
             &nbsp;·&nbsp; <span style="color:var(--c-slate-l);font-size:.78rem;">Anwendung ab OKFF oberste NE &gt; 22 m</span>
           </div>
@@ -11018,7 +11018,7 @@
       <details class="acc-item">
         <summary><span class="acc-num">07</span><span class="acc-title">Verkaufsstätten (MVKVO) – A &gt; 2.000 m²</span><span class="acc-arrow">›</span></summary>
         <div class="acc-body">
-          <div style="background:rgba(201,168,76,.07);border-left:3px solid var(--c-gold);padding:.6rem .9rem;border-radius:0 var(--r-sm) var(--r-sm) 0;margin-bottom:.85rem;">
+          <div style="background:color-mix(in srgb,var(--c-gold) 7%,transparent);border-left:3px solid var(--c-gold);padding:.6rem .9rem;border-radius:0 var(--r-sm) var(--r-sm) 0;margin-bottom:.85rem;">
             <span style="color:var(--c-gold);font-weight:700;font-size:.8rem;">MVKVO</span>&nbsp;·&nbsp;<span style="color:var(--c-slate-l);font-size:.78rem;">Verkaufsräume + Ladenstraßen &gt; 2.000 m²</span>
           </div>
           <p class="acc-sub">Rettungswege</p>
@@ -11053,7 +11053,7 @@
       <details class="acc-item">
         <summary><span class="acc-num">08</span><span class="acc-title">Beherbergungsstätten (MBeVO) – &gt; 12 Gastbetten</span><span class="acc-arrow">›</span></summary>
         <div class="acc-body">
-          <div style="background:rgba(201,168,76,.07);border-left:3px solid var(--c-gold);padding:.6rem .9rem;border-radius:0 var(--r-sm) var(--r-sm) 0;margin-bottom:.85rem;">
+          <div style="background:color-mix(in srgb,var(--c-gold) 7%,transparent);border-left:3px solid var(--c-gold);padding:.6rem .9rem;border-radius:0 var(--r-sm) var(--r-sm) 0;margin-bottom:.85rem;">
             <span style="color:var(--c-gold);font-weight:700;font-size:.8rem;">MBeVO</span>&nbsp;·&nbsp;<span style="color:var(--c-slate-l);font-size:.78rem;">Anwendung ab mehr als 12 Gastbetten</span>
           </div>
           <p class="acc-sub">Rettungswege</p>
@@ -11085,7 +11085,7 @@
       <details class="acc-item">
         <summary><span class="acc-num">09</span><span class="acc-title">Industriebau (MIndBauRL)</span><span class="acc-arrow">›</span></summary>
         <div class="acc-body">
-          <div style="background:rgba(201,168,76,.07);border-left:3px solid var(--c-gold);padding:.6rem .9rem;border-radius:0 var(--r-sm) var(--r-sm) 0;margin-bottom:.85rem;">
+          <div style="background:color-mix(in srgb,var(--c-gold) 7%,transparent);border-left:3px solid var(--c-gold);padding:.6rem .9rem;border-radius:0 var(--r-sm) var(--r-sm) 0;margin-bottom:.85rem;">
             <span style="color:var(--c-gold);font-weight:700;font-size:.8rem;">MIndBauRL</span>&nbsp;·&nbsp;<span style="color:var(--c-slate-l);font-size:.78rem;">Produktion, Behandlung, Verwertung, Lagerung</span>
           </div>
           <p class="acc-sub">Rettungswege</p>
@@ -11167,7 +11167,7 @@
     <div style="background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r-lg);padding:1.25rem;margin-bottom:1.25rem;">
       <div style="text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.08em;color:var(--c-gold);text-transform:uppercase;margin-bottom:.85rem;">Zwei-Stäbe-Modell · Führungsstufe D</div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:.5rem;">
-        <div style="background:rgba(201,168,76,.15);border:1px solid var(--c-gold-rim);border-radius:var(--r-sm);padding:.45rem 1.4rem;font-size:.78rem;font-weight:700;color:var(--c-gold);">Politisch Gesamtverantwortlicher (HVB)</div>
+        <div style="background:color-mix(in srgb,var(--c-gold) 15%,transparent);border:1px solid var(--c-gold-rim);border-radius:var(--r-sm);padding:.45rem 1.4rem;font-size:.78rem;font-weight:700;color:var(--c-gold);">Politisch Gesamtverantwortlicher (HVB)</div>
         <div style="width:1px;height:1.2rem;background:var(--c-gold-rim);"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;width:100%;">
           <div style="display:flex;flex-direction:column;align-items:center;gap:.4rem;">
@@ -11399,11 +11399,11 @@
 
     <!-- Visuelles Info-Banner -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem;">
-      <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.8rem 1rem;">
+      <div style="background:color-mix(in srgb,var(--c-gold) 8%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 25%,transparent);border-radius:var(--r-md);padding:.8rem 1rem;">
         <div style="font-size:.7rem;font-weight:700;color:var(--c-gold);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.35rem;">Rechtsgrundlage</div>
         <div style="font-size:.78rem;color:var(--c-text-b);">§ 4 Landespressegesetz<br>§ 43 Landesbeamtengesetz</div>
       </div>
-      <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:var(--r-md);padding:.8rem 1rem;">
+      <div style="background:color-mix(in srgb,var(--c-gold) 8%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 25%,transparent);border-radius:var(--r-md);padding:.8rem 1rem;">
         <div style="font-size:.7rem;font-weight:700;color:var(--c-gold);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.35rem;">Zuständigkeit</div>
         <div style="font-size:.78rem;color:var(--c-text-b);">Leitung der Behörde entscheidet, wer Auskünfte erteilt – kann delegiert werden (Pressesprecher, EL)</div>
       </div>
@@ -11889,7 +11889,7 @@
           <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin:.75rem 0;">
             <div style="flex:1;min-width:70px;background:rgba(100,149,237,.12);border:1px solid rgba(100,149,237,.3);border-radius:var(--r-sm);padding:.5rem;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:#6495ED;">78 %</div><div style="font-size:.7rem;color:var(--c-muted);">N₂</div></div>
             <div style="flex:1;min-width:70px;background:rgba(72,199,142,.12);border:1px solid rgba(72,199,142,.3);border-radius:var(--r-sm);padding:.5rem;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:#48c78e;">21 %</div><div style="font-size:.7rem;color:var(--c-muted);">O₂</div></div>
-            <div style="flex:1;min-width:70px;background:rgba(201,168,76,.1);border:1px solid var(--c-gold-rim);border-radius:var(--r-sm);padding:.5rem;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:var(--c-gold);">0,96 %</div><div style="font-size:.7rem;color:var(--c-muted);">Edelgase</div></div>
+            <div style="flex:1;min-width:70px;background:color-mix(in srgb,var(--c-gold) 10%,transparent);border:1px solid var(--c-gold-rim);border-radius:var(--r-sm);padding:.5rem;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:var(--c-gold);">0,96 %</div><div style="font-size:.7rem;color:var(--c-muted);">Edelgase</div></div>
             <div style="flex:1;min-width:70px;background:rgba(200,30,30,.1);border:1px solid rgba(200,30,30,.25);border-radius:var(--r-sm);padding:.5rem;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:#c81e1e;">0,04 %</div><div style="font-size:.7rem;color:var(--c-muted);">CO₂</div></div>
           </div>
           <p>Sinkt O₂ unter <strong>15 Vol.&nbsp;%</strong> nimmt der Körper Schaden. Der Mensch besitzt <strong>kein Sinnesorgan</strong> für Sauerstoffmangel – Nachweis ausschließlich mit Messgeräten.</p>
