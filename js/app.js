@@ -23,25 +23,15 @@ const NAV = (function(){
     }
     window.scrollTo({top:0,behavior:'instant'});
     const isContentPage = (id.split('-').length > 2 && !_GOLD_VIEWS.has(id)) || _NAVY_VIEWS.has(id);
-    window._shaderContentMode = isContentPage ? 1.0 : 0.0;
-    document.body.classList.toggle('mode-navy', isContentPage);
-    const bkBtn = document.getElementById('bookmark-btn');
-    if(bkBtn){
-      bkBtn.classList.toggle('hidden', !isContentPage);
-      if(isContentPage){ bkBtn.dataset.id=id; bkBtn.dataset.label=stack.length?stack[stack.length-1].label:''; }
-    }
-    const notesFab = document.getElementById('notes-fab');
-    if(notesFab) notesFab.classList.toggle('hidden', !isContentPage);
     if(typeof NOTES!=='undefined') NOTES.setView(id);
     if(typeof BOOKMARKS!=='undefined') BOOKMARKS.setView(id);
-    updateHeader();
-    MOBILE.onShow(id, isContentPage, stack);
-    if(id==='v-idf') IDF_PLAN.render('idf-plan-inner');
-    if(id==='v-plan') IDF_PLAN.render('plan-inner');
-    if(id==='v-home') MOBILE.renderHome();
-    if(id==='v-pruefung') MOBILE.renderExam();
-    if(id==='v-settings') MOBILE.syncSettings();
-    if(id==='v-notizen') MOBILE.renderNotes();
+    SHELL.onShow(id, isContentPage, stack);
+    if(id==='v-plan') IDF_PLAN.render();
+    if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); }
+    if(id==='v-home') SHELL.renderHome();
+    if(id==='v-pruefung') SHELL.renderExam();
+    if(id==='v-settings') SHELL.syncSettings();
+    if(id==='v-notizen') SHELL.renderNotes();
     if(id==='v-abkuerzungen') ABK.init();
     if(id==='v-vak-altklausur') QUIZ.init();
     if(id==='v-klausurfragen') KF_QUIZ.init();
@@ -63,37 +53,6 @@ const NAV = (function(){
     history.replaceState(history.state,'',url.pathname+(url.search==='?'||url.search===''?'':url.search));
     // Recently visited
     if(typeof RECENT!=='undefined') RECENT.track(id);
-  }
-
-  function updateHeader(){
-    const bb=document.getElementById('back-btn');
-    const fb=document.getElementById('float-back');
-    const cr=document.getElementById('breadcrumb');
-    const noStack = stack.length===0;
-
-    // Header back button (desktop)
-    bb.classList.toggle('hidden', noStack);
-
-    // Floating back button (mobile)
-    if(fb) fb.classList.toggle('hidden', noStack);
-
-    if(noStack){ cr.innerHTML=''; return; }
-
-    // Breadcrumb trail
-    const items=[{label:'Startseite',idx:-1},...stack.map((s,i)=>({label:s.label,idx:i}))];
-    cr.innerHTML=items.map((item,i)=>{
-      const last=i===items.length-1;
-      const cls=last?'crumb-item active':'crumb-item';
-      const click=last?'':(item.idx===-1?'onclick="NAV.home()"':`onclick="NAV.jumpTo(${item.idx})"`);
-      return `<span class="${cls}" ${click}>${item.label}</span>`;
-    }).join('');
-
-    // Float button label = previous page or Startseite
-    if(fb){
-      const prev = stack.length>=2 ? stack[stack.length-2].label : 'Startseite';
-      const lbl = fb.querySelector('.fb-label');
-      if(lbl) lbl.textContent = prev;
-    }
   }
 
   return {
@@ -1219,8 +1178,6 @@ const PROGRESS = (function(){
     const allLeafs = Object.values(GROUPS).flat();
     const total = allLeafs.length;
     const done = allLeafs.filter(v=>visited[v]).length;
-    const bar = document.getElementById('prog-bar');
-    if(bar) bar.style.width = (total ? Math.round(done/total*100) : 0) + '%';
 
     if(!_cardCache) _cardCache = document.querySelectorAll('.topic-card');
     _cardCache.forEach(card => {
@@ -1440,24 +1397,7 @@ const TOAST = (function(){
 })();
 
 const SETTINGS = (function(){
-  function closeAllPanels(){
-    document.getElementById('fontsize-overlay')?.classList.add('hidden');
-    document.getElementById('notif-overlay')?.classList.add('hidden');
-  }
   return {
-    toggleFontPanel(){
-      const p=document.getElementById('fontsize-overlay');
-      const was=p?.classList.contains('hidden');
-      closeAllPanels();
-      if(was) p?.classList.remove('hidden');
-    },
-    toggleNotifPanel(){
-      const p=document.getElementById('notif-overlay');
-      const was=p?.classList.contains('hidden');
-      closeAllPanels();
-      if(was){ p?.classList.remove('hidden'); if(typeof NOTIF!=='undefined') NOTIF.updateUI(); }
-    },
-    closeAllPanels,
     resetTopics(){
       const snap=localStorage.getItem('bvi_progress');
       if(!confirm('Lernfortschritt wirklich zurücksetzen?')) return;
@@ -1509,7 +1449,6 @@ const NOTES = (function(){
       if(preview) preview.textContent = note ? note.substring(0,80)+(note.length>80?'…':'') : 'Notiz hinzufügen…';
     }
     const has = !!(note && note.trim());
-    document.getElementById('notes-fab')?.classList.toggle('fab-active', has);
     document.getElementById('m-note')?.classList.toggle('fab-active', has);
   }
   function ensureWidget(){}
@@ -1585,15 +1524,7 @@ const BOOKMARKS = (function(){
   function syncFab(id){
     if(!id) return;
     const on=load().some(b=>b.id===id);
-    document.getElementById('bookmark-btn')?.classList.toggle('fab-active', on);
     document.getElementById('m-bm')?.classList.toggle('fab-active', on);
-  }
-  function updateHomeTile(){
-    const tile=document.getElementById('bm-tile');
-    const desc=document.getElementById('bm-tile-desc');
-    const d=load();
-    if(tile){ tile.classList.toggle('hidden', d.length===0); }
-    if(desc){ desc.textContent=d.length===1?'1 gespeicherte Seite':`${d.length} gespeicherte Seiten`; }
   }
   function renderPage(){
     const list=document.getElementById('bm-list');
@@ -1614,7 +1545,7 @@ const BOOKMARKS = (function(){
       btn.addEventListener('click',()=>NAV.go(btn.dataset.id, btn.dataset.label));
     });
     list.querySelectorAll('.bm-remove').forEach(btn=>{
-      btn.addEventListener('click',()=>{ removeBk(btn.dataset.id); renderPage(); updateHomeTile(); });
+      btn.addEventListener('click',()=>{ removeBk(btn.dataset.id); renderPage(); });
     });
   }
   return {
@@ -1625,12 +1556,11 @@ const BOOKMARKS = (function(){
       const i=d.findIndex(b=>b.id===id);
       if(i>=0){ d.splice(i,1); TOAST.show('Lesezeichen entfernt'); }
       else { d.unshift({id,label:label||id}); TOAST.show('Lesezeichen gesetzt',{type:'ok'}); }
-      save(d); syncFab(id); updateHomeTile();
+      save(d); syncFab(id);
     },
     getAll(){ return load(); },
     remove(id){ removeBk(id); },
-    renderPage,
-    updateHomeTile
+    renderPage
   };
 })();
 
@@ -1750,17 +1680,18 @@ const FC = (function(){
       const base=b.dataset.label||'';
       if(df==='all'){
         b.classList.toggle('active',allSel&&!isPruefung&&!isStarred);
-        b.textContent=`${base} (${FLASHCARD_DATA.length})`;
+        b.innerHTML=`<b>${base}</b><small>${FLASHCARD_DATA.length}</small>`;
       } else if(df==='starred'){
         b.classList.toggle('active',isStarred);
-        b.textContent=`⭐ ${base} (${stars.size})`;
+        b.classList.toggle('hidden',stars.size===0&&!isStarred);
+        b.innerHTML=`<b>★ ${base}</b><small>${stars.size}</small>`;
       } else if(df==='pruefung'){
         b.classList.toggle('active',isPruefung);
       } else if(df){
         const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df));
         const knownCnt=cats.filter(c=>known[c.id]).length;
         b.classList.toggle('active',!allSel&&!isPruefung&&!isStarred&&activeFilters.has(df));
-        b.textContent=`${base} ${knownCnt}/${cats.length}`;
+        b.innerHTML=`<b>${base}</b><small>${knownCnt}/${cats.length}</small>`;
       }
     });
   }
@@ -1843,7 +1774,6 @@ const FC = (function(){
     if(curIdx >= deck.length){ renderEnd(); return; }
     const card = deck[curIdx];
     const known = fcLoad();
-    const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
     const card_e = known[card.id];
     const iVal=card_e?(card_e.interval||1):0;
     const ease_v=card_e?(card_e.ease||2.5):2.5;
@@ -1853,23 +1783,19 @@ const FC = (function(){
     const stars=fcLoadStars();
     const isStarred=stars.has(card.id);
     box.innerHTML = `
-      <div class="fc-stats-row">
-        <span class="fc-stat">🟢 ${sess.known} gewusst</span>
-        <span class="fc-stat">🔴 ${sess.unknown} nicht gewusst</span>
-        <span class="fc-stat">📚 ${knownCnt}/${FLASHCARD_DATA.length} gelernt</span>
-        ${iVal>0?`<span class="fc-stat" title="Letztes Intervall">📅 ${iVal}d</span>`:''}
-      </div>
       <div class="fc-nav">
-        <button class="fc-back-btn" onclick="FC.back()" ${_seen.length===0?'disabled':''}>← Zurück</button>
-        <span>${curIdx+1} / ${deck.length}</span>
-        <button class="fc-star-btn${isStarred?' starred':''}" onclick="FC.toggleStar('${card.id}')" title="${isStarred?'Markierung entfernen':'Markieren'}">⭐</button>
+        <button class="fc-back-btn" onclick="FC.back()" ${_seen.length===0?'disabled':''} aria-label="Vorherige Karte"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+        <span class="fc-pos">Karte ${curIdx+1} von ${deck.length}</span>
+        <span class="fc-score">${sess.known} gewusst · ${sess.unknown} nochmal</span>
+        <button class="fc-star-btn${isStarred?' starred':''}" onclick="FC.toggleStar('${card.id}')" aria-label="${isStarred?'Markierung entfernen':'Karte markieren'}"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
       </div>
+      <div class="fc-progress"><i style="width:${deck.length?Math.round(curIdx/deck.length*100):0}%"></i></div>
       <div class="fc-outer">
         <div class="fc-inner" id="fc-inner">
           <div class="fc-face fc-front">
             <div class="fc-cat">${card.cat}</div>
             <div class="fc-q">${card.q}</div>
-            <div class="fc-tap">Tippen zum Aufdecken ↓</div>
+            <div class="fc-tap">Tippen zum Aufdecken</div>
           </div>
           <div class="fc-face fc-back">
             <div class="fc-cat">${card.cat}</div>
@@ -1880,19 +1806,15 @@ const FC = (function(){
         <div class="fc-swipe-no">✗ Nicht gewusst</div>
       </div>
       <div class="fc-controls" id="fc-controls" style="display:none">
-        <button class="fc-btn fc-no" onclick="FC.answer(false)">✗ Nicht gewusst<span class="fc-hint">1d</span></button>
-        <button class="fc-btn fc-hard" onclick="FC.answer('hard')">～ Schwer<span class="fc-hint">${iHard}d</span></button>
-        <button class="fc-btn fc-yes" onclick="FC.answer(true)">✓ Gewusst<span class="fc-hint">${iGood}d</span></button>
+        <button class="fc-btn fc-no" onclick="FC.answer(false)">Nochmal<span class="fc-hint">gleich wieder</span></button>
+        <button class="fc-btn fc-hard" onclick="FC.answer('hard')">Schwer<span class="fc-hint">in ${iHard} Tagen</span></button>
+        <button class="fc-btn fc-yes" onclick="FC.answer(true)">Gewusst<span class="fc-hint">in ${iGood} Tagen</span></button>
       </div>`;
     flipped = false;
-    window._shaderContentMode = 1.0;
-    document.body.classList.add('mode-navy');
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
   }
 
   function renderEnd(){
-    window._shaderContentMode = 1.0;
-    document.body.classList.add('mode-navy');
     const box = document.getElementById('fc-container'); if(!box) return;
     const known = fcLoad();
     const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
@@ -1971,7 +1893,7 @@ const FC = (function(){
         d[card.id]=sm2(d[card.id]||{},q); sess.known++;
         if(typeof STREAK!=='undefined') STREAK.record();
       }
-      fcSave(d); curIdx++; renderCard();
+      fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide();
     },
     setFilter(f){
       if(f==='starred'){
@@ -2010,6 +1932,7 @@ const FC = (function(){
       updateFilterButtons();
     },
     resetKnown(){ localStorage.removeItem('bvi_fc'); this.start(); },
+    syncFilters(){ updateFilterButtons(); },
     resize(){ sizeCard(); },
     print(){
       const cards=[...new Map(getDeck().map(c=>[c.id,c])).values()];
@@ -2327,156 +2250,23 @@ window.addEventListener('resize', () => {
 });
 
 /* ======================================================================
-   SHADER BG – WebGL2 fractal noise nebula (based on shader by Matthias Hurrle)
-====================================================================== */
-(function(){
-  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
-  if(window.matchMedia('(max-width:700px)').matches) return;
-  const canvas = document.getElementById('shader-bg');
-  if(!canvas) return;
-  const gl = canvas.getContext('webgl2');
-  if(!gl){ canvas.style.display='none'; return; }
-
-  const VS = `#version 300 es
-in vec2 position;
-void main(){gl_Position=vec4(position,0,1);}`;
-
-  const FS = `#version 300 es
-precision highp float;
-out vec4 O;
-uniform vec2 resolution;
-uniform float time;
-uniform float blend;
-uniform float realTime;
-#define FC gl_FragCoord.xy
-#define T time
-#define R resolution
-#define MN min(R.x,R.y)
-float rnd(vec2 p){p=fract(p*vec2(12.9898,78.233));p+=dot(p,p+34.56);return fract(p.x*p.y);}
-float noise(in vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);float a=rnd(i),b=rnd(i+vec2(1,0)),c=rnd(i+vec2(0,1)),d=rnd(i+1.);return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);}
-float fbm(vec2 p){float t=.0,a=1.;mat2 m=mat2(1.,-.5,.2,1.2);for(int i=0;i<5;i++){t+=a*noise(p);p*=2.*m;a*=.5;}return t;}
-float clouds(vec2 p){float d=1.,t=.0;for(float i=.0;i<3.;i++){float a=d*fbm(i*10.+p.x*.2+.2*(1.+i)*p.y+d+i*i+p);t=mix(t,d,a);d=a;p*=2./(i+1.);}return t;}
-void main(void){
-  vec2 uv=(FC-.5*R)/MN,st=uv*vec2(2,1);
-  vec3 col=vec3(0);
-  float bg=clouds(vec2(st.x+T*.5,-st.y));
-  uv*=1.-.3*(sin(T*.2)*.5+.5);
-  for(float i=1.;i<12.;i++){
-    uv+=.18*cos(i*vec2(.12+.013*i,.72)+i*i+T*.5);
-    vec2 p=uv;
-    float d=length(p);
-    float fade=smoothstep(1.3,0.25,d);
-    col+=.0003/d*(cos(sin(i)*vec3(1,2,3))+1.)*fade;
-    float b=noise(i+p+bg*1.731);
-    col+=.00048*b/length(vec2(max(abs(p.x),abs(p.y)*.12+.004),p.y))*fade;
-    col=mix(col,vec3(bg*.25,bg*.137,bg*.05),clamp(d,0.,1.));
-  }
-  // Navy-Modus: dunkles Navy + dezenter langsamer Radial-Puls auf Inhaltsseiten
-  float pulse=sin(realTime*0.6)*.5+.5;
-  vec2 ctr=(FC/R)-.5;
-  float glow=exp(-dot(ctr,ctr)*6.0)*(0.22+pulse*0.12);
-  vec3 navy=vec3(
-    0.031+bg*.02+glow*.015,
-    0.059+bg*.025+glow*.04,
-    0.110+bg*.07+glow*.11
-  );
-  col=mix(col,navy,blend);
-  O=vec4(col,1);
-}`;
-
-  function makeShader(type, src){
-    const sh = gl.createShader(type);
-    gl.shaderSource(sh, src);
-    gl.compileShader(sh);
-    if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)){
-      console.warn('Shader compile:', gl.getShaderInfoLog(sh));
-      return null;
-    }
-    return sh;
-  }
-
-  const vs = makeShader(gl.VERTEX_SHADER, VS);
-  const fs = makeShader(gl.FRAGMENT_SHADER, FS);
-  if(!vs || !fs){ canvas.style.display='none'; return; }
-
-  const prog = gl.createProgram();
-  gl.attachShader(prog, vs);
-  gl.attachShader(prog, fs);
-  gl.linkProgram(prog);
-  if(!gl.getProgramParameter(prog, gl.LINK_STATUS)){
-    console.warn('Program link:', gl.getProgramInfoLog(prog));
-    canvas.style.display='none'; return;
-  }
-  gl.useProgram(prog);
-
-  const vao = gl.createVertexArray();
-  gl.bindVertexArray(vao);
-  const buf = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-  const posLoc = gl.getAttribLocation(prog, 'position');
-  gl.enableVertexAttribArray(posLoc);
-  gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
-
-  const uRes      = gl.getUniformLocation(prog, 'resolution');
-  const uTime     = gl.getUniformLocation(prog, 'time');
-  const uBlend    = gl.getUniformLocation(prog, 'blend');
-  const uRealTime = gl.getUniformLocation(prog, 'realTime');
-
-  function resize(){
-    canvas.width  = innerWidth;
-    canvas.height = innerHeight;
-    gl.viewport(0, 0, canvas.width, canvas.height);
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  let start = 0, blendVal = 0;
-  function frame(now){
-    if(!start) start = now;
-    blendVal += ((window._shaderContentMode || 0) - blendVal) * 0.025;
-    const elapsed = (now - start) * 0.001;
-    gl.uniform2f(uRes, canvas.width, canvas.height);
-    gl.uniform1f(uTime, elapsed * 0.143);
-    gl.uniform1f(uRealTime, elapsed);
-    gl.uniform1f(uBlend, blendVal);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-})();
-
-/* ======================================================================
    STREAK – tägliche Lernsträhne
 ====================================================================== */
 const STREAK = (function(){
   function load(){ try{return JSON.parse(localStorage.getItem('bvi_streak')||'{}');}catch{return{};} }
   function save(d){ try{localStorage.setItem('bvi_streak',JSON.stringify(d));}catch{} }
   function todayStr(){ const n=new Date();return n.getFullYear()+'-'+(n.getMonth()+1)+'-'+n.getDate(); }
-  function render(){
-    const d=load(),n=d.current||0;
-    const el=document.getElementById('streak-badge');
-    if(!el) return;
-    const today=todayStr();
-    const prevD=new Date();prevD.setDate(prevD.getDate()-1);
-    const yStr=prevD.getFullYear()+'-'+(prevD.getMonth()+1)+'-'+prevD.getDate();
-    const active=n>0&&(d.lastStudy===today||d.lastStudy===yStr);
-    el.textContent=active?`🔥 ${n}`:'';
-    el.style.display=active?'':'none';
-    el.title=`Lernstreak: ${n} Tag${n===1?'':'e'} in Folge`;
-  }
   return {
     record(){
       const d=load(),today=todayStr();
-      if(d.lastStudy===today){render();return;}
+      if(d.lastStudy===today) return;
       const prev=new Date();prev.setDate(prev.getDate()-1);
       const yStr=prev.getFullYear()+'-'+(prev.getMonth()+1)+'-'+prev.getDate();
       d.current=d.lastStudy===yStr?(d.current||0)+1:1;
       d.longest=Math.max(d.longest||0,d.current);
       d.lastStudy=today;
-      save(d); render();
+      save(d);
     },
-    render,
     get(){ return load(); }
   };
 })();
@@ -2492,7 +2282,7 @@ const NOTIF = (function(){
       if(!('Notification' in window)){ TOAST.show('Benachrichtigungen nicht unterstützt'); return false; }
       if(on){
         const r=await Notification.requestPermission();
-        if(r!=='granted'){ TOAST.show('Benachrichtigungen wurden abgelehnt'); const t=document.getElementById('notif-toggle');if(t)t.checked=false; return false; }
+        if(r!=='granted'){ TOAST.show('Benachrichtigungen wurden abgelehnt'); return false; }
         savePrefs({...prefs(),enabled:true});
         TOAST.show('Benachrichtigungen aktiviert',{type:'ok'}); return true;
       } else { savePrefs({...prefs(),enabled:false}); return false; }
@@ -2506,11 +2296,6 @@ const NOTIF = (function(){
       if(new Date().getHours()<(p.hour||18)) return;
       try{ new Notification('B VI Lernwebsite 📚',{body:'Heute schon gelernt? Kurz Karten wiederholen!',icon:'./icons/icon-192.svg',tag:'bvi-daily'}); }catch{}
       savePrefs({...p,lastShown:today});
-    },
-    updateUI(){
-      const p=prefs();
-      const t=document.getElementById('notif-toggle');if(t) t.checked=this.isEnabled();
-      const h=document.getElementById('notif-hour');if(h) h.value=p.hour||18;
     }
   };
 })();
@@ -2619,10 +2404,7 @@ const POMO=(function(){
   function render(){
     const d=document.getElementById('pomo-display'); if(d) d.textContent=fmt(_rem);
     const btn=document.getElementById('pomo-start'); if(btn) btn.textContent=_running?'⏸ Pause':'▶ Start';
-    document.getElementById('pomo-hdr-btn')?.classList.toggle('hidden',!_running);
     document.getElementById('m-pomo')?.classList.toggle('hidden',!_running);
-    const ht=document.getElementById('pomo-hdr-time');
-    if(ht) ht.textContent=fmt(_rem);
     const mt=document.getElementById('m-pomo-time');
     if(mt) mt.textContent=fmt(_rem);
   }
@@ -2696,12 +2478,6 @@ const SETTINGS2=(function(){
     document.querySelectorAll('.s2-font-btn').forEach(b=>b.classList.toggle('active',b.dataset.ff===(ff||'sans')));
   }
   return {
-    open(){
-      document.getElementById('settings2-overlay').classList.remove('hidden');
-      SETTINGS._restoreFsUI();
-      if(typeof NOTIF!=='undefined') NOTIF.updateUI();
-    },
-    close(){ document.getElementById('settings2-overlay').classList.add('hidden'); },
     setFont(ff){ applyFont(ff); },
     restoreFont(){ applyFont(localStorage.getItem('bvi_font_family')||'sans'); }
   };
@@ -2736,20 +2512,8 @@ const RECENT=(function(){
       const entries=load().filter(e=>e.id!==id);
       entries.unshift({id,label});
       save(entries.slice(0,MAX));
-      this.render();
     },
-    render(){
-      const el=document.getElementById('recent-section'); if(!el) return;
-      const entries=load();
-      if(!entries.length){ el.classList.add('hidden'); return; }
-      el.classList.remove('hidden');
-      const list=el.querySelector('.recent-list');
-      if(list){
-        list.innerHTML=entries.map(e=>`<button class="recent-item" data-id="${e.id}" data-label="${e.label.replace(/"/g,'&quot;')}">${e.label}</button>`).join('');
-        list.querySelectorAll('.recent-item').forEach(b=>b.addEventListener('click',()=>NAV.go(b.dataset.id,b.dataset.label)));
-      }
-    },
-    clear(){ save([]); this.render(); },
+    clear(){ save([]); },
     list(){ return load(); }
   };
 })();
@@ -3531,6 +3295,18 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.1.0',ts:'2026-10-18T18:00',items:[
+      'Neues Design jetzt auch auf Tablet und Desktop: Tablet mit Tab-Leiste und zwei Spalten, Desktop mit Seitenleiste links',
+      'Startseite als Dashboard mit Kennzahlen, Wochenaktivität, Weiterlernen, nächster Klausur und Modul-Kacheln',
+      'Plan: auf dem Desktop die ganze Woche nebeneinander',
+      'Lernseiten: Inhaltsverzeichnis „Auf dieser Seite“ am rechten Rand (große Bildschirme)',
+      'Lernkarten: Spalte „Dein Stand“ mit Fortschritt pro Modul',
+      'Lernkarten im neuen Design: alle Modul-Filter auf einen Blick, Karte links ausgerichtet, Knöpfe Nochmal/Schwer/Gewusst, lange Antworten werden nicht mehr abgeschnitten',
+      'Filter „Markiert“ erscheint erst, wenn du eine Karte markierst – dann ganz vorne',
+      'Stundenplan: Uhrzeiten, Räume und Hinweise zu jeder Einheit, Telefonnummern der Woche; alle Wochen mit dem PDF abgeglichen und korrigiert',
+      'Stundenplan: Pfeile bleiben im Kasten, beim Gruppenwechsel bleibt die Woche gleich',
+      'Header, bewegter Hintergrund und altes Einstellungs-Fenster entfernt – alles liegt jetzt in den Tabs'
+    ]},
     {v:'3.0.0',ts:'2026-10-18T12:00',items:[
       'Neue Mobil-Ansicht im App-Stil: Tab-Leiste unten mit Start, Plan, Prüfung, Einstellungen und Lernen – der Header entfällt auf dem Handy',
       'Startseite (Handy): Streak, gelesene Themen, Lernkarten, Aktivität der Woche, Weiterlernen und alle Module mit Fortschritt',
@@ -4757,229 +4533,164 @@ const UEBUNGSKLAUSUR = (function(){
 
 /* ── IdF Münster Stundenplan Modul 3.5 ──────────────────────────────────── */
 const IDF_PLAN = (function(){
-  // Item type: 'hi'=Schlüsseltermin(gold) 'ex'=Exkursion(green) 'ar'=Anreise/Abreise(grey) 'std'=Standard(blue)
-  const W = [ // [kw, woche, thema, start(YYYY-MM-DD), gruppe(g1|g2|both), tage[5][items[{t,c}]]]
-    [44,1,'Vorbeugender Brandschutz 1','2026-10-26','g1',[
-      [{t:'Anreise',c:'ar'},{t:'Begrüßung & Einführung TM VB',c:'hi'},{t:'Rechtsgrundlagen Baurecht',c:'std'},{t:'Gebäudeklassen',c:'std'}],
-      [{t:'Baustoffnormung',c:'std'},{t:'Bauliche Trennung',c:'std'},{t:'Löschwasserversorgung',c:'std'}],
-      [{t:'System Rettungswege',c:'std'},{t:'Brandmeldeanlagen',c:'std'}],
-      [{t:'Einführung Sonderbau',c:'std'},{t:'Beherbergungsstätten',c:'std'},{t:'Brandschutznachweis',c:'std'}],
-      [{t:'Versammlungsstätten',c:'std'},{t:'Löschanlagen',c:'std'},{t:'Abreise ab 14:00',c:'ar'}],
-    ]],
-    [45,2,'Vorbeugender Brandschutz 2','2026-11-02','g1',[
-      [{t:'Anreise',c:'ar'},{t:'Verkaufsstätten',c:'std'},{t:'Einführung Stellungnahme',c:'std'}],
-      [{t:'Stellungnahme Übung',c:'hi'},{t:'Garagen',c:'std'},{t:'Hochhäuser',c:'std'}],
-      [{t:'Industriebau',c:'std'},{t:'Brandschutzsachverständige',c:'std'}],
-      [{t:'Stellungnahme Übung',c:'hi'},{t:'Aktuelles aus der Forschung',c:'std'}],
-      [{t:'EU-Katastrophenschutz (beide HG)',c:'hi'},{t:'Abreise',c:'ar'}],
-    ]],
-    [46,3,'Vorbeugender Brandschutz 3','2026-11-09','g1',[
-      [{t:'Anreise',c:'ar'},{t:'Pflege- und Betreuung',c:'std'},{t:'Stellungnahme Übung',c:'hi'}],
-      [{t:'Einführung Brandverhütungsschau',c:'std'},{t:'BVS praktisch (IdF NRW)',c:'hi'}],
-      [{t:'Exkursion Brandverhütungsschau',c:'ex'},{t:'BVS-Bericht',c:'std'}],
-      [{t:'Veranstaltungssicherheit',c:'std'},{t:'Einsatzplanung',c:'std'}],
-      [{t:'Leitung Brandschutzdienststelle',c:'std'},{t:'Verabschiedung',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [47,4,'Stab 1','2026-11-16','g1',[
-      [{t:'Anreise',c:'ar'},{t:'Begrüßung & Organisation',c:'std'},{t:'Führungslehre',c:'std'},{t:'Kommunikation',c:'std'}],
-      [{t:'Führungslehre',c:'std'},{t:'Stationsausbildung',c:'hi'},{t:'Sachgebiete 1–4 (rollierend)',c:'std'}],
-      [{t:'Innerer Dienst / Übernahme EL',c:'hi'},{t:'Stabsrahmenübung »Waldbrand«',c:'hi'},{t:'Übungsauswertung',c:'std'}],
-      [{t:'Sachgebiete 5 & 6 (Halbgruppen)',c:'std'},{t:'Mars, Venus & Saturn — in zivil',c:'std'}],
-      [{t:'(Fortsetzung in zivil)',c:'std'},{t:'Rekapitulation',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [48,5,'Stab 2','2026-11-23','g1',[
-      [{t:'Anreise',c:'ar'},{t:'Krisenstäbe',c:'std'}],
-      [{t:'Krisenstäbe — in zivil',c:'std'},{t:'Exkursion SAR-Leitstelle 13:30',c:'ex'}],
-      [{t:'Wiederholung & Aufbau',c:'std'},{t:'Stabsrahmenübung »Auswärtsspiel«',c:'hi'},{t:'Zusammenarbeit mit THW',c:'std'}],
-      [{t:'Stabsrahmenübung »Zugunglück«',c:'hi'},{t:'Übungsauswertung & Rückbau',c:'std'},{t:'Abreise',c:'ar'}],
-      [{t:'Selbststudium — Inhalt & Ort eigenem Ermessen',c:'ar'}],
-    ]],
-    [49,6,'Presse & Öffentlichkeitsarbeit','2026-11-30','g1',[
-      [{t:'Anreise',c:'ar'},{t:'Begrüßung',c:'std'},{t:'Presserecht',c:'std'}],
-      [{t:'Einführung Pressearbeit',c:'std'},{t:'Medien im Wandel',c:'std'},{t:'Exkursion Villa ten Hompel 13:30',c:'ex'}],
-      [{t:'Gr.A: Pressearbeit in der Krise',c:'hi'},{t:'Gr.B: Kameratraining',c:'hi'},{t:'Gruppenwechsel',c:'std'}],
-      [{t:'(Fortsetzung)',c:'std'},{t:'Exkursion WDR-Studio 13:30',c:'ex'}],
-      [{t:'Spontanhelfende',c:'std'},{t:'VOST',c:'std'},{t:'Krisenkommunikation Privatwirtschaft',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [44,1,'Stab 1','2026-10-26','g2',[
-      [{t:'Anreise',c:'ar'},{t:'Begrüßung & Organisation',c:'std'},{t:'Führungslehre',c:'std'},{t:'Kommunikation',c:'std'}],
-      [{t:'Führungslehre',c:'std'},{t:'Stationsausbildung',c:'hi'},{t:'Sachgebiete 1–4',c:'std'}],
-      [{t:'Innerer Dienst / Übernahme EL',c:'hi'},{t:'Stabsrahmenübung »Waldbrand«',c:'hi'},{t:'Übungsauswertung',c:'std'}],
-      [{t:'Sachgebiete 5 & 6 (Halbgruppen)',c:'std'},{t:'Mars, Venus & Saturn',c:'std'}],
-      [{t:'(Fortsetzung in zivil)',c:'std'},{t:'Rekapitulation',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [45,2,'Stab 2','2026-11-02','g2',[
-      [{t:'Anreise',c:'ar'},{t:'Krisenstäbe',c:'std'}],
-      [{t:'Krisenstäbe',c:'std'},{t:'Exkursion SAR-Leitstelle 13:30',c:'ex'}],
-      [{t:'Wiederholung & Aufbau',c:'std'},{t:'Stabsrahmenübung »Auswärtsspiel«',c:'hi'},{t:'Zusammenarbeit THW',c:'std'}],
-      [{t:'Stabsrahmenübung »Zugunglück«',c:'hi'},{t:'EVA EU-Katastrophenschutz',c:'std'},{t:'Abreise',c:'ar'}],
-      [{t:'EU-Katastrophenschutz (beide HG)',c:'hi'},{t:'Selbststudium',c:'ar'}],
-    ]],
-    [46,3,'Presse & Öffentlichkeitsarbeit','2026-11-09','g2',[
-      [{t:'Anreise',c:'ar'},{t:'Begrüßung',c:'std'},{t:'Presserecht',c:'std'}],
-      [{t:'Einführung Pressearbeit',c:'std'},{t:'Medien im Wandel',c:'std'},{t:'Exkursion Villa ten Hompel 13:30',c:'ex'}],
-      [{t:'Pressearbeit in der Krise',c:'hi'},{t:'Kameratraining',c:'hi'},{t:'Exkursion WDR-Studio',c:'ex'}],
-      [{t:'(Fortsetzung)',c:'std'},{t:'Gruppenwechsel',c:'std'}],
-      [{t:'Spontanhelfende',c:'std'},{t:'VOST',c:'std'},{t:'Krisenkommunikation',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [47,4,'Vorbeugender Brandschutz 1','2026-11-16','g2',[
-      [{t:'Anreise',c:'ar'},{t:'Einführung TM VB',c:'hi'},{t:'Rechtsgrundlagen Baurecht',c:'std'},{t:'Gebäudeklassen',c:'std'}],
-      [{t:'Baustoffnormung',c:'std'},{t:'Bauliche Trennung',c:'std'},{t:'Löschwasserversorgung',c:'std'}],
-      [{t:'System Rettungswege',c:'std'},{t:'Brandmeldeanlagen',c:'std'}],
-      [{t:'Einführung Sonderbau',c:'std'},{t:'Beherbergungsstätten',c:'std'},{t:'Brandschutznachweis',c:'std'}],
-      [{t:'Versammlungsstätten',c:'std'},{t:'Löschanlagen',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [48,5,'Vorbeugender Brandschutz 2','2026-11-23','g2',[
-      [{t:'Anreise',c:'ar'},{t:'Verkaufsstätten',c:'std'},{t:'Einführung Stellungnahme',c:'std'}],
-      [{t:'Stellungnahme Übung',c:'hi'},{t:'Garagen',c:'std'},{t:'Hochhäuser',c:'std'}],
-      [{t:'Industriebau',c:'std'},{t:'Brandschutzsachverständige',c:'std'}],
-      [{t:'Stellungnahme Übung',c:'hi'},{t:'Aktuelles aus der Forschung',c:'std'},{t:'Abreise',c:'ar'}],
-      [{t:'Selbststudium',c:'ar'}],
-    ]],
-    [49,6,'Vorbeugender Brandschutz 3','2026-11-30','g2',[
-      [{t:'Anreise',c:'ar'},{t:'Pflege- und Betreuung',c:'std'},{t:'Stellungnahme Übung',c:'hi'}],
-      [{t:'Einführung Brandverhütungsschau',c:'std'},{t:'BVS praktisch',c:'hi'}],
-      [{t:'Exkursion Brandverhütungsschau',c:'ex'},{t:'Einsatzplanung',c:'std'}],
-      [{t:'Veranstaltungssicherheit',c:'std'}],
-      [{t:'Leitung Brandschutzdienststelle',c:'std'},{t:'Verabschiedung',c:'std'},{t:'Abreise',c:'ar'}],
-    ]],
-    [50,7,'Zivile Verteidigung (Ahrweiler)','2026-12-07','both',[
-      [{t:'Anreise / BABZ-Programm',c:'std'}],
-      [{t:'BABZ-Programm',c:'std'}],
-      [{t:'BABZ-Programm',c:'std'}],
-      [{t:'BABZ-Programm',c:'std'}],
-      [{t:'BABZ-Programm / Abreise',c:'ar'}],
-    ]],
+  // Eintrag: "Zeit|Titel|Art|Raum|Hinweis" · Zeit = UE ("1-2") oder Uhrzeit ("09:00-09:15", "19:00", "EVA")
+  // Art: hi = Schlüsseltermin, ex = Exkursion, ar = Anreise/Abreise/frei
+  const UE_S=['07:45','08:30','09:45','10:30','11:30','12:15','14:00','14:45'];
+  const UE_E=['08:30','09:15','10:30','11:15','12:15','13:00','14:45','15:30'];
+  const TEL={
+    langer:[['Jörn Ruschenburg','-3202'],['Daniel Langer','-3210']],
+    schoene:[['Jörn Ruschenburg','-3202'],['Malte Schönefeld','-3221']],
+    spahl:[['Jörn Ruschenburg','-3202'],['Frank Spahlholz','-3223']],
+    babz:[['Christoph Schaaf (BABZ)','0228 99550-5205'],['Thorsten Ohm (BABZ)','-5206']]
+  };
+  const SG='Sachgebiete 1 bis 4|hi|C-205, C-213, C-214, C-215|in vier Gruppen rollierend';
+  const VB1_G1=[
+    ['1-2|Anreise|ar','3|Begrüßung|hi|C-1|Begrüßung durch den Direktor · Hemd/Krawatte','4|Einführung in das Teilmodul VB||B1-106','5-6|Rechtsgrundlagen Baurecht||B1-106','7-8|Gebäudeklassen||B1-106'],
+    ['1-2|Baustoffnormung||B1-106','3-6|Bauliche Trennung||B1-106','7-8|Löschwasserversorgung||B1-106'],
+    ['1-6|System Rettungswege||B1-106','7-8|Brandmeldeanlagen||B1-106','19:00|Vortrag @fire|hi|C-1|freiwillig'],
+    ['1-2|Einführung Sonderbau||B1-106','3-6|Beherbergungsstätten||B1-106','7-8|Brandschutznachweis||B1-106'],
+    ['1-4|Versammlungsstätten||B1-106','5-6|Löschanlagen||B1-106','7|Abreise|ar']];
+  const VB1_G2=[
+    ['1-2|Anreise|ar','3|Einführung in das Teilmodul VB||B1-106','4-5|Rechtsgrundlagen Baurecht||B1-106','6-7|Gebäudeklassen||B1-106','8|Baustoffnormung||B1-106'],
+    ['1-4|Baustoffnormung||B1-106','5-6|Bauliche Trennung||B1-106','7-8|Löschwasserversorgung||B1-106'],
+    VB1_G1[2].slice(0,2), VB1_G1[3], VB1_G1[4]];
+  const VB2=(mi,doLast,fr)=>[
+    ['1-2|Anreise|ar','3-6|Verkaufsstätten||B1-106','7-8|Einführung Stellungnahme||B1-106'],
+    ['1-2|Stellungnahme Übung|hi|B1-106','3-5|Garagen||B1-106','6-8|Hochhäuser||B1-106'],
+    ['1-4|Industriebau||B1-106','5-8|Brandschutzsachverständige||B1-106',...mi],
+    ['07:45-ca. 11:00|Stellungnahme Übung|hi|B1-106','ca. 11:00-13:00|Aktuelles aus der Forschung||B1-106',doLast],
+    fr];
+  const SELBST=['ganztägig|Selbststudium|ar||Inhalt und Ort nach eigenem Ermessen'];
+  const VB3_FR=['1-4|Leitung einer Brandschutzdienststelle||B1-106','5-6|Verabschiedung||B1-106|Evaluation der vergangenen drei Wochen','7|Abreise|ar'];
+  const VB3_MO=['1-2|Anreise|ar','3-4|Pflege- und Betreuung||B1-106','5-8|Stellungnahme Übung|hi|B1-106','EVA|Vorbereitung Einsatzplanung'];
+  const VB3_DI=['1-4|Einführung Brandverhütungsschau||B1-106','5-8|Brandverhütungsschau praktisch|hi||IdF NRW','EVA|Vorbereitung Exkursion anhand BSK'];
+  const VB3_DO=['1-8|Veranstaltungssicherheit||B1-106|Orientierungsrahmen für Veranstaltungen im Freien'];
+  const STAB1=(g)=>[
+    g===1?['1-2|Anreise|ar','3|Begrüßung & Organisation||C-205','4-7|Führungslehre||C-205|Zwei-Stäbe-Modell · FwDV 100 · Führungsstufe D · Rollenverständnis','8|Kommunikation|||Nachrichtenvordruck · Lagedarstellung · Lagevortrag · Einsatztagebuch','EVA|Sachgebiet 4']
+         :['1-2|Anreise|ar','3|Begrüßung|hi|C-1|Begrüßung durch den Direktor · Hemd/Krawatte · Vorstellungsrunde','4|Wochenorganisation||C-205','5-7|Führungslehre||C-205|Zwei-Stäbe-Modell · FwDV 100 · Führungsstufe D · Rollenverständnis · Lagedarstellung NRW','8|Kommunikation|||Nachrichtenvordruck · Lagedarstellung · Lagevortrag · Einsatztagebuch','EVA|Sachgebiet 4'],
+    ['07:45-09:00|Führungslehre||C-205|'+(g===1?'Wiederholung Vortrag · Meldewesen · FB & Verbinder':'Meldewesen · Fachberater & Verbinder'),'09:00-09:15|Stationsausbildung|||gemeinsame Lageeinweisung','09:30-10:30|'+SG,'10:45-11:45|'+SG,'12:00-13:00|'+SG,'14:00-15:00|'+SG,'15:00-15:30|Aufbau|||Stabsräume „klein“','EVA|Sichter/Sichterin'],
+    ['07:45-08:30|Innerer Dienst / Übernahme der EL|||gleitender Übergang zur Übung','08:30-12:15|Stabsrahmenübung »Waldbrand«|hi|'+(g===1?'C-204, C-205':'C-205, C-215')+'|Küchenwagen mitbringen','6|Übungsauswertung','14:00-15:00|Waldbrände||C-205|Einsatztaktiken · Einsatzmittel · Kooperation mit Forstbehörden','15:00-15:30|Rückbau|||Stabsräume „klein“',...(g===2?['19:00|Vortrag @fire|hi|C-1|freiwillig']:[]),'EVA|Führungsgrundsätze'],
+    ['1-2|Sachgebiete 5 und 6||'+(g===1?'C-204, A3-28':'C-204, C-205')+'|in Halbgruppen im Wechsel · in zivil','3-8|Mars, Venus & Saturn||C-215|in zivil','EVA|Fayol'],
+    ['1-5|Mars, Venus & Saturn (Fortsetzung)|||in zivil','6|Rekapitulation & Organisatorisches||'+(g===1?'C-215':'C-205'),'7|Abreise|ar']];
+  const STAB2=(g)=>[
+    ['1-2|Anreise|ar','3-8|Krisenstäbe||C-205|in zivil · Zuständigkeiten · Struktur · Methoden · Kooperation mit EL','EVA|Web-GIS||C-205'],
+    ['07:45-12:30|Krisenstäbe||C-1|in zivil · Aufbau · Anwendungstraining · Nachbesprechung','13:30-17:00|Exkursion zur SAR-Leitstelle|ex||Hemd/Krawatte, ggf. Wetterschutz · fußläufig · Abmarsch 13:30 vor Gebäude C','EVA|KatS-Konzepte'],
+    ['1|Wiederholung & Aufbau||C-205|Stabsraum „groß“','2-5|Stabsrahmenübung »Auswärtsspiel«|hi|C-205|Küchenwagen mitbringen','6|Übungsauswertung||C-205','7-8|Zusammenarbeit mit dem THW||C-205','EVA|Sachgebiet 3'],
+    g===1?['1-5|Stabsrahmenübung »Zugunglück«|hi|C-205|Küchenwagen mitbringen','6|Übungsauswertung & Rückbau','7|Abreise|ar','EVA|LdS']
+         :['1-5|Stabsrahmenübung »Zugunglück«|hi|C-205|Küchenwagen mitbringen','6|Übungsauswertung & Rückbau','7-8|EVA: EU-Katastrophenschutz','EVA|LdS'],
+    g===1?SELBST:['1-6|EU-Katastrophenschutz|hi|C-205|beide Halbgruppen gemeinsam','7|Abreise|ar']];
+  const PRESSE=(g)=>{
+    const r=g===1?'C-215':'C-205';
+    const wdr='13:30-ca. 17:00|Exkursion zum WDR-Studio|ex||zivil · Fahrt mit MTFs · Abfahrt 13:30, Parkplatz 2 · Ende in Dortmund';
+    return [
+      ['1-2|Anreise|ar','3|Begrüßung, Vorstellung der Woche||'+r,'4-8|Presserecht||'+r,...(g===2?['18:00|Kaminabend in Präsenz|hi||Gebäude C · zivil/leger · inkl. Catering']:[])],
+      ['1|Einführung in die Pressearbeit||'+r,'2|Strategische Pressearbeit','3|Medien im Wandel||'+r,'4|Öffentlichkeitsarbeit','5|Wie arbeitet Presse?','6|Erwartungen eines Journalisten','13:30-18:00|Exkursion zur Villa ten Hompel|ex||zivil · fußläufig · Abmarsch 13:30 vor Gebäude C'],
+      g===1?['1-7|Gr. A: Pressearbeit in der Krise, Pressekonferenzen|hi|C-215','1-7|Gr. B: Kameratraining|hi|C-204','8|Gruppenwechsel|||Fortsetzung']
+           :['1-6|Gr. A: Pressearbeit in der Krise, Pressekonferenzen|hi|C-205','1-6|Gr. B: Kameratraining|hi|C-204',wdr],
+      g===1?['1-6|Pressearbeit in der Krise / Kameratraining (Fortsetzung)',wdr]
+           :['1|Pressearbeit in der Krise / Kameratraining (Fortsetzung)','2-8|Gruppenwechsel|||Fortsetzung'],
+      ['1-2|Spontanhelfende||'+r,'3-4|Virtual Operations Support Team (VOST)||'+r,'5-6|Krisenkommunikation in der Privatwirtschaft||'+r+'|Evaluation der Woche','7|Abreise|ar']];
+  };
+  const W = [ // [KW, Woche, Thema, Montag, Gruppe, Tage Mo–Fr, Telefon, Hinweis]
+    [44,1,'Vorbeugender Brandschutz 1','2026-10-26','g1',VB1_G1],
+    [45,2,'Vorbeugender Brandschutz 2','2026-11-02','g1',VB2([],'EVA|EU-Katastrophenschutz',['1-6|EU-Katastrophenschutz|hi|C-205|beide Halbgruppen gemeinsam','7|Abreise|ar'])],
+    [46,3,'Vorbeugender Brandschutz 3','2026-11-09','g1',[[...VB3_MO,'18:00|Kaminabend in Präsenz|hi||Gebäude C · zivil/leger · inkl. Catering'],VB3_DI,
+      ['1-3|Exkursion Brandverhütungsschau praktisch|ex||extern · Poloshirt, Büroschuhe genügen','4-6|Brandverhütungsschaubericht||A3-25','7-8|Einsatzplanung||A3-25'],VB3_DO,VB3_FR]],
+    [47,4,'Stab 1','2026-11-16','g1',STAB1(1),TEL.langer],
+    [48,5,'Stab 2','2026-11-23','g1',STAB2(1),TEL.schoene],
+    [49,6,'Presse & Öffentlichkeitsarbeit','2026-11-30','g1',PRESSE(1),TEL.schoene],
+    [44,1,'Stab 1','2026-10-26','g2',STAB1(2),TEL.langer],
+    [45,2,'Stab 2','2026-11-02','g2',STAB2(2),TEL.schoene],
+    [46,3,'Presse & Öffentlichkeitsarbeit','2026-11-09','g2',PRESSE(2),TEL.schoene],
+    [47,4,'Vorbeugender Brandschutz 1','2026-11-16','g2',VB1_G2],
+    [48,5,'Vorbeugender Brandschutz 2','2026-11-23','g2',VB2(['EVA|Vorbereitung Stellungnahme für Freitag anhand Unterlagen'],'7|Abreise|ar',SELBST)],
+    [49,6,'Vorbeugender Brandschutz 3','2026-11-30','g2',[VB3_MO,VB3_DI,
+      ['1-6|Exkursion Brandverhütungsschau praktisch|ex||Poloshirt, Büroschuhe genügen · inkl. Brandverhütungsschaubericht','7-8|Einsatzplanung||B1-106'],VB3_DO,VB3_FR]],
+    [50,7,'Zivile Verteidigung','2026-12-07','both',Array(5).fill(['ganztägig|Programm der BABZ|||Ahrweiler']),TEL.babz,
+      'Die ganze Woche gestaltet die BABZ in Ahrweiler. Der genaue Stundenplan und Hinweise zu Anreise, Unterkunft, Verpflegung und Kleidung kommen als separates Dokument.'],
     [51,8,'Stab 3','2026-12-14','both',[
-      [{t:'Anreise',c:'ar'},{t:'Leistungsnachweis §13',c:'hi'},{t:'MoFüSt NRW',c:'std'},{t:'SRÜ »Unwetter« ab 18:15',c:'hi'}],
-      [{t:'unterrichtsfrei',c:'ar'},{t:'Übungsauswertung',c:'std'}],
-      [{t:'Fachtagung Stabsarbeit (ab 8:00)',c:'hi'},{t:'Get Together · Hemd/Krawatte',c:'hi'}],
-      [{t:'Konzepterarbeitung Großveranstaltung',c:'std'},{t:'Gr.A: SRÜ Großveranstaltung',c:'hi'}],
-      [{t:'Gr.B: SRÜ Großveranstaltung',c:'hi'},{t:'Übungsauswertung beide Gruppen',c:'hi'},{t:'Rückbau & Abreise',c:'ar'}],
-    ]],
+      ['1-2|Anreise|ar','3|Leistungsnachweis nach § 13 Abs. 3|hi|C-1|siehe Prüfungsleitfaden','11:00-11:30|MoFüSt NRW||C-1','11:30-13:00|Historie der Stabsarbeit & Stabsarbeit international||C-1','13:30-14:45|Historie der Stabsarbeit (Fortsetzung)','8|Lageeinweisung||C-1','18:15|Stabsrahmenübung »Unwetter«|hi||Lunchpaket packen · spätes Ende · Küchenwagen mitbringen'],
+      ['1-6|unterrichtsfrei|ar','7-8|Übungsauswertung||C-205'],
+      ['08:00-16:30|Fachtagung Stabsarbeit|hi|C-1|Get Together 08:00 · Beginn 08:45 · Hemd/Krawatte','EVA|Übungsbedarf'],
+      ['1-5|Konzepterarbeitung Großveranstaltung||C-205','6|Aufbau||C-205|Stabsraum „groß“','14:00-17:00|Gr. A: Stabsrahmenübung »Großveranstaltung«|hi|C-205|Küchenwagen mitbringen'],
+      ['07:45-ca. 11:00|Gr. B: Stabsrahmenübung »Großveranstaltung«|hi|C-205|Küchenwagen mitbringen','ca. 11:15-12:15|Übungsauswertung beider Gruppen||C-205','6|Rückbau & Organisatorisches|||Evaluation der drei Wochen Stab','7|Abreise|ar']],TEL.spahl],
     [52,9,'Klausuren','2026-12-21','both',[
-      [{t:'Anreise',c:'ar'},{t:'Klausur §21 — 4 Zeitstunden',c:'hi'}],
-      [{t:'Klausur §21 — 4 Zeitstunden',c:'hi'},{t:'Verabschiedung durch Direktor (Hemd/Krawatte)',c:'hi'}],
-      [{t:'Ende des Moduls',c:'ar'}],
-      [],
-      [],
-    ]],
+      ['1|Anreise|ar','08:30-12:30|Klausur nach § 21|hi|B1-106, A3-25|4 Zeitstunden','7-8|unterrichtsfrei|ar'],
+      ['1|unterrichtsfrei|ar','08:30-12:30|Klausur nach § 21|hi|B1-106, A3-25|4 Zeitstunden','7-8|Verabschiedung durch den Direktor|hi|A2-1|Hemd/Krawatte'],
+      [],['nachmittags|Heiligabend|ar'],['ganztägig|1. Weihnachtstag|ar']],TEL.spahl]
   ];
 
   const DAYS=['Mo','Di','Mi','Do','Fr'];
   const MONS=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
-  let _grp='g1', _wi=0, _weeks=[], _target='idf-plan-inner';
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  let _grp='g1', _wi=0, _weeks=[];
 
-  function _isoWeek(d){
-    const t=new Date(d);
-    t.setHours(0,0,0,0);
-    t.setDate(t.getDate()+3-(t.getDay()||7)-1+1);
-    const w1=new Date(t.getFullYear(),0,4);
-    return 1+Math.round((t-w1)/604800000);
+  function _time(spec){
+    const m=/^(\d)(?:-(\d))?$/.exec(spec);
+    if(m) return [UE_S[m[1]-1], UE_E[(m[2]||m[1])-1]];
+    const i=spec.indexOf('-');
+    return i<0?[spec,'']:[spec.slice(0,i),spec.slice(i+1)];
   }
-
+  function _item(s){
+    const [t,title,cls='',room='',note='']=s.split('|');
+    const [a,b]=_time(t);
+    const meta=[note,room?'Raum '+room:''].filter(Boolean).join(' · ');
+    return `<div class="idf-item ${cls}"><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${esc(title)}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
+  }
   function _buildWeeks(g=_grp){
-    return W.filter(w=>w[4]==='both'||w[4]===g)
-             .sort((a,b)=>new Date(a[3])-new Date(b[3]));
+    return W.filter(w=>w[4]==='both'||w[4]===g).sort((a,b)=>a[3]<b[3]?-1:1);
   }
-
   function _autoIdx(ws=_weeks){
-    const today=new Date();today.setHours(0,0,0,0);
-    for(let i=ws.length-1;i>=0;i--){
-      if(new Date(ws[i][3]+'T00:00')<=today) return i;
-    }
+    const today=new Date(); today.setHours(0,0,0,0);
+    for(let i=ws.length-1;i>=0;i--) if(new Date(ws[i][3]+'T00:00')<=today) return i;
     return 0;
   }
-
   function _savedGrp(){ try{ return localStorage.getItem('idf_plan_grp')||'g1'; }catch(e){ return 'g1'; } }
 
-  function _getDates(w){
-    const base=new Date(w[3]+'T00:00');
-    return DAYS.map((_,i)=>{ const d=new Date(base);d.setDate(base.getDate()+i);return d; });
-  }
-
   function _draw(){
-    const el=document.getElementById(_target);
-    if(!el) return;
-    const wk=_weeks[_wi];
-    if(!wk){ el.innerHTML='<p style="color:var(--c-slate);font-size:.8rem;padding:.5rem 0">Kein Eintrag.</p>'; return; }
-    const isBoth=wk[4]==='both';
-    const dates=_getDates(wk);
-    const today=new Date();today.setHours(0,0,0,0);
-
-    // header
-    let h=`<div class="idf-plan-hdr">`;
-    h+=`<div class="idf-plan-row1">`;
-    h+=`<div class="idf-plan-kw">KW ${wk[0]} <small>Woche ${wk[1]} / 9</small></div>`;
-    h+=`<div style="display:flex;align-items:center;gap:.4rem">`;
-    h+=`<div class="idf-prog">${_weeks.map((_,i)=>`<div class="idf-pip${i<_wi?' done':i===_wi?' cur':''}"></div>`).join('')}</div>`;
-    h+=`<div class="idf-plan-nav">`;
-    h+=`<button class="idf-nav-btn" onclick="IDF_PLAN._nav(-1)"${_wi===0?' disabled':''}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>`;
-    h+=`<button class="idf-nav-btn" onclick="IDF_PLAN._nav(1)"${_wi===_weeks.length-1?' disabled':''}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>`;
-    h+=`</div></div></div>`;
-    h+=`<div class="idf-plan-row2"><span class="idf-thema">${wk[2]}</span>`;
-    if(isBoth){
-      h+=`<span style="font-size:.7rem;color:var(--c-gold)">beide Gruppen</span>`;
-    } else {
-      h+=`<div class="idf-grp-toggle">`;
-      h+=`<button class="idf-grp-btn${_grp==='g1'?' active':''}" onclick="IDF_PLAN._grp('g1')">Gruppe 1</button>`;
-      h+=`<button class="idf-grp-btn${_grp==='g2'?' active':''}" onclick="IDF_PLAN._grp('g2')">Gruppe 2</button>`;
-      h+=`</div>`;
-    }
-    h+=`</div></div>`;
-
-    // special note for Ahrweiler
-    if(wk[0]===50){
-      h+=`<div class="idf-plan-note"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:.1rem"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Veranstaltungsort: Ahrweiler (BABZ). Detailprogramm wird separat geteilt.</div>`;
-    }
-
-    // day cards
-    h+=`<div class="idf-day-wrap"><div class="idf-days">`;
-    wk[5].forEach((items,di)=>{
-      const d=dates[di];
+    const el=document.getElementById('plan-inner'); if(!el) return;
+    const wk=_weeks[_wi]; if(!wk) return;
+    const [kw,nr,thema,start,grp,days,tel,info]=wk;
+    const today=new Date(); today.setHours(0,0,0,0);
+    const base=new Date(start+'T00:00');
+    const notStarted=today<new Date(_weeks[0][3]+'T00:00');
+    const icon=d=>`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+    let h=`<div class="m-card idf-head">
+      <div class="idf-row"><div><b class="idf-kw">KW ${kw}</b><span class="m-t2">Woche ${nr} von 9${grp==='both'?' · beide Gruppen':''}</span></div>
+        <div class="idf-nav"><button onclick="IDF_PLAN._nav(-1)" aria-label="Vorherige Woche"${_wi===0?' disabled':''}>${icon('m15 18-6-6 6-6')}</button><button onclick="IDF_PLAN._nav(1)" aria-label="Nächste Woche"${_wi===_weeks.length-1?' disabled':''}>${icon('m9 18 6-6-6-6')}</button></div></div>
+      <div class="idf-pips">${_weeks.map((_,i)=>`<i class="${i<_wi?'done':i===_wi?'cur':''}"></i>`).join('')}</div>
+      <div class="idf-row idf-row2"><span class="idf-thema">${esc(thema)}</span>
+        <span class="m-seg" role="group" aria-label="Gruppe">${['g1','g2'].map(g=>`<button class="${_grp===g?'active':''}" onclick="IDF_PLAN._grp('${g}')">Gruppe ${g[1]}</button>`).join('')}</span></div>
+    </div>`;
+    if(notStarted&&_wi===0) h+=`<div class="idf-note">Das Modul beginnt am 26. Oktober. Bis dahin zeigt der Plan die erste Woche.</div>`;
+    if(info) h+=`<div class="idf-note">${esc(info)}</div>`;
+    h+='<div class="idf-days">'+days.map((items,i)=>{
+      const d=new Date(base); d.setDate(base.getDate()+i);
       const isToday=d.getTime()===today.getTime();
-      const isEmpty=items.length===0;
-      h+=`<div class="idf-day"${isToday?' style="background:color-mix(in srgb,var(--c-gold) 5%,transparent);"':''}>`;
-      h+=`<div class="idf-dc">`;
-      h+=`<div class="idf-dow" style="${isToday?'color:var(--c-gold)':''}">${DAYS[di]}</div>`;
-      h+=`<div class="idf-dnum" style="${isToday?'color:var(--c-gold)':''}">${d.getDate()}</div>`;
-      h+=`<div class="idf-dmo">${MONS[d.getMonth()]}.</div>`;
-      h+=`</div>`;
-      h+=`<div class="idf-dvr"></div>`;
-      h+=`<div class="idf-items">`;
-      if(isEmpty){
-        h+=`<div class="idf-empty">—</div>`;
-      } else {
-        items.forEach(it=>{ h+=`<div class="idf-item ${it.c}">${it.t}</div>`; });
-      }
-      h+=`</div></div>`;
-    });
-    h+=`</div></div>`;
-
+      return `<div class="idf-day${isToday?' today':''}"><div class="idf-dc"><span class="idf-dow">${DAYS[i]}</span><span class="idf-dnum">${d.getDate()}</span><span class="idf-dmo">${MONS[d.getMonth()]}</span></div>
+        <div class="idf-items">${items.length?items.map(_item).join(''):'<div class="idf-empty">frei</div>'}</div></div>`;
+    }).join('')+'</div>';
+    if(tel) h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${[...tel,['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><span>${esc(t)}</span></div>`).join('')}</div>`;
+    h+='<div class="idf-legend"><span><i class="hi"></i>Schlüsseltermin</span><span><i class="ex"></i>Exkursion</span><span><i class="ar"></i>An-/Abreise, frei</span><span>EVA = eigenverantwortliches Arbeiten</span></div>';
     el.innerHTML=h;
   }
 
-  function render(target){
-    if(target) _target=target;
+  function render(){
     _grp=_savedGrp();
     _weeks=_buildWeeks();
     _wi=_autoIdx();
     _draw();
   }
-
-  function _nav(d){
-    _wi=Math.max(0,Math.min(_weeks.length-1,_wi+d));
-    _draw();
-  }
-
+  function _nav(d){ _wi=Math.max(0,Math.min(_weeks.length-1,_wi+d)); _draw(); }
   function _setGrp(g){
     _grp=g;
     try{ localStorage.setItem('idf_plan_grp',g); }catch(e){}
+    const kw=_weeks[_wi]&&_weeks[_wi][0];
     _weeks=_buildWeeks();
-    _wi=_autoIdx();
+    const keep=_weeks.findIndex(w=>w[0]===kw);
+    _wi=keep>=0?keep:_autoIdx();
     _draw();
   }
-
   function summary(){
     const ws=_buildWeeks(_savedGrp()), w=ws[_autoIdx(ws)];
     const end=new Date(ws[ws.length-1][3]+'T00:00'); end.setDate(end.getDate()+5);
@@ -5020,8 +4731,7 @@ const ACCENT=(function(){
 ACCENT.init();
 
 /* ── Mobil-Ansicht: Tab-Leiste, Startseite, Prüfung, Einstellungen ──────── */
-const MOBILE=(function(){
-  const mq=window.matchMedia('(max-width:700px)');
+const SHELL=(function(){
   const ROOTS={'v-home':'start','v-plan':'plan','v-pruefung':'exam','v-settings':'settings','v-flashcards':'learn'};
   const MODS=[
     ['gal','GAL','Grundlehrgang','v-gal','GAL Grundlehrgang',1],
@@ -5053,6 +4763,8 @@ const MOBILE=(function(){
     sim:'<path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z"/>',
     cal:'<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
     cloud:'<path d="M18 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7"/><path d="M15 3h6v6M10 14 21 3"/>',
+    exam:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+    cards:'<rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/>',
     play:'<path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z" fill="currentColor" stroke="none"/>',
     flame:'<path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z" fill="currentColor" stroke="none"/>'
   };
@@ -5090,48 +4802,103 @@ const MOBILE=(function(){
     return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Aufgerufene Lernseiten pro Tag in dieser Woche, insgesamt ${sum}">${g}</svg>`;
   }
 
+  function daysToExam(){
+    const t=new Date(); t.setHours(0,0,0,0);
+    return Math.round((new Date('2026-12-21T00:00')-t)/864e5);
+  }
+
   function renderHome(){
     const el=document.getElementById('m-home');
-    if(!el||!mq.matches) return;
+    if(!el) return;
     const now=new Date(), h=now.getHours();
     const hi=h<11?'Guten Morgen':h<18?'Guten Tag':'Guten Abend';
     const streak=streakDays(), cnt=PROGRESS.counts();
     const done=Object.values(cnt).reduce((a,c)=>a+c.done,0), total=Object.values(cnt).reduce((a,c)=>a+c.total,0);
-    const cs=cardStats(), recent=RECENT.list()[0], idf=IDF_PLAN.summary();
+    const cs=cardStats(), recent=RECENT.list()[0], idf=IDF_PLAN.summary(), exam=daysToExam();
+    const pct=c=>c.total?Math.round(c.done/c.total*100):0;
     const modRow=m=>{
-      const c=cnt[m[0]]||{done:0,total:0}, pct=c.total?Math.round(c.done/c.total*100):0;
-      return `<button class="m-row m-go" onclick="${goJs(m[3],m[4])}"><span class="m-ic">${m[1]}</span><span class="m-tx"><span class="m-t1">${m[1]}</span><span class="m-t2">${esc(m[2])}</span><span class="m-bar"><i style="width:${pct}%"></i></span></span><span class="m-val">${c.done}/${c.total}</span></button>`;
+      const c=cnt[m[0]]||{done:0,total:0};
+      return `<button class="m-row m-go" onclick="${goJs(m[3],m[4])}"><span class="m-ic">${m[1]}</span><span class="m-tx"><span class="m-t1">${m[1]}</span><span class="m-t2">${esc(m[2])}</span><span class="m-bar"><i style="width:${pct(c)}%"></i></span></span><span class="m-val">${c.done}/${c.total}</span></button>`;
+    };
+    const modCard=m=>{
+      const c=cnt[m[0]]||{done:0,total:0};
+      return `<button class="m-modcard" onclick="${goJs(m[3],m[4])}"><span class="m-mc-top"><span class="m-ic">${m[1]}</span><span class="m-val">${c.done}/${c.total}</span></span><b>${m[1]}</b><span class="m-t2">${esc(m[2])}</span><span class="m-bar"><i style="width:${pct(c)}%"></i></span></button>`;
+    };
+    const year=y=>{
+      const ms=MODS.filter(m=>m[5]===y);
+      return `<div class="m-sec">${y}. Ausbildungsjahr</div><div class="m-list m-only-s">${ms.map(modRow).join('')}</div><div class="m-modgrid">${ms.map(modCard).join('')}</div>`;
     };
     let cont='';
     if(recent&&document.getElementById(recent.id)){
       const eb=document.querySelector('#'+recent.id+' .page-eyebrow')?.textContent?.trim()||'';
       cont=`<div class="m-card m-cont"><div class="m-tx"><span class="m-eyebrow">Weiterlernen</span><span class="m-t1" style="margin-top:4px">${esc(recent.label)}</span>${eb?`<span class="m-t2">${esc(eb)}</span>`:''}</div><button class="m-play" aria-label="${esc(recent.label)} öffnen" onclick="${goJs(recent.id,recent.label)}">${svg('play')}</button></div>`;
     }
+    const extra=(exam>=0?row({ic:ic('exam'),t1:'Nächste Klausur',t2:`Klausur § 21 · ${exam===0?'heute':exam===1?'morgen':'noch '+exam+' Tage'}`,on:"NAV.tab('v-pruefung','Prüfung')"}):'')
+      +row({ic:ic('cards'),t1:'Lernkarten wiederholen',t2:cs.due?`${cs.due} Karten heute fällig`:'Heute nichts fällig',on:"NAV.tab('v-flashcards','Lernen')"});
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${streak?`<span class="m-streak">${svg('flame')}${streak} ${streak===1?'Tag':'Tage'}</span>`:''}</div>
-      <div class="m-stats3">
-        <div class="m-stat"><b>${done}/${total}</b><span>Themen gelesen</span></div>
-        <div class="m-stat"><b>${cs.known}</b><span>von ${cs.total} Karten gewusst</span></div>
-        <div class="m-stat"><b>${cs.due}</b><span>Karten heute fällig</span></div>
+      <div class="m-g2 m-home-top">
+        <div class="m-col">
+          <div class="m-stats3">
+            <div class="m-stat"><b>${done}/${total}</b><span>Themen gelesen</span></div>
+            <div class="m-stat"><b>${cs.known}</b><span>von ${cs.total} Karten gewusst</span></div>
+            <div class="m-stat"><b>${cs.due}</b><span>Karten heute fällig</span></div>
+          </div>
+          <div class="m-card m-chart"><div class="m-chart-h"><b>Aktivität diese Woche</b><span>aufgerufene Seiten</span></div>${chart(HEATMAP.week())}</div>
+        </div>
+        <div class="m-col">
+          ${cont}
+          ${idf.over?'':`<div class="m-list">${row({ic:ic('cal'),t1:'Diese Woche am IdF',t2:`KW ${idf.kw} · ${idf.thema}`,on:"NAV.tab('v-plan','Plan')"})}</div>`}
+          <div class="m-list m-only-l">${extra}</div>
+        </div>
       </div>
-      <div class="m-card m-chart"><div class="m-chart-h"><b>Aktivität diese Woche</b><span>aufgerufene Seiten</span></div>${chart(HEATMAP.week())}</div>
-      ${cont}
-      ${idf.over?'':`<div class="m-list">${row({ic:ic('cal'),t1:'Diese Woche am IdF',t2:`KW ${idf.kw} · ${idf.thema}`,on:"NAV.tab('v-plan','Plan')"})}</div>`}
-      <div class="m-sec">1. Ausbildungsjahr</div>
-      <div class="m-list">${MODS.filter(m=>m[5]===1).map(modRow).join('')}</div>
-      <div class="m-sec">2. Ausbildungsjahr</div>
-      <div class="m-list">${MODS.filter(m=>m[5]===2).map(modRow).join('')}
-        <a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2">Passwort steht in der WhatsApp-Gruppe</span></span></a>
-      </div>`;
+      ${year(1)}${year(2)}
+      <div class="m-list"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
   }
 
   function renderExam(){
     const cd=document.getElementById('m-countdown'), list=document.getElementById('m-exam-list');
     if(!cd||!list) return;
-    const t=new Date(); t.setHours(0,0,0,0);
-    const days=Math.round((new Date('2026-12-21T00:00')-t)/864e5);
+    const days=daysToExam();
     cd.innerHTML=days<0?'':`<div class="m-card m-count"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">Klausur § 21 · IdF Münster</span><span class="m-t2">Mo, 21. Dezember 2026 · 08:30 Uhr</span></div></div>`;
-    list.innerHTML=EXAMS.map(([sec,items])=>`<div class="m-sec">${esc(sec)}</div><div class="m-list">${items.map(([id,t1,t2,k])=>row({ic:ic(k),t1,t2,on:goJs(id,t1)})).join('')}</div>`).join('');
+    const sec=([name,items])=>`<div class="m-col"><div class="m-sec">${esc(name)}</div><div class="m-list">${items.map(([id,t1,t2,k])=>row({ic:ic(k),t1,t2,on:goJs(id,t1)})).join('')}</div></div>`;
+    list.innerHTML=`<div class="m-g2">${sec(EXAMS[0])}${sec(EXAMS[1])}</div>${sec(EXAMS[2])}`;
+  }
+
+  function renderFcSide(){
+    const el=document.getElementById('m-fc-side'); if(!el) return;
+    let fc={}; try{ fc=JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch(e){}
+    const cats=[['gal','GAL'],['sfs','SFS'],['hlfs','HLFS'],['ibk','IBK'],['vak','VAk'],['feuak','FeuAK'],['idf','IdF']];
+    const rows=cats.map(([k,l])=>{
+      const cs=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(k));
+      const p=cs.length?Math.round(cs.filter(c=>fc[c.id]).length/cs.length*100):0;
+      return `<div class="m-fc-row"><span>${l}</span><span class="m-bar"><i style="width:${p}%"></i></span><span class="m-val">${p} %</span></div>`;
+    }).join('');
+    const known=FLASHCARD_DATA.filter(c=>fc[c.id]).length;
+    el.innerHTML=`<div class="m-card"><div class="m-t1">Dein Stand</div>${rows}<div class="m-t2" style="margin-top:12px">${known} von ${FLASHCARD_DATA.length} Karten gewusst</div></div>
+      <div class="m-card m-kbd"><div class="m-t1">Tastatur</div><div class="m-t2" style="line-height:2.1"><kbd>Leertaste</kbd> aufdecken<br><kbd>→</kbd> gewusst · <kbd>←</kbd> nicht gewusst</div></div>`;
+  }
+
+  let _tocIO=null;
+  function buildToc(id,isContent){
+    const toc=document.getElementById('m-toc'); if(!toc) return;
+    if(_tocIO){ _tocIO.disconnect(); _tocIO=null; }
+    const v=document.getElementById(id);
+    let heads=isContent&&v?[...v.querySelectorAll('.pc .sec-h')]:[];
+    if(heads.length<2&&isContent&&v) heads=[...v.querySelectorAll('.pc .acc-item > summary')];
+    heads=heads.slice(0,24);
+    const on=heads.length>=2;
+    toc.classList.toggle('hidden',!on);
+    document.body.classList.toggle('has-toc',on);
+    if(!on){ toc.innerHTML=''; return; }
+    const label=h=>((h.querySelector('.acc-title,.acc-h')||h).textContent||'').replace(/\s+/g,' ').trim().slice(0,70);
+    toc.innerHTML='<div class="m-toc-h">Auf dieser Seite</div>'+heads.map((h,i)=>`<button data-i="${i}">${esc(label(h))}</button>`).join('');
+    toc.onclick=e=>{ const b=e.target.closest('button[data-i]'); if(b) heads[+b.dataset.i].scrollIntoView({behavior:'smooth',block:'start'}); };
+    const btns=[...toc.querySelectorAll('button')];
+    _tocIO=new IntersectionObserver(es=>{
+      es.forEach(en=>{ if(en.isIntersecting){ const i=heads.indexOf(en.target); btns.forEach((b,k)=>b.classList.toggle('on',k===i)); } });
+    },{rootMargin:'-15% 0px -75% 0px'});
+    heads.forEach(h=>_tocIO.observe(h));
   }
 
   function notes(){
@@ -5175,7 +4942,11 @@ const MOBILE=(function(){
 
   function onShow(id,isContent,stack){
     const tab=stack.length&&ROOTS[stack[0].id]?ROOTS[stack[0].id]:'start';
-    document.querySelectorAll('#m-tabbar .m-tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+    document.querySelectorAll('#m-tabbar [data-tab],#m-rail [data-tab]').forEach(b=>{
+      const on=b.dataset.tab===tab;
+      b.classList.toggle('on',on);
+      if(on) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+    });
     const isRoot=!stack.length||(stack.length===1&&!!ROOTS[id]);
     document.getElementById('m-topbar')?.classList.toggle('hidden',isRoot);
     if(!isRoot){
@@ -5183,14 +4954,11 @@ const MOBILE=(function(){
       if(lbl) lbl.textContent=stack.length>=2?stack[stack.length-2].label:'Start';
     }
     document.getElementById('m-tb-actions')?.classList.toggle('hidden',!isContent);
+    buildToc(id,isContent);
   }
 
-  mq.addEventListener?.('change',e=>{ if(e.matches&&document.getElementById('v-home')?.classList.contains('active')) renderHome(); });
-  if(mq.matches) document.querySelector('meta[name="theme-color"]')?.setAttribute('content','#121212');
-
   return {
-    isMobile:()=>mq.matches,
-    onShow, renderHome, renderExam, renderNotes, syncSettings,
+    onShow, renderHome, renderExam, renderNotes, renderFcSide, syncSettings,
     bookmark(){
       const v=document.querySelector('.view.active'); if(!v) return;
       BOOKMARKS.toggle(v.id, v.querySelector('.page-title')?.textContent?.trim()||v.id);
@@ -5214,12 +4982,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     NAV.home();
   }
   PROGRESS.updateUI();
-  BOOKMARKS.updateHomeTile();
   SETTINGS.restoreFontSize();
-  STREAK.render();
   NOTIF.check();
   SETTINGS2.restoreFont();
-  RECENT.render();
   ONBOARD.init();
   CHANGELOG.check();
   if(typeof FALLBEARBEITUNG!=='undefined') { document.querySelectorAll('#v-vak-fallbearbeitung').forEach(()=>{}); }
@@ -5255,11 +5020,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(e.key==='Escape'){
       if(!document.getElementById('search-overlay').classList.contains('hidden')){ SEARCH.close(); return; }
       if(!document.getElementById('shortcuts-overlay').classList.contains('hidden')){ document.getElementById('shortcuts-overlay').classList.add('hidden'); return; }
-      if(!document.getElementById('settings2-overlay').classList.contains('hidden')){ SETTINGS2.close(); return; }
       if(!document.getElementById('pomodoro-overlay').classList.contains('hidden')){ POMO.close(); return; }
       if(!document.getElementById('onboarding-overlay')?.classList.contains('hidden')){ ONBOARD.close(); return; }
       if(!document.getElementById('quiz-mastery-modal').classList.contains('hidden')){ QUIZ.closeMastery(); return; }
-      SETTINGS.closeAllPanels();
       if(document.getElementById('stats-overlay')&&!document.getElementById('stats-overlay').classList.contains('hidden')){ STATS.close(); return; }
       if(!document.getElementById('notes-overlay').classList.contains('hidden')){ NOTES.close(); return; }
       if(!document.getElementById('changelog-modal').classList.contains('hidden')){ CHANGELOG.close(); return; }
@@ -5277,12 +5040,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(sTop) sTop.classList.toggle('visible',window.scrollY>300);
     if(!_perfRafPending){_perfRafPending=true;requestAnimationFrame(()=>{updateReadProgress();_perfRafPending=false;});}
   },{passive:true});
-  document.addEventListener('click', e=>{
-    if(!e.target.closest('.fontsize-btn-hdr')&&!e.target.closest('#fontsize-overlay'))
-      document.getElementById('fontsize-overlay')?.classList.add('hidden');
-    if(!e.target.closest('.notif-btn-hdr')&&!e.target.closest('#notif-overlay'))
-      document.getElementById('notif-overlay')?.classList.add('hidden');
-  });
   // Swipe-Back-Geste (Wischen vom linken Rand → zurück)
   (function(){
     let x0=0, y0=0, live=false;
@@ -5304,11 +5061,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   function updateOnlineStatus(){
     const online = navigator.onLine;
     document.body.classList.toggle('offline',!online);
-    const paths = document.querySelectorAll('.logo-emblem svg path');
-    if(paths.length>=2){
-      paths[0].setAttribute('fill', online ? '#C9A84C' : '#fff');
-      paths[1].setAttribute('fill', online ? '#fff' : '#C9A84C');
-    }
   }
   window.addEventListener('offline', updateOnlineStatus);
   window.addEventListener('online', updateOnlineStatus);

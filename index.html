@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="css/style.css"/>
   <script src="js/version.js"></script>
   <link rel="manifest" href="manifest.json"/>
-  <meta name="theme-color" content="#0A192F"/>
+  <meta name="theme-color" content="#121212"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -22,49 +22,15 @@
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.56 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
   Offline – du siehst die zwischengespeicherte Version
 </div>
-<canvas id="shader-bg" aria-hidden="true"></canvas>
 
-<!-- HEADER -->
-<header id="app-header">
-  <div id="logo" onclick="NAV.home()" title="Startseite">
-    <div class="logo-emblem">
-      <svg width="20" height="22" viewBox="0 0 20 22" fill="none"><path d="M10 1C10 1 3 7.5 3 13C3 16.9 6.1 20 10 20C13.9 20 17 16.9 17 13C17 7.5 10 1 10 1Z" fill="#C9A84C" opacity="0.9"/><path d="M10 6C10 6 5.5 10.5 5.5 14C5.5 16.5 7.5 18 10 18C12.5 18 14.5 16.5 14.5 14C14.5 10.5 10 6 10 6Z" fill="#fff" opacity="0.85"/></svg>
-    </div>
-    <div><span class="logo-main">B VI</span><span class="logo-sub">Höherer Dienst</span></div>
-  </div>
-  <div id="nav-trail">
-    <button id="back-btn" class="hidden" onclick="NAV.back()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      Zurück
-    </button>
-    <nav class="crumb" id="breadcrumb"></nav>
-  </div>
-  <span id="streak-badge" class="streak-badge" onclick="STATS.open()" title="Lernstreak" style="display:none"></span>
-  <button id="notes-fab" class="notes-btn-hdr hidden" onclick="NOTES.toggle()" title="Notizen">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-  </button>
-  <button id="bookmark-btn" class="bookmark-btn-hdr hidden" onclick="BOOKMARKS.toggle(this.dataset.id,this.dataset.label)" title="Lesezeichen">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-  </button>
-  <button id="pomo-hdr-btn" class="pomo-btn-hdr hidden" onclick="POMO.open()" title="Pomodoro-Timer">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    <span id="pomo-hdr-time">25:00</span>
-  </button>
-  <button class="search-btn-hdr icon-only" onclick="SEARCH.toggle()" title="Suchen (Ctrl+K)">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-  </button>
-  <button class="settings2-btn-hdr" onclick="SETTINGS2.open()" title="Einstellungen">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-  </button>
-</header>
 <!-- MOBILE: Zurück-Zeile (scrollt mit), Pomodoro-Anzeige und Tab-Leiste -->
-<div id="m-topbar" class="m-only hidden">
+<div id="m-topbar" class="hidden">
   <button id="m-back" onclick="NAV.back()">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     <span id="m-back-lbl">Start</span>
   </button>
   <div id="m-tb-actions" class="m-tb-actions hidden">
-    <button id="m-bm" onclick="MOBILE.bookmark()" aria-label="Lesezeichen setzen">
+    <button id="m-bm" onclick="SHELL.bookmark()" aria-label="Lesezeichen setzen">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
     </button>
     <button id="m-note" onclick="NOTES.toggle()" aria-label="Notiz zu dieser Seite">
@@ -75,11 +41,11 @@
     </button>
   </div>
 </div>
-<button id="m-pomo" class="m-only hidden" onclick="POMO.open()" aria-label="Pomodoro-Timer öffnen">
+<button id="m-pomo" class="hidden" onclick="POMO.open()" aria-label="Pomodoro-Timer öffnen">
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/><path d="M9 2h6"/></svg>
   <span id="m-pomo-time">25:00</span>
 </button>
-<nav id="m-tabbar" class="m-only" aria-label="Hauptnavigation">
+<nav id="m-tabbar" aria-label="Hauptnavigation">
   <button class="m-tab" data-tab="start" onclick="NAV.home()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
     <span>Start</span>
@@ -101,6 +67,18 @@
     <span>Lernen</span>
   </button>
 </nav>
+<nav id="m-rail" aria-label="Hauptnavigation">
+  <button class="m-brand" onclick="NAV.home()"><span class="m-emb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z" fill="currentColor" stroke="none"/></svg></span><span><b>B VI</b><small>Höherer Dienst</small></span></button>
+  <button class="m-ri" data-tab="start" onclick="NAV.home()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</button>
+  <button class="m-ri" data-tab="plan" onclick="NAV.tab('v-plan','Plan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Plan</button>
+  <button class="m-ri m-ri-cta" data-tab="exam" onclick="NAV.tab('v-pruefung','Prüfung')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>Prüfung</button>
+  <button class="m-ri" data-tab="settings" onclick="NAV.tab('v-settings','Einstellungen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Einstellungen</button>
+  <button class="m-ri" data-tab="learn" onclick="NAV.tab('v-flashcards','Lernen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></svg>Lernen</button>
+  <div class="m-rail-foot">
+    <button class="m-ri m-ri-search" onclick="SEARCH.open()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4-4"/></svg>Suchen <kbd>Strg K</kbd></button>
+  </div>
+</nav>
+<nav id="m-toc" class="hidden" aria-label="Auf dieser Seite"></nav>
 <!-- SEARCH OVERLAY -->
 <div id="search-overlay" class="search-overlay hidden" onclick="SEARCH.close()">
   <div class="search-box" onclick="event.stopPropagation()">
@@ -152,25 +130,25 @@
       <div class="ob-step">
         <div class="ob-icon">📚</div>
         <div class="ob-title">Lernmodule &amp; Fortschritt</div>
-        <div class="ob-desc">Die Kacheln auf der Startseite führen zu den Lernthemen. Besuchte Seiten erhalten automatisch ein grünes Häkchen — so siehst du immer, wie weit du bist.</div>
+        <div class="ob-desc">Auf der Startseite findest du alle Module mit Fortschrittsbalken. Besuchte Seiten erhalten automatisch ein grünes Häkchen — so siehst du immer, wie weit du bist.</div>
       </div>
       <!-- Step 3 -->
       <div class="ob-step">
         <div class="ob-icon">🔍</div>
         <div class="ob-title">Suche &amp; Lernkarten</div>
-        <div class="ob-desc">Mit dem <strong>Suchen-Button</strong> (oder Strg+K) findest du jeden Begriff blitzschnell. Die <strong>Lernkarten</strong> (319 Karten) helfen dir beim gezielten Abfragen — erreichbar über die Startseite.</div>
+        <div class="ob-desc">Die <strong>Suche</strong> findest du unter Einstellungen (oder mit Strg+K). Im Bereich <strong>Lernen</strong> fragst du dich mit den Lernkarten gezielt ab.</div>
       </div>
       <!-- Step 4 -->
       <div class="ob-step">
         <div class="ob-icon">📝</div>
         <div class="ob-title">Notizen &amp; Lesezeichen</div>
-        <div class="ob-desc">Auf jeder Inhaltsseite kannst du über den <strong>Stift-Button</strong> im Header eigene Notizen hinterlegen — sie bleiben gespeichert. Mit dem <strong>Lesezeichen-Button</strong> merkst du dir Seiten für später.</div>
+        <div class="ob-desc">Auf jeder Lernseite findest du oben rechts den <strong>Stift</strong> für eigene Notizen — sie bleiben gespeichert. Mit dem <strong>Lesezeichen</strong> merkst du dir Seiten für später.</div>
       </div>
       <!-- Step 5 -->
       <div class="ob-step">
         <div class="ob-icon">⚙️</div>
         <div class="ob-title">Einstellungen &amp; Timer</div>
-        <div class="ob-desc">Im <strong>Einstellungen-Menü</strong> findest du den Pomodoro-Timer, deine Lernstatistik, Schriftgröße und mehr. Der Timer erscheint im Header, sobald er läuft.</div>
+        <div class="ob-desc">Unter <strong>Einstellungen</strong> findest du den Pomodoro-Timer, deine Lernstatistik, Schriftgröße und Akzentfarbe. Läuft der Timer, siehst du ihn oben auf dem Bildschirm.</div>
       </div>
     </div>
     <div class="ob-dots">
@@ -195,7 +173,7 @@
         <button class="btn btn-ghost" style="font-size:.73rem;padding:.3rem .7rem" onclick="SETTINGS.resetTopics()" title="Lernfortschritt zurücksetzen">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>Zurücksetzen
         </button>
-        <button class="search-close-btn" onclick="STATS.close();if(!MOBILE.isMobile())SETTINGS2.open()" title="Zurück zu Einstellungen">
+        <button class="search-close-btn" onclick="STATS.close()" title="Zurück zu Einstellungen">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         </button>
       </div>
@@ -203,15 +181,8 @@
     <div id="stats-content" style="padding:.25rem 0 .5rem"></div>
   </div>
 </div>
-<!-- PROGRESS BAR -->
-<div class="hdr-progress"><div class="hdr-progress-fill" id="prog-bar"></div></div>
 <!-- READING PROGRESS -->
 <div id="read-prog"><div id="read-prog-fill"></div></div>
-<!-- FLOATING BACK BUTTON (mobile) -->
-<button id="float-back" class="hidden" onclick="NAV.back()">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-  <span class="fb-label">Zurück</span>
-</button>
 <!-- FAB: Scroll-to-top -->
 <button id="scroll-top-btn" title="Nach oben scrollen" onclick="window.scrollTo({top:0,behavior:'smooth'})">
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
@@ -233,70 +204,6 @@
       <div class="pomo-controls">
         <button class="btn btn-gold" id="pomo-start" onclick="POMO.toggle()">▶ Start</button>
         <button class="btn btn-ghost" onclick="POMO.reset()">↺ Reset</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- EINSTELLUNGS-OVERLAY (#13) -->
-<div id="settings2-overlay" class="search-overlay hidden" onclick="if(event.target===this)SETTINGS2.close()">
-  <div class="search-box settings2-box" onclick="event.stopPropagation()">
-    <div class="s2-header">
-      <span>Einstellungen</span>
-      <button class="s2-close" onclick="SETTINGS2.close()">✕</button>
-    </div>
-    <div class="s2-body">
-      <div class="s2-section">
-        <div class="s2-title">🔔 Neuigkeiten <span id="changelog-badge" class="s2-new-badge hidden">Neu</span></div>
-        <p class="s2-desc" id="changelog-tile-desc">Update-Verlauf · Was ist neu in der App.</p>
-        <button class="btn btn-ghost s2-btn" onclick="SETTINGS2.close();CHANGELOG.open()">Neuigkeiten anzeigen →</button>
-      </div>
-      <div class="s2-section">
-        <div class="s2-title">🍅 Pomodoro-Timer</div>
-        <p class="s2-desc">Lernphasen mit Countdown und automatischer Pause verwalten.</p>
-        <button class="btn btn-ghost s2-btn" onclick="SETTINGS2.close();POMO.open()">Timer öffnen →</button>
-      </div>
-      <div class="s2-section">
-        <div class="s2-title">📊 Lernstatistik</div>
-        <p class="s2-desc">Lernfortschritt, Streak und Lernkarten-Statistik im Überblick.</p>
-        <button class="btn btn-ghost s2-btn" onclick="SETTINGS2.close();STATS.open()">Statistik anzeigen →</button>
-      </div>
-      <div class="s2-section">
-        <div class="s2-title">🔄 Lernfortschritt zurücksetzen</div>
-        <p class="s2-desc">Setzt die grünen Häkchen auf allen Modul-Kacheln zurück.</p>
-        <button class="btn btn-ghost s2-btn" onclick="SETTINGS.resetTopics();SETTINGS2.close()">Zurücksetzen</button>
-      </div>
-      <div class="s2-section">
-        <div class="s2-title">🎴 Lernkarten-Lernstand</div>
-        <p class="s2-desc">Setzt alle als „gewusst" markierten Lernkarten zurück.</p>
-        <button class="btn btn-ghost s2-btn" onclick="SETTINGS.resetCards();SETTINGS2.close()">Lernkarten zurücksetzen</button>
-      </div>
-      <div class="s2-section">
-        <div class="s2-title">🔔 Tägliche Erinnerung</div>
-        <div style="display:flex;flex-direction:column;gap:.65rem;margin-top:.4rem">
-          <label class="notif-label">
-            <input type="checkbox" id="notif-toggle" onchange="SETTINGS.toggleNotif(this.checked)"/>
-            <span>Benachrichtigungen aktiv</span>
-          </label>
-          <div class="notif-hour-row">
-            <label for="notif-hour" style="font-size:.73rem;color:var(--c-slate)">Um:</label>
-            <input type="number" id="notif-hour" min="6" max="23" value="18" class="notif-hour-inp" onchange="SETTINGS.setNotifHour(this.value)"/>
-            <span style="font-size:.73rem;color:var(--c-slate)">Uhr</span>
-          </div>
-        </div>
-      </div>
-      <div class="s2-section">
-        <div class="s2-title">🔤 Schriftgröße</div>
-        <div class="fs-opts-row" style="margin-top:.4rem">
-          <button class="fs-opt" data-sz="sm" onclick="SETTINGS.setFontSize('sm')">A−</button>
-          <button class="fs-opt active" data-sz="md" onclick="SETTINGS.setFontSize('md')">A</button>
-          <button class="fs-opt" data-sz="lg" onclick="SETTINGS.setFontSize('lg')">A+</button>
-          <button class="fs-opt" data-sz="xl" onclick="SETTINGS.setFontSize('xl')">A++</button>
-        </div>
-      </div>
-      <div class="s2-section">
-        <div class="s2-title">🕐 Verlauf</div>
-        <p class="s2-desc">Löscht „Zuletzt besucht"-Einträge und den Suchverlauf.</p>
-        <button class="btn btn-ghost s2-btn" onclick="RECENT.clear();SEARCH.clearHist();SETTINGS2.close();TOAST.show('Verlauf gelöscht',{type:'ok'})">Verlauf löschen</button>
       </div>
     </div>
   </div>
@@ -369,66 +276,7 @@
 
 <!-- ============================================================ HOME ============================================================ -->
 <div id="v-home" class="view active">
-  <div id="m-home" class="m-only m-page"><!-- MOBILE.renderHome() --></div>
-  <div class="hero">
-    <div class="hero-content">
-      <div class="hero-eyebrow">Lernplattform · Berufsfeuerwehr und Werkfeuerwehr</div>
-      <h1 class="hero-title"><span class="t-red">B</span>&thinsp;<span class="t-gold">VI</span></h1>
-      <p class="hero-sub">Prüfungsvorbereitung für den höheren feuerwehrtechnischen Dienst.</p>
-      <div class="gold-rule"></div>
-      <div class="home-grid">
-        <!-- ── 1. JAHR ─────────────────────────────────────────── -->
-        <div class="glass-tile" onclick="NAV.go('v-jahr1','1. Jahr')">
-          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-          <div class="tile-name">1. Jahr</div>
-          <div class="tile-desc">GAL Grundlehrgang · SFS Regensburg · HLFS Kassel</div>
-          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-        <!-- ── 2. JAHR ─────────────────────────────────────────── -->
-        <div class="glass-tile tile-cta" onclick="NAV.go('v-jahr2','2. Jahr')">
-          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <div class="tile-name">2. Jahr</div>
-          <div class="tile-desc">IBK Heyrothsberge · VAk Berlin · FeuAK Hamburg · IdF Münster</div>
-          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-        <div class="glass-tile" onclick="NAV.go('v-flashcards','Lernkarten')">
-          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="7" y1="10" x2="17" y2="10"/><line x1="7" y1="14" x2="13" y2="14"/></svg>
-          <div class="tile-name">Lernkarten</div>
-          <div class="tile-desc">319 Flashcards · GAL, SFS, HLFS, IBK, VAk, FeuAK, IdF · Lernstand gespeichert</div>
-          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-        <div class="glass-tile" onclick="NAV.go('v-abkuerzungen','Abkürzungen')">
-          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
-          <div class="tile-name">Abkürzungen</div>
-          <div class="tile-desc">220+ Einträge · Fahrzeuge, Recht, Taktik, Führung · durchsuchbar</div>
-          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-        <div id="bm-tile" class="glass-tile hidden" onclick="NAV.go('v-bookmarks','Lesezeichen')">
-          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-          <div class="tile-name">Lesezeichen</div>
-          <div class="tile-desc" id="bm-tile-desc">Gespeicherte Seiten</div>
-          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-        <div id="apk-tile" class="glass-tile" style="grid-column:1/-1" onclick="NAV.go('v-app','App')">
-          <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>
-          <div class="tile-name">App</div>
-          <div class="tile-desc">App auf iOS &amp; Android installieren</div>
-          <svg class="tile-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-      </div>
-    </div>
-    <div id="recent-section" class="recent-section hidden">
-      <div class="recent-title">Zuletzt besucht</div>
-      <div class="recent-list"></div>
-    </div>
-    <footer class="home-footer">
-      <span>© 2026 Fabian Flemig</span>
-      <span class="home-footer-sep">·</span>
-      <button class="home-footer-link" onclick="NAV.go('v-impressum','Impressum')">Impressum</button>
-      <span class="home-footer-sep">·</span>
-      <button class="home-footer-link" onclick="NAV.go('v-datenschutz','Datenschutz')">Datenschutz</button>
-    </footer>
-  </div>
+  <div id="m-home" class="m-page"><!-- SHELL.renderHome() --></div>
 </div>
 
 <!-- ============================================================ IMPRESSUM ============================================================ -->
@@ -10750,48 +10598,6 @@
   </div>
 </div>
 <!-- ============================================================ IdF MÜNSTER OVERVIEW ============================================================ -->
-<style>
-#idf-plan{margin-top:1.5rem;}
-.idf-plan-hdr{display:flex;flex-direction:column;gap:.55rem;padding:.9rem 1rem .75rem;background:var(--c-navy-2);border:1px solid color-mix(in srgb,var(--c-gold) 15%,transparent);border-radius:var(--r-md);margin-bottom:.75rem;}
-.idf-plan-row1{display:flex;align-items:center;justify-content:space-between;gap:.5rem;}
-.idf-plan-kw{font-size:.95rem;font-weight:700;color:var(--c-text);}
-.idf-plan-kw small{font-size:.68rem;font-weight:400;color:var(--c-slate);margin-left:.4rem;}
-.idf-plan-nav{display:flex;gap:.3rem;}
-.idf-nav-btn{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:var(--c-slate);display:grid;place-items:center;cursor:pointer;font-family:inherit;transition:background .12s,color .12s;}
-.idf-nav-btn:hover:not(:disabled){background:var(--c-gold-dim);color:var(--c-gold);}
-.idf-nav-btn:disabled{opacity:.3;cursor:default;}
-.idf-plan-row2{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap;}
-.idf-thema{display:inline-flex;align-items:center;gap:.35rem;font-size:.72rem;font-weight:600;padding:.22rem .65rem;border-radius:20px;background:var(--c-gold-dim);border:1px solid var(--c-gold-rim);color:var(--c-gold);}
-.idf-grp-toggle{display:flex;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-sm);padding:2px;}
-.idf-grp-btn{padding:.25rem .75rem;border-radius:calc(var(--r-sm) - 1px);font-size:.72rem;font-weight:600;cursor:pointer;color:var(--c-slate);border:none;background:transparent;font-family:inherit;transition:background .12s,color .12s;}
-.idf-grp-btn.active{background:var(--c-gold);color:var(--m-on-accent,#000);}
-.idf-days{display:flex;flex-direction:column;gap:0;}
-.idf-day{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;border-bottom:1px solid rgba(255,255,255,.06);transition:background .12s;}
-.idf-day:last-child{border-bottom:none;border-radius:0 0 var(--r-md) var(--r-md);}
-.idf-day:first-child{border-radius:var(--r-md) var(--r-md) 0 0;}
-.idf-day-wrap{border:1px solid rgba(255,255,255,.07);border-radius:var(--r-md);background:var(--c-navy);overflow:hidden;}
-.idf-dc{flex-shrink:0;width:36px;text-align:center;}
-.idf-dow{font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--c-slate);}
-.idf-dnum{font-size:1.1rem;font-weight:700;line-height:1;color:var(--c-text);}
-.idf-dmo{font-size:.58rem;color:var(--c-slate);}
-.idf-dvr{width:1px;background:rgba(255,255,255,.07);align-self:stretch;flex-shrink:0;}
-.idf-items{flex:1;min-width:0;display:flex;flex-direction:column;gap:.22rem;padding:.05rem 0;}
-.idf-item{display:flex;align-items:flex-start;gap:.4rem;font-size:.78rem;line-height:1.4;color:var(--c-slate-l);}
-.idf-item::before{content:'';width:5px;height:5px;border-radius:50%;margin-top:.42em;flex-shrink:0;}
-.idf-item.hi{color:var(--c-gold);}
-.idf-item.hi::before{background:var(--c-gold);}
-.idf-item.ex{color:#5dcfa0;}
-.idf-item.ex::before{background:#5dcfa0;}
-.idf-item.ar{color:var(--c-slate);font-style:italic;}
-.idf-item.ar::before{background:rgba(255,255,255,.2);}
-.idf-item.std::before{background:rgba(58,127,212,.7);}
-.idf-empty{color:var(--c-slate);font-style:italic;font-size:.78rem;padding:.1rem 0;}
-.idf-plan-note{display:flex;align-items:flex-start;gap:.5rem;font-size:.73rem;color:var(--c-slate);background:rgba(58,127,212,.08);border:1px solid rgba(58,127,212,.18);border-radius:var(--r-sm);padding:.6rem .8rem;margin-bottom:.75rem;}
-.idf-prog{display:flex;gap:.28rem;align-items:center;margin-top:.1rem;}
-.idf-pip{width:18px;height:3px;border-radius:2px;background:rgba(255,255,255,.1);}
-.idf-pip.done{background:var(--c-gold);opacity:.7;}
-.idf-pip.cur{background:var(--c-gold);}
-</style>
 <div id="v-idf" class="view detail-view">
   <div class="page-hero">
     <div class="phi">
@@ -10801,18 +10607,13 @@
     </div>
   </div>
   <div class="pc">
-    <div class="m-list m-only" style="margin-bottom:1rem">
+    <div class="m-list" style="margin-bottom:1rem">
       <button class="m-row" onclick="NAV.tab('v-plan','Plan')">
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg></span>
         <span class="m-tx"><span class="m-t1">Stundenplan Modul 3.5</span><span class="m-t2">im Tab „Plan“</span></span>
         <svg class="m-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </button>
     </div>
-    <div id="idf-plan" class="d-only">
-      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c-slate);margin-bottom:.6rem;">Stundenplan Modul 3.5</div>
-      <div id="idf-plan-inner"><!-- rendered by IDF_PLAN.render() --></div>
-    </div>
-    <div class="d-only" style="width:100%;height:1px;background:rgba(255,255,255,.07);margin:1.25rem 0;"></div>
     <div class="cg cg-2">
       <div class="topic-card" onclick="NAV.go('v-idf-brandschutz','Vorbeugender Brandschutz')">
         <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/><path d="M12 12v0"/></svg>
@@ -11545,6 +11346,7 @@
       <span>Themen, Karten und Inhalte durchsuchen</span>
     </button>
 
+    <div class="m-g2"><div class="m-col">
     <div class="m-sec">Werkzeuge</div>
     <div class="m-list">
       <button class="m-row m-go" onclick="NAV.go('v-notizen','Notizen')">
@@ -11573,7 +11375,7 @@
     <div class="m-list">
       <div class="m-row m-static m-wrap">
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2a10 10 0 0 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.3A5.7 5.7 0 0 0 22 9.8C22 5.5 17.5 2 12 2z"/></svg></span>
-        <span class="m-tx"><span class="m-t1">Akzentfarbe</span><span class="m-t2">Farbe für Tab-Leiste, Knöpfe und Hervorhebungen</span></span>
+        <span class="m-tx"><span class="m-t1">Akzentfarbe</span><span class="m-t2">Farbe für Navigation, Knöpfe und Hervorhebungen</span></span>
         <div id="m-accent" class="m-swatches" role="radiogroup" aria-label="Akzentfarbe"></div>
       </div>
       <div class="m-row m-static">
@@ -11597,20 +11399,21 @@
       </div>
     </div>
 
+    </div><div class="m-col">
     <div class="m-sec">Erinnerung</div>
     <div class="m-list">
       <label class="m-row" for="m-notif-toggle">
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
         <span class="m-tx"><span class="m-t1">Tägliche Erinnerung</span><span class="m-t2">Hinweis, wenn du heute noch nicht gelernt hast</span></span>
-        <input type="checkbox" id="m-notif-toggle" class="m-switch" onchange="MOBILE.setNotif(this)">
+        <input type="checkbox" id="m-notif-toggle" class="m-switch" onchange="SHELL.setNotif(this)">
       </label>
       <div class="m-row m-static">
         <span class="m-ic m-ic-empty"></span>
         <span class="m-tx"><span class="m-t1">Uhrzeit</span></span>
         <span class="m-step">
-          <button onclick="MOBILE.stepHour(-1)" aria-label="Eine Stunde früher">−</button>
+          <button onclick="SHELL.stepHour(-1)" aria-label="Eine Stunde früher">−</button>
           <span id="m-notif-hour">18:00</span>
-          <button onclick="MOBILE.stepHour(1)" aria-label="Eine Stunde später">+</button>
+          <button onclick="SHELL.stepHour(1)" aria-label="Eine Stunde später">+</button>
         </span>
       </div>
     </div>
@@ -11625,7 +11428,7 @@
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg></span>
         <span class="m-tx"><span class="m-t1">Lernkarten zurücksetzen</span><span class="m-t2">Alle als „gewusst“ markierten Karten</span></span>
       </button>
-      <button class="m-row" onclick="RECENT.clear();SEARCH.clearHist();MOBILE.renderHome();TOAST.show('Verlauf gelöscht',{type:'ok'})">
+      <button class="m-row" onclick="RECENT.clear();SEARCH.clearHist();SHELL.renderHome();TOAST.show('Verlauf gelöscht',{type:'ok'})">
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg></span>
         <span class="m-tx"><span class="m-t1">Verlauf löschen</span><span class="m-t2">Zuletzt besucht und Suchverlauf</span></span>
       </button>
@@ -11650,6 +11453,7 @@
         <span class="m-tx"><span class="m-t1">Datenschutz</span></span>
       </button>
     </div>
+    </div></div>
     <p class="m-version">B VI · Version <span id="m-version"></span> · © 2026 Fabian Flemig</p>
   </div>
 </div>
@@ -11821,31 +11625,31 @@
 <!-- ============================================================ LERNKARTEN ============================================================ -->
 <div id="v-flashcards" class="view detail-view">
   <div class="page-hero"><div class="phi">
-    <p class="page-eyebrow">Interaktives Lernen · LocalStorage</p>
-    <h1 class="page-title">Lern<span class="accent">karten</span></h1>
-    <p class="page-lead">319 Flashcards zu GAL, SFS Regensburg, HLFS Kassel, IBK Heyrothsberge, VAk Berlin, FeuAK Hamburg und IdF Münster – tippe auf eine Karte, um die Antwort aufzudecken. Dein Lernstand wird gespeichert.</p>
+    <p class="page-eyebrow">Wiederholung nach Lernstand</p>
+    <h1 class="page-title">Lernkarten</h1>
+    <p class="page-lead">Tippe auf eine Karte, um die Antwort aufzudecken. Dein Lernstand wird auf diesem Gerät gespeichert.</p>
   </div></div>
-  <div class="fc-filter-row">
-    <button class="fc-f-btn active" data-filter="all" data-label="Alle" onclick="FC.setFilter('all')">Alle (319)</button>
+  <div class="fc-filter-row" role="group" aria-label="Lernkarten filtern">
+    <button class="fc-f-btn fc-star-filter-btn hidden" data-filter="starred" data-label="Markiert" onclick="FC.setFilter('starred')">Markiert</button>
+    <button class="fc-f-btn active" data-filter="all" data-label="Alle" onclick="FC.setFilter('all')">Alle</button>
     <button class="fc-f-btn" data-filter="gal" data-label="GAL" onclick="FC.setFilter('gal')">GAL</button>
-    <button class="fc-f-btn" data-filter="sfs" data-label="SFS Regensburg" onclick="FC.setFilter('sfs')">SFS Regensburg</button>
-    <button class="fc-f-btn" data-filter="hlfs" data-label="HLFS Kassel" onclick="FC.setFilter('hlfs')">HLFS Kassel</button>
-    <button class="fc-f-btn" data-filter="ibk" data-label="IBK Heyrothsberge" onclick="FC.setFilter('ibk')">IBK Heyrothsberge</button>
-    <button class="fc-f-btn" data-filter="vak" data-label="VAk Berlin" onclick="FC.setFilter('vak')">VAk Berlin</button>
-    <button class="fc-f-btn" data-filter="feuak" data-label="FeuAK Hamburg" onclick="FC.setFilter('feuak')">FeuAK Hamburg</button>
-    <button class="fc-f-btn" data-filter="idf" data-label="IdF Münster" onclick="FC.setFilter('idf')">IdF Münster</button>
-    <button class="fc-f-btn fc-star-filter-btn" data-filter="starred" data-label="Markiert" onclick="FC.setFilter('starred')">⭐ Markiert (0)</button>
-    <button class="fc-f-btn fc-reset-btn" onclick="SETTINGS.resetCards()" title="Lernstand zurücksetzen">↺ Zurücksetzen</button>
+    <button class="fc-f-btn" data-filter="sfs" data-label="SFS" onclick="FC.setFilter('sfs')">SFS</button>
+    <button class="fc-f-btn" data-filter="hlfs" data-label="HLFS" onclick="FC.setFilter('hlfs')">HLFS</button>
+    <button class="fc-f-btn" data-filter="ibk" data-label="IBK" onclick="FC.setFilter('ibk')">IBK</button>
+    <button class="fc-f-btn" data-filter="vak" data-label="VAk" onclick="FC.setFilter('vak')">VAk</button>
+    <button class="fc-f-btn" data-filter="feuak" data-label="FeuAK" onclick="FC.setFilter('feuak')">FeuAK</button>
+    <button class="fc-f-btn" data-filter="idf" data-label="IdF" onclick="FC.setFilter('idf')">IdF</button>
   </div>
   <div class="pc">
     <div id="fc-container">
       <div class="fc-end">
-        <div class="fc-end-ico">🎴</div>
+        <span class="fc-end-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></svg></span>
         <div class="fc-end-title">Bereit zum Lernen?</div>
-        <div class="fc-end-sub">284 Karten zu GAL, SFS Regensburg, HLFS Kassel, IBK Heyrothsberge, VAk Berlin, FeuAK Hamburg und IdF Münster.<br>Lernstand wird im Browser gespeichert.</div>
+        <div class="fc-end-sub">Wähle oben ein Modul oder lerne alle Karten gemischt.</div>
         <button class="btn btn-gold" onclick="FC.start()">Karten starten →</button>
       </div>
     </div>
+    <aside id="m-fc-side" class="m-fc-side" aria-label="Dein Lernstand"></aside>
   </div>
 </div>
 
