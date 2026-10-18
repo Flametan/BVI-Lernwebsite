@@ -592,8 +592,6 @@
   .sc-table tr.sc-sep td{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--c-gold);padding-top:.9rem;padding-bottom:.2rem;}
   kbd{display:inline-block;font-family:var(--f-m);font-size:.72rem;padding:.1rem .35rem;border-radius:4px;border:1px solid var(--glass-b);background:var(--c-navy-2);color:var(--c-slate-l);}
   /* ── SCHRIFTART ── */
-  html.ff-serif{font-family:'Cormorant Garamond',Georgia,serif;}
-  html.ff-mono{font-family:'DM Mono',monospace;}
   /* ── ZULETZT BESUCHT ── */
   /* ── DRUCKANSICHT ── */
   @media print{
@@ -1288,6 +1286,10 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 .idf-item.ex .idf-name,.idf-item.ex .idf-time{color:#4cc38a;}
 .idf-item.ar .idf-name{color:var(--m-muted);font-style:italic;}
 .idf-empty{font-size:.88rem;color:var(--m-muted);font-style:italic;}
+.idf-lunch{padding:7px 0;border-top:1px dashed var(--m-line);border-bottom:1px dashed var(--m-line);}
+.idf-lunch .idf-time{color:var(--m-muted);font-weight:400;}
+.idf-lunch .idf-name{display:flex;align-items:center;gap:7px;font-size:.85rem;color:var(--m-accent);}
+.idf-lunch svg{flex-shrink:0;}
 .idf-tel{margin-top:1rem;}
 .idf-tel-row{display:flex;justify-content:space-between;gap:12px;font-size:.88rem;color:var(--m-muted);padding-top:8px;}
 .idf-tel-row span:last-child{color:var(--m-fg);font-variant-numeric:tabular-nums;}

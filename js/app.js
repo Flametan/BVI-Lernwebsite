@@ -43,7 +43,6 @@ const NAV = (function(){
       if(w) w.classList.remove('hidden');
     }
     if(typeof PROGRESS!=='undefined') PROGRESS.track(id);
-    if(typeof HEATMAP!=='undefined') HEATMAP.record();
     if(typeof RELATED!=='undefined'&&RELATED[id]){const _v=document.getElementById(id);if(_v&&!_v.querySelector('.related-topics')){const _pc=_v.querySelector('.pc');if(_pc){const _d=document.createElement('div');_d.className='related-topics';_d.innerHTML='<div class="related-label">Verwandte Themen</div><div class="related-chips">'+RELATED[id].map(([rid,rl])=>'<button class="related-chip" onclick="NAV.go(\''+rid+'\',\''+rl+'\')">'+rl+'</button>').join('')+'</div>';_pc.appendChild(_d);}}}
     updateReadProgress();
     CHECKS.init(id);
@@ -2467,23 +2466,6 @@ const CHECKS=(function(){
 })();
 
 /* ======================================================================
-   SETTINGS2 – Einstellungs-Overlay (Reset, Schriftart)
-====================================================================== */
-const SETTINGS2=(function(){
-  function applyFont(ff){
-    document.documentElement.classList.remove('ff-serif','ff-mono');
-    if(ff==='serif') document.documentElement.classList.add('ff-serif');
-    else if(ff==='mono') document.documentElement.classList.add('ff-mono');
-    localStorage.setItem('bvi_font_family',ff||'sans');
-    document.querySelectorAll('.s2-font-btn').forEach(b=>b.classList.toggle('active',b.dataset.ff===(ff||'sans')));
-  }
-  return {
-    setFont(ff){ applyFont(ff); },
-    restoreFont(){ applyFont(localStorage.getItem('bvi_font_family')||'sans'); }
-  };
-})();
-
-/* ======================================================================
    SHARE – Direktlink kopieren
 ====================================================================== */
 const SHARE=(function(){
@@ -3253,36 +3235,6 @@ const KLAUSUR_HUB = (function(){
   };
 })();
 
-/* ======================================================================
-   HEATMAP – Tägliche Lernaktivität
-====================================================================== */
-const HEATMAP=(function(){
-  const KEY='bvi_heatmap';
-  function load(){try{return JSON.parse(localStorage.getItem(KEY)||'{}');}catch{return{};}}
-  function save(d){try{localStorage.setItem(KEY,JSON.stringify(d));}catch{}}
-  function pad(n){return String(n).padStart(2,'0');}
-  function todayStr(){const n=new Date();return n.getFullYear()+'-'+pad(n.getMonth()+1)+'-'+pad(n.getDate());}
-  return{
-    record(){const d=load(),t=todayStr();d[t]=(d[t]||0)+1;save(d);},
-    week(){const d=load(),now=new Date(),mo=new Date(now);mo.setDate(now.getDate()-((now.getDay()+6)%7));return Array.from({length:7},(_,i)=>{const dt=new Date(mo);dt.setDate(mo.getDate()+i);return d[dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate())]||0;});},
-    render(el){
-      if(!el)return;
-      const d=load();const weeks=13;const today=new Date();const days=[];
-      for(let i=(weeks*7)-1;i>=0;i--){
-        const dt=new Date(today);dt.setDate(today.getDate()-i);
-        const k=dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate());
-        days.push({k,count:d[k]||0,dt});
-      }
-      const max=Math.max(1,...days.map(x=>x.count));
-      el.innerHTML='<div class="hm-grid">'+days.map(({k,count,dt})=>{
-        const lvl=count===0?0:count<=max*.25?1:count<=max*.5?2:count<=max*.75?3:4;
-        const lbl=dt.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'})+(count?' · '+count+' Besuche':'');
-        return'<span class="hm-cell hm-'+lvl+'" title="'+lbl+'"></span>';
-      }).join('')+'</div>'
-      +'<div class="hm-legend"><span class="hm-lbl-l">Weniger</span><span class="hm-cell hm-0"></span><span class="hm-cell hm-1"></span><span class="hm-cell hm-2"></span><span class="hm-cell hm-3"></span><span class="hm-cell hm-4"></span><span class="hm-lbl-l">Mehr</span></div>';
-    }
-  };
-})();
 
 /* ======================================================================
    CHANGELOG – Update-Feed mit Auto-Open bei neuer Version
@@ -3295,6 +3247,14 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.2.0',ts:'2026-10-19T10:00',items:[
+      'Startseite: oben steht jetzt, wie viel Zeit du in der App verbracht hast (heute, diese Woche, insgesamt); das Diagramm zeigt die Minuten pro Tag',
+      'Die Zeit zählt nur, solange die App geöffnet ist und du sie bedienst – nach 5 Minuten ohne Eingabe pausiert sie',
+      'Stundenplan: Mittagessen 13:00–14:00 als eigene Zeile mit Symbol in deiner Akzentfarbe',
+      'Stundenplan: Blöcke über die Mittagspause hinweg werden in Vormittag und Fortsetzung geteilt',
+      'Einstellungen: Auswahl der Schriftart entfernt',
+      'Android-App: Das Symbol auf dem Startbildschirm übernimmt die Akzentfarbe (Orange, Gold, Rot, Blau oder Grün)'
+    ]},
     {v:'3.1.0',ts:'2026-10-18T18:00',items:[
       'Neues Design jetzt auch auf Tablet und Desktop: Tablet mit Tab-Leiste und zwei Spalten, Desktop mit Seitenleiste links',
       'Startseite als Dashboard mit Kennzahlen, Wochenaktivität, Weiterlernen, nächster Klausur und Modul-Kacheln',
@@ -4637,6 +4597,39 @@ const IDF_PLAN = (function(){
     const meta=[note,room?'Raum '+room:''].filter(Boolean).join(' · ');
     return `<div class="idf-item ${cls}"><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${esc(title)}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
   }
+  const LUNCH=end=>`<div class="idf-item idf-lunch"><span class="idf-time">13:00<i>${end}</i></span><span class="idf-txt"><span class="idf-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v5a3 3 0 0 0 6 0V2M18 22V2c-2.5 1.5-4 4.5-4 8 0 2 1 3 4 3"/></svg>Mittagessen</span></span></div>`;
+  function _start(spec){
+    const ue=/^(\d)(?:-\d)?$/.exec(spec);
+    if(ue) return UE_S[ue[1]-1];
+    const hm=/(\d{2}):(\d{2})/.exec(spec);
+    return hm?hm[0]:null;
+  }
+  function _splitAtLunch(items){
+    const out=[];
+    items.forEach(x=>{
+      const p=x.split('|'), m=/^(\d)-(\d)$/.exec(p[0]);
+      if(m&&+m[1]<=6&&+m[2]>=7){
+        out.push([`${m[1]}-6`,...p.slice(1)].join('|'));
+        out.push([m[2]==='7'?'7':`7-${m[2]}`,p[1]+' (Fortsetzung)',p[2]||'',p[3]||''].join('|'));
+      } else out.push(x);
+    });
+    return out.map((x,i)=>({x,i,t:_start(x.split('|')[0])}))
+      .sort((a,b)=>a.t&&b.t?(a.t<b.t?-1:a.t>b.t?1:a.i-b.i):a.i-b.i).map(o=>o.x);
+  }
+  function _dayItems(raw){
+    if(!raw.length) return '<div class="idf-empty">frei</div>';
+    const items=_splitAtLunch(raw);
+    const starts=items.map(x=>_start(x.split('|')[0]));
+    const html=items.map(_item);
+    if(starts.some(Boolean)){
+      let at=0;
+      starts.forEach((t,i)=>{ if(t&&t<'13:00') at=i+1; });
+      const next=starts.slice(at).find(Boolean);
+      html.splice(at,0,LUNCH(next&&next>'13:00'&&next<'14:00'?next:'14:00'));
+    }
+    return html.join('');
+  }
+
   function _buildWeeks(g=_grp){
     return W.filter(w=>w[4]==='both'||w[4]===g).sort((a,b)=>a[3]<b[3]?-1:1);
   }
@@ -4668,7 +4661,7 @@ const IDF_PLAN = (function(){
       const d=new Date(base); d.setDate(base.getDate()+i);
       const isToday=d.getTime()===today.getTime();
       return `<div class="idf-day${isToday?' today':''}"><div class="idf-dc"><span class="idf-dow">${DAYS[i]}</span><span class="idf-dnum">${d.getDate()}</span><span class="idf-dmo">${MONS[d.getMonth()]}</span></div>
-        <div class="idf-items">${items.length?items.map(_item).join(''):'<div class="idf-empty">frei</div>'}</div></div>`;
+        <div class="idf-items">${_dayItems(items)}</div></div>`;
     }).join('')+'</div>';
     if(tel) h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${[...tel,['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><span>${esc(t)}</span></div>`).join('')}</div>`;
     h+='<div class="idf-legend"><span><i class="hi"></i>Schlüsseltermin</span><span><i class="ex"></i>Exkursion</span><span><i class="ar"></i>An-/Abreise, frei</span><span>EVA = eigenverantwortliches Arbeiten</span></div>';
@@ -4700,10 +4693,34 @@ const IDF_PLAN = (function(){
   return { render, summary, _nav, _grp:_setGrp };
 })();
 
+/* ── Nutzungszeit: zählt nur, solange die App sichtbar ist und bedient wird ── */
+const USAGE=(function(){
+  const KEY='bvi_usage', TICK=15, IDLE=5*60*1000;
+  let last=Date.now();
+  const pad=n=>String(n).padStart(2,'0');
+  const key=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ return {}; } }
+  ['pointerdown','keydown','wheel','touchstart','scroll'].forEach(ev=>window.addEventListener(ev,()=>{ last=Date.now(); },{passive:true,capture:true}));
+  setInterval(()=>{
+    if(document.visibilityState!=='visible'||Date.now()-last>IDLE) return;
+    const d=load(), k=key(new Date());
+    d[k]=(d[k]||0)+TICK;
+    try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){}
+  },TICK*1000);
+  return {
+    today(){ return load()[key(new Date())]||0; },
+    week(){
+      const d=load(), mo=new Date(); mo.setDate(mo.getDate()-((mo.getDay()+6)%7));
+      return Array.from({length:7},(_,i)=>{ const x=new Date(mo); x.setDate(mo.getDate()+i); return d[key(x)]||0; });
+    },
+    total(){ return Object.values(load()).reduce((a,b)=>a+b,0); }
+  };
+})();
+
 /* ── Akzentfarbe der Mobil-Ansicht ──────────────────────────────────────── */
 const ACCENT=(function(){
   const KEY='bvi_accent', DEF='#FFA412';
-  const PRESETS=[['#FFA412','Orange'],['#C9A84C','Gold'],['#E5484D','Rot'],['#3E8EF7','Blau'],['#3DBE7A','Grün']];
+  const PRESETS=[['#FFA412','Orange','orange'],['#C9A84C','Gold','gold'],['#E5484D','Rot','red'],['#3E8EF7','Blau','blue'],['#3DBE7A','Grün','green']];
   const valid=c=>/^#[0-9a-f]{6}$/i.test(c||'');
   function get(){ try{ const c=localStorage.getItem(KEY); return valid(c)?c.toUpperCase():DEF; }catch(e){ return DEF; } }
   function onColor(hex){
@@ -4715,6 +4732,15 @@ const ACCENT=(function(){
     st.setProperty('--m-accent',c);
     st.setProperty('--m-on-accent',onColor(c));
   }
+  // Android-App: Startsymbol in der nächstliegenden der 5 Vorgabefarben
+  function syncAppIcon(c){
+    if(!window.BVIAndroid||!BVIAndroid.setIcon) return;
+    const rgb=h=>{const n=parseInt(h.slice(1),16);return[n>>16&255,n>>8&255,n&255];};
+    const [r,g,b]=rgb(c);
+    let best=PRESETS[0],min=Infinity;
+    PRESETS.forEach(p=>{const [x,y,z]=rgb(p[0]),d=(r-x)**2+(g-y)**2+(b-z)**2;if(d<min){min=d;best=p;}});
+    try{ BVIAndroid.setIcon(best[2]); }catch(e){}
+  }
   function render(){
     const el=document.getElementById('m-accent'); if(!el) return;
     const cur=get(), custom=!PRESETS.some(p=>p[0]===cur);
@@ -4722,8 +4748,8 @@ const ACCENT=(function(){
       +`<label class="m-sw m-sw-wheel" role="radio" aria-checked="${custom}" aria-label="Eigene Farbe wählen">${custom?`<i style="background:${cur}"></i>`:''}<input type="color" value="${cur.toLowerCase()}" oninput="ACCENT.preview(this.value)" onchange="ACCENT.set(this.value)"></label>`;
   }
   return {
-    init(){ apply(get()); },
-    set(c){ if(!valid(c)) return; c=c.toUpperCase(); try{ localStorage.setItem(KEY,c); }catch(e){} apply(c); render(); },
+    init(){ const c=get(); apply(c); syncAppIcon(c); },
+    set(c){ if(!valid(c)) return; c=c.toUpperCase(); try{ localStorage.setItem(KEY,c); }catch(e){} apply(c); syncAppIcon(c); render(); },
     preview(c){ if(valid(c)) apply(c); },
     render
   };
@@ -4787,7 +4813,7 @@ const SHELL=(function(){
   }
   function chart(v){
     const W=340,H=150,L=30,R=12,T=14,B=26;
-    const top=Math.max(4,Math.ceil(Math.max(...v)/4)*4);
+    const mx=Math.max(...v), top=mx>20?Math.ceil(mx/20)*20:Math.max(4,Math.ceil(mx/4)*4);
     const x=i=>L+i*(W-L-R)/6, y=m=>T+(H-T-B)*(1-m/top);
     const today=(new Date().getDay()+6)%7, days=['Mo','Di','Mi','Do','Fr','Sa','So'];
     const pts=v.slice(0,today+1).map((m,i)=>`${x(i)},${y(m)}`).join(' ');
@@ -4799,7 +4825,12 @@ const SHELL=(function(){
     v.slice(0,today+1).forEach((m,i)=>{ g+=`<circle cx="${x(i)}" cy="${y(m)}" r="${i===today?6:3.5}" style="fill:var(--m-accent)"/>`; });
     days.forEach((d,i)=>{ g+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle" font-size="11" font-weight="${i===today?700:400}" style="fill:${i===today?'var(--m-accent)':'#7a7a7a'}">${d}</text>`; });
     const sum=v.reduce((a,b)=>a+b,0);
-    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Aufgerufene Lernseiten pro Tag in dieser Woche, insgesamt ${sum}">${g}</svg>`;
+    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Minuten in der App pro Tag in dieser Woche, insgesamt ${sum} Minuten">${g}</svg>`;
+  }
+
+  function dur(sec){
+    const m=Math.floor(sec/60);
+    return m<60?`${m} min`:`${Math.floor(m/60)} h ${String(m%60).padStart(2,'0')}`;
   }
 
   function daysToExam(){
@@ -4813,8 +4844,7 @@ const SHELL=(function(){
     const now=new Date(), h=now.getHours();
     const hi=h<11?'Guten Morgen':h<18?'Guten Tag':'Guten Abend';
     const streak=streakDays(), cnt=PROGRESS.counts();
-    const done=Object.values(cnt).reduce((a,c)=>a+c.done,0), total=Object.values(cnt).reduce((a,c)=>a+c.total,0);
-    const cs=cardStats(), recent=RECENT.list()[0], idf=IDF_PLAN.summary(), exam=daysToExam();
+    const cs=cardStats(), recent=RECENT.list()[0], idf=IDF_PLAN.summary(), exam=daysToExam(), week=USAGE.week();
     const pct=c=>c.total?Math.round(c.done/c.total*100):0;
     const modRow=m=>{
       const c=cnt[m[0]]||{done:0,total:0};
@@ -4840,11 +4870,11 @@ const SHELL=(function(){
       <div class="m-g2 m-home-top">
         <div class="m-col">
           <div class="m-stats3">
-            <div class="m-stat"><b>${done}/${total}</b><span>Themen gelesen</span></div>
-            <div class="m-stat"><b>${cs.known}</b><span>von ${cs.total} Karten gewusst</span></div>
-            <div class="m-stat"><b>${cs.due}</b><span>Karten heute fällig</span></div>
+            <div class="m-stat"><b>${dur(USAGE.today())}</b><span>heute in der App</span></div>
+            <div class="m-stat"><b>${dur(week.reduce((a,b)=>a+b,0))}</b><span>diese Woche</span></div>
+            <div class="m-stat"><b>${dur(USAGE.total())}</b><span>insgesamt</span></div>
           </div>
-          <div class="m-card m-chart"><div class="m-chart-h"><b>Aktivität diese Woche</b><span>aufgerufene Seiten</span></div>${chart(HEATMAP.week())}</div>
+          <div class="m-card m-chart"><div class="m-chart-h"><b>Lernzeit diese Woche</b><span>Minuten pro Tag</span></div>${chart(week.map(x=>Math.round(x/60)))}</div>
         </div>
         <div class="m-col">
           ${cont}
@@ -4928,7 +4958,6 @@ const SHELL=(function(){
   function syncSettings(){
     ACCENT.render();
     SETTINGS._restoreFsUI();
-    SETTINGS2.restoreFont();
     const nc=notes().length, bc=BOOKMARKS.getAll().length;
     const set=(id,txt)=>{ const e=document.getElementById(id); if(e) e.textContent=txt; };
     set('m-notes-count',nc||'');
@@ -4984,7 +5013,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   PROGRESS.updateUI();
   SETTINGS.restoreFontSize();
   NOTIF.check();
-  SETTINGS2.restoreFont();
   ONBOARD.init();
   CHANGELOG.check();
   if(typeof FALLBEARBEITUNG!=='undefined') { document.querySelectorAll('#v-vak-fallbearbeitung').forEach(()=>{}); }
