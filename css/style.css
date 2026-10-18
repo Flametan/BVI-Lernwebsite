@@ -592,8 +592,6 @@
   .sc-table tr.sc-sep td{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--c-gold);padding-top:.9rem;padding-bottom:.2rem;}
   kbd{display:inline-block;font-family:var(--f-m);font-size:.72rem;padding:.1rem .35rem;border-radius:4px;border:1px solid var(--glass-b);background:var(--c-navy-2);color:var(--c-slate-l);}
   /* ── SCHRIFTART ── */
-  html.ff-serif{font-family:'Cormorant Garamond',Georgia,serif;}
-  html.ff-mono{font-family:'DM Mono',monospace;}
   /* ── ZULETZT BESUCHT ── */
   /* ── DRUCKANSICHT ── */
   @media print{

@@ -4,11 +4,9 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Flame shape -->
     <path
         android:fillColor="#C9A84C"
         android:pathData="M54,18 C54,18 34,38 34,54 C34,66 43,74 54,74 C65,74 74,66 74,54 C74,38 54,18 54,18Z"/>
-    <!-- Inner white glow -->
     <path
         android:fillColor="#FFFFFF"
         android:fillAlpha="0.85"

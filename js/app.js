@@ -2466,23 +2466,6 @@ const CHECKS=(function(){
 })();
 
 /* ======================================================================
-   SETTINGS2 – Einstellungs-Overlay (Reset, Schriftart)
-====================================================================== */
-const SETTINGS2=(function(){
-  function applyFont(ff){
-    document.documentElement.classList.remove('ff-serif','ff-mono');
-    if(ff==='serif') document.documentElement.classList.add('ff-serif');
-    else if(ff==='mono') document.documentElement.classList.add('ff-mono');
-    localStorage.setItem('bvi_font_family',ff||'sans');
-    document.querySelectorAll('.s2-font-btn').forEach(b=>b.classList.toggle('active',b.dataset.ff===(ff||'sans')));
-  }
-  return {
-    setFont(ff){ applyFont(ff); },
-    restoreFont(){ applyFont(localStorage.getItem('bvi_font_family')||'sans'); }
-  };
-})();
-
-/* ======================================================================
    SHARE – Direktlink kopieren
 ====================================================================== */
 const SHARE=(function(){
@@ -3268,7 +3251,9 @@ const CHANGELOG=(function(){
       'Startseite: oben steht jetzt, wie viel Zeit du in der App verbracht hast (heute, diese Woche, insgesamt); das Diagramm zeigt die Minuten pro Tag',
       'Die Zeit zählt nur, solange die App geöffnet ist und du sie bedienst – nach 5 Minuten ohne Eingabe pausiert sie',
       'Stundenplan: Mittagessen 13:00–14:00 als eigene Zeile mit Symbol in deiner Akzentfarbe',
-      'Stundenplan: Blöcke über die Mittagspause hinweg werden in Vormittag und Fortsetzung geteilt'
+      'Stundenplan: Blöcke über die Mittagspause hinweg werden in Vormittag und Fortsetzung geteilt',
+      'Einstellungen: Auswahl der Schriftart entfernt',
+      'Android-App: Das Symbol auf dem Startbildschirm übernimmt die Akzentfarbe (Orange, Gold, Rot, Blau oder Grün)'
     ]},
     {v:'3.1.0',ts:'2026-10-18T18:00',items:[
       'Neues Design jetzt auch auf Tablet und Desktop: Tablet mit Tab-Leiste und zwei Spalten, Desktop mit Seitenleiste links',
@@ -4735,7 +4720,7 @@ const USAGE=(function(){
 /* ── Akzentfarbe der Mobil-Ansicht ──────────────────────────────────────── */
 const ACCENT=(function(){
   const KEY='bvi_accent', DEF='#FFA412';
-  const PRESETS=[['#FFA412','Orange'],['#C9A84C','Gold'],['#E5484D','Rot'],['#3E8EF7','Blau'],['#3DBE7A','Grün']];
+  const PRESETS=[['#FFA412','Orange','orange'],['#C9A84C','Gold','gold'],['#E5484D','Rot','red'],['#3E8EF7','Blau','blue'],['#3DBE7A','Grün','green']];
   const valid=c=>/^#[0-9a-f]{6}$/i.test(c||'');
   function get(){ try{ const c=localStorage.getItem(KEY); return valid(c)?c.toUpperCase():DEF; }catch(e){ return DEF; } }
   function onColor(hex){
@@ -4747,6 +4732,15 @@ const ACCENT=(function(){
     st.setProperty('--m-accent',c);
     st.setProperty('--m-on-accent',onColor(c));
   }
+  // Android-App: Startsymbol in der nächstliegenden der 5 Vorgabefarben
+  function syncAppIcon(c){
+    if(!window.BVIAndroid||!BVIAndroid.setIcon) return;
+    const rgb=h=>{const n=parseInt(h.slice(1),16);return[n>>16&255,n>>8&255,n&255];};
+    const [r,g,b]=rgb(c);
+    let best=PRESETS[0],min=Infinity;
+    PRESETS.forEach(p=>{const [x,y,z]=rgb(p[0]),d=(r-x)**2+(g-y)**2+(b-z)**2;if(d<min){min=d;best=p;}});
+    try{ BVIAndroid.setIcon(best[2]); }catch(e){}
+  }
   function render(){
     const el=document.getElementById('m-accent'); if(!el) return;
     const cur=get(), custom=!PRESETS.some(p=>p[0]===cur);
@@ -4754,8 +4748,8 @@ const ACCENT=(function(){
       +`<label class="m-sw m-sw-wheel" role="radio" aria-checked="${custom}" aria-label="Eigene Farbe wählen">${custom?`<i style="background:${cur}"></i>`:''}<input type="color" value="${cur.toLowerCase()}" oninput="ACCENT.preview(this.value)" onchange="ACCENT.set(this.value)"></label>`;
   }
   return {
-    init(){ apply(get()); },
-    set(c){ if(!valid(c)) return; c=c.toUpperCase(); try{ localStorage.setItem(KEY,c); }catch(e){} apply(c); render(); },
+    init(){ const c=get(); apply(c); syncAppIcon(c); },
+    set(c){ if(!valid(c)) return; c=c.toUpperCase(); try{ localStorage.setItem(KEY,c); }catch(e){} apply(c); syncAppIcon(c); render(); },
     preview(c){ if(valid(c)) apply(c); },
     render
   };
@@ -4964,7 +4958,6 @@ const SHELL=(function(){
   function syncSettings(){
     ACCENT.render();
     SETTINGS._restoreFsUI();
-    SETTINGS2.restoreFont();
     const nc=notes().length, bc=BOOKMARKS.getAll().length;
     const set=(id,txt)=>{ const e=document.getElementById(id); if(e) e.textContent=txt; };
     set('m-notes-count',nc||'');
@@ -5020,7 +5013,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   PROGRESS.updateUI();
   SETTINGS.restoreFontSize();
   NOTIF.check();
-  SETTINGS2.restoreFont();
   ONBOARD.init();
   CHANGELOG.check();
   if(typeof FALLBEARBEITUNG!=='undefined') { document.querySelectorAll('#v-vak-fallbearbeitung').forEach(()=>{}); }
