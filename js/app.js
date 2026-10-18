@@ -3247,6 +3247,10 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.3.0',ts:'2026-10-19T12:00',items:[
+      'Startseite: Gruß passend zur Tageszeit (Noch wach?, Guten Morgen, Mahlzeit, Guten Tag, Guten Abend)',
+      'Startseite: Unter dem Gruß steht einer von 200 Sprüchen, passend zu Nacht, Morgen, Mittag, Nachmittag oder Abend'
+    ]},
     {v:'3.2.0',ts:'2026-10-19T10:00',items:[
       'Startseite: oben steht jetzt, wie viel Zeit du in der App verbracht hast (heute, diese Woche, insgesamt); das Diagramm zeigt die Minuten pro Tag',
       'Die Zeit zählt nur, solange die App geöffnet ist und du sie bedienst – nach 5 Minuten ohne Eingabe pausiert sie',
@@ -4800,6 +4804,227 @@ const SHELL=(function(){
   const row=({ic,t1,t2,on,right=''})=>`<button class="m-row m-go" onclick="${on}">${ic}<span class="m-tx"><span class="m-t1">${esc(t1)}</span>${t2?`<span class="m-t2">${esc(t2)}</span>`:''}</span>${right}</button>`;
   const ic=k=>`<span class="m-ic">${svg(k)}</span>`;
 
+  // Startseite: Gruß und Spruch je Tageszeit; der Spruch bleibt pro App-Öffnung gleich
+  const GREET={night:'Noch wach?',morning:'Guten Morgen',noon:'Mahlzeit',afternoon:'Guten Tag',evening:'Guten Abend'};
+  const QUIPS={
+    night:[
+      "Die Leitstelle schläft nie – du offenbar auch nicht.",
+      "Nachtschicht am Schreibtisch: Der Lagevortrag hält dich wach.",
+      "Um diese Uhrzeit lernt nur, wer wirklich Bereitschaft hat.",
+      "Selbst die Brandmeldeanlage gönnt sich gerade Ruhe.",
+      "Nachteule erkannt. Kaffee ist keine Dauerlösung.",
+      "Funkstille überall, nur dein Kopf ist noch auf Empfang.",
+      "Ruhezeiten gelten auch für Führungskräfte. Nur so als Hinweis.",
+      "Das Einsatztagebuch notiert: „Lernbetrieb weiterhin aktiv.“",
+      "Mondschein, Monitorlicht und Musterbauordnung – romantischer wird's nicht.",
+      "Selbst der Sicherheitstrupp hat jetzt Pause.",
+      "Die Klausur schreibt man tagsüber. Nur so als Tipp.",
+      "Nächtlicher Alarm? Nein, nur dein Ehrgeiz.",
+      "Schlaf ist auch eine Lernmethode. Wissenschaftlich belegt.",
+      "Wer um diese Zeit Gebäudeklassen paukt, verdient einen Orden.",
+      "Die Stabsrahmenübung »Schlafmangel« läuft bereits.",
+      "„Nur noch eine Karte“ – sagen alle um diese Uhrzeit.",
+      "Sogar der Rauchmelder blinzelt dir müde zu.",
+      "Lagefeststellung: Es ist dunkel, und du lernst. Respekt.",
+      "Die Wache schläft, die Lernkarten nicht.",
+      "Morgen früh dankt dir dein Kopf – oder er beschwert sich.",
+      "Die Sterne leuchten, die Lernkarten auch.",
+      "Bereitschaftsdienst im Schlafanzug – auch eine Dienstform.",
+      "Wenn jetzt der Melder geht, bist du wenigstens schon wach.",
+      "Nachtruhe ist kein Dienstvergehen. Nur so.",
+      "Um diese Zeit zählt jede Karte doppelt. Gefühlt.",
+      "Der Wachhabende fragt: Alles ruhig bei dir?",
+      "Das Wissen sickert nachts besonders tief ein. Angeblich.",
+      "Wach wie ein Nachtalarm, fleißig wie eine ganze Wachabteilung.",
+      "Noch eine Frage, dann ist aber wirklich Licht aus.",
+      "Die Wärmebildkamera würde jetzt nur dich und den Bildschirm sehen.",
+      "Nachts sind alle Gebäudeklassen grau.",
+      "Ein kurzer Blick auf den Plan – und dann ab ins Bett.",
+      "Stille Wache am Schreibtisch: angetreten.",
+      "Kaffee um diese Uhrzeit ist ein taktischer Fehler.",
+      "Selbst die Pforte hat schon das Licht gedimmt.",
+      "Du lernst, während andere schnarchen. Respekt.",
+      "Nachtdienst-Modus: aktiviert.",
+      "Morgen wirst du dich fragen, warum du so lange wach warst.",
+      "Die Nacht ist kurz, die FwDV lang.",
+      "Schlafen ist die beste Wiederholung. Gute Nacht – bald!"
+    ],
+    morning:[
+      "Kaffee an, Gehirn hochfahren, Lagefeststellung beginnen.",
+      "Frühdienst! Heute wird gelernt, nicht nur gelöscht.",
+      "Der frühe Vogel kennt alle Gebäudeklassen.",
+      "Erst Kaffee, dann Krisenstab.",
+      "Morgenappell: Alle Synapsen bitte vollzählig antreten.",
+      "Wissen kalt einspeisen, Kaffee heiß trinken.",
+      "Heute sagst du S1 bis S6 im Schlaf auf. Na ja, fast.",
+      "Die Sonne geht auf, der Lernfortschritt hoffentlich auch.",
+      "Morgenstund hat Gold im Mund – und die FwDV im Kopf.",
+      "Fahrzeughalle offen, Kopf auch. Los geht's.",
+      "Einsatzbereitschaft hergestellt. Jetzt fehlt nur noch der Kaffee.",
+      "Heute ist ein guter Tag für einen sauberen Führungsvorgang.",
+      "Wer morgens lernt, muss abends nicht büffeln.",
+      "Erste Lagemeldung: motiviert, aber noch im Bademantel.",
+      "Das Frühstück ist die wichtigste Mahlzeit – direkt nach den Lernkarten.",
+      "Alarmstufe Kaffee: erreicht.",
+      "Die Brötchen sind frisch, die Rechtsgrundlagen hoffentlich auch.",
+      "Wach werden ist auch eine Form von Lagebeurteilung.",
+      "Der innere Schweinehund bekommt heute keinen Einsatzbefehl.",
+      "Guten Start – heute wird's ein Wissens-Großeinsatz.",
+      "Der Tag hat gerade erst ausgerückt.",
+      "Das Funkgerät ist noch still, der Kopf schon an.",
+      "Wer früh aufsteht, hat mehr Zeit für Lernkarten.",
+      "Frisch geduscht, frisch motiviert.",
+      "Heute schon Fahrzeugkunde gemacht? Zur Not tut's auch eine Lernkarte.",
+      "Morgenlage: Wetter egal, Motivation hoch.",
+      "Atemschutzüberwachung läuft – du atmest, also lernst du.",
+      "Kaffee ist das Löschmittel gegen Müdigkeit.",
+      "Erste Übung des Tages: Augen offen halten.",
+      "Der Morgen gehört den Schnellen und den Neugierigen.",
+      "Gestern ist abgearbeitet, heute ist ein neuer Einsatz.",
+      "Fahrzeugcheck erledigt? Dann jetzt Kopfcheck.",
+      "Früh übt sich, wer in den höheren Dienst will.",
+      "Ein Frühstücksbrötchen und eine Lernkarte, bitte.",
+      "Die Sonne meldet: einsatzbereit. Und du?",
+      "Heute schreiben wir Geschichte. Oder wenigstens Stichpunkte.",
+      "Gute Laune ist ansteckend. Wissen hoffentlich auch.",
+      "Wer morgens schon hier ist, hat den Tag im Griff.",
+      "Ab in den Tag – mit Plan, Kaffee und Lernkarten.",
+      "Schichtbeginn: Kopf auf Empfang, Handy auf Lernen."
+    ],
+    noon:[
+      "Mittagspause naht. Vorher noch schnell eine Karte?",
+      "Erst die Karten, dann die Kantine.",
+      "Der Magen knurrt lauter als jedes Funkgerät.",
+      "Lagefeststellung: Hunger. Maßnahme: Mittagessen.",
+      "Halbzeit! Die zweite Hälfte des Tages wartet schon.",
+      "Zwischen Suppe und Stabsarbeit passt noch eine Lernkarte.",
+      "Die Kantine ist kein Bereitstellungsraum. Aber fast.",
+      "Nachschub angefordert: Essen und Wissen.",
+      "Löschwasserversorgung ist wichtig. Trinkwasserversorgung auch.",
+      "Auch Führungskräfte brauchen Verpflegung. Zuständig: S4.",
+      "Nach dem Essen sollst du ruhen oder tausend Karten üben.",
+      "Der Küchenwagen ist schon unterwegs. Hoffentlich.",
+      "Kurze Pause im Einsatzabschnitt Schreibtisch.",
+      "Satt und schlau – die perfekte Kombination.",
+      "Mittagstief? Nicht mit dir.",
+      "Schnitzel mit Brandschutzordnung – das Tagesgericht.",
+      "Die Lernkarten essen übrigens nicht mit.",
+      "Wer mit vollem Bauch lernt, lernt doppelt. Behauptet zumindest der Koch.",
+      "Volle Teller, volle Akkus, voller Lernplan.",
+      "13 Uhr ist Mittag. Bis dahin zählt jede Minute.",
+      "Nachtisch gibt's erst nach drei Karten.",
+      "Kurze Lagebesprechung: Was gibt's heute in der Kantine?",
+      "Die Mittagspause ist heilig. Die Lernkarten sind geduldig.",
+      "Satt werden ist auch eine Form von Eigenschutz.",
+      "Ein Lernhäppchen zum Mittagessen?",
+      "Pünktlich um 13 Uhr wird verpflegt – bis dahin wird gelernt.",
+      "Mittag ist, wenn der Kopf nach Kartoffeln verlangt.",
+      "Zwischen Hauptgang und Dessert passt immer eine Definition.",
+      "Auch die Wache macht jetzt Mittag. Fast alle.",
+      "Die Verpflegungskomponente ist angefordert.",
+      "Mittagsrapport: halb geschafft, halb satt.",
+      "Kleine Pause, große Wirkung.",
+      "Heute auf dem Speiseplan: Brandschutz à la carte.",
+      "Wer mittags lernt, verdaut doppelt.",
+      "Erst essen, dann Einsatzplanung.",
+      "Mit leerem Magen löscht es sich schlecht.",
+      "Mittag! Zeit, die Akkus aufzuladen.",
+      "Ein Teller Nudeln und ein Prüfschema – das Mittagsmenü.",
+      "Der Kopf braucht Pause, der Bauch braucht Essen.",
+      "Halbzeitpfiff! Kurz durchatmen."
+    ],
+    afternoon:[
+      "Mittagstief überstanden? Dann ab an die Karten.",
+      "Kaffee Nummer drei zählt offiziell als Lernhilfe.",
+      "Zeit für Kaffee, Kuchen und Krisenkommunikation.",
+      "Die zweite Welle rollt an: Konzentration nachfordern!",
+      "Halte durch – der Feierabend ist schon in Sichtweite.",
+      "Das Gehirn meldet: Kapazität für noch ein Kapitel.",
+      "Perfekte Zeit, um eine Klausurfrage zu knacken.",
+      "Kuchenpause ist auch ein taktischer Rückzug.",
+      "Kleine Nachforderung: noch zehn Minuten Fokus.",
+      "Nachmittags lernen ist wie Nachlöschen – lohnt sich immer.",
+      "Die Sonne sinkt, das Wissen steigt.",
+      "Kurz die Lage beurteilen und dann Vollgas.",
+      "Zwischen Kaffee und Feierabend passt noch ein Prüfschema.",
+      "Der Tag ist noch jung. Na ja, mittelalt.",
+      "Gute Nachricht: Mehr als die Hälfte des Tages ist geschafft.",
+      "Der Nachmittag gehört den Fleißigen – und den Kuchenessern.",
+      "Wer jetzt noch lernt, hat den Rückzugsbefehl elegant überhört.",
+      "Nachmittagsübung: Die Lernkarten warten schon.",
+      "Ein Kapitel noch, dann darfst du an den Kühlschrank.",
+      "Feierabend kommt sowieso. Wissen nur, wenn du was tust.",
+      "Das Nachmittagsprogramm: Kaffee, Kekse, Kompetenz.",
+      "Die Uhr tickt Richtung Feierabend – du tickst Richtung Klausur.",
+      "Jetzt wird's spannend: Endspurt des Tages.",
+      "Konzentration ist wie Löschwasser – rechtzeitig nachfüllen.",
+      "Kleiner Energieschub gefällig? Eine Lernkarte wirkt Wunder.",
+      "Der Nachmittag ist lang genug für ein ganzes Kapitel.",
+      "Wer jetzt dranbleibt, darf abends entspannen.",
+      "Lagebild: müde Augen, wache Gedanken.",
+      "Zeit für eine Lernrunde mit Kuchenbegleitung.",
+      "Noch nicht Feierabend? Perfekt für eine Wiederholung.",
+      "Nachmittagsdienst: Wissen nachfordern, Müdigkeit zurückstellen.",
+      "Ein Keks pro richtiger Antwort. Deal?",
+      "Die Sonne wandert, du lernst.",
+      "Jetzt noch kurz durchziehen, dann ist der Tag gewonnen.",
+      "Stabsarbeit am Nachmittag: S3 übernimmt deine Motivation.",
+      "Gähnen ist erlaubt, Aufgeben nicht.",
+      "Ein paar Karten noch, dann darfst du den Rechner ausmachen.",
+      "Wer nachmittags lernt, hat abends frei.",
+      "Zweiter Trupp vor: Konzentration, Wasser marsch!",
+      "Fast geschafft – der Feierabend steht schon im Bereitstellungsraum."
+    ],
+    evening:[
+      "Feierabend? Nicht für deinen Ehrgeiz.",
+      "Couch, Tee und ein bisschen Verwaltungsrecht – so geht Entspannung.",
+      "Der Kaminabend ist eröffnet. Thema: Lernen.",
+      "Abendrunde: Ein paar Karten noch, dann ist Schluss.",
+      "Wer abends lernt, träumt nachts von Gebäudeklassen.",
+      "Abendlage: Was hast du heute gelernt?",
+      "Die Fahrzeughalle ist sauber, jetzt ist der Kopf dran.",
+      "Die Serie kann warten. Die FwDV nicht.",
+      "Ein guter Tag endet mit einer guten Wiederholung.",
+      "Einsatznachbesprechung des Tages: Lernkarten zählen dazu.",
+      "Abendbrot erledigt? Dann jetzt Abendwissen.",
+      "Die Sonne ist weg, die Motivation hoffentlich nicht.",
+      "Noch eine Fragerunde vor dem Schlafengehen?",
+      "Abends ist die Lage ruhig – perfekt zum Lernen.",
+      "Kurze Lernschicht, dann ab in die Bereitschaft.",
+      "Rückbau des Tages beginnt. Vorher noch eine Karte.",
+      "Wer abends lernt, startet morgen mit Vorsprung.",
+      "Zeit für eine entspannte Lagebesprechung mit dir selbst.",
+      "Gleich ist Ruhezeit. Vorher noch ein kleines Erfolgserlebnis?",
+      "Der Tag war lang, die Karteikarten sind kurz.",
+      "Feierabendbier? Erst nach der Lernkarte.",
+      "Abends werden die Fleißigen sichtbar.",
+      "Schicht im Schacht – fast.",
+      "Die Lernkarten freuen sich über Abendbesuch.",
+      "Ein bisschen Wissen zum Abendbrot.",
+      "Abendroutine: Zähne putzen, Karten lernen, schlafen.",
+      "Heute schon geglänzt? Hier kannst du noch nachlegen.",
+      "Der Abend gehört dir – und ein bisschen der FwDV.",
+      "Abendlage: Akkus niedrig, Wissen hoch.",
+      "Noch schnell den Tag sichern, dann Feierabend.",
+      "Lesezeichen setzen und morgen weitermachen – auch ein Plan.",
+      "Gemütlich lernen ist auch lernen.",
+      "Abendsonne, Abendruhe, Abendrunde.",
+      "Ein Prüfschema vor dem Schlafen – das Gute-Nacht-Märchen für Profis.",
+      "Heute war ein guter Tag. Mit einer Karte wird er noch besser.",
+      "Die Wache wechselt, du bleibst dran.",
+      "Schluss machen ist erlaubt. Eine Karte vorher auch.",
+      "Abends lernt es sich ohne Funkverkehr am besten.",
+      "Der Tag geht, das Wissen bleibt.",
+      "Gleich Feierabend – aber vorher noch ein kleiner Sieg."
+    ]
+  };
+  const daySlot=h=>h>=22||h<5?'night':h<11?'morning':h<14?'noon':h<18?'afternoon':'evening';
+  let _quip=null;
+  function quip(slot){
+    if(!_quip||_quip.slot!==slot){ const l=QUIPS[slot]; _quip={slot,text:l[Math.floor(Math.random()*l.length)]}; }
+    return _quip.text;
+  }
+
   function streakDays(){
     const d=STREAK.get(), n=d.current||0;
     const f=x=>x.getFullYear()+'-'+(x.getMonth()+1)+'-'+x.getDate();
@@ -4842,7 +5067,7 @@ const SHELL=(function(){
     const el=document.getElementById('m-home');
     if(!el) return;
     const now=new Date(), h=now.getHours();
-    const hi=h<11?'Guten Morgen':h<18?'Guten Tag':'Guten Abend';
+    const slot=daySlot(h), hi=GREET[slot];
     const streak=streakDays(), cnt=PROGRESS.counts();
     const cs=cardStats(), recent=RECENT.list()[0], idf=IDF_PLAN.summary(), exam=daysToExam(), week=USAGE.week();
     const pct=c=>c.total?Math.round(c.done/c.total*100):0;
@@ -4866,7 +5091,7 @@ const SHELL=(function(){
     const extra=(exam>=0?row({ic:ic('exam'),t1:'Nächste Klausur',t2:`Klausur § 21 · ${exam===0?'heute':exam===1?'morgen':'noch '+exam+' Tage'}`,on:"NAV.tab('v-pruefung','Prüfung')"}):'')
       +row({ic:ic('cards'),t1:'Lernkarten wiederholen',t2:cs.due?`${cs.due} Karten heute fällig`:'Heute nichts fällig',on:"NAV.tab('v-flashcards','Lernen')"});
     el.innerHTML=`
-      <div class="m-hello"><div><h1>${hi}</h1><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${streak?`<span class="m-streak">${svg('flame')}${streak} ${streak===1?'Tag':'Tage'}</span>`:''}</div>
+      <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${streak?`<span class="m-streak">${svg('flame')}${streak} ${streak===1?'Tag':'Tage'}</span>`:''}</div>
       <div class="m-g2 m-home-top">
         <div class="m-col">
           <div class="m-stats3">
