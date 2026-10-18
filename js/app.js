@@ -3247,38 +3247,16 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
-    {v:'3.3.0',ts:'2026-10-19T12:00',items:[
-      'Startseite: Gruß passend zur Tageszeit (Noch wach?, Guten Morgen, Mahlzeit, Guten Tag, Guten Abend)',
-      'Startseite: Unter dem Gruß steht einer von 200 Sprüchen, passend zu Nacht, Morgen, Mittag, Nachmittag oder Abend'
-    ]},
-    {v:'3.2.0',ts:'2026-10-19T10:00',items:[
-      'Startseite: oben steht jetzt, wie viel Zeit du in der App verbracht hast (heute, diese Woche, insgesamt); das Diagramm zeigt die Minuten pro Tag',
-      'Die Zeit zählt nur, solange die App geöffnet ist und du sie bedienst – nach 5 Minuten ohne Eingabe pausiert sie',
-      'Stundenplan: Mittagessen 13:00–14:00 als eigene Zeile mit Symbol in deiner Akzentfarbe',
-      'Stundenplan: Blöcke über die Mittagspause hinweg werden in Vormittag und Fortsetzung geteilt',
-      'Einstellungen: Auswahl der Schriftart entfernt',
-      'Android-App: Das Symbol auf dem Startbildschirm übernimmt die Akzentfarbe (Orange, Gold, Rot, Blau oder Grün)'
-    ]},
-    {v:'3.1.0',ts:'2026-10-18T18:00',items:[
-      'Neues Design jetzt auch auf Tablet und Desktop: Tablet mit Tab-Leiste und zwei Spalten, Desktop mit Seitenleiste links',
-      'Startseite als Dashboard mit Kennzahlen, Wochenaktivität, Weiterlernen, nächster Klausur und Modul-Kacheln',
-      'Plan: auf dem Desktop die ganze Woche nebeneinander',
-      'Lernseiten: Inhaltsverzeichnis „Auf dieser Seite“ am rechten Rand (große Bildschirme)',
-      'Lernkarten: Spalte „Dein Stand“ mit Fortschritt pro Modul',
-      'Lernkarten im neuen Design: alle Modul-Filter auf einen Blick, Karte links ausgerichtet, Knöpfe Nochmal/Schwer/Gewusst, lange Antworten werden nicht mehr abgeschnitten',
-      'Filter „Markiert“ erscheint erst, wenn du eine Karte markierst – dann ganz vorne',
-      'Stundenplan: Uhrzeiten, Räume und Hinweise zu jeder Einheit, Telefonnummern der Woche; alle Wochen mit dem PDF abgeglichen und korrigiert',
-      'Stundenplan: Pfeile bleiben im Kasten, beim Gruppenwechsel bleibt die Woche gleich',
-      'Header, bewegter Hintergrund und altes Einstellungs-Fenster entfernt – alles liegt jetzt in den Tabs'
-    ]},
-    {v:'3.0.0',ts:'2026-10-18T12:00',items:[
-      'Neue Mobil-Ansicht im App-Stil: Tab-Leiste unten mit Start, Plan, Prüfung, Einstellungen und Lernen – der Header entfällt auf dem Handy',
-      'Startseite (Handy): Streak, gelesene Themen, Lernkarten, Aktivität der Woche, Weiterlernen und alle Module mit Fortschritt',
-      'Neue Tabs: Plan (IdF-Stundenplan), Prüfung (alle Klausur-Werkzeuge mit Countdown) und Einstellungen (Suche, Notizen, Lesezeichen, Pomodoro, Statistik)',
-      'Einstellungen: Akzentfarbe wählbar – 5 Vorgaben oder eigene Farbe über den Farbkreis',
-      'Rahmen, Tönungen und Grafiken auf allen Lernseiten übernehmen jetzt die gewählte Akzentfarbe',
-      'Performance-Modus entfernt',
-      'Stundenplan: heutiger Tag wird jetzt korrekt hervorgehoben'
+    {v:'3.0.0',ts:'2026-10-19T12:00',items:[
+      'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Plan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links; Header und bewegter Hintergrund entfallen',
+      'Startseite: Gruß und Spruch passend zur Tageszeit, Zeit in der App (heute, diese Woche, insgesamt) mit Wochendiagramm, Weiterlernen, nächste Klausur und alle Module mit Fortschritt',
+      'Plan: IdF-Stundenplan Modul 3.5 mit Uhrzeiten, Räumen, Hinweisen, Mittagspause und Telefonnummern; öffnet immer die aktuelle Woche, auf dem Desktop die ganze Woche nebeneinander',
+      'Prüfung: alle Klausur-Werkzeuge an einem Ort, mit Countdown zur nächsten Klausur',
+      'Einstellungen: Suche, Notizen, Lesezeichen, Pomodoro, Lernstatistik und Abkürzungen gebündelt',
+      'Akzentfarbe wählbar (5 Vorgaben oder Farbkreis) – sie färbt Navigation, Rahmen und Grafiken, in der Android-App auch das Symbol auf dem Startbildschirm',
+      'Lernkarten im neuen Design: alle Filter auf einen Blick, „Markiert“ erscheint erst nach dem ersten Markieren, Spalte „Dein Stand“ auf Tablet und Desktop',
+      'Lernseiten: Merken, Notiz und Vorlesen direkt auf der Seite; Inhaltsverzeichnis am rechten Rand auf großen Bildschirmen',
+      'Entfernt: Performance-Modus, Schriftart-Auswahl und das alte Einstellungs-Fenster'
     ]},
     {v:'2.31.0',ts:'2026-10-18T00:00',items:[
       'IdF Münster: Stundenplan Modul 3.5 (KW 44–52, Gruppe 1 & 2) direkt im Übersichtstab – Tageskarten-Ansicht mit Wochennavigation, automatischer Wochenerkennung und Gruppen-Toggle'
