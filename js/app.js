@@ -1456,6 +1456,8 @@ const NOTES = (function(){
     open(){
       const ta = document.getElementById('notes-textarea');
       if(ta) ta.value = localStorage.getItem(key())||'';
+      const lbl = document.getElementById('notes-page-lbl');
+      if(lbl) lbl.textContent = document.querySelector('#'+_view+' .page-title')?.textContent?.trim()||'';
       document.getElementById('notes-overlay').classList.remove('hidden');
       if(ta) setTimeout(()=>ta.focus(),80);
     },
@@ -1532,14 +1534,12 @@ const BOOKMARKS = (function(){
     const d=load();
     if(!d.length){ list.innerHTML=''; empty?.classList.remove('hidden'); return; }
     empty?.classList.add('hidden');
-    list.innerHTML=d.map(b=>`
-      <div class="bm-card">
-        <div class="bm-card-label">${xss(b.label||b.id)}</div>
-        <div class="bm-card-actions">
-          <button class="btn btn-gold bm-open" data-id="${xss(b.id)}" data-label="${xss(b.label||b.id)}">Öffnen →</button>
-          <button class="btn btn-ghost bm-remove" data-id="${xss(b.id)}">✕ Entfernen</button>
-        </div>
-      </div>`).join('');
+    list.innerHTML='<div class="m-list">'+d.map(b=>{
+      const eb=document.querySelector('#'+b.id+' .page-eyebrow')?.textContent?.trim()||'';
+      return `<div class="m-row bm-row">
+        <button class="bm-open" data-id="${xss(b.id)}" data-label="${xss(b.label||b.id)}"><span class="m-t1">${xss(b.label||b.id)}</span>${eb?`<span class="m-t2">${xss(eb)}</span>`:''}</button>
+        <button class="bm-remove" data-id="${xss(b.id)}" aria-label="Lesezeichen entfernen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>`;}).join('')+'</div>';
     list.querySelectorAll('.bm-open').forEach(btn=>{
       btn.addEventListener('click',()=>NAV.go(btn.dataset.id, btn.dataset.label));
     });
@@ -2364,20 +2364,20 @@ const STATS = (function(){
       return `<div class="stat-row"><span class="stat-row-lbl">${g}</span><div class="stat-bar-wrap"><div class="stat-bar-fill" style="width:${pct}%"></div></div><span class="stat-row-cnt">${d}/${vs.length}</span></div>`;
     }).join('');
     c.innerHTML=`
-      <div class="stat-tiles">
-        <div class="stat-tile"><div class="stat-val">${streak.current||0}</div><div class="stat-lbl">🔥 Streak (Tage)</div></div>
-        <div class="stat-tile"><div class="stat-val">${streak.longest||0}</div><div class="stat-lbl">⭐ Bester Streak</div></div>
-        <div class="stat-tile"><div class="stat-val">${Math.round(visited/allViews.length*100)}%</div><div class="stat-lbl">📚 Themen</div></div>
-        <div class="stat-tile"><div class="stat-val">${Math.round(known/total*100)}%</div><div class="stat-lbl">🎴 Karten</div></div>
+      <div class="st-tiles">
+        <div class="m-stat"><b>${streak.current||0}</b><span>Tage Streak</span></div>
+        <div class="m-stat"><b>${streak.longest||0}</b><span>bester Streak</span></div>
+        <div class="m-stat"><b>${Math.round(visited/allViews.length*100)} %</b><span>Themen gelesen</span></div>
+        <div class="m-stat"><b>${Math.round(known/total*100)} %</b><span>Karten gewusst</span></div>
       </div>
       <div class="stat-section-title">Themen-Fortschritt</div>
       <div class="stat-bars">${bars}</div>
-      <div class="stat-section-title" style="margin-top:1.1rem">Lernkarten (${known}/${total})</div>
+      <div class="stat-section-title">Lernkarten (${known}/${total})</div>
       <div class="stat-bars">
         <div class="stat-row"><span class="stat-row-lbl">Gelernt</span><div class="stat-bar-wrap"><div class="stat-bar-fill" style="width:${Math.round(known/total*100)}%"></div></div><span class="stat-row-cnt">${known}</span></div>
         <div class="stat-row"><span class="stat-row-lbl">Heute fällig</span><div class="stat-bar-wrap"><div class="stat-bar-fill stat-bar-gold" style="width:${Math.min(100,Math.round(due/total*100))}%"></div></div><span class="stat-row-cnt">${due}</span></div>
       </div>
-      <div class="stat-section-title" style="margin-top:1.1rem">Lernkarten pro Kategorie</div>
+      <div class="stat-section-title">Lernkarten pro Modul</div>
       <div class="stat-bars">${['gal','sfs','hlfs','ibk','vak','feuak','idf'].map(cat=>{
         const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(cat));
         const kn=cats.filter(c=>fc[c.id]).length;
@@ -2402,7 +2402,7 @@ const POMO=(function(){
   function tick(){ if(!_running) return; _rem--; render(); if(_rem<=0){ clearInterval(_iv); _running=false; done(); } }
   function render(){
     const d=document.getElementById('pomo-display'); if(d) d.textContent=fmt(_rem);
-    const btn=document.getElementById('pomo-start'); if(btn) btn.textContent=_running?'⏸ Pause':'▶ Start';
+    const btn=document.getElementById('pomo-start'); if(btn) btn.textContent=_running?'Pause':'Start';
     document.getElementById('m-pomo')?.classList.toggle('hidden',!_running);
     const mt=document.getElementById('m-pomo-time');
     if(mt) mt.textContent=fmt(_rem);
@@ -3247,6 +3247,12 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.0.1',ts:'2026-10-19T14:00',items:[
+      'Einstellungen im neuen Design: Neuigkeiten, Pomodoro, Lernstatistik und Notiz öffnen sich am Handy als Blatt von unten',
+      'Lesezeichen als Liste mit Modul-Angabe, Entfernen über das ✕',
+      'Abkürzungen, Suche und „App installieren“ an das neue Design angepasst',
+      'Fehler behoben: Der Knopf „APK laden“ war nicht lesbar'
+    ]},
     {v:'3.0.0',ts:'2026-10-19T12:00',items:[
       'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Plan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links; Header und bewegter Hintergrund entfallen',
       'Startseite: Gruß und Spruch passend zur Tageszeit, Zeit in der App (heute, diese Woche, insgesamt) mit Wochendiagramm, Weiterlernen, nächste Klausur und alle Module mit Fortschritt',
