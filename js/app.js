@@ -6081,6 +6081,10 @@ const SHELL=(function(){
   };
 })();
 
+// Zeit-Sprechblase am Balken nur nach Tipp; ein Tipp daneben oder Esc schließt sie
+document.addEventListener('click',e=>{ if(!e.target.closest('.m-pc')) document.querySelectorAll('.m-pc.sel').forEach(x=>x.classList.remove('sel')); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.m-pc.sel').forEach(x=>x.classList.remove('sel')); });
+
 document.addEventListener('DOMContentLoaded',()=>{
   // Deep-link on load
   const initId=new URLSearchParams(location.search).get('id');
