@@ -40,6 +40,19 @@ const EXEC = process.env.PW_EXEC || undefined;
     for (const fn of ['SEARCH.open()', 'SEARCH.close()', 'STATS.open()', 'STATS.close()', 'POMO.open()', 'POMO.close()', 'CHANGELOG.open()', 'CHANGELOG.close()']) {
       await page.evaluate(fn).catch(e => errors.push(`${fn}: ${e.message}`));
     }
+    // Farbschema umschalten und Bild-Vergrößerung öffnen
+    for (const m of ['light', 'dark', 'system']) {
+      await page.evaluate(m => THEME.set(m), m).catch(e => errors.push(`THEME ${m}: ${e.message}`));
+      const th = await page.evaluate(() => document.documentElement.dataset.theme);
+      if (m !== 'system' && th !== m) errors.push(`Farbschema ${m} nicht gesetzt (${th})`);
+    }
+    await page.evaluate(() => {
+      NAV.go('v-gal-atemschutz', 'x');
+      document.querySelector('#v-gal-atemschutz details').open = true;
+      document.querySelector('#v-gal-atemschutz img.pdf-img').click();
+    });
+    if (!(await page.evaluate(() => LIGHTBOX.isOpen()))) errors.push('Bild-Vergrößerung öffnet nicht');
+    await page.evaluate(() => LIGHTBOX.close(true));
     for (const e of [...new Set(errors)]) problems.push(`${name}: ${e}`);
     await ctx.close();
   }

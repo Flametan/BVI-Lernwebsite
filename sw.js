@@ -1,4 +1,4 @@
-const APP_VERSION = '3.1.0'; // keep in sync with js/version.js
+const APP_VERSION = '3.2.0'; // keep in sync with js/version.js
 const CACHE = 'bvi-v' + APP_VERSION;
 const PRECACHE = [
   './',
@@ -9,6 +9,9 @@ const PRECACHE = [
   './manifest.json',
   './icons/icon-192.svg',
   './icons/icon-512.svg',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/apple-touch-icon.png',
 ];
 
 self.addEventListener('install', e => {

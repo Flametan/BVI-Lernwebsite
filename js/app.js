@@ -66,6 +66,7 @@ const NAV = (function(){
 
 history.replaceState({home:true},'');
 window.addEventListener('popstate',function(e){
+  if(typeof LIGHTBOX!=='undefined'&&LIGHTBOX.isOpen()){ LIGHTBOX.close(true); return; }
   if(e.state&&e.state.stack){
     // Restore stack from state and show the top view
     const s=e.state.stack;
@@ -1935,10 +1936,10 @@ const FC = (function(){
       w.document.write(`<!DOCTYPE html><html><head><title>Lernkarten B VI</title><style>
         *{box-sizing:border-box;margin:0;padding:0;}body{font-family:sans-serif;padding:1rem;}
         .grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
-        .pc{border:1px solid #ccc;border-radius:8px;padding:.85rem;page-break-inside:avoid;}
-        .cat{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;}
+        .pc{border:1px solid var(--b-cccccc);border-radius:8px;padding:.85rem;page-break-inside:avoid;}
+        .cat{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--k-888888);margin-bottom:.35rem;}
         .q{font-weight:700;font-size:.88rem;margin-bottom:.45rem;line-height:1.4;}
-        hr{border:none;border-top:1px solid #eee;margin:.4rem 0;}
+        hr{border:none;border-top:1px solid var(--b-eeeeee);margin:.4rem 0;}
         .a{font-size:.78rem;color:#333;line-height:1.6;}
         @media print{.grid{grid-template-columns:1fr 1fr;}}
       </style></head><body><div class="grid">${rows}</div></body></html>`);
@@ -3280,6 +3281,12 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.2.0',ts:'2026-10-19T22:00',items:[
+      'Helles Design: In den Einstellungen unter „Farbschema“ zwischen Dunkel, Hell und System wählen',
+      'Bilder und Diagramme auf den Lernseiten antippen: öffnet sich groß im Vordergrund, mit Zoom per Doppeltipp oder zwei Fingern',
+      'Neues App-Symbol: die Flamme der Website; in der Android-App passt sie sich der Akzentfarbe an, im Browser-Tab ebenfalls',
+      'Einstellungen: freiwillige Unterstützung per PayPal (kein Muss, die Seite bleibt kostenlos)',
+    ]},
     {v:'3.1.0',ts:'2026-10-19T20:00',items:[
       'Startseite: Karte „Jetzt / Als Nächstes“ mit der laufenden bzw. nächsten Einheit aus dem Stundenplan (Zeit, Raum)',
       'Startseite: Tagesziel mit Fortschrittsring – das Ziel stellst du in den Einstellungen ein',
@@ -4984,6 +4991,109 @@ const USAGE=(function(){
   };
 })();
 
+/* ── Bild-Vergrößerung (Lightbox) ───────────────────────────────────────── */
+const LIGHTBOX=(function(){
+  let box=null, stage=null, content=null, open=false;
+  let sc=1, tx=0, ty=0;
+  const pts=new Map(); let startDist=0, startSc=1, last=null, lastTap=0;
+  function apply(){ content.style.transform=`translate(${tx}px,${ty}px) scale(${sc})`; }
+  function reset(){ sc=1; tx=0; ty=0; apply(); }
+  function zoomAt(f,cx,cy){
+    const n=Math.min(6,Math.max(1,sc*f)), r=n/sc, b=stage.getBoundingClientRect();
+    const ox=cx-(b.left+b.width/2), oy=cy-(b.top+b.height/2);
+    tx=ox-(ox-tx)*r; ty=oy-(oy-ty)*r; sc=n;
+    if(sc===1){ tx=0; ty=0; }
+    apply();
+  }
+  function build(){
+    box=document.createElement('div'); box.id='lb'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Bildansicht');
+    box.innerHTML='<div class="lb-stage"><div class="lb-content"></div></div><div class="lb-cap"></div>'
+      +'<button class="lb-x" aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>'
+      +'<div class="lb-hint">Zum Zoomen zweimal tippen oder zwei Finger nutzen</div>';
+    document.body.appendChild(box);
+    stage=box.querySelector('.lb-stage'); content=box.querySelector('.lb-content');
+    box.querySelector('.lb-x').onclick=()=>close();
+    stage.addEventListener('pointerdown',e=>{
+      stage.setPointerCapture(e.pointerId); pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      if(pts.size===2){ const [a,b]=[...pts.values()]; startDist=Math.hypot(a.x-b.x,a.y-b.y); startSc=sc; }
+      last={x:e.clientX,y:e.clientY,t:Date.now(),moved:false};
+    });
+    stage.addEventListener('pointermove',e=>{
+      if(!pts.has(e.pointerId)) return;
+      const p=pts.get(e.pointerId), dx=e.clientX-p.x, dy=e.clientY-p.y;
+      p.x=e.clientX; p.y=e.clientY;
+      if(last&&Math.hypot(e.clientX-last.x,e.clientY-last.y)>6) last.moved=true;
+      if(pts.size===2){
+        const [a,b]=[...pts.values()], d=Math.hypot(a.x-b.x,a.y-b.y);
+        if(startDist) zoomAt((startSc*d/startDist)/sc,(a.x+b.x)/2,(a.y+b.y)/2);
+      } else if(sc>1){ tx+=dx; ty+=dy; apply(); }
+    });
+    const up=e=>{
+      if(!pts.has(e.pointerId)) return;
+      pts.delete(e.pointerId);
+      if(pts.size===0&&last&&!last.moved&&Date.now()-last.t<350){
+        const now=Date.now();
+        if(now-lastTap<320){ lastTap=0; if(sc>1) reset(); else zoomAt(2.5,e.clientX,e.clientY); }
+        else{
+          lastTap=now;
+          setTimeout(()=>{ if(lastTap&&Date.now()-lastTap>=300){ lastTap=0; if(sc===1&&!e.target.closest('.lb-x')) close(); } },320);
+        }
+      }
+    };
+    stage.addEventListener('pointerup',up); stage.addEventListener('pointercancel',up);
+    stage.addEventListener('wheel',e=>{ e.preventDefault(); zoomAt(e.deltaY<0?1.2:1/1.2,e.clientX,e.clientY); },{passive:false});
+    document.addEventListener('keydown',e=>{ if(!open) return; if(e.key==='Escape') close(); else if(e.key==='+'||e.key==='=') zoomAt(1.3,innerWidth/2,innerHeight/2); else if(e.key==='-') zoomAt(1/1.3,innerWidth/2,innerHeight/2); else if(e.key==='0') reset(); });
+  }
+  function show(node,cap){
+    if(!box) build();
+    content.replaceChildren(node);
+    box.querySelector('.lb-cap').textContent=cap||'';
+    reset(); box.hidden=false; open=true;
+    document.documentElement.classList.add('lb-open');
+    try{ history.pushState(history.state,''); }catch(e){}
+    box.querySelector('.lb-x').focus({preventScroll:true});
+  }
+  function close(fromPop){
+    if(!open) return;
+    open=false; box.hidden=true; content.replaceChildren(); pts.clear();
+    document.documentElement.classList.remove('lb-open');
+    if(!fromPop){ try{ history.back(); }catch(e){} }
+  }
+  document.addEventListener('click',e=>{
+    if(open) return;
+    const img=e.target.closest('img.pdf-img,img.pdf-img-sm');
+    if(img){ const c=img.cloneNode(); c.className='lb-img'; c.removeAttribute('style'); c.draggable=false; show(c,img.alt); return; }
+    const svg=e.target.closest('.diagram-wrap svg');
+    if(svg&&!e.target.closest('a,button')){
+      const c=svg.cloneNode(true); c.classList.add('lb-img'); c.removeAttribute('style'); c.removeAttribute('width'); c.removeAttribute('height');
+      show(c,svg.getAttribute('aria-label')||'');
+    }
+  });
+  return {open:show,close,isOpen:()=>open};
+})();
+
+/* ── Farbschema: Dunkel / Hell / System ─────────────────────────────────── */
+const THEME=(function(){
+  const KEY='bvi_theme', MODES=['dark','light','system'];
+  const mq=window.matchMedia?matchMedia('(prefers-color-scheme: light)'):null;
+  function get(){ try{ const m=localStorage.getItem(KEY); return MODES.includes(m)?m:'system'; }catch(e){ return 'system'; } }
+  function light(m){ return m==='light'||(m==='system'&&!!(mq&&mq.matches)); }
+  function apply(m){
+    const l=light(m);
+    document.documentElement.setAttribute('data-theme',l?'light':'dark');
+    const t=document.querySelector('meta[name=theme-color]'); if(t) t.content=l?'#f4f4f1':'#121212';
+    document.querySelectorAll('.theme-opt').forEach(b=>{ const on=b.dataset.mode===m; b.classList.toggle('active',on); b.setAttribute('aria-pressed',on); });
+  }
+  if(mq) (mq.addEventListener?mq.addEventListener.bind(mq,'change'):mq.addListener.bind(mq))(()=>{ if(get()==='system') apply('system'); });
+  return {
+    init(){ apply(get()); },
+    set(m){ if(!MODES.includes(m)) return; try{ localStorage.setItem(KEY,m); }catch(e){} apply(m); },
+    render(){ apply(get()); }
+  };
+})();
+THEME.init();
+
 /* ── Akzentfarbe der Mobil-Ansicht ──────────────────────────────────────── */
 const ACCENT=(function(){
   const KEY='bvi_accent', DEF='#FFA412';
@@ -4998,6 +5108,14 @@ const ACCENT=(function(){
     const st=document.documentElement.style;
     st.setProperty('--m-accent',c);
     st.setProperty('--m-on-accent',onColor(c));
+    favicon(c);
+  }
+  // Tab-Symbol im Browser: Flamme in der Akzentfarbe (installierte Web-App behält ihr festes Symbol)
+  function favicon(c){
+    const el=document.getElementById('fav'); if(!el) return;
+    const d='M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z';
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#1b1b1b"/><g transform="translate(40 85) scale(18)"><path d="${d}" fill="${c}"/><path d="${d}" fill="#fff" fill-opacity=".55" transform="translate(12 17) scale(.52) translate(-12 -17)"/></g></svg>`;
+    el.href='data:image/svg+xml,'+encodeURIComponent(svg);
   }
   // Android-App: Startsymbol in der nächstliegenden der 5 Vorgabefarben
   function syncAppIcon(c){
@@ -5476,14 +5594,14 @@ const SHELL=(function(){
         const v=document.getElementById(id);
         const label=v?.querySelector('.page-title')?.textContent?.trim()||(id==='home'?'Startseite':id);
         const eb=v?.querySelector('.page-eyebrow')?.textContent?.trim()||'';
-        return `<button class="m-row m-go" onclick="${v?goJs(id,label):''}" style="align-items:flex-start"><span class="m-tx"><span class="m-t2" style="margin:0;color:var(--m-accent)">${esc(eb?eb+' · '+label:label)}</span><span class="m-note-txt">${esc(txt)}</span></span></button>`;
+        return `<button class="m-row m-go" onclick="${v?goJs(id,label):''}" style="align-items:flex-start"><span class="m-tx"><span class="m-t2" style="margin:0;color:var(--m-accent-fg)">${esc(eb?eb+' · '+label:label)}</span><span class="m-note-txt">${esc(txt)}</span></span></button>`;
       }).join('')+'</div>';
     }
     if(marks.length){
       h+='<div class="m-sec" style="margin-top:1.4rem">Markierungen</div>'+marks.map(({view,items})=>{
         const v=document.getElementById(view);
         const label=v?.querySelector('.page-title')?.textContent?.trim()||view;
-        return `<div class="m-hl-group"><div class="m-t2" style="color:var(--m-accent);margin:0 0 6px 4px">${esc(label)}</div><div class="m-list">${items.map((it,i)=>`<div class="m-row bm-row"><button class="bm-open" onclick="${goJs(view,label)}"><span class="m-note-txt">${esc(it.q)}</span></button><button class="bm-remove" aria-label="Markierung löschen" onclick="HL.removeAt(${esc(JSON.stringify(view))},${i});SHELL.renderNotes()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>`).join('')}</div></div>`;
+        return `<div class="m-hl-group"><div class="m-t2" style="color:var(--m-accent-fg);margin:0 0 6px 4px">${esc(label)}</div><div class="m-list">${items.map((it,i)=>`<div class="m-row bm-row"><button class="bm-open" onclick="${goJs(view,label)}"><span class="m-note-txt">${esc(it.q)}</span></button><button class="bm-remove" aria-label="Markierung löschen" onclick="HL.removeAt(${esc(JSON.stringify(view))},${i});SHELL.renderNotes()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>`).join('')}</div></div>`;
       }).join('');
     }
     if(!h) h='<div class="m-empty">Noch keine Notizen oder Markierungen.<br>Öffne eine Lernseite: Mit dem Stift schreibst du eine Notiz, und wenn du Text auswählst, kannst du ihn markieren.</div>';
