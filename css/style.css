@@ -1046,7 +1046,7 @@ body.offline .offline-banner{display:flex;}
 .m-row:not(.m-static):active{background:var(--m-raised);}
 .m-static{cursor:default;}
 .m-wrap{flex-wrap:wrap;}
-.m-ic{width:36px;height:36px;border-radius:10px;background:var(--m-raised);display:grid;place-items:center;flex-shrink:0;color:var(--m-accent-fg);font-size:.68rem;font-weight:700;letter-spacing:.02em;}
+.m-ic{min-width:36px;width:auto;padding:0 3px;height:36px;border-radius:10px;background:var(--m-raised);display:grid;place-items:center;flex-shrink:0;color:var(--m-accent-fg);font-size:.68rem;font-weight:700;letter-spacing:.02em;}
 .m-ic svg{width:19px;height:19px;}
 .m-ic-empty{background:none;}
 .m-tx{flex:1;min-width:0;display:flex;flex-direction:column;}
@@ -1773,3 +1773,5 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 /* ── Lernzeit: Umschalter Woche / Monate ─────────────────────────────────── */
 .m-seg-s button{min-width:0;height:28px;font-size:.74rem;padding:0 10px;}
 .m-chart-u{font-size:.75rem;color:var(--m-dim);margin:-2px 0 4px;}
+.idf-item.idf-wtime{grid-template-columns:max-content minmax(0,1fr);}
+.sec-h,.page-title{overflow-wrap:anywhere;}
