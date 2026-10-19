@@ -2032,3 +2032,8 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
   .m-y1.static .m-rings.r3{gap:12px;}
   .m-r2 .m-sec{margin:0;}
 }
+
+/* Tastatur-Hinweis: Tasten und Beschreibung in zwei Spalten, mehr Abstand */
+.m-kbd .m-t2{line-height:1.4!important;display:flex;flex-direction:column;gap:12px;margin-top:10px;}
+.kb-r{display:grid;grid-template-columns:76px 1fr;align-items:center;column-gap:12px;}
+.kb-r kbd{justify-self:start;min-width:34px;text-align:center;padding:5px 9px;}
