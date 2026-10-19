@@ -1998,8 +1998,9 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 @media(max-width:700px){
   .m-r2{background:var(--m-card);border-radius:18px;padding:14px 6px 12px;}
   .m-r2 .m-sec{padding-left:10px;}
-  .m-r2 .m-rings{margin-top:10px;gap:0;}
-  .m-ringbtn .m-hring{width:min(82px,calc((100vw - 54px) / 4));height:auto;aspect-ratio:1;}
+  .m-r2 .m-rings{margin-top:10px;gap:10px;padding:0 6px;}
+  .m-ringbtn{min-width:0;}
+  .m-ringbtn .m-hring{width:min(70px,100%);height:auto;aspect-ratio:1;}
   .m-ringbtn small{font-size:.78rem;margin-top:2px;}
 }
 @media(min-width:701px) and (max-width:1099px){
