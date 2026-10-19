@@ -2602,20 +2602,6 @@ const CHECKS=(function(){
 })();
 
 /* ======================================================================
-   SHARE – Direktlink kopieren
-====================================================================== */
-const SHARE=(function(){
-  return {
-    copy(){
-      const url=location.href;
-      navigator.clipboard.writeText(url)
-        .then(()=>TOAST.show('Link kopiert',{type:'ok'}))
-        .catch(()=>TOAST.show('Kopieren nicht unterstützt'));
-    }
-  };
-})();
-
-/* ======================================================================
    CUSTOM – Eigene Lernkarten
 ====================================================================== */
 const CUSTOM=(function(){
@@ -3543,6 +3529,8 @@ const CHANGELOG=(function(){
       'Ersteinrichtung beim ersten Start (Farbschema, Akzentfarbe, Kartenziel); Installationshilfe je Gerät und QR-Code zum Teilen der App',
       'Lernkarten: eigene Karten anlegen, Filter „Schwach“ für Karten, die schwer waren oder nicht saßen',
       'Klausur-Timer (30 bis 90 Minuten) auf den Übungsklausuren; Notizen zu Stundenplan-Einträgen; Fehler melden per E-Mail oder GitHub',
+      'Suche findet auch bei Tippfehlern und fehlenden Umlauten, Treffer in Gruppen (Seiten, Lernkarten, Notizen); „Das kann ich noch nicht“ sammelt schwere Karten und falsche Quizfragen',
+      'Schriften liegen jetzt in der App (kein Google-Aufruf mehr), Datenschutz ergänzt, rote Texte im dunklen Design besser lesbar',
       'Android-App: Erinnerung als echte Benachrichtigung, Links öffnen außerhalb der App'
     ]},
     {v:'2.31.0',ts:'2026-10-18T00:00',items:[
