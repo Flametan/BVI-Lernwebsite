@@ -1032,8 +1032,8 @@ body.offline .offline-banner{display:flex;}
 :root{
   --m-accent:#FFA412;--m-on-accent:#111;
   --m-accent-dim:color-mix(in srgb,var(--m-accent) 15%,transparent);
-  --m-bg:#121212;--m-card:#1d1d1d;--m-raised:#262626;--m-line:#2b2b2b;--m-bar:#171717;
-  --m-fg:#ededed;--m-muted:#8b8b8b;--m-dim:#5e5e5e;--m-tabbar-h:78px;
+  --m-bg:#121212;--m-card:#1d1d1d;--m-raised:#262626;--m-line:#2b2b2b;--m-bar:#0a0a0a;
+  --m-fg:#ededed;--m-muted:#8b8b8b;--m-dim:#5e5e5e;--m-tabbar-h:62px;
 }
 
 /* Bausteine der Mobil-Ansichten */
@@ -1848,3 +1848,13 @@ html.no-timers .uk-timer-box,html.no-timers .uk-timer-inline,html.no-timers .qui
 .search-result:hover,.search-result.sr-focus{background:var(--m-raised);}
 .search-footer kbd{background:var(--m-raised);border-color:var(--m-line);}
 .search-result mark,.sr-snippet mark{background:color-mix(in srgb,var(--m-accent) 28%,transparent);color:inherit;border-radius:3px;padding:0 1px;font-style:normal;}
+
+/* ── Tab-Leiste: schwarz, flacher, Mitte mit dauerhaftem Glow ────────────── */
+#m-tabbar{border-top:1px solid var(--w06);padding-top:5px;padding-bottom:calc(6px + env(safe-area-inset-bottom,0px));}
+.m-tab{gap:2px;padding:2px 0;}
+.m-tab>svg{width:24px;height:24px;}
+.m-tab>span:last-child{font-size:clamp(10px,2.9vw,11.5px);}
+.m-fab{width:58px;height:58px;margin-top:-30px;box-shadow:0 0 0 5px var(--m-bar),0 0 26px 5px color-mix(in srgb,var(--m-accent) 60%,transparent);}
+.m-tab-center.on .m-fab{box-shadow:0 0 0 5px var(--m-bar),0 0 28px 6px color-mix(in srgb,var(--m-accent) 65%,transparent);}
+.m-fab svg{width:26px;height:26px;}
+:root[data-theme="light"] .m-fab{box-shadow:0 0 0 5px var(--m-bar),0 4px 18px 2px color-mix(in srgb,var(--m-accent) 50%,transparent);}
