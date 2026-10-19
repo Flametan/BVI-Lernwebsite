@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Dunkler Start: Fensterhintergrund fast schwarz statt AppCompat-Grau -->
+    <!-- Dunkler Start: Fensterhintergrund fast schwarz statt AppCompat-Grau.
+         Das Android-12-Startbild übernimmt diese Farbe und zeigt das Symbol des
+         gestarteten Startsymbols (je Akzentfarbe); deshalb hier keine eigenen Splash-Attribute. -->
     <style name="Theme.BVI" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@color/bvi_black</item>
         <item name="android:colorBackground">@color/bvi_black</item>
