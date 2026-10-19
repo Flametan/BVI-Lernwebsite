@@ -1977,3 +1977,8 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
   .m-rings{margin-top:6px;}
   .m-ringbtn .m-hring{width:52px;height:52px;}
 }
+
+/* Einstellungen: Beschriftung wird nie von Knöpfen überdeckt; bei wenig Platz rutscht die Bedienung in die nächste Zeile */
+.m-row:has(>.m-seg,>.m-step){flex-wrap:wrap;row-gap:8px;}
+.m-row:has(>.m-seg,>.m-step)>.m-tx{flex:1 1 0;min-width:min-content;}
+.m-row:has(>.m-seg,>.m-step)>.m-seg,.m-row:has(>.m-seg,>.m-step)>.m-step{margin-left:auto;}
