@@ -1989,3 +1989,20 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
   .m-cont2{order:1;}.m-r2{order:2;}.m-chart2{order:3;}.m-y1{order:4;}.m-cloud{order:5;}
   .m-chart2 .m-seg-s button{height:24px;font-size:.7rem;padding:0 9px;min-width:0;}
 }
+
+/* Module als dominante Ringe: größer, kräftigerer Strich, sichtbare Spur */
+.m-ringbtn .m-hring .bg{stroke:color-mix(in srgb,var(--m-fg) 16%,transparent);stroke-width:11;}
+.m-ringbtn .m-hring .fg{stroke-width:11;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--m-accent) 55%,transparent));}
+.m-ringbtn small{color:var(--m-fg);opacity:.75;font-weight:500;}
+.m-r2 .m-sec{color:var(--m-fg);font-size:.8rem;font-weight:600;}
+@media(max-width:700px){
+  .m-r2{background:var(--m-card);border-radius:18px;padding:14px 6px 12px;}
+  .m-r2 .m-sec{padding-left:10px;}
+  .m-r2 .m-rings{margin-top:10px;gap:10px;padding:0 6px;}
+  .m-ringbtn{min-width:0;}
+  .m-ringbtn .m-hring{width:min(70px,100%);height:auto;aspect-ratio:1;}
+  .m-ringbtn small{font-size:.78rem;margin-top:2px;}
+}
+@media(min-width:701px) and (max-width:1099px){
+  .m-ringbtn .m-hring{width:80px;height:80px;}
+}
