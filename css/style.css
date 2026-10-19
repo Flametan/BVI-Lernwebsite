@@ -1847,3 +1847,4 @@ html.no-timers .uk-timer-box,html.no-timers .uk-timer-inline,html.no-timers .qui
 :root[data-theme="light"] .search-overlay,:root[data-theme="light"] .quiz-mastery-modal{background:rgba(20,20,20,.45)!important;}
 .search-result:hover,.search-result.sr-focus{background:var(--m-raised);}
 .search-footer kbd{background:var(--m-raised);border-color:var(--m-line);}
+.search-result mark,.sr-snippet mark{background:color-mix(in srgb,var(--m-accent) 28%,transparent);color:inherit;border-radius:3px;padding:0 1px;font-style:normal;}
