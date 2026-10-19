@@ -2,7 +2,7 @@
    NAVIGATIONS-ENGINE
    NAV.go(id, label) · NAV.back() · NAV.home() · NAV.jumpTo(idx)
 ====================================================================== */
-const _NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app','v-klausurfragen','v-klausur-0826']);
+const _NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app','v-klausurfragen','v-klausur-0826','v-laufbahn-2023','v-laufbahn-2026']);
 const _GOLD_VIEWS = new Set(['v-vak-klausurvorbereitung','v-feuak-bp-hub','v-feuak-analyse']);
 
 const NAV = (function(){
@@ -36,6 +36,7 @@ const NAV = (function(){
     if(id==='v-notizen') SHELL.renderNotes();
     if(id==='v-abkuerzungen') ABK.init();
     if(id==='v-vak-altklausur') QUIZ.init();
+    if(id==='v-idf-altklausur') IDFQ.init();
     if(id==='v-klausurfragen') KF_QUIZ.init();
     if(id==='v-klausur') KLAUSUR_HUB.render();
     if(id==='v-vak-fallbearbeitung') FALLBEARBEITUNG.init();
@@ -1162,7 +1163,7 @@ const PROGRESS = (function(){
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-klausurvorbereitung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung'],
     feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse'],
+    idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse','v-idf-altklausur'],
   };
   const LEAF_PARENT = {};
   Object.keys(GROUPS).forEach(g => GROUPS[g].forEach(v => { LEAF_PARENT[v] = g; }));
@@ -1242,6 +1243,9 @@ const SEARCH = (function(){
     'v-feuak-risikoanalyse':'FeuAK · Prospektive Risikoanalyse',
     'v-idf-brandschutz':'IdF · Vorbeugender Brandschutz',
     'v-idf-stab':'IdF · Stabsarbeit',
+    'v-idf-altklausur':'IdF · Altklausur-Quiz',
+    'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
+    'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
     'v-idf-presse':'IdF · Presse- & Öffentlichkeitsarbeit',
   };
 
@@ -2480,7 +2484,7 @@ const STATS = (function(){
     IBK:['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     VAk:['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht'],
     FeuAK:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    IdF:['v-idf-brandschutz','v-idf-stab','v-idf-presse']
+    IdF:['v-idf-brandschutz','v-idf-stab','v-idf-presse','v-idf-altklausur']
   };
   function ov(){ return document.getElementById('stats-overlay'); }
   function build(){
@@ -2778,47 +2782,59 @@ const ONBOARD=(function(){
 /* ──────────────────────────────────────────────
    QUIZ – Altklausur Quiz
 ────────────────────────────────────────────────── */
-const QUIZ=(function(){
-  const KEY_BM='bvi_quiz_bm';
-  const KEY_MASTERY='bvi_quiz_mastery';
+function makeQuiz(cfg){
+  const G=cfg.G,SFX=cfg.sfx||'',VIEW_ID=cfg.view,HTMLX=!!cfg.html,EXAM_MIN=cfg.minutes||60;
+  const $=id=>document.getElementById(id+SFX);
+  const $v=()=>document.getElementById(VIEW_ID);
+  let self;
+  const KEY_BM=cfg.keys.bm;
+  const KEY_MASTERY=cfg.keys.mastery;
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-  const Q=[{"id":1,"cat":"Staatsorganisationsrecht","type":"essay","q":"Nennen Sie die Verfassungsorgane, die bei den einzelnen Phasen der Bundesgesetzgebung beteiligt sind oder beteiligt sein können (Gesetzesinitiative, Gesetzesberatung, Gesetzesbeschluss, Länderbeteiligung, Ausfertigung, Verkündung).","ref":"Gesetzesinitiative (Art. 76 I GG): Bundesregierung ✓, Bundesrat ✓, Bundestag ✓\nGesetzesberatung/1. Durchgang: Bundestag ✓, Bundesrat ✓ (Stellungnahme), Bundesregierung ✓\nGesetzesbeschluss (Art. 77 I GG): nur Bundestag ✓\nLänderbeteiligung/2. Durchgang (Art. 77 II ff.): Bundesrat ✓ (Zustimmung/Einspruch, ggf. Vermittlungsausschuss)\nAusfertigung (Art. 82 I GG): Bundespräsident ✓, Bundesregierung ✓ (Gegenzeichnung, Art. 58 GG)\nVerkündung im BGBl. (Art. 82 I GG): Bundespräsident ✓\nDas Bundesverfassungsgericht ist am regulären Gesetzgebungsverfahren nie beteiligt."},{"id":2,"cat":"Staatsorganisationsrecht","type":"essay","q":"Welche Auswirkungen haben Änderungen in den politischen Kräfteverhältnissen in den Landesparlamenten auf der Bundesebene? Erläutern Sie dies für die Wahl des Bundespräsidenten und für Grundgesetzänderungen.","ref":"Bundespräsidentenwahl: Die Bundesversammlung besteht zur Hälfte aus von den Landesparlamenten entsandten Mitgliedern (Art. 54 III GG); Mehrheitsverschiebungen in den Landtagen verschieben die Mehrheitsverhältnisse bei der Präsidentenwahl.\nGrundgesetzänderungen: Erforderlich sind zwei Drittel der Stimmen des Bundesrates (Art. 79 II GG); der Bundesrat besteht aus Mitgliedern der Landesregierungen (Art. 51 GG) – welche Koalitionen dort regieren, hängt von den Landtagswahlen ab."},{"id":3,"cat":"Staatsorganisationsrecht","type":"tf","q":"Grundrechte sind Abwehrrechte der Bürgerinnen und Bürger gegen den Staat.","opts":["Richtig","Falsch"],"correct":0,"exp":"Das ist ihre klassische Funktion gegenüber dem Staat."},{"id":4,"cat":"Staatsorganisationsrecht","type":"tf","q":"Gemeinderäte sind Bestandteile der vollziehenden Gewalt.","opts":["Richtig","Falsch"],"correct":0,"exp":"Trotz parlamentsähnlicher Struktur gehört die kommunale Selbstverwaltung nach Art. 28 II GG organisatorisch zur Exekutive, da es auf kommunaler Ebene keine eigene Gewaltenteilung gibt."},{"id":5,"cat":"Staatsorganisationsrecht","type":"tf","q":"Das Schulrecht fällt in die konkurrierende Gesetzgebungskompetenz des Bundes und der Länder.","opts":["Richtig","Falsch"],"correct":1,"exp":"Schulrecht ist Ländersache (Kulturhoheit der Länder); eine Bundeskompetenz nach Art. 70 ff. GG besteht dafür nicht."},{"id":6,"cat":"Staatsorganisationsrecht","type":"tf","q":"Der Bundeskanzler beziehungsweise die Bundeskanzlerin kann den Deutschen Bundestag auflösen.","opts":["Richtig","Falsch"],"correct":1,"exp":"Auflösen kann nur der Bundespräsident, und nur in den engen Fällen der Art. 63 IV oder Art. 68 GG."},{"id":7,"cat":"Staatsorganisationsrecht","type":"tf","q":"Der Bundeskanzler beziehungsweise die Bundeskanzlerin vertritt im Falle der Verhinderung den Bundespräsidenten.","opts":["Richtig","Falsch"],"correct":1,"exp":"Das übernimmt nach Art. 57 GG der Präsident des Bundesrates."},{"id":8,"cat":"Staatsorganisationsrecht","type":"tf","q":"Bundespräsident Steinmeier kann 2027 wiedergewählt werden.","opts":["Richtig","Falsch"],"correct":1,"exp":"Seine zweite Amtszeit endet am 18. März 2027, eine dritte Amtszeit in Folge schließt Art. 54 II GG aus."},{"id":9,"cat":"Staatsorganisationsrecht","type":"tf","q":"Autos sind vom Schutzbereich des Art. 13 Abs. 1 GG umfasst.","opts":["Richtig","Falsch"],"correct":1,"exp":"Art. 13 GG schützt die Wohnung; Kraftfahrzeuge fallen nach ständiger Rechtsprechung nicht darunter.","note":"Wohnmobile schon, obwohl sie ein KFZ sind. (Wohnwagen auch) – sie sind ein Raum des Rückzuges und der Privatsphäre."},{"id":10,"cat":"Staatsorganisationsrecht","type":"tf","q":"Alle Grundrechte sind im Rahmen der Regelungen des Grundgesetzes einschränkbar.","opts":["Richtig","Falsch"],"correct":1,"exp":"Die Menschenwürde (Art. 1 I GG) ist nach Art. 79 III GG unantastbar; vorbehaltlos gewährleistete Grundrechte wie Art. 4 I GG sind nur durch verfassungsimmanente Schranken einschränkbar."},{"id":11,"cat":"Staatsorganisationsrecht","type":"tf","q":"Die Wahlrechtsgrundsätze lauten Allgemein, Unmittelbar, Frei und Geheim.","opts":["Richtig","Falsch"],"correct":1,"exp":"Art. 38 I 1 GG nennt fünf Grundsätze; es fehlen die Gleichheit der Wahl und die Öffentlichkeit (durch BVerfG aus Art. 38 i.V.m. Art. 20 GG entwickelt)."},{"id":12,"cat":"Staatsorganisationsrecht","type":"tf","q":"Das Grundgesetz wurde am 23.05.1949 verkündet.","opts":["Richtig","Falsch"],"correct":0,"exp":"Verkündet wurde es am 23.05.1949. In Kraft getreten ist es erst am folgenden Tag, dem 24.05.1949."},{"id":13,"cat":"Staatsorganisationsrecht","type":"mc","q":"Was beschreibt das Entschließungsermessen?","opts":["Die Auswahl eines Mittels durch die Behörde","Die Entscheidung, ob die Behörde überhaupt tätig wird","Die Pflicht zur Anhörung des Betroffenen","Die Festlegung von Nebenbestimmungen"],"correct":1,"exp":"Das Entschließungsermessen betrifft nur die Frage, ob die Behörde tätig wird. Welches Mittel sie einsetzt, ist das davon zu unterscheidende Auswahlermessen."},{"id":14,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welches Kriterium gehört nicht zur Verhältnismäßigkeitsprüfung?","opts":["Legitimer Zweck","Geeignetheit","Rechtmäßigkeit","Angemessenheit"],"correct":2,"exp":"Die Prüfung umfasst legitimen Zweck, Geeignetheit, Erforderlichkeit und Angemessenheit. Die Rechtmäßigkeit ist keine eigene Stufe, sondern das Ergebnis der Prüfung."},{"id":15,"cat":"Staatsorganisationsrecht","type":"mc","q":"Woran erkennt man in einer Norm typischerweise Ermessensspielräume?","opts":["An der Verwendung von „muss\"","An der Verwendung von „kann\" oder „darf\"","An der Reihenfolge der Normabsätze","An der Länge des Gesetzestextes"],"correct":1,"exp":"„Kann\" oder „darf\" signalisieren Ermessen; „muss\" oder „ist\" weisen auf eine gebundene Entscheidung hin."},{"id":16,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche Aussage zur Konkurrenzgesetzgebung ist korrekt?","opts":["Der Bund darf nur tätig werden, wenn die Länder zustimmen","Die Länder sind zuständig, bis der Bund tätig wird","Der Bund ist immer zuständig","Konkurrenzgesetzgebung betrifft nur das Steuerrecht"],"correct":1,"exp":"Das folgt aus Art. 72 I GG: Die Länder haben die Gesetzgebungsbefugnis, solange und soweit der Bund von seiner Zuständigkeit nicht durch Gesetz Gebrauch gemacht hat."},{"id":17,"cat":"Staatsorganisationsrecht","type":"mc","q":"Was bedeutet das Rechtsstaatsprinzip?","opts":["Es verpflichtet den Staat zu wirtschaftlicher Neutralität","Es garantiert rechtliche Unabhängigkeit","Es verbietet Gewaltenteilung","Es erlaubt Verwaltungshandeln ohne Gesetz"],"correct":1,"exp":"Die richterliche Unabhängigkeit (Art. 97 GG) ist eine anerkannte Ausprägung des Rechtsstaatsprinzips. Es umfasst vor allem die Bindung an Gesetz und Recht, den Vorbehalt des Gesetzes, Rechtssicherheit und Rechtsschutz."},{"id":18,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche Aussage beschreibt das Prinzip der Gewaltenteilung im deutschen Grundgesetz zutreffend?","opts":["Die Legislative kontrolliert ausschließlich die Exekutive","Die Gewalten sind strikt getrennt und dürfen nicht zusammenwirken","Die Staatsgewalt ist in Legislative, Exekutive und Judikative gegliedert, mit funktionalen Überschneidungen","Die Judikative entscheidet nur über politische Fragen"],"correct":2,"exp":"Das deutsche Modell kennt keine strikte Trennung, sondern eine Gewaltenverschränkung mit wechselseitigen Kontrollmechanismen."},{"id":19,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche der folgenden Institutionen gehört nicht zu den (ständigen) Verfassungsorganen der Bundesrepublik Deutschland?","opts":["Der Bundesrat","Der Bundespräsident","Das Bundesverfassungsgericht","Die Bundesversammlung"],"correct":3,"exp":"Zu den fünf ständigen Verfassungsorganen zählen Bundestag, Bundesrat, Bundesregierung, Bundespräsident und Bundesverfassungsgericht. Die Bundesversammlung tritt nur bei Bedarf zur Präsidentenwahl zusammen."},{"id":20,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche Aussage zur Bundesrat-Mitwirkung im Gesetzgebungsverfahren ist korrekt?","opts":["Der Bundesrat wirkt nur bei Finanzgesetzen mit","Der Bundesrat hat bei Zustimmungsgesetzen ein Vetorecht, das der Bundestag nicht überstimmen kann","Der Bundesrat ist am Gesetzgebungsverfahren nie beteiligt","Der Bundesrat kann nur beratende Stellungnahmen abgeben"],"correct":1,"exp":"Bei Zustimmungsgesetzen kommt das Gesetz ohne Zustimmung des Bundesrates nicht zustande. Das unterscheidet sie von Einspruchsgesetzen, bei denen der Bundestag einen Einspruch zurückweisen kann (Art. 77 IV GG)."},{"id":21,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche Aussage zum Wahlgrundsatz der Gleichheit ist zutreffend?","opts":["Jede Stimme hat den gleichen Zähl- und Erfolgswert","Der Erfolgswert darf unterschiedlich sein, solange alle wählen dürfen","Wahlgleichheit gilt nur für Bundestagswahlen","Wahlgleichheit verlangt zwingend Mehrheitswahl"],"correct":0,"exp":"Das folgt aus Art. 38 I 1 GG: Jede Stimme hat denselben Zählwert und denselben Erfolgswert."},{"id":22,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was ist nach § 35 VwVfG ein Verwaltungsakt?","opts":["Eine Rechtsverordnung, die von einer obersten Bundesbehörde erlassen wird","Eine Maßnahme einer Behörde zur Regelung eines Einzelfalls auf dem Gebiet des öffentlichen Rechts mit Außenwirkung","Ein allgemeiner Erlass, der für eine unbestimmte Vielzahl von Fällen gilt","Eine innerdienstliche Anweisung ohne rechtliche Außenwirkung"],"correct":1,"exp":"So die Legaldefinition in § 35 S. 1 VwVfG."},{"id":23,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Welches der folgenden Merkmale muss ein Verwaltungsakt nach § 35 VwVfG erfüllen?","opts":["Er muss schriftlich erlassen sein","Er muss von einem Gericht stammen","Er muss eine Regelung enthalten","Er muss sich auf Zivilrecht beziehen"],"correct":2,"exp":"Der Regelungscharakter ist das zentrale Tatbestandsmerkmal des § 35 VwVfG."},{"id":24,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Welche Aussage trifft im Sinne des § 35 VwVfG am ehesten auf die „Außenwirkung\" eines Verwaltungsaktes zu?","opts":["Der Verwaltungsakt muss für die allgemeine Öffentlichkeit bestimmt sein","Der Verwaltungsakt betrifft ausschließlich interne Verwaltungsabläufe","Der Verwaltungsakt muss gegenüber einer außerhalb der Verwaltung stehenden Person rechtliche Wirkung entfalten","Die Außenwirkung meint, dass der Verwaltungsakt öffentlich bekannt gemacht werden muss"],"correct":2,"exp":"Außenwirkung bedeutet Rechtswirkung gegenüber einer außerhalb der Verwaltung stehenden Person."},{"id":25,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Welche der folgenden Maßnahmen stellt typischerweise keinen Verwaltungsakt im Sinne des § 35 VwVfG dar?","opts":["Eine Baugenehmigung für ein Wohnhaus","Die Versetzung eines Beamten in eine andere Dienststelle","Eine Straßenverkehrsbehörde stellt ein Halteverbotsschild auf","Eine Ministerin kündigt auf einer Pressekonferenz ein neues Gesetzesvorhaben an"],"correct":3,"exp":"Der Ankündigung fehlt die Regelung eines Einzelfalls – sie ist eine politische Aussage ohne unmittelbare Rechtswirkung. Das Halteverbotsschild gilt als Allgemeinverfügung."},{"id":26,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was ist vor dem Erlass eines belastenden Verwaltungsaktes grundsätzlich erforderlich?","opts":["Die Veröffentlichung im Amtsblatt","Die Genehmigung durch das Bundesministerium","Die Anhörung des Betroffenen","Die Zustimmung des Landtages"],"correct":2,"exp":"So § 28 I VwVfG."},{"id":27,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Wann kann auf eine Anhörung vor Erlass eines Verwaltungsaktes verzichtet werden?","opts":["Nie","Nur bei Gefahr im Verzug","Wenn dies durch Verwaltungsvorschriften vorgesehen ist","Wenn § 28 Abs. 2 VwVfG dies zulässt"],"correct":3,"exp":"§ 28 II VwVfG zählt mehrere Fallgruppen auf, etwa Gefahr im Verzug, Allgemeinverfügungen oder Massenverfahren – „nur bei Gefahr im Verzug\" wäre zu eng."},{"id":28,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was gilt, wenn eine erforderliche Anhörung unterblieben ist?","opts":["Der Verwaltungsakt ist automatisch nichtig","Die Anhörung kann nachgeholt werden","Der Verwaltungsakt bleibt dauerhaft unwirksam","Der Verwaltungsakt ist nur in Bayern gültig"],"correct":1,"exp":"Nach § 45 VwVfG ist dieser Verfahrensfehler heilbar."},{"id":29,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Welche Aussage ist richtig?","opts":["Jeder Verwaltungsakt muss durch die Polizei vollzogen werden","Verwaltungsakte werden durch das Grundgesetz definiert","Allgemeinverfügungen richten sich an eine unbestimmte Vielzahl von Personen","Ein Verwaltungsakt muss immer durch den Bundesrat bestätigt werden"],"correct":2,"exp":"So die Definition der Allgemeinverfügung in § 35 S. 2 VwVfG."},{"id":30,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Wann wird ein Verwaltungsakt wirksam?","opts":["Bei Unterschrift durch den Behördenleiter","Bei Veröffentlichung im Gesetzblatt","Mit seiner Bekanntgabe","Nach Zustimmung der betroffenen Person"],"correct":2,"exp":"So §§ 41, 43 VwVfG."},{"id":31,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was ist eine Nebenbestimmung im Verwaltungsakt?","opts":["Ein unwesentlicher Zusatz ohne rechtliche Wirkung","Eine Regelung, die den Verwaltungsakt inhaltlich oder zeitlich einschränkt","Eine interne Dienstanweisung","Eine mündliche Erläuterung für den Bürger"],"correct":1,"exp":"So § 36 VwVfG."},{"id":32,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was ist eine Bedingung im Sinne des § 36 VwVfG?","opts":["Eine sofort wirksame Einschränkung","Von einem künftigen ungewissen Ereignis abhängige Regelung","Eine interne Absprache","Eine Obliegenheit"],"correct":1,"exp":"Eine Bedingung macht den Eintritt oder Wegfall einer Vergünstigung oder Belastung vom ungewissen Eintritt eines künftigen Ereignisses abhängig (§ 36 II Nr. 2 VwVfG)."},{"id":33,"cat":"Allgemeines Verwaltungsrecht","type":"essay","q":"Was ist eine Auflage gemäß § 36 VwVfG? Erläutern Sie den Unterschied zur Bedingung.","ref":"Eine Auflage (§ 36 II Nr. 4 VwVfG) verpflichtet die begünstigte Person zu einem zusätzlichen Tun, Dulden oder Unterlassen, ohne dass die Wirksamkeit des Verwaltungsakts selbst davon abhängt.\nUnterschied zur Bedingung: Bei der Bedingung steht die Wirksamkeit des Hauptverwaltungsakts infrage (er tritt erst ein oder entfällt bei Bedingungseintritt). Bei der Auflage bleibt der Hauptverwaltungsakt voll wirksam; die Auflage kann eigenständig durchgesetzt werden."},{"id":34,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was ist ein Realakt?","opts":["Hoheitliche Aufgabe","Gesetz","Verwaltungsakt","Vertrag"],"correct":0,"exp":"Von den gegebenen Optionen kommt „Hoheitliche Aufgabe\" am nächsten. Ein Realakt ist tatsächliches Verwaltungshandeln ohne eigenen Regelungscharakter – keine unmittelbare Rechtswirkung wie ein Verwaltungsakt, z. B. eine Auskunft oder eine Maßnahme vor Ort."},{"id":35,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was sind Ampel- und Handzeichen der Polizei nach der Rechtsprechung?","opts":["Gesetz","Realakt","Allgemeinverfügung","Verordnung"],"correct":2,"exp":"Die Rechtsprechung behandelt Ampelzeichen als Verwaltungsakte in Form von Allgemeinverfügungen, gerichtet an die jeweils anwesenden Verkehrsteilnehmer. Gleiches gilt für Zeichen von Polizeibeamten nach § 36 StVO."},{"id":36,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Welche Zwangsmittel kennt das Verwaltungsvollstreckungsrecht typischerweise?","opts":["Bußgeld, Freiheitsentzug, Enteignung","Zwangsgeld, Ersatzvornahme, unmittelbarer Zwang","Ordnungsstrafe, Hausverbot, Verwarnung","Verwarnungsgeld, Bußgeld, Verhaftung"],"correct":1,"exp":"Nach dem Bundes-VwVG: Ersatzvornahme (§ 10), Zwangsgeld (§ 11), unmittelbarer Zwang (§ 12), zusammengefasst in § 9 VwVG."},{"id":37,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Was ist der wesentliche Unterschied zwischen Verwaltungsvollstreckung und Sofortvollzug?","opts":["Es gibt keinen Unterschied","Der Sofortvollzug kann ohne vorherigen Verwaltungsakt erfolgen","Die Verwaltungsvollstreckung ist nur für Steuerschulden möglich","Der Sofortvollzug darf nur bei Notstand angewendet werden"],"correct":1,"exp":"§ 6 II VwVG: Der Sofortvollzug ist zulässig, wenn die vorherige Bekanntgabe eines Verwaltungsakts den Zweck der Maßnahme vereiteln würde."},{"id":38,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Was muss vor dem Einsatz von Zwangsmitteln vorliegen?","opts":["Eine richterliche Genehmigung","Ein Gesetz zur Anordnung","Ein wirksamer Verwaltungsakt, der nicht befolgt wird","Eine Anzeige durch Dritte"],"correct":2,"exp":"So § 6 I VwVG des Bundes beziehungsweise § 55 I VwVG NRW."},{"id":39,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Welche Wirkung hat ein Widerspruch gegen einen belastenden Verwaltungsakt?","opts":["Keine","Er verzögert die Zustellung","Er hat aufschiebende Wirkung","Er macht den Verwaltungsakt nichtig"],"correct":2,"exp":"So § 80 I VwGO."},{"id":40,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Was muss die Behörde tun, wenn sie trotz Widerspruchs sofort vollziehen will?","opts":["Klage beim Verwaltungsgericht erheben","Eine Anhörung durchführen","Sofortige Vollziehung anordnen und begründen","Den Verwaltungsakt zurücknehmen"],"correct":2,"exp":"So § 80 II Nr. 4, § 80 III VwGO."},{"id":41,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Wie kann sich der Adressat gegen die Anordnung der sofortigen Vollziehung wehren?","opts":["Mit Dienstaufsichtsbeschwerde","Mit Gegenvorstellung bei der Behörde","Mit Eilantrag beim Verwaltungsgericht","Mit Antrag beim Bundesverfassungsgericht"],"correct":2,"exp":"So § 80 V VwGO."},{"id":42,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Was regelt § 34 BeamtStG?","opts":["Dienstunfall","Pflicht zum vollen persönlichen Einsatz","Wahlrecht","Nebentätigkeiten"],"correct":1,"exp":"Beamtinnen und Beamte haben sich mit vollem persönlichem Einsatz ihrem Beruf zu widmen und ihr Verhalten muss der Achtung und dem Vertrauen gerecht werden, die ihr Beruf erfordert."},{"id":43,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Welches Beamtenverhältnis gibt es nicht?","opts":["Beamter auf Probe","Beamter auf Widerruf","Beamter auf Lebenszeit","Beamter auf Abruf"],"correct":3,"exp":"Nach § 4 BeamtStG gibt es Beamte auf Lebenszeit, auf Probe, auf Widerruf und auf Zeit. Einen „Beamten auf Abruf\" kennt das Beamtenrecht nicht."},{"id":44,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Was ist die Voraussetzung für die Berufung in das Beamtenverhältnis?","opts":["10 Jahre Berufserfahrung","Deutsche oder EU-Staatsangehörigkeit","Privatrechtlicher Vertrag","Kirchenzugehörigkeit"],"correct":1,"exp":"Diese materielle Voraussetzung steht in § 7 BeamtStG. § 8 BeamtStG regelt die Ernennung als formalen Akt."},{"id":45,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Welcher Zweck gehört nicht zu den klassischen Zielen des Disziplinarrechts?","opts":["Erziehungszweck","Schutzfunktion","Privatisierung der Ermittlungen","Reinigungsfunktion"],"correct":2,"exp":"Das Disziplinarverfahren ist und bleibt ein hoheitliches, staatliches Verfahren. Erziehungszweck, Schutzfunktion und Reinigungsfunktion sind anerkannte Zwecke."},{"id":46,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Was ist der Zweck des Disziplinarrechts?","opts":["Bestrafung","Erziehung und Funktionssicherung","Politische Kontrolle","Gehaltskürzungen maximieren"],"correct":1,"exp":"Das Disziplinarrecht dient der Erziehung (Wiedereingliederung) und der Funktionssicherung des Berufsbeamtentums, nicht der Bestrafung im strafrechtlichen Sinne."},{"id":47,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Wann muss ein Disziplinarverfahren eingeleitet werden?","opts":["Sobald der Personalrat zustimmt","Wenn eine anonyme Beschwerde eingeht","Bei zureichenden tatsächlichen Anhaltspunkten für ein Dienstvergehen","Wenn ein Strafbefehl rechtskräftig ist"],"correct":2,"exp":"Es gilt das Legalitätsprinzip – dem Dienstvorgesetzten steht kein Ermessen zu, ob er tätig wird, nur wie er das Verfahren führt."},{"id":48,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Was versteht man unter einem „Dienstvergehen\"?","opts":["Jegliches Verhalten außerhalb der Dienstzeit","Eine schuldhafte Verletzung dienstlicher Pflichten","Jede Form von Kritik an Vorgesetzten","Ein Verwaltungsverstoß nach dem Ordnungsrecht"],"correct":1,"exp":"So die Definition in § 47 BeamtStG."},{"id":49,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Was gehört nicht zu den Dienstpflichten?","opts":["Pflicht zur wöchentlichen Fortbildung","Neutralitätsgebot","Folgepflicht","Verschwiegenheitspflicht"],"correct":0,"exp":"Neutralitätsgebot, Folgepflicht und Verschwiegenheitspflicht sind ausdrücklich normiert (§§ 33, 35, 37 BeamtStG). Eine eigenständige, gesetzlich fixierte Pflicht zur wöchentlichen Fortbildung gibt es dagegen nicht."},{"id":50,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Eine Trunkenheitsfahrt in der Freizeit führt zu einem Disziplinarverfahren.","opts":["Richtig","Falsch"],"correct":1,"exp":"Rein außerdienstliches Verhalten ist nur dann relevant, wenn es in besonderem Maß geeignet ist, Achtung und Vertrauen in einer für das Amt bedeutsamen Weise zu beeinträchtigen (§ 34 S. 3 BeamtStG)."},{"id":51,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Das statusrechtliche Amt bezieht sich auf die tatsächlich wahrgenommenen Aufgaben.","opts":["Richtig","Falsch"],"correct":1,"exp":"Das statusrechtliche Amt meint die abstrakte Rechtsstellung (Laufbahn, Besoldungsgruppe, Amtsbezeichnung), nicht die konkret ausgeübte Tätigkeit – das wäre das Amt im konkret-funktionellen Sinn."},{"id":52,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Für eine Ernennung zum 10.01.2025 kann die Urkunde bis zum Ende des Monats überreicht werden.","opts":["Richtig","Falsch"],"correct":1,"exp":"Eine Ernennung auf einen zurückliegenden Zeitpunkt ist unzulässig und unwirksam (§ 8 IV BeamtStG). Wirksam wird sie erst mit tatsächlicher Aushändigung der Urkunde."},{"id":53,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Der Dienstherr muss bei Vorliegen tatsächlicher Anhaltspunkte über ein Dienstvergehen ein Disziplinarverfahren einleiten.","opts":["Richtig","Falsch"],"correct":0,"exp":"Legalitätsprinzip, kein Einleitungsermessen."},{"id":54,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Leistung und Persönlichkeitsbild des Beamten oder der Beamtin sind alleiniger Grund für die Bemessung der Disziplinarmaßnahme.","opts":["Richtig","Falsch"],"correct":1,"exp":"Ausgangspunkt ist die Schwere des Dienstvergehens; Persönlichkeitsbild und bisherige Führung fließen nur ergänzend ein."},{"id":55,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Die dienstliche Beurteilung ist das Hauptauswahlkriterium bei der Beförderung.","opts":["Richtig","Falsch"],"correct":0,"exp":"Im Rahmen der Bestenauslese nach Art. 33 II GG ist sie regelmäßig das zentrale Erkenntnismittel für Eignung, Befähigung und fachliche Leistung."},{"id":56,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Maßgebliche Kriterien bei einer Ernennung von Beamten sind Eignung, Leistung, Befähigung und der Wohnsitz im Gebiet des jeweiligen Dienstherrn.","opts":["Richtig","Falsch"],"correct":1,"exp":"Art. 33 II GG nennt Eignung, Befähigung und fachliche Leistung; ein Wohnsitzerfordernis gehört nicht dazu."},{"id":57,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Bei Bekanntwerden eines Dienstvergehens steht dem Dienstvorgesetzten Ermessen zu, ob ein Disziplinarverfahren eingeleitet wird oder nicht.","opts":["Richtig","Falsch"],"correct":1,"exp":"Legalitätsprinzip – kein Einleitungsermessen."},{"id":58,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Das Disziplinarrecht ist abschließend durch das Bundesdisziplinargesetz geregelt.","opts":["Richtig","Falsch"],"correct":1,"exp":"Das Bundesdisziplinargesetz gilt nur für Bundesbeamte; für Landes- und Kommunalbeamte gilt das jeweilige Landesdisziplinargesetz."},{"id":59,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Die Entfernung aus dem Beamtenverhältnis aufgrund von Verfehlungen muss im Rahmen einer Disziplinarklage vor dem Verwaltungsgericht erwirkt werden.","opts":["Richtig","Falsch"],"correct":0,"exp":"Diese schwerste Disziplinarmaßnahme kann die Behörde nicht selbst verfügen, sondern nur gerichtlich durchsetzen."},{"id":60,"cat":"Beamten- und Disziplinarrecht","type":"essay","q":"Was ist nach einer strafrechtlichen Verurteilung disziplinarisch nicht zulässig? (Die Antwortoptionen fehlen im Original-Protokoll.)","ref":"Einschlägig ist die Bindungswirkung strafgerichtlicher Feststellungen: Die Disziplinarbehörde bzw. das Disziplinargericht ist an die tatsächlichen Feststellungen eines rechtskräftigen Strafurteils grundsätzlich gebunden und darf davon nur unter engen Voraussetzungen abweichen (z. B. bei offenkundiger Unrichtigkeit).\nNicht zulässig ist es daher in aller Regel, eigene, den strafgerichtlichen Feststellungen widersprechende Tatsachenfeststellungen zu treffen."},{"id":61,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"essay","q":"Gegen welche drei „Personengruppen\" können sich Maßnahmen der Gefahrenabwehr richten?","ref":"1. Verhaltensstörer (Handlungsstörer): verursacht die Gefahr durch eigenes Verhalten.\n2. Zustandsstörer: hat die tatsächliche Gewalt über eine gefahrverursachende Sache oder ist deren Eigentümer.\n3. Nichtstörer (Notstandspflichtiger): nicht verantwortliche Dritte – nur unter engen Voraussetzungen bei gegenwärtiger erheblicher Gefahr zulässig."},{"id":62,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"essay","q":"Erklären Sie den Unterschied zwischen einer konkreten Gefahr und einer Anscheinsgefahr. Was ist bei der Anscheinsgefahr besonders zu beachten?","ref":"Konkrete Gefahr: Bei ungehindertem Ablauf des objektiv zu erwartenden Geschehens ist mit hinreichender Wahrscheinlichkeit in absehbarer Zeit ein Schaden zu erwarten.\nAnscheinsgefahr: Nachträglich stellt sich heraus, dass keine Gefahr bestand – maßgeblich ist die Sicht im Zeitpunkt des Handelns (ex-ante-Betrachtung). Durfte eine besonnene Einsatzkraft von einer Gefahr ausgehen, war das Einschreiten rechtmäßig. Sobald der Irrtum erkannt wird, sind alle Maßnahmen unverzüglich einzustellen.\nBesonders zu beachten: Die Kostenfrage – wer trägt die Kosten einer sich als unbegründet herausstellenden Maßnahme?"},{"id":63,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"essay","q":"Welche Aufgabe ergibt sich aus § 1 Abs. 1 Nr. 1 BHKG?","ref":"§ 1 Abs. 1 Nr. 1 BHKG definiert das Ziel des Gesetzes im Bereich Brandschutz: vorbeugende und abwehrende Maßnahmen bei Brandgefahren zum Schutz der Bevölkerung. Die Norm begründet die gesetzliche Grundlage für den vorbeugenden und abwehrenden Brandschutz als Pflichtaufgabe der Gemeinden."},{"id":64,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"mc","q":"Was ist ein Unglücksfall im Sinne des BHKG?","opts":["Langsamer Vorgang","Plötzliches Ereignis mit erheblicher Gefahr","Nur Explosionen","Nur Brände"],"correct":1,"exp":"Ein Unglücksfall ist ein plötzliches Ereignis, von dem eine erhebliche Gefahr für Menschen, Tiere, Sachen oder die Umwelt ausgeht."},{"id":65,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"essay","q":"Fall: Schornsteinbrand im Hinterhaus. Alarmierung zu einem Schornsteinbrand in einem Altbau, 3 OG. Der Einsatzleiter ordnet an, alle am Schornstein gelegenen Wohnungen auf Brandausbreitung zu kontrollieren. Im 3. OG lässt ein pensionierter Feuerwehrmann weder die Nachbarwohnung noch seine eigene Wohnung kontrollieren.\n\na) Dürfen Sie als Einsatzleiter die verschlossene Nachbarwohnung gewaltsam öffnen? Was ist zu beachten?\nb) Dürfen Sie die Wohnung gegen den Willen des Mieters betreten?\nc) Was beachten Sie beim Verlassen der Einsatzstelle?","ref":"a) Ja, gestützt auf § 41 BHKG NRW i. V. m. Art. 13 VII GG. Bei möglicher Rauch-/Brandausbreitung liegt zumindest eine Anscheinsgefahr vor. Zu beachten: Verhältnismäßigkeit – wenn zeitlich möglich, zunächst Schlüsseldienst; bei Gefahr im Verzug sofortiges gewaltsames Öffnen zulässig.\nb) Ja. Der widersprechende Mieter ist nicht Inhaber der zu kontrollierenden Nachbarwohnung und kann über deren Betretung nicht wirksam entscheiden. Sein Widerspruch ist rechtlich unbeachtlich.\nc) Geöffnete Wohnung sichern/wiederverschließen; Bewohner und Eigentümer informieren; Vorgang und Gründe dokumentieren; sicherstellen, dass keine Glutnester zurückbleiben."},{"id":66,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"essay","q":"Fall: Rauchmelder piept im 2. OG, Nachbarn alarmieren die Feuerwehr. Die Feuerwehr bricht die Tür auf – in der Wohnung kein Rauch, Melder hatte technischen Defekt. Der Mieter fordert Ersatz für die Tür. War die Türöffnung rechtmäßig?","ref":"Ja. Maßgeblich ist die Anscheinsgefahr: Beim Alarm eines Rauchmelders, auf den niemand reagiert, durfte die Feuerwehr ex-ante von einer konkreten Gefahr ausgehen (§ 41 BHKG NRW i. V. m. Art. 13 VII GG). Der nachträglich festgestellte technische Defekt ändert an der Rechtmäßigkeit nichts.\nEin Schadensersatzanspruch scheidet bei rechtmäßiger Maßnahme in der Regel aus; ein etwaiger Ausgleich richtet sich nach den landesrechtlichen Kostenerstattungsregelungen."},{"id":67,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"essay","q":"Fall: Es brennt im Keller eines Mehrfamilienhauses. Ein Trupp soll wegen der Rauchausbreitung die angrenzenden Kellerräume kontrollieren. Der Eigentümer verbietet den Zutritt zu einem vermieteten Kellerraum, weil der Mieter das Betreten nicht erlauben würde. Dürfen Sie den Kellerraum öffnen?","ref":"Ja. Bei einem Kellerbrand mit Rauchausbreitungsgefahr besteht eine konkrete Gefahr, die die Kontrolle aller betroffenen Kellerräume rechtfertigt, unabhängig davon, ob sie vermietet sind. Weder Eigentümer noch Mieter können der Gefahrenabwehr ein wirksames Zutrittsverbot entgegensetzen (§ 41 BHKG NRW).\nVorgehen: Raum verhältnismäßig, notfalls gewaltsam öffnen, kontrollieren, anschließend sichern und Eigentümer sowie Mieter informieren."},{"id":68,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was regelt das Entschließungsermessen einer Behörde?","opts":["Das „Ob\" des behördlichen Handelns – ob die Behörde tätig wird","Das „Wie\" – die Art und Weise der Maßnahme","Die Auswahl zwischen mehreren Adressaten","Den Zeitpunkt des behördlichen Eingreifens"],"correct":0,"exp":"Das Entschließungsermessen (§ 40 VwVfG) betrifft das „Ob\" – ob die Behörde bei Vorliegen aller Voraussetzungen tätig wird oder untätig bleibt. Das „Wie\" regelt das Auswahlermessen."},{"id":69,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was regelt das Auswahlermessen einer Behörde?","opts":["Das „Ob\" des behördlichen Handelns","Das „Wie\" – die Auswahl der passenden Maßnahme oder Person","Die Zuständigkeit der Behörde","Ob überhaupt ein Verwaltungsakt erlassen werden darf"],"correct":1,"exp":"Das Auswahlermessen (§ 40 VwVfG) betrifft das „Wie\" – bei mehreren erlaubten Maßnahmen oder Adressaten wählt die Behörde die passende Reaktion aus."},{"id":70,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was versteht man unter einer Ermessensreduzierung auf Null?","opts":["Die Behörde hat kein Ermessen und muss untätig bleiben","Aufgrund besonderer Umstände ist nur noch eine einzige rechtmäßige Entscheidung möglich","Die Behörde kann frei zwischen allen Maßnahmen wählen","Das Ermessen wird auf eine übergeordnete Behörde übertragen"],"correct":1,"exp":"Bei der Ermessensreduzierung auf Null schrumpft der gesetzliche Spielraum der Behörde so stark, dass nur noch eine rechtmäßige Entscheidung verbleibt. Jede andere Handlung wäre rechtswidrig (gebundene Entscheidung)."},{"id":71,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"tf","q":"Bei einer Anscheinsgefahr muss die Feuerwehr ihre Maßnahmen sofort einstellen, sobald sich herausstellt, dass keine konkrete Gefahr vorliegt.","opts":["Richtig","Falsch"],"correct":0,"exp":"Richtig. Ergibt die Erkundung, dass keine konkrete Gefahr besteht, handelt es sich um eine Anscheinsgefahr – alle Maßnahmen sind unverzüglich einzustellen."},{"id":72,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"mc","q":"Wann liegt eine konkrete Gefahr vor?","opts":["Wenn Anhaltspunkte für eine mögliche Gefahr bestehen","Wenn bei ungehindertem Ablauf in absehbarer Zeit mit hinreichender Wahrscheinlichkeit ein Schaden droht","Wenn bereits ein Schaden eingetreten ist","Wenn ein Bürger eine Gefahr gemeldet hat"],"correct":1,"exp":"Eine konkrete Gefahr liegt vor, wenn bei ungehindertem Ablauf des objektiv zu erwartenden Geschehens mit hinreichender Wahrscheinlichkeit in absehbarer Zeit ein Schaden zu erwarten ist."},{"id":73,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Welche Anforderung stellt § 37 VwVfG an den Tenor (Verfügungssatz) eines Verwaltungsaktes?","opts":["Er muss schriftlich und handschriftlich unterschrieben sein","Er muss hinreichend bestimmt sein","Er muss stets eine Rechtsmittelbelehrung enthalten","Er darf keine Bedingungen oder Auflagen enthalten"],"correct":1,"exp":"§ 37 VwVfG verlangt, dass der Tenor eines VA hinreichend bestimmt ist – er muss klar und vollziehbar beschreiben, was die Behörde vom Bürger verlangt."},{"id":74,"cat":"Allgemeines Verwaltungsrecht","type":"tf","q":"Die Begründung eines Verwaltungsaktes darf allgemeine Floskeln enthalten, wenn der Tenor eindeutig ist (§ 39 VwVfG).","opts":["Richtig","Falsch"],"correct":1,"exp":"Falsch. § 39 VwVfG verlangt eine konkrete Begründung: Sie muss an bestimmte Anhaltspunkte geknüpft sein, darf nicht floskelhaft sein und muss die tragenden rechtlichen Gründe aufführen."},{"id":75,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Welche Zwangsmittel nennt § 9 Abs. 1 VwVG zur Durchsetzung eines Verwaltungsaktes?","opts":["Bußgeld, Strafanzeige, Zwangshaft","Zwangsgeld, Ersatzvornahme, unmittelbarer Zwang","Ordnungsgeld, Einspruch, Vollziehung","Bußgeld, Ersatzvornahme, Freiheitsstrafe"],"correct":1,"exp":"§ 9 Abs. 1 VwVG nennt abschließend drei Zwangsmittel: Zwangsgeld, Ersatzvornahme und unmittelbarer Zwang."},{"id":76,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Wie kann ein VA trotz eingelegten Widerspruchs vollzogen werden?","opts":["Gar nicht – der Widerspruch hat immer unüberwindliche aufschiebende Wirkung","Durch Anordnung des sofortigen Vollzugs mit schriftlicher Begründung nach § 80 Abs. 2 Nr. 4 VwGO","Durch eine einfache mündliche Anweisung des Vorgesetzten","Durch Verwirkung des Widerspruchsrechts nach drei Tagen"],"correct":1,"exp":"§ 80 Abs. 2 Nr. 4 VwGO ermöglicht die Anordnung des sofortigen Vollzugs. Sie muss schriftlich erfolgen und besonders begründet werden, damit die aufschiebende Wirkung des Widerspruchs entfällt."},{"id":77,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche Arten der Gesetzgebungskompetenz unterscheidet das Grundgesetz?","opts":["Primäre und sekundäre Gesetzgebung","Ausschließliche Bundeskompetenz (§ 71 GG), konkurrierende Gesetzgebung (§ 72 GG) und Länderzuständigkeit (§ 70 GG)","Föderale und zentralistische Gesetzgebung","Formelle und materielle Gesetzgebung"],"correct":1,"exp":"Das GG unterscheidet: ausschließliche Gesetzgebungskompetenz des Bundes (§ 71 GG), konkurrierende Gesetzgebung (§ 72 GG) und den Bereich, in dem die Länder die Gesetzgebungszuständigkeit haben (§ 70 GG, Auffangzuständigkeit)."},{"id":78,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Eine Ernennung mit rückwirkendem Datum ist nach § 8 BeamtStG zulässig.","opts":["Richtig","Falsch"],"correct":1,"exp":"Falsch. § 8 Abs. 4 BeamtStG verbietet Ernennungen mit rückwirkender Kraft ausdrücklich. Die Ernennung wird nach § 8 Abs. 2 BeamtStG erst mit Aushändigung der Ernennungsurkunde wirksam."},{"id":79,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Ein Beamter trägt bei einer privaten politischen Veranstaltung seine Dienstuniform ohne vorherige Abstimmung. Welche Rechtsgrundlagen sind für die Prüfung eines Dienstvergehens einschlägig?","opts":["§ 33 Abs. 2 BeamtStG (Mäßigungsgebot) i.V.m. § 47 Abs. 1 BeamtStG (Dienstvergehen)","§ 12 BeamtStG (Eidesleistung)","§ 60 BeamtStG (Streikverbot)","§ 42 BeamtStG (Nebentätigkeit)"],"correct":0,"exp":"§ 33 Abs. 2 BeamtStG verpflichtet Beamte zur Mäßigung und Zurückhaltung – das Tragen der Dienstuniform bei politischen Veranstaltungen verletzt diese Pflicht. § 47 Abs. 1 BeamtStG definiert die schuldhafte Verletzung von Dienstpflichten als Dienstvergehen."},{"id":80,"cat":"Staatsorganisationsrecht","type":"mc","q":"Wer hat nach Art. 76 Abs. 1 GG das Recht der Gesetzesinitiative?","opts":["Bundestag, Bundesrat und Bundesregierung","Nur Bundestag und Bundesrat","Bundestag, Bundesrat, Bundesregierung und Bundespräsident","Bundestag und Bundesverfassungsgericht"],"correct":0,"exp":"Das Initiativrecht steht nach Art. 76 I GG dem Bundestag (aus seiner Mitte), dem Bundesrat und der Bundesregierung zu. Der Bundespräsident und das BVerfG haben kein Initiativrecht."},{"id":81,"cat":"Staatsorganisationsrecht","type":"tf","q":"Das Bundesverfassungsgericht ist am regulären Gesetzgebungsverfahren des Bundes beteiligt.","opts":["Richtig","Falsch"],"correct":1,"exp":"Das BVerfG ist am regulären Verfahren nicht beteiligt. Es prüft Bundesgesetze erst nachträglich auf Antrag – z. B. im Wege der abstrakten oder konkreten Normenkontrolle."},{"id":82,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welches Organ fasst den Gesetzesbeschluss (Art. 77 Abs. 1 GG) allein?","opts":["Bundestag und Bundesrat gemeinsam","Nur der Bundestag","Nur der Bundesrat","Bundestag und Bundesregierung gemeinsam"],"correct":1,"exp":"Nach Art. 77 I GG beschließt allein der Bundestag die Bundesgesetze. Der Bundesrat ist in dieser Phase nicht beteiligt – er kommt erst im 2. Durchgang (Art. 77 II ff. GG)."},{"id":83,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche Möglichkeiten hat der Bundesrat im zweiten Durchgang (Art. 77 Abs. 2 ff. GG)?","opts":["Er kann das Gesetz endgültig und unüberwindlich ablehnen","Er kann zustimmen, Einspruch einlegen oder den Vermittlungsausschuss anrufen","Er hat in dieser Phase keine Mitwirkungsrechte","Er leitet das Gesetz zur Prüfung an das BVerfG weiter"],"correct":1,"exp":"Im 2. Durchgang kann der Bundesrat zustimmen, Einspruch einlegen oder den Vermittlungsausschuss anrufen (Art. 77 II ff. GG). Ein absolutes Veto hat er nur bei Zustimmungsgesetzen; bei Einspruchsgesetzen kann der Bundestag den Einspruch überstimmen."},{"id":84,"cat":"Staatsorganisationsrecht","type":"mc","q":"Wer fertigt ein Bundesgesetz nach Art. 82 Abs. 1 GG aus und verkündet es?","opts":["Der Bundestag","Der Bundesrat","Der Bundespräsident – mit Gegenzeichnung durch die Bundesregierung (Art. 58 GG)","Das Bundesverfassungsgericht"],"correct":2,"exp":"Nach Art. 82 I GG fertigt der Bundespräsident die Bundesgesetze aus und verkündet sie im Bundesgesetzblatt. Die Gegenzeichnung nach Art. 58 GG durch den zuständigen Bundesminister ist Voraussetzung für die Wirksamkeit."}];
+  const Q=cfg.Q;
 
   let _mode='learn',_order=[],_cur=0,_answered=false,_filter='all',_catFilter='all',_inited=false;
   let _bookmarks=new Set(),_examAnswers={},_examSubmitted=false;
   let _masteryMap={},_sessionCorrect=0,_sessionWrong=0,_sessionSkipped=0,_retried=new Set();
   let _typeFilter='all',_posHistory={},_retriedCount=0,_examPendingSubmit=false,_filterOpen=false;
-  let _examTimerInterval=null,_examTimeLeft=0;
+  let _examTimerInterval=null,_examTimeLeft=0,_msel=new Set(),_examQs=[];
+  const setTxt=(el,t)=>{if(HTMLX)el.innerHTML=t;else el.textContent=t;};
+  const corrSet=q=>new Set(q.type==='multi'?q.correct:[q.correct]);
+  const sameSet=(a,b)=>a.size===b.size&&[...a].every(x=>b.has(x));
+  const TYPE_LBL={mc:'Multiple Choice',tf:'Richtig / Falsch',multi:'Mehrfachauswahl',essay:'Freitextfrage'};
+  const BASIS_LBL={protokoll:'Quelle: Prüfungsprotokoll',tab:'Quelle: IdF-Tab',web:'Quelle: Recherche',gemischt:'Quelle: Protokoll/Tab/Recherche'};
+  function examOk(q){const a=_examAnswers[q.id];return q.type==='multi'?!!a&&sameSet(new Set(a),corrSet(q)):a===q.correct;}
+  function markOpts(q,sel){const c=corrSet(q);$v().querySelectorAll('.quiz-opt').forEach((b,i)=>{b.disabled=true;b.classList.remove('sel');if(c.has(i)){b.classList.add('correct');if(!sel.has(i))b.classList.add('missed');}else if(sel.has(i))b.classList.add('wrong');});}
+  function metaHtml(q){return (q.basis?'<span class="quiz-src-tag">'+(BASIS_LBL[q.basis]||'')+'</span>':'')+(q.unsicher?'<span class="quiz-src-tag quiz-src-warn">⚠ Antwort bitte prüfen</span>':'');}
 
   function startTimer(){
     if(document.documentElement.classList.contains('no-timers')) return;
-    _examTimeLeft=60*60;
-    const bar=document.getElementById('quiz-exam-timer-bar');
+    _examTimeLeft=EXAM_MIN*60;
+    const bar=$('quiz-exam-timer-bar');
     if(bar)bar.classList.remove('hidden');
     updateTimerDisplay();
     clearInterval(_examTimerInterval);
-    _examTimerInterval=setInterval(()=>{_examTimeLeft--;updateTimerDisplay();if(_examTimeLeft<=0){clearInterval(_examTimerInterval);QUIZ.submitExam();}},1000);
+    _examTimerInterval=setInterval(()=>{_examTimeLeft--;updateTimerDisplay();if(_examTimeLeft<=0){clearInterval(_examTimerInterval);self.submitExam();}},1000);
   }
   function updateTimerDisplay(){
-    const el=document.getElementById('quiz-exam-time');if(!el)return;
+    const el=$('quiz-exam-time');if(!el)return;
     const m=Math.floor(_examTimeLeft/60),s=_examTimeLeft%60;
     el.textContent=m+':'+String(s).padStart(2,'0');
-    const bar=document.getElementById('quiz-exam-timer-bar');
+    const bar=$('quiz-exam-timer-bar');
     if(bar)bar.classList.toggle('qetb-urgent',_examTimeLeft<=300);
   }
   function stopTimer(){
     clearInterval(_examTimerInterval);_examTimerInterval=null;
-    const bar=document.getElementById('quiz-exam-timer-bar');
+    const bar=$('quiz-exam-timer-bar');
     if(bar)bar.classList.add('hidden');
   }
 
-  const CAT_LABELS={'Staatsorganisationsrecht':'StaatsorgR','Allgemeines Verwaltungsrecht':'AllgVwR','Verwaltungsvollstreckung / Rechtsschutz':'Vollstr./RS','Beamten- und Disziplinarrecht':'BeamtR','Gefahrenabwehr / Feuerwehrrecht':'GefahrenabwR'};
+  const CAT_LABELS=cfg.catLabels||{};
 
   function loadBm(){try{const s=localStorage.getItem(KEY_BM);if(s)_bookmarks=new Set(JSON.parse(s));}catch(e){}}
   function saveBm(){try{localStorage.setItem(KEY_BM,JSON.stringify([..._bookmarks]));}catch(e){}}
   // Wiederholung nach Plan: richtig = nächste Stufe (1, 3, 7, 14, 30 Tage), falsch = Stufe 1 und sofort fällig
-  const KEY_SRS='bvi_quiz_srs', SRS_DAYS=[0,1,3,7,14,30];
+  const KEY_SRS=cfg.keys.srs, SRS_DAYS=[0,1,3,7,14,30];
   let _srs={};
   function loadSrs(){try{_srs=JSON.parse(localStorage.getItem(KEY_SRS)||'{}')||{};}catch(e){_srs={};}}
   function srsUpdate(id,ok){
@@ -2829,11 +2845,11 @@ const QUIZ=(function(){
   }
   const isDue=id=>!!_srs[id]&&_srs[id].due<=Date.now();
   function dueCount(){ loadSrs(); return Object.values(_srs).filter(x=>x&&x.due<=Date.now()).length; }
-  function updateDueBtn(){const b=document.getElementById('quiz-filter-due');if(b){const n=Q.filter(q=>isDue(q.id)).length;b.textContent='↻ Fällig'+(n?' ('+n+')':'');}}
+  function updateDueBtn(){const b=$('quiz-filter-due');if(b){const n=Q.filter(q=>isDue(q.id)).length;b.textContent='↻ Fällig'+(n?' ('+n+')':'');}}
   function loadMastery(){try{const s=localStorage.getItem(KEY_MASTERY);if(s)_masteryMap=JSON.parse(s);}catch(e){}}
   function saveMastery(){try{localStorage.setItem(KEY_MASTERY,JSON.stringify(_masteryMap));}catch(e){}}
 
-  const KEY_STATS='bvi_quiz_stats';
+  const KEY_STATS=cfg.keys.stats;
   function loadStats(){try{return JSON.parse(localStorage.getItem(KEY_STATS)||'{"sessions":[],"exams":[]}');}catch{return{sessions:[],exams:[]};}}
   function saveStats(d){try{localStorage.setItem(KEY_STATS,JSON.stringify(d));}catch{}}
   function recordSession(ok,err,skip){
@@ -2855,20 +2871,20 @@ const QUIZ=(function(){
   function curQ(){return Q.find(q=>q.id===_order[_cur]);}
 
   function renderCatBar(){
-    const bar=document.getElementById('quiz-cat-bar');if(!bar)return;
+    const bar=$('quiz-cat-bar');if(!bar)return;
     const cats=[...new Set(Q.map(q=>q.cat))];
     bar.innerHTML='<button class="quiz-cat-filter-btn'+(_catFilter==='all'?' active':'')+'" data-cat="all">Alle</button>'
       +cats.map(c=>'<button class="quiz-cat-filter-btn'+(_catFilter===c?' active':'')+'" data-cat="'+esc(c)+'">'+(CAT_LABELS[c]||esc(c))+'</button>').join('');
-    bar.querySelectorAll('.quiz-cat-filter-btn').forEach(btn=>{btn.addEventListener('click',()=>{QUIZ.setCatFilter(btn.dataset.cat);});});
+    bar.querySelectorAll('.quiz-cat-filter-btn').forEach(btn=>{btn.addEventListener('click',()=>{self.setCatFilter(btn.dataset.cat);});});
   }
 
   function renderMastery(){
-    const grid=document.getElementById('quiz-mastery-grid');if(!grid)return;
+    const grid=$('quiz-mastery-grid');if(!grid)return;
     grid.innerHTML=Q.map(q=>{const m=_masteryMap[q.id];return'<span class="qmd '+(m==='ok'?'qmd-ok':m==='err'?'qmd-err':'qmd-un')+'" title="'+esc(q.q.substring(0,60))+'"></span>';}).join('');
   }
 
   function renderMasteryCats(){
-    const el=document.getElementById('quiz-mastery-cats');if(!el)return;
+    const el=$('quiz-mastery-cats');if(!el)return;
     const cats=[...new Set(Q.map(q=>q.cat))];
     el.innerHTML=cats.map(cat=>{
       const qs=Q.filter(q=>q.cat===cat);
@@ -2880,63 +2896,64 @@ const QUIZ=(function(){
   }
 
   function renderTypeBar(){
-    const bar=document.getElementById('quiz-type-bar');if(!bar)return;
-    const types=[{k:'all',l:'Alle Typen'},{k:'mc',l:'Multiple Choice'},{k:'tf',l:'Richtig/Falsch'},{k:'essay',l:'Freitext'}];
+    const bar=$('quiz-type-bar');if(!bar)return;
+    const types=[{k:'all',l:'Alle Typen'},{k:'mc',l:'Multiple Choice'},{k:'multi',l:'Mehrfachauswahl'},{k:'tf',l:'Richtig/Falsch'},{k:'essay',l:'Freitext'}].filter(t=>t.k==='all'||Q.some(q=>q.type===t.k));
     bar.innerHTML=types.map(t=>'<button class="quiz-cat-filter-btn'+(_typeFilter===t.k?' active':'')+'" data-type="'+t.k+'">'+t.l+'</button>').join('');
-    bar.querySelectorAll('.quiz-cat-filter-btn').forEach(btn=>{btn.addEventListener('click',()=>{QUIZ.setTypeFilter(btn.dataset.type);});});
+    bar.querySelectorAll('.quiz-cat-filter-btn').forEach(btn=>{btn.addEventListener('click',()=>{self.setTypeFilter(btn.dataset.type);});});
   }
 
   function renderFilterStatus(){
-    const el=document.getElementById('quiz-filter-status');
-    const tog=document.getElementById('qft-status');
+    const el=$('quiz-filter-status');
+    const tog=$('qft-status');
     const count=filteredIds().length;
     updateDueBtn();
     const parts=[];
     if(_filter!=='all')parts.push(_filter==='bookmarked'?'★ Gemerkte':_filter==='due'?'↻ Fällig':'✗ Falsche');
     if(_catFilter!=='all')parts.push(CAT_LABELS[_catFilter]||_catFilter);
-    if(_typeFilter!=='all')parts.push(_typeFilter==='mc'?'Multiple Choice':_typeFilter==='tf'?'Richtig/Falsch':'Freitext');
+    if(_typeFilter!=='all')parts.push(TYPE_LBL[_typeFilter]||_typeFilter);
     const hasFilter=parts.length>0;
     if(el){
       el.innerHTML='<span class="qfs-count">'+count+' Frage'+(count!==1?'n':'')+'</span>'
         +(parts.length?'<span class="qfs-sep">·</span><span class="qfs-chips">'+parts.map(p=>'<span class="qfs-chip">'+esc(p)+'</span>').join('')+'</span>':'')
-        +(hasFilter?'<button class="qfs-reset" onclick="QUIZ.clearFilters()">× leeren</button>':'');
+        +(hasFilter?'<button class="qfs-reset" onclick="'+G+'.clearFilters()">× leeren</button>':'');
     }
     if(tog){tog.textContent=hasFilter?parts.join(' · '):count+' Fragen';tog.className='qft-status'+(hasFilter?' qft-active':'');}
   }
 
   function initKeyboard(){
     document.addEventListener('keydown',e=>{
-      if(e.key==='Escape'){const m=document.getElementById('quiz-mastery-modal');if(m&&!m.classList.contains('hidden')){QUIZ.closeMastery();return;}}
-      if(_mode!=='learn')return;
+      if(e.key==='Escape'){const m=$('quiz-mastery-modal');if(m&&!m.classList.contains('hidden')){self.closeMastery();return;}}
+      if(_mode!=='learn'||!$v().classList.contains('active'))return;
       const inText=e.target.matches('textarea,input,select,[contenteditable]');
       if(e.key===' '&&!e.ctrlKey&&!e.metaKey&&!inText){
         e.preventDefault();
         const q=curQ();if(!q)return;
-        if(_answered)QUIZ.next();else if(q.type==='essay')QUIZ._revealEssay();
+        if(_answered)self.next();else if(q.type==='essay')self._revealEssay();else if(q.type==='multi')self._check();
       }else if(e.key==='Backspace'&&!inText){
-        if(_cur>0){e.preventDefault();QUIZ.back();}
-      }else if(!inText&&['1','2','3','4'].includes(e.key)){
+        if(_cur>0){e.preventDefault();self.back();}
+      }else if(!inText&&['1','2','3','4','5','6'].includes(e.key)){
         const q=curQ();
-        if(!_answered&&q&&(q.type==='mc'||q.type==='tf')){const idx=+e.key-1;if(idx<q.opts.length)QUIZ._answer(idx);}
+        if(!_answered&&q&&(q.type==='mc'||q.type==='tf')){const idx=+e.key-1;if(idx<q.opts.length)self._answer(idx);}
+        else if(!_answered&&q&&q.type==='multi'){const idx=+e.key-1;if(idx<q.opts.length)self._toggle(idx);}
       }
     });
   }
 
   function initTouch(){
-    const card=document.getElementById('quiz-learn-inner');if(!card)return;
+    const card=$('quiz-learn-inner');if(!card)return;
     let sx=0,sy=0;
     card.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
     card.addEventListener('touchend',e=>{
       if(_mode!=='learn'||!curQ())return;
       const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
       if(Math.abs(dx)<50||Math.abs(dy)>Math.abs(dx)*0.75)return;
-      if(dx<0){if(_answered)QUIZ.next();}else{if(_cur>0)QUIZ.back();}
+      if(dx<0){if(_answered)self.next();}else{if(_cur>0)self.back();}
     },{passive:true});
   }
 
   function showSummary(){
     recordSession(_sessionCorrect,_sessionWrong,_sessionSkipped);
-    const inner=document.getElementById('quiz-learn-inner'),summary=document.getElementById('quiz-summary');
+    const inner=$('quiz-learn-inner'),summary=$('quiz-summary');
     if(inner)inner.classList.add('hidden');
     if(!summary)return;
     const mc=_sessionCorrect+_sessionWrong||1;
@@ -2953,12 +2970,12 @@ const QUIZ=(function(){
       const col=diff>0?'#22c55e':diff<0?'#ef4444':'var(--c-sub)';
       cmpHtml='<div class="quiz-summary-cmp"><span style="color:'+col+'">'+arrow+' '+(diff>0?'+':'')+diff+'%</span> zum Schnitt ('+avg+'%)</div>';
     }
-    summary.innerHTML='<div class="quiz-summary-inner"><div class="quiz-summary-title">Runde abgeschlossen!</div><div class="quiz-summary-stats"><div class="quiz-stat quiz-stat-ok"><div class="quiz-stat-num">'+_sessionCorrect+'</div><div class="quiz-stat-label">Richtig</div></div><div class="quiz-stat quiz-stat-err"><div class="quiz-stat-num">'+_sessionWrong+'</div><div class="quiz-stat-label">Falsch</div></div><div class="quiz-stat quiz-stat-skip"><div class="quiz-stat-num">'+_sessionSkipped+'</div><div class="quiz-stat-label">Übersprungen</div></div></div><div class="quiz-summary-pct">'+pct+' % richtig (MC / R-F)</div>'+cmpHtml+'<button class="quiz-next-btn quiz-new-round-btn" onclick="QUIZ.newRound()">Neue Runde ↻</button></div>';
+    summary.innerHTML='<div class="quiz-summary-inner"><div class="quiz-summary-title">Runde abgeschlossen!</div><div class="quiz-summary-stats"><div class="quiz-stat quiz-stat-ok"><div class="quiz-stat-num">'+_sessionCorrect+'</div><div class="quiz-stat-label">Richtig</div></div><div class="quiz-stat quiz-stat-err"><div class="quiz-stat-num">'+_sessionWrong+'</div><div class="quiz-stat-label">Falsch</div></div><div class="quiz-stat quiz-stat-skip"><div class="quiz-stat-num">'+_sessionSkipped+'</div><div class="quiz-stat-label">Übersprungen</div></div></div><div class="quiz-summary-pct">'+pct+' % richtig (MC / R-F)</div>'+cmpHtml+'<button class="quiz-next-btn quiz-new-round-btn" onclick="'+G+'.newRound()">Neue Runde ↻</button></div>';
     summary.classList.remove('hidden');
   }
 
   function hideSummary(){
-    const inner=document.getElementById('quiz-learn-inner'),summary=document.getElementById('quiz-summary');
+    const inner=$('quiz-learn-inner'),summary=$('quiz-summary');
     if(inner)inner.classList.remove('hidden');
     if(summary)summary.classList.add('hidden');
   }
@@ -2966,107 +2983,134 @@ const QUIZ=(function(){
   function renderLearn(){
     const q=curQ();
     if(!q){renderEmpty();return;}
-    document.getElementById('quiz-cat').textContent=q.cat;
-    document.getElementById('quiz-counter').textContent=(_cur+1)+' / '+_order.length;
-    document.getElementById('quiz-progress').style.width=((_cur/_order.length)*100)+'%';
-    document.getElementById('quiz-bm-btn').textContent=_bookmarks.has(q.id)?'★':'☆';
-    const rt=document.getElementById('quiz-retry-tag');if(rt)rt.textContent=_retriedCount>0?'+'+_retriedCount+' ↻':'';
-    document.getElementById('quiz-q').textContent=q.q;
-    const tb=document.getElementById('quiz-type-badge');
-    tb.textContent=q.type==='mc'?'Multiple Choice':q.type==='tf'?'Richtig / Falsch':'Freitextfrage';
+    $('quiz-cat').textContent=q.cat;
+    $('quiz-counter').textContent=(_cur+1)+' / '+_order.length;
+    $('quiz-progress').style.width=((_cur/_order.length)*100)+'%';
+    $('quiz-bm-btn').textContent=_bookmarks.has(q.id)?'★':'☆';
+    const rt=$('quiz-retry-tag');if(rt)rt.textContent=_retriedCount>0?'+'+_retriedCount+' ↻':'';
+    $('quiz-q').textContent=q.q;
+    const im=$('quiz-img');if(im){im.innerHTML=q.img||'';im.classList.toggle('hidden',!q.img);}
+    const mt=$('quiz-meta');if(mt)mt.innerHTML=metaHtml(q);
+    _msel=new Set();
+    const tb=$('quiz-type-badge');
+    tb.textContent=TYPE_LBL[q.type]||'';
     tb.className='quiz-type-badge quiz-type-'+q.type;
-    const opts=document.getElementById('quiz-opts');
+    const opts=$('quiz-opts');
     if(q.type==='mc'){
-      opts.innerHTML='<div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt" onclick="QUIZ._answer('+i+')"><span class="quiz-opt-label">'+String.fromCharCode(97+i)+'</span><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div>';
+      opts.innerHTML='<div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt" onclick="'+G+'._answer('+i+')"><span class="quiz-opt-label">'+String.fromCharCode(97+i)+'</span><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div>';
     }else if(q.type==='tf'){
-      opts.innerHTML='<div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt quiz-tf-opt" onclick="QUIZ._answer('+i+')"><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div>';
+      opts.innerHTML='<div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt quiz-tf-opt" onclick="'+G+'._answer('+i+')"><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div>';
+    }else if(q.type==='multi'){
+      opts.innerHTML='<div class="quiz-multi-hint">Mehrere Antworten möglich – alle richtigen müssen gewählt sein.</div><div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt quiz-opt-multi" onclick="'+G+'._toggle('+i+')"><span class="quiz-opt-label quiz-opt-box">'+String.fromCharCode(97+i)+'</span><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div><button class="quiz-reveal-btn quiz-check-btn" onclick="'+G+'._check()">Antwort prüfen</button>';
     }else{
-      opts.innerHTML='<textarea class="quiz-textarea" id="quiz-ta" placeholder="Schreibe deine Antwort hier..." rows="4"></textarea><button class="quiz-reveal-btn" onclick="QUIZ._revealEssay()">Lösung anzeigen</button>';
+      opts.innerHTML='<textarea class="quiz-textarea" id="quiz-ta'+SFX+'" placeholder="Schreibe deine Antwort hier..." rows="4"></textarea><button class="quiz-reveal-btn" onclick="'+G+'._revealEssay()">Lösung anzeigen</button>';
     }
-    const exp=document.getElementById('quiz-exp');exp.textContent='';exp.className='quiz-exp hidden';
-    const noteEl=document.getElementById('quiz-note');if(noteEl){noteEl.textContent='';noteEl.className='quiz-note hidden';}
+    const exp=$('quiz-exp');exp.textContent='';exp.className='quiz-exp hidden';
+    const noteEl=$('quiz-note');if(noteEl){noteEl.textContent='';noteEl.className='quiz-note hidden';}
     const hist=_posHistory[_cur];
     if(hist){
       _answered=true;
       if(q.type==='essay'){
-        exp.textContent=q.ref;exp.className='quiz-exp quiz-exp-ref';
-        const rb=document.querySelector('.quiz-reveal-btn');if(rb)rb.disabled=true;
+        setTxt(exp,q.ref);exp.className='quiz-exp quiz-exp-ref';
+        const rb=$v().querySelector('.quiz-reveal-btn');if(rb)rb.disabled=true;
       }else{
-        document.querySelectorAll('.quiz-opt').forEach((b,i)=>{b.disabled=true;if(i===q.correct)b.classList.add('correct');else if(i===hist.userIdx)b.classList.add('wrong');});
-        exp.textContent=q.exp;exp.className=hist.correct?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';
+        markOpts(q,new Set(hist.sel||(hist.userIdx==null?[]:[hist.userIdx])));
+        setTxt(exp,q.exp);exp.className=hist.correct?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';
         if(q.note&&noteEl){noteEl.textContent=q.note;noteEl.className='quiz-note';}
       }
-      document.getElementById('quiz-skip').classList.add('hidden');
-      document.getElementById('quiz-next').classList.remove('hidden');
+      $('quiz-skip').classList.add('hidden');
+      $('quiz-next').classList.remove('hidden');
     }else{
-      document.getElementById('quiz-skip').classList.remove('hidden');
-      document.getElementById('quiz-next').classList.add('hidden');
+      $('quiz-skip').classList.remove('hidden');
+      $('quiz-next').classList.add('hidden');
       _answered=false;
     }
-    const bb=document.getElementById('quiz-back');if(bb)bb.classList.toggle('hidden',_cur===0);
+    const bb=$('quiz-back');if(bb)bb.classList.toggle('hidden',_cur===0);
   }
 
   function renderEmpty(){
-    document.getElementById('quiz-cat').textContent='';document.getElementById('quiz-counter').textContent='';
-    document.getElementById('quiz-type-badge').textContent='';
+    $('quiz-cat').textContent='';$('quiz-counter').textContent='';
+    $('quiz-type-badge').textContent='';
     const msg=_filter==='bookmarked'?'Keine gemerkten Fragen für diesen Filter.':_filter==='wrong'?'Keine falsch beantworteten Fragen für diesen Filter.':(_catFilter!=='all'||_typeFilter!=='all'?'Keine Fragen für diesen Filter.':'Keine Fragen gefunden.');
-    document.getElementById('quiz-q').textContent=msg;
-    document.getElementById('quiz-opts').innerHTML='';document.getElementById('quiz-exp').className='quiz-exp hidden';
-    document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.add('hidden');
-    document.getElementById('quiz-progress').style.width='100%';
+    $('quiz-q').textContent=msg;
+    $('quiz-opts').innerHTML='';$('quiz-exp').className='quiz-exp hidden';
+    $('quiz-skip').classList.add('hidden');$('quiz-next').classList.add('hidden');
+    $('quiz-progress').style.width='100%';
   }
 
   function renderExam(){
     _examAnswers={};_examSubmitted=false;_examPendingSubmit=false;
-    const el=document.getElementById('quiz-exam-questions');
-    el.innerHTML=Q.map((q,qi)=>{
+    const el=$('quiz-exam-questions');
+    _examQs=cfg.examCount?shuffle(Q.filter(q=>q.type!=='essay')).slice(0,cfg.examCount):Q;
+    el.innerHTML=_examQs.map((q,qi)=>{
       const isE=q.type==='essay';
       const optsH=isE
-        ?'<div class="quiz-exam-essay-note">Freitextfrage – fließt nicht in die Bewertung ein</div><textarea class="quiz-textarea quiz-exam-ta" id="qeta-'+q.id+'" placeholder="Notizen..." rows="3"></textarea>'
-        :q.opts.map((o,i)=>'<label class="quiz-exam-opt" id="qeol-'+q.id+'-'+i+'"><input type="radio" name="qe-'+q.id+'" value="'+i+'" onchange="QUIZ._examSel('+q.id+','+i+')"><span class="quiz-exam-opt-label">'+(q.type==='mc'?String.fromCharCode(97+i):(i===0?'R':'F'))+'</span><span>'+esc(o)+'</span></label>').join('');
-      return '<div class="quiz-exam-q" id="qeq-'+q.id+'"><div class="quiz-exam-q-header"><span class="quiz-exam-q-num" id="qeqn-'+q.id+'">Frage '+(qi+1)+'</span><span class="quiz-cat quiz-cat-sm">'+esc(q.cat)+'</span>'+(isE?'<span class="quiz-essay-tag">Freitext</span>':'')+'</div><div class="quiz-exam-q-text">'+esc(q.q)+'</div><div class="quiz-exam-opts" id="qeo-'+q.id+'">'+optsH+'</div><div class="quiz-exam-ref hidden" id="qee-'+q.id+'">'+esc(isE?q.ref:q.exp)+'</div></div>';
+        ?'<div class="quiz-exam-essay-note">Freitextfrage – fließt nicht in die Bewertung ein</div><textarea class="quiz-textarea quiz-exam-ta" id="qeta-'+q.id+SFX+'" placeholder="Notizen..." rows="3"></textarea>'
+        :(q.type==='multi'?'<div class="quiz-multi-hint">Mehrfachauswahl – alle richtigen Antworten wählen</div>':'')+q.opts.map((o,i)=>'<label class="quiz-exam-opt" id="qeol-'+q.id+'-'+i+SFX+'"><input type="'+(q.type==='multi'?'checkbox':'radio')+'" name="qe-'+q.id+SFX+'" value="'+i+'" onchange="'+G+(q.type==='multi'?'._examTog('+q.id+','+i+',this.checked)':'._examSel('+q.id+','+i+')')+'"><span class="quiz-exam-opt-label">'+(q.type==='tf'?(i===0?'R':'F'):String.fromCharCode(97+i))+'</span><span>'+esc(o)+'</span></label>').join('');
+      return '<div class="quiz-exam-q" id="qeq-'+q.id+SFX+'"><div class="quiz-exam-q-header"><span class="quiz-exam-q-num" id="qeqn-'+q.id+SFX+'">Frage '+(qi+1)+'</span><span class="quiz-cat quiz-cat-sm">'+esc(q.cat)+'</span>'+(isE?'<span class="quiz-essay-tag">Freitext</span>':'')+'</div><div class="quiz-exam-q-text">'+esc(q.q)+'</div>'+(q.img?'<div class="quiz-img">'+q.img+'</div>':'')+'<div class="quiz-exam-opts" id="qeo-'+q.id+SFX+'">'+optsH+'</div><div class="quiz-exam-ref hidden" id="qee-'+q.id+SFX+'">'+(HTMLX?(isE?q.ref:q.exp):esc(isE?q.ref:q.exp))+'</div></div>';
     }).join('');
-    document.getElementById('quiz-exam-footer').classList.remove('hidden');
-    document.getElementById('quiz-result').classList.add('hidden');
+    $('quiz-exam-footer').classList.remove('hidden');
+    $('quiz-result').classList.add('hidden');
     startTimer();
   }
 
-  return {
+  self={
     init(){
       if(_inited)return;_inited=true;
       loadBm();loadMastery();loadSrs();buildOrder();renderCatBar();renderTypeBar();renderLearn();initKeyboard();initTouch();
     },
     setMode(m){
       _mode=m;
-      document.getElementById('quiz-learn').classList.toggle('hidden',m!=='learn');
-      document.getElementById('quiz-exam').classList.toggle('hidden',m!=='exam');
-      document.getElementById('quiz-mode-learn').classList.toggle('active',m==='learn');
-      document.getElementById('quiz-mode-exam').classList.toggle('active',m==='exam');
+      $('quiz-learn').classList.toggle('hidden',m!=='learn');
+      $('quiz-exam').classList.toggle('hidden',m!=='exam');
+      $('quiz-mode-learn').classList.toggle('active',m==='learn');
+      $('quiz-mode-exam').classList.toggle('active',m==='exam');
       if(m==='exam')renderExam();
       else{stopTimer();buildOrder();renderCatBar();renderTypeBar();renderLearn();}
     },
     _answer(idx){
       if(_answered)return;_answered=true;
       const q=curQ();const ok=idx===q.correct;
-      document.querySelectorAll('.quiz-opt').forEach((b,i)=>{b.disabled=true;if(i===q.correct)b.classList.add('correct');else if(i===idx)b.classList.add('wrong');});
-      const exp=document.getElementById('quiz-exp');
-      exp.textContent=q.exp;exp.className=ok?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';
-      const noteEl2=document.getElementById('quiz-note');if(q.note&&noteEl2){noteEl2.textContent=q.note;noteEl2.className='quiz-note';}
-      document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.remove('hidden');
+      markOpts(q,new Set([idx]));
+      const exp=$('quiz-exp');
+      setTxt(exp,q.exp);exp.className=ok?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';
+      const noteEl2=$('quiz-note');if(q.note&&noteEl2){noteEl2.textContent=q.note;noteEl2.className='quiz-note';}
+      $('quiz-skip').classList.add('hidden');$('quiz-next').classList.remove('hidden');
       _masteryMap[q.id]=ok?'ok':'err';saveMastery();srsUpdate(q.id,ok);updateDueBtn();
       _posHistory[_cur]={userIdx:idx,correct:ok};
-      if(!ok&&!_retried.has(q.id)){_retried.add(q.id);_order.push(q.id);_retriedCount++;const rt=document.getElementById('quiz-retry-tag');if(rt){rt.textContent='+'+_retriedCount+' ↻';rt.classList.add('qrt-flash');setTimeout(()=>rt.classList.remove('qrt-flash'),600);}}
+      if(!ok&&!_retried.has(q.id)){_retried.add(q.id);_order.push(q.id);_retriedCount++;const rt=$('quiz-retry-tag');if(rt){rt.textContent='+'+_retriedCount+' ↻';rt.classList.add('qrt-flash');setTimeout(()=>rt.classList.remove('qrt-flash'),600);}}
       if(ok)_sessionCorrect++;else _sessionWrong++;
       renderMastery();renderMasteryCats();
     },
     _revealEssay(){
       if(_answered)return;_answered=true;
       const q=curQ();
-      const exp=document.getElementById('quiz-exp');exp.textContent=q.ref;exp.className='quiz-exp quiz-exp-ref';
-      document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.remove('hidden');
-      const rb=document.querySelector('.quiz-reveal-btn');if(rb)rb.disabled=true;
+      const exp=$('quiz-exp');setTxt(exp,q.ref);exp.className='quiz-exp quiz-exp-ref';
+      $('quiz-skip').classList.add('hidden');$('quiz-next').classList.remove('hidden');
+      const rb=$v().querySelector('.quiz-reveal-btn');if(rb)rb.disabled=true;
       if(!_masteryMap[q.id]||_masteryMap[q.id]==='err')_masteryMap[q.id]='ok';
       saveMastery();srsUpdate(q.id,true);updateDueBtn();_posHistory[_cur]={userIdx:null,correct:true};
+      renderMastery();renderMasteryCats();
+    },
+    _toggle(i){
+      if(_answered)return;
+      if(_msel.has(i))_msel.delete(i);else _msel.add(i);
+      $v().querySelectorAll('.quiz-opt')[i]?.classList.toggle('sel',_msel.has(i));
+    },
+    _check(){
+      if(_answered)return;
+      const q=curQ();if(!q||!_msel.size)return;
+      _answered=true;
+      const sel=new Set(_msel),ok=sameSet(sel,corrSet(q));
+      markOpts(q,sel);
+      const exp=$('quiz-exp');setTxt(exp,q.exp);exp.className=ok?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';
+      const noteEl=$('quiz-note');if(q.note&&noteEl){noteEl.textContent=q.note;noteEl.className='quiz-note';}
+      const cb=$v().querySelector('.quiz-check-btn');if(cb)cb.disabled=true;
+      $('quiz-skip').classList.add('hidden');$('quiz-next').classList.remove('hidden');
+      _masteryMap[q.id]=ok?'ok':'err';saveMastery();srsUpdate(q.id,ok);updateDueBtn();
+      _posHistory[_cur]={userIdx:null,sel:[...sel],correct:ok};
+      if(!ok&&!_retried.has(q.id)){_retried.add(q.id);_order.push(q.id);_retriedCount++;const rt=$('quiz-retry-tag');if(rt)rt.textContent='+'+_retriedCount+' ↻';}
+      if(ok)_sessionCorrect++;else _sessionWrong++;
       renderMastery();renderMasteryCats();
     },
     next(){_cur++;if(_cur>=_order.length){showSummary();return;}renderLearn();},
@@ -3075,31 +3119,31 @@ const QUIZ=(function(){
     toggleBookmark(){
       const q=curQ();if(!q)return;
       if(_bookmarks.has(q.id))_bookmarks.delete(q.id);else _bookmarks.add(q.id);
-      saveBm();document.getElementById('quiz-bm-btn').textContent=_bookmarks.has(q.id)?'★':'☆';
+      saveBm();$('quiz-bm-btn').textContent=_bookmarks.has(q.id)?'★':'☆';
     },
     setFilter(f){
       _filter=f;
-      document.getElementById('quiz-filter-all').classList.toggle('active',f==='all');
-      document.getElementById('quiz-filter-bm').classList.toggle('active',f==='bookmarked');
-      document.getElementById('quiz-filter-wrong')?.classList.toggle('active',f==='wrong');
-      document.getElementById('quiz-filter-due')?.classList.toggle('active',f==='due');
+      $('quiz-filter-all').classList.toggle('active',f==='all');
+      $('quiz-filter-bm').classList.toggle('active',f==='bookmarked');
+      $('quiz-filter-wrong')?.classList.toggle('active',f==='wrong');
+      $('quiz-filter-due')?.classList.toggle('active',f==='due');
       buildOrder();renderFilterStatus();renderLearn();
     },
     setCatFilter(cat){_catFilter=cat;renderCatBar();buildOrder();renderFilterStatus();renderLearn();},
     setTypeFilter(t){_typeFilter=t;renderTypeBar();buildOrder();renderFilterStatus();renderLearn();},
     toggleFilters(){
       _filterOpen=!_filterOpen;
-      const body=document.getElementById('quiz-filter-body');
-      const chev=document.getElementById('qft-chevron');
+      const body=$('quiz-filter-body');
+      const chev=$('qft-chevron');
       if(body)body.classList.toggle('open',_filterOpen);
       if(chev)chev.style.transform=_filterOpen?'rotate(180deg)':'';
     },
     clearFilters(){
       _filter='all';_catFilter='all';_typeFilter='all';
-      document.getElementById('quiz-filter-all').classList.add('active');
-      document.getElementById('quiz-filter-bm').classList.remove('active');
-      document.getElementById('quiz-filter-wrong')?.classList.remove('active');
-      document.getElementById('quiz-filter-due')?.classList.remove('active');
+      $('quiz-filter-all').classList.add('active');
+      $('quiz-filter-bm').classList.remove('active');
+      $('quiz-filter-wrong')?.classList.remove('active');
+      $('quiz-filter-due')?.classList.remove('active');
       renderCatBar();renderTypeBar();renderFilterStatus();buildOrder();renderLearn();
     },
     back(){if(_cur>0){_cur--;renderLearn();}},
@@ -3107,11 +3151,11 @@ const QUIZ=(function(){
     reshuffle(){buildOrder();renderLearn();},
     openMastery(){
       renderMastery();renderMasteryCats();
-      const m=document.getElementById('quiz-mastery-modal');
+      const m=$('quiz-mastery-modal');
       if(m){m.classList.remove('hidden');document.body.style.overflow='hidden';}
     },
     closeMastery(){
-      const m=document.getElementById('quiz-mastery-modal');
+      const m=$('quiz-mastery-modal');
       if(m){m.classList.add('hidden');document.body.style.overflow='';}
     },
     resetMastery(){
@@ -3119,46 +3163,57 @@ const QUIZ=(function(){
       _masteryMap={};saveMastery();renderMastery();renderMasteryCats();
     },
     _examSel(qid,idx){_examAnswers[qid]=idx;},
+    _examTog(qid,idx,on){const a=new Set(_examAnswers[qid]||[]);if(on)a.add(idx);else a.delete(idx);if(a.size)_examAnswers[qid]=[...a];else delete _examAnswers[qid];},
     submitExam(){
       if(_examSubmitted)return;
-      const unanswered=Q.filter(q=>q.type!=='essay'&&_examAnswers[q.id]===undefined);
+      const unanswered=_examQs.filter(q=>q.type!=='essay'&&_examAnswers[q.id]===undefined);
       if(unanswered.length>0&&!_examPendingSubmit){
-        unanswered.forEach(q=>{const el=document.getElementById('qeq-'+q.id);if(el)el.classList.add('exam-q-unanswered');});
-        const warn=document.getElementById('quiz-exam-warn');
+        unanswered.forEach(q=>{const el=$('qeq-'+q.id);if(el)el.classList.add('exam-q-unanswered');});
+        const warn=$('quiz-exam-warn');
         if(warn){warn.textContent=unanswered.length+' Frage'+(unanswered.length!==1?'n':'')+' noch nicht beantwortet – nochmal klicken zum Abgeben.';warn.classList.remove('hidden');}
-        const first=document.getElementById('qeq-'+unanswered[0].id);
+        const first=$('qeq-'+unanswered[0].id);
         if(first)first.scrollIntoView({behavior:'smooth',block:'center'});
         _examPendingSubmit=true;return;
       }
       _examSubmitted=true;_examPendingSubmit=false;stopTimer();
       let correct=0,total=0;
-      Q.forEach(q=>{
-        const ee=document.getElementById('qee-'+q.id);if(ee)ee.classList.remove('hidden');
+      _examQs.forEach(q=>{
+        const ee=$('qee-'+q.id);if(ee)ee.classList.remove('hidden');
         if(q.type==='essay')return;
         total++;
-        const sel=_examAnswers[q.id],ok=sel===q.correct;
+        const sel=_examAnswers[q.id],ok=examOk(q),selS=new Set(q.type==='multi'?(sel||[]):[sel]),cS=corrSet(q);
         if(ok)correct++;
-        q.opts.forEach((o,i)=>{const l=document.getElementById('qeol-'+q.id+'-'+i);if(!l)return;if(i===q.correct)l.classList.add('exam-correct');else if(i===sel)l.classList.add('exam-wrong');});
-        const eo=document.getElementById('qeo-'+q.id);if(eo)eo.querySelectorAll('input').forEach(inp=>inp.disabled=true);
-        const qel=document.getElementById('qeq-'+q.id);if(qel)qel.classList.add(ok?'exam-q-correct':'exam-q-wrong');
+        q.opts.forEach((o,i)=>{const l=$('qeol-'+q.id+'-'+i);if(!l)return;if(cS.has(i))l.classList.add('exam-correct');else if(selS.has(i))l.classList.add('exam-wrong');});
+        const eo=$('qeo-'+q.id);if(eo)eo.querySelectorAll('input').forEach(inp=>inp.disabled=true);
+        const qel=$('qeq-'+q.id);if(qel)qel.classList.add(ok?'exam-q-correct':'exam-q-wrong');
       });
       const pct=Math.round((correct/total)*100);
       const grade=pct>=90?'Sehr gut':pct>=75?'Gut':pct>=60?'Befriedigend':pct>=50?'Ausreichend':'Nicht bestanden';
       recordExam(correct,total,pct,grade);
-      const catBreakdown=[...new Set(Q.filter(q=>q.type!=='essay').map(q=>q.cat))].map(cat=>{
-        const cq=Q.filter(q=>q.cat===cat&&q.type!=='essay');
-        const cok=cq.filter(q=>_examAnswers[q.id]===q.correct).length;
+      const catBreakdown=[...new Set(_examQs.filter(q=>q.type!=='essay').map(q=>q.cat))].map(cat=>{
+        const cq=_examQs.filter(q=>q.cat===cat&&q.type!=='essay');
+        const cok=cq.filter(examOk).length;
         const cp=Math.round((cok/cq.length)*100);
         return'<div class="quiz-rcat"><span class="quiz-rcat-name">'+(CAT_LABELS[cat]||esc(cat))+'</span><div class="quiz-rcat-bar"><div class="quiz-rcat-fill'+(cp<60?' qrf-fail':'')+'" style="width:'+cp+'%"></div></div><span class="quiz-rcat-stat">'+cok+'/'+cq.length+'</span></div>';
       }).join('');
-      const res=document.getElementById('quiz-result');
-      res.innerHTML='<div class="quiz-result-inner"><div class="quiz-result-title">Ergebnis</div><div class="quiz-result-score">'+correct+' / '+total+'</div><div class="quiz-result-pct '+(pct>=60?'grade-ok':'grade-fail')+'">'+pct+' %</div><div class="quiz-result-grade">'+grade+'</div><div class="quiz-result-bar"><div class="quiz-result-fill" style="width:'+pct+'%"></div></div><div class="quiz-result-cats">'+catBreakdown+'</div><p class="quiz-result-note">'+total+' bewertete Fragen (MC + R/F). Freitextfragen nicht eingerechnet.<br>Scrolle nach oben, um alle Korrekturen zu sehen.</p><button class="quiz-retry-btn" onclick="QUIZ.setMode(\'exam\')">Nochmal versuchen</button></div>';
+      const res=$('quiz-result');
+      res.innerHTML='<div class="quiz-result-inner"><div class="quiz-result-title">Ergebnis</div><div class="quiz-result-score">'+correct+' / '+total+'</div><div class="quiz-result-pct '+(pct>=60?'grade-ok':'grade-fail')+'">'+pct+' %</div><div class="quiz-result-grade">'+grade+'</div><div class="quiz-result-bar"><div class="quiz-result-fill" style="width:'+pct+'%"></div></div><div class="quiz-result-cats">'+catBreakdown+'</div><p class="quiz-result-note">'+total+' bewertete Fragen (MC + R/F'+(Q.some(x=>x.type==='multi')?' + Mehrfachauswahl, nur ganz richtig zählt':'')+'). Freitextfragen nicht eingerechnet.<br>Scrolle nach oben, um alle Korrekturen zu sehen.</p><button class="quiz-retry-btn" onclick="'+G+'.setMode(\'exam\')">Nochmal versuchen</button></div>';
       res.classList.remove('hidden');
-      document.getElementById('quiz-exam-footer').classList.add('hidden');
+      $('quiz-exam-footer').classList.add('hidden');
       res.scrollIntoView({behavior:'smooth'});
     }
   };
-})();
+
+  return self;
+}
+const QUIZ=makeQuiz({G:'QUIZ',view:'v-vak-altklausur',sfx:'',minutes:60,
+  keys:{bm:'bvi_quiz_bm',mastery:'bvi_quiz_mastery',srs:'bvi_quiz_srs',stats:'bvi_quiz_stats'},
+  catLabels:{'Staatsorganisationsrecht':'StaatsorgR','Allgemeines Verwaltungsrecht':'AllgVwR','Verwaltungsvollstreckung / Rechtsschutz':'Vollstr./RS','Beamten- und Disziplinarrecht':'BeamtR','Gefahrenabwehr / Feuerwehrrecht':'GefahrenabwR'},
+  Q:[{"id":1,"cat":"Staatsorganisationsrecht","type":"essay","q":"Nennen Sie die Verfassungsorgane, die bei den einzelnen Phasen der Bundesgesetzgebung beteiligt sind oder beteiligt sein können (Gesetzesinitiative, Gesetzesberatung, Gesetzesbeschluss, Länderbeteiligung, Ausfertigung, Verkündung).","ref":"Gesetzesinitiative (Art. 76 I GG): Bundesregierung ✓, Bundesrat ✓, Bundestag ✓\nGesetzesberatung/1. Durchgang: Bundestag ✓, Bundesrat ✓ (Stellungnahme), Bundesregierung ✓\nGesetzesbeschluss (Art. 77 I GG): nur Bundestag ✓\nLänderbeteiligung/2. Durchgang (Art. 77 II ff.): Bundesrat ✓ (Zustimmung/Einspruch, ggf. Vermittlungsausschuss)\nAusfertigung (Art. 82 I GG): Bundespräsident ✓, Bundesregierung ✓ (Gegenzeichnung, Art. 58 GG)\nVerkündung im BGBl. (Art. 82 I GG): Bundespräsident ✓\nDas Bundesverfassungsgericht ist am regulären Gesetzgebungsverfahren nie beteiligt."},{"id":2,"cat":"Staatsorganisationsrecht","type":"essay","q":"Welche Auswirkungen haben Änderungen in den politischen Kräfteverhältnissen in den Landesparlamenten auf der Bundesebene? Erläutern Sie dies für die Wahl des Bundespräsidenten und für Grundgesetzänderungen.","ref":"Bundespräsidentenwahl: Die Bundesversammlung besteht zur Hälfte aus von den Landesparlamenten entsandten Mitgliedern (Art. 54 III GG); Mehrheitsverschiebungen in den Landtagen verschieben die Mehrheitsverhältnisse bei der Präsidentenwahl.\nGrundgesetzänderungen: Erforderlich sind zwei Drittel der Stimmen des Bundesrates (Art. 79 II GG); der Bundesrat besteht aus Mitgliedern der Landesregierungen (Art. 51 GG) – welche Koalitionen dort regieren, hängt von den Landtagswahlen ab."},{"id":3,"cat":"Staatsorganisationsrecht","type":"tf","q":"Grundrechte sind Abwehrrechte der Bürgerinnen und Bürger gegen den Staat.","opts":["Richtig","Falsch"],"correct":0,"exp":"Das ist ihre klassische Funktion gegenüber dem Staat."},{"id":4,"cat":"Staatsorganisationsrecht","type":"tf","q":"Gemeinderäte sind Bestandteile der vollziehenden Gewalt.","opts":["Richtig","Falsch"],"correct":0,"exp":"Trotz parlamentsähnlicher Struktur gehört die kommunale Selbstverwaltung nach Art. 28 II GG organisatorisch zur Exekutive, da es auf kommunaler Ebene keine eigene Gewaltenteilung gibt."},{"id":5,"cat":"Staatsorganisationsrecht","type":"tf","q":"Das Schulrecht fällt in die konkurrierende Gesetzgebungskompetenz des Bundes und der Länder.","opts":["Richtig","Falsch"],"correct":1,"exp":"Schulrecht ist Ländersache (Kulturhoheit der Länder); eine Bundeskompetenz nach Art. 70 ff. GG besteht dafür nicht."},{"id":6,"cat":"Staatsorganisationsrecht","type":"tf","q":"Der Bundeskanzler beziehungsweise die Bundeskanzlerin kann den Deutschen Bundestag auflösen.","opts":["Richtig","Falsch"],"correct":1,"exp":"Auflösen kann nur der Bundespräsident, und nur in den engen Fällen der Art. 63 IV oder Art. 68 GG."},{"id":7,"cat":"Staatsorganisationsrecht","type":"tf","q":"Der Bundeskanzler beziehungsweise die Bundeskanzlerin vertritt im Falle der Verhinderung den Bundespräsidenten.","opts":["Richtig","Falsch"],"correct":1,"exp":"Das übernimmt nach Art. 57 GG der Präsident des Bundesrates."},{"id":8,"cat":"Staatsorganisationsrecht","type":"tf","q":"Bundespräsident Steinmeier kann 2027 wiedergewählt werden.","opts":["Richtig","Falsch"],"correct":1,"exp":"Seine zweite Amtszeit endet am 18. März 2027, eine dritte Amtszeit in Folge schließt Art. 54 II GG aus."},{"id":9,"cat":"Staatsorganisationsrecht","type":"tf","q":"Autos sind vom Schutzbereich des Art. 13 Abs. 1 GG umfasst.","opts":["Richtig","Falsch"],"correct":1,"exp":"Art. 13 GG schützt die Wohnung; Kraftfahrzeuge fallen nach ständiger Rechtsprechung nicht darunter.","note":"Wohnmobile schon, obwohl sie ein KFZ sind. (Wohnwagen auch) – sie sind ein Raum des Rückzuges und der Privatsphäre."},{"id":10,"cat":"Staatsorganisationsrecht","type":"tf","q":"Alle Grundrechte sind im Rahmen der Regelungen des Grundgesetzes einschränkbar.","opts":["Richtig","Falsch"],"correct":1,"exp":"Die Menschenwürde (Art. 1 I GG) ist nach Art. 79 III GG unantastbar; vorbehaltlos gewährleistete Grundrechte wie Art. 4 I GG sind nur durch verfassungsimmanente Schranken einschränkbar."},{"id":11,"cat":"Staatsorganisationsrecht","type":"tf","q":"Die Wahlrechtsgrundsätze lauten Allgemein, Unmittelbar, Frei und Geheim.","opts":["Richtig","Falsch"],"correct":1,"exp":"Art. 38 I 1 GG nennt fünf Grundsätze; es fehlen die Gleichheit der Wahl und die Öffentlichkeit (durch BVerfG aus Art. 38 i.V.m. Art. 20 GG entwickelt)."},{"id":12,"cat":"Staatsorganisationsrecht","type":"tf","q":"Das Grundgesetz wurde am 23.05.1949 verkündet.","opts":["Richtig","Falsch"],"correct":0,"exp":"Verkündet wurde es am 23.05.1949. In Kraft getreten ist es erst am folgenden Tag, dem 24.05.1949."},{"id":13,"cat":"Staatsorganisationsrecht","type":"mc","q":"Was beschreibt das Entschließungsermessen?","opts":["Die Auswahl eines Mittels durch die Behörde","Die Entscheidung, ob die Behörde überhaupt tätig wird","Die Pflicht zur Anhörung des Betroffenen","Die Festlegung von Nebenbestimmungen"],"correct":1,"exp":"Das Entschließungsermessen betrifft nur die Frage, ob die Behörde tätig wird. Welches Mittel sie einsetzt, ist das davon zu unterscheidende Auswahlermessen."},{"id":14,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welches Kriterium gehört nicht zur Verhältnismäßigkeitsprüfung?","opts":["Legitimer Zweck","Geeignetheit","Rechtmäßigkeit","Angemessenheit"],"correct":2,"exp":"Die Prüfung umfasst legitimen Zweck, Geeignetheit, Erforderlichkeit und Angemessenheit. Die Rechtmäßigkeit ist keine eigene Stufe, sondern das Ergebnis der Prüfung."},{"id":15,"cat":"Staatsorganisationsrecht","type":"mc","q":"Woran erkennt man in einer Norm typischerweise Ermessensspielräume?","opts":["An der Verwendung von „muss\"","An der Verwendung von „kann\" oder „darf\"","An der Reihenfolge der Normabsätze","An der Länge des Gesetzestextes"],"correct":1,"exp":"„Kann\" oder „darf\" signalisieren Ermessen; „muss\" oder „ist\" weisen auf eine gebundene Entscheidung hin."},{"id":16,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche Aussage zur Konkurrenzgesetzgebung ist korrekt?","opts":["Der Bund darf nur tätig werden, wenn die Länder zustimmen","Die Länder sind zuständig, bis der Bund tätig wird","Der Bund ist immer zuständig","Konkurrenzgesetzgebung betrifft nur das Steuerrecht"],"correct":1,"exp":"Das folgt aus Art. 72 I GG: Die Länder haben die Gesetzgebungsbefugnis, solange und soweit der Bund von seiner Zuständigkeit nicht durch Gesetz Gebrauch gemacht hat."},{"id":17,"cat":"Staatsorganisationsrecht","type":"mc","q":"Was bedeutet das Rechtsstaatsprinzip?","opts":["Es verpflichtet den Staat zu wirtschaftlicher Neutralität","Es garantiert rechtliche Unabhängigkeit","Es verbietet Gewaltenteilung","Es erlaubt Verwaltungshandeln ohne Gesetz"],"correct":1,"exp":"Die richterliche Unabhängigkeit (Art. 97 GG) ist eine anerkannte Ausprägung des Rechtsstaatsprinzips. Es umfasst vor allem die Bindung an Gesetz und Recht, den Vorbehalt des Gesetzes, Rechtssicherheit und Rechtsschutz."},{"id":18,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche Aussage beschreibt das Prinzip der Gewaltenteilung im deutschen Grundgesetz zutreffend?","opts":["Die Legislative kontrolliert ausschließlich die Exekutive","Die Gewalten sind strikt getrennt und dürfen nicht zusammenwirken","Die Staatsgewalt ist in Legislative, Exekutive und Judikative gegliedert, mit funktionalen Überschneidungen","Die Judikative entscheidet nur über politische Fragen"],"correct":2,"exp":"Das deutsche Modell kennt keine strikte Trennung, sondern eine Gewaltenverschränkung mit wechselseitigen Kontrollmechanismen."},{"id":19,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche der folgenden Institutionen gehört nicht zu den (ständigen) Verfassungsorganen der Bundesrepublik Deutschland?","opts":["Der Bundesrat","Der Bundespräsident","Das Bundesverfassungsgericht","Die Bundesversammlung"],"correct":3,"exp":"Zu den fünf ständigen Verfassungsorganen zählen Bundestag, Bundesrat, Bundesregierung, Bundespräsident und Bundesverfassungsgericht. Die Bundesversammlung tritt nur bei Bedarf zur Präsidentenwahl zusammen."},{"id":20,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche Aussage zur Bundesrat-Mitwirkung im Gesetzgebungsverfahren ist korrekt?","opts":["Der Bundesrat wirkt nur bei Finanzgesetzen mit","Der Bundesrat hat bei Zustimmungsgesetzen ein Vetorecht, das der Bundestag nicht überstimmen kann","Der Bundesrat ist am Gesetzgebungsverfahren nie beteiligt","Der Bundesrat kann nur beratende Stellungnahmen abgeben"],"correct":1,"exp":"Bei Zustimmungsgesetzen kommt das Gesetz ohne Zustimmung des Bundesrates nicht zustande. Das unterscheidet sie von Einspruchsgesetzen, bei denen der Bundestag einen Einspruch zurückweisen kann (Art. 77 IV GG)."},{"id":21,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche Aussage zum Wahlgrundsatz der Gleichheit ist zutreffend?","opts":["Jede Stimme hat den gleichen Zähl- und Erfolgswert","Der Erfolgswert darf unterschiedlich sein, solange alle wählen dürfen","Wahlgleichheit gilt nur für Bundestagswahlen","Wahlgleichheit verlangt zwingend Mehrheitswahl"],"correct":0,"exp":"Das folgt aus Art. 38 I 1 GG: Jede Stimme hat denselben Zählwert und denselben Erfolgswert."},{"id":22,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was ist nach § 35 VwVfG ein Verwaltungsakt?","opts":["Eine Rechtsverordnung, die von einer obersten Bundesbehörde erlassen wird","Eine Maßnahme einer Behörde zur Regelung eines Einzelfalls auf dem Gebiet des öffentlichen Rechts mit Außenwirkung","Ein allgemeiner Erlass, der für eine unbestimmte Vielzahl von Fällen gilt","Eine innerdienstliche Anweisung ohne rechtliche Außenwirkung"],"correct":1,"exp":"So die Legaldefinition in § 35 S. 1 VwVfG."},{"id":23,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Welches der folgenden Merkmale muss ein Verwaltungsakt nach § 35 VwVfG erfüllen?","opts":["Er muss schriftlich erlassen sein","Er muss von einem Gericht stammen","Er muss eine Regelung enthalten","Er muss sich auf Zivilrecht beziehen"],"correct":2,"exp":"Der Regelungscharakter ist das zentrale Tatbestandsmerkmal des § 35 VwVfG."},{"id":24,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Welche Aussage trifft im Sinne des § 35 VwVfG am ehesten auf die „Außenwirkung\" eines Verwaltungsaktes zu?","opts":["Der Verwaltungsakt muss für die allgemeine Öffentlichkeit bestimmt sein","Der Verwaltungsakt betrifft ausschließlich interne Verwaltungsabläufe","Der Verwaltungsakt muss gegenüber einer außerhalb der Verwaltung stehenden Person rechtliche Wirkung entfalten","Die Außenwirkung meint, dass der Verwaltungsakt öffentlich bekannt gemacht werden muss"],"correct":2,"exp":"Außenwirkung bedeutet Rechtswirkung gegenüber einer außerhalb der Verwaltung stehenden Person."},{"id":25,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Welche der folgenden Maßnahmen stellt typischerweise keinen Verwaltungsakt im Sinne des § 35 VwVfG dar?","opts":["Eine Baugenehmigung für ein Wohnhaus","Die Versetzung eines Beamten in eine andere Dienststelle","Eine Straßenverkehrsbehörde stellt ein Halteverbotsschild auf","Eine Ministerin kündigt auf einer Pressekonferenz ein neues Gesetzesvorhaben an"],"correct":3,"exp":"Der Ankündigung fehlt die Regelung eines Einzelfalls – sie ist eine politische Aussage ohne unmittelbare Rechtswirkung. Das Halteverbotsschild gilt als Allgemeinverfügung."},{"id":26,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was ist vor dem Erlass eines belastenden Verwaltungsaktes grundsätzlich erforderlich?","opts":["Die Veröffentlichung im Amtsblatt","Die Genehmigung durch das Bundesministerium","Die Anhörung des Betroffenen","Die Zustimmung des Landtages"],"correct":2,"exp":"So § 28 I VwVfG."},{"id":27,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Wann kann auf eine Anhörung vor Erlass eines Verwaltungsaktes verzichtet werden?","opts":["Nie","Nur bei Gefahr im Verzug","Wenn dies durch Verwaltungsvorschriften vorgesehen ist","Wenn § 28 Abs. 2 VwVfG dies zulässt"],"correct":3,"exp":"§ 28 II VwVfG zählt mehrere Fallgruppen auf, etwa Gefahr im Verzug, Allgemeinverfügungen oder Massenverfahren – „nur bei Gefahr im Verzug\" wäre zu eng."},{"id":28,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was gilt, wenn eine erforderliche Anhörung unterblieben ist?","opts":["Der Verwaltungsakt ist automatisch nichtig","Die Anhörung kann nachgeholt werden","Der Verwaltungsakt bleibt dauerhaft unwirksam","Der Verwaltungsakt ist nur in Bayern gültig"],"correct":1,"exp":"Nach § 45 VwVfG ist dieser Verfahrensfehler heilbar."},{"id":29,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Welche Aussage ist richtig?","opts":["Jeder Verwaltungsakt muss durch die Polizei vollzogen werden","Verwaltungsakte werden durch das Grundgesetz definiert","Allgemeinverfügungen richten sich an eine unbestimmte Vielzahl von Personen","Ein Verwaltungsakt muss immer durch den Bundesrat bestätigt werden"],"correct":2,"exp":"So die Definition der Allgemeinverfügung in § 35 S. 2 VwVfG."},{"id":30,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Wann wird ein Verwaltungsakt wirksam?","opts":["Bei Unterschrift durch den Behördenleiter","Bei Veröffentlichung im Gesetzblatt","Mit seiner Bekanntgabe","Nach Zustimmung der betroffenen Person"],"correct":2,"exp":"So §§ 41, 43 VwVfG."},{"id":31,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was ist eine Nebenbestimmung im Verwaltungsakt?","opts":["Ein unwesentlicher Zusatz ohne rechtliche Wirkung","Eine Regelung, die den Verwaltungsakt inhaltlich oder zeitlich einschränkt","Eine interne Dienstanweisung","Eine mündliche Erläuterung für den Bürger"],"correct":1,"exp":"So § 36 VwVfG."},{"id":32,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was ist eine Bedingung im Sinne des § 36 VwVfG?","opts":["Eine sofort wirksame Einschränkung","Von einem künftigen ungewissen Ereignis abhängige Regelung","Eine interne Absprache","Eine Obliegenheit"],"correct":1,"exp":"Eine Bedingung macht den Eintritt oder Wegfall einer Vergünstigung oder Belastung vom ungewissen Eintritt eines künftigen Ereignisses abhängig (§ 36 II Nr. 2 VwVfG)."},{"id":33,"cat":"Allgemeines Verwaltungsrecht","type":"essay","q":"Was ist eine Auflage gemäß § 36 VwVfG? Erläutern Sie den Unterschied zur Bedingung.","ref":"Eine Auflage (§ 36 II Nr. 4 VwVfG) verpflichtet die begünstigte Person zu einem zusätzlichen Tun, Dulden oder Unterlassen, ohne dass die Wirksamkeit des Verwaltungsakts selbst davon abhängt.\nUnterschied zur Bedingung: Bei der Bedingung steht die Wirksamkeit des Hauptverwaltungsakts infrage (er tritt erst ein oder entfällt bei Bedingungseintritt). Bei der Auflage bleibt der Hauptverwaltungsakt voll wirksam; die Auflage kann eigenständig durchgesetzt werden."},{"id":34,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was ist ein Realakt?","opts":["Hoheitliche Aufgabe","Gesetz","Verwaltungsakt","Vertrag"],"correct":0,"exp":"Von den gegebenen Optionen kommt „Hoheitliche Aufgabe\" am nächsten. Ein Realakt ist tatsächliches Verwaltungshandeln ohne eigenen Regelungscharakter – keine unmittelbare Rechtswirkung wie ein Verwaltungsakt, z. B. eine Auskunft oder eine Maßnahme vor Ort."},{"id":35,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was sind Ampel- und Handzeichen der Polizei nach der Rechtsprechung?","opts":["Gesetz","Realakt","Allgemeinverfügung","Verordnung"],"correct":2,"exp":"Die Rechtsprechung behandelt Ampelzeichen als Verwaltungsakte in Form von Allgemeinverfügungen, gerichtet an die jeweils anwesenden Verkehrsteilnehmer. Gleiches gilt für Zeichen von Polizeibeamten nach § 36 StVO."},{"id":36,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Welche Zwangsmittel kennt das Verwaltungsvollstreckungsrecht typischerweise?","opts":["Bußgeld, Freiheitsentzug, Enteignung","Zwangsgeld, Ersatzvornahme, unmittelbarer Zwang","Ordnungsstrafe, Hausverbot, Verwarnung","Verwarnungsgeld, Bußgeld, Verhaftung"],"correct":1,"exp":"Nach dem Bundes-VwVG: Ersatzvornahme (§ 10), Zwangsgeld (§ 11), unmittelbarer Zwang (§ 12), zusammengefasst in § 9 VwVG."},{"id":37,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Was ist der wesentliche Unterschied zwischen Verwaltungsvollstreckung und Sofortvollzug?","opts":["Es gibt keinen Unterschied","Der Sofortvollzug kann ohne vorherigen Verwaltungsakt erfolgen","Die Verwaltungsvollstreckung ist nur für Steuerschulden möglich","Der Sofortvollzug darf nur bei Notstand angewendet werden"],"correct":1,"exp":"§ 6 II VwVG: Der Sofortvollzug ist zulässig, wenn die vorherige Bekanntgabe eines Verwaltungsakts den Zweck der Maßnahme vereiteln würde."},{"id":38,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Was muss vor dem Einsatz von Zwangsmitteln vorliegen?","opts":["Eine richterliche Genehmigung","Ein Gesetz zur Anordnung","Ein wirksamer Verwaltungsakt, der nicht befolgt wird","Eine Anzeige durch Dritte"],"correct":2,"exp":"So § 6 I VwVG des Bundes beziehungsweise § 55 I VwVG NRW."},{"id":39,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Welche Wirkung hat ein Widerspruch gegen einen belastenden Verwaltungsakt?","opts":["Keine","Er verzögert die Zustellung","Er hat aufschiebende Wirkung","Er macht den Verwaltungsakt nichtig"],"correct":2,"exp":"So § 80 I VwGO."},{"id":40,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Was muss die Behörde tun, wenn sie trotz Widerspruchs sofort vollziehen will?","opts":["Klage beim Verwaltungsgericht erheben","Eine Anhörung durchführen","Sofortige Vollziehung anordnen und begründen","Den Verwaltungsakt zurücknehmen"],"correct":2,"exp":"So § 80 II Nr. 4, § 80 III VwGO."},{"id":41,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Wie kann sich der Adressat gegen die Anordnung der sofortigen Vollziehung wehren?","opts":["Mit Dienstaufsichtsbeschwerde","Mit Gegenvorstellung bei der Behörde","Mit Eilantrag beim Verwaltungsgericht","Mit Antrag beim Bundesverfassungsgericht"],"correct":2,"exp":"So § 80 V VwGO."},{"id":42,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Was regelt § 34 BeamtStG?","opts":["Dienstunfall","Pflicht zum vollen persönlichen Einsatz","Wahlrecht","Nebentätigkeiten"],"correct":1,"exp":"Beamtinnen und Beamte haben sich mit vollem persönlichem Einsatz ihrem Beruf zu widmen und ihr Verhalten muss der Achtung und dem Vertrauen gerecht werden, die ihr Beruf erfordert."},{"id":43,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Welches Beamtenverhältnis gibt es nicht?","opts":["Beamter auf Probe","Beamter auf Widerruf","Beamter auf Lebenszeit","Beamter auf Abruf"],"correct":3,"exp":"Nach § 4 BeamtStG gibt es Beamte auf Lebenszeit, auf Probe, auf Widerruf und auf Zeit. Einen „Beamten auf Abruf\" kennt das Beamtenrecht nicht."},{"id":44,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Was ist die Voraussetzung für die Berufung in das Beamtenverhältnis?","opts":["10 Jahre Berufserfahrung","Deutsche oder EU-Staatsangehörigkeit","Privatrechtlicher Vertrag","Kirchenzugehörigkeit"],"correct":1,"exp":"Diese materielle Voraussetzung steht in § 7 BeamtStG. § 8 BeamtStG regelt die Ernennung als formalen Akt."},{"id":45,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Welcher Zweck gehört nicht zu den klassischen Zielen des Disziplinarrechts?","opts":["Erziehungszweck","Schutzfunktion","Privatisierung der Ermittlungen","Reinigungsfunktion"],"correct":2,"exp":"Das Disziplinarverfahren ist und bleibt ein hoheitliches, staatliches Verfahren. Erziehungszweck, Schutzfunktion und Reinigungsfunktion sind anerkannte Zwecke."},{"id":46,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Was ist der Zweck des Disziplinarrechts?","opts":["Bestrafung","Erziehung und Funktionssicherung","Politische Kontrolle","Gehaltskürzungen maximieren"],"correct":1,"exp":"Das Disziplinarrecht dient der Erziehung (Wiedereingliederung) und der Funktionssicherung des Berufsbeamtentums, nicht der Bestrafung im strafrechtlichen Sinne."},{"id":47,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Wann muss ein Disziplinarverfahren eingeleitet werden?","opts":["Sobald der Personalrat zustimmt","Wenn eine anonyme Beschwerde eingeht","Bei zureichenden tatsächlichen Anhaltspunkten für ein Dienstvergehen","Wenn ein Strafbefehl rechtskräftig ist"],"correct":2,"exp":"Es gilt das Legalitätsprinzip – dem Dienstvorgesetzten steht kein Ermessen zu, ob er tätig wird, nur wie er das Verfahren führt."},{"id":48,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Was versteht man unter einem „Dienstvergehen\"?","opts":["Jegliches Verhalten außerhalb der Dienstzeit","Eine schuldhafte Verletzung dienstlicher Pflichten","Jede Form von Kritik an Vorgesetzten","Ein Verwaltungsverstoß nach dem Ordnungsrecht"],"correct":1,"exp":"So die Definition in § 47 BeamtStG."},{"id":49,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Was gehört nicht zu den Dienstpflichten?","opts":["Pflicht zur wöchentlichen Fortbildung","Neutralitätsgebot","Folgepflicht","Verschwiegenheitspflicht"],"correct":0,"exp":"Neutralitätsgebot, Folgepflicht und Verschwiegenheitspflicht sind ausdrücklich normiert (§§ 33, 35, 37 BeamtStG). Eine eigenständige, gesetzlich fixierte Pflicht zur wöchentlichen Fortbildung gibt es dagegen nicht."},{"id":50,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Eine Trunkenheitsfahrt in der Freizeit führt zu einem Disziplinarverfahren.","opts":["Richtig","Falsch"],"correct":1,"exp":"Rein außerdienstliches Verhalten ist nur dann relevant, wenn es in besonderem Maß geeignet ist, Achtung und Vertrauen in einer für das Amt bedeutsamen Weise zu beeinträchtigen (§ 34 S. 3 BeamtStG)."},{"id":51,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Das statusrechtliche Amt bezieht sich auf die tatsächlich wahrgenommenen Aufgaben.","opts":["Richtig","Falsch"],"correct":1,"exp":"Das statusrechtliche Amt meint die abstrakte Rechtsstellung (Laufbahn, Besoldungsgruppe, Amtsbezeichnung), nicht die konkret ausgeübte Tätigkeit – das wäre das Amt im konkret-funktionellen Sinn."},{"id":52,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Für eine Ernennung zum 10.01.2025 kann die Urkunde bis zum Ende des Monats überreicht werden.","opts":["Richtig","Falsch"],"correct":1,"exp":"Eine Ernennung auf einen zurückliegenden Zeitpunkt ist unzulässig und unwirksam (§ 8 IV BeamtStG). Wirksam wird sie erst mit tatsächlicher Aushändigung der Urkunde."},{"id":53,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Der Dienstherr muss bei Vorliegen tatsächlicher Anhaltspunkte über ein Dienstvergehen ein Disziplinarverfahren einleiten.","opts":["Richtig","Falsch"],"correct":0,"exp":"Legalitätsprinzip, kein Einleitungsermessen."},{"id":54,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Leistung und Persönlichkeitsbild des Beamten oder der Beamtin sind alleiniger Grund für die Bemessung der Disziplinarmaßnahme.","opts":["Richtig","Falsch"],"correct":1,"exp":"Ausgangspunkt ist die Schwere des Dienstvergehens; Persönlichkeitsbild und bisherige Führung fließen nur ergänzend ein."},{"id":55,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Die dienstliche Beurteilung ist das Hauptauswahlkriterium bei der Beförderung.","opts":["Richtig","Falsch"],"correct":0,"exp":"Im Rahmen der Bestenauslese nach Art. 33 II GG ist sie regelmäßig das zentrale Erkenntnismittel für Eignung, Befähigung und fachliche Leistung."},{"id":56,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Maßgebliche Kriterien bei einer Ernennung von Beamten sind Eignung, Leistung, Befähigung und der Wohnsitz im Gebiet des jeweiligen Dienstherrn.","opts":["Richtig","Falsch"],"correct":1,"exp":"Art. 33 II GG nennt Eignung, Befähigung und fachliche Leistung; ein Wohnsitzerfordernis gehört nicht dazu."},{"id":57,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Bei Bekanntwerden eines Dienstvergehens steht dem Dienstvorgesetzten Ermessen zu, ob ein Disziplinarverfahren eingeleitet wird oder nicht.","opts":["Richtig","Falsch"],"correct":1,"exp":"Legalitätsprinzip – kein Einleitungsermessen."},{"id":58,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Das Disziplinarrecht ist abschließend durch das Bundesdisziplinargesetz geregelt.","opts":["Richtig","Falsch"],"correct":1,"exp":"Das Bundesdisziplinargesetz gilt nur für Bundesbeamte; für Landes- und Kommunalbeamte gilt das jeweilige Landesdisziplinargesetz."},{"id":59,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Die Entfernung aus dem Beamtenverhältnis aufgrund von Verfehlungen muss im Rahmen einer Disziplinarklage vor dem Verwaltungsgericht erwirkt werden.","opts":["Richtig","Falsch"],"correct":0,"exp":"Diese schwerste Disziplinarmaßnahme kann die Behörde nicht selbst verfügen, sondern nur gerichtlich durchsetzen."},{"id":60,"cat":"Beamten- und Disziplinarrecht","type":"essay","q":"Was ist nach einer strafrechtlichen Verurteilung disziplinarisch nicht zulässig? (Die Antwortoptionen fehlen im Original-Protokoll.)","ref":"Einschlägig ist die Bindungswirkung strafgerichtlicher Feststellungen: Die Disziplinarbehörde bzw. das Disziplinargericht ist an die tatsächlichen Feststellungen eines rechtskräftigen Strafurteils grundsätzlich gebunden und darf davon nur unter engen Voraussetzungen abweichen (z. B. bei offenkundiger Unrichtigkeit).\nNicht zulässig ist es daher in aller Regel, eigene, den strafgerichtlichen Feststellungen widersprechende Tatsachenfeststellungen zu treffen."},{"id":61,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"essay","q":"Gegen welche drei „Personengruppen\" können sich Maßnahmen der Gefahrenabwehr richten?","ref":"1. Verhaltensstörer (Handlungsstörer): verursacht die Gefahr durch eigenes Verhalten.\n2. Zustandsstörer: hat die tatsächliche Gewalt über eine gefahrverursachende Sache oder ist deren Eigentümer.\n3. Nichtstörer (Notstandspflichtiger): nicht verantwortliche Dritte – nur unter engen Voraussetzungen bei gegenwärtiger erheblicher Gefahr zulässig."},{"id":62,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"essay","q":"Erklären Sie den Unterschied zwischen einer konkreten Gefahr und einer Anscheinsgefahr. Was ist bei der Anscheinsgefahr besonders zu beachten?","ref":"Konkrete Gefahr: Bei ungehindertem Ablauf des objektiv zu erwartenden Geschehens ist mit hinreichender Wahrscheinlichkeit in absehbarer Zeit ein Schaden zu erwarten.\nAnscheinsgefahr: Nachträglich stellt sich heraus, dass keine Gefahr bestand – maßgeblich ist die Sicht im Zeitpunkt des Handelns (ex-ante-Betrachtung). Durfte eine besonnene Einsatzkraft von einer Gefahr ausgehen, war das Einschreiten rechtmäßig. Sobald der Irrtum erkannt wird, sind alle Maßnahmen unverzüglich einzustellen.\nBesonders zu beachten: Die Kostenfrage – wer trägt die Kosten einer sich als unbegründet herausstellenden Maßnahme?"},{"id":63,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"essay","q":"Welche Aufgabe ergibt sich aus § 1 Abs. 1 Nr. 1 BHKG?","ref":"§ 1 Abs. 1 Nr. 1 BHKG definiert das Ziel des Gesetzes im Bereich Brandschutz: vorbeugende und abwehrende Maßnahmen bei Brandgefahren zum Schutz der Bevölkerung. Die Norm begründet die gesetzliche Grundlage für den vorbeugenden und abwehrenden Brandschutz als Pflichtaufgabe der Gemeinden."},{"id":64,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"mc","q":"Was ist ein Unglücksfall im Sinne des BHKG?","opts":["Langsamer Vorgang","Plötzliches Ereignis mit erheblicher Gefahr","Nur Explosionen","Nur Brände"],"correct":1,"exp":"Ein Unglücksfall ist ein plötzliches Ereignis, von dem eine erhebliche Gefahr für Menschen, Tiere, Sachen oder die Umwelt ausgeht."},{"id":65,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"essay","q":"Fall: Schornsteinbrand im Hinterhaus. Alarmierung zu einem Schornsteinbrand in einem Altbau, 3 OG. Der Einsatzleiter ordnet an, alle am Schornstein gelegenen Wohnungen auf Brandausbreitung zu kontrollieren. Im 3. OG lässt ein pensionierter Feuerwehrmann weder die Nachbarwohnung noch seine eigene Wohnung kontrollieren.\n\na) Dürfen Sie als Einsatzleiter die verschlossene Nachbarwohnung gewaltsam öffnen? Was ist zu beachten?\nb) Dürfen Sie die Wohnung gegen den Willen des Mieters betreten?\nc) Was beachten Sie beim Verlassen der Einsatzstelle?","ref":"a) Ja, gestützt auf § 41 BHKG NRW i. V. m. Art. 13 VII GG. Bei möglicher Rauch-/Brandausbreitung liegt zumindest eine Anscheinsgefahr vor. Zu beachten: Verhältnismäßigkeit – wenn zeitlich möglich, zunächst Schlüsseldienst; bei Gefahr im Verzug sofortiges gewaltsames Öffnen zulässig.\nb) Ja. Der widersprechende Mieter ist nicht Inhaber der zu kontrollierenden Nachbarwohnung und kann über deren Betretung nicht wirksam entscheiden. Sein Widerspruch ist rechtlich unbeachtlich.\nc) Geöffnete Wohnung sichern/wiederverschließen; Bewohner und Eigentümer informieren; Vorgang und Gründe dokumentieren; sicherstellen, dass keine Glutnester zurückbleiben."},{"id":66,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"essay","q":"Fall: Rauchmelder piept im 2. OG, Nachbarn alarmieren die Feuerwehr. Die Feuerwehr bricht die Tür auf – in der Wohnung kein Rauch, Melder hatte technischen Defekt. Der Mieter fordert Ersatz für die Tür. War die Türöffnung rechtmäßig?","ref":"Ja. Maßgeblich ist die Anscheinsgefahr: Beim Alarm eines Rauchmelders, auf den niemand reagiert, durfte die Feuerwehr ex-ante von einer konkreten Gefahr ausgehen (§ 41 BHKG NRW i. V. m. Art. 13 VII GG). Der nachträglich festgestellte technische Defekt ändert an der Rechtmäßigkeit nichts.\nEin Schadensersatzanspruch scheidet bei rechtmäßiger Maßnahme in der Regel aus; ein etwaiger Ausgleich richtet sich nach den landesrechtlichen Kostenerstattungsregelungen."},{"id":67,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"essay","q":"Fall: Es brennt im Keller eines Mehrfamilienhauses. Ein Trupp soll wegen der Rauchausbreitung die angrenzenden Kellerräume kontrollieren. Der Eigentümer verbietet den Zutritt zu einem vermieteten Kellerraum, weil der Mieter das Betreten nicht erlauben würde. Dürfen Sie den Kellerraum öffnen?","ref":"Ja. Bei einem Kellerbrand mit Rauchausbreitungsgefahr besteht eine konkrete Gefahr, die die Kontrolle aller betroffenen Kellerräume rechtfertigt, unabhängig davon, ob sie vermietet sind. Weder Eigentümer noch Mieter können der Gefahrenabwehr ein wirksames Zutrittsverbot entgegensetzen (§ 41 BHKG NRW).\nVorgehen: Raum verhältnismäßig, notfalls gewaltsam öffnen, kontrollieren, anschließend sichern und Eigentümer sowie Mieter informieren."},{"id":68,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was regelt das Entschließungsermessen einer Behörde?","opts":["Das „Ob\" des behördlichen Handelns – ob die Behörde tätig wird","Das „Wie\" – die Art und Weise der Maßnahme","Die Auswahl zwischen mehreren Adressaten","Den Zeitpunkt des behördlichen Eingreifens"],"correct":0,"exp":"Das Entschließungsermessen (§ 40 VwVfG) betrifft das „Ob\" – ob die Behörde bei Vorliegen aller Voraussetzungen tätig wird oder untätig bleibt. Das „Wie\" regelt das Auswahlermessen."},{"id":69,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was regelt das Auswahlermessen einer Behörde?","opts":["Das „Ob\" des behördlichen Handelns","Das „Wie\" – die Auswahl der passenden Maßnahme oder Person","Die Zuständigkeit der Behörde","Ob überhaupt ein Verwaltungsakt erlassen werden darf"],"correct":1,"exp":"Das Auswahlermessen (§ 40 VwVfG) betrifft das „Wie\" – bei mehreren erlaubten Maßnahmen oder Adressaten wählt die Behörde die passende Reaktion aus."},{"id":70,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Was versteht man unter einer Ermessensreduzierung auf Null?","opts":["Die Behörde hat kein Ermessen und muss untätig bleiben","Aufgrund besonderer Umstände ist nur noch eine einzige rechtmäßige Entscheidung möglich","Die Behörde kann frei zwischen allen Maßnahmen wählen","Das Ermessen wird auf eine übergeordnete Behörde übertragen"],"correct":1,"exp":"Bei der Ermessensreduzierung auf Null schrumpft der gesetzliche Spielraum der Behörde so stark, dass nur noch eine rechtmäßige Entscheidung verbleibt. Jede andere Handlung wäre rechtswidrig (gebundene Entscheidung)."},{"id":71,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"tf","q":"Bei einer Anscheinsgefahr muss die Feuerwehr ihre Maßnahmen sofort einstellen, sobald sich herausstellt, dass keine konkrete Gefahr vorliegt.","opts":["Richtig","Falsch"],"correct":0,"exp":"Richtig. Ergibt die Erkundung, dass keine konkrete Gefahr besteht, handelt es sich um eine Anscheinsgefahr – alle Maßnahmen sind unverzüglich einzustellen."},{"id":72,"cat":"Gefahrenabwehr / Feuerwehrrecht","type":"mc","q":"Wann liegt eine konkrete Gefahr vor?","opts":["Wenn Anhaltspunkte für eine mögliche Gefahr bestehen","Wenn bei ungehindertem Ablauf in absehbarer Zeit mit hinreichender Wahrscheinlichkeit ein Schaden droht","Wenn bereits ein Schaden eingetreten ist","Wenn ein Bürger eine Gefahr gemeldet hat"],"correct":1,"exp":"Eine konkrete Gefahr liegt vor, wenn bei ungehindertem Ablauf des objektiv zu erwartenden Geschehens mit hinreichender Wahrscheinlichkeit in absehbarer Zeit ein Schaden zu erwarten ist."},{"id":73,"cat":"Allgemeines Verwaltungsrecht","type":"mc","q":"Welche Anforderung stellt § 37 VwVfG an den Tenor (Verfügungssatz) eines Verwaltungsaktes?","opts":["Er muss schriftlich und handschriftlich unterschrieben sein","Er muss hinreichend bestimmt sein","Er muss stets eine Rechtsmittelbelehrung enthalten","Er darf keine Bedingungen oder Auflagen enthalten"],"correct":1,"exp":"§ 37 VwVfG verlangt, dass der Tenor eines VA hinreichend bestimmt ist – er muss klar und vollziehbar beschreiben, was die Behörde vom Bürger verlangt."},{"id":74,"cat":"Allgemeines Verwaltungsrecht","type":"tf","q":"Die Begründung eines Verwaltungsaktes darf allgemeine Floskeln enthalten, wenn der Tenor eindeutig ist (§ 39 VwVfG).","opts":["Richtig","Falsch"],"correct":1,"exp":"Falsch. § 39 VwVfG verlangt eine konkrete Begründung: Sie muss an bestimmte Anhaltspunkte geknüpft sein, darf nicht floskelhaft sein und muss die tragenden rechtlichen Gründe aufführen."},{"id":75,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Welche Zwangsmittel nennt § 9 Abs. 1 VwVG zur Durchsetzung eines Verwaltungsaktes?","opts":["Bußgeld, Strafanzeige, Zwangshaft","Zwangsgeld, Ersatzvornahme, unmittelbarer Zwang","Ordnungsgeld, Einspruch, Vollziehung","Bußgeld, Ersatzvornahme, Freiheitsstrafe"],"correct":1,"exp":"§ 9 Abs. 1 VwVG nennt abschließend drei Zwangsmittel: Zwangsgeld, Ersatzvornahme und unmittelbarer Zwang."},{"id":76,"cat":"Verwaltungsvollstreckung / Rechtsschutz","type":"mc","q":"Wie kann ein VA trotz eingelegten Widerspruchs vollzogen werden?","opts":["Gar nicht – der Widerspruch hat immer unüberwindliche aufschiebende Wirkung","Durch Anordnung des sofortigen Vollzugs mit schriftlicher Begründung nach § 80 Abs. 2 Nr. 4 VwGO","Durch eine einfache mündliche Anweisung des Vorgesetzten","Durch Verwirkung des Widerspruchsrechts nach drei Tagen"],"correct":1,"exp":"§ 80 Abs. 2 Nr. 4 VwGO ermöglicht die Anordnung des sofortigen Vollzugs. Sie muss schriftlich erfolgen und besonders begründet werden, damit die aufschiebende Wirkung des Widerspruchs entfällt."},{"id":77,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche Arten der Gesetzgebungskompetenz unterscheidet das Grundgesetz?","opts":["Primäre und sekundäre Gesetzgebung","Ausschließliche Bundeskompetenz (§ 71 GG), konkurrierende Gesetzgebung (§ 72 GG) und Länderzuständigkeit (§ 70 GG)","Föderale und zentralistische Gesetzgebung","Formelle und materielle Gesetzgebung"],"correct":1,"exp":"Das GG unterscheidet: ausschließliche Gesetzgebungskompetenz des Bundes (§ 71 GG), konkurrierende Gesetzgebung (§ 72 GG) und den Bereich, in dem die Länder die Gesetzgebungszuständigkeit haben (§ 70 GG, Auffangzuständigkeit)."},{"id":78,"cat":"Beamten- und Disziplinarrecht","type":"tf","q":"Eine Ernennung mit rückwirkendem Datum ist nach § 8 BeamtStG zulässig.","opts":["Richtig","Falsch"],"correct":1,"exp":"Falsch. § 8 Abs. 4 BeamtStG verbietet Ernennungen mit rückwirkender Kraft ausdrücklich. Die Ernennung wird nach § 8 Abs. 2 BeamtStG erst mit Aushändigung der Ernennungsurkunde wirksam."},{"id":79,"cat":"Beamten- und Disziplinarrecht","type":"mc","q":"Ein Beamter trägt bei einer privaten politischen Veranstaltung seine Dienstuniform ohne vorherige Abstimmung. Welche Rechtsgrundlagen sind für die Prüfung eines Dienstvergehens einschlägig?","opts":["§ 33 Abs. 2 BeamtStG (Mäßigungsgebot) i.V.m. § 47 Abs. 1 BeamtStG (Dienstvergehen)","§ 12 BeamtStG (Eidesleistung)","§ 60 BeamtStG (Streikverbot)","§ 42 BeamtStG (Nebentätigkeit)"],"correct":0,"exp":"§ 33 Abs. 2 BeamtStG verpflichtet Beamte zur Mäßigung und Zurückhaltung – das Tragen der Dienstuniform bei politischen Veranstaltungen verletzt diese Pflicht. § 47 Abs. 1 BeamtStG definiert die schuldhafte Verletzung von Dienstpflichten als Dienstvergehen."},{"id":80,"cat":"Staatsorganisationsrecht","type":"mc","q":"Wer hat nach Art. 76 Abs. 1 GG das Recht der Gesetzesinitiative?","opts":["Bundestag, Bundesrat und Bundesregierung","Nur Bundestag und Bundesrat","Bundestag, Bundesrat, Bundesregierung und Bundespräsident","Bundestag und Bundesverfassungsgericht"],"correct":0,"exp":"Das Initiativrecht steht nach Art. 76 I GG dem Bundestag (aus seiner Mitte), dem Bundesrat und der Bundesregierung zu. Der Bundespräsident und das BVerfG haben kein Initiativrecht."},{"id":81,"cat":"Staatsorganisationsrecht","type":"tf","q":"Das Bundesverfassungsgericht ist am regulären Gesetzgebungsverfahren des Bundes beteiligt.","opts":["Richtig","Falsch"],"correct":1,"exp":"Das BVerfG ist am regulären Verfahren nicht beteiligt. Es prüft Bundesgesetze erst nachträglich auf Antrag – z. B. im Wege der abstrakten oder konkreten Normenkontrolle."},{"id":82,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welches Organ fasst den Gesetzesbeschluss (Art. 77 Abs. 1 GG) allein?","opts":["Bundestag und Bundesrat gemeinsam","Nur der Bundestag","Nur der Bundesrat","Bundestag und Bundesregierung gemeinsam"],"correct":1,"exp":"Nach Art. 77 I GG beschließt allein der Bundestag die Bundesgesetze. Der Bundesrat ist in dieser Phase nicht beteiligt – er kommt erst im 2. Durchgang (Art. 77 II ff. GG)."},{"id":83,"cat":"Staatsorganisationsrecht","type":"mc","q":"Welche Möglichkeiten hat der Bundesrat im zweiten Durchgang (Art. 77 Abs. 2 ff. GG)?","opts":["Er kann das Gesetz endgültig und unüberwindlich ablehnen","Er kann zustimmen, Einspruch einlegen oder den Vermittlungsausschuss anrufen","Er hat in dieser Phase keine Mitwirkungsrechte","Er leitet das Gesetz zur Prüfung an das BVerfG weiter"],"correct":1,"exp":"Im 2. Durchgang kann der Bundesrat zustimmen, Einspruch einlegen oder den Vermittlungsausschuss anrufen (Art. 77 II ff. GG). Ein absolutes Veto hat er nur bei Zustimmungsgesetzen; bei Einspruchsgesetzen kann der Bundestag den Einspruch überstimmen."},{"id":84,"cat":"Staatsorganisationsrecht","type":"mc","q":"Wer fertigt ein Bundesgesetz nach Art. 82 Abs. 1 GG aus und verkündet es?","opts":["Der Bundestag","Der Bundesrat","Der Bundespräsident – mit Gegenzeichnung durch die Bundesregierung (Art. 58 GG)","Das Bundesverfassungsgericht"],"correct":2,"exp":"Nach Art. 82 I GG fertigt der Bundespräsident die Bundesgesetze aus und verkündet sie im Bundesgesetzblatt. Die Gegenzeichnung nach Art. 58 GG durch den zuständigen Bundesminister ist Voraussetzung für die Wirksamkeit."}]});
+const IDFQ=makeQuiz({G:'IDFQ',view:'v-idf-altklausur',sfx:'-idf',minutes:45,html:true,examCount:25,
+  keys:{bm:'bvi_idfq_bm',mastery:'bvi_idfq_mastery',srs:'bvi_idfq_srs',stats:'bvi_idfq_stats'},
+  catLabels:{'Vorbeugender Brandschutz':'Vorb. Brandschutz','Stabsarbeit':'Stabsarbeit'},
+  Q:typeof IDF_QUIZ_Q!=='undefined'?IDF_QUIZ_Q:[]});
 
 /* ══════════════════════════════════════════════════════════════
    KF_QUIZ – Klausurfragen Übersicht (14 Fragen, 90 Min)
@@ -3520,6 +3575,7 @@ const CHANGELOG=(function(){
       'Startseite ruhiger: Weiterlernen mit Tagesziel-Ring, Lernzeit-Verlauf als Balken (Woche oder Monate) mit nächster Einheit, Module als Ringe, 1. Ausbildungsjahr eingeklappt; Gruß und Spruch passend zur Tageszeit',
       'Stundenplan: IdF Modul 3.5 mit Uhrzeiten, Räumen, Hinweisen, Mittagspause und Telefonnummern; Übernahme in den Kalender mit Erinnerung',
       'Prüfung: alle Klausur-Werkzeuge an einem Ort, mit Countdown zur nächsten Klausur; Altklausur-Quiz, Klausurfragen und Fallbearbeitung im neuen Design',
+      'Prüfung: neuer Abschnitt „Laufbahnprüfung“ mit den schriftlichen Klausuren Dez 2023 und Juni 2026 samt Musterlösungen (wie Klausur 08/2026) und Abschnitt „IdF Münster“ mit dem Altklausur-Quiz IdF (Vorbeugender Brandschutz und Stabsarbeit, Mehrfachauswahl, Lern- und Prüfungsmodus, Wiederholung nach Plan); Quelle und Unsicherheit stehen bei jeder Antwort',
       'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
       'Lernseiten: Text markieren, Merken, Notiz und Vorlesen direkt auf der Seite; Bilder und Diagramme per Tipp groß öffnen und zoomen; Inhaltsverzeichnis am Rand auf großen Bildschirmen; Fehler melden',
       'Einstellungen: Suche, Notizen, Lesezeichen, Pomodoro, Lernstatistik, Abkürzungen, Sicherung erstellen und einspielen, Klausurtermin einstellbar, freiwillige Unterstützung per PayPal',
@@ -5435,7 +5491,7 @@ const INSTALL=(function(){
 
 /* ── Klausur-Timer für die Übungsklausuren ──────────────────────────────── */
 const ETIMER=(function(){
-  const KEY='bvi_et_end', VIEWS=['v-klausurfragen','v-feuak-altklausur','v-klausur-0826','v-eingrenzung-klausur'];
+  const KEY='bvi_et_end', VIEWS=['v-klausurfragen','v-feuak-altklausur','v-klausur-0826','v-eingrenzung-klausur','v-laufbahn-2023','v-laufbahn-2026'];
   let pill=null, tick=null, minutes=60;
   const left=()=>{ try{ const e=parseInt(localStorage.getItem(KEY),10); return e?Math.round((e-Date.now())/1000):null; }catch(x){ return null; } };
   const fmt=sec=>{ sec=Math.max(0,sec); const h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), s=sec%60; return (h?h+':':'')+String(m).padStart(h?2:1,'0')+':'+String(s).padStart(2,'0'); };
@@ -5580,6 +5636,11 @@ const SHELL=(function(){
     ['idf','IdF','Institut der Feuerwehr NRW · Münster','v-idf','IdF Münster',2]
   ];
   const EXAMS=[
+    ['Laufbahnprüfung',[
+      ['v-laufbahn-2026','Laufbahnklausuren Juni 2026','Recht, Management, Stabsarbeit, Vorbeugender Brandschutz · Musterlösungen','doc',true],
+      ['v-laufbahn-2023','Laufbahnklausuren Dez 2023','Führungsvorgang, Recht, Management, Heyrothsberge · Musterlösungen','doc']]],
+    ['IdF Münster',[
+      ['v-idf-altklausur','Altklausur-Quiz IdF',(typeof IDF_QUIZ_Q!=='undefined'?IDF_QUIZ_Q.length:0)+' Fragen · Vorbeugender Brandschutz & Stabsarbeit · Lern- und Prüfungsmodus','doc',true]]],
     ['FeuAK Hamburg',[
       ['v-klausur-0826','Klausur 08/2026','14 Originalfragen · 70 Punkte · Musterlösungen','doc',true],
       ['v-klausurfragen','Klausurfragen','14 Fragen der Dozenten-Liste · Freitext und Selbstbewertung','pen'],
@@ -5977,12 +6038,13 @@ const SHELL=(function(){
     const days=daysToExam();
     cd.innerHTML=days<0?'':`<div class="m-card m-count"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">${esc(examCfg().name)}</span><span class="m-t2">${new Date(examCfg().date+'T00:00').toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'long',year:'numeric'})}</span></div></div>`;
     const dueQ=(typeof QUIZ!=='undefined'&&QUIZ.dueCount)?QUIZ.dueCount():0;
-    const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2:id==='v-vak-altklausur'&&dueQ?`${t2} · ${dueQ} zur Wiederholung fällig`:t2,on:goJs(id,t1)});
+    const dueI=(typeof IDFQ!=='undefined'&&IDFQ.dueCount)?IDFQ.dueCount():0;
+    const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2:id==='v-vak-altklausur'&&dueQ?`${t2} · ${dueQ} zur Wiederholung fällig`:id==='v-idf-altklausur'&&dueI?`${t2} · ${dueI} zur Wiederholung fällig`:t2,on:goJs(id,t1)});
     const sec=([name,items])=>{
       const hot=items.filter(x=>x[4]), rest=items.filter(x=>!x[4]);
       return `<div class="m-col"><div class="m-sec">${esc(name)}</div>${hot.map(x=>`<div class="m-list m-glow">${card(x)}</div>`).join('')}${rest.length?`<div class="m-list">${rest.map(card).join('')}</div>`:''}</div>`;
     };
-    list.innerHTML=`<div class="m-g2">${sec(EXAMS[0])}${sec(EXAMS[1])}</div>${sec(EXAMS[2])}`;
+    list.innerHTML=`<div class="m-g2"><div class="m-col">${sec(EXAMS[0])}${sec(EXAMS[1])}${sec(EXAMS[2])}</div><div class="m-col">${sec(EXAMS[3])}${sec(EXAMS[4])}</div></div>`;
   }
 
   function renderFcSide(){
@@ -6115,9 +6177,9 @@ const SHELL=(function(){
       if(!window.__noMail) REPORT.open(mail,gh);
       return mail;
     },
-    reportQuiz(){
-      const t=id=>document.getElementById(id)?.textContent?.trim()||'';
-      return this.report('Frage '+t('quiz-counter')+' ['+t('quiz-cat')+']:\n'+t('quiz-q'));
+    reportQuiz(sfx){
+      const t=id=>document.getElementById(id+(sfx||''))?.textContent?.trim()||'';
+      return this.report((sfx?'IdF-Quiz ':'')+'Frage '+t('quiz-counter')+' ['+t('quiz-cat')+']:\n'+t('quiz-q'));
     },
     stepGoal(d){
       const g=Math.min(240,Math.max(5,goalMin()+d*5));
@@ -6219,6 +6281,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(!document.getElementById('pomodoro-overlay').classList.contains('hidden')){ POMO.close(); return; }
       if(!document.getElementById('onboarding-overlay')?.classList.contains('hidden')){ ONBOARD.close(); return; }
       if(!document.getElementById('quiz-mastery-modal').classList.contains('hidden')){ QUIZ.closeMastery(); return; }
+      if(!document.getElementById('quiz-mastery-modal-idf').classList.contains('hidden')){ IDFQ.closeMastery(); return; }
       if(document.getElementById('stats-overlay')&&!document.getElementById('stats-overlay').classList.contains('hidden')){ STATS.close(); return; }
       if(!document.getElementById('notes-overlay').classList.contains('hidden')){ NOTES.close(); return; }
       if(!document.getElementById('changelog-modal').classList.contains('hidden')){ CHANGELOG.close(); return; }

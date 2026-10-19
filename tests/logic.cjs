@@ -121,6 +121,35 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   const theme = await page.evaluate(() => { THEME.set('light'); const a = document.documentElement.dataset.theme; THEME.set('dark'); return [a, document.documentElement.dataset.theme]; });
   eq('Farbschema schaltet um', theme, ['light', 'dark']);
 
+  // ── IdF-Quiz: Mehrfachauswahl zählt nur ganz richtig ──
+  const idfq = await page.evaluate(() => {
+    NAV.go('v-idf-altklausur', 'IdF');
+    IDFQ.setTypeFilter('multi');
+    const cur = () => IDF_QUIZ_Q.find(x => x.q === document.getElementById('quiz-q-idf').textContent);
+    const res = {};
+    let q = cur();
+    q.correct.slice(0, -1).forEach(i => IDFQ._toggle(i));            // eine richtige fehlt
+    if (q.correct.length === 1) IDFQ._toggle(q.opts.findIndex((_, i) => !q.correct.includes(i))); // sonst eine falsche
+    IDFQ._check();
+    res.partial = JSON.parse(localStorage.getItem('bvi_idfq_mastery'))[q.id];
+    IDFQ.next();
+    q = cur();
+    q.correct.forEach(i => IDFQ._toggle(i));
+    IDFQ._check();
+    res.full = JSON.parse(localStorage.getItem('bvi_idfq_mastery'))[q.id];
+    res.vakUntouched = localStorage.getItem('bvi_quiz_mastery');
+    IDFQ.setMode('exam');
+    res.examQs = document.querySelectorAll('#quiz-exam-questions-idf .quiz-exam-q').length;
+    res.boxes = document.querySelectorAll('#quiz-exam-questions-idf input[type=checkbox]').length > 0;
+    IDFQ.setMode('learn');
+    return res;
+  });
+  eq('IdF-Quiz: teilweise richtig zählt als falsch', idfq.partial, 'err');
+  eq('IdF-Quiz: ganz richtig zählt', idfq.full, 'ok');
+  eq('IdF-Quiz: Prüfung hat 25 Fragen', idfq.examQs, 25);
+  ok('IdF-Quiz: Prüfung nutzt Kontrollkästchen', idfq.boxes);
+  ok('IdF-Quiz: VAk-Lernstand bleibt unberührt', idfq.vakUntouched === null);
+
   for (const e of errors) fails.push('JavaScript-Fehler: ' + e);
   await browser.close();
   if (fails.length) { console.error('FEHLER:\n - ' + fails.join('\n - ')); process.exit(1); }
