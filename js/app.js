@@ -5761,22 +5761,22 @@ const SHELL=(function(){
     return { known:Object.keys(fc).length, due:Object.values(fc).filter(v=>v&&v.nextReview<=now).length, total:FLASHCARD_DATA.length };
   }
   // Balken-Diagramm: beginnt bei 0, kein Strich bis zur Oberkante; Beschriftung nur an Balken mit Wert
-  function plot(vals,labels,cur,top,hours){
-    const fmt=v=>hours?(Math.round(v*10)/10).toString().replace('.',','):String(Math.round(v));
-    return `<div class="m-plot${vals.length>8?' many':''}" role="img" aria-label="Lernzeit je ${vals.length>8?'Monat':'Tag'}">${vals.map((v,i)=>
-      `<div><span class="m-pv">${v>0?fmt(v):''}</span><i class="m-pb${i===cur?' cur':v>0?' dim':' zero'}" style="height:${v>0?Math.max(4,v/top*100):0}%"></i><span class="m-pl${i===cur?' cur':''}">${labels[i]}</span></div>`).join('')}</div>`;
+  function plot(vals,labels,cur,top,secs){
+    return `<div class="m-plot${vals.length>8?' many':''}" role="group" aria-label="Lernzeit je ${vals.length>8?'Monat':'Tag'}, antippen für die Zeit">${vals.map((v,i)=>{
+      const h=v>0?Math.max(4,v/top*100):0, pos=i===0?' first':i===vals.length-1?' last':'';
+      return `<button type="button" class="m-pc" onclick="SHELL.pick(this)" aria-label="${labels[i]}: ${dur(secs[i])}"><span class="m-tip${pos}" style="bottom:calc(${h}% + 22px)">${labels[i]} · ${dur(secs[i])}</span><i class="m-pb${i===cur?' cur':v>0?' dim':' zero'}" style="height:${h}%"></i><span class="m-pl${i===cur?' cur':''}">${labels[i]}</span></button>`;}).join('')}</div>`;
   }
   function weekPlot(){
     const w=USAGE.week(), today=(new Date().getDay()+6)%7;
     const hours=Math.max(...w)>=7200;
     const v=w.map(x=>hours?x/3600:x/60), top=hours?Math.max(2,Math.ceil(Math.max(...v))):Math.max(30,Math.ceil(Math.max(...v)/10)*10);
-    return {html:plot(v,['Mo','Di','Mi','Do','Fr','Sa','So'],today,top,hours),unit:hours?'Stunden pro Tag':'Minuten pro Tag',sum:w.reduce((a,b)=>a+b,0)};
+    return {html:plot(v,['Mo','Di','Mi','Do','Fr','Sa','So'],today,top,w),unit:hours?'Stunden pro Tag':'Minuten pro Tag',sum:w.reduce((a,b)=>a+b,0)};
   }
   function monthPlot(){
     const ms=USAGE.months(12), names=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
     const hours=Math.max(...ms.map(m=>m.sec))>=7200;
     const v=ms.map(m=>hours?m.sec/3600:m.sec/60), top=hours?Math.max(2,Math.ceil(Math.max(...v)/2)*2):Math.max(30,Math.ceil(Math.max(...v)/10)*10);
-    return {html:plot(v,ms.map(m=>names[m.m]),ms.length-1,top,hours),unit:hours?'Stunden pro Monat':'Minuten pro Monat',sum:ms.reduce((a,m)=>a+m.sec,0)};
+    return {html:plot(v,ms.map(m=>names[m.m]),ms.length-1,top,ms.map(m=>m.sec)),unit:hours?'Stunden pro Monat':'Minuten pro Monat',sum:ms.reduce((a,m)=>a+m.sec,0)};
   }
   function homeRing(p,label,aria){
     const r=44,c=2*Math.PI*r;
@@ -6057,6 +6057,11 @@ const SHELL=(function(){
     },
     setRange(r){ chartRange=r==='month'?'month':'week'; renderHome(); },
     y1(open){ y1Open=!!open; },
+    pick(btn){
+      const on=!btn.classList.contains('sel');
+      btn.parentElement.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));
+      if(on) btn.classList.add('sel');
+    },
     cardDone, renderCardGoal, syncCardGoal,
     setExam(){
       const date=document.getElementById('m-exam-date')?.value, name=document.getElementById('m-exam-name')?.value||'';
