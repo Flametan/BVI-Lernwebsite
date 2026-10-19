@@ -2102,3 +2102,4 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 #v-abkuerzungen .pc{overflow-x:clip;overflow-y:visible;}
 .abk-c-sec{top:94px;}
 @media(min-width:701px){.abk-stick{margin:0 -32px;padding:8px 32px 0;}}
+.idf-day{scroll-margin-top:12px;}
