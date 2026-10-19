@@ -5453,7 +5453,7 @@ const ACCENT=(function(){
   function favicon(c){
     const el=document.getElementById('fav'); if(!el) return;
     const d='M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z';
-    const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#0a0a0a"/><g transform="translate(40 85) scale(18)"><path d="${d}" fill="${c}"/><path d="${d}" fill="#fff" fill-opacity=".55" transform="translate(12 17) scale(.52) translate(-12 -17)"/></g></svg>`;
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#0a0a0a"/><g transform="translate(-24.8 33.7) scale(23.4)"><path d="${d}" fill="${c}"/><path d="${d}" fill="#fff" fill-opacity=".65" transform="translate(12 17) scale(.52) translate(-12 -17)"/></g></svg>`;
     el.href='data:image/svg+xml,'+encodeURIComponent(svg);
   }
   // Android-App: Startsymbol in der nächstliegenden der 5 Vorgabefarben

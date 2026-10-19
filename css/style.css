@@ -1859,5 +1859,13 @@ html.no-timers .uk-timer-box,html.no-timers .uk-timer-inline,html.no-timers .qui
 .m-fab svg{width:26px;height:26px;}
 :root[data-theme="light"] .m-fab{box-shadow:0 0 0 5px var(--m-bar),0 4px 18px 2px color-mix(in srgb,var(--m-accent) 50%,transparent);}
 .m-emb{background:#0a0a0a;box-shadow:none;}
-:root[data-theme="light"] .m-emb{background:#fff;box-shadow:inset 0 0 0 1px var(--w08);}
+:root[data-theme="light"] .m-emb{background:#fff;box-shadow:none;}
 .m-emb{color:var(--m-accent);}
+
+/* Flamme: größer und leichtes Flackern (nicht auf dem Handy-Startbildschirm) */
+.m-emb svg{width:23px;height:23px;}
+@keyframes flame-flick{0%,100%{transform:scale(1) rotate(0)}25%{transform:scale(1.03,.985) rotate(-.8deg)}50%{transform:scale(.985,1.035) rotate(.6deg)}75%{transform:scale(1.02,.99) rotate(-.4deg)}}
+@keyframes flame-inner{0%,100%{opacity:1}50%{opacity:.7}}
+.m-emb .fl,.m-streak svg{transform-box:fill-box;transform-origin:50% 100%;animation:flame-flick 1.3s ease-in-out infinite;}
+.m-emb .in{animation:flame-inner .9s ease-in-out infinite;}
+@media(prefers-reduced-motion:reduce){.m-emb .fl,.m-emb .in,.m-streak svg{animation:none;}}
