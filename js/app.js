@@ -2611,7 +2611,7 @@ const CUSTOM=(function(){
       +'<button class="btn btn-gold" id="cu-save">Karte speichern</button>'
       +'<div class="cu-h">Meine Karten</div><div id="cu-list"></div>'
       +'<div class="cu-io"><button class="btn btn-ghost" id="cu-exp">Karten exportieren</button><button class="btn btn-ghost" id="cu-mail">Per E-Mail senden</button><label class="btn btn-ghost" for="cu-imp">Karten importieren</label><input type="file" id="cu-imp" accept=".json,application/json" hidden></div>'
-      +'<div class="m-t2">Exportierte Karten kannst du Fabian schicken, er nimmt sie für alle in die App auf.</div></div>';
+      +'</div>';
     document.body.appendChild(box);
     box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
@@ -5911,7 +5911,7 @@ const SHELL=(function(){
     }).join('');
     const known=FLASHCARD_DATA.filter(c=>fc[c.id]).length;
     el.innerHTML=`<div class="m-card"><div class="m-t1">Dein Stand</div>${rows}<div class="m-t2" style="margin-top:12px">${known} von ${FLASHCARD_DATA.length} Karten gewusst</div></div>
-      <div class="m-card m-kbd"><div class="m-t1">Tastatur</div><div class="m-t2" style="line-height:2.1"><kbd>Leertaste</kbd> aufdecken<br><kbd>→</kbd> gewusst · <kbd>↓</kbd> schwer · <kbd>←</kbd> nicht gewusst</div></div>`;
+      <div class="m-card m-kbd"><div class="m-t1">Tastatur</div><div class="m-t2" style="line-height:2.1"><span class="kb-r"><kbd>↑</kbd> aufdecken</span><span class="kb-r"><kbd>→</kbd> gewusst</span><span class="kb-r"><kbd>↓</kbd> schwer</span><span class="kb-r"><kbd>←</kbd> nicht gewusst</span></div></div>`;
   }
 
   let _tocIO=null;
