@@ -11,11 +11,16 @@
   <script src="js/version.js"></script>
   <link rel="manifest" href="manifest.json"/>
   <meta name="theme-color" content="#121212"/>
+  <script>(function(){var m='system';try{m=localStorage.getItem('bvi_theme')||'system';}catch(e){}
+  var l=m==='light'||(m!=='dark'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);
+  document.documentElement.setAttribute('data-theme',l?'light':'dark');
+  var t=document.querySelector('meta[name=theme-color]');if(t)t.content=l?'#f4f4f1':'#121212';})();</script>
+  <link rel="icon" id="fav" type="image/svg+xml" href="icons/icon-512.svg"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="apple-mobile-web-app-title" content="B VI"/>
-  <link rel="apple-touch-icon" href="icons/icon-192.svg"/>
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 </head>
 <body>
 <div class="offline-banner" id="offline-banner">
@@ -120,35 +125,35 @@
 <div id="onboarding-overlay" class="search-overlay hidden">
   <div class="search-box ob-box" onclick="event.stopPropagation()">
     <div class="ob-steps">
-      <!-- Step 1 -->
+      <!-- Schritt 1 -->
       <div class="ob-step active">
-        <div class="ob-icon">🔥</div>
+        <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z"/></svg></div>
         <div class="ob-title">Willkommen bei B&nbsp;VI</div>
-        <div class="ob-desc">Deine Lernplattform für den Höheren Dienst — alles an einem Ort. In wenigen Schritten zeigen wir dir, was die App kann.</div>
+        <div class="ob-desc">Deine Lernplattform für den Höheren Dienst – alles an einem Ort. In wenigen Schritten zeigen wir dir, was die App kann.</div>
       </div>
-      <!-- Step 2 -->
+      <!-- Schritt 2 -->
       <div class="ob-step">
-        <div class="ob-icon">📚</div>
-        <div class="ob-title">Lernmodule &amp; Fortschritt</div>
-        <div class="ob-desc">Auf der Startseite findest du alle Module mit Fortschrittsbalken. Besuchte Seiten erhalten automatisch ein grünes Häkchen — so siehst du immer, wie weit du bist.</div>
+        <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div>
+        <div class="ob-title">Fünf Bereiche</div>
+        <div class="ob-desc">Unten (am Computer links) wechselst du zwischen <strong>Start</strong>, <strong>Plan</strong>, <strong>Prüfung</strong>, <strong>Einstellungen</strong> und <strong>Lernen</strong>. Auf der Startseite siehst du, was als Nächstes im Stundenplan ansteht, und dein Tagesziel.</div>
       </div>
-      <!-- Step 3 -->
+      <!-- Schritt 3 -->
       <div class="ob-step">
-        <div class="ob-icon">🔍</div>
-        <div class="ob-title">Suche &amp; Lernkarten</div>
-        <div class="ob-desc">Die <strong>Suche</strong> findest du unter Einstellungen (oder mit Strg+K). Im Bereich <strong>Lernen</strong> fragst du dich mit den Lernkarten gezielt ab.</div>
+        <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></svg></div>
+        <div class="ob-title">Lernen und Wiederholen</div>
+        <div class="ob-desc">Im Bereich <strong>Lernen</strong> wiederholst du Karten, die App zeigt dir, was heute fällig ist. Das Altklausur-Quiz unter <strong>Prüfung</strong> wiederholt Fragen nach einem festen Plan.</div>
       </div>
-      <!-- Step 4 -->
+      <!-- Schritt 4 -->
       <div class="ob-step">
-        <div class="ob-icon">📝</div>
-        <div class="ob-title">Notizen &amp; Lesezeichen</div>
-        <div class="ob-desc">Auf jeder Lernseite findest du oben rechts den <strong>Stift</strong> für eigene Notizen — sie bleiben gespeichert. Mit dem <strong>Lesezeichen</strong> merkst du dir Seiten für später.</div>
+        <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
+        <div class="ob-title">Notizen, Lesezeichen, Markierungen</div>
+        <div class="ob-desc">Auf jeder Lernseite findest du oben rechts <strong>Lesezeichen</strong>, <strong>Notiz</strong> und <strong>Vorlesen</strong>. Wählst du einen Text aus, kannst du ihn <strong>markieren</strong>.</div>
       </div>
-      <!-- Step 5 -->
+      <!-- Schritt 5 -->
       <div class="ob-step">
-        <div class="ob-icon">⚙️</div>
-        <div class="ob-title">Einstellungen &amp; Timer</div>
-        <div class="ob-desc">Unter <strong>Einstellungen</strong> findest du den Pomodoro-Timer, deine Lernstatistik, Schriftgröße und Akzentfarbe. Läuft der Timer, siehst du ihn oben auf dem Bildschirm.</div>
+        <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></div>
+        <div class="ob-title">Einstellungen</div>
+        <div class="ob-desc">Hier findest du die <strong>Suche</strong>, Pomodoro-Timer, Tagesziel, tägliche Erinnerung und deine <strong>Akzentfarbe</strong>. Mit der <strong>Sicherung</strong> nimmst du deinen Lernstand mit aufs nächste Gerät.</div>
       </div>
     </div>
     <div class="ob-dots">
@@ -450,7 +455,7 @@
       <div class="topic-card" onclick="NAV.go('v-gal-fahrzeugnormung','Fahrzeugnormung')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><div class="tc-name">Fahrzeugnormung</div><div class="tc-sub">DIN EN 1846, Typbezeichnung, DIN 14530, Beladungsnormen, Prüfzeichen</div></div>
       <div class="topic-card" onclick="NAV.go('v-gal-fuehrung','Führung')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><div class="tc-name">Führung</div><div class="tc-sub">Führungsstile, Führungsgrundsätze, Kommunikation, Kritik und Anerkennung</div></div>
       <div class="topic-card" onclick="NAV.go('v-gal-fwdven','FwDVen')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><div class="tc-name">FwDVen</div><div class="tc-sub">Erstellung, Zweck, FwDV 1/2/3/7/8/10/100/500, Löscheinsatz, Taktische Einheiten</div></div>
-      <div class="topic-card" onclick="NAV.go('v-gal-gabc','G-ABC Einsatz')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div class="tc-name">G-ABC Einsatz</div><div class="tc-sub">4A-/GAMS-Regel, Gefahrenbereiche, Dekon I–III, Kennzeichnung, B-Einsatz, A-Einsatz</div></div>
+      <div class="topic-card" onclick="NAV.go('v-gal-gabc','G-ABC Einsatz')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div class="tc-name">G-ABC Einsatz</div><div class="tc-sub">4A-/GAMS-Regel, Gefahrenbereiche, Dekon I–III, Kennzeichnung, B-Einsatz, A-Einsatz</div></div>
       <div class="topic-card" onclick="NAV.go('v-gal-geraetepruefung','Geräteprüfung')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><div class="tc-name">Geräteprüfung</div><div class="tc-sub">DGUV 49/50, prüfpflichtige Geräte, Prüffristen, Dokumentation</div></div>
       <div class="topic-card" onclick="NAV.go('v-gal-hbkg','HBKG Hessen')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="17" x2="2" y2="17"/><path d="M17 22V11H7v11"/><path d="M2 11L12 2l10 9"/></svg><div class="tc-name">HBKG Hessen</div><div class="tc-sub">Aufbau, Aufgaben, Pflichtfeuerwehr, Kostenersatz, Behördenstruktur</div></div>
       <div class="topic-card" onclick="NAV.go('v-gal-kartenkunde','Kartenkunde')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg><div class="tc-name">Kartenkunde</div><div class="tc-sub">TK 25/50, UTM, MGRS, GPS, Höhenlinien, Meldekoordinaten</div></div>
@@ -1883,7 +1888,7 @@
             <li>Wasserentnahmestelle</li>
             <li>Lage des Verteilers</li>
             <li style="opacity:.5">— Einheit/Auftrag/Mittel/Ziel/Weg entfallen —</li>
-            <li>→ <strong style="color:#8FA0B0">ZUM EINSATZ FERTIG!</strong></li>
+            <li>→ <strong style="color:var(--k-8fa0b0)">ZUM EINSATZ FERTIG!</strong></li>
             <li style="font-size:.75rem;color:var(--c-slate)">Übergabe an Einsatzstelle nach Zuständigkeit</li>
           </ul>
           </div>
@@ -2954,8 +2959,8 @@
           <text x="84"  y="222" text-anchor="middle" font-size="8.5" fill="#4ACD90" font-family="'DM Sans',sans-serif" font-weight="600">WIN–WIN</text>
           <text x="276" y="222" text-anchor="middle" font-size="8.5" fill="#D4903A" font-family="'DM Sans',sans-serif" font-weight="600">WIN–LOSE</text>
           <text x="487" y="222" text-anchor="middle" font-size="8.5" fill="#E07070" font-family="'DM Sans',sans-serif" font-weight="600">LOSE–LOSE</text>
-          <line x1="200" y1="8" x2="200" y2="215" stroke="rgba(255,255,255,.12)" stroke-width="1" stroke-dasharray="4,3"/>
-          <line x1="392" y1="8" x2="392" y2="215" stroke="rgba(255,255,255,.12)" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="200" y1="8" x2="200" y2="215" stroke="var(--w12)" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="392" y1="8" x2="392" y2="215" stroke="var(--w12)" stroke-width="1" stroke-dasharray="4,3"/>
           </svg>
           <p class="diagram-caption">9 Eskalationsstufen nach Glasl – Richtung: links aufwärts = Eskalation</p>
           </div>
@@ -3435,11 +3440,11 @@
         <summary><span class="acc-num">06</span><span class="acc-title">Burnout – Entstehung in Phasen (ICD-11 seit 2022)</span><span class="acc-arrow">›</span></summary>
         <div class="acc-body">
           <div class="burnout-row">
-          <div class="bo-stage" style="background:rgba(42,122,82,.15)"><div class="bo-num" style="color:#4ACD90">1</div><div class="bo-title" style="color:var(--c-text-b)">Enthusiasmus</div><div class="bo-desc" style="color:var(--c-slate-l)">Hoher Einsatz, Idealisierung, Überengagement – Warnsignale übersehen</div></div>
+          <div class="bo-stage" style="background:rgba(42,122,82,.15)"><div class="bo-num" style="color:var(--k-4acd90)">1</div><div class="bo-title" style="color:var(--c-text-b)">Enthusiasmus</div><div class="bo-desc" style="color:var(--c-slate-l)">Hoher Einsatz, Idealisierung, Überengagement – Warnsignale übersehen</div></div>
           <div class="bo-stage" style="background:color-mix(in srgb,var(--c-gold) 12%,transparent)"><div class="bo-num" style="color:var(--c-gold)">2</div><div class="bo-title" style="color:var(--c-text-b)">Stagnation</div><div class="bo-desc" style="color:var(--c-slate-l)">Enttäuschung, erste Frustration, nachlassende Energie</div></div>
-          <div class="bo-stage" style="background:rgba(176,115,32,.15)"><div class="bo-num" style="color:#D4903A">3</div><div class="bo-title" style="color:var(--c-text-b)">Frustration</div><div class="bo-desc" style="color:var(--c-slate-l)">Hilflosigkeit, Zynismus, emotionale Erschöpfung, Rückzug</div></div>
-          <div class="bo-stage" style="background:rgba(139,26,26,.15)"><div class="bo-num" style="color:#E07070">4</div><div class="bo-title" style="color:var(--c-text-b)">Apathie</div><div class="bo-desc" style="color:var(--c-slate-l)">Innere Kündigung, emotionale Verarmung, Gleichgültigkeit</div></div>
-          <div class="bo-stage" style="background:rgba(139,26,26,.25)"><div class="bo-num" style="color:#FF5555">5</div><div class="bo-title" style="color:var(--c-text-b)">Burnout</div><div class="bo-desc" style="color:var(--c-slate-l)">Vollständiger Zusammenbruch, AU, psychiatrische Behandlung</div></div>
+          <div class="bo-stage" style="background:rgba(176,115,32,.15)"><div class="bo-num" style="color:var(--k-d4903a)">3</div><div class="bo-title" style="color:var(--c-text-b)">Frustration</div><div class="bo-desc" style="color:var(--c-slate-l)">Hilflosigkeit, Zynismus, emotionale Erschöpfung, Rückzug</div></div>
+          <div class="bo-stage" style="background:rgba(139,26,26,.15)"><div class="bo-num" style="color:var(--k-e07070)">4</div><div class="bo-title" style="color:var(--c-text-b)">Apathie</div><div class="bo-desc" style="color:var(--c-slate-l)">Innere Kündigung, emotionale Verarmung, Gleichgültigkeit</div></div>
+          <div class="bo-stage" style="background:rgba(139,26,26,.25)"><div class="bo-num" style="color:var(--k-ff5555)">5</div><div class="bo-title" style="color:var(--c-text-b)">Burnout</div><div class="bo-desc" style="color:var(--c-slate-l)">Vollständiger Zusammenbruch, AU, psychiatrische Behandlung</div></div>
           </div>
           <div class="cg" style="margin-top:.75rem;">
           <div class="info-card"><div class="info-card-title"><span class="dot dot-b"></span>EAP – Employee Assistance Program</div><p>Externes Beratungsangebot: psychologische Beratung, Sucht, Recht, Finanzen. <strong>Anonym, niedrigschwellig, vertraulich.</strong> Effektivstes BGM-Präventionsinstrument.</p></div>
@@ -3615,11 +3620,11 @@
           <div style="padding:.5rem;text-align:center;font-size:.65rem;color:var(--c-slate)">Geringe Wahrsch.</div>
           <div style="padding:.5rem;text-align:center;font-size:.65rem;color:var(--c-slate)">Hohe Wahrsch.</div>
           <div style="padding:.5rem;text-align:center;font-size:.65rem;color:var(--c-slate)">Geringer Schaden</div>
-          <div style="padding:.75rem;background:rgba(42,122,82,.2);border:1px solid rgba(42,122,82,.3);border-radius:6px;text-align:center;font-size:.72rem;color:#4ACD90;font-weight:600">AKZEPTIEREN</div>
-          <div style="padding:.75rem;background:rgba(176,115,32,.2);border:1px solid rgba(176,115,32,.3);border-radius:6px;text-align:center;font-size:.72rem;color:#D4903A;font-weight:600">BEOBACHTEN</div>
+          <div style="padding:.75rem;background:rgba(42,122,82,.2);border:1px solid rgba(42,122,82,.3);border-radius:6px;text-align:center;font-size:.72rem;color:var(--k-4acd90);font-weight:600">AKZEPTIEREN</div>
+          <div style="padding:.75rem;background:rgba(176,115,32,.2);border:1px solid rgba(176,115,32,.3);border-radius:6px;text-align:center;font-size:.72rem;color:var(--k-d4903a);font-weight:600">BEOBACHTEN</div>
           <div style="padding:.5rem;text-align:center;font-size:.65rem;color:var(--c-slate)">Hoher Schaden</div>
-          <div style="padding:.75rem;background:rgba(176,115,32,.2);border:1px solid rgba(176,115,32,.3);border-radius:6px;text-align:center;font-size:.72rem;color:#D4903A;font-weight:600">MITIGIEREN</div>
-          <div style="padding:.75rem;background:rgba(139,26,26,.25);border:1px solid rgba(139,26,26,.35);border-radius:6px;text-align:center;font-size:.72rem;color:#E07070;font-weight:600">VERMEIDEN</div>
+          <div style="padding:.75rem;background:rgba(176,115,32,.2);border:1px solid rgba(176,115,32,.3);border-radius:6px;text-align:center;font-size:.72rem;color:var(--k-d4903a);font-weight:600">MITIGIEREN</div>
+          <div style="padding:.75rem;background:rgba(139,26,26,.25);border:1px solid rgba(139,26,26,.35);border-radius:6px;text-align:center;font-size:.72rem;color:var(--k-e07070);font-weight:600">VERMEIDEN</div>
           </div>
           <div class="cg" style="margin-top:.75rem;">
           <div class="info-card"><div class="info-card-title"><span class="dot dot-r"></span>Risikovermeidung</div><p>Risikoursache komplett eliminieren. Teuerstes, aber sicherste Strategie.</p></div>
@@ -4514,6 +4519,7 @@
           <button class="quiz-skip-btn" id="quiz-skip" onclick="QUIZ.skip()">Überspringen →</button>
           <button class="quiz-next-btn hidden" id="quiz-next" onclick="QUIZ.next()">Weiter →</button>
         </div>
+        <button class="quiz-report-btn" onclick="SHELL.reportQuiz()">Fehler in dieser Frage melden</button>
       </div>
       <div class="quiz-summary hidden" id="quiz-summary"></div>
       <div class="quiz-filter-panel" id="quiz-filter-panel">
@@ -4530,6 +4536,7 @@
               <button class="quiz-filter-btn active" id="quiz-filter-all" onclick="QUIZ.setFilter('all')">Alle</button>
               <button class="quiz-filter-btn" id="quiz-filter-bm" onclick="QUIZ.setFilter('bookmarked')">★ Gemerkte</button>
               <button class="quiz-filter-btn" id="quiz-filter-wrong" onclick="QUIZ.setFilter('wrong')">✗ Falsche</button>
+              <button class="quiz-filter-btn" id="quiz-filter-due" onclick="QUIZ.setFilter('due')">↻ Fällig</button>
             </div>
           </div>
           <div class="quiz-filter-group">
@@ -4615,7 +4622,7 @@
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);text-align:center;color:var(--c-slate-l);">nein</td>
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);text-align:center;">ja</td>
                 </tr>
-                <tr style="background:rgba(255,255,255,.03);">
+                <tr style="background:var(--w03);">
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);font-weight:600;">Gesetzesberatung – 1. Durchgang (Art. 76 II GG)</td>
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);text-align:center;">ja</td>
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);text-align:center;">ja<br><span style="font-size:.78rem;color:var(--c-slate-l);">(Stellungnahme)</span></td>
@@ -4631,7 +4638,7 @@
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);text-align:center;color:var(--c-slate-l);">nein</td>
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);text-align:center;color:var(--c-slate-l);">nein</td>
                 </tr>
-                <tr style="background:rgba(255,255,255,.03);">
+                <tr style="background:var(--w03);">
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);font-weight:600;">Länderbeteiligung – 2. Durchgang (Art. 77 II ff. GG)</td>
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);text-align:center;color:var(--c-slate-l);">nein</td>
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);text-align:center;">ja<br><span style="font-size:.78rem;color:var(--c-slate-l);">(Zustimmung / Einspruch, ggf. Vermittlungsausschuss)</span></td>
@@ -4647,7 +4654,7 @@
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);text-align:center;">ja</td>
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);text-align:center;">ja<br><span style="font-size:.78rem;color:var(--c-slate-l);">(Gegenzeichnung Art. 58 GG)</span></td>
                 </tr>
-                <tr style="background:rgba(255,255,255,.03);">
+                <tr style="background:var(--w03);">
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);font-weight:600;">Verkündung im Bundesgesetzblatt (Art. 82 I GG)</td>
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);text-align:center;color:var(--c-slate-l);">nein</td>
                   <td style="padding:.45rem .7rem;border:1px solid var(--c-gold-rim);text-align:center;color:var(--c-slate-l);">nein</td>
@@ -7273,12 +7280,12 @@
             </div>
             <!-- Zeile: Macht niedrig -->
             <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c-slate-l);padding-right:.4rem;display:flex;align-items:center">Macht niedrig</div>
-            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:var(--r-md);padding:1rem;min-height:90px">
+            <div style="background:var(--w03);border:1px solid var(--w08);border-radius:var(--r-md);padding:1rem;min-height:90px">
               <div style="font-size:.75rem;font-weight:700;color:var(--c-slate-l);margin-bottom:.35rem">MONITOR</div>
               <div style="font-size:.82rem;color:var(--c-text)">Beobachten – minimaler Aufwand, bei Veränderungen neu einordnen</div>
             </div>
             <div style="background:rgba(74,144,217,.07);border:1px solid rgba(74,144,217,.22);border-radius:var(--r-md);padding:1rem;min-height:90px">
-              <div style="font-size:.75rem;font-weight:700;color:#7BB3E0;margin-bottom:.35rem">KEEP INFORMED</div>
+              <div style="font-size:.75rem;font-weight:700;color:var(--k-7bb3e0);margin-bottom:.35rem">KEEP INFORMED</div>
               <div style="font-size:.82rem;color:var(--c-text)">Informieren – transparent kommunizieren, Bedenken ernst nehmen</div>
             </div>
           </div>
@@ -7358,28 +7365,28 @@
           <h3 class="sec-h" style="font-size:1rem;margin-top:0">Einbindungsgrade (aufsteigend)</h3>
           <div class="step-stack">
             <div class="step-item">
-              <div class="step-letter" style="background:rgba(255,255,255,.06)">I</div>
+              <div class="step-letter" style="background:var(--w06)">I</div>
               <div>
                 <strong>Informieren</strong>
                 <p style="margin:.25rem 0 0;font-size:.85rem;color:var(--c-text)">Einseitige Kommunikation – Stakeholder werden über Entscheidungen in Kenntnis gesetzt. Kein Feedback vorgesehen. Geeignet für periphere Stakeholder (Monitor/Keep Informed).</p>
               </div>
             </div>
             <div class="step-item">
-              <div class="step-letter" style="background:rgba(255,255,255,.06)">II</div>
+              <div class="step-letter" style="background:var(--w06)">II</div>
               <div>
                 <strong>Konsultieren</strong>
                 <p style="margin:.25rem 0 0;font-size:.85rem;color:var(--c-text)">Stakeholder werden um Meinung gefragt – Ergebnisse fließen in die Entscheidung ein, Entscheidungshoheit bleibt bei der Organisation.</p>
               </div>
             </div>
             <div class="step-item">
-              <div class="step-letter" style="background:rgba(255,255,255,.06)">III</div>
+              <div class="step-letter" style="background:var(--w06)">III</div>
               <div>
                 <strong>Einbeziehen</strong>
                 <p style="margin:.25rem 0 0;font-size:.85rem;color:var(--c-text)">Aktive Mitgestaltung ermöglichen – Stakeholder arbeiten in Arbeitsgruppen oder Gremien mit. Geeignet für Schlüsselakteure (Manage Closely).</p>
               </div>
             </div>
             <div class="step-item">
-              <div class="step-letter" style="background:rgba(255,255,255,.06)">IV</div>
+              <div class="step-letter" style="background:var(--w06)">IV</div>
               <div>
                 <strong>Kooperieren</strong>
                 <p style="margin:.25rem 0 0;font-size:.85rem;color:var(--c-text)">Gemeinsame Entscheidungsfindung und geteilte Verantwortung – z. B. in Projekten mit Partnerbehörden oder Hilfsorganisationen.</p>
@@ -7446,12 +7453,12 @@
               <div style="font-size:.8rem;color:var(--c-text);line-height:1.5">Amtsleitung<br>Personalrat<br>Gewerkschaft (ver.di)<br>Senat / Bürgerschaft</div>
             </div>
             <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--c-slate-l);padding-right:.4rem;display:flex;align-items:center">Macht niedrig</div>
-            <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:var(--r-md);padding:.85rem;min-height:100px">
+            <div style="background:var(--w03);border:1px solid var(--w08);border-radius:var(--r-md);padding:.85rem;min-height:100px">
               <div style="font-size:.7rem;font-weight:700;color:var(--c-slate-l);margin-bottom:.4rem">MONITOR</div>
               <div style="font-size:.8rem;color:var(--c-text);line-height:1.5">Lieferanten / Industrie<br>Nachbarkommunen<br>Versicherungen</div>
             </div>
             <div style="background:rgba(74,144,217,.07);border:1px solid rgba(74,144,217,.22);border-radius:var(--r-md);padding:.85rem;min-height:100px">
-              <div style="font-size:.7rem;font-weight:700;color:#7BB3E0;margin-bottom:.4rem">KEEP INFORMED</div>
+              <div style="font-size:.7rem;font-weight:700;color:var(--k-7bb3e0);margin-bottom:.4rem">KEEP INFORMED</div>
               <div style="font-size:.8rem;color:var(--c-text);line-height:1.5">Einsatzpersonal<br>Bürger / Bevölkerung<br>Hilfsorganisationen (THW, DRK)<br>Verbände (DFV, vfdb)</div>
             </div>
           </div>
@@ -7540,46 +7547,46 @@
               </tr>
             </thead>
             <tbody>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+              <tr style="border-bottom:1px solid var(--w06)">
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Senat / Bürgerschaft</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-text)">5</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-text)">4</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-red-l);font-weight:700">4,6</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Manage Closely</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+              <tr style="border-bottom:1px solid var(--w06)">
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Personalrat</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-text)">4</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-text)">5</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-red-l);font-weight:700">4,4</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Manage Closely</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+              <tr style="border-bottom:1px solid var(--w06)">
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Gewerkschaft (ver.di)</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-text)">4</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-text)">4</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-red-l);font-weight:700">4,0</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Manage Closely</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+              <tr style="border-bottom:1px solid var(--w06)">
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Innenministerium (BSI)</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-text)">5</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-text)">2</td>
-                <td style="text-align:center;padding:.5rem;color:#d4a017;font-weight:700">3,8</td>
+                <td style="text-align:center;padding:.5rem;color:var(--k-d4a017);font-weight:700">3,8</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Keep Satisfied</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+              <tr style="border-bottom:1px solid var(--w06)">
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Bevölkerung</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-text)">2</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-text)">4</td>
-                <td style="text-align:center;padding:.5rem;color:#d4a017;font-weight:700">2,8</td>
+                <td style="text-align:center;padding:.5rem;color:var(--k-d4a017);font-weight:700">2,8</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Keep Informed</td>
               </tr>
               <tr>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Lieferanten</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-text)">1</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-text)">2</td>
-                <td style="text-align:center;padding:.5rem;color:#50b860;font-weight:700">1,4</td>
+                <td style="text-align:center;padding:.5rem;color:var(--k-50b860);font-weight:700">1,4</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Monitor</td>
               </tr>
             </tbody>
@@ -7609,7 +7616,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+              <tr style="border-bottom:1px solid var(--w06)">
                 <td style="padding:.5rem .75rem;color:var(--c-text-b);font-weight:600">Senat / Bürgerschaft</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-red-l);font-weight:700">4,6</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Einbeziehen</td>
@@ -7617,7 +7624,7 @@
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Persönlich / monatlich</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Amtsleitung</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+              <tr style="border-bottom:1px solid var(--w06)">
                 <td style="padding:.5rem .75rem;color:var(--c-text-b);font-weight:600">Personalrat</td>
                 <td style="text-align:center;padding:.5rem;color:var(--c-red-l);font-weight:700">4,4</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Kooperieren</td>
@@ -7625,17 +7632,17 @@
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Sitzung / wöchentlich</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Führungskraft</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+              <tr style="border-bottom:1px solid var(--w06)">
                 <td style="padding:.5rem .75rem;color:var(--c-text-b);font-weight:600">Innenministerium</td>
-                <td style="text-align:center;padding:.5rem;color:#d4a017;font-weight:700">3,8</td>
+                <td style="text-align:center;padding:.5rem;color:var(--k-d4a017);font-weight:700">3,8</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Konsultieren</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Quartalsberichte, Meilenstein-Informationen, keine Überraschungen</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Schriftlich / quartalsweise</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Amtsleitung</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+              <tr style="border-bottom:1px solid var(--w06)">
                 <td style="padding:.5rem .75rem;color:var(--c-text-b);font-weight:600">Bevölkerung</td>
-                <td style="text-align:center;padding:.5rem;color:#d4a017;font-weight:700">2,8</td>
+                <td style="text-align:center;padding:.5rem;color:var(--k-d4a017);font-weight:700">2,8</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Informieren</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Pressemitteilungen, Social Media, Jahresbericht</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Öffentlich / bei Bedarf</td>
@@ -7643,7 +7650,7 @@
               </tr>
               <tr>
                 <td style="padding:.5rem .75rem;color:var(--c-text-b);font-weight:600">Lieferanten</td>
-                <td style="text-align:center;padding:.5rem;color:#50b860;font-weight:700">1,4</td>
+                <td style="text-align:center;padding:.5rem;color:var(--k-50b860);font-weight:700">1,4</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Beobachten</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Marktbeobachtung, Vergabeprozess nach VOL/A, anlassbezogener Kontakt</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Vergabeverfahren / projektweise</td>
@@ -7867,49 +7874,49 @@
               <div style="text-align:center;font-size:.65rem;font-weight:700;color:var(--c-slate-l);padding:.3rem 0">S5</div>
               <!-- Row P5 -->
               <div style="font-size:.65rem;font-weight:700;color:var(--c-slate-l);display:flex;align-items:center;padding-right:.4rem">P5</div>
-              <div style="background:rgba(255,200,0,.18);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#d4a017">5</div>
-              <div style="background:rgba(255,140,0,.22);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#d46b00">10</div>
+              <div style="background:rgba(255,200,0,.18);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-d4a017)">5</div>
+              <div style="background:rgba(255,140,0,.22);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-d46b00)">10</div>
               <div style="background:rgba(204,21,21,.18);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--c-red-l)">15</div>
               <div style="background:rgba(204,21,21,.3);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--c-red-l)">20</div>
-              <div style="background:rgba(204,21,21,.45);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#ff4444">25</div>
+              <div style="background:rgba(204,21,21,.45);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-ff4444)">25</div>
               <!-- Row P4 -->
               <div style="font-size:.65rem;font-weight:700;color:var(--c-slate-l);display:flex;align-items:center;padding-right:.4rem">P4</div>
-              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#50b860">4</div>
-              <div style="background:rgba(255,200,0,.18);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#d4a017">8</div>
-              <div style="background:rgba(255,140,0,.22);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#d46b00">12</div>
+              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-50b860)">4</div>
+              <div style="background:rgba(255,200,0,.18);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-d4a017)">8</div>
+              <div style="background:rgba(255,140,0,.22);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-d46b00)">12</div>
               <div style="background:rgba(204,21,21,.18);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--c-red-l)">16</div>
               <div style="background:rgba(204,21,21,.3);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--c-red-l)">20</div>
               <!-- Row P3 -->
               <div style="font-size:.65rem;font-weight:700;color:var(--c-slate-l);display:flex;align-items:center;padding-right:.4rem">P3</div>
-              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#50b860">3</div>
-              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#50b860">6</div>
-              <div style="background:rgba(255,200,0,.18);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#d4a017">9</div>
-              <div style="background:rgba(255,140,0,.22);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#d46b00">12</div>
+              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-50b860)">3</div>
+              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-50b860)">6</div>
+              <div style="background:rgba(255,200,0,.18);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-d4a017)">9</div>
+              <div style="background:rgba(255,140,0,.22);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-d46b00)">12</div>
               <div style="background:rgba(204,21,21,.18);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--c-red-l)">15</div>
               <!-- Row P2 -->
               <div style="font-size:.65rem;font-weight:700;color:var(--c-slate-l);display:flex;align-items:center;padding-right:.4rem">P2</div>
-              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#50b860">2</div>
-              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#50b860">4</div>
-              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#50b860">6</div>
-              <div style="background:rgba(255,200,0,.18);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#d4a017">8</div>
-              <div style="background:rgba(255,140,0,.22);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#d46b00">10</div>
+              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-50b860)">2</div>
+              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-50b860)">4</div>
+              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-50b860)">6</div>
+              <div style="background:rgba(255,200,0,.18);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-d4a017)">8</div>
+              <div style="background:rgba(255,140,0,.22);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-d46b00)">10</div>
               <!-- Row P1 -->
               <div style="font-size:.65rem;font-weight:700;color:var(--c-slate-l);display:flex;align-items:center;padding-right:.4rem">P1</div>
-              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#50b860">1</div>
-              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#50b860">2</div>
-              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#50b860">3</div>
-              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#50b860">4</div>
-              <div style="background:rgba(255,200,0,.18);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#d4a017">5</div>
+              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-50b860)">1</div>
+              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-50b860)">2</div>
+              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-50b860)">3</div>
+              <div style="background:rgba(60,180,80,.15);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-50b860)">4</div>
+              <div style="background:rgba(255,200,0,.18);border-radius:4px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--k-d4a017)">5</div>
             </div>
           </div>
 
           <div class="cg cg-3">
             <div class="info-card">
-              <div class="info-card-title" style="color:#50b860">Grün: 1–6 (akzeptabel)</div>
+              <div class="info-card-title" style="color:var(--k-50b860)">Grün: 1–6 (akzeptabel)</div>
               Risiko ist tolerierbar. Kein sofortiger Handlungsbedarf. Beobachten und dokumentieren.
             </div>
             <div class="info-card">
-              <div class="info-card-title" style="color:#d46b00">Gelb: 7–12 (tolerierbar)</div>
+              <div class="info-card-title" style="color:var(--k-d46b00)">Gelb: 7–12 (tolerierbar)</div>
               Risiko ist relevant. Maßnahmen zur Reduzierung planen und mittelfristig umsetzen.
             </div>
             <div class="info-card">
@@ -8163,7 +8170,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+              <tr style="border-bottom:1px solid var(--w05)">
                 <td style="padding:.5rem .75rem;color:var(--c-text-b);font-weight:600" rowspan="2">Alarmierung</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Leitstellenausfall / Totalversagen</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">2</td>
@@ -8171,14 +8178,14 @@
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-red-l);font-weight:700">10</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Redundante Leitstelle, Notbetrieb</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+              <tr style="border-bottom:1px solid var(--w05)">
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Fehldisposition (falsche Stärke)</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">3</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">4</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-red-l);font-weight:700">12</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Einsatzstichwort-Matrix, Rückfragepflicht</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+              <tr style="border-bottom:1px solid var(--w05)">
                 <td style="padding:.5rem .75rem;color:var(--c-text-b);font-weight:600" rowspan="2">Anfahrt</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Hilfsfristüberschreitung durch Stau</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">4</td>
@@ -8186,14 +8193,14 @@
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-red-l);font-weight:700">12</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Sonderrechte §35 StVO, Einsatzleitrechner</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+              <tr style="border-bottom:1px solid var(--w05)">
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Fahrzeugausfall auf Anfahrt</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">2</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">4</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-red-l);font-weight:700">8</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Wartungsplan, Reservefahrzeug</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+              <tr style="border-bottom:1px solid var(--w05)">
                 <td style="padding:.5rem .75rem;color:var(--c-text-b);font-weight:600">Erkundung</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Fehlbeurteilung der Lage (keine Menschenrettung erkannt)</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">3</td>
@@ -8201,7 +8208,7 @@
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-red-l);font-weight:700">15</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Erkundungsschema, Befragung Anwohner</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+              <tr style="border-bottom:1px solid var(--w05)">
                 <td style="padding:.5rem .75rem;color:var(--c-text-b);font-weight:600" rowspan="3">AGT-Einsatz</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Funkverbindungsabbruch im Gebäude</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">3</td>
@@ -8209,14 +8216,14 @@
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-red-l);font-weight:700">15</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Leine, Signalprotokoll, Repeater</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+              <tr style="border-bottom:1px solid var(--w05)">
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Druckluftreserve unterschritten</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">2</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">5</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-red-l);font-weight:700">10</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Druckkontrolle vor Einsatz, 1/3-Regel</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+              <tr style="border-bottom:1px solid var(--w05)">
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Ausfall des Sicherheitstrupps</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">2</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">5</td>
@@ -8291,13 +8298,13 @@
               </tr>
             </thead>
             <tbody>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+              <tr style="border-bottom:1px solid var(--w06)">
                 <td style="padding:.5rem .75rem;color:var(--c-text-b);font-weight:600">Einfache Matrix</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text);font-family:var(--f-m)">P × S</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Schnell, kommunizierbar, visuell darstellbar</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Gleiche Gewichtung P und S, keine Detektierbarkeit</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.06)">
+              <tr style="border-bottom:1px solid var(--w06)">
                 <td style="padding:.5rem .75rem;color:var(--c-text-b);font-weight:600">RPZ (FMEA)</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text);font-family:var(--f-m)">P × S × E</td>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Detektierbarkeit berücksichtigt, mehr Differenzierung</td>
@@ -8327,7 +8334,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+              <tr style="border-bottom:1px solid var(--w05)">
                 <td style="padding:.5rem .75rem;color:var(--c-text)">AGT-Mindestbesetzung unterschritten</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">4</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">5</td>
@@ -8335,7 +8342,7 @@
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-red-l);font-weight:700">40</td>
                 <td style="padding:.5rem .75rem;color:var(--c-red-l)">🔴 Sofort</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+              <tr style="border-bottom:1px solid var(--w05)">
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Funkverbindungsabbruch im Gebäude</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">3</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">5</td>
@@ -8343,7 +8350,7 @@
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-red-l);font-weight:700">60</td>
                 <td style="padding:.5rem .75rem;color:var(--c-red-l)">🔴 Sofort</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+              <tr style="border-bottom:1px solid var(--w05)">
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Fehlbeurteilung der Lage</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">3</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">5</td>
@@ -8351,21 +8358,21 @@
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-red-l);font-weight:700">45</td>
                 <td style="padding:.5rem .75rem;color:var(--c-red-l)">🔴 Sofort</td>
               </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+              <tr style="border-bottom:1px solid var(--w05)">
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Hilfsfristüberschreitung durch Stau</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">4</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">3</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">2</td>
-                <td style="text-align:center;padding:.5rem .4rem;color:#d4a017;font-weight:700">24</td>
-                <td style="padding:.5rem .75rem;color:#d4a017">🟡 Mittelfristig</td>
+                <td style="text-align:center;padding:.5rem .4rem;color:var(--k-d4a017);font-weight:700">24</td>
+                <td style="padding:.5rem .75rem;color:var(--k-d4a017)">🟡 Mittelfristig</td>
               </tr>
               <tr>
                 <td style="padding:.5rem .75rem;color:var(--c-text)">Fahrzeugausfall auf Anfahrt</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">2</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">4</td>
                 <td style="text-align:center;padding:.5rem .4rem;color:var(--c-text)">1</td>
-                <td style="text-align:center;padding:.5rem .4rem;color:#50b860;font-weight:700">8</td>
-                <td style="padding:.5rem .75rem;color:#50b860">🟢 Beobachten</td>
+                <td style="text-align:center;padding:.5rem .4rem;color:var(--k-50b860);font-weight:700">8</td>
+                <td style="padding:.5rem .75rem;color:var(--k-50b860)">🟢 Beobachten</td>
               </tr>
             </tbody>
           </table>
@@ -8447,23 +8454,23 @@
           <div style="overflow-x:auto">
             <table style="border-collapse:collapse;font-size:.82rem;width:100%;margin:.5rem 0">
               <thead><tr style="background:color-mix(in srgb,var(--c-gold) 15%,transparent)">
-                <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Fahrzeugtyp</th>
-                <th style="padding:.3rem .6rem;text-align:right;border:1px solid rgba(255,255,255,.1)">Kosten (brutto)</th>
-                <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Fahrzeugtyp</th>
-                <th style="padding:.3rem .6rem;text-align:right;border:1px solid rgba(255,255,255,.1)">Kosten (brutto)</th>
+                <th style="padding:.3rem .6rem;text-align:left;border:1px solid var(--w10)">Fahrzeugtyp</th>
+                <th style="padding:.3rem .6rem;text-align:right;border:1px solid var(--w10)">Kosten (brutto)</th>
+                <th style="padding:.3rem .6rem;text-align:left;border:1px solid var(--w10)">Fahrzeugtyp</th>
+                <th style="padding:.3rem .6rem;text-align:right;border:1px solid var(--w10)">Kosten (brutto)</th>
               </tr></thead>
               <tbody>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">KdoW</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">70.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">WLF mit LK</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">400.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">ELW1</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">200.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">AB-Dekon</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">700.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">HLF 20</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">700.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">AB-Schaum</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">260.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">LF 20 KatS</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">550.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">MTW</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">60.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">DLK</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">900.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">RTW</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">400.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">RW</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">700.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">NEF</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">200.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">GW-Hygiene</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">650.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">STW</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">600.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">GW-Versorgung</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">750.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">GRTW</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">950.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">GW-Wasserrettung</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">650.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">FwK</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">1.200.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">LUV</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">350.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">TGM 50</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">1.500.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">RTB 2</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">150.000 €</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">AB-Logistik</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">100.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">KdoW</td><td style="text-align:right;border:1px solid var(--w08)">70.000 €</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">WLF mit LK</td><td style="text-align:right;border:1px solid var(--w08)">400.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">ELW1</td><td style="text-align:right;border:1px solid var(--w08)">200.000 €</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">AB-Dekon</td><td style="text-align:right;border:1px solid var(--w08)">700.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">HLF 20</td><td style="text-align:right;border:1px solid var(--w08)">700.000 €</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">AB-Schaum</td><td style="text-align:right;border:1px solid var(--w08)">260.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">LF 20 KatS</td><td style="text-align:right;border:1px solid var(--w08)">550.000 €</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">MTW</td><td style="text-align:right;border:1px solid var(--w08)">60.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">DLK</td><td style="text-align:right;border:1px solid var(--w08)">900.000 €</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">RTW</td><td style="text-align:right;border:1px solid var(--w08)">400.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">RW</td><td style="text-align:right;border:1px solid var(--w08)">700.000 €</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">NEF</td><td style="text-align:right;border:1px solid var(--w08)">200.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">GW-Hygiene</td><td style="text-align:right;border:1px solid var(--w08)">650.000 €</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">STW</td><td style="text-align:right;border:1px solid var(--w08)">600.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">GW-Versorgung</td><td style="text-align:right;border:1px solid var(--w08)">750.000 €</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">GRTW</td><td style="text-align:right;border:1px solid var(--w08)">950.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">GW-Wasserrettung</td><td style="text-align:right;border:1px solid var(--w08)">650.000 €</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">FwK</td><td style="text-align:right;border:1px solid var(--w08)">1.200.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">LUV</td><td style="text-align:right;border:1px solid var(--w08)">350.000 €</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">TGM 50</td><td style="text-align:right;border:1px solid var(--w08)">1.500.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">RTB 2</td><td style="text-align:right;border:1px solid var(--w08)">150.000 €</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">AB-Logistik</td><td style="text-align:right;border:1px solid var(--w08)">100.000 €</td></tr>
               </tbody>
             </table>
           </div>
@@ -8471,18 +8478,18 @@
           <div style="overflow-x:auto">
             <table style="border-collapse:collapse;font-size:.82rem;width:100%;margin:.5rem 0">
               <thead><tr style="background:color-mix(in srgb,var(--c-gold) 15%,transparent)">
-                <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Fahrzeugtyp</th>
-                <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">BF</th>
-                <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">FF</th>
-                <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Bemerkungen</th>
+                <th style="padding:.3rem .6rem;text-align:left;border:1px solid var(--w10)">Fahrzeugtyp</th>
+                <th style="padding:.3rem .6rem;text-align:center;border:1px solid var(--w10)">BF</th>
+                <th style="padding:.3rem .6rem;text-align:center;border:1px solid var(--w10)">FF</th>
+                <th style="padding:.3rem .6rem;text-align:left;border:1px solid var(--w10)">Bemerkungen</th>
               </tr></thead>
               <tbody>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">ELW / KdoW</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">12 Jahre</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">–</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Trend: max. 10–12 Jahre (BF)</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">HLF</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">15 Jahre</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">20 Jahre</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Trend BF: max. 10–12 Jahre</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">DLK</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">15 Jahre</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">–</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">–</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Sonderfahrzeuge</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">15–20 Jahre</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">–</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">typenabhängig; AB bis 30 Jahre</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">RTW</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">7 Jahre</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">–</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Trend: max. 5 Jahre</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">NEF</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">4 Jahre</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">–</td><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Trend: oft schon nach 3 Jahren</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">ELW / KdoW</td><td style="text-align:center;border:1px solid var(--w08)">12 Jahre</td><td style="text-align:center;border:1px solid var(--w08)">–</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">Trend: max. 10–12 Jahre (BF)</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">HLF</td><td style="text-align:center;border:1px solid var(--w08)">15 Jahre</td><td style="text-align:center;border:1px solid var(--w08)">20 Jahre</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">Trend BF: max. 10–12 Jahre</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">DLK</td><td style="text-align:center;border:1px solid var(--w08)">15 Jahre</td><td style="text-align:center;border:1px solid var(--w08)">–</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">–</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">Sonderfahrzeuge</td><td style="text-align:center;border:1px solid var(--w08)">15–20 Jahre</td><td style="text-align:center;border:1px solid var(--w08)">–</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">typenabhängig; AB bis 30 Jahre</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">RTW</td><td style="text-align:center;border:1px solid var(--w08)">7 Jahre</td><td style="text-align:center;border:1px solid var(--w08)">–</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">Trend: max. 5 Jahre</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">NEF</td><td style="text-align:center;border:1px solid var(--w08)">4 Jahre</td><td style="text-align:center;border:1px solid var(--w08)">–</td><td style="padding:.2rem .6rem;border:1px solid var(--w08)">Trend: oft schon nach 3 Jahren</td></tr>
               </tbody>
             </table>
           </div>
@@ -8552,17 +8559,17 @@
           <div style="overflow-x:auto">
             <table style="border-collapse:collapse;font-size:.82rem;width:100%;margin:.5rem 0">
               <thead><tr style="background:color-mix(in srgb,var(--c-gold) 15%,transparent)">
-                <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Auftragsart</th>
-                <th style="padding:.3rem .6rem;text-align:right;border:1px solid rgba(255,255,255,.1)">ab 1.1.2026</th>
-                <th style="padding:.3rem .6rem;text-align:right;border:1px solid rgba(255,255,255,.1)">bis 31.12.2025</th>
+                <th style="padding:.3rem .6rem;text-align:left;border:1px solid var(--w10)">Auftragsart</th>
+                <th style="padding:.3rem .6rem;text-align:right;border:1px solid var(--w10)">ab 1.1.2026</th>
+                <th style="padding:.3rem .6rem;text-align:right;border:1px solid var(--w10)">bis 31.12.2025</th>
               </tr></thead>
               <tbody>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Liefer- und Dienstleistungsaufträge (sonstige öAG)</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08);font-weight:700;color:var(--c-gold)">216.000 €</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">221.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Liefer- und DL (obere/oberste Bundesbehörden)</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">140.000 €</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">143.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Liefer- und DL (Sektorenauftraggeber)</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">432.000 €</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">443.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Verteidigungs- und sicherheitsrelevante L/DL</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">432.000 €</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">443.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Soziale und andere besondere Dienstleistungen</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">750.000 €</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">750.000 €</td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">Bauaufträge / Konzessionen</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">5.404.000 €</td><td style="text-align:right;border:1px solid rgba(255,255,255,.08)">5.538.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">Liefer- und Dienstleistungsaufträge (sonstige öAG)</td><td style="text-align:right;border:1px solid var(--w08);font-weight:700;color:var(--c-gold)">216.000 €</td><td style="text-align:right;border:1px solid var(--w08)">221.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">Liefer- und DL (obere/oberste Bundesbehörden)</td><td style="text-align:right;border:1px solid var(--w08)">140.000 €</td><td style="text-align:right;border:1px solid var(--w08)">143.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">Liefer- und DL (Sektorenauftraggeber)</td><td style="text-align:right;border:1px solid var(--w08)">432.000 €</td><td style="text-align:right;border:1px solid var(--w08)">443.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">Verteidigungs- und sicherheitsrelevante L/DL</td><td style="text-align:right;border:1px solid var(--w08)">432.000 €</td><td style="text-align:right;border:1px solid var(--w08)">443.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">Soziale und andere besondere Dienstleistungen</td><td style="text-align:right;border:1px solid var(--w08)">750.000 €</td><td style="text-align:right;border:1px solid var(--w08)">750.000 €</td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">Bauaufträge / Konzessionen</td><td style="text-align:right;border:1px solid var(--w08)">5.404.000 €</td><td style="text-align:right;border:1px solid var(--w08)">5.538.000 €</td></tr>
               </tbody>
             </table>
           </div>
@@ -8673,17 +8680,17 @@
           <div style="overflow-x:auto">
             <table style="border-collapse:collapse;font-size:.82rem;width:100%;margin:.5rem 0">
               <thead><tr style="background:color-mix(in srgb,var(--c-gold) 15%,transparent)">
-                <th style="padding:.3rem .6rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Fahrzeug</th>
-                <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Kat. 1<br><small>Straßenfähig (ca. 20 cm)</small></th>
-                <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Kat. 2<br><small>Geländefähig (60 cm)</small></th>
-                <th style="padding:.3rem .6rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Kat. 3<br><small>Geländegängig (100 cm)</small></th>
+                <th style="padding:.3rem .6rem;text-align:left;border:1px solid var(--w10)">Fahrzeug</th>
+                <th style="padding:.3rem .6rem;text-align:center;border:1px solid var(--w10)">Kat. 1<br><small>Straßenfähig (ca. 20 cm)</small></th>
+                <th style="padding:.3rem .6rem;text-align:center;border:1px solid var(--w10)">Kat. 2<br><small>Geländefähig (60 cm)</small></th>
+                <th style="padding:.3rem .6rem;text-align:center;border:1px solid var(--w10)">Kat. 3<br><small>Geländegängig (100 cm)</small></th>
               </tr></thead>
               <tbody>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">ELW / DLK / RTW</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">HLF Straßenfahrgestell</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">HLF Allradfahrgestell</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">GW1 (KLEF)</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td></tr>
-                <tr><td style="padding:.2rem .6rem;border:1px solid rgba(255,255,255,.08)">RW / GW-R</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">✓</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)"></td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">ELW / DLK / RTW</td><td style="text-align:center;border:1px solid var(--w08)">✓</td><td style="text-align:center;border:1px solid var(--w08)"></td><td style="text-align:center;border:1px solid var(--w08)"></td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">HLF Straßenfahrgestell</td><td style="text-align:center;border:1px solid var(--w08)">✓</td><td style="text-align:center;border:1px solid var(--w08)"></td><td style="text-align:center;border:1px solid var(--w08)"></td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">HLF Allradfahrgestell</td><td style="text-align:center;border:1px solid var(--w08)">✓</td><td style="text-align:center;border:1px solid var(--w08)">✓</td><td style="text-align:center;border:1px solid var(--w08)"></td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">GW1 (KLEF)</td><td style="text-align:center;border:1px solid var(--w08)">✓</td><td style="text-align:center;border:1px solid var(--w08)"></td><td style="text-align:center;border:1px solid var(--w08)"></td></tr>
+                <tr><td style="padding:.2rem .6rem;border:1px solid var(--w08)">RW / GW-R</td><td style="text-align:center;border:1px solid var(--w08)">✓</td><td style="text-align:center;border:1px solid var(--w08)">✓</td><td style="text-align:center;border:1px solid var(--w08)"></td></tr>
               </tbody>
             </table>
           </div>
@@ -10019,7 +10026,7 @@
               <p class="acc-sub" style="margin-top:1rem">Kurzantwort</p>
               <div class="def-box"><strong>NWA (F88):</strong> Alternativen anhand gewichteter Kriterien → höchster Gesamtnutzwert = rechtssichere Entscheidung.<br><br><strong>Vorgehen:</strong> Kriterien festlegen → gewichten (Preis ≥ 40 %) → Punkte je Anbieter → gewichtet summieren → Höchstwert gewinnt.<br><br><strong>Rechtliche Pflichten (F90):</strong> Haushaltsmittel vorhanden · Preis ≥ 40 % · Wertungsmatrix mit Ausschreibung veröffentlichen.</div>
               <p class="acc-sub" style="margin-top:1rem">Ausführliche Antwort</p>
-              <div><strong>Instrument: Nutzwertanalyse (NWA) (F 88)</strong><br>Vergleich mehrerer Alternativen anhand <strong>gewichteter Kriterien</strong>; höchster Gesamtnutzwert = rechtssichere Entscheidungsgrundlage (F 89).<br><br><strong>Beispiel HLF-Vergabe (F 89)</strong><br><table style="border-collapse:collapse;font-size:.82rem;margin:.5rem 0;width:100%"><thead><tr style="background:color-mix(in srgb,var(--c-gold) 15%,transparent)"><th style="padding:.25rem .5rem;text-align:left;border:1px solid rgba(255,255,255,.1)">Kriterium</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Gewicht</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Anbieter A (Punkte)</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">A gewichtet</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">Anbieter B (Punkte)</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.1)">B gewichtet</th></tr></thead><tbody><tr><td style="padding:.2rem .5rem;border:1px solid rgba(255,255,255,.08)">Preis</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">40 %</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">4</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">1,6</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">2</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">0,8</td></tr><tr><td style="padding:.2rem .5rem;border:1px solid rgba(255,255,255,.08)">Unterhaltung</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">30 %</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">3</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">0,9</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">3</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">0,9</td></tr><tr><td style="padding:.2rem .5rem;border:1px solid rgba(255,255,255,.08)">Zuladungsreserve</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">30 %</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">3</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">0,9</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">4</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">1,2</td></tr><tr style="font-weight:700"><td style="padding:.2rem .5rem;border:1px solid rgba(255,255,255,.08)">Gesamtnutzwert</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">100 %</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">—</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08);color:#4ACD90">3,4</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">—</td><td style="text-align:center;border:1px solid rgba(255,255,255,.08)">2,9</td></tr></tbody></table><br>→ Anbieter A gewinnt (3,4 vs. 2,9).<br><br><strong>Rechtliche Pflichten (F 90)</strong><br>① Haushaltsrechtliche Voraussetzungen vor Vergabestart.<br>② <strong>Preis mind. 40 %</strong> werten.<br>③ <strong>Wertungsmatrix mit Ausschreibung veröffentlichen.</strong></div>
+              <div><strong>Instrument: Nutzwertanalyse (NWA) (F 88)</strong><br>Vergleich mehrerer Alternativen anhand <strong>gewichteter Kriterien</strong>; höchster Gesamtnutzwert = rechtssichere Entscheidungsgrundlage (F 89).<br><br><strong>Beispiel HLF-Vergabe (F 89)</strong><br><table style="border-collapse:collapse;font-size:.82rem;margin:.5rem 0;width:100%"><thead><tr style="background:color-mix(in srgb,var(--c-gold) 15%,transparent)"><th style="padding:.25rem .5rem;text-align:left;border:1px solid var(--w10)">Kriterium</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid var(--w10)">Gewicht</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid var(--w10)">Anbieter A (Punkte)</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid var(--w10)">A gewichtet</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid var(--w10)">Anbieter B (Punkte)</th><th style="padding:.25rem .5rem;text-align:center;border:1px solid var(--w10)">B gewichtet</th></tr></thead><tbody><tr><td style="padding:.2rem .5rem;border:1px solid var(--w08)">Preis</td><td style="text-align:center;border:1px solid var(--w08)">40 %</td><td style="text-align:center;border:1px solid var(--w08)">4</td><td style="text-align:center;border:1px solid var(--w08)">1,6</td><td style="text-align:center;border:1px solid var(--w08)">2</td><td style="text-align:center;border:1px solid var(--w08)">0,8</td></tr><tr><td style="padding:.2rem .5rem;border:1px solid var(--w08)">Unterhaltung</td><td style="text-align:center;border:1px solid var(--w08)">30 %</td><td style="text-align:center;border:1px solid var(--w08)">3</td><td style="text-align:center;border:1px solid var(--w08)">0,9</td><td style="text-align:center;border:1px solid var(--w08)">3</td><td style="text-align:center;border:1px solid var(--w08)">0,9</td></tr><tr><td style="padding:.2rem .5rem;border:1px solid var(--w08)">Zuladungsreserve</td><td style="text-align:center;border:1px solid var(--w08)">30 %</td><td style="text-align:center;border:1px solid var(--w08)">3</td><td style="text-align:center;border:1px solid var(--w08)">0,9</td><td style="text-align:center;border:1px solid var(--w08)">4</td><td style="text-align:center;border:1px solid var(--w08)">1,2</td></tr><tr style="font-weight:700"><td style="padding:.2rem .5rem;border:1px solid var(--w08)">Gesamtnutzwert</td><td style="text-align:center;border:1px solid var(--w08)">100 %</td><td style="text-align:center;border:1px solid var(--w08)">—</td><td style="text-align:center;border:1px solid var(--w08);color:var(--k-4acd90)">3,4</td><td style="text-align:center;border:1px solid var(--w08)">—</td><td style="text-align:center;border:1px solid var(--w08)">2,9</td></tr></tbody></table><br>→ Anbieter A gewinnt (3,4 vs. 2,9).<br><br><strong>Rechtliche Pflichten (F 90)</strong><br>① Haushaltsrechtliche Voraussetzungen vor Vergabestart.<br>② <strong>Preis mind. 40 %</strong> werten.<br>③ <strong>Wertungsmatrix mit Ausschreibung veröffentlichen.</strong></div>
         </div>
       </details>
 
@@ -10964,11 +10971,11 @@
         <div style="width:1px;height:1.2rem;background:var(--c-gold-rim);"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;width:100%;">
           <div style="display:flex;flex-direction:column;align-items:center;gap:.4rem;">
-            <div style="background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);border-radius:var(--r-sm);padding:.4rem .8rem;font-size:.74rem;font-weight:600;color:#93c5fd;text-align:center;width:100%;">Operativ-taktische<br>Einsatzleitung (EL)</div>
+            <div style="background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);border-radius:var(--r-sm);padding:.4rem .8rem;font-size:.74rem;font-weight:600;color:var(--k-93c5fd);text-align:center;width:100%;">Operativ-taktische<br>Einsatzleitung (EL)</div>
             <div style="font-size:.67rem;color:var(--c-slate);text-align:center;">Führt den Einsatz<br>operativ-taktisch</div>
           </div>
           <div style="display:flex;flex-direction:column;align-items:center;gap:.4rem;">
-            <div style="background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);border-radius:var(--r-sm);padding:.4rem .8rem;font-size:.74rem;font-weight:600;color:#c4b5fd;text-align:center;width:100%;">Administrativ-organ.<br>Krisenstab (KS)</div>
+            <div style="background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);border-radius:var(--r-sm);padding:.4rem .8rem;font-size:.74rem;font-weight:600;color:var(--k-c4b5fd);text-align:center;width:100%;">Administrativ-organ.<br>Krisenstab (KS)</div>
             <div style="font-size:.67rem;color:var(--c-slate);text-align:center;">Rechtliche, finanzielle<br>&amp; politische Aufgaben</div>
           </div>
         </div>
@@ -11365,6 +11372,15 @@
 
     <div class="m-sec">Darstellung</div>
     <div class="m-list">
+      <div class="m-row m-static">
+        <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span>
+        <span class="m-tx"><span class="m-t1">Farbschema</span></span>
+        <span class="m-seg" role="group" aria-label="Farbschema">
+          <button class="theme-opt" data-mode="dark" onclick="THEME.set('dark')">Dunkel</button>
+          <button class="theme-opt" data-mode="light" onclick="THEME.set('light')">Hell</button>
+          <button class="theme-opt" data-mode="system" onclick="THEME.set('system')">System</button>
+        </span>
+      </div>
       <div class="m-row m-static m-wrap">
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2a10 10 0 0 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.3A5.7 5.7 0 0 0 22 9.8C22 5.5 17.5 2 12 2z"/></svg></span>
         <span class="m-tx"><span class="m-t1">Akzentfarbe</span><span class="m-t2">Farbe für Navigation, Knöpfe und Hervorhebungen</span></span>
@@ -11383,6 +11399,27 @@
     </div>
 
     </div><div class="m-col">
+    <div class="m-sec">Lernen</div>
+    <div class="m-list">
+      <div class="m-row m-static">
+        <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span>
+        <span class="m-tx"><span class="m-t1">Tagesziel</span><span class="m-t2">Minuten in der App pro Tag</span></span>
+        <span class="m-step">
+          <button onclick="SHELL.stepGoal(-1)" aria-label="5 Minuten weniger">−</button>
+          <span id="m-goal-val">30 min</span>
+          <button onclick="SHELL.stepGoal(1)" aria-label="5 Minuten mehr">+</button>
+        </span>
+      </div>
+      <div class="m-row m-static m-wrap">
+        <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>
+        <span class="m-tx"><span class="m-t1">Nächste Klausur</span><span class="m-t2">Datum und Name für den Countdown</span></span>
+        <div class="m-fields">
+          <input type="date" id="m-exam-date" class="m-input" aria-label="Datum der Klausur" onchange="SHELL.setExam()">
+          <input type="text" id="m-exam-name" class="m-input" maxlength="60" placeholder="Klausur § 21 · IdF Münster" aria-label="Name der Klausur" onchange="SHELL.setExam()">
+        </div>
+      </div>
+    </div>
+
     <div class="m-sec">Erinnerung</div>
     <div class="m-list">
       <label class="m-row" for="m-notif-toggle">
@@ -11403,6 +11440,15 @@
 
     <div class="m-sec">Daten</div>
     <div class="m-list">
+      <button class="m-row" onclick="BACKUP.export()">
+        <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+        <span class="m-tx"><span class="m-t1">Sicherung erstellen</span><span class="m-t2" id="m-backup-last">Lernstand, Notizen und Einstellungen als Datei</span></span>
+      </button>
+      <label class="m-row" for="m-backup-file" style="cursor:pointer">
+        <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+        <span class="m-tx"><span class="m-t1">Sicherung einspielen</span><span class="m-t2">Datei auswählen, z. B. beim Gerätewechsel</span></span>
+      </label>
+      <input type="file" id="m-backup-file" accept=".json,application/json" hidden onchange="BACKUP.import(this)">
       <button class="m-row" onclick="SETTINGS.resetTopics()">
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg></span>
         <span class="m-tx"><span class="m-t1">Lernfortschritt zurücksetzen</span><span class="m-t2">Häkchen auf allen Modul-Kacheln</span></span>
@@ -11436,6 +11482,15 @@
         <span class="m-tx"><span class="m-t1">Datenschutz</span></span>
       </button>
     </div>
+
+    <div class="m-sec">Projekt unterstützen</div>
+    <div class="m-list m-donate">
+      <a class="m-row m-go" href="https://www.paypal.me/FabianFlemig" target="_blank" rel="noopener noreferrer">
+        <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
+        <span class="m-tx"><span class="m-t1">Freiwillig per PayPal spenden</span><span class="m-t2">paypal.me/FabianFlemig</span></span>
+      </a>
+      <p class="m-note">Die Seite ist und bleibt kostenlos – eine Spende ist <strong>völlig freiwillig</strong>. Wenn dir die Seite beim Lernen hilft und du das Projekt cool findest, kannst du mich gerne unterstützen. Danke dir!</p>
+    </div>
     </div></div>
     <p class="m-version">B VI · Version <span id="m-version"></span> · © 2026 Fabian Flemig</p>
   </div>
@@ -11446,7 +11501,7 @@
   <div class="page-hero"><div class="phi">
     <p class="page-eyebrow">Nur auf diesem Gerät gespeichert</p>
     <h1 class="page-title">Notizen</h1>
-    <p class="page-lead">Alle Notizen, die du auf Lernseiten geschrieben hast. Tippe auf eine Notiz, um die Seite zu öffnen.</p>
+    <p class="page-lead">Alle Notizen und markierten Stellen aus den Lernseiten. Tippe darauf, um die Seite zu öffnen.</p>
   </div></div>
   <div class="pc m-stack">
     <div id="m-notes-list"></div>
@@ -11651,18 +11706,18 @@
     <!-- Gruppen-Übersicht -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:.5rem;margin-bottom:1.5rem;">
       <div style="background:rgba(100,149,237,.1);border:1px solid rgba(100,149,237,.25);border-radius:var(--r-md);padding:.75rem;text-align:center;">
-        <div style="color:#6495ED;font-size:1.3rem;margin-bottom:.3rem;">💨</div>
-        <div style="font-size:.72rem;font-weight:700;color:#6495ED;">Gruppe 1</div>
+        <div style="color:var(--k-6495ed);font-size:1.3rem;margin-bottom:.3rem;">💨</div>
+        <div style="font-size:.72rem;font-weight:700;color:var(--k-6495ed);">Gruppe 1</div>
         <div style="font-size:.68rem;color:var(--c-text-b);margin-top:.2rem;">Erstickend<br>(O₂ verdrängen)</div>
       </div>
       <div style="background:rgba(255,140,0,.08);border:1px solid rgba(255,140,0,.25);border-radius:var(--r-md);padding:.75rem;text-align:center;">
-        <div style="color:#FF8C00;font-size:1.3rem;margin-bottom:.3rem;">⚠️</div>
-        <div style="font-size:.72rem;font-weight:700;color:#FF8C00;">Gruppe 2</div>
+        <div style="color:var(--k-ff8c00);font-size:1.3rem;margin-bottom:.3rem;">⚠️</div>
+        <div style="font-size:.72rem;font-weight:700;color:var(--k-ff8c00);">Gruppe 2</div>
         <div style="font-size:.68rem;color:var(--c-text-b);margin-top:.2rem;">Reiz- &amp; Ätzend<br>(Schleimhäute)</div>
       </div>
       <div style="background:rgba(200,30,30,.08);border:1px solid rgba(200,30,30,.22);border-radius:var(--r-md);padding:.75rem;text-align:center;">
-        <div style="color:#c81e1e;font-size:1.3rem;margin-bottom:.3rem;">☠️</div>
-        <div style="font-size:.72rem;font-weight:700;color:#c81e1e;">Gruppe 3</div>
+        <div style="color:var(--k-c81e1e);font-size:1.3rem;margin-bottom:.3rem;">☠️</div>
+        <div style="font-size:.72rem;font-weight:700;color:var(--k-c81e1e);">Gruppe 3</div>
         <div style="font-size:.68rem;color:var(--c-text-b);margin-top:.2rem;">Systemisch<br>(Blut, Nerven)</div>
       </div>
     </div>
@@ -11674,10 +11729,10 @@
         <div class="acc-body">
           <p><strong>Atemgifte</strong> sind in der Umluft enthaltene Gase, Nebel, Stäube oder Aerosole, die über die Atemwege in den Körper gelangen und dort schädigend wirken oder den Sauerstoffgehalt unter das notwendige Maß herabsetzen.</p>
           <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin:.75rem 0;">
-            <div style="flex:1;min-width:70px;background:rgba(100,149,237,.12);border:1px solid rgba(100,149,237,.3);border-radius:var(--r-sm);padding:.5rem;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:#6495ED;">78 %</div><div style="font-size:.7rem;color:var(--c-muted);">N₂</div></div>
-            <div style="flex:1;min-width:70px;background:rgba(72,199,142,.12);border:1px solid rgba(72,199,142,.3);border-radius:var(--r-sm);padding:.5rem;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:#48c78e;">21 %</div><div style="font-size:.7rem;color:var(--c-muted);">O₂</div></div>
+            <div style="flex:1;min-width:70px;background:rgba(100,149,237,.12);border:1px solid rgba(100,149,237,.3);border-radius:var(--r-sm);padding:.5rem;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:var(--k-6495ed);">78 %</div><div style="font-size:.7rem;color:var(--c-muted);">N₂</div></div>
+            <div style="flex:1;min-width:70px;background:rgba(72,199,142,.12);border:1px solid rgba(72,199,142,.3);border-radius:var(--r-sm);padding:.5rem;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:var(--k-48c78e);">21 %</div><div style="font-size:.7rem;color:var(--c-muted);">O₂</div></div>
             <div style="flex:1;min-width:70px;background:color-mix(in srgb,var(--c-gold) 10%,transparent);border:1px solid var(--c-gold-rim);border-radius:var(--r-sm);padding:.5rem;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:var(--c-gold);">0,96 %</div><div style="font-size:.7rem;color:var(--c-muted);">Edelgase</div></div>
-            <div style="flex:1;min-width:70px;background:rgba(200,30,30,.1);border:1px solid rgba(200,30,30,.25);border-radius:var(--r-sm);padding:.5rem;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:#c81e1e;">0,04 %</div><div style="font-size:.7rem;color:var(--c-muted);">CO₂</div></div>
+            <div style="flex:1;min-width:70px;background:rgba(200,30,30,.1);border:1px solid rgba(200,30,30,.25);border-radius:var(--r-sm);padding:.5rem;text-align:center;"><div style="font-size:1.1rem;font-weight:800;color:var(--k-c81e1e);">0,04 %</div><div style="font-size:.7rem;color:var(--c-muted);">CO₂</div></div>
           </div>
           <p>Sinkt O₂ unter <strong>15 Vol.&nbsp;%</strong> nimmt der Körper Schaden. Der Mensch besitzt <strong>kein Sinnesorgan</strong> für Sauerstoffmangel – Nachweis ausschließlich mit Messgeräten.</p>
           <p class="acc-sub">Äußere &amp; Innere Atmung</p>
@@ -15721,7 +15776,7 @@
       <details class="acc-item">
         <summary><span class="acc-num">04</span><span class="acc-title">MGRS – Military Grid Reference System</span><span class="acc-arrow">›</span></summary>
         <div class="acc-body">
-          <div class="def-box"><div class="def-box-label">Aufbau MGRS</div><p>MGRS basiert auf UTM, ersetzt aber den langen numerischen Rechts-/Hochwert durch ein <strong>Buchstaben-Gittersystem</strong>:</p><p style="margin-top:.6rem"><code style="background:#1a1d2e;padding:.2rem .5rem;border-radius:4px">[Zone] [Breitenband] [2 Buchstaben Gitterquadrat 100×100 km] [Ostwert] [Nordwert]</code></p></div>
+          <div class="def-box"><div class="def-box-label">Aufbau MGRS</div><p>MGRS basiert auf UTM, ersetzt aber den langen numerischen Rechts-/Hochwert durch ein <strong>Buchstaben-Gittersystem</strong>:</p><p style="margin-top:.6rem"><code style="background:var(--b-1a1d2e);padding:.2rem .5rem;border-radius:4px">[Zone] [Breitenband] [2 Buchstaben Gitterquadrat 100×100 km] [Ostwert] [Nordwert]</code></p></div>
           <div class="cg cg-2">
             <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Beispiel komplett</div><p>MGRS-Koordinate: <strong>32U MC 12345 67890</strong></p><ul class="bl"><li><strong>32U</strong> = UTM-Zone 32, Breitenband U (Mitteleuropa)</li><li><strong>MC</strong> = 100-km-Gitterquadrat innerhalb der Zone</li><li><strong>12345</strong> = Ostwert (5-stellig → 1 m Genauigkeit)</li><li><strong>67890</strong> = Nordwert (5-stellig → 1 m Genauigkeit)</li></ul></div>
             <div class="info-card"><div class="info-card-title"><span class="dot dot-ok"></span>Stellenanzahl &amp; Genauigkeit</div><ul class="bl"><li><strong>0 Stellen</strong> (nur MC) → 100 km</li><li><strong>2 Stellen</strong> (M C 1 6) → 10 km</li><li><strong>4 Stellen</strong> (MC 12 67) → 1 km (Standardplanquadrat)</li><li><strong>6 Stellen</strong> (MC 123 678) → 100 m</li><li><strong>8 Stellen</strong> (MC 1234 6789) → 10 m</li><li><strong>10 Stellen</strong> (MC 12345 67890) → 1 m</li></ul></div>

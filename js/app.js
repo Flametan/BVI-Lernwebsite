@@ -66,6 +66,7 @@ const NAV = (function(){
 
 history.replaceState({home:true},'');
 window.addEventListener('popstate',function(e){
+  if(typeof LIGHTBOX!=='undefined'&&LIGHTBOX.isOpen()){ LIGHTBOX.close(true); return; }
   if(e.state&&e.state.stack){
     // Restore stack from state and show the top view
     const s=e.state.stack;
@@ -1504,12 +1505,7 @@ const NOTES = (function(){
         entries.push('### '+label+'\n'+v.trim());
       }
       if(!entries.length){ TOAST.show('Keine Notizen vorhanden'); return; }
-      const blob = new Blob([entries.join('\n\n---\n\n')], {type:'text/plain;charset=utf-8'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href=url; a.download='bvi-notizen.txt'; a.click();
-      URL.revokeObjectURL(url);
-      TOAST.show('Notizen exportiert',{type:'ok'});
+      FILES.save('bvi-notizen.txt','text/plain',entries.join('\n\n---\n\n'));
     }
   };
 })();
@@ -1892,7 +1888,7 @@ const FC = (function(){
         d[card.id]=sm2(d[card.id]||{},q); sess.known++;
         if(typeof STREAK!=='undefined') STREAK.record();
       }
-      fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide();
+      fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide(); SHELL.updateBadges();
     },
     setFilter(f){
       if(f==='starred'){
@@ -1940,10 +1936,10 @@ const FC = (function(){
       w.document.write(`<!DOCTYPE html><html><head><title>Lernkarten B VI</title><style>
         *{box-sizing:border-box;margin:0;padding:0;}body{font-family:sans-serif;padding:1rem;}
         .grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
-        .pc{border:1px solid #ccc;border-radius:8px;padding:.85rem;page-break-inside:avoid;}
-        .cat{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;}
+        .pc{border:1px solid var(--b-cccccc);border-radius:8px;padding:.85rem;page-break-inside:avoid;}
+        .cat{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--k-888888);margin-bottom:.35rem;}
         .q{font-weight:700;font-size:.88rem;margin-bottom:.45rem;line-height:1.4;}
-        hr{border:none;border-top:1px solid #eee;margin:.4rem 0;}
+        hr{border:none;border-top:1px solid var(--b-eeeeee);margin:.4rem 0;}
         .a{font-size:.78rem;color:#333;line-height:1.6;}
         @media print{.grid{grid-template-columns:1fr 1fr;}}
       </style></head><body><div class="grid">${rows}</div></body></html>`);
@@ -2276,8 +2272,18 @@ const STREAK = (function(){
 const NOTIF = (function(){
   function prefs(){ try{return JSON.parse(localStorage.getItem('bvi_notif')||'{}');}catch{return{};} }
   function savePrefs(p){ try{localStorage.setItem('bvi_notif',JSON.stringify(p));}catch{} }
-  return {
+  const native=()=>!!(window.BVIAndroid&&window.BVIAndroid.setReminder);
+  function syncToggle(){ const t=document.getElementById('m-notif-toggle'); if(t) t.checked=api.isEnabled(); }
+  const api={
     async setEnabled(on){
+      if(native()){
+        // Android-App: echte Benachrichtigung, auch wenn die App geschlossen ist
+        let r='ok'; try{ r=BVIAndroid.setReminder(!!on,api.hour()); }catch(e){ r='error'; }
+        if(r==='ask') return !!prefs().enabled;
+        savePrefs({...prefs(),enabled:!!on&&r==='ok'});
+        if(on&&r==='ok') TOAST.show('Erinnerung um '+api.hour()+':00 Uhr aktiviert',{type:'ok'});
+        return !!prefs().enabled;
+      }
       if(!('Notification' in window)){ TOAST.show('Benachrichtigungen nicht unterstützt'); return false; }
       if(on){
         const r=await Notification.requestPermission();
@@ -2286,10 +2292,20 @@ const NOTIF = (function(){
         TOAST.show('Benachrichtigungen aktiviert',{type:'ok'}); return true;
       } else { savePrefs({...prefs(),enabled:false}); return false; }
     },
-    setHour(h){ savePrefs({...prefs(),hour:parseInt(h,10)}); },
+    // Antwort der Android-App auf die Berechtigungsabfrage
+    _nativeResult(ok){
+      savePrefs({...prefs(),enabled:!!ok});
+      TOAST.show(ok?'Erinnerung um '+api.hour()+':00 Uhr aktiviert':'Benachrichtigungen wurden abgelehnt',{type:ok?'ok':undefined});
+      syncToggle();
+    },
+    setHour(h){
+      savePrefs({...prefs(),hour:parseInt(h,10)});
+      if(native()&&prefs().enabled){ try{ BVIAndroid.setReminder(true,parseInt(h,10)); }catch(e){} }
+    },
     hour(){ return prefs().hour||18; },
-    isEnabled(){ const p=prefs();return !!p.enabled&&'Notification' in window&&Notification.permission==='granted'; },
+    isEnabled(){ const p=prefs(); return native()?!!p.enabled:(!!p.enabled&&'Notification' in window&&Notification.permission==='granted'); },
     check(){
+      if(native()) return;
       const p=prefs(); if(!this.isEnabled()) return;
       const today=new Date().toDateString(); if(p.lastShown===today) return;
       if(new Date().getHours()<(p.hour||18)) return;
@@ -2297,6 +2313,7 @@ const NOTIF = (function(){
       savePrefs({...p,lastShown:today});
     }
   };
+  return api;
 })();
 
 /* ======================================================================
@@ -2569,6 +2586,19 @@ const QUIZ=(function(){
 
   function loadBm(){try{const s=localStorage.getItem(KEY_BM);if(s)_bookmarks=new Set(JSON.parse(s));}catch(e){}}
   function saveBm(){try{localStorage.setItem(KEY_BM,JSON.stringify([..._bookmarks]));}catch(e){}}
+  // Wiederholung nach Plan: richtig = nächste Stufe (1, 3, 7, 14, 30 Tage), falsch = Stufe 1 und sofort fällig
+  const KEY_SRS='bvi_quiz_srs', SRS_DAYS=[0,1,3,7,14,30];
+  let _srs={};
+  function loadSrs(){try{_srs=JSON.parse(localStorage.getItem(KEY_SRS)||'{}')||{};}catch(e){_srs={};}}
+  function srsUpdate(id,ok){
+    const cur=_srs[id]||{box:0};
+    const box=ok?Math.min(5,(cur.box||0)+1):1;
+    _srs[id]={box,due:ok?Date.now()+SRS_DAYS[box]*864e5:Date.now()};
+    try{localStorage.setItem(KEY_SRS,JSON.stringify(_srs));}catch(e){}
+  }
+  const isDue=id=>!!_srs[id]&&_srs[id].due<=Date.now();
+  function dueCount(){ loadSrs(); return Object.values(_srs).filter(x=>x&&x.due<=Date.now()).length; }
+  function updateDueBtn(){const b=document.getElementById('quiz-filter-due');if(b){const n=Q.filter(q=>isDue(q.id)).length;b.textContent='↻ Fällig'+(n?' ('+n+')':'');}}
   function loadMastery(){try{const s=localStorage.getItem(KEY_MASTERY);if(s)_masteryMap=JSON.parse(s);}catch(e){}}
   function saveMastery(){try{localStorage.setItem(KEY_MASTERY,JSON.stringify(_masteryMap));}catch(e){}}
 
@@ -2589,7 +2619,7 @@ const QUIZ=(function(){
     saveStats(d);
   }
   function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=0|Math.random()*(i+1);[r[i],r[j]]=[r[j],r[i]];}return r;}
-  function filteredIds(){let p=_filter==='bookmarked'?Q.filter(q=>_bookmarks.has(q.id)):_filter==='wrong'?Q.filter(q=>_masteryMap[q.id]==='err'):Q;if(_catFilter!=='all')p=p.filter(q=>q.cat===_catFilter);if(_typeFilter!=='all')p=p.filter(q=>q.type===_typeFilter);return p.map(q=>q.id);}
+  function filteredIds(){let p=_filter==='bookmarked'?Q.filter(q=>_bookmarks.has(q.id)):_filter==='wrong'?Q.filter(q=>_masteryMap[q.id]==='err'):_filter==='due'?Q.filter(q=>isDue(q.id)):Q;if(_catFilter!=='all')p=p.filter(q=>q.cat===_catFilter);if(_typeFilter!=='all')p=p.filter(q=>q.type===_typeFilter);return p.map(q=>q.id);}
   function buildOrder(){_order=shuffle(filteredIds());_cur=0;_answered=false;_sessionCorrect=0;_sessionWrong=0;_sessionSkipped=0;_retried=new Set();_retriedCount=0;_posHistory={};hideSummary();renderFilterStatus();}
   function curQ(){return Q.find(q=>q.id===_order[_cur]);}
 
@@ -2629,8 +2659,9 @@ const QUIZ=(function(){
     const el=document.getElementById('quiz-filter-status');
     const tog=document.getElementById('qft-status');
     const count=filteredIds().length;
+    updateDueBtn();
     const parts=[];
-    if(_filter!=='all')parts.push(_filter==='bookmarked'?'★ Gemerkte':'✗ Falsche');
+    if(_filter!=='all')parts.push(_filter==='bookmarked'?'★ Gemerkte':_filter==='due'?'↻ Fällig':'✗ Falsche');
     if(_catFilter!=='all')parts.push(CAT_LABELS[_catFilter]||_catFilter);
     if(_typeFilter!=='all')parts.push(_typeFilter==='mc'?'Multiple Choice':_typeFilter==='tf'?'Richtig/Falsch':'Freitext');
     const hasFilter=parts.length>0;
@@ -2772,7 +2803,7 @@ const QUIZ=(function(){
   return {
     init(){
       if(_inited)return;_inited=true;
-      loadBm();loadMastery();buildOrder();renderCatBar();renderTypeBar();renderLearn();initKeyboard();initTouch();
+      loadBm();loadMastery();loadSrs();buildOrder();renderCatBar();renderTypeBar();renderLearn();initKeyboard();initTouch();
     },
     setMode(m){
       _mode=m;
@@ -2791,7 +2822,7 @@ const QUIZ=(function(){
       exp.textContent=q.exp;exp.className=ok?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';
       const noteEl2=document.getElementById('quiz-note');if(q.note&&noteEl2){noteEl2.textContent=q.note;noteEl2.className='quiz-note';}
       document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.remove('hidden');
-      _masteryMap[q.id]=ok?'ok':'err';saveMastery();
+      _masteryMap[q.id]=ok?'ok':'err';saveMastery();srsUpdate(q.id,ok);updateDueBtn();
       _posHistory[_cur]={userIdx:idx,correct:ok};
       if(!ok&&!_retried.has(q.id)){_retried.add(q.id);_order.push(q.id);_retriedCount++;const rt=document.getElementById('quiz-retry-tag');if(rt){rt.textContent='+'+_retriedCount+' ↻';rt.classList.add('qrt-flash');setTimeout(()=>rt.classList.remove('qrt-flash'),600);}}
       if(ok)_sessionCorrect++;else _sessionWrong++;
@@ -2804,7 +2835,7 @@ const QUIZ=(function(){
       document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.remove('hidden');
       const rb=document.querySelector('.quiz-reveal-btn');if(rb)rb.disabled=true;
       if(!_masteryMap[q.id]||_masteryMap[q.id]==='err')_masteryMap[q.id]='ok';
-      saveMastery();_posHistory[_cur]={userIdx:null,correct:true};
+      saveMastery();srsUpdate(q.id,true);updateDueBtn();_posHistory[_cur]={userIdx:null,correct:true};
       renderMastery();renderMasteryCats();
     },
     next(){_cur++;if(_cur>=_order.length){showSummary();return;}renderLearn();},
@@ -2820,6 +2851,7 @@ const QUIZ=(function(){
       document.getElementById('quiz-filter-all').classList.toggle('active',f==='all');
       document.getElementById('quiz-filter-bm').classList.toggle('active',f==='bookmarked');
       document.getElementById('quiz-filter-wrong')?.classList.toggle('active',f==='wrong');
+      document.getElementById('quiz-filter-due')?.classList.toggle('active',f==='due');
       buildOrder();renderFilterStatus();renderLearn();
     },
     setCatFilter(cat){_catFilter=cat;renderCatBar();buildOrder();renderFilterStatus();renderLearn();},
@@ -2836,9 +2868,11 @@ const QUIZ=(function(){
       document.getElementById('quiz-filter-all').classList.add('active');
       document.getElementById('quiz-filter-bm').classList.remove('active');
       document.getElementById('quiz-filter-wrong')?.classList.remove('active');
+      document.getElementById('quiz-filter-due')?.classList.remove('active');
       renderCatBar();renderTypeBar();renderFilterStatus();buildOrder();renderLearn();
     },
     back(){if(_cur>0){_cur--;renderLearn();}},
+    dueCount,
     reshuffle(){buildOrder();renderLearn();},
     openMastery(){
       renderMastery();renderMasteryCats();
@@ -3247,6 +3281,25 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.2.0',ts:'2026-10-19T22:00',items:[
+      'Helles Design: In den Einstellungen unter „Farbschema“ zwischen Dunkel, Hell und System wählen',
+      'Bilder und Diagramme auf den Lernseiten antippen: öffnet sich groß im Vordergrund, mit Zoom per Doppeltipp oder zwei Fingern',
+      'Neues App-Symbol: die Flamme der Website; in der Android-App passt sie sich der Akzentfarbe an, im Browser-Tab ebenfalls',
+      'Einstellungen: freiwillige Unterstützung per PayPal (kein Muss, die Seite bleibt kostenlos)',
+    ]},
+    {v:'3.1.0',ts:'2026-10-19T20:00',items:[
+      'Startseite: Karte „Jetzt / Als Nächstes“ mit der laufenden bzw. nächsten Einheit aus dem Stundenplan (Zeit, Raum)',
+      'Startseite: Tagesziel mit Fortschrittsring – das Ziel stellst du in den Einstellungen ein',
+      'Tab „Lernen“ zeigt, wie viele Karten heute fällig sind',
+      'Plan: Stundenplan in den Kalender übernehmen (Datei mit Erinnerung 30 Minuten vorher)',
+      'Einstellungen: Sicherung erstellen und einspielen (Lernstand, Notizen, Lesezeichen, Einstellungen); Datum und Name der nächsten Klausur einstellbar',
+      'Quiz: Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) mit Filter „Fällig“; Altklausur-Quiz, Klausurfragen und Fallbearbeitung im neuen Design',
+      'Lernseiten: Text auswählen und markieren; Markierungen stehen auch in der Notizen-Übersicht',
+      'Fehler melden: Zeile am Ende jeder Lernseite und Knopf bei jeder Quiz-Frage',
+      'Lernseiten im neuen Design (Abschnitte, Infokästen, Tabellen), kräftigere Grautöne, größere Trefferflächen, neue Einführung',
+      'Android-App: Erinnerung als echte Benachrichtigung, auch bei geschlossener App; neue Versionen lassen sich über die installierte App installieren (einmalig deinstallieren); Links öffnen außerhalb der App',
+      'Prüfung: Fallbearbeitung leuchtet in der Akzentfarbe'
+    ]},
     {v:'3.0.2',ts:'2026-10-19T16:00',items:[
       'Prüfung: Klausur 08/2026, Altklausur-Quiz VAk und Führungsdienstsimulator leuchten in deiner Akzentfarbe',
       'Einstellungen: Die Farbkreise sind kleiner und passen in eine Zeile',
@@ -4661,6 +4714,7 @@ const IDF_PLAN = (function(){
         <div class="idf-items">${_dayItems(items)}</div></div>`;
     }).join('')+'</div>';
     if(tel) h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${[...tel,['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><span>${esc(t)}</span></div>`).join('')}</div>`;
+    h+=`<button class="m-cal-btn" onclick="IDF_PLAN.exportIcs()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5"/></svg>Stundenplan in den Kalender übernehmen<small>Gruppe ${_grp[1]} · alle Einheiten mit Erinnerung 30 Minuten vorher</small></button>`;
     h+='<div class="idf-legend"><span><i class="hi"></i>Schlüsseltermin</span><span><i class="ex"></i>Exkursion</span><span><i class="ar"></i>An-/Abreise, frei</span><span>EVA = eigenverantwortliches Arbeiten</span></div>';
     el.innerHTML=h;
   }
@@ -4681,13 +4735,236 @@ const IDF_PLAN = (function(){
     _wi=keep>=0?keep:_autoIdx();
     _draw();
   }
+  function _minutes(str){ const m=/(\d{1,2}):(\d{2})/.exec(str||''); return m?(+m[1])*60+(+m[2]):null; }
+  // Laufende oder nächste Einheit nach Stundenplan der gewählten Gruppe; null, wenn das Modul vorbei ist
+  function next(now=new Date()){
+    for(const w of _buildWeeks(_savedGrp())){
+      const base=new Date(w[3]+'T00:00');
+      for(let d=0;d<5;d++){
+        const day=new Date(base); day.setDate(base.getDate()+d);
+        const dayEnd=new Date(day); dayEnd.setHours(23,59,59,0);
+        if(dayEnd<now) continue;
+        for(const raw of _splitAtLunch(w[5][d]||[])){
+          const [t,title,cls='',room='',note='']=raw.split('|');
+          if(/unterrichtsfrei|Selbststudium|Heiligabend|Weihnachtstag/.test(title)) continue;
+          const [a,b]=_time(t);
+          const s=_minutes(a); if(s===null) continue;
+          const e=_minutes(b); 
+          const start=new Date(day); start.setHours(0,s,0,0);
+          const end=new Date(day); end.setHours(0,e===null?s+60:e,0,0);
+          if(end>now) return {state:start<=now?'now':'next',title,start,end,room,note,cls,kw:w[0]};
+        }
+      }
+    }
+    return null;
+  }
+
+  // Stundenplan der gewählten Gruppe als Kalenderdatei (iCalendar), mit Erinnerung 30 Minuten vorher
+  function ics(){
+    const g=_savedGrp(), pad=n=>String(n).padStart(2,'0');
+    const fold=l=>{ let out='',cur=''; for(const ch of l){ if(new TextEncoder().encode(cur+ch).length>73){ out+=cur+'\r\n '; cur=''; } cur+=ch; } return out+cur; };
+    const esc=t=>String(t).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+    const stamp=(()=>{const d=new Date();return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z';})();
+    const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//B VI Lernwebsite//Stundenplan Modul 3.5//DE','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:IdF Münster Modul 3.5 · Gruppe '+g[1]];
+    let count=0;
+    for(const w of _buildWeeks(g)){
+      const base=new Date(w[3]+'T00:00');
+      for(let d=0;d<5;d++){
+        const day=new Date(base); day.setDate(base.getDate()+d);
+        const ymd=day.getFullYear()+pad(day.getMonth()+1)+pad(day.getDate());
+        _splitAtLunch(w[5][d]||[]).forEach((raw,i)=>{
+          const [t,title,cls='',room='',note='']=raw.split('|');
+          if(/unterrichtsfrei|Selbststudium|Heiligabend|Weihnachtstag/.test(title)) return;
+          const [a,b]=_time(t); const s=_minutes(a); if(s===null) return;
+          const e=_minutes(b)??s+60, hm=m=>pad(Math.floor(m/60))+pad(m%60)+'00';
+          lines.push('BEGIN:VEVENT','UID:bvi-'+g+'-'+ymd+'-'+hm(s)+'-'+i+'@bvi-lernwebsite','DTSTAMP:'+stamp,
+            'DTSTART:'+ymd+'T'+hm(s),'DTEND:'+ymd+'T'+hm(e),
+            'SUMMARY:'+esc(title));
+          if(room) lines.push('LOCATION:'+esc('IdF NRW Münster, Raum '+room));
+          lines.push('DESCRIPTION:'+esc([w[2]+' (KW '+w[0]+')',note].filter(Boolean).join('\n')));
+          lines.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+esc(title),'TRIGGER:-PT30M','END:VALARM','END:VEVENT');
+          count++;
+        });
+      }
+    }
+    lines.push('END:VCALENDAR');
+    return {text:lines.map(fold).join('\r\n')+'\r\n',count,group:g};
+  }
+  function exportIcs(){
+    const r=ics();
+    FILES.save('bvi-stundenplan-gruppe'+r.group[1]+'.ics','text/calendar',r.text,true);
+  }
+
   function summary(){
     const ws=_buildWeeks(_savedGrp()), w=ws[_autoIdx(ws)];
     const end=new Date(ws[ws.length-1][3]+'T00:00'); end.setDate(end.getDate()+5);
     return { kw:w[0], thema:w[2], over:new Date()>end };
   }
 
-  return { render, summary, _nav, _grp:_setGrp };
+  return { render, summary, next, ics, exportIcs, _nav, _grp:_setGrp };
+})();
+
+/* ── Dateien speichern (Browser: Download, Android-App: Ordner Downloads) ── */
+const FILES=(function(){
+  function save(name,mime,text,open){
+    if(window.BVIAndroid&&BVIAndroid.saveText){
+      try{
+        const ok=BVIAndroid.saveText(name,mime,text,!!open);
+        TOAST.show(ok?(open?'Datei wird geöffnet …':'In Downloads gespeichert'):'Speichern fehlgeschlagen',ok?{type:'ok'}:undefined);
+        return ok;
+      }catch(e){}
+    }
+    const url=URL.createObjectURL(new Blob([text],{type:mime+';charset=utf-8'}));
+    const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),3000);
+    TOAST.show('Datei erstellt: '+name,{type:'ok'});
+    return true;
+  }
+  return {save};
+})();
+
+/* ── Sicherung: Lernstand, Notizen, Lesezeichen und Einstellungen als Datei ── */
+const BACKUP=(function(){
+  const keep=k=>(k.startsWith('bvi_')&&k!=='bvi_seen_version'&&k!=='bvi_last_backup')||k==='idf_plan_grp';
+  function collect(){
+    const d={};
+    for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&keep(k)) d[k]=localStorage.getItem(k); }
+    return d;
+  }
+  const stamp=()=>{ const d=new Date(),p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); };
+  return {
+    export(){
+      const data=collect(), n=Object.keys(data).length;
+      const body=JSON.stringify({app:'bvi-lernwebsite',version:APP_VERSION,exported:new Date().toISOString(),data},null,1);
+      FILES.save('bvi-sicherung-'+stamp()+'.json','application/json',body);
+      try{ localStorage.setItem('bvi_last_backup',new Date().toISOString()); }catch(e){}
+      SHELL.syncSettings();
+      return n;
+    },
+    last(){ try{ const t=localStorage.getItem('bvi_last_backup'); return t?new Date(t):null; }catch(e){ return null; } },
+    import(input){
+      const f=input.files&&input.files[0]; input.value='';
+      if(!f) return;
+      const r=new FileReader();
+      r.onload=()=>{
+        let o; try{ o=JSON.parse(r.result); }catch(e){ TOAST.show('Das ist keine gültige Sicherungsdatei'); return; }
+        if(!o||o.app!=='bvi-lernwebsite'||typeof o.data!=='object'||!o.data){ TOAST.show('Das ist keine Sicherung dieser App'); return; }
+        const keys=Object.keys(o.data).filter(k=>keep(k)&&typeof o.data[k]==='string');
+        if(!keys.length){ TOAST.show('Die Sicherung enthält keine Daten'); return; }
+        const when=o.exported?new Date(o.exported).toLocaleDateString('de-DE'):'unbekannt';
+        if(!confirm('Sicherung vom '+when+' einspielen?\n\nDeine aktuellen Daten für diese '+keys.length+' Einträge werden überschrieben.')) return;
+        keys.forEach(k=>{ try{ localStorage.setItem(k,o.data[k]); }catch(e){} });
+        TOAST.show('Sicherung eingespielt – App wird neu geladen',{type:'ok'});
+        setTimeout(()=>location.reload(),900);
+      };
+      r.onerror=()=>TOAST.show('Datei konnte nicht gelesen werden');
+      r.readAsText(f);
+    }
+  };
+})();
+
+/* ── Textmarkierungen auf Lernseiten (CSS Custom Highlight API; gespeichert wird das Zitat samt Umgebung) ── */
+const HL=(function(){
+  const KEY='bvi_hl', OK=!!(window.CSS&&CSS.highlights&&window.Highlight);
+  const load=()=>{ try{ return JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ return {}; } };
+  const save=d=>{ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){} };
+  let view=null, ranges=[], bar=null, timer=null;
+  const root=()=>view?document.getElementById(view)?.querySelector('.pc'):null;
+  const lesson=pc=>!!pc&&!!pc.querySelector('.sec-h,.acc-item,.info-card,table');
+  function index(pc){
+    const w=document.createTreeWalker(pc,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement&&!n.parentElement.closest('script,style,textarea,input,.m-report,#m-hl-bar')?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT});
+    const arr=[]; let n,pos=0;
+    while((n=w.nextNode())){ arr.push({n,s:pos}); pos+=n.data.length; }
+    return {arr,full:arr.map(x=>x.n.data).join('')};
+  }
+  function span(r,idx){
+    let a=null,b=null;
+    for(const e of idx.arr){
+      if(!r.intersectsNode(e.n)) continue;
+      const st=e.n===r.startContainer?r.startOffset:0, en=e.n===r.endContainer?r.endOffset:e.n.data.length;
+      if(en<=st) continue;
+      if(a===null) a=e.s+st;
+      b=e.s+en;
+    }
+    return a===null?null:[a,b];
+  }
+  function locate(idx,h){
+    let best=-1,score=-1,from=0,i;
+    while((i=idx.full.indexOf(h.q,from))!==-1){
+      let sc=0;
+      if(h.p&&idx.full.slice(Math.max(0,i-h.p.length),i)===h.p) sc+=2;
+      if(h.s&&idx.full.slice(i+h.q.length,i+h.q.length+h.s.length)===h.s) sc+=2;
+      if(sc>score){ score=sc; best=i; }
+      from=i+1;
+    }
+    return best<0?null:[best,best+h.q.length];
+  }
+  function toRange(idx,a,b){
+    const r=document.createRange(); let set=false;
+    for(const e of idx.arr){
+      const end=e.s+e.n.data.length;
+      if(!set&&a<end){ r.setStart(e.n,a-e.s); set=true; }
+      if(set&&b<=end){ r.setEnd(e.n,b-e.s); return r; }
+    }
+    return null;
+  }
+  function apply(id){
+    view=id; ranges=[];
+    if(!OK) return;
+    const pc=root();
+    if(!lesson(pc)){ CSS.highlights.delete('user-hl'); hide(); return; }
+    const idx=index(pc), list=load()[id]||[];
+    list.forEach((h,i)=>{ const sp=locate(idx,h); const r=sp&&toRange(idx,sp[0],sp[1]); if(r){ r._i=i; ranges.push(r); } });
+    ranges.length?CSS.highlights.set('user-hl',new Highlight(...ranges)):CSS.highlights.delete('user-hl');
+    hide();
+  }
+  const overlaps=(r,h)=>h.isPointInRange(r.startContainer,r.startOffset)||h.isPointInRange(r.endContainer,r.endOffset)||r.isPointInRange(h.startContainer,h.startOffset);
+  function hide(){ if(bar) bar.hidden=true; }
+  function update(){
+    const pc=root(), sel=getSelection();
+    if(!OK||!lesson(pc)||!sel||!sel.rangeCount) return hide();
+    const r=sel.getRangeAt(0), node=r.commonAncestorContainer, el=node.nodeType===1?node:node.parentElement;
+    if(!pc.contains(node)||(el&&el.closest('textarea,input,#m-hl-bar'))) return hide();
+    const hit=ranges.filter(h=>overlaps(r,h));
+    const canAdd=!r.collapsed&&r.toString().trim().length>=2;
+    if(!canAdd&&!hit.length) return hide();
+    if(!bar) build();
+    bar.querySelector('[data-a="add"]').hidden=!canAdd;
+    bar.querySelector('[data-a="del"]').hidden=!hit.length;
+    bar.hidden=false;
+  }
+  function build(){
+    bar=document.createElement('div'); bar.id='m-hl-bar'; bar.hidden=true; bar.setAttribute('role','toolbar');
+    bar.innerHTML='<button data-a="add">Markieren</button><button data-a="del">Markierung entfernen</button>';
+    ['mousedown','touchstart'].forEach(ev=>bar.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
+    bar.addEventListener('click',e=>{ const a=e.target.closest('button')?.dataset.a; if(a==='add') add(); else if(a==='del') remove(); });
+    document.body.appendChild(bar);
+  }
+  function add(){
+    const pc=root(), sel=getSelection(); if(!pc||!sel||!sel.rangeCount) return;
+    const idx=index(pc), sp=span(sel.getRangeAt(0),idx); if(!sp) return;
+    let [a,b]=sp; while(a<b&&/\s/.test(idx.full[a])) a++; while(b>a&&/\s/.test(idx.full[b-1])) b--;
+    const q=idx.full.slice(a,b);
+    if(q.length<2||q.length>800){ TOAST.show('Markiere eine Stelle zwischen 2 und 800 Zeichen'); return; }
+    const d=load(), list=d[view]||[];
+    list.push({q,p:idx.full.slice(Math.max(0,a-24),a),s:idx.full.slice(b,b+24)});
+    d[view]=list; save(d);
+    sel.removeAllRanges(); apply(view);
+    TOAST.show('Stelle markiert',{type:'ok'});
+  }
+  function remove(){
+    const sel=getSelection(), r=sel&&sel.rangeCount?sel.getRangeAt(0):null; if(!r) return;
+    const drop=new Set(ranges.filter(h=>overlaps(r,h)).map(h=>h._i));
+    const d=load(); d[view]=(d[view]||[]).filter((_,i)=>!drop.has(i)); if(!d[view].length) delete d[view];
+    save(d); sel.removeAllRanges(); apply(view);
+    TOAST.show('Markierung entfernt');
+  }
+  document.addEventListener('selectionchange',()=>{ clearTimeout(timer); timer=setTimeout(update,120); });
+  return {
+    apply, hide, supported:OK,
+    all(){ const d=load(); return Object.keys(d).map(v=>({view:v,items:d[v]})); },
+    removeAt(v,i){ const d=load(); (d[v]=d[v]||[]).splice(i,1); if(!d[v].length) delete d[v]; save(d); if(v===view) apply(view); }
+  };
 })();
 
 /* ── Nutzungszeit: zählt nur, solange die App sichtbar ist und bedient wird ── */
@@ -4714,6 +4991,109 @@ const USAGE=(function(){
   };
 })();
 
+/* ── Bild-Vergrößerung (Lightbox) ───────────────────────────────────────── */
+const LIGHTBOX=(function(){
+  let box=null, stage=null, content=null, open=false;
+  let sc=1, tx=0, ty=0;
+  const pts=new Map(); let startDist=0, startSc=1, last=null, lastTap=0;
+  function apply(){ content.style.transform=`translate(${tx}px,${ty}px) scale(${sc})`; }
+  function reset(){ sc=1; tx=0; ty=0; apply(); }
+  function zoomAt(f,cx,cy){
+    const n=Math.min(6,Math.max(1,sc*f)), r=n/sc, b=stage.getBoundingClientRect();
+    const ox=cx-(b.left+b.width/2), oy=cy-(b.top+b.height/2);
+    tx=ox-(ox-tx)*r; ty=oy-(oy-ty)*r; sc=n;
+    if(sc===1){ tx=0; ty=0; }
+    apply();
+  }
+  function build(){
+    box=document.createElement('div'); box.id='lb'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Bildansicht');
+    box.innerHTML='<div class="lb-stage"><div class="lb-content"></div></div><div class="lb-cap"></div>'
+      +'<button class="lb-x" aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>'
+      +'<div class="lb-hint">Zum Zoomen zweimal tippen oder zwei Finger nutzen</div>';
+    document.body.appendChild(box);
+    stage=box.querySelector('.lb-stage'); content=box.querySelector('.lb-content');
+    box.querySelector('.lb-x').onclick=()=>close();
+    stage.addEventListener('pointerdown',e=>{
+      stage.setPointerCapture(e.pointerId); pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      if(pts.size===2){ const [a,b]=[...pts.values()]; startDist=Math.hypot(a.x-b.x,a.y-b.y); startSc=sc; }
+      last={x:e.clientX,y:e.clientY,t:Date.now(),moved:false};
+    });
+    stage.addEventListener('pointermove',e=>{
+      if(!pts.has(e.pointerId)) return;
+      const p=pts.get(e.pointerId), dx=e.clientX-p.x, dy=e.clientY-p.y;
+      p.x=e.clientX; p.y=e.clientY;
+      if(last&&Math.hypot(e.clientX-last.x,e.clientY-last.y)>6) last.moved=true;
+      if(pts.size===2){
+        const [a,b]=[...pts.values()], d=Math.hypot(a.x-b.x,a.y-b.y);
+        if(startDist) zoomAt((startSc*d/startDist)/sc,(a.x+b.x)/2,(a.y+b.y)/2);
+      } else if(sc>1){ tx+=dx; ty+=dy; apply(); }
+    });
+    const up=e=>{
+      if(!pts.has(e.pointerId)) return;
+      pts.delete(e.pointerId);
+      if(pts.size===0&&last&&!last.moved&&Date.now()-last.t<350){
+        const now=Date.now();
+        if(now-lastTap<320){ lastTap=0; if(sc>1) reset(); else zoomAt(2.5,e.clientX,e.clientY); }
+        else{
+          lastTap=now;
+          setTimeout(()=>{ if(lastTap&&Date.now()-lastTap>=300){ lastTap=0; if(sc===1&&!e.target.closest('.lb-x')) close(); } },320);
+        }
+      }
+    };
+    stage.addEventListener('pointerup',up); stage.addEventListener('pointercancel',up);
+    stage.addEventListener('wheel',e=>{ e.preventDefault(); zoomAt(e.deltaY<0?1.2:1/1.2,e.clientX,e.clientY); },{passive:false});
+    document.addEventListener('keydown',e=>{ if(!open) return; if(e.key==='Escape') close(); else if(e.key==='+'||e.key==='=') zoomAt(1.3,innerWidth/2,innerHeight/2); else if(e.key==='-') zoomAt(1/1.3,innerWidth/2,innerHeight/2); else if(e.key==='0') reset(); });
+  }
+  function show(node,cap){
+    if(!box) build();
+    content.replaceChildren(node);
+    box.querySelector('.lb-cap').textContent=cap||'';
+    reset(); box.hidden=false; open=true;
+    document.documentElement.classList.add('lb-open');
+    try{ history.pushState(history.state,''); }catch(e){}
+    box.querySelector('.lb-x').focus({preventScroll:true});
+  }
+  function close(fromPop){
+    if(!open) return;
+    open=false; box.hidden=true; content.replaceChildren(); pts.clear();
+    document.documentElement.classList.remove('lb-open');
+    if(!fromPop){ try{ history.back(); }catch(e){} }
+  }
+  document.addEventListener('click',e=>{
+    if(open) return;
+    const img=e.target.closest('img.pdf-img,img.pdf-img-sm');
+    if(img){ const c=img.cloneNode(); c.className='lb-img'; c.removeAttribute('style'); c.draggable=false; show(c,img.alt); return; }
+    const svg=e.target.closest('.diagram-wrap svg');
+    if(svg&&!e.target.closest('a,button')){
+      const c=svg.cloneNode(true); c.classList.add('lb-img'); c.removeAttribute('style'); c.removeAttribute('width'); c.removeAttribute('height');
+      show(c,svg.getAttribute('aria-label')||'');
+    }
+  });
+  return {open:show,close,isOpen:()=>open};
+})();
+
+/* ── Farbschema: Dunkel / Hell / System ─────────────────────────────────── */
+const THEME=(function(){
+  const KEY='bvi_theme', MODES=['dark','light','system'];
+  const mq=window.matchMedia?matchMedia('(prefers-color-scheme: light)'):null;
+  function get(){ try{ const m=localStorage.getItem(KEY); return MODES.includes(m)?m:'system'; }catch(e){ return 'system'; } }
+  function light(m){ return m==='light'||(m==='system'&&!!(mq&&mq.matches)); }
+  function apply(m){
+    const l=light(m);
+    document.documentElement.setAttribute('data-theme',l?'light':'dark');
+    const t=document.querySelector('meta[name=theme-color]'); if(t) t.content=l?'#f4f4f1':'#121212';
+    document.querySelectorAll('.theme-opt').forEach(b=>{ const on=b.dataset.mode===m; b.classList.toggle('active',on); b.setAttribute('aria-pressed',on); });
+  }
+  if(mq) (mq.addEventListener?mq.addEventListener.bind(mq,'change'):mq.addListener.bind(mq))(()=>{ if(get()==='system') apply('system'); });
+  return {
+    init(){ apply(get()); },
+    set(m){ if(!MODES.includes(m)) return; try{ localStorage.setItem(KEY,m); }catch(e){} apply(m); },
+    render(){ apply(get()); }
+  };
+})();
+THEME.init();
+
 /* ── Akzentfarbe der Mobil-Ansicht ──────────────────────────────────────── */
 const ACCENT=(function(){
   const KEY='bvi_accent', DEF='#FFA412';
@@ -4728,6 +5108,14 @@ const ACCENT=(function(){
     const st=document.documentElement.style;
     st.setProperty('--m-accent',c);
     st.setProperty('--m-on-accent',onColor(c));
+    favicon(c);
+  }
+  // Tab-Symbol im Browser: Flamme in der Akzentfarbe (installierte Web-App behält ihr festes Symbol)
+  function favicon(c){
+    const el=document.getElementById('fav'); if(!el) return;
+    const d='M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z';
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#1b1b1b"/><g transform="translate(40 85) scale(18)"><path d="${d}" fill="${c}"/><path d="${d}" fill="#fff" fill-opacity=".55" transform="translate(12 17) scale(.52) translate(-12 -17)"/></g></svg>`;
+    el.href='data:image/svg+xml,'+encodeURIComponent(svg);
   }
   // Android-App: Startsymbol in der nächstliegenden der 5 Vorgabefarben
   function syncAppIcon(c){
@@ -4773,7 +5161,7 @@ const SHELL=(function(){
       ['v-feuak-altklausur','Altklausur-Training FeuAK','22 Fragen aus Aug 2025 und Feb 2026','doc']]],
     ['VAk Berlin',[
       ['v-vak-altklausur','Altklausur-Quiz VAk','84 Fragen · Lernmodus oder Prüfungssimulation','doc',true],
-      ['v-vak-fallbearbeitung','Fallbearbeitung','9-Punkte-Schema mit sechs Übungsfällen','pen'],
+      ['v-vak-fallbearbeitung','Fallbearbeitung','9-Punkte-Schema mit sechs Übungsfällen','pen',true],
       ['v-vak-klausurhinweise','Klausurhinweise','Prüfungsrelevante Themen und Definitionen','doc'],
       ['v-vak-klausurvorbereitung','Klausurvorbereitung VAk','Alle VAk-Materialien auf einen Blick','target']]],
     ['Training',[
@@ -5051,9 +5439,39 @@ const SHELL=(function(){
     return m<60?`${m} min`:`${Math.floor(m/60)} h ${String(m%60).padStart(2,'0')}`;
   }
 
+  const DEF_EXAM={date:'2026-12-21',name:'Klausur § 21 · IdF Münster'};
+  function examCfg(){
+    try{
+      const o=JSON.parse(localStorage.getItem('bvi_exam')||'{}');
+      return {date:/^\d{4}-\d{2}-\d{2}$/.test(o.date||'')?o.date:DEF_EXAM.date, name:((o.name||'').trim().slice(0,60))||DEF_EXAM.name};
+    }catch(e){ return {...DEF_EXAM}; }
+  }
+  function goalMin(){
+    try{ const v=parseInt(localStorage.getItem('bvi_goal'),10); return v>=5&&v<=240?v:30; }catch(e){ return 30; }
+  }
   function daysToExam(){
     const t=new Date(); t.setHours(0,0,0,0);
-    return Math.round((new Date('2026-12-21T00:00')-t)/864e5);
+    return Math.round((new Date(examCfg().date+'T00:00')-t)/864e5);
+  }
+  const hhmm=d=>String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  function dayWord(d){
+    const t=new Date(); t.setHours(0,0,0,0);
+    const x=new Date(d); x.setHours(0,0,0,0);
+    const diff=Math.round((x-t)/864e5);
+    return diff===0?'heute':diff===1?'morgen':d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'});
+  }
+  function goalCard(){
+    const sec=USAGE.today(), goal=goalMin(), p=Math.min(1,sec/(goal*60)), done=p>=1;
+    const R=26, C=2*Math.PI*R;
+    return `<div class="m-card m-goal"><svg viewBox="0 0 64 64" role="img" aria-label="${Math.round(p*100)} Prozent des Tagesziels"><circle cx="32" cy="32" r="${R}" class="m-ring-bg"/><circle cx="32" cy="32" r="${R}" class="m-ring-fg" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 32 32)"/>${done?'<path d="m22 33 7 7 13-14" class="m-ring-ok"/>':`<text x="32" y="37" text-anchor="middle" class="m-ring-t">${Math.round(p*100)}%</text>`}</svg><div class="m-tx"><span class="m-eyebrow">Tagesziel</span><span class="m-t1" style="margin-top:2px">${done?'Geschafft!':dur(sec)+' von '+goal+' min'}</span><span class="m-t2">${done?'Dein Ziel für heute ist erreicht.':'Noch '+Math.max(1,Math.ceil((goal*60-sec)/60))+' min bis zum Ziel'}</span></div></div>`;
+  }
+  function updateBadges(){
+    const n=cardStats().due;
+    document.querySelectorAll('#m-tabbar [data-tab="learn"],#m-rail [data-tab="learn"]').forEach(b=>{
+      let s=b.querySelector('.m-tab-b'); if(!s){ s=document.createElement('span'); s.className='m-tab-b'; if(b.classList.contains('m-tab')) b.insertBefore(s,b.firstChild); else b.appendChild(s); }
+      s.textContent=n>99?'99+':n; s.hidden=!n;
+      s.setAttribute('aria-label',n+' Karten fällig');
+    });
   }
 
   function renderHome(){
@@ -5062,7 +5480,7 @@ const SHELL=(function(){
     const now=new Date(), h=now.getHours();
     const slot=daySlot(h), hi=GREET[slot];
     const streak=streakDays(), cnt=PROGRESS.counts();
-    const cs=cardStats(), recent=RECENT.list()[0], idf=IDF_PLAN.summary(), exam=daysToExam(), week=USAGE.week();
+    const cs=cardStats(), recent=RECENT.list()[0], nx=IDF_PLAN.next(), exam=daysToExam(), week=USAGE.week(), ex=examCfg();
     const pct=c=>c.total?Math.round(c.done/c.total*100):0;
     const modRow=m=>{
       const c=cnt[m[0]]||{done:0,total:0};
@@ -5081,22 +5499,23 @@ const SHELL=(function(){
       const eb=document.querySelector('#'+recent.id+' .page-eyebrow')?.textContent?.trim()||'';
       cont=`<div class="m-card m-cont"><div class="m-tx"><span class="m-eyebrow">Weiterlernen</span><span class="m-t1" style="margin-top:4px">${esc(recent.label)}</span>${eb?`<span class="m-t2">${esc(eb)}</span>`:''}</div><button class="m-play" aria-label="${esc(recent.label)} öffnen" onclick="${goJs(recent.id,recent.label)}">${svg('play')}</button></div>`;
     }
-    const extra=(exam>=0?row({ic:ic('exam'),t1:'Nächste Klausur',t2:`Klausur § 21 · ${exam===0?'heute':exam===1?'morgen':'noch '+exam+' Tage'}`,on:"NAV.tab('v-pruefung','Prüfung')"}):'')
+    const nextRow=nx?row({ic:ic('cal'),t1:nx.title,t2:`${nx.state==='now'?'Jetzt':'Als Nächstes'} · ${dayWord(nx.start)} ${hhmm(nx.start)}${nx.state==='now'?'–'+hhmm(nx.end):''}${nx.room?' · Raum '+nx.room:''}`,on:"NAV.tab('v-plan','Plan')"}):'';
+    const extra=(exam>=0?row({ic:ic('exam'),t1:'Nächste Klausur',t2:`${ex.name} · ${exam===0?'heute':exam===1?'morgen':'noch '+exam+' Tage'}`,on:"NAV.tab('v-pruefung','Prüfung')"}):'')
       +row({ic:ic('cards'),t1:'Lernkarten wiederholen',t2:cs.due?`${cs.due} Karten heute fällig`:'Heute nichts fällig',on:"NAV.tab('v-flashcards','Lernen')"});
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${streak?`<span class="m-streak">${svg('flame')}${streak} ${streak===1?'Tag':'Tage'}</span>`:''}</div>
       <div class="m-g2 m-home-top">
         <div class="m-col">
-          <div class="m-stats3">
-            <div class="m-stat"><b>${dur(USAGE.today())}</b><span>heute in der App</span></div>
-            <div class="m-stat"><b>${dur(week.reduce((a,b)=>a+b,0))}</b><span>diese Woche</span></div>
+          ${goalCard()}
+          <div class="m-stats2">
+            <div class="m-stat"><b>${dur(week.reduce((a,b)=>a+b,0))}</b><span>diese Woche in der App</span></div>
             <div class="m-stat"><b>${dur(USAGE.total())}</b><span>insgesamt</span></div>
           </div>
           <div class="m-card m-chart"><div class="m-chart-h"><b>Lernzeit diese Woche</b><span>Minuten pro Tag</span></div>${chart(week.map(x=>Math.round(x/60)))}</div>
         </div>
         <div class="m-col">
           ${cont}
-          ${idf.over?'':`<div class="m-list">${row({ic:ic('cal'),t1:'Diese Woche am IdF',t2:`KW ${idf.kw} · ${idf.thema}`,on:"NAV.tab('v-plan','Plan')"})}</div>`}
+          ${nextRow?`<div class="m-list">${nextRow}</div>`:''}
           <div class="m-list m-only-l">${extra}</div>
         </div>
       </div>
@@ -5108,8 +5527,9 @@ const SHELL=(function(){
     const cd=document.getElementById('m-countdown'), list=document.getElementById('m-exam-list');
     if(!cd||!list) return;
     const days=daysToExam();
-    cd.innerHTML=days<0?'':`<div class="m-card m-count"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">Klausur § 21 · IdF Münster</span><span class="m-t2">Mo, 21. Dezember 2026 · 08:30 Uhr</span></div></div>`;
-    const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2,on:goJs(id,t1)});
+    cd.innerHTML=days<0?'':`<div class="m-card m-count"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">${esc(examCfg().name)}</span><span class="m-t2">${new Date(examCfg().date+'T00:00').toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'long',year:'numeric'})}</span></div></div>`;
+    const dueQ=(typeof QUIZ!=='undefined'&&QUIZ.dueCount)?QUIZ.dueCount():0;
+    const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2:id==='v-vak-altklausur'&&dueQ?`${t2} · ${dueQ} zur Wiederholung fällig`:t2,on:goJs(id,t1)});
     const sec=([name,items])=>{
       const hot=items.filter(x=>x[4]), rest=items.filter(x=>!x[4]);
       return `<div class="m-col"><div class="m-sec">${esc(name)}</div>${hot.map(x=>`<div class="m-list m-glow">${card(x)}</div>`).join('')}${rest.length?`<div class="m-list">${rest.map(card).join('')}</div>`:''}</div>`;
@@ -5167,14 +5587,25 @@ const SHELL=(function(){
   }
   function renderNotes(){
     const el=document.getElementById('m-notes-list'); if(!el) return;
-    const n=notes();
-    if(!n.length){ el.innerHTML='<div class="m-empty">Noch keine Notizen.<br>Öffne eine Lernseite und tippe oben rechts auf den Stift.</div>'; return; }
-    el.innerHTML='<div class="m-list">'+n.map(({id,txt})=>{
-      const v=document.getElementById(id);
-      const label=v?.querySelector('.page-title')?.textContent?.trim()||(id==='home'?'Startseite':id);
-      const eb=v?.querySelector('.page-eyebrow')?.textContent?.trim()||'';
-      return `<button class="m-row m-go" onclick="${v?goJs(id,label):''}" style="align-items:flex-start"><span class="m-tx"><span class="m-t2" style="margin:0;color:var(--m-accent)">${esc(eb?eb+' · '+label:label)}</span><span class="m-note-txt">${esc(txt)}</span></span></button>`;
-    }).join('')+'</div>';
+    const n=notes(), marks=HL.all();
+    let h='';
+    if(n.length){
+      h+='<div class="m-list">'+n.map(({id,txt})=>{
+        const v=document.getElementById(id);
+        const label=v?.querySelector('.page-title')?.textContent?.trim()||(id==='home'?'Startseite':id);
+        const eb=v?.querySelector('.page-eyebrow')?.textContent?.trim()||'';
+        return `<button class="m-row m-go" onclick="${v?goJs(id,label):''}" style="align-items:flex-start"><span class="m-tx"><span class="m-t2" style="margin:0;color:var(--m-accent-fg)">${esc(eb?eb+' · '+label:label)}</span><span class="m-note-txt">${esc(txt)}</span></span></button>`;
+      }).join('')+'</div>';
+    }
+    if(marks.length){
+      h+='<div class="m-sec" style="margin-top:1.4rem">Markierungen</div>'+marks.map(({view,items})=>{
+        const v=document.getElementById(view);
+        const label=v?.querySelector('.page-title')?.textContent?.trim()||view;
+        return `<div class="m-hl-group"><div class="m-t2" style="color:var(--m-accent-fg);margin:0 0 6px 4px">${esc(label)}</div><div class="m-list">${items.map((it,i)=>`<div class="m-row bm-row"><button class="bm-open" onclick="${goJs(view,label)}"><span class="m-note-txt">${esc(it.q)}</span></button><button class="bm-remove" aria-label="Markierung löschen" onclick="HL.removeAt(${esc(JSON.stringify(view))},${i});SHELL.renderNotes()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>`).join('')}</div></div>`;
+      }).join('');
+    }
+    if(!h) h='<div class="m-empty">Noch keine Notizen oder Markierungen.<br>Öffne eine Lernseite: Mit dem Stift schreibst du eine Notiz, und wenn du Text auswählst, kannst du ihn markieren.</div>';
+    el.innerHTML=h;
   }
 
   function syncSettings(){
@@ -5186,6 +5617,10 @@ const SHELL=(function(){
     set('m-bm-count',bc||'');
     set('m-version',APP_VERSION);
     set('m-notif-hour',NOTIF.hour()+':00');
+    set('m-goal-val',goalMin()+' min');
+    const lb=BACKUP.last(); set('m-backup-last',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
+    const ex=examCfg(), di=document.getElementById('m-exam-date'), ni=document.getElementById('m-exam-name');
+    if(di) di.value=ex.date; if(ni) ni.value=ex.name===DEF_EXAM.name&&!localStorage.getItem('bvi_exam')?'':ex.name;
     const tg=document.getElementById('m-notif-toggle'); if(tg) tg.checked=NOTIF.isEnabled();
     document.getElementById('m-cl-badge')?.classList.toggle('hidden',!CHANGELOG.isNew());
   }
@@ -5205,10 +5640,43 @@ const SHELL=(function(){
     }
     document.getElementById('m-tb-actions')?.classList.toggle('hidden',!isContent);
     buildToc(id,isContent);
+    updateBadges();
+    HL.apply(id);
+    if(isContent){
+      const pc=document.getElementById(id)?.querySelector('.pc');
+      if(pc&&!pc.querySelector(':scope > .m-report')){
+        const d=document.createElement('div'); d.className='m-report';
+        d.innerHTML='<button onclick="SHELL.report()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22V4M4 4h13l-2 4 2 4H4"/></svg>Fehler oder Unklarheit melden</button>';
+        pc.appendChild(d);
+      }
+    }
   }
 
   return {
-    onShow, renderHome, renderExam, renderNotes, renderFcSide, syncSettings,
+    onShow, renderHome, renderExam, renderNotes, renderFcSide, syncSettings, updateBadges,
+    report(extra){
+      const v=document.querySelector('.view.active'); if(!v) return;
+      const title=v.querySelector('.page-title')?.textContent?.trim()||v.id;
+      const eb=v.querySelector('.page-eyebrow')?.textContent?.trim()||'';
+      const body='Seite: '+title+(eb?' ('+eb+')':'')+'\nLink: '+location.origin+location.pathname+'?id='+v.id+'\nApp-Version: '+APP_VERSION+'\n'+(extra?'\n'+extra+'\n':'')+'\nWas ist falsch oder unklar?\n';
+      const url='mailto:fabian.flemig@gmx.de?subject='+encodeURIComponent('B VI – Fehler: '+title)+'&body='+encodeURIComponent(body);
+      if(!window.__noMail) location.href=url;
+      return url;
+    },
+    reportQuiz(){
+      const t=id=>document.getElementById(id)?.textContent?.trim()||'';
+      return this.report('Frage '+t('quiz-counter')+' ['+t('quiz-cat')+']:\n'+t('quiz-q'));
+    },
+    stepGoal(d){
+      const g=Math.min(240,Math.max(5,goalMin()+d*5));
+      try{ localStorage.setItem('bvi_goal',String(g)); }catch(e){}
+      const e=document.getElementById('m-goal-val'); if(e) e.textContent=g+' min';
+    },
+    setExam(){
+      const date=document.getElementById('m-exam-date')?.value, name=document.getElementById('m-exam-name')?.value||'';
+      const o=examCfg(); if(/^\d{4}-\d{2}-\d{2}$/.test(date||'')) o.date=date;
+      try{ localStorage.setItem('bvi_exam',JSON.stringify({date:o.date,name:name.trim()})); }catch(e){}
+    },
     bookmark(){
       const v=document.querySelector('.view.active'); if(!v) return;
       BOOKMARKS.toggle(v.id, v.querySelector('.page-title')?.textContent?.trim()||v.id);

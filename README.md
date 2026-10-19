@@ -33,6 +33,8 @@
 - **Lesezeichen & Notizen** – Seitenweise, persistiert per LocalStorage
 - **Fortschritts-Tracking** – Besuchte Themen mit Badge-Anzeige
 - **PWA** – Installierbar, Service Worker mit Offline-Fallback
+- **Farbschema** – Dunkel, Hell oder System (Einstellungen)
+- **Bildansicht** – Bilder und Diagramme per Tipp groß öffnen und zoomen
 
 ---
 
@@ -49,8 +51,8 @@ BVI-Lernwebsite/
 ├── sw.js               # Service Worker (Network-first für Core-Assets)
 ├── manifest.json       # PWA-Manifest
 └── icons/
-    ├── icon-192.svg
-    └── icon-512.svg
+    ├── icon-192.svg / icon-512.svg   # Flamme (SVG)
+    └── *.png                          # PNG-Varianten für Startbildschirm
 ```
 
 **Stack:** Vanilla HTML/CSS/JS · Kein Framework · Kein Build-Schritt  
@@ -110,15 +112,15 @@ Wichtige CSS-Klassen: `.info-card`, `.def-box`, `.hint`, `.step-stack`, `.acc-li
 
 ## Version
 
-Aktuelle Version: **3.0.2**  
+Aktuelle Version: **3.2.0**  
 `js/version.js` und `sw.js` müssen immer synchron gehalten werden.
 
 ```javascript
 // js/version.js
-const APP_VERSION = '3.0.2';
+const APP_VERSION = '3.2.0';
 
 // sw.js (erste Zeile)
-const APP_VERSION = '3.0.2'; // keep in sync with js/version.js
+const APP_VERSION = '3.2.0'; // keep in sync with js/version.js
 ```
 
 ---

@@ -11,14 +11,26 @@ android {
         applicationId 'de.bvi.lernwebsite'
         minSdk 26
         targetSdk 34
-        versionCode 1
-        versionName '1.0'
+        versionCode Integer.parseInt(System.getenv('VERSION_CODE') ?: '1')
+        versionName (System.getenv('VERSION_NAME') ?: '1.0')
+    }
+
+    // Fester Schlüssel: Nur damit erkennt Android neue Builds als Update der installierten App.
+    // Bewusst im Repository (privates Lernprojekt, nicht für den Play Store).
+    signingConfigs {
+        bvi {
+            storeFile file('../bvi.keystore')
+            storePassword 'bvi-lernapp'
+            keyAlias 'bvi'
+            keyPassword 'bvi-lernapp'
+        }
     }
 
     buildTypes {
-        debug {}
+        debug { signingConfig signingConfigs.bvi }
         release {
             minifyEnabled false
+            signingConfig signingConfigs.bvi
         }
     }
 
