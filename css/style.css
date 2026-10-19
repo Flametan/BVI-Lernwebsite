@@ -2004,7 +2004,9 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
   .m-ringbtn small{font-size:.78rem;margin-top:2px;}
 }
 @media(min-width:701px) and (max-width:1099px){
-  .m-ringbtn .m-hring{width:80px;height:80px;}
+  .m-ringbtn{min-width:0;}
+  .m-ringbtn .m-hring{width:min(74px,100%);height:auto;aspect-ratio:1;}
+  .m-rings{gap:12px;}
 }
 
 /* Desktop: beide Ausbildungsjahre gleichwertig nebeneinander, ohne Auf- und Zuklappen */
@@ -2022,4 +2024,11 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
   .m-r2 .m-sec{margin:0;line-height:1.3;}
   .m-y1.static{border-left:1px solid var(--m-line);padding-left:36px;border-radius:0;}
   .m-y1.static summary{line-height:1.3;}
+}
+
+/* Tablet: 1. Ausbildungsjahr dauerhaft offen, durch eine Linie vom 2. Ausbildungsjahr getrennt */
+@media(min-width:701px) and (max-width:1099px){
+  .m-y1.static{border-top:1px solid var(--m-line);border-radius:0;padding-top:14px;margin-top:14px;}
+  .m-y1.static .m-rings.r3{gap:12px;}
+  .m-r2 .m-sec{margin:0;}
 }

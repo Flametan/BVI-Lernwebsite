@@ -5783,7 +5783,7 @@ const SHELL=(function(){
     return `<svg class="m-hring" viewBox="0 0 100 100" role="img" aria-label="${esc(aria)}"><circle cx="50" cy="50" r="${r}" class="bg"/>${p>0?`<circle cx="50" cy="50" r="${r}" class="fg" stroke-dasharray="${c*p/100} ${c}" transform="rotate(-90 50 50)"/>`:''}<text x="50" y="58" text-anchor="middle" font-size="${label.length>3?22:26}">${esc(label)}</text></svg>`;
   }
   let chartRange='week', y1Open=false;
-  if(window.matchMedia) matchMedia('(min-width:1100px)').addEventListener('change',()=>{ if(document.getElementById('v-home')?.classList.contains('active')) renderHome(); });
+  if(window.matchMedia) matchMedia('(min-width:701px)').addEventListener('change',()=>{ if(document.getElementById('v-home')?.classList.contains('active')) renderHome(); });
 
   function dur(sec){
     const m=Math.floor(sec/60);
@@ -5879,7 +5879,7 @@ const SHELL=(function(){
       const c=cnt[m[0]]||{done:0,total:0};
       return `<button class="m-ringbtn" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen">${homeRing(pct(c),m[1],m[1])}<small>${c.done}/${c.total}</small></button>`;
     };
-    const wide=!!(window.matchMedia&&matchMedia('(min-width:1100px)').matches);
+    const wide=!!(window.matchMedia&&matchMedia('(min-width:701px)').matches);
     const mods=`<div class="m-card m-mods"><div class="m-modgrid2"><div class="m-r2"><div class="m-sec">2. Ausbildungsjahr</div><div class="m-rings">${MODS.filter(m=>m[5]===2).map(ringBtn).join('')}</div></div>
       <details class="m-y1${wide?' static':''}"${y1Open||wide?' open':''} ontoggle="SHELL.y1(this.open)"><summary>1. Ausbildungsjahr</summary><div class="inner"><div class="m-rings r3">${MODS.filter(m=>m[5]===1).map(ringBtn).join('')}</div></div></details></div></div>`;
     const cloud=`<div class="m-list m-glow m-cloud"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2 m-cloud-x">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
