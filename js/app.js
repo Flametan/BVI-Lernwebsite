@@ -3247,6 +3247,11 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.0.2',ts:'2026-10-19T16:00',items:[
+      'Prüfung: Klausur 08/2026, Altklausur-Quiz VAk und Führungsdienstsimulator leuchten in deiner Akzentfarbe',
+      'Einstellungen: Die Farbkreise sind kleiner und passen in eine Zeile',
+      'Fehler behoben: Das „Neu“ bei Neuigkeiten verschwindet jetzt, sobald du die Neuigkeiten geöffnet hast'
+    ]},
     {v:'3.0.1',ts:'2026-10-19T14:00',items:[
       'Einstellungen im neuen Design: Neuigkeiten, Pomodoro, Lernstatistik und Notiz öffnen sich am Handy als Blatt von unten',
       'Lesezeichen als Liste mit Modul-Angabe, Entfernen über das ✕',
@@ -3940,12 +3945,16 @@ const CHANGELOG=(function(){
       m.classList.remove('hidden');
       localStorage.setItem(KEY,APP_VERSION);
       _updateTile();
+      document.getElementById('m-cl-badge')?.classList.add('hidden');
     },
     close(){
       document.getElementById('changelog-modal').classList.add('hidden');
     },
     check(){
       _updateTile();
+    },
+    isNew(){
+      try{ return localStorage.getItem(KEY)!==APP_VERSION; }catch(e){ return false; }
     }
   };
 })();
@@ -4758,17 +4767,17 @@ const SHELL=(function(){
   ];
   const EXAMS=[
     ['FeuAK Hamburg',[
-      ['v-klausur-0826','Klausur 08/2026','14 Originalfragen · 70 Punkte · Musterlösungen','doc'],
+      ['v-klausur-0826','Klausur 08/2026','14 Originalfragen · 70 Punkte · Musterlösungen','doc',true],
       ['v-klausurfragen','Klausurfragen','14 Fragen der Dozenten-Liste · Freitext und Selbstbewertung','pen'],
       ['v-eingrenzung-klausur','Eingrenzung 08/2026 & Münster','12 Fragen · Kurzantwort und Musterlösung','target'],
       ['v-feuak-altklausur','Altklausur-Training FeuAK','22 Fragen aus Aug 2025 und Feb 2026','doc']]],
     ['VAk Berlin',[
-      ['v-vak-altklausur','Altklausur-Quiz VAk','84 Fragen · Lernmodus oder Prüfungssimulation','doc'],
+      ['v-vak-altklausur','Altklausur-Quiz VAk','84 Fragen · Lernmodus oder Prüfungssimulation','doc',true],
       ['v-vak-fallbearbeitung','Fallbearbeitung','9-Punkte-Schema mit sechs Übungsfällen','pen'],
       ['v-vak-klausurhinweise','Klausurhinweise','Prüfungsrelevante Themen und Definitionen','doc'],
       ['v-vak-klausurvorbereitung','Klausurvorbereitung VAk','Alle VAk-Materialien auf einen Blick','target']]],
     ['Training',[
-      ['v-simulator','Führungsdienstsimulator','8 Szenarien mit verzweigten Entscheidungen','sim']]]
+      ['v-simulator','Führungsdienstsimulator','8 Szenarien mit verzweigten Entscheidungen','sim',true]]]
   ];
   const ICON={
     doc:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
@@ -5100,7 +5109,11 @@ const SHELL=(function(){
     if(!cd||!list) return;
     const days=daysToExam();
     cd.innerHTML=days<0?'':`<div class="m-card m-count"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">Klausur § 21 · IdF Münster</span><span class="m-t2">Mo, 21. Dezember 2026 · 08:30 Uhr</span></div></div>`;
-    const sec=([name,items])=>`<div class="m-col"><div class="m-sec">${esc(name)}</div><div class="m-list">${items.map(([id,t1,t2,k])=>row({ic:ic(k),t1,t2,on:goJs(id,t1)})).join('')}</div></div>`;
+    const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2,on:goJs(id,t1)});
+    const sec=([name,items])=>{
+      const hot=items.filter(x=>x[4]), rest=items.filter(x=>!x[4]);
+      return `<div class="m-col"><div class="m-sec">${esc(name)}</div>${hot.map(x=>`<div class="m-list m-glow">${card(x)}</div>`).join('')}${rest.length?`<div class="m-list">${rest.map(card).join('')}</div>`:''}</div>`;
+    };
     list.innerHTML=`<div class="m-g2">${sec(EXAMS[0])}${sec(EXAMS[1])}</div>${sec(EXAMS[2])}`;
   }
 
@@ -5174,8 +5187,7 @@ const SHELL=(function(){
     set('m-version',APP_VERSION);
     set('m-notif-hour',NOTIF.hour()+':00');
     const tg=document.getElementById('m-notif-toggle'); if(tg) tg.checked=NOTIF.isEnabled();
-    const isNew=!document.getElementById('changelog-badge')?.classList.contains('hidden');
-    document.getElementById('m-cl-badge')?.classList.toggle('hidden',!isNew);
+    document.getElementById('m-cl-badge')?.classList.toggle('hidden',!CHANGELOG.isNew());
   }
 
   function onShow(id,isContent,stack){
