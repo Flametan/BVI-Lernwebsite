@@ -5445,7 +5445,7 @@ const SHELL=(function(){
     return m<60?`${m} min`:`${Math.floor(m/60)} h ${String(m%60).padStart(2,'0')}`;
   }
 
-  const DEF_EXAM={date:'2026-12-21',name:'Klausur § 21 · IdF Münster'};
+  const DEF_EXAM={date:'2026-12-14',name:'Leistungsnachweis nach § 13 Abs. 3'};
   function examCfg(){
     try{
       const o=JSON.parse(localStorage.getItem('bvi_exam')||'{}');
