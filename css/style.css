@@ -1282,7 +1282,7 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 .idf-lunch svg{flex-shrink:0;}
 .idf-tel{margin-top:1rem;}
 .idf-tel-row{display:flex;justify-content:space-between;gap:12px;font-size:.88rem;color:var(--m-muted);padding-top:8px;}
-.idf-tel-row span:last-child{color:var(--m-fg);font-variant-numeric:tabular-nums;}
+.idf-tel-row span:last-child,.idf-tel-row a{text-decoration:none;color:var(--m-fg);font-variant-numeric:tabular-nums;}
 .idf-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:1rem;font-size:.75rem;color:var(--m-dim);}
 .idf-legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;}
 .idf-legend i.hi{background:var(--m-accent);}

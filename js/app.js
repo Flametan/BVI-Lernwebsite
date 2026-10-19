@@ -4692,7 +4692,9 @@ const IDF_PLAN = (function(){
       return `<div class="idf-day${isToday?' today':''}"><div class="idf-dc"><span class="idf-dow">${DAYS[i]}</span><span class="idf-dnum">${d.getDate()}</span><span class="idf-dmo">${MONS[d.getMonth()]}</span></div>
         <div class="idf-items">${_dayItems(items)}</div></div>`;
     }).join('')+'</div>';
-    if(tel) h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${[...tel,['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><span>${esc(t)}</span></div>`).join('')}</div>`;
+    const full=(n,t)=>/^-/.test(t)?(/BABZ/.test(n)?'0228 99550':'0251 3112')+t:t;
+    const rows=[...(tel||[['Jörn Ruschenburg','-3202']]),['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>[n,full(n,t)]);
+    h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${rows.map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><a href="tel:+49${t.replace(/\D/g,'').replace(/^0/,'')}">${esc(t)}</a></div>`).join('')}</div>`;
     h+=`<button class="m-cal-btn" onclick="IDF_PLAN.exportIcs()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5"/></svg>Stundenplan in den Kalender übernehmen<small>Gruppe ${_grp[1]} · alle Einheiten mit Erinnerung 30 Minuten vorher</small></button>`;
     h+='<div class="idf-legend"><span><i class="hi"></i>Schlüsseltermin</span><span><i class="ex"></i>Exkursion</span><span><i class="ar"></i>An-/Abreise, frei</span><span>EVA = eigenverantwortliches Arbeiten</span></div>';
     el.innerHTML=h;
