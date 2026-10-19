@@ -1876,3 +1876,78 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .m-tab:active>svg,.m-tab:active>span{opacity:.55;}
 .m-tab-center:active .m-fab{transform:scale(.95);}
 .m-fab{transition:box-shadow .2s,transform .12s;}
+
+/* ── Startseite (ruhiger): Weiterlernen mit Verlauf, Verlauf, Ringe ─────── */
+#m-home .m-hgrid{display:flex;flex-direction:column;gap:12px;margin-top:1rem;align-items:stretch}
+#m-home .m-hl,#m-home .m-hr2{display:flex;flex-direction:column;gap:12px;min-width:0}
+.m-cont2{padding:16px;background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
+.m-cont2-top{display:flex;align-items:center;gap:12px;}
+.m-cont2-top .m-tx{flex:1;min-width:0;display:flex;flex-direction:column;}
+.m-cont2-t{font-size:1.5rem;font-weight:700;line-height:1.15;margin:4px 0 2px;overflow-wrap:anywhere;color:var(--m-fg);}
+.m-cont2-bot{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap;}
+.m-cont2-bot .m-t2{margin-left:auto;}
+.m-go2{background:var(--m-accent);color:var(--m-on-accent);border-radius:20px;padding:0 16px;height:36px;font-family:inherit;font-weight:700;font-size:.9rem;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+.m-go2 svg{width:14px;height:14px;fill:currentColor;stroke:none;}
+.m-hring{width:68px;height:68px;flex-shrink:0;}
+.m-hring .bg{fill:none;stroke:var(--m-raised);stroke-width:9;}
+.m-hring .fg{fill:none;stroke:var(--m-accent);stroke-width:9;stroke-linecap:round;}
+.m-hring text{fill:var(--m-fg);font-weight:700;font-family:var(--f-b);}
+.m-chart2{padding:14px;}
+.m-chart2 .m-chart-h{align-items:center;margin-bottom:0;}
+.m-eyebrow{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--m-muted);}
+.m-tot{display:flex;gap:18px;flex-wrap:wrap;font-size:.8rem;color:var(--m-muted);margin:8px 0 12px;}
+.m-tot b{color:var(--m-fg);font-size:.95rem;}
+.m-plot{display:flex;gap:6px;align-items:flex-end;height:118px;}
+.m-plot>div{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px;}
+.m-pb{display:block;width:100%;max-width:26px;border-radius:5px;background:var(--m-accent);min-height:0;transition:height .3s;}
+.m-pb.dim{opacity:.55;}
+.m-pb.zero{height:3px!important;background:var(--m-raised);}
+.m-pb.cur{opacity:1;}
+.m-plot>div:not(:has(.dim,.cur)) .m-pb.zero{min-height:3px;}
+.m-pv{font-size:.66rem;color:var(--m-muted);font-variant-numeric:tabular-nums;height:12px;line-height:12px;}
+.m-pl{font-size:.68rem;color:var(--m-muted);}
+.m-pl.cur{color:var(--m-accent-fg);font-weight:700;}
+.m-plot.many{gap:4px;}.m-plot.many .m-pb{max-width:14px;}.m-plot.many .m-pl{font-size:.6rem;}.m-plot.many .m-pv{font-size:.56rem;}
+.m-chart-u{font-size:.72rem;color:var(--m-dim);margin-top:6px;}
+.m-hr{height:1px;background:var(--m-line);margin:12px 0;}
+.m-chart2 .m-row{padding:0;min-height:0;}
+.m-mods{background:transparent;padding:0;}
+.m-modgrid2{display:flex;flex-direction:column;gap:10px;}
+.m-rings{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;text-align:center;}
+.m-rings.r3{grid-template-columns:repeat(3,1fr);margin-top:2px;}
+.m-ringbtn{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:0;color:var(--m-fg);font-family:inherit;padding:0;cursor:pointer;}
+.m-ringbtn .m-hring{width:58px;height:58px;}
+.m-ringbtn small{font-size:.66rem;color:var(--m-muted);}
+.m-y1{border-radius:14px;background:var(--m-card);}
+.m-y1 summary{list-style:none;cursor:pointer;padding:12px 14px;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--m-muted);display:flex;justify-content:space-between;align-items:center;}
+.m-y1 summary::-webkit-details-marker{display:none;}
+.m-y1 summary::after{content:'›';font-size:1.1rem;transform:rotate(90deg);transition:transform .15s;}
+.m-y1[open] summary::after{transform:rotate(-90deg);}
+.m-y1 .inner{padding:0 10px 14px;}
+.m-cloud-x{display:none;}
+@media(min-width:701px){
+  #m-home .m-hgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
+  .m-mods{background:var(--m-card);padding:16px;border-radius:18px;}
+  .m-y1{background:var(--m-raised);}
+  .m-cont2,.m-chart2{padding:16px;border-radius:18px;}
+  .m-hring{width:78px;height:78px;}
+  .m-ringbtn .m-hring{width:66px;height:66px;}
+  .m-plot{height:132px;}
+}
+@media(min-width:1100px){
+  #m-home .m-hgrid{grid-template-columns:5fr 7fr;grid-template-rows:auto 1fr auto;gap:20px;}
+  #m-home .m-hl,#m-home .m-hr2{display:contents;}
+  .m-cont2{grid-column:1;grid-row:1;}
+  .m-chart2{grid-column:2;grid-row:1 / span 2;}
+  .m-cloud{grid-column:1;grid-row:2;align-self:start;}
+  .m-mods{grid-column:1 / -1;grid-row:3;}
+  .m-modgrid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
+  .m-hring{width:96px;height:96px;}
+  .m-ringbtn .m-hring{width:84px;height:84px;}
+  .m-plot{height:170px;}
+  .m-cloud-x{display:block;}
+}
+
+/* ── Dezenter Farbverlauf an besonderen Stellen ──────────────────────────── */
+.m-count,.m-fc-goal.done,.idf-item.idf-now{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
+.idf-item.idf-now{border-radius:12px;padding:8px 10px;margin:-8px -10px;}
