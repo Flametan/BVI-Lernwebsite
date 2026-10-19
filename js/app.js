@@ -4966,7 +4966,16 @@ const USAGE=(function(){
       const d=load(), mo=new Date(); mo.setDate(mo.getDate()-((mo.getDay()+6)%7));
       return Array.from({length:7},(_,i)=>{ const x=new Date(mo); x.setDate(mo.getDate()+i); return d[key(x)]||0; });
     },
-    total(){ return Object.values(load()).reduce((a,b)=>a+b,0); }
+    total(){ return Object.values(load()).reduce((a,b)=>a+b,0); },
+    // letzte n Monate (ältester zuerst) mit Sekunden je Monat
+    months(n){
+      const d=load(), now=new Date();
+      return Array.from({length:n},(_,i)=>{
+        const x=new Date(now.getFullYear(),now.getMonth()-(n-1-i),1), pre=x.getFullYear()+'-'+pad(x.getMonth()+1)+'-';
+        let sec=0; for(const k in d) if(k.startsWith(pre)) sec+=d[k];
+        return {y:x.getFullYear(),m:x.getMonth(),sec};
+      });
+    }
   };
 })();
 
@@ -5413,6 +5422,24 @@ const SHELL=(function(){
     return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Minuten in der App pro Tag in dieser Woche, insgesamt ${sum} Minuten">${g}</svg>`;
   }
 
+  function chartMonths(ms){
+    const W=340,H=150,L=30,R=12,T=14,B=26, hours=Math.max(...ms.map(m=>m.sec))>=7200;
+    const v=ms.map(m=>hours?m.sec/3600:Math.round(m.sec/60));
+    const mx=Math.max(...v), top=hours?Math.max(2,Math.ceil(mx/2)*2):(mx>20?Math.ceil(mx/20)*20:Math.max(4,Math.ceil(mx/4)*4));
+    const bw=(W-L-R)/ms.length, y=m=>T+(H-T-B)*(1-m/top);
+    const names=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+    let g='';
+    [0,top/2,top].forEach(m=>{ g+=`<line x1="${L}" x2="${W-R}" y1="${y(m)}" y2="${y(m)}" style="stroke:#333" stroke-dasharray="3 5"/><text x="${L-8}" y="${y(m)+4}" text-anchor="end" font-size="11" style="fill:#7a7a7a">${m}</text>`; });
+    ms.forEach((m,i)=>{
+      const last=i===ms.length-1, x=L+i*bw+bw*.18, w=bw*.64, h=(H-T-B)*v[i]/top;
+      if(h>0) g+=`<rect x="${x}" y="${y(v[i])}" width="${w}" height="${h}" rx="3" style="fill:var(--m-accent);opacity:${last?1:.55}"/>`;
+      g+=`<text x="${L+i*bw+bw/2}" y="${H-6}" text-anchor="middle" font-size="9.5" font-weight="${last?700:400}" style="fill:${last?'var(--m-accent)':'#7a7a7a'}">${names[m.m]}</text>`;
+    });
+    const sum=Math.round(ms.reduce((a,m)=>a+m.sec,0)/60);
+    return {svg:`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Lernzeit pro Monat in den letzten 12 Monaten, insgesamt ${sum} Minuten">${g}</svg>`,unit:hours?'Stunden pro Monat':'Minuten pro Monat'};
+  }
+  let chartRange='week';
+
   function dur(sec){
     const m=Math.floor(sec/60);
     return m<60?`${m} min`:`${Math.floor(m/60)} h ${String(m%60).padStart(2,'0')}`;
@@ -5509,7 +5536,8 @@ const SHELL=(function(){
             <div class="m-stat"><b>${dur(week.reduce((a,b)=>a+b,0))}</b><span>diese Woche in der App</span></div>
             <div class="m-stat"><b>${dur(USAGE.total())}</b><span>insgesamt</span></div>
           </div>
-          <div class="m-card m-chart"><div class="m-chart-h"><b>Lernzeit diese Woche</b><span>Minuten pro Tag</span></div>${chart(week.map(x=>Math.round(x/60)))}</div>
+          ${(()=>{ const mo=chartRange==='month'?chartMonths(USAGE.months(12)):null;
+            return `<div class="m-card m-chart"><div class="m-chart-h"><b>${mo?'Lernzeit pro Monat':'Lernzeit diese Woche'}</b><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${mo?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${mo?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span></div><div class="m-chart-u">${mo?mo.unit:'Minuten pro Tag'}</div>${mo?mo.svg:chart(week.map(x=>Math.round(x/60)))}</div>`; })()}
         </div>
         <div class="m-col">
           ${cont}
@@ -5518,7 +5546,7 @@ const SHELL=(function(){
         </div>
       </div>
       ${year(1)}${year(2)}
-      <div class="m-list"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
+      <div class="m-list m-glow"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
   }
 
   function renderExam(){
@@ -5682,6 +5710,7 @@ const SHELL=(function(){
       try{ localStorage.setItem('bvi_tabnum',on?'1':'0'); }catch(e){}
       updateBadges();
     },
+    setRange(r){ chartRange=r==='month'?'month':'week'; renderHome(); },
     cardDone, renderCardGoal,
     setExam(){
       const date=document.getElementById('m-exam-date')?.value, name=document.getElementById('m-exam-name')?.value||'';

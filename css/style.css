@@ -1769,3 +1769,7 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 .m-fc-goal-bar{height:6px;border-radius:3px;background:var(--m-raised);overflow:hidden;}
 .m-fc-goal-bar i{display:block;height:100%;background:var(--m-accent);border-radius:3px;transition:width .3s;}
 @media(min-width:701px){#v-flashcards #m-fc-goal{grid-column:1 / -1;margin-bottom:0;}}
+
+/* ── Lernzeit: Umschalter Woche / Monate ─────────────────────────────────── */
+.m-seg-s button{min-width:0;height:28px;font-size:.74rem;padding:0 10px;}
+.m-chart-u{font-size:.75rem;color:var(--m-dim);margin:-2px 0 4px;}
