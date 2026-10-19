@@ -11383,6 +11383,27 @@
     </div>
 
     </div><div class="m-col">
+    <div class="m-sec">Lernen</div>
+    <div class="m-list">
+      <div class="m-row m-static">
+        <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span>
+        <span class="m-tx"><span class="m-t1">Tagesziel</span><span class="m-t2">Minuten in der App pro Tag</span></span>
+        <span class="m-step">
+          <button onclick="SHELL.stepGoal(-1)" aria-label="5 Minuten weniger">−</button>
+          <span id="m-goal-val">30 min</span>
+          <button onclick="SHELL.stepGoal(1)" aria-label="5 Minuten mehr">+</button>
+        </span>
+      </div>
+      <div class="m-row m-static m-wrap">
+        <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>
+        <span class="m-tx"><span class="m-t1">Nächste Klausur</span><span class="m-t2">Datum und Name für den Countdown</span></span>
+        <div class="m-fields">
+          <input type="date" id="m-exam-date" class="m-input" aria-label="Datum der Klausur" onchange="SHELL.setExam()">
+          <input type="text" id="m-exam-name" class="m-input" maxlength="60" placeholder="Klausur § 21 · IdF Münster" aria-label="Name der Klausur" onchange="SHELL.setExam()">
+        </div>
+      </div>
+    </div>
+
     <div class="m-sec">Erinnerung</div>
     <div class="m-list">
       <label class="m-row" for="m-notif-toggle">

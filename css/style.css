@@ -1614,3 +1614,20 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 .fb-dot{font-family:var(--f-b);border:0;background:var(--m-raised);color:var(--m-muted);width:26px;height:26px;font-size:.72rem;}
 .fb-dot-active{background:var(--m-accent);color:var(--m-on-accent);}
 .fb-dot-done{background:color-mix(in srgb,#4cc38a 22%,var(--m-raised));color:#4cc38a;}
+
+/* Tagesziel, Eingabefelder, Tab-Zähler */
+.m-stats2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.m-goal{display:flex;align-items:center;gap:16px;}
+.m-goal svg{width:64px;height:64px;flex-shrink:0;}
+.m-ring-bg{fill:none;stroke:var(--m-raised);stroke-width:7;}
+.m-ring-fg{fill:none;stroke:var(--m-accent);stroke-width:7;stroke-linecap:round;transition:stroke-dasharray .4s ease;}
+.m-ring-t{fill:var(--m-fg);font-size:15px;font-weight:700;font-family:var(--f-b);}
+.m-ring-ok{fill:none;stroke:var(--m-accent);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;}
+.m-fields{display:flex;flex-direction:column;gap:8px;width:100%;padding:6px 0 4px 50px;}
+.m-input{width:100%;min-width:0;background:var(--m-raised);border:0;border-radius:12px;color:var(--m-fg);font-family:var(--f-b);font-size:.95rem;padding:12px 14px;color-scheme:dark;}
+.m-input::placeholder{color:var(--m-dim);}
+.m-input:focus{outline:2px solid var(--m-accent);outline-offset:0;}
+.m-tab,.m-ri{position:relative;}
+.m-tab-b{position:absolute;top:0;left:calc(50% + 8px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--m-accent);color:var(--m-on-accent);font-size:.68rem;font-weight:700;display:grid;place-items:center;font-variant-numeric:tabular-nums;line-height:1;}
+.m-tab-b[hidden]{display:none;}
+.m-ri .m-tab-b{position:static;margin-left:auto;}

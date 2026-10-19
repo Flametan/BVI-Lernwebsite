@@ -1892,7 +1892,7 @@ const FC = (function(){
         d[card.id]=sm2(d[card.id]||{},q); sess.known++;
         if(typeof STREAK!=='undefined') STREAK.record();
       }
-      fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide();
+      fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide(); SHELL.updateBadges();
     },
     setFilter(f){
       if(f==='starred'){
@@ -4708,13 +4708,37 @@ const IDF_PLAN = (function(){
     _wi=keep>=0?keep:_autoIdx();
     _draw();
   }
+  function _minutes(str){ const m=/(\d{1,2}):(\d{2})/.exec(str||''); return m?(+m[1])*60+(+m[2]):null; }
+  // Laufende oder nächste Einheit nach Stundenplan der gewählten Gruppe; null, wenn das Modul vorbei ist
+  function next(now=new Date()){
+    for(const w of _buildWeeks(_savedGrp())){
+      const base=new Date(w[3]+'T00:00');
+      for(let d=0;d<5;d++){
+        const day=new Date(base); day.setDate(base.getDate()+d);
+        const dayEnd=new Date(day); dayEnd.setHours(23,59,59,0);
+        if(dayEnd<now) continue;
+        for(const raw of _splitAtLunch(w[5][d]||[])){
+          const [t,title,cls='',room='',note='']=raw.split('|');
+          if(/unterrichtsfrei|Selbststudium|Heiligabend|Weihnachtstag/.test(title)) continue;
+          const [a,b]=_time(t);
+          const s=_minutes(a); if(s===null) continue;
+          const e=_minutes(b); 
+          const start=new Date(day); start.setHours(0,s,0,0);
+          const end=new Date(day); end.setHours(0,e===null?s+60:e,0,0);
+          if(end>now) return {state:start<=now?'now':'next',title,start,end,room,note,cls,kw:w[0]};
+        }
+      }
+    }
+    return null;
+  }
+
   function summary(){
     const ws=_buildWeeks(_savedGrp()), w=ws[_autoIdx(ws)];
     const end=new Date(ws[ws.length-1][3]+'T00:00'); end.setDate(end.getDate()+5);
     return { kw:w[0], thema:w[2], over:new Date()>end };
   }
 
-  return { render, summary, _nav, _grp:_setGrp };
+  return { render, summary, next, _nav, _grp:_setGrp };
 })();
 
 /* ── Nutzungszeit: zählt nur, solange die App sichtbar ist und bedient wird ── */
@@ -5078,9 +5102,39 @@ const SHELL=(function(){
     return m<60?`${m} min`:`${Math.floor(m/60)} h ${String(m%60).padStart(2,'0')}`;
   }
 
+  const DEF_EXAM={date:'2026-12-21',name:'Klausur § 21 · IdF Münster'};
+  function examCfg(){
+    try{
+      const o=JSON.parse(localStorage.getItem('bvi_exam')||'{}');
+      return {date:/^\d{4}-\d{2}-\d{2}$/.test(o.date||'')?o.date:DEF_EXAM.date, name:((o.name||'').trim().slice(0,60))||DEF_EXAM.name};
+    }catch(e){ return {...DEF_EXAM}; }
+  }
+  function goalMin(){
+    try{ const v=parseInt(localStorage.getItem('bvi_goal'),10); return v>=5&&v<=240?v:30; }catch(e){ return 30; }
+  }
   function daysToExam(){
     const t=new Date(); t.setHours(0,0,0,0);
-    return Math.round((new Date('2026-12-21T00:00')-t)/864e5);
+    return Math.round((new Date(examCfg().date+'T00:00')-t)/864e5);
+  }
+  const hhmm=d=>String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  function dayWord(d){
+    const t=new Date(); t.setHours(0,0,0,0);
+    const x=new Date(d); x.setHours(0,0,0,0);
+    const diff=Math.round((x-t)/864e5);
+    return diff===0?'heute':diff===1?'morgen':d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'});
+  }
+  function goalCard(){
+    const sec=USAGE.today(), goal=goalMin(), p=Math.min(1,sec/(goal*60)), done=p>=1;
+    const R=26, C=2*Math.PI*R;
+    return `<div class="m-card m-goal"><svg viewBox="0 0 64 64" role="img" aria-label="${Math.round(p*100)} Prozent des Tagesziels"><circle cx="32" cy="32" r="${R}" class="m-ring-bg"/><circle cx="32" cy="32" r="${R}" class="m-ring-fg" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 32 32)"/>${done?'<path d="m22 33 7 7 13-14" class="m-ring-ok"/>':`<text x="32" y="37" text-anchor="middle" class="m-ring-t">${Math.round(p*100)}%</text>`}</svg><div class="m-tx"><span class="m-eyebrow">Tagesziel</span><span class="m-t1" style="margin-top:2px">${done?'Geschafft!':dur(sec)+' von '+goal+' min'}</span><span class="m-t2">${done?'Dein Ziel für heute ist erreicht.':'Noch '+Math.max(1,Math.ceil((goal*60-sec)/60))+' min bis zum Ziel'}</span></div></div>`;
+  }
+  function updateBadges(){
+    const n=cardStats().due;
+    document.querySelectorAll('#m-tabbar [data-tab="learn"],#m-rail [data-tab="learn"]').forEach(b=>{
+      let s=b.querySelector('.m-tab-b'); if(!s){ s=document.createElement('span'); s.className='m-tab-b'; b.appendChild(s); }
+      s.textContent=n>99?'99+':n; s.hidden=!n;
+      s.setAttribute('aria-label',n+' Karten fällig');
+    });
   }
 
   function renderHome(){
@@ -5089,7 +5143,7 @@ const SHELL=(function(){
     const now=new Date(), h=now.getHours();
     const slot=daySlot(h), hi=GREET[slot];
     const streak=streakDays(), cnt=PROGRESS.counts();
-    const cs=cardStats(), recent=RECENT.list()[0], idf=IDF_PLAN.summary(), exam=daysToExam(), week=USAGE.week();
+    const cs=cardStats(), recent=RECENT.list()[0], nx=IDF_PLAN.next(), exam=daysToExam(), week=USAGE.week(), ex=examCfg();
     const pct=c=>c.total?Math.round(c.done/c.total*100):0;
     const modRow=m=>{
       const c=cnt[m[0]]||{done:0,total:0};
@@ -5108,22 +5162,23 @@ const SHELL=(function(){
       const eb=document.querySelector('#'+recent.id+' .page-eyebrow')?.textContent?.trim()||'';
       cont=`<div class="m-card m-cont"><div class="m-tx"><span class="m-eyebrow">Weiterlernen</span><span class="m-t1" style="margin-top:4px">${esc(recent.label)}</span>${eb?`<span class="m-t2">${esc(eb)}</span>`:''}</div><button class="m-play" aria-label="${esc(recent.label)} öffnen" onclick="${goJs(recent.id,recent.label)}">${svg('play')}</button></div>`;
     }
-    const extra=(exam>=0?row({ic:ic('exam'),t1:'Nächste Klausur',t2:`Klausur § 21 · ${exam===0?'heute':exam===1?'morgen':'noch '+exam+' Tage'}`,on:"NAV.tab('v-pruefung','Prüfung')"}):'')
+    const nextRow=nx?row({ic:ic('cal'),t1:nx.title,t2:`${nx.state==='now'?'Jetzt':'Als Nächstes'} · ${dayWord(nx.start)} ${hhmm(nx.start)}${nx.state==='now'?'–'+hhmm(nx.end):''}${nx.room?' · Raum '+nx.room:''}`,on:"NAV.tab('v-plan','Plan')"}):'';
+    const extra=(exam>=0?row({ic:ic('exam'),t1:'Nächste Klausur',t2:`${ex.name} · ${exam===0?'heute':exam===1?'morgen':'noch '+exam+' Tage'}`,on:"NAV.tab('v-pruefung','Prüfung')"}):'')
       +row({ic:ic('cards'),t1:'Lernkarten wiederholen',t2:cs.due?`${cs.due} Karten heute fällig`:'Heute nichts fällig',on:"NAV.tab('v-flashcards','Lernen')"});
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${streak?`<span class="m-streak">${svg('flame')}${streak} ${streak===1?'Tag':'Tage'}</span>`:''}</div>
       <div class="m-g2 m-home-top">
         <div class="m-col">
-          <div class="m-stats3">
-            <div class="m-stat"><b>${dur(USAGE.today())}</b><span>heute in der App</span></div>
-            <div class="m-stat"><b>${dur(week.reduce((a,b)=>a+b,0))}</b><span>diese Woche</span></div>
+          ${goalCard()}
+          <div class="m-stats2">
+            <div class="m-stat"><b>${dur(week.reduce((a,b)=>a+b,0))}</b><span>diese Woche in der App</span></div>
             <div class="m-stat"><b>${dur(USAGE.total())}</b><span>insgesamt</span></div>
           </div>
           <div class="m-card m-chart"><div class="m-chart-h"><b>Lernzeit diese Woche</b><span>Minuten pro Tag</span></div>${chart(week.map(x=>Math.round(x/60)))}</div>
         </div>
         <div class="m-col">
           ${cont}
-          ${idf.over?'':`<div class="m-list">${row({ic:ic('cal'),t1:'Diese Woche am IdF',t2:`KW ${idf.kw} · ${idf.thema}`,on:"NAV.tab('v-plan','Plan')"})}</div>`}
+          ${nextRow?`<div class="m-list">${nextRow}</div>`:''}
           <div class="m-list m-only-l">${extra}</div>
         </div>
       </div>
@@ -5135,7 +5190,7 @@ const SHELL=(function(){
     const cd=document.getElementById('m-countdown'), list=document.getElementById('m-exam-list');
     if(!cd||!list) return;
     const days=daysToExam();
-    cd.innerHTML=days<0?'':`<div class="m-card m-count"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">Klausur § 21 · IdF Münster</span><span class="m-t2">Mo, 21. Dezember 2026 · 08:30 Uhr</span></div></div>`;
+    cd.innerHTML=days<0?'':`<div class="m-card m-count"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">${esc(examCfg().name)}</span><span class="m-t2">${new Date(examCfg().date+'T00:00').toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'long',year:'numeric'})}</span></div></div>`;
     const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2,on:goJs(id,t1)});
     const sec=([name,items])=>{
       const hot=items.filter(x=>x[4]), rest=items.filter(x=>!x[4]);
@@ -5213,6 +5268,9 @@ const SHELL=(function(){
     set('m-bm-count',bc||'');
     set('m-version',APP_VERSION);
     set('m-notif-hour',NOTIF.hour()+':00');
+    set('m-goal-val',goalMin()+' min');
+    const ex=examCfg(), di=document.getElementById('m-exam-date'), ni=document.getElementById('m-exam-name');
+    if(di) di.value=ex.date; if(ni) ni.value=ex.name===DEF_EXAM.name&&!localStorage.getItem('bvi_exam')?'':ex.name;
     const tg=document.getElementById('m-notif-toggle'); if(tg) tg.checked=NOTIF.isEnabled();
     document.getElementById('m-cl-badge')?.classList.toggle('hidden',!CHANGELOG.isNew());
   }
@@ -5232,10 +5290,21 @@ const SHELL=(function(){
     }
     document.getElementById('m-tb-actions')?.classList.toggle('hidden',!isContent);
     buildToc(id,isContent);
+    updateBadges();
   }
 
   return {
-    onShow, renderHome, renderExam, renderNotes, renderFcSide, syncSettings,
+    onShow, renderHome, renderExam, renderNotes, renderFcSide, syncSettings, updateBadges,
+    stepGoal(d){
+      const g=Math.min(240,Math.max(5,goalMin()+d*5));
+      try{ localStorage.setItem('bvi_goal',String(g)); }catch(e){}
+      const e=document.getElementById('m-goal-val'); if(e) e.textContent=g+' min';
+    },
+    setExam(){
+      const date=document.getElementById('m-exam-date')?.value, name=document.getElementById('m-exam-name')?.value||'';
+      const o=examCfg(); if(/^\d{4}-\d{2}-\d{2}$/.test(date||'')) o.date=date;
+      try{ localStorage.setItem('bvi_exam',JSON.stringify({date:o.date,name:name.trim()})); }catch(e){}
+    },
     bookmark(){
       const v=document.querySelector('.view.active'); if(!v) return;
       BOOKMARKS.toggle(v.id, v.querySelector('.page-title')?.textContent?.trim()||v.id);
