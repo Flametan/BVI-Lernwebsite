@@ -2,8 +2,13 @@ package de.bvi.lernwebsite
 
 import android.annotation.SuppressLint
 import android.content.ComponentName
+import android.Manifest
 import android.content.ContentValues
+import android.content.Intent
+import android.net.Uri
 import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -32,6 +37,34 @@ class MainActivity : AppCompatActivity() {
         fun setIcon(name: String) {
             if (name in iconAliases) prefs.edit().putString("pending_icon", name).apply()
         }
+
+        // Tägliche Erinnerung: "ok" = geplant, "ask" = Berechtigung wird erfragt, Antwort per NOTIF._nativeResult
+        @JavascriptInterface
+        fun setReminder(on: Boolean, hour: Int): String {
+            val h = hour.coerceIn(0, 23)
+            prefs.edit().putBoolean("reminder_on", on).putInt("reminder_hour", h).apply()
+            if (!on) { Reminder.cancel(this@MainActivity); return "ok" }
+            if (Build.VERSION.SDK_INT >= 33 &&
+                ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+                runOnUiThread {
+                    ActivityCompat.requestPermissions(this@MainActivity,
+                        arrayOf(Manifest.permission.POST_NOTIFICATIONS), 77)
+                }
+                return "ask"
+            }
+            Reminder.schedule(this@MainActivity, h)
+            return "ok"
+        }
+    }
+
+    override fun onRequestPermissionsResult(code: Int, perms: Array<out String>, results: IntArray) {
+        super.onRequestPermissionsResult(code, perms, results)
+        if (code != 77) return
+        val ok = results.isNotEmpty() && results[0] == PackageManager.PERMISSION_GRANTED
+        if (ok) Reminder.schedule(this, prefs.getInt("reminder_hour", 18))
+        else prefs.edit().putBoolean("reminder_on", false).apply()
+        webView.post { webView.evaluateJavascript("window.NOTIF&&NOTIF._nativeResult($ok)", null) }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -55,6 +88,15 @@ class MainActivity : AppCompatActivity() {
                 val url = request.url.toString()
                 if (url.contains("BHKG_NRW_Kommentar.pdf")) {
                     saveAssetToDownloads("BHKG_NRW_Kommentar.pdf")
+                    return true
+                }
+                // Mail, Telefon und fremde Webseiten außerhalb der App öffnen
+                val own = request.url.host == "flametan.github.io"
+                if (request.url.scheme == "mailto" || request.url.scheme == "tel" ||
+                    (request.url.scheme?.startsWith("http") == true && !own)) {
+                    try { startActivity(Intent(Intent.ACTION_VIEW, request.url)) } catch (e: Exception) {
+                        Toast.makeText(this@MainActivity, "Keine passende App gefunden", Toast.LENGTH_SHORT).show()
+                    }
                     return true
                 }
                 return false

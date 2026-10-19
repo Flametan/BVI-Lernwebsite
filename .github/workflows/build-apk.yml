@@ -38,7 +38,11 @@ jobs:
 
       - name: Build debug APK
         working-directory: android
-        run: gradle assembleDebug --no-daemon
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+        run: |
+          export VERSION_NAME=$(grep -oP "APP_VERSION = '\K[0-9.]+" ../js/version.js)
+          gradle assembleDebug --no-daemon
 
       - name: Rename APK
         run: cp android/app/build/outputs/apk/debug/app-debug.apk bvi-lernwebsite.apk

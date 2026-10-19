@@ -2276,8 +2276,18 @@ const STREAK = (function(){
 const NOTIF = (function(){
   function prefs(){ try{return JSON.parse(localStorage.getItem('bvi_notif')||'{}');}catch{return{};} }
   function savePrefs(p){ try{localStorage.setItem('bvi_notif',JSON.stringify(p));}catch{} }
-  return {
+  const native=()=>!!(window.BVIAndroid&&window.BVIAndroid.setReminder);
+  function syncToggle(){ const t=document.getElementById('m-notif-toggle'); if(t) t.checked=api.isEnabled(); }
+  const api={
     async setEnabled(on){
+      if(native()){
+        // Android-App: echte Benachrichtigung, auch wenn die App geschlossen ist
+        let r='ok'; try{ r=BVIAndroid.setReminder(!!on,api.hour()); }catch(e){ r='error'; }
+        if(r==='ask') return !!prefs().enabled;
+        savePrefs({...prefs(),enabled:!!on&&r==='ok'});
+        if(on&&r==='ok') TOAST.show('Erinnerung um '+api.hour()+':00 Uhr aktiviert',{type:'ok'});
+        return !!prefs().enabled;
+      }
       if(!('Notification' in window)){ TOAST.show('Benachrichtigungen nicht unterstützt'); return false; }
       if(on){
         const r=await Notification.requestPermission();
@@ -2286,10 +2296,20 @@ const NOTIF = (function(){
         TOAST.show('Benachrichtigungen aktiviert',{type:'ok'}); return true;
       } else { savePrefs({...prefs(),enabled:false}); return false; }
     },
-    setHour(h){ savePrefs({...prefs(),hour:parseInt(h,10)}); },
+    // Antwort der Android-App auf die Berechtigungsabfrage
+    _nativeResult(ok){
+      savePrefs({...prefs(),enabled:!!ok});
+      TOAST.show(ok?'Erinnerung um '+api.hour()+':00 Uhr aktiviert':'Benachrichtigungen wurden abgelehnt',{type:ok?'ok':undefined});
+      syncToggle();
+    },
+    setHour(h){
+      savePrefs({...prefs(),hour:parseInt(h,10)});
+      if(native()&&prefs().enabled){ try{ BVIAndroid.setReminder(true,parseInt(h,10)); }catch(e){} }
+    },
     hour(){ return prefs().hour||18; },
-    isEnabled(){ const p=prefs();return !!p.enabled&&'Notification' in window&&Notification.permission==='granted'; },
+    isEnabled(){ const p=prefs(); return native()?!!p.enabled:(!!p.enabled&&'Notification' in window&&Notification.permission==='granted'); },
     check(){
+      if(native()) return;
       const p=prefs(); if(!this.isEnabled()) return;
       const today=new Date().toDateString(); if(p.lastShown===today) return;
       if(new Date().getHours()<(p.hour||18)) return;
@@ -2297,6 +2317,7 @@ const NOTIF = (function(){
       savePrefs({...p,lastShown:today});
     }
   };
+  return api;
 })();
 
 /* ======================================================================
