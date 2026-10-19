@@ -2585,6 +2585,19 @@ const QUIZ=(function(){
 
   function loadBm(){try{const s=localStorage.getItem(KEY_BM);if(s)_bookmarks=new Set(JSON.parse(s));}catch(e){}}
   function saveBm(){try{localStorage.setItem(KEY_BM,JSON.stringify([..._bookmarks]));}catch(e){}}
+  // Wiederholung nach Plan: richtig = nächste Stufe (1, 3, 7, 14, 30 Tage), falsch = Stufe 1 und sofort fällig
+  const KEY_SRS='bvi_quiz_srs', SRS_DAYS=[0,1,3,7,14,30];
+  let _srs={};
+  function loadSrs(){try{_srs=JSON.parse(localStorage.getItem(KEY_SRS)||'{}')||{};}catch(e){_srs={};}}
+  function srsUpdate(id,ok){
+    const cur=_srs[id]||{box:0};
+    const box=ok?Math.min(5,(cur.box||0)+1):1;
+    _srs[id]={box,due:ok?Date.now()+SRS_DAYS[box]*864e5:Date.now()};
+    try{localStorage.setItem(KEY_SRS,JSON.stringify(_srs));}catch(e){}
+  }
+  const isDue=id=>!!_srs[id]&&_srs[id].due<=Date.now();
+  function dueCount(){ loadSrs(); return Object.values(_srs).filter(x=>x&&x.due<=Date.now()).length; }
+  function updateDueBtn(){const b=document.getElementById('quiz-filter-due');if(b){const n=Q.filter(q=>isDue(q.id)).length;b.textContent='↻ Fällig'+(n?' ('+n+')':'');}}
   function loadMastery(){try{const s=localStorage.getItem(KEY_MASTERY);if(s)_masteryMap=JSON.parse(s);}catch(e){}}
   function saveMastery(){try{localStorage.setItem(KEY_MASTERY,JSON.stringify(_masteryMap));}catch(e){}}
 
@@ -2605,7 +2618,7 @@ const QUIZ=(function(){
     saveStats(d);
   }
   function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=0|Math.random()*(i+1);[r[i],r[j]]=[r[j],r[i]];}return r;}
-  function filteredIds(){let p=_filter==='bookmarked'?Q.filter(q=>_bookmarks.has(q.id)):_filter==='wrong'?Q.filter(q=>_masteryMap[q.id]==='err'):Q;if(_catFilter!=='all')p=p.filter(q=>q.cat===_catFilter);if(_typeFilter!=='all')p=p.filter(q=>q.type===_typeFilter);return p.map(q=>q.id);}
+  function filteredIds(){let p=_filter==='bookmarked'?Q.filter(q=>_bookmarks.has(q.id)):_filter==='wrong'?Q.filter(q=>_masteryMap[q.id]==='err'):_filter==='due'?Q.filter(q=>isDue(q.id)):Q;if(_catFilter!=='all')p=p.filter(q=>q.cat===_catFilter);if(_typeFilter!=='all')p=p.filter(q=>q.type===_typeFilter);return p.map(q=>q.id);}
   function buildOrder(){_order=shuffle(filteredIds());_cur=0;_answered=false;_sessionCorrect=0;_sessionWrong=0;_sessionSkipped=0;_retried=new Set();_retriedCount=0;_posHistory={};hideSummary();renderFilterStatus();}
   function curQ(){return Q.find(q=>q.id===_order[_cur]);}
 
@@ -2645,8 +2658,9 @@ const QUIZ=(function(){
     const el=document.getElementById('quiz-filter-status');
     const tog=document.getElementById('qft-status');
     const count=filteredIds().length;
+    updateDueBtn();
     const parts=[];
-    if(_filter!=='all')parts.push(_filter==='bookmarked'?'★ Gemerkte':'✗ Falsche');
+    if(_filter!=='all')parts.push(_filter==='bookmarked'?'★ Gemerkte':_filter==='due'?'↻ Fällig':'✗ Falsche');
     if(_catFilter!=='all')parts.push(CAT_LABELS[_catFilter]||_catFilter);
     if(_typeFilter!=='all')parts.push(_typeFilter==='mc'?'Multiple Choice':_typeFilter==='tf'?'Richtig/Falsch':'Freitext');
     const hasFilter=parts.length>0;
@@ -2788,7 +2802,7 @@ const QUIZ=(function(){
   return {
     init(){
       if(_inited)return;_inited=true;
-      loadBm();loadMastery();buildOrder();renderCatBar();renderTypeBar();renderLearn();initKeyboard();initTouch();
+      loadBm();loadMastery();loadSrs();buildOrder();renderCatBar();renderTypeBar();renderLearn();initKeyboard();initTouch();
     },
     setMode(m){
       _mode=m;
@@ -2807,7 +2821,7 @@ const QUIZ=(function(){
       exp.textContent=q.exp;exp.className=ok?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';
       const noteEl2=document.getElementById('quiz-note');if(q.note&&noteEl2){noteEl2.textContent=q.note;noteEl2.className='quiz-note';}
       document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.remove('hidden');
-      _masteryMap[q.id]=ok?'ok':'err';saveMastery();
+      _masteryMap[q.id]=ok?'ok':'err';saveMastery();srsUpdate(q.id,ok);updateDueBtn();
       _posHistory[_cur]={userIdx:idx,correct:ok};
       if(!ok&&!_retried.has(q.id)){_retried.add(q.id);_order.push(q.id);_retriedCount++;const rt=document.getElementById('quiz-retry-tag');if(rt){rt.textContent='+'+_retriedCount+' ↻';rt.classList.add('qrt-flash');setTimeout(()=>rt.classList.remove('qrt-flash'),600);}}
       if(ok)_sessionCorrect++;else _sessionWrong++;
@@ -2820,7 +2834,7 @@ const QUIZ=(function(){
       document.getElementById('quiz-skip').classList.add('hidden');document.getElementById('quiz-next').classList.remove('hidden');
       const rb=document.querySelector('.quiz-reveal-btn');if(rb)rb.disabled=true;
       if(!_masteryMap[q.id]||_masteryMap[q.id]==='err')_masteryMap[q.id]='ok';
-      saveMastery();_posHistory[_cur]={userIdx:null,correct:true};
+      saveMastery();srsUpdate(q.id,true);updateDueBtn();_posHistory[_cur]={userIdx:null,correct:true};
       renderMastery();renderMasteryCats();
     },
     next(){_cur++;if(_cur>=_order.length){showSummary();return;}renderLearn();},
@@ -2836,6 +2850,7 @@ const QUIZ=(function(){
       document.getElementById('quiz-filter-all').classList.toggle('active',f==='all');
       document.getElementById('quiz-filter-bm').classList.toggle('active',f==='bookmarked');
       document.getElementById('quiz-filter-wrong')?.classList.toggle('active',f==='wrong');
+      document.getElementById('quiz-filter-due')?.classList.toggle('active',f==='due');
       buildOrder();renderFilterStatus();renderLearn();
     },
     setCatFilter(cat){_catFilter=cat;renderCatBar();buildOrder();renderFilterStatus();renderLearn();},
@@ -2852,9 +2867,11 @@ const QUIZ=(function(){
       document.getElementById('quiz-filter-all').classList.add('active');
       document.getElementById('quiz-filter-bm').classList.remove('active');
       document.getElementById('quiz-filter-wrong')?.classList.remove('active');
+      document.getElementById('quiz-filter-due')?.classList.remove('active');
       renderCatBar();renderTypeBar();renderFilterStatus();buildOrder();renderLearn();
     },
     back(){if(_cur>0){_cur--;renderLearn();}},
+    dueCount,
     reshuffle(){buildOrder();renderLearn();},
     openMastery(){
       renderMastery();renderMasteryCats();
@@ -4832,6 +4849,110 @@ const BACKUP=(function(){
   };
 })();
 
+/* ── Textmarkierungen auf Lernseiten (CSS Custom Highlight API; gespeichert wird das Zitat samt Umgebung) ── */
+const HL=(function(){
+  const KEY='bvi_hl', OK=!!(window.CSS&&CSS.highlights&&window.Highlight);
+  const load=()=>{ try{ return JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ return {}; } };
+  const save=d=>{ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){} };
+  let view=null, ranges=[], bar=null, timer=null;
+  const root=()=>view?document.getElementById(view)?.querySelector('.pc'):null;
+  const lesson=pc=>!!pc&&!!pc.querySelector('.sec-h,.acc-item,.info-card,table');
+  function index(pc){
+    const w=document.createTreeWalker(pc,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement&&!n.parentElement.closest('script,style,textarea,input,.m-report,#m-hl-bar')?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT});
+    const arr=[]; let n,pos=0;
+    while((n=w.nextNode())){ arr.push({n,s:pos}); pos+=n.data.length; }
+    return {arr,full:arr.map(x=>x.n.data).join('')};
+  }
+  function span(r,idx){
+    let a=null,b=null;
+    for(const e of idx.arr){
+      if(!r.intersectsNode(e.n)) continue;
+      const st=e.n===r.startContainer?r.startOffset:0, en=e.n===r.endContainer?r.endOffset:e.n.data.length;
+      if(en<=st) continue;
+      if(a===null) a=e.s+st;
+      b=e.s+en;
+    }
+    return a===null?null:[a,b];
+  }
+  function locate(idx,h){
+    let best=-1,score=-1,from=0,i;
+    while((i=idx.full.indexOf(h.q,from))!==-1){
+      let sc=0;
+      if(h.p&&idx.full.slice(Math.max(0,i-h.p.length),i)===h.p) sc+=2;
+      if(h.s&&idx.full.slice(i+h.q.length,i+h.q.length+h.s.length)===h.s) sc+=2;
+      if(sc>score){ score=sc; best=i; }
+      from=i+1;
+    }
+    return best<0?null:[best,best+h.q.length];
+  }
+  function toRange(idx,a,b){
+    const r=document.createRange(); let set=false;
+    for(const e of idx.arr){
+      const end=e.s+e.n.data.length;
+      if(!set&&a<end){ r.setStart(e.n,a-e.s); set=true; }
+      if(set&&b<=end){ r.setEnd(e.n,b-e.s); return r; }
+    }
+    return null;
+  }
+  function apply(id){
+    view=id; ranges=[];
+    if(!OK) return;
+    const pc=root();
+    if(!lesson(pc)){ CSS.highlights.delete('user-hl'); hide(); return; }
+    const idx=index(pc), list=load()[id]||[];
+    list.forEach((h,i)=>{ const sp=locate(idx,h); const r=sp&&toRange(idx,sp[0],sp[1]); if(r){ r._i=i; ranges.push(r); } });
+    ranges.length?CSS.highlights.set('user-hl',new Highlight(...ranges)):CSS.highlights.delete('user-hl');
+    hide();
+  }
+  const overlaps=(r,h)=>h.isPointInRange(r.startContainer,r.startOffset)||h.isPointInRange(r.endContainer,r.endOffset)||r.isPointInRange(h.startContainer,h.startOffset);
+  function hide(){ if(bar) bar.hidden=true; }
+  function update(){
+    const pc=root(), sel=getSelection();
+    if(!OK||!lesson(pc)||!sel||!sel.rangeCount) return hide();
+    const r=sel.getRangeAt(0), node=r.commonAncestorContainer, el=node.nodeType===1?node:node.parentElement;
+    if(!pc.contains(node)||(el&&el.closest('textarea,input,#m-hl-bar'))) return hide();
+    const hit=ranges.filter(h=>overlaps(r,h));
+    const canAdd=!r.collapsed&&r.toString().trim().length>=2;
+    if(!canAdd&&!hit.length) return hide();
+    if(!bar) build();
+    bar.querySelector('[data-a="add"]').hidden=!canAdd;
+    bar.querySelector('[data-a="del"]').hidden=!hit.length;
+    bar.hidden=false;
+  }
+  function build(){
+    bar=document.createElement('div'); bar.id='m-hl-bar'; bar.hidden=true; bar.setAttribute('role','toolbar');
+    bar.innerHTML='<button data-a="add">Markieren</button><button data-a="del">Markierung entfernen</button>';
+    ['mousedown','touchstart'].forEach(ev=>bar.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
+    bar.addEventListener('click',e=>{ const a=e.target.closest('button')?.dataset.a; if(a==='add') add(); else if(a==='del') remove(); });
+    document.body.appendChild(bar);
+  }
+  function add(){
+    const pc=root(), sel=getSelection(); if(!pc||!sel||!sel.rangeCount) return;
+    const idx=index(pc), sp=span(sel.getRangeAt(0),idx); if(!sp) return;
+    let [a,b]=sp; while(a<b&&/\s/.test(idx.full[a])) a++; while(b>a&&/\s/.test(idx.full[b-1])) b--;
+    const q=idx.full.slice(a,b);
+    if(q.length<2||q.length>800){ TOAST.show('Markiere eine Stelle zwischen 2 und 800 Zeichen'); return; }
+    const d=load(), list=d[view]||[];
+    list.push({q,p:idx.full.slice(Math.max(0,a-24),a),s:idx.full.slice(b,b+24)});
+    d[view]=list; save(d);
+    sel.removeAllRanges(); apply(view);
+    TOAST.show('Stelle markiert',{type:'ok'});
+  }
+  function remove(){
+    const sel=getSelection(), r=sel&&sel.rangeCount?sel.getRangeAt(0):null; if(!r) return;
+    const drop=new Set(ranges.filter(h=>overlaps(r,h)).map(h=>h._i));
+    const d=load(); d[view]=(d[view]||[]).filter((_,i)=>!drop.has(i)); if(!d[view].length) delete d[view];
+    save(d); sel.removeAllRanges(); apply(view);
+    TOAST.show('Markierung entfernt');
+  }
+  document.addEventListener('selectionchange',()=>{ clearTimeout(timer); timer=setTimeout(update,120); });
+  return {
+    apply, hide, supported:OK,
+    all(){ const d=load(); return Object.keys(d).map(v=>({view:v,items:d[v]})); },
+    removeAt(v,i){ const d=load(); (d[v]=d[v]||[]).splice(i,1); if(!d[v].length) delete d[v]; save(d); if(v===view) apply(view); }
+  };
+})();
+
 /* ── Nutzungszeit: zählt nur, solange die App sichtbar ist und bedient wird ── */
 const USAGE=(function(){
   const KEY='bvi_usage', TICK=15, IDLE=5*60*1000;
@@ -5282,7 +5403,8 @@ const SHELL=(function(){
     if(!cd||!list) return;
     const days=daysToExam();
     cd.innerHTML=days<0?'':`<div class="m-card m-count"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">${esc(examCfg().name)}</span><span class="m-t2">${new Date(examCfg().date+'T00:00').toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'long',year:'numeric'})}</span></div></div>`;
-    const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2,on:goJs(id,t1)});
+    const dueQ=(typeof QUIZ!=='undefined'&&QUIZ.dueCount)?QUIZ.dueCount():0;
+    const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2:id==='v-vak-altklausur'&&dueQ?`${t2} · ${dueQ} zur Wiederholung fällig`:t2,on:goJs(id,t1)});
     const sec=([name,items])=>{
       const hot=items.filter(x=>x[4]), rest=items.filter(x=>!x[4]);
       return `<div class="m-col"><div class="m-sec">${esc(name)}</div>${hot.map(x=>`<div class="m-list m-glow">${card(x)}</div>`).join('')}${rest.length?`<div class="m-list">${rest.map(card).join('')}</div>`:''}</div>`;
@@ -5340,14 +5462,25 @@ const SHELL=(function(){
   }
   function renderNotes(){
     const el=document.getElementById('m-notes-list'); if(!el) return;
-    const n=notes();
-    if(!n.length){ el.innerHTML='<div class="m-empty">Noch keine Notizen.<br>Öffne eine Lernseite und tippe oben rechts auf den Stift.</div>'; return; }
-    el.innerHTML='<div class="m-list">'+n.map(({id,txt})=>{
-      const v=document.getElementById(id);
-      const label=v?.querySelector('.page-title')?.textContent?.trim()||(id==='home'?'Startseite':id);
-      const eb=v?.querySelector('.page-eyebrow')?.textContent?.trim()||'';
-      return `<button class="m-row m-go" onclick="${v?goJs(id,label):''}" style="align-items:flex-start"><span class="m-tx"><span class="m-t2" style="margin:0;color:var(--m-accent)">${esc(eb?eb+' · '+label:label)}</span><span class="m-note-txt">${esc(txt)}</span></span></button>`;
-    }).join('')+'</div>';
+    const n=notes(), marks=HL.all();
+    let h='';
+    if(n.length){
+      h+='<div class="m-list">'+n.map(({id,txt})=>{
+        const v=document.getElementById(id);
+        const label=v?.querySelector('.page-title')?.textContent?.trim()||(id==='home'?'Startseite':id);
+        const eb=v?.querySelector('.page-eyebrow')?.textContent?.trim()||'';
+        return `<button class="m-row m-go" onclick="${v?goJs(id,label):''}" style="align-items:flex-start"><span class="m-tx"><span class="m-t2" style="margin:0;color:var(--m-accent)">${esc(eb?eb+' · '+label:label)}</span><span class="m-note-txt">${esc(txt)}</span></span></button>`;
+      }).join('')+'</div>';
+    }
+    if(marks.length){
+      h+='<div class="m-sec" style="margin-top:1.4rem">Markierungen</div>'+marks.map(({view,items})=>{
+        const v=document.getElementById(view);
+        const label=v?.querySelector('.page-title')?.textContent?.trim()||view;
+        return `<div class="m-hl-group"><div class="m-t2" style="color:var(--m-accent);margin:0 0 6px 4px">${esc(label)}</div><div class="m-list">${items.map((it,i)=>`<div class="m-row bm-row"><button class="bm-open" onclick="${goJs(view,label)}"><span class="m-note-txt">${esc(it.q)}</span></button><button class="bm-remove" aria-label="Markierung löschen" onclick="HL.removeAt(${esc(JSON.stringify(view))},${i});SHELL.renderNotes()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>`).join('')}</div></div>`;
+      }).join('');
+    }
+    if(!h) h='<div class="m-empty">Noch keine Notizen oder Markierungen.<br>Öffne eine Lernseite: Mit dem Stift schreibst du eine Notiz, und wenn du Text auswählst, kannst du ihn markieren.</div>';
+    el.innerHTML=h;
   }
 
   function syncSettings(){
@@ -5383,6 +5516,7 @@ const SHELL=(function(){
     document.getElementById('m-tb-actions')?.classList.toggle('hidden',!isContent);
     buildToc(id,isContent);
     updateBadges();
+    HL.apply(id);
     if(isContent){
       const pc=document.getElementById(id)?.querySelector('.pc');
       if(pc&&!pc.querySelector(':scope > .m-report')){
