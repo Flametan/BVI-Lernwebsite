@@ -1773,7 +1773,6 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 
 /* ── Lernzeit: Umschalter Woche / Monate ─────────────────────────────────── */
 .m-seg-s button{min-width:0;height:28px;font-size:.74rem;padding:0 10px;}
-.m-chart-u{font-size:.75rem;color:var(--m-dim);margin:-2px 0 4px;}
 .idf-item.idf-wtime{grid-template-columns:max-content minmax(0,1fr);}
 .sec-h,.page-title{overflow-wrap:anywhere;}
 
@@ -1895,8 +1894,6 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .m-chart2{padding:14px;}
 .m-chart2 .m-chart-h{align-items:center;margin-bottom:0;}
 .m-eyebrow{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--m-muted);}
-.m-tot{display:flex;gap:18px;flex-wrap:wrap;font-size:.8rem;color:var(--m-muted);margin:8px 0 12px;}
-.m-tot b{color:var(--m-fg);font-size:.95rem;}
 .m-plot{--pl:80px;display:flex;gap:6px;align-items:flex-end;height:calc(var(--pl) + 28px);padding-top:28px;box-sizing:border-box;}
 .m-pc{position:relative;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px;background:none;border:0;padding:0;font-family:inherit;cursor:pointer;}
 .m-tip{position:absolute;left:50%;transform:translateX(-50%);background:var(--m-fg);color:var(--m-bg);font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:8px;white-space:nowrap;display:none;z-index:2;pointer-events:none;}
@@ -1911,7 +1908,6 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .m-pl{font-size:.68rem;color:var(--m-muted);}
 .m-pl.cur{color:var(--m-accent-fg);font-weight:700;}
 .m-plot.many{gap:4px;}.m-plot.many .m-pb{max-width:14px;}.m-plot.many .m-pl{font-size:.6rem;}
-.m-chart-u{font-size:.72rem;color:var(--m-dim);margin-top:6px;}
 .m-hr{height:1px;background:var(--m-line);margin:12px 0;}
 .m-chart2 .m-row{padding:0;min-height:0;}
 .m-mods{background:transparent;padding:0;}
@@ -1970,9 +1966,7 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
   .m-cont2-bot{margin-top:10px;}
   .m-go2{height:32px;font-size:.85rem;}
   .m-chart2{padding:12px;}
-  .m-tot{margin:6px 0 4px;}
   .m-plot{--pl:48px;}
-  .m-chart-u{margin-top:3px;}
   .m-hr{margin:8px 0;}
   .m-rings{margin-top:6px;}
   .m-ringbtn .m-hring{width:52px;height:52px;}
@@ -1982,3 +1976,14 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .m-row:has(>.m-seg,>.m-step){flex-wrap:wrap;row-gap:8px;}
 .m-row:has(>.m-seg,>.m-step)>.m-tx{flex:1 1 0;min-width:min-content;}
 .m-row:has(>.m-seg,>.m-step)>.m-seg,.m-row:has(>.m-seg,>.m-step)>.m-step{margin-left:auto;}
+
+/* Kopfzeile des Verlaufs: Umschalter links, Zeit rechts */
+.m-st{font-size:.78rem;color:var(--m-muted);white-space:nowrap;}
+.m-st b{color:var(--m-accent-fg);font-size:.95rem;}
+.m-chart2 .m-plot{margin-top:6px;}
+/* Handy: Reihenfolge Weiterlernen, 2. Ausbildungsjahr, Verlauf, 1. Ausbildungsjahr, Cloud */
+@media(max-width:700px){
+  #m-home .m-hl,#m-home .m-hr2,#m-home .m-mods,#m-home .m-modgrid2{display:contents;}
+  .m-cont2{order:1;}.m-r2{order:2;}.m-chart2{order:3;}.m-y1{order:4;}.m-cloud{order:5;}
+  .m-chart2 .m-seg-s button{height:24px;font-size:.7rem;padding:0 9px;min-width:0;}
+}

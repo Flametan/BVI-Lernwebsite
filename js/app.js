@@ -5871,15 +5871,14 @@ const SHELL=(function(){
       <div class="m-cont2-bot"><button class="m-go2" onclick="${cGo}">${cBtn} ${svg('play')}</button><span class="m-t2">Ziel heute: ${minToday} / ${goal} min</span></div></div>`;
     const nextRow=nx?row({ic:ic('cal'),t1:nx.title,t2:`${nx.state==='now'?'Jetzt':'Als Nächstes'} · ${dayWord(nx.start)} ${hhmm(nx.start)}${nx.state==='now'?'–'+hhmm(nx.end):''}${nx.room?' · Raum '+nx.room:''}`,on:"NAV.tab('v-plan','Stundenplan')"}):'';
     const pl=chartRange==='month'?monthPlot():weekPlot(), isM=chartRange==='month';
-    const chartCard=`<div class="m-card m-chart2"><div class="m-chart-h"><span class="m-eyebrow">${isM?'Pro Monat':'Diese Woche'}</span><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${isM?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${isM?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span></div>
-      <div class="m-tot"><span><b>${dur(pl.sum)}</b> ${isM?'in 12 Monaten':'diese Woche'}</span><span><b>${dur(USAGE.total())}</b> insgesamt</span></div>
-      ${pl.html}<div class="m-chart-u">${pl.unit}</div>
+    const chartCard=`<div class="m-card m-chart2"><div class="m-chart-h"><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${isM?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${isM?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span><span class="m-st"><b>${dur(pl.sum)}</b> ${isM?'12 Mon.':'Woche'}</span></div>
+      ${pl.html}
       ${nextRow?`<div class="m-hr"></div>${nextRow}`:''}</div>`;
     const ringBtn=m=>{
       const c=cnt[m[0]]||{done:0,total:0};
       return `<button class="m-ringbtn" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen">${homeRing(pct(c),m[1],m[1])}<small>${c.done}/${c.total}</small></button>`;
     };
-    const mods=`<div class="m-card m-mods"><div class="m-modgrid2"><div><div class="m-sec">2. Ausbildungsjahr</div><div class="m-rings">${MODS.filter(m=>m[5]===2).map(ringBtn).join('')}</div></div>
+    const mods=`<div class="m-card m-mods"><div class="m-modgrid2"><div class="m-r2"><div class="m-sec">2. Ausbildungsjahr</div><div class="m-rings">${MODS.filter(m=>m[5]===2).map(ringBtn).join('')}</div></div>
       <details class="m-y1"${y1Open?' open':''} ontoggle="SHELL.y1(this.open)"><summary>1. Ausbildungsjahr</summary><div class="inner"><div class="m-rings r3">${MODS.filter(m=>m[5]===1).map(ringBtn).join('')}</div></div></details></div></div>`;
     const cloud=`<div class="m-list m-glow m-cloud"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2 m-cloud-x">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
     el.innerHTML=`
