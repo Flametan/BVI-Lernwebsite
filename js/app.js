@@ -27,6 +27,8 @@ const NAV = (function(){
     if(typeof BOOKMARKS!=='undefined') BOOKMARKS.setView(id);
     SHELL.onShow(id, isContentPage, stack);
     if(id==='v-plan') IDF_PLAN.render();
+    if(id==='v-app') INSTALL.render();
+    ETIMER.mount(id);
     if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); SHELL.renderCardGoal(); }
     if(id==='v-home') SHELL.renderHome();
     if(id==='v-pruefung') SHELL.renderExam();
@@ -1145,6 +1147,9 @@ const FLASHCARD_DATA = [
 
 
 ];
+// Eigene Karten aus dem Speicher dazunehmen
+try{ JSON.parse(localStorage.getItem('bvi_fc_custom')||'[]').forEach(c=>{ if(c&&c.id&&c.q&&c.a) FLASHCARD_DATA.push({id:c.id,cat:c.cat,q:c.q,a:c.a,own:true}); }); }catch(e){}
+
 
 /* ======================================================================
    PROGRESS – Lernfortschritt in LocalStorage
@@ -1658,12 +1663,19 @@ const FC = (function(){
   function fcSave(d){ try{ localStorage.setItem('bvi_fc',JSON.stringify(d)); }catch{} }
   function fcLoadStars(){ try{ return new Set(JSON.parse(localStorage.getItem('bvi_fc_stars')||'[]')); }catch{ return new Set(); } }
   function fcSaveStars(s){ try{ localStorage.setItem('bvi_fc_stars',JSON.stringify([...s])); }catch{} }
+  function fcLoadWeak(){ try{ return new Set(JSON.parse(localStorage.getItem('bvi_fc_weak')||'[]')); }catch{ return new Set(); } }
+  function fcSaveWeak(s){ try{ localStorage.setItem('bvi_fc_weak',JSON.stringify([...s])); }catch{} }
   function fcToggleStar(id){ const s=fcLoadStars(); if(s.has(id)) s.delete(id); else s.add(id); fcSaveStars(s); return s.has(id); }
 
   function getDeck(){
     if(activeFilters.has('starred')){
       const stars=fcLoadStars();
       return shuffle(FLASHCARD_DATA.filter(c=>stars.has(c.id)));
+    }
+    if(activeFilters.has('own')) return shuffle(FLASHCARD_DATA.filter(c=>c.own));
+    if(activeFilters.has('weak')){
+      const weak=fcLoadWeak();
+      return shuffle(FLASHCARD_DATA.filter(c=>weak.has(c.id)));
     }
     const base = activeFilters.size===CATS.length ? [...FLASHCARD_DATA]
       : FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f)));
@@ -1673,7 +1685,11 @@ const FC = (function(){
   function updateFilterButtons(){
     const known=fcLoad();
     const stars=fcLoadStars();
-    const isStarred=activeFilters.has('starred');
+    const isStarred=activeFilters.has('starred')||activeFilters.has('weak')||activeFilters.has('own');
+    const isWeak=activeFilters.has('weak');
+    const isOwn=activeFilters.has('own');
+    const ownN=FLASHCARD_DATA.filter(c=>c.own).length;
+    const weakN=fcLoadWeak().size;
     const allSel=CATS.every(c=>activeFilters.has(c));
     const PRUEFUNG_CATS=['ibk','vak','feuak','idf'];
     const isPruefung=!isStarred&&PRUEFUNG_CATS.every(c=>activeFilters.has(c))&&activeFilters.size===PRUEFUNG_CATS.length;
@@ -1684,9 +1700,17 @@ const FC = (function(){
         b.classList.toggle('active',allSel&&!isPruefung&&!isStarred);
         b.innerHTML=`<b>${base}</b><small>${FLASHCARD_DATA.length}</small>`;
       } else if(df==='starred'){
-        b.classList.toggle('active',isStarred);
-        b.classList.toggle('hidden',stars.size===0&&!isStarred);
+        b.classList.toggle('active',activeFilters.has('starred'));
+        b.classList.toggle('hidden',stars.size===0&&!activeFilters.has('starred'));
         b.innerHTML=`<b>★ ${base}</b><small>${stars.size}</small>`;
+      } else if(df==='own'){
+        b.classList.toggle('active',isOwn);
+        b.classList.toggle('hidden',ownN===0&&!isOwn);
+        b.innerHTML=`<b>${base}</b><small>${ownN}</small>`;
+      } else if(df==='weak'){
+        b.classList.toggle('active',isWeak);
+        b.classList.toggle('hidden',weakN===0&&!isWeak);
+        b.innerHTML=`<b>${base}</b><small>${weakN}</small>`;
       } else if(df==='pruefung'){
         b.classList.toggle('active',isPruefung);
       } else if(df){
@@ -1895,18 +1919,23 @@ const FC = (function(){
         d[card.id]=sm2(d[card.id]||{},q); sess.known++;
         if(typeof STREAK!=='undefined') STREAK.record();
       }
+      const weak=fcLoadWeak(); if(q===2) weak.delete(card.id); else weak.add(card.id); fcSaveWeak(weak);
       fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide(); SHELL.updateBadges(); SHELL.cardDone();
     },
     setFilter(f){
       if(f==='starred'){
         activeFilters=activeFilters.has('starred')?new Set(CATS):new Set(['starred']);
+      } else if(f==='own'){
+        activeFilters=activeFilters.has('own')?new Set(CATS):new Set(['own']);
+      } else if(f==='weak'){
+        activeFilters=activeFilters.has('weak')?new Set(CATS):new Set(['weak']);
       } else if(f==='all'){
         activeFilters=new Set(CATS);
       } else if(f==='pruefung'){
         activeFilters=new Set(['ibk','vak','feuak','idf']);
         updateFilterButtons(); this.start(); return;
       } else {
-        activeFilters.delete('starred');
+        activeFilters.delete('starred'); activeFilters.delete('weak'); activeFilters.delete('own');
         if(activeFilters.size===CATS.length) activeFilters=new Set([f]);
         else if(activeFilters.has(f)){ activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(CATS); }
         else activeFilters.add(f);
@@ -2504,6 +2533,56 @@ const SHARE=(function(){
 })();
 
 /* ======================================================================
+   CUSTOM – Eigene Lernkarten
+====================================================================== */
+const CUSTOM=(function(){
+  const KEY='bvi_fc_custom', MODS=['GAL','SFS','HLFS','IBK','VAk','FeuAK','IdF'];
+  let box=null;
+  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const html=t=>esc(t.trim()).replace(/\n/g,'<br>');
+  const load=()=>{ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){ return []; } };
+  const save=a=>{ try{ localStorage.setItem(KEY,JSON.stringify(a)); }catch(e){} };
+  function refresh(){ if(typeof FC!=='undefined') FC.syncFilters(); SHELL.renderFcSide(); }
+  function list(){
+    const el=box.querySelector('#cu-list'), a=load();
+    el.innerHTML=a.length?a.map(c=>`<div class="cu-item"><div><b>${esc(c.cat.split(' · ')[0])}</b> ${c.q}</div><button aria-label="Karte löschen" data-id="${esc(c.id)}">Löschen</button></div>`).join(''):'<div class="cu-empty">Noch keine eigenen Karten.</div>';
+    el.querySelectorAll('button').forEach(b=>b.onclick=()=>remove(b.dataset.id));
+  }
+  function remove(id){
+    save(load().filter(c=>c.id!==id));
+    const i=FLASHCARD_DATA.findIndex(c=>c.id===id); if(i>=0) FLASHCARD_DATA.splice(i,1);
+    list(); refresh();
+  }
+  function add(){
+    const q=box.querySelector('#cu-q').value, a=box.querySelector('#cu-a').value, m=box.querySelector('#cu-m').value;
+    if(!q.trim()||!a.trim()){ TOAST.show('Bitte Frage und Antwort eintragen',{type:'info'}); return; }
+    const c={id:'own'+Date.now().toString(36),cat:m+' · Eigene Karte',q:html(q),a:html(a)};
+    const all=load(); all.push(c); save(all);
+    FLASHCARD_DATA.push({...c,own:true});
+    box.querySelector('#cu-q').value=''; box.querySelector('#cu-a').value='';
+    list(); refresh(); TOAST.show('Karte gespeichert',{type:'ok'});
+    box.querySelector('#cu-q').focus();
+  }
+  function build(){
+    box=document.createElement('div'); box.id='cu-ov'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Eigene Lernkarte');
+    box.innerHTML='<div class="cu-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t">Eigene Lernkarte</div>'
+      +'<label>Modul<select id="cu-m">'+MODS.map(m=>'<option>'+m+'</option>').join('')+'</select></label>'
+      +'<label>Frage<textarea id="cu-q" rows="3" maxlength="500"></textarea></label>'
+      +'<label>Antwort<textarea id="cu-a" rows="4" maxlength="1500"></textarea></label>'
+      +'<button class="btn btn-gold" id="cu-save">Karte speichern</button>'
+      +'<div class="cu-h">Meine Karten</div><div id="cu-list"></div></div>';
+    document.body.appendChild(box);
+    box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
+    box.querySelector('#cu-save').onclick=add;
+  }
+  function open(){ if(!box) build(); list(); box.hidden=false; box.querySelector('#cu-q').focus({preventScroll:true}); }
+  function close(){ if(box) box.hidden=true; }
+  return {open,close};
+})();
+
+/* ======================================================================
    RECENT – Zuletzt besucht
 ====================================================================== */
 const RECENT=(function(){
@@ -2530,13 +2609,17 @@ const RECENT=(function(){
 const ONBOARD=(function(){
   const KEY='bvi_onboarded';
   let _step=0;
-  const TOTAL=5;
+  const TOTAL=6;
+  function syncSetup(){
+    THEME.render(); ACCENT.render(); SHELL.syncCardGoal();
+  }
   function setStep(n){
     _step=Math.max(0,Math.min(TOTAL-1,n));
     document.querySelectorAll('.ob-step').forEach((el,i)=>el.classList.toggle('active',i===_step));
     document.querySelectorAll('.ob-dot').forEach((el,i)=>el.classList.toggle('active',i===_step));
     const nextBtn=document.querySelector('.ob-next');
     if(nextBtn) nextBtn.textContent=_step===TOTAL-1?'Los geht\'s!':'Weiter →';
+    if(_step===1) syncSetup();
   }
   return {
     init(){
@@ -2569,6 +2652,7 @@ const QUIZ=(function(){
   let _examTimerInterval=null,_examTimeLeft=0;
 
   function startTimer(){
+    if(document.documentElement.classList.contains('no-timers')) return;
     _examTimeLeft=60*60;
     const bar=document.getElementById('quiz-exam-timer-bar');
     if(bar)bar.classList.remove('hidden');
@@ -3299,6 +3383,9 @@ const CHANGELOG=(function(){
       'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
       'Lernseiten: Text markieren, Merken, Notiz und Vorlesen direkt auf der Seite; Bilder und Diagramme per Tipp groß öffnen und zoomen; Inhaltsverzeichnis am Rand auf großen Bildschirmen; Fehler melden',
       'Einstellungen: Suche, Notizen, Lesezeichen, Pomodoro, Lernstatistik, Abkürzungen, Sicherung erstellen und einspielen, Klausurtermin einstellbar, freiwillige Unterstützung per PayPal',
+      'Ersteinrichtung beim ersten Start (Farbschema, Akzentfarbe, Kartenziel); Installationshilfe je Gerät und QR-Code zum Teilen der App',
+      'Lernkarten: eigene Karten anlegen, Filter „Schwach“ für Karten, die schwer waren oder nicht saßen',
+      'Klausur-Timer (30 bis 90 Minuten) auf den Übungsklausuren; Notizen zu Stundenplan-Einträgen; Fehler melden per E-Mail oder GitHub',
       'Android-App: Erinnerung als echte Benachrichtigung, Links öffnen außerhalb der App'
     ]},
     {v:'2.31.0',ts:'2026-10-18T00:00',items:[
@@ -4521,6 +4608,45 @@ const UEBUNGSKLAUSUR = (function(){
 })();
 
 /* ── IdF Münster Stundenplan Modul 3.5 ──────────────────────────────────── */
+/* ── Notizen zu Stundenplan-Einträgen ───────────────────────────────────── */
+const PLANNOTE=(function(){
+  const KEY='bvi_plan_notes';
+  let box=null, cur='', el=null;
+  const all=()=>{ try{ return JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ return {}; } };
+  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function build(){
+    box=document.createElement('div'); box.id='pn-ov'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Stundenplan-Eintrag');
+    box.innerHTML='<div class="cu-card"><button class="sh-x" aria-label="Schließen">×</button><div class="pn-when"></div><div class="sh-t pn-title" style="padding:0"></div><div class="pn-meta"></div>'
+      +'<label>Meine Notiz<textarea id="pn-t" rows="4" maxlength="800" placeholder="z. B. Unterlagen mitbringen"></textarea></label></div>';
+    document.body.appendChild(box);
+    box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
+    box.querySelector('#pn-t').addEventListener('input',e=>{
+      const a=all(); const v=e.target.value.trim();
+      if(v) a[cur]=v; else delete a[cur];
+      try{ localStorage.setItem(KEY,JSON.stringify(a)); }catch(x){}
+    });
+  }
+  function open(item){
+    if(!box) build();
+    el=item; cur=item.dataset.k;
+    const [ymd,,]=cur.split('|');
+    const d=new Date(ymd+'T00:00').toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
+    const t=item.querySelector('.idf-time'); 
+    box.querySelector('.pn-when').textContent=d+' · '+(t?t.textContent.replace(/(\d)(\d{2}:\d{2})/,'$1 – $2'):'');
+    box.querySelector('.pn-title').textContent=item.querySelector('.idf-name').textContent.replace(/\s*✎\s*$/,'');
+    const m=item.querySelector('.idf-meta'); box.querySelector('.pn-meta').textContent=m?m.textContent:'';
+    box.querySelector('#pn-t').value=all()[cur]||'';
+    box.hidden=false; box.querySelector('#pn-t').focus({preventScroll:true});
+  }
+  function close(){
+    if(!box||box.hidden) return; box.hidden=true;
+    if(typeof IDF_PLAN!=='undefined') IDF_PLAN.redraw();
+  }
+  return {open,get:k=>all()[k]||''};
+})();
+
 const IDF_PLAN = (function(){
   // Eintrag: "Zeit|Titel|Art|Raum|Hinweis" · Zeit = UE ("1-2") oder Uhrzeit ("09:00-09:15", "19:00", "EVA")
   // Art: hi = Schlüsseltermin, ex = Exkursion, ar = Anreise/Abreise/frei
@@ -4618,11 +4744,13 @@ const IDF_PLAN = (function(){
     const i=spec.indexOf('-');
     return i<0?[spec,'']:[spec.slice(0,i),spec.slice(i+1)];
   }
-  function _item(s){
+  function _item(s,ymd){
     const [t,title,cls='',room='',note='']=s.split('|');
     const [a,b]=_time(t);
     const meta=[note,room?'Raum '+room:''].filter(Boolean).join(' · ');
-    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}"><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${esc(title)}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
+    const nk=ymd?ymd+'|'+t+'|'+title:'';
+    const has=nk&&PLANNOTE.get(nk);
+    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}${nk?' idf-tap':''}"${nk?` data-k="${esc(nk)}" tabindex="0" role="button"`:''}><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${esc(title)}${has?' <i class="idf-pen" aria-label="Mit Notiz">✎</i>':''}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
   }
   const LUNCH=end=>`<div class="idf-item idf-lunch"><span class="idf-time">13:00<i>${end}</i></span><span class="idf-txt"><span class="idf-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v5a3 3 0 0 0 6 0V2M18 22V2c-2.5 1.5-4 4.5-4 8 0 2 1 3 4 3"/></svg>Mittagessen</span></span></div>`;
   function _start(spec){
@@ -4643,11 +4771,11 @@ const IDF_PLAN = (function(){
     return out.map((x,i)=>({x,i,t:_start(x.split('|')[0])}))
       .sort((a,b)=>a.t&&b.t?(a.t<b.t?-1:a.t>b.t?1:a.i-b.i):a.i-b.i).map(o=>o.x);
   }
-  function _dayItems(raw){
+  function _dayItems(raw,ymd){
     if(!raw.length) return '<div class="idf-empty">frei</div>';
     const items=_splitAtLunch(raw);
     const starts=items.map(x=>_start(x.split('|')[0]));
-    const html=items.map(_item);
+    const html=items.map(x=>_item(x,ymd));
     if(starts.some(Boolean)){
       let at=0;
       starts.forEach((t,i)=>{ if(t&&t<'13:00') at=i+1; });
@@ -4657,6 +4785,28 @@ const IDF_PLAN = (function(){
     return html.join('');
   }
 
+  // Änderungen vom Institut: data/plan-overrides.json (siehe Datei), wird beim Öffnen frisch geladen
+  let _ov={tage:[],wochenhinweise:[]};
+  const _ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  function _dayRaw(w,d,g){
+    const day=new Date(w[3]+'T00:00'); day.setDate(day.getDate()+d);
+    const key=_ymd(day);
+    const o=_ov.tage.find(t=>t&&t.datum===key&&(!t.gruppe||t.gruppe==='both'||t.gruppe===g)&&Array.isArray(t.eintraege));
+    return o?o.eintraege:(w[5][d]||[]);
+  }
+  function _weekNote(w){
+    const o=_ov.wochenhinweise.find(x=>x&&x.montag===w[3]);
+    return o&&o.text?String(o.text):'';
+  }
+  async function _loadOv(){
+    try{
+      const r=await fetch('data/plan-overrides.json',{cache:'no-cache'}); if(!r.ok) return;
+      const j=await r.json();
+      _ov={tage:Array.isArray(j.tage)?j.tage:[],wochenhinweise:Array.isArray(j.wochenhinweise)?j.wochenhinweise:[]};
+      if(document.getElementById('v-plan')?.classList.contains('active')) _draw();
+      if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome();
+    }catch(e){}
+  }
   function _buildWeeks(g=_grp){
     return W.filter(w=>w[4]==='both'||w[4]===g).sort((a,b)=>a[3]<b[3]?-1:1);
   }
@@ -4684,11 +4834,13 @@ const IDF_PLAN = (function(){
     </div>`;
     if(notStarted&&_wi===0) h+=`<div class="idf-note">Das Modul beginnt am 26. Oktober. Bis dahin zeigt der Plan die erste Woche.</div>`;
     if(info) h+=`<div class="idf-note">${esc(info)}</div>`;
-    h+='<div class="idf-days">'+days.map((items,i)=>{
+    const wn=_weekNote(wk); if(wn) h+=`<div class="idf-note">${esc(wn)}</div>`;
+    h+='<div class="idf-days">'+days.map((_,i)=>{
+      const items=_dayRaw(wk,i,_grp);
       const d=new Date(base); d.setDate(base.getDate()+i);
       const isToday=d.getTime()===today.getTime();
       return `<div class="idf-day${isToday?' today':''}"><div class="idf-dc"><span class="idf-dow">${DAYS[i]}</span><span class="idf-dnum">${d.getDate()}</span><span class="idf-dmo">${MONS[d.getMonth()]}</span></div>
-        <div class="idf-items">${_dayItems(items)}</div></div>`;
+        <div class="idf-items">${_dayItems(items,_ymd(d))}</div></div>`;
     }).join('')+'</div>';
     const full=(n,t)=>/^-/.test(t)?(/BABZ/.test(n)?'0228 99550':'0251 3112')+t:t;
     const rows=[...(tel||TEL.spahl),['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>[n,full(n,t)]);
@@ -4723,7 +4875,7 @@ const IDF_PLAN = (function(){
         const day=new Date(base); day.setDate(base.getDate()+d);
         const dayEnd=new Date(day); dayEnd.setHours(23,59,59,0);
         if(dayEnd<now) continue;
-        for(const raw of _splitAtLunch(w[5][d]||[])){
+        for(const raw of _splitAtLunch(_dayRaw(w,d,_savedGrp()))){
           const [t,title,cls='',room='',note='']=raw.split('|');
           if(/unterrichtsfrei|Selbststudium|Heiligabend|Weihnachtstag/.test(title)) continue;
           const [a,b]=_time(t);
@@ -4751,7 +4903,7 @@ const IDF_PLAN = (function(){
       for(let d=0;d<5;d++){
         const day=new Date(base); day.setDate(base.getDate()+d);
         const ymd=day.getFullYear()+pad(day.getMonth()+1)+pad(day.getDate());
-        _splitAtLunch(w[5][d]||[]).forEach((raw,i)=>{
+        _splitAtLunch(_dayRaw(w,d,g)).forEach((raw,i)=>{
           const [t,title,cls='',room='',note='']=raw.split('|');
           if(/unterrichtsfrei|Selbststudium|Heiligabend|Weihnachtstag/.test(title)) return;
           const [a,b]=_time(t); const s=_minutes(a); if(s===null) return;
@@ -4780,7 +4932,14 @@ const IDF_PLAN = (function(){
     return { kw:w[0], thema:w[2], over:new Date()>end };
   }
 
-  return { render, summary, next, ics, exportIcs, _nav, _grp:_setGrp };
+  document.addEventListener('click',e=>{
+    const it=e.target.closest('#plan-inner .idf-tap'); if(it) PLANNOTE.open(it);
+  });
+  document.addEventListener('keydown',e=>{
+    if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('#plan-inner .idf-tap')){ e.preventDefault(); PLANNOTE.open(e.target); }
+  });
+  _loadOv();
+  return { render, summary, next, ics, exportIcs, _nav, _grp:_setGrp, redraw:_draw };
 })();
 
 /* ── Dateien speichern (Browser: Download, Android-App: Ordner Downloads) ── */
@@ -5061,6 +5220,139 @@ const LIGHTBOX=(function(){
   return {open:show,close,isOpen:()=>open};
 })();
 
+/* ── App teilen (QR-Code) und Installationshilfe ────────────────────────── */
+const APPSHARE=(function(){
+  const URL_APP='https://flametan.github.io/BVI-Lernwebsite/';
+  let box=null, loading=null;
+  function loadLib(){
+    if(window.qrcode) return Promise.resolve();
+    return loading||(loading=new Promise((ok,fail)=>{
+      const s=document.createElement('script'); s.src='js/qrcode.min.js'; s.onload=ok; s.onerror=()=>{ loading=null; fail(); };
+      document.head.appendChild(s);
+    }));
+  }
+  function build(){
+    box=document.createElement('div'); box.id='share-ov'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','App teilen');
+    box.innerHTML='<div class="sh-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t">B VI auf dem Handy öffnen</div>'
+      +'<div class="sh-qr" id="sh-qr" role="img" aria-label="QR-Code zum Link der App"></div>'
+      +'<div class="sh-u">'+URL_APP.replace('https://','')+'</div>'
+      +'<div class="sh-b"><button class="btn btn-gold" id="sh-copy">Link kopieren</button><button class="btn btn-ghost" id="sh-share" hidden>Teilen …</button></div></div>';
+    document.body.appendChild(box);
+    box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
+    box.querySelector('#sh-copy').onclick=async()=>{
+      try{ await navigator.clipboard.writeText(URL_APP); TOAST.show('Link kopiert',{type:'ok'}); }
+      catch(e){ TOAST.show(URL_APP,{type:'info'}); }
+    };
+    const sb=box.querySelector('#sh-share');
+    if(navigator.share){ sb.hidden=false; sb.onclick=()=>navigator.share({title:'B VI – Höherer Dienst',url:URL_APP}).catch(()=>{}); }
+  }
+  async function open(){
+    if(!box) build();
+    box.hidden=false;
+    const el=box.querySelector('#sh-qr');
+    try{
+      await loadLib();
+      const q=qrcode(0,'M'); q.addData(URL_APP); q.make();
+      el.innerHTML=q.createSvgTag({cellSize:6,margin:2,scalable:true});
+    }catch(e){ el.textContent='QR-Code konnte nicht geladen werden – nutze den Link darunter.'; }
+    box.querySelector('.sh-x').focus({preventScroll:true});
+  }
+  function close(){ if(box) box.hidden=true; }
+  return {open,close};
+})();
+
+const INSTALL=(function(){
+  let deferred=null;
+  window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferred=e; render(); });
+  window.addEventListener('appinstalled',()=>{ deferred=null; render(); });
+  const ua=navigator.userAgent||'';
+  const ios=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const android=/Android/.test(ua);
+  const standalone=()=>window.matchMedia&&(matchMedia('(display-mode: standalone)').matches||navigator.standalone===true);
+  function render(){
+    const el=document.getElementById('app-device'); if(!el) return;
+    let t,steps=[],btn='';
+    if(window.BVIAndroid){ t='Du nutzt die Android-App bereits ✓'; }
+    else if(standalone()){ t='Die App ist installiert ✓'; }
+    else if(ios){ t='So installierst du die App auf deinem iPhone / iPad'; steps=['Öffne diese Seite in <strong>Safari</strong>','Tippe unten auf das <strong>Teilen-Symbol</strong> (□↑)','Wähle <strong>„Zum Home-Bildschirm“</strong> und bestätige mit <strong>„Hinzufügen“</strong>']; }
+    else if(android){ t='So installierst du die App auf deinem Android-Gerät'; steps=deferred?['Tippe auf <strong>„Jetzt installieren“</strong> und bestätige']:['Tippe oben rechts auf das <strong>Menü</strong> (⋮)','Wähle <strong>„App installieren“</strong> oder <strong>„Zum Startbildschirm hinzufügen“</strong>','Alternativ: die <strong>APK</strong> weiter unten laden – sie ändert auch das Symbol mit deiner Akzentfarbe']; }
+    else { t='So installierst du die App am Computer'; steps=deferred?['Klicke auf <strong>„Jetzt installieren“</strong>']:['Klicke in der Adressleiste auf das <strong>Installieren-Symbol</strong> (Chrome, Edge) oder im Menü auf <strong>„App installieren“</strong>','Auf dem Handy: QR-Code unten scannen']; }
+    if(deferred&&!standalone()) btn='<button class="btn btn-gold" onclick="INSTALL.prompt()">Jetzt installieren</button>';
+    el.innerHTML='<div class="m-card"><div class="m-eyebrow">Für dein Gerät</div><div class="m-t1" style="margin:4px 0 8px">'+t+'</div>'
+      +(steps.length?'<ol class="ap-steps">'+steps.map(x=>'<li>'+x+'</li>').join('')+'</ol>':'')
+      +'<div class="ap-act">'+btn+'<button class="btn btn-ghost" onclick="APPSHARE.open()">QR-Code zum Teilen</button></div></div>';
+  }
+  async function prompt(){ if(!deferred) return; deferred.prompt(); try{ await deferred.userChoice; }catch(e){} deferred=null; render(); }
+  return {render,prompt};
+})();
+
+/* ── Klausur-Timer für die Übungsklausuren ──────────────────────────────── */
+const ETIMER=(function(){
+  const KEY='bvi_et_end', VIEWS=['v-klausurfragen','v-feuak-altklausur','v-klausur-0826','v-eingrenzung-klausur'];
+  let pill=null, tick=null, minutes=60;
+  const left=()=>{ try{ const e=parseInt(localStorage.getItem(KEY),10); return e?Math.round((e-Date.now())/1000):null; }catch(x){ return null; } };
+  const fmt=sec=>{ sec=Math.max(0,sec); const h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), s=sec%60; return (h?h+':':'')+String(m).padStart(h?2:1,'0')+':'+String(s).padStart(2,'0'); };
+  function ensurePill(){
+    if(pill) return;
+    pill=document.createElement('div'); pill.id='et-pill'; pill.hidden=true;
+    pill.innerHTML='<span class="et-t" role="timer"></span><button class="et-stop" aria-label="Timer beenden">×</button>';
+    pill.querySelector('.et-stop').onclick=stop;
+    document.body.appendChild(pill);
+  }
+  function update(){
+    const l=left(); ensurePill();
+    if(l===null){ pill.hidden=true; clearInterval(tick); tick=null; return; }
+    pill.hidden=false;
+    pill.classList.toggle('urgent',l<=300&&l>0);
+    pill.classList.toggle('over',l<=0);
+    pill.querySelector('.et-t').textContent=l>0?'⏱ '+fmt(l):'Zeit um';
+    if(l<=0&&!pill.dataset.done){ pill.dataset.done='1'; if(navigator.vibrate) navigator.vibrate([200,100,200]); TOAST.show('Die Zeit ist um – Stift runter!',{type:'ok'}); }
+  }
+  function start(min){
+    if(document.documentElement.classList.contains('no-timers')) return;
+    try{ localStorage.setItem(KEY,String(Date.now()+min*60000)); }catch(e){}
+    ensurePill(); delete pill.dataset.done; update();
+    clearInterval(tick); tick=setInterval(update,1000);
+    TOAST.show('Timer läuft: '+min+' Minuten',{type:'ok'});
+  }
+  function stop(){ try{ localStorage.removeItem(KEY); }catch(e){} update(); }
+  function card(){
+    return '<div class="m-card et-card"><div class="m-t1">Klausur simulieren</div><div class="m-t2" style="margin:2px 0 10px">Stelle einen Timer und bearbeite die Fragen, ohne in die Musterlösung zu schauen.</div>'
+      +'<div class="et-row"><span class="m-seg" role="group" aria-label="Dauer">'+[30,45,60,90].map(m=>'<button class="et-d'+(m===minutes?' active':'')+'" data-m="'+m+'">'+m+' min</button>').join('')+'</span>'
+      +'<button class="btn btn-gold et-go">Timer starten</button></div></div>';
+  }
+  function mount(id){
+    if(!VIEWS.includes(id)) return;
+    const pc=document.querySelector('#'+id+' .pc'); if(!pc||pc.querySelector('.et-card')) return;
+    pc.insertAdjacentHTML('afterbegin',card());
+    const c=pc.querySelector('.et-card');
+    c.querySelectorAll('.et-d').forEach(b=>b.onclick=()=>{ minutes=+b.dataset.m; c.querySelectorAll('.et-d').forEach(x=>x.classList.toggle('active',x===b)); });
+    c.querySelector('.et-go').onclick=()=>start(minutes);
+  }
+  function init(){ if(left()!==null){ ensurePill(); update(); tick=setInterval(update,1000); } }
+  return {mount,init,start,stop};
+})();
+
+/* ── Fehler melden: E-Mail oder GitHub ──────────────────────────────────── */
+const REPORT=(function(){
+  let box=null;
+  function build(){
+    box=document.createElement('div'); box.id='rp-ov'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Fehler melden');
+    box.innerHTML='<div class="sh-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t">Fehler oder Unklarheit melden</div>'
+      +'<div class="m-t2">Seite, Link und App-Version werden automatisch mitgeschickt.</div>'
+      +'<div class="sh-b" style="flex-direction:column;align-items:stretch"><a class="btn btn-gold" id="rp-mail">Per E-Mail senden</a><a class="btn btn-ghost" id="rp-gh" target="_blank" rel="noopener noreferrer">Auf GitHub melden (Konto nötig)</a></div></div>';
+    document.body.appendChild(box);
+    box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')||e.target.closest('a')) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
+  }
+  function open(mail,gh){ if(!box) build(); box.querySelector('#rp-mail').href=mail; box.querySelector('#rp-gh').href=gh; box.hidden=false; box.querySelector('#rp-mail').focus({preventScroll:true}); }
+  function close(){ if(box) box.hidden=true; }
+  return {open,close};
+})();
+
 /* ── Farbschema: Dunkel / Hell / System ─────────────────────────────────── */
 const THEME=(function(){
   const KEY='bvi_theme', MODES=['dark','light','system'];
@@ -5115,10 +5407,10 @@ const ACCENT=(function(){
     try{ BVIAndroid.setIcon(best[2]); }catch(e){}
   }
   function render(){
-    const el=document.getElementById('m-accent'); if(!el) return;
     const cur=get(), custom=!PRESETS.some(p=>p[0]===cur);
-    el.innerHTML=PRESETS.map(([c,n])=>`<button class="m-sw" role="radio" aria-checked="${c===cur}" aria-label="${n}" style="background:${c}" onclick="ACCENT.set('${c}')"></button>`).join('')
+    const html=PRESETS.map(([c,n])=>`<button class="m-sw" role="radio" aria-checked="${c===cur}" aria-label="${n}" style="background:${c}" onclick="ACCENT.set('${c}')"></button>`).join('')
       +`<label class="m-sw m-sw-wheel" role="radio" aria-checked="${custom}" aria-label="Eigene Farbe wählen">${custom?`<i style="background:${cur}"></i>`:''}<input type="color" value="${cur.toLowerCase()}" oninput="ACCENT.preview(this.value)" onchange="ACCENT.set(this.value)"></label>`;
+    document.querySelectorAll('#m-accent,.ob-accent').forEach(el=>{ el.innerHTML=html; });
   }
   return {
     init(){ const c=get(); apply(c); syncAppIcon(c); },
@@ -5128,6 +5420,7 @@ const ACCENT=(function(){
   };
 })();
 ACCENT.init();
+ETIMER.init();
 
 /* ── Mobil-Ansicht: Tab-Leiste, Startseite, Prüfung, Einstellungen ──────── */
 const SHELL=(function(){
@@ -5462,6 +5755,7 @@ const SHELL=(function(){
   function cardsToday(){
     try{ const o=JSON.parse(localStorage.getItem('bvi_cards_day')||'{}'); return o.d===dayKey()?(o.n||0):0; }catch(e){ return 0; }
   }
+  function syncCardGoal(){ document.querySelectorAll('#m-cardgoal-val,.ob-cardval').forEach(e=>{ e.textContent=cardGoal(); }); }
   function tabNumOn(){ try{ return localStorage.getItem('bvi_tabnum')!=='0'; }catch(e){ return true; } }
   function renderCardGoal(){
     const el=document.getElementById('m-fc-goal'); if(!el) return;
@@ -5645,6 +5939,7 @@ const SHELL=(function(){
     set('m-notif-hour',NOTIF.hour()+':00');
     set('m-goal-val',goalMin()+' min');
     set('m-cardgoal-val',cardGoal());
+    const tm=document.getElementById('m-timers-toggle'); if(tm) tm.checked=!document.documentElement.classList.contains('no-timers');
     const tn=document.getElementById('m-tabnum-toggle'); if(tn) tn.checked=tabNumOn();
     const lb=BACKUP.last(); set('m-backup-last',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
     const ex=examCfg(), di=document.getElementById('m-exam-date'), ni=document.getElementById('m-exam-name');
@@ -5687,9 +5982,10 @@ const SHELL=(function(){
       const title=v.querySelector('.page-title')?.textContent?.trim()||v.id;
       const eb=v.querySelector('.page-eyebrow')?.textContent?.trim()||'';
       const body='Seite: '+title+(eb?' ('+eb+')':'')+'\nLink: '+location.origin+location.pathname+'?id='+v.id+'\nApp-Version: '+APP_VERSION+'\n'+(extra?'\n'+extra+'\n':'')+'\nWas ist falsch oder unklar?\n';
-      const url='mailto:fabian.flemig@gmx.de?subject='+encodeURIComponent('B VI – Fehler: '+title)+'&body='+encodeURIComponent(body);
-      if(!window.__noMail) location.href=url;
-      return url;
+      const mail='mailto:fabian.flemig@gmx.de?subject='+encodeURIComponent('B VI – Fehler: '+title)+'&body='+encodeURIComponent(body);
+      const gh='https://github.com/Flametan/BVI-Lernwebsite/issues/new?labels=fehler&title='+encodeURIComponent('Fehler: '+title)+'&body='+encodeURIComponent(body);
+      if(!window.__noMail) REPORT.open(mail,gh);
+      return mail;
     },
     reportQuiz(){
       const t=id=>document.getElementById(id)?.textContent?.trim()||'';
@@ -5703,15 +5999,20 @@ const SHELL=(function(){
     stepCards(d){
       const g=Math.min(200,Math.max(5,cardGoal()+d*5));
       try{ localStorage.setItem('bvi_cardgoal',String(g)); }catch(e){}
-      const e=document.getElementById('m-cardgoal-val'); if(e) e.textContent=g;
+      syncCardGoal();
       renderCardGoal(); updateBadges();
+    },
+    setTimers(on){
+      try{ localStorage.setItem('bvi_timers',on?'1':'0'); }catch(e){}
+      document.documentElement.classList.toggle('no-timers',!on);
+      if(!on&&typeof ETIMER!=='undefined') ETIMER.stop();
     },
     setTabNum(on){
       try{ localStorage.setItem('bvi_tabnum',on?'1':'0'); }catch(e){}
       updateBadges();
     },
     setRange(r){ chartRange=r==='month'?'month':'week'; renderHome(); },
-    cardDone, renderCardGoal,
+    cardDone, renderCardGoal, syncCardGoal,
     setExam(){
       const date=document.getElementById('m-exam-date')?.value, name=document.getElementById('m-exam-name')?.value||'';
       const o=examCfg(); if(/^\d{4}-\d{2}-\d{2}$/.test(date||'')) o.date=date;

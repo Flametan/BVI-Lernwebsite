@@ -1,0 +1,11 @@
+{
+  "_hilfe": [
+    "Änderungen am Stundenplan ohne neue App-Version. Datei speichern, nach wenigen Minuten ist sie in der App.",
+    "tage: ersetzt alle Einträge eines Tages. datum = JJJJ-MM-TT, gruppe = g1, g2 oder weglassen (beide Gruppen), eintraege = Liste im Format 'Zeit|Titel|Art|Raum|Hinweis'.",
+    "Zeit: Unterrichtseinheiten '1-2', Uhrzeit '09:00-10:30' oder '19:00'. Art: hi = Schlüsseltermin, ex = Exkursion, ar = An-/Abreise, frei. Eine leere Liste zeigt 'frei'.",
+    "wochenhinweise: Text oben in der Woche. montag = JJJJ-MM-TT des Montags.",
+    "Beispiel für tage: {\"datum\":\"2026-10-28\",\"gruppe\":\"g1\",\"eintraege\":[\"08:30-10:00|Raumwechsel Baurecht||A3-25|Heute im Raum A3-25\"]}"
+  ],
+  "tage": [],
+  "wochenhinweise": []
+}
