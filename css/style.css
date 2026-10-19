@@ -1869,3 +1869,10 @@ html.no-timers .uk-timer-box,html.no-timers .uk-timer-inline,html.no-timers .qui
 .m-emb .fl,.m-streak svg{transform-box:fill-box;transform-origin:50% 100%;animation:flame-flick 1.3s ease-in-out infinite;}
 .m-emb .in{animation:flame-inner .9s ease-in-out infinite;}
 @media(prefers-reduced-motion:reduce){.m-emb .fl,.m-emb .in,.m-streak svg{animation:none;}}
+
+/* Kein blaues Tipp-Viereck (Android-WebView/Chrome); eigener Druck-Zustand statt dessen */
+html,body,*{-webkit-tap-highlight-color:transparent;}
+.m-tab,.m-ri{outline:0;}
+.m-tab:active>svg,.m-tab:active>span{opacity:.55;}
+.m-tab-center:active .m-fab{transform:scale(.95);}
+.m-fab{transition:box-shadow .2s,transform .12s;}
