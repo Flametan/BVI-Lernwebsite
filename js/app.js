@@ -4604,6 +4604,45 @@ const UEBUNGSKLAUSUR = (function(){
 })();
 
 /* ── IdF Münster Stundenplan Modul 3.5 ──────────────────────────────────── */
+/* ── Notizen zu Stundenplan-Einträgen ───────────────────────────────────── */
+const PLANNOTE=(function(){
+  const KEY='bvi_plan_notes';
+  let box=null, cur='', el=null;
+  const all=()=>{ try{ return JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ return {}; } };
+  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function build(){
+    box=document.createElement('div'); box.id='pn-ov'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Stundenplan-Eintrag');
+    box.innerHTML='<div class="cu-card"><button class="sh-x" aria-label="Schließen">×</button><div class="pn-when"></div><div class="sh-t pn-title" style="padding:0"></div><div class="pn-meta"></div>'
+      +'<label>Meine Notiz<textarea id="pn-t" rows="4" maxlength="800" placeholder="z. B. Unterlagen mitbringen"></textarea></label></div>';
+    document.body.appendChild(box);
+    box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
+    box.querySelector('#pn-t').addEventListener('input',e=>{
+      const a=all(); const v=e.target.value.trim();
+      if(v) a[cur]=v; else delete a[cur];
+      try{ localStorage.setItem(KEY,JSON.stringify(a)); }catch(x){}
+    });
+  }
+  function open(item){
+    if(!box) build();
+    el=item; cur=item.dataset.k;
+    const [ymd,,]=cur.split('|');
+    const d=new Date(ymd+'T00:00').toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
+    const t=item.querySelector('.idf-time'); 
+    box.querySelector('.pn-when').textContent=d+' · '+(t?t.textContent.replace(/(\d)(\d{2}:\d{2})/,'$1 – $2'):'');
+    box.querySelector('.pn-title').textContent=item.querySelector('.idf-name').textContent.replace(/\s*✎\s*$/,'');
+    const m=item.querySelector('.idf-meta'); box.querySelector('.pn-meta').textContent=m?m.textContent:'';
+    box.querySelector('#pn-t').value=all()[cur]||'';
+    box.hidden=false; box.querySelector('#pn-t').focus({preventScroll:true});
+  }
+  function close(){
+    if(!box||box.hidden) return; box.hidden=true;
+    if(typeof IDF_PLAN!=='undefined') IDF_PLAN.redraw();
+  }
+  return {open,get:k=>all()[k]||''};
+})();
+
 const IDF_PLAN = (function(){
   // Eintrag: "Zeit|Titel|Art|Raum|Hinweis" · Zeit = UE ("1-2") oder Uhrzeit ("09:00-09:15", "19:00", "EVA")
   // Art: hi = Schlüsseltermin, ex = Exkursion, ar = Anreise/Abreise/frei
@@ -4701,11 +4740,13 @@ const IDF_PLAN = (function(){
     const i=spec.indexOf('-');
     return i<0?[spec,'']:[spec.slice(0,i),spec.slice(i+1)];
   }
-  function _item(s){
+  function _item(s,ymd){
     const [t,title,cls='',room='',note='']=s.split('|');
     const [a,b]=_time(t);
     const meta=[note,room?'Raum '+room:''].filter(Boolean).join(' · ');
-    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}"><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${esc(title)}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
+    const nk=ymd?ymd+'|'+t+'|'+title:'';
+    const has=nk&&PLANNOTE.get(nk);
+    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}${nk?' idf-tap':''}"${nk?` data-k="${esc(nk)}" tabindex="0" role="button"`:''}><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${esc(title)}${has?' <i class="idf-pen" aria-label="Mit Notiz">✎</i>':''}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
   }
   const LUNCH=end=>`<div class="idf-item idf-lunch"><span class="idf-time">13:00<i>${end}</i></span><span class="idf-txt"><span class="idf-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v5a3 3 0 0 0 6 0V2M18 22V2c-2.5 1.5-4 4.5-4 8 0 2 1 3 4 3"/></svg>Mittagessen</span></span></div>`;
   function _start(spec){
@@ -4726,11 +4767,11 @@ const IDF_PLAN = (function(){
     return out.map((x,i)=>({x,i,t:_start(x.split('|')[0])}))
       .sort((a,b)=>a.t&&b.t?(a.t<b.t?-1:a.t>b.t?1:a.i-b.i):a.i-b.i).map(o=>o.x);
   }
-  function _dayItems(raw){
+  function _dayItems(raw,ymd){
     if(!raw.length) return '<div class="idf-empty">frei</div>';
     const items=_splitAtLunch(raw);
     const starts=items.map(x=>_start(x.split('|')[0]));
-    const html=items.map(_item);
+    const html=items.map(x=>_item(x,ymd));
     if(starts.some(Boolean)){
       let at=0;
       starts.forEach((t,i)=>{ if(t&&t<'13:00') at=i+1; });
@@ -4740,6 +4781,28 @@ const IDF_PLAN = (function(){
     return html.join('');
   }
 
+  // Änderungen vom Institut: data/plan-overrides.json (siehe Datei), wird beim Öffnen frisch geladen
+  let _ov={tage:[],wochenhinweise:[]};
+  const _ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  function _dayRaw(w,d,g){
+    const day=new Date(w[3]+'T00:00'); day.setDate(day.getDate()+d);
+    const key=_ymd(day);
+    const o=_ov.tage.find(t=>t&&t.datum===key&&(!t.gruppe||t.gruppe==='both'||t.gruppe===g)&&Array.isArray(t.eintraege));
+    return o?o.eintraege:(w[5][d]||[]);
+  }
+  function _weekNote(w){
+    const o=_ov.wochenhinweise.find(x=>x&&x.montag===w[3]);
+    return o&&o.text?String(o.text):'';
+  }
+  async function _loadOv(){
+    try{
+      const r=await fetch('data/plan-overrides.json',{cache:'no-cache'}); if(!r.ok) return;
+      const j=await r.json();
+      _ov={tage:Array.isArray(j.tage)?j.tage:[],wochenhinweise:Array.isArray(j.wochenhinweise)?j.wochenhinweise:[]};
+      if(document.getElementById('v-plan')?.classList.contains('active')) _draw();
+      if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome();
+    }catch(e){}
+  }
   function _buildWeeks(g=_grp){
     return W.filter(w=>w[4]==='both'||w[4]===g).sort((a,b)=>a[3]<b[3]?-1:1);
   }
@@ -4767,11 +4830,13 @@ const IDF_PLAN = (function(){
     </div>`;
     if(notStarted&&_wi===0) h+=`<div class="idf-note">Das Modul beginnt am 26. Oktober. Bis dahin zeigt der Plan die erste Woche.</div>`;
     if(info) h+=`<div class="idf-note">${esc(info)}</div>`;
-    h+='<div class="idf-days">'+days.map((items,i)=>{
+    const wn=_weekNote(wk); if(wn) h+=`<div class="idf-note">${esc(wn)}</div>`;
+    h+='<div class="idf-days">'+days.map((_,i)=>{
+      const items=_dayRaw(wk,i,_grp);
       const d=new Date(base); d.setDate(base.getDate()+i);
       const isToday=d.getTime()===today.getTime();
       return `<div class="idf-day${isToday?' today':''}"><div class="idf-dc"><span class="idf-dow">${DAYS[i]}</span><span class="idf-dnum">${d.getDate()}</span><span class="idf-dmo">${MONS[d.getMonth()]}</span></div>
-        <div class="idf-items">${_dayItems(items)}</div></div>`;
+        <div class="idf-items">${_dayItems(items,_ymd(d))}</div></div>`;
     }).join('')+'</div>';
     const full=(n,t)=>/^-/.test(t)?(/BABZ/.test(n)?'0228 99550':'0251 3112')+t:t;
     const rows=[...(tel||TEL.spahl),['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>[n,full(n,t)]);
@@ -4806,7 +4871,7 @@ const IDF_PLAN = (function(){
         const day=new Date(base); day.setDate(base.getDate()+d);
         const dayEnd=new Date(day); dayEnd.setHours(23,59,59,0);
         if(dayEnd<now) continue;
-        for(const raw of _splitAtLunch(w[5][d]||[])){
+        for(const raw of _splitAtLunch(_dayRaw(w,d,_savedGrp()))){
           const [t,title,cls='',room='',note='']=raw.split('|');
           if(/unterrichtsfrei|Selbststudium|Heiligabend|Weihnachtstag/.test(title)) continue;
           const [a,b]=_time(t);
@@ -4834,7 +4899,7 @@ const IDF_PLAN = (function(){
       for(let d=0;d<5;d++){
         const day=new Date(base); day.setDate(base.getDate()+d);
         const ymd=day.getFullYear()+pad(day.getMonth()+1)+pad(day.getDate());
-        _splitAtLunch(w[5][d]||[]).forEach((raw,i)=>{
+        _splitAtLunch(_dayRaw(w,d,g)).forEach((raw,i)=>{
           const [t,title,cls='',room='',note='']=raw.split('|');
           if(/unterrichtsfrei|Selbststudium|Heiligabend|Weihnachtstag/.test(title)) return;
           const [a,b]=_time(t); const s=_minutes(a); if(s===null) return;
@@ -4863,7 +4928,14 @@ const IDF_PLAN = (function(){
     return { kw:w[0], thema:w[2], over:new Date()>end };
   }
 
-  return { render, summary, next, ics, exportIcs, _nav, _grp:_setGrp };
+  document.addEventListener('click',e=>{
+    const it=e.target.closest('#plan-inner .idf-tap'); if(it) PLANNOTE.open(it);
+  });
+  document.addEventListener('keydown',e=>{
+    if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('#plan-inner .idf-tap')){ e.preventDefault(); PLANNOTE.open(e.target); }
+  });
+  _loadOv();
+  return { render, summary, next, ics, exportIcs, _nav, _grp:_setGrp, redraw:_draw };
 })();
 
 /* ── Dateien speichern (Browser: Download, Android-App: Ordner Downloads) ── */

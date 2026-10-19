@@ -1820,3 +1820,12 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 #et-pill.over{background:#e5484d;color:#fff;}
 .et-stop{width:28px;height:28px;font-size:1.1rem;line-height:1;border-radius:50%;background:rgba(0,0,0,.18);color:inherit;}
 @media(min-width:1100px){#et-pill{bottom:28px;left:auto;right:28px;}}
+
+/* ── Stundenplan: Eintrag antippen ───────────────────────────────────────── */
+.idf-tap{cursor:pointer;border-radius:8px;}
+.idf-tap:active{background:var(--w05);}
+.idf-pen{font-style:normal;color:var(--m-accent-fg);font-size:.85em;}
+.pn-when{font-size:.8rem;color:var(--m-muted);padding-right:36px;}
+.pn-meta{font-size:.85rem;color:var(--m-muted);}
+#pn-ov{position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.7);display:grid;place-items:center;padding:16px;overflow:auto;}
+#pn-ov[hidden]{display:none;}

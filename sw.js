@@ -8,6 +8,7 @@ const PRECACHE = [
   './js/version.js',
   './js/qrcode.min.js',
   './manifest.json',
+  './data/plan-overrides.json',
   './icons/icon-192.svg',
   './icons/icon-512.svg',
   './icons/icon-192.png',
@@ -31,7 +32,7 @@ self.addEventListener('fetch', e => {
   if(e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
   const isCore = url.pathname.endsWith('.html') || url.pathname.endsWith('.css')
-              || url.pathname.endsWith('.js')   || url.pathname.endsWith('/')
+              || url.pathname.endsWith('.js')   || url.pathname.endsWith('.json') || url.pathname.endsWith('/')
               || url.pathname === '';
 
   if(isCore){
