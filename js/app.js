@@ -3575,7 +3575,7 @@ const CHANGELOG=(function(){
       'Startseite ruhiger: Weiterlernen mit Tagesziel-Ring, Lernzeit-Verlauf als Balken (Woche oder Monate) mit nächster Einheit, Module als Ringe, 1. Ausbildungsjahr eingeklappt; Gruß und Spruch passend zur Tageszeit',
       'Stundenplan: IdF Modul 3.5 mit Uhrzeiten, Räumen, Hinweisen, Mittagspause und Telefonnummern; Übernahme in den Kalender mit Erinnerung',
       'Prüfung: alle Klausur-Werkzeuge an einem Ort, mit Countdown zur nächsten Klausur; Altklausur-Quiz, Klausurfragen und Fallbearbeitung im neuen Design',
-      'Prüfung: neuer Abschnitt „Laufbahnprüfung“ mit den schriftlichen Klausuren Dez 2023 und Juni 2026 samt Musterlösungen (wie Klausur 08/2026) und Abschnitt „IdF Münster“ mit dem Altklausur-Quiz IdF (Vorbeugender Brandschutz und Stabsarbeit, Mehrfachauswahl, Lern- und Prüfungsmodus, Wiederholung nach Plan); Quelle und Unsicherheit stehen bei jeder Antwort',
+      'Prüfung: neuer Abschnitt „Laufbahnprüfung“ mit den schriftlichen Klausuren Dez 2023 und Juni 2026 samt Musterlösungen (wie Klausur 08/2026) und Abschnitt „IdF Münster“ mit dem Altklausur-Quiz IdF (Vorbeugender Brandschutz und Stabsarbeit, Mehrfachauswahl, Lern- und Prüfungsmodus, Wiederholung nach Plan); Quelle und Unsicherheit stehen bei jeder Antwort; Prüfung-Tab als gleichmäßiges Raster (3 Spalten Desktop, 2 Tablet, 1 Handy) und Countdown-Karte führt zum passenden Quiz bzw. zur Klausur',
       'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
       'Lernseiten: Text markieren, Merken, Notiz und Vorlesen direkt auf der Seite; Bilder und Diagramme per Tipp groß öffnen und zoomen; Inhaltsverzeichnis am Rand auf großen Bildschirmen; Fehler melden',
       'Einstellungen: Suche, Notizen, Lesezeichen, Pomodoro, Lernstatistik, Abkürzungen, Sicherung erstellen und einspielen, Klausurtermin einstellbar, freiwillige Unterstützung per PayPal',
@@ -5934,12 +5934,19 @@ const SHELL=(function(){
     return m<60?`${m} min`:`${Math.floor(m/60)} h ${String(m%60).padStart(2,'0')}`;
   }
 
-  const DEF_EXAM={date:'2026-12-14',name:'Leistungsnachweis nach § 13 Abs. 3'};
+  // Voreinstellung: der nächste anstehende Termin (nach dem 14.12. folgt die Klausur nach § 21 am 21.12.)
+  const DEF_EXAMS=[{date:'2026-12-14',name:'Leistungsnachweis nach § 13 Abs. 3'},{date:'2026-12-21',name:'Klausur nach § 21'}];
+  const DEF_EXAM=DEF_EXAMS[0];
+  function defExam(){
+    const t=new Date(); t.setHours(0,0,0,0);
+    return DEF_EXAMS.find(e=>new Date(e.date+'T00:00')>=t)||DEF_EXAMS[DEF_EXAMS.length-1];
+  }
   function examCfg(){
+    const d=defExam();
     try{
       const o=JSON.parse(localStorage.getItem('bvi_exam')||'{}');
-      return {date:/^\d{4}-\d{2}-\d{2}$/.test(o.date||'')?o.date:DEF_EXAM.date, name:((o.name||'').trim().slice(0,60))||DEF_EXAM.name};
-    }catch(e){ return {...DEF_EXAM}; }
+      return {date:/^\d{4}-\d{2}-\d{2}$/.test(o.date||'')?o.date:d.date, name:((o.name||'').trim().slice(0,60))||d.name};
+    }catch(e){ return {...d}; }
   }
   function goalMin(){
     try{ const v=parseInt(localStorage.getItem('bvi_goal'),10); return v>=5&&v<=240?v:30; }catch(e){ return 30; }
@@ -5965,6 +5972,8 @@ const SHELL=(function(){
     renderCardGoal(); updateBadges();
     if(n===g&&typeof TOAST!=='undefined') TOAST.show('Kartenziel für heute erreicht – stark!',{type:'ok'});
   }
+  // Ziel der Countdown-Karte: Klausur nach § 21 → Laufbahnklausuren, sonst Altklausur-Quiz IdF
+  function examTarget(){ return /§\s*21/.test(examCfg().name)?['v-laufbahn-2026','Laufbahnklausuren Juni 2026']:['v-idf-altklausur','Altklausur-Quiz IdF']; }
   function daysToExam(){
     const t=new Date(); t.setHours(0,0,0,0);
     return Math.round((new Date(examCfg().date+'T00:00')-t)/864e5);
@@ -6036,7 +6045,8 @@ const SHELL=(function(){
     const cd=document.getElementById('m-countdown'), list=document.getElementById('m-exam-list');
     if(!cd||!list) return;
     const days=daysToExam();
-    cd.innerHTML=days<0?'':`<div class="m-card m-count"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">${esc(examCfg().name)}</span><span class="m-t2">${new Date(examCfg().date+'T00:00').toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'long',year:'numeric'})}</span></div></div>`;
+    const tgt=examTarget();
+    cd.innerHTML=days<0?'':`<button type="button" class="m-card m-count m-count-go" onclick="${goJs(tgt[0],tgt[1])}"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">${esc(examCfg().name)}</span><span class="m-t2">${new Date(examCfg().date+'T00:00').toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'long',year:'numeric'})}</span></div><span class="m-count-link">${esc(tgt[1])} <i>›</i></span></button>`;
     const dueQ=(typeof QUIZ!=='undefined'&&QUIZ.dueCount)?QUIZ.dueCount():0;
     const dueI=(typeof IDFQ!=='undefined'&&IDFQ.dueCount)?IDFQ.dueCount():0;
     const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2:id==='v-vak-altklausur'&&dueQ?`${t2} · ${dueQ} zur Wiederholung fällig`:id==='v-idf-altklausur'&&dueI?`${t2} · ${dueI} zur Wiederholung fällig`:t2,on:goJs(id,t1)});
@@ -6044,7 +6054,7 @@ const SHELL=(function(){
       const hot=items.filter(x=>x[4]), rest=items.filter(x=>!x[4]);
       return `<div class="m-col"><div class="m-sec">${esc(name)}</div>${hot.map(x=>`<div class="m-list m-glow">${card(x)}</div>`).join('')}${rest.length?`<div class="m-list">${rest.map(card).join('')}</div>`:''}</div>`;
     };
-    list.innerHTML=`<div class="m-g2"><div class="m-col">${sec(EXAMS[0])}${sec(EXAMS[1])}${sec(EXAMS[2])}</div><div class="m-col">${sec(EXAMS[3])}${sec(EXAMS[4])}</div></div>`;
+    list.innerHTML=`<div class="m-areas">${EXAMS.map(sec).join('')}</div>`;
   }
 
   function renderFcSide(){
@@ -6133,7 +6143,7 @@ const SHELL=(function(){
     const tn=document.getElementById('m-tabnum-toggle'); if(tn) tn.checked=tabNumOn();
     const lb=BACKUP.last(); set('m-backup-last',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
     const ex=examCfg(), di=document.getElementById('m-exam-date'), ni=document.getElementById('m-exam-name');
-    if(di) di.value=ex.date; if(ni) ni.value=ex.name===DEF_EXAM.name&&!localStorage.getItem('bvi_exam')?'':ex.name;
+    if(di) di.value=ex.date; if(ni) ni.value=ex.name===defExam().name&&!localStorage.getItem('bvi_exam')?'':ex.name;
     const tg=document.getElementById('m-notif-toggle'); if(tg) tg.checked=NOTIF.isEnabled();
     document.getElementById('m-cl-badge')?.classList.toggle('hidden',!CHANGELOG.isNew());
   }
