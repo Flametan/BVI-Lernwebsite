@@ -5471,7 +5471,7 @@ const SHELL=(function(){
   function cardDone(){
     const n=cardsToday()+1, g=cardGoal();
     try{ localStorage.setItem('bvi_cards_day',JSON.stringify({d:dayKey(),n})); }catch(e){}
-    renderCardGoal();
+    renderCardGoal(); updateBadges();
     if(n===g&&typeof TOAST!=='undefined') TOAST.show('Kartenziel für heute erreicht – stark!',{type:'ok'});
   }
   function daysToExam(){
@@ -5491,11 +5491,11 @@ const SHELL=(function(){
     return `<div class="m-card m-goal"><svg viewBox="0 0 64 64" role="img" aria-label="${Math.round(p*100)} Prozent des Tagesziels"><circle cx="32" cy="32" r="${R}" class="m-ring-bg"/><circle cx="32" cy="32" r="${R}" class="m-ring-fg" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 32 32)"/>${done?'<path d="m22 33 7 7 13-14" class="m-ring-ok"/>':`<text x="32" y="37" text-anchor="middle" class="m-ring-t">${Math.round(p*100)}%</text>`}</svg><div class="m-tx"><span class="m-eyebrow">Tagesziel</span><span class="m-t1" style="margin-top:2px">${done?'Geschafft!':dur(sec)+' von '+goal+' min'}</span><span class="m-t2">${done?'Dein Ziel für heute ist erreicht.':'Noch '+Math.max(1,Math.ceil((goal*60-sec)/60))+' min bis zum Ziel'}</span></div></div>`;
   }
   function updateBadges(){
-    const n=tabNumOn()?cardStats().due:0;
+    const n=tabNumOn()?Math.max(0,cardGoal()-cardsToday()):0;
     document.querySelectorAll('#m-tabbar [data-tab="learn"],#m-rail [data-tab="learn"]').forEach(b=>{
       let s=b.querySelector('.m-tab-b'); if(!s){ s=document.createElement('span'); s.className='m-tab-b'; if(b.classList.contains('m-tab')) b.insertBefore(s,b.firstChild); else b.appendChild(s); }
       s.textContent=n>99?'99+':n; s.hidden=!n;
-      s.setAttribute('aria-label',n+' Karten fällig');
+      s.setAttribute('aria-label',n+' Karten bis zum Tagesziel');
     });
   }
 
@@ -5704,7 +5704,7 @@ const SHELL=(function(){
       const g=Math.min(200,Math.max(5,cardGoal()+d*5));
       try{ localStorage.setItem('bvi_cardgoal',String(g)); }catch(e){}
       const e=document.getElementById('m-cardgoal-val'); if(e) e.textContent=g;
-      renderCardGoal();
+      renderCardGoal(); updateBadges();
     },
     setTabNum(on){
       try{ localStorage.setItem('bvi_tabnum',on?'1':'0'); }catch(e){}
