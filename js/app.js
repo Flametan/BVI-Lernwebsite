@@ -4527,8 +4527,6 @@ const IDF_PLAN = (function(){
   const UE_S=['07:45','08:30','09:45','10:30','11:30','12:15','14:00','14:45'];
   const UE_E=['08:30','09:15','10:30','11:15','12:15','13:00','14:45','15:30'];
   const TEL={
-    langer:[['Jörn Ruschenburg','-3202'],['Daniel Langer','-3210']],
-    schoene:[['Jörn Ruschenburg','-3202'],['Malte Schönefeld','-3221']],
     spahl:[['Jörn Ruschenburg','-3202'],['Frank Spahlholz','-3223']],
     babz:[['Christoph Schaaf (BABZ)','0228 99550-5205'],['Thorsten Ohm (BABZ)','-5206']]
   };
@@ -4585,12 +4583,12 @@ const IDF_PLAN = (function(){
     [45,2,'Vorbeugender Brandschutz 2','2026-11-02','g1',VB2([],'EVA|EU-Katastrophenschutz',['1-6|EU-Katastrophenschutz|hi|C-205|beide Halbgruppen gemeinsam','7|Abreise|ar'])],
     [46,3,'Vorbeugender Brandschutz 3','2026-11-09','g1',[[...VB3_MO,'18:00|Kaminabend in Präsenz|hi||Gebäude C · zivil/leger · inkl. Catering'],VB3_DI,
       ['1-3|Exkursion Brandverhütungsschau praktisch|ex||extern · Poloshirt, Büroschuhe genügen','4-6|Brandverhütungsschaubericht||A3-25','7-8|Einsatzplanung||A3-25'],VB3_DO,VB3_FR]],
-    [47,4,'Stab 1','2026-11-16','g1',STAB1(1),TEL.langer],
-    [48,5,'Stab 2','2026-11-23','g1',STAB2(1),TEL.schoene],
-    [49,6,'Presse & Öffentlichkeitsarbeit','2026-11-30','g1',PRESSE(1),TEL.schoene],
-    [44,1,'Stab 1','2026-10-26','g2',STAB1(2),TEL.langer],
-    [45,2,'Stab 2','2026-11-02','g2',STAB2(2),TEL.schoene],
-    [46,3,'Presse & Öffentlichkeitsarbeit','2026-11-09','g2',PRESSE(2),TEL.schoene],
+    [47,4,'Stab 1','2026-11-16','g1',STAB1(1),TEL.spahl],
+    [48,5,'Stab 2','2026-11-23','g1',STAB2(1),TEL.spahl],
+    [49,6,'Presse & Öffentlichkeitsarbeit','2026-11-30','g1',PRESSE(1),TEL.spahl],
+    [44,1,'Stab 1','2026-10-26','g2',STAB1(2),TEL.spahl],
+    [45,2,'Stab 2','2026-11-02','g2',STAB2(2),TEL.spahl],
+    [46,3,'Presse & Öffentlichkeitsarbeit','2026-11-09','g2',PRESSE(2),TEL.spahl],
     [47,4,'Vorbeugender Brandschutz 1','2026-11-16','g2',VB1_G2],
     [48,5,'Vorbeugender Brandschutz 2','2026-11-23','g2',VB2(['EVA|Vorbereitung Stellungnahme für Freitag anhand Unterlagen'],'7|Abreise|ar',SELBST)],
     [49,6,'Vorbeugender Brandschutz 3','2026-11-30','g2',[VB3_MO,VB3_DI,
@@ -4693,7 +4691,7 @@ const IDF_PLAN = (function(){
         <div class="idf-items">${_dayItems(items)}</div></div>`;
     }).join('')+'</div>';
     const full=(n,t)=>/^-/.test(t)?(/BABZ/.test(n)?'0228 99550':'0251 3112')+t:t;
-    const rows=[...(tel||[['Jörn Ruschenburg','-3202']]),['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>[n,full(n,t)]);
+    const rows=[...(tel||TEL.spahl),['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>[n,full(n,t)]);
     h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${rows.map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><a href="tel:+49${t.replace(/\D/g,'').replace(/^0/,'')}">${esc(t)}</a></div>`).join('')}</div>`;
     h+=`<button class="m-cal-btn" onclick="IDF_PLAN.exportIcs()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5"/></svg>Stundenplan in den Kalender übernehmen<small>Gruppe ${_grp[1]} · alle Einheiten mit Erinnerung 30 Minuten vorher</small></button>`;
     h+='<div class="idf-legend"><span><i class="hi"></i>Schlüsseltermin</span><span><i class="ex"></i>Exkursion</span><span><i class="ar"></i>An-/Abreise, frei</span><span>EVA = eigenverantwortliches Arbeiten</span></div>';
