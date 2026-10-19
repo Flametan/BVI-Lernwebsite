@@ -1829,3 +1829,6 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 .pn-meta{font-size:.85rem;color:var(--m-muted);}
 #pn-ov{position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.7);display:grid;place-items:center;padding:16px;overflow:auto;}
 #pn-ov[hidden]{display:none;}
+#rp-ov{position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.7);display:grid;place-items:center;padding:16px;}
+#rp-ov[hidden]{display:none;}
+#rp-ov .btn{text-decoration:none;text-align:center;}

@@ -3382,6 +3382,9 @@ const CHANGELOG=(function(){
       'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
       'Lernseiten: Text markieren, Merken, Notiz und Vorlesen direkt auf der Seite; Bilder und Diagramme per Tipp groß öffnen und zoomen; Inhaltsverzeichnis am Rand auf großen Bildschirmen; Fehler melden',
       'Einstellungen: Suche, Notizen, Lesezeichen, Pomodoro, Lernstatistik, Abkürzungen, Sicherung erstellen und einspielen, Klausurtermin einstellbar, freiwillige Unterstützung per PayPal',
+      'Ersteinrichtung beim ersten Start (Farbschema, Akzentfarbe, Kartenziel); Installationshilfe je Gerät und QR-Code zum Teilen der App',
+      'Lernkarten: eigene Karten anlegen, Filter „Schwach“ für Karten, die schwer waren oder nicht saßen',
+      'Klausur-Timer (30 bis 90 Minuten) auf den Übungsklausuren; Notizen zu Stundenplan-Einträgen; Fehler melden per E-Mail oder GitHub',
       'Android-App: Erinnerung als echte Benachrichtigung, Links öffnen außerhalb der App'
     ]},
     {v:'2.31.0',ts:'2026-10-18T00:00',items:[
@@ -5330,6 +5333,24 @@ const ETIMER=(function(){
   return {mount,init,start,stop};
 })();
 
+/* ── Fehler melden: E-Mail oder GitHub ──────────────────────────────────── */
+const REPORT=(function(){
+  let box=null;
+  function build(){
+    box=document.createElement('div'); box.id='rp-ov'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Fehler melden');
+    box.innerHTML='<div class="sh-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t">Fehler oder Unklarheit melden</div>'
+      +'<div class="m-t2">Seite, Link und App-Version werden automatisch mitgeschickt.</div>'
+      +'<div class="sh-b" style="flex-direction:column;align-items:stretch"><a class="btn btn-gold" id="rp-mail">Per E-Mail senden</a><a class="btn btn-ghost" id="rp-gh" target="_blank" rel="noopener noreferrer">Auf GitHub melden (Konto nötig)</a></div></div>';
+    document.body.appendChild(box);
+    box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')||e.target.closest('a')) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
+  }
+  function open(mail,gh){ if(!box) build(); box.querySelector('#rp-mail').href=mail; box.querySelector('#rp-gh').href=gh; box.hidden=false; box.querySelector('#rp-mail').focus({preventScroll:true}); }
+  function close(){ if(box) box.hidden=true; }
+  return {open,close};
+})();
+
 /* ── Farbschema: Dunkel / Hell / System ─────────────────────────────────── */
 const THEME=(function(){
   const KEY='bvi_theme', MODES=['dark','light','system'];
@@ -5958,9 +5979,10 @@ const SHELL=(function(){
       const title=v.querySelector('.page-title')?.textContent?.trim()||v.id;
       const eb=v.querySelector('.page-eyebrow')?.textContent?.trim()||'';
       const body='Seite: '+title+(eb?' ('+eb+')':'')+'\nLink: '+location.origin+location.pathname+'?id='+v.id+'\nApp-Version: '+APP_VERSION+'\n'+(extra?'\n'+extra+'\n':'')+'\nWas ist falsch oder unklar?\n';
-      const url='mailto:fabian.flemig@gmx.de?subject='+encodeURIComponent('B VI – Fehler: '+title)+'&body='+encodeURIComponent(body);
-      if(!window.__noMail) location.href=url;
-      return url;
+      const mail='mailto:fabian.flemig@gmx.de?subject='+encodeURIComponent('B VI – Fehler: '+title)+'&body='+encodeURIComponent(body);
+      const gh='https://github.com/Flametan/BVI-Lernwebsite/issues/new?labels=fehler&title='+encodeURIComponent('Fehler: '+title)+'&body='+encodeURIComponent(body);
+      if(!window.__noMail) REPORT.open(mail,gh);
+      return mail;
     },
     reportQuiz(){
       const t=id=>document.getElementById(id)?.textContent?.trim()||'';
