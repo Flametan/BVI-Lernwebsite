@@ -3247,6 +3247,11 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.0.3',ts:'2026-10-19T18:00',items:[
+      'Altklausur-Quiz im neuen Design: Antworten als Karten mit Buchstaben, grüne und rote Rückmeldung, Filter als Kacheln, Prüfungsmodus und Ergebnis angepasst',
+      'Klausurfragen, Übungsklausur und Fallbearbeitung ebenfalls angepasst: Reiter, Fragenlisten, Antwortfelder und Knöpfe',
+      'Fehler behoben: Mehrere Rahmen und Hintergründe wurden nicht angezeigt, weil Farbwerte fehlten'
+    ]},
     {v:'3.0.2',ts:'2026-10-19T16:00',items:[
       'Prüfung: Klausur 08/2026, Altklausur-Quiz VAk und Führungsdienstsimulator leuchten in deiner Akzentfarbe',
       'Einstellungen: Die Farbkreise sind kleiner und passen in eine Zeile',
