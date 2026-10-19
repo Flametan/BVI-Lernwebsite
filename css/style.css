@@ -1757,7 +1757,7 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 :root[data-theme="light"]{--k-059669:#047854;--k-22c55e:#157b3b;--k-48c78e:#257a54;--k-4acd90:#21774f;--k-4ade80:#16793a;--k-4cc38a:#287751;--k-50b860:#327a3d;--k-6366f1:#5054ef;--k-6495ed:#1b63e5;--k-6baad4:#2d709c;--k-7bb3e0:#2870a9;--k-7bb8f0:#156dbd;--k-888888:#616161;--k-8fa0b0:#5a6d7f;--k-93c5fd:#0466d4;--k-c4b5fd:#6d48fa;--k-c81e1e:#c81e1e;--k-cfcfcf:#303030;--k-d2d2d2:#2d2d2d;--k-d46b00:#a65400;--k-d4903a:#926020;--k-d4a017:#86650f;--k-d4a84a:#84641f;--k-d6d6d6:#292929;--k-d8d8d8:#272727;--k-d97706:#a25904;--k-dddddd:#222222;--k-e05040:#c83120;--k-e07070:#cd2c2c;--k-e0903a:#9c5c18;--k-e5484d:#d21e24;--k-e6e6e6:#191919;--k-ef4444:#d41212;--k-fb923c:#af5104;--k-ff4444:#d80000;--k-ff5555:#da0000;--k-ff7b7f:#d70007;--k-ff8c00:#9e5700;}
 
 :root{--b-1a1a1a:#1a1a1a;--b-1a1d2e:#1a1d2e;--b-1f1f1f:#1f1f1f;--b-222222:#222222;--b-2a2a2a:#2a2a2a;--b-2e2e2e:#2e2e2e;--b-303030:#303030;--b-353535:#353535;--b-3a3a3a:#3a3a3a;--b-4a4a4a:#4a4a4a;--b-8a97a2:#8a97a2;--b-bdbdbd:#bdbdbd;--b-cccccc:#cccccc;--b-d0d0d0:#d0d0d0;--b-eeeeee:#eeeeee;}
-:root[data-theme="light"]{--b-1a1a1a:#e5e5e5;--b-1a1d2e:#d5d7e1;--b-1f1f1f:#e0e0e0;--b-222222:#dddddd;--b-2a2a2a:#d5d5d5;--b-2e2e2e:#d1d1d1;--b-303030:#cfcfcf;--b-353535:#cacaca;--b-3a3a3a:#c5c5c5;--b-4a4a4a:#b5b5b5;--b-8a97a2:#5d6a75;--b-bdbdbd:#424242;--b-cccccc:#333333;--b-d0d0d0:#2f2f2f;--b-eeeeee:#111111;}
+:root[data-theme="light"]{--b-1a1a1a:#ffffff;--b-1a1d2e:#d5d7e1;--b-1f1f1f:#e0e0e0;--b-222222:#dddddd;--b-2a2a2a:#d5d5d5;--b-2e2e2e:#d1d1d1;--b-303030:#cfcfcf;--b-353535:#cacaca;--b-3a3a3a:#c5c5c5;--b-4a4a4a:#b5b5b5;--b-8a97a2:#5d6a75;--b-bdbdbd:#424242;--b-cccccc:#333333;--b-d0d0d0:#2f2f2f;--b-eeeeee:#111111;}
 /* Dunkle Inseln im hellen Design: Diagramme sind für dunklen Grund gezeichnet */
 :root[data-theme="light"] .diagram-wrap{background:#1b1b1b;border-color:#2b2b2b;}
 :root[data-theme="light"] .diagram-caption{color:#a3a3a3;}
@@ -1841,3 +1841,10 @@ html.no-timers .uk-timer-box,html.no-timers .uk-timer-inline,html.no-timers .qui
 .cu-io .btn{text-decoration:none;cursor:pointer;}
 
 .kb-r{display:block;white-space:nowrap;}
+
+/* ── Fenster im hellen Design: weiße Karte, Filter-Chips abgesetzt ───────── */
+.sf-btn{background:var(--m-raised);}
+:root[data-theme="light"] .search-overlay,:root[data-theme="light"] .quiz-mastery-modal{background:rgba(20,20,20,.45)!important;}
+.search-result:hover,.search-result.sr-focus{background:var(--m-raised);}
+.search-footer kbd{background:var(--m-raised);border-color:var(--m-line);}
+.search-result mark,.sr-snippet mark{background:color-mix(in srgb,var(--m-accent) 28%,transparent);color:inherit;border-radius:3px;padding:0 1px;font-style:normal;}
