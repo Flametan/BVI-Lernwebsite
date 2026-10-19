@@ -1832,3 +1832,6 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 #rp-ov{position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.7);display:grid;place-items:center;padding:16px;}
 #rp-ov[hidden]{display:none;}
 #rp-ov .btn{text-decoration:none;text-align:center;}
+
+/* Timer ausgeschaltet (Einstellungen) */
+html.no-timers .uk-timer-box,html.no-timers .uk-timer-inline,html.no-timers .quiz-exam-timer-bar,html.no-timers #et-pill,html.no-timers .et-card{display:none!important;}

@@ -2652,6 +2652,7 @@ const QUIZ=(function(){
   let _examTimerInterval=null,_examTimeLeft=0;
 
   function startTimer(){
+    if(document.documentElement.classList.contains('no-timers')) return;
     _examTimeLeft=60*60;
     const bar=document.getElementById('quiz-exam-timer-bar');
     if(bar)bar.classList.remove('hidden');
@@ -5310,6 +5311,7 @@ const ETIMER=(function(){
     if(l<=0&&!pill.dataset.done){ pill.dataset.done='1'; if(navigator.vibrate) navigator.vibrate([200,100,200]); TOAST.show('Die Zeit ist um – Stift runter!',{type:'ok'}); }
   }
   function start(min){
+    if(document.documentElement.classList.contains('no-timers')) return;
     try{ localStorage.setItem(KEY,String(Date.now()+min*60000)); }catch(e){}
     ensurePill(); delete pill.dataset.done; update();
     clearInterval(tick); tick=setInterval(update,1000);
@@ -5937,6 +5939,7 @@ const SHELL=(function(){
     set('m-notif-hour',NOTIF.hour()+':00');
     set('m-goal-val',goalMin()+' min');
     set('m-cardgoal-val',cardGoal());
+    const tm=document.getElementById('m-timers-toggle'); if(tm) tm.checked=!document.documentElement.classList.contains('no-timers');
     const tn=document.getElementById('m-tabnum-toggle'); if(tn) tn.checked=tabNumOn();
     const lb=BACKUP.last(); set('m-backup-last',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
     const ex=examCfg(), di=document.getElementById('m-exam-date'), ni=document.getElementById('m-exam-name');
@@ -5998,6 +6001,11 @@ const SHELL=(function(){
       try{ localStorage.setItem('bvi_cardgoal',String(g)); }catch(e){}
       syncCardGoal();
       renderCardGoal(); updateBadges();
+    },
+    setTimers(on){
+      try{ localStorage.setItem('bvi_timers',on?'1':'0'); }catch(e){}
+      document.documentElement.classList.toggle('no-timers',!on);
+      if(!on&&typeof ETIMER!=='undefined') ETIMER.stop();
     },
     setTabNum(on){
       try{ localStorage.setItem('bvi_tabnum',on?'1':'0'); }catch(e){}
