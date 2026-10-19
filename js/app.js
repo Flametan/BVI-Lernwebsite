@@ -2611,7 +2611,7 @@ const CUSTOM=(function(){
       +'<button class="btn btn-gold" id="cu-save">Karte speichern</button>'
       +'<div class="cu-h">Meine Karten</div><div id="cu-list"></div>'
       +'<div class="cu-io"><button class="btn btn-ghost" id="cu-exp">Karten exportieren</button><button class="btn btn-ghost" id="cu-mail">Per E-Mail senden</button><label class="btn btn-ghost" for="cu-imp">Karten importieren</label><input type="file" id="cu-imp" accept=".json,application/json" hidden></div>'
-      +'<div class="m-t2">Exportierte Karten kannst du Fabian schicken, er nimmt sie für alle in die App auf.</div></div>';
+      +'</div>';
     document.body.appendChild(box);
     box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
