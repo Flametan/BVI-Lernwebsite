@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 12+: Startbild in Schwarz, Flamme ohne eigenen Kachel-Hintergrund -->
+    <style name="Theme.BVI" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/bvi_black</item>
+        <item name="android:colorBackground">@color/bvi_black</item>
+        <item name="android:windowSplashScreenBackground">@color/bvi_black</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/bvi_black</item>
+    </style>
+</resources>
