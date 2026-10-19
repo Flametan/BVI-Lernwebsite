@@ -1504,12 +1504,7 @@ const NOTES = (function(){
         entries.push('### '+label+'\n'+v.trim());
       }
       if(!entries.length){ TOAST.show('Keine Notizen vorhanden'); return; }
-      const blob = new Blob([entries.join('\n\n---\n\n')], {type:'text/plain;charset=utf-8'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href=url; a.download='bvi-notizen.txt'; a.click();
-      URL.revokeObjectURL(url);
-      TOAST.show('Notizen exportiert',{type:'ok'});
+      FILES.save('bvi-notizen.txt','text/plain',entries.join('\n\n---\n\n'));
     }
   };
 })();
@@ -4688,6 +4683,7 @@ const IDF_PLAN = (function(){
         <div class="idf-items">${_dayItems(items)}</div></div>`;
     }).join('')+'</div>';
     if(tel) h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${[...tel,['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><span>${esc(t)}</span></div>`).join('')}</div>`;
+    h+=`<button class="m-cal-btn" onclick="IDF_PLAN.exportIcs()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5"/></svg>Stundenplan in den Kalender übernehmen<small>Gruppe ${_grp[1]} · alle Einheiten mit Erinnerung 30 Minuten vorher</small></button>`;
     h+='<div class="idf-legend"><span><i class="hi"></i>Schlüsseltermin</span><span><i class="ex"></i>Exkursion</span><span><i class="ar"></i>An-/Abreise, frei</span><span>EVA = eigenverantwortliches Arbeiten</span></div>';
     el.innerHTML=h;
   }
@@ -4732,13 +4728,108 @@ const IDF_PLAN = (function(){
     return null;
   }
 
+  // Stundenplan der gewählten Gruppe als Kalenderdatei (iCalendar), mit Erinnerung 30 Minuten vorher
+  function ics(){
+    const g=_savedGrp(), pad=n=>String(n).padStart(2,'0');
+    const fold=l=>{ let out='',cur=''; for(const ch of l){ if(new TextEncoder().encode(cur+ch).length>73){ out+=cur+'\r\n '; cur=''; } cur+=ch; } return out+cur; };
+    const esc=t=>String(t).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+    const stamp=(()=>{const d=new Date();return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z';})();
+    const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//B VI Lernwebsite//Stundenplan Modul 3.5//DE','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:IdF Münster Modul 3.5 · Gruppe '+g[1]];
+    let count=0;
+    for(const w of _buildWeeks(g)){
+      const base=new Date(w[3]+'T00:00');
+      for(let d=0;d<5;d++){
+        const day=new Date(base); day.setDate(base.getDate()+d);
+        const ymd=day.getFullYear()+pad(day.getMonth()+1)+pad(day.getDate());
+        _splitAtLunch(w[5][d]||[]).forEach((raw,i)=>{
+          const [t,title,cls='',room='',note='']=raw.split('|');
+          if(/unterrichtsfrei|Selbststudium|Heiligabend|Weihnachtstag/.test(title)) return;
+          const [a,b]=_time(t); const s=_minutes(a); if(s===null) return;
+          const e=_minutes(b)??s+60, hm=m=>pad(Math.floor(m/60))+pad(m%60)+'00';
+          lines.push('BEGIN:VEVENT','UID:bvi-'+g+'-'+ymd+'-'+hm(s)+'-'+i+'@bvi-lernwebsite','DTSTAMP:'+stamp,
+            'DTSTART:'+ymd+'T'+hm(s),'DTEND:'+ymd+'T'+hm(e),
+            'SUMMARY:'+esc(title));
+          if(room) lines.push('LOCATION:'+esc('IdF NRW Münster, Raum '+room));
+          lines.push('DESCRIPTION:'+esc([w[2]+' (KW '+w[0]+')',note].filter(Boolean).join('\n')));
+          lines.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+esc(title),'TRIGGER:-PT30M','END:VALARM','END:VEVENT');
+          count++;
+        });
+      }
+    }
+    lines.push('END:VCALENDAR');
+    return {text:lines.map(fold).join('\r\n')+'\r\n',count,group:g};
+  }
+  function exportIcs(){
+    const r=ics();
+    FILES.save('bvi-stundenplan-gruppe'+r.group[1]+'.ics','text/calendar',r.text,true);
+  }
+
   function summary(){
     const ws=_buildWeeks(_savedGrp()), w=ws[_autoIdx(ws)];
     const end=new Date(ws[ws.length-1][3]+'T00:00'); end.setDate(end.getDate()+5);
     return { kw:w[0], thema:w[2], over:new Date()>end };
   }
 
-  return { render, summary, next, _nav, _grp:_setGrp };
+  return { render, summary, next, ics, exportIcs, _nav, _grp:_setGrp };
+})();
+
+/* ── Dateien speichern (Browser: Download, Android-App: Ordner Downloads) ── */
+const FILES=(function(){
+  function save(name,mime,text,open){
+    if(window.BVIAndroid&&BVIAndroid.saveText){
+      try{
+        const ok=BVIAndroid.saveText(name,mime,text,!!open);
+        TOAST.show(ok?(open?'Datei wird geöffnet …':'In Downloads gespeichert'):'Speichern fehlgeschlagen',ok?{type:'ok'}:undefined);
+        return ok;
+      }catch(e){}
+    }
+    const url=URL.createObjectURL(new Blob([text],{type:mime+';charset=utf-8'}));
+    const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),3000);
+    TOAST.show('Datei erstellt: '+name,{type:'ok'});
+    return true;
+  }
+  return {save};
+})();
+
+/* ── Sicherung: Lernstand, Notizen, Lesezeichen und Einstellungen als Datei ── */
+const BACKUP=(function(){
+  const keep=k=>(k.startsWith('bvi_')&&k!=='bvi_seen_version'&&k!=='bvi_last_backup')||k==='idf_plan_grp';
+  function collect(){
+    const d={};
+    for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&keep(k)) d[k]=localStorage.getItem(k); }
+    return d;
+  }
+  const stamp=()=>{ const d=new Date(),p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); };
+  return {
+    export(){
+      const data=collect(), n=Object.keys(data).length;
+      const body=JSON.stringify({app:'bvi-lernwebsite',version:APP_VERSION,exported:new Date().toISOString(),data},null,1);
+      FILES.save('bvi-sicherung-'+stamp()+'.json','application/json',body);
+      try{ localStorage.setItem('bvi_last_backup',new Date().toISOString()); }catch(e){}
+      SHELL.syncSettings();
+      return n;
+    },
+    last(){ try{ const t=localStorage.getItem('bvi_last_backup'); return t?new Date(t):null; }catch(e){ return null; } },
+    import(input){
+      const f=input.files&&input.files[0]; input.value='';
+      if(!f) return;
+      const r=new FileReader();
+      r.onload=()=>{
+        let o; try{ o=JSON.parse(r.result); }catch(e){ TOAST.show('Das ist keine gültige Sicherungsdatei'); return; }
+        if(!o||o.app!=='bvi-lernwebsite'||typeof o.data!=='object'||!o.data){ TOAST.show('Das ist keine Sicherung dieser App'); return; }
+        const keys=Object.keys(o.data).filter(k=>keep(k)&&typeof o.data[k]==='string');
+        if(!keys.length){ TOAST.show('Die Sicherung enthält keine Daten'); return; }
+        const when=o.exported?new Date(o.exported).toLocaleDateString('de-DE'):'unbekannt';
+        if(!confirm('Sicherung vom '+when+' einspielen?\n\nDeine aktuellen Daten für diese '+keys.length+' Einträge werden überschrieben.')) return;
+        keys.forEach(k=>{ try{ localStorage.setItem(k,o.data[k]); }catch(e){} });
+        TOAST.show('Sicherung eingespielt – App wird neu geladen',{type:'ok'});
+        setTimeout(()=>location.reload(),900);
+      };
+      r.onerror=()=>TOAST.show('Datei konnte nicht gelesen werden');
+      r.readAsText(f);
+    }
+  };
 })();
 
 /* ── Nutzungszeit: zählt nur, solange die App sichtbar ist und bedient wird ── */
@@ -5269,6 +5360,7 @@ const SHELL=(function(){
     set('m-version',APP_VERSION);
     set('m-notif-hour',NOTIF.hour()+':00');
     set('m-goal-val',goalMin()+' min');
+    const lb=BACKUP.last(); set('m-backup-last',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
     const ex=examCfg(), di=document.getElementById('m-exam-date'), ni=document.getElementById('m-exam-name');
     if(di) di.value=ex.date; if(ni) ni.value=ex.name===DEF_EXAM.name&&!localStorage.getItem('bvi_exam')?'':ex.name;
     const tg=document.getElementById('m-notif-toggle'); if(tg) tg.checked=NOTIF.isEnabled();
@@ -5291,10 +5383,31 @@ const SHELL=(function(){
     document.getElementById('m-tb-actions')?.classList.toggle('hidden',!isContent);
     buildToc(id,isContent);
     updateBadges();
+    if(isContent){
+      const pc=document.getElementById(id)?.querySelector('.pc');
+      if(pc&&!pc.querySelector(':scope > .m-report')){
+        const d=document.createElement('div'); d.className='m-report';
+        d.innerHTML='<button onclick="SHELL.report()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22V4M4 4h13l-2 4 2 4H4"/></svg>Fehler oder Unklarheit melden</button>';
+        pc.appendChild(d);
+      }
+    }
   }
 
   return {
     onShow, renderHome, renderExam, renderNotes, renderFcSide, syncSettings, updateBadges,
+    report(extra){
+      const v=document.querySelector('.view.active'); if(!v) return;
+      const title=v.querySelector('.page-title')?.textContent?.trim()||v.id;
+      const eb=v.querySelector('.page-eyebrow')?.textContent?.trim()||'';
+      const body='Seite: '+title+(eb?' ('+eb+')':'')+'\nLink: '+location.origin+location.pathname+'?id='+v.id+'\nApp-Version: '+APP_VERSION+'\n'+(extra?'\n'+extra+'\n':'')+'\nWas ist falsch oder unklar?\n';
+      const url='mailto:fabian.flemig@gmx.de?subject='+encodeURIComponent('B VI – Fehler: '+title)+'&body='+encodeURIComponent(body);
+      if(!window.__noMail) location.href=url;
+      return url;
+    },
+    reportQuiz(){
+      const t=id=>document.getElementById(id)?.textContent?.trim()||'';
+      return this.report('Frage '+t('quiz-counter')+' ['+t('quiz-cat')+']:\n'+t('quiz-q'));
+    },
     stepGoal(d){
       const g=Math.min(240,Math.max(5,goalMin()+d*5));
       try{ localStorage.setItem('bvi_goal',String(g)); }catch(e){}

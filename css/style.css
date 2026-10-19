@@ -1631,3 +1631,13 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 .m-tab-b{position:absolute;top:0;left:calc(50% + 8px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--m-accent);color:var(--m-on-accent);font-size:.68rem;font-weight:700;display:grid;place-items:center;font-variant-numeric:tabular-nums;line-height:1;}
 .m-tab-b[hidden]{display:none;}
 .m-ri .m-tab-b{position:static;margin-left:auto;}
+
+/* Kalender-Knopf, Fehler melden */
+.m-cal-btn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;margin-top:1rem;padding:14px 16px;border-radius:16px;background:var(--m-card);color:var(--m-fg);font-family:var(--f-b);font-size:.95rem;font-weight:500;text-align:left;position:relative;padding-left:54px;}
+.m-cal-btn svg{position:absolute;left:18px;top:16px;color:var(--m-accent);}
+.m-cal-btn small{font-size:.8rem;font-weight:400;color:var(--m-muted);}
+.m-cal-btn:active{background:var(--m-raised);}
+.m-report{margin-top:2rem;display:flex;justify-content:center;}
+.m-report button,.quiz-report-btn{display:inline-flex;align-items:center;gap:8px;color:var(--m-muted);font-family:var(--f-b);font-size:.85rem;padding:10px 14px;border-radius:20px;background:none;}
+.m-report button:hover,.quiz-report-btn:hover{color:var(--m-fg);background:var(--m-card);}
+.quiz-report-btn{display:block;margin:10px auto 0;}
