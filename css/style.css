@@ -2089,3 +2089,28 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .m-count-go:hover .m-count-link{filter:brightness(1.08);}
 .m-count-go .m-tx{flex:1 1 160px;min-width:0;}
 @media(max-width:700px){.m-count-go{flex-wrap:wrap;}.m-count-link{flex:1 1 100%;margin-left:0;justify-content:center;padding:11px 12px;}}
+
+/* Abkürzungen: Suchleiste, Karten auf dem Handy, Tabelle ab Tablet */
+.abk-stick{position:sticky;top:0;z-index:20;background:var(--m-bg);margin:0 -16px;padding:8px 16px 0;}
+.abk-search-wrap{margin-bottom:.4rem;position:static;}
+.abk-sbox{position:relative;display:flex;align-items:center;}
+.abk-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--m-muted);pointer-events:none;}
+.abk-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:0;border-radius:50%;background:none;color:var(--m-muted);font-size:1rem;cursor:pointer;}
+.abk-clear.hidden,.abk-none.hidden{display:none;}
+.abk-search{padding-right:42px;}
+.abk-count{padding:6px 4px 8px;}
+.abk-c-sec{position:sticky;top:78px;z-index:5;background:var(--m-bg);color:var(--m-accent-fg);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:14px 2px 6px;}
+.abk-c-grp.hidden,.abk-card.hidden{display:none;}
+.abk-card{background:var(--m-card);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer;}
+.abk-c-h{display:flex;gap:12px;align-items:baseline;}
+.abk-c-ab{font-weight:800;font-size:1rem;min-width:56px;color:var(--m-fg);overflow-wrap:anywhere;}
+.abk-c-fu{flex:1;min-width:0;color:var(--m-fg);}
+.abk-c-ch{color:var(--m-muted);transition:transform .15s;}
+.abk-card.open .abk-c-ch{transform:rotate(90deg);}
+.abk-c-d{display:none;color:var(--m-muted);font-size:.82rem;line-height:1.5;margin-top:6px;}
+.abk-card.open .abk-c-d{display:block;}
+.abk-none{padding:2rem 1rem;text-align:center;color:var(--m-muted);}
+.abk-table{display:none;}
+@media(min-width:701px){.abk-table{display:table;}.abk-cards{display:none;}.abk-stick{position:static;margin:0;padding:0;}.abk-none{display:none;}}
+#v-abkuerzungen .pc{overflow-x:clip;overflow-y:visible;}
+.abk-c-sec{top:94px;}
