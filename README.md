@@ -110,15 +110,15 @@ Wichtige CSS-Klassen: `.info-card`, `.def-box`, `.hint`, `.step-stack`, `.acc-li
 
 ## Version
 
-Aktuelle Version: **3.0.3**  
+Aktuelle Version: **3.1.0**  
 `js/version.js` und `sw.js` müssen immer synchron gehalten werden.
 
 ```javascript
 // js/version.js
-const APP_VERSION = '3.0.3';
+const APP_VERSION = '3.1.0';
 
 // sw.js (erste Zeile)
-const APP_VERSION = '3.0.3'; // keep in sync with js/version.js
+const APP_VERSION = '3.1.0'; // keep in sync with js/version.js
 ```
 
 ---

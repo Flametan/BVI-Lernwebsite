@@ -3280,11 +3280,18 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
-    {v:'3.0.3',ts:'2026-10-19T18:00',items:[
-      'Altklausur-Quiz im neuen Design: Antworten als Karten mit Buchstaben, grüne und rote Rückmeldung, Filter als Kacheln, Prüfungsmodus und Ergebnis angepasst',
-      'Klausurfragen, Übungsklausur und Fallbearbeitung ebenfalls angepasst: Reiter, Fragenlisten, Antwortfelder und Knöpfe',
-      'Prüfung: Auch die Fallbearbeitung leuchtet jetzt in deiner Akzentfarbe',
-      'Fehler behoben: Mehrere Rahmen und Hintergründe wurden nicht angezeigt, weil Farbwerte fehlten'
+    {v:'3.1.0',ts:'2026-10-19T20:00',items:[
+      'Startseite: Karte „Jetzt / Als Nächstes“ mit der laufenden bzw. nächsten Einheit aus dem Stundenplan (Zeit, Raum)',
+      'Startseite: Tagesziel mit Fortschrittsring – das Ziel stellst du in den Einstellungen ein',
+      'Tab „Lernen“ zeigt, wie viele Karten heute fällig sind',
+      'Plan: Stundenplan in den Kalender übernehmen (Datei mit Erinnerung 30 Minuten vorher)',
+      'Einstellungen: Sicherung erstellen und einspielen (Lernstand, Notizen, Lesezeichen, Einstellungen); Datum und Name der nächsten Klausur einstellbar',
+      'Quiz: Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) mit Filter „Fällig“; Altklausur-Quiz, Klausurfragen und Fallbearbeitung im neuen Design',
+      'Lernseiten: Text auswählen und markieren; Markierungen stehen auch in der Notizen-Übersicht',
+      'Fehler melden: Zeile am Ende jeder Lernseite und Knopf bei jeder Quiz-Frage',
+      'Lernseiten im neuen Design (Abschnitte, Infokästen, Tabellen), kräftigere Grautöne, größere Trefferflächen, neue Einführung',
+      'Android-App: Erinnerung als echte Benachrichtigung, auch bei geschlossener App; neue Versionen lassen sich über die installierte App installieren (einmalig deinstallieren); Links öffnen außerhalb der App',
+      'Prüfung: Fallbearbeitung leuchtet in der Akzentfarbe'
     ]},
     {v:'3.0.2',ts:'2026-10-19T16:00',items:[
       'Prüfung: Klausur 08/2026, Altklausur-Quiz VAk und Führungsdienstsimulator leuchten in deiner Akzentfarbe',
@@ -5343,7 +5350,7 @@ const SHELL=(function(){
   function updateBadges(){
     const n=cardStats().due;
     document.querySelectorAll('#m-tabbar [data-tab="learn"],#m-rail [data-tab="learn"]').forEach(b=>{
-      let s=b.querySelector('.m-tab-b'); if(!s){ s=document.createElement('span'); s.className='m-tab-b'; b.appendChild(s); }
+      let s=b.querySelector('.m-tab-b'); if(!s){ s=document.createElement('span'); s.className='m-tab-b'; if(b.classList.contains('m-tab')) b.insertBefore(s,b.firstChild); else b.appendChild(s); }
       s.textContent=n>99?'99+':n; s.hidden=!n;
       s.setAttribute('aria-label',n+' Karten fällig');
     });
