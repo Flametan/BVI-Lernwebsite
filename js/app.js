@@ -3572,7 +3572,7 @@ const CHANGELOG=(function(){
       'Stundenplan: IdF Modul 3.5 mit Uhrzeiten, Räumen, Hinweisen, Mittagspause und Telefonnummern; Übernahme in den Kalender mit Erinnerung',
       'Prüfung: alle Klausur-Werkzeuge an einem Ort, mit Countdown zur nächsten Klausur; Altklausur-Quiz, Klausurfragen und Fallbearbeitung im neuen Design',
       'Prüfung: neuer Abschnitt „Laufbahnprüfung“ mit den schriftlichen Klausuren Dez 2023 und Juni 2026 samt Musterlösungen (wie Klausur 08/2026) und Abschnitt „IdF Münster“ mit dem Altklausur-Quiz IdF (Vorbeugender Brandschutz und Stabsarbeit, Mehrfachauswahl, Lern- und Prüfungsmodus, Wiederholung nach Plan); Quelle und Unsicherheit stehen bei jeder Antwort; Prüfung-Tab als gleichmäßiges Raster (3 Spalten Desktop, 2 Tablet, 1 Handy) und Countdown-Karte führt zum passenden Quiz bzw. zur Klausur',
-      'Stundenplan springt beim Öffnen zur laufenden bzw. nächsten Einheit: richtige Woche, der aktuelle Tag steht oben (am Wochenende der nächste Montag)',
+      'Stundenplan springt beim Öffnen zur laufenden bzw. nächsten Einheit: richtige Woche, der aktuelle Tag steht oben (am Wochenende der nächste Montag); die laufende bzw. nächste Einheit leuchtet und wechselt mit der Uhrzeit',
       'Abkürzungen als Karten zum Aufklappen (Kürzel und Name, Erläuterung per Tipp; auf Tablet 2, auf Desktop 3 Spalten) mit fest stehender Suchleiste, Kategorien-Überschriften und „Suche leeren“',
       'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
       'Lernseiten: Text markieren, Merken, Notiz und Vorlesen direkt auf der Seite; Bilder und Diagramme per Tipp groß öffnen und zoomen; Inhaltsverzeichnis am Rand auf großen Bildschirmen; Fehler melden',
@@ -5063,6 +5063,12 @@ const IDF_PLAN = (function(){
     const day=key&&document.querySelector('#plan-inner .idf-day[data-ymd="'+key+'"]');
     if(day) requestAnimationFrame(()=>{ day.scrollIntoView({block:'start'}); });
   }
+  // Markierung folgt der Uhrzeit: alle 30 s prüfen, ob eine andere Einheit läuft bzw. ansteht
+  setInterval(()=>{
+    if(document.hidden||!document.getElementById('v-plan')?.classList.contains('active')) return;
+    const n=next(), k=n?_ymd(n.start)+'|'+n.title+'|'+(n.start.getHours()*60+n.start.getMinutes()):'';
+    if(k!==_nk) _draw();
+  },30000);
   function _nav(d){ _wi=Math.max(0,Math.min(_weeks.length-1,_wi+d)); _draw(); }
   function _setGrp(g){
     _grp=g;

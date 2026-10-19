@@ -2103,3 +2103,6 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .abk-c-sec{top:94px;}
 @media(min-width:701px){.abk-stick{margin:0 -32px;padding:8px 32px 0;}}
 .idf-day{scroll-margin-top:12px;}
+/* Laufende bzw. nächste Einheit: pulsierender Glow */
+.idf-item.idf-now{position:relative;box-shadow:0 0 0 1px color-mix(in srgb,var(--m-accent) 60%,transparent),0 0 18px color-mix(in srgb,var(--m-accent) 38%,transparent),0 0 42px color-mix(in srgb,var(--m-accent) 16%,transparent);animation:m-glow-pulse 3.2s ease-in-out infinite;}
+@media(prefers-reduced-motion:reduce){.idf-item.idf-now{animation:none;}}
