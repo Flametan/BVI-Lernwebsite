@@ -27,7 +27,7 @@ const NAV = (function(){
     if(typeof BOOKMARKS!=='undefined') BOOKMARKS.setView(id);
     SHELL.onShow(id, isContentPage, stack);
     if(id==='v-plan') IDF_PLAN.render();
-    if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); }
+    if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); SHELL.renderCardGoal(); }
     if(id==='v-home') SHELL.renderHome();
     if(id==='v-pruefung') SHELL.renderExam();
     if(id==='v-settings') SHELL.syncSettings();
@@ -1888,7 +1888,7 @@ const FC = (function(){
         d[card.id]=sm2(d[card.id]||{},q); sess.known++;
         if(typeof STREAK!=='undefined') STREAK.record();
       }
-      fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide(); SHELL.updateBadges();
+      fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide(); SHELL.updateBadges(); SHELL.cardDone();
     },
     setFilter(f){
       if(f==='starred'){
@@ -3289,7 +3289,7 @@ const CHANGELOG=(function(){
       'Startseite: Gruß und Spruch passend zur Tageszeit, „Jetzt / Als Nächstes“ aus dem Stundenplan, Tagesziel mit Fortschrittsring, Zeit in der App mit Wochendiagramm, Weiterlernen, nächste Klausur und alle Module mit Fortschritt',
       'Stundenplan: IdF Modul 3.5 mit Uhrzeiten, Räumen, Hinweisen, Mittagspause und Telefonnummern; Übernahme in den Kalender mit Erinnerung',
       'Prüfung: alle Klausur-Werkzeuge an einem Ort, mit Countdown zur nächsten Klausur; Altklausur-Quiz, Klausurfragen und Fallbearbeitung im neuen Design',
-      'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick',
+      'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
       'Lernseiten: Text markieren, Merken, Notiz und Vorlesen direkt auf der Seite; Bilder und Diagramme per Tipp groß öffnen und zoomen; Inhaltsverzeichnis am Rand auf großen Bildschirmen; Fehler melden',
       'Einstellungen: Suche, Notizen, Lesezeichen, Pomodoro, Lernstatistik, Abkürzungen, Sicherung erstellen und einspielen, Klausurtermin einstellbar, freiwillige Unterstützung per PayPal',
       'Android-App: Erinnerung als echte Benachrichtigung, Links öffnen außerhalb der App'
@@ -5421,6 +5421,25 @@ const SHELL=(function(){
   function goalMin(){
     try{ const v=parseInt(localStorage.getItem('bvi_goal'),10); return v>=5&&v<=240?v:30; }catch(e){ return 30; }
   }
+  function cardGoal(){
+    try{ const v=parseInt(localStorage.getItem('bvi_cardgoal'),10); return v>=5&&v<=200?v:20; }catch(e){ return 20; }
+  }
+  const dayKey=()=>{ const t=new Date(); return t.getFullYear()+'-'+(t.getMonth()+1)+'-'+t.getDate(); };
+  function cardsToday(){
+    try{ const o=JSON.parse(localStorage.getItem('bvi_cards_day')||'{}'); return o.d===dayKey()?(o.n||0):0; }catch(e){ return 0; }
+  }
+  function tabNumOn(){ try{ return localStorage.getItem('bvi_tabnum')!=='0'; }catch(e){ return true; } }
+  function renderCardGoal(){
+    const el=document.getElementById('m-fc-goal'); if(!el) return;
+    const n=cardsToday(), g=cardGoal(), p=Math.min(100,Math.round(n/g*100));
+    el.innerHTML=`<div class="m-fc-goal-t"><span>Heute gelernt</span><b>${n} / ${g} Karten${n>=g?' ✓':''}</b></div><div class="m-fc-goal-bar"><i style="width:${p}%"></i></div>`;
+  }
+  function cardDone(){
+    const n=cardsToday()+1, g=cardGoal();
+    try{ localStorage.setItem('bvi_cards_day',JSON.stringify({d:dayKey(),n})); }catch(e){}
+    renderCardGoal();
+    if(n===g&&typeof TOAST!=='undefined') TOAST.show('Kartenziel für heute erreicht – stark!',{type:'ok'});
+  }
   function daysToExam(){
     const t=new Date(); t.setHours(0,0,0,0);
     return Math.round((new Date(examCfg().date+'T00:00')-t)/864e5);
@@ -5438,7 +5457,7 @@ const SHELL=(function(){
     return `<div class="m-card m-goal"><svg viewBox="0 0 64 64" role="img" aria-label="${Math.round(p*100)} Prozent des Tagesziels"><circle cx="32" cy="32" r="${R}" class="m-ring-bg"/><circle cx="32" cy="32" r="${R}" class="m-ring-fg" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 32 32)"/>${done?'<path d="m22 33 7 7 13-14" class="m-ring-ok"/>':`<text x="32" y="37" text-anchor="middle" class="m-ring-t">${Math.round(p*100)}%</text>`}</svg><div class="m-tx"><span class="m-eyebrow">Tagesziel</span><span class="m-t1" style="margin-top:2px">${done?'Geschafft!':dur(sec)+' von '+goal+' min'}</span><span class="m-t2">${done?'Dein Ziel für heute ist erreicht.':'Noch '+Math.max(1,Math.ceil((goal*60-sec)/60))+' min bis zum Ziel'}</span></div></div>`;
   }
   function updateBadges(){
-    const n=cardStats().due;
+    const n=tabNumOn()?cardStats().due:0;
     document.querySelectorAll('#m-tabbar [data-tab="learn"],#m-rail [data-tab="learn"]').forEach(b=>{
       let s=b.querySelector('.m-tab-b'); if(!s){ s=document.createElement('span'); s.className='m-tab-b'; if(b.classList.contains('m-tab')) b.insertBefore(s,b.firstChild); else b.appendChild(s); }
       s.textContent=n>99?'99+':n; s.hidden=!n;
@@ -5473,7 +5492,7 @@ const SHELL=(function(){
     }
     const nextRow=nx?row({ic:ic('cal'),t1:nx.title,t2:`${nx.state==='now'?'Jetzt':'Als Nächstes'} · ${dayWord(nx.start)} ${hhmm(nx.start)}${nx.state==='now'?'–'+hhmm(nx.end):''}${nx.room?' · Raum '+nx.room:''}`,on:"NAV.tab('v-plan','Plan')"}):'';
     const extra=(exam>=0?row({ic:ic('exam'),t1:'Nächste Klausur',t2:`${ex.name} · ${exam===0?'heute':exam===1?'morgen':'noch '+exam+' Tage'}`,on:"NAV.tab('v-pruefung','Prüfung')"}):'')
-      +row({ic:ic('cards'),t1:'Lernkarten wiederholen',t2:cs.due?`${cs.due} Karten heute fällig`:'Heute nichts fällig',on:"NAV.tab('v-flashcards','Lernen')"});
+      +row({ic:ic('cards'),t1:'Lernkarten wiederholen',t2:cs.due?`${cs.due} Karten heute fällig`:'Heute nichts fällig',on:"NAV.tab('v-flashcards','Lernkarten')"});
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${streak?`<span class="m-streak">${svg('flame')}${streak} ${streak===1?'Tag':'Tage'}</span>`:''}</div>
       <div class="m-g2 m-home-top">
@@ -5590,6 +5609,8 @@ const SHELL=(function(){
     set('m-version',APP_VERSION);
     set('m-notif-hour',NOTIF.hour()+':00');
     set('m-goal-val',goalMin()+' min');
+    set('m-cardgoal-val',cardGoal());
+    const tn=document.getElementById('m-tabnum-toggle'); if(tn) tn.checked=tabNumOn();
     const lb=BACKUP.last(); set('m-backup-last',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
     const ex=examCfg(), di=document.getElementById('m-exam-date'), ni=document.getElementById('m-exam-name');
     if(di) di.value=ex.date; if(ni) ni.value=ex.name===DEF_EXAM.name&&!localStorage.getItem('bvi_exam')?'':ex.name;
@@ -5644,6 +5665,17 @@ const SHELL=(function(){
       try{ localStorage.setItem('bvi_goal',String(g)); }catch(e){}
       const e=document.getElementById('m-goal-val'); if(e) e.textContent=g+' min';
     },
+    stepCards(d){
+      const g=Math.min(200,Math.max(5,cardGoal()+d*5));
+      try{ localStorage.setItem('bvi_cardgoal',String(g)); }catch(e){}
+      const e=document.getElementById('m-cardgoal-val'); if(e) e.textContent=g;
+      renderCardGoal();
+    },
+    setTabNum(on){
+      try{ localStorage.setItem('bvi_tabnum',on?'1':'0'); }catch(e){}
+      updateBadges();
+    },
+    cardDone, renderCardGoal,
     setExam(){
       const date=document.getElementById('m-exam-date')?.value, name=document.getElementById('m-exam-name')?.value||'';
       const o=examCfg(); if(/^\d{4}-\d{2}-\d{2}$/.test(date||'')) o.date=date;
