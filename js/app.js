@@ -27,6 +27,7 @@ const NAV = (function(){
     if(typeof BOOKMARKS!=='undefined') BOOKMARKS.setView(id);
     SHELL.onShow(id, isContentPage, stack);
     if(id==='v-plan') IDF_PLAN.render();
+    if(id==='v-app') INSTALL.render();
     if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); SHELL.renderCardGoal(); }
     if(id==='v-home') SHELL.renderHome();
     if(id==='v-pruefung') SHELL.renderExam();
@@ -2530,19 +2531,26 @@ const RECENT=(function(){
 const ONBOARD=(function(){
   const KEY='bvi_onboarded';
   let _step=0;
-  const TOTAL=5;
+  const TOTAL=6;
+  function syncSetup(){
+    const g=IDF_PLAN.group();
+    document.querySelectorAll('.ob-grp').forEach(b=>b.classList.toggle('active',b.dataset.g===g));
+    THEME.render(); ACCENT.render(); SHELL.syncCardGoal();
+  }
   function setStep(n){
     _step=Math.max(0,Math.min(TOTAL-1,n));
     document.querySelectorAll('.ob-step').forEach((el,i)=>el.classList.toggle('active',i===_step));
     document.querySelectorAll('.ob-dot').forEach((el,i)=>el.classList.toggle('active',i===_step));
     const nextBtn=document.querySelector('.ob-next');
     if(nextBtn) nextBtn.textContent=_step===TOTAL-1?'Los geht\'s!':'Weiter →';
+    if(_step===1) syncSetup();
   }
   return {
     init(){
       if(localStorage.getItem(KEY)) return;
       document.getElementById('onboarding-overlay')?.classList.remove('hidden');
     },
+    setGrp(g){ IDF_PLAN._grp(g); syncSetup(); },
     next(){ if(_step<TOTAL-1){ setStep(_step+1); } else { this.close(); } },
     goto(n){ setStep(n); },
     close(){
@@ -4780,7 +4788,7 @@ const IDF_PLAN = (function(){
     return { kw:w[0], thema:w[2], over:new Date()>end };
   }
 
-  return { render, summary, next, ics, exportIcs, _nav, _grp:_setGrp };
+  return { render, summary, next, ics, exportIcs, _nav, _grp:_setGrp, group:()=>_savedGrp() };
 })();
 
 /* ── Dateien speichern (Browser: Download, Android-App: Ordner Downloads) ── */
@@ -5061,6 +5069,74 @@ const LIGHTBOX=(function(){
   return {open:show,close,isOpen:()=>open};
 })();
 
+/* ── App teilen (QR-Code) und Installationshilfe ────────────────────────── */
+const APPSHARE=(function(){
+  const URL_APP='https://flametan.github.io/BVI-Lernwebsite/';
+  let box=null, loading=null;
+  function loadLib(){
+    if(window.qrcode) return Promise.resolve();
+    return loading||(loading=new Promise((ok,fail)=>{
+      const s=document.createElement('script'); s.src='js/qrcode.min.js'; s.onload=ok; s.onerror=()=>{ loading=null; fail(); };
+      document.head.appendChild(s);
+    }));
+  }
+  function build(){
+    box=document.createElement('div'); box.id='share-ov'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','App teilen');
+    box.innerHTML='<div class="sh-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t">B VI auf dem Handy öffnen</div>'
+      +'<div class="sh-qr" id="sh-qr" role="img" aria-label="QR-Code zum Link der App"></div>'
+      +'<div class="sh-u">'+URL_APP.replace('https://','')+'</div>'
+      +'<div class="sh-b"><button class="btn btn-gold" id="sh-copy">Link kopieren</button><button class="btn btn-ghost" id="sh-share" hidden>Teilen …</button></div></div>';
+    document.body.appendChild(box);
+    box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
+    box.querySelector('#sh-copy').onclick=async()=>{
+      try{ await navigator.clipboard.writeText(URL_APP); TOAST.show('Link kopiert',{type:'ok'}); }
+      catch(e){ TOAST.show(URL_APP,{type:'info'}); }
+    };
+    const sb=box.querySelector('#sh-share');
+    if(navigator.share){ sb.hidden=false; sb.onclick=()=>navigator.share({title:'B VI – Höherer Dienst',url:URL_APP}).catch(()=>{}); }
+  }
+  async function open(){
+    if(!box) build();
+    box.hidden=false;
+    const el=box.querySelector('#sh-qr');
+    try{
+      await loadLib();
+      const q=qrcode(0,'M'); q.addData(URL_APP); q.make();
+      el.innerHTML=q.createSvgTag({cellSize:6,margin:2,scalable:true});
+    }catch(e){ el.textContent='QR-Code konnte nicht geladen werden – nutze den Link darunter.'; }
+    box.querySelector('.sh-x').focus({preventScroll:true});
+  }
+  function close(){ if(box) box.hidden=true; }
+  return {open,close};
+})();
+
+const INSTALL=(function(){
+  let deferred=null;
+  window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferred=e; render(); });
+  window.addEventListener('appinstalled',()=>{ deferred=null; render(); });
+  const ua=navigator.userAgent||'';
+  const ios=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const android=/Android/.test(ua);
+  const standalone=()=>window.matchMedia&&(matchMedia('(display-mode: standalone)').matches||navigator.standalone===true);
+  function render(){
+    const el=document.getElementById('app-device'); if(!el) return;
+    let t,steps=[],btn='';
+    if(window.BVIAndroid){ t='Du nutzt die Android-App bereits ✓'; }
+    else if(standalone()){ t='Die App ist installiert ✓'; }
+    else if(ios){ t='So installierst du die App auf deinem iPhone / iPad'; steps=['Öffne diese Seite in <strong>Safari</strong>','Tippe unten auf das <strong>Teilen-Symbol</strong> (□↑)','Wähle <strong>„Zum Home-Bildschirm“</strong> und bestätige mit <strong>„Hinzufügen“</strong>']; }
+    else if(android){ t='So installierst du die App auf deinem Android-Gerät'; steps=deferred?['Tippe auf <strong>„Jetzt installieren“</strong> und bestätige']:['Tippe oben rechts auf das <strong>Menü</strong> (⋮)','Wähle <strong>„App installieren“</strong> oder <strong>„Zum Startbildschirm hinzufügen“</strong>','Alternativ: die <strong>APK</strong> weiter unten laden – sie ändert auch das Symbol mit deiner Akzentfarbe']; }
+    else { t='So installierst du die App am Computer'; steps=deferred?['Klicke auf <strong>„Jetzt installieren“</strong>']:['Klicke in der Adressleiste auf das <strong>Installieren-Symbol</strong> (Chrome, Edge) oder im Menü auf <strong>„App installieren“</strong>','Auf dem Handy: QR-Code unten scannen']; }
+    if(deferred&&!standalone()) btn='<button class="btn btn-gold" onclick="INSTALL.prompt()">Jetzt installieren</button>';
+    el.innerHTML='<div class="m-card"><div class="m-eyebrow">Für dein Gerät</div><div class="m-t1" style="margin:4px 0 8px">'+t+'</div>'
+      +(steps.length?'<ol class="ap-steps">'+steps.map(x=>'<li>'+x+'</li>').join('')+'</ol>':'')
+      +'<div class="ap-act">'+btn+'<button class="btn btn-ghost" onclick="APPSHARE.open()">QR-Code zum Teilen</button></div></div>';
+  }
+  async function prompt(){ if(!deferred) return; deferred.prompt(); try{ await deferred.userChoice; }catch(e){} deferred=null; render(); }
+  return {render,prompt};
+})();
+
 /* ── Farbschema: Dunkel / Hell / System ─────────────────────────────────── */
 const THEME=(function(){
   const KEY='bvi_theme', MODES=['dark','light','system'];
@@ -5115,10 +5191,10 @@ const ACCENT=(function(){
     try{ BVIAndroid.setIcon(best[2]); }catch(e){}
   }
   function render(){
-    const el=document.getElementById('m-accent'); if(!el) return;
     const cur=get(), custom=!PRESETS.some(p=>p[0]===cur);
-    el.innerHTML=PRESETS.map(([c,n])=>`<button class="m-sw" role="radio" aria-checked="${c===cur}" aria-label="${n}" style="background:${c}" onclick="ACCENT.set('${c}')"></button>`).join('')
+    const html=PRESETS.map(([c,n])=>`<button class="m-sw" role="radio" aria-checked="${c===cur}" aria-label="${n}" style="background:${c}" onclick="ACCENT.set('${c}')"></button>`).join('')
       +`<label class="m-sw m-sw-wheel" role="radio" aria-checked="${custom}" aria-label="Eigene Farbe wählen">${custom?`<i style="background:${cur}"></i>`:''}<input type="color" value="${cur.toLowerCase()}" oninput="ACCENT.preview(this.value)" onchange="ACCENT.set(this.value)"></label>`;
+    document.querySelectorAll('#m-accent,.ob-accent').forEach(el=>{ el.innerHTML=html; });
   }
   return {
     init(){ const c=get(); apply(c); syncAppIcon(c); },
@@ -5462,6 +5538,7 @@ const SHELL=(function(){
   function cardsToday(){
     try{ const o=JSON.parse(localStorage.getItem('bvi_cards_day')||'{}'); return o.d===dayKey()?(o.n||0):0; }catch(e){ return 0; }
   }
+  function syncCardGoal(){ document.querySelectorAll('#m-cardgoal-val,.ob-cardval').forEach(e=>{ e.textContent=cardGoal(); }); }
   function tabNumOn(){ try{ return localStorage.getItem('bvi_tabnum')!=='0'; }catch(e){ return true; } }
   function renderCardGoal(){
     const el=document.getElementById('m-fc-goal'); if(!el) return;
@@ -5703,7 +5780,7 @@ const SHELL=(function(){
     stepCards(d){
       const g=Math.min(200,Math.max(5,cardGoal()+d*5));
       try{ localStorage.setItem('bvi_cardgoal',String(g)); }catch(e){}
-      const e=document.getElementById('m-cardgoal-val'); if(e) e.textContent=g;
+      syncCardGoal();
       renderCardGoal(); updateBadges();
     },
     setTabNum(on){
@@ -5711,7 +5788,7 @@ const SHELL=(function(){
       updateBadges();
     },
     setRange(r){ chartRange=r==='month'?'month':'week'; renderHome(); },
-    cardDone, renderCardGoal,
+    cardDone, renderCardGoal, syncCardGoal,
     setExam(){
       const date=document.getElementById('m-exam-date')?.value, name=document.getElementById('m-exam-name')?.value||'';
       const o=examCfg(); if(/^\d{4}-\d{2}-\d{2}$/.test(date||'')) o.date=date;

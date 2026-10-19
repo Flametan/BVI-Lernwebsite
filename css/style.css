@@ -1775,3 +1775,25 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 .m-chart-u{font-size:.75rem;color:var(--m-dim);margin:-2px 0 4px;}
 .idf-item.idf-wtime{grid-template-columns:max-content minmax(0,1fr);}
 .sec-h,.page-title{overflow-wrap:anywhere;}
+
+/* ── Ersteinrichtung ─────────────────────────────────────────────────────── */
+.ob-setup{display:flex;flex-direction:column;gap:12px;width:100%;text-align:left;}
+.ob-set-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.9rem;color:var(--m-fg);}
+.ob-set-row .m-swatches{padding:0;margin:0;}
+.ob-steps{min-height:0;}
+
+/* ── App teilen, Installationshilfe ──────────────────────────────────────── */
+#share-ov{position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.7);display:grid;place-items:center;padding:16px;}
+#share-ov[hidden]{display:none;}
+.sh-card{position:relative;background:var(--m-card);color:var(--m-fg);border-radius:22px;padding:24px 22px 20px;width:min(360px,100%);text-align:center;display:flex;flex-direction:column;gap:14px;}
+.sh-x{position:absolute;top:8px;right:12px;width:36px;height:36px;border-radius:50%;background:var(--m-raised);color:var(--m-fg);font-size:1.4rem;line-height:1;}
+.sh-t{font-weight:700;font-size:1.05rem;padding:0 28px;}
+.sh-qr{background:#fff;border-radius:14px;padding:10px;width:min(260px,100%);margin:0 auto;}
+.sh-qr svg{display:block;width:100%;height:auto;}
+.sh-u{font-size:.82rem;color:var(--m-muted);word-break:break-all;}
+.sh-b{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.app-device{margin-bottom:1rem;}
+.ap-steps{margin:0 0 12px;padding-left:1.2rem;font-size:.9rem;line-height:1.7;color:var(--m-muted);}
+.ap-steps strong{color:var(--m-fg);}
+.ap-act{display:flex;gap:8px;flex-wrap:wrap;}
+#apk-chromium-warn{display:none!important;}
