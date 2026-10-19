@@ -1173,6 +1173,12 @@ const PROGRESS = (function(){
 
   let _cardCache = null;
 
+  // Sammelkacheln: Haken, sobald alle enthaltenen Themen besucht wurden
+  const HUBS = {
+    'v-feuak-bp-hub':['v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp'],
+    'v-feuak-analyse':['v-feuak-stakeholder','v-feuak-risikoanalyse']
+  };
+
   function updateUI(){
     const visited = load();
     const allLeafs = Object.values(GROUPS).flat();
@@ -1186,7 +1192,8 @@ const PROGRESS = (function(){
       if(!m) return;
       const vid = m[1];
       let chk = card.querySelector('.tc-check');
-      if(visited[vid]){
+      const hub = HUBS[vid];
+      if(hub ? hub.every(v=>visited[v]) : visited[vid]){
         if(!chk){ chk = document.createElement('span'); chk.className='tc-check'; chk.textContent='✓'; card.style.position='relative'; card.appendChild(chk); }
       } else { if(chk) chk.remove(); }
     });
