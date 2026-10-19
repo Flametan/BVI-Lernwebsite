@@ -2052,3 +2052,7 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .wk-chips{display:flex;gap:6px;flex-wrap:wrap;}
 .wk-chip{background:var(--m-raised);border-radius:14px;padding:4px 10px;font-size:.78rem;color:var(--m-muted);}
 .wk-chip b{color:var(--m-fg);}
+
+/* ── Suche: Gruppen und ähnliche Treffer ─────────────────────────────────── */
+.sr-group{padding:10px 18px 4px;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:var(--m-muted);background:var(--b-1a1a1a);position:sticky;top:0;}
+.sr-fz{font-style:normal;font-size:.62rem;color:var(--m-muted);background:var(--m-raised);border-radius:8px;padding:1px 6px;margin-left:4px;vertical-align:middle;}
