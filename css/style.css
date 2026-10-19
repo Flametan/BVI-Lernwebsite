@@ -1954,3 +1954,4 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 /* ── Dezenter Farbverlauf an besonderen Stellen ──────────────────────────── */
 .m-count,.m-fc-goal.done,.idf-item.idf-now{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
 .idf-item.idf-now{border-radius:12px;padding:8px 10px;margin:-8px -10px;}
+.m-list.m-donate{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}

@@ -5764,7 +5764,7 @@ const SHELL=(function(){
   function plot(vals,labels,cur,top,secs){
     return `<div class="m-plot${vals.length>8?' many':''}" role="group" aria-label="Lernzeit je ${vals.length>8?'Monat':'Tag'}, antippen für die Zeit">${vals.map((v,i)=>{
       const h=v>0?Math.max(4,v/top*100):0, pos=i===0?' first':i===vals.length-1?' last':'';
-      return `<button type="button" class="m-pc" onclick="SHELL.pick(this)" aria-label="${labels[i]}: ${dur(secs[i])}"><span class="m-tip${pos}" style="bottom:calc(${h}% + 22px)">${labels[i]} · ${dur(secs[i])}</span><i class="m-pb${i===cur?' cur':v>0?' dim':' zero'}" style="height:${h}%"></i><span class="m-pl${i===cur?' cur':''}">${labels[i]}</span></button>`;}).join('')}</div>`;
+      return `<button type="button" class="m-pc" onclick="SHELL.pick(this)" aria-label="${labels[i]}: ${dur(secs[i])}"><span class="m-tip${pos}" style="bottom:calc(${h}% + 22px)">${dur(secs[i])}</span><i class="m-pb${i===cur?' cur':v>0?' dim':' zero'}" style="height:${h}%"></i><span class="m-pl${i===cur?' cur':''}">${labels[i]}</span></button>`;}).join('')}</div>`;
   }
   function weekPlot(){
     const w=USAGE.week(), today=(new Date().getDay()+6)%7;
