@@ -1685,7 +1685,7 @@ const FC = (function(){
       } else if(df){
         const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df));
         const knownCnt=cats.filter(c=>known[c.id]).length;
-        b.classList.toggle('active',!allSel&&!isPruefung&&!isStarred&&activeFilters.has(df));
+        b.classList.toggle('active',!allSel&&!isStarred&&activeFilters.has(df));
         b.innerHTML=`<b>${base}</b><small>${knownCnt}/${cats.length}</small>`;
       }
     });
@@ -5136,7 +5136,7 @@ const SHELL=(function(){
       ['v-vak-fallbearbeitung','Fallbearbeitung','9-Punkte-Schema mit sechs Übungsfällen','pen',true],
       ['v-vak-klausurhinweise','Klausurhinweise','Prüfungsrelevante Themen und Definitionen','doc'],
       ['v-vak-klausurvorbereitung','Klausurvorbereitung VAk','Alle VAk-Materialien auf einen Blick','target']]],
-    ['Training',[
+    ['Heyrothsberge',[
       ['v-simulator','Führungsdienstsimulator','8 Szenarien mit verzweigten Entscheidungen','sim',true]]]
   ];
   const ICON={
