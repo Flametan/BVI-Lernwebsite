@@ -2695,7 +2695,7 @@ const CUSTOM=(function(){
 })();
 
 /* ======================================================================
-   WEAK – „Das kann ich noch nicht“: schwere Karten und falsche Quizfragen
+   WEAK – schwere Karten im Überblick
 ====================================================================== */
 const WEAK=(function(){
   let box=null;
@@ -2708,19 +2708,17 @@ const WEAK=(function(){
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
   }
   function render(){
-    const n=FC.weakCount(), by=FC.weakByModule(), q=QUIZ.wrongCount();
+    const n=FC.weakCount(), by=FC.weakByModule();
     const chips=Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<span class="wk-chip">${esc(k)} <b>${v}</b></span>`).join('');
     box.innerHTML=`<div class="cu-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t" style="text-align:left;padding-right:36px">Das kann ich noch nicht</div>
       <div class="wk-sec"><div class="wk-h">Lernkarten</div>${n?`<div class="wk-n"><b>${n}</b> ${n===1?'Karte':'Karten'} mit „schwer“ oder „nicht gewusst“</div><div class="wk-chips">${chips}</div><button class="btn btn-gold" onclick="WEAK.cards()">Diese Karten üben</button>`:'<div class="wk-n m">Keine schweren Karten. Gut so!</div>'}</div>
-      <div class="wk-sec"><div class="wk-h">Altklausur-Quiz VAk</div>${q?`<div class="wk-n"><b>${q}</b> ${q===1?'Frage':'Fragen'} zuletzt falsch beantwortet</div><button class="btn btn-gold" onclick="WEAK.quiz()">Falsche Fragen üben</button>`:'<div class="wk-n m">Keine falsch beantworteten Fragen.</div>'}</div>
       <div class="m-t2">Eine Karte verschwindet aus der Liste, sobald du sie als „gewusst“ beantwortest.</div></div>`;
   }
   function open(){ if(!box) build(); render(); box.hidden=false; box.querySelector('.sh-x').focus({preventScroll:true}); }
   function close(){ if(box) box.hidden=true; }
   return {
     open,close,
-    cards(){ close(); NAV.tab('v-flashcards','Lernkarten'); FC.showWeak(); },
-    quiz(){ close(); NAV.go('v-vak-altklausur','Altklausur-Quiz'); QUIZ.setFilter('wrong'); }
+    cards(){ close(); NAV.tab('v-flashcards','Lernkarten'); FC.showWeak(); }
   };
 })();
 
@@ -3106,7 +3104,6 @@ const QUIZ=(function(){
     },
     back(){if(_cur>0){_cur--;renderLearn();}},
     dueCount,
-    wrongCount(){loadMastery();return Object.values(_masteryMap).filter(v=>v==='err').length;},
     reshuffle(){buildOrder();renderLearn();},
     openMastery(){
       renderMastery();renderMasteryCats();
@@ -3529,7 +3526,7 @@ const CHANGELOG=(function(){
       'Ersteinrichtung beim ersten Start (Farbschema, Akzentfarbe, Kartenziel); Installationshilfe je Gerät und QR-Code zum Teilen der App',
       'Lernkarten: eigene Karten anlegen, Filter „Schwach“ für Karten, die schwer waren oder nicht saßen',
       'Klausur-Timer (30 bis 90 Minuten) auf den Übungsklausuren; Notizen zu Stundenplan-Einträgen; Fehler melden per E-Mail oder GitHub',
-      'Suche findet auch bei Tippfehlern und fehlenden Umlauten, Treffer in Gruppen (Seiten, Lernkarten, Notizen); „Das kann ich noch nicht“ sammelt schwere Karten und falsche Quizfragen',
+      'Suche findet auch bei Tippfehlern und fehlenden Umlauten, Treffer in Gruppen (Seiten, Lernkarten, Notizen); eine Übersicht sammelt die schweren Lernkarten',
       'Schriften liegen jetzt in der App (kein Google-Aufruf mehr), Datenschutz ergänzt, rote Texte im dunklen Design besser lesbar',
       'Android-App: Erinnerung als echte Benachrichtigung, Links öffnen außerhalb der App'
     ]},
