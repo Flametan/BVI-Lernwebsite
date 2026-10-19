@@ -2312,34 +2312,30 @@ const ABK = (function(){
   return {
     render(){
       if(rendered) return;
+      const cards = document.getElementById('abk-cards');
+      if(!cards) return;
       rendered = true;
-      const body = document.getElementById('abk-body');
-      if(!body) return;
       const sections = [...new Set(DATA.map(d=>d.s))];
-      body.innerHTML = sections.map(sec=>{
+      cards.innerHTML = sections.map(sec=>{
         const rows = DATA.filter(d=>d.s===sec).sort((a,b)=>a.a.localeCompare(b.a));
-        return `<tr class="abk-sec-hdr" data-sec="${sec}"><td colspan="3">${sec}</td></tr>`
-          + rows.map(r=>`<tr class="abk-row" data-sec="${sec}" data-search="${(r.a+' '+r.f+' '+r.d).toLowerCase()}">
-            <td class="abk-abbr">${r.a}</td>
-            <td class="abk-full">${r.f}</td>
-            <td class="abk-desc">${r.d}</td>
-          </tr>`).join('');
+        return `<div class="abk-c-grp" data-sec="${sec}"><div class="abk-c-sec">${sec}</div><div class="abk-c-list">`
+          + rows.map(r=>`<div class="abk-card" data-sec="${sec}" data-search="${(r.a+' '+r.f+' '+r.d).toLowerCase()}" onclick="this.classList.toggle('open')"><div class="abk-c-h"><span class="abk-c-ab">${r.a}</span><span class="abk-c-fu">${r.f}</span><span class="abk-c-ch">›</span></div><div class="abk-c-d">${r.d}</div></div>`).join('')
+          + '</div></div>';
       }).join('');
     },
     filter(q){
       const term = q.trim().toLowerCase();
       const words = term ? term.split(/\s+/).filter(Boolean) : [];
-      const rows = document.querySelectorAll('#abk-body .abk-row');
+      const crd = document.querySelectorAll('#abk-cards .abk-card');
       let vis = 0;
-      rows.forEach(r=>{ const show = !words.length||words.every(w=>r.dataset.search.includes(w)); r.classList.toggle('hidden',!show); if(show) vis++; });
-      // Hide section headers if all their rows are hidden
-      document.querySelectorAll('#abk-body .abk-sec-hdr').forEach(h=>{
-        const sec=h.dataset.sec;
-        const hasVis=[...rows].some(r=>r.dataset.sec===sec&&!r.classList.contains('hidden'));
-        h.classList.toggle('hidden',!hasVis);
+      crd.forEach(c=>{ const show = !words.length||words.every(w=>c.dataset.search.includes(w)); c.classList.toggle('hidden',!show); if(show) vis++; });
+      document.querySelectorAll('#abk-cards .abk-c-grp').forEach(g=>{
+        g.classList.toggle('hidden',![...crd].some(c=>c.dataset.sec===g.dataset.sec&&!c.classList.contains('hidden')));
       });
+      const none = document.getElementById('abk-none'); if(none) none.classList.toggle('hidden',vis>0);
+      const clr = document.getElementById('abk-clear'); if(clr) clr.classList.toggle('hidden',!term);
       const cnt = document.getElementById('abk-count');
-      if(cnt) cnt.textContent = term ? `${vis} Treffer` : `${rows.length} Einträge`;
+      if(cnt) cnt.textContent = term ? `${vis} Treffer` : `${crd.length} Einträge`;
     },
     init(){ this.render(); document.getElementById('abk-search').value=''; this.filter(''); }
   };
@@ -3576,6 +3572,7 @@ const CHANGELOG=(function(){
       'Stundenplan: IdF Modul 3.5 mit Uhrzeiten, Räumen, Hinweisen, Mittagspause und Telefonnummern; Übernahme in den Kalender mit Erinnerung',
       'Prüfung: alle Klausur-Werkzeuge an einem Ort, mit Countdown zur nächsten Klausur; Altklausur-Quiz, Klausurfragen und Fallbearbeitung im neuen Design',
       'Prüfung: neuer Abschnitt „Laufbahnprüfung“ mit den schriftlichen Klausuren Dez 2023 und Juni 2026 samt Musterlösungen (wie Klausur 08/2026) und Abschnitt „IdF Münster“ mit dem Altklausur-Quiz IdF (Vorbeugender Brandschutz und Stabsarbeit, Mehrfachauswahl, Lern- und Prüfungsmodus, Wiederholung nach Plan); Quelle und Unsicherheit stehen bei jeder Antwort; Prüfung-Tab als gleichmäßiges Raster (3 Spalten Desktop, 2 Tablet, 1 Handy) und Countdown-Karte führt zum passenden Quiz bzw. zur Klausur',
+      'Abkürzungen als Karten zum Aufklappen (Kürzel und Name, Erläuterung per Tipp; auf Tablet 2, auf Desktop 3 Spalten) mit fest stehender Suchleiste, Kategorien-Überschriften und „Suche leeren“',
       'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
       'Lernseiten: Text markieren, Merken, Notiz und Vorlesen direkt auf der Seite; Bilder und Diagramme per Tipp groß öffnen und zoomen; Inhaltsverzeichnis am Rand auf großen Bildschirmen; Fehler melden',
       'Einstellungen: Suche, Notizen, Lesezeichen, Pomodoro, Lernstatistik, Abkürzungen, Sicherung erstellen und einspielen, Klausurtermin einstellbar, freiwillige Unterstützung per PayPal',
