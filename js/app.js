@@ -1393,6 +1393,8 @@ const TOAST = (function(){
   function container(){ if(!wrap){ wrap=document.createElement('div'); wrap.className='toast-wrap'; document.body.appendChild(wrap); } return wrap; }
   return {
     show(msg, {type='',undo=null,duration=4200}={}){
+      // gleiche Meldung nicht doppelt stapeln
+      if([...container().querySelectorAll('.toast:not(.toast-out) .toast-msg')].some(e=>e.textContent===String(msg).replace(/<[^>]*>/g,''))) return;
       const t=document.createElement('div');
       t.className='toast'+(type?' toast-'+type:'');
       t.innerHTML=`<span class="toast-msg">${msg}</span>${undo?'<button class="toast-undo">Rückgängig</button>':''}`;
@@ -2328,10 +2330,18 @@ const NOTIF = (function(){
       }
       if(!('Notification' in window)){ TOAST.show('Benachrichtigungen nicht unterstützt'); return false; }
       if(on){
-        const r=await Notification.requestPermission();
-        if(r!=='granted'){ TOAST.show('Benachrichtigungen wurden abgelehnt'); return false; }
+        if(Notification.permission==='denied'){
+          TOAST.show('Benachrichtigungen sind in deinem Browser blockiert. Erlaube sie über das Schloss-Symbol neben der Adresse (Website-Einstellungen) und schalte dann erneut ein.',{duration:9000});
+          return false;
+        }
+        let r='denied';
+        try{ r=await Notification.requestPermission(); }catch(e){}
+        if(r!=='granted'){
+          TOAST.show(r==='denied'?'Benachrichtigungen wurden abgelehnt. Du kannst sie über das Schloss-Symbol neben der Adresse wieder erlauben.':'Du hast die Abfrage geschlossen – bitte erlaube Benachrichtigungen, um erinnert zu werden.',{duration:8000});
+          return false;
+        }
         savePrefs({...prefs(),enabled:true});
-        TOAST.show('Benachrichtigungen aktiviert',{type:'ok'}); return true;
+        TOAST.show('Erinnerung aktiviert. Im Browser erscheint sie, wenn die App geöffnet ist; die Android-App erinnert auch bei geschlossener App.',{type:'ok',duration:8000}); return true;
       } else { savePrefs({...prefs(),enabled:false}); return false; }
     },
     // Antwort der Android-App auf die Berechtigungsabfrage
