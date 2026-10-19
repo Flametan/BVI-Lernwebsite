@@ -4,9 +4,8 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>B VI – Lernen für den höheren Dienst</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link rel="preload" href="fonts/roboto-400-latin.woff2" as="font" type="font/woff2" crossorigin/>
+  <link rel="stylesheet" href="css/fonts.css"/>
   <link rel="stylesheet" href="css/style.css"/>
   <script src="js/version.js"></script>
   <link rel="manifest" href="manifest.json"/>
@@ -352,8 +351,27 @@
         <li>Einstellungen (Schriftgröße, Benachrichtigungen)</li>
         <li>Lernstreak</li>
         <li>Nutzungszeit in der App (Minuten pro Tag)</li>
+        <li>Eigene Lernkarten, Notizen zu Stundenplan-Einträgen, Kartenziel und Karten pro Tag</li>
+        <li>Farbschema, Akzentfarbe, Timer-Einstellung und Zeitpunkt der Erinnerung</li>
       </ul>
       <p style="margin-top:.75rem">Diese Daten können jederzeit über die Browser-Einstellungen (Websitedaten löschen) entfernt werden.</p>
+    </div>
+
+    <h2 class="sec-h" style="margin-top:2rem">Schriften</h2>
+    <div class="glass-card" style="padding:1.25rem;font-size:.88rem;color:var(--c-slate);line-height:1.7">
+      <p>Die verwendeten Schriften (Roboto, DM Mono) liegen <strong style="color:var(--c-slate-l)">auf dem eigenen Server</strong> dieser Website. Es werden keine Schriften von Google oder anderen Anbietern nachgeladen.</p>
+    </div>
+
+    <h2 class="sec-h" style="margin-top:2rem">Verweise auf externe Seiten</h2>
+    <div class="glass-card" style="padding:1.25rem;font-size:.88rem;color:var(--c-slate);line-height:1.7">
+      <p>Die App enthält einige Verweise, die <strong style="color:var(--c-slate-l)">erst nach Ihrem Tipp</strong> eine fremde Seite öffnen. Erst dann werden Daten (z. B. Ihre IP-Adresse) an den jeweiligen Anbieter übertragen; dessen Datenschutzerklärung gilt:</p>
+      <ul style="margin:.75rem 0 0 1.2rem;line-height:2">
+        <li><strong style="color:var(--c-slate-l)">PayPal</strong> („Freiwillige Spende“ in den Einstellungen, paypal.me)</li>
+        <li><strong style="color:var(--c-slate-l)">GitHub</strong> (Fehler melden per GitHub, Download der Android-App)</li>
+        <li><strong style="color:var(--c-slate-l)">Lehrgangs-Cloud</strong> (Link auf der Startseite zum Dateiserver des Lehrgangs)</li>
+        <li><strong style="color:var(--c-slate-l)">E-Mail-Programm</strong> (Fehler melden per E-Mail, eigene Lernkarten senden): Die Nachricht senden Sie selbst, die App überträgt nichts.</li>
+      </ul>
+      <p style="margin-top:.75rem">Der QR-Code zum Teilen der App wird auf Ihrem Gerät erzeugt. Dabei wird nichts an Dritte gesendet.</p>
     </div>
 
     <h2 class="sec-h" style="margin-top:2rem">Offline-Cache (Service Worker)</h2>
@@ -11706,7 +11724,7 @@
     <p class="page-eyebrow">Wiederholung nach Lernstand</p>
     <h1 class="page-title">Lernkarten</h1>
     <p class="page-lead">Tippe auf eine Karte, um die Antwort aufzudecken. Dein Lernstand wird auf diesem Gerät gespeichert.</p>
-    <button class="fc-own-add" onclick="CUSTOM.open()">＋ Eigene Karte</button>
+    <div class="fc-hero-btns"><button class="fc-own-add" onclick="CUSTOM.open()">＋ Eigene Karte</button><button class="fc-own-add" onclick="WEAK.open()">Nochmal üben</button></div>
   </div></div>
   <div class="fc-filter-row" role="group" aria-label="Lernkarten filtern">
     <button class="fc-f-btn fc-sp fc-star-filter-btn hidden" data-filter="starred" data-label="Markiert" onclick="FC.setFilter('starred')">Markiert</button>

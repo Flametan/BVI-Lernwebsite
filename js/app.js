@@ -1289,23 +1289,79 @@ const SEARCH = (function(){
     return(start>0?'…':'')+text.slice(start,end)+(end<text.length?'…':'');
   }
 
+  // Umlaute und Akzente vereinheitlichen, damit „Ubung“ auch „Übung“ findet
+  const norm=t=>String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ß/g,'ss');
+  function lev(a,b,max){
+    if(Math.abs(a.length-b.length)>max) return max+1;
+    let prev=Array.from({length:b.length+1},(_,i)=>i);
+    for(let i=1;i<=a.length;i++){
+      const cur=[i]; let rowMin=i;
+      for(let j=1;j<=b.length;j++){
+        cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+        if(cur[j]<rowMin) rowMin=cur[j];
+      }
+      if(rowMin>max) return max+1;
+      prev=cur;
+    }
+    return prev[b.length];
+  }
+  // Tippfehler: ab 5 Buchstaben ein Fehler, ab 8 Buchstaben zwei Fehler erlaubt
+  const wordsOf=t=>norm(t).split(/[^a-z0-9]+/).filter(x=>x.length>=4);
+  function fuzzyIn(ws,t){
+    if(t.length<5) return false;
+    const max=t.length>=8?2:1;
+    return ws.some(w=>lev(w,t,max)<=max);
+  }
+  function fuzzyHas(e,t){ return fuzzyIn(e.w||(e.w=wordsOf(e.title+' '+e.snippet)),t); }
+  function noteEntries(){
+    const out=[];
+    try{
+      for(let i=0;i<localStorage.length;i++){
+        const k=localStorage.key(i);
+        if(!k||!k.startsWith('bvi_note_')) continue;
+        const text=(localStorage.getItem(k)||'').trim(); if(!text) continue;
+        const vid=k.slice(9), lbl=VIEW_LABELS[vid]||vid;
+        out.push({vid,lbl:'Notiz · '+lbl,title:text.split('\n')[0].slice(0,90),snippet:text.slice(0,400),boost:3,isNote:true});
+      }
+    }catch(e){}
+    return out;
+  }
+
   function doSearch(q){
     if(!q || q.length < 2) return [];
-    const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
-    let scored = idx.map(e => {
-      const hay = (e.title+' '+e.snippet+' '+e.lbl).toLowerCase();
+    const terms = norm(q).split(/\s+/).filter(Boolean);
+    const all = idx.concat(noteEntries());
+    const hayOf=e=>e.h||(e.isNote?norm(e.title+' '+e.snippet+' '+e.lbl):(e.h=norm(e.title+' '+e.snippet+' '+e.lbl)));
+    let scored = all.map(e => {
+      const hay = hayOf(e);
       const score = terms.reduce((s,t) => s + (hay.includes(t) ? e.boost : 0), 0);
       return {...e, score};
     }).filter(e => e.score > 0);
+    if(scored.length<4 && terms.some(t=>t.length>=5)){
+      const have=new Set(scored.map(e=>e.vid+'|'+e.title));
+      all.forEach(e=>{
+        if(have.has(e.vid+'|'+e.title)) return;
+        const hay=hayOf(e);
+        const tw=wordsOf(e.title);
+        const sc=terms.reduce((s,t)=>s+(hay.includes(t)?e.boost:(fuzzyHas(e,t)?e.boost*.6+(fuzzyIn(tw,t)?2:0):0)),0);
+        if(sc>0) scored.push({...e,score:sc,fuzzy:true});
+      });
+    }
     if(_filter !== 'all'){
       if(_filter==='karten') scored=scored.filter(e=>e.isCard);
-      else scored=scored.filter(e=>!e.isCard&&(
+      else scored=scored.filter(e=>!e.isCard&&!e.isNote&&(
         e.lbl.toLowerCase().split('·')[0].trim()===_filter.toLowerCase()
         ||e.lbl.toLowerCase().split('·')[0].trim().startsWith(_filter.toLowerCase())));
     }
     scored.sort((a,b) => b.score-a.score);
     const seen = new Set();
-    return scored.filter(e => { const k=e.vid+'|'+e.title; if(seen.has(k)) return false; seen.add(k); return true; }).slice(0,12);
+    const uniq = scored.filter(e => { const k=e.vid+'|'+e.title; if(seen.has(k)) return false; seen.add(k); return true; });
+    const pick=(f,n)=>uniq.filter(f).slice(0,n);
+    return [
+      ...pick(e=>e.isNote,4).map(e=>({...e,grp:'Notizen'})),
+      ...pick(e=>!e.isCard&&!e.isNote,8).map(e=>({...e,grp:'Seiten und Themen'})),
+      ...pick(e=>e.isCard,6).map(e=>({...e,grp:'Lernkarten'}))
+    ];
   }
 
   function renderBookmarks(){
@@ -1332,7 +1388,11 @@ const SEARCH = (function(){
     if(!q){ renderBookmarks(); results=[]; focusIdx=-1; return; }
     results = doSearch(q);
     if(!results.length){ el.innerHTML='<div class="search-empty">Keine Treffer für <strong>'+xss(q)+'</strong></div>'; focusIdx=-1; return; }
-    el.innerHTML = results.map((r,i)=>`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${r.lbl}</span><div><div class="sr-title">${hl(xss(r.title),q)}</div>${r.snippet?`<div class="sr-snippet">${hl(xss(contextSnippet(r.snippet,q)),q)}</div>`:''}</div></div>`).join('');
+    let lastGrp='';
+    el.innerHTML = results.map((r,i)=>{
+      const head=r.grp!==lastGrp?`<div class="sr-group">${r.grp}</div>`:''; lastGrp=r.grp;
+      return head+`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${r.lbl}</span><div><div class="sr-title">${hl(xss(r.title),q)}${r.fuzzy?' <i class="sr-fz">ähnlich</i>':''}</div>${r.snippet?`<div class="sr-snippet">${hl(xss(contextSnippet(r.snippet,q)),q)}</div>`:''}</div></div>`;
+    }).join('');
     focusIdx = -1;
   }
 
@@ -1964,6 +2024,13 @@ const FC = (function(){
       if(btn) btn.classList.toggle('starred',starred);
       updateFilterButtons();
     },
+    showWeak(){ activeFilters=new Set(['weak']); updateFilterButtons(); this.start(); },
+    weakCount(){ return fcLoadWeak().size; },
+    weakByModule(){
+      const w=fcLoadWeak(), m={};
+      FLASHCARD_DATA.forEach(c=>{ if(w.has(c.id)){ const k=c.cat.split(' · ')[0]; m[k]=(m[k]||0)+1; } });
+      return m;
+    },
     starCurrent(){
       const c=_reviewPos>=0?_seen[_reviewPos]:deck[curIdx];
       if(!c) return;
@@ -2535,20 +2602,6 @@ const CHECKS=(function(){
 })();
 
 /* ======================================================================
-   SHARE – Direktlink kopieren
-====================================================================== */
-const SHARE=(function(){
-  return {
-    copy(){
-      const url=location.href;
-      navigator.clipboard.writeText(url)
-        .then(()=>TOAST.show('Link kopiert',{type:'ok'}))
-        .catch(()=>TOAST.show('Kopieren nicht unterstützt'));
-    }
-  };
-})();
-
-/* ======================================================================
    CUSTOM – Eigene Lernkarten
 ====================================================================== */
 const CUSTOM=(function(){
@@ -2639,6 +2692,34 @@ const CUSTOM=(function(){
   function open(){ if(!box) build(); list(); box.hidden=false; box.querySelector('#cu-q').focus({preventScroll:true}); }
   function close(){ if(box) box.hidden=true; }
   return {open,close};
+})();
+
+/* ======================================================================
+   WEAK – schwere Karten im Überblick
+====================================================================== */
+const WEAK=(function(){
+  let box=null;
+  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function build(){
+    box=document.createElement('div'); box.id='wk-ov'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Nochmal üben');
+    document.body.appendChild(box);
+    box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
+  }
+  function render(){
+    const n=FC.weakCount(), by=FC.weakByModule();
+    const chips=Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<span class="wk-chip">${esc(k)} <b>${v}</b></span>`).join('');
+    box.innerHTML=`<div class="cu-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t" style="text-align:left;padding-right:36px">Nochmal üben</div>
+      <div class="wk-sec"><div class="wk-h">Lernkarten</div>${n?`<div class="wk-n"><b>${n}</b> ${n===1?'Karte':'Karten'} mit „schwer“ oder „nicht gewusst“</div><div class="wk-chips">${chips}</div><button class="btn btn-gold" onclick="WEAK.cards()">Diese Karten üben</button>`:'<div class="wk-n m">Keine schweren Karten. Gut so!</div>'}</div>
+      <div class="m-t2">Eine Karte verschwindet aus der Liste, sobald du sie als „gewusst“ beantwortest.</div></div>`;
+  }
+  function open(){ if(!box) build(); render(); box.hidden=false; box.querySelector('.sh-x').focus({preventScroll:true}); }
+  function close(){ if(box) box.hidden=true; }
+  return {
+    open,close,
+    cards(){ close(); NAV.tab('v-flashcards','Lernkarten'); FC.showWeak(); }
+  };
 })();
 
 /* ======================================================================
@@ -3445,6 +3526,8 @@ const CHANGELOG=(function(){
       'Ersteinrichtung beim ersten Start (Farbschema, Akzentfarbe, Kartenziel); Installationshilfe je Gerät und QR-Code zum Teilen der App',
       'Lernkarten: eigene Karten anlegen, Filter „Schwach“ für Karten, die schwer waren oder nicht saßen',
       'Klausur-Timer (30 bis 90 Minuten) auf den Übungsklausuren; Notizen zu Stundenplan-Einträgen; Fehler melden per E-Mail oder GitHub',
+      'Suche findet auch bei Tippfehlern und fehlenden Umlauten, Treffer in Gruppen (Seiten, Lernkarten, Notizen); eine Übersicht sammelt die schweren Lernkarten',
+      'Schriften liegen jetzt in der App (kein Google-Aufruf mehr), Datenschutz ergänzt, rote Texte im dunklen Design besser lesbar',
       'Android-App: Erinnerung als echte Benachrichtigung, Links öffnen außerhalb der App'
     ]},
     {v:'2.31.0',ts:'2026-10-18T00:00',items:[
