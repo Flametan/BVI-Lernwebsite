@@ -2563,6 +2563,44 @@ const CUSTOM=(function(){
     list(); refresh(); TOAST.show('Karte gespeichert',{type:'ok'});
     box.querySelector('#cu-q').focus();
   }
+  const plain=h=>String(h).replace(/<br\s*\/?>/g,'\n').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+  function exportCards(){
+    const a=load();
+    if(!a.length){ TOAST.show('Noch keine eigenen Karten zum Exportieren',{type:'info'}); return; }
+    const data={app:'bvi-lernwebsite',typ:'eigene-karten',version:APP_VERSION,exportiert:new Date().toISOString(),
+      karten:a.map(c=>({modul:c.cat.split(' · ')[0],frage:plain(c.q),antwort:plain(c.a)}))};
+    const d=new Date(), p2=n=>String(n).padStart(2,'0');
+    FILES.save('bvi-eigene-karten-'+d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())+'.json','application/json',JSON.stringify(data,null,1));
+  }
+  function mailCards(){
+    const a=load();
+    if(!a.length){ TOAST.show('Noch keine eigenen Karten zum Senden',{type:'info'}); return; }
+    const txt=a.map((c,i)=>(i+1)+'. ['+c.cat.split(' · ')[0]+']\nFrage: '+plain(c.q)+'\nAntwort: '+plain(c.a)).join('\n\n');
+    if(txt.length>1500){ exportCards(); TOAST.show('Zu viele Karten für eine Mail – die Datei wurde gespeichert, bitte anhängen',{type:'info'}); }
+    location.href='mailto:fabian.flemig@gmx.de?subject='+encodeURIComponent('B VI – Eigene Lernkarten')+'&body='+encodeURIComponent('Meine Lernkarten für die App:\n\n'+(txt.length>1500?'(Datei im Anhang)':txt));
+  }
+  function importCards(file){
+    if(!file) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const j=JSON.parse(r.result);
+        if(j.typ!=='eigene-karten'||!Array.isArray(j.karten)) throw new Error('format');
+        const have=new Set(load().map(c=>c.cat.split(' · ')[0]+'|'+plain(c.q).trim()));
+        const all=load(); let n=0;
+        j.karten.forEach(k=>{
+          const m=MODS.includes(k.modul)?k.modul:'GAL', q=String(k.frage||'').slice(0,500), a=String(k.antwort||'').slice(0,1500);
+          if(!q.trim()||!a.trim()||have.has(m+'|'+q.trim())) return;
+          have.add(m+'|'+q.trim());
+          const c={id:'own'+Date.now().toString(36)+n,cat:m+' · Eigene Karte',q:html(q),a:html(a)};
+          all.push(c); FLASHCARD_DATA.push({...c,own:true}); n++;
+        });
+        save(all); list(); refresh();
+        TOAST.show(n?n+' Karten importiert':'Keine neuen Karten gefunden',{type:n?'ok':'info'});
+      }catch(e){ TOAST.show('Datei nicht lesbar – bitte eine exportierte Kartendatei wählen',{type:'info'}); }
+    };
+    r.readAsText(file);
+  }
   function build(){
     box=document.createElement('div'); box.id='cu-ov'; box.hidden=true;
     box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Eigene Lernkarte');
@@ -2571,11 +2609,16 @@ const CUSTOM=(function(){
       +'<label>Frage<textarea id="cu-q" rows="3" maxlength="500"></textarea></label>'
       +'<label>Antwort<textarea id="cu-a" rows="4" maxlength="1500"></textarea></label>'
       +'<button class="btn btn-gold" id="cu-save">Karte speichern</button>'
-      +'<div class="cu-h">Meine Karten</div><div id="cu-list"></div></div>';
+      +'<div class="cu-h">Meine Karten</div><div id="cu-list"></div>'
+      +'<div class="cu-io"><button class="btn btn-ghost" id="cu-exp">Karten exportieren</button><button class="btn btn-ghost" id="cu-mail">Per E-Mail senden</button><label class="btn btn-ghost" for="cu-imp">Karten importieren</label><input type="file" id="cu-imp" accept=".json,application/json" hidden></div>'
+      +'<div class="m-t2">Exportierte Karten kannst du Fabian schicken, er nimmt sie für alle in die App auf.</div></div>';
     document.body.appendChild(box);
     box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
     box.querySelector('#cu-save').onclick=add;
+    box.querySelector('#cu-exp').onclick=exportCards;
+    box.querySelector('#cu-mail').onclick=mailCards;
+    box.querySelector('#cu-imp').onchange=e=>{ importCards(e.target.files[0]); e.target.value=''; };
   }
   function open(){ if(!box) build(); list(); box.hidden=false; box.querySelector('#cu-q').focus({preventScroll:true}); }
   function close(){ if(box) box.hidden=true; }
