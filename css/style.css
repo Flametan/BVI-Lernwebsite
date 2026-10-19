@@ -1955,3 +1955,25 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .m-count,.m-fc-goal.done,.idf-item.idf-now{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
 .idf-item.idf-now{border-radius:12px;padding:8px 10px;margin:-8px -10px;}
 .m-list.m-donate{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
+
+/* Handy: Startseite kompakter, damit die Ringe des 2. Ausbildungsjahrs ohne Scrollen sichtbar sind */
+@media(max-width:700px){
+  #m-home{padding-top:.9rem;gap:10px;}
+  .m-hello h1{font-size:1.6rem;}
+  .m-quip{font-size:.9rem;line-height:1.35;margin-top:4px;}
+  .m-date{font-size:.82rem;margin-top:2px;}
+  #m-home .m-hgrid{margin-top:0;gap:10px;}
+  #m-home .m-hl,#m-home .m-hr2{gap:10px;}
+  .m-cont2{padding:12px;}
+  .m-cont2-t{font-size:1.25rem;margin:2px 0 0;}
+  .m-cont2 .m-hring{width:54px;height:54px;}
+  .m-cont2-bot{margin-top:10px;}
+  .m-go2{height:32px;font-size:.85rem;}
+  .m-chart2{padding:12px;}
+  .m-tot{margin:6px 0 4px;}
+  .m-plot{--pl:48px;}
+  .m-chart-u{margin-top:3px;}
+  .m-hr{margin:8px 0;}
+  .m-rings{margin-top:6px;}
+  .m-ringbtn .m-hring{width:52px;height:52px;}
+}
