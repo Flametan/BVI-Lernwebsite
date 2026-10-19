@@ -28,6 +28,7 @@ const NAV = (function(){
     SHELL.onShow(id, isContentPage, stack);
     if(id==='v-plan') IDF_PLAN.render();
     if(id==='v-app') INSTALL.render();
+    ETIMER.mount(id);
     if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); SHELL.renderCardGoal(); }
     if(id==='v-home') SHELL.renderHome();
     if(id==='v-pruefung') SHELL.renderExam();
@@ -1146,6 +1147,9 @@ const FLASHCARD_DATA = [
 
 
 ];
+// Eigene Karten aus dem Speicher dazunehmen
+try{ JSON.parse(localStorage.getItem('bvi_fc_custom')||'[]').forEach(c=>{ if(c&&c.id&&c.q&&c.a) FLASHCARD_DATA.push({id:c.id,cat:c.cat,q:c.q,a:c.a,own:true}); }); }catch(e){}
+
 
 /* ======================================================================
    PROGRESS – Lernfortschritt in LocalStorage
@@ -1659,12 +1663,19 @@ const FC = (function(){
   function fcSave(d){ try{ localStorage.setItem('bvi_fc',JSON.stringify(d)); }catch{} }
   function fcLoadStars(){ try{ return new Set(JSON.parse(localStorage.getItem('bvi_fc_stars')||'[]')); }catch{ return new Set(); } }
   function fcSaveStars(s){ try{ localStorage.setItem('bvi_fc_stars',JSON.stringify([...s])); }catch{} }
+  function fcLoadWeak(){ try{ return new Set(JSON.parse(localStorage.getItem('bvi_fc_weak')||'[]')); }catch{ return new Set(); } }
+  function fcSaveWeak(s){ try{ localStorage.setItem('bvi_fc_weak',JSON.stringify([...s])); }catch{} }
   function fcToggleStar(id){ const s=fcLoadStars(); if(s.has(id)) s.delete(id); else s.add(id); fcSaveStars(s); return s.has(id); }
 
   function getDeck(){
     if(activeFilters.has('starred')){
       const stars=fcLoadStars();
       return shuffle(FLASHCARD_DATA.filter(c=>stars.has(c.id)));
+    }
+    if(activeFilters.has('own')) return shuffle(FLASHCARD_DATA.filter(c=>c.own));
+    if(activeFilters.has('weak')){
+      const weak=fcLoadWeak();
+      return shuffle(FLASHCARD_DATA.filter(c=>weak.has(c.id)));
     }
     const base = activeFilters.size===CATS.length ? [...FLASHCARD_DATA]
       : FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f)));
@@ -1674,7 +1685,11 @@ const FC = (function(){
   function updateFilterButtons(){
     const known=fcLoad();
     const stars=fcLoadStars();
-    const isStarred=activeFilters.has('starred');
+    const isStarred=activeFilters.has('starred')||activeFilters.has('weak')||activeFilters.has('own');
+    const isWeak=activeFilters.has('weak');
+    const isOwn=activeFilters.has('own');
+    const ownN=FLASHCARD_DATA.filter(c=>c.own).length;
+    const weakN=fcLoadWeak().size;
     const allSel=CATS.every(c=>activeFilters.has(c));
     const PRUEFUNG_CATS=['ibk','vak','feuak','idf'];
     const isPruefung=!isStarred&&PRUEFUNG_CATS.every(c=>activeFilters.has(c))&&activeFilters.size===PRUEFUNG_CATS.length;
@@ -1685,9 +1700,17 @@ const FC = (function(){
         b.classList.toggle('active',allSel&&!isPruefung&&!isStarred);
         b.innerHTML=`<b>${base}</b><small>${FLASHCARD_DATA.length}</small>`;
       } else if(df==='starred'){
-        b.classList.toggle('active',isStarred);
-        b.classList.toggle('hidden',stars.size===0&&!isStarred);
+        b.classList.toggle('active',activeFilters.has('starred'));
+        b.classList.toggle('hidden',stars.size===0&&!activeFilters.has('starred'));
         b.innerHTML=`<b>★ ${base}</b><small>${stars.size}</small>`;
+      } else if(df==='own'){
+        b.classList.toggle('active',isOwn);
+        b.classList.toggle('hidden',ownN===0&&!isOwn);
+        b.innerHTML=`<b>${base}</b><small>${ownN}</small>`;
+      } else if(df==='weak'){
+        b.classList.toggle('active',isWeak);
+        b.classList.toggle('hidden',weakN===0&&!isWeak);
+        b.innerHTML=`<b>${base}</b><small>${weakN}</small>`;
       } else if(df==='pruefung'){
         b.classList.toggle('active',isPruefung);
       } else if(df){
@@ -1896,18 +1919,23 @@ const FC = (function(){
         d[card.id]=sm2(d[card.id]||{},q); sess.known++;
         if(typeof STREAK!=='undefined') STREAK.record();
       }
+      const weak=fcLoadWeak(); if(q===2) weak.delete(card.id); else weak.add(card.id); fcSaveWeak(weak);
       fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide(); SHELL.updateBadges(); SHELL.cardDone();
     },
     setFilter(f){
       if(f==='starred'){
         activeFilters=activeFilters.has('starred')?new Set(CATS):new Set(['starred']);
+      } else if(f==='own'){
+        activeFilters=activeFilters.has('own')?new Set(CATS):new Set(['own']);
+      } else if(f==='weak'){
+        activeFilters=activeFilters.has('weak')?new Set(CATS):new Set(['weak']);
       } else if(f==='all'){
         activeFilters=new Set(CATS);
       } else if(f==='pruefung'){
         activeFilters=new Set(['ibk','vak','feuak','idf']);
         updateFilterButtons(); this.start(); return;
       } else {
-        activeFilters.delete('starred');
+        activeFilters.delete('starred'); activeFilters.delete('weak'); activeFilters.delete('own');
         if(activeFilters.size===CATS.length) activeFilters=new Set([f]);
         else if(activeFilters.has(f)){ activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(CATS); }
         else activeFilters.add(f);
@@ -2505,6 +2533,56 @@ const SHARE=(function(){
 })();
 
 /* ======================================================================
+   CUSTOM – Eigene Lernkarten
+====================================================================== */
+const CUSTOM=(function(){
+  const KEY='bvi_fc_custom', MODS=['GAL','SFS','HLFS','IBK','VAk','FeuAK','IdF'];
+  let box=null;
+  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const html=t=>esc(t.trim()).replace(/\n/g,'<br>');
+  const load=()=>{ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){ return []; } };
+  const save=a=>{ try{ localStorage.setItem(KEY,JSON.stringify(a)); }catch(e){} };
+  function refresh(){ if(typeof FC!=='undefined') FC.syncFilters(); SHELL.renderFcSide(); }
+  function list(){
+    const el=box.querySelector('#cu-list'), a=load();
+    el.innerHTML=a.length?a.map(c=>`<div class="cu-item"><div><b>${esc(c.cat.split(' · ')[0])}</b> ${c.q}</div><button aria-label="Karte löschen" data-id="${esc(c.id)}">Löschen</button></div>`).join(''):'<div class="cu-empty">Noch keine eigenen Karten.</div>';
+    el.querySelectorAll('button').forEach(b=>b.onclick=()=>remove(b.dataset.id));
+  }
+  function remove(id){
+    save(load().filter(c=>c.id!==id));
+    const i=FLASHCARD_DATA.findIndex(c=>c.id===id); if(i>=0) FLASHCARD_DATA.splice(i,1);
+    list(); refresh();
+  }
+  function add(){
+    const q=box.querySelector('#cu-q').value, a=box.querySelector('#cu-a').value, m=box.querySelector('#cu-m').value;
+    if(!q.trim()||!a.trim()){ TOAST.show('Bitte Frage und Antwort eintragen',{type:'info'}); return; }
+    const c={id:'own'+Date.now().toString(36),cat:m+' · Eigene Karte',q:html(q),a:html(a)};
+    const all=load(); all.push(c); save(all);
+    FLASHCARD_DATA.push({...c,own:true});
+    box.querySelector('#cu-q').value=''; box.querySelector('#cu-a').value='';
+    list(); refresh(); TOAST.show('Karte gespeichert',{type:'ok'});
+    box.querySelector('#cu-q').focus();
+  }
+  function build(){
+    box=document.createElement('div'); box.id='cu-ov'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Eigene Lernkarte');
+    box.innerHTML='<div class="cu-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t">Eigene Lernkarte</div>'
+      +'<label>Modul<select id="cu-m">'+MODS.map(m=>'<option>'+m+'</option>').join('')+'</select></label>'
+      +'<label>Frage<textarea id="cu-q" rows="3" maxlength="500"></textarea></label>'
+      +'<label>Antwort<textarea id="cu-a" rows="4" maxlength="1500"></textarea></label>'
+      +'<button class="btn btn-gold" id="cu-save">Karte speichern</button>'
+      +'<div class="cu-h">Meine Karten</div><div id="cu-list"></div></div>';
+    document.body.appendChild(box);
+    box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
+    box.querySelector('#cu-save').onclick=add;
+  }
+  function open(){ if(!box) build(); list(); box.hidden=false; box.querySelector('#cu-q').focus({preventScroll:true}); }
+  function close(){ if(box) box.hidden=true; }
+  return {open,close};
+})();
+
+/* ======================================================================
    RECENT – Zuletzt besucht
 ====================================================================== */
 const RECENT=(function(){
@@ -2533,8 +2611,6 @@ const ONBOARD=(function(){
   let _step=0;
   const TOTAL=6;
   function syncSetup(){
-    const g=IDF_PLAN.group();
-    document.querySelectorAll('.ob-grp').forEach(b=>b.classList.toggle('active',b.dataset.g===g));
     THEME.render(); ACCENT.render(); SHELL.syncCardGoal();
   }
   function setStep(n){
@@ -2550,7 +2626,6 @@ const ONBOARD=(function(){
       if(localStorage.getItem(KEY)) return;
       document.getElementById('onboarding-overlay')?.classList.remove('hidden');
     },
-    setGrp(g){ IDF_PLAN._grp(g); syncSetup(); },
     next(){ if(_step<TOTAL-1){ setStep(_step+1); } else { this.close(); } },
     goto(n){ setStep(n); },
     close(){
@@ -4788,7 +4863,7 @@ const IDF_PLAN = (function(){
     return { kw:w[0], thema:w[2], over:new Date()>end };
   }
 
-  return { render, summary, next, ics, exportIcs, _nav, _grp:_setGrp, group:()=>_savedGrp() };
+  return { render, summary, next, ics, exportIcs, _nav, _grp:_setGrp };
 })();
 
 /* ── Dateien speichern (Browser: Download, Android-App: Ordner Downloads) ── */
@@ -5137,6 +5212,52 @@ const INSTALL=(function(){
   return {render,prompt};
 })();
 
+/* ── Klausur-Timer für die Übungsklausuren ──────────────────────────────── */
+const ETIMER=(function(){
+  const KEY='bvi_et_end', VIEWS=['v-klausurfragen','v-feuak-altklausur','v-klausur-0826','v-eingrenzung-klausur'];
+  let pill=null, tick=null, minutes=60;
+  const left=()=>{ try{ const e=parseInt(localStorage.getItem(KEY),10); return e?Math.round((e-Date.now())/1000):null; }catch(x){ return null; } };
+  const fmt=sec=>{ sec=Math.max(0,sec); const h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), s=sec%60; return (h?h+':':'')+String(m).padStart(h?2:1,'0')+':'+String(s).padStart(2,'0'); };
+  function ensurePill(){
+    if(pill) return;
+    pill=document.createElement('div'); pill.id='et-pill'; pill.hidden=true;
+    pill.innerHTML='<span class="et-t" role="timer"></span><button class="et-stop" aria-label="Timer beenden">×</button>';
+    pill.querySelector('.et-stop').onclick=stop;
+    document.body.appendChild(pill);
+  }
+  function update(){
+    const l=left(); ensurePill();
+    if(l===null){ pill.hidden=true; clearInterval(tick); tick=null; return; }
+    pill.hidden=false;
+    pill.classList.toggle('urgent',l<=300&&l>0);
+    pill.classList.toggle('over',l<=0);
+    pill.querySelector('.et-t').textContent=l>0?'⏱ '+fmt(l):'Zeit um';
+    if(l<=0&&!pill.dataset.done){ pill.dataset.done='1'; if(navigator.vibrate) navigator.vibrate([200,100,200]); TOAST.show('Die Zeit ist um – Stift runter!',{type:'ok'}); }
+  }
+  function start(min){
+    try{ localStorage.setItem(KEY,String(Date.now()+min*60000)); }catch(e){}
+    ensurePill(); delete pill.dataset.done; update();
+    clearInterval(tick); tick=setInterval(update,1000);
+    TOAST.show('Timer läuft: '+min+' Minuten',{type:'ok'});
+  }
+  function stop(){ try{ localStorage.removeItem(KEY); }catch(e){} update(); }
+  function card(){
+    return '<div class="m-card et-card"><div class="m-t1">Klausur simulieren</div><div class="m-t2" style="margin:2px 0 10px">Stelle einen Timer und bearbeite die Fragen, ohne in die Musterlösung zu schauen.</div>'
+      +'<div class="et-row"><span class="m-seg" role="group" aria-label="Dauer">'+[30,45,60,90].map(m=>'<button class="et-d'+(m===minutes?' active':'')+'" data-m="'+m+'">'+m+' min</button>').join('')+'</span>'
+      +'<button class="btn btn-gold et-go">Timer starten</button></div></div>';
+  }
+  function mount(id){
+    if(!VIEWS.includes(id)) return;
+    const pc=document.querySelector('#'+id+' .pc'); if(!pc||pc.querySelector('.et-card')) return;
+    pc.insertAdjacentHTML('afterbegin',card());
+    const c=pc.querySelector('.et-card');
+    c.querySelectorAll('.et-d').forEach(b=>b.onclick=()=>{ minutes=+b.dataset.m; c.querySelectorAll('.et-d').forEach(x=>x.classList.toggle('active',x===b)); });
+    c.querySelector('.et-go').onclick=()=>start(minutes);
+  }
+  function init(){ if(left()!==null){ ensurePill(); update(); tick=setInterval(update,1000); } }
+  return {mount,init,start,stop};
+})();
+
 /* ── Farbschema: Dunkel / Hell / System ─────────────────────────────────── */
 const THEME=(function(){
   const KEY='bvi_theme', MODES=['dark','light','system'];
@@ -5204,6 +5325,7 @@ const ACCENT=(function(){
   };
 })();
 ACCENT.init();
+ETIMER.init();
 
 /* ── Mobil-Ansicht: Tab-Leiste, Startseite, Prüfung, Einstellungen ──────── */
 const SHELL=(function(){

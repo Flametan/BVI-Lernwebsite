@@ -136,7 +136,6 @@
         <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></div>
         <div class="ob-title">Richte deine App ein</div>
         <div class="ob-setup">
-          <div class="ob-set-row"><span>Gruppe (Stundenplan)</span><span class="m-seg" role="group" aria-label="Gruppe"><button class="ob-grp" data-g="g1" onclick="ONBOARD.setGrp('g1')">Gruppe 1</button><button class="ob-grp" data-g="g2" onclick="ONBOARD.setGrp('g2')">Gruppe 2</button></span></div>
           <div class="ob-set-row"><span>Farbschema</span><span class="m-seg" role="group" aria-label="Farbschema"><button class="theme-opt" data-mode="dark" onclick="THEME.set('dark')">Dunkel</button><button class="theme-opt" data-mode="light" onclick="THEME.set('light')">Hell</button><button class="theme-opt" data-mode="system" onclick="THEME.set('system')">System</button></span></div>
           <div class="ob-set-row"><span>Akzentfarbe</span><div class="m-swatches ob-accent" role="radiogroup" aria-label="Akzentfarbe"></div></div>
           <div class="ob-set-row"><span>Karten pro Tag</span><span class="m-step"><button onclick="SHELL.stepCards(-1)" aria-label="5 Karten weniger">−</button><span class="ob-cardval">20</span><button onclick="SHELL.stepCards(1)" aria-label="5 Karten mehr">+</button></span></div>
@@ -11700,9 +11699,12 @@
     <p class="page-eyebrow">Wiederholung nach Lernstand</p>
     <h1 class="page-title">Lernkarten</h1>
     <p class="page-lead">Tippe auf eine Karte, um die Antwort aufzudecken. Dein Lernstand wird auf diesem Gerät gespeichert.</p>
+    <button class="fc-own-add" onclick="CUSTOM.open()">＋ Eigene Karte</button>
   </div></div>
   <div class="fc-filter-row" role="group" aria-label="Lernkarten filtern">
-    <button class="fc-f-btn fc-star-filter-btn hidden" data-filter="starred" data-label="Markiert" onclick="FC.setFilter('starred')">Markiert</button>
+    <button class="fc-f-btn fc-sp fc-star-filter-btn hidden" data-filter="starred" data-label="Markiert" onclick="FC.setFilter('starred')">Markiert</button>
+    <button class="fc-f-btn fc-sp fc-weak-filter-btn hidden" data-filter="weak" data-label="Schwach" onclick="FC.setFilter('weak')">Schwach</button>
+    <button class="fc-f-btn fc-sp fc-own-filter-btn hidden" data-filter="own" data-label="Eigene" onclick="FC.setFilter('own')">Eigene</button>
     <button class="fc-f-btn active" data-filter="all" data-label="Alle" onclick="FC.setFilter('all')">Alle</button>
     <button class="fc-f-btn" data-filter="gal" data-label="GAL" onclick="FC.setFilter('gal')">GAL</button>
     <button class="fc-f-btn" data-filter="sfs" data-label="SFS" onclick="FC.setFilter('sfs')">SFS</button>
