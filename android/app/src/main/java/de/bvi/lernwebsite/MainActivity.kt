@@ -116,6 +116,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         webView = WebView(this)
+        webView.setBackgroundColor(0xFF0A0A0A.toInt())
         setContentView(webView)
 
         webView.settings.apply {
