@@ -2087,3 +2087,5 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .m-count-link{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:var(--m-accent);color:var(--m-on-accent);font-weight:700;font-size:.8rem;border-radius:10px;padding:8px 12px;}
 .m-count-link i{font-style:normal;}
 .m-count-go:hover .m-count-link{filter:brightness(1.08);}
+.m-count-go .m-tx{flex:1 1 160px;min-width:0;}
+@media(max-width:700px){.m-count-go{flex-wrap:wrap;}.m-count-link{flex:1 1 100%;margin-left:0;justify-content:center;padding:11px 12px;}}
