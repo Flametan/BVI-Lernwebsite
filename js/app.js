@@ -3281,46 +3281,18 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
-    {v:'3.2.0',ts:'2026-10-19T22:00',items:[
-      'Helles Design: In den Einstellungen unter „Farbschema“ zwischen Dunkel, Hell und System wählen',
-      'Bilder und Diagramme auf den Lernseiten antippen: öffnet sich groß im Vordergrund, mit Zoom per Doppeltipp oder zwei Fingern',
-      'Neues App-Symbol: die Flamme der Website; in der Android-App passt sie sich der Akzentfarbe an, im Browser-Tab ebenfalls',
-      'Einstellungen: freiwillige Unterstützung per PayPal (kein Muss, die Seite bleibt kostenlos)',
-    ]},
-    {v:'3.1.0',ts:'2026-10-19T20:00',items:[
-      'Startseite: Karte „Jetzt / Als Nächstes“ mit der laufenden bzw. nächsten Einheit aus dem Stundenplan (Zeit, Raum)',
-      'Startseite: Tagesziel mit Fortschrittsring – das Ziel stellst du in den Einstellungen ein',
-      'Tab „Lernen“ zeigt, wie viele Karten heute fällig sind',
-      'Plan: Stundenplan in den Kalender übernehmen (Datei mit Erinnerung 30 Minuten vorher)',
-      'Einstellungen: Sicherung erstellen und einspielen (Lernstand, Notizen, Lesezeichen, Einstellungen); Datum und Name der nächsten Klausur einstellbar',
-      'Quiz: Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) mit Filter „Fällig“; Altklausur-Quiz, Klausurfragen und Fallbearbeitung im neuen Design',
-      'Lernseiten: Text auswählen und markieren; Markierungen stehen auch in der Notizen-Übersicht',
-      'Fehler melden: Zeile am Ende jeder Lernseite und Knopf bei jeder Quiz-Frage',
-      'Lernseiten im neuen Design (Abschnitte, Infokästen, Tabellen), kräftigere Grautöne, größere Trefferflächen, neue Einführung',
-      'Android-App: Erinnerung als echte Benachrichtigung, auch bei geschlossener App; neue Versionen lassen sich über die installierte App installieren (einmalig deinstallieren); Links öffnen außerhalb der App',
-      'Prüfung: Fallbearbeitung leuchtet in der Akzentfarbe'
-    ]},
-    {v:'3.0.2',ts:'2026-10-19T16:00',items:[
-      'Prüfung: Klausur 08/2026, Altklausur-Quiz VAk und Führungsdienstsimulator leuchten in deiner Akzentfarbe',
-      'Einstellungen: Die Farbkreise sind kleiner und passen in eine Zeile',
-      'Fehler behoben: Das „Neu“ bei Neuigkeiten verschwindet jetzt, sobald du die Neuigkeiten geöffnet hast'
-    ]},
-    {v:'3.0.1',ts:'2026-10-19T14:00',items:[
-      'Einstellungen im neuen Design: Neuigkeiten, Pomodoro, Lernstatistik und Notiz öffnen sich am Handy als Blatt von unten',
-      'Lesezeichen als Liste mit Modul-Angabe, Entfernen über das ✕',
-      'Abkürzungen, Suche und „App installieren“ an das neue Design angepasst',
-      'Fehler behoben: Der Knopf „APK laden“ war nicht lesbar'
-    ]},
-    {v:'3.0.0',ts:'2026-10-19T12:00',items:[
-      'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Plan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links; Header und bewegter Hintergrund entfallen',
-      'Startseite: Gruß und Spruch passend zur Tageszeit, Zeit in der App (heute, diese Woche, insgesamt) mit Wochendiagramm, Weiterlernen, nächste Klausur und alle Module mit Fortschritt',
-      'Plan: IdF-Stundenplan Modul 3.5 mit Uhrzeiten, Räumen, Hinweisen, Mittagspause und Telefonnummern; öffnet immer die aktuelle Woche, auf dem Desktop die ganze Woche nebeneinander',
-      'Prüfung: alle Klausur-Werkzeuge an einem Ort, mit Countdown zur nächsten Klausur',
-      'Einstellungen: Suche, Notizen, Lesezeichen, Pomodoro, Lernstatistik und Abkürzungen gebündelt',
-      'Akzentfarbe wählbar (5 Vorgaben oder Farbkreis) – sie färbt Navigation, Rahmen und Grafiken, in der Android-App auch das Symbol auf dem Startbildschirm',
-      'Lernkarten im neuen Design: alle Filter auf einen Blick, „Markiert“ erscheint erst nach dem ersten Markieren, Spalte „Dein Stand“ auf Tablet und Desktop',
-      'Lernseiten: Merken, Notiz und Vorlesen direkt auf der Seite; Inhaltsverzeichnis am rechten Rand auf großen Bildschirmen',
-      'Entfernt: Performance-Modus, Schriftart-Auswahl und das alte Einstellungs-Fenster'
+    {v:'3.0.0',ts:'2026-10-19T22:00',items:[
+      'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Stundenplan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links',
+      'Farbschema: Dunkel, Hell oder System (Einstellungen → Farbschema)',
+      'Akzentfarbe wählbar (5 Vorgaben oder Farbkreis); sie färbt Navigation, Rahmen und Grafiken, in der Android-App auch das Symbol auf dem Startbildschirm',
+      'Neues App-Symbol: die Flamme der Website',
+      'Startseite: Gruß und Spruch passend zur Tageszeit, „Jetzt / Als Nächstes“ aus dem Stundenplan, Tagesziel mit Fortschrittsring, Zeit in der App mit Wochendiagramm, Weiterlernen, nächste Klausur und alle Module mit Fortschritt',
+      'Stundenplan: IdF Modul 3.5 mit Uhrzeiten, Räumen, Hinweisen, Mittagspause und Telefonnummern; Übernahme in den Kalender mit Erinnerung',
+      'Prüfung: alle Klausur-Werkzeuge an einem Ort, mit Countdown zur nächsten Klausur; Altklausur-Quiz, Klausurfragen und Fallbearbeitung im neuen Design',
+      'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick',
+      'Lernseiten: Text markieren, Merken, Notiz und Vorlesen direkt auf der Seite; Bilder und Diagramme per Tipp groß öffnen und zoomen; Inhaltsverzeichnis am Rand auf großen Bildschirmen; Fehler melden',
+      'Einstellungen: Suche, Notizen, Lesezeichen, Pomodoro, Lernstatistik, Abkürzungen, Sicherung erstellen und einspielen, Klausurtermin einstellbar, freiwillige Unterstützung per PayPal',
+      'Android-App: Erinnerung als echte Benachrichtigung, Links öffnen außerhalb der App'
     ]},
     {v:'2.31.0',ts:'2026-10-18T00:00',items:[
       'IdF Münster: Stundenplan Modul 3.5 (KW 44–52, Gruppe 1 & 2) direkt im Übersichtstab – Tageskarten-Ansicht mit Wochennavigation, automatischer Wochenerkennung und Gruppen-Toggle'
