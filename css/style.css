@@ -2040,3 +2040,15 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 
 /* Dunkles Design: rote Texte besser lesbar (Kontrast), helles Design unverändert */
 :root:not([data-theme="light"]){--c-red-l:#ff6b6b;}
+
+/* ── Das kann ich noch nicht ─────────────────────────────────────────────── */
+.fc-hero-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:.6rem;}
+.fc-hero-btns .fc-own-add{margin-top:0;}
+#wk-ov{position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.7);display:grid;place-items:center;padding:16px;overflow:auto;}
+#wk-ov[hidden]{display:none;}
+.wk-sec{display:flex;flex-direction:column;gap:10px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--m-line);}
+.wk-h{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--m-muted);}
+.wk-n{font-size:.95rem;}.wk-n b{color:var(--m-accent-fg);}.wk-n.m{color:var(--m-muted);}
+.wk-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.wk-chip{background:var(--m-raised);border-radius:14px;padding:4px 10px;font-size:.78rem;color:var(--m-muted);}
+.wk-chip b{color:var(--m-fg);}

@@ -1964,6 +1964,13 @@ const FC = (function(){
       if(btn) btn.classList.toggle('starred',starred);
       updateFilterButtons();
     },
+    showWeak(){ activeFilters=new Set(['weak']); updateFilterButtons(); this.start(); },
+    weakCount(){ return fcLoadWeak().size; },
+    weakByModule(){
+      const w=fcLoadWeak(), m={};
+      FLASHCARD_DATA.forEach(c=>{ if(w.has(c.id)){ const k=c.cat.split(' · ')[0]; m[k]=(m[k]||0)+1; } });
+      return m;
+    },
     starCurrent(){
       const c=_reviewPos>=0?_seen[_reviewPos]:deck[curIdx];
       if(!c) return;
@@ -2642,6 +2649,36 @@ const CUSTOM=(function(){
 })();
 
 /* ======================================================================
+   WEAK – „Das kann ich noch nicht“: schwere Karten und falsche Quizfragen
+====================================================================== */
+const WEAK=(function(){
+  let box=null;
+  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function build(){
+    box=document.createElement('div'); box.id='wk-ov'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Das kann ich noch nicht');
+    document.body.appendChild(box);
+    box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
+  }
+  function render(){
+    const n=FC.weakCount(), by=FC.weakByModule(), q=QUIZ.wrongCount();
+    const chips=Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<span class="wk-chip">${esc(k)} <b>${v}</b></span>`).join('');
+    box.innerHTML=`<div class="cu-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t" style="text-align:left;padding-right:36px">Das kann ich noch nicht</div>
+      <div class="wk-sec"><div class="wk-h">Lernkarten</div>${n?`<div class="wk-n"><b>${n}</b> ${n===1?'Karte':'Karten'} mit „schwer“ oder „nicht gewusst“</div><div class="wk-chips">${chips}</div><button class="btn btn-gold" onclick="WEAK.cards()">Diese Karten üben</button>`:'<div class="wk-n m">Keine schweren Karten. Gut so!</div>'}</div>
+      <div class="wk-sec"><div class="wk-h">Altklausur-Quiz VAk</div>${q?`<div class="wk-n"><b>${q}</b> ${q===1?'Frage':'Fragen'} zuletzt falsch beantwortet</div><button class="btn btn-gold" onclick="WEAK.quiz()">Falsche Fragen üben</button>`:'<div class="wk-n m">Keine falsch beantworteten Fragen.</div>'}</div>
+      <div class="m-t2">Eine Karte verschwindet aus der Liste, sobald du sie als „gewusst“ beantwortest.</div></div>`;
+  }
+  function open(){ if(!box) build(); render(); box.hidden=false; box.querySelector('.sh-x').focus({preventScroll:true}); }
+  function close(){ if(box) box.hidden=true; }
+  return {
+    open,close,
+    cards(){ close(); NAV.tab('v-flashcards','Lernkarten'); FC.showWeak(); },
+    quiz(){ close(); NAV.go('v-vak-altklausur','Altklausur-Quiz'); QUIZ.setFilter('wrong'); }
+  };
+})();
+
+/* ======================================================================
    RECENT – Zuletzt besucht
 ====================================================================== */
 const RECENT=(function(){
@@ -3023,6 +3060,7 @@ const QUIZ=(function(){
     },
     back(){if(_cur>0){_cur--;renderLearn();}},
     dueCount,
+    wrongCount(){loadMastery();return Object.values(_masteryMap).filter(v=>v==='err').length;},
     reshuffle(){buildOrder();renderLearn();},
     openMastery(){
       renderMastery();renderMasteryCats();
