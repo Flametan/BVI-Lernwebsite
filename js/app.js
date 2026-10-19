@@ -3250,6 +3250,7 @@ const CHANGELOG=(function(){
     {v:'3.0.3',ts:'2026-10-19T18:00',items:[
       'Altklausur-Quiz im neuen Design: Antworten als Karten mit Buchstaben, grüne und rote Rückmeldung, Filter als Kacheln, Prüfungsmodus und Ergebnis angepasst',
       'Klausurfragen, Übungsklausur und Fallbearbeitung ebenfalls angepasst: Reiter, Fragenlisten, Antwortfelder und Knöpfe',
+      'Prüfung: Auch die Fallbearbeitung leuchtet jetzt in deiner Akzentfarbe',
       'Fehler behoben: Mehrere Rahmen und Hintergründe wurden nicht angezeigt, weil Farbwerte fehlten'
     ]},
     {v:'3.0.2',ts:'2026-10-19T16:00',items:[
@@ -4778,7 +4779,7 @@ const SHELL=(function(){
       ['v-feuak-altklausur','Altklausur-Training FeuAK','22 Fragen aus Aug 2025 und Feb 2026','doc']]],
     ['VAk Berlin',[
       ['v-vak-altklausur','Altklausur-Quiz VAk','84 Fragen · Lernmodus oder Prüfungssimulation','doc',true],
-      ['v-vak-fallbearbeitung','Fallbearbeitung','9-Punkte-Schema mit sechs Übungsfällen','pen'],
+      ['v-vak-fallbearbeitung','Fallbearbeitung','9-Punkte-Schema mit sechs Übungsfällen','pen',true],
       ['v-vak-klausurhinweise','Klausurhinweise','Prüfungsrelevante Themen und Definitionen','doc'],
       ['v-vak-klausurvorbereitung','Klausurvorbereitung VAk','Alle VAk-Materialien auf einen Blick','target']]],
     ['Training',[
