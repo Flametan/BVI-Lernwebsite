@@ -1685,7 +1685,7 @@ const FC = (function(){
       } else if(df){
         const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df));
         const knownCnt=cats.filter(c=>known[c.id]).length;
-        b.classList.toggle('active',!allSel&&!isPruefung&&!isStarred&&activeFilters.has(df));
+        b.classList.toggle('active',!allSel&&!isStarred&&activeFilters.has(df));
         b.innerHTML=`<b>${base}</b><small>${knownCnt}/${cats.length}</small>`;
       }
     });
