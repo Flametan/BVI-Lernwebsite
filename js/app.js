@@ -5911,7 +5911,7 @@ const SHELL=(function(){
     }).join('');
     const known=FLASHCARD_DATA.filter(c=>fc[c.id]).length;
     el.innerHTML=`<div class="m-card"><div class="m-t1">Dein Stand</div>${rows}<div class="m-t2" style="margin-top:12px">${known} von ${FLASHCARD_DATA.length} Karten gewusst</div></div>
-      <div class="m-card m-kbd"><div class="m-t1">Tastatur</div><div class="m-t2" style="line-height:2.1"><span class="kb-r"><kbd>Leertaste</kbd> aufdecken</span><span class="kb-r"><kbd>→</kbd> gewusst</span><span class="kb-r"><kbd>↑</kbd> schwer</span><span class="kb-r"><kbd>←</kbd> nicht gewusst</span></div></div>`;
+      <div class="m-card m-kbd"><div class="m-t1">Tastatur</div><div class="m-t2" style="line-height:2.1"><span class="kb-r"><kbd>↑</kbd> aufdecken</span><span class="kb-r"><kbd>→</kbd> gewusst</span><span class="kb-r"><kbd>↓</kbd> schwer</span><span class="kb-r"><kbd>←</kbd> nicht gewusst</span></div></div>`;
   }
 
   let _tocIO=null;
@@ -6130,10 +6130,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
     // Lernkarten-Tastatursteuerung
     if(document.getElementById('v-flashcards').classList.contains('active')){
-      if(e.key===' '){ e.preventDefault(); FC.flip(); }
+      if(e.key===' '||e.key==='ArrowUp'){ e.preventDefault(); FC.flip(); }
       if((e.key==='ArrowRight'||e.key==='j')&&!e.ctrlKey&&!e.metaKey){ e.preventDefault(); FC.answer(true); }
       if((e.key==='ArrowLeft'||e.key==='f')&&!e.ctrlKey&&!e.metaKey){ e.preventDefault(); FC.answer(false); }
-      if(e.key==='ArrowUp'&&!e.ctrlKey&&!e.metaKey){ e.preventDefault(); FC.answer('hard'); }
+      if(e.key==='ArrowDown'&&!e.ctrlKey&&!e.metaKey){ e.preventDefault(); FC.answer('hard'); }
     }
   });
   let _perfRafPending=false;
