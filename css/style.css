@@ -449,17 +449,6 @@
   .abk-search::placeholder{color:var(--c-slate);}
   .abk-search-icon{position:absolute;left:.8rem;top:50%;transform:translateY(-50%);color:var(--c-slate);pointer-events:none;}
   .abk-count{font-size:.73rem;color:var(--c-slate);margin-top:.4rem;}
-  .abk-table{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:.5rem;}
-  .abk-table th{font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold);background:var(--c-gold-dim);padding:.5rem .75rem;text-align:left;border-bottom:1px solid var(--c-gold-rim);}
-  .abk-table td{padding:.48rem .75rem;border-bottom:1px solid var(--w04);vertical-align:top;line-height:1.55;}
-  .abk-table tr:hover td{background:var(--w025);}
-  .abk-abbr{font-family:var(--f-m);font-weight:600;color:var(--c-text-b);white-space:nowrap;}
-  .abk-full{color:var(--c-text);}
-  .abk-desc{color:var(--c-slate-l);font-size:.77rem;}
-  .abk-row.hidden{display:none;}
-  .abk-sec-hdr{background:var(--c-gold-dim);border-top:2px solid var(--c-gold-rim);}
-  .abk-sec-hdr td{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--c-gold);padding:.4rem .75rem;}
-  .abk-sec-hdr.hidden{display:none;}
 
   /* ── SCROLL TO TOP ── */
   #scroll-top-btn{position:fixed;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));right:1.5rem;z-index:500;width:38px;height:38px;border-radius:50%;background:rgba(13,33,64,0.88);border:1px solid var(--c-gold-rim);color:var(--c-gold);display:flex;align-items:center;justify-content:center;opacity:0;transform:translateY(10px);transition:opacity .25s var(--ease),transform .25s var(--ease);pointer-events:none;backdrop-filter:blur(12px);box-shadow:0 4px 16px rgba(0,0,0,.4);}
@@ -1405,11 +1394,6 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 /* Abkürzungen */
 .abk-search{background:var(--m-card);border:0;border-radius:14px;padding:14px 14px 14px 40px;font-size:1rem;color:var(--m-fg);}
 .abk-search:focus{outline:2px solid var(--m-accent);outline-offset:0;}
-.abk-table th{background:var(--m-raised);color:var(--m-muted);border-bottom:0;letter-spacing:.06em;}
-.abk-table td{border-bottom:1px solid var(--m-line);}
-.abk-sec-hdr{background:none;border-top:0;}
-.abk-sec-hdr td{color:var(--m-accent-fg);font-weight:500;letter-spacing:.06em;padding-top:18px;}
-.abk-abbr{font-family:var(--f-b);}
 /* App installieren */
 .pc a.btn,.pc a.btn:hover{text-decoration:none;}
 .pc a.btn-gold,.pc a.btn-gold:hover{color:var(--m-on-accent);}
@@ -2110,7 +2094,11 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .abk-c-d{display:none;color:var(--m-muted);font-size:.82rem;line-height:1.5;margin-top:6px;}
 .abk-card.open .abk-c-d{display:block;}
 .abk-none{padding:2rem 1rem;text-align:center;color:var(--m-muted);}
-.abk-table{display:none;}
-@media(min-width:701px){.abk-table{display:table;}.abk-cards{display:none;}.abk-stick{position:static;margin:0;padding:0;}.abk-none{display:none;}}
+/* Tablet und Desktop: Karten im Raster */
+.abk-c-list{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;align-items:start;}
+.abk-c-list .abk-card{margin-bottom:0;}
+@media(min-width:701px){.abk-c-list{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(min-width:1100px){.abk-c-list{grid-template-columns:repeat(3,minmax(0,1fr));}}
 #v-abkuerzungen .pc{overflow-x:clip;overflow-y:visible;}
 .abk-c-sec{top:94px;}
+@media(min-width:701px){.abk-stick{margin:0 -32px;padding:8px 32px 0;}}
