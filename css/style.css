@@ -1819,7 +1819,7 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 #et-pill.urgent{background:#e5484d;color:#fff;}
 #et-pill.over{background:#e5484d;color:#fff;}
 .et-stop{width:28px;height:28px;font-size:1.1rem;line-height:1;border-radius:50%;background:rgba(0,0,0,.18);color:inherit;}
-@media(min-width:1100px){#et-pill{bottom:28px;left:auto;right:28px;}}
+@media(min-width:1100px){#et-pill{bottom:auto;top:14px;left:calc(240px + (100vw - 240px) / 2);right:auto;transform:translateX(-50%);}}
 
 /* ── Stundenplan: Eintrag antippen ───────────────────────────────────────── */
 .idf-tap{cursor:pointer;border-radius:8px;}
@@ -1835,3 +1835,7 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 
 /* Timer ausgeschaltet (Einstellungen) */
 html.no-timers .uk-timer-box,html.no-timers .uk-timer-inline,html.no-timers .quiz-exam-timer-bar,html.no-timers #et-pill,html.no-timers .et-card{display:none!important;}
+@media(min-width:1360px){#et-pill{left:auto;right:28px;transform:none;}}
+
+.cu-io{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.cu-io .btn{text-decoration:none;cursor:pointer;}
