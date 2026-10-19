@@ -55,9 +55,9 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
     <span>Start</span>
   </button>
-  <button class="m-tab" data-tab="plan" onclick="NAV.tab('v-plan','Plan')">
+  <button class="m-tab" data-tab="plan" onclick="NAV.tab('v-plan','Stundenplan')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>
-    <span>Plan</span>
+    <span>Stundenplan</span>
   </button>
   <button class="m-tab m-tab-center" data-tab="exam" onclick="NAV.tab('v-pruefung','Prüfung')">
     <span class="m-fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>
@@ -75,7 +75,7 @@
 <nav id="m-rail" aria-label="Hauptnavigation">
   <button class="m-brand" onclick="NAV.home()"><span class="m-emb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z" fill="currentColor" stroke="none"/></svg></span><span><b>B VI</b><small>Höherer Dienst</small></span></button>
   <button class="m-ri" data-tab="start" onclick="NAV.home()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</button>
-  <button class="m-ri" data-tab="plan" onclick="NAV.tab('v-plan','Plan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Plan</button>
+  <button class="m-ri" data-tab="plan" onclick="NAV.tab('v-plan','Stundenplan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Stundenplan</button>
   <button class="m-ri m-ri-cta" data-tab="exam" onclick="NAV.tab('v-pruefung','Prüfung')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>Prüfung</button>
   <button class="m-ri" data-tab="settings" onclick="NAV.tab('v-settings','Einstellungen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Einstellungen</button>
   <button class="m-ri" data-tab="learn" onclick="NAV.tab('v-flashcards','Lernen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></svg>Lernen</button>
@@ -135,7 +135,7 @@
       <div class="ob-step">
         <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div>
         <div class="ob-title">Fünf Bereiche</div>
-        <div class="ob-desc">Unten (am Computer links) wechselst du zwischen <strong>Start</strong>, <strong>Plan</strong>, <strong>Prüfung</strong>, <strong>Einstellungen</strong> und <strong>Lernen</strong>. Auf der Startseite siehst du, was als Nächstes im Stundenplan ansteht, und dein Tagesziel.</div>
+        <div class="ob-desc">Unten (am Computer links) wechselst du zwischen <strong>Start</strong>, <strong>Stundenplan</strong>, <strong>Prüfung</strong>, <strong>Einstellungen</strong> und <strong>Lernen</strong>. Auf der Startseite siehst du, was als Nächstes im Stundenplan ansteht, und dein Tagesziel.</div>
       </div>
       <!-- Schritt 3 -->
       <div class="ob-step">
@@ -11314,7 +11314,7 @@
 <div id="v-plan" class="view detail-view">
   <div class="page-hero"><div class="phi">
     <p class="page-eyebrow">IdF Münster · Modul 3.5</p>
-    <h1 class="page-title">Plan</h1>
+    <h1 class="page-title">Stundenplan</h1>
     <p class="page-lead">Stundenplan für KW 44 bis 52. Es öffnet sich immer die aktuelle Woche.</p>
   </div></div>
   <div class="pc"><div id="plan-inner"></div></div>
