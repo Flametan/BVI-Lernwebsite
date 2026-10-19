@@ -1046,7 +1046,7 @@ body.offline .offline-banner{display:flex;}
 .m-row:not(.m-static):active{background:var(--m-raised);}
 .m-static{cursor:default;}
 .m-wrap{flex-wrap:wrap;}
-.m-ic{width:36px;height:36px;border-radius:10px;background:var(--m-raised);display:grid;place-items:center;flex-shrink:0;color:var(--m-accent-fg);font-size:.68rem;font-weight:700;letter-spacing:.02em;}
+.m-ic{min-width:36px;width:auto;padding:0 3px;height:36px;border-radius:10px;background:var(--m-raised);display:grid;place-items:center;flex-shrink:0;color:var(--m-accent-fg);font-size:.68rem;font-weight:700;letter-spacing:.02em;}
 .m-ic svg{width:19px;height:19px;}
 .m-ic-empty{background:none;}
 .m-tx{flex:1;min-width:0;display:flex;flex-direction:column;}
@@ -1282,7 +1282,7 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 .idf-lunch svg{flex-shrink:0;}
 .idf-tel{margin-top:1rem;}
 .idf-tel-row{display:flex;justify-content:space-between;gap:12px;font-size:.88rem;color:var(--m-muted);padding-top:8px;}
-.idf-tel-row span:last-child{color:var(--m-fg);font-variant-numeric:tabular-nums;}
+.idf-tel-row span:last-child,.idf-tel-row a{text-decoration:none;color:var(--m-fg);font-variant-numeric:tabular-nums;}
 .idf-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:1rem;font-size:.75rem;color:var(--m-dim);}
 .idf-legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;}
 .idf-legend i.hi{background:var(--m-accent);}
@@ -1769,3 +1769,9 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 .m-fc-goal-bar{height:6px;border-radius:3px;background:var(--m-raised);overflow:hidden;}
 .m-fc-goal-bar i{display:block;height:100%;background:var(--m-accent);border-radius:3px;transition:width .3s;}
 @media(min-width:701px){#v-flashcards #m-fc-goal{grid-column:1 / -1;margin-bottom:0;}}
+
+/* ── Lernzeit: Umschalter Woche / Monate ─────────────────────────────────── */
+.m-seg-s button{min-width:0;height:28px;font-size:.74rem;padding:0 10px;}
+.m-chart-u{font-size:.75rem;color:var(--m-dim);margin:-2px 0 4px;}
+.idf-item.idf-wtime{grid-template-columns:max-content minmax(0,1fr);}
+.sec-h,.page-title{overflow-wrap:anywhere;}

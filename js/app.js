@@ -4527,8 +4527,6 @@ const IDF_PLAN = (function(){
   const UE_S=['07:45','08:30','09:45','10:30','11:30','12:15','14:00','14:45'];
   const UE_E=['08:30','09:15','10:30','11:15','12:15','13:00','14:45','15:30'];
   const TEL={
-    langer:[['Jörn Ruschenburg','-3202'],['Daniel Langer','-3210']],
-    schoene:[['Jörn Ruschenburg','-3202'],['Malte Schönefeld','-3221']],
     spahl:[['Jörn Ruschenburg','-3202'],['Frank Spahlholz','-3223']],
     babz:[['Christoph Schaaf (BABZ)','0228 99550-5205'],['Thorsten Ohm (BABZ)','-5206']]
   };
@@ -4585,12 +4583,12 @@ const IDF_PLAN = (function(){
     [45,2,'Vorbeugender Brandschutz 2','2026-11-02','g1',VB2([],'EVA|EU-Katastrophenschutz',['1-6|EU-Katastrophenschutz|hi|C-205|beide Halbgruppen gemeinsam','7|Abreise|ar'])],
     [46,3,'Vorbeugender Brandschutz 3','2026-11-09','g1',[[...VB3_MO,'18:00|Kaminabend in Präsenz|hi||Gebäude C · zivil/leger · inkl. Catering'],VB3_DI,
       ['1-3|Exkursion Brandverhütungsschau praktisch|ex||extern · Poloshirt, Büroschuhe genügen','4-6|Brandverhütungsschaubericht||A3-25','7-8|Einsatzplanung||A3-25'],VB3_DO,VB3_FR]],
-    [47,4,'Stab 1','2026-11-16','g1',STAB1(1),TEL.langer],
-    [48,5,'Stab 2','2026-11-23','g1',STAB2(1),TEL.schoene],
-    [49,6,'Presse & Öffentlichkeitsarbeit','2026-11-30','g1',PRESSE(1),TEL.schoene],
-    [44,1,'Stab 1','2026-10-26','g2',STAB1(2),TEL.langer],
-    [45,2,'Stab 2','2026-11-02','g2',STAB2(2),TEL.schoene],
-    [46,3,'Presse & Öffentlichkeitsarbeit','2026-11-09','g2',PRESSE(2),TEL.schoene],
+    [47,4,'Stab 1','2026-11-16','g1',STAB1(1),TEL.spahl],
+    [48,5,'Stab 2','2026-11-23','g1',STAB2(1),TEL.spahl],
+    [49,6,'Presse & Öffentlichkeitsarbeit','2026-11-30','g1',PRESSE(1),TEL.spahl],
+    [44,1,'Stab 1','2026-10-26','g2',STAB1(2),TEL.spahl],
+    [45,2,'Stab 2','2026-11-02','g2',STAB2(2),TEL.spahl],
+    [46,3,'Presse & Öffentlichkeitsarbeit','2026-11-09','g2',PRESSE(2),TEL.spahl],
     [47,4,'Vorbeugender Brandschutz 1','2026-11-16','g2',VB1_G2],
     [48,5,'Vorbeugender Brandschutz 2','2026-11-23','g2',VB2(['EVA|Vorbereitung Stellungnahme für Freitag anhand Unterlagen'],'7|Abreise|ar',SELBST)],
     [49,6,'Vorbeugender Brandschutz 3','2026-11-30','g2',[VB3_MO,VB3_DI,
@@ -4624,7 +4622,7 @@ const IDF_PLAN = (function(){
     const [t,title,cls='',room='',note='']=s.split('|');
     const [a,b]=_time(t);
     const meta=[note,room?'Raum '+room:''].filter(Boolean).join(' · ');
-    return `<div class="idf-item ${cls}"><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${esc(title)}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
+    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}"><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${esc(title)}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
   }
   const LUNCH=end=>`<div class="idf-item idf-lunch"><span class="idf-time">13:00<i>${end}</i></span><span class="idf-txt"><span class="idf-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v5a3 3 0 0 0 6 0V2M18 22V2c-2.5 1.5-4 4.5-4 8 0 2 1 3 4 3"/></svg>Mittagessen</span></span></div>`;
   function _start(spec){
@@ -4692,7 +4690,9 @@ const IDF_PLAN = (function(){
       return `<div class="idf-day${isToday?' today':''}"><div class="idf-dc"><span class="idf-dow">${DAYS[i]}</span><span class="idf-dnum">${d.getDate()}</span><span class="idf-dmo">${MONS[d.getMonth()]}</span></div>
         <div class="idf-items">${_dayItems(items)}</div></div>`;
     }).join('')+'</div>';
-    if(tel) h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${[...tel,['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><span>${esc(t)}</span></div>`).join('')}</div>`;
+    const full=(n,t)=>/^-/.test(t)?(/BABZ/.test(n)?'0228 99550':'0251 3112')+t:t;
+    const rows=[...(tel||TEL.spahl),['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>[n,full(n,t)]);
+    h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${rows.map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><a href="tel:+49${t.replace(/\D/g,'').replace(/^0/,'')}">${esc(t)}</a></div>`).join('')}</div>`;
     h+=`<button class="m-cal-btn" onclick="IDF_PLAN.exportIcs()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5"/></svg>Stundenplan in den Kalender übernehmen<small>Gruppe ${_grp[1]} · alle Einheiten mit Erinnerung 30 Minuten vorher</small></button>`;
     h+='<div class="idf-legend"><span><i class="hi"></i>Schlüsseltermin</span><span><i class="ex"></i>Exkursion</span><span><i class="ar"></i>An-/Abreise, frei</span><span>EVA = eigenverantwortliches Arbeiten</span></div>';
     el.innerHTML=h;
@@ -4966,7 +4966,16 @@ const USAGE=(function(){
       const d=load(), mo=new Date(); mo.setDate(mo.getDate()-((mo.getDay()+6)%7));
       return Array.from({length:7},(_,i)=>{ const x=new Date(mo); x.setDate(mo.getDate()+i); return d[key(x)]||0; });
     },
-    total(){ return Object.values(load()).reduce((a,b)=>a+b,0); }
+    total(){ return Object.values(load()).reduce((a,b)=>a+b,0); },
+    // letzte n Monate (ältester zuerst) mit Sekunden je Monat
+    months(n){
+      const d=load(), now=new Date();
+      return Array.from({length:n},(_,i)=>{
+        const x=new Date(now.getFullYear(),now.getMonth()-(n-1-i),1), pre=x.getFullYear()+'-'+pad(x.getMonth()+1)+'-';
+        let sec=0; for(const k in d) if(k.startsWith(pre)) sec+=d[k];
+        return {y:x.getFullYear(),m:x.getMonth(),sec};
+      });
+    }
   };
 })();
 
@@ -5413,12 +5422,30 @@ const SHELL=(function(){
     return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Minuten in der App pro Tag in dieser Woche, insgesamt ${sum} Minuten">${g}</svg>`;
   }
 
+  function chartMonths(ms){
+    const W=340,H=150,L=30,R=12,T=14,B=26, hours=Math.max(...ms.map(m=>m.sec))>=7200;
+    const v=ms.map(m=>hours?m.sec/3600:Math.round(m.sec/60));
+    const mx=Math.max(...v), top=hours?Math.max(2,Math.ceil(mx/2)*2):(mx>20?Math.ceil(mx/20)*20:Math.max(4,Math.ceil(mx/4)*4));
+    const bw=(W-L-R)/ms.length, y=m=>T+(H-T-B)*(1-m/top);
+    const names=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+    let g='';
+    [0,top/2,top].forEach(m=>{ g+=`<line x1="${L}" x2="${W-R}" y1="${y(m)}" y2="${y(m)}" style="stroke:#333" stroke-dasharray="3 5"/><text x="${L-8}" y="${y(m)+4}" text-anchor="end" font-size="11" style="fill:#7a7a7a">${m}</text>`; });
+    ms.forEach((m,i)=>{
+      const last=i===ms.length-1, x=L+i*bw+bw*.18, w=bw*.64, h=(H-T-B)*v[i]/top;
+      if(h>0) g+=`<rect x="${x}" y="${y(v[i])}" width="${w}" height="${h}" rx="3" style="fill:var(--m-accent);opacity:${last?1:.55}"/>`;
+      g+=`<text x="${L+i*bw+bw/2}" y="${H-6}" text-anchor="middle" font-size="9.5" font-weight="${last?700:400}" style="fill:${last?'var(--m-accent)':'#7a7a7a'}">${names[m.m]}</text>`;
+    });
+    const sum=Math.round(ms.reduce((a,m)=>a+m.sec,0)/60);
+    return {svg:`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Lernzeit pro Monat in den letzten 12 Monaten, insgesamt ${sum} Minuten">${g}</svg>`,unit:hours?'Stunden pro Monat':'Minuten pro Monat'};
+  }
+  let chartRange='week';
+
   function dur(sec){
     const m=Math.floor(sec/60);
     return m<60?`${m} min`:`${Math.floor(m/60)} h ${String(m%60).padStart(2,'0')}`;
   }
 
-  const DEF_EXAM={date:'2026-12-21',name:'Klausur § 21 · IdF Münster'};
+  const DEF_EXAM={date:'2026-12-14',name:'Leistungsnachweis nach § 13 Abs. 3'};
   function examCfg(){
     try{
       const o=JSON.parse(localStorage.getItem('bvi_exam')||'{}');
@@ -5444,7 +5471,7 @@ const SHELL=(function(){
   function cardDone(){
     const n=cardsToday()+1, g=cardGoal();
     try{ localStorage.setItem('bvi_cards_day',JSON.stringify({d:dayKey(),n})); }catch(e){}
-    renderCardGoal();
+    renderCardGoal(); updateBadges();
     if(n===g&&typeof TOAST!=='undefined') TOAST.show('Kartenziel für heute erreicht – stark!',{type:'ok'});
   }
   function daysToExam(){
@@ -5464,11 +5491,11 @@ const SHELL=(function(){
     return `<div class="m-card m-goal"><svg viewBox="0 0 64 64" role="img" aria-label="${Math.round(p*100)} Prozent des Tagesziels"><circle cx="32" cy="32" r="${R}" class="m-ring-bg"/><circle cx="32" cy="32" r="${R}" class="m-ring-fg" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 32 32)"/>${done?'<path d="m22 33 7 7 13-14" class="m-ring-ok"/>':`<text x="32" y="37" text-anchor="middle" class="m-ring-t">${Math.round(p*100)}%</text>`}</svg><div class="m-tx"><span class="m-eyebrow">Tagesziel</span><span class="m-t1" style="margin-top:2px">${done?'Geschafft!':dur(sec)+' von '+goal+' min'}</span><span class="m-t2">${done?'Dein Ziel für heute ist erreicht.':'Noch '+Math.max(1,Math.ceil((goal*60-sec)/60))+' min bis zum Ziel'}</span></div></div>`;
   }
   function updateBadges(){
-    const n=tabNumOn()?cardStats().due:0;
+    const n=tabNumOn()?Math.max(0,cardGoal()-cardsToday()):0;
     document.querySelectorAll('#m-tabbar [data-tab="learn"],#m-rail [data-tab="learn"]').forEach(b=>{
       let s=b.querySelector('.m-tab-b'); if(!s){ s=document.createElement('span'); s.className='m-tab-b'; if(b.classList.contains('m-tab')) b.insertBefore(s,b.firstChild); else b.appendChild(s); }
       s.textContent=n>99?'99+':n; s.hidden=!n;
-      s.setAttribute('aria-label',n+' Karten fällig');
+      s.setAttribute('aria-label',n+' Karten bis zum Tagesziel');
     });
   }
 
@@ -5509,7 +5536,8 @@ const SHELL=(function(){
             <div class="m-stat"><b>${dur(week.reduce((a,b)=>a+b,0))}</b><span>diese Woche in der App</span></div>
             <div class="m-stat"><b>${dur(USAGE.total())}</b><span>insgesamt</span></div>
           </div>
-          <div class="m-card m-chart"><div class="m-chart-h"><b>Lernzeit diese Woche</b><span>Minuten pro Tag</span></div>${chart(week.map(x=>Math.round(x/60)))}</div>
+          ${(()=>{ const mo=chartRange==='month'?chartMonths(USAGE.months(12)):null;
+            return `<div class="m-card m-chart"><div class="m-chart-h"><b>${mo?'Lernzeit pro Monat':'Lernzeit diese Woche'}</b><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${mo?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${mo?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span></div><div class="m-chart-u">${mo?mo.unit:'Minuten pro Tag'}</div>${mo?mo.svg:chart(week.map(x=>Math.round(x/60)))}</div>`; })()}
         </div>
         <div class="m-col">
           ${cont}
@@ -5518,7 +5546,7 @@ const SHELL=(function(){
         </div>
       </div>
       ${year(1)}${year(2)}
-      <div class="m-list"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
+      <div class="m-list m-glow"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
   }
 
   function renderExam(){
@@ -5676,12 +5704,13 @@ const SHELL=(function(){
       const g=Math.min(200,Math.max(5,cardGoal()+d*5));
       try{ localStorage.setItem('bvi_cardgoal',String(g)); }catch(e){}
       const e=document.getElementById('m-cardgoal-val'); if(e) e.textContent=g;
-      renderCardGoal();
+      renderCardGoal(); updateBadges();
     },
     setTabNum(on){
       try{ localStorage.setItem('bvi_tabnum',on?'1':'0'); }catch(e){}
       updateBadges();
     },
+    setRange(r){ chartRange=r==='month'?'month':'week'; renderHome(); },
     cardDone, renderCardGoal,
     setExam(){
       const date=document.getElementById('m-exam-date')?.value, name=document.getElementById('m-exam-name')?.value||'';
