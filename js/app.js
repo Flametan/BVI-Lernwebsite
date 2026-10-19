@@ -3436,7 +3436,7 @@ const CHANGELOG=(function(){
       'Farbschema: Dunkel, Hell oder System (Einstellungen → Farbschema)',
       'Akzentfarbe wählbar (5 Vorgaben oder Farbkreis); sie färbt Navigation, Rahmen und Grafiken, in der Android-App auch das Symbol auf dem Startbildschirm',
       'Neues App-Symbol: die Flamme der Website',
-      'Startseite: Gruß und Spruch passend zur Tageszeit, „Jetzt / Als Nächstes“ aus dem Stundenplan, Tagesziel mit Fortschrittsring, Zeit in der App mit Wochendiagramm, Weiterlernen, nächste Klausur und alle Module mit Fortschritt',
+      'Startseite ruhiger: Weiterlernen mit Tagesziel-Ring, Lernzeit-Verlauf als Balken (Woche oder Monate) mit nächster Einheit, Module als Ringe, 1. Ausbildungsjahr eingeklappt; Gruß und Spruch passend zur Tageszeit',
       'Stundenplan: IdF Modul 3.5 mit Uhrzeiten, Räumen, Hinweisen, Mittagspause und Telefonnummern; Übernahme in den Kalender mit Erinnerung',
       'Prüfung: alle Klausur-Werkzeuge an einem Ort, mit Countdown zur nächsten Klausur; Altklausur-Quiz, Klausurfragen und Fallbearbeitung im neuen Design',
       'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
@@ -5757,40 +5757,29 @@ const SHELL=(function(){
     const now=Date.now();
     return { known:Object.keys(fc).length, due:Object.values(fc).filter(v=>v&&v.nextReview<=now).length, total:FLASHCARD_DATA.length };
   }
-  function chart(v){
-    const W=340,H=150,L=30,R=12,T=14,B=26;
-    const mx=Math.max(...v), top=mx>20?Math.ceil(mx/20)*20:Math.max(4,Math.ceil(mx/4)*4);
-    const x=i=>L+i*(W-L-R)/6, y=m=>T+(H-T-B)*(1-m/top);
-    const today=(new Date().getDay()+6)%7, days=['Mo','Di','Mi','Do','Fr','Sa','So'];
-    const pts=v.slice(0,today+1).map((m,i)=>`${x(i)},${y(m)}`).join(' ');
-    let g='';
-    [0,top/2,top].forEach(m=>{ g+=`<line x1="${L}" x2="${W-R}" y1="${y(m)}" y2="${y(m)}" style="stroke:#333" stroke-dasharray="3 5"/><text x="${L-8}" y="${y(m)+4}" text-anchor="end" font-size="11" style="fill:#7a7a7a">${m}</text>`; });
-    g+=`<polygon points="${x(0)},${y(0)} ${pts} ${x(today)},${y(0)}" style="fill:var(--m-accent);opacity:.12"/>`;
-    g+=`<polyline points="${pts}" fill="none" style="stroke:var(--m-accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
-    g+=`<line x1="${x(today)}" x2="${x(today)}" y1="${T}" y2="${y(v[today])}" style="stroke:var(--m-accent)" stroke-width="2"/>`;
-    v.slice(0,today+1).forEach((m,i)=>{ g+=`<circle cx="${x(i)}" cy="${y(m)}" r="${i===today?6:3.5}" style="fill:var(--m-accent)"/>`; });
-    days.forEach((d,i)=>{ g+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle" font-size="11" font-weight="${i===today?700:400}" style="fill:${i===today?'var(--m-accent)':'#7a7a7a'}">${d}</text>`; });
-    const sum=v.reduce((a,b)=>a+b,0);
-    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Minuten in der App pro Tag in dieser Woche, insgesamt ${sum} Minuten">${g}</svg>`;
+  // Balken-Diagramm: beginnt bei 0, kein Strich bis zur Oberkante; Beschriftung nur an Balken mit Wert
+  function plot(vals,labels,cur,top,hours){
+    const fmt=v=>hours?(Math.round(v*10)/10).toString().replace('.',','):String(Math.round(v));
+    return `<div class="m-plot${vals.length>8?' many':''}" role="img" aria-label="Lernzeit je ${vals.length>8?'Monat':'Tag'}">${vals.map((v,i)=>
+      `<div><span class="m-pv">${v>0?fmt(v):''}</span><i class="m-pb${i===cur?' cur':v>0?' dim':' zero'}" style="height:${v>0?Math.max(4,v/top*100):0}%"></i><span class="m-pl${i===cur?' cur':''}">${labels[i]}</span></div>`).join('')}</div>`;
   }
-
-  function chartMonths(ms){
-    const W=340,H=150,L=30,R=12,T=14,B=26, hours=Math.max(...ms.map(m=>m.sec))>=7200;
-    const v=ms.map(m=>hours?m.sec/3600:Math.round(m.sec/60));
-    const mx=Math.max(...v), top=hours?Math.max(2,Math.ceil(mx/2)*2):(mx>20?Math.ceil(mx/20)*20:Math.max(4,Math.ceil(mx/4)*4));
-    const bw=(W-L-R)/ms.length, y=m=>T+(H-T-B)*(1-m/top);
-    const names=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
-    let g='';
-    [0,top/2,top].forEach(m=>{ g+=`<line x1="${L}" x2="${W-R}" y1="${y(m)}" y2="${y(m)}" style="stroke:#333" stroke-dasharray="3 5"/><text x="${L-8}" y="${y(m)+4}" text-anchor="end" font-size="11" style="fill:#7a7a7a">${m}</text>`; });
-    ms.forEach((m,i)=>{
-      const last=i===ms.length-1, x=L+i*bw+bw*.18, w=bw*.64, h=(H-T-B)*v[i]/top;
-      if(h>0) g+=`<rect x="${x}" y="${y(v[i])}" width="${w}" height="${h}" rx="3" style="fill:var(--m-accent);opacity:${last?1:.55}"/>`;
-      g+=`<text x="${L+i*bw+bw/2}" y="${H-6}" text-anchor="middle" font-size="9.5" font-weight="${last?700:400}" style="fill:${last?'var(--m-accent)':'#7a7a7a'}">${names[m.m]}</text>`;
-    });
-    const sum=Math.round(ms.reduce((a,m)=>a+m.sec,0)/60);
-    return {svg:`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Lernzeit pro Monat in den letzten 12 Monaten, insgesamt ${sum} Minuten">${g}</svg>`,unit:hours?'Stunden pro Monat':'Minuten pro Monat'};
+  function weekPlot(){
+    const w=USAGE.week(), today=(new Date().getDay()+6)%7;
+    const hours=Math.max(...w)>=7200;
+    const v=w.map(x=>hours?x/3600:x/60), top=hours?Math.max(2,Math.ceil(Math.max(...v))):Math.max(30,Math.ceil(Math.max(...v)/10)*10);
+    return {html:plot(v,['Mo','Di','Mi','Do','Fr','Sa','So'],today,top,hours),unit:hours?'Stunden pro Tag':'Minuten pro Tag',sum:w.reduce((a,b)=>a+b,0)};
   }
-  let chartRange='week';
+  function monthPlot(){
+    const ms=USAGE.months(12), names=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+    const hours=Math.max(...ms.map(m=>m.sec))>=7200;
+    const v=ms.map(m=>hours?m.sec/3600:m.sec/60), top=hours?Math.max(2,Math.ceil(Math.max(...v)/2)*2):Math.max(30,Math.ceil(Math.max(...v)/10)*10);
+    return {html:plot(v,ms.map(m=>names[m.m]),ms.length-1,top,hours),unit:hours?'Stunden pro Monat':'Minuten pro Monat',sum:ms.reduce((a,m)=>a+m.sec,0)};
+  }
+  function homeRing(p,label,aria){
+    const r=44,c=2*Math.PI*r;
+    return `<svg class="m-hring" viewBox="0 0 100 100" role="img" aria-label="${esc(aria)}"><circle cx="50" cy="50" r="${r}" class="bg"/>${p>0?`<circle cx="50" cy="50" r="${r}" class="fg" stroke-dasharray="${c*p/100} ${c}" transform="rotate(-90 50 50)"/>`:''}<text x="50" y="58" text-anchor="middle" font-size="${label.length>3?22:26}">${esc(label)}</text></svg>`;
+  }
+  let chartRange='week', y1Open=false;
 
   function dur(sec){
     const m=Math.floor(sec/60);
@@ -5838,11 +5827,6 @@ const SHELL=(function(){
     const diff=Math.round((x-t)/864e5);
     return diff===0?'heute':diff===1?'morgen':d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'});
   }
-  function goalCard(){
-    const sec=USAGE.today(), goal=goalMin(), p=Math.min(1,sec/(goal*60)), done=p>=1;
-    const R=26, C=2*Math.PI*R;
-    return `<div class="m-card m-goal"><svg viewBox="0 0 64 64" role="img" aria-label="${Math.round(p*100)} Prozent des Tagesziels"><circle cx="32" cy="32" r="${R}" class="m-ring-bg"/><circle cx="32" cy="32" r="${R}" class="m-ring-fg" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 32 32)"/>${done?'<path d="m22 33 7 7 13-14" class="m-ring-ok"/>':`<text x="32" y="37" text-anchor="middle" class="m-ring-t">${Math.round(p*100)}%</text>`}</svg><div class="m-tx"><span class="m-eyebrow">Tagesziel</span><span class="m-t1" style="margin-top:2px">${done?'Geschafft!':dur(sec)+' von '+goal+' min'}</span><span class="m-t2">${done?'Dein Ziel für heute ist erreicht.':'Noch '+Math.max(1,Math.ceil((goal*60-sec)/60))+' min bis zum Ziel'}</span></div></div>`;
-  }
   function updateBadges(){
     const n=tabNumOn()?Math.max(0,cardGoal()-cardsToday()):0;
     document.querySelectorAll('#m-tabbar [data-tab="learn"],#m-rail [data-tab="learn"]').forEach(b=>{
@@ -5872,34 +5856,31 @@ const SHELL=(function(){
       const ms=MODS.filter(m=>m[5]===y);
       return `<div class="m-sec">${y}. Ausbildungsjahr</div><div class="m-list m-only-s">${ms.map(modRow).join('')}</div><div class="m-modgrid">${ms.map(modCard).join('')}</div>`;
     };
-    let cont='';
+    const sec=USAGE.today(), goal=goalMin(), gp=Math.min(100,Math.round(sec/(goal*60)*100));
+    const minToday=Math.floor(sec/60);
+    let cTitle="Los geht's", cSub='Starte mit den Lernkarten', cGo="NAV.tab('v-flashcards','Lernkarten')", cBtn='Starten';
     if(recent&&document.getElementById(recent.id)){
-      const eb=document.querySelector('#'+recent.id+' .page-eyebrow')?.textContent?.trim()||'';
-      cont=`<div class="m-card m-cont"><div class="m-tx"><span class="m-eyebrow">Weiterlernen</span><span class="m-t1" style="margin-top:4px">${esc(recent.label)}</span>${eb?`<span class="m-t2">${esc(eb)}</span>`:''}</div><button class="m-play" aria-label="${esc(recent.label)} öffnen" onclick="${goJs(recent.id,recent.label)}">${svg('play')}</button></div>`;
+      cTitle=recent.label; cGo=goJs(recent.id,recent.label); cBtn='Weiter';
+      cSub=document.querySelector('#'+recent.id+' .page-eyebrow')?.textContent?.trim()||'';
     }
-    const nextRow=nx?row({ic:ic('cal'),t1:nx.title,t2:`${nx.state==='now'?'Jetzt':'Als Nächstes'} · ${dayWord(nx.start)} ${hhmm(nx.start)}${nx.state==='now'?'–'+hhmm(nx.end):''}${nx.room?' · Raum '+nx.room:''}`,on:"NAV.tab('v-plan','Plan')"}):'';
-    const extra=(exam>=0?row({ic:ic('exam'),t1:'Nächste Klausur',t2:`${ex.name} · ${exam===0?'heute':exam===1?'morgen':'noch '+exam+' Tage'}`,on:"NAV.tab('v-pruefung','Prüfung')"}):'')
-      +row({ic:ic('cards'),t1:'Lernkarten wiederholen',t2:cs.due?`${cs.due} Karten heute fällig`:'Heute nichts fällig',on:"NAV.tab('v-flashcards','Lernkarten')"});
+    const cont=`<div class="m-card m-cont2"><div class="m-cont2-top"><div class="m-tx"><span class="m-eyebrow">Weiterlernen</span><span class="m-cont2-t">${esc(cTitle)}</span>${cSub?`<span class="m-t2">${esc(cSub)}</span>`:''}</div>${homeRing(gp,gp+'%',gp+' Prozent des Tagesziels')}</div>
+      <div class="m-cont2-bot"><button class="m-go2" onclick="${cGo}">${cBtn} ${svg('play')}</button><span class="m-t2">Ziel heute: ${minToday} / ${goal} min</span></div></div>`;
+    const nextRow=nx?row({ic:ic('cal'),t1:nx.title,t2:`${nx.state==='now'?'Jetzt':'Als Nächstes'} · ${dayWord(nx.start)} ${hhmm(nx.start)}${nx.state==='now'?'–'+hhmm(nx.end):''}${nx.room?' · Raum '+nx.room:''}`,on:"NAV.tab('v-plan','Stundenplan')"}):'';
+    const pl=chartRange==='month'?monthPlot():weekPlot(), isM=chartRange==='month';
+    const chartCard=`<div class="m-card m-chart2"><div class="m-chart-h"><span class="m-eyebrow">${isM?'Pro Monat':'Diese Woche'}</span><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${isM?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${isM?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span></div>
+      <div class="m-tot"><span><b>${dur(pl.sum)}</b> ${isM?'in 12 Monaten':'diese Woche'}</span><span><b>${dur(USAGE.total())}</b> insgesamt</span></div>
+      ${pl.html}<div class="m-chart-u">${pl.unit}</div>
+      ${nextRow?`<div class="m-hr"></div>${nextRow}`:''}</div>`;
+    const ringBtn=m=>{
+      const c=cnt[m[0]]||{done:0,total:0};
+      return `<button class="m-ringbtn" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen">${homeRing(pct(c),m[1],m[1])}<small>${c.done}/${c.total}</small></button>`;
+    };
+    const mods=`<div class="m-card m-mods"><div class="m-modgrid2"><div><div class="m-sec">2. Ausbildungsjahr</div><div class="m-rings">${MODS.filter(m=>m[5]===2).map(ringBtn).join('')}</div></div>
+      <details class="m-y1"${y1Open?' open':''} ontoggle="SHELL.y1(this.open)"><summary>1. Ausbildungsjahr</summary><div class="inner"><div class="m-rings r3">${MODS.filter(m=>m[5]===1).map(ringBtn).join('')}</div></div></details></div></div>`;
+    const cloud=`<div class="m-list m-glow m-cloud"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2 m-cloud-x">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${streak?`<span class="m-streak">${svg('flame')}${streak} ${streak===1?'Tag':'Tage'}</span>`:''}</div>
-      <div class="m-g2 m-home-top">
-        <div class="m-col">
-          ${goalCard()}
-          <div class="m-stats2">
-            <div class="m-stat"><b>${dur(week.reduce((a,b)=>a+b,0))}</b><span>diese Woche in der App</span></div>
-            <div class="m-stat"><b>${dur(USAGE.total())}</b><span>insgesamt</span></div>
-          </div>
-          ${(()=>{ const mo=chartRange==='month'?chartMonths(USAGE.months(12)):null;
-            return `<div class="m-card m-chart"><div class="m-chart-h"><b>${mo?'Lernzeit pro Monat':'Lernzeit diese Woche'}</b><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${mo?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${mo?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span></div><div class="m-chart-u">${mo?mo.unit:'Minuten pro Tag'}</div>${mo?mo.svg:chart(week.map(x=>Math.round(x/60)))}</div>`; })()}
-        </div>
-        <div class="m-col">
-          ${cont}
-          ${nextRow?`<div class="m-list">${nextRow}</div>`:''}
-          <div class="m-list m-only-l">${extra}</div>
-        </div>
-      </div>
-      ${year(1)}${year(2)}
-      <div class="m-list m-glow"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
+      <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${cloud}</div></div>`;
   }
 
   function renderExam(){
@@ -6071,6 +6052,7 @@ const SHELL=(function(){
       updateBadges();
     },
     setRange(r){ chartRange=r==='month'?'month':'week'; renderHome(); },
+    y1(open){ y1Open=!!open; },
     cardDone, renderCardGoal, syncCardGoal,
     setExam(){
       const date=document.getElementById('m-exam-date')?.value, name=document.getElementById('m-exam-name')?.value||'';

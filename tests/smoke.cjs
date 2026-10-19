@@ -54,6 +54,7 @@ const EXEC = process.env.PW_EXEC || undefined;
     if (!(await page.evaluate(() => LIGHTBOX.isOpen()))) errors.push('Bild-Vergrößerung öffnet nicht');
     await page.evaluate(() => LIGHTBOX.close(true));
     // Neue Werkzeuge: Eigene Karte, QR-Code, Klausur-Timer, Fehler melden
+    await page.evaluate(() => { NAV.home(); SHELL.setRange('month'); SHELL.setRange('week'); });
     await page.evaluate(() => { CUSTOM.open(); CUSTOM.close(); APPSHARE.open(); APPSHARE.close(); ETIMER.start(1); ETIMER.stop(); }).catch(e => errors.push(`Werkzeuge: ${e.message}`));
     for (const e of [...new Set(errors)]) problems.push(`${name}: ${e}`);
     await ctx.close();
