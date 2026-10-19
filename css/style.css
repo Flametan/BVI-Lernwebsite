@@ -1969,7 +1969,9 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
   .m-plot{--pl:48px;}
   .m-hr{margin:8px 0;}
   .m-rings{margin-top:6px;}
-  .m-ringbtn .m-hring{width:52px;height:52px;}
+  .m-ringbtn .m-hring{width:68px;height:68px;}
+  .m-ringbtn small{font-size:.72rem;}
+  .m-rings{gap:6px;}
 }
 
 /* Einstellungen: Beschriftung wird nie von Knöpfen überdeckt; bei wenig Platz rutscht die Bedienung in die nächste Zeile */
