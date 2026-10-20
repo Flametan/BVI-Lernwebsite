@@ -1663,7 +1663,7 @@ const BOOKMARKS = (function(){
       const eb=document.querySelector('#'+b.id+' .page-eyebrow')?.textContent?.trim()||'';
       return `<div class="m-row bm-row">
         <button class="bm-open" data-id="${xss(b.id)}" data-label="${xss(b.label||b.id)}"><span class="m-t1">${xss(b.label||b.id)}</span>${eb?`<span class="m-t2">${xss(eb)}</span>`:''}</button>
-        <button class="bm-remove" data-id="${xss(b.id)}" aria-label="Lesezeichen entfernen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        <button class="bm-remove" data-id="${xss(b.id)}" aria-label="Lesezeichen entfernen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
       </div>`;}).join('')+'</div>';
     list.querySelectorAll('.bm-open').forEach(btn=>{
       btn.addEventListener('click',()=>NAV.go(btn.dataset.id, btn.dataset.label));
@@ -1927,7 +1927,7 @@ const FC = (function(){
     const isStarred=stars.has(card.id);
     box.innerHTML = `
       <div class="fc-nav">
-        <button class="fc-back-btn" onclick="FC.back()" ${_seen.length===0?'disabled':''} aria-label="Vorherige Karte"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+        <button class="fc-back-btn" onclick="FC.back()" ${_seen.length===0?'disabled':''} aria-label="Vorherige Karte"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
         <span class="fc-pos">Karte ${curIdx+1} von ${deck.length}</span>
         <span class="fc-score">${sess.known} gewusst · ${sess.unknown} nochmal</span>
         <button class="fc-star-btn${isStarred?' starred':''}" onclick="FC.toggleStar('${card.id}')" aria-label="${isStarred?'Markierung entfernen':'Karte markieren'}"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
@@ -2599,7 +2599,7 @@ const TB=(function(){
         if(!w||!/auto|scroll/.test(getComputedStyle(w).overflowX)){ w=document.createElement('div'); t.parentNode.insertBefore(w,t); w.appendChild(t); }
         w.classList.add('tb-scroll');
         const hint=document.createElement('span'); hint.className='tb-hint'; hint.textContent='← wischen →'; w.appendChild(hint);
-        w.addEventListener('scroll',()=>hint.classList.toggle('gone',w.scrollLeft>8),{passive:true});
+        { let q=0; w.addEventListener('scroll',()=>{ if(q) return; q=requestAnimationFrame(()=>{ q=0; hint.classList.toggle('gone',w.scrollLeft>8); }); },{passive:true}); }
         requestAnimationFrame(()=>{ if(w.scrollWidth<=w.clientWidth+4) hint.classList.add('gone'); });
       }
     });
@@ -2664,14 +2664,14 @@ const LP=(function(){
   }
   function build(){
     win=document.createElement('div'); win.className='lp-win'; win.setAttribute('role','dialog'); win.setAttribute('aria-label','Kapitel');
-    win.innerHTML='<div class="lp-wh"><button type="button" class="lp-wb-back" aria-label="Zurück zur Übersicht"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="lp-wt"><span class="lp-eb"></span><b></b></div>'
+    win.innerHTML='<div class="lp-wh"><button type="button" class="lp-wb-back" aria-label="Zurück zur Übersicht"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="lp-wt"><span class="lp-eb"></span><b></b></div>'
       +'<div class="m-tb-actions"><button type="button" class="lp-fm" aria-label="Schrift kleiner">A−</button><button type="button" class="lp-fp" aria-label="Schrift größer">A+</button><button type="button" class="lp-bm" aria-label="Lesezeichen setzen" onclick="SHELL.bookmark()"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>'
       +'<button type="button" class="lp-nt" aria-label="Notiz zu dieser Seite" onclick="NOTES.toggle()"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button></div></div>'
       +'<div class="lp-bar"><i></i></div><div class="lp-wbody"></div><div class="lp-pg"><button type="button" class="lp-prev">‹ Vorheriges Kapitel</button><button type="button" class="lp-next">Nächstes Kapitel ›</button></div>';
     win.querySelector('.lp-wb-back').onclick=()=>back();
     win.querySelector('.lp-fm').onclick=()=>fz(-1);
     win.querySelector('.lp-fp').onclick=()=>fz(1);
-    win.querySelector('.lp-wbody').addEventListener('scroll',bar,{passive:true});
+    { let q=0; win.querySelector('.lp-wbody').addEventListener('scroll',()=>{ if(q) return; q=requestAnimationFrame(()=>{ q=0; bar(); }); },{passive:true}); } // pro Frame höchstens einmal rechnen
     win.querySelector('.lp-prev').onclick=()=>go(cur.i-1);
     win.querySelector('.lp-next').onclick=()=>go(cur.i+1);
     const mo=new MutationObserver(sync);
@@ -3801,6 +3801,7 @@ const CHANGELOG=(function(){
       'Lernseiten korrigiert: FwDV 8 (Tauchen) und FwDV 10 (tragbare Leitern), praktische Saughöhe einheitlich 7,5 m, LF 10 mit 1.200 l und HLF 20 mit 1.600 l nach DIN 14530-5 bzw. -27, Körperschutzformen 1–3 und Gefahrengruppen I–III nach FwDV 500, Absperrbereich 25 µSv/h, Führungsstufen B/C mit Führungstrupp/-staffel bzw. Führungsgruppe',
       'Altklausur-Quiz korrigiert: IdF „Hochhäuser bis 60 m“ nach MHHR (Feuerwehraufzug und Steigleitungen sowie ein Sicherheitstreppenraum statt zwei Treppenräumen sind richtig), VAk „Was ist ein Realakt?“ mit Erklärung, warum „Hoheitliche Aufgabe“ am ehesten passt',
       'Farbsystem: Skalen (Amber, Neutral, Grün, Rot) und Namen nach Aufgabe (Seite, Fläche, Haupttext, Nebentext, Akzent …) als gemeinsame Schicht im CSS; Kontrast im hellen Design korrigiert (graue Zusatztexte, Datum), alle geprüften Texte erreichen jetzt WCAG AA; Verläufe, Glow und bewusst farbige Kacheln bleiben unverändert',
+      'Technik: Höhen folgen der sichtbaren Bildschirmhöhe (dvh, wichtig am Handy mit Adressleiste), Übergänge nur noch für Farben, Rand, Deckkraft und Bewegung statt für alles, ruhigeres Scrollen in Kapitel-Fenster und Tabellen, einheitliche Strichstärke der Symbole (2, große Kachel-Symbole 1,5) und eine benannte Skala für die Ebenen (z-index)',
 'Lernseiten neu: Überblick mit Kapitelkarten (Titel, Lesezeit, Vorschau) – auf Handy und Tablet gleich, ohne Umschalter; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges/Nächstes Kapitel“, Stift (Notiz) und Lesezeichen oben; Zurück führt zur Übersicht; am Desktop als Volltext; die Suche springt direkt ins passende Kapitel; Vorlesefunktion entfernt; Tabellen am Handy automatisch lesbar (2 Spalten als Begriff/Erklärung, 3–4 Spalten als Karten, ab 5 Spalten mit fester erster Spalte) und überall im gleichen Stil',
       'Stundenplan springt beim Öffnen zur laufenden bzw. nächsten Einheit: richtige Woche, der aktuelle Tag steht oben (am Wochenende der nächste Montag); die laufende bzw. nächste Einheit leuchtet mit Farbverlauf und Glow und wechselt mit der Uhrzeit',
       'Abkürzungen als Karten zum Aufklappen (Kürzel und Name, Erläuterung per Tipp; auf Tablet 2, auf Desktop 3 Spalten) mit fest stehender Suchleiste, Kategorien-Überschriften und „Suche leeren“',
@@ -5253,7 +5254,7 @@ const IDF_PLAN = (function(){
     const today=new Date(); today.setHours(0,0,0,0);
     const base=new Date(start+'T00:00');
     const notStarted=today<new Date(_weeks[0][3]+'T00:00');
-    const icon=d=>`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+    const icon=d=>`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
     let h=`<div class="m-card idf-head">
       <div class="idf-row"><div><b class="idf-kw">KW ${kw}</b><span class="m-t2">Woche ${nr} von 9${grp==='both'?' · beide Gruppen':''}</span></div>
         <div class="idf-nav"><button onclick="IDF_PLAN._nav(-1)" aria-label="Vorherige Woche"${_wi===0?' disabled':''}>${icon('m15 18-6-6 6-6')}</button><button onclick="IDF_PLAN._nav(1)" aria-label="Nächste Woche"${_wi===_weeks.length-1?' disabled':''}>${icon('m9 18 6-6-6-6')}</button></div></div>
@@ -5599,7 +5600,7 @@ const LIGHTBOX=(function(){
     box=document.createElement('div'); box.id='lb'; box.hidden=true;
     box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Bildansicht');
     box.innerHTML='<div class="lb-stage"><div class="lb-content"></div></div><div class="lb-cap"></div>'
-      +'<button class="lb-x" aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>'
+      +'<button class="lb-x" aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>'
       +'<div class="lb-hint">Zum Zoomen zweimal tippen oder zwei Finger nutzen</div>';
     document.body.appendChild(box);
     stage=box.querySelector('.lb-stage'); content=box.querySelector('.lb-content');
@@ -6367,7 +6368,7 @@ const SHELL=(function(){
       h+='<div class="m-sec" style="margin-top:1.4rem">Markierungen</div>'+marks.map(({view,items})=>{
         const v=document.getElementById(view);
         const label=v?.querySelector('.page-title')?.textContent?.trim()||view;
-        return `<div class="m-hl-group"><div class="m-t2" style="color:var(--m-accent-fg);margin:0 0 6px 4px">${esc(label)}</div><div class="m-list">${items.map((it,i)=>`<div class="m-row bm-row"><button class="bm-open" onclick="${goJs(view,label)}"><span class="m-note-txt">${esc(it.q)}</span></button><button class="bm-remove" aria-label="Markierung löschen" onclick="HL.removeAt(${esc(JSON.stringify(view))},${i});SHELL.renderNotes()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>`).join('')}</div></div>`;
+        return `<div class="m-hl-group"><div class="m-t2" style="color:var(--m-accent-fg);margin:0 0 6px 4px">${esc(label)}</div><div class="m-list">${items.map((it,i)=>`<div class="m-row bm-row"><button class="bm-open" onclick="${goJs(view,label)}"><span class="m-note-txt">${esc(it.q)}</span></button><button class="bm-remove" aria-label="Markierung löschen" onclick="HL.removeAt(${esc(JSON.stringify(view))},${i});SHELL.renderNotes()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>`).join('')}</div></div>`;
       }).join('');
     }
     if(!h) h='<div class="m-empty">Noch keine Notizen oder Markierungen.<br>Öffne eine Lernseite: Mit dem Stift schreibst du eine Notiz, und wenn du Text auswählst, kannst du ihn markieren.</div>';
