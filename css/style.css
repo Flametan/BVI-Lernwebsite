@@ -2291,3 +2291,7 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 /* Kapitel-Fenster auf Tablets: A−/A+ nur im Fokus-Lesemodus, Text in lesbarer Breite */
 .lp-win:not(.focus) .lp-fm,.lp-win:not(.focus) .lp-fp{display:none!important;}
 @media(min-width:701px){.lp-win:not(.focus) .lp-wbody{padding-left:max(16px,calc((100% - 780px)/2));padding-right:max(16px,calc((100% - 780px)/2));}}
+
+/* Kopfzeile mit Zurück/Üben/Fokus/Notiz/Lesezeichen bleibt beim Scrollen stehen */
+#m-topbar:has(#m-tb-actions:not(.hidden)){position:sticky;top:0;z-index:150;padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:6px;background:var(--m-bg);}
+@media(min-width:701px){#m-topbar:has(#m-tb-actions:not(.hidden)){padding-top:14px;}}
