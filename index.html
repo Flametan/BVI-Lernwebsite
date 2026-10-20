@@ -35,6 +35,12 @@
     <span id="m-back-lbl">Start</span>
   </button>
   <div id="m-tb-actions" class="m-tb-actions hidden">
+    <button id="m-practice" class="hidden" onclick="LP.togglePractice()" aria-label="Lernkarten zu dieser Seite ein- oder ausblenden">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></svg>
+    </button>
+    <button id="m-focus" class="hidden" onclick="LP.focusMode()" aria-label="Fokus-Lesemodus">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+    </button>
     <button id="m-bm" onclick="SHELL.bookmark()" aria-label="Lesezeichen setzen">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
     </button>
@@ -86,7 +92,7 @@
   <div class="search-box" onclick="event.stopPropagation()">
     <div class="search-input-wrap">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--c-slate);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="search-input" class="search-input" type="text" placeholder="Themen, Begriffe, Abkürzungen suchen…" oninput="SEARCH.query(this.value)" onkeydown="SEARCH.keydown(event)" autocomplete="off" spellcheck="false"/>
+      <input id="search-input" class="search-input" type="text" placeholder="Suchen oder Aktion wählen …" oninput="SEARCH.query(this.value)" onkeydown="SEARCH.keydown(event)" autocomplete="off" spellcheck="false"/>
       <button class="search-close-btn" onclick="SEARCH.close()" title="Schließen (Esc)">✕</button>
     </div>
     <div class="search-filter-row">

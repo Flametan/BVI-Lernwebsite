@@ -1385,6 +1385,36 @@ const SEARCH = (function(){
     ];
   }
 
+  // ── Befehlspalette: Aktionen und Kapitel der aktuellen Seite ──
+  function quick(q){
+    const v=document.querySelector('.view.active'), vid=v&&v.id, out=[];
+    const NAVS=[['Zur Startseite','→',()=>NAV.home()],['Zum Stundenplan','→',()=>NAV.tab('v-plan','Stundenplan')],['Zur Prüfung','→',()=>NAV.tab('v-pruefung','Prüfung')],
+      ['Lernkarten üben','→',()=>NAV.tab('v-flashcards','Lernkarten')],['Einstellungen öffnen','→',()=>NAV.tab('v-settings','Einstellungen')]];
+    const acts=[];
+    const page=vid&&vid.split('-').length>2&&document.getElementById('m-tb-actions')&&!document.getElementById('m-tb-actions').classList.contains('hidden');
+    if(page){ acts.push(['Notiz zu dieser Seite','N',()=>NOTES.toggle()],['Lesezeichen setzen oder entfernen','B',()=>SHELL.bookmark()]); }
+    if(typeof LP!=='undefined'&&LP.canFocus()) acts.push(['Fokus-Lesemodus','F',()=>LP.focusMode()]);
+    if(typeof LP!=='undefined'&&LP.canPractice()&&window.matchMedia('(min-width:1100px)').matches) acts.push(['Lernkarten-Fenster ein- oder ausblenden','Ü',()=>LP.togglePractice()]);
+    NAVS.forEach(n=>acts.push([n[0],n[1],n[2]]));
+    const t=norm(q||'').trim();
+    if(v){
+      const its=[...v.querySelectorAll('.pc .acc-item')];
+      its.forEach((d,i)=>{
+        const ti=(d.querySelector('summary .acc-title,summary .acc-h')||d.querySelector('summary')).textContent.replace(/\s+/g,' ').trim();
+        if(t?norm(ti).includes(t):i<8) out.push({grp:'Kapitel dieser Seite',lbl:String(i+1).padStart(2,'0'),title:ti,snippet:'',act:()=>LP.focus(vid,i),quick:true});
+      });
+    }
+    acts.forEach(a=>{ if(!t||norm(a[0]).includes(t)) out.push({grp:'Aktionen',lbl:a[1],title:a[0],snippet:'',act:a[2],quick:true}); });
+    return out.slice(0,t?14:16);
+  }
+  function quickHtml(items,q){
+    let lastGrp='';
+    return items.map((r,i)=>{
+      const head=r.grp!==lastGrp?`<div class="sr-group">${r.grp}</div>`:''; lastGrp=r.grp;
+      return head+`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${xss(r.lbl)}</span><div><div class="sr-title">${q?hl(xss(r.title),q):xss(r.title)}</div></div></div>`;
+    }).join('');
+  }
+
   function renderBookmarks(){
     const el = document.getElementById('search-results'); if(!el) return;
     const bks = (typeof BOOKMARKS!=='undefined') ? BOOKMARKS.getAll() : [];
@@ -1401,17 +1431,18 @@ const SEARCH = (function(){
         +`<button class="bk-del" onclick="event.stopPropagation();SEARCH.clearHist()">✕</button>`
         +'</div>').join('')+'</div>';
     if(!html) html='<div class="search-idle">Suchbegriff eingeben – z.&nbsp;B. <em>AVIVA</em>, <em>Glasl</em>, <em>MANV</em></div>';
-    el.innerHTML=html;
+    el.innerHTML=quickHtml(results,'')+html;
   }
 
   function render(q){
     const el = document.getElementById('search-results');
-    if(!q){ renderBookmarks(); results=[]; focusIdx=-1; return; }
-    results = doSearch(q);
+    if(!q){ results=quick(''); focusIdx=-1; renderBookmarks(); return; }
+    results = [...quick(q), ...doSearch(q)];
     if(!results.length){ el.innerHTML='<div class="search-empty">Keine Treffer für <strong>'+xss(q)+'</strong></div>'; focusIdx=-1; return; }
     let lastGrp='';
     el.innerHTML = results.map((r,i)=>{
       const head=r.grp!==lastGrp?`<div class="sr-group">${r.grp}</div>`:''; lastGrp=r.grp;
+      if(r.quick) return head+`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${xss(r.lbl)}</span><div><div class="sr-title">${hl(xss(r.title),q)}</div></div></div>`;
       return head+`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${r.lbl}</span><div><div class="sr-title">${hl(xss(r.title),q)}${r.fuzzy?' <i class="sr-fz">ähnlich</i>':''}</div>${r.snippet?`<div class="sr-snippet">${hl(xss(contextSnippet(r.snippet,q)),q)}</div>`:''}</div></div>`;
     }).join('');
     focusIdx = -1;
@@ -1450,6 +1481,7 @@ const SEARCH = (function(){
     },
     go(i){
       const r = results[i]; if(!r) return;
+      if(r.quick){ this.close(); setTimeout(r.act,60); return; }
       saveHist(document.getElementById('search-input').value.trim());
       this.close();
       const lbl = r.lbl.split('·').pop().trim();
@@ -1987,6 +2019,13 @@ const FC = (function(){
       const ctrl=document.getElementById('fc-controls');
       if(inner) inner.classList.toggle('flipped',flipped);
       if(ctrl) ctrl.style.display=flipped?'flex':'none';
+    },
+    // Karte außerhalb des Kartenstapels bewerten (z. B. im Übungs-Fenster neben der Lernseite)
+    rateExternal(id,ok){
+      const d=fcLoad();
+      if(ok){ d[id]=sm2(d[id]||{},2); if(typeof STREAK!=='undefined') STREAK.record(); } else delete d[id];
+      const weak=fcLoadWeak(); if(ok) weak.delete(id); else weak.add(id); fcSaveWeak(weak);
+      fcSave(d); SHELL.renderFcSide(); SHELL.updateBadges(); SHELL.cardDone();
     },
     answer(quality){
       if(!flipped) return;
@@ -2690,10 +2729,13 @@ const LP=(function(){
   function build(){
     win=document.createElement('div'); win.className='lp-win'; win.setAttribute('role','dialog'); win.setAttribute('aria-label','Kapitel');
     win.innerHTML='<div class="lp-wh"><button type="button" class="lp-wb-back" aria-label="Zurück zur Übersicht"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="lp-wt"><span class="lp-eb"></span><b></b></div>'
-      +'<div class="m-tb-actions"><button type="button" class="lp-bm" aria-label="Lesezeichen setzen" onclick="SHELL.bookmark()"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>'
+      +'<div class="m-tb-actions"><button type="button" class="lp-fm" aria-label="Schrift kleiner">A−</button><button type="button" class="lp-fp" aria-label="Schrift größer">A+</button><button type="button" class="lp-bm" aria-label="Lesezeichen setzen" onclick="SHELL.bookmark()"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>'
       +'<button type="button" class="lp-nt" aria-label="Notiz zu dieser Seite" onclick="NOTES.toggle()"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button></div></div>'
-      +'<div class="lp-wbody"></div><div class="lp-pg"><button type="button" class="lp-prev">‹ Vorheriges Kapitel</button><button type="button" class="lp-next">Nächstes Kapitel ›</button></div>';
+      +'<div class="lp-bar"><i></i></div><div class="lp-wbody"></div><div class="lp-pg"><button type="button" class="lp-prev">‹ Vorheriges Kapitel</button><button type="button" class="lp-next">Nächstes Kapitel ›</button></div>';
     win.querySelector('.lp-wb-back').onclick=()=>back();
+    win.querySelector('.lp-fm').onclick=()=>fz(-1);
+    win.querySelector('.lp-fp').onclick=()=>fz(1);
+    win.querySelector('.lp-wbody').addEventListener('scroll',bar,{passive:true});
     win.querySelector('.lp-prev').onclick=()=>go(cur.i-1);
     win.querySelector('.lp-next').onclick=()=>go(cur.i+1);
     const mo=new MutationObserver(sync);
@@ -2714,14 +2756,27 @@ const LP=(function(){
     const body=d.querySelector('.acc-body'); cur.body=body;
     const wb=win.querySelector('.lp-wbody'); wb.innerHTML='<h2 class="lp-h">'+esc(titleOf(d))+'</h2>'; wb.appendChild(body); body.classList.add('lp-held');
     win.querySelector('.lp-eb').textContent='Kapitel '+numOf(d,i)+' / '+String(its.length).padStart(2,'0');
+    applyFz();
     win.querySelector('.lp-wt b').textContent=document.querySelector('#'+cur.v.id+' .page-title')?.textContent.trim()||'';
     win.querySelector('.lp-prev').classList.toggle('dis',i===0);
     win.querySelector('.lp-next').classList.toggle('dis',i===its.length-1);
-    wb.scrollTop=0; CHECKS.set(cur.v._lp.id,ckOf(d),true); sync();
+    wb.scrollTop=0; CHECKS.set(cur.v._lp.id,ckOf(d),true); sync(); bar();
   }
-  function open(v,i){
+  // Fokus-Lesemodus: Fortschrittslinie (Kapitel + Lesestand im Kapitel) und Schriftgröße
+  function bar(){
+    if(!cur||!win) return;
+    const wb=win.querySelector('.lp-wbody'), n=items(cur.v).length, f=wb.scrollHeight>wb.clientHeight?wb.scrollTop/(wb.scrollHeight-wb.clientHeight):1;
+    win.querySelector('.lp-bar i').style.width=Math.min(100,(cur.i+f)/n*100)+'%';
+  }
+  const FZ=[15,16,18,20,22,24];
+  function fzIdx(){ try{ const i=parseInt(localStorage.getItem('bvi_lp_fz'),10); return i>=0&&i<FZ.length?i:2; }catch(e){ return 2; } }
+  function fz(d){ const i=Math.max(0,Math.min(FZ.length-1,fzIdx()+d)); try{ localStorage.setItem('bvi_lp_fz',String(i)); }catch(e){} applyFz(); }
+  function applyFz(){ win&&win.style.setProperty('--lp-fz',FZ[fzIdx()]+'px'); }
+  function open(v,i,opt){
     if(!win) build();
-    cur={v,i,body:null};
+    const focus=!!(opt&&opt.focus);
+    cur={v,i,body:null,focus};
+    win.classList.toggle('focus',focus); v.classList.toggle('lp-focus',focus);
     v.appendChild(win); v.classList.add('lp-open'); document.documentElement.classList.add('lp-lock');
     const r=v.getBoundingClientRect(); win.style.setProperty('--lp-l',Math.max(0,r.left)+'px'); win.style.setProperty('--lp-w',r.width+'px');
     load(i); win.classList.add('on');
@@ -2730,7 +2785,7 @@ const LP=(function(){
   function go(i){ if(!cur||i<0||i>=items(cur.v).length) return; give(); load(i); }
   function close(silent){
     if(!cur) return;
-    give(); const v=cur.v; win.classList.remove('on'); v.classList.remove('lp-open'); document.documentElement.classList.remove('lp-lock'); cur=null;
+    give(); const v=cur.v; win.classList.remove('on','focus'); v.classList.remove('lp-open','lp-focus'); document.documentElement.classList.remove('lp-lock'); cur=null;
     if(v.classList.contains('lp-ueber')) render(v);
     if(pushed){ pushed=false; if(!silent){ ignorePop=true; try{ history.back(); }catch(e){ ignorePop=false; } } }
   }
@@ -2739,7 +2794,73 @@ const LP=(function(){
     if(ignorePop){ ignorePop=false; e.stopImmediatePropagation(); return; }
     if(cur){ close(true); e.stopImmediatePropagation(); }
   },true);
-  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&cur&&document.getElementById('notes-overlay')?.classList.contains('hidden')) back(); });
+  document.addEventListener('keydown',e=>{
+    if(!cur) return;
+    if(e.key==='Escape'&&document.getElementById('notes-overlay')?.classList.contains('hidden')) back();
+    else if(cur.focus&&!/INPUT|TEXTAREA|SELECT/.test((e.target&&e.target.tagName)||'')){
+      if(e.key==='ArrowRight') go(cur.i+1); else if(e.key==='ArrowLeft') go(cur.i-1);
+    }
+  });
+  // ── Fokus-Lesemodus (Desktop) ──
+  function focusMode(){
+    const v=document.querySelector('.view.active'); if(!v||!v._lp) return;
+    const its=items(v); let i=0;
+    its.forEach((d,k)=>{ if(d.getBoundingClientRect().top<window.innerHeight*0.4) i=k; });
+    open(v,i,{focus:true});
+  }
+  // ── Lernkarten-Fenster neben der Lernseite (Desktop): ein-/ausblendbar ──
+  const PMAP={
+    'v-gal-brandlehre':['GAL · Brandlehre'],'v-gal-atemschutz':['GAL · Atemschutz'],'v-gal-beamtenrecht':['GAL · Beamtenrecht'],'v-gal-brandbekaempfung':['GAL · Brandbekämpfung'],
+    'v-gal-einsatztechnik':['GAL · Einsatztechnik'],'v-gal-erstehilfe':['GAL · Erste Hilfe'],'v-gal-gabc':['GAL · GABC'],'v-gal-fahrzeuge':['GAL · Fahrzeuge'],'v-gal-hbkg':['GAL · HBKG'],
+    'v-gal-beihilferecht':['GAL · Beihilfe'],'v-gal-kartenkunde':['GAL · Kartenkunde'],'v-gal-knoten':['GAL · Knoten'],'v-gal-geraetepruefung':['GAL · Geräteprüfung'],'v-gal-fuehrung':['GAL · Führung'],
+    'v-gal-fwdven':['GAL · FwDVen'],'v-gal-psa':['GAL · PSA'],'v-gal-leitern':['GAL · Leitern'],'v-gal-maschinist':['GAL · Maschinist'],'v-gal-armaturen':['GAL · Armaturen'],'v-gal-uvv':['GAL · UVV'],
+    'v-gal-staatsbuerger':['GAL · Staatsbürgerkunde'],'v-gal-th-verkehr':['GAL · TH-Verkehr'],
+    'v-sfs-fwdv3':['SFS · Taktik'],'v-sfs-methodik':['SFS · Methodik'],'v-sfs-rechtsgrundlagen':['SFS · Recht'],
+    'v-hlfs-fuehrungsvorgang':['HLFS · Führung'],'v-hlfs-gabc':['HLFS · GABC'],'v-hlfs-manv':['HLFS · MANV'],'v-hlfs-stab':['HLFS · Stab'],'v-hlfs-tunnel':['HLFS · Tunnel'],'v-hlfs-vb':['HLFS · Vorbeugen'],
+    'v-ibk-ta':['IBK · TA'],'v-ibk-konflikt':['IBK · Konflikt'],'v-ibk-stress':['IBK · Stress'],'v-ibk-psnv':['IBK · PSNV'],'v-ibk-bgm':['IBK · BGM'],'v-ibk-pm':['IBK · PM'],'v-ibk-zeit':['IBK · Zeit'],
+    'v-vak-jur-denken':['VAk · Jur. Denken'],'v-vak-verwaltungsrecht':['VAk · Verwaltungsrecht'],'v-vak-staatsrecht':['VAk · Staatsrecht'],'v-vak-einsatzrecht':['VAk · Einsatzrecht'],'v-vak-dienstrecht':['VAk · Dienstrecht'],
+    'v-feuak-vwl':['FeuAK · VWL'],'v-feuak-haushalt':['FeuAK · Haushalt'],'v-feuak-pm':['FeuAK · PM'],'v-feuak-bedarfsplanung':['FeuAK · Bedarfsplanung'],'v-feuak-katsbp':['FeuAK · KatS-Bedarfsplanung'],
+    'v-feuak-qm':['FeuAK · BSC/QM'],'v-feuak-stakeholder':['FeuAK · Stakeholderanalyse'],'v-feuak-risikoanalyse':['FeuAK · Prospektive Risikoanalyse'],'v-feuak-beschaffung':['FeuAK · Beschaffungspraxis','FeuAK · Vergabe'],
+    'v-idf-brandschutz':['IdF · Brandschutz'],'v-idf-stab':['IdF · Stabsarbeit'],'v-idf-presse':['IdF · Presse']
+  };
+  const cardsFor=id=>{ const c=PMAP[id]; return c&&typeof FLASHCARD_DATA!=='undefined'?FLASHCARD_DATA.filter(x=>c.includes(x.cat)):[]; };
+  const PRKEY='bvi_lp_prac';
+  let pr={id:null,list:[],i:0,flip:false,known:0}, panel=null;
+  const prefPrac=()=>{ try{ return localStorage.getItem(PRKEY)==='1'; }catch(e){ return false; } };
+  const shuf=a=>{ const r=[...a]; for(let i=r.length-1;i>0;i--){ const j=0|Math.random()*(i+1); [r[i],r[j]]=[r[j],r[i]]; } return r; };
+  function drawPrac(){
+    if(!panel) return;
+    const c=pr.list[pr.i], n=pr.list.length;
+    panel.innerHTML='<div class="lpp-h"><b>Üben</b><span>'+n+' Karten zu dieser Seite</span><button type="button" class="lpp-x" aria-label="Lernkarten ausblenden">✕</button></div>'
+      +'<div class="lpp-bar"><i style="width:'+(n?pr.known/n*100:0)+'%"></i></div>'
+      +(c?'<button type="button" class="lpp-card" aria-label="Karte umdrehen"><small>'+(pr.flip?'Antwort':'Frage')+' '+(pr.i+1)+' / '+n+'</small><div class="'+(pr.flip?'a':'q')+'">'+(pr.flip?c.a:c.q)+'</div></button>'
+        +'<div class="lpp-act"><button type="button" class="lpp-no">Nochmal</button><button type="button" class="lpp-ok">Gewusst</button></div><p class="lpp-t">Antippen dreht die Karte um. Die Bewertung zählt auch bei den Lernkarten.</p>':'<p class="lpp-t">Keine Karten zu dieser Seite.</p>');
+    panel.querySelector('.lpp-x').onclick=()=>togglePractice(false);
+    const card=panel.querySelector('.lpp-card'); if(card) card.onclick=()=>{ pr.flip=!pr.flip; drawPrac(); };
+    const rate=ok=>{ FC.rateExternal(c.id,ok); if(ok) pr.known=Math.min(n,pr.known+1); pr.i=(pr.i+1)%n; pr.flip=false; drawPrac(); };
+    const ok=panel.querySelector('.lpp-ok'), no=panel.querySelector('.lpp-no'); if(ok) ok.onclick=()=>rate(true); if(no) no.onclick=()=>rate(false);
+  }
+  function applyPrac(id){
+    const list=cardsFor(id);
+    const on=!!list.length&&prefPrac()&&mq.matches;
+    document.body.classList.toggle('lp-prac',on);
+    if(!on){ panel&&panel.classList.remove('on'); return; }
+    if(!panel){ panel=document.createElement('aside'); panel.id='lp-practice'; panel.setAttribute('aria-label','Lernkarten zu dieser Seite'); document.body.appendChild(panel); }
+    if(pr.id!==id){ pr={id,list:shuf(list),i:0,flip:false,known:0}; }
+    panel.classList.add('on'); drawPrac();
+  }
+  function togglePractice(force){
+    const v=document.querySelector('.view.active'); if(!v) return;
+    const on=typeof force==='boolean'?force:!prefPrac();
+    try{ localStorage.setItem(PRKEY,on?'1':'0'); }catch(e){}
+    applyPrac(v.id); tools(v.id);
+  }
+  // Knöpfe „Fokus“ und „Üben“ in der Kopfleiste nur auf passenden Seiten zeigen
+  function tools(id){
+    const v=document.getElementById(id), f=document.getElementById('m-focus'), p=document.getElementById('m-practice');
+    if(f) f.classList.toggle('hidden',!(v&&v._lp));
+    if(p){ const has=cardsFor(id).length>0; p.classList.toggle('hidden',!has); p.classList.toggle('fab-active',has&&prefPrac()); }
+  }
   mq.addEventListener&&mq.addEventListener('change',()=>{ if(mq.matches&&cur) close(true); const v=document.querySelector('.view.active'); if(v&&v._lp) apply(v); });
   // Suche: direkt zum Kapitel – im Überblick (Handy/Tablet) im Kapitel-Fenster, sonst Abschnitt aufklappen und hinscrollen
   function focus(id,i){
@@ -2748,7 +2869,8 @@ const LP=(function(){
     if(v._lp&&v.classList.contains('lp-ueber')){ open(v,i); return; }
     d.open=true; d.scrollIntoView({block:'start',behavior:'smooth'});
   }
-  return { init, focus, isOpen:()=>!!cur, back, onShow(id){ if(cur&&cur.v.id!==id) close(true); else if(cur) close(true); } };
+  return { init, focus, focusMode, togglePractice, canFocus:()=>{ const v=document.querySelector('.view.active'); return !!(v&&v._lp); }, canPractice:()=>cardsFor(document.querySelector('.view.active')?.id).length>0, isOpen:()=>!!cur, back,
+    onShow(id){ if(cur) close(true); applyPrac(id); setTimeout(()=>tools(id),0); } };
 })();
 
 /* ======================================================================
@@ -3731,7 +3853,8 @@ const CHANGELOG=(function(){
       'Startseite: Die nächste Einheit steht oben rechts neben der Begrüßung (im Unterricht grau die laufende, orange die folgende; Text bis zu drei Zeilen), ein Tipp öffnet den Stundenplan',
       'Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator) bekommen keinen Haken mehr und zählen nicht zum Themenfortschritt; Führungsdienstsimulator steht oben im IBK-Reiter, Zurück aus einem Szenario führt zur Szenario-Übersicht',
       'Klausur-Seiten (Klausur 08/2026, Eingrenzung, Altklausur-Training FeuAK, Laufbahnklausuren, VAk-Klausurhinweise) als Karten: zuerst die Frage, per Tipp Kurzfassung und Musterlösung; Klausurfragen, Hubs (FeuAK, VAk) im gleichen Kartenstil und gleich groß',
-      'Lernseiten neu: Überblick mit Kapitelkarten (Titel, Lesezeit, Vorschau) oder Volltext; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges/Nächstes Kapitel“, Stift (Notiz) und Lesezeichen oben; Zurück führt zur Übersicht; am Desktop immer Volltext; die Suche springt direkt ins passende Kapitel; Vorlesefunktion entfernt; Tabellen am Handy automatisch lesbar (2 Spalten als Begriff/Erklärung, 3–4 Spalten als Karten, ab 5 Spalten mit fester erster Spalte) und überall im gleichen Stil',
+      'Desktop: Befehlspalette (Strg K) mit Kapiteln und Aktionen, Fokus-Lesemodus (ganzer Bildschirm, Pfeiltasten, Schriftgröße) und ein ein-/ausblendbares Lernkarten-Fenster neben der Lernseite',
+'Lernseiten neu: Überblick mit Kapitelkarten (Titel, Lesezeit, Vorschau) oder Volltext; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges/Nächstes Kapitel“, Stift (Notiz) und Lesezeichen oben; Zurück führt zur Übersicht; am Desktop immer Volltext; die Suche springt direkt ins passende Kapitel; Vorlesefunktion entfernt; Tabellen am Handy automatisch lesbar (2 Spalten als Begriff/Erklärung, 3–4 Spalten als Karten, ab 5 Spalten mit fester erster Spalte) und überall im gleichen Stil',
       'Stundenplan springt beim Öffnen zur laufenden bzw. nächsten Einheit: richtige Woche, der aktuelle Tag steht oben (am Wochenende der nächste Montag); die laufende bzw. nächste Einheit leuchtet mit Farbverlauf und Glow und wechselt mit der Uhrzeit',
       'Abkürzungen als Karten zum Aufklappen (Kürzel und Name, Erläuterung per Tipp; auf Tablet 2, auf Desktop 3 Spalten) mit fest stehender Suchleiste, Kategorien-Überschriften und „Suche leeren“',
       'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
