@@ -4514,7 +4514,7 @@ const FALLBEARBEITUNG = (function(){
     el.innerHTML=STEPS.map((s,i)=>`
       <div class="fb-schema-item">
         <div class="fb-schema-head" onclick="this.parentElement.classList.toggle('fb-open')">
-          <span class="fb-schema-num">${i+1}</span>
+          <span class="fb-schema-num">${String(i+1).padStart(2,'0')}</span>
           <span class="fb-schema-title">${s.title}</span>
           <span class="fb-schema-law">${s.law}</span>
           <span class="fb-chevron">›</span>
