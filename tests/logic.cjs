@@ -150,6 +150,29 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('IdF-Quiz: Prüfung nutzt Kontrollkästchen', idfq.boxes);
   ok('IdF-Quiz: VAk-Lernstand bleibt unberührt', idfq.vakUntouched === null);
 
+  // ── Lernseiten: Überblick, Kapitel-Fenster, Zurück ──
+  const lp = await page.evaluate(async () => {
+    NAV.go('v-vak-verwaltungsrecht', 'VR');
+    await new Promise(r => setTimeout(r, 300));
+    const v = document.getElementById('v-vak-verwaltungsrecht'), res = {};
+    res.cards = v.querySelectorAll('.lp-card').length;
+    v.querySelector('.lp-card[data-i="2"]').click();
+    res.open = LP.isOpen();
+    res.bodyMoved = !!document.querySelector('.lp-wbody .acc-body');
+    document.querySelector('.lp-next').click();
+    res.chapter = document.querySelector('.lp-eb').textContent;
+    NAV.back();
+    res.closed = !LP.isOpen();
+    res.bodyBack = v.querySelectorAll('details.acc-item > .acc-body').length;
+    res.read = JSON.parse(localStorage.getItem('bvi_checks_v-vak-verwaltungsrecht') || '{}');
+    return res;
+  });
+  eq('Lernseite: sieben Kapitelkarten', lp.cards, 7);
+  ok('Lernseite: Kapitel öffnet im Fenster', lp.open && lp.bodyMoved);
+  eq('Lernseite: Weiter öffnet nächstes Kapitel', lp.chapter, 'Kapitel 04 / 07');
+  ok('Lernseite: Zurück schließt das Fenster und gibt den Inhalt zurück', lp.closed && lp.bodyBack === 7);
+  ok('Lernseite: geöffnete Kapitel gelten als gelesen', Object.keys(lp.read).length >= 2);
+
   for (const e of errors) fails.push('JavaScript-Fehler: ' + e);
   await browser.close();
   if (fails.length) { console.error('FEHLER:\n - ' + fails.join('\n - ')); process.exit(1); }
