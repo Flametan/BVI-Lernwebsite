@@ -1163,7 +1163,7 @@ const PROGRESS = (function(){
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-klausurvorbereitung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung'],
     feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse','v-idf-altklausur'],
+    idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse'],
   };
   const LEAF_PARENT = {};
   Object.keys(GROUPS).forEach(g => GROUPS[g].forEach(v => { LEAF_PARENT[v] = g; }));
@@ -2480,7 +2480,7 @@ const STATS = (function(){
     IBK:['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     VAk:['v-vak-lernzusammenfassung','v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht'],
     FeuAK:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-altklausur','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    IdF:['v-idf-brandschutz','v-idf-stab','v-idf-presse','v-idf-altklausur']
+    IdF:['v-idf-brandschutz','v-idf-stab','v-idf-presse']
   };
   function ov(){ return document.getElementById('stats-overlay'); }
   function build(){
