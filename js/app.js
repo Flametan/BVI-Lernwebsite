@@ -51,6 +51,7 @@ const NAV = (function(){
     CHECKS.init(id);
     if(typeof TB!=='undefined') TB.init(id);
     if(typeof LP!=='undefined'){ LP.onShow(id); LP.init(id); }
+    PAUSE_LOADER.onShow(id);
     // Update URL for direct linking
     const url=new URL(location.href);
     if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
@@ -61,7 +62,7 @@ const NAV = (function(){
 
   return {
     go(id,label){ _dir='forward'; stack.push({id,label}); history.pushState({stack:[...stack]},''); show(id); },
-    back(){ if(typeof LP!=='undefined'&&LP.isOpen()){ LP.back(); return; } if(!stack.length) return; _dir='back'; stack.pop(); show(stack.length?stack[stack.length-1].id:'v-home'); },
+    back(){ if(typeof LP!=='undefined'&&LP.isOpen()){ LP.back(); return; } if(typeof PAUSE!=='undefined'&&_activeEl&&_activeEl.id==='v-pause'&&PAUSE.back()) return; if(!stack.length) return; _dir='back'; stack.pop(); show(stack.length?stack[stack.length-1].id:'v-home'); },
     jumpTo(idx){ _dir=idx<stack.length-1?'back':'forward'; stack=stack.slice(0,idx+1); history.pushState({stack:[...stack]},''); show(idx>=0?stack[idx].id:'v-home'); },
     home(){ _dir='back'; stack=[]; history.pushState({home:true},''); show('v-home'); },
     tab(id,label){ _dir='forward'; stack=[{id,label}]; history.pushState({stack:[...stack]},''); show(id); },
@@ -3319,6 +3320,7 @@ function makeQuiz(cfg){
   }
 
   self={
+    qs(){return Q;},
     init(){
       if(_inited)return;_inited=true;
       loadBm();loadMastery();loadSrs();buildOrder();renderCatBar();renderTypeBar();renderLearn();initKeyboard();initTouch();
@@ -3853,6 +3855,7 @@ const CHANGELOG=(function(){
       'Der Pfeil „Nach oben“ (Seitenanfang) ist überall entfernt',
       'Die Kopfzeile mit Zurück, Üben, Fokus, Notiz und Lesezeichen bleibt auf Inhaltsseiten beim Scrollen sichtbar',
       'Startseite: Die Modul-Kreise tragen einen kleinen Pfeil-Knopf (›) am Ring und pulsieren beim Öffnen der Seite kurz nacheinander, damit klar ist, dass man sie antippen kann',
+      'Neu: Kleine Pause – Karte auf der Startseite mit wechselndem Satz und eigene Seite mit sechs Spielen: Einsatzfahrt (Route wählen, Prüfungsfragen aus IBK, VAk, FeuAK oder IdF, Hilfsfrist schaffen, Brand wächst mit der Zeit), Quizleiter, Wahr oder Falsch, Wörter-Raten, Mehr oder weniger und Memory; Fragen wahlweise Allgemeinwissen, Feuerwehr oder beides',
 'Lernseiten neu: Überblick mit Kapitelkarten (Titel, Lesezeit, Vorschau) – auf Handy und Tablet gleich, ohne Umschalter; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges/Nächstes Kapitel“, Stift (Notiz) und Lesezeichen oben; Zurück führt zur Übersicht; am Desktop als Volltext; die Suche springt direkt ins passende Kapitel; Vorlesefunktion entfernt; Tabellen am Handy automatisch lesbar (2 Spalten als Begriff/Erklärung, 3–4 Spalten als Karten, ab 5 Spalten mit fester erster Spalte) und überall im gleichen Stil',
       'Stundenplan springt beim Öffnen zur laufenden bzw. nächsten Einheit: richtige Woche, der aktuelle Tag steht oben (am Wochenende der nächste Montag); die laufende bzw. nächste Einheit leuchtet mit Farbverlauf und Glow und wechselt mit der Uhrzeit',
       'Abkürzungen als Karten zum Aufklappen (Kürzel und Name, Erläuterung per Tipp; auf Tablet 2, auf Desktop 3 Spalten) mit fest stehender Suchleiste, Kategorien-Überschriften und „Suche leeren“',
@@ -5958,6 +5961,7 @@ const SHELL=(function(){
     exam:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
     cards:'<rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/>',
     play:'<path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z" fill="currentColor" stroke="none"/>',
+    cup:'<path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17M8 2.5c-.6 1 .6 1.8 0 3M12 2.5c-.6 1 .6 1.8 0 3"/>',
     flame:'<path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z" fill="currentColor" stroke="none"/>'
   };
   const svg=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
@@ -6337,10 +6341,11 @@ const SHELL=(function(){
     const wide=!!(window.matchMedia&&matchMedia('(min-width:701px)').matches);
     const mods=`<div class="m-card m-mods"><div class="m-modgrid2"><div class="m-r2"><div class="m-sec">2. Ausbildungsjahr</div><div class="m-rings">${MODS.filter(m=>m[5]===2).map(ringBtn).join('')}</div></div>
       <details class="m-y1${wide?' static':''}"${y1Open||wide?' open':''} ontoggle="SHELL.y1(this.open)"><summary>1. Ausbildungsjahr</summary><div class="inner"><div class="m-rings r3">${MODS.filter(m=>m[5]===1).map(ringBtn).join('')}</div></div></details></div></div>`;
+    const pause=`<div class="m-list m-pause">${row({ic:ic('cup'),t1:'Kleine Pause',t2:PAUSE_LOADER.quip(),on:goJs('v-pause','Kleine Pause')})}</div>`;
     const cloud=`<div class="m-list m-cloud"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2 m-cloud-x">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}${streak?` <span class="m-streak m-streak-in">${svg('flame')}${streak} ${streak===1?'Tag':'Tage'}</span>`:''}</div></div>${nextBox}</div>
-      <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${cloud}</div></div>`;
+      <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}</div></div>`;
   }
 
   function renderExam(){
@@ -6647,3 +6652,76 @@ document.addEventListener('DOMContentLoaded',()=>{
     'background:#A50000;color:#fff;padding:3px 8px;border-radius:4px 0 0 4px;font-family:"DM Mono",monospace;font-weight:700',
     'background:#0A192F;color:#C9A84C;padding:3px 8px;border-radius:0 4px 4px 0;font-family:"DM Mono",monospace');
 });
+/* ======================================================================
+   KLEINE PAUSE – Sätze und Nachladen der Spiele (js/pause-data.js, js/pause.js)
+====================================================================== */
+const PAUSE_LOADER=(function(){
+  const QUIPS=[
+    'Kurz durchatmen – das Gehirn speichert in Pausen am besten.',
+    'Fünf Minuten Spiel, danach geht das Lernen leichter.',
+    'Auch der beste Atemschutzgeräteträger braucht mal frische Luft.',
+    'Pause ist keine verlorene Zeit, sondern Ladezeit.',
+    'Einmal den Kopf durchlüften, dann weiter im Stoff.',
+    'Wissen sacken lassen – und nebenbei ein bisschen spielen.',
+    'Kleine Pause, großer Effekt.',
+    'Auch zwischen zwei Einsätzen gibt es eine Tasse Kaffee.',
+    'Kurz abschalten, bevor der Akku leer ist.',
+    'Wer Pausen macht, bleibt länger konzentriert.',
+    'Ein Spiel zwischendurch hält den Kopf beweglich.',
+    'Raus aus dem Paragrafendschungel, rein in die Pause.',
+    'Kurz die Gedanken ordnen, dann geht es weiter.',
+    'Die Wache ruht, die Neugier nicht.',
+    'Ein bisschen Spaß gehört auch in den Dienstplan.',
+    'Pause heißt nicht Stillstand – nur kurz Tempo raus.',
+    'Zeit für eine Runde, bevor das nächste Kapitel ruft.',
+    'Gehirnjogging statt Grübeln.',
+    'Mal kurz den Helm absetzen.',
+    'Ein paar Minuten Abstand bringen oft die beste Idee.',
+    'Lernen ist ein Marathon – hier ist die Trinkstation.',
+    'Durchschnaufen ist erlaubt, sogar ausdrücklich empfohlen.',
+    'Kurzer Boxenstopp für den Kopf.',
+    'Wer spielt, lernt oft mehr, als er denkt.',
+    'Gönn dir eine Runde, du hast sie dir verdient.',
+    'Das Lehrbuch läuft nicht weg.',
+    'Zwischen Haushaltsplan und Stabsarbeit: einmal lächeln.',
+    'Auch Führungskräfte dürfen mal Pause machen.',
+    'Kurz entspannen, dann wieder volle Leistung.',
+    'Eine Pause ist die beste Vorbereitung auf die nächste Stunde.',
+    'Kopf frei, Wasser marsch für neue Gedanken.',
+    'Ein kleines Rätsel zwischendurch weckt die grauen Zellen.',
+    'Pause machen ist auch eine Führungsaufgabe – an sich selbst.',
+    'Kaffee holen, eine Runde spielen, weiterlernen.',
+    'Hier zählt kein Punkt für die Prüfung – nur der Spaß.',
+    'Kurze Pausen verhindern lange Durchhänger.',
+    'Abstand gewinnen, Überblick behalten.',
+    'Erst ein Spiel, dann wieder Gesetzestexte.',
+    'Wenn der Kopf raucht: kurz lüften.',
+    'Eine Runde Quiz ist Frühsport fürs Gehirn.',
+    'Kurz runterfahren, ohne den Motor abzustellen.',
+    'Konzentration braucht Erholung – hier gibt es beides.',
+    'Die beste Lernstrategie hat Pausen fest eingeplant.',
+    'Ein bisschen Ablenkung, ganz ohne schlechtes Gewissen.',
+    'Kurz die Perspektive wechseln.',
+    'Fünf Minuten für dich – der Rest kann warten.',
+    'Spielen ist Lernen in bequemer Kleidung.',
+    'Status 2: einsatzbereit, aber gerade in der Pause.',
+    'Pause heißt auch: Das Gelernte darf sich setzen.',
+    'Noch eine Runde? Aber wirklich nur eine.'
+  ];
+  let last=-1,loading=null;
+  // bei jedem Anzeigen ein anderer Satz
+  function quip(){let i;do{i=Math.floor(Math.random()*QUIPS.length);}while(i===last&&QUIPS.length>1);last=i;return QUIPS[i];}
+  function load(){
+    if(typeof PAUSE!=='undefined') return Promise.resolve();
+    if(loading) return loading;
+    const add=src=>new Promise((ok,fail)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=fail;document.body.appendChild(s);});
+    loading=add('js/pause-data.js').then(()=>add('js/pause.js')).catch(()=>{loading=null;const r=document.getElementById('pause-root');if(r)r.innerHTML='<div class="m-card">Die Spiele konnten nicht geladen werden. Bitte Verbindung prüfen.</div>';});
+    return loading;
+  }
+  function onShow(id){
+    if(id!=='v-pause'){ if(typeof PAUSE!=='undefined') PAUSE.leave(); return; }
+    const q=document.getElementById('pause-quip'); if(q) q.textContent=quip();
+    load().then(()=>{ if(typeof PAUSE!=='undefined'&&document.getElementById('v-pause').classList.contains('active')) PAUSE.show(); });
+  }
+  return { quip, onShow, load, QUIPS };
+})();
