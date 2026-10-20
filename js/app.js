@@ -3572,6 +3572,7 @@ const CHANGELOG=(function(){
       'Stundenplan: IdF Modul 3.5 mit Uhrzeiten, Räumen, Hinweisen, Mittagspause und Telefonnummern; Übernahme in den Kalender mit Erinnerung',
       'Prüfung: alle Klausur-Werkzeuge an einem Ort, mit Countdown zur nächsten Klausur; Altklausur-Quiz, Klausurfragen und Fallbearbeitung im neuen Design',
       'Prüfung: neuer Abschnitt „Laufbahnprüfung“ mit den schriftlichen Klausuren Dez 2023 und Juni 2026 samt Musterlösungen (wie Klausur 08/2026) und Abschnitt „IdF Münster“ mit dem Altklausur-Quiz IdF (Vorbeugender Brandschutz und Stabsarbeit, Mehrfachauswahl, Lern- und Prüfungsmodus, Wiederholung nach Plan), auch im Reiter IdF erreichbar; Quelle und Unsicherheit stehen bei jeder Antwort; Prüfung-Tab als gleichmäßiges Raster (3 Spalten Desktop, 2 Tablet, 1 Handy) und Countdown-Karte führt zum passenden Quiz bzw. zur Klausur',
+      'Startseite: Die nächste Einheit steht oben rechts neben der Begrüßung (im Unterricht grau die laufende, orange die folgende; Text bis zu drei Zeilen), ein Tipp öffnet den Stundenplan',
       'Stundenplan springt beim Öffnen zur laufenden bzw. nächsten Einheit: richtige Woche, der aktuelle Tag steht oben (am Wochenende der nächste Montag); die laufende bzw. nächste Einheit leuchtet mit Farbverlauf und Glow und wechselt mit der Uhrzeit',
       'Abkürzungen als Karten zum Aufklappen (Kürzel und Name, Erläuterung per Tipp; auf Tablet 2, auf Desktop 3 Spalten) mit fest stehender Suchleiste, Kategorien-Überschriften und „Suche leeren“',
       'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
@@ -6035,11 +6036,18 @@ const SHELL=(function(){
     }
     const cont=`<div class="m-card m-cont2"><div class="m-cont2-top"><div class="m-tx"><span class="m-eyebrow">Weiterlernen</span><span class="m-cont2-t">${esc(cTitle)}</span>${cSub?`<span class="m-t2">${esc(cSub)}</span>`:''}</div>${homeRing(gp,gp+'%',gp+' Prozent des Tagesziels')}</div>
       <div class="m-cont2-bot"><button class="m-go2" onclick="${cGo}">${cBtn} ${svg('play')}</button><span class="m-t2">Ziel heute: ${minToday} / ${goal} min</span></div></div>`;
-    const nextRow=nx?row({ic:ic('cal'),t1:nx.title,t2:`${nx.state==='now'?'Jetzt':'Als Nächstes'} · ${dayWord(nx.start)} ${hhmm(nx.start)}${nx.state==='now'?'–'+hhmm(nx.end):''}${nx.room?' · Raum '+nx.room:''}`,on:"NAV.tab('v-plan','Stundenplan')"}):'';
+    // Nächste Einheit oben rechts: im Unterricht die laufende (grau) und die folgende (orange), sonst die kommende
+    const stamp=d=>(dayWord(d)==='heute'?'':dayWord(d)==='morgen'?'morgen ':d.toLocaleDateString('de-DE',{weekday:'short'})+' ')+hhmm(d);
+    let nextBox='';
+    if(nx){
+      const aft=nx.state==='now'?IDF_PLAN.next(new Date(nx.end.getTime()+60000)):null;
+      const head=nx.state==='now'&&aft?`<span class="m-nx-cur">Jetzt · ${esc(nx.title)}</span><span class="m-nx-h">Danach ${stamp(aft.start)}</span><span class="m-nx-t">${esc(aft.title)}</span>`
+        :`<span class="m-nx-h">${nx.state==='now'?'Jetzt · bis '+hhmm(nx.end):stamp(nx.start)}</span><span class="m-nx-t">${esc(nx.title)}</span>`;
+      nextBox=`<button class="m-nx" onclick="NAV.tab('v-plan','Stundenplan')" aria-label="Zum Stundenplan">${head}</button>`;
+    }
     const pl=chartRange==='month'?monthPlot():weekPlot(), isM=chartRange==='month';
     const chartCard=`<div class="m-card m-chart2"><div class="m-chart-h"><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${isM?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${isM?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span><span class="m-st"><b>${dur(pl.sum)}</b> ${isM?'12 Mon.':'Woche'}</span></div>
-      ${pl.html}
-      ${nextRow?`<div class="m-hr"></div>${nextRow}`:''}</div>`;
+      ${pl.html}</div>`;
     const ringBtn=m=>{
       const c=cnt[m[0]]||{done:0,total:0};
       return `<button class="m-ringbtn" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen">${homeRing(pct(c),m[1],m[1])}<small>${c.done}/${c.total}</small></button>`;
@@ -6049,7 +6057,7 @@ const SHELL=(function(){
       <details class="m-y1${wide?' static':''}"${y1Open||wide?' open':''} ontoggle="SHELL.y1(this.open)"><summary>1. Ausbildungsjahr</summary><div class="inner"><div class="m-rings r3">${MODS.filter(m=>m[5]===1).map(ringBtn).join('')}</div></div></details></div></div>`;
     const cloud=`<div class="m-list m-glow m-cloud"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2 m-cloud-x">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
     el.innerHTML=`
-      <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${streak?`<span class="m-streak">${svg('flame')}${streak} ${streak===1?'Tag':'Tage'}</span>`:''}</div>
+      <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}${streak?` <span class="m-streak m-streak-in">${svg('flame')}${streak} ${streak===1?'Tag':'Tage'}</span>`:''}</div></div>${nextBox}</div>
       <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${cloud}</div></div>`;
   }
 
