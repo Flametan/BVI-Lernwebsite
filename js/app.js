@@ -6043,7 +6043,8 @@ const SHELL=(function(){
       const aft=nx.state==='now'?IDF_PLAN.next(new Date(nx.end.getTime()+60000)):null;
       const head=nx.state==='now'&&aft?`<span class="m-nx-cur">Jetzt · ${esc(nx.title)}</span><span class="m-nx-h">Danach ${stamp(aft.start)}</span><span class="m-nx-t">${esc(aft.title)}</span>`
         :`<span class="m-nx-h">${nx.state==='now'?'Jetzt · bis '+hhmm(nx.end):stamp(nx.start)}</span><span class="m-nx-t">${esc(nx.title)}</span>`;
-      nextBox=`<button class="m-nx" onclick="NAV.tab('v-plan','Stundenplan')" aria-label="Zum Stundenplan">${head}</button>`;
+      const dt=nx.start.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'});
+      nextBox=`<button class="m-nx" onclick="NAV.tab('v-plan','Stundenplan')" aria-label="Zum Stundenplan"><span class="m-nx-d">${esc(dt)}</span>${head}</button>`;
     }
     const pl=chartRange==='month'?monthPlot():weekPlot(), isM=chartRange==='month';
     const chartCard=`<div class="m-card m-chart2"><div class="m-chart-h"><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${isM?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${isM?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span><span class="m-st"><b>${dur(pl.sum)}</b> / ${isM?'12 Monate':'Woche'}</span></div>
@@ -6055,7 +6056,7 @@ const SHELL=(function(){
     const wide=!!(window.matchMedia&&matchMedia('(min-width:701px)').matches);
     const mods=`<div class="m-card m-mods"><div class="m-modgrid2"><div class="m-r2"><div class="m-sec">2. Ausbildungsjahr</div><div class="m-rings">${MODS.filter(m=>m[5]===2).map(ringBtn).join('')}</div></div>
       <details class="m-y1${wide?' static':''}"${y1Open||wide?' open':''} ontoggle="SHELL.y1(this.open)"><summary>1. Ausbildungsjahr</summary><div class="inner"><div class="m-rings r3">${MODS.filter(m=>m[5]===1).map(ringBtn).join('')}</div></div></details></div></div>`;
-    const cloud=`<div class="m-list m-glow m-cloud"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2 m-cloud-x">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
+    const cloud=`<div class="m-list m-cloud"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2 m-cloud-x">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}${streak?` <span class="m-streak m-streak-in">${svg('flame')}${streak} ${streak===1?'Tag':'Tage'}</span>`:''}</div></div>${nextBox}</div>
       <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${cloud}</div></div>`;
