@@ -2130,3 +2130,17 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .m-chart2 .m-seg-s button{background:transparent;color:var(--m-muted);}
 .m-chart2 .m-seg-s button.active{background:var(--m-raised);color:var(--m-fg);}
 .m-hello{align-items:flex-start;}
+
+/* Klausur-Seiten: Karten mit Kurzfassung (Aufgabe, Titel, Punkte, Kurz-Zeile, Aufklappen) */
+.acc-cards{gap:10px;}
+.acc-cards .acc-item summary{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:12px;row-gap:8px;align-items:center;padding:14px 16px;}
+.acc-cards .acc-arrow,.acc-cards .acc-check{display:none!important;}
+.acc-cards .acc-title{font-size:1rem;font-weight:600;min-width:0;}
+.acc-cards .acc-pts{font-size:.72rem;padding:2px 9px;border-radius:99px;background:var(--m-raised);color:var(--m-muted);white-space:nowrap;font-weight:500;}
+.acc-cards .acc-kurz{grid-column:1/-1;font-size:.88rem;line-height:1.5;color:var(--k-d2d2d2);}
+.acc-cards .acc-kurz b{color:var(--m-accent-fg);font-weight:600;}
+.acc-cards .acc-item summary::after{grid-column:1/-1;content:"Fragestellung & Musterlösung ›";color:var(--m-accent-fg);font-size:.82rem;}
+.acc-cards .acc-item[open] summary::after{content:"Weniger anzeigen ˄";color:var(--m-muted);}
+#v-vak-klausurhinweise .acc-cards .acc-item summary::after{content:"Begriffe ansehen ›";}
+#v-eingrenzung-klausur .acc-cards .acc-item summary::after{content:"Fragestellung & Antwort ›";}
+#v-vak-klausurhinweise .acc-cards .acc-item[open] summary::after,#v-eingrenzung-klausur .acc-cards .acc-item[open] summary::after{content:"Weniger anzeigen ˄";}
