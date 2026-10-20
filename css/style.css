@@ -2265,7 +2265,8 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 #lp-practice{display:none;}
 @media(min-width:1100px){
   #lp-practice.on{display:flex;position:fixed;top:0;right:0;bottom:0;width:340px;z-index:40;flex-direction:column;gap:12px;padding:20px 18px;background:var(--m-bar);border-left:1px solid var(--m-line);overflow-y:auto;}
-  body.lp-prac .detail-view .phi,body.lp-prac .detail-view .pc,body.lp-prac #m-topbar{margin-right:360px!important;margin-left:0!important;}
+  body.lp-prac{padding-right:364px;}
+  body.lp-prac .detail-view .phi,body.lp-prac .detail-view .pc,body.lp-prac #m-topbar{margin-right:auto!important;margin-left:auto!important;}
   body.lp-prac #m-toc{display:none!important;}
 }
 .lpp-h{display:flex;align-items:baseline;gap:8px;}.lpp-h b{font-size:1.05rem;}.lpp-h span{color:var(--m-muted);font-size:.8rem;flex:1;}
