@@ -267,6 +267,27 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Einsatzfahrt Ring: 6 Fragen, 4 Optionen, verloren bei 6 Fehlern', pz.fahrt.n === 6 && pz.fahrt.phase === 'end' && pz.fahrt.win === false && pz.fahrt.t > 480 && pz.fahrt.opts);
   ok('Zurück im Spiel führt zur Spieleliste, Verlassen stoppt', pz.backToHub && pz.left);
 
+  // ── Farbsystem: Kontrast der Text- und Hintergrundnamen (WCAG AA) in beiden Designs ──
+  const ct = await page.evaluate(async () => {
+    const out = {};
+    for (const th of ['dark', 'light']) {
+      document.documentElement.setAttribute('data-theme', th);
+      await new Promise(r => setTimeout(r, 50));
+      const rgb = n => { const t = document.createElement('i'); t.style.color = 'var(' + n + ')'; document.body.appendChild(t); const m = getComputedStyle(t).color.match(/[\d.]+/g).map(Number); t.remove(); return m; };
+      const lin = c => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); };
+      const L = c => .2126 * lin(c[0]) + .7152 * lin(c[1]) + .0722 * lin(c[2]);
+      const cr = (f, b) => { const x = L(f), y = L(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+      const bad = [];
+      for (const fg of ['--text-primary', '--text-secondary', '--text-tertiary', '--brand-text'])
+        for (const bg of ['--bg-page', '--bg-surface']) { const c = cr(rgb(fg), rgb(bg)); if (c < 4.5) bad.push(fg + ' auf ' + bg + ' ' + c.toFixed(2)); }
+      const c2 = cr(rgb('--brand-on-primary'), rgb('--brand-primary')); if (c2 < 4.5) bad.push('Text auf Akzent ' + c2.toFixed(2));
+      out[th] = bad;
+    }
+    document.documentElement.removeAttribute('data-theme');
+    return out;
+  });
+  eq('Kontrast der Farbnamen in Dunkel und Hell (AA)', [ct.dark, ct.light], [[], []]);
+
   for (const e of errors) fails.push('JavaScript-Fehler: ' + e);
   await browser.close();
   if (fails.length) { console.error('FEHLER:\n - ' + fails.join('\n - ')); process.exit(1); }
