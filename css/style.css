@@ -2187,7 +2187,7 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .lp-card .go{grid-column:1/-1;color:var(--m-accent-fg);font-size:.82rem;}
 .view.lp-open{animation:none!important;transform:none!important;}
 html.lp-lock,html.lp-lock body{overflow:hidden;}
-.lp-win{position:fixed;left:0;right:0;top:0;bottom:calc(var(--m-tabbar-h) + env(safe-area-inset-bottom,0px));background:var(--m-bg);z-index:5;display:none;flex-direction:column;}
+.lp-win{position:fixed;left:0;right:0;top:0;bottom:var(--lp-tb,calc(var(--m-tabbar-h) + env(safe-area-inset-bottom,0px)));background:var(--m-bg);z-index:5;display:none;flex-direction:column;}
 .lp-win.on{display:flex;}
 @media(min-width:701px){.lp-win{left:var(--lp-l,0);right:auto;width:var(--lp-w,100%);bottom:0;}}
 .lp-wh{display:flex;align-items:center;gap:10px;padding:max(10px,env(safe-area-inset-top,0px)) 12px 8px;flex:none;}
