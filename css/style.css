@@ -1220,7 +1220,7 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 .m-rail-foot{margin-top:auto;}
 
 /* Inhaltsverzeichnis rechts, sobald genug Platz ist */
-@media(min-width:1360px){
+@media(min-width:1100px){
   body.has-toc .detail-view .phi,body.has-toc .detail-view .pc,body.has-toc #m-topbar{margin-right:max(260px,calc((100vw - 240px - 1140px)/2));margin-left:auto;}
   #m-toc:not(.hidden){display:flex;flex-direction:column;gap:2px;position:fixed;top:96px;right:28px;width:220px;max-height:calc(100vh - 140px);overflow-y:auto;z-index:20;}
 }
@@ -2246,3 +2246,20 @@ table.tb td:first-child{font-weight:600;}
 table.tb tr{border:0!important;}
 table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb-dl,table.tb-dl tr{box-sizing:border-box;}
 @media(max-width:700px){table.tb-cards,table.tb-dl{min-width:0!important;width:100%!important;max-width:100%;}}
+
+/* Desktop: Kopfleiste mit beschrifteten Knöpfen (Notiz, Lesezeichen) */
+@media(min-width:1100px){
+  .m-tb-actions button{width:auto;height:40px;border-radius:99px;padding:0 16px;display:flex;align-items:center;gap:8px;font-family:inherit;font-size:.88rem;}
+  #m-note{order:1;}#m-bm{order:2;}
+  #m-note::after{content:"Notiz";}
+  #m-bm::after{content:"Lesezeichen";}
+}
+
+/* Volltext: Abschnitte als fortlaufender Text mit Überschrift statt aufgeklappter Karten */
+.lp-voll .pc .acc-list{gap:0;}
+.lp-voll .acc-item{background:none!important;border:0!important;box-shadow:none!important;border-radius:0;overflow:visible;}
+.lp-voll .acc-item+.acc-item{border-top:1px solid var(--m-line)!important;}
+.lp-voll .acc-item>summary{pointer-events:none;padding:24px 0 8px;min-height:0;gap:12px;}
+.lp-voll .acc-item>summary .acc-title{font-size:1.3rem;font-weight:700;}
+.lp-voll .acc-item>summary .acc-arrow,.lp-voll .acc-item>summary .acc-check{display:none!important;}
+.lp-voll .acc-body{border-top:0;padding:0 0 10px;}

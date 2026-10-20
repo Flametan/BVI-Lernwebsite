@@ -46,7 +46,7 @@ self.addEventListener('fetch', e => {
   if(isCore){
     // Network-first: immer frisch vom Server, Cache nur als Offline-Fallback
     e.respondWith(
-      fetch(e.request)
+      fetch(e.request, { cache: 'no-cache' }) // immer beim Server nachfragen, nicht aus dem Browser-Zwischenspeicher
         .then(res => {
           if(res.ok) caches.open(CACHE).then(c => c.put(e.request, res.clone()));
           return res;
