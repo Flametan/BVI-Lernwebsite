@@ -1963,7 +1963,7 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 /* Handy: Reihenfolge Weiterlernen, 2. Ausbildungsjahr, Verlauf, 1. Ausbildungsjahr, Cloud */
 @media(max-width:700px){
   #m-home .m-hl,#m-home .m-hr2,#m-home .m-mods,#m-home .m-modgrid2{display:contents;}
-  .m-cont2{order:1;}.m-r2{order:2;}.m-chart2{order:3;}.m-y1{order:4;}.m-pause{order:5;}.m-cloud{order:6;}
+  .m-cont2{order:1;}.m-r2{order:2;}.m-chart2{order:3;}.m-pause{order:4;}.m-y1{order:5;}.m-cloud{order:6;}
   .m-chart2 .m-seg-s button{height:24px;font-size:.7rem;padding:0 9px;min-width:0;}
 }
 
