@@ -25,7 +25,7 @@ const PAUSE=(function(){
   };
   const svg=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
   const GAMES=[
-    ['fahrt','truck','Einsatzfahrt','Route wählen, Prüfungsfragen unterwegs, Hilfsfrist schaffen',()=>FAHRT],
+    ['fahrt','truck','Einsatzfahrt','Nur Prüfungsfragen aus IBK, VAk, FeuAK und IdF · Route wählen, Hilfsfrist schaffen',()=>FAHRT],
     ['quiz','ladder','Quizleiter','8 Stufen, ein 50:50-Joker – wie weit kommst du?',()=>QUIZL],
     ['tf','bolt','Wahr oder Falsch','60 Sekunden, so viele Aussagen wie möglich',()=>TF],
     ['word','grid','Wörter-Raten','Ein Begriff mit 5 Buchstaben, sechs Versuche',()=>WORD],
@@ -33,9 +33,13 @@ const PAUSE=(function(){
     ['mem','pairs','Memory','Finde die Paare mit möglichst wenigen Zügen',()=>MEM]
   ];
   function bestTxt(k){const b=best()[k];if(b==null)return'';return k==='mem'?`Bestwert: ${b} Züge`:k==='quiz'?`Bestwert: Stufe ${b}`:k==='num'?`Beste Serie: ${b}`:k==='word'?`Gelöst: ${b}`:`Bestwert: ${b} Punkte`;}
-  function hub(){stop();const b=best();
-    root.innerHTML=`<div class="pz-wrap"><div class="pz-mode" role="tablist" aria-label="Fragen">${[['allg','Allgemeinwissen'],['fw','Feuerwehr'],['beides','Beides']].map(([k,t])=>`<button data-m="${k}" class="${mode===k?'on':''}">${t}</button>`).join('')}</div>
-    <div class="pz-grid">${GAMES.map(([k,ic,t,d],i)=>`<button class="pz-game${i===0?' pz-big':''}" data-g="${k}"><span class="pz-gi">${svg(ic)}</span><span><b>${t}</b><small>${d}${i===0?' · nur Prüfungsfragen':''}</small>${bestTxt(k)?`<em>${bestTxt(k)}</em>`:''}</span></button>`).join('')}</div></div>`;
+  function hub(){stop();
+    const card=([k,ic,t,d],big)=>`<button class="pz-game${big?' pz-big':''}" data-g="${k}"><span class="pz-gi">${svg(ic)}</span><span><b>${t}</b><small>${d}</small>${bestTxt(k)?`<em>${bestTxt(k)}</em>`:''}</span></button>`;
+    // Einsatzfahrt immer mit Prüfungsfragen; der Umschalter gilt nur für die Spiele darunter
+    root.innerHTML=`<div class="pz-wrap"><div class="pz-grid">${card(GAMES[0],true)}</div>
+    <div class="m-sec" style="margin:.4rem 0 -.2rem">Weitere Spiele · Fragen aus</div>
+    <div class="pz-mode" role="tablist" aria-label="Fragen für die weiteren Spiele">${[['allg','Allgemeinwissen'],['fw','Feuerwehr'],['beides','Beides']].map(([k,t])=>`<button data-m="${k}" class="${mode===k?'on':''}">${t}</button>`).join('')}</div>
+    <div class="pz-grid">${GAMES.slice(1).map(g=>card(g,false)).join('')}</div></div>`;
     root.querySelectorAll('[data-m]').forEach(x=>x.onclick=()=>{mode=x.dataset.m;set(MKEY,mode);hub();});
     root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
   }
