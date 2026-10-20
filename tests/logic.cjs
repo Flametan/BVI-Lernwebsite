@@ -187,6 +187,34 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Suche: springt ins Kapitel', sj.win && /Kapitel 0\d \/ 07/.test(sj.eb || ''));
   ok('Vorlesefunktion entfernt', sj.tts === 'undefined' && !sj.btn);
 
+  // ── Desktop: Befehlspalette, Fokus-Lesemodus, Lernkarten-Fenster ──
+  await page.setViewportSize({ width: 1280, height: 860 });
+  const dk = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(400);
+    r.btns = ['m-practice', 'm-focus'].map(i => !document.getElementById(i).classList.contains('hidden'));
+    SEARCH.open(); await w(100);
+    r.pal = [...document.querySelectorAll('#search-results .sr-group')].map(e => e.textContent);
+    SEARCH.close();
+    localStorage.removeItem('bvi_lp_prac');
+    LP.togglePractice(true); await w(100);
+    r.prac = document.body.classList.contains('lp-prac') && !!document.querySelector('#lp-practice .lpp-card');
+    LP.togglePractice(false); await w(50);
+    r.pracOff = !document.body.classList.contains('lp-prac');
+    LP.focusMode(); await w(100);
+    r.focus = LP.isOpen() && document.querySelector('.lp-win').classList.contains('focus');
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })); await w(50);
+    r.next = document.querySelector('.lp-eb').textContent;
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(100);
+    r.closed = !LP.isOpen();
+    return r;
+  });
+  eq('Desktop: Knöpfe Üben und Fokus sichtbar', dk.btns, [true, true]);
+  ok('Befehlspalette: Kapitel und Aktionen', dk.pal.includes('Kapitel dieser Seite') && dk.pal.includes('Aktionen'));
+  ok('Lernkarten-Fenster ein- und ausblendbar', dk.prac && dk.pracOff);
+  ok('Fokus-Lesemodus mit Pfeiltasten und Esc', dk.focus && /02 \/ 07/.test(dk.next) && dk.closed);
+  await page.setViewportSize({ width: 390, height: 844 });
+
   for (const e of errors) fails.push('JavaScript-Fehler: ' + e);
   await browser.close();
   if (fails.length) { console.error('FEHLER:\n - ' + fails.join('\n - ')); process.exit(1); }
