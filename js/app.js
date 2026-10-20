@@ -49,6 +49,7 @@ const NAV = (function(){
     if(typeof RELATED!=='undefined'&&RELATED[id]){const _v=document.getElementById(id);if(_v&&!_v.querySelector('.related-topics')){const _pc=_v.querySelector('.pc');if(_pc){const _d=document.createElement('div');_d.className='related-topics';_d.innerHTML='<div class="related-label">Verwandte Themen</div><div class="related-chips">'+RELATED[id].map(([rid,rl])=>'<button class="related-chip" onclick="NAV.go(\''+rid+'\',\''+rl+'\')">'+rl+'</button>').join('')+'</div>';_pc.appendChild(_d);}}}
     updateReadProgress();
     CHECKS.init(id);
+    if(typeof LP!=='undefined'){ LP.onShow(id); LP.init(id); }
     // Update URL for direct linking
     const url=new URL(location.href);
     if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
@@ -59,7 +60,7 @@ const NAV = (function(){
 
   return {
     go(id,label){ _dir='forward'; stack.push({id,label}); history.pushState({stack:[...stack]},''); show(id); },
-    back(){ if(!stack.length) return; _dir='back'; stack.pop(); show(stack.length?stack[stack.length-1].id:'v-home'); },
+    back(){ if(typeof LP!=='undefined'&&LP.isOpen()){ LP.back(); return; } if(!stack.length) return; _dir='back'; stack.pop(); show(stack.length?stack[stack.length-1].id:'v-home'); },
     jumpTo(idx){ _dir=idx<stack.length-1?'back':'forward'; stack=stack.slice(0,idx+1); history.pushState({stack:[...stack]},''); show(idx>=0?stack[idx].id:'v-home'); },
     home(){ _dir='back'; stack=[]; history.pushState({home:true},''); show('v-home'); },
     tab(id,label){ _dir='forward'; stack=[{id,label}]; history.pushState({stack:[...stack]},''); show(id); },
@@ -2607,8 +2608,122 @@ const CHECKS=(function(){
         const arrow=sum.querySelector('.acc-arrow');
         if(arrow) sum.insertBefore(btn,arrow); else sum.appendChild(btn);
       });
+    },
+    // für LP: Lesestand je Kapitel abfragen bzw. setzen (gleicher Speicher wie die Haken)
+    get(id,ck){ return !!load(id)[ck]; },
+    set(id,ck,on){
+      const d=load(id); d[ck]=!!on; save(id,d);
+      const v=document.getElementById(id);
+      v&&v.querySelectorAll('.acc-item summary').forEach(sum=>{
+        const t=sum.querySelector('.acc-title,.acc-h');
+        if(((t?t.textContent:sum.textContent).trim().slice(0,80))===ck) sum.querySelector('.acc-check')?.classList.toggle('checked',!!on);
+      });
     }
   };
+})();
+
+/* ======================================================================
+   LP – Lernseiten: Überblick mit Kapitelkarten, Kapitel-Fenster, Volltext
+   (Handy/Tablet; ab 1100 px immer Volltext mit allen Abschnitten offen)
+====================================================================== */
+const LP=(function(){
+  const TABKEY='bvi_lp_tab', mq=window.matchMedia('(min-width:1100px)');
+  let win=null, cur=null, pushed=false, ignorePop=false;
+  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const items=v=>[...v.querySelectorAll('.pc .acc-item')];
+  const ckOf=d=>{ const t=d.querySelector('summary .acc-title,summary .acc-h'); return (t?t.textContent:d.querySelector('summary').textContent).trim().slice(0,80); };
+  const titleOf=d=>{ const t=d.querySelector('summary .acc-title,summary .acc-h'); return ((t?t.textContent:d.querySelector('summary').textContent)||'').replace(/\s+/g,' ').trim(); };
+  const numOf=(d,i)=>d.querySelector('summary .acc-num')?.textContent.trim()||String(i+1).padStart(2,'0');
+  function plain(body){
+    const w=document.createTreeWalker(body,NodeFilter.SHOW_TEXT);let out=[],n;
+    while((n=w.nextNode())){ const t=n.nodeValue.replace(/\s+/g,' ').trim(); if(t) out.push(t); }
+    return out.join(' ');
+  }
+  const pref=()=>{ try{ return localStorage.getItem(TABKEY)==='voll'?'voll':'ueber'; }catch(e){ return 'ueber'; } };
+  function init(id){
+    const v=document.getElementById(id); if(!v) return;
+    if(v._lp){ apply(v); return; }
+    const list=v.querySelector('.pc .acc-list:not(.acc-cards)'); if(!list||items(v).length<3) return;
+    v._lp={id};
+    const tabs=document.createElement('div'); tabs.className='lp-tabs';
+    tabs.innerHTML='<button type="button" data-t="ueber">Überblick</button><button type="button" data-t="voll">Volltext</button>';
+    const cards=document.createElement('div'); cards.className='lp-cards';
+    list.parentNode.insertBefore(tabs,list); list.parentNode.insertBefore(cards,list);
+    tabs.onclick=e=>{ const b=e.target.closest('button[data-t]'); if(!b) return; try{ localStorage.setItem(TABKEY,b.dataset.t); }catch(x){} apply(v,true); };
+    cards.onclick=e=>{ const c=e.target.closest('.lp-card'); if(c) open(v,+c.dataset.i); };
+    apply(v);
+  }
+  function apply(v,fromTab){
+    const wide=mq.matches, mode=wide?'voll':pref();
+    v.classList.add('lp-on'); v.classList.toggle('lp-ueber',mode==='ueber'); v.classList.toggle('lp-voll',mode==='voll');
+    v.querySelectorAll('.lp-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===mode));
+    if(mode==='voll'&&(fromTab||wide||!v._lpOpened)){ items(v).forEach(d=>{ d.open=true; }); v._lpOpened=true; }
+    if(mode==='ueber') render(v);
+  }
+  function render(v){
+    const its=items(v), id=v._lp.id, box=v.querySelector('.lp-cards'); if(!box) return;
+    box.innerHTML=its.map((d,i)=>{
+      const body=d.querySelector('.acc-body')||d.querySelector('.lp-held'); const txt=body?plain(body):'';
+      const min=Math.max(1,Math.round(txt.split(/\s+/).length/180));
+      const read=CHECKS.get(id,ckOf(d));
+      return '<button type="button" class="lp-card'+(read?' read':'')+'" data-i="'+i+'"><span class="acc-num">'+esc(numOf(d,i))+'</span><span class="t">'+esc(titleOf(d))+'</span><span class="acc-pts">'+(read?'✓ ':'')+min+' Min.</span><span class="pv">'+esc(txt.slice(0,150))+(txt.length>150?'…':'')+'</span><span class="go">Kapitel öffnen ›</span></button>';
+    }).join('');
+  }
+  function build(){
+    win=document.createElement('div'); win.className='lp-win'; win.setAttribute('role','dialog'); win.setAttribute('aria-label','Kapitel');
+    win.innerHTML='<div class="lp-wh"><button type="button" class="lp-wb-back" aria-label="Zurück zur Übersicht"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="lp-wt"><span class="lp-eb"></span><b></b></div>'
+      +'<div class="m-tb-actions"><button type="button" class="lp-bm" aria-label="Lesezeichen setzen" onclick="SHELL.bookmark()"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>'
+      +'<button type="button" class="lp-nt" aria-label="Notiz zu dieser Seite" onclick="NOTES.toggle()"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button></div></div>'
+      +'<div class="lp-wbody"></div><div class="lp-pg"><button type="button" class="lp-prev">‹ Vorheriges Kapitel</button><button type="button" class="lp-next">Nächstes Kapitel ›</button></div>';
+    win.querySelector('.lp-wb-back').onclick=()=>back();
+    win.querySelector('.lp-prev').onclick=()=>go(cur.i-1);
+    win.querySelector('.lp-next').onclick=()=>go(cur.i+1);
+    const mo=new MutationObserver(sync);
+    ['m-bm','m-note'].forEach(i=>{ const e=document.getElementById(i); if(e) mo.observe(e,{attributes:true,attributeFilter:['class']}); });
+  }
+  function sync(){
+    if(!win) return;
+    win.querySelector('.lp-bm').classList.toggle('fab-active',!!document.getElementById('m-bm')?.classList.contains('fab-active'));
+    win.querySelector('.lp-nt').classList.toggle('fab-active',!!document.getElementById('m-note')?.classList.contains('fab-active'));
+  }
+  function give(){ // Inhalt zurück in sein Kapitel
+    if(!cur||!cur.body) return;
+    const d=items(cur.v)[cur.i]; if(d&&cur.body.parentNode!==d) d.appendChild(cur.body);
+    cur.body.classList.remove('lp-held'); cur.body=null;
+  }
+  function load(i){
+    const its=items(cur.v), d=its[i]; cur.i=i;
+    const body=d.querySelector('.acc-body'); cur.body=body;
+    const wb=win.querySelector('.lp-wbody'); wb.innerHTML='<h2 class="lp-h">'+esc(titleOf(d))+'</h2>'; wb.appendChild(body); body.classList.add('lp-held');
+    win.querySelector('.lp-eb').textContent='Kapitel '+numOf(d,i)+' / '+String(its.length).padStart(2,'0');
+    win.querySelector('.lp-wt b').textContent=document.querySelector('#'+cur.v.id+' .page-title')?.textContent.trim()||'';
+    win.querySelector('.lp-prev').classList.toggle('dis',i===0);
+    win.querySelector('.lp-next').classList.toggle('dis',i===its.length-1);
+    wb.scrollTop=0; CHECKS.set(cur.v._lp.id,ckOf(d),true); sync();
+  }
+  function open(v,i){
+    if(!win) build();
+    cur={v,i,body:null};
+    v.appendChild(win); v.classList.add('lp-open'); document.documentElement.classList.add('lp-lock');
+    const r=v.getBoundingClientRect(); win.style.setProperty('--lp-l',Math.max(0,r.left)+'px'); win.style.setProperty('--lp-w',r.width+'px');
+    load(i); win.classList.add('on');
+    if(!pushed){ try{ history.pushState(Object.assign({},history.state||{},{lp:1}),''); pushed=true; }catch(e){} }
+  }
+  function go(i){ if(!cur||i<0||i>=items(cur.v).length) return; give(); load(i); }
+  function close(silent){
+    if(!cur) return;
+    give(); const v=cur.v; win.classList.remove('on'); v.classList.remove('lp-open'); document.documentElement.classList.remove('lp-lock'); cur=null;
+    if(v.classList.contains('lp-ueber')) render(v);
+    if(pushed){ pushed=false; if(!silent){ ignorePop=true; try{ history.back(); }catch(e){ ignorePop=false; } } }
+  }
+  function back(){ close(false); }
+  window.addEventListener('popstate',e=>{
+    if(ignorePop){ ignorePop=false; e.stopImmediatePropagation(); return; }
+    if(cur){ close(true); e.stopImmediatePropagation(); }
+  },true);
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&cur&&document.getElementById('notes-overlay')?.classList.contains('hidden')) back(); });
+  mq.addEventListener&&mq.addEventListener('change',()=>{ if(mq.matches&&cur) close(true); const v=document.querySelector('.view.active'); if(v&&v._lp) apply(v); });
+  return { init, isOpen:()=>!!cur, back, onShow(id){ if(cur&&cur.v.id!==id) close(true); else if(cur) close(true); } };
 })();
 
 /* ======================================================================
@@ -3591,6 +3706,7 @@ const CHANGELOG=(function(){
       'Startseite: Die nächste Einheit steht oben rechts neben der Begrüßung (im Unterricht grau die laufende, orange die folgende; Text bis zu drei Zeilen), ein Tipp öffnet den Stundenplan',
       'Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator) bekommen keinen Haken mehr und zählen nicht zum Themenfortschritt; Führungsdienstsimulator steht oben im IBK-Reiter, Zurück aus einem Szenario führt zur Szenario-Übersicht',
       'Klausur-Seiten (Klausur 08/2026, Eingrenzung, Altklausur-Training FeuAK, Laufbahnklausuren, VAk-Klausurhinweise) als Karten: zuerst die Frage, per Tipp Kurzfassung und Musterlösung; Klausurfragen, Hubs (FeuAK, VAk) im gleichen Kartenstil und gleich groß',
+      'Lernseiten neu: Überblick mit Kapitelkarten (Titel, Lesezeit, Vorschau) oder Volltext; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges/Nächstes Kapitel“, Stift (Notiz) und Lesezeichen oben; Zurück führt zur Übersicht; am Desktop immer Volltext',
       'Stundenplan springt beim Öffnen zur laufenden bzw. nächsten Einheit: richtige Woche, der aktuelle Tag steht oben (am Wochenende der nächste Montag); die laufende bzw. nächste Einheit leuchtet mit Farbverlauf und Glow und wechselt mit der Uhrzeit',
       'Abkürzungen als Karten zum Aufklappen (Kürzel und Name, Erläuterung per Tipp; auf Tablet 2, auf Desktop 3 Spalten) mit fest stehender Suchleiste, Kategorien-Überschriften und „Suche leeren“',
       'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
