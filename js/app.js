@@ -49,6 +49,7 @@ const NAV = (function(){
     if(typeof RELATED!=='undefined'&&RELATED[id]){const _v=document.getElementById(id);if(_v&&!_v.querySelector('.related-topics')){const _pc=_v.querySelector('.pc');if(_pc){const _d=document.createElement('div');_d.className='related-topics';_d.innerHTML='<div class="related-label">Verwandte Themen</div><div class="related-chips">'+RELATED[id].map(([rid,rl])=>'<button class="related-chip" onclick="NAV.go(\''+rid+'\',\''+rl+'\')">'+rl+'</button>').join('')+'</div>';_pc.appendChild(_d);}}}
     updateReadProgress();
     CHECKS.init(id);
+    if(typeof TB!=='undefined') TB.init(id);
     if(typeof LP!=='undefined'){ LP.onShow(id); LP.init(id); }
     // Update URL for direct linking
     const url=new URL(location.href);
@@ -2595,6 +2596,38 @@ const CHECKS=(function(){
 })();
 
 /* ======================================================================
+   TB – Tabellen am Handy: 2 Spalten als Begriff/Erklärung, 3–4 Spalten als Karten,
+   ab 5 Spalten mit fester erster Spalte (reines CSS ab 700 px nicht nötig)
+====================================================================== */
+const TB=(function(){
+  function init(id){
+    const v=document.getElementById(id); if(!v) return;
+    v.querySelectorAll('.pc table:not(.tb)').forEach(t=>{
+      t.classList.add('tb');
+      const rows=[...t.rows]; if(rows.length<2) { t.classList.add('tb-wide'); return; }
+      const head=rows.find(r=>r.querySelector('th'))||rows[0];
+      const hi=rows.indexOf(head);
+      const spans=[...t.querySelectorAll('td,th')].some(c=>c.colSpan>1||c.rowSpan>1);
+      const n=Math.max(...rows.map(r=>r.cells.length));
+      head.classList.add('tb-head');
+      const labels=[...head.cells].map(c=>c.textContent.replace(/\s+/g,' ').trim());
+      rows.forEach((r,ri)=>{ if(ri===hi) return; [...r.cells].forEach((c,i)=>{ if(labels[i]) c.setAttribute('data-label',labels[i]); }); });
+      const kind=spans?'wide':n===2?'dl':n<=4?'cards':'wide';
+      t.classList.add('tb-'+kind);
+      if(kind==='wide'){
+        let w=t.parentElement;
+        if(!w||!/auto|scroll/.test(getComputedStyle(w).overflowX)){ w=document.createElement('div'); t.parentNode.insertBefore(w,t); w.appendChild(t); }
+        w.classList.add('tb-scroll');
+        const hint=document.createElement('span'); hint.className='tb-hint'; hint.textContent='← wischen →'; w.appendChild(hint);
+        w.addEventListener('scroll',()=>hint.classList.toggle('gone',w.scrollLeft>8),{passive:true});
+        requestAnimationFrame(()=>{ if(w.scrollWidth<=w.clientWidth+4) hint.classList.add('gone'); });
+      }
+    });
+  }
+  return { init };
+})();
+
+/* ======================================================================
    LP – Lernseiten: Überblick mit Kapitelkarten, Kapitel-Fenster, Volltext
    (Handy/Tablet; ab 1100 px immer Volltext mit allen Abschnitten offen)
 ====================================================================== */
@@ -3698,7 +3731,7 @@ const CHANGELOG=(function(){
       'Startseite: Die nächste Einheit steht oben rechts neben der Begrüßung (im Unterricht grau die laufende, orange die folgende; Text bis zu drei Zeilen), ein Tipp öffnet den Stundenplan',
       'Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator) bekommen keinen Haken mehr und zählen nicht zum Themenfortschritt; Führungsdienstsimulator steht oben im IBK-Reiter, Zurück aus einem Szenario führt zur Szenario-Übersicht',
       'Klausur-Seiten (Klausur 08/2026, Eingrenzung, Altklausur-Training FeuAK, Laufbahnklausuren, VAk-Klausurhinweise) als Karten: zuerst die Frage, per Tipp Kurzfassung und Musterlösung; Klausurfragen, Hubs (FeuAK, VAk) im gleichen Kartenstil und gleich groß',
-      'Lernseiten neu: Überblick mit Kapitelkarten (Titel, Lesezeit, Vorschau) oder Volltext; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges/Nächstes Kapitel“, Stift (Notiz) und Lesezeichen oben; Zurück führt zur Übersicht; am Desktop immer Volltext; die Suche springt direkt ins passende Kapitel; Vorlesefunktion entfernt',
+      'Lernseiten neu: Überblick mit Kapitelkarten (Titel, Lesezeit, Vorschau) oder Volltext; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges/Nächstes Kapitel“, Stift (Notiz) und Lesezeichen oben; Zurück führt zur Übersicht; am Desktop immer Volltext; die Suche springt direkt ins passende Kapitel; Vorlesefunktion entfernt; Tabellen am Handy automatisch lesbar (2 Spalten als Begriff/Erklärung, 3–4 Spalten als Karten, ab 5 Spalten mit fester erster Spalte) und überall im gleichen Stil',
       'Stundenplan springt beim Öffnen zur laufenden bzw. nächsten Einheit: richtige Woche, der aktuelle Tag steht oben (am Wochenende der nächste Montag); die laufende bzw. nächste Einheit leuchtet mit Farbverlauf und Glow und wechselt mit der Uhrzeit',
       'Abkürzungen als Karten zum Aufklappen (Kürzel und Name, Erläuterung per Tipp; auf Tablet 2, auf Desktop 3 Spalten) mit fest stehender Suchleiste, Kategorien-Überschriften und „Suche leeren“',
       'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
