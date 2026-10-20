@@ -3856,7 +3856,7 @@ const CHANGELOG=(function(){
       'Die Kopfzeile mit Zurück, Üben, Fokus, Notiz und Lesezeichen bleibt auf Inhaltsseiten beim Scrollen sichtbar',
       'Startseite: Die Modul-Kreise tragen einen kleinen Pfeil-Knopf (›) am Ring und pulsieren beim Öffnen der Seite kurz nacheinander, damit klar ist, dass man sie antippen kann',
       'Neu: Kleine Pause – Karte auf der Startseite mit wechselndem Satz und eigene Seite mit sechs Spielen: Einsatzfahrt (Route wählen, Prüfungsfragen aus IBK, VAk, FeuAK oder IdF, Hilfsfrist schaffen, Brand wächst mit der Zeit), Quizleiter, Wahr oder Falsch, Wörter-Raten, Mehr oder weniger und Memory; Fragen wahlweise Allgemeinwissen, Feuerwehr oder beides',
-      'Kleine Pause: Zurück im Spiel führt zur Spieleauswahl; bei „Mehr oder weniger“ liegen die Werte mit jeder richtigen Antwort enger beieinander; auf dem Handy steht die Karte über dem 1. Ausbildungsjahr; Tagesserie ohne Flammensymbol',
+      'Kleine Pause: Zurück im Spiel führt zur Spieleauswahl; bei „Mehr oder weniger“ liegen die Werte mit jeder richtigen Antwort enger beieinander; auf dem Handy steht die Karte über dem 1. Ausbildungsjahr; keine Tagesserie mehr in der Kopfzeile der Startseite',
       'Lernseiten korrigiert: FwDV 8 (Tauchen) und FwDV 10 (tragbare Leitern), praktische Saughöhe einheitlich 7,5 m, LF 10 mit 1.200 l und HLF 20 mit 1.600 l nach DIN 14530-5 bzw. -27, Körperschutzformen 1–3 und Gefahrengruppen I–III nach FwDV 500, Absperrbereich 25 µSv/h, Führungsstufen B/C mit Führungstrupp/-staffel bzw. Führungsgruppe',
       'Altklausur-Quiz korrigiert: IdF „Hochhäuser bis 60 m“ nach MHHR (Feuerwehraufzug und Steigleitungen sowie ein Sicherheitstreppenraum statt zwei Treppenräumen sind richtig), VAk „Was ist ein Realakt?“ mit Erklärung, warum „Hoheitliche Aufgabe“ am ehesten passt',
 'Lernseiten neu: Überblick mit Kapitelkarten (Titel, Lesezeit, Vorschau) – auf Handy und Tablet gleich, ohne Umschalter; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges/Nächstes Kapitel“, Stift (Notiz) und Lesezeichen oben; Zurück führt zur Übersicht; am Desktop als Volltext; die Suche springt direkt ins passende Kapitel; Vorlesefunktion entfernt; Tabellen am Handy automatisch lesbar (2 Spalten als Begriff/Erklärung, 3–4 Spalten als Karten, ab 5 Spalten mit fester erster Spalte) und überall im gleichen Stil',
@@ -6194,12 +6194,6 @@ const SHELL=(function(){
     return _quip.text;
   }
 
-  function streakDays(){
-    const d=STREAK.get(), n=d.current||0;
-    const f=x=>x.getFullYear()+'-'+(x.getMonth()+1)+'-'+x.getDate();
-    const t=new Date(), y=new Date(); y.setDate(t.getDate()-1);
-    return n>0&&(d.lastStudy===f(t)||d.lastStudy===f(y))?n:0;
-  }
   function cardStats(){
     let fc={}; try{ fc=JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch(e){}
     const now=Date.now();
@@ -6300,7 +6294,7 @@ const SHELL=(function(){
     if(!el) return;
     const now=new Date(), h=now.getHours();
     const slot=daySlot(h), hi=GREET[slot];
-    const streak=streakDays(), cnt=PROGRESS.counts();
+    const cnt=PROGRESS.counts();
     const cs=cardStats(), recent=RECENT.list()[0], nx=IDF_PLAN.next(), exam=daysToExam(), week=USAGE.week(), ex=examCfg();
     const pct=c=>c.total?Math.round(c.done/c.total*100):0;
     const modRow=m=>{
@@ -6347,7 +6341,7 @@ const SHELL=(function(){
     const pause=`<div class="m-list m-pause">${row({ic:ic('cup'),t1:'Kleine Pause',t2:PAUSE_LOADER.quip(),on:goJs('v-pause','Kleine Pause')})}</div>`;
     const cloud=`<div class="m-list m-cloud"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2 m-cloud-x">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
     el.innerHTML=`
-      <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}${streak?` <span class="m-streak m-streak-in">${streak} ${streak===1?'Tag':'Tage'}</span>`:''}</div></div>${nextBox}</div>
+      <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
       <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}</div></div>`;
   }
 
