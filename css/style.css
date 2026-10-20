@@ -2394,3 +2394,4 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 @media(min-width:1100px){.pz-fahrt{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:start;}}
 /* Startseite: Karte Kleine Pause */
 .m-pause .m-t2{white-space:normal;}
+.pz-fbx{display:flex;flex-direction:column;gap:10px;}.pz-fbx:empty{display:none;}
