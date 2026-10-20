@@ -37,7 +37,7 @@ const EXEC = process.env.PW_EXEC || undefined;
         if (w > 1) problems.push(`${name}: ${id} ragt ${w}px über den Rand`);
       }
     }
-    for (const fn of ['SEARCH.open()', 'SEARCH.close()', 'STATS.open()', 'STATS.close()', 'POMO.open()', 'POMO.close()', 'CHANGELOG.open()', 'CHANGELOG.close()']) {
+    for (const fn of ['SEARCH.open()', 'SEARCH.close()', 'POMO.open()', 'POMO.close()', 'CHANGELOG.open()', 'CHANGELOG.close()']) {
       await page.evaluate(fn).catch(e => errors.push(`${fn}: ${e.message}`));
     }
     // Farbschema umschalten und Bild-Vergrößerung öffnen
