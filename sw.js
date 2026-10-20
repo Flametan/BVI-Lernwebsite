@@ -13,6 +13,8 @@ const PRECACHE = [
   './fonts/roboto-400-latin.woff2',
   './js/app.js',
   './js/idf-data.js',
+  './js/pause.js',
+  './js/pause-data.js',
   './js/version.js',
   './js/qrcode.min.js',
   './manifest.json',

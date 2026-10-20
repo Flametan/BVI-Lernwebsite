@@ -215,6 +215,56 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Fokus-Lesemodus mit Pfeiltasten und Esc', dk.focus && /02 \/ 07/.test(dk.next) && dk.closed);
   await page.setViewportSize({ width: 390, height: 844 });
 
+  // ── Kleine Pause: Startseiten-Karte, Spiele, Einsatzfahrt ──
+  const pz = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    NAV.home(); await w(300);
+    r.card = (document.querySelector('#m-home .m-pause .m-t2') || {}).textContent || '';
+    r.quips = PAUSE_LOADER.QUIPS.length;
+    r.emoji = PAUSE_LOADER.QUIPS.some(q => /\p{Extended_Pictographic}/u.test(q));
+    NAV.go('v-pause', 'Kleine Pause'); await PAUSE_LOADER.load(); await w(300);
+    r.games = document.querySelectorAll('#pause-root [data-g]').length;
+    r.modes = [];
+    for (const m of ['allg', 'fw', 'beides']) {
+      document.querySelector(`#pause-root [data-m="${m}"]`).click(); await w(50);
+      const res = {};
+      for (const g of ['quiz', 'tf', 'word', 'num', 'mem']) {
+        PAUSE.open(g); await w(60);
+        res[g] = !document.querySelector('#pause-root .pz-body').textContent.includes('noch keine Inhalte');
+        if (g === 'quiz') { document.querySelector('#pause-root .pz-opt').click(); await w(50); res.quizFb = !!document.querySelector('#pause-root .pz-fb'); }
+        if (g === 'word') { 'ABCDE'.split('').forEach(k => document.querySelector(`#pause-root [data-k="${k}"]`).click()); document.querySelector('#pause-root [data-k="ENTER"]').click(); await w(30); res.wordRow = document.querySelectorAll('#pause-root .pz-wc.gr,#pause-root .pz-wc.ye,#pause-root .pz-wc.xx').length; }
+        if (g === 'mem') res.memCards = document.querySelectorAll('#pause-root .pz-mc').length;
+        PAUSE.back(); await w(30);
+      }
+      r.modes.push(res);
+    }
+    PAUSE.open('fahrt'); await w(100);
+    document.querySelector('#pause-root [data-a="route"]').click(); await w(30);
+    document.querySelector('#pause-root [data-a="go"][data-v="B"]').click();
+    let n = 0;
+    for (let i = 0; i < 6; i++) {
+      for (let k = 0; k < 60 && !document.querySelector('#pause-root [data-a="ans"]:not([disabled])'); k++) await w(100);
+      const st = PAUSE._fahrt()._state(), q = st.qs[st.qi];
+      document.querySelector(`#pause-root [data-a="ans"][data-v="${(q.c + 1) % q.o.length}"]`).click(); n++; await w(30);
+      document.querySelector('#pause-root [data-a="next"]').click();
+    }
+    for (let k = 0; k < 60 && PAUSE._fahrt()._state().phase !== 'end'; k++) await w(100);
+    const st = PAUSE._fahrt()._state();
+    r.fahrt = { n, phase: st.phase, win: st.win, t: Math.round(st.t), opts: st.qs.every(q => q.o.length === 4) };
+    NAV.back(); await w(200);
+    r.backToHub = !!document.querySelector('#pause-root [data-g]');
+    NAV.home(); await w(200);
+    r.left = document.querySelector('#pause-root').innerHTML === '';
+    return r;
+  });
+  ok('Kleine Pause: Karte auf der Startseite mit Satz', pz.card.length > 10);
+  eq('Kleine Pause: 50 Sätze ohne Emojis', [pz.quips, pz.emoji], [50, false]);
+  eq('Kleine Pause: 6 Spiele', pz.games, 6);
+  ok('Spiele haben Inhalte in allen drei Modi', pz.modes.every(m => m.quiz && m.tf && m.word && m.num && m.mem));
+  ok('Quizleiter, Wörter-Raten, Memory reagieren', pz.modes.every(m => m.quizFb && m.wordRow === 5 && m.memCards === 12));
+  ok('Einsatzfahrt Ring: 6 Fragen, 4 Optionen, verloren bei 6 Fehlern', pz.fahrt.n === 6 && pz.fahrt.phase === 'end' && pz.fahrt.win === false && pz.fahrt.t > 480 && pz.fahrt.opts);
+  ok('Zurück im Spiel führt zur Spieleliste, Verlassen stoppt', pz.backToHub && pz.left);
+
   for (const e of errors) fails.push('JavaScript-Fehler: ' + e);
   await browser.close();
   if (fails.length) { console.error('FEHLER:\n - ' + fails.join('\n - ')); process.exit(1); }
