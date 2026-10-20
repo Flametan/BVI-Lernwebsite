@@ -10,7 +10,7 @@ const PAUSE=(function(){
   const rnd=a=>a[Math.floor(Math.random()*a.length)];
   const get=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}};
   const set=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
-  let root=null,cur=null,mode=get(MKEY,'beides');
+  let root=null,cur=null,mode=get(MKEY,'beides'),pushed=false;
   const best=()=>get(BKEY,{});
   function saveBest(k,v,lower){const b=best();if(b[k]==null||(lower?v<b[k]:v>b[k])){b[k]=v;set(BKEY,b);return true;}return false;}
   // Inhalte je Umschalter: Allgemeinwissen, Feuerwehrwissen oder beides
@@ -44,9 +44,13 @@ const PAUSE=(function(){
     root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
   }
   function open(k){const g=GAMES.find(x=>x[0]===k);if(!g)return;stop();cur=g[4]();
+    if(!pushed){try{history.pushState(Object.assign({},history.state,{pz:1}),'');pushed=true;}catch(e){}}
     root.innerHTML=`<div class="pz-wrap"><div class="pz-head"><button class="pz-back">‹ Alle Spiele</button><span class="pz-center" style="font-size:.78rem">${k==='fahrt'?'Prüfungsfragen':mode==='allg'?'Allgemeinwissen':mode==='fw'?'Feuerwehr':'Allgemein + Feuerwehr'}</span></div><div class="pz-body"></div></div>`;
-    root.querySelector('.pz-back').onclick=hub;cur.start(root.querySelector('.pz-body'));}
+    root.querySelector('.pz-back').onclick=toHub;cur.start(root.querySelector('.pz-body'));}
   function stop(){if(cur&&cur.stop)cur.stop();cur=null;}
+  function toHub(){if(pushed)history.back();else hub();}
+  // Zurück (Browser, Wischgeste, Android) im Spiel: zur Spieleauswahl statt zur Startseite
+  window.addEventListener('popstate',e=>{if(!pushed)return;pushed=false;if(cur&&root&&root.isConnected){e.stopImmediatePropagation();hub();}},true);
   const empty=el=>{el.innerHTML='<div class="pz-card"><div class="pz-center">Für diese Auswahl gibt es noch keine Inhalte. Schalte oben auf „Beides“.</div></div>';};
 
   /* ---------- 1 Quizleiter ---------- */
@@ -90,11 +94,15 @@ const PAUSE=(function(){
     stop(){if(this.kd)document.removeEventListener('keydown',this.kd);}};
 
   /* ---------- 4 Mehr oder weniger ---------- */
-  const NUM={start(el){const P=pool('num');const cats={};P.forEach(x=>{const k=x._k+'|'+x.cat;(cats[k]=cats[k]||[]).push(x);});const keys=Object.keys(cats).filter(k=>cats[k].length>=2);if(!keys.length)return empty(el);let streak=0;
-    const round=()=>{const k=rnd(keys),[a,b]=shuf(cats[k]).filter((x,i,arr)=>i===0||x.v!==arr[0].v).slice(0,2);const big=a.v>b.v?0:1;
+  // Mit jeder richtigen Antwort liegen die beiden Werte näher beieinander (Verhältnis groß/klein sinkt)
+  const NUM={start(el){const P=pool('num');const cats={};P.forEach(x=>{const k=x._k+'|'+x.cat;(cats[k]=cats[k]||[]).push(x);});
+    const pairs=[];Object.values(cats).forEach(a=>{for(let i=0;i<a.length;i++)for(let j=i+1;j<a.length;j++){const x=a[i],y=a[j];if(x.v>0&&y.v>0&&x.v!==y.v)pairs.push({a:x,b:y,r:Math.log(Math.max(x.v,y.v)/Math.min(x.v,y.v))});}});
+    if(!pairs.length)return empty(el);pairs.sort((p,q)=>q.r-p.r);let streak=0;const used=new Set();
+    const pickPair=()=>{const d=Math.min(1,streak/14),c=pairs.filter(p=>!used.has(p));const L=c.length?c:pairs;const idx=Math.round(d*(L.length-1)),w=Math.max(3,Math.round(L.length*.06));const lo=Math.max(0,idx-w),hi=Math.min(L.length,idx+w+1);const p=L[lo+Math.floor(Math.random()*(hi-lo))];used.add(p);return p;};
+    const round=()=>{const pr=pickPair(),[a,b]=shuf([pr.a,pr.b]);const big=a.v>b.v?0:1,diff=Math.round((Math.exp(pr.r)-1)*100);
       el.innerHTML=`<div class="pz-card"><div class="pz-lbl"><span>${esc(a.cat)}</span><b>Serie ${streak}</b></div><div class="pz-qt">Was ist größer?</div><div class="pz-hl">${[a,b].map((x,i)=>`<button class="pz-opt" data-i="${i}"><span>${esc(x.n)}</span><b class="v" style="visibility:hidden">${esc(x.f)}</b></button>`).join('')}</div><div class="pz-fbx"></div></div>`;
       el.querySelectorAll('[data-i]').forEach(btn=>btn.onclick=()=>{const ok=+btn.dataset.i===big;el.querySelectorAll('[data-i]').forEach(x=>{x.style.pointerEvents='none';x.querySelector('.v').style.visibility='visible';});btn.classList.add(ok?'ok':'bad');
-        const fb=el.querySelector('.pz-fbx');if(ok){streak++;fb.innerHTML=`<div class="pz-fb g"><b>Richtig</b></div>`;setTimeout(round,1300);}else{const rec=saveBest('num',streak);fb.innerHTML=`<div class="pz-fb r"><b>Serie beendet: ${streak}</b>${rec&&streak?' · neuer Bestwert':''}</div><button class="pz-pri">Neue Serie</button>`;fb.querySelector('.pz-pri').onclick=()=>NUM.start(el);}});};
+        const fb=el.querySelector('.pz-fbx');if(ok){streak++;fb.innerHTML=`<div class="pz-fb g"><b>Richtig</b> · Unterschied ${diff} %${streak%5===0?' · es wird knapper':''}</div>`;setTimeout(round,1300);}else{const rec=saveBest('num',streak);fb.innerHTML=`<div class="pz-fb r"><b>Serie beendet: ${streak}</b>${rec&&streak?' · neuer Bestwert':''}</div><button class="pz-pri">Neue Serie</button>`;fb.querySelector('.pz-pri').onclick=()=>NUM.start(el);}});};
     round();}};
 
   /* ---------- 5 Memory ---------- */
@@ -194,8 +202,8 @@ const PAUSE=(function(){
 
   return{
     show(){root=document.getElementById('pause-root');if(!root)return;if(!cur)hub();},
-    leave(){stop();if(root)root.innerHTML='';},
-    back(){if(cur){hub();return true;}return false;},
+    leave(){stop();pushed=false;if(root)root.innerHTML='';},
+    back(){if(cur){toHub();return true;}return false;},
     open, _fahrt:()=>FAHRT
   };
 })();
