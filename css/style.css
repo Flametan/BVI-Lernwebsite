@@ -2298,7 +2298,9 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 /* Modul-Kreise: „Öffnen ›“-Pille und kurzer Hinweis-Puls */
 .m-rw{display:block;position:relative;width:min(70px,100%);}
 .m-rw .m-hring{width:100%!important;height:auto!important;display:block;}
-.m-rw::before{content:"›";position:absolute;right:-5px;bottom:-3px;z-index:var(--z-base);width:22px;height:22px;border-radius:50%;background:var(--m-accent);color:var(--m-on-accent);display:grid;place-items:center;font-weight:900;font-size:1rem;line-height:1;box-shadow:0 2px 6px rgba(0,0,0,.3);}
+.m-rw::before{content:"›";position:absolute;right:-6px;bottom:-4px;z-index:var(--z-base);width:24px;height:24px;border-radius:50%;background:var(--m-accent);color:var(--m-on-accent);display:grid;place-items:center;font-weight:900;font-size:1.05rem;line-height:1;/* Rand in Kartenfarbe: der Knopf hebt sich auch dort ab, wo der Fortschrittsring endet */box-shadow:0 0 0 3px var(--rg,var(--m-card)),0 2px 8px rgba(0,0,0,.35);}
+.m-r2,.m-y1 .inner{--rg:var(--m-card);}
+@media(min-width:701px){.m-y1 .inner{--rg:var(--m-raised);}}
 .m-rw::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--m-accent);opacity:0;pointer-events:none;animation:m-pulse 2.6s ease-out 3;}
 .m-ringbtn:nth-child(2) .m-rw::after{animation-delay:.3s;}.m-ringbtn:nth-child(3) .m-rw::after{animation-delay:.6s;}.m-ringbtn:nth-child(4) .m-rw::after{animation-delay:.9s;}
 @keyframes m-pulse{0%{opacity:.8;transform:scale(.92)}60%,100%{opacity:0;transform:scale(1.25)}}
