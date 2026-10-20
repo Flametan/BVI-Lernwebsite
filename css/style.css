@@ -2209,3 +2209,4 @@ html.lp-lock,html.lp-lock body{overflow:hidden;}
 .lp-pg button{flex:1;padding:13px 8px;border-radius:14px;font-family:inherit;font-size:.9rem;font-weight:600;border:0;cursor:pointer;background:var(--m-raised);color:var(--m-fg);}
 .lp-pg .lp-next{background:var(--m-accent);color:var(--m-on-accent);font-weight:700;}
 .lp-pg .dis{opacity:.35;pointer-events:none;}
+html.lp-lock #scroll-top-btn{display:none!important;}
