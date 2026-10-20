@@ -3433,12 +3433,12 @@ const KF_QUIZ = (function(){
       var pts=_scores[scoreKey(q.id)];
       var done=pts!==undefined;
       var ptsHtml=done?('<span class="uk-q-pts-got">'+pts+'/'+q.punkte+'</span>'):'<span class="uk-q-pts-open">–</span>';
-      return '<div class="uk-q-row'+(done?' uk-q-done':'')+'" onclick="KF_QUIZ.goToQ('+i+')">'+'<span class="acc-num">'+String(i+1).padStart(2,'0')+'</span><span class="uk-q-nr">'+q.nr+'</span><span class="acc-pts">'+q.punkte+' Pkt.</span>'+ptsHtml+'</div>';
+      return '<div class="uk-q-row'+(done?' uk-q-done':'')+'" onclick="KF_QUIZ.goToQ('+i+')">'+'<span class="acc-num">'+String(i+1).padStart(2,'0')+'</span><span class="uk-q-nr">'+q.nr+'</span><span class="acc-pts">'+q.punkte+' Pkt.</span>'+ptsHtml+'<span class="acc-q">'+q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\s*\n\s*/g,' ')+'</span><span class="uk-q-hint">'+(done?'Nochmal ansehen ›':'Beantworten ›')+'</span></div>';
     }).join('');
     var progressHtml=progress>0?('<div class="uk-progress-row"><span>Fortschritt: '+progress+'/'+QUESTIONS.length+' bewertet</span><span>'+totalScored+'/'+KF_TOTAL_PTS+' Punkte ('+Math.round(totalScored/KF_TOTAL_PTS*100)+' %)</span></div>'):''
 ;    var resetBtn=progress>0?'<button class="uk-timer-reset" style="margin-left:auto" onclick="KF_QUIZ.resetAll()">↺ Neu beginnen</button>':'';
     var resultBtn=progress===QUESTIONS.length?'<button class="uk-result-btn" onclick="KF_QUIZ.showResult()">Auswertung anzeigen</button>':'';
-    el.innerHTML='<div class="uk-start"><div class="uk-intro-box"><div class="uk-intro-title">Klausurfragen · FeuAK Hamburg</div>'+'<div class="uk-intro-meta">'+QUESTIONS.length+' Fragen · '+KF_TOTAL_PTS+' Punkte</div>'+'<div class="uk-intro-desc">Schreib deine Antwort, zeige dann die Musterlösung an und bewerte dich selbst. Die Fragen basieren auf der offiziellen Fragenliste der Dozenten für den Führungslehrgang.</div></div>'+(resetBtn?'<div class="uk-timer-box">'+resetBtn+'</div>':'')+'<div class="uk-q-overview">'+overviewRows+'</div>'+progressHtml+'<button class="uk-start-btn" onclick="KF_QUIZ.goToQ(0)">'+(progress>0?'Klausur fortsetzen →':'Klausur beginnen →')+'</button>'+resultBtn+'</div>';
+    el.innerHTML='<div class="uk-start"><div class="uk-intro-box"><div class="uk-intro-title">Klausurfragen · FeuAK Hamburg</div>'+'<div class="uk-intro-meta">'+QUESTIONS.length+' Fragen · '+KF_TOTAL_PTS+' Punkte</div>'+'</div>'+(resetBtn?'<div class="uk-timer-box">'+resetBtn+'</div>':'')+'<div class="uk-q-overview">'+overviewRows+'</div>'+progressHtml+'<button class="uk-start-btn" onclick="KF_QUIZ.goToQ(0)">'+(progress>0?'Klausur fortsetzen →':'Klausur beginnen →')+'</button>'+resultBtn+'</div>';
   }
 
   function renderQuestion(){
@@ -3526,6 +3526,12 @@ const KF_QUIZ = (function(){
       document.getElementById('kf-score-row')?.classList.remove('hidden');
     },
     showResult:function(){renderResult();},
+    // Stand für die Übersichtskachel: nur Fragen, die es wirklich gibt
+    info:function(){
+      var sc={};try{sc=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){}
+      var got=QUESTIONS.filter(function(q){return sc[scoreKey(q.id)]!==undefined;});
+      return {done:got.length,totalQ:QUESTIONS.length,pts:got.reduce(function(a,q){return a+(parseInt(sc[scoreKey(q.id)])||0);},0),maxPts:KF_TOTAL_PTS};
+    },
     resetAll:function(){
       localStorage.removeItem(KEY);_scores={};_step=0;_revealed=false;_shortRevealed=false;
       renderStart();
@@ -3554,7 +3560,7 @@ const KLAUSUR_HUB = (function(){
       var eq=document.getElementById('klh-eq-progress');
       var fq=document.getElementById('klh-fq-progress');
       var kf=document.getElementById('klh-kf-progress');
-      if(kf) kf.textContent=fmt(getInfo('bvi_kf_scores',13,65));
+      if(kf) kf.textContent=fmt(KF_QUIZ.info());
       if(eq) eq.textContent=fmt(getInfo('bvi_eq_scores',8,50));
       if(fq) fq.textContent=fmt(getInfo('bvi_fq_scores',22,110));
     }
@@ -4508,7 +4514,7 @@ const FALLBEARBEITUNG = (function(){
     el.innerHTML=STEPS.map((s,i)=>`
       <div class="fb-schema-item">
         <div class="fb-schema-head" onclick="this.parentElement.classList.toggle('fb-open')">
-          <span class="fb-schema-num">${i+1}</span>
+          <span class="fb-schema-num">${String(i+1).padStart(2,'0')}</span>
           <span class="fb-schema-title">${s.title}</span>
           <span class="fb-schema-law">${s.law}</span>
           <span class="fb-chevron">›</span>

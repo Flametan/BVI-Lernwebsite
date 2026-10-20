@@ -2151,10 +2151,28 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .acc-kurz2{margin:.2rem 0 .9rem;padding:.65rem .8rem;border-radius:12px;background:var(--m-raised);font-size:.9rem;line-height:1.55;color:var(--k-d2d2d2);}
 .acc-kurz2 b{color:var(--m-accent-fg);font-weight:600;}
 
-/* Klausurfragen: Übersicht als einzelne Karten wie die anderen Klausur-Seiten */
-.uk-q-overview{background:none;border-radius:0;overflow:visible;gap:10px;}
-.uk-q-overview .uk-q-row{background:var(--m-card);border-radius:16px;border-top:0;padding:14px 16px;gap:12px;}
+/* Klausurfragen: Übersicht als Karten wie die anderen Klausur-Seiten (Frage sichtbar, Antwort per Tipp) */
+.uk-q-overview{background:none;border-radius:0;overflow:visible;gap:10px;display:flex;flex-direction:column;}
+.uk-q-overview .uk-q-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;column-gap:12px;row-gap:8px;align-items:center;background:var(--m-card);border-radius:16px;border:0;border-top:0;padding:14px 16px;box-shadow:none;}
 .uk-q-overview .uk-q-row+.uk-q-row{border-top:0;}
+.uk-q-overview .uk-q-done{box-shadow:none;}
+.uk-q-overview .uk-q-nr{font-size:1rem;font-weight:600;color:var(--m-fg);}
 .uk-q-overview .acc-pts{font-size:.72rem;padding:2px 9px;border-radius:99px;background:var(--m-raised);color:var(--m-muted);white-space:nowrap;font-weight:500;}
-.uk-q-overview .uk-q-nr{font-weight:600;}
-#v-klausur .cg,#v-vak-klausurvorbereitung .cg{grid-auto-rows:1fr;}
+.uk-q-overview .uk-q-pts-got{margin:0;padding:2px 9px;border-radius:99px;background:color-mix(in srgb,#4cc38a 18%,var(--m-raised));font-size:.72rem;}
+.uk-q-overview .uk-q-pts-open{display:none;}
+.uk-q-overview .acc-q{grid-column:1/-1;font-size:.9rem;line-height:1.5;color:var(--k-d2d2d2);font-style:italic;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4;overflow:hidden;}
+.uk-q-overview .uk-q-hint{grid-column:1/-1;color:var(--m-accent-fg);font-size:.82rem;}
+.uk-q-overview .uk-q-done .uk-q-hint{color:var(--m-muted);}
+
+/* Fallbearbeitung: Schema-Schritte als Karten wie die anderen Klausur-Seiten */
+.fb-schema-head{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;row-gap:6px;align-items:center;}
+.fb-schema-title{font-size:1rem;font-weight:600;white-space:normal;}
+.fb-schema-law{grid-column:1/-1;grid-row:2;max-width:none;white-space:normal;overflow:visible;text-overflow:clip;font-size:.8rem;line-height:1.45;}
+.fb-schema-head .fb-chevron{display:none;}
+.fb-schema-head::after{grid-column:1/-1;grid-row:3;content:"Schritt ansehen ›";color:var(--m-accent-fg);font-size:.82rem;}
+.fb-schema-item.fb-open .fb-schema-head::after{content:"Weniger anzeigen ˄";color:var(--m-muted);}
+/* Fallbearbeitung: Übungsfälle als Karten (Nummer-Pille, Titel, Hinweis) */
+.fb-case-card{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;row-gap:8px;align-items:center;}
+.fb-case-card .fb-case-num{margin:0;background:var(--m-accent-dim);color:var(--m-accent-fg);border-radius:8px;padding:3px 8px;font-size:.75rem;font-family:var(--f-b);font-weight:600;}
+.fb-case-card .fb-case-title{font-size:1rem;font-weight:600;}
+.fb-case-card::after{grid-column:1/-1;content:"Fall bearbeiten ›";color:var(--m-accent-fg);font-size:.82rem;}
