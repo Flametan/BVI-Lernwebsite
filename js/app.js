@@ -2774,6 +2774,7 @@ const LP=(function(){
     win.classList.toggle('focus',focus); v.classList.toggle('lp-focus',focus);
     v.appendChild(win); v.classList.add('lp-open'); document.documentElement.classList.add('lp-lock');
     const r=v.getBoundingClientRect(); win.style.setProperty('--lp-l',Math.max(0,r.left)+'px'); win.style.setProperty('--lp-w',r.width+'px');
+    const tb=document.getElementById('m-tabbar'); if(tb&&tb.offsetHeight) win.style.setProperty('--lp-tb',tb.offsetHeight+'px'); // echte Höhe der Tab-Leiste: kein Durchscheinen der Ebene darunter
     load(i); win.classList.add('on');
     if(!pushed){ try{ history.pushState(Object.assign({},history.state||{},{lp:1}),''); pushed=true; }catch(e){} }
   }
