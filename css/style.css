@@ -2177,14 +2177,11 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .fb-case-card::after{grid-column:1/-1;content:"Fall bearbeiten ›";color:var(--m-accent-fg);font-size:.82rem;}
 
 /* Lernseiten: Überblick (Kapitelkarten) · Volltext · Kapitel-Fenster */
-.lp-tabs{display:flex;gap:4px;background:var(--m-card);border-radius:12px;padding:4px;margin:0 0 14px;}
-.lp-tabs button{flex:1;padding:9px;border-radius:9px;font-family:inherit;font-size:.88rem;color:var(--m-muted);background:none;border:0;cursor:pointer;}
-.lp-tabs button.on{background:var(--m-accent);color:var(--m-on-accent);font-weight:700;}
 .lp-cards{display:none;flex-direction:column;gap:10px;}
 .lp-ueber .lp-cards{display:flex;}
 .lp-ueber .pc .acc-list{display:none;}
-@media(min-width:701px){.lp-ueber .lp-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;}}
-@media(min-width:1100px){.lp-tabs,.lp-cards{display:none!important;}.lp-on .pc .acc-list{display:flex!important;}}
+@media(min-width:701px){.lp-ueber .lp-cards{max-width:780px;margin:0 auto;}}
+@media(min-width:1100px){.lp-cards{display:none!important;}.lp-on .pc .acc-list{display:flex!important;}}
 .lp-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:12px;row-gap:8px;align-items:center;text-align:left;background:var(--m-card);border:0;border-radius:16px;padding:14px 16px;width:100%;color:var(--m-fg);font-family:inherit;cursor:pointer;}
 .lp-card:hover{background:var(--b-222222);}
 .lp-card .t{font-weight:600;font-size:1rem;min-width:0;}
