@@ -6046,7 +6046,7 @@ const SHELL=(function(){
       nextBox=`<button class="m-nx" onclick="NAV.tab('v-plan','Stundenplan')" aria-label="Zum Stundenplan">${head}</button>`;
     }
     const pl=chartRange==='month'?monthPlot():weekPlot(), isM=chartRange==='month';
-    const chartCard=`<div class="m-card m-chart2"><div class="m-chart-h"><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${isM?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${isM?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span><span class="m-st"><b>${dur(pl.sum)}</b> ${isM?'12 Mon.':'Woche'}</span></div>
+    const chartCard=`<div class="m-card m-chart2"><div class="m-chart-h"><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${isM?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${isM?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span><span class="m-st"><b>${dur(pl.sum)}</b> / ${isM?'12 Monate':'Woche'}</span></div>
       ${pl.html}</div>`;
     const ringBtn=m=>{
       const c=cnt[m[0]]||{done:0,total:0};
