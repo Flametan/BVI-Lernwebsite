@@ -2139,8 +2139,22 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .acc-cards .acc-pts{font-size:.72rem;padding:2px 9px;border-radius:99px;background:var(--m-raised);color:var(--m-muted);white-space:nowrap;font-weight:500;}
 .acc-cards .acc-kurz{grid-column:1/-1;font-size:.88rem;line-height:1.5;color:var(--k-d2d2d2);}
 .acc-cards .acc-kurz b{color:var(--m-accent-fg);font-weight:600;}
-.acc-cards .acc-item summary::after{grid-column:1/-1;content:"Fragestellung & Musterlösung ›";color:var(--m-accent-fg);font-size:.82rem;}
+.acc-cards .acc-item summary::after{grid-column:1/-1;content:"Lösung ansehen ›";color:var(--m-accent-fg);font-size:.82rem;}
 .acc-cards .acc-item[open] summary::after{content:"Weniger anzeigen ˄";color:var(--m-muted);}
 #v-vak-klausurhinweise .acc-cards .acc-item summary::after{content:"Begriffe ansehen ›";}
-#v-eingrenzung-klausur .acc-cards .acc-item summary::after{content:"Fragestellung & Antwort ›";}
+#v-eingrenzung-klausur .acc-cards .acc-item summary::after{content:"Antwort ansehen ›";}
 #v-vak-klausurhinweise .acc-cards .acc-item[open] summary::after,#v-eingrenzung-klausur .acc-cards .acc-item[open] summary::after{content:"Weniger anzeigen ˄";}
+
+/* Karte zeigt zuerst die Frage (bis 4 Zeilen); aufgeklappt steht sie vollständig im Textteil */
+.acc-cards .acc-q{grid-column:1/-1;font-size:.9rem;line-height:1.5;color:var(--k-d2d2d2);font-style:italic;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4;overflow:hidden;}
+.acc-cards .acc-item[open] .acc-q{display:none;}
+.acc-kurz2{margin:.2rem 0 .9rem;padding:.65rem .8rem;border-radius:12px;background:var(--m-raised);font-size:.9rem;line-height:1.55;color:var(--k-d2d2d2);}
+.acc-kurz2 b{color:var(--m-accent-fg);font-weight:600;}
+
+/* Klausurfragen: Übersicht als einzelne Karten wie die anderen Klausur-Seiten */
+.uk-q-overview{background:none;border-radius:0;overflow:visible;gap:10px;}
+.uk-q-overview .uk-q-row{background:var(--m-card);border-radius:16px;border-top:0;padding:14px 16px;gap:12px;}
+.uk-q-overview .uk-q-row+.uk-q-row{border-top:0;}
+.uk-q-overview .acc-pts{font-size:.72rem;padding:2px 9px;border-radius:99px;background:var(--m-raised);color:var(--m-muted);white-space:nowrap;font-weight:500;}
+.uk-q-overview .uk-q-nr{font-weight:600;}
+#v-klausur .cg,#v-vak-klausurvorbereitung .cg{grid-auto-rows:1fr;}

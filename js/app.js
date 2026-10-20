@@ -3433,7 +3433,7 @@ const KF_QUIZ = (function(){
       var pts=_scores[scoreKey(q.id)];
       var done=pts!==undefined;
       var ptsHtml=done?('<span class="uk-q-pts-got">'+pts+'/'+q.punkte+'</span>'):'<span class="uk-q-pts-open">–</span>';
-      return '<div class="uk-q-row'+(done?' uk-q-done':'')+'" onclick="KF_QUIZ.goToQ('+i+')">'+'<span class="uk-q-nr">'+q.nr+'</span><span class="uk-q-pts-max">'+q.punkte+' Pkt.</span>'+ptsHtml+'</div>';
+      return '<div class="uk-q-row'+(done?' uk-q-done':'')+'" onclick="KF_QUIZ.goToQ('+i+')">'+'<span class="acc-num">'+String(i+1).padStart(2,'0')+'</span><span class="uk-q-nr">'+q.nr+'</span><span class="acc-pts">'+q.punkte+' Pkt.</span>'+ptsHtml+'</div>';
     }).join('');
     var progressHtml=progress>0?('<div class="uk-progress-row"><span>Fortschritt: '+progress+'/'+QUESTIONS.length+' bewertet</span><span>'+totalScored+'/'+KF_TOTAL_PTS+' Punkte ('+Math.round(totalScored/KF_TOTAL_PTS*100)+' %)</span></div>'):''
 ;    var resetBtn=progress>0?'<button class="uk-timer-reset" style="margin-left:auto" onclick="KF_QUIZ.resetAll()">↺ Neu beginnen</button>':'';
@@ -3584,7 +3584,7 @@ const CHANGELOG=(function(){
       'Prüfung: neuer Abschnitt „Laufbahnprüfung“ mit den schriftlichen Klausuren Dez 2023 und Juni 2026 samt Musterlösungen (wie Klausur 08/2026) und Abschnitt „IdF Münster“ mit dem Altklausur-Quiz IdF (Vorbeugender Brandschutz und Stabsarbeit, Mehrfachauswahl, Lern- und Prüfungsmodus, Wiederholung nach Plan), auch im Reiter IdF erreichbar; Quelle und Unsicherheit stehen bei jeder Antwort; Prüfung-Tab als gleichmäßiges Raster (3 Spalten Desktop, 2 Tablet, 1 Handy) und Countdown-Karte führt zum passenden Quiz bzw. zur Klausur',
       'Startseite: Die nächste Einheit steht oben rechts neben der Begrüßung (im Unterricht grau die laufende, orange die folgende; Text bis zu drei Zeilen), ein Tipp öffnet den Stundenplan',
       'Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator) bekommen keinen Haken mehr und zählen nicht zum Themenfortschritt; Führungsdienstsimulator steht oben im IBK-Reiter, Zurück aus einem Szenario führt zur Szenario-Übersicht',
-      'Klausur-Seiten (Klausur 08/2026, Eingrenzung, Altklausur-Training FeuAK, Laufbahnklausuren, VAk-Klausurhinweise) als Karten mit Kurz-Zeile: das Wichtigste steht sofort sichtbar, Fragestellung und Musterlösung per Tipp',
+      'Klausur-Seiten (Klausur 08/2026, Eingrenzung, Altklausur-Training FeuAK, Laufbahnklausuren, VAk-Klausurhinweise) als Karten: zuerst die Frage, per Tipp Kurzfassung und Musterlösung; Klausurfragen, Hubs (FeuAK, VAk) im gleichen Kartenstil und gleich groß',
       'Stundenplan springt beim Öffnen zur laufenden bzw. nächsten Einheit: richtige Woche, der aktuelle Tag steht oben (am Wochenende der nächste Montag); die laufende bzw. nächste Einheit leuchtet mit Farbverlauf und Glow und wechselt mit der Uhrzeit',
       'Abkürzungen als Karten zum Aufklappen (Kürzel und Name, Erläuterung per Tipp; auf Tablet 2, auf Desktop 3 Spalten) mit fest stehender Suchleiste, Kategorien-Überschriften und „Suche leeren“',
       'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
