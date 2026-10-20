@@ -646,11 +646,10 @@
   
   
 
-  /* ── PAGE TOOLS ROW (Notes / TTS / AI-Tutor) ── */
+  /* ── PAGE TOOLS ROW (Notes / AI-Tutor) ── */
   
   
   
-  .tts-active{border-color:var(--c-gold-rim)!important;color:var(--c-gold)!important;background:var(--c-gold-dim)!important;}
 
 /* ─── ALTKLAUSUR QUIZ ─────────────────────────────── */
 .quiz-mode-bar{display:flex;gap:.5rem;margin-bottom:1.5rem;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
@@ -1100,7 +1099,7 @@ body.offline .offline-banner{display:flex;}
 #m-back svg{flex-shrink:0;}
 .m-tb-actions{display:flex;gap:6px;}
 .m-tb-actions button{width:42px;height:42px;border-radius:50%;background:var(--m-card);color:var(--m-fg);display:grid;place-items:center;}
-.m-tb-actions button.fab-active,.m-tb-actions button.tts-active{color:var(--m-accent-fg);background:var(--m-accent-dim);}
+.m-tb-actions button.fab-active{color:var(--m-accent-fg);background:var(--m-accent-dim);}
 #m-pomo{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:160;display:flex;align-items:center;gap:6px;background:var(--m-accent);color:var(--m-on-accent);font-family:inherit;font-weight:700;font-size:.82rem;border-radius:20px;padding:7px 13px;font-variant-numeric:tabular-nums;box-shadow:0 4px 16px rgba(0,0,0,.4);}
 #m-tabbar{position:fixed;left:0;right:0;bottom:0;z-index:150;background:var(--m-bar);border-top:1px solid var(--b-222222);display:grid;grid-template-columns:repeat(5,1fr);align-items:end;padding:8px max(4px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px));}
 .m-tab{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0;color:var(--k-e6e6e6);font-family:var(--f-b);min-width:0;}

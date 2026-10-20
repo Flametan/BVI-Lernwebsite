@@ -173,6 +173,20 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Lernseite: Zurück schließt das Fenster und gibt den Inhalt zurück', lp.closed && lp.bodyBack === 7);
   ok('Lernseite: geöffnete Kapitel gelten als gelesen', Object.keys(lp.read).length >= 2);
 
+  // ── Suche springt ins Kapitel, Vorlesefunktion ist entfernt ──
+  const sj = await page.evaluate(async () => {
+    NAV.home();
+    SEARCH.open();
+    const inp = document.getElementById('search-input'); inp.value = 'Untätigkeitsklage'; SEARCH.query(inp.value);
+    await new Promise(r => setTimeout(r, 600));
+    const hit = document.querySelector('#search-results [onclick*="SEARCH.go"]'); hit && hit.click();
+    await new Promise(r => setTimeout(r, 700));
+    return { view: document.querySelector('.view.active').id, win: LP.isOpen(), eb: document.querySelector('.lp-eb')?.textContent, tts: typeof TTS, btn: !!document.getElementById('m-tts') };
+  });
+  eq('Suche: öffnet die passende Lernseite', sj.view, 'v-vak-verwaltungsrecht');
+  ok('Suche: springt ins Kapitel', sj.win && /Kapitel 0\d \/ 07/.test(sj.eb || ''));
+  ok('Vorlesefunktion entfernt', sj.tts === 'undefined' && !sj.btn);
+
   for (const e of errors) fails.push('JavaScript-Fehler: ' + e);
   await browser.close();
   if (fails.length) { console.error('FEHLER:\n - ' + fails.join('\n - ')); process.exit(1); }

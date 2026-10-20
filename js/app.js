@@ -1262,6 +1262,11 @@ const SEARCH = (function(){
 
   function stripHtml(s){ const d=document.createElement('div');d.innerHTML=s;return d.textContent||''; }
 
+  // Nummer des Kapitels (Akkordeon-Abschnitt), in dem ein Element liegt; -1 = nicht in einem Kapitel
+  function chOf(el){
+    const d=el.closest('.acc-item'), v=el.closest('.view'); if(!d||!v) return -1;
+    return [...v.querySelectorAll('.pc .acc-item')].indexOf(d);
+  }
   function buildIndex(){
     if(_indexBuilt) return;
     _indexBuilt = true;
@@ -1271,13 +1276,13 @@ const SEARCH = (function(){
       const lbl = VIEW_LABELS[vid];
       el.querySelectorAll('.sec-h,.tc-name,.page-title,.def-box-label').forEach(h => {
         const t = h.textContent.trim(); if(t.length < 3) return;
-        idx.push({vid, lbl, title:t, snippet:'', boost:3});
+        idx.push({vid, lbl, title:t, snippet:'', boost:3, ch:chOf(h)});
       });
       el.querySelectorAll('.def-box p,.info-card p,.bl li,.step-desc,.hint p,.tc-sub,.ant-desc,.pillar ul li').forEach(p => {
         const t = p.textContent.trim(); if(t.length < 8) return;
         const hdr = p.closest('.info-card,.def-box,.step-item');
         const ttl = hdr ? (hdr.querySelector('.info-card-title,.def-box-label,.step-title')||{}).textContent||lbl : lbl;
-        idx.push({vid, lbl, title:ttl.trim(), snippet:t.slice(0,400), boost:1});
+        idx.push({vid, lbl, title:ttl.trim(), snippet:t.slice(0,400), boost:1, ch:chOf(p)});
       });
     });
     // Lernkarten in den Index aufnehmen
@@ -1448,6 +1453,7 @@ const SEARCH = (function(){
       this.close();
       const lbl = r.lbl.split('·').pop().trim();
       NAV.go(r.vid, lbl);
+      if(r.ch>=0&&typeof LP!=='undefined') setTimeout(()=>LP.focus(r.vid,r.ch),80);
     },
     runHist(q){
       const inp=document.getElementById('search-input');
@@ -2447,40 +2453,6 @@ const NOTIF = (function(){
 })();
 
 /* ======================================================================
-   TTS – Text-to-Speech (Web Speech API)
-====================================================================== */
-const TTS = (function(){
-  let speaking=false;
-  function stop(){ if('speechSynthesis' in window) window.speechSynthesis.cancel(); speaking=false; updateBtns(); }
-  function updateBtns(){
-    document.querySelectorAll('.tts-page-btn').forEach(b=>{
-      b.classList.toggle('tts-active',speaking);
-      const l=b.querySelector('.tts-lbl');if(l) l.textContent=speaking?'Stop':'Vorlesen';
-    });
-  }
-  return {
-    toggle(){
-      if(speaking){ stop(); return; }
-      if(!('speechSynthesis' in window)){ TOAST.show('Text-to-Speech wird nicht unterstützt'); return; }
-      const active=document.querySelector('.view.active');
-      const pc=active&&active.querySelector('.pc');
-      if(!pc){ TOAST.show('Kein Inhalt zum Vorlesen'); return; }
-      const text=(pc.innerText||pc.textContent||'').replace(/\s+/g,' ').trim();
-      if(!text){ TOAST.show('Kein Text gefunden'); return; }
-      window.speechSynthesis.cancel();
-      const u=new SpeechSynthesisUtterance(text);
-      u.lang='de-DE'; u.rate=0.92;
-      u.onend=()=>{ speaking=false; updateBtns(); };
-      u.onerror=()=>{ speaking=false; updateBtns(); };
-      window.speechSynthesis.speak(u);
-      speaking=true; updateBtns();
-    },
-    stop
-  };
-})();
-
-
-/* ======================================================================
    STATS – Lernstatistiken
 ====================================================================== */
 const STATS = (function(){
@@ -2639,6 +2611,19 @@ const LP=(function(){
     while((n=w.nextNode())){ const t=n.nodeValue.replace(/\s+/g,' ').trim(); if(t) out.push(t); }
     return out.join(' ');
   }
+  // Vorschau: erste Sätze/Stichpunkte des Kapitels, durch „·“ getrennt (statt aneinandergereihter Textknoten)
+  function preview(body){
+    const sel='p,li,.def-body,.step-desc';
+    const out=[]; let n=0;
+    body.querySelectorAll(sel).forEach(el=>{
+      if(n>=170||el.querySelector(sel)||el.closest('table')) return;
+      const t=el.textContent.replace(/\s+/g,' ').trim(); if(t.length<12) return;
+      out.push(t.replace(/[.;:]$/,'')); n+=t.length;
+    });
+    let s=out.length?out.join(' · '):plain(body).replace(/ (?=[A-ZÄÖÜ])/g,' · ');
+    if(s.length>170){ s=s.slice(0,170); const k=s.lastIndexOf(' '); s=(k>120?s.slice(0,k):s)+' …'; }
+    return s;
+  }
   const pref=()=>{ try{ return localStorage.getItem(TABKEY)==='voll'?'voll':'ueber'; }catch(e){ return 'ueber'; } };
   function init(id){
     const v=document.getElementById(id); if(!v) return;
@@ -2666,7 +2651,7 @@ const LP=(function(){
       const body=d.querySelector('.acc-body')||d.querySelector('.lp-held'); const txt=body?plain(body):'';
       const min=Math.max(1,Math.round(txt.split(/\s+/).length/180));
       const read=CHECKS.get(id,ckOf(d));
-      return '<button type="button" class="lp-card'+(read?' read':'')+'" data-i="'+i+'"><span class="acc-num">'+esc(numOf(d,i))+'</span><span class="t">'+esc(titleOf(d))+'</span><span class="acc-pts">'+(read?'✓ ':'')+min+' Min.</span><span class="pv">'+esc(txt.slice(0,150))+(txt.length>150?'…':'')+'</span><span class="go">Kapitel öffnen ›</span></button>';
+      return '<button type="button" class="lp-card'+(read?' read':'')+'" data-i="'+i+'"><span class="acc-num">'+esc(numOf(d,i))+'</span><span class="t">'+esc(titleOf(d))+'</span><span class="acc-pts">'+(read?'✓ ':'')+min+' Min.</span><span class="pv">'+esc(body?preview(body):'')+'</span><span class="go">Kapitel öffnen ›</span></button>';
     }).join('');
   }
   function build(){
@@ -2723,7 +2708,14 @@ const LP=(function(){
   },true);
   document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&cur&&document.getElementById('notes-overlay')?.classList.contains('hidden')) back(); });
   mq.addEventListener&&mq.addEventListener('change',()=>{ if(mq.matches&&cur) close(true); const v=document.querySelector('.view.active'); if(v&&v._lp) apply(v); });
-  return { init, isOpen:()=>!!cur, back, onShow(id){ if(cur&&cur.v.id!==id) close(true); else if(cur) close(true); } };
+  // Suche: direkt zum Kapitel – im Überblick (Handy/Tablet) im Kapitel-Fenster, sonst Abschnitt aufklappen und hinscrollen
+  function focus(id,i){
+    const v=document.getElementById(id); if(!v) return;
+    const d=items(v)[i]; if(!d) return;
+    if(v._lp&&v.classList.contains('lp-ueber')){ open(v,i); return; }
+    d.open=true; d.scrollIntoView({block:'start',behavior:'smooth'});
+  }
+  return { init, focus, isOpen:()=>!!cur, back, onShow(id){ if(cur&&cur.v.id!==id) close(true); else if(cur) close(true); } };
 })();
 
 /* ======================================================================
@@ -3706,11 +3698,11 @@ const CHANGELOG=(function(){
       'Startseite: Die nächste Einheit steht oben rechts neben der Begrüßung (im Unterricht grau die laufende, orange die folgende; Text bis zu drei Zeilen), ein Tipp öffnet den Stundenplan',
       'Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator) bekommen keinen Haken mehr und zählen nicht zum Themenfortschritt; Führungsdienstsimulator steht oben im IBK-Reiter, Zurück aus einem Szenario führt zur Szenario-Übersicht',
       'Klausur-Seiten (Klausur 08/2026, Eingrenzung, Altklausur-Training FeuAK, Laufbahnklausuren, VAk-Klausurhinweise) als Karten: zuerst die Frage, per Tipp Kurzfassung und Musterlösung; Klausurfragen, Hubs (FeuAK, VAk) im gleichen Kartenstil und gleich groß',
-      'Lernseiten neu: Überblick mit Kapitelkarten (Titel, Lesezeit, Vorschau) oder Volltext; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges/Nächstes Kapitel“, Stift (Notiz) und Lesezeichen oben; Zurück führt zur Übersicht; am Desktop immer Volltext',
+      'Lernseiten neu: Überblick mit Kapitelkarten (Titel, Lesezeit, Vorschau) oder Volltext; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges/Nächstes Kapitel“, Stift (Notiz) und Lesezeichen oben; Zurück führt zur Übersicht; am Desktop immer Volltext; die Suche springt direkt ins passende Kapitel; Vorlesefunktion entfernt',
       'Stundenplan springt beim Öffnen zur laufenden bzw. nächsten Einheit: richtige Woche, der aktuelle Tag steht oben (am Wochenende der nächste Montag); die laufende bzw. nächste Einheit leuchtet mit Farbverlauf und Glow und wechselt mit der Uhrzeit',
       'Abkürzungen als Karten zum Aufklappen (Kürzel und Name, Erläuterung per Tipp; auf Tablet 2, auf Desktop 3 Spalten) mit fest stehender Suchleiste, Kategorien-Überschriften und „Suche leeren“',
       'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
-      'Lernseiten: Text markieren, Merken, Notiz und Vorlesen direkt auf der Seite; Bilder und Diagramme per Tipp groß öffnen und zoomen; Inhaltsverzeichnis am Rand auf großen Bildschirmen; Fehler melden',
+      'Lernseiten: Text markieren, Merken, Notiz direkt auf der Seite; Bilder und Diagramme per Tipp groß öffnen und zoomen; Inhaltsverzeichnis am Rand auf großen Bildschirmen; Fehler melden',
       'Einstellungen: Suche, Notizen, Lesezeichen, Pomodoro, Lernstatistik, Abkürzungen, Sicherung erstellen und einspielen, Klausurtermin einstellbar, freiwillige Unterstützung per PayPal',
       'Ersteinrichtung beim ersten Start (Farbschema, Akzentfarbe, Kartenziel); Installationshilfe je Gerät und QR-Code zum Teilen der App',
       'Lernkarten: eigene Karten anlegen, Filter „Schwach“ für Karten, die schwer waren oder nicht saßen',
