@@ -2296,3 +2296,6 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .lp-win.focus .lp-wbody .acc-body{font-family:Georgia,'Times New Roman',serif;font-size:var(--lp-fz,18px);line-height:1.85;}
 .lp-win.focus .lp-wbody .acc-body .def-box,.lp-win.focus .lp-wbody .acc-body table,.lp-win.focus .lp-wbody .acc-body .info-card{font-family:Roboto,system-ui,sans-serif;font-size:.9em;}
 .lp-win.focus .lp-pg{justify-content:center;}.lp-win.focus .lp-pg button{max-width:260px;}
+/* Kapitel-Fenster auf Tablets: A−/A+ nur im Fokus-Lesemodus, Text in lesbarer Breite */
+.lp-win:not(.focus) .lp-fm,.lp-win:not(.focus) .lp-fp{display:none!important;}
+@media(min-width:701px){.lp-win:not(.focus) .lp-wbody{padding-left:max(16px,calc((100% - 780px)/2));padding-right:max(16px,calc((100% - 780px)/2));}}
