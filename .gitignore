@@ -4,3 +4,4 @@ android/app/build/
 android/local.properties
 node_modules/
 tests/node_modules/
+data/stundenplan-gruppe*.ics

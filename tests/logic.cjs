@@ -522,6 +522,31 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Lernkarten teilen: Link, Übernehmen, keine Doppelten, ohne E-Mail', sh, { n1: 2, link: true, noMail: true, n2: 2, q: 'Was ist &lt;b&gt;A&lt;/b&gt;?', dupe: 2 });
 
+  // ── Eigener Stundenplan aus einer Kalenderdatei (.ics) ──
+  const pi = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    const y = new Date().getFullYear() + 1, d = `${y}0106`;   // ein Dienstag/Montag im nächsten Jahr, damit "als Nächstes" etwas findet
+    const ics = ['BEGIN:VCALENDAR', 'X-WR-CALNAME:Test-Plan', 'BEGIN:VEVENT', 'DTSTART:' + d + 'T080000', 'DTEND:' + d + 'T093000', 'SUMMARY:Mathe\\, Teil 1', 'LOCATION:Raum 12', 'RRULE:FREQ=WEEKLY;COUNT=3', 'END:VEVENT',
+      'BEGIN:VEVENT', 'DTSTART;VALUE=DATE:' + y + '0107', 'SUMMARY:Ausflug', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+    const res = IDF_PLAN.parseIcs(ics);
+    r.parsed = [res.name, res.ev.length, res.ev[0].t, res.ev[0].r, (() => { const m = res.ev.filter(e => e.t.startsWith('Mathe')); return m[1].s - m[0].s === 7 * 864e5; })(), res.ev.some(e => e.ad === 1)];
+    const f = new File([ics], 'x.ics');
+    NAV.go('v-plan', 'Stundenplan'); await w(300);
+    IDF_PLAN.importIcs(f); await w(500);
+    r.custom = IDF_PLAN.isCustom();
+    r.shown = /Mathe, Teil 1/.test(document.getElementById('plan-inner').innerText) || document.getElementById('plan-inner').innerText.length > 100;
+    r.next = (IDF_PLAN.next() || {}).title;
+    let sent = null; window.BVIAndroid = { setSchedule: j => { sent = j; }, setWidgetStyle() {}, setIcon() {} };
+    IDF_PLAN.pushWidget(); const u = JSON.parse(sent || '[]'); delete window.BVIAndroid;
+    r.units = [u.length, u.every(x => x.x === 1), u[0] && u[0].r];
+    r.ics = /X-WR-CALNAME:Test-Plan/.test(IDF_PLAN.ics().text);
+    IDF_PLAN.useSource('idf'); await w(300);
+    r.back = [IDF_PLAN.isCustom(), /Gruppe 1/.test(document.getElementById('plan-inner').innerText)];
+    localStorage.removeItem('bvi_plan_custom'); localStorage.setItem('bvi_plan_src', 'idf');
+    return r;
+  });
+  eq('Eigener Plan: lesen, anzeigen, Widget-Daten, Export, zurück zum IdF-Plan', pi, { parsed: ['Test-Plan', 4, 'Mathe, Teil 1', 'Raum 12', true, true], custom: true, shown: true, next: 'Mathe, Teil 1', units: [3, true, 'Raum 12'], ics: true, back: [false, true] });
+
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
   const tp = await tctx.newPage();

@@ -27,6 +27,7 @@ class ScheduleTest {
         assertEquals("08:00–09:30", Schedule.range(s.cur!!))
         assertEquals("Raum B1-106", Schedule.room(s.cur!!))
         assertEquals("", Schedule.room(all[2]))
+        assertEquals("Hörsaal A", Schedule.room(Lesson(0, 1, "x", "Hörsaal A", true)))
         assertEquals("30 min", Schedule.dur(at(27, 9, 30) - at(27, 9, 0)))
         assertEquals("1 Std 25 min", Schedule.dur(85 * 60_000L))
     }
