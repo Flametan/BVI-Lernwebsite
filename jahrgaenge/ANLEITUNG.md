@@ -38,7 +38,7 @@ Alles ist optional (siehe `_beispiel.json`):
 * `plane` – Stundenpläne je Abschnitt (`ibk`, `vak`, `feuak`, `idf`), jeweils mit Termine (Beginn, Ende, Titel, Raum); `aktiv` nennt den Abschnitt, dessen Plan Startseite und Widgets benutzen.
 * `erg` – Ergänzungen zu Lernseiten (`seite` ist die Seiten-ID, z. B. `v-vak-verwaltungsrecht`; `bild` verweist auf `bilder`).
 * `pr` – Prüfungen: `hinzu` (eigene Prüfungen mit Fragen und Antworten), `weg` (ausgeblendete mitgelieferte Prüfungen).
-* `nrel` – IDs der Prüfungen, die **nicht** klausurrelevant sind (z. B. `v-vak-klausurhinweise`). Alle anderen gelten als relevant und liefern die Fragen für Einsatzfahrt und Duell.
+* `rel` – Klausurrelevanz einzelner Prüfungen als `{ "<Prüfungs-ID>": true|false }`. Ohne Angabe gelten die im Master hervorgehobenen Prüfungen (und eigene Prüfungen) als relevant; relevante Prüfungen liefern die Fragen für Einsatzfahrt und Duell.
 * `bilder` – die Bilder als `data:image/jpeg;base64,…` (die App verkleinert sie vor dem Speichern).
 
 ## Prüfen, bevor du veröffentlichst

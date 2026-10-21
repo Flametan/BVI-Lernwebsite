@@ -81,13 +81,15 @@ const JGUI=(function(){
     const opts=list.map(j=>'<option value="'+j.id+'"'+(j.id===cur?' selected':'')+'>'+E(j.label)+(j.id===JG.MASTER?' (Master)':'')+'</option>').join('');
     const master=JG.isMaster(), loc=JG.hasLocal();
     root.innerHTML='<div class="m-row m-static m-wrap"><span class="m-tx"><span class="m-t1">Mein Jahrgang</span><span class="m-t2">'+(master?'Der Master: alle Inhalte der App':'Kopie des Masters mit eigenen Änderungen – neue Inhalte und Verbesserungen vom Master kommen automatisch')+'</span></span><select id="jg-sel" class="m-input" aria-label="Jahrgang">'+opts+'</select></div>'
-      +'<button class="m-row" id="jg-exp"><span class="m-tx"><span class="m-t1">Änderungen exportieren</span><span class="m-t2">Eine Datei mit Plan, Ergänzungen und Prüfungen, zum Weitergeben per WhatsApp</span></span></button>'
+      +(master?'':'<button class="m-row" id="jg-exp"><span class="m-tx"><span class="m-t1">Änderungen exportieren</span><span class="m-t2">Eine Datei mit Plan, Ergänzungen und Prüfungen, zum Weitergeben per WhatsApp</span></span></button>'
       +'<label class="m-row" for="jg-imp" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Änderungen einlesen</span><span class="m-t2">Eine Datei von jemandem aus deinem Jahrgang</span></span><input type="file" id="jg-imp" accept=".json,application/json" hidden></label>'
-      +(loc?'<button class="m-row" id="jg-dis"><span class="m-tx"><span class="m-t1">Meine Änderungen verwerfen</span><span class="m-t2">Zurück zum Stand des Masters (mit Rückgängig)</span></span></button>':'')
-      +'<p class="m-note" style="padding:10px 16px 14px">'+NOTICE+'</p>';
+      +(loc?'<button class="m-row" id="jg-dis"><span class="m-tx"><span class="m-t1">Meine Änderungen verwerfen</span><span class="m-t2">Zurück zum Stand des Masters (mit Rückgängig)</span></span></button>':''))
+      +(master?'':'<p class="m-note" style="padding:10px 16px 14px">'+NOTICE+'</p>');
     $(root,'#jg-sel').onchange=e=>{ JG.set(e.target.value); };
-    $(root,'#jg-exp').onclick=exportFile;
-    $(root,'#jg-imp').onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(f) importFile(f); };
+    if(!master){
+      $(root,'#jg-exp').onclick=exportFile;
+      $(root,'#jg-imp').onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(f) importFile(f); };
+    }
     const d=$(root,'#jg-dis'); if(d) d.onclick=()=>{ if(!confirm('Alle eigenen Änderungen dieses Jahrgangs verwerfen?\n\nDer Plan, deine Ergänzungen, hinzugefügte und ausgeblendete Prüfungen sind danach weg.')) return; const prev=JG.discard(); TOAST.show('Änderungen verworfen',{type:'ok',undo:()=>JG.restore(prev)}); };
   }
   async function exportFile(){
@@ -208,11 +210,12 @@ const JGUI=(function(){
   function mount(id){
     const v=document.getElementById(id); if(!v) return;
     const pc=v.querySelector('.pc'); if(!lessonLike(pc)) return;
+    if(JG.isMaster()) editPage=null;
     [pc,...document.querySelectorAll('.lp-win')].forEach(r=>r.querySelectorAll('.jg-ctl,.jg-erg-k').forEach(x=>x.remove()));
     pc.classList.toggle('jg-ed-on',editPage===id);
     const d=JG.data(), gone=new Set(d.ausg), mine=new Set(JG.local().ausg), all=parts(id,pc);
     all.forEach(p=>p.el.classList.toggle('jg-gone',gone.has(p.key)));
-    const ed=editPage===id, ks=new Map(all.filter(p=>p.kind==='a'&&!gone.has(p.key)).map(p=>[p.kap,p]));
+    const master=JG.isMaster(), ed=editPage===id&&!master, ks=new Map(all.filter(p=>p.kind==='a'&&!gone.has(p.key)).map(p=>[p.kap,p]));
     // Ergänzungen: in ihrem Kapitel, sonst unten auf der Seite
     const items=d.erg.filter(e=>e.seite===id).sort((a,b)=>a.ts-b.ts), rest=items.filter(e=>!(e.kap&&ks.has(e.kap)));
     ks.forEach((p,kap)=>{
@@ -228,6 +231,7 @@ const JGUI=(function(){
       if(p.kind==='a'){ const s=$(p.el,'summary'); if(s) s.insertBefore(b,$(s,'.acc-arrow')); } else p.el.insertBefore(b,p.el.firstChild);
     });
     let box=pc.querySelector(':scope > .jg-erg');
+    if(master){ if(box) box.remove(); if(typeof LP!=='undefined'&&LP.refresh) LP.refresh(id); return; }
     if(!box){ box=document.createElement('div'); box.className='jg-erg'; pc.appendChild(box); }
     box.innerHTML=(rest.length?'<div class="m-sec">Eigene Ergänzungen</div>':'')+rest.map(ergHtml).join('')
       +'<button type="button" class="jg-plus" aria-label="Eigene Ergänzung hinzufügen"><span>+</span> Eigene Ergänzung</button>';
@@ -293,8 +297,8 @@ const JGUI=(function(){
   const isEditing=()=>editing;
   function toggleEdit(){ editing=!editing; SHELL.renderExam(); }
   function setRel(id){
-    const l=JG.local(), n=new Set(JG.data().nrel||[]); if(n.has(id)) n.delete(id); else n.add(id);
-    l.nrel=[...n]; JG.saveLocal(l);
+    if(JG.isMaster()) return;
+    const l=JG.local(); l.rel[id]=!JG.rel(id); JG.saveLocal(l);
   }
   function delExam(id){
     const l=JG.local(), prev=JSON.stringify(l), i=l.pr.hinzu.findIndex(p=>p.id===id);
