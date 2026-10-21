@@ -94,19 +94,8 @@
   <div class="search-box" onclick="event.stopPropagation()">
     <div class="search-input-wrap">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--c-slate);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="search-input" class="search-input" type="text" placeholder="Suchen oder Aktion wählen …" oninput="SEARCH.query(this.value)" onkeydown="SEARCH.keydown(event)" autocomplete="off" spellcheck="false"/>
+      <input id="search-input" class="search-input" type="text" placeholder="Suchen …" oninput="SEARCH.query(this.value)" onkeydown="SEARCH.keydown(event)" autocomplete="off" spellcheck="false"/>
       <button class="search-close-btn" onclick="SEARCH.close()" title="Schließen (Esc)">✕</button>
-    </div>
-    <div class="search-filter-row">
-      <button class="sf-btn active" data-f="all" onclick="SEARCH.setFilter('all')">Alle</button>
-      <button class="sf-btn" data-f="gal" onclick="SEARCH.setFilter('gal')">GAL</button>
-      <button class="sf-btn" data-f="sfs" onclick="SEARCH.setFilter('sfs')">SFS</button>
-      <button class="sf-btn" data-f="hlfs" onclick="SEARCH.setFilter('hlfs')">HLFS</button>
-      <button class="sf-btn" data-f="ibk" onclick="SEARCH.setFilter('ibk')">IBK</button>
-      <button class="sf-btn" data-f="vak" onclick="SEARCH.setFilter('vak')">VAk</button>
-      <button class="sf-btn" data-f="feuak" onclick="SEARCH.setFilter('feuak')">FeuAK</button>
-      <button class="sf-btn" data-f="idf" onclick="SEARCH.setFilter('idf')">IdF</button>
-      <button class="sf-btn" data-f="karten" onclick="SEARCH.setFilter('karten')">Karten</button>
     </div>
     <div id="search-results" class="search-results"><div class="search-idle">Suchbegriff eingeben – z.&nbsp;B. <em>AVIVA</em>, <em>Glasl</em>, <em>MANV</em></div></div>
     <div class="search-footer"><span><kbd>↑↓</kbd> navigieren</span><span><kbd>↵</kbd> öffnen</span><span><kbd>Esc</kbd> schließen</span></div>

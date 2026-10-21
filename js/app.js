@@ -1227,7 +1227,7 @@ const PROGRESS = (function(){
    SEARCH – Volltext-Suche über alle Views
 ====================================================================== */
 const SEARCH = (function(){
-  let idx = [], results = [], focusIdx = -1, _filter = 'all', _indexBuilt = false, _debounceTimer = null;
+  let idx = [], results = [], focusIdx = -1, _indexBuilt = false, _debounceTimer = null;
   const HIST_KEY='bvi_search_hist';
   function loadHist(){ try{ return JSON.parse(localStorage.getItem(HIST_KEY)||'[]'); }catch{ return []; } }
   function saveHist(q){ const h=loadHist().filter(x=>x!==q); h.unshift(q); localStorage.setItem(HIST_KEY,JSON.stringify(h.slice(0,5))); }
@@ -1370,12 +1370,6 @@ const SEARCH = (function(){
         if(sc>0) scored.push({...e,score:sc,fuzzy:true});
       });
     }
-    if(_filter !== 'all'){
-      if(_filter==='karten') scored=scored.filter(e=>e.isCard);
-      else scored=scored.filter(e=>!e.isCard&&!e.isNote&&(
-        e.lbl.toLowerCase().split('·')[0].trim()===_filter.toLowerCase()
-        ||e.lbl.toLowerCase().split('·')[0].trim().startsWith(_filter.toLowerCase())));
-    }
     scored.sort((a,b) => b.score-a.score);
     const seen = new Set();
     const uniq = scored.filter(e => { const k=e.vid+'|'+e.title; if(seen.has(k)) return false; seen.add(k); return true; });
@@ -1387,17 +1381,9 @@ const SEARCH = (function(){
     ];
   }
 
-  // ── Befehlspalette: Aktionen und Kapitel der aktuellen Seite ──
+  // ── Kapitel der aktuellen Seite in der Suche ──
   function quick(q){
     const v=document.querySelector('.view.active'), vid=v&&v.id, out=[];
-    const NAVS=[['Zur Startseite','→',()=>NAV.home()],['Zum Stundenplan','→',()=>NAV.tab('v-plan','Stundenplan')],['Zur Prüfung','→',()=>NAV.tab('v-pruefung','Prüfung')],
-      ['Lernkarten üben','→',()=>NAV.tab('v-flashcards','Lernkarten')],['Einstellungen öffnen','→',()=>NAV.tab('v-settings','Einstellungen')]];
-    const acts=[];
-    const page=vid&&vid.split('-').length>2&&document.getElementById('m-tb-actions')&&!document.getElementById('m-tb-actions').classList.contains('hidden');
-    if(page){ acts.push(['Notiz zu dieser Seite','N',()=>NOTES.toggle()],['Lesezeichen setzen oder entfernen','B',()=>SHELL.bookmark()]); }
-    if(typeof LP!=='undefined'&&LP.canFocus()) acts.push(['Fokus-Lesemodus','F',()=>LP.focusMode()]);
-    if(typeof LP!=='undefined'&&LP.canPractice()&&window.matchMedia('(min-width:1100px)').matches) acts.push(['Lernkarten-Fenster ein- oder ausblenden','Ü',()=>LP.togglePractice()]);
-    NAVS.forEach(n=>acts.push([n[0],n[1],n[2]]));
     const t=norm(q||'').trim();
     if(v){
       const its=[...v.querySelectorAll('.pc .acc-item')];
@@ -1406,7 +1392,6 @@ const SEARCH = (function(){
         if(t?norm(ti).includes(t):i<8) out.push({grp:'Kapitel dieser Seite',lbl:String(i+1).padStart(2,'0'),title:ti,snippet:'',act:()=>LP.focus(vid,i),quick:true});
       });
     }
-    acts.forEach(a=>{ if(!t||norm(a[0]).includes(t)) out.push({grp:'Aktionen',lbl:a[1],title:a[0],snippet:'',act:a[2],quick:true}); });
     return out.slice(0,t?14:16);
   }
   function quickHtml(items,q){
@@ -1459,8 +1444,7 @@ const SEARCH = (function(){
 
   return {
     open(){
-      buildIndex(); _filter='all';
-      document.querySelectorAll('.sf-btn').forEach(b=>b.classList.toggle('active',b.dataset.f==='all'));
+      buildIndex();
       document.getElementById('search-overlay').classList.remove('hidden');
       const inp = document.getElementById('search-input');
       inp.value = ''; inp.focus(); render('');
@@ -1468,11 +1452,6 @@ const SEARCH = (function(){
     close(){ document.getElementById('search-overlay').classList.add('hidden'); results=[]; focusIdx=-1; },
     toggle(){ document.getElementById('search-overlay').classList.contains('hidden') ? this.open() : this.close(); },
     query(q){ clearTimeout(_debounceTimer); _debounceTimer = setTimeout(()=>render(q.trim()), 150); },
-    setFilter(f){
-      _filter=f;
-      document.querySelectorAll('.sf-btn').forEach(b=>b.classList.toggle('active',b.dataset.f===f));
-      render(document.getElementById('search-input').value.trim());
-    },
     goBk(id,label){ this.close(); NAV.go(id,label||id); },
     removeBk(id){ if(typeof BOOKMARKS!=='undefined') BOOKMARKS.remove(id); renderBookmarks(); },
     keydown(e){
@@ -3799,6 +3778,7 @@ const CHANGELOG=(function(){
       'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Stundenplan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links',
       'Android-App: Das Startsymbol und das Startbild folgen jetzt auch dem Farbschema – schwarz im dunklen, hell (Farbton der Website) im hellen Design',
       'Einstellungen: fehlender Trennstrich zwischen „Sicherung einspielen“ und „Lernfortschritt zurücksetzen“ ergänzt; Erste-Schritte nennt jetzt den Pausenraum statt der Lernkarten',
+      'Suche: Aktionen (Seitensprünge, Notiz, Lesezeichen, Fokus) und die Filterleiste entfernt – die Suche zeigt nur noch Treffer und die Kapitel der Seite',
       'Startseite: Wochen- und Monatsdiagramm passt auf dem Handy wieder vollständig in die Karte',
       'Einstellungen: Gruppen (Darstellung, Lernen, Erinnerung, Daten, Werkzeuge, App) klappen auf und zu und zeigen die aktuellen Werte; „Projekt unterstützen“ bleibt immer unten sichtbar',
       'Farbschema: Dunkel, Hell oder System (Einstellungen → Farbschema)',
