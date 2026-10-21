@@ -30,7 +30,7 @@ const NAV = (function(){
     if(id==='v-app') INSTALL.render();
     ETIMER.mount(id);
     if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); }
-    if(id==='v-home') SHELL.renderHome();
+    if(id==='v-home'){ SHELL.newQuip(); SHELL.renderHome(); }
     if(id==='v-pruefung') SHELL.renderExam();
     if(id==='v-settings') SHELL.syncSettings();
     if(id==='v-notizen') SHELL.renderNotes();
@@ -3779,6 +3779,7 @@ const CHANGELOG=(function(){
       'Android-App: Das Startsymbol und das Startbild folgen jetzt auch dem Farbschema – schwarz im dunklen, hell (Farbton der Website) im hellen Design',
       'Einstellungen: fehlender Trennstrich zwischen „Sicherung einspielen“ und „Lernfortschritt zurücksetzen“ ergänzt; Erste-Schritte nennt jetzt den Pausenraum statt der Lernkarten',
       'Suche: Aktionen (Seitensprünge, Notiz, Lesezeichen, Fokus) und die Filterleiste entfernt – die Suche zeigt nur noch Treffer und die Kapitel der Seite',
+      'Startseite: Der Satz unter der Begrüßung wechselt bei jedem Aufrufen der Seite; „Freiwillige Spende“ ist als ganze Karte anklickbar',
       'Startseite: Wochen- und Monatsdiagramm passt auf dem Handy wieder vollständig in die Karte',
       'Einstellungen: Gruppen (Darstellung, Lernen, Erinnerung, Daten, Werkzeuge, App) klappen auf und zu und zeigen die aktuellen Werte; „Projekt unterstützen“ bleibt immer unten sichtbar',
       'Farbschema: Dunkel, Hell oder System (Einstellungen → Farbschema)',
@@ -6143,10 +6144,12 @@ const SHELL=(function(){
   };
   const daySlot=h=>h>=22||h<5?'night':h<11?'morning':h<14?'noon':h<18?'afternoon':'evening';
   let _quip=null;
+  // Satz bleibt, solange die Startseite nur neu gezeichnet wird; beim erneuten Aufrufen der Seite (newQuip) kommt ein anderer
   function quip(slot){
-    if(!_quip||_quip.slot!==slot){ const l=QUIPS[slot]; _quip={slot,text:l[Math.floor(Math.random()*l.length)]}; }
+    if(!_quip||_quip.slot!==slot){ const l=QUIPS[slot], old=_quip&&_quip.text; let t; do{ t=l[Math.floor(Math.random()*l.length)]; }while(t===old&&l.length>1); _quip={slot,text:t}; }
     return _quip.text;
   }
+  function newQuip(){ if(_quip) _quip.slot=null; }
 
   function cardStats(){
     let fc={}; try{ fc=JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch(e){}
@@ -6421,7 +6424,7 @@ const SHELL=(function(){
   }
 
   return {
-    onShow, renderHome, renderExam, renderNotes, renderFcSide, syncSettings,
+    onShow, renderHome, newQuip, renderExam, renderNotes, renderFcSide, syncSettings,
     report(extra){
       const v=document.querySelector('.view.active'); if(!v) return;
       const title=v.querySelector('.page-title')?.textContent?.trim()||v.id;

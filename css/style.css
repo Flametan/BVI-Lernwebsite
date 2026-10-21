@@ -2462,3 +2462,6 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .m-acc-b{border-top:1px solid var(--m-line,rgba(128,128,128,.18));}
 .m-acc-b .m-list{border-radius:0;background:transparent;}
 @media(prefers-reduced-motion:reduce){.m-acc-chv{transition:none;}}
+
+/* Spende: die ganze Karte ist der Link */
+a.m-donate{display:block;color:inherit;text-decoration:none;cursor:pointer;}

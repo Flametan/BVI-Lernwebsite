@@ -352,6 +352,18 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Daten: Trennstrich vor jeder Zeile', dat.sep.length === 4 && dat.sep.every(Boolean));
   ok('Erste Schritte: Pausenraum statt Lernkarten', dat.pause && !dat.karten);
 
+  // ── Spende ist als ganze Karte ein Link; Startseiten-Satz wechselt bei jedem Aufrufen ──
+  const dq = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    const d = document.querySelector('#v-settings .m-donate');
+    const seen = new Set();
+    for (let i = 0; i < 8; i++) { NAV.go('v-settings', 'x'); await w(60); NAV.home(); await w(120); seen.add(document.querySelector('.m-quip').textContent); }
+    const a = document.querySelector('.m-quip').textContent; SHELL.renderHome(); const b = document.querySelector('.m-quip').textContent;
+    return { tag: d.tagName, href: /paypal\.me/.test(d.href), note: d.contains(d.querySelector('.m-note')), many: seen.size, same: a === b };
+  });
+  ok('Spende: ganze Karte ist ein Link', dq.tag === 'A' && dq.href && dq.note);
+  ok('Startseite: Satz wechselt beim erneuten Aufrufen, bleibt beim Neuzeichnen', dq.many >= 4 && dq.same);
+
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
   const tp = await tctx.newPage();
