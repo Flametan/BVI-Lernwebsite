@@ -66,9 +66,9 @@
     <span class="m-fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>
     <span>Prüfung</span>
   </button>
-  <button class="m-tab" data-tab="learn" onclick="NAV.tab('v-flashcards','Lernkarten')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></svg>
-    <span>Lernkarten</span>
+  <button class="m-tab" data-tab="pause" onclick="NAV.tab('v-pause','Kleine Pause')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17M8 2.5c-.6 1 .6 1.8 0 3M12 2.5c-.6 1 .6 1.8 0 3"/></svg>
+    <span>Kleine Pause</span>
   </button>
   <button class="m-tab" data-tab="settings" onclick="NAV.tab('v-settings','Einstellungen')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
@@ -80,7 +80,7 @@
   <button class="m-ri" data-tab="start" onclick="NAV.home()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</button>
   <button class="m-ri" data-tab="plan" onclick="NAV.tab('v-plan','Stundenplan')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Stundenplan</button>
   <button class="m-ri m-ri-cta" data-tab="exam" onclick="NAV.tab('v-pruefung','Prüfung')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>Prüfung</button>
-  <button class="m-ri" data-tab="learn" onclick="NAV.tab('v-flashcards','Lernkarten')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></svg>Lernenkarten</button>
+  <button class="m-ri" data-tab="pause" onclick="NAV.tab('v-pause','Kleine Pause')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17M8 2.5c-.6 1 .6 1.8 0 3M12 2.5c-.6 1 .6 1.8 0 3"/></svg>Kleine Pause</button>
   <button class="m-ri" data-tab="settings" onclick="NAV.tab('v-settings','Einstellungen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Einstellungen</button>
   <div class="m-rail-foot">
     <button class="m-ri m-ri-search" onclick="SEARCH.open()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4-4"/></svg>Suchen <kbd>Strg K</kbd></button>
@@ -141,7 +141,6 @@
         <div class="ob-setup">
           <div class="ob-set-row"><span>Farbschema</span><span class="m-seg" role="group" aria-label="Farbschema"><button class="theme-opt" data-mode="dark" onclick="THEME.set('dark')">Dunkel</button><button class="theme-opt" data-mode="light" onclick="THEME.set('light')">Hell</button><button class="theme-opt" data-mode="system" onclick="THEME.set('system')">System</button></span></div>
           <div class="ob-set-row"><span>Akzentfarbe</span><div class="m-swatches ob-accent" role="radiogroup" aria-label="Akzentfarbe"></div></div>
-          <div class="ob-set-row"><span>Karten pro Tag</span><span class="m-step"><button onclick="SHELL.stepCards(-1)" aria-label="5 Karten weniger">−</button><span class="ob-cardval">20</span><button onclick="SHELL.stepCards(1)" aria-label="5 Karten mehr">+</button></span></div>
         </div>
         <div class="ob-desc">Alles lässt sich später in den Einstellungen ändern.</div>
       </div>
@@ -354,7 +353,7 @@
         <li>Einstellungen (Schriftgröße, Benachrichtigungen)</li>
         <li>Lernstreak</li>
         <li>Nutzungszeit in der App (Minuten pro Tag)</li>
-        <li>Eigene Lernkarten, Notizen zu Stundenplan-Einträgen, Kartenziel und Karten pro Tag</li>
+        <li>Eigene Lernkarten und Notizen zu Stundenplan-Einträgen</li>
         <li>Farbschema, Akzentfarbe, Timer-Einstellung und Zeitpunkt der Erinnerung</li>
       </ul>
       <p style="margin-top:.75rem">Diese Daten können jederzeit über die Browser-Einstellungen (Websitedaten löschen) entfernt werden.</p>
@@ -12512,24 +12511,10 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
           <button onclick="SHELL.stepGoal(1)" aria-label="5 Minuten mehr">+</button>
         </span>
       </div>
-      <div class="m-row m-static">
-        <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="14" height="14" rx="2"/><path d="M3 17V5a2 2 0 0 1 2-2h12"/></svg></span>
-        <span class="m-tx"><span class="m-t1">Karten pro Tag</span><span class="m-t2">Wie viele Lernkarten du täglich schaffen willst</span></span>
-        <span class="m-step">
-          <button onclick="SHELL.stepCards(-1)" aria-label="5 Karten weniger">−</button>
-          <span id="m-cardgoal-val">20</span>
-          <button onclick="SHELL.stepCards(1)" aria-label="5 Karten mehr">+</button>
-        </span>
-      </div>
       <label class="m-row" for="m-timers-toggle">
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/><path d="M9 2h6"/></svg></span>
         <span class="m-tx"><span class="m-t1">Timer bei Klausuren</span><span class="m-t2">Countdown im Prüfungsmodus und bei den Übungsklausuren</span></span>
         <input type="checkbox" id="m-timers-toggle" class="m-switch" checked onchange="SHELL.setTimers(this.checked)">
-      </label>
-      <label class="m-row" for="m-tabnum-toggle">
-        <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></svg></span>
-        <span class="m-tx"><span class="m-t1">Zahl bei den Lernkarten</span><span class="m-t2">Zeigt am Tab, wie viele Karten bis zum Tagesziel noch fehlen</span></span>
-        <input type="checkbox" id="m-tabnum-toggle" class="m-switch" onchange="SHELL.setTabNum(this.checked)">
       </label>
       <div class="m-row m-static m-wrap">
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>
@@ -12809,8 +12794,7 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
     <button class="fc-f-btn" data-filter="idf" data-label="IdF" onclick="FC.setFilter('idf')">IdF</button>
   </div>
   <div class="pc">
-    <div id="m-fc-goal" class="m-fc-goal"></div>
-    <div id="fc-container">
+        <div id="fc-container">
       <div class="fc-end">
         <span class="fc-end-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></svg></span>
         <div class="fc-end-title">Bereit zum Lernen?</div>
