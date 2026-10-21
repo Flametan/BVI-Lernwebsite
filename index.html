@@ -23,13 +23,15 @@
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 </head>
 <body>
+<a class="skip-link" href="#" onclick="A11Y.skip(event)">Zum Inhalt springen</a>
+<div id="a11y-live" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 <div class="offline-banner" id="offline-banner">
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.56 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
   Offline – du siehst die zwischengespeicherte Version
 </div>
 
 <!-- MOBILE: Zurück-Zeile (scrollt mit), Pomodoro-Anzeige und Tab-Leiste -->
-<div id="m-topbar" class="hidden">
+<div id="m-topbar" class="hidden" role="banner">
   <button id="m-back" onclick="NAV.back()">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     <span id="m-back-lbl">Start</span>
@@ -88,7 +90,7 @@
 </nav>
 <nav id="m-toc" class="hidden" aria-label="Auf dieser Seite"></nav>
 <!-- SEARCH OVERLAY -->
-<div id="search-overlay" class="search-overlay hidden" onclick="SEARCH.close()">
+<div id="search-overlay" class="search-overlay hidden" role="dialog" aria-modal="true" aria-label="Suche" onclick="SEARCH.close()">
   <div class="search-box" onclick="event.stopPropagation()">
     <div class="search-input-wrap">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--c-slate);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -111,7 +113,7 @@
   </div>
 </div>
 <!-- CHANGELOG OVERLAY -->
-<div id="changelog-modal" class="search-overlay hidden" onclick="if(event.target===this)CHANGELOG.close()">
+<div id="changelog-modal" class="search-overlay hidden" role="dialog" aria-modal="true" aria-label="Neuerungen" onclick="if(event.target===this)CHANGELOG.close()">
   <div class="changelog-box" onclick="event.stopPropagation()">
     <div class="changelog-header">
       <div class="changelog-eyebrow">Was ist neu</div>
@@ -125,7 +127,7 @@
   </div>
 </div>
 <!-- ONBOARDING OVERLAY -->
-<div id="onboarding-overlay" class="search-overlay hidden">
+<div id="onboarding-overlay" class="search-overlay hidden" role="dialog" aria-modal="true" aria-label="Ersteinrichtung">
   <div class="search-box ob-box" onclick="event.stopPropagation()">
     <div class="ob-steps">
       <!-- Schritt 1 -->
@@ -186,7 +188,7 @@
 <!-- READING PROGRESS -->
 <div id="read-prog"><div id="read-prog-fill"></div></div>
 <!-- POMODORO-OVERLAY (#3) -->
-<div id="pomodoro-overlay" class="search-overlay hidden" onclick="if(event.target===this)POMO.close()">
+<div id="pomodoro-overlay" class="search-overlay hidden" role="dialog" aria-modal="true" aria-label="Pomodoro-Timer" onclick="if(event.target===this)POMO.close()">
   <div class="search-box pomo-box" onclick="event.stopPropagation()">
     <div class="s2-header">
       <span>Pomodoro-Timer</span>
@@ -207,7 +209,7 @@
   </div>
 </div>
 <!-- SHORTCUTS-OVERLAY (#8) -->
-<div id="shortcuts-overlay" class="search-overlay hidden" onclick="if(event.target===this)document.getElementById('shortcuts-overlay').classList.add('hidden')">
+<div id="shortcuts-overlay" class="search-overlay hidden" role="dialog" aria-modal="true" aria-label="Tastenkürzel" onclick="if(event.target===this)document.getElementById('shortcuts-overlay').classList.add('hidden')">
   <div class="search-box s2-box-wide" onclick="event.stopPropagation()">
     <div class="s2-header">
       <span>Tastaturkürzel</span>
@@ -229,7 +231,7 @@
   </div>
 </div>
 <!-- NOTES OVERLAY -->
-<div id="notes-overlay" class="search-overlay hidden" onclick="if(event.target===this)NOTES.close()">
+<div id="notes-overlay" class="search-overlay hidden" role="dialog" aria-modal="true" aria-label="Notizen" onclick="if(event.target===this)NOTES.close()">
   <div class="search-box notes-box" onclick="event.stopPropagation()">
     <div class="notes-hdr">
       <div class="notes-ttl"><span class="settings-title">Notiz</span><span id="notes-page-lbl" class="notes-page"></span></div>
@@ -18433,7 +18435,7 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
       <div class="abk-search-wrap">
         <div class="abk-sbox">
           <svg class="abk-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" class="abk-search" id="abk-search" placeholder="Abkürzung oder Begriff suchen …" oninput="ABK.filter(this.value)" autocomplete="off"/>
+          <input type="text" class="abk-search" id="abk-search" aria-label="Abkürzungen durchsuchen" placeholder="Abkürzung oder Begriff suchen …" oninput="ABK.filter(this.value)" autocomplete="off"/>
           <button type="button" class="abk-clear hidden" id="abk-clear" aria-label="Suche leeren" onclick="var i=document.getElementById('abk-search');i.value='';ABK.filter('');i.focus()">✕</button>
         </div>
         <div class="abk-count" id="abk-count"></div>

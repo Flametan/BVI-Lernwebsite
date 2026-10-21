@@ -52,6 +52,7 @@ const NAV = (function(){
     if(typeof TB!=='undefined') TB.init(id);
     if(typeof LP!=='undefined'){ LP.onShow(id); LP.init(id); }
     PAUSE_LOADER.onShow(id);
+    A11Y.onShow();
     // Update URL for direct linking
     const url=new URL(location.href);
     if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
@@ -1503,6 +1504,20 @@ const SEARCH = (function(){
 /* ======================================================================
    TOAST
 ====================================================================== */
+/* ======================================================================
+   A11Y – Hilfen für Screenreader und Tastatur: Live-Ansage, Hauptbereich, Sprunglink
+====================================================================== */
+const A11Y=(function(){
+  let t=0;
+  return{
+    // Text vorlesen lassen (höflich, unterbricht nichts); gleicher Text hintereinander wird erneut angesagt
+    say(msg){ const el=document.getElementById('a11y-live'); if(!el) return; clearTimeout(t); el.textContent=''; t=setTimeout(()=>{ el.textContent=String(msg).replace(/<[^>]*>/g,'').trim(); },60); },
+    // die sichtbare Seite ist der Hauptbereich (genau einer zur Zeit)
+    onShow(){ document.querySelectorAll('.view[role="main"]').forEach(v=>v.removeAttribute('role')); const a=document.querySelector('.view.active'); if(a){ a.setAttribute('role','main'); a.setAttribute('aria-label',(a.querySelector('.page-title')?.textContent||'').trim()||'Inhalt'); } },
+    skip(e){ e.preventDefault(); const a=document.querySelector('.view.active'); if(!a) return; a.setAttribute('tabindex','-1'); a.focus({preventScroll:false}); }
+  };
+})();
+
 const TOAST = (function(){
   let wrap;
   function container(){ if(!wrap){ wrap=document.createElement('div'); wrap.className='toast-wrap'; document.body.appendChild(wrap); } return wrap; }
@@ -1515,6 +1530,7 @@ const TOAST = (function(){
       t.innerHTML=`<span class="toast-msg">${msg}</span>${undo?'<button class="toast-undo">Rückgängig</button>':''}`;
       if(undo) t.querySelector('.toast-undo').addEventListener('click',()=>{ undo(); this.dismiss(t); });
       container().appendChild(t);
+      A11Y.say(msg);
       t._timer=setTimeout(()=>this.dismiss(t),duration);
     },
     dismiss(t){
@@ -3208,7 +3224,7 @@ function makeQuiz(cfg){
     }else if(q.type==='multi'){
       opts.innerHTML='<div class="quiz-multi-hint">Mehrere Antworten möglich – alle richtigen müssen gewählt sein.</div><div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt quiz-opt-multi" onclick="'+G+'._toggle('+i+')"><span class="quiz-opt-label quiz-opt-box">'+String.fromCharCode(97+i)+'</span><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div><button class="quiz-reveal-btn quiz-check-btn" onclick="'+G+'._check()">Antwort prüfen</button>';
     }else{
-      opts.innerHTML='<textarea class="quiz-textarea" id="quiz-ta'+SFX+'" placeholder="Schreibe deine Antwort hier..." rows="4"></textarea><button class="quiz-reveal-btn" onclick="'+G+'._revealEssay()">Lösung anzeigen</button>';
+      opts.innerHTML='<textarea class="quiz-textarea" aria-label="Deine Antwort" id="quiz-ta'+SFX+'" placeholder="Schreibe deine Antwort hier..." rows="4"></textarea><button class="quiz-reveal-btn" onclick="'+G+'._revealEssay()">Lösung anzeigen</button>';
     }
     const exp=$('quiz-exp');exp.textContent='';exp.className='quiz-exp hidden';
     const noteEl=$('quiz-note');if(noteEl){noteEl.textContent='';noteEl.className='quiz-note hidden';}
@@ -3279,7 +3295,7 @@ function makeQuiz(cfg){
       const q=curQ();const ok=idx===q.correct;
       markOpts(q,new Set([idx]));
       const exp=$('quiz-exp');
-      setTxt(exp,q.exp);exp.className=ok?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';
+      setTxt(exp,q.exp);exp.className=ok?'quiz-exp quiz-exp-ok':'quiz-exp quiz-exp-err';A11Y.say((ok?'Richtig. ':'Falsch. ')+(q.exp||''));
       const noteEl2=$('quiz-note');if(q.note&&noteEl2){noteEl2.textContent=q.note;noteEl2.className='quiz-note';}
       $('quiz-skip').classList.add('hidden');$('quiz-next').classList.remove('hidden');
       _masteryMap[q.id]=ok?'ok':'err';saveMastery();srsUpdate(q.id,ok);updateDueBtn();

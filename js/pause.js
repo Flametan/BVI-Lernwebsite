@@ -5,6 +5,7 @@
 const PAUSE=(function(){
   const D=typeof PAUSE_DATA!=='undefined'?PAUSE_DATA:{allg:{},fw:{},exam:[]};
   const MKEY='bvi_pause_mode',BKEY='bvi_pause_best';
+  const say=m=>{ if(typeof A11Y!=='undefined') A11Y.say(m); };
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
   const rnd=a=>a[Math.floor(Math.random()*a.length)];
@@ -63,7 +64,7 @@ const PAUSE=(function(){
     const draw=()=>{const L='ABCD';el.innerHTML=`<div class="pz-card"><div class="pz-lbl"><span>Stufe <b>${i+1}/8</b> · ${esc(q._k)}</span><button class="pz-sec2" data-j ${joker?'':'disabled'}>50:50</button></div><div class="pz-ladder">${LV.map((_,k)=>`<i class="${k<=i?'on':''}"></i>`).join('')}</div><div class="pz-qt">${esc(q.q)}</div>${q.o.map((o,k)=>`<button class="pz-opt" data-k="${k}"><i>${L[k]}</i><span>${esc(o)}</span></button>`).join('')}<div class="pz-fbx"></div></div>`;
       el.querySelector('[data-j]').onclick=e=>{joker=false;e.currentTarget.disabled=true;shuf([0,1,2,3].filter(k=>k!==q.c)).slice(0,2).forEach(k=>el.querySelector(`[data-k="${k}"]`).classList.add('off'));};
       el.querySelectorAll('.pz-opt').forEach(b=>b.onclick=()=>answer(+b.dataset.k,b));};
-    const answer=(k,b)=>{el.querySelectorAll('.pz-opt').forEach(x=>x.style.pointerEvents='none');el.querySelector(`[data-k="${q.c}"]`).classList.add('ok');const ok=k===q.c;if(!ok)b.classList.add('bad');
+    const answer=(k,b)=>{el.querySelectorAll('.pz-opt').forEach(x=>x.style.pointerEvents='none');el.querySelector(`[data-k="${q.c}"]`).classList.add('ok');const ok=k===q.c;say(ok?'Richtig':'Falsch');if(!ok)b.classList.add('bad');
       const fb=el.querySelector('.pz-fbx');fb.innerHTML=`<div class="pz-fb ${ok?'g':'r'}"><b>${ok?'Richtig':'Leider falsch'}</b>${q.e?' – '+esc(q.e):''}</div><button class="pz-pri">${ok?(i<7?'Nächste Stufe':'Zum Ergebnis'):'Ergebnis'}</button>`;
       fb.querySelector('.pz-pri').onclick=()=>{if(ok&&i<7){i++;q=pick(LV[i]);draw();}else end(ok?8:i);};};
     const end=n=>{const rec=n>0&&saveBest('quiz',n);el.innerHTML=`<div class="pz-card"><div class="pz-big-n">${n===8?'Geschafft':'Stufe '+n}</div><div class="pz-center">${n===8?'Alle 8 Stufen richtig beantwortet.':n?`Du hast ${n} von 8 Stufen geschafft.`:'Direkt an der ersten Stufe hängen geblieben.'}${rec?' Neuer Bestwert.':''}</div><button class="pz-pri">Neue Runde</button></div>`;el.querySelector('.pz-pri').onclick=()=>QUIZL.start(el);};
@@ -73,7 +74,7 @@ const PAUSE=(function(){
   const TF={t:0,start(el){const P=shuf(pool('tf'));if(P.length<5)return empty(el);const DUR=60;let left=DUR,score=0,streak=0,n=0,wrong=[],lock=false;
     clearInterval(this.t);
     const draw=()=>{const s=P[n%P.length];el.innerHTML=`<div class="pz-card"><div class="pz-lbl"><span>Punkte <b>${score}</b> · Serie <b>${streak}</b></span><b class="pz-tm">${left} s</b></div><div class="pz-bar"><i style="width:${left/DUR*100}%"></i></div><div class="pz-stmt">${esc(s.s)}</div><div class="pz-tf"><button class="pz-opt" data-v="1">Wahr</button><button class="pz-opt" data-v="0">Falsch</button></div></div>`;
-      el.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{if(lock)return;lock=true;const ok=(b.dataset.v==='1')===!!s.a;streak=ok?streak+1:0;score+=ok?10+Math.min(streak-1,5)*2:0;if(!ok)wrong.push(s);n++;b.classList.add(ok?'ok':'bad');el.querySelector('.pz-card').classList.add(ok?'pz-flash-ok':'pz-flash-bad');setTimeout(()=>{lock=false;if(left>0)draw();},380);});};
+      el.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{if(lock)return;lock=true;const ok=(b.dataset.v==='1')===!!s.a;say(ok?'Richtig':'Falsch');streak=ok?streak+1:0;score+=ok?10+Math.min(streak-1,5)*2:0;if(!ok)wrong.push(s);n++;b.classList.add(ok?'ok':'bad');el.querySelector('.pz-card').classList.add(ok?'pz-flash-ok':'pz-flash-bad');setTimeout(()=>{lock=false;if(left>0)draw();},380);});};
     const end=()=>{clearInterval(this.t);const rec=saveBest('tf',score);el.innerHTML=`<div class="pz-card"><div class="pz-big-n">${score}</div><div class="pz-center">Punkte · ${n} Aussagen · ${n-wrong.length} richtig${rec?' · neuer Bestwert':''}</div>${wrong.length?`<div class="pz-lbl"><span>Auflösung</span></div><ul class="pz-res">${wrong.slice(0,8).map(w=>`<li>${esc(w.s)}<br><small>${w.a?'Wahr':'Falsch'}${w.e?' – '+esc(w.e):''}</small></li>`).join('')}</ul>`:''}<button class="pz-pri">Nochmal</button></div>`;el.querySelector('.pz-pri').onclick=()=>TF.start(el);};
     this.t=setInterval(()=>{left--;const t=el.querySelector('.pz-tm'),b=el.querySelector('.pz-bar i');if(t)t.textContent=left+' s';if(b)b.style.width=left/DUR*100+'%';if(left<=0)end();},1000);draw();},
     stop(){clearInterval(this.t);}};
@@ -103,7 +104,7 @@ const PAUSE=(function(){
     const pickPair=()=>{const d=Math.min(1,streak/14),c=pairs.filter(p=>!used.has(p));const L=c.length?c:pairs;const idx=Math.round(d*(L.length-1)),w=Math.max(3,Math.round(L.length*.06));const lo=Math.max(0,idx-w),hi=Math.min(L.length,idx+w+1);const p=L[lo+Math.floor(Math.random()*(hi-lo))];used.add(p);return p;};
     const round=()=>{const pr=pickPair(),[a,b]=shuf([pr.a,pr.b]);const big=a.v>b.v?0:1,diff=Math.round((Math.exp(pr.r)-1)*100);
       el.innerHTML=`<div class="pz-card"><div class="pz-lbl"><span>${esc(a.cat)}</span><b>Serie ${streak}</b></div><div class="pz-qt">Was ist größer?</div><div class="pz-hl">${[a,b].map((x,i)=>`<button class="pz-opt" data-i="${i}"><span>${esc(x.n)}</span><b class="v" style="visibility:hidden">${esc(x.f)}</b></button>`).join('')}</div><div class="pz-fbx"></div></div>`;
-      el.querySelectorAll('[data-i]').forEach(btn=>btn.onclick=()=>{const ok=+btn.dataset.i===big;el.querySelectorAll('[data-i]').forEach(x=>{x.style.pointerEvents='none';x.querySelector('.v').style.visibility='visible';});btn.classList.add(ok?'ok':'bad');
+      el.querySelectorAll('[data-i]').forEach(btn=>btn.onclick=()=>{const ok=+btn.dataset.i===big;say(ok?'Richtig':'Falsch');el.querySelectorAll('[data-i]').forEach(x=>{x.style.pointerEvents='none';x.querySelector('.v').style.visibility='visible';});btn.classList.add(ok?'ok':'bad');
         const fb=el.querySelector('.pz-fbx');if(ok){streak++;fb.innerHTML=`<div class="pz-fb g"><b>Richtig</b> · Unterschied ${diff} %${streak%5===0?' · es wird knapper':''}</div>`;setTimeout(round,1300);}else{const rec=saveBest('num',streak);fb.innerHTML=`<div class="pz-fb r"><b>Serie beendet: ${streak}</b>${rec&&streak?' · neuer Bestwert':''}</div><button class="pz-pri">Neue Serie</button>`;fb.querySelector('.pz-pri').onclick=()=>NUM.start(el);}});};
     round();}};
 
@@ -167,7 +168,7 @@ const PAUSE=(function(){
       else if(a==='route'){if(sel.size){s.phase='route';panel();}}
       else if(a==='sel'){s.phase='select';panel();}
       else if(a==='go'){s.route=ROUTES[v];s.qs=pick(s.route);s.stops=s.qs.map((_,i)=>(i+1)/(s.qs.length+1));drive();}
-      else if(a==='ans'){if(s.phase!=='ask')return;const i=+v,q=s.qs[s.qi],ok=i===q.c;s.phase='fb';s.pick=i;s.fx=ok?'ok':'bad';s.fxT=performance.now();s.dt=ok?-s.route.bon:s.route.pen;s.t+=s.dt;s.res.push({q,ok});if(s.duel)SESS.send({t:'a',ok});panel();}
+      else if(a==='ans'){if(s.phase!=='ask')return;const i=+v,q=s.qs[s.qi],ok=i===q.c;say(ok?'Richtig':(i<0?'Zeit abgelaufen':'Falsch'));s.phase='fb';s.pick=i;s.fx=ok?'ok':'bad';s.fxT=performance.now();s.dt=ok?-s.route.bon:s.route.pen;s.t+=s.dt;s.res.push({q,ok});if(s.duel)SESS.send({t:'a',ok});panel();}
       else if(a==='next'){s.qi++;drive();}
       else if(a==='new')newGame();
       else if(a==='rematch'&&s.duel){s.rm=true;SESS.send({t:'rematch'});panel();if(s.opp.rm)SESS.rematch();}
