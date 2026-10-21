@@ -69,6 +69,7 @@ const NAV = (function(){
     if(typeof LP!=='undefined'){ LP.onShow(id); LP.init(id); }
     PAUSE_LOADER.onShow(id);
     A11Y.onShow();
+    if(isContentPage) ABKTIP.apply(id);
     // Update URL for direct linking
     const url=new URL(location.href);
     if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
@@ -2486,9 +2487,84 @@ const ABK = (function(){
       const cnt = document.getElementById('abk-count');
       if(cnt) cnt.textContent = term ? `${vis} Treffer` : `${crd.length} Einträge`;
     },
-    init(){ this.render(); document.getElementById('abk-search').value=''; this.filter(''); }
+    init(){ this.render(); document.getElementById('abk-search').value=''; this.filter(''); },
+    data(){ return DATA; }
   };
 })();
+
+/* ======================================================================
+   ABKTIP – Abkürzungen in Lernseiten antippen: Name und Erläuterung aus dem Abkürzungsverzeichnis
+====================================================================== */
+const ABKTIP=(function(){
+  // zu allgemeine Kürzel nicht markieren (zu viele Fehltreffer)
+  const SKIP=new Set(['Ma','SMART','CO','NA','PA','SP','OE','AS']);
+  const BLOCK='script,style,textarea,input,select,a,button,summary,svg,h1,h2,h3,.abk-t,.acc-num,.page-title,.sec-h,.lj-src,.quiz-src,.m-hl,#m-hl-bar';
+  let re=null, map=null, pop=null;
+  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function build(){
+    if(re||map) return !!re;
+    try{
+      map=new Map();
+      ABK.data().forEach(x=>{ if(x.a.length>=2&&!SKIP.has(x.a)&&!map.has(x.a)) map.set(x.a,x); });
+      const keys=[...map.keys()].sort((a,b)=>b.length-a.length).map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+      re=new RegExp('(?<![\\p{L}\\p{N}-])('+keys.join('|')+')(?![\\p{L}\\p{N}-])','gu');
+    }catch(e){ re=null; }
+    return !!re;
+  }
+  // jede Abkürzung auf der Seite nur beim ersten Vorkommen markieren (seen gilt für die ganze Seite)
+  function wrapBlock(root,seen){
+    const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.data.trim().length>1&&n.parentElement&&!n.parentElement.closest(BLOCK)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT});
+    const nodes=[]; let n; while((n=w.nextNode())) nodes.push(n);
+    nodes.forEach(node=>{
+      re.lastIndex=0; const t=node.data; let m, last=0, frag=null;
+      while((m=re.exec(t))){
+        if(seen.has(m[1])) continue;
+        seen.add(m[1]);
+        frag=frag||document.createDocumentFragment();
+        if(m.index>last) frag.appendChild(document.createTextNode(t.slice(last,m.index)));
+        const sp=document.createElement('span'); sp.className='abk-t'; sp.dataset.k=m[1]; sp.tabIndex=0; sp.setAttribute('role','button'); sp.textContent=m[1];
+        frag.appendChild(sp); last=m.index+m[1].length;
+      }
+      if(frag){ if(last<t.length) frag.appendChild(document.createTextNode(t.slice(last))); node.replaceWith(frag); }
+    });
+  }
+  function apply(id){
+    const v=document.getElementById(id); if(!v||v._abk||!v.querySelector('.pc')) return;
+    v._abk=true;
+    if(!build()) return;
+    const pc=v.querySelector('.pc'), items=[...pc.querySelectorAll('.acc-item')];
+    const seen=new Set();
+    if(items.length) items.forEach(it=>wrapBlock(it,seen)); else wrapBlock(pc,seen);
+  }
+  function hide(){ if(pop) pop.hidden=true; }
+  function show(el){
+    const x=map&&map.get(el.dataset.k); if(!x) return;
+    if(!pop){
+      pop=document.createElement('div'); pop.id='abk-pop'; pop.hidden=true; pop.setAttribute('role','dialog'); pop.setAttribute('aria-label','Abkürzung');
+      document.body.appendChild(pop);
+      pop.addEventListener('click',e=>{ if(e.target.closest('[data-all]')){ hide(); NAV.go('v-abkuerzungen','Abkürzungen'); setTimeout(()=>{ const i=document.getElementById('abk-search'); if(i){ i.value=el.dataset.k; ABK.filter(el.dataset.k); } },120); } });
+    }
+    pop.innerHTML='<b>'+esc(x.a)+'</b> – '+esc(x.f)+(x.d?'<div class="abk-d">'+esc(x.d)+'</div>':'')+'<button type="button" data-all>Alle Abkürzungen ›</button>';
+    pop.hidden=false;
+    const r=el.getBoundingClientRect(), w=Math.min(320,innerWidth-24);
+    pop.style.width=w+'px';
+    pop.style.left=Math.max(12,Math.min(innerWidth-w-12,r.left+r.width/2-w/2))+'px';
+    const h=pop.offsetHeight, below=r.bottom+8+h<innerHeight-12;
+    pop.style.top=(below?r.bottom+8:Math.max(12,r.top-8-h))+'px';
+  }
+  document.addEventListener('click',e=>{
+    const t=e.target.closest&&e.target.closest('.abk-t');
+    if(t){ e.preventDefault(); show(t); return; }
+    if(pop&&!pop.hidden&&!e.target.closest('#abk-pop')) hide();
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape') hide();
+    if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('abk-t')){ e.preventDefault(); show(e.target); }
+  });
+  window.addEventListener('scroll',hide,{passive:true});
+  return {apply,hide};
+})();
+
 
 /* ======================================================================
    CHROMIUM-ERKENNUNG – Warnung beim APK-Download
@@ -2949,12 +3025,63 @@ const CUSTOM=(function(){
     const d=new Date(), p2=n=>String(n).padStart(2,'0');
     FILES.save('bvi-eigene-karten-'+d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())+'.json','application/json',JSON.stringify(data,null,1));
   }
-  function mailCards(){
-    const a=load();
-    if(!a.length){ TOAST.show('Noch keine eigenen Karten zum Senden',{type:'info'}); return; }
-    const txt=a.map((c,i)=>(i+1)+'. ['+c.cat.split(' · ')[0]+']\nFrage: '+plain(c.q)+'\nAntwort: '+plain(c.a)).join('\n\n');
-    if(txt.length>1500){ exportCards(); TOAST.show('Zu viele Karten für eine Mail – die Datei wurde gespeichert, bitte anhängen',{type:'info'}); }
-    location.href='mailto:fabian.flemig@gmx.de?subject='+encodeURIComponent('B VI – Eigene Lernkarten')+'&body='+encodeURIComponent('Meine Lernkarten für die App:\n\n'+(txt.length>1500?'(Datei im Anhang)':txt));
+  // ── Kartenstapel teilen: Link oder Code (Karten stecken im Link selbst, nichts läuft über einen Server) ──
+  const URL_APP='https://flametan.github.io/BVI-Lernwebsite/';
+  const toB64u=u8=>{ let b=''; for(let i=0;i<u8.length;i+=8192) b+=String.fromCharCode.apply(null,u8.subarray(i,i+8192)); return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const fromB64u=t=>{ const b=atob(t.replace(/-/g,'+').replace(/_/g,'/')+'==='.slice((t.length+3)%4)); const u=new Uint8Array(b.length); for(let i=0;i<b.length;i++) u[i]=b.charCodeAt(i); return u; };
+  async function pack(){
+    const a=load(), bytes=new TextEncoder().encode(JSON.stringify({v:1,k:a.map(c=>[c.cat.split(' · ')[0],plain(c.q),plain(c.a)])}));
+    if(typeof CompressionStream!=='undefined'){
+      try{ return 'BVIK1.'+toB64u(new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer())); }catch(e){}
+    }
+    return 'BVIK0.'+toB64u(bytes);
+  }
+  async function unpack(text){
+    const m=/BVIK([01])\.([A-Za-z0-9_-]+)/.exec(String(text||'')); if(!m) throw new Error('code');
+    let bytes=fromB64u(m[2]);
+    if(m[1]==='1') bytes=new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+    const j=JSON.parse(new TextDecoder().decode(bytes));
+    if(!j||!Array.isArray(j.k)) throw new Error('format');
+    return j.k.slice(0,300).map(x=>({modul:x[0],frage:x[1],antwort:x[2]}));
+  }
+  // Karten zu den vorhandenen hinzufügen (gleiche Fragen im selben Modul werden übersprungen)
+  function merge(items){
+    const all=load(), have=new Set(all.map(c=>c.cat.split(' · ')[0]+'|'+plain(c.q).trim())); let n=0;
+    items.forEach(k=>{
+      const m=MODS.includes(k.modul)?k.modul:'GAL', q=String(k.frage||'').slice(0,500), a=String(k.antwort||'').slice(0,1500);
+      if(!q.trim()||!a.trim()||have.has(m+'|'+q.trim())) return;
+      have.add(m+'|'+q.trim());
+      const c={id:'own'+Date.now().toString(36)+n,cat:m+' · Eigene Karte',q:html(q),a:html(a)};
+      all.push(c); FLASHCARD_DATA.push({...c,own:true}); n++;
+    });
+    save(all); if(box) list(); refresh();
+    return n;
+  }
+  async function fromCode(text,ask){
+    let items;
+    try{ items=await unpack(text); }catch(e){ TOAST.show('Das ist kein gültiger Karten-Link oder -Code',{type:'info'}); return; }
+    if(!items.length){ TOAST.show('Keine Karten gefunden',{type:'info'}); return; }
+    if(ask&&!confirm(items.length+' Lernkarten übernehmen?\n\nSie werden zu deinen eigenen Karten hinzugefügt.')) return;
+    const n=merge(items);
+    TOAST.show(n?n+' Karten importiert':'Alle Karten hatte ich schon',{type:n?'ok':'info'});
+  }
+  async function shareLink(){
+    if(!load().length){ TOAST.show('Noch keine eigenen Karten zum Teilen',{type:'info'}); return null; }
+    return URL_APP+'?karten='+await pack();
+  }
+  async function shareNow(){
+    const link=await shareLink(); if(!link) return;
+    const n=load().length;
+    if(navigator.share){ try{ await navigator.share({title:'B VI – Lernkarten',text:'Meine '+n+' Lernkarten für B VI. Link öffnen, dann werden sie übernommen:',url:link}); return; }catch(e){ if(e&&e.name==='AbortError') return; } }
+    try{ await navigator.clipboard.writeText(link); TOAST.show('Link kopiert – jetzt z. B. in WhatsApp einfügen',{type:'ok'}); }
+    catch(e){ box.querySelector('#cu-code').value=link; TOAST.show('Link steht unten im Feld – bitte kopieren',{type:'info'}); }
+  }
+  async function showQr(){
+    const link=await shareLink(); if(!link) return;
+    const el=box.querySelector('#cu-qr');
+    if(link.length>2300){ el.innerHTML='<div class="cu-empty">Zu viele Karten für einen QR-Code – bitte „Link teilen“ nutzen.</div>'; return; }
+    try{ await APPSHARE.qr(el,link); el.innerHTML+='<div class="cu-empty" style="text-align:center">Mit der Kamera scannen, der Link öffnet B VI</div>'; }
+    catch(e){ el.innerHTML='<div class="cu-empty">QR-Code konnte nicht erstellt werden – bitte „Link teilen“ nutzen.</div>'; }
   }
   function importCards(file){
     if(!file) return;
@@ -2963,16 +3090,7 @@ const CUSTOM=(function(){
       try{
         const j=JSON.parse(r.result);
         if(j.typ!=='eigene-karten'||!Array.isArray(j.karten)) throw new Error('format');
-        const have=new Set(load().map(c=>c.cat.split(' · ')[0]+'|'+plain(c.q).trim()));
-        const all=load(); let n=0;
-        j.karten.forEach(k=>{
-          const m=MODS.includes(k.modul)?k.modul:'GAL', q=String(k.frage||'').slice(0,500), a=String(k.antwort||'').slice(0,1500);
-          if(!q.trim()||!a.trim()||have.has(m+'|'+q.trim())) return;
-          have.add(m+'|'+q.trim());
-          const c={id:'own'+Date.now().toString(36)+n,cat:m+' · Eigene Karte',q:html(q),a:html(a)};
-          all.push(c); FLASHCARD_DATA.push({...c,own:true}); n++;
-        });
-        save(all); list(); refresh();
+        const n=merge(j.karten);
         TOAST.show(n?n+' Karten importiert':'Keine neuen Karten gefunden',{type:n?'ok':'info'});
       }catch(e){ TOAST.show('Datei nicht lesbar – bitte eine exportierte Kartendatei wählen',{type:'info'}); }
     };
@@ -2987,14 +3105,18 @@ const CUSTOM=(function(){
       +'<label>Antwort<textarea id="cu-a" rows="4" maxlength="1500"></textarea></label>'
       +'<button class="btn btn-gold" id="cu-save">Karte speichern</button>'
       +'<div class="cu-h">Meine Karten</div><div id="cu-list"></div>'
-      +'<div class="cu-io"><button class="btn btn-ghost" id="cu-exp">Karten exportieren</button><button class="btn btn-ghost" id="cu-mail">Per E-Mail senden</button><label class="btn btn-ghost" for="cu-imp">Karten importieren</label><input type="file" id="cu-imp" accept=".json,application/json" hidden></div>'
+      +'<div class="cu-h">Karten teilen</div><div class="cu-io"><button class="btn btn-ghost" id="cu-share">Link teilen</button><button class="btn btn-ghost" id="cu-qrb">QR-Code zeigen</button></div><div id="cu-qr"></div>'
+      +'<label>Link oder Code von jemand anderem<textarea id="cu-code" rows="2" placeholder="Link oder Code hier einfügen"></textarea></label><button class="btn btn-ghost" id="cu-fromcode">Karten übernehmen</button>'
+      +'<div class="cu-io"><button class="btn btn-ghost" id="cu-exp">Als Datei speichern</button><label class="btn btn-ghost" for="cu-imp">Aus Datei laden</label><input type="file" id="cu-imp" accept=".json,application/json" hidden></div>'
       +'</div>';
     document.body.appendChild(box);
     box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
     box.querySelector('#cu-save').onclick=add;
     box.querySelector('#cu-exp').onclick=exportCards;
-    box.querySelector('#cu-mail').onclick=mailCards;
+    box.querySelector('#cu-share').onclick=shareNow;
+    box.querySelector('#cu-qrb').onclick=showQr;
+    box.querySelector('#cu-fromcode').onclick=()=>{ const t=box.querySelector('#cu-code').value; if(t.trim()) fromCode(t,false).then(()=>{ box.querySelector('#cu-code').value=''; }); };
     box.querySelector('#cu-imp').onchange=e=>{ importCards(e.target.files[0]); e.target.value=''; };
   }
   // pre: {a: vorbelegte Antwort, view: Seite, von der der Text stammt} – für „Als Lernkarte“ aus einer Markierung
@@ -3009,7 +3131,7 @@ const CUSTOM=(function(){
     box.querySelector('#cu-q').focus({preventScroll:true});
   }
   function close(){ if(box) box.hidden=true; }
-  return {open,close};
+  return {open,close,fromCode};
 })();
 
 /* ======================================================================
@@ -3894,6 +4016,9 @@ const CHANGELOG=(function(){
       'Android-App: Das Startsymbol und das Startbild folgen jetzt auch dem Farbschema – schwarz im dunklen, hell (Farbton der Website) im hellen Design',
       'Startseite: Beim Wechsel zwischen Woche und Monaten starten die Animationen nicht mehr neu; die Umschalter sind wieder schmaler',
       'Android-App: Drei Widgets für den Startbildschirm zur Auswahl – „Nächste Einheit“, „Tagesplan“ und „Jetzt und danach“ mit Zeitraum, Raum, Restzeit und der Einheit danach (nach Unterrichtsende zeigen sie, was morgen ansteht); sie folgen Akzentfarbe und Hell/Dunkel',
+      'Stundenplan: Eigenen Stundenplan aus einer Kalenderdatei (.ics) laden – er ersetzt den IdF-Plan und alle Funktionen laufen weiter (nächste Einheit auf der Startseite, Widgets, Notizen, Kalender-Export); der IdF-Plan lässt sich als Kalender-Abo (Link, der sich selbst aktualisiert) in den eigenen Kalender einbinden',
+      'Lernkarten teilen: Eigene Karten als Link oder QR-Code an Kollegen schicken (die Karten stecken im Link, nichts läuft über einen Server); „Per E-Mail senden“ gibt es nicht mehr',
+      'Lernseiten: Abkürzungen (z. B. ELW, FwDV, HBKG) sind beim ersten Vorkommen auf der Seite unterstrichen; ein Tipp zeigt Name und Erläuterung aus dem Abkürzungsverzeichnis',
       'Neu: Markierten Text auf einer Lernseite mit „Als Lernkarte“ direkt zu einer eigenen Lernkarte machen (Modul wird vorgewählt, die Frage schreibst du dazu)',
       'Updates: Bei einer neuen Version erscheint ein Hinweis „Aktualisieren“, statt dass die Seite mitten im Lernen neu lädt',
       'Stundenplan: Er springt von selbst zur aktuellen Kalenderwoche, wenn das Datum weiterläuft (Mitternacht) oder die App wieder in den Vordergrund kommt – außer du hast selbst in andere Wochen geblättert',
@@ -5295,7 +5420,7 @@ const IDF_PLAN = (function(){
       [],['nachmittags|Heiligabend|ar'],['ganztägig|1. Weihnachtstag|ar']],TEL.spahl]
   ];
 
-  const DAYS=['Mo','Di','Mi','Do','Fr'];
+  const DAYS=['Mo','Di','Mi','Do','Fr','Sa','So'];
   const MONS=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   let _grp='g1', _wi=0, _weeks=[];
@@ -5310,7 +5435,7 @@ const IDF_PLAN = (function(){
   function _item(s,ymd){
     const [t,title,cls='',room='',note='']=s.split('|');
     const [a,b]=_time(t);
-    const meta=[note,room?'Raum '+room:''].filter(Boolean).join(' · ');
+    const meta=[note,room?(_isCustom()?room:'Raum '+room):''].filter(Boolean).join(' · ');
     const nk=ymd?ymd+'|'+t+'|'+title:'';
     const isNext=ymd&&_nk&&(ymd+'|'+title+'|'+_minutes(a))===_nk;
     const has=nk&&PLANNOTE.get(nk);
@@ -5340,7 +5465,7 @@ const IDF_PLAN = (function(){
     const items=_splitAtLunch(raw);
     const starts=items.map(x=>_start(x.split('|')[0]));
     const html=items.map(x=>_item(x,ymd));
-    if(starts.some(Boolean)){
+    if(!_isCustom()&&starts.some(Boolean)){
       let at=0;
       starts.forEach((t,i)=>{ if(t&&t<'13:00') at=i+1; });
       const next=starts.slice(at).find(Boolean);
@@ -5352,7 +5477,147 @@ const IDF_PLAN = (function(){
   // Änderungen vom Institut: data/plan-overrides.json (siehe Datei), wird beim Öffnen frisch geladen
   let _ov={tage:[],wochenhinweise:[]};
   const _ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+
+  // ── Eigener Stundenplan aus einer Kalenderdatei (.ics): ersetzt den IdF-Plan, alle Funktionen laufen weiter ──
+  const CKEY='bvi_plan_custom', SKEY='bvi_plan_src';
+  let _cust=null, _cw=null;
+  function _loadCust(){
+    try{ const j=JSON.parse(localStorage.getItem(CKEY)||'null'); _cust=j&&Array.isArray(j.ev)&&j.ev.length?j:null; }catch(e){ _cust=null; }
+    _cw=null;
+  }
+  const _isCustom=()=>{ try{ return !!_cust&&localStorage.getItem(SKEY)==='custom'; }catch(e){ return false; } };
+  _loadCust();
+  const _icsUnfold=t=>String(t).replace(/\r\n|\r/g,'\n').replace(/\n[ \t]/g,'').split('\n');
+  const _icsText=v=>String(v||'').replace(/\\[nN]/g,' ').replace(/\\([,;\\])/g,'$1').replace(/\s+/g,' ').trim();
+  // lokale Zeit in einer Zeitzone → UTC-Millisekunden (unbekannte Zeitzone: Zeit des Geräts)
+  function _tzMs(y,mo,d,h,mi,tz){
+    try{
+      const f=new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      const off=t=>{ const p={}; f.formatToParts(new Date(t)).forEach(x=>{ p[x.type]=x.value; }); return Date.UTC(+p.year,+p.month-1,+p.day,+p.hour%24,+p.minute,+p.second)-t; };
+      const g=Date.UTC(y,mo-1,d,h,mi); let t=g-off(g); t=g-off(t); return t;
+    }catch(e){ return new Date(y,mo-1,d,h,mi).getTime(); }
+  }
+  function _icsDate(val,params){
+    const m=/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})?)?(Z)?$/.exec(String(val).trim()); if(!m) return null;
+    const y=+m[1], mo=+m[2], d=+m[3];
+    if(m[4]===undefined) return {ms:new Date(y,mo-1,d).getTime(),all:true};
+    if(m[7]) return {ms:Date.UTC(y,mo-1,d,+m[4],+m[5],+(m[6]||0)),all:false};
+    const tz=/TZID=([^;:]+)/i.exec(params||'');
+    return {ms:tz?_tzMs(y,mo,d,+m[4],+m[5],tz[1].replace(/"/g,'')):new Date(y,mo-1,d,+m[4],+m[5]).getTime(),all:false};
+  }
+  function _icsDur(v){
+    const m=/^([+-])?P(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/.exec(String(v).trim()); if(!m) return null;
+    const ms=(((+m[2]||0)*7+(+m[3]||0))*86400+(+m[4]||0)*3600+(+m[5]||0)*60+(+m[6]||0))*1000;
+    return m[1]==='-'?-ms:ms;
+  }
+  // Kalenderdatei lesen → Liste von Terminen {s,e,t,r,n,ad}; einfache Wiederholungen (täglich, wöchentlich) werden aufgelöst
+  function parseIcs(text){
+    const evs=[]; let cur=null, name='';
+    _icsUnfold(text).forEach(ln=>{
+      if(ln==='BEGIN:VEVENT'){ cur={}; return; }
+      if(ln==='END:VEVENT'){ if(cur&&cur.DTSTART) evs.push(cur); cur=null; return; }
+      const m=/^([A-Za-z-]+)((?:;[^:]*)?):(.*)$/.exec(ln); if(!m) return;
+      const k=m[1].toUpperCase();
+      if(cur){ if(k==='EXDATE'){ (cur.EX=cur.EX||[]).push(...m[3].split(',').map(x=>x.trim().slice(0,8))); } else if(!(k in cur)){ cur[k]=m[3]; cur[k+'_P']=m[2]; } }
+      else if(k==='X-WR-CALNAME') name=_icsText(m[3]);
+    });
+    const out=[], DAYMAP={SU:0,MO:1,TU:2,WE:3,TH:4,FR:5,SA:6}, LIMIT=3000;
+    evs.forEach(ev=>{
+      if(/CANCELLED/i.test(ev.STATUS||'')) return;
+      const st=_icsDate(ev.DTSTART,ev.DTSTART_P); if(!st) return;
+      let en=ev.DTEND?_icsDate(ev.DTEND,ev.DTEND_P):null, dur=en?en.ms-st.ms:(ev.DURATION?_icsDur(ev.DURATION):null);
+      if(dur===null||dur<=0) dur=st.all?86400000:3600000;
+      const t=_icsText(ev.SUMMARY)||'Termin', r=_icsText(ev.LOCATION), n=_icsText(ev.DESCRIPTION).slice(0,140);
+      const starts=[st.ms];
+      const rr=ev.RRULE?Object.fromEntries(ev.RRULE.split(';').map(x=>x.split('='))):null;
+      if(rr&&(rr.FREQ==='DAILY'||rr.FREQ==='WEEKLY')){
+        const iv=Math.max(1,+rr.INTERVAL||1), cnt=+rr.COUNT||0, s0=new Date(st.ms);
+        let until=rr.UNTIL?(_icsDate(rr.UNTIL,'')||{}).ms:null; if(!until||until>st.ms+400*864e5) until=st.ms+400*864e5; if(rr.UNTIL&&/^\d{8}$/.test(rr.UNTIL)) until+=86399000;
+        const wd=rr.BYDAY?rr.BYDAY.split(',').map(x=>DAYMAP[x.slice(-2)]).filter(x=>x!==undefined):[s0.getDay()];
+        const mon0=new Date(s0.getFullYear(),s0.getMonth(),s0.getDate()-((s0.getDay()+6)%7));
+        starts.length=0; let c=0;
+        for(let i=0;i<=400&&starts.length<LIMIT;i++){
+          const day=new Date(s0.getFullYear(),s0.getMonth(),s0.getDate()+i); if(day.getTime()>until) break;
+          let ok;
+          if(rr.FREQ==='DAILY') ok=i%iv===0;
+          else ok=Math.floor((new Date(day.getFullYear(),day.getMonth(),day.getDate()-((day.getDay()+6)%7))-mon0)/(7*864e5))%iv===0&&wd.includes(day.getDay());
+          if(!ok) continue;
+          const o=new Date(day.getFullYear(),day.getMonth(),day.getDate(),s0.getHours(),s0.getMinutes()).getTime();
+          if(o<st.ms) continue;
+          c++; if(cnt&&c>cnt) break;
+          const key=_ymd(day).replace(/-/g,'');
+          if((ev.EX||[]).includes(key)) continue;
+          starts.push(o);
+        }
+      }
+      starts.forEach(a=>{ if(out.length<LIMIT) out.push({s:a,e:a+dur,t,r,n,ad:st.all?1:0}); });
+    });
+    out.sort((a,b)=>a.s-b.s);
+    return {name,ev:out};
+  }
+  const _isoWeek=d=>{ const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())); const n=t.getUTCDay()||7; t.setUTCDate(t.getUTCDate()+4-n); return Math.ceil(((t-Date.UTC(t.getUTCFullYear(),0,1))/864e5+1)/7); };
+  // Termine in Wochen (Mo–So) mit Einträgen im Format des IdF-Plans umwandeln
+  function _customWeeks(){
+    if(_cw) return _cw;
+    const ev=(_cust&&_cust.ev)||[]; if(!ev.length) return (_cw=[]);
+    const hm=ms=>{ const d=new Date(ms); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); };
+    const days=new Map(), add=(ymd,raw)=>{ (days.get(ymd)||days.set(ymd,[]).get(ymd)).push(raw); };
+    const clean=x=>String(x||'').replace(/\|/g,'/');
+    ev.forEach(e=>{
+      if(e.ad){ for(let d=new Date(e.s);d.getTime()<e.e&&d.getTime()<e.s+60*864e5;d.setDate(d.getDate()+1)) add(_ymd(d),['ganztägig',clean(e.t),'ar',clean(e.r),clean(e.n)].join('|')); return; }
+      const sd=new Date(e.s), same=_ymd(sd)===_ymd(new Date(e.e-1));
+      add(_ymd(sd),[hm(e.s)+'-'+(same?hm(e.e):'23:59'),clean(e.t),'',clean(e.r),clean(e.n)].join('|'));
+    });
+    const first=new Date(Math.min(...ev.map(e=>e.s))), last=new Date(Math.max(...ev.map(e=>e.e)));
+    const mon=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate()-((d.getDay()+6)%7));
+    const ws=[]; let i=0;
+    for(let m=mon(first);m<=last&&ws.length<110;m=new Date(m.getFullYear(),m.getMonth(),m.getDate()+7)){
+      const dd=[]; for(let k=0;k<7;k++) dd.push(days.get(_ymd(new Date(m.getFullYear(),m.getMonth(),m.getDate()+k)))||[]);
+      ws.push([_isoWeek(m),++i,(_cust&&_cust.name)||'Eigener Plan',_ymd(m),'both',dd,null,'']);
+    }
+    return (_cw=ws);
+  }
+  function importIcs(file){
+    if(!file) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      let res; try{ res=parseIcs(String(r.result)); }catch(e){ res=null; }
+      if(!res||!res.ev.length){ TOAST.show('In der Datei wurden keine Termine gefunden – bitte eine Kalenderdatei (.ics) wählen',{type:'info'}); return; }
+      res.name=res.name||String(file.name||'').replace(/\.[^.]+$/,'')||'Eigener Plan'; res.at=Date.now();
+      try{ localStorage.setItem(CKEY,JSON.stringify(res)); localStorage.setItem(SKEY,'custom'); }catch(e){}
+      _loadCust(); _manual=false; render(); pushWidget();
+      if(typeof SHELL!=='undefined') SHELL.renderHome();
+      TOAST.show(res.ev.length+' Termine aus „'+res.name+'“ geladen',{type:'ok'});
+    };
+    r.onerror=()=>TOAST.show('Datei konnte nicht gelesen werden');
+    r.readAsText(file);
+  }
+  function useSource(src){
+    try{ localStorage.setItem(SKEY,src==='custom'?'custom':'idf'); }catch(e){}
+    _cw=null; _manual=false; render(); pushWidget();
+    if(typeof SHELL!=='undefined') SHELL.renderHome();
+    TOAST.show(src==='custom'?'Eigener Plan wird angezeigt':'IdF-Plan Modul 3.5 wird angezeigt',{type:'ok'});
+  }
+  function removeCustom(){
+    if(!confirm('Den geladenen eigenen Stundenplan entfernen?')) return;
+    try{ localStorage.removeItem(CKEY); localStorage.setItem(SKEY,'idf'); }catch(e){}
+    _loadCust(); _manual=false; render(); pushWidget();
+    if(typeof SHELL!=='undefined') SHELL.renderHome();
+    TOAST.show('Eigener Plan entfernt',{type:'ok'});
+  }
+  function _planControls(){
+    const cust=!!_cust, on=_isCustom();
+    const row=(t1,t2,btn)=>`<div class="m-row m-static m-wrap"><span class="m-tx"><span class="m-t1">${t1}</span><span class="m-t2">${t2}</span></span>${btn}</div>`;
+    let h='<div class="m-sec" style="margin-top:1rem">Stundenplan wählen</div><div class="m-list idf-src">';
+    h+=row('IdF Münster · Modul 3.5',on?'Der mitgelieferte Plan, mit Gruppe 1 und 2':'Wird gerade angezeigt',on?'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'idf\')">Anzeigen</button>':'<span class="m-badge">aktiv</span>');
+    if(cust) h+=row(esc(_cust.name),_cust.ev.length+' Termine aus deiner Datei',on?'<span class="m-badge">aktiv</span>':'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'custom\')">Anzeigen</button>');
+    h+=`<label class="m-row" for="plan-file" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Eigenen Stundenplan laden</span><span class="m-t2">Kalenderdatei (.ics), z. B. aus dem Kalender deiner Schule oder deines Betriebs</span></span><input type="file" id="plan-file" accept=".ics,text/calendar" hidden onchange="IDF_PLAN.importIcs(this.files[0]);this.value=''"></label>`;
+    if(cust) h+=`<button class="m-row" onclick="IDF_PLAN.removeCustom()"><span class="m-tx"><span class="m-t1">Eigenen Plan entfernen</span></span></button>`;
+    if(!on) h+=`<button class="m-row m-go" onclick="PLANABO.open()"><span class="m-tx"><span class="m-t1">Kalender abonnieren</span><span class="m-t2">Der IdF-Plan als Link, der sich selbst aktualisiert</span></span></button>`;
+    return h+'</div>';
+  }
   function _dayRaw(w,d,g){
+    if(_isCustom()) return w[5][d]||[];
     const day=new Date(w[3]+'T00:00'); day.setDate(day.getDate()+d);
     const key=_ymd(day);
     const o=_ov.tage.find(t=>t&&t.datum===key&&(!t.gruppe||t.gruppe==='both'||t.gruppe===g)&&Array.isArray(t.eintraege));
@@ -5373,6 +5638,7 @@ const IDF_PLAN = (function(){
     }catch(e){}
   }
   function _buildWeeks(g=_grp){
+    if(_isCustom()) return _customWeeks();
     return W.filter(w=>w[4]==='both'||w[4]===g).sort((a,b)=>a[3]<b[3]?-1:1);
   }
   function _autoIdx(ws=_weeks){
@@ -5392,13 +5658,13 @@ const IDF_PLAN = (function(){
     const notStarted=today<new Date(_weeks[0][3]+'T00:00');
     const icon=d=>`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
     let h=`<div class="m-card idf-head">
-      <div class="idf-row"><div><b class="idf-kw">KW ${kw}</b><span class="m-t2">Woche ${nr} von 9${grp==='both'?' · beide Gruppen':''}</span></div>
+      <div class="idf-row"><div><b class="idf-kw">KW ${kw}</b><span class="m-t2">Woche ${nr} von ${_isCustom()?_weeks.length:9}${grp==='both'&&!_isCustom()?' · beide Gruppen':''}</span></div>
         <div class="idf-nav"><button onclick="IDF_PLAN._nav(-1)" aria-label="Vorherige Woche"${_wi===0?' disabled':''}>${icon('m15 18-6-6 6-6')}</button><button onclick="IDF_PLAN._nav(1)" aria-label="Nächste Woche"${_wi===_weeks.length-1?' disabled':''}>${icon('m9 18 6-6-6-6')}</button></div></div>
       <div class="idf-pips">${_weeks.map((_,i)=>`<i class="${i<_wi?'done':i===_wi?'cur':''}"></i>`).join('')}</div>
       <div class="idf-row idf-row2"><span class="idf-thema">${esc(thema)}</span>
-        <span class="m-seg" role="group" aria-label="Gruppe">${['g1','g2'].map(g=>`<button class="${_grp===g?'active':''}" onclick="IDF_PLAN._grp('${g}')">Gruppe ${g[1]}</button>`).join('')}</span></div>
+        ${_isCustom()?'':`<span class="m-seg" role="group" aria-label="Gruppe">${['g1','g2'].map(g=>`<button class="${_grp===g?'active':''}" onclick="IDF_PLAN._grp('${g}')">Gruppe ${g[1]}</button>`).join('')}</span>`}</div>
     </div>`;
-    if(notStarted&&_wi===0) h+=`<div class="idf-note">Das Modul beginnt am 26. Oktober. Bis dahin zeigt der Plan die erste Woche.</div>`;
+    if(notStarted&&_wi===0) h+=_isCustom()?`<div class="idf-note">Der Plan beginnt am ${base.toLocaleDateString('de-DE',{day:'numeric',month:'long'})}. Bis dahin zeigt er die erste Woche.</div>`:`<div class="idf-note">Das Modul beginnt am 26. Oktober. Bis dahin zeigt der Plan die erste Woche.</div>`;
     if(info) h+=`<div class="idf-note">${esc(info)}</div>`;
     const wn=_weekNote(wk); if(wn) h+=`<div class="idf-note">${esc(wn)}</div>`;
     h+='<div class="idf-days">'+days.map((_,i)=>{
@@ -5410,9 +5676,17 @@ const IDF_PLAN = (function(){
     }).join('')+'</div>';
     const full=(n,t)=>/^-/.test(t)?(/BABZ/.test(n)?'0228 99550':'0251 3112')+t:t;
     const rows=[...(tel||TEL.spahl),['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>[n,full(n,t)]);
-    h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${rows.map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><a href="tel:+49${t.replace(/\D/g,'').replace(/^0/,'')}">${esc(t)}</a></div>`).join('')}</div>`;
-    h+=`<button class="m-cal-btn" onclick="IDF_PLAN.exportIcs()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5"/></svg>Stundenplan in den Kalender übernehmen<small>Gruppe ${_grp[1]} · alle Einheiten mit Erinnerung 30 Minuten vorher</small></button>`;
-    h+='<div class="idf-legend"><span><i class="hi"></i>Schlüsseltermin</span><span><i class="ex"></i>Exkursion</span><span><i class="ar"></i>An-/Abreise, frei</span><span>EVA = eigenverantwortliches Arbeiten</span></div>';
+    if(!_isCustom()) h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${rows.map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><a href="tel:+49${t.replace(/\D/g,'').replace(/^0/,'')}">${esc(t)}</a></div>`).join('')}</div>`;
+    h+=`<button class="m-cal-btn" onclick="IDF_PLAN.exportIcs()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5"/></svg>Stundenplan in den Kalender übernehmen<small>${_isCustom()?'Dein Plan':'Gruppe '+_grp[1]} · alle Einheiten mit Erinnerung 30 Minuten vorher</small></button>`;
+    if(!_isCustom()) h+='<div class="idf-legend"><span><i class="hi"></i>Schlüsseltermin</span><span><i class="ex"></i>Exkursion</span><span><i class="ar"></i>An-/Abreise, frei</span><span>EVA = eigenverantwortliches Arbeiten</span></div>';
+    h+=_planControls();
+    // Kopf der Seite: Name und Zeitraum des angezeigten Plans
+    const ey=document.querySelector('#v-plan .page-eyebrow'), ld=document.querySelector('#v-plan .page-lead');
+    if(ey&&ld){
+      if(!ey.dataset.d){ ey.dataset.d=ey.textContent; ld.dataset.d=ld.textContent; }
+      ey.textContent=_isCustom()?_cust.name:ey.dataset.d;
+      ld.textContent=_isCustom()?'Stundenplan für KW '+_weeks[0][0]+' bis '+_weeks[_weeks.length-1][0]+'. Es öffnet sich immer die aktuelle Woche.':ld.dataset.d;
+    }
     el.innerHTML=h;
   }
 
@@ -5469,7 +5743,7 @@ const IDF_PLAN = (function(){
   function next(now=new Date()){
     for(const w of _buildWeeks(_savedGrp())){
       const base=new Date(w[3]+'T00:00');
-      for(let d=0;d<5;d++){
+      for(let d=0;d<w[5].length;d++){
         const day=new Date(base); day.setDate(base.getDate()+d);
         const dayEnd=new Date(day); dayEnd.setHours(23,59,59,0);
         if(dayEnd<now) continue;
@@ -5493,7 +5767,7 @@ const IDF_PLAN = (function(){
     const out=[], g=_savedGrp(), from=new Date(); from.setHours(0,0,0,0);
     for(const w of _buildWeeks(g)){
       const base=new Date(w[3]+'T00:00');
-      for(let d=0;d<5;d++){
+      for(let d=0;d<w[5].length;d++){
         const day=new Date(base); day.setDate(base.getDate()+d);
         if(day<from) continue;
         for(const raw of _splitAtLunch(_dayRaw(w,d,g))){
@@ -5503,7 +5777,7 @@ const IDF_PLAN = (function(){
           const e=_minutes(b);
           const st=new Date(day); st.setHours(0,s,0,0);
           const en=new Date(day); en.setHours(0,e===null?s+60:e,0,0);
-          out.push({s:st.getTime(),e:en.getTime(),t:title,r:room});
+          out.push({s:st.getTime(),e:en.getTime(),t:title,r:room?(_isCustom()?room:'Raum '+room):'',x:1});
         }
       }
     }
@@ -5520,11 +5794,11 @@ const IDF_PLAN = (function(){
     const fold=l=>{ let out='',cur=''; for(const ch of l){ if(new TextEncoder().encode(cur+ch).length>73){ out+=cur+'\r\n '; cur=''; } cur+=ch; } return out+cur; };
     const esc=t=>String(t).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
     const stamp=(()=>{const d=new Date();return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z';})();
-    const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//B VI Lernwebsite//Stundenplan Modul 3.5//DE','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:IdF Münster Modul 3.5 · Gruppe '+g[1]];
+    const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//B VI Lernwebsite//Stundenplan Modul 3.5//DE','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:'+(_isCustom()?esc(_cust.name):'IdF Münster Modul 3.5 · Gruppe '+g[1])];
     let count=0;
     for(const w of _buildWeeks(g)){
       const base=new Date(w[3]+'T00:00');
-      for(let d=0;d<5;d++){
+      for(let d=0;d<w[5].length;d++){
         const day=new Date(base); day.setDate(base.getDate()+d);
         const ymd=day.getFullYear()+pad(day.getMonth()+1)+pad(day.getDate());
         _splitAtLunch(_dayRaw(w,d,g)).forEach((raw,i)=>{
@@ -5535,7 +5809,7 @@ const IDF_PLAN = (function(){
           lines.push('BEGIN:VEVENT','UID:bvi-'+g+'-'+ymd+'-'+hm(s)+'-'+i+'@bvi-lernwebsite','DTSTAMP:'+stamp,
             'DTSTART:'+ymd+'T'+hm(s),'DTEND:'+ymd+'T'+hm(e),
             'SUMMARY:'+esc(title));
-          if(room) lines.push('LOCATION:'+esc('IdF NRW Münster, Raum '+room));
+          if(room) lines.push('LOCATION:'+esc(_isCustom()?room:'IdF NRW Münster, Raum '+room));
           lines.push('DESCRIPTION:'+esc([w[2]+' (KW '+w[0]+')',note].filter(Boolean).join('\n')));
           lines.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+esc(title),'TRIGGER:-PT30M','END:VALARM','END:VEVENT');
           count++;
@@ -5547,7 +5821,7 @@ const IDF_PLAN = (function(){
   }
   function exportIcs(){
     const r=ics();
-    FILES.save('bvi-stundenplan-gruppe'+r.group[1]+'.ics','text/calendar',r.text,true);
+    FILES.save(_isCustom()?'bvi-stundenplan-eigener-plan.ics':'bvi-stundenplan-gruppe'+r.group[1]+'.ics','text/calendar',r.text,true);
   }
 
   function summary(){
@@ -5564,7 +5838,33 @@ const IDF_PLAN = (function(){
   });
   _loadOv();
   pushWidget();
-  return { render, summary, next, units, pushWidget, ics, exportIcs, _nav, _grp:_setGrp, redraw:_draw };
+  return { render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _grp:_setGrp, redraw:_draw };
+})();
+
+/* ── Stundenplan als Kalender-Abo (Link, der sich selbst aktualisiert) ──────── */
+const PLANABO=(function(){
+  const BASE='https://flametan.github.io/BVI-Lernwebsite/data/';
+  let box=null;
+  const url=g=>BASE+'stundenplan-gruppe'+g+'.ics';
+  function build(){
+    box=document.createElement('div'); box.id='abo-ov'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Stundenplan abonnieren');
+    box.innerHTML='<div class="sh-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t">Stundenplan abonnieren</div>'
+      +'<p class="abo-p">Dein Kalender holt sich den Plan selbst und aktualisiert ihn bei Änderungen. Wähle deine Gruppe:</p>'
+      +[1,2].map(g=>'<div class="abo-row"><b>Gruppe '+g+'</b><button type="button" class="btn btn-ghost" data-g="'+g+'">Link kopieren</button><a class="btn btn-gold" href="'+url(g).replace('https://','webcal://')+'">In Kalender öffnen</a></div>').join('')
+      +'<p class="abo-p abo-s">iPhone und Mac: „In Kalender öffnen“ tippen. Google Kalender: am Computer calendar.google.com öffnen, bei „Weitere Kalender“ das Plus wählen, „Per URL“ und den kopierten Link einfügen.</p></div>';
+    document.body.appendChild(box);
+    box.addEventListener('click',async e=>{
+      if(e.target===box||e.target.closest('.sh-x')){ close(); return; }
+      const b=e.target.closest('[data-g]'); if(!b) return;
+      try{ await navigator.clipboard.writeText(url(b.dataset.g)); TOAST.show('Link kopiert',{type:'ok'}); }
+      catch(err){ TOAST.show(url(b.dataset.g),{type:'info',duration:12000}); }
+    });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
+  }
+  function open(){ if(!box) build(); box.hidden=false; box.querySelector('.sh-x').focus({preventScroll:true}); }
+  function close(){ if(box) box.hidden=true; }
+  return {open,close,url};
 })();
 
 /* ── Dateien speichern (Browser: Download, Android-App: Ordner Downloads) ── */
@@ -5591,7 +5891,7 @@ const BACKUP=(function(){
   const keep=k=>(k.startsWith('bvi_')&&k!=='bvi_seen_version'&&k!=='bvi_last_backup'&&k!=='bvi_et_end')||k==='idf_plan_grp';
   // Form der Werte beim Einspielen prüfen: falsch geformte Daten würden die App dauerhaft stören
   const ARR=new Set(['bvi_bookmarks','bvi_recent','bvi_search_hist','bvi_fc_custom','bvi_fc_stars','bvi_fc_weak']);
-  const NOJSON=new Set(['bvi_theme','bvi_accent','bvi_font_size','bvi_goal','bvi_timers','bvi_onboarded','bvi_exam','bvi_lp_fz','bvi_lp_prac','bvi_pause_mode','bvi_pause_mods','bvi_duell_name','bvi_duell_col','bvi_duell_stun','bvi_duell_cfg','idf_plan_grp']);
+  const NOJSON=new Set(['bvi_plan_src','bvi_theme','bvi_accent','bvi_font_size','bvi_goal','bvi_timers','bvi_onboarded','bvi_exam','bvi_lp_fz','bvi_lp_prac','bvi_pause_mode','bvi_pause_mods','bvi_duell_name','bvi_duell_col','bvi_duell_stun','bvi_duell_cfg','idf_plan_grp']);
   const safeTxt=t=>String(t==null?'':t).replace(/</g,'&lt;').replace(/>/g,'&gt;');
   function clean(k,v){
     if(typeof v!=='string'||v.length>2e6) return null;
@@ -5917,7 +6217,13 @@ const APPSHARE=(function(){
     box.querySelector('.sh-x').focus({preventScroll:true});
   }
   function close(){ if(box) box.hidden=true; }
-  return {open,close};
+  // QR-Code für beliebigen Text in ein Element zeichnen (z. B. geteilte Lernkarten)
+  async function qr(el,text){
+    await loadLib();
+    const q=qrcode(0,'L'); q.addData(text); q.make();
+    el.innerHTML=q.createSvgTag({cellSize:4,margin:2,scalable:true});
+  }
+  return {open,close,qr};
 })();
 
 const INSTALL=(function(){
@@ -6710,6 +7016,14 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySele
 
 document.addEventListener('DOMContentLoaded',()=>{
   // Deep-link on load
+  // Geteilte Lernkarten: ?karten=… übernehmen (nach Rückfrage) und den Parameter aus der Adresse entfernen
+  (function(){
+    const u=new URL(location.href), kc=u.searchParams.get('karten');
+    if(!kc) return;
+    u.searchParams.delete('karten');
+    try{ history.replaceState(history.state,'',u.pathname+(u.search||'')+u.hash); }catch(e){}
+    setTimeout(()=>CUSTOM.fromCode('BVIK'+kc.replace(/^BVIK/,''),true),700);
+  })();
   const initId=new URLSearchParams(location.search).get('id')||location.hash.replace(/^#/,'');
   if(initId&&document.getElementById(initId)?.classList.contains('view')){
     const lbl=document.querySelector('#'+initId+' .page-title')?.textContent?.trim()||initId;

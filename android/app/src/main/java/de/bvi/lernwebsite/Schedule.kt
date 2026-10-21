@@ -6,7 +6,8 @@ import java.util.Calendar
 import java.util.Locale
 
 // Eine Unterrichtseinheit aus dem Stundenplan (Beginn und Ende in Millisekunden)
-class Lesson(val s: Long, val e: Long, val t: String, val r: String)
+// x = true: der Raum-Text ist schon vollständig (eigener Plan), sonst kommt "Raum " davor
+class Lesson(val s: Long, val e: Long, val t: String, val r: String, val x: Boolean = false)
 
 // Zustand zu einem Zeitpunkt: laufende Einheit, Pause, Unterricht vorbei oder kein Plan
 class Snap(
@@ -47,7 +48,7 @@ object Schedule {
             val a = JSONArray(raw)
             for (i in 0 until a.length()) {
                 val o = a.getJSONObject(i)
-                out.add(Lesson(o.getLong("s"), o.getLong("e"), o.optString("t"), o.optString("r")))
+                out.add(Lesson(o.getLong("s"), o.getLong("e"), o.optString("t"), o.optString("r"), o.optInt("x", 0) == 1))
             }
         } catch (e: Exception) {
             return emptyList()
@@ -71,7 +72,7 @@ object Schedule {
 
     fun range(l: Lesson): String = hhmm(l.s) + "–" + hhmm(l.e)
 
-    fun room(l: Lesson): String = if (l.r.isBlank()) "" else "Raum " + l.r
+    fun room(l: Lesson): String = if (l.r.isBlank()) "" else if (l.x) l.r else "Raum " + l.r
 
     // "35 min" oder "1 Std 25 min"
     fun dur(ms: Long): String {

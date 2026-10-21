@@ -489,6 +489,64 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   ok('Widget-Daten: Einheiten mit Beginn, Ende, Titel, Raum', wu.n > 20 && wu.ok && wu.sorted);
 
+  // ── Abkürzungen antippen; Lernkarten teilen (Link und Code) ──
+  const ab = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    NAV.go('v-hlfs-stab', 'Stab'); await w(500);
+    const sp = document.querySelector('#v-hlfs-stab .abk-t');
+    r.marked = !!sp; r.noDouble = (() => { const k = [...document.querySelectorAll('#v-hlfs-stab .abk-t')].map(e => e.dataset.k); return k.length > 1 && new Set(k).size === k.length; })();   // jede Abkürzung nur einmal je Seite
+    sp.click(); await w(100);
+    const pop = document.getElementById('abk-pop'); r.pop = !pop.hidden && pop.textContent.includes(sp.dataset.k);
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(50); r.closed = pop.hidden;
+    return r;
+  });
+  eq('Abkürzungen: jede nur beim ersten Vorkommen je Seite, Tipp zeigt Erläuterung', ab, { marked: true, noDouble: true, pop: true, closed: true });
+  const sh = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    localStorage.removeItem('bvi_fc_custom'); CUSTOM.open(); await w(200);
+    for (const [q, a] of [['Was ist <b>A</b>?', 'Antwort & Umlaute äöü'], ['Zweite Frage', 'x'.repeat(900)]]) { document.getElementById('cu-q').value = q; document.getElementById('cu-a').value = a; document.getElementById('cu-save').click(); }
+    await w(100);
+    r.n1 = JSON.parse(localStorage.getItem('bvi_fc_custom')).length;
+    let link = null; Object.defineProperty(navigator, 'share', { value: o => { link = o.url; return Promise.resolve(); }, configurable: true });
+    document.getElementById('cu-share').click(); await w(500);
+    r.link = !!link && link.includes('?karten=BVIK');
+    r.noMail = !document.getElementById('cu-mail');
+    // andere Karten übernehmen: erst löschen, dann den Link einlesen
+    localStorage.removeItem('bvi_fc_custom'); FLASHCARD_DATA.splice(FLASHCARD_DATA.findIndex(c => c.own), FLASHCARD_DATA.filter(c => c.own).length);
+    document.getElementById('cu-code').value = 'Hier meine Karten: ' + link; document.getElementById('cu-fromcode').click(); await w(500);
+    const back = JSON.parse(localStorage.getItem('bvi_fc_custom') || '[]'); r.n2 = back.length; r.q = back[0] && back[0].q;
+    document.getElementById('cu-code').value = link; document.getElementById('cu-fromcode').click(); await w(300);
+    r.dupe = JSON.parse(localStorage.getItem('bvi_fc_custom')).length;
+    localStorage.removeItem('bvi_fc_custom'); CUSTOM.close(); delete navigator.share;
+    return r;
+  });
+  eq('Lernkarten teilen: Link, Übernehmen, keine Doppelten, ohne E-Mail', sh, { n1: 2, link: true, noMail: true, n2: 2, q: 'Was ist &lt;b&gt;A&lt;/b&gt;?', dupe: 2 });
+
+  // ── Eigener Stundenplan aus einer Kalenderdatei (.ics) ──
+  const pi = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    const y = new Date().getFullYear() + 1, d = `${y}0106`;   // ein Dienstag/Montag im nächsten Jahr, damit "als Nächstes" etwas findet
+    const ics = ['BEGIN:VCALENDAR', 'X-WR-CALNAME:Test-Plan', 'BEGIN:VEVENT', 'DTSTART:' + d + 'T080000', 'DTEND:' + d + 'T093000', 'SUMMARY:Mathe\\, Teil 1', 'LOCATION:Raum 12', 'RRULE:FREQ=WEEKLY;COUNT=3', 'END:VEVENT',
+      'BEGIN:VEVENT', 'DTSTART;VALUE=DATE:' + y + '0107', 'SUMMARY:Ausflug', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+    const res = IDF_PLAN.parseIcs(ics);
+    r.parsed = [res.name, res.ev.length, res.ev[0].t, res.ev[0].r, (() => { const m = res.ev.filter(e => e.t.startsWith('Mathe')); return m[1].s - m[0].s === 7 * 864e5; })(), res.ev.some(e => e.ad === 1)];
+    const f = new File([ics], 'x.ics');
+    NAV.go('v-plan', 'Stundenplan'); await w(300);
+    IDF_PLAN.importIcs(f); await w(500);
+    r.custom = IDF_PLAN.isCustom();
+    r.shown = /Mathe, Teil 1/.test(document.getElementById('plan-inner').innerText) || document.getElementById('plan-inner').innerText.length > 100;
+    r.next = (IDF_PLAN.next() || {}).title;
+    let sent = null; window.BVIAndroid = { setSchedule: j => { sent = j; }, setWidgetStyle() {}, setIcon() {} };
+    IDF_PLAN.pushWidget(); const u = JSON.parse(sent || '[]'); delete window.BVIAndroid;
+    r.units = [u.length, u.every(x => x.x === 1), u[0] && u[0].r];
+    r.ics = /X-WR-CALNAME:Test-Plan/.test(IDF_PLAN.ics().text);
+    IDF_PLAN.useSource('idf'); await w(300);
+    r.back = [IDF_PLAN.isCustom(), /Gruppe 1/.test(document.getElementById('plan-inner').innerText)];
+    localStorage.removeItem('bvi_plan_custom'); localStorage.setItem('bvi_plan_src', 'idf');
+    return r;
+  });
+  eq('Eigener Plan: lesen, anzeigen, Widget-Daten, Export, zurück zum IdF-Plan', pi, { parsed: ['Test-Plan', 4, 'Mathe, Teil 1', 'Raum 12', true, true], custom: true, shown: true, next: 'Mathe, Teil 1', units: [3, true, 'Raum 12'], ics: true, back: [false, true] });
+
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
   const tp = await tctx.newPage();
