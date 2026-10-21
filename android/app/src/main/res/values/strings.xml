@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">B VI</string>
+    <string name="widget_next_name">B VI · Nächste Einheit</string>
+    <string name="widget_day_name">B VI · Tagesplan</string>
+    <string name="widget_now_name">B VI · Jetzt und danach</string>
+    <string name="widget_next_desc">Laufende Einheit mit Zeitraum, Raum und Fortschritt, darunter die Einheit danach</string>
+    <string name="widget_day_desc">Die nächsten Einheiten des Tages mit Zeit und Raum, die laufende farbig</string>
+    <string name="widget_now_desc">Laufende Einheit links, die Einheit danach rechts</string>
 </resources>

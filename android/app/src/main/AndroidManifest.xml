@@ -28,6 +28,45 @@
             android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|uiMode|smallestScreenSize|density|fontScale|layoutDirection"/>
 
         <receiver android:name=".ReminderReceiver" android:exported="false"/>
+
+        <receiver
+            android:name=".WidgetNext"
+            android:label="@string/widget_next_name"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_next_info"/>
+        </receiver>
+
+        <receiver
+            android:name=".WidgetDay"
+            android:label="@string/widget_day_name"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_day_info"/>
+        </receiver>
+
+        <receiver
+            android:name=".WidgetNow"
+            android:label="@string/widget_now_name"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_now_info"/>
+        </receiver>
+
+        <receiver android:name=".WidgetTick" android:exported="false"/>
+
         <receiver android:name=".BootReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

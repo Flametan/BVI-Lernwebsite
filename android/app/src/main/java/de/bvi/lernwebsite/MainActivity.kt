@@ -65,6 +65,20 @@ open class MainActivity : AppCompatActivity() {
             if (name in iconAliases) prefs.edit().putString("pending_icon", name).apply()
         }
 
+        // Stundenplan für die Startbildschirm-Widgets (JSON-Liste mit s, e, t, r)
+        @JavascriptInterface
+        fun setSchedule(json: String) {
+            Schedule.save(applicationContext, json)
+            Widgets.updateAll(applicationContext)
+        }
+
+        // Akzentfarbe und hell/dunkel für die Widgets
+        @JavascriptInterface
+        fun setWidgetStyle(accent: String, light: Boolean) {
+            Widgets.setStyle(applicationContext, accent, light)
+            Widgets.updateAll(applicationContext)
+        }
+
         // Textdatei in Downloads speichern (Sicherung, Kalender); open=true öffnet sie danach in der passenden App
         @JavascriptInterface
         fun saveText(filename: String, mime: String, text: String, open: Boolean): Boolean {
@@ -206,7 +220,9 @@ open class MainActivity : AppCompatActivity() {
 
         // Bei fehlgeschlagener Wiederherstellung (restoreState liefert null) frisch laden
         if (savedInstanceState == null || webView.restoreState(savedInstanceState) == null) {
-            webView.loadUrl("https://flametan.github.io/BVI-Lernwebsite/")
+            // Tipp auf ein Widget öffnet gleich den Stundenplan
+            val plan = intent?.getStringExtra("open") == "plan"
+            webView.loadUrl("https://flametan.github.io/BVI-Lernwebsite/" + if (plan) "?id=v-plan" else "")
         }
     }
 
@@ -237,6 +253,14 @@ open class MainActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             // Manche Launcher blockieren den Wechsel; dann bleibt das bisherige Symbol
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        if (intent.getStringExtra("open") == "plan") {
+            webView.evaluateJavascript("try{NAV.tab('v-plan','Stundenplan')}catch(e){}", null)
         }
     }
 

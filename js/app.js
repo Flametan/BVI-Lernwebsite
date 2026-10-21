@@ -3893,6 +3893,7 @@ const CHANGELOG=(function(){
       'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Stundenplan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links',
       'Android-App: Das Startsymbol und das Startbild folgen jetzt auch dem Farbschema – schwarz im dunklen, hell (Farbton der Website) im hellen Design',
       'Startseite: Beim Wechsel zwischen Woche und Monaten starten die Animationen nicht mehr neu; die Umschalter sind wieder schmaler',
+      'Android-App: Drei Widgets für den Startbildschirm zur Auswahl – „Nächste Einheit“, „Tagesplan“ und „Jetzt und danach“ mit Zeitraum, Raum, Restzeit und der Einheit danach (nach Unterrichtsende zeigen sie, was morgen ansteht); sie folgen Akzentfarbe und Hell/Dunkel',
       'Neu: Markierten Text auf einer Lernseite mit „Als Lernkarte“ direkt zu einer eigenen Lernkarte machen (Modul wird vorgewählt, die Frage schreibst du dazu)',
       'Updates: Bei einer neuen Version erscheint ein Hinweis „Aktualisieren“, statt dass die Seite mitten im Lernen neu lädt',
       'Stundenplan: Er springt von selbst zur aktuellen Kalenderwoche, wenn das Datum weiterläuft (Mitternacht) oder die App wieder in den Vordergrund kommt – außer du hast selbst in andere Wochen geblättert',
@@ -5368,6 +5369,7 @@ const IDF_PLAN = (function(){
       _ov={tage:Array.isArray(j.tage)?j.tage:[],wochenhinweise:Array.isArray(j.wochenhinweise)?j.wochenhinweise:[]};
       if(document.getElementById('v-plan')?.classList.contains('active')) _draw();
       if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome();
+      pushWidget();
     }catch(e){}
   }
   function _buildWeeks(g=_grp){
@@ -5460,6 +5462,7 @@ const IDF_PLAN = (function(){
     const keep=_weeks.findIndex(w=>w[0]===kw);
     _wi=keep>=0?keep:_autoIdx();
     _draw();
+    pushWidget();
   }
   function _minutes(str){ const m=/(\d{1,2}):(\d{2})/.exec(str||''); return m?(+m[1])*60+(+m[2]):null; }
   // Laufende oder nächste Einheit nach Stundenplan der gewählten Gruppe; null, wenn das Modul vorbei ist
@@ -5484,6 +5487,32 @@ const IDF_PLAN = (function(){
     }
     return null;
   }
+
+  // Alle kommenden Einheiten (Beginn/Ende in ms) für die Startbildschirm-Widgets der Android-App
+  function units(){
+    const out=[], g=_savedGrp(), from=new Date(); from.setHours(0,0,0,0);
+    for(const w of _buildWeeks(g)){
+      const base=new Date(w[3]+'T00:00');
+      for(let d=0;d<5;d++){
+        const day=new Date(base); day.setDate(base.getDate()+d);
+        if(day<from) continue;
+        for(const raw of _splitAtLunch(_dayRaw(w,d,g))){
+          const [t,title,cls='',room='']=raw.split('|');
+          if(/unterrichtsfrei|Selbststudium|Heiligabend|Weihnachtstag/.test(title)) continue;
+          const [a,b]=_time(t); const s=_minutes(a); if(s===null) continue;
+          const e=_minutes(b);
+          const st=new Date(day); st.setHours(0,s,0,0);
+          const en=new Date(day); en.setHours(0,e===null?s+60:e,0,0);
+          out.push({s:st.getTime(),e:en.getTime(),t:title,r:room});
+        }
+      }
+    }
+    return out;
+  }
+  function pushWidget(){
+    try{ if(window.BVIAndroid&&BVIAndroid.setSchedule) BVIAndroid.setSchedule(JSON.stringify(units())); }catch(e){}
+  }
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) pushWidget(); });
 
   // Stundenplan der gewählten Gruppe als Kalenderdatei (iCalendar), mit Erinnerung 30 Minuten vorher
   function ics(){
@@ -5534,7 +5563,8 @@ const IDF_PLAN = (function(){
     if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('#plan-inner .idf-tap')){ e.preventDefault(); PLANNOTE.open(e.target); }
   });
   _loadOv();
-  return { render, summary, next, ics, exportIcs, _nav, _grp:_setGrp, redraw:_draw };
+  pushWidget();
+  return { render, summary, next, units, pushWidget, ics, exportIcs, _nav, _grp:_setGrp, redraw:_draw };
 })();
 
 /* ── Dateien speichern (Browser: Download, Android-App: Ordner Downloads) ── */
@@ -6041,6 +6071,7 @@ const ACCENT=(function(){
     PRESETS.forEach(p=>{const [x,y,z]=rgb(p[0]),d=(r-x)**2+(g-y)**2+(b-z)**2;if(d<min){min=d;best=p;}});
     const light=document.documentElement.getAttribute('data-theme')==='light';
     try{ BVIAndroid.setIcon(best[2]+(light?'_light':'')); }catch(e){}
+    try{ if(BVIAndroid.setWidgetStyle) BVIAndroid.setWidgetStyle(c,light); }catch(e){}
   }
   function render(){
     const cur=get(), custom=!PRESETS.some(p=>p[0]===cur);
