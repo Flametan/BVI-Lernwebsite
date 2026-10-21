@@ -109,6 +109,12 @@ const eq = (n, a, b) => ok(n + ' (ist: ' + JSON.stringify(a) + ')', JSON.stringi
   // Aufgabe: B verlässt das Duell, A gewinnt
   await B.evaluate(() => DUELL.stop()); await A.waitForTimeout(600);
   ok('Aufgabe des Gegners: Sieg durch Aufgabe', (await A.innerText('.pz-fp')).includes('Lena hat aufgegeben'));
+  // Wörter-Raten: doppelte Buchstaben zweiphasig (APFEL gegen AAAAA: nur ein A grün, Rest grau)
+  eq('Wörter-Farben APFEL/AAAAA', await A.evaluate(() => PAUSE._wordCols('AAAAA', 'APFEL')), ['gr', 'xx', 'xx', 'xx', 'xx']);
+  eq('Wörter-Farben APFEL/PAPPE', await A.evaluate(() => PAUSE._wordCols('PAPPE', 'APFEL')), ['ye', 'ye', 'xx', 'xx', 'ye']);
+  // Code-Extraktion: Text vor dem Code stört nicht, fremder Text wird abgelehnt
+  const ex = await A.evaluate(c => [DUELL._codeOf('Hier mein Code: ' + c + '\nViele Grüße'), DUELL._codeOf('https://example.org'), DUELL._codeOf('D1~kaputt')], c1b);
+  eq('Code-Extraktion', [ex[0] === c1b, ex[1], ex[2]], [true, null, null]);
   for (const e of errors) fails.push('JavaScript-Fehler: ' + e);
   await browser.close();
   if (fails.length) { console.error('FEHLER:\n - ' + fails.join('\n - ')); process.exit(1); }

@@ -2462,3 +2462,26 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .m-acc-b{border-top:1px solid var(--m-line,rgba(128,128,128,.18));}
 .m-acc-b .m-list{border-radius:0;background:transparent;}
 @media(prefers-reduced-motion:reduce){.m-acc-chv{transition:none;}}
+
+/* Spende: die ganze Karte ist der Link */
+a.m-donate{display:block;color:inherit;text-decoration:none;cursor:pointer;}
+
+/* Einführung: Punkte sind Knöpfe (Tastatur, Screenreader), Klickfläche größer als der Punkt */
+.ob-dot{padding:0;position:relative;font:inherit;}
+.ob-dot::before{content:'';position:absolute;inset:-14px -6px;}
+
+/* Fehlersuche: Touch-Ziele auf mindestens 44 px erweitern, ohne das Aussehen zu ändern (unsichtbare Trefferfläche) */
+@media(pointer:coarse){
+  .m-sw,.m-step button,.m-seg button,.search-close-btn,.s2-close,.pomo-preset,.pz-back,.pz-chk,.acc-check,.uk-back-btn,.fb-back-case,.fc-f-btn{position:relative;}
+  .m-sw::after,.m-step button::after,.m-seg button::after,.search-close-btn::after,.s2-close::after,.pomo-preset::after,.pz-back::after,.acc-check::after,.uk-back-btn::after,.fb-back-case::after{content:'';position:absolute;inset:-7px -4px;}
+  .pz-chk{min-height:44px;display:flex;align-items:center;gap:10px;}
+  .pz-chk input{width:24px;height:24px;flex-shrink:0;}
+  .m-pc{min-width:0;}
+}
+.sh-t{padding:0;}
+/* große Schrift auf schmalen Geräten: Auswahlleisten und Karten dürfen umbrechen statt über den Rand zu laufen */
+html.fs-lg .m-seg,html.fs-xl .m-seg{flex-wrap:wrap;max-width:100%;}
+html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap:anywhere;}
+/* schmale Geräte mit großer Schrift: Raster und Auswahlleisten brechen um statt über den Rand zu laufen */
+@media(max-width:700px){.sim-menu{grid-template-columns:minmax(0,1fr);}}
+.pz-mode{flex-wrap:wrap;}

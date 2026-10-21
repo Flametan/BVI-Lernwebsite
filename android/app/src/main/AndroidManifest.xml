@@ -19,16 +19,16 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"/>
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|uiMode|smallestScreenSize|density|fontScale|layoutDirection"/>
 
         <activity
             android:name=".MainActivityLight"
             android:theme="@style/Theme.BVI.Light"
             android:exported="false"
-            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"/>
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|uiMode|smallestScreenSize|density|fontScale|layoutDirection"/>
 
         <receiver android:name=".ReminderReceiver" android:exported="false"/>
-        <receiver android:name=".BootReceiver" android:exported="true">
+        <receiver android:name=".BootReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>

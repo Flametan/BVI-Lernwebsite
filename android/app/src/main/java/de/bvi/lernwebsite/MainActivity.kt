@@ -68,6 +68,16 @@ open class MainActivity : AppCompatActivity() {
         // Textdatei in Downloads speichern (Sicherung, Kalender); open=true öffnet sie danach in der passenden App
         @JavascriptInterface
         fun saveText(filename: String, mime: String, text: String, open: Boolean): Boolean {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+                ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+                // Android 8/9: Berechtigung erfragen; der Nutzer wiederholt die Aktion danach
+                runOnUiThread {
+                    ActivityCompat.requestPermissions(this@MainActivity,
+                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 78)
+                }
+                return false
+            }
             return try {
                 val uri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     val values = ContentValues().apply {
@@ -121,11 +131,11 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(code: Int, perms: Array<out String>, results: IntArray) {
         super.onRequestPermissionsResult(code, perms, results)
-        if (code != 77) return
+        if (code != 77) return // 78 (Speicher) braucht keine weitere Aktion
         val ok = results.isNotEmpty() && results[0] == PackageManager.PERMISSION_GRANTED
         if (ok) Reminder.schedule(this, prefs.getInt("reminder_hour", 18))
         else prefs.edit().putBoolean("reminder_on", false).apply()
-        webView.post { webView.evaluateJavascript("window.NOTIF&&NOTIF._nativeResult($ok)", null) }
+        webView.post { webView.evaluateJavascript("try{NOTIF._nativeResult($ok)}catch(e){}", null) }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -139,7 +149,7 @@ open class MainActivity : AppCompatActivity() {
             javaScriptEnabled = true
             domStorageEnabled = true
             databaseEnabled = true
-            allowFileAccess = true
+            allowFileAccess = false // es werden nur https-Seiten geladen, keine file://
             mediaPlaybackRequiresUserGesture = false
         }
 
@@ -178,13 +188,10 @@ open class MainActivity : AppCompatActivity() {
 
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                val url = request.url.toString()
-                if (url.contains("BHKG_NRW_Kommentar.pdf")) {
-                    saveAssetToDownloads("BHKG_NRW_Kommentar.pdf")
-                    return true
-                }
                 // Mail, Telefon und fremde Webseiten außerhalb der App öffnen
-                val own = request.url.host == "flametan.github.io"
+                val path = request.url.path ?: ""
+                val own = request.url.host == "flametan.github.io" &&
+                    (path == "/BVI-Lernwebsite" || path.startsWith("/BVI-Lernwebsite/"))
                 if (request.url.scheme == "mailto" || request.url.scheme == "tel" ||
                     (request.url.scheme?.startsWith("http") == true && !own)) {
                     val action = if (request.url.scheme == "mailto") Intent.ACTION_SENDTO else Intent.ACTION_VIEW
@@ -197,39 +204,9 @@ open class MainActivity : AppCompatActivity() {
             }
         }
 
-        if (savedInstanceState != null) {
-            webView.restoreState(savedInstanceState)
-        } else {
+        // Bei fehlgeschlagener Wiederherstellung (restoreState liefert null) frisch laden
+        if (savedInstanceState == null || webView.restoreState(savedInstanceState) == null) {
             webView.loadUrl("https://flametan.github.io/BVI-Lernwebsite/")
-        }
-    }
-
-    private fun saveAssetToDownloads(filename: String) {
-        try {
-            val input = assets.open(filename)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val values = ContentValues().apply {
-                    put(MediaStore.Downloads.DISPLAY_NAME, filename)
-                    put(MediaStore.Downloads.MIME_TYPE, "application/pdf")
-                    put(MediaStore.Downloads.IS_PENDING, 1)
-                }
-                val uri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
-                uri?.let {
-                    contentResolver.openOutputStream(it)?.use { os -> input.copyTo(os) }
-                    values.clear()
-                    values.put(MediaStore.Downloads.IS_PENDING, 0)
-                    contentResolver.update(it, values, null, null)
-                }
-            } else {
-                val outFile = File(
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                    filename
-                )
-                outFile.outputStream().use { input.copyTo(it) }
-            }
-            Toast.makeText(this, "PDF in Downloads gespeichert", Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            Toast.makeText(this, "Fehler beim Speichern", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -270,10 +247,22 @@ open class MainActivity : AppCompatActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack()
-        } else {
-            super.onBackPressed()
+        // Die Seite entscheidet: "handled" (Overlay/Schritt geschlossen), "exit" (Startseite) oder "back"
+        val js = "(function(){try{return window.bviBack?window.bviBack():'back'}catch(e){return 'back'}})()"
+        try {
+            webView.evaluateJavascript(js) { r ->
+                when (r?.trim('"')) {
+                    "handled" -> {}
+                    "exit" -> finish()
+                    else -> fallbackBack()
+                }
+            }
+        } catch (e: Exception) {
+            fallbackBack()
         }
+    }
+
+    private fun fallbackBack() {
+        if (webView.canGoBack()) webView.goBack() else finish()
     }
 }

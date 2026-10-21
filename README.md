@@ -18,13 +18,13 @@
 | ⚖️ VAk Berlin | 6 | 33 |
 | 📊 FeuAK Hamburg | 12 | 60 |
 | 🏛️ IdF Münster | 3 | 28 |
-| **Gesamt** | **74** | **319** |
+| **Gesamt** | **74** | **349** |
 
 ---
 
 ## Features
 
-- **319 Lernkarten** – 3D-Flip-Animation, Know/Don't-Know-Bewertung, LocalStorage-Persistenz
+- **349 Lernkarten** – 3D-Flip-Animation, Know/Don't-Know-Bewertung, LocalStorage-Persistenz
 - **Fallbearbeitung** – 6 juristische Übungsfälle mit 9-Punkte-Schema (Realakt/VA-Differenzierung)
 - **Altklausur-Training** – VAk Berlin + FeuAK Hamburg Prüfungsvorbereitung
 - **Führungsdienstsimulator** – 8 verzweigte Entscheidungsszenarien mit Scoring

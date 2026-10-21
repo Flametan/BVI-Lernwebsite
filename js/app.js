@@ -5,6 +5,22 @@
 const _NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app','v-klausurfragen','v-klausur-0826','v-laufbahn-2023','v-laufbahn-2026']);
 const _GOLD_VIEWS = new Set(['v-vak-klausurvorbereitung','v-feuak-bp-hub','v-feuak-analyse']);
 
+/* ── Speicher absichern: voller oder gesperrter localStorage darf die App nicht lahmlegen ── */
+(function(){
+  let warned=0;
+  function warn(){ if(Date.now()-warned<8000) return; warned=Date.now(); try{ TOAST.show('Speicher voll oder gesperrt – Änderungen werden nicht gespeichert'); }catch(e){} }
+  let ls; try{ ls=window.localStorage; void ls.length; }catch(e){ ls=null; }
+  if(!ls){   // Zugriff verweigert (z. B. alle Website-Daten blockiert): Speicher nur für diese Sitzung
+    const m=new Map(), mem={ getItem:k=>m.has(k)?m.get(k):null, setItem:(k,v)=>{ m.set(String(k),String(v)); }, removeItem:k=>{ m.delete(k); }, clear:()=>m.clear(), key:i=>[...m.keys()][i]??null, get length(){ return m.size; } };
+    try{ Object.defineProperty(window,'localStorage',{value:mem,configurable:true}); }catch(e){}
+    return;
+  }
+  const P=Storage.prototype, si=P.setItem, gi=P.getItem, ri=P.removeItem;
+  P.setItem=function(k,v){ try{ si.call(this,k,v); }catch(e){ warn(); } };
+  P.getItem=function(k){ try{ return gi.call(this,k); }catch(e){ return null; } };
+  P.removeItem=function(k){ try{ ri.call(this,k); }catch(e){} };
+})();
+
 const NAV = (function(){
   let stack = [];
   let _dir = 'forward';
@@ -30,7 +46,7 @@ const NAV = (function(){
     if(id==='v-app') INSTALL.render();
     ETIMER.mount(id);
     if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); }
-    if(id==='v-home') SHELL.renderHome();
+    if(id==='v-home'){ SHELL.newQuip(); SHELL.renderHome(); }
     if(id==='v-pruefung') SHELL.renderExam();
     if(id==='v-settings') SHELL.syncSettings();
     if(id==='v-notizen') SHELL.renderNotes();
@@ -67,6 +83,7 @@ const NAV = (function(){
     jumpTo(idx){ _dir=idx<stack.length-1?'back':'forward'; stack=stack.slice(0,idx+1); history.pushState({stack:[...stack]},''); show(idx>=0?stack[idx].id:'v-home'); },
     home(){ _dir='back'; stack=[]; history.pushState({home:true},''); show('v-home'); },
     tab(id,label){ _dir='forward'; stack=[{id,label}]; history.pushState({stack:[...stack]},''); show(id); },
+    depth(){ return stack.length; },
     _restoreStack(s){ _dir='back'; stack=s; show(s.length?s[s.length-1].id:'v-home'); }
   };
 })();
@@ -74,6 +91,7 @@ const NAV = (function(){
 history.replaceState({home:true},'');
 window.addEventListener('popstate',function(e){
   if(typeof LIGHTBOX!=='undefined'&&LIGHTBOX.isOpen()){ LIGHTBOX.close(true); return; }
+  if(typeof OVL!=='undefined'&&OVL.onPop(e,NAV.depth())) return;
   if(e.state&&e.state.stack){
     // Restore stack from state and show the top view
     const s=e.state.stack;
@@ -767,7 +785,7 @@ function mk(tag,cls){ const e=document.createElement(tag); e.className=cls; retu
 function xss(s){ if(!s) return ''; const d=document.createElement('div'); d.appendChild(document.createTextNode(s)); return d.innerHTML; }
 
 /* ======================================================================
-   FLASHCARD-DATEN (364 Karten)
+   FLASHCARD-DATEN
 ====================================================================== */
 const FLASHCARD_DATA = [
   {id:'f01',cat:'SFS · Taktik',q:'Was ist der Führungsvorgang nach FwDV 100?',a:'Ein <strong>kontinuierlicher Kreislauf</strong> aus Lagefeststellung → Planung (Entschluss/Beurteilung) → Befehlsgebung → Kontrolle. Nicht statisch – wird bei neuen Informationen erneut durchlaufen.'},
@@ -899,7 +917,7 @@ const FLASHCARD_DATA = [
   {id:'v04',cat:'VAk · Jur. Denken',q:'Was bedeuten Entschließungsermessen und Auswahlermessen?',a:'<strong>Entschließungsermessen:</strong> Behörde kann entscheiden, ob sie tätig wird (Ausnahme: Ermessensreduzierung auf null bei erheblicher Gefahr).<br><strong>Auswahlermessen:</strong> Behörde wählt aus mehreren geeigneten Mitteln das am wenigsten belastende.<br><strong>Gebundene Entscheidung:</strong> bei „hat"/„muss" – kein Ermessen.'},
   {id:'v05',cat:'VAk · Jur. Denken',q:'Welche 4 Stufen hat der Grundsatz der Verhältnismäßigkeit?',a:'<strong>1. Legitimes Ziel</strong> – gesetzlicher Auftrag vorhanden.<br><strong>2. Geeignetheit</strong> – Mittel kann Ziel erreichen.<br><strong>3. Erforderlichkeit</strong> – mildestes geeignetes Mittel wählen.<br><strong>4. Angemessenheit</strong> – Maßnahme steht in vertretbarem Verhältnis zum Nutzen.'},
   {id:'v06',cat:'VAk · Jur. Denken',q:'Was sind die vier Bestandteile des Gutachtenstils (O·D·S·K)?',a:'<strong>O – Obersatz (Fallfrage):</strong> Rechtsfrage als offene Hypothese formulieren, Ergebnis nicht vorwegnehmen. Formel: „Fraglich ist, ob …"<br><strong>D – Definition:</strong> Norminhalt erläutern; bei unbestimmten Rechtsbegriffen (z. B. „Gefahr") nach Wortlaut, Systematik und Zweck auslegen.<br><strong>S – Subsumtion:</strong> Sachverhalt unter die Tatbestandsmerkmale subsumieren. Formel: „Im vorliegenden Fall …"<br><strong>K – Konklusion:</strong> Ergebnis knapp zusammenfassen und Fallfrage beantworten. Formel: „Mithin …" / „Folglich …"<br><br><strong>Merkhilfe:</strong> „Ohne Dich Sind Klausuren (sinnlos)"<br><strong>vs. Urteilsstil:</strong> Gutachtenstil = Ergebnis offen bis zum Schluss; Urteilsstil = Ergebnis steht am Anfang (typisch für Bescheide/Urteile).'},
-  {id:'v06',cat:'VAk · Verwaltungsrecht',q:'Was ist ein Verwaltungsakt (VA) und welche Merkmale muss er erfüllen?',a:'Ein VA ist eine <strong>hoheitliche Maßnahme einer Behörde</strong> auf dem Gebiet des öffentlichen Rechts zur <strong>Regelung eines Einzelfalls mit Außenwirkung</strong>.<br>Inhalt: muss hinreichend bestimmt sein (Wer, Was, Wann, Wo, Wie); schriftlicher VA enthält Begründung + Rechtsbehelfsbelehrung (Frist 1 Monat).'},
+  {id:'v63',cat:'VAk · Verwaltungsrecht',q:'Was ist ein Verwaltungsakt (VA) und welche Merkmale muss er erfüllen?',a:'Ein VA ist eine <strong>hoheitliche Maßnahme einer Behörde</strong> auf dem Gebiet des öffentlichen Rechts zur <strong>Regelung eines Einzelfalls mit Außenwirkung</strong>.<br>Inhalt: muss hinreichend bestimmt sein (Wer, Was, Wann, Wo, Wie); schriftlicher VA enthält Begründung + Rechtsbehelfsbelehrung (Frist 1 Monat).'},
   {id:'v07',cat:'VAk · Verwaltungsrecht',q:'Welche Nebenbestimmungen kann ein VA enthalten?',a:'<strong>Befristung</strong> (zeitl. Bindung) · <strong>Bedingung</strong> (Wirksamkeit an Ereignis geknüpft) · <strong>Widerrufsvorbehalt</strong> · <strong>Auflage</strong> (Tun/Dulden/Unterlassen auferlegt) · <strong>Auflagenvorbehalt</strong> (spätere Auflage vorbehalten).'},
   {id:'v08',cat:'VAk · Verwaltungsrecht',q:'Was bewirkt ein Widerspruch gegen einen VA und wann entfällt diese Wirkung?',a:'Ein Widerspruch hat grundsätzlich <strong>aufschiebende Wirkung</strong> – Bürger muss VA nicht befolgen, Behörde darf nicht vollstrecken.<br>Entfällt durch: <strong>Anordnung der sofortigen Vollziehung</strong> (schriftl. Begründung des besonderen öffentlichen Interesses erforderlich).'},
   {id:'v09',cat:'VAk · Verwaltungsrecht',q:'Welche 3 Zwangsmittel der Verwaltungsvollstreckung gibt es?',a:'<strong>Ersatzvornahme:</strong> Behörde lässt vertretbare Handlung durch Dritten auf Kosten des Pflichtigen vornehmen.<br><strong>Zwangsgeld:</strong> bei unvertretbaren Handlungen, keine Sanktion.<br><strong>Unmittelbarer Zwang:</strong> körperliche Gewalt durch Hilfsmittel oder Waffen.'},
@@ -1032,7 +1050,7 @@ const FLASHCARD_DATA = [
 
   /* ── FeuAK – Altklausur-Karten h42–h60 ── */
   {id:'h42',cat:'FeuAK · BSC/QM',q:'Nennen Sie die 4 Perspektiven der Balanced Scorecard (BSC) und je ein FW-Beispiel.',a:'<strong>1. Finanzperspektive:</strong> Budgettreue, Kosten/Einsatz (Träger-Sicht).<br><strong>2. Kundenperspektive:</strong> Hilfsfristerfüllung, Bevölkerungszufriedenheit.<br><strong>3. Interne Prozessperspektive:</strong> Ausrückzeit, Fahrzeugverfügbarkeit, Ausbildungsstand.<br><strong>4. Lern-/Entwicklungsperspektive:</strong> Fortbildungsquote, Personalentwicklung, Innovation.<br>Alle 4 Perspektiven sind durch Ursache-Wirkungs-Ketten verknüpft.'},
-  {id:'h44',cat:'FeuAK · Vergabe',q:'Welche EU-Schwellenwerte gelten für Kommunen ab 1.1.2026 und welche Fristen im offenen Verfahren?',a:'<strong>Ab 1.1.2026 (§106 GWB):</strong><br>· Liefer- & DL sonstige öAG (Kommunen): <strong>216.000 €</strong> (zuvor: 221.000 €)<br>· Sektorenauftraggeber / Verteidigung: 432.000 €<br>· Bauaufträge / Konzessionen: <strong>5.404.000 €</strong> (zuvor: 5.538.000 €)<br><strong>Auftragswert:</strong> Gesamtwert ohne USt.; bei Blockbeschaffung Gesamtwert aller Lose maßgeblich.<br><strong>Fristen offenes Verfahren:</strong> Standard 52 Tage · elektronisch 30 Tage · Dringlichkeit 15 Tage.<br>Bekanntmachung: EU-Amtsblatt (TED).<br><em>Praxis FW: HLF 20 (700.000 €), DLK (900.000 €) liegen stets über dem Schwellenwert → EU-weites offenes Verfahren ist die Regel.</em>'},
+  {id:'h44',cat:'FeuAK · Vergabe',q:'Welche EU-Schwellenwerte gelten für Kommunen ab 1.1.2026 und welche Fristen im offenen Verfahren?',a:'<strong>Ab 1.1.2026 (§106 GWB):</strong><br>· Liefer- & DL sonstige öAG (Kommunen): <strong>216.000 €</strong> (zuvor: 221.000 €)<br>· Sektorenauftraggeber / Verteidigung: 432.000 €<br>· Bauaufträge / Konzessionen: <strong>5.404.000 €</strong> (zuvor: 5.538.000 €)<br><strong>Auftragswert:</strong> Gesamtwert ohne USt.; bei Blockbeschaffung Gesamtwert aller Lose maßgeblich.<br><strong>Fristen offenes Verfahren:</strong> Standard 35 Tage (§ 15 VgV) · bei elektronischer Angebotsabgabe 30 Tage · Dringlichkeit 15 Tage.<br>Bekanntmachung: EU-Amtsblatt (TED).<br><em>Praxis FW: HLF 20 (700.000 €), DLK (900.000 €) liegen stets über dem Schwellenwert → EU-weites offenes Verfahren ist die Regel.</em>'},
   {id:'h46',cat:'FeuAK · VWL',q:'Erläutern Sie Minimal- und Maximalprinzip im taktischen Feuerwehrkontext.',a:'Beide sind Ausprägungen des <strong>ökonomischen Prinzips</strong> – taktische Effizienz bei Rettung und Brandbekämpfung.<br><strong>Minimalprinzip:</strong> Vorgegebenes Einsatzziel mit minimalem Mitteleinsatz erreichen.<br>&nbsp; → Beispiel: Brandbekämpfung mit geringstmöglichem Wasserschaden erzielen.<br><strong>Maximalprinzip:</strong> Vorhandene Kräfte (z. B. einen Löschtrupp) für maximalen Rettungserfolg einsetzen.<br>&nbsp; → Beispiel: Taktische Abwägung Ressourcensparsamkeit vs. maximale Wirkung an der Einsatzstelle.<br><strong>Ziel:</strong> Optimaler Schutz der Bevölkerung trotz limitierter Kapazitäten.'},
   {id:'h51',cat:'FeuAK · VWL',q:'Was ist „Swiftonomics"? Erläutern Sie Multiplikatoreffekt und Swiftflation.',a:'<strong>Swiftonomics:</strong> Phänomen der volkswirtschaftlichen Auswirkungen von Taylor Swifts Eras Tour – Lehrbeispiel für Ketteneffekte in der VWL.<br><strong>Multiplikatoreffekt:</strong> Konzertbesucher bringen Geld → fließt in Hotellerie, Transport, Einzelhandel → Ketteneffekt in der Gesamtwirtschaft.<br><strong>Swiftflation:</strong> Schlagartige Nachfrageexplosion → Preisanstieg bei Flügen und Hotels. In Schweden und Portugal kurzzeitig im nationalen Verbraucherpreisindex sichtbar.<br><strong>FW-Relevanz:</strong> Brandsicherheitswachen, Überstunden, gebundene Kräfte im Stadtgebiet, Opportunitätskosten.'},
   {id:'h52',cat:'FeuAK · Bedarfsplanung',q:'Welcher wesentliche Unterschied besteht zwischen den AGBF-Qualitätskriterien von 1998 und der Fortschreibung von 2015?',a:'<strong>Kernelemente gleichgeblieben:</strong> 10+6=16 Fu · 8+5=13 Min.<br><br><strong>Änderungen 2015:</strong><br>① Wissenschaftl.-mediz. Herleitung (Zeitkette/Flashover) entfallen.<br>② Einsatzmittel zu Eintreffzeit, Funktionsstärke, Erreichungsgrad ergänzt.<br>③ Erreichungsgrad <strong>95 % → 90 %</strong> (prakt.-math. Gründe).<br>④ Szenario: „Mehrzahl von Personen zu retten“ (explizit).<br>⑤ Formulierung: „Vernachlässigung Eigensicherung“ → „Zurückstellung Brandbekämpfung“.<br>⑥ Mind. 50 bemessungsrelevante Einsätze für Erreichungsgrad-Auswertung.'},
@@ -1296,9 +1314,12 @@ const SEARCH = (function(){
     });
   }
 
+  // Attributwert für onclick="…" absichern (JSON enthält Anführungszeichen)
+  const attr=t=>String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  // Treffer markieren, ohne HTML-Entitäten wie &amp; zu zerreißen
   function hl(text, q){
     const re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
-    return text.replace(re,'<mark>$1</mark>');
+    return text.split(/(&(?:[a-z]+|#\d+);)/i).map((p,i)=>i%2?p:p.replace(re,'<mark>$1</mark>')).join('');
   }
   function contextSnippet(text, q, len=160){
     if(!text) return '';
@@ -1408,14 +1429,14 @@ const SEARCH = (function(){
     const hist = loadHist();
     let html = '';
     if(bks.length) html+='<div class="bk-section"><div class="bk-section-title">⭐ Lesezeichen</div>'
-      +bks.map(b=>`<div class="bk-item" onclick="SEARCH.goBk(${JSON.stringify(b.id)},${JSON.stringify(b.label||b.id)})">`
+      +bks.map(b=>`<div class="bk-item" onclick="SEARCH.goBk(${attr(JSON.stringify(b.id))},${attr(JSON.stringify(b.label||b.id))})">`
         +`<span class="bk-label">${xss(b.label||b.id)}</span>`
-        +`<button class="bk-del" onclick="event.stopPropagation();SEARCH.removeBk(${JSON.stringify(b.id)})">✕</button>`
+        +`<button class="bk-del" onclick="event.stopPropagation();SEARCH.removeBk(${attr(JSON.stringify(b.id))})" aria-label="Lesezeichen entfernen">✕</button>`
         +'</div>').join('')+'</div>';
     if(hist.length) html+='<div class="bk-section"><div class="bk-section-title">🕐 Zuletzt gesucht</div>'
-      +hist.map(q=>`<div class="bk-item" onclick="SEARCH.runHist(${JSON.stringify(q)})">`
+      +hist.map(q=>`<div class="bk-item" onclick="SEARCH.runHist(${attr(JSON.stringify(q))})">`
         +`<span class="bk-label">${xss(q)}</span>`
-        +`<button class="bk-del" onclick="event.stopPropagation();SEARCH.clearHist()">✕</button>`
+        +`<button class="bk-del" onclick="event.stopPropagation();SEARCH.clearHist()" aria-label="Suchverlauf löschen">✕</button>`
         +'</div>').join('')+'</div>';
     if(!html) html='<div class="search-idle">Suchbegriff eingeben – z.&nbsp;B. <em>AVIVA</em>, <em>Glasl</em>, <em>MANV</em></div>';
     el.innerHTML=quickHtml(results,'')+html;
@@ -1430,7 +1451,7 @@ const SEARCH = (function(){
     el.innerHTML = results.map((r,i)=>{
       const head=r.grp!==lastGrp?`<div class="sr-group">${r.grp}</div>`:''; lastGrp=r.grp;
       if(r.quick) return head+`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${xss(r.lbl)}</span><div><div class="sr-title">${hl(xss(r.title),q)}</div></div></div>`;
-      return head+`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${r.lbl}</span><div><div class="sr-title">${hl(xss(r.title),q)}${r.fuzzy?' <i class="sr-fz">ähnlich</i>':''}</div>${r.snippet?`<div class="sr-snippet">${hl(xss(contextSnippet(r.snippet,q)),q)}</div>`:''}</div></div>`;
+      return head+`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${xss(r.lbl)}</span><div><div class="sr-title">${hl(xss(r.title),q)}${r.fuzzy?' <i class="sr-fz">ähnlich</i>':''}</div>${r.snippet?`<div class="sr-snippet">${hl(xss(contextSnippet(r.snippet,q)),q)}</div>`:''}</div></div>`;
     }).join('');
     focusIdx = -1;
   }
@@ -1497,6 +1518,70 @@ const A11Y=(function(){
   };
 })();
 
+/* ======================================================================
+   OVL – Fenster (Suche, Notiz, Pomodoro …): Fokus hinein und zurück, Tab bleibt im Fenster,
+   Esc schließt nur das oberste, Zurück (Browser/Android) schließt das Fenster statt die Seite dahinter
+====================================================================== */
+const OVL=(function(){
+  const DEFS={
+    'search-overlay':()=>SEARCH.close(), 'shortcuts-overlay':()=>document.getElementById('shortcuts-overlay').classList.add('hidden'),
+    'pomodoro-overlay':()=>POMO.close(), 'onboarding-overlay':()=>ONBOARD.close(),
+    'quiz-mastery-modal':()=>QUIZ.closeMastery(), 'quiz-mastery-modal-idf':()=>IDFQ.closeMastery(),
+    'notes-overlay':()=>NOTES.close(), 'changelog-modal':()=>CHANGELOG.close()
+  };
+  const order=[], opener={}; let skip=0;
+  const el=id=>document.getElementById(id);
+  const isOpen=id=>{ const e=el(id); return !!e&&!e.classList.contains('hidden'); };
+  const top=()=>{ for(let i=order.length-1;i>=0;i--) if(isOpen(order[i])) return order[i]; return null; };
+  const focusables=root=>[...root.querySelectorAll('a[href],button,input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter(e=>!e.disabled&&!e.hidden&&e.offsetParent!==null&&e.tabIndex>=0);
+  function onChange(id){
+    const e=el(id); if(!e) return;
+    const open=isOpen(id), idx=order.indexOf(id);
+    if(open&&idx<0){
+      order.push(id); opener[id]=document.activeElement;
+      setTimeout(()=>{ if(!isOpen(id)||e.contains(document.activeElement)) return; const f=focusables(e)[0]; if(f) f.focus({preventScroll:true}); },30);
+    } else if(!open&&idx>=0){
+      order.splice(idx,1); const o=opener[id]; delete opener[id];
+      if(o&&o.isConnected&&o!==document.body&&!order.length) try{ o.focus({preventScroll:true}); }catch(err){}
+    }
+  }
+  function init(){
+    const mo=new MutationObserver(m=>m.forEach(r=>onChange(r.target.id)));
+    Object.keys(DEFS).forEach(id=>{ const e=el(id); if(e){ mo.observe(e,{attributes:true,attributeFilter:['class']}); onChange(id); } });
+    document.addEventListener('keydown',e=>{
+      if(e.key!=='Tab') return;
+      const t=top(); if(!t) return;
+      const f=focusables(el(t)); if(!f.length) return;
+      const a=document.activeElement, first=f[0], last=f[f.length-1];
+      if(!el(t).contains(a)){ e.preventDefault(); first.focus(); }
+      else if(e.shiftKey&&a===first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey&&a===last){ e.preventDefault(); first.focus(); }
+    },true);
+  }
+  return {
+    init, top, any:()=>!!top(),
+    closeTop(){ const t=top(); if(!t) return false; DEFS[t](); return true; },
+    escape(e){ if(!OVL.closeTop()) return false; if(e) e.preventDefault(); return true; },
+    // Browser-Zurück bei offenem Fenster: Fenster schließen und die Seite dahinter behalten
+    onPop(e,depth){
+      if(skip>0){ skip--; return true; }
+      if(!OVL.closeTop()) return false;
+      const n=(e.state&&e.state.stack)?e.state.stack.length:0;
+      if(n<depth){ skip=1; try{ history.forward(); }catch(err){ skip=0; } }
+      return true;
+    }
+  };
+})();
+
+// Zurück-Taste der Android-App: "handled" (Fenster/Kapitel geschlossen), "exit" (Startseite) oder "back"
+window.bviBack=function(){
+  if(OVL.closeTop()) return 'handled';
+  if(typeof LIGHTBOX!=='undefined'&&LIGHTBOX.isOpen()){ LIGHTBOX.close(); return 'handled'; }
+  if(typeof LP!=='undefined'&&LP.isOpen()){ LP.back(); return 'handled'; }
+  const v=document.querySelector('.view.active');
+  return !v||v.id==='v-home'?'exit':'back';
+};
+
 const TOAST = (function(){
   let wrap;
   function container(){ if(!wrap){ wrap=document.createElement('div'); wrap.className='toast-wrap'; document.body.appendChild(wrap); } return wrap; }
@@ -1556,9 +1641,9 @@ const SETTINGS = (function(){
    NOTES – Seitennotizen (localStorage pro View)
 ====================================================================== */
 const NOTES = (function(){
-  let _view = null, _prevNote = '', _undoTimer = null;
+  let _view = null, _openKey = null, _prevNote = '', _undoTimer = null;
   const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz','v-plan','v-pruefung','v-settings','v-notizen']);
-  function key(){ return 'bvi_note_'+(_view||'home'); }
+  function key(){ return _openKey||'bvi_note_'+(_view||'home'); }
   function getBtn(){
     if(!_view) return null;
     const v = document.getElementById(_view);
@@ -1577,10 +1662,14 @@ const NOTES = (function(){
   }
   function ensureWidget(){}
   return {
-    setView(id){ _view = id; ensureWidget(); updateBtn(); },
+    setView(id){
+      if(_openKey&&!document.getElementById('notes-overlay').classList.contains('hidden')) this.close();   // Text bleibt auf der Seite, auf der er geschrieben wurde
+      _view = id; ensureWidget(); updateBtn();
+    },
     open(){
+      _openKey = 'bvi_note_'+(_view||'home');
       const ta = document.getElementById('notes-textarea');
-      if(ta) ta.value = localStorage.getItem(key())||'';
+      if(ta){ ta.value = localStorage.getItem(key())||''; if(!ta._live){ ta._live=true; ta.addEventListener('input',()=>{ if(_openKey){ if(ta.value.trim()) localStorage.setItem(_openKey,ta.value); else localStorage.removeItem(_openKey); } }); } }
       const lbl = document.getElementById('notes-page-lbl');
       if(lbl) lbl.textContent = document.querySelector('#'+_view+' .page-title')?.textContent?.trim()||'';
       document.getElementById('notes-overlay').classList.remove('hidden');
@@ -1590,6 +1679,7 @@ const NOTES = (function(){
       const ta = document.getElementById('notes-textarea');
       if(ta){ const v=ta.value.trim(); if(v) localStorage.setItem(key(),ta.value); else localStorage.removeItem(key()); }
       document.getElementById('notes-overlay').classList.add('hidden');
+      _openKey = null;
       updateBtn();
     },
     toggle(){ document.getElementById('notes-overlay').classList.contains('hidden') ? this.open() : this.close(); },
@@ -2024,7 +2114,7 @@ const FC = (function(){
       fcSave(d); SHELL.renderFcSide();
     },
     answer(quality){
-      if(!flipped) return;
+      if(!flipped||_reviewPos>=0) return;   // im Rückblick nicht die unsichtbare aktuelle Karte bewerten
       const q=quality===true?2:quality===false?0:1; // true=gut, false=wieder, 'hard'=schwer
       if(navigator.vibrate) navigator.vibrate(q>0?[30]:[20,50,20]);
       const card=deck[curIdx];
@@ -2094,20 +2184,26 @@ const FC = (function(){
       this.toggleStar(c.id);
       TOAST.show(fcLoadStars().has(c.id)?'Karte markiert':'Markierung entfernt',{type:'ok'});
     },
-    resetKnown(){ localStorage.removeItem('bvi_fc'); this.start(); },
+    resetKnown(){
+      const snap=localStorage.getItem('bvi_fc');
+      if(!confirm('Lernkarten-Lernstand wirklich zurücksetzen?')) return;
+      localStorage.removeItem('bvi_fc'); this.start();
+      TOAST.show('Lernstand zurückgesetzt',{type:'ok',undo:()=>{ if(snap){ localStorage.setItem('bvi_fc',snap); this.start(); } }});
+    },
     syncFilters(){ updateFilterButtons(); },
     resize(){ sizeCard(); },
     print(){
       const cards=[...new Map(getDeck().map(c=>[c.id,c])).values()];
       const rows=cards.map(c=>`<div class="pc"><div class="cat">${c.cat}</div><div class="q">${c.q}</div><hr/><div class="a">${c.a}</div></div>`).join('');
       const w=window.open('','_blank');
+      if(!w){ TOAST.show('Das Druckfenster wurde blockiert – bitte Pop-ups erlauben'); return; }
       w.document.write(`<!DOCTYPE html><html><head><title>Lernkarten B VI</title><style>
         *{box-sizing:border-box;margin:0;padding:0;}body{font-family:sans-serif;padding:1rem;}
         .grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
-        .pc{border:1px solid var(--b-cccccc);border-radius:8px;padding:.85rem;page-break-inside:avoid;}
-        .cat{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--k-888888);margin-bottom:.35rem;}
+        .pc{border:1px solid #ccc;border-radius:8px;padding:.85rem;page-break-inside:avoid;}
+        .cat{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:.35rem;}
         .q{font-weight:700;font-size:.88rem;margin-bottom:.45rem;line-height:1.4;}
-        hr{border:none;border-top:1px solid var(--b-eeeeee);margin:.4rem 0;}
+        hr{border:none;border-top:1px solid #eee;margin:.4rem 0;}
         .a{font-size:.78rem;color:#333;line-height:1.6;}
         @media print{.grid{grid-template-columns:1fr 1fr;}}
       </style></head><body><div class="grid">${rows}</div></body></html>`);
@@ -2445,7 +2541,7 @@ const NOTIF = (function(){
         let r='ok'; try{ r=BVIAndroid.setReminder(!!on,api.hour()); }catch(e){ r='error'; }
         if(r==='ask') return !!prefs().enabled;
         savePrefs({...prefs(),enabled:!!on&&r==='ok'});
-        if(on&&r==='ok') TOAST.show('Erinnerung um '+api.hour()+':00 Uhr aktiviert',{type:'ok'});
+        if(on&&r==='ok') TOAST.show('Erinnerung gegen '+api.hour()+':00 Uhr aktiviert',{type:'ok'});
         return !!prefs().enabled;
       }
       if(!('Notification' in window)){ TOAST.show('Benachrichtigungen nicht unterstützt'); return false; }
@@ -2467,7 +2563,7 @@ const NOTIF = (function(){
     // Antwort der Android-App auf die Berechtigungsabfrage
     _nativeResult(ok){
       savePrefs({...prefs(),enabled:!!ok});
-      TOAST.show(ok?'Erinnerung um '+api.hour()+':00 Uhr aktiviert':'Benachrichtigungen wurden abgelehnt',{type:ok?'ok':undefined});
+      TOAST.show(ok?'Erinnerung gegen '+api.hour()+':00 Uhr aktiviert':'Benachrichtigungen wurden abgelehnt',{type:ok?'ok':undefined});
       syncToggle();
     },
     setHour(h){
@@ -2492,9 +2588,9 @@ const NOTIF = (function(){
    POMO – Pomodoro-Timer
 ====================================================================== */
 const POMO=(function(){
-  let _total=25*60, _rem=25*60, _running=false, _iv=null;
+  let _total=25*60, _rem=25*60, _running=false, _iv=null, _end=0;
   function fmt(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
-  function tick(){ if(!_running) return; _rem--; render(); if(_rem<=0){ clearInterval(_iv); _running=false; done(); } }
+  function tick(){ if(!_running) return; _rem=Math.max(0,Math.round((_end-Date.now())/1000)); render(); if(_rem<=0){ clearInterval(_iv); _running=false; done(); } }
   function render(){
     const d=document.getElementById('pomo-display'); if(d) d.textContent=fmt(_rem);
     const btn=document.getElementById('pomo-start'); if(btn) btn.textContent=_running?'Pause':'Start';
@@ -2511,9 +2607,9 @@ const POMO=(function(){
     open(){ document.getElementById('pomodoro-overlay').classList.remove('hidden'); render(); },
     close(){ document.getElementById('pomodoro-overlay').classList.add('hidden'); },
     toggle(){
-      if(_rem<=0) return;
+      if(_rem<=0) _rem=_total;   // nach Ablauf startet "Start" eine neue Runde
       _running=!_running;
-      if(_running) _iv=setInterval(tick,1000); else clearInterval(_iv);
+      if(_running){ _end=Date.now()+_rem*1000; _iv=setInterval(tick,1000); } else clearInterval(_iv);
       render();
     },
     reset(){ clearInterval(_iv); _running=false; _rem=_total; render(); },
@@ -2692,6 +2788,7 @@ const LP=(function(){
     win.querySelector('.lp-prev').classList.toggle('dis',i===0);
     win.querySelector('.lp-next').classList.toggle('dis',i===its.length-1);
     wb.scrollTop=0; CHECKS.set(cur.v._lp.id,ckOf(d),true); sync(); bar();
+    if(typeof HL!=='undefined') HL.apply(cur.v.id);   // Markierungen im Kapitel-Fenster zeigen
   }
   // Fokus-Lesemodus: Fortschrittslinie (Kapitel + Lesestand im Kapitel) und Schriftgröße
   function bar(){
@@ -2718,6 +2815,7 @@ const LP=(function(){
   function close(silent){
     if(!cur) return;
     give(); const v=cur.v; win.classList.remove('on','focus'); v.classList.remove('lp-open','lp-focus'); document.documentElement.classList.remove('lp-lock'); cur=null;
+    if(typeof HL!=='undefined') HL.apply(v.id);
     if(v.classList.contains('lp-ueber')) render(v);
     if(pushed){ pushed=false; if(!silent){ ignorePop=true; try{ history.back(); }catch(e){ ignorePop=false; } } }
   }
@@ -2728,7 +2826,7 @@ const LP=(function(){
   },true);
   document.addEventListener('keydown',e=>{
     if(!cur) return;
-    if(e.key==='Escape'&&document.getElementById('notes-overlay')?.classList.contains('hidden')) back();
+    if(e.key==='Escape'&&!e.defaultPrevented&&!OVL.any()) back();
     else if(cur.focus&&!/INPUT|TEXTAREA|SELECT/.test((e.target&&e.target.tagName)||'')){
       if(e.key==='ArrowRight') go(cur.i+1); else if(e.key==='ArrowLeft') go(cur.i-1);
     }
@@ -2813,7 +2911,7 @@ const CUSTOM=(function(){
   let box=null;
   const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const html=t=>esc(t.trim()).replace(/\n/g,'<br>');
-  const load=()=>{ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){ return []; } };
+  const load=()=>{ try{ const a=JSON.parse(localStorage.getItem(KEY)||'[]'); return Array.isArray(a)?a.filter(c=>c&&typeof c==='object'&&c.id&&typeof c.cat==='string'):[]; }catch(e){ return []; } };
   const save=a=>{ try{ localStorage.setItem(KEY,JSON.stringify(a)); }catch(e){} };
   function refresh(){ if(typeof FC!=='undefined') FC.syncFilters(); SHELL.renderFcSide(); }
   function list(){
@@ -2824,7 +2922,13 @@ const CUSTOM=(function(){
   function remove(id){
     save(load().filter(c=>c.id!==id));
     const i=FLASHCARD_DATA.findIndex(c=>c.id===id); if(i>=0) FLASHCARD_DATA.splice(i,1);
+    // Lernstand, Stern und "schwer" der gelöschten Karte entfernen (sonst zählt sie weiter)
+    try{
+      const fc=JSON.parse(localStorage.getItem('bvi_fc')||'{}'); if(fc&&typeof fc==='object'&&id in fc){ delete fc[id]; localStorage.setItem('bvi_fc',JSON.stringify(fc)); }
+      ['bvi_fc_stars','bvi_fc_weak'].forEach(k=>{ const a=JSON.parse(localStorage.getItem(k)||'[]'); if(Array.isArray(a)&&a.includes(id)) localStorage.setItem(k,JSON.stringify(a.filter(x=>x!==id))); });
+    }catch(e){}
     list(); refresh();
+    if(typeof FC!=='undefined'&&document.getElementById('v-flashcards').classList.contains('active')) FC.start();
   }
   function add(){
     const q=box.querySelector('#cu-q').value, a=box.querySelector('#cu-a').value, m=box.querySelector('#cu-m').value;
@@ -3014,7 +3118,8 @@ function makeQuiz(cfg){
     if(bar)bar.classList.remove('hidden');
     updateTimerDisplay();
     clearInterval(_examTimerInterval);
-    _examTimerInterval=setInterval(()=>{_examTimeLeft--;updateTimerDisplay();if(_examTimeLeft<=0){clearInterval(_examTimerInterval);self.submitExam();}},1000);
+    const end=Date.now()+_examTimeLeft*1000;   // Endzeitpunkt statt Herunterzählen: läuft auch bei gedrosselten Timern richtig
+    _examTimerInterval=setInterval(()=>{_examTimeLeft=Math.max(0,Math.round((end-Date.now())/1000));updateTimerDisplay();if(_examTimeLeft<=0){clearInterval(_examTimerInterval);self.submitExam(true);}},1000);
   }
   function updateTimerDisplay(){
     const el=$('quiz-exam-time');if(!el)return;
@@ -3123,9 +3228,9 @@ function makeQuiz(cfg){
   function initKeyboard(){
     document.addEventListener('keydown',e=>{
       if(e.key==='Escape'){const m=$('quiz-mastery-modal');if(m&&!m.classList.contains('hidden')){self.closeMastery();return;}}
-      if(_mode!=='learn'||!$v().classList.contains('active'))return;
+      if(_mode!=='learn'||!$v().classList.contains('active')||e.ctrlKey||e.metaKey||e.altKey||(typeof OVL!=='undefined'&&OVL.any()))return;
       const inText=e.target.matches('textarea,input,select,[contenteditable]');
-      if(e.key===' '&&!e.ctrlKey&&!e.metaKey&&!inText){
+      if(e.key===' '&&!inText&&!(e.target.closest&&e.target.closest('button,a,summary'))){   // Leertaste auf einem fokussierten Knopf klickt den Knopf
         e.preventDefault();
         const q=curQ();if(!q)return;
         if(_answered)self.next();else if(q.type==='essay')self._revealEssay();else if(q.type==='multi')self._check();
@@ -3365,10 +3470,10 @@ function makeQuiz(cfg){
     },
     _examSel(qid,idx){_examAnswers[qid]=idx;},
     _examTog(qid,idx,on){const a=new Set(_examAnswers[qid]||[]);if(on)a.add(idx);else a.delete(idx);if(a.size)_examAnswers[qid]=[...a];else delete _examAnswers[qid];},
-    submitExam(){
+    submitExam(force){   // force: Zeit abgelaufen, ohne Rückfrage abgeben
       if(_examSubmitted)return;
       const unanswered=_examQs.filter(q=>q.type!=='essay'&&_examAnswers[q.id]===undefined);
-      if(unanswered.length>0&&!_examPendingSubmit){
+      if(unanswered.length>0&&!_examPendingSubmit&&!force){
         unanswered.forEach(q=>{const el=$('qeq-'+q.id);if(el)el.classList.add('exam-q-unanswered');});
         const warn=$('quiz-exam-warn');
         if(warn){warn.textContent=unanswered.length+' Frage'+(unanswered.length!==1?'n':'')+' noch nicht beantwortet – nochmal klicken zum Abgeben.';warn.classList.remove('hidden');}
@@ -3647,7 +3752,7 @@ const KF_QUIZ = (function(){
     var prevBtn=_step===0?'':'<button class="fb-prev-btn" onclick="KF_QUIZ.prevQ()">← Zurück</button>';
     var nextLabel=_step===QUESTIONS.length-1?'Auswertung →':'Nächste Frage →';
     var nextFn=_step===QUESTIONS.length-1?'KF_QUIZ.showResult()':'KF_QUIZ.nextQ()';
-    el.innerHTML='<div class="uk-q-header"><button class="uk-back-btn" onclick="KF_QUIZ.showStart()">← Übersicht</button>'+'<span class="uk-q-badge">'+q.nr+' · '+q.punkte+(q.punkte===1?' Punkt':' Punkte')+'</span></div>'+'<div class="uk-question"><p>'+q.text+'</p></div>'+'<textarea class="fb-textarea" id="kf-ta" placeholder="Schreibe deine Antwort hier…" rows="6">'+savedTa+'</textarea>'+'<div class="eq-reveal-row" id="kf-reveal-row">'+'<button class="fb-reveal-btn" id="kf-reveal-btn" onclick="KF_QUIZ.reveal()">Musterlösung anzeigen</button>'+'<button class="eq-short-btn" id="kf-short-btn" onclick="KF_QUIZ.revealShort()">Kurzantwort</button></div>'+'<div class="fb-answer'+(_revealed?'':' hidden')+'" id="kf-answer">'+q.answer+'</div>'+'<div class="fb-answer eq-short-answer'+(_shortRevealed?'':' hidden')+'" id="kf-short">'+(q.short||q.answer)+'</div>'+'<div class="uk-score-row'+((_revealed||_shortRevealed)?'':' hidden')+'" id="kf-score-row">'+'<span class="uk-score-label">Meine Punkte:</span><div class="uk-score-btns">'+scoreBtns+'</div>'+scoreGot+'</div>'+'<div class="fb-step-actions">'+prevBtn+'<button class="fb-next-btn" onclick="'+nextFn+'">'+nextLabel+'</button></div>'+'<div class="fb-step-dots">'+dotsHtml()+'</div>';
+    el.innerHTML='<div class="uk-q-header"><button class="uk-back-btn" onclick="KF_QUIZ.showStart()">← Übersicht</button>'+'<span class="uk-q-badge">'+q.nr+' · '+q.punkte+(q.punkte===1?' Punkt':' Punkte')+'</span></div>'+'<div class="uk-question"><p>'+q.text+'</p></div>'+'<textarea class="fb-textarea" id="kf-ta" placeholder="Schreibe deine Antwort hier…" rows="6">'+xss(savedTa)+'</textarea>'+'<div class="eq-reveal-row" id="kf-reveal-row">'+'<button class="fb-reveal-btn" id="kf-reveal-btn" onclick="KF_QUIZ.reveal()">Musterlösung anzeigen</button>'+'<button class="eq-short-btn" id="kf-short-btn" onclick="KF_QUIZ.revealShort()">Kurzantwort</button></div>'+'<div class="fb-answer'+(_revealed?'':' hidden')+'" id="kf-answer">'+q.answer+'</div>'+'<div class="fb-answer eq-short-answer'+(_shortRevealed?'':' hidden')+'" id="kf-short">'+(q.short||q.answer)+'</div>'+'<div class="uk-score-row'+((_revealed||_shortRevealed)?'':' hidden')+'" id="kf-score-row">'+'<span class="uk-score-label">Meine Punkte:</span><div class="uk-score-btns">'+scoreBtns+'</div>'+scoreGot+'</div>'+'<div class="fb-step-actions">'+prevBtn+'<button class="fb-next-btn" onclick="'+nextFn+'">'+nextLabel+'</button></div>'+'<div class="fb-step-dots">'+dotsHtml()+'</div>';
   }
 
   function renderResult(){
@@ -3777,8 +3882,15 @@ const CHANGELOG=(function(){
     {v:'3.0.0',ts:'2026-10-19T22:00',items:[
       'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Stundenplan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links',
       'Android-App: Das Startsymbol und das Startbild folgen jetzt auch dem Farbschema – schwarz im dunklen, hell (Farbton der Website) im hellen Design',
-      'Einstellungen: fehlender Trennstrich zwischen „Sicherung einspielen“ und „Lernfortschritt zurücksetzen“ ergänzt; Erste-Schritte nennt jetzt den Pausenraum statt der Lernkarten',
+      'Fehlerbehebung: In Textfeldern (Suche, eigene Lernkarte) lassen sich „j“ und „f“ wieder tippen; Lesezeichen und „Zuletzt gesucht“ in der Suche funktionieren wieder; Markierungen funktionieren auch im Kapitel-Fenster auf Handy und Tablet',
+      'Fehlerbehebung: Der Prüfungsmodus gibt bei Zeitablauf automatisch ab; Pomodoro startet nach Ablauf eine neue Runde; Klausur-Timer und Pomodoro laufen auch bei gesperrtem Bildschirm richtig weiter; ein abgelaufener Klausur-Timer meldet sich nicht mehr bei jedem Start',
+      'Fehlerbehebung: Fenster (Suche, Notiz, Pomodoro, Neuigkeiten) nehmen den Fokus auf, halten die Tab-Taste im Fenster und schließen mit Zurück oder Esc einzeln; die Zurück-Taste der Android-App schließt zuerst offene Fenster',
+      'Fehlerbehebung: Eine Notiz landet immer auf der Seite, auf der sie geschrieben wurde; Sicherungen werden beim Einspielen geprüft, damit eine kaputte Datei die App nicht lahmlegt; bei vollem Speicher läuft die App weiter und weist darauf hin',
+      'Fehlerbehebung: Besserer Kontrast der Schrift auf Akzentflächen (Rot, Blau, Grün); größere Trefferflächen auf Touch-Geräten; ein Quiz-Fakt zur Vergabefrist korrigiert (35 statt 52 Tage); Erste Schritte nennt den Pausenraum; fehlender Trennstrich in den Einstellungen ergänzt',
+      'Fehlerbehebung Pausenraum und Duell: Wörter-Raten färbt doppelte Buchstaben richtig, Duell-Gast bricht nicht mehr nach 30 Sekunden ab, fremde oder eingefügte Codes werden erkannt, die Kamera schaltet sich zuverlässig aus, Revanche-Knopf nur wenn der Gegner noch da ist',
+      'Fehlerbehebung Offline: Bilder werden mit der App gespeichert und sind auch ohne Netz da',
       'Suche: Aktionen (Seitensprünge, Notiz, Lesezeichen, Fokus) und die Filterleiste entfernt – die Suche zeigt nur noch Treffer und die Kapitel der Seite',
+      'Startseite: Der Satz unter der Begrüßung wechselt bei jedem Aufrufen der Seite; „Freiwillige Spende“ ist als ganze Karte anklickbar',
       'Startseite: Wochen- und Monatsdiagramm passt auf dem Handy wieder vollständig in die Karte',
       'Einstellungen: Gruppen (Darstellung, Lernen, Erinnerung, Daten, Werkzeuge, App) klappen auf und zu und zeigen die aktuellen Werte; „Projekt unterstützen“ bleibt immer unten sichtbar',
       'Farbschema: Dunkel, Hell oder System (Einstellungen → Farbschema)',
@@ -4773,7 +4885,7 @@ const FALLBEARBEITUNG = (function(){
             <span class="fb-step-law-badge">${s.law}</span>
           </div>
           <p class="fb-step-prompt">${s.prompt}</p>
-          <textarea class="fb-textarea" id="fb-ta" placeholder="Schreibe deine Antwort hier…" rows="5">${savedText}</textarea>
+          <textarea class="fb-textarea" id="fb-ta" placeholder="Schreibe deine Antwort hier…" rows="5">${xss(savedText)}</textarea>
           <button class="fb-reveal-btn${_revealed?' hidden':''}" onclick="FALLBEARBEITUNG.reveal()" id="fb-reveal">Musterlösung anzeigen</button>
           <div class="fb-answer${_revealed?'':' hidden'}" id="fb-answer">${c.answers[_step]}</div>
           <div class="fb-step-actions">
@@ -4967,7 +5079,7 @@ const UEBUNGSKLAUSUR = (function(){
     var prevBtn=_step===0?'':'<button class="fb-prev-btn" onclick="UEBUNGSKLAUSUR.prevQ()">← Zurück</button>';
     var nextLabel=_step===QUESTIONS.length-1?'Auswertung →':'Nächste Frage →';
     var nextFn=_step===QUESTIONS.length-1?'UEBUNGSKLAUSUR.showResult()':'UEBUNGSKLAUSUR.nextQ()';
-    el.innerHTML='<div class="uk-q-header"><button class="uk-back-btn" onclick="UEBUNGSKLAUSUR.showStart()">← Übersicht</button><span class="uk-q-badge">'+q.nr+' · '+q.punkte+(q.punkte===1?' Punkt':' Punkte')+'</span><span class="uk-timer-inline">⏱ <span id="uk-timer-val2">'+fmtTime(_timeLeft)+'</span></span></div>'+ctxHtml+'<div class="uk-question"><p>'+q.text+'</p></div><textarea class="fb-textarea" id="uk-ta" placeholder="Schreibe deine Antwort hier…" rows="6">'+savedTa+'</textarea><button class="fb-reveal-btn'+(_revealed?' hidden':'')+'" id="uk-reveal" onclick="UEBUNGSKLAUSUR.reveal()">Musterlösung anzeigen</button><div class="fb-answer'+(_revealed?'':' hidden')+'" id="uk-answer">'+q.answer+'</div><div class="uk-score-row'+(_revealed?'':' hidden')+'" id="uk-score-row"><span class="uk-score-label">Meine Punkte:</span><div class="uk-score-btns">'+scoreBtns+'</div>'+scoreGot+'</div><div class="fb-step-actions">'+prevBtn+'<button class="fb-next-btn" onclick="'+nextFn+'">'+nextLabel+'</button></div><div class="fb-step-dots">'+dotsHtml()+'</div>';
+    el.innerHTML='<div class="uk-q-header"><button class="uk-back-btn" onclick="UEBUNGSKLAUSUR.showStart()">← Übersicht</button><span class="uk-q-badge">'+q.nr+' · '+q.punkte+(q.punkte===1?' Punkt':' Punkte')+'</span><span class="uk-timer-inline">⏱ <span id="uk-timer-val2">'+fmtTime(_timeLeft)+'</span></span></div>'+ctxHtml+'<div class="uk-question"><p>'+q.text+'</p></div><textarea class="fb-textarea" id="uk-ta" placeholder="Schreibe deine Antwort hier…" rows="6">'+xss(savedTa)+'</textarea><button class="fb-reveal-btn'+(_revealed?' hidden':'')+'" id="uk-reveal" onclick="UEBUNGSKLAUSUR.reveal()">Musterlösung anzeigen</button><div class="fb-answer'+(_revealed?'':' hidden')+'" id="uk-answer">'+q.answer+'</div><div class="uk-score-row'+(_revealed?'':' hidden')+'" id="uk-score-row"><span class="uk-score-label">Meine Punkte:</span><div class="uk-score-btns">'+scoreBtns+'</div>'+scoreGot+'</div><div class="fb-step-actions">'+prevBtn+'<button class="fb-next-btn" onclick="'+nextFn+'">'+nextLabel+'</button></div><div class="fb-step-dots">'+dotsHtml()+'</div>';
   }
 
   function renderResult(){
@@ -5415,7 +5527,24 @@ const FILES=(function(){
 
 /* ── Sicherung: Lernstand, Notizen, Lesezeichen und Einstellungen als Datei ── */
 const BACKUP=(function(){
-  const keep=k=>(k.startsWith('bvi_')&&k!=='bvi_seen_version'&&k!=='bvi_last_backup')||k==='idf_plan_grp';
+  const keep=k=>(k.startsWith('bvi_')&&k!=='bvi_seen_version'&&k!=='bvi_last_backup'&&k!=='bvi_et_end')||k==='idf_plan_grp';
+  // Form der Werte beim Einspielen prüfen: falsch geformte Daten würden die App dauerhaft stören
+  const ARR=new Set(['bvi_bookmarks','bvi_recent','bvi_search_hist','bvi_fc_custom','bvi_fc_stars','bvi_fc_weak']);
+  const NOJSON=new Set(['bvi_theme','bvi_accent','bvi_font_size','bvi_goal','bvi_timers','bvi_onboarded','bvi_exam','bvi_lp_fz','bvi_lp_prac','bvi_pause_mode','bvi_pause_mods','bvi_duell_name','bvi_duell_col','bvi_duell_stun','bvi_duell_cfg','idf_plan_grp']);
+  const safeTxt=t=>String(t==null?'':t).replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function clean(k,v){
+    if(typeof v!=='string'||v.length>2e6) return null;
+    if(/^bvi_note_v-[a-z0-9-]+$|^bvi_note_home$/.test(k)) return v;
+    if(NOJSON.has(k)) return v;
+    if(!/^bvi_[a-z0-9_]+$/.test(k)&&!/^bvi_checks_[\w-]+$/.test(k)) return null;
+    let j; try{ j=JSON.parse(v); }catch(e){ return null; }
+    if(j===null||typeof j!=='object') return null;
+    if(ARR.has(k)!==Array.isArray(j)&&(ARR.has(k)||k==='bvi_progress'||k==='bvi_fc'||k==='bvi_usage'||k==='bvi_notif')) return null;
+    if(k==='bvi_fc_custom') j=j.filter(c=>c&&typeof c==='object'&&/^[\w-]+$/.test(String(c.id))).map(c=>({...c,id:String(c.id),q:safeTxt(c.q),a:safeTxt(c.a),cat:safeTxt(c.cat||'Eigene')}));
+    if(k==='bvi_bookmarks') j=j.filter(b=>b&&typeof b==='object'&&typeof b.id==='string');
+    if(k==='bvi_recent'||k==='bvi_search_hist') j=j.filter(x=>typeof x==='string'||(x&&typeof x==='object'));
+    return JSON.stringify(j);
+  }
   function collect(){
     const d={};
     for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&keep(k)) d[k]=localStorage.getItem(k); }
@@ -5439,13 +5568,18 @@ const BACKUP=(function(){
       r.onload=()=>{
         let o; try{ o=JSON.parse(r.result); }catch(e){ TOAST.show('Das ist keine gültige Sicherungsdatei'); return; }
         if(!o||o.app!=='bvi-lernwebsite'||typeof o.data!=='object'||!o.data){ TOAST.show('Das ist keine Sicherung dieser App'); return; }
-        const keys=Object.keys(o.data).filter(k=>keep(k)&&typeof o.data[k]==='string');
-        if(!keys.length){ TOAST.show('Die Sicherung enthält keine Daten'); return; }
-        const when=o.exported?new Date(o.exported).toLocaleDateString('de-DE'):'unbekannt';
-        if(!confirm('Sicherung vom '+when+' einspielen?\n\nDeine aktuellen Daten für diese '+keys.length+' Einträge werden überschrieben.')) return;
-        keys.forEach(k=>{ try{ localStorage.setItem(k,o.data[k]); }catch(e){} });
-        TOAST.show('Sicherung eingespielt – App wird neu geladen',{type:'ok'});
-        setTimeout(()=>location.reload(),900);
+        const ok={}, skipped=[];
+        Object.keys(o.data).filter(keep).forEach(k=>{ const c=clean(k,o.data[k]); if(c===null) skipped.push(k); else ok[k]=c; });
+        const keys=Object.keys(ok);
+        if(!keys.length){ TOAST.show('Die Sicherung enthält keine verwertbaren Daten'); return; }
+        const dt=o.exported?new Date(o.exported):null;
+        const when=dt&&!isNaN(dt)?dt.toLocaleDateString('de-DE'):'unbekannt';
+        if(!confirm('Sicherung vom '+when+' einspielen?\n\nDie '+keys.length+' Einträge der Sicherung überschreiben deine aktuellen Daten. Was in der Sicherung fehlt, bleibt unverändert.')) return;
+        let failed=0;
+        keys.forEach(k=>{ localStorage.setItem(k,ok[k]); if(localStorage.getItem(k)!==ok[k]) failed++; });
+        if(failed||skipped.length){ TOAST.show((failed?failed+' Einträge passten nicht in den Speicher. ':'')+(skipped.length?skipped.length+' ungültige Einträge wurden übersprungen. ':'')+'Rest eingespielt – App wird neu geladen'); }
+        else TOAST.show('Sicherung eingespielt – App wird neu geladen',{type:'ok'});
+        setTimeout(()=>location.reload(),failed||skipped.length?2600:900);
       };
       r.onerror=()=>TOAST.show('Datei konnte nicht gelesen werden');
       r.readAsText(f);
@@ -5459,8 +5593,9 @@ const HL=(function(){
   const load=()=>{ try{ return JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ return {}; } };
   const save=d=>{ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){} };
   let view=null, ranges=[], bar=null, timer=null;
-  const root=()=>view?document.getElementById(view)?.querySelector('.pc'):null;
-  const lesson=pc=>!!pc&&!!pc.querySelector('.sec-h,.acc-item,.info-card,table');
+  // im Kapitel-Fenster (Handy/Tablet) liegt der Kapiteltext im Fenster statt in .pc
+  const root=()=>{ const v=view&&document.getElementById(view); if(!v) return null; return (v.classList.contains('lp-open')&&v.querySelector(':scope > .lp-win .lp-wbody'))||v.querySelector('.pc'); };
+  const lesson=pc=>!!pc&&(pc.classList.contains('lp-wbody')||!!pc.querySelector('.sec-h,.acc-item,.info-card,table'));
   function index(pc){
     const w=document.createTreeWalker(pc,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement&&!n.parentElement.closest('script,style,textarea,input,.m-report,#m-hl-bar')?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT});
     const arr=[]; let n,pos=0;
@@ -5760,6 +5895,7 @@ const ETIMER=(function(){
     pill.classList.toggle('urgent',l<=300&&l>0);
     pill.classList.toggle('over',l<=0);
     pill.querySelector('.et-t').textContent=l>0?'⏱ '+fmt(l):'Zeit um';
+    if(l<=-60){ try{ localStorage.removeItem(KEY); }catch(x){} clearInterval(tick); tick=null; pill.hidden=true; return; }   // abgelaufene Zeit nicht ewig anzeigen
     if(l<=0&&!pill.dataset.done){ pill.dataset.done='1'; if(navigator.vibrate) navigator.vibrate([200,100,200]); TOAST.show('Die Zeit ist um – Stift runter!',{type:'ok'}); }
   }
   function start(min){
@@ -5783,7 +5919,11 @@ const ETIMER=(function(){
     c.querySelectorAll('.et-d').forEach(b=>b.onclick=()=>{ minutes=+b.dataset.m; c.querySelectorAll('.et-d').forEach(x=>x.classList.toggle('active',x===b)); });
     c.querySelector('.et-go').onclick=()=>start(minutes);
   }
-  function init(){ if(left()!==null){ ensurePill(); update(); tick=setInterval(update,1000); } }
+  function init(){
+    const l=left();
+    if(l!==null&&l<=-60){ try{ localStorage.removeItem(KEY); }catch(x){} return; }   // alter, längst abgelaufener Timer
+    if(l!==null){ ensurePill(); if(l<=0) pill.dataset.done='1'; update(); tick=setInterval(update,1000); }
+  }
   return {mount,init,start,stop};
 })();
 
@@ -5834,8 +5974,10 @@ const ACCENT=(function(){
   const valid=c=>/^#[0-9a-f]{6}$/i.test(c||'');
   function get(){ try{ const c=localStorage.getItem(KEY); return valid(c)?c.toUpperCase():DEF; }catch(e){ return DEF; } }
   function onColor(hex){
-    const n=parseInt(hex.slice(1),16);
-    return ((n>>16&255)*299+(n>>8&255)*587+(n&255)*114)/1000>=150?'#111':'#fff';
+    // Schrift auf Akzentfläche: die Farbe (dunkel oder weiß) mit dem höheren WCAG-Kontrast
+    const n=parseInt(hex.slice(1),16), ch=v=>{ v/=255; return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4); };
+    const L=.2126*ch(n>>16&255)+.7152*ch(n>>8&255)+.0722*ch(n&255);
+    return (L+.05)/(0.0056+.05)>=(1.05)/(L+.05)?'#111':'#fff';   // #111 hat die Leuchtdichte ≈ .0056
   }
   function apply(c){
     const st=document.documentElement.style;
@@ -6143,15 +6285,19 @@ const SHELL=(function(){
   };
   const daySlot=h=>h>=22||h<5?'night':h<11?'morning':h<14?'noon':h<18?'afternoon':'evening';
   let _quip=null;
+  // Satz bleibt, solange die Startseite nur neu gezeichnet wird; beim erneuten Aufrufen der Seite (newQuip) kommt ein anderer
   function quip(slot){
-    if(!_quip||_quip.slot!==slot){ const l=QUIPS[slot]; _quip={slot,text:l[Math.floor(Math.random()*l.length)]}; }
+    if(!_quip||_quip.slot!==slot){ const l=QUIPS[slot], old=_quip&&_quip.text; let t; do{ t=l[Math.floor(Math.random()*l.length)]; }while(t===old&&l.length>1); _quip={slot,text:t}; }
     return _quip.text;
   }
+  function newQuip(){ if(_quip) _quip.slot=null; }
 
   function cardStats(){
     let fc={}; try{ fc=JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch(e){}
     const now=Date.now();
-    return { known:Object.keys(fc).length, due:Object.values(fc).filter(v=>v&&v.nextReview<=now).length, total:FLASHCARD_DATA.length };
+    const ids=new Set(FLASHCARD_DATA.map(c=>c.id)); if(!fc||typeof fc!=='object') fc={};
+    const ks=Object.keys(fc).filter(k=>ids.has(k));
+    return { known:ks.length, due:ks.filter(k=>fc[k]&&fc[k].nextReview<=now).length, total:FLASHCARD_DATA.length };
   }
   // Balken-Diagramm: beginnt bei 0, kein Strich bis zur Oberkante; Beschriftung nur an Balken mit Wert
   function plot(vals,labels,cur,top,secs){
@@ -6421,7 +6567,7 @@ const SHELL=(function(){
   }
 
   return {
-    onShow, renderHome, renderExam, renderNotes, renderFcSide, syncSettings,
+    onShow, renderHome, newQuip, renderExam, renderNotes, renderFcSide, syncSettings,
     report(extra){
       const v=document.querySelector('.view.active'); if(!v) return;
       const title=v.querySelector('.page-title')?.textContent?.trim()||v.id;
@@ -6467,7 +6613,7 @@ const SHELL=(function(){
       const v=document.querySelector('.view.active'); if(!v) return;
       BOOKMARKS.toggle(v.id, v.querySelector('.page-title')?.textContent?.trim()||v.id);
     },
-    async setNotif(el){ await NOTIF.setEnabled(el.checked); el.checked=NOTIF.isEnabled(); },
+    async setNotif(el){ await NOTIF.setEnabled(el.checked); el.checked=NOTIF.isEnabled(); accSubs(); },
     stepHour(d){
       const h=Math.min(23,Math.max(6,NOTIF.hour()+d));
       NOTIF.setHour(h);
@@ -6482,8 +6628,8 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySele
 
 document.addEventListener('DOMContentLoaded',()=>{
   // Deep-link on load
-  const initId=new URLSearchParams(location.search).get('id');
-  if(initId&&document.getElementById(initId)){
+  const initId=new URLSearchParams(location.search).get('id')||location.hash.replace(/^#/,'');
+  if(initId&&document.getElementById(initId)?.classList.contains('view')){
     const lbl=document.querySelector('#'+initId+' .page-title')?.textContent?.trim()||initId;
     NAV.go(initId,lbl);
   } else {
@@ -6493,6 +6639,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   SETTINGS.restoreFontSize();
   NOTIF.check();
   ONBOARD.init();
+  OVL.init();
   CHANGELOG.check();
   if(typeof FALLBEARBEITUNG!=='undefined') { document.querySelectorAll('#v-vak-fallbearbeitung').forEach(()=>{}); }
   document.querySelectorAll('.pc table').forEach(t=>{
@@ -6518,24 +6665,15 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 
   document.addEventListener('keydown', e => {
-    if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); SEARCH.open(); return; }
+    if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); const t=OVL.top(); if(!t||t==='search-overlay') SEARCH.open(); return; }
     if(e.key==='?'&&!e.target.matches('input,textarea')){
       e.preventDefault();
       document.getElementById('shortcuts-overlay').classList.toggle('hidden');
       return;
     }
-    if(e.key==='Escape'){
-      if(!document.getElementById('search-overlay').classList.contains('hidden')){ SEARCH.close(); return; }
-      if(!document.getElementById('shortcuts-overlay').classList.contains('hidden')){ document.getElementById('shortcuts-overlay').classList.add('hidden'); return; }
-      if(!document.getElementById('pomodoro-overlay').classList.contains('hidden')){ POMO.close(); return; }
-      if(!document.getElementById('onboarding-overlay')?.classList.contains('hidden')){ ONBOARD.close(); return; }
-      if(!document.getElementById('quiz-mastery-modal').classList.contains('hidden')){ QUIZ.closeMastery(); return; }
-      if(!document.getElementById('quiz-mastery-modal-idf').classList.contains('hidden')){ IDFQ.closeMastery(); return; }
-      if(!document.getElementById('notes-overlay').classList.contains('hidden')){ NOTES.close(); return; }
-      if(!document.getElementById('changelog-modal').classList.contains('hidden')){ CHANGELOG.close(); return; }
-    }
-    // Lernkarten-Tastatursteuerung
-    if(document.getElementById('v-flashcards').classList.contains('active')){
+    if(e.key==='Escape'&&OVL.escape(e)) return;
+    // Lernkarten-Tastatursteuerung (nicht in Eingabefeldern und nicht hinter offenen Fenstern)
+    if(document.getElementById('v-flashcards').classList.contains('active')&&!OVL.any()&&!(e.target.closest&&e.target.closest('input,textarea,select,[contenteditable]'))){
       if(e.key==='ArrowUp'){ e.preventDefault(); FC.flip(); }
       if(e.key===' '&&!e.target.matches('input,textarea,button,select')){ e.preventDefault(); FC.starCurrent(); }
       if((e.key==='ArrowRight'||e.key==='j')&&!e.ctrlKey&&!e.metaKey){ e.preventDefault(); FC.answer(true); }
@@ -6576,7 +6714,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   if('serviceWorker' in navigator){
     navigator.serviceWorker.register('./sw.js').catch(()=>{});
     // Seite automatisch neu laden, wenn ein neuer SW übernimmt
-    navigator.serviceWorker.addEventListener('controllerchange',()=>{ window.location.reload(); });
+    // Neu laden nur bei einem Update, nicht beim allerersten Besuch (sonst springt die Einführung)
+    const hadSW=!!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(hadSW) window.location.reload(); });
   }
   ABK.render(); ABK.filter('');
   console.log('%c B VI %c Lernwebsite '+APP_VERSION+' · flametan/BVI-Lernwebsite ',
