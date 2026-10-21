@@ -26,18 +26,24 @@ node tools/pruefe-jahrgang.cjs <Datei.json>          # Zusammenfassung, Fehler u
 node tools/pruefe-jahrgang.cjs <Datei.json> --voll   # zusätzlich alle Texte zum Durchlesen
 ```
 
-Es zählt Pläne, Ergänzungen, Kapitel, Prüfungen, Fragen, Karten, Termine, Reiter und Bilder und warnt
+Es zählt Pläne, Ergänzungen, Kapitel, Prüfungen, Fragen, Karten, Reiter und Bilder und warnt
 bei HTML oder Skriptteilen, Links, sehr langen Texten, fehlenden Bildern, falschem Dateinamen und
-einem Link-Hinweis mit „Passwort“. Bei echten Fehlern (kein gültiges Format, ungültiger Reiter,
-Termin oder Link) endet es mit Code 1. Das Skript braucht nur Node, sonst nichts.
+einem Link-Hinweis mit „Passwort“. Bei echten Fehlern (kein gültiges Format, ungültiger Reiter
+oder Link) endet es mit Code 1. Das Skript braucht nur Node, sonst nichts.
 
 ## So kommt eine Datei in die App
 
-1. Jemand aus dem Jahrgang exportiert in der App: **Einstellungen → Lehrgang → Änderungen exportieren**
-   und schickt dir die Datei (z. B. per WhatsApp).
-2. Du **prüfst die Datei** (siehe unten).
-3. Auf GitHub in diesen Ordner hochladen: *Add file → Upload files*, Dateiname wie oben, direkt auf `main`.
-4. Nach etwa zwei Minuten ist sie veröffentlicht. Alle in diesem Jahrgang sehen den Stand beim nächsten Öffnen.
+**Normalweg: der Jahrgang pflegt sich selbst.** Der Jahrgang bestimmt eine Person, die sich um die Seite kümmert.
+Sie exportiert unter **Einstellungen → Lehrgang → Änderungen exportieren** und teilt die Datei in der WhatsApp-Gruppe
+des Jahrgangs. Alle anderen lesen sie unter **Änderungen einlesen** ein, damit sind alle auf demselben Stand.
+Du musst dafür nichts veröffentlichen und bist nur bei Problemen gefragt.
+
+**Optional: Datei im Repo veröffentlichen.** Wer die Datei fest in der App hinterlegen will, so dass alle im Jahrgang
+sie ohne Einlesen bekommen:
+
+1. Datei **prüfen** (Skript unten, dann siehe „Prüfen“).
+2. Auf GitHub in diesen Ordner hochladen: *Add file → Upload files*, Dateiname wie oben, direkt auf `main`.
+3. Nach etwa zwei Minuten ist sie veröffentlicht. Alle in diesem Jahrgang sehen den Stand beim nächsten Öffnen.
 
 Der Export enthält immer den **ganzen** Stand (veröffentlichte Datei plus Änderungen des Absenders).
 Die neue Datei ersetzt also die alte mit gleichem Namen.
@@ -54,7 +60,6 @@ Alles ist optional (siehe `_beispiel.json`):
 * `pr` – Prüfungen: `hinzu` (eigene Prüfungen mit Fragen und Antworten), `weg` (ausgeblendete mitgelieferte Prüfungen).
 * `rel` – Klausurrelevanz einzelner Prüfungen als `{ "<Prüfungs-ID>": true|false }`. Ohne Angabe gelten die im Master hervorgehobenen Prüfungen (und eigene Prüfungen) als relevant; relevante Prüfungen liefern die Fragen für Einsatzfahrt und Duell.
 * `erg` kann außer Text auch eigene Kapitel enthalten: `typ` ist `text` (Standard) oder `kapitel`. `kap` ordnet eine Ergänzung einem Kapitel zu.
-* `termine` – Klausurtermine des Jahrgangs: `[{ "date": "2026-12-14", "name": "Klausur IdF" }]`. Der nächste erscheint als Countdown.
 * `links` – `{ "cloud": { "url": "https://…", "titel": "…", "hinweis": "…" } }`, nur `https`. Erscheint als Karte auf der Startseite. Keine Passwörter eintragen.
 * `karten` – Lernkarten des Jahrgangs: `[{ "id": "k1", "modul": "VAk", "q": "Frage", "a": "Antwort" }]` (Module: GAL, SFS, HLFS, IBK, VAk, FeuAK, IdF).
 * `orte` – Standorte statt der Standardnamen: `{ "ibk": "…", "vak": "…", "feuak": "…", "idf": "…" }`.

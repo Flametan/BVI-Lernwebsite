@@ -14,7 +14,7 @@ if(!j||j.format!=='bvi-jahrgang'){ console.error('FEHLER: Das ist keine Jahrgang
 
 const TABS=['laufbahn','idf','feuak','vak','ibk'], PLAN=['ibk','vak','feuak','idf','idf2'], MODS=['GAL','SFS','HLFS','IBK','VAk','FeuAK','IdF'];
 const arr=v=>Array.isArray(v)?v:[], str=v=>typeof v==='string'?v:'';
-const KNOWN=['format','v','jahrgang','stand','plane','plan','aktiv','erg','pr','rel','ausg','termine','links','karten','orte','reiter','bilder','nrel','glow'];
+const KNOWN=['format','v','jahrgang','stand','plane','plan','aktiv','erg','pr','rel','ausg','links','karten','orte','reiter','bilder','nrel','glow'];
 Object.keys(j).filter(k=>!KNOWN.includes(k)).forEach(k=>warn.push('Unbekanntes Feld „'+k+'“ (wird von der App ignoriert)'));
 
 // Verdächtige Texte: HTML, Skripte, Links
@@ -66,7 +66,6 @@ const rel=j.rel||{}; if(Object.keys(rel).length) z('Klausurrelevanz geändert:',
 z('Ausgeblendete Kapitel/Blöcke/Reiter:',arr(j.ausg).length);
 
 // Termine, Link, Karten, Orte, Reiter
-const tm=arr(j.termine); z('Klausurtermine:',tm.length?tm.map(t=>str(t.date)+' '+str(t.name)).join('; '):'keine'); tm.forEach(t=>{ sehen('Termin',t.name); if(!/^\d{4}-\d{2}-\d{2}$/.test(str(t.date))) fehler.push('Termin mit ungültigem Datum: '+t.date); });
 const cl=j.links&&j.links.cloud;
 if(cl){ z('Lehrgangs-Link:',str(cl.titel),'→',str(cl.url)); sehen('Link Titel',cl.titel); sehen('Link Hinweis',cl.hinweis);
   let h=''; try{ h=new URL(str(cl.url)).hostname; }catch(e){ fehler.push('Link ist keine gültige Adresse'); }

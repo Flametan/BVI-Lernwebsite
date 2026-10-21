@@ -743,14 +743,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.noErgBtn = !document.querySelector('#v-vak-verwaltungsrecht .jg-add[data-k=erg]');
     setv('jg-et', 'Mein Kapitel'); setv('jg-ex', 'Inhalt'); document.getElementById('jg-es').click(); await w(500);
     r.kap = !!document.querySelector('#v-vak-verwaltungsrecht .acc-item.jg-kap');
-    // Einrichten: Termine
     JGUI.checklist(); await w(200);
-    document.querySelector('.jg-ck-i button[data-a=termine]').click(); await w(200);
-    document.getElementById('jg-tm-add').click(); await w(50);
-    document.querySelector('.jg-td').value = '2099-05-04'; document.querySelector('.jg-tn').value = 'Meine Klausur'; document.getElementById('jg-tm-s').click(); await w(300);
-    r.termine = JG.data().termine.length === 1;
-    NAV.tab('v-pruefung', 'Prüfung'); await w(500);
-    r.countdown = /Meine Klausur/.test(document.getElementById('m-countdown').innerText);
+    r.noTermine = !document.querySelector('.jg-ck-i button[data-a=termine]') && !document.querySelector('.jg-ck-m') && !/Weitergeben/.test(document.querySelector('.jg-body').innerText);
     NAV.tab('v-home', 'Start'); await w(500);
     // Link
     r.noCloud = !document.querySelector('#m-home .m-cloud');
@@ -770,13 +764,13 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.karte = JG.data().karten.length === 1 && FLASHCARD_DATA.some(c => c.jg && /Testfrage/.test(c.q));
     // Export enthält alles; Verwerfen räumt auf
     const j = JSON.parse(await JG.exportJson());
-    r.exp = j.termine.length === 1 && !!j.links.cloud && j.orte.vak === 'Köln' && j.karten.length === 1 && j.erg.some(e => e.typ === 'kapitel');
+    r.exp = !!j.links.cloud && j.orte.vak === 'Köln' && j.karten.length === 1 && j.erg.some(e => e.typ === 'kapitel');
     JG.discard(); await w(300);
-    r.clean = !FLASHCARD_DATA.some(c => c.jg) && JG.data().termine.length === 0;
+    r.clean = !FLASHCARD_DATA.some(c => c.jg);
     JG.set(JG.MASTER); await w(300);
     return r;
   });
-  eq('Auswahlfragen, Kapitel, Jahrgang einrichten', su, { kapNoTypes: true, noErgBtn: true, kap: true, termine: true, countdown: true, noCloud: true, httpsOnly: true, cloud: true, orte: true, karte: true, exp: true, clean: true });
+  eq('Auswahlfragen, Kapitel, Jahrgang einrichten', su, { kapNoTypes: true, noErgBtn: true, kap: true, noTermine: true, noCloud: true, httpsOnly: true, cloud: true, orte: true, karte: true, exp: true, clean: true });
 
   // ── Prüfungen: Bearbeiten-Knopf oben, Fragearten, eigene Reiter, Hilfeseite ──
   const nw = await page.evaluate(async () => {
@@ -823,13 +817,14 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.kapInReiter = !!document.querySelector('#v-jg-reiter .acc-item.jg-kap');
     // Hilfeseite
     NAV.go('v-settings', 'E'); await w(400);
-    r.helpBtn = !!document.getElementById('jg-help');
+    r.helpBtn = !!document.getElementById('jg-help') && !!document.querySelector('#jg-settings .m-glow #jg-help');
     document.getElementById('jg-help').click(); await w(500);
     r.help = document.getElementById('v-jg-hilfe').classList.contains('active') && !document.querySelector('#v-jg-hilfe .jg-be') && /fabian\.flemig@gmx\.de/.test(document.getElementById('v-jg-hilfe').innerHTML);
+    r.noAbk = !document.querySelector('#v-jg-hilfe .abk-t, #v-jg-hilfe [data-abk]');
     JG.discard(); JG.set(JG.MASTER); await w(300);
     return r;
   });
-  eq('Prüfungen oben bearbeiten, Fragearten, Reiter, Hilfe', nw, { topBar: true, plusAfter: true, types: true, mcOk: true, textShown: true, done: true, notInFahrt: true, tileGone: true, reiter: true, opened: true, kapInReiter: true, helpBtn: true, help: true });
+  eq('Prüfungen oben bearbeiten, Fragearten, Reiter, Hilfe', nw, { topBar: true, plusAfter: true, types: true, mcOk: true, textShown: true, done: true, notInFahrt: true, tileGone: true, reiter: true, opened: true, kapInReiter: true, helpBtn: true, help: true, noAbk: true });
 
   // ── Prüfskript für Jahrgangs-Dateien ──
   {

@@ -2621,3 +2621,17 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 .jg-qty{display:flex;width:100%;margin:6px 0;}
 .jg-qty button{flex:1;}
 .jg-opts label.jg-opt{display:flex;gap:10px;align-items:flex-start;cursor:pointer;}
+
+/* Hilfeseite im neuen Design */
+.jg-hl details+details{border-top:1px solid var(--m-line);}
+.jg-hd>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 16px;min-height:52px;}
+.jg-hd>summary::-webkit-details-marker{display:none;}
+.jg-hd>summary .m-t1{flex:1;}
+.jg-hd>summary svg{width:18px;height:18px;flex:none;color:var(--m-muted);transition:transform .2s;}
+.jg-hd[open]>summary svg{transform:rotate(90deg);}
+.jg-hb{padding:0 16px 16px;}
+.jg-ul{margin:.6rem 0 0;padding-left:1.15rem;display:flex;flex-direction:column;gap:.65rem;line-height:1.5;color:var(--m-muted);}
+.jg-ul strong{color:var(--m-fg);}
+.jg-hb .jg-ul{margin-top:0;}
+@media(prefers-reduced-motion:reduce){.jg-hd>summary svg{transition:none;}}
+#jg-settings .m-glow{margin:12px 12px 4px;border-radius:14px;background:var(--m-raised);animation:none;box-shadow:0 0 0 1.5px color-mix(in srgb,var(--m-accent) 60%,transparent),0 0 12px color-mix(in srgb,var(--m-accent) 40%,transparent);}
