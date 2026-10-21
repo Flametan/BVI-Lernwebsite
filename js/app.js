@@ -3797,6 +3797,7 @@ const CHANGELOG=(function(){
   const ENTRIES=[
     {v:'3.0.0',ts:'2026-10-19T22:00',items:[
       'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Stundenplan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links',
+      'Android-App: Das Startsymbol und das Startbild folgen jetzt auch dem Farbschema – schwarz im dunklen, hell (Farbton der Website) im hellen Design',
       'Startseite: Wochen- und Monatsdiagramm passt auf dem Handy wieder vollständig in die Karte',
       'Einstellungen: Gruppen (Darstellung, Lernen, Erinnerung, Daten, Werkzeuge, App) klappen auf und zu und zeigen die aktuellen Werte; „Projekt unterstützen“ bleibt immer unten sichtbar',
       'Farbschema: Dunkel, Hell oder System (Einstellungen → Farbschema)',
@@ -5833,6 +5834,7 @@ const THEME=(function(){
     const l=light(m);
     document.documentElement.setAttribute('data-theme',l?'light':'dark');
     const t=document.querySelector('meta[name=theme-color]'); if(t) t.content=l?'#f4f4f1':'#121212';
+    try{ ACCENT.syncIcon(); }catch(e){}   // beim ersten Aufruf ist ACCENT noch nicht angelegt
     document.querySelectorAll('.theme-opt').forEach(b=>{ const on=b.dataset.mode===m; b.classList.toggle('active',on); b.setAttribute('aria-pressed',on); });
   }
   if(mq) (mq.addEventListener?mq.addEventListener.bind(mq,'change'):mq.addListener.bind(mq))(()=>{ if(get()==='system') apply('system'); });
@@ -5874,7 +5876,8 @@ const ACCENT=(function(){
     const [r,g,b]=rgb(c);
     let best=PRESETS[0],min=Infinity;
     PRESETS.forEach(p=>{const [x,y,z]=rgb(p[0]),d=(r-x)**2+(g-y)**2+(b-z)**2;if(d<min){min=d;best=p;}});
-    try{ BVIAndroid.setIcon(best[2]); }catch(e){}
+    const light=document.documentElement.getAttribute('data-theme')==='light';
+    try{ BVIAndroid.setIcon(best[2]+(light?'_light':'')); }catch(e){}
   }
   function render(){
     const cur=get(), custom=!PRESETS.some(p=>p[0]===cur);
@@ -5886,6 +5889,7 @@ const ACCENT=(function(){
     init(){ const c=get(); apply(c); syncAppIcon(c); },
     set(c){ if(!valid(c)) return; c=c.toUpperCase(); try{ localStorage.setItem(KEY,c); }catch(e){} apply(c); syncAppIcon(c); render(); },
     preview(c){ if(valid(c)) apply(c); },
+    syncIcon(){ syncAppIcon(get()); },
     render
   };
 })();

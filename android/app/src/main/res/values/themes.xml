@@ -7,4 +7,10 @@
         <item name="android:windowBackground">@color/bvi_black</item>
         <item name="android:colorBackground">@color/bvi_black</item>
     </style>
+
+    <!-- Heller Start: weißer Fensterhintergrund (Farbton der Website) und weißes Startbild -->
+    <style name="Theme.BVI.Light" parent="Theme.BVI">
+        <item name="android:windowBackground">@color/bvi_white</item>
+        <item name="android:colorBackground">@color/bvi_white</item>
+    </style>
 </resources>
