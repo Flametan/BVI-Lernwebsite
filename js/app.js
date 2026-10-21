@@ -3882,6 +3882,7 @@ const CHANGELOG=(function(){
     {v:'3.0.0',ts:'2026-10-19T22:00',items:[
       'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Stundenplan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links',
       'Android-App: Das Startsymbol und das Startbild folgen jetzt auch dem Farbschema – schwarz im dunklen, hell (Farbton der Website) im hellen Design',
+      'Startseite: Beim Wechsel zwischen Woche und Monaten starten die Animationen nicht mehr neu; die Umschalter sind wieder schmaler',
       'Stundenplan: Er springt von selbst zur aktuellen Kalenderwoche, wenn das Datum weiterläuft (Mitternacht) oder die App wieder in den Vordergrund kommt – außer du hast selbst in andere Wochen geblättert',
       'Fehlerbehebung: In Textfeldern (Suche, eigene Lernkarte) lassen sich „j“ und „f“ wieder tippen; Lesezeichen und „Zuletzt gesucht“ in der Suche funktionieren wieder; Markierungen funktionieren auch im Kapitel-Fenster auf Handy und Tablet',
       'Fehlerbehebung: Der Prüfungsmodus gibt bei Zeitablauf automatisch ab; Pomodoro startet nach Ablauf eine neue Runde; Klausur-Timer und Pomodoro laufen auch bei gesperrtem Bildschirm richtig weiter; ein abgelaufener Klausur-Timer meldet sich nicht mehr bei jedem Start',
@@ -6377,6 +6378,12 @@ const SHELL=(function(){
     const diff=Math.round((x-t)/864e5);
     return diff===0?'heute':diff===1?'morgen':d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'});
   }
+  // Lernzeit-Diagramm als eigene Karte: beim Wechsel Woche/Monate wird nur sie ersetzt, die Startseite animiert nicht neu
+  function chartHtml(){
+    const pl=chartRange==='month'?monthPlot():weekPlot(), isM=chartRange==='month';
+    return `<div class="m-card m-chart2"><div class="m-chart-h"><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${isM?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${isM?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span><span class="m-st"><b>${dur(pl.sum)}</b> / ${isM?'12 Monate':'Woche'}</span></div>
+      ${pl.html}</div>`;
+  }
   function renderHome(){
     const el=document.getElementById('m-home');
     if(!el) return;
@@ -6416,9 +6423,7 @@ const SHELL=(function(){
       const dt=nx.start.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'});
       nextBox=`<button class="m-nx" onclick="NAV.tab('v-plan','Stundenplan')" aria-label="Zum Stundenplan"><span class="m-nx-d">${esc(dt)}</span>${head}</button>`;
     }
-    const pl=chartRange==='month'?monthPlot():weekPlot(), isM=chartRange==='month';
-    const chartCard=`<div class="m-card m-chart2"><div class="m-chart-h"><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${isM?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${isM?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span><span class="m-st"><b>${dur(pl.sum)}</b> / ${isM?'12 Monate':'Woche'}</span></div>
-      ${pl.html}</div>`;
+    const chartCard=chartHtml();
     const ringBtn=m=>{
       const c=cnt[m[0]]||{done:0,total:0};
       return `<button class="m-ringbtn" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen"><span class="m-rw">${homeRing(pct(c),m[1],m[1])}</span></button>`; // nur der Ring, ohne Zahl
@@ -6615,7 +6620,14 @@ const SHELL=(function(){
       document.documentElement.classList.toggle('no-timers',!on);
       if(!on&&typeof ETIMER!=='undefined') ETIMER.stop();
     },
-    setRange(r){ chartRange=r==='month'?'month':'week'; renderHome(); },
+    setRange(r){
+      chartRange=r==='month'?'month':'week';
+      const old=document.querySelector('#v-home .m-chart2');
+      if(!old){ renderHome(); return; }
+      const t=document.createElement('template'); t.innerHTML=chartHtml();
+      old.replaceWith(t.content.firstElementChild);
+      document.querySelector('#v-home .m-chart2 .m-seg-s button.active')?.focus({preventScroll:true});
+    },
     y1(open){ if(!document.querySelector('.m-y1.static')) y1Open=!!open; },
     pick(btn){
       const on=!btn.classList.contains('sel');

@@ -1662,7 +1662,7 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 
 /* Touch-Ziele: auf Touch-Geräten mindestens ca. 44 px */
 @media(pointer:coarse){
-  .m-seg button,.m-step button{min-height:40px;min-width:40px;}
+  .m-seg:not(.m-seg-s) button,.m-step button{min-height:40px;min-width:40px;}
   .quiz-filter-btn,.quiz-cat-filter-btn,.qfs-reset,.quiz-shuffle-btn,.related-chip{min-height:40px;}
   .idf-nav button,.m-tb-actions button{width:44px;height:44px;}
   .acc-check,.m-sw,.fb-dot,.quiz-bm-btn,.fc-star-btn,.fc-back-btn,.bm-remove{position:relative;}
@@ -2442,7 +2442,7 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 
 /* Barrierefreiheit (D): Klickflächen auf Touch-Geräten mindestens 44 px (Apple 44 pt, WCAG 2.5.8 mindestens 24 px) */
 @media(pointer:coarse){
-  .m-seg button,.m-step button{min-height:44px;min-width:44px;}
+  .m-seg:not(.m-seg-s) button,.m-step button{min-height:44px;min-width:44px;}
   .quiz-filter-btn,.quiz-cat-filter-btn,.quiz-type-btn,.qfs-reset,.quiz-shuffle-btn,.related-chip,.fc-own-add,.quiz-mode-btn,.m-go2,.quiz-report-btn,.m-report button,.m-input,.theme-opt,.fs-opt,.btn{min-height:44px;}
   .theme-opt,.fs-opt{min-width:44px;}
   .idf-item{min-height:44px;}
