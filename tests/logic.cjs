@@ -332,6 +332,15 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Einstellungen: Inhalt der offenen Gruppe sichtbar, Kurzinfo gefüllt', acc.vis && /^Tagesziel \d+ min/.test(acc.sub));
   ok('Einstellungen: Spende liegt außerhalb der Gruppen', acc.donate);
 
+  // ── Android-Startsymbol folgt Akzentfarbe und Farbschema ──
+  const icons = await page.evaluate(() => {
+    const calls = []; window.BVIAndroid = { setIcon: n => calls.push(n) };
+    ACCENT.set('#3E8EF7'); THEME.set('light'); THEME.set('dark'); ACCENT.set('#FFA412');
+    delete window.BVIAndroid; THEME.set('dark');
+    return calls;
+  });
+  eq('Startsymbol: Farbe und hell/dunkel', icons, ['blue', 'blue_light', 'blue', 'orange']);
+
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
   const tp = await tctx.newPage();

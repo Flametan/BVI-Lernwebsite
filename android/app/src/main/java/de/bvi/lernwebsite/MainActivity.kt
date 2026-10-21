@@ -26,7 +26,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
+
+    // Die helle Variante (MainActivityLight) startet mit weißem Fenster statt schwarzem
+    protected open val lightStart = false
 
     private lateinit var webView: WebView
     private val prefs by lazy { getSharedPreferences("bvi", MODE_PRIVATE) }
@@ -51,7 +54,9 @@ class MainActivity : AppCompatActivity() {
     // Startsymbole je Akzentfarbe (activity-alias im Manifest); Orange ist per Manifest aktiv
     private val iconAliases = mapOf(
         "orange" to "IconOrange", "gold" to "IconGold", "red" to "IconRed",
-        "blue" to "IconBlue", "green" to "IconGreen"
+        "blue" to "IconBlue", "green" to "IconGreen",
+        "orange_light" to "IconOrangeLight", "gold_light" to "IconGoldLight", "red_light" to "IconRedLight",
+        "blue_light" to "IconBlueLight", "green_light" to "IconGreenLight"
     )
 
     inner class IconBridge {
@@ -127,7 +132,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         webView = WebView(this)
-        webView.setBackgroundColor(0xFF0A0A0A.toInt())
+        webView.setBackgroundColor(if (lightStart) 0xFFF4F4F1.toInt() else 0xFF0A0A0A.toInt())
         setContentView(webView)
 
         webView.settings.apply {
