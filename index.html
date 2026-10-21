@@ -12513,6 +12513,8 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
         <div class="m-fields">
           <input type="date" id="m-exam-date" class="m-input" aria-label="Datum der Klausur" onchange="SHELL.setExam()">
           <input type="text" id="m-exam-name" class="m-input" maxlength="60" placeholder="Leistungsnachweis nach § 13 Abs. 3" aria-label="Name der Klausur" onchange="SHELL.setExam()">
+          <label class="jg-l">Der Countdown öffnet<select id="m-exam-target" class="m-input" onchange="SHELL.setExam()"></select></label>
+          <button type="button" class="btn btn-ghost" id="m-exam-clear" onclick="SHELL.clearExam()">Termin entfernen</button>
         </div>
       </div>
     </div>

@@ -1732,6 +1732,7 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 /* ── Lernzeit: Umschalter Woche / Monate ─────────────────────────────────── */
 .m-seg-s button{min-width:0;height:28px;font-size:.75rem;padding:0 10px;}
 .idf-item.idf-wtime{grid-template-columns:max-content minmax(0,1fr);}
+@media(min-width:1100px){.idf-item.idf-wtime{grid-template-columns:minmax(0,1fr);}}   /* Wochenansicht: Zeit mit „ca.“ über dem Titel statt daneben */
 .sec-h,.page-title{overflow-wrap:anywhere;}
 
 /* ── Ersteinrichtung ─────────────────────────────────────────────────────── */
@@ -2629,3 +2630,4 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 @media(prefers-reduced-motion:reduce){.jg-hd>summary svg{transition:none;}}
 #jg-settings .m-glow{margin:12px 12px 4px;border-radius:14px;background:var(--m-raised);animation:none;box-shadow:0 0 0 1.5px color-mix(in srgb,var(--m-accent) 60%,transparent),0 0 12px color-mix(in srgb,var(--m-accent) 40%,transparent);}
 #read-prog{z-index:var(--z-float);}   /* über der oberen Leiste, sonst verdeckt sie den Fortschrittsbalken */
+@media(min-width:1100px){.idf-name{hyphens:auto;}}   /* lange Wörter in den schmalen Wochenspalten sauber trennen */
