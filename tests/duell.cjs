@@ -5,7 +5,7 @@ const fails = []; let checks = 0;
 const ok = (n, c) => { checks++; if (!c) fails.push(n); };
 const eq = (n, a, b) => ok(n + ' (ist: ' + JSON.stringify(a) + ')', JSON.stringify(a) === JSON.stringify(b));
 (async () => {
-  const browser = await chromium.launch({ ...(EXEC ? { executablePath: EXEC } : {}), args: ['--disable-features=WebRtcHideLocalIpsWithMdns'] });
+  const browser = await chromium.launch({ ...(EXEC ? { executablePath: EXEC } : {}), args: ['--disable-features=WebRtcHideLocalIpsWithMdns', '--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'] });
   const errors = [];
   const mk = async name => {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
@@ -32,7 +32,20 @@ const eq = (n, a, b) => ok(n + ' (ist: ' + JSON.stringify(a) + ')', JSON.stringi
   }, c1);
   ok('QR-Code enthält genau den Verbindungscode', qrOk);
   await A.click('[data-a="next1"]'); await A.waitForSelector('#pc');
-  await B.click('[data-a="join"]'); await B.waitForSelector('#pc'); await B.fill('#pc', c1); await B.click('[data-a="paste"]');
+  ok('Vor dem Scan wird erst gefragt: „Kamera starten“ (kein automatischer Zugriff)', await A.locator('[data-a="cam"]').count() === 1 && await A.locator('.pz-scan video').count() === 0);
+  // Kamera: nach Tipp auf „Kamera starten“ läuft die Vorschau; bei verweigertem Zugriff erscheint eine verständliche Meldung
+  await A.click('[data-a="cam"]'); await A.waitForSelector('.pz-scan video');
+  ok('Kamera-Vorschau läuft nach dem Tipp', await A.locator('.pz-scan video').count() === 1);
+  await A.evaluate(() => { navigator.mediaDevices.getUserMedia = () => Promise.reject(Object.assign(new Error('x'), { name: 'NotAllowedError' })); });
+  await A.evaluate(() => DUELL._stopScan && DUELL._stopScan());
+  await A.click('[data-a="cancel"]'); await A.waitForSelector('[data-a="host"]'); await A.click('[data-a="host"]'); await A.waitForSelector('textarea.pz-code');
+  await A.click('[data-a="next1"]'); await A.click('[data-a="cam"]'); await A.waitForSelector('#se b');
+  ok('Verweigerte Kamera: Meldung nennt den Weg in die Einstellungen', (await A.innerText('#se')).includes('Berechtigungen') && await A.locator('[data-a="cam"]').isVisible());
+  await A.reload(); await A.waitForTimeout(800); await A.evaluate(() => NAV.go('v-pause', 'x')); await A.evaluate(() => PAUSE_LOADER.load()); await A.evaluate(() => PAUSE.open('duell')); await A.waitForSelector('[data-a="host"]');
+  await A.click('[data-a="host"]'); await A.waitForSelector('textarea.pz-code');
+  const c1b = await A.inputValue('textarea.pz-code');
+  await A.click('[data-a="next1"]'); await A.waitForSelector('#pc');
+  await B.click('[data-a="join"]'); await B.waitForSelector('#pc'); await B.fill('#pc', c1b); await B.click('[data-a="paste"]');
   await B.waitForSelector('textarea.pz-code'); const c2 = await B.inputValue('textarea.pz-code');
   await A.fill('#pc', c2); await A.click('[data-a="paste"]');
   await A.waitForSelector('[data-a="go"]', { timeout: 30000 }); await B.waitForSelector('[data-a="ready"]');

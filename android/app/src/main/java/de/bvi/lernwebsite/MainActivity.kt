@@ -15,6 +15,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.app.Activity
 import android.webkit.JavascriptInterface
+import android.webkit.PermissionRequest
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
@@ -35,6 +36,16 @@ class MainActivity : AppCompatActivity() {
             if (r.resultCode == Activity.RESULT_OK) WebChromeClient.FileChooserParams.parseResult(r.resultCode, r.data) else null
         )
         fileCallback = null
+    }
+
+    // Kamera für den QR-Scan im Duell: Anfrage der Seite merken, Android-Berechtigung erfragen, dann freigeben
+    private var camRequest: PermissionRequest? = null
+    private val camPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        val r = camRequest
+        camRequest = null
+        if (r != null) {
+            if (granted) r.grant(arrayOf(PermissionRequest.RESOURCE_VIDEO_CAPTURE)) else r.deny()
+        }
     }
 
     // Startsymbole je Akzentfarbe (activity-alias im Manifest); Orange ist per Manifest aktiv
@@ -129,6 +140,27 @@ class MainActivity : AppCompatActivity() {
 
         webView.addJavascriptInterface(IconBridge(), "BVIAndroid")
         webView.webChromeClient = object : WebChromeClient() {
+            override fun onPermissionRequest(request: PermissionRequest) {
+                runOnUiThread {
+                    // Nur die Kamera, nur für die eigene Seite; Mikrofon und alles andere bleibt gesperrt
+                    val onlyCamera = request.resources.isNotEmpty() &&
+                        request.resources.all { it == PermissionRequest.RESOURCE_VIDEO_CAPTURE }
+                    if (!onlyCamera || request.origin.host != "flametan.github.io") { request.deny(); return@runOnUiThread }
+                    if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_GRANTED) {
+                        request.grant(arrayOf(PermissionRequest.RESOURCE_VIDEO_CAPTURE))
+                    } else {
+                        camRequest?.deny()
+                        camRequest = request
+                        camPermission.launch(Manifest.permission.CAMERA)
+                    }
+                }
+            }
+
+            override fun onPermissionRequestCanceled(request: PermissionRequest) {
+                if (camRequest === request) camRequest = null
+            }
+
             override fun onShowFileChooser(
                 view: WebView, cb: ValueCallback<Array<Uri>>, params: FileChooserParams
             ): Boolean {

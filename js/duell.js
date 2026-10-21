@@ -54,7 +54,7 @@ const DUELL=(function(){
   function stopScan(){clearTimeout(scanT);scanT=0;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}}
   async function scan(box,onCode,onErr){
     stopScan();
-    try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});}catch(e){onErr('Die Kamera ist nicht verfügbar oder nicht erlaubt. Nutze den Kurzcode unten.');return;}
+    try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});}catch(e){const n=e&&e.name;onErr(n==='NotAllowedError'||n==='SecurityError'?'Der Kamerazugriff wurde nicht erlaubt. Erlaube die Kamera in den Einstellungen deines Geräts (bei der Android-App: Einstellungen, Apps, B VI, Berechtigungen) und tippe dann noch einmal auf „Kamera starten“. Oder nutze den Kurzcode.':n==='NotFoundError'||n==='OverconstrainedError'?'Auf diesem Gerät wurde keine Kamera gefunden. Nutze den Kurzcode.':'Die Kamera lässt sich gerade nicht starten. Tippe noch einmal auf „Kamera starten“ oder nutze den Kurzcode.');return;}
     const v=document.createElement('video');v.setAttribute('playsinline','');v.muted=true;v.srcObject=stream;box.innerHTML='';box.appendChild(v);
     try{await v.play();}catch(e){}
     let det=null;if('BarcodeDetector' in window){try{det=new BarcodeDetector({formats:['qr_code']});}catch(e){det=null;}}
@@ -69,12 +69,16 @@ const DUELL=(function(){
     step();
   }
   function scanBox(title,hint,onCode){
-    card(`<div class="pz-lbl"><span>${esc(title)}</span></div><div class="pz-qt">${esc(hint)}</div><div class="pz-scan" id="sc"><div class="pz-fb" style="padding:30px 12px;text-align:center">Kamera wird gestartet …</div></div><div class="pz-fb" id="se"></div>
+    card(`<div class="pz-lbl"><span>${esc(title)}</span></div><div class="pz-qt">${esc(hint)}</div>
+      <div class="pz-scan" id="sc" style="display:none"></div>
+      <div class="pz-cam" id="cm"><div class="pz-fb">Zum Scannen braucht die App kurz deine Kamera. Beim Tippen auf „Kamera starten“ fragt dein Gerät, ob die Kamera benutzt werden darf. Es wird nichts aufgenommen oder gespeichert.</div><button class="pz-pri" data-a="cam">Kamera starten</button></div>
+      <div class="pz-fb" id="se"></div>
       <div class="pz-lbl"><span>Oder Kurzcode einfügen</span></div><textarea class="pz-code" id="pc" rows="3" placeholder="D1~…"></textarea><button class="pz-sec2" data-a="paste" style="align-self:flex-start">Code übernehmen</button><button class="pz-sec2" data-a="cancel" style="align-self:flex-start">Abbrechen</button>`);
     root._onCode=onCode;
-    scan(root.querySelector('#sc'),onCode,m=>{const e=root.querySelector('#se');if(e)e.innerHTML='<b>'+esc(m)+'</b>';const s=root.querySelector('#sc');if(s)s.style.display='none';});
   }
-
+  function startCam(){const cm=root.querySelector('#cm'),sc=root.querySelector('#sc'),se=root.querySelector('#se');if(!sc)return;
+    if(cm)cm.style.display='none';sc.style.display='';sc.innerHTML='<div class="pz-fb" style="padding:30px 12px;text-align:center">Kamera wird gestartet …</div>';
+    scan(sc,root._onCode,(m,why)=>{sc.style.display='none';if(cm)cm.style.display='';if(se)se.innerHTML='<b>'+esc(m)+'</b>';});}
   /* ---------- Verbindung ---------- */
   function mkPc(){const stun=get(SK,true);pc=new RTCPeerConnection({iceServers:stun?[{urls:'stun:stun.l.google.com:19302'}]:[]});
     pc.onconnectionstatechange=()=>{if(!pc)return;const s=pc.connectionState;if(s==='failed'||s==='closed')setDown(true);else if(s==='connected'){if(down&&dc&&dc.readyState==='open')lastRx=performance.now();}};
@@ -145,6 +149,7 @@ const DUELL=(function(){
     if(a==='host')host();else if(a==='join')join();
     else if(a==='copy')copy(root._code,b);
     else if(a==='next1')hostScan();
+    else if(a==='cam')startCam();
     else if(a==='paste'){const t=(root.querySelector('#pc')||{}).value;if(t&&t.trim()){stopScan();root._onCode&&root._onCode(t.trim());}}
     else if(a==='cancel'){stopScan();teardown(false);intro();}
     else if(a==='n'){if(cfg.n===+v)return;cfg.n=+v;sendCfg();lobby();}
@@ -156,6 +161,6 @@ const DUELL=(function(){
     start(el,fahrt,loader){root=el;F=fahrt;loadJs=loader;gameOn=false;const c=get(MK,null);if(c&&Array.isArray(c.mods))cfg={n:c.n||5,mods:c.mods};
       el.onclick=onClick;if(!window.RTCPeerConnection){card('<div class="pz-qt">Nicht verfügbar</div><div class="pz-fb">Dieser Browser unterstützt keine direkte Verbindung zwischen Geräten (WebRTC).</div>');return;}intro();},
     stop(){stopScan();teardown(false);if(root)root.onclick=null;},
-    _pack:pack,_unpack:unpack
+    _pack:pack,_unpack:unpack,_stopScan:stopScan
   };
 })();
