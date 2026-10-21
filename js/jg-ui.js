@@ -207,8 +207,21 @@ const JGUI=(function(){
   const chapterKey=(id,d)=>{ const v=document.getElementById(id), p=v&&parts(id,v.querySelector('.pc')).find(x=>x.el===d); return p?p.key:''; };
   const ergHtml=e=>'<div class="m-card jg-e" data-id="'+E(e.id)+'"><div class="jg-eh"><b>'+E(e.titel||'Ergänzung')+'</b><span><button type="button" class="jg-ed" aria-label="Ergänzung bearbeiten">Bearbeiten</button><button type="button" class="jg-dl" aria-label="Ergänzung löschen">Löschen</button></span></div>'+para(e.text)+(e.bild?'<img class="jg-img" data-b="'+E(e.bild)+'" alt="Bild zur Ergänzung">':'')+'</div>';
   let editPage=null;
+  // Eigene Fragen direkt auf einer Prüfungsseite (nur in Jahrgängen)
+  function qBlock(id,v){
+    const pc=v.querySelector('.pc'); if(!pc) return;
+    pc.querySelectorAll(':scope > .jg-qbox').forEach(x=>x.remove());
+    if(JG.isMaster()||!JG.examOf(id)) return;
+    const p=JG.data().pr.hinzu.find(x=>x.seite===id), box=document.createElement('div'); box.className='jg-qbox';
+    box.innerHTML='<div class="m-sec">Eigene Fragen</div>'+(p
+      ?'<div class="m-card"><div class="m-t1">'+p.fragen.length+' eigene '+(p.fragen.length===1?'Frage':'Fragen')+'</div><div class="m-t2">'+E(p.fragen.slice(0,3).map(f=>f.q).join(' · ').slice(0,160))+'</div><div class="jg-tools2" style="margin-top:10px"><button type="button" class="btn btn-gold" onclick="JGUI.openExam(\''+p.id+'\')">Üben</button><button type="button" class="btn btn-ghost" onclick="JGUI.examEditor(\''+p.id+'\',null,\''+id+'\')">Bearbeiten oder entfernen</button></div></div>'
+      :'')
+      +'<button type="button" class="jg-plus" onclick="JGUI.examEditor(null,null,\''+id+'\')"><span>+</span> Eigene Frage hinzufügen</button>';
+    pc.appendChild(box);
+  }
   function mount(id){
     const v=document.getElementById(id); if(!v) return;
+    qBlock(id,v);
     const pc=v.querySelector('.pc'); if(!lessonLike(pc)) return;
     if(JG.isMaster()) editPage=null;
     [pc,...document.querySelectorAll('.lp-win')].forEach(r=>r.querySelectorAll('.jg-ctl,.jg-erg-k').forEach(x=>x.remove()));
@@ -327,10 +340,13 @@ const JGUI=(function(){
     });
     push(); return qs;
   }
-  function examEditor(id,preTab){
+  function examEditor(id,preTab,seite){
     const cur=id?JG.data().pr.hinzu.find(p=>p.id===id):null;
+    seite=seite||(cur&&cur.seite)||null;
+    const info=seite?JG.examOf(seite):null;
     let qs=cur?cur.fragen.map(f=>({...f})):[];
     const m=modal(cur?'Prüfung bearbeiten':'Prüfung hinzufügen','<label class="jg-l">Reiter<select id="jg-tab" class="m-input">'+JG.TABS.map(t=>'<option value="'+t[0]+'"'+((cur?cur.tab:preTab||'idf')===t[0]?' selected':'')+'>'+E(t[1])+'</option>').join('')+'</select></label><label class="jg-l">Name der Prüfung<input type="text" id="jg-pt" class="m-input" maxlength="100" value="'+E(cur?cur.titel:'')+'" placeholder="z. B. Klausur 02/2027"></label><div class="jg-ocr-w"></div><div id="jg-qs"></div><button class="btn btn-ghost" id="jg-qa" type="button">+ Frage</button><p class="m-note" style="padding:0;margin:8px 0">'+NOTICE+'</p><button class="btn btn-gold" id="jg-ps" type="button">Speichern</button>','jg-wide');
+    if(info){ const t=$(m.body,'#jg-tab'),n=$(m.body,'#jg-pt'); [t,n].forEach(x=>{ if(x&&x.closest('label')) x.closest('label').style.display='none'; }); if(t) t.value=info.tab; if(n) n.value='Eigene Fragen · '+info.titel; }
     const box=$(m.body,'#jg-qs'), draw=()=>{ box.innerHTML=qs.map(qHtml).join('')||'<div class="cu-empty">Noch keine Fragen – mit „+ Frage“ anfangen oder ein Foto einlesen.</div>'; };
     const sync=()=>{ box.querySelectorAll('.jg-q').forEach(el=>{ const i=+el.dataset.i,q=qs[i]; if(!q) return; q.q=$(el,'.jg-qt').value; q.o=[...el.querySelectorAll('.jg-o input[type=text]')].map(x=>x.value); const r=el.querySelector('input[type=radio]:checked'); q.c=r?+r.value:-1; q.e=$(el,'.jg-qe').value; }); };
     draw();
@@ -351,8 +367,9 @@ const JGUI=(function(){
         });
         if(!titel){ TOAST.show('Bitte der Prüfung einen Namen geben',{type:'info'}); return; }
         if(bad){ TOAST.show(bad+' Fragen sind unvollständig: Frage, mindestens 2 Antworten und die richtige Antwort wählen',{type:'info'}); return; }
-        if(!fr.length){ TOAST.show('Bitte mindestens eine Frage eingeben',{type:'info'}); return; }
-        const l=JG.local(), item={id:cur?cur.id:JG.newId(),tab,titel,fragen:fr,ts:cur?cur.ts:Date.now()}, i=l.pr.hinzu.findIndex(p=>p.id===item.id);
+        if(!fr.length&&!info){ TOAST.show('Bitte mindestens eine Frage eingeben',{type:'info'}); return; }
+        const l=JG.local(), item={id:cur?cur.id:JG.newId(),tab:info?info.tab:tab,seite,titel,fragen:fr,ts:cur?cur.ts:Date.now()}, i=l.pr.hinzu.findIndex(p=>p.id===item.id);
+        if(!fr.length){ if(i>=0) l.pr.hinzu.splice(i,1); JG.saveLocal(l); m.close(); TOAST.show('Eigene Fragen entfernt',{type:'ok'}); return; }
         if(i>=0) l.pr.hinzu[i]=item; else l.pr.hinzu.push(item);
         JG.saveLocal(l); m.close(); TOAST.show('Prüfung gespeichert',{type:'ok'});
       }

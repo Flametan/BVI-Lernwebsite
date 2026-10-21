@@ -148,7 +148,7 @@ const PAUSE=(function(){
       // eigene Prüfungen aus den Jahrgangs-Änderungen (nur Einzelspiel; im Duell zählen nur die mitgelieferten Fragen)
       if(typeof JG!=='undefined')JG.data().pr.hinzu.forEach(p=>{const t=JG.TABS.find(x=>x[0]===p.tab);if(t)p.fragen.forEach(f=>Q.push({m:t[2],src:p.titel,g:1,q:f.q,o:f.o.slice(),c:f.c,e:f.e||'',custom:1}));});
       // Fragen aus Prüfungen, die nicht klausurrelevant sind, fallen heraus
-      if(typeof JG!=='undefined'){const SRC={'Altklausur-Quiz VAk':'v-vak-altklausur','Altklausur-Quiz IdF':'v-idf-altklausur'};JG.data().pr.hinzu.forEach(p=>SRC[p.titel]=p.id);Q=Q.filter(q=>!SRC[q.src]||JG.rel(SRC[q.src]));}
+      if(typeof JG!=='undefined'){const SRC={'Altklausur-Quiz VAk':'v-vak-altklausur','Altklausur-Quiz IdF':'v-idf-altklausur'};JG.data().pr.hinzu.forEach(p=>SRC[p.titel]=p.seite||p.id);Q=Q.filter(q=>!SRC[q.src]||JG.rel(SRC[q.src]));}
       return Q;}
     const baseQuestions=()=>questions().filter(q=>!q.custom);
     let sel=new Set(get('bvi_pause_mods',['VAk','IBK'])),st=null,el=null,cv=null,ctx=null,raf=0,PART=[],last=0,shake=0,lastFx=null,stars=[];

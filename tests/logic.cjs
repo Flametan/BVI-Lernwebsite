@@ -685,6 +685,45 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Master: keine Bearbeitungsfelder, Farbverlauf nur bei hervorgehobenen Prüfungen', ma, { lesson: true, exam: true, hot: 6, rows: 12, set: true, plan: true });
 
+  // ── Eigene Fragen direkt in einer Klausur; IdF-Pläne für Gruppe 1 und 2 ──
+  const eq2 = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    JG.set(JG.list()[0].id); await w(300); JG.discard();
+    NAV.go('v-vak-altklausur', 'VAk'); await w(600);
+    r.btn = !!document.querySelector('#v-vak-altklausur .jg-qbox .jg-plus');
+    JGUI.examEditor(null, null, 'v-vak-altklausur'); await w(200);
+    r.hideName = document.getElementById('jg-pt').closest('label').style.display === 'none';
+    document.getElementById('jg-qa').click(); await w(50);
+    const q = document.querySelector('.jg-q'); q.querySelector('.jg-qt').value = 'Eigene Klausurfrage?';
+    const os = q.querySelectorAll('.jg-o input[type=text]'); os[0].value = 'A'; os[1].value = 'B';
+    q.querySelectorAll('input[type=radio]')[0].click();
+    document.getElementById('jg-ps').click(); await w(500);
+    const p = JG.data().pr.hinzu[0];
+    r.saved = !!p && p.seite === 'v-vak-altklausur' && p.tab === 'vak' && /1 eigene Frage/.test(document.querySelector('#v-vak-altklausur .jg-qbox').innerText);
+    NAV.tab('v-pruefung', 'Prüfung'); await w(300);
+    r.notListed = !/Eigene Klausurfrage|Eigene Fragen ·/.test(document.getElementById('m-exam-list').innerText);
+    await PAUSE_LOADER.load();
+    r.feeds = PAUSE._fahrt().questions().some(x => x.custom && x.q === 'Eigene Klausurfrage?');
+    JGUI.setRel('v-vak-altklausur'); await w(100);
+    r.offWhenIrrelevant = !PAUSE._fahrt().questions().some(x => x.custom && x.q === 'Eigene Klausurfrage?');
+    JGUI.setRel('v-vak-altklausur');
+    JGUI.examEditor(p.id, null, 'v-vak-altklausur'); await w(200);
+    document.querySelector('.jg-qd').click(); await w(50); document.getElementById('jg-ps').click(); await w(400);
+    r.removed = JG.data().pr.hinzu.length === 0;
+    // IdF: zwei Pläne
+    NAV.tab('v-plan', 'Plan'); await w(300);
+    const mk = (d, t) => ({ name: t, ev: [{ s: new Date(2099, 0, d, 8, 0).getTime(), e: new Date(2099, 0, d, 9, 0).getTime(), t, r: '', n: '', ad: 0 }] });
+    IDF_PLAN.viewTab('idf', true); IDF_PLAN.savePlan(mk(5, 'G1-Termin')); await w(200);
+    r.grpUi = !!document.querySelector('#v-plan .idf-gr') && document.querySelectorAll('#v-plan .idf-gr button').length === 2;
+    IDF_PLAN.viewTab('idf2', true); IDF_PLAN.savePlan(mk(6, 'G2-Termin')); await w(200);
+    const d = JG.data(); r.two = d.plane.idf.ev[0].t === 'G1-Termin' && d.plane.idf2.ev[0].t === 'G2-Termin';
+    IDF_PLAN.viewTab('idf'); await w(200); r.back2 = /Gruppe 2/.test(document.querySelector('#v-plan .idf-gr .active').textContent);
+    IDF_PLAN.setActive('idf2'); await w(200); const nx = IDF_PLAN.next(); r.act2 = !!nx && /G2-Termin/.test(JSON.stringify(nx));
+    JG.discard(); JG.set(JG.MASTER); await w(300);
+    return r;
+  });
+  eq('Eigene Fragen in Klausuren; IdF-Pläne für Gruppe 1 und 2', eq2, { btn: true, hideName: true, saved: true, notListed: true, feeds: true, offWhenIrrelevant: true, removed: true, grpUi: true, two: true, back2: true, act2: true });
+
   // ── Veröffentlichte Jahrgangs-Datei (jahrgaenge/<ID>.json) wird mit den eigenen Änderungen zusammengeführt ──
   const jid = await page.evaluate(() => JG.list()[0].id);
   await page.route('**/jahrgaenge/' + jid + '.json', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ format: 'bvi-jahrgang', v: 1, erg: [{ id: 'pub1', seite: 'v-vak-verwaltungsrecht', titel: 'Vom Jahrgang', text: '<script>x</script>' }], pr: { hinzu: [], weg: ['v-laufbahn-2023'] }, rel: { 'v-vak-altklausur': false } }) }));

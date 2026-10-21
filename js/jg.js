@@ -6,16 +6,16 @@
      · eigene Ebene          im Browser gespeichert (Ergänzungen, Prüfungen, Klausurrelevanz, eigener Plan)
    Datei-Format (Version 1), alles optional:
      { format:'bvi-jahrgang', v:1, jahrgang:'BRef 10/2026 - AB 10/2027', stand:'2027-01-12',
-       plane:{ ibk|vak|feuak|idf : { name, ev:[{s,e,t,r,n,ad}] } },  aktiv:'idf',
+       plane:{ ibk|vak|feuak|idf|idf2 (IdF Gruppe 1/2) : { name, ev:[{s,e,t,r,n,ad}] } },  aktiv:'idf',
        erg:[{ id, seite, titel, text, bild, ts }],
-       pr:{ hinzu:[{ id, tab, titel, fragen:[{ q, o:[…], c:0, e:'' }], ts }], weg:['v-…', …] },
+       pr:{ hinzu:[{ id, tab, seite (optional: gehört zu dieser Prüfungsseite), titel, fragen:[{ q, o:[…], c:0, e:'' }], ts }], weg:['v-…', …] },
        rel:{ '<pruefung-id>':true|false },  ausg:['v-seite|a|<kennung>', …]  (ausgeblendete Kapitel/Blöcke)
        bilder:{ '<bild-id>':'data:image/jpeg;base64,…' } }
 ====================================================================== */
 const JG=(function(){
   const MASTER='BRef-04-2025_AB-04-2026', K='bvi_jg', PRE='bvi_jgd_', PUB='bvi_jgp_';
   const TABS=[['laufbahn','Laufbahnprüfung','Laufbahn'],['idf','IdF Münster','IdF'],['feuak','FeuAK Hamburg','FeuAK'],['vak','VAk Berlin','VAk'],['ibk','IBK Heyrothsberge','IBK']];
-  const ALLTABS=TABS.map(t=>t[0]), PLANKEYS=['ibk','vak','feuak','idf'];   // Stundenpläne gibt es je Abschnitt
+  const ALLTABS=TABS.map(t=>t[0]), PLANKEYS=['ibk','vak','feuak','idf','idf2'];   // Stundenpläne je Abschnitt; IdF hat je einen für Gruppe 1 (idf) und Gruppe 2 (idf2)
   const pad=n=>String(n).padStart(2,'0');
   let pub=null, pubImg={}, ver=0; const subs=[];
   const lsGet=k=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } };
@@ -86,7 +86,7 @@ const JG=(function(){
         const q=str(f&&f.q,600).trim();
         return q&&opts.length>=2&&Number.isInteger(c)&&c>=0&&c<opts.length?{q,o:opts,c,e:str(f.e,1200).trim()}:null;
       }).filter(Boolean);
-      if(fr.length) out.pr.hinzu.push({id,tab:p.tab,titel:str(p.titel,100).trim()||'Eigene Prüfung',fragen:fr,ts:Number.isFinite(+p.ts)?+p.ts:Date.now()});
+      if(fr.length) out.pr.hinzu.push({id,tab:p.tab,seite:/^v-[a-z0-9-]{1,58}$/.test(String(p.seite))?String(p.seite):null,titel:str(p.titel,100).trim()||'Eigene Prüfung',fragen:fr,ts:Number.isFinite(+p.ts)?+p.ts:Date.now()});
     });
     out.pr.weg=(Array.isArray(pr.weg)?pr.weg:[]).slice(0,200).map(x=>str(x,60)).filter(x=>/^(v-[a-z0-9-]+|[A-Za-z0-9_-]+)$/.test(x));
     if(Array.isArray(o.ausg)) out.ausg=[...new Set(o.ausg.slice(0,600).map(x=>String(x)).filter(x=>AUSOK.test(x)))];
@@ -120,11 +120,12 @@ const JG=(function(){
     const it=exams&&exams.flatMap(x=>x[1]).find(x=>x[0]===id);
     return it?!!it[4]:true;
   };
+  const examOf=id=>{ if(!exams) return null; for(let i=0;i<exams.length;i++){ const it=exams[i][1].find(x=>x[0]===id); if(it) return {tab:TABS[i][0],titel:it[1]}; } return null; };
   const glow=()=>{
     if(!exams) return new Set(ALLTABS);
     const d=data(), weg=new Set(d.pr.weg), g=new Set();
     exams.forEach(([,items],i)=>{ if(items.some(x=>!weg.has(x[0])&&rel(x[0]))) g.add(TABS[i][0]); });
-    d.pr.hinzu.forEach(p=>{ if(rel(p.id)) g.add(p.tab); });
+    d.pr.hinzu.forEach(p=>{ if(rel(p.seite||p.id)) g.add(p.tab); });
     return g;
   };
   function changed(){ ver++; subs.forEach(f=>{ try{ f(); }catch(e){} }); }
@@ -177,6 +178,6 @@ const JG=(function(){
   function restore(prev){ if(prev) lsSet(PRE+current(),prev); changed(); }
   const hasLocal=()=>{ const l=local(); return !!(Object.keys(l.plane).length||l.aktiv||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||Object.keys(l.rel).length||l.ausg.length); };
 
-  return { MASTER, TABS, PLANKEYS, list, labelOf, current, isMaster, data, local, saveLocal, glow, rel, setExams, load, set, on, ver:()=>ver, img, okImg,
+  return { MASTER, TABS, PLANKEYS, list, labelOf, current, isMaster, data, local, saveLocal, glow, rel, setExams, examOf, load, set, on, ver:()=>ver, img, okImg,
     exportJson, importJson, discard, restore, hasLocal, empty, newId:()=>'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6) };
 })();

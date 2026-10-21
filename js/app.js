@@ -4028,6 +4028,9 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite; nach 10 Stunden Nutzung ein kleines „Danke“ (höchstens 2-mal, nur auf der Startseite, mit „Später“ und „Nicht mehr zeigen“)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Klausuren: In Jahrgängen lassen sich direkt auf der Prüfungsseite eigene Fragen hinzufügen, bearbeiten, entfernen und üben (sie zählen für Einsatzfahrt, wenn die Prüfung klausurrelevant ist)',
+      'Stundenplan (Jahrgänge): Für IdF gibt es je einen Plan für Gruppe 1 und Gruppe 2 mit Umschalter; mit „Als aktiven Stundenplan markieren“ wählst du die Gruppe für Startseite und Widgets',
+      'Einsatzfahrt-Duell: Farbverlauf auf der Karte entfernt',
       'Master-Lehrgang ist nicht veränderbar (keine Bearbeitungsfelder); den Farbverlauf in den Prüfungen tragen nur die hervorgehobenen Prüfungen, in Jahrgängen lässt sich das je Prüfung mit ★ ändern',
       'Kapitelkarten zeigen keine Lesezeit in Minuten mehr, nur noch ein Häkchen bei gelesenen Kapiteln',
       'Stundenplan: Er springt von selbst zur aktuellen Kalenderwoche, wenn das Datum weiterläuft (Mitternacht) oder die App wieder in den Vordergrund kommt – außer du hast selbst in andere Wochen geblättert',
@@ -5492,7 +5495,8 @@ const IDF_PLAN = (function(){
   let _cust=null, _act=null, _cw=null, _cwa=null, _mode='view';   // _cust: angezeigter Plan, _act: aktiver Plan (Startseite, Widgets)
   // Master-Jahrgang: eigener Plan optional (alter Speicherort); andere Jahrgänge: immer eigener Plan, ggf. noch leer
   const _nonMaster=()=>typeof JG!=='undefined'&&!JG.isMaster();
-  const PTAB={ibk:'IBK',vak:'VAk',feuak:'FeuAK',idf:'IdF'};
+  const PTAB={ibk:'IBK',vak:'VAk',feuak:'FeuAK',idf:'IdF Gruppe 1',idf2:'IdF Gruppe 2'};
+  const _idfG=()=>{ try{ return localStorage.getItem('bvi_plan_idfg')==='idf2'?'idf2':'idf'; }catch(e){ return 'idf'; } };
   const _actKey=()=>{ const d=JG.data(); return d.aktiv&&d.plane[d.aktiv]?d.aktiv:(JG.PLANKEYS.find(k=>d.plane[k])||null); };
   function _vkey(){ try{ const k=localStorage.getItem('bvi_plan_view'); if(JG.PLANKEYS.includes(k)) return k; }catch(e){} return _actKey()||'idf'; }
   function _loadCust(){
@@ -5508,7 +5512,8 @@ const IDF_PLAN = (function(){
     if(typeof SHELL!=='undefined') SHELL.renderHome();
   }
   // Andere Jahrgänge: zwischen den Abschnitten (IBK, VAk, FeuAK, IdF) wechseln und einen Plan als aktiv markieren
-  function viewTab(k){ if(!JG.PLANKEYS.includes(k)) return; try{ localStorage.setItem('bvi_plan_view',k); }catch(e){} _loadCust(); _manual=false; render(); }
+  // viewTab('idf') zeigt die zuletzt gewählte IdF-Gruppe, viewTab('idf',true) genau Gruppe 1
+  function viewTab(k,exact){ if(!JG.PLANKEYS.includes(k)) return; if(k==='idf'&&!exact) k=_idfG(); try{ localStorage.setItem('bvi_plan_view',k); if(k==='idf'||k==='idf2') localStorage.setItem('bvi_plan_idfg',k); }catch(e){} _loadCust(); _manual=false; render(); }
   function setActive(k){ const l=JG.local(); l.aktiv=k; JG.saveLocal(l); TOAST.show(PTAB[k]+'-Plan ist jetzt aktiv: Startseite und Widgets nutzen ihn',{type:'ok'}); }
   const _icsUnfold=t=>String(t).replace(/\r\n|\r/g,'\n').replace(/\n[ \t]/g,'').split('\n');
   const _icsText=v=>String(v||'').replace(/\\[nN]/g,' ').replace(/\\([,;\\])/g,'$1').replace(/\s+/g,' ').trim();
@@ -5633,10 +5638,15 @@ const IDF_PLAN = (function(){
   function _tabsBar(){
     if(!_nonMaster()) return '';
     const d=JG.data(), vk=_vkey(), ak=_actKey();
-    const seg=JG.PLANKEYS.map(k=>`<button class="${k===vk?'active':''}" onclick="IDF_PLAN.viewTab('${k}')" aria-pressed="${k===vk}">${PTAB[k]}${ak===k?' ★':d.plane[k]?'':' ·'}</button>`).join('');
+    const inIdf=vk==='idf'||vk==='idf2', idfAct=ak==='idf'||ak==='idf2', idfHas=!!(d.plane.idf||d.plane.idf2);
+    const seg=[['ibk','IBK'],['vak','VAk'],['feuak','FeuAK'],['idf','IdF']].map(([k,l])=>{
+      const on=k==='idf'?inIdf:k===vk, star=k==='idf'?idfAct:ak===k, has=k==='idf'?idfHas:!!d.plane[k];
+      return `<button class="${on?'active':''}" onclick="IDF_PLAN.viewTab('${k}')" aria-pressed="${on}">${l}${star?' ★':has?'':' ·'}</button>`;
+    }).join('');
+    const grp=inIdf?`<span class="m-seg idf-seg idf-gr" role="group" aria-label="IdF-Gruppe">${[['idf','Gruppe 1'],['idf2','Gruppe 2']].map(([k,l])=>`<button class="${k===vk?'active':''}" onclick="IDF_PLAN.viewTab('${k}',true)" aria-pressed="${k===vk}">${l}${ak===k?' ★':d.plane[k]?'':' ·'}</button>`).join('')}</span>`:'';
     let act='';
     if(d.plane[vk]) act=ak===vk?`<div class="idf-act on"><span class="m-badge">★ Aktiv</span><span class="m-t2">Startseite und Widgets zeigen diesen Plan</span></div>`:`<div class="idf-act"><button class="btn btn-gold" onclick="IDF_PLAN.setActive('${vk}')">Als aktiven Stundenplan markieren</button><span class="m-t2">Dann nutzen Startseite und Widgets diesen Plan</span></div>`;
-    return `<div class="m-card idf-tabs"><span class="m-seg idf-seg" role="group" aria-label="Abschnitt">${seg}</span>${act}</div>`;
+    return `<div class="m-card idf-tabs"><span class="m-seg idf-seg" role="group" aria-label="Abschnitt">${seg}</span>${grp}${act}</div>`;
   }
   function _planControls(){
     const cust=!!_cust, on=_isCustom(), nm=_nonMaster();
@@ -6900,7 +6910,7 @@ const SHELL=(function(){
     const rw=(id,inner)=>`<div class="jg-rw${rel(id)?' hot':''}">${inner}${del(id)}</div>`;
     const sec=([name,items],si)=>{
       const key=JG.TABS[si][0];
-      const vis=items.filter(x=>!weg.has(x[0])), adds=jd.pr.hinzu.filter(p=>p.tab===key);
+      const vis=items.filter(x=>!weg.has(x[0])), adds=jd.pr.hinzu.filter(p=>p.tab===key&&!p.seite);
       const lists=[...vis.map(x=>rw(x[0],card(x))),...adds.map(p=>rw(p.id,own(p)))];
       return `<div class="m-col"><div class="m-sec jg-sh">${esc(name)}</div><div class="m-list">${lists.join('')||'<div class="jg-none">Keine Prüfungen</div>'}</div></div>`;
     };

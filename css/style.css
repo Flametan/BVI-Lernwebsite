@@ -2311,7 +2311,7 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .pz-game b{display:block;font-size:1rem;}
 .pz-game small{display:block;color:var(--m-muted);font-size:.8rem;line-height:1.35;margin-top:2px;}
 .pz-game em{font-style:normal;color:var(--m-accent-fg);font-size:.75rem;font-weight:600;}
-.pz-game.pz-big{grid-column:1 / -1;background:linear-gradient(135deg,color-mix(in srgb,var(--m-accent) 18%,var(--m-card)),var(--m-card) 60%);}
+.pz-game.pz-big{grid-column:1 / -1;}
 .pz-head{display:flex;align-items:center;justify-content:space-between;gap:10px;}
 .pz-back{background:none;border:0;color:var(--m-accent-fg);font-family:inherit;font-size:.95rem;padding:6px 0;cursor:pointer;}
 .pz-card{background:var(--m-card);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px;}
@@ -2604,3 +2604,5 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 .lp-card .jg-cx{position:absolute;right:12px;bottom:10px;display:grid;place-items:center;}
 .lp-win .jg-bx{position:absolute;}
 .lp-win .info-card:has(>.jg-bx),.lp-win .def-box:has(>.jg-bx){position:relative;padding-right:48px;}
+.jg-qbox{display:flex;flex-direction:column;gap:12px;margin-top:1.2rem;}
+.idf-gr{margin-top:-2px;}
