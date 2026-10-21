@@ -315,6 +315,23 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   const css = await page.evaluate(async () => { const t = await (await fetch('css/style.css')).text(); return { rm: /prefers-reduced-motion:reduce\)\{\s*html\{scroll-behavior:auto!important/.test(t), fv: /:focus-visible\{outline:2px solid/.test(t), coarse: /Klickflächen auf Touch-Geräten mindestens 44 px/.test(t) }; });
   ok('CSS: Bewegung reduzieren, Fokusrahmen und 44-px-Klickflächen vorhanden', css.rm && css.fv && css.coarse);
 
+  // ── Einstellungen: Gruppen klappen auf, nur eine ist offen, Spende bleibt sichtbar ──
+  const acc = await page.evaluate(async () => {
+    NAV.go('v-settings', 'Einstellungen'); await new Promise(r => setTimeout(r, 300));
+    const hs = [...document.querySelectorAll('#v-settings .m-acc-h')], r = { n: hs.length };
+    r.closed = hs.every(h => document.getElementById(h.getAttribute('aria-controls')).hidden);
+    hs[0].click(); hs[1].click();
+    r.open = hs.map(h => h.getAttribute('aria-expanded'));
+    r.vis = document.getElementById('m-timers-toggle').offsetParent !== null;
+    r.sub = document.getElementById('acc-ler-sub').textContent;
+    r.donate = !!document.querySelector('#v-settings .m-donate') && !document.querySelector('#v-settings .m-acc .m-donate');
+    return r;
+  });
+  eq('Einstellungen: sechs Gruppen, zu Beginn zugeklappt', [acc.n, acc.closed], [6, true]);
+  eq('Einstellungen: nur eine Gruppe offen', acc.open, ['false', 'true', 'false', 'false', 'false', 'false']);
+  ok('Einstellungen: Inhalt der offenen Gruppe sichtbar, Kurzinfo gefüllt', acc.vis && /^Tagesziel \d+ min/.test(acc.sub));
+  ok('Einstellungen: Spende liegt außerhalb der Gruppen', acc.donate);
+
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
   const tp = await tctx.newPage();
