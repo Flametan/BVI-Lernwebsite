@@ -2482,3 +2482,6 @@ a.m-donate{display:block;color:inherit;text-decoration:none;cursor:pointer;}
 /* große Schrift auf schmalen Geräten: Auswahlleisten und Karten dürfen umbrechen statt über den Rand zu laufen */
 html.fs-lg .m-seg,html.fs-xl .m-seg{flex-wrap:wrap;max-width:100%;}
 html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap:anywhere;}
+/* schmale Geräte mit großer Schrift: Raster und Auswahlleisten brechen um statt über den Rand zu laufen */
+@media(max-width:700px){.sim-menu{grid-template-columns:minmax(0,1fr);}}
+.pz-mode{flex-wrap:wrap;}
