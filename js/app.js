@@ -2511,13 +2511,15 @@ const ABKTIP=(function(){
     }catch(e){ re=null; }
     return !!re;
   }
-  // alle Vorkommen von Abkürzungen im Kapitel (oder auf der Seite) markieren
-  function wrapBlock(root){
+  // jede Abkürzung auf der Seite nur beim ersten Vorkommen markieren (seen gilt für die ganze Seite)
+  function wrapBlock(root,seen){
     const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.data.trim().length>1&&n.parentElement&&!n.parentElement.closest(BLOCK)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT});
     const nodes=[]; let n; while((n=w.nextNode())) nodes.push(n);
     nodes.forEach(node=>{
       re.lastIndex=0; const t=node.data; let m, last=0, frag=null;
       while((m=re.exec(t))){
+        if(seen.has(m[1])) continue;
+        seen.add(m[1]);
         frag=frag||document.createDocumentFragment();
         if(m.index>last) frag.appendChild(document.createTextNode(t.slice(last,m.index)));
         const sp=document.createElement('span'); sp.className='abk-t'; sp.dataset.k=m[1]; sp.tabIndex=0; sp.setAttribute('role','button'); sp.textContent=m[1];
@@ -2531,7 +2533,8 @@ const ABKTIP=(function(){
     v._abk=true;
     if(!build()) return;
     const pc=v.querySelector('.pc'), items=[...pc.querySelectorAll('.acc-item')];
-    if(items.length) items.forEach(wrapBlock); else wrapBlock(pc);
+    const seen=new Set();
+    if(items.length) items.forEach(it=>wrapBlock(it,seen)); else wrapBlock(pc,seen);
   }
   function hide(){ if(pop) pop.hidden=true; }
   function show(el){
@@ -4015,7 +4018,7 @@ const CHANGELOG=(function(){
       'Android-App: Drei Widgets für den Startbildschirm zur Auswahl – „Nächste Einheit“, „Tagesplan“ und „Jetzt und danach“ mit Zeitraum, Raum, Restzeit und der Einheit danach (nach Unterrichtsende zeigen sie, was morgen ansteht); sie folgen Akzentfarbe und Hell/Dunkel',
       'Stundenplan: Eigenen Stundenplan aus einer Kalenderdatei (.ics) laden – er ersetzt den IdF-Plan und alle Funktionen laufen weiter (nächste Einheit auf der Startseite, Widgets, Notizen, Kalender-Export); der IdF-Plan lässt sich als Kalender-Abo (Link, der sich selbst aktualisiert) in den eigenen Kalender einbinden',
       'Lernkarten teilen: Eigene Karten als Link oder QR-Code an Kollegen schicken (die Karten stecken im Link, nichts läuft über einen Server); „Per E-Mail senden“ gibt es nicht mehr',
-      'Lernseiten: Abkürzungen (z. B. ELW, FwDV, HBKG) sind überall unterstrichen; ein Tipp zeigt Name und Erläuterung aus dem Abkürzungsverzeichnis',
+      'Lernseiten: Abkürzungen (z. B. ELW, FwDV, HBKG) sind beim ersten Vorkommen auf der Seite unterstrichen; ein Tipp zeigt Name und Erläuterung aus dem Abkürzungsverzeichnis',
       'Neu: Markierten Text auf einer Lernseite mit „Als Lernkarte“ direkt zu einer eigenen Lernkarte machen (Modul wird vorgewählt, die Frage schreibst du dazu)',
       'Updates: Bei einer neuen Version erscheint ein Hinweis „Aktualisieren“, statt dass die Seite mitten im Lernen neu lädt',
       'Stundenplan: Er springt von selbst zur aktuellen Kalenderwoche, wenn das Datum weiterläuft (Mitternacht) oder die App wieder in den Vordergrund kommt – außer du hast selbst in andere Wochen geblättert',

@@ -494,13 +494,13 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
     NAV.go('v-hlfs-stab', 'Stab'); await w(500);
     const sp = document.querySelector('#v-hlfs-stab .abk-t');
-    r.marked = !!sp; r.noDouble = [...document.querySelectorAll('#v-hlfs-stab .acc-item')].some(it => { const k = [...it.querySelectorAll('.abk-t')].map(e => e.dataset.k); return new Set(k).size < k.length; });   // alle Vorkommen, auch mehrfach
+    r.marked = !!sp; r.noDouble = (() => { const k = [...document.querySelectorAll('#v-hlfs-stab .abk-t')].map(e => e.dataset.k); return k.length > 1 && new Set(k).size === k.length; })();   // jede Abkürzung nur einmal je Seite
     sp.click(); await w(100);
     const pop = document.getElementById('abk-pop'); r.pop = !pop.hidden && pop.textContent.includes(sp.dataset.k);
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(50); r.closed = pop.hidden;
     return r;
   });
-  eq('Abkürzungen: alle Vorkommen markiert, Tipp zeigt Erläuterung', ab, { marked: true, noDouble: true, pop: true, closed: true });
+  eq('Abkürzungen: jede nur beim ersten Vorkommen je Seite, Tipp zeigt Erläuterung', ab, { marked: true, noDouble: true, pop: true, closed: true });
   const sh = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
     localStorage.removeItem('bvi_fc_custom'); CUSTOM.open(); await w(200);
