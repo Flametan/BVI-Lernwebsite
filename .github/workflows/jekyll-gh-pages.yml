@@ -29,18 +29,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Node einrichten (für die Kalender-Dateien)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Kalender-Abo-Dateien des Stundenplans erzeugen
-        # Fehler hier sollen die Veröffentlichung der Seite nicht verhindern
-        continue-on-error: true
-        working-directory: tests
-        run: |
-          npm install --no-audit --no-fund
-          npx playwright install --with-deps chromium
-          node gen-ics.cjs
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:

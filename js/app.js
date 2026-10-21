@@ -4031,6 +4031,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Stundenplan: „Wichtige Termine in den Kalender übernehmen“ nimmt nur Schlüsseltermine (Akzentfarbe) und Exkursionen (grün) mit; „Kalender abonnieren“ und die Anzeige des aktiven Plans im Master sind entfernt',
       'Jahrgänge: Die Erklärseite beschreibt jetzt, dass jeder Jahrgang eine Person bestimmt, die die Seite pflegt, Änderungen exportiert und in der WhatsApp-Gruppe teilt; alle anderen lesen die Datei ein. Klausurtermine als Countdown für Jahrgänge sind entfernt.',
       'Jahrgänge: „So funktioniert dein Jahrgang“ in den Einstellungen erklärt, warum es die Seite gibt und wie sie funktioniert; „Prüfungen bearbeiten“ steht oben auf der Prüfungsseite, auf Übersichtsseiten lassen sich Reiter ausblenden und eigene Reiter mit Kapiteln anlegen; eigene Fragen können Single-Choice, Multiple-Choice oder Freitext sein; die Ergänzung im Kapitel hat nur noch Text und Bild',
       'Jahrgang einrichten (Einstellungen → Lehrgang): Checkliste mit Stundenplänen, Lehrgangs-Link, Standorten und Lernkarten des Jahrgangs; die Datei trägt alles mit',
@@ -5660,8 +5661,8 @@ const IDF_PLAN = (function(){
     const row=(t1,t2,btn)=>`<div class="m-row m-static m-wrap"><span class="m-tx"><span class="m-t1">${t1}</span><span class="m-t2">${t2}</span></span>${btn}</div>`;
     const fileRow=`<label class="m-row" for="plan-file" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Kalenderdatei (.ics) laden</span><span class="m-t2">z. B. aus dem Kalender deiner Schule oder deines Betriebs</span></span><input type="file" id="plan-file" accept=".ics,text/calendar" hidden onchange="IDF_PLAN.importIcs(this.files[0]);this.value=''"></label>`;
     const ui=(fn,t1,t2)=>`<button class="m-row m-go" onclick="${fn}"><span class="m-tx"><span class="m-t1">${t1}</span><span class="m-t2">${t2}</span></span></button>`;
-    let h='<div class="m-sec" style="margin:1rem 0 .6rem">'+(nm?'Plan für '+PTAB[_vkey()]:'Stundenplan wählen')+'</div><div class="m-list idf-src">';
-    if(!nm) h+=row('IdF Münster · Modul 3.5',on?'Der mitgelieferte Plan, mit Gruppe 1 und 2':'Wird gerade angezeigt',on?'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'idf\')">Anzeigen</button>':'<span class="m-badge">aktiv</span>');
+    let h='<div class="m-sec" style="margin:1rem 0 .6rem">'+(nm?'Plan für '+PTAB[_vkey()]:cust?'Stundenplan wählen':'Kalender')+'</div><div class="m-list idf-src">';
+    if(!nm&&cust) h+=row('IdF Münster · Modul 3.5',on?'Der mitgelieferte Plan, mit Gruppe 1 und 2':'Wird gerade angezeigt',on?'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'idf\')">Anzeigen</button>':'<span class="m-badge">aktiv</span>');
     if(cust) h+=row(esc(_cust.name),_cust.ev.length+' Termine'+(nm?'':' aus deiner Datei'),on&&!nm?'<span class="m-badge">aktiv</span>':nm?'':'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'custom\')">Anzeigen</button>');
     if(nm) h+=fileRow;   // Im Master lässt sich nichts ändern oder importieren
     if(nm&&typeof JGUI!=='undefined'){
@@ -5669,8 +5670,7 @@ const IDF_PLAN = (function(){
       h+=ui('JGUI.planEditor()','Termine von Hand eingeben oder ändern','Datum, Zeit, Titel und Raum');
     }
     if(cust&&(!nm||JG.local().plane[_vkey()])) h+=`<button class="m-row" onclick="IDF_PLAN.removeCustom()"><span class="m-tx"><span class="m-t1">Eigenen Plan entfernen</span></span></button>`;
-    if(!on) h+=`<button class="m-row m-go" onclick="PLANABO.open()"><span class="m-tx"><span class="m-t1">Kalender abonnieren</span><span class="m-t2">Der IdF-Plan als Link, der sich selbst aktualisiert</span></span></button>`;
-    return h+'</div>';
+    return h.endsWith('<div class="m-list idf-src">')?'':h+'</div>';
   }
   // Noch kein Plan für diesen Abschnitt (andere Jahrgänge): Hinweis und Wege zum Importieren
   function _drawEmpty(el){
@@ -5739,7 +5739,7 @@ const IDF_PLAN = (function(){
     const full=(n,t)=>/^-/.test(t)?(/BABZ/.test(n)?'0228 99550':'0251 3112')+t:t;
     const rows=[...(tel||TEL.spahl),['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>[n,full(n,t)]);
     if(!_isCustom()) h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${rows.map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><a href="tel:+49${t.replace(/\D/g,'').replace(/^0/,'')}">${esc(t)}</a></div>`).join('')}</div>`;
-    h+=`<button class="m-cal-btn" onclick="IDF_PLAN.exportIcs()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5"/></svg>Stundenplan in den Kalender übernehmen<small>${_isCustom()?'Dein Plan':'Gruppe '+_grp[1]} · alle Einheiten mit Erinnerung 30 Minuten vorher</small></button>`;
+    h+=`<button class="m-cal-btn" onclick="IDF_PLAN.exportIcs()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5"/></svg>Wichtige Termine in den Kalender übernehmen<small>${_isCustom()?'Alle Termine deines Plans':'Gruppe '+_grp[1]+' · Schlüsseltermine und Exkursionen'} · mit Erinnerung 30 Minuten vorher</small></button>`;
     if(!_isCustom()) h+='<div class="idf-legend"><span><i class="hi"></i>Schlüsseltermin</span><span><i class="ex"></i>Exkursion</span><span><i class="ar"></i>An-/Abreise, frei</span><span>EVA = eigenverantwortliches Arbeiten</span></div>';
     h+=_planControls();
     // Kopf der Seite: Name und Zeitraum des angezeigten Plans
@@ -5871,6 +5871,7 @@ const IDF_PLAN = (function(){
         _splitAtLunch(_dayRaw(w,d,g)).forEach((raw,i)=>{
           const [t,title,cls='',room='',note='']=raw.split('|');
           if(/unterrichtsfrei|Selbststudium|Heiligabend|Weihnachtstag/.test(title)) return;
+          if(!_isCustom()&&!/^(hi|ex)$/.test(cls)) return;   // nur Schlüsseltermine (Akzentfarbe) und Exkursionen (grün)
           const [a,b]=_time(t); const s=_minutes(a); if(s===null) return;
           const e=_minutes(b)??s+60, hm=m=>pad(Math.floor(m/60))+pad(m%60)+'00';
           lines.push('BEGIN:VEVENT','UID:bvi-'+g+'-'+ymd+'-'+hm(s)+'-'+i+'@bvi-lernwebsite','DTSTAMP:'+stamp,
@@ -5914,32 +5915,6 @@ const IDF_PLAN = (function(){
   _loadOv();
   pushWidget();
   return { viewTab, setActive, savePlan:_saveCust, getPlan:()=>_cust, render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _grp:_setGrp, redraw:_draw };
-})();
-
-/* ── Stundenplan als Kalender-Abo (Link, der sich selbst aktualisiert) ──────── */
-const PLANABO=(function(){
-  const BASE='https://flametan.github.io/BVI-Lernwebsite/data/';
-  let box=null;
-  const url=g=>BASE+'stundenplan-gruppe'+g+'.ics';
-  function build(){
-    box=document.createElement('div'); box.id='abo-ov'; box.hidden=true;
-    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Stundenplan abonnieren');
-    box.innerHTML='<div class="sh-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t">Stundenplan abonnieren</div>'
-      +'<p class="abo-p">Dein Kalender holt sich den Plan selbst und aktualisiert ihn bei Änderungen. Wähle deine Gruppe:</p>'
-      +[1,2].map(g=>'<div class="abo-row"><b>Gruppe '+g+'</b><button type="button" class="btn btn-ghost" data-g="'+g+'">Link kopieren</button><a class="btn btn-gold" href="'+url(g).replace('https://','webcal://')+'">In Kalender öffnen</a></div>').join('')
-      +'<p class="abo-p abo-s">iPhone und Mac: „In Kalender öffnen“ tippen. Google Kalender: am Computer calendar.google.com öffnen, bei „Weitere Kalender“ das Plus wählen, „Per URL“ und den kopierten Link einfügen.</p></div>';
-    document.body.appendChild(box);
-    box.addEventListener('click',async e=>{
-      if(e.target===box||e.target.closest('.sh-x')){ close(); return; }
-      const b=e.target.closest('[data-g]'); if(!b) return;
-      try{ await navigator.clipboard.writeText(url(b.dataset.g)); TOAST.show('Link kopiert',{type:'ok'}); }
-      catch(err){ TOAST.show(url(b.dataset.g),{type:'info',duration:12000}); }
-    });
-    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
-  }
-  function open(){ if(!box) build(); box.hidden=false; box.querySelector('.sh-x').focus({preventScroll:true}); }
-  function close(){ if(box) box.hidden=true; }
-  return {open,close,url};
 })();
 
 /* ── Dateien speichern (Browser: Download, Android-App: Ordner Downloads) ── */
