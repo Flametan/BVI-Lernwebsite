@@ -50,7 +50,7 @@ const eq = (n, a, b) => ok(n + ' (ist: ' + JSON.stringify(a) + ')', JSON.stringi
   await B.click('[data-a="join"]'); await B.waitForSelector('#ph', { state: 'attached' });
   ok('Foto-Auswahl ist neben der Live-Kamera angeboten', await B.locator('[data-a="photo"]').count() === 1);
   await B.setInputFiles('#ph', { name: 'qr.png', mimeType: 'image/png', buffer: Buffer.from(png, 'base64') });
-  await B.waitForSelector('textarea.pz-code'); const c2 = await B.inputValue('textarea.pz-code');
+  await B.waitForSelector('#qr svg'); const c2 = await B.inputValue('textarea.pz-code[readonly]');   // erst warten, bis das Foto gelesen und der Antwort-Code da ist
   await A.fill('#pc', c2); await A.click('[data-a="paste"]');
   await A.waitForSelector('[data-a="go"]', { timeout: 30000 }); await B.waitForSelector('[data-a="ready"]');
   ok('Beide Spieler sind in der Lobby', (await A.innerText('.pz-card')).includes('MAX GEGEN LENA') || /Max gegen Lena/i.test(await A.innerText('.pz-card')));

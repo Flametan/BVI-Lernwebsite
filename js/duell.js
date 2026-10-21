@@ -90,7 +90,7 @@ const DUELL=(function(){
   function mkPc(){const stun=get(SK,true);pc=new RTCPeerConnection({iceServers:stun?[{urls:'stun:stun.l.google.com:19302'}]:[]});
     pc.onconnectionstatechange=()=>{if(!pc)return;const s=pc.connectionState;if(s==='failed'||s==='closed')setDown(true);else if(s==='connected'){if(down&&dc&&dc.readyState==='open')lastRx=performance.now();}};
     pc.ondatachannel=e=>wire(e.channel);}
-  function wire(ch){dc=ch;dc.onopen=()=>{alive=true;lastRx=performance.now();send({t:'hello',name:me,sig:F.sig()});startHb();};dc.onmessage=e=>{let m;try{m=JSON.parse(e.data);}catch(x){return;}rx(m);};dc.onclose=()=>setDown(true);}
+  function wire(ch){dc=ch;let opened=false;const onOpen=()=>{if(opened)return;opened=true;alive=true;lastRx=performance.now();send({t:'hello',name:me,sig:F.sig()});startHb();};dc.onopen=onOpen;if(ch.readyState==='open')onOpen();dc.onmessage=e=>{let m;try{m=JSON.parse(e.data);}catch(x){return;}rx(m);};dc.onclose=()=>setDown(true);}
   const send=m=>{try{if(dc&&dc.readyState==='open')dc.send(JSON.stringify(m));}catch(e){}};
   function startHb(){clearInterval(hb);hb=setInterval(()=>{send({t:'ping'});if(performance.now()-lastRx>6000)setDown(true);if(down&&performance.now()-downAt>30000){setDown(false,true);giveUp();}},2000);}
   function setDown(on,force){if(on&&!down){down=true;downAt=performance.now();if(gameOn)F.duelPause(true);else if(alive)card('<div class="pz-qt">Verbindung unterbrochen</div><div class="pz-fb">Warte auf die Verbindung …</div>');}
