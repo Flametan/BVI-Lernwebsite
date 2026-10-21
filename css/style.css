@@ -1894,7 +1894,8 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
   #m-home .m-hgrid{grid-template-columns:5fr 7fr;grid-template-rows:auto auto 1fr auto;gap:20px;}
   #m-home .m-hl,#m-home .m-hr2{display:contents;}
   .m-cont2{grid-column:1;grid-row:1;}
-  .m-chart2{grid-column:2;grid-row:1 / span 3;}
+  .m-chart2{grid-column:2;grid-row:1 / span 2;}
+  .m-donate-home{grid-column:2;grid-row:3;align-self:start;}
   .m-pause{grid-column:1;grid-row:2;align-self:start;}
   .m-cloud{grid-column:1;grid-row:3;align-self:start;}
   .m-mods{grid-column:1 / -1;grid-row:4;}
@@ -1944,7 +1945,7 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 /* Handy: Reihenfolge Weiterlernen, 2. Ausbildungsjahr, Verlauf, 1. Ausbildungsjahr, Cloud */
 @media(max-width:700px){
   #m-home .m-hl,#m-home .m-hr2,#m-home .m-mods,#m-home .m-modgrid2{display:contents;}
-  .m-cont2{order:1;}.m-r2{order:2;}.m-chart2{order:3;}.m-pause{order:4;}.m-y1{order:5;}.m-cloud{order:6;}
+  .m-cont2{order:1;}.m-r2{order:2;}.m-chart2{order:3;}.m-pause{order:4;}.m-y1{order:5;}.m-cloud{order:6;}.m-donate-home{order:7;}
   .m-chart2 .m-seg-s button{height:24px;font-size:.75rem;padding:0 9px;min-width:0;}
 }
 
