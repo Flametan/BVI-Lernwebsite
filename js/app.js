@@ -46,9 +46,9 @@ const NAV = (function(){
     if(id==='v-app') INSTALL.render();
     ETIMER.mount(id);
     if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); }
-    DANKE.hide();
     if(id==='v-home'){ SHELL.newQuip(); SHELL.renderHome(); }
     if(id==='v-pruefung') SHELL.renderExam();
+    if(typeof JGUI!=='undefined'&&JGUI.names) setTimeout(JGUI.names,0);
     if(id==='v-settings') SHELL.syncSettings();
     if(id==='v-notizen') SHELL.renderNotes();
     if(id==='v-abkuerzungen') ABK.init();
@@ -2828,7 +2828,7 @@ const LP=(function(){
     box.innerHTML=its.map((d,i)=>{
       const body=d.querySelector('.acc-body')||d.querySelector('.lp-held');
       const read=CHECKS.get(id,ckOf(d));
-      const ctl=ed?'<span class="jg-ctl jg-cx" role="button" tabindex="0" aria-label="Kapitel löschen" data-key="'+esc(JGUI.chapterKey(id,d))+'">✕</span>':'';
+      const key=ed?JGUI.chapterKey(id,d):'', ctl=key?'<span class="jg-ctl jg-cx" role="button" tabindex="0" aria-label="Kapitel löschen" data-key="'+esc(key)+'">✕</span>':'';
       return '<button type="button" class="lp-card'+(read?' read':'')+'" data-i="'+i+'"><span class="acc-num">'+esc(numOf(d,i))+'</span><span class="t">'+esc(titleOf(d))+'</span>'+(read?'<span class="acc-pts">✓ gelesen</span>':'')+'<span class="pv">'+esc(body?preview(body):'')+'</span><span class="go">Kapitel öffnen ›</span>'+ctl+'</button>';
     }).join('');
   }
@@ -4025,9 +4025,11 @@ const CHANGELOG=(function(){
       'Lernseiten: Abkürzungen (z. B. ELW, FwDV, HBKG) sind beim ersten Vorkommen auf der Seite unterstrichen; ein Tipp zeigt Name und Erläuterung aus dem Abkürzungsverzeichnis',
       'Neu: Markierten Text auf einer Lernseite mit „Als Lernkarte“ direkt zu einer eigenen Lernkarte machen (Modul wird vorgewählt, die Frage schreibst du dazu)',
       'Updates: Bei einer neuen Version erscheint ein Hinweis „Aktualisieren“, statt dass die Seite mitten im Lernen neu lädt',
-      'Spendenlink: dezente Karte unten auf der Startseite; nach 10 Stunden Nutzung ein kleines „Danke“ (höchstens 2-mal, nur auf der Startseite, mit „Später“ und „Nicht mehr zeigen“)',
+      'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Jahrgang einrichten (Einstellungen → Lehrgang): Checkliste mit Stundenplänen, Klausurterminen, Lehrgangs-Link, Standorten und Lernkarten des Jahrgangs; die Datei trägt alles mit',
+      'Lernseiten: „+ Eigene Ergänzung“ und „+ Eigene Frage“ erscheinen erst nach „Seite bearbeiten“; Ergänzungen als Freitext, Single-Choice oder Multiple-Choice, dazu eigene Kapitel; das Kreuz sitzt rechts an der Frage',
       'Klausuren: In Jahrgängen lassen sich direkt auf der Prüfungsseite eigene Fragen hinzufügen, bearbeiten, entfernen und üben (sie zählen für Einsatzfahrt, wenn die Prüfung klausurrelevant ist)',
       'Stundenplan (Jahrgänge): Für IdF gibt es je einen Plan für Gruppe 1 und Gruppe 2 mit Umschalter; mit „Als aktiven Stundenplan markieren“ wählst du die Gruppe für Startseite und Widgets',
       'Einsatzfahrt-Duell: Farbverlauf auf der Karte entfernt',
@@ -6163,30 +6165,7 @@ const USAGE=(function(){
   };
 })();
 
-/* ── Danke-Hinweis: höchstens 2-mal, erstmals nach 10 h Nutzung, nur auf der Startseite ── */
-const DANKE=(function(){
-  const KEY='bvi_danke', URL='https://www.paypal.me/FabianFlemig', STEP=10*3600, MAX=2;
-  function load(){ try{ return Object.assign({n:0,next:STEP},JSON.parse(localStorage.getItem(KEY)||'{}')); }catch(e){ return {n:0,next:STEP}; } }
-  function save(d){ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){} }
-  function hide(){ document.getElementById('danke')?.remove(); }
-  function maybe(){
-    if(document.getElementById('danke')) return;
-    const d=load(), t=USAGE.total();
-    if(d.n>=MAX||t<d.next) return;
-    const h=Math.floor(t/3600);
-    const el=document.createElement('div'); el.id='danke'; el.setAttribute('role','status');
-    el.innerHTML='<div class="dk-t"><span class="dk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></span><div><b>Schon '+h+' Stunden gelernt – stark!</b><p>Wenn dir die Seite hilft, freue ich mich über eine kleine, freiwillige Spende. Danke dir!</p></div></div>'
-      +'<div class="dk-b"><a class="dk-go" href="'+URL+'" target="_blank" rel="noopener noreferrer">Spenden</a><button type="button" class="dk-later">Später</button><button type="button" class="dk-no">Nicht mehr zeigen</button></div>';
-    const set=o=>{ save(Object.assign(d,o)); hide(); };
-    el.querySelector('.dk-go').onclick=()=>set({n:MAX});
-    el.querySelector('.dk-later').onclick=()=>set({n:d.n+1,next:t+STEP});
-    el.querySelector('.dk-no').onclick=()=>set({n:MAX});
-    document.body.appendChild(el);
-    // Als gezeigt zählen, auch wenn nur weggewischt wird
-    save(Object.assign(d,{n:d.n+1,next:t+STEP}));
-  }
-  return {URL,maybe,hide};
-})();
+const SPENDE_URL='https://www.paypal.me/FabianFlemig';
 
 /* ── Bild-Vergrößerung (Lightbox) ───────────────────────────────────────── */
 const LIGHTBOX=(function(){
@@ -6806,7 +6785,9 @@ const SHELL=(function(){
   const DEF_EXAM=DEF_EXAMS[0];
   function defExam(){
     const t=new Date(); t.setHours(0,0,0,0);
-    return DEF_EXAMS.find(e=>new Date(e.date+'T00:00')>=t)||DEF_EXAMS[DEF_EXAMS.length-1];
+    let list=DEF_EXAMS;   // andere Jahrgänge: eigene Termine, sonst kein Countdown
+    if(!JG.isMaster()){ const tm=JG.data().termine; list=tm.length?tm:[{date:'2000-01-01',name:'Klausur'}]; }
+    return list.find(e=>new Date(e.date+'T00:00')>=t)||list[list.length-1];
   }
   function examCfg(){
     const d=defExam();
@@ -6885,12 +6866,12 @@ const SHELL=(function(){
     const mods=`<div class="m-card m-mods"><div class="m-modgrid2"><div class="m-r2"><div class="m-sec">2. Ausbildungsjahr</div><div class="m-rings">${MODS.filter(m=>m[5]===2).map(ringBtn).join('')}</div></div>
       <details class="m-y1${wide?' static':''}"${y1Open||wide?' open':''} ontoggle="SHELL.y1(this.open)"><summary>1. Ausbildungsjahr</summary><div class="inner"><div class="m-rings r3">${MODS.filter(m=>m[5]===1).map(ringBtn).join('')}</div></div></details></div></div>`;
     const pause=`<div class="m-list m-pause">${row({ic:ic('cards'),t1:'Lernkarten',t2:cs.due?cs.due+' zur Wiederholung fällig · '+cs.known+' von '+cs.total+' gelernt':cs.known+' von '+cs.total+' gelernt · Karten üben',on:goJs('v-flashcards','Lernkarten')})}</div>`;
-    const cloud=`<div class="m-list m-cloud"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2 m-cloud-x">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
-    const donate=`<a class="m-list m-donate m-donate-home" href="${DANKE.URL}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><div class="m-row m-go">${ic('heart')}<span class="m-tx"><span class="m-t1">Gefällt dir die Seite?</span><span class="m-t2">Kostenlos &amp; werbefrei – freiwillig unterstützen</span></span></div></a>`;
+    const lk=JG.isMaster()?{url:'https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare',titel:'Lehrgangs-Cloud',hinweis:'Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe'}:JG.data().links.cloud;
+    const cloud=lk?`<div class="m-list m-cloud"><a class="m-row m-go" href="${esc(lk.url)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">${esc(lk.titel||'Lehrgangs-Link')}</span>${lk.hinweis?`<span class="m-t2 m-cloud-x">${esc(lk.hinweis)}</span>`:''}</span></a></div>`:'';
+    const donate=`<a class="m-list m-donate m-donate-home" href="${SPENDE_URL}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><div class="m-row m-go">${ic('heart')}<span class="m-tx"><span class="m-t1">Gefällt dir die Seite?</span><span class="m-t2">Kostenlos &amp; werbefrei – freiwillig unterstützen</span></span></div></a>`;
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
       <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}</div></div>`;
-    DANKE.maybe();
   }
 
   function renderExam(){
