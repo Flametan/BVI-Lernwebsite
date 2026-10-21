@@ -3798,6 +3798,7 @@ const CHANGELOG=(function(){
     {v:'3.0.0',ts:'2026-10-19T22:00',items:[
       'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Stundenplan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links',
       'Startseite: Wochen- und Monatsdiagramm passt auf dem Handy wieder vollständig in die Karte',
+      'Einstellungen: Gruppen (Darstellung, Lernen, Erinnerung, Daten, Werkzeuge, App) klappen auf und zu und zeigen die aktuellen Werte; „Projekt unterstützen“ bleibt immer unten sichtbar',
       'Farbschema: Dunkel, Hell oder System (Einstellungen → Farbschema)',
       'Akzentfarbe wählbar (5 Vorgaben oder Farbkreis); sie färbt Navigation, Rahmen und Grafiken, in der Android-App auch das Symbol auf dem Startbildschirm',
       'Neues App-Symbol: die Flamme der Website',
@@ -4516,6 +4517,7 @@ const CHANGELOG=(function(){
       localStorage.setItem(KEY,APP_VERSION);
       _updateTile();
       document.getElementById('m-cl-badge')?.classList.add('hidden');
+      document.getElementById('m-cl-badge2')?.classList.add('hidden');
     },
     close(){
       document.getElementById('changelog-modal').classList.add('hidden');
@@ -6385,7 +6387,25 @@ const SHELL=(function(){
     if(di) di.value=ex.date; if(ni) ni.value=ex.name===defExam().name&&!localStorage.getItem('bvi_exam')?'':ex.name;
     const tg=document.getElementById('m-notif-toggle'); if(tg) tg.checked=NOTIF.isEnabled();
     document.getElementById('m-cl-badge')?.classList.toggle('hidden',!CHANGELOG.isNew());
+    document.getElementById('m-cl-badge2')?.classList.toggle('hidden',!CHANGELOG.isNew());
+    accSubs();
   }
+
+  // Kurzinfo unter jeder Einstellungs-Gruppe (zeigt die aktuellen Werte, auch wenn die Gruppe zu ist)
+  function accSubs(){
+    const set=(id,txt)=>{ const e=document.getElementById(id); if(e) e.textContent=txt; };
+    const th={dark:'Dunkel',light:'Hell',system:'System'}[localStorage.getItem('bvi_theme')]||'System';
+    const fs={sm:'A−',md:'A',lg:'A+',xl:'A++'}[localStorage.getItem('bvi_font_size')||'md']||'A';
+    const nc=notes().length, bc=BOOKMARKS.getAll().length;
+    const lb=BACKUP.last();
+    set('acc-dar-sub',th+' · Schrift '+fs);
+    set('acc-ler-sub','Tagesziel '+goalMin()+' min · Timer '+(document.documentElement.classList.contains('no-timers')?'aus':'an'));
+    set('acc-eri-sub',NOTIF.isEnabled()?'Täglich um '+NOTIF.hour()+':00':'Aus');
+    set('acc-dat-sub',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
+    set('acc-wer-sub',nc+(nc===1?' Notiz':' Notizen')+' · '+bc+' Lesezeichen');
+  }
+  document.addEventListener('click',e=>{ if(e.target.closest('#v-settings')) setTimeout(accSubs,0); });
+  document.addEventListener('change',e=>{ if(e.target.closest('#v-settings')) setTimeout(accSubs,0); });
 
   // alte Einstellungen und Zähler der entfernten Funktionen „Karten pro Tag“ und „Zahl bei den Lernkarten“ löschen
   ['bvi_cardgoal','bvi_tabnum','bvi_cards_day'].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
@@ -6430,6 +6450,11 @@ const SHELL=(function(){
     reportQuiz(sfx){
       const t=id=>document.getElementById(id+(sfx||''))?.textContent?.trim()||'';
       return this.report((sfx?'IdF-Quiz ':'')+'Frage '+t('quiz-counter')+' ['+t('quiz-cat')+']:\n'+t('quiz-q'));
+    },
+    acc(btn){
+      const open=btn.getAttribute('aria-expanded')!=='true';
+      document.querySelectorAll('#v-settings .m-acc-h').forEach(h=>{ h.setAttribute('aria-expanded','false'); document.getElementById(h.getAttribute('aria-controls')).hidden=true; });
+      if(open){ btn.setAttribute('aria-expanded','true'); document.getElementById(btn.getAttribute('aria-controls')).hidden=false; }
     },
     stepGoal(d){
       const g=Math.min(240,Math.max(5,goalMin()+d*5));

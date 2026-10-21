@@ -2459,3 +2459,14 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
   .m-tab{position:relative;}
   .m-tab::before{content:'';position:absolute;inset:-5px 0 -6px;}
 }
+
+/* Einstellungen: aufklappbare Gruppen (immer nur eine offen) */
+.m-acc{background:var(--m-card);border-radius:16px;overflow:hidden;}
+.m-acc-h{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:13px 16px;min-height:58px;color:var(--m-fg);font-family:inherit;font-size:inherit;background:none;border:0;cursor:pointer;}
+.m-acc-h .m-t2{display:block;}
+.m-acc-chv{width:18px;height:18px;margin-left:auto;flex-shrink:0;color:var(--m-muted);transition:transform .2s;}
+.m-badge+.m-acc-chv{margin-left:8px;}
+.m-acc-h[aria-expanded=true] .m-acc-chv{transform:rotate(90deg);}
+.m-acc-b{border-top:1px solid var(--m-line,rgba(128,128,128,.18));}
+.m-acc-b .m-list{border-radius:0;background:transparent;}
+@media(prefers-reduced-motion:reduce){.m-acc-chv{transition:none;}}
