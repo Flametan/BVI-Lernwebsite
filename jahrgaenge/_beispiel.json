@@ -26,6 +26,6 @@
     ],
     "weg": ["v-laufbahn-2023"]
   },
-  "glow": ["laufbahn", "idf", "feuak", "vak", "ibk"],
+  "nrel": ["v-vak-klausurhinweise"],
   "bilder": {}
 }

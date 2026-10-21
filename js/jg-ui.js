@@ -185,19 +185,77 @@ const JGUI=(function(){
   async function fillImages(root){
     for(const im of root.querySelectorAll('img[data-b]')){ const u=await JG.img.get(im.dataset.b); if(u) im.src=u; else im.remove(); }
   }
+  const hash=s=>{ let h=5381; for(let i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))|0; return (h>>>0).toString(36); };
+  // Kapitel (a) und Blöcke (b) einer Seite mit stabiler Kennung aus ihrem Text (bleibt bei Umsortieren gleich).
+  // Der Inhalt eines gerade geöffneten Kapitels liegt im Lesefenster; bodyOf findet ihn dort.
+  const bodyOf=d=>{ const b=$(d,'.acc-body'); if(b) return b; const h=typeof LP!=='undefined'&&LP.held&&LP.held(); return h&&h.d===d?h.body:null; };
+  function parts(id,pc){
+    const seen={}, out=[];
+    const add=(el,kind,txt)=>{
+      const b=hash(txt.replace(/\s+/g,' ').trim().slice(0,200)), n=seen[kind+b]=(seen[kind+b]||0)+1;
+      out.push({el,kind,kap:b+(n>1?'~'+n:''),key:id+'|'+kind+'|'+b+(n>1?'~'+n:'')});
+    };
+    const blk=el=>{ if(el.closest('.jg-erg,.jg-e')) return; const t=$(el,'.info-card-title,.def-box-label'); add(el,'b',(t?t.textContent:'')+'|'+el.textContent.slice(0,80)); };
+    const chs=[...pc.querySelectorAll('.acc-item')];
+    chs.forEach(el=>add(el,'a',($(el,'.acc-title')||el).textContent));
+    pc.querySelectorAll('.info-card,.def-box').forEach(el=>{ if(!el.closest('.acc-item')) blk(el); });
+    chs.forEach(d=>{ const b=bodyOf(d); if(b) b.querySelectorAll('.info-card,.def-box').forEach(blk); });
+    return out;
+  }
+  const chapterKey=(id,d)=>{ const v=document.getElementById(id), p=v&&parts(id,v.querySelector('.pc')).find(x=>x.el===d); return p?p.key:''; };
+  const ergHtml=e=>'<div class="m-card jg-e" data-id="'+E(e.id)+'"><div class="jg-eh"><b>'+E(e.titel||'Ergänzung')+'</b><span><button type="button" class="jg-ed" aria-label="Ergänzung bearbeiten">Bearbeiten</button><button type="button" class="jg-dl" aria-label="Ergänzung löschen">Löschen</button></span></div>'+para(e.text)+(e.bild?'<img class="jg-img" data-b="'+E(e.bild)+'" alt="Bild zur Ergänzung">':'')+'</div>';
+  let editPage=null;
   function mount(id){
     const v=document.getElementById(id); if(!v) return;
     const pc=v.querySelector('.pc'); if(!lessonLike(pc)) return;
+    [pc,...document.querySelectorAll('.lp-win')].forEach(r=>r.querySelectorAll('.jg-ctl,.jg-erg-k').forEach(x=>x.remove()));
+    pc.classList.toggle('jg-ed-on',editPage===id);
+    const d=JG.data(), gone=new Set(d.ausg), mine=new Set(JG.local().ausg), all=parts(id,pc);
+    all.forEach(p=>p.el.classList.toggle('jg-gone',gone.has(p.key)));
+    const ed=editPage===id, ks=new Map(all.filter(p=>p.kind==='a'&&!gone.has(p.key)).map(p=>[p.kap,p]));
+    // Ergänzungen: in ihrem Kapitel, sonst unten auf der Seite
+    const items=d.erg.filter(e=>e.seite===id).sort((a,b)=>a.ts-b.ts), rest=items.filter(e=>!(e.kap&&ks.has(e.kap)));
+    ks.forEach((p,kap)=>{
+      const body=bodyOf(p.el); if(!body) return;
+      const own=items.filter(e=>e.kap===kap);
+      if(own.length){ const w=document.createElement('div'); w.className='jg-erg-k'; w.innerHTML=own.map(ergHtml).join(''); body.appendChild(w); }
+      if(ed){ const b=document.createElement('button'); b.type='button'; b.className='jg-plus jg-ctl jg-in'; b.dataset.kap=kap; b.innerHTML='<span>+</span> Ergänzung in diesem Kapitel'; body.appendChild(b); }
+    });
+    if(ed) all.forEach(p=>{
+      if(gone.has(p.key)) return;
+      const b=document.createElement('button'); b.type='button'; b.className='jg-ctl '+(p.kind==='a'?'jg-cx':'jg-bx'); b.dataset.key=p.key;
+      b.setAttribute('aria-label',p.kind==='a'?'Kapitel löschen':'Block löschen'); b.textContent='✕';
+      if(p.kind==='a'){ const s=$(p.el,'summary'); if(s) s.insertBefore(b,$(s,'.acc-arrow')); } else p.el.insertBefore(b,p.el.firstChild);
+    });
     let box=pc.querySelector(':scope > .jg-erg');
     if(!box){ box=document.createElement('div'); box.className='jg-erg'; pc.appendChild(box); }
-    const items=JG.data().erg.filter(e=>e.seite===id).sort((a,b)=>a.ts-b.ts);
-    box.innerHTML=(items.length?'<div class="m-sec">Eigene Ergänzungen</div>':'')
-      +items.map(e=>'<div class="m-card jg-e" data-id="'+E(e.id)+'"><div class="jg-eh"><b>'+E(e.titel||'Ergänzung')+'</b><span><button type="button" class="jg-ed" aria-label="Ergänzung bearbeiten">Bearbeiten</button><button type="button" class="jg-dl" aria-label="Ergänzung löschen">Löschen</button></span></div>'+para(e.text)+(e.bild?'<img class="jg-img" data-b="'+E(e.bild)+'" alt="Bild zur Ergänzung">':'')+'</div>').join('')
+    box.innerHTML=(rest.length?'<div class="m-sec">Eigene Ergänzungen</div>':'')+rest.map(ergHtml).join('')
       +'<button type="button" class="jg-plus" aria-label="Eigene Ergänzung hinzufügen"><span>+</span> Eigene Ergänzung</button>';
-    fillImages(box);
+    const n=all.filter(p=>mine.has(p.key)).length;
+    const bar=document.createElement('div'); bar.className='jg-bar jg-ctl';
+    bar.innerHTML='<button type="button" class="btn btn-ghost jg-be">'+(ed?'Fertig':'Seite bearbeiten')+'</button>'+(n?'<button type="button" class="btn btn-ghost jg-br">'+n+' gelöschte wiederherstellen</button>':'');
+    pc.insertBefore(bar,pc.firstChild);
+    fillImages(pc);
+    if(typeof LP!=='undefined'&&LP.refresh) LP.refresh(id);
+  }
+  function delPart(key){
+    const l=JG.local(), prev=JSON.stringify(l);
+    if(!l.ausg.includes(key)) l.ausg.push(key);
+    JG.saveLocal(l);
+    TOAST.show(key.split('|')[1]==='a'?'Kapitel gelöscht':'Block gelöscht',{type:'ok',undo:()=>JG.saveLocal(JSON.parse(prev))});
+  }
+  function restoreParts(id){
+    const l=JG.local(), prev=JSON.stringify(l), n=l.ausg.filter(k=>k.startsWith(id+'|')).length;
+    l.ausg=l.ausg.filter(k=>!k.startsWith(id+'|')); JG.saveLocal(l);
+    TOAST.show(n+' gelöschte Inhalte sind wieder da',{type:'ok',undo:()=>JG.saveLocal(JSON.parse(prev))});
   }
   document.addEventListener('click',e=>{
-    const v=document.querySelector('.view.active'); if(!v) return;
+    const v=document.querySelector('.view.active'); if(!v||!e.target.closest) return;
+    const x=e.target.closest('.jg-cx,.jg-bx');
+    if(x){ e.preventDefault(); e.stopPropagation(); delPart(x.dataset.key); return; }
+    const inb=e.target.closest('.jg-in'); if(inb){ ergEditor(v.id,null,inb.dataset.kap); return; }
+    if(e.target.closest('.jg-be')){ editPage=editPage===v.id?null:v.id; mount(v.id); return; }
+    if(e.target.closest('.jg-br')){ restoreParts(v.id); return; }
     if(e.target.closest('.jg-plus')) ergEditor(v.id);
     const c=e.target.closest('.jg-e'); if(!c) return;
     if(e.target.closest('.jg-ed')) ergEditor(v.id,c.dataset.id);
@@ -207,8 +265,8 @@ const JGUI=(function(){
       const prev=JSON.stringify(l); l.erg.splice(i,1); JG.saveLocal(l);
       TOAST.show('Ergänzung gelöscht',{type:'ok',undo:()=>{ JG.saveLocal(JSON.parse(prev)); }});
     }
-  });
-  function ergEditor(seite,id){
+  },true);
+  function ergEditor(seite,id,kap){
     const cur=id?JG.data().erg.find(e=>e.id===id):null;
     const m=modal(cur?'Ergänzung bearbeiten':'Eigene Ergänzung','<label class="jg-l">Überschrift<input type="text" id="jg-et" class="m-input" maxlength="120" value="'+E(cur?cur.titel:'')+'"></label><label class="jg-l">Text<textarea id="jg-ex" class="m-input" rows="8" maxlength="20000" placeholder="Text eingeben oder aus einem Bild einlesen">'+E(cur?cur.text:'')+'</textarea></label><div class="jg-ocr-w"></div><div id="jg-ep" class="jg-ep"></div><label class="jg-chk"><input type="checkbox" id="jg-keep" checked> Bild zusätzlich anzeigen</label><p class="m-note" style="padding:0;margin:8px 0">'+NOTICE+'</p><button class="btn btn-gold" id="jg-es" type="button">Speichern</button>');
     let imgData=null, imgId=cur&&cur.bild||null;
@@ -224,7 +282,7 @@ const JGUI=(function(){
       const keep=$(m.body,'#jg-keep').checked;
       let bild=keep?imgId:null;
       if(imgData&&keep){ bild=JG.newId(); try{ await JG.img.put(bild,imgData); }catch(e){ bild=null; TOAST.show('Das Bild konnte nicht gespeichert werden',{type:'info'}); } }
-      const l=JG.local(), item={id:cur?cur.id:JG.newId(),seite,titel,text,bild,ts:cur?cur.ts:Date.now()}, i=l.erg.findIndex(x=>x.id===item.id);
+      const l=JG.local(), item={id:cur?cur.id:JG.newId(),seite,kap:cur?cur.kap:(kap||null),titel,text,bild,ts:cur?cur.ts:Date.now()}, i=l.erg.findIndex(x=>x.id===item.id);
       if(i>=0) l.erg[i]=item; else l.erg.push(item);
       JG.saveLocal(l); m.close(); TOAST.show('Ergänzung gespeichert',{type:'ok'});
     };
@@ -234,9 +292,9 @@ const JGUI=(function(){
   let editing=false;
   const isEditing=()=>editing;
   function toggleEdit(){ editing=!editing; SHELL.renderExam(); }
-  function setGlow(key){
-    const l=JG.local(), g=new Set(JG.glow()); if(g.has(key)) g.delete(key); else g.add(key);
-    l.glow=[...g]; JG.saveLocal(l);
+  function setRel(id){
+    const l=JG.local(), n=new Set(JG.data().nrel||[]); if(n.has(id)) n.delete(id); else n.add(id);
+    l.nrel=[...n]; JG.saveLocal(l);
   }
   function delExam(id){
     const l=JG.local(), prev=JSON.stringify(l), i=l.pr.hinzu.findIndex(p=>p.id===id);
@@ -332,6 +390,6 @@ const JGUI=(function(){
   settings();
   JG.load();
 
-  return { settings, mount, closeTop, planEditor, planPhoto, parsePlanText, parseQuestions, ocr, isEditing, toggleEdit, setGlow, delExam, restoreExams,
+  return { settings, mount, chapterKey, closeTop, planEditor, planPhoto, parsePlanText, parseQuestions, ocr, isEditing, toggleEdit, setRel, delExam, restoreExams,
     examEditor, openExam, notice:NOTICE };
 })();
