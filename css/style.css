@@ -2437,3 +2437,7 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
 .skip-link{position:fixed;left:12px;top:-60px;z-index:var(--z-critical);background:var(--m-accent);color:var(--m-on-accent);padding:10px 16px;border-radius:12px;font-weight:700;text-decoration:none;transition:top .15s;}
 .skip-link:focus{top:12px;}
+
+/* Barrierefreiheit (B): sichtbarer Fokusrahmen bei Tastaturbedienung (Kontrast mindestens 3:1), Mausklicks bleiben unverändert */
+:focus-visible{outline:2px solid var(--m-accent-fg,#ffa412)!important;outline-offset:2px!important;}
+:where(.m-ri,.m-tab,.m-brand,.m-go,.m-row):focus-visible{outline-offset:-3px!important;border-radius:12px;}
