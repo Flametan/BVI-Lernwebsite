@@ -2485,3 +2485,4 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 /* schmale Geräte mit großer Schrift: Raster und Auswahlleisten brechen um statt über den Rand zu laufen */
 @media(max-width:700px){.sim-menu{grid-template-columns:minmax(0,1fr);}}
 .pz-mode{flex-wrap:wrap;}
+#m-hl-bar{max-width:calc(100vw - 16px);flex-wrap:wrap;justify-content:center;}

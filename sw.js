@@ -59,7 +59,6 @@ self.addEventListener('install', e => {
       .then(res => { if(!res.ok) throw new Error(u + ' ' + res.status); return cache.put(u, res); })
       .catch(err => { if(!u.startsWith('./img/')) throw err; })
   ))));
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', e => {
@@ -101,3 +100,6 @@ self.addEventListener('fetch', e => {
     );
   }
 });
+
+// Die Seite fragt beim Nutzer nach und löst das Aktualisieren aus (statt automatischem Neuladen)
+self.addEventListener('message', e => { if(e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting(); });
