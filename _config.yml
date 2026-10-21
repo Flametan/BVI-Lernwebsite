@@ -1,0 +1,8 @@
+# Jekyll (GitHub Pages): nicht zur Website gehörende Ordner und Dateien nicht veröffentlichen
+exclude:
+  - android
+  - tests
+  - docs
+  - .github
+  - README.md
+  - node_modules

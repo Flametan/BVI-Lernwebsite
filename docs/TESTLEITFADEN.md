@@ -7,10 +7,10 @@ Ziel: herausfinden, wo jemand hängen bleibt, der die App zum ersten Mal sieht. 
 - Der Person sagen: „Denk laut. Du testest die App, nicht dich.“
 
 ## Aufgaben (jeweils: Zeit stoppen, Stolpern notieren)
-1. **Einrichten:** Farbschema und Akzentfarbe wählen, Kartenziel auf 10 stellen.
+1. **Einrichten:** Farbschema und Akzentfarbe wählen.
 2. **Stundenplan:** „Wann und wo beginnt am Dienstag der Unterricht in Gruppe 2?“
 3. **Telefonnummer:** „Wie erreichst du Herrn Spahlholz?“
-4. **Lernkarten:** Fünf Karten lernen, eine als „schwer“ markieren. Danach: „Wo siehst du, wie viele Karten du heute noch schaffen willst?“
+4. **Lernkarten:** Fünf Karten lernen, eine als „schwer“ markieren. Danach: „Wo siehst du, welche Karten du als schwer markiert hast?“
 5. **Eigene Karte:** Eine eigene Lernkarte anlegen.
 6. **Prüfung:** Die Klausur 08/2026 öffnen und einen 45-Minuten-Timer starten.
 7. **Fehler melden:** Auf einer Lernseite einen Fehler melden.

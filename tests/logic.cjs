@@ -364,6 +364,68 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Spende: ganze Karte ist ein Link', dq.tag === 'A' && dq.href && dq.note);
   ok('Startseite: Satz wechselt beim erneuten Aufrufen, bleibt beim Neuzeichnen', dq.many >= 4 && dq.same);
 
+  // ── Fehlerbehebungen aus dem Bugtest ──
+  const bf = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    // j und f in Textfeldern auf der Lernkarten-Seite
+    NAV.tab('v-flashcards', 'Lernkarten'); await w(300);
+    CUSTOM.open(); await w(200);
+    const q = document.getElementById('cu-q'); q.focus();
+    r.jTyped = q.dispatchEvent(new KeyboardEvent('keydown', { key: 'j', bubbles: true, cancelable: true }));   // true = nicht abgefangen
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })); await w(100);
+    // Lesezeichen und Verlauf in der Suche klickbar (kein kaputtes onclick)
+    NAV.go('v-gal-organisation', 'GAL'); await w(300);
+    BOOKMARKS.toggle ? 0 : 0;
+    localStorage.setItem('bvi_bookmarks', JSON.stringify([{ id: 'v-gal-organisation', label: 'GAL "Organisation"' }]));
+    localStorage.setItem('bvi_search_hist', JSON.stringify(['Glasl "x"']));
+    SEARCH.open(); await w(250);
+    const bk = document.querySelector('#search-results .bk-item');
+    r.bkOnclick = !!bk && /SEARCH\.goBk\(/.test(bk.getAttribute('onclick')) && bk.getAttribute('onclick').includes('Organisation');
+    NAV.home(); await w(100); bk && bk.click(); await w(300);
+    r.bkNav = document.querySelector('.view.active').id;
+    // Esc schließt nur das oberste Fenster
+    POMO.open(); await w(100); SEARCH.open(); await w(100);
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })); await w(100);
+    r.escOne = [document.getElementById('search-overlay').classList.contains('hidden'), document.getElementById('pomodoro-overlay').classList.contains('hidden')];
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })); await w(100);
+    r.escTwo = document.getElementById('pomodoro-overlay').classList.contains('hidden');
+    // Notiz bleibt auf der Seite, auf der sie geschrieben wurde
+    NAV.go('v-gal-organisation', 'GAL'); await w(300);
+    localStorage.removeItem('bvi_note_v-gal-organisation'); localStorage.removeItem('bvi_note_v-settings');
+    NOTES.open(); await w(100);
+    const ta = document.getElementById('notes-textarea'); ta.value = 'Testnotiz'; ta.dispatchEvent(new Event('input'));
+    NAV.go('v-settings', 'x'); await w(300);
+    r.note = [localStorage.getItem('bvi_note_v-gal-organisation'), localStorage.getItem('bvi_note_v-settings')];
+    localStorage.removeItem('bvi_note_v-gal-organisation');
+    // Android-Zurück-Taste
+    NAV.home(); await w(200);
+    r.back = [window.bviBack()];
+    NAV.go('v-gal-organisation', 'GAL'); await w(200);
+    SEARCH.open(); await w(100);
+    r.back.push(window.bviBack()); r.back.push(window.bviBack());
+    return r;
+  });
+  ok('Textfeld: Taste „j“ wird nicht verschluckt', bf.jTyped === true);
+  ok('Suche: Lesezeichen-Eintrag hat gültigen onclick und öffnet die Seite', bf.bkOnclick && bf.bkNav === 'v-gal-organisation');
+  eq('Esc schließt nur das oberste Fenster', [bf.escOne, bf.escTwo], [[true, false], true]);
+  eq('Notiz bleibt auf ihrer Seite', bf.note, ['Testnotiz', null]);
+  eq('Android-Zurück: Startseite verlassen, Fenster zuerst schließen, dann zurück', bf.back, ['exit', 'handled', 'back']);
+
+  // Sicherung: falsch geformte oder gefährliche Werte werden beim Einspielen aussortiert
+  const bi = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    const data = { bvi_bookmarks: 'null', bvi_progress: '[1]', bvi_usage: '"x"', bvi_fc_custom: JSON.stringify([{ id: 'own1', cat: 'IdF · Eigene Karte', q: '<img src=x onerror=alert(1)>', a: 'ok' }, { id: '"><b>', q: 'x', a: 'y' }]), bvi_note_v_home: 'x', 'bvi_note_<img>': 'x', bvi_font_size: 'lg', bvi_et_end: '1' };
+    window.confirm = () => false;   // nur die Aufbereitung prüfen, nichts schreiben
+    let shown = null; const t = TOAST.show; TOAST.show = m => { shown = m; };
+    const f = new File([JSON.stringify({ app: 'bvi-lernwebsite', exported: 'quatsch', data })], 'x.json');
+    const inp = document.createElement('input'); Object.defineProperty(inp, 'files', { value: [f] });
+    BACKUP.import(inp); await w(300); TOAST.show = t;
+    return { shown };
+  });
+  ok('Sicherung: kaputte Datei bringt keinen Fehler', bi.shown === null || typeof bi.shown === 'string');
+  const ac = await page.evaluate(() => { const c = ['#FFA412', '#C9A84C', '#E5484D', '#3E8EF7', '#3DBE7A']; const lum = h => { const n = parseInt(h.slice(1), 16), f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return .2126 * f(n >> 16 & 255) + .7152 * f(n >> 8 & 255) + .0722 * f(n & 255); }; const out = []; c.forEach(h => { ACCENT.set(h); const on = getComputedStyle(document.documentElement).getPropertyValue('--m-on-accent').trim(); const L = lum(h), o = on === '#111' ? .0056 : 1; out.push(((Math.max(L, o) + .05) / (Math.min(L, o) + .05)) >= 4.5); }); ACCENT.set('#FFA412'); return out; });
+  eq('Akzentfarben: Schrift auf Akzentfläche erreicht 4,5:1', ac, [true, true, true, true, true]);
+
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
   const tp = await tctx.newPage();

@@ -26,10 +26,39 @@ const PRECACHE = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
+  './icons/icon-maskable-512.png',
+  './img/armaturen/seite01_bild1.png',
+  './img/armaturen/seite01_bild2.png',
+  './img/armaturen/seite02_bild1.png',
+  './img/armaturen/seite04_bild1.png',
+  './img/armaturen/seite04_bild2.png',
+  './img/armaturen/seite04_bild3.png',
+  './img/armaturen/seite05_bild1.png',
+  './img/armaturen/seite05_bild2.png',
+  './img/armaturen/seite05_bild3.png',
+  './img/atemschutz/seite01_bild1.png',
+  './img/atemschutz/seite01_bild2.png',
+  './img/atemschutz/seite01_bild3.png',
+  './img/atemschutz/seite03_bild1.png',
+  './img/atemschutz/seite04_bild1.png',
+  './img/atemschutz/seite04_bild2.png',
+  './img/atemschutz/seite04_bild3.png',
+  './img/atemschutz/seite05_bild1.png',
+  './img/atemschutz/seite06_bild1.png',
+  './img/atemschutz/seite06_bild2.png',
+  './img/atemschutz/seite11_bild1.png',
+  './img/atemschutz/seite11_bild2.png',
+  './img/atemschutz/seite12_bild1.png',
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(PRECACHE)));
+  // Einzeln mit cache:'reload' laden (kein veralteter Browser-Cache) und ablegen;
+  // ein fehlschlagendes Bild verhindert die Installation nicht.
+  e.waitUntil(caches.open(CACHE).then(cache => Promise.all(PRECACHE.map(u =>
+    fetch(new Request(u, { cache: 'reload' }))
+      .then(res => { if(!res.ok) throw new Error(u + ' ' + res.status); return cache.put(u, res); })
+      .catch(err => { if(!u.startsWith('./img/')) throw err; })
+  ))));
   self.skipWaiting();
 });
 
@@ -43,27 +72,32 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   if(e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
-  const isCore = url.pathname.endsWith('.html') || url.pathname.endsWith('.css')
+  if(url.origin !== self.location.origin) return;
+  const isCore = e.request.mode === 'navigate'
+              || url.pathname.endsWith('.html') || url.pathname.endsWith('.css')
               || url.pathname.endsWith('.js')   || url.pathname.endsWith('.json') || url.pathname.endsWith('/')
               || url.pathname === '';
+
+  const store = res => {
+    if(res.ok){
+      const copy = res.clone(); // synchron, bevor der Body gelesen wird
+      e.waitUntil(caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {}));
+    }
+    return res;
+  };
 
   if(isCore){
     // Network-first: immer frisch vom Server, Cache nur als Offline-Fallback
     e.respondWith(
       fetch(e.request, { cache: 'no-cache' }) // immer beim Server nachfragen, nicht aus dem Browser-Zwischenspeicher
-        .then(res => {
-          if(res.ok) caches.open(CACHE).then(c => c.put(e.request, res.clone()));
-          return res;
-        })
-        .catch(() => caches.match(e.request))
+        .then(store)
+        .catch(() => caches.match(e.request, { ignoreSearch: true })
+          .then(r => r || (e.request.mode === 'navigate' ? caches.match('./index.html') : undefined)))
     );
   } else {
     // Cache-first für Icons/Bilder
     e.respondWith(
-      caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
-        if(res.ok) caches.open(CACHE).then(c => c.put(e.request, res.clone()));
-        return res;
-      }))
+      caches.match(e.request).then(cached => cached || fetch(e.request).then(store))
     );
   }
 });

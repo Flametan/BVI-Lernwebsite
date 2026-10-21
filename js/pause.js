@@ -14,7 +14,7 @@ const PAUSE=(function(){
   const set=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
   let root=null,cur=null,mode=get(MKEY,'beides'),pushed=false;
   const best=()=>get(BKEY,{});
-  function saveBest(k,v,lower){const b=best();if(b[k]==null||(lower?v<b[k]:v>b[k])){b[k]=v;set(BKEY,b);return true;}return false;}
+  function saveBest(k,v,lower){if(v<=0&&!lower)return false;const b=best();if(b[k]==null||(lower?v<b[k]:v>b[k])){b[k]=v;set(BKEY,b);return true;}return false;}
   // Inhalte je Umschalter: Allgemeinwissen, Feuerwehrwissen oder beides
   function pool(key){const a=(D.allg[key]||[]).map(x=>({...x,_k:'Allgemein'})),f=(D.fw[key]||[]).map(x=>({...x,_k:'Feuerwehr'}));return mode==='allg'?a:mode==='fw'?f:a.concat(f);}
   const ICON={
@@ -54,7 +54,8 @@ const PAUSE=(function(){
   function stop(){if(cur&&cur.stop)cur.stop();cur=null;}
   function toHub(){if(pushed)history.back();else hub();}
   // Zurück (Browser, Wischgeste, Android) im Spiel: zur Spieleauswahl statt zur Startseite
-  window.addEventListener('popstate',e=>{if(!pushed)return;pushed=false;if(cur&&root&&root.isConnected){e.stopImmediatePropagation();hub();}},true);
+  // toter pz-Eintrag (Spiel über die Navigation verlassen): beim Zurückgehen überspringen
+  window.addEventListener('popstate',e=>{if(!pushed){if(history.state&&history.state.pz&&root&&root.isConnected){e.stopImmediatePropagation();try{history.back();}catch(x){}}return;}pushed=false;if(cur&&root&&root.isConnected){e.stopImmediatePropagation();hub();}},true);
   const empty=el=>{el.innerHTML='<div class="pz-card"><div class="pz-center">Für diese Auswahl gibt es noch keine Inhalte. Schalte oben auf „Beides“.</div></div>';};
 
   /* ---------- 1 Quizleiter ---------- */
@@ -65,7 +66,7 @@ const PAUSE=(function(){
     const draw=()=>{const L='ABCD';el.innerHTML=`<div class="pz-card"><div class="pz-lbl"><span>Stufe <b>${i+1}/8</b> · ${esc(q._k)}</span><button class="pz-sec2" data-j ${joker?'':'disabled'}>50:50</button></div><div class="pz-ladder">${LV.map((_,k)=>`<i class="${k<=i?'on':''}"></i>`).join('')}</div><div class="pz-qt">${esc(q.q)}</div>${q.o.map((o,k)=>`<button class="pz-opt" data-k="${k}"><i>${L[k]}</i><span>${esc(o)}</span></button>`).join('')}<div class="pz-fbx"></div></div>`;
       el.querySelector('[data-j]').onclick=e=>{joker=false;e.currentTarget.disabled=true;shuf([0,1,2,3].filter(k=>k!==q.c)).slice(0,2).forEach(k=>el.querySelector(`[data-k="${k}"]`).classList.add('off'));};
       el.querySelectorAll('.pz-opt').forEach(b=>b.onclick=()=>answer(+b.dataset.k,b));};
-    const answer=(k,b)=>{el.querySelectorAll('.pz-opt').forEach(x=>x.style.pointerEvents='none');el.querySelector(`[data-k="${q.c}"]`).classList.add('ok');const ok=k===q.c;say(ok?'Richtig':'Falsch');if(!ok)b.classList.add('bad');
+    const answer=(k,b)=>{el.querySelectorAll('.pz-opt').forEach(x=>x.style.pointerEvents='none');el.querySelector('[data-j]').disabled=true;el.querySelector(`[data-k="${q.c}"]`).classList.add('ok');const ok=k===q.c;say(ok?'Richtig':'Falsch');if(!ok)b.classList.add('bad');
       const fb=el.querySelector('.pz-fbx');fb.innerHTML=`<div class="pz-fb ${ok?'g':'r'}"><b>${ok?'Richtig':'Leider falsch'}</b>${q.e?' – '+esc(q.e):''}</div><button class="pz-pri">${ok?(i<7?'Nächste Stufe':'Zum Ergebnis'):'Ergebnis'}</button>`;
       fb.querySelector('.pz-pri').onclick=()=>{if(ok&&i<7){i++;q=pick(LV[i]);draw();}else end(ok?8:i);};};
     const end=n=>{const rec=n>0&&saveBest('quiz',n);el.innerHTML=`<div class="pz-card"><div class="pz-big-n">${n===8?'Geschafft':'Stufe '+n}</div><div class="pz-center">${n===8?'Alle 8 Stufen richtig beantwortet.':n?`Du hast ${n} von 8 Stufen geschafft.`:'Direkt an der ersten Stufe hängen geblieben.'}${rec?' Neuer Bestwert.':''}</div><button class="pz-pri">Neue Runde</button></div>`;el.querySelector('.pz-pri').onclick=()=>QUIZL.start(el);};
@@ -81,32 +82,35 @@ const PAUSE=(function(){
     stop(){clearInterval(this.t);}};
 
   /* ---------- 3 Wörter-Raten ---------- */
-  const WORD={start(el){const P=pool('words');if(!P.length)return empty(el);const w=rnd(P),W=w.w;let rows=[],inp='',hint=false,msg='';const KB=['QWERTZUIOP','ASDFGHJKL','YXCVBNM'];
-    const col=(g,c)=>g[c]===W[c]?'gr':W.includes(g[c])?'ye':'xx';
-    const keyCol=()=>{const m={};rows.forEach(g=>[...g].forEach((ch,c)=>{const k=col(g,c);if(m[ch]!=='gr')m[ch]=k==='gr'?'gr':(m[ch]==='ye'?'ye':k);}));return m;};
+  // zweiphasig: erst Grün, dann Gelb nur so oft, wie der Buchstabe im Lösungswort noch übrig ist
+  const wordCols=(g,W)=>{const r=[],n={};for(let c=0;c<5;c++){if(g[c]===W[c])r[c]='gr';else n[W[c]]=(n[W[c]]||0)+1;}for(let c=0;c<5;c++)if(!r[c])r[c]=n[g[c]]>0?(n[g[c]]--,'ye'):'xx';return r;};
+  const WORD={start(el){this.stop();const P=pool('words');if(!P.length)return empty(el);const w=rnd(P),W=w.w;let rows=[],inp='',hint=false,msg='';const KB=['QWERTZUIOP','ASDFGHJKL','YXCVBNM'];
+    const rc=g=>wordCols(g,W);
+    const keyCol=()=>{const m={};rows.forEach(g=>{const r=rc(g);[...g].forEach((ch,c)=>{const k=r[c];if(m[ch]!=='gr')m[ch]=k==='gr'?'gr':(m[ch]==='ye'?'ye':k);});});return m;};
     const done=()=>rows.at(-1)===W||rows.length>=6;
     const draw=()=>{const km=keyCol(),fin=done();
-      el.innerHTML=`<div class="pz-card"><div class="pz-lbl"><span>${esc(w._k)} · 5 Buchstaben</span><b>${rows.length}/6</b></div><div class="pz-wg">${Array.from({length:6},(_,r)=>`<div class="pz-wr">${[0,1,2,3,4].map(c=>{const g=rows[r];if(g)return`<div class="pz-wc ${col(g,c)}">${g[c]}</div>`;if(r===rows.length&&!fin)return`<div class="pz-wc cur">${inp[c]||''}</div>`;return'<div class="pz-wc"></div>';}).join('')}</div>`).join('')}</div>
+      el.innerHTML=`<div class="pz-card"><div class="pz-lbl"><span>${esc(w._k)} · 5 Buchstaben</span><b>${rows.length}/6</b></div><div class="pz-wg">${Array.from({length:6},(_,r)=>`<div class="pz-wr">${[0,1,2,3,4].map(c=>{const g=rows[r];if(g)return`<div class="pz-wc ${rc(g)[c]}">${g[c]}</div>`;if(r===rows.length&&!fin)return`<div class="pz-wc cur">${inp[c]||''}</div>`;return'<div class="pz-wc"></div>';}).join('')}</div>`).join('')}</div>
       ${fin?`<div class="pz-fb ${rows.at(-1)===W?'g':'r'}" style="text-align:center"><b>${rows.at(-1)===W?'Richtig: '+W:'Lösung: '+W}</b>${w.h?'<br>'+esc(w.h):''}</div><button class="pz-pri">Neues Wort</button>`
       :`<div class="pz-center" style="min-height:1.3em">${msg?esc(msg):hint?'Hinweis: '+esc(w.h||'–'):'<button class="pz-sec2" data-h>Hinweis zeigen</button>'}</div><div class="pz-kb">${KB.map((r,i)=>`<div>${i===2?'<button class="w" data-k="ENTER">OK</button>':''}${[...r].map(ch=>`<button class="${km[ch]||''}" data-k="${ch}">${ch}</button>`).join('')}${i===2?'<button class="w" data-k="DEL" aria-label="Löschen">⌫</button>':''}</div>`).join('')}</div>`}</div>`;
-      const p=el.querySelector('.pz-pri');if(p)p.onclick=()=>{if(rows.at(-1)===W)saveBest('word',(best().word||0)+1);WORD.start(el);};
+      const p=el.querySelector('.pz-pri');if(p)p.onclick=()=>WORD.start(el);
       const h=el.querySelector('[data-h]');if(h)h.onclick=()=>{hint=true;draw();};
-      el.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>key(b.dataset.k));};
-    const key=k=>{if(done())return;msg='';if(k==='DEL')inp=inp.slice(0,-1);else if(k==='ENTER'){if(inp.length<5){msg='Bitte 5 Buchstaben eingeben';}else{rows.push(inp);inp='';}}else if(inp.length<5)inp+=k;draw();};
-    this.kd=e=>{if(!el.isConnected)return;const k=e.key.toUpperCase();if(k==='ENTER')key('ENTER');else if(k==='BACKSPACE')key('DEL');else if(/^[A-Z]$/.test(k))key(k);else if(k==='Ä')key('A');};
+      el.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k;key(k);const n=el.querySelector(`[data-k="${k}"]`);if(n)n.focus();});};
+    const key=k=>{if(done())return;msg='';if(k==='DEL')inp=inp.slice(0,-1);else if(k==='ENTER'){if(inp.length<5){msg='Bitte 5 Buchstaben eingeben';}else{rows.push(inp);if(inp===W)saveBest('word',(best().word||0)+1);inp='';}}else if(inp.length<5)inp+=k;draw();};
+    this.kd=e=>{if(!el.isConnected||e.ctrlKey||e.metaKey||e.altKey)return;const t=e.target;if(t&&t.closest&&t.closest('input,textarea,select,[contenteditable]'))return;const k=e.key.toUpperCase();if((k==='ENTER'||k===' ')&&t&&t.closest&&t.closest('button'))return;if(k==='ENTER')key('ENTER');else if(k==='BACKSPACE')key('DEL');else if(/^[A-Z]$/.test(k))key(k);else if(k==='Ä')key('A');};
     document.addEventListener('keydown',this.kd);draw();},
     stop(){if(this.kd)document.removeEventListener('keydown',this.kd);}};
 
   /* ---------- 4 Mehr oder weniger ---------- */
   // Mit jeder richtigen Antwort liegen die beiden Werte näher beieinander (Verhältnis groß/klein sinkt)
-  const NUM={start(el){const P=pool('num');const cats={};P.forEach(x=>{const k=x._k+'|'+x.cat;(cats[k]=cats[k]||[]).push(x);});
-    const pairs=[];Object.values(cats).forEach(a=>{for(let i=0;i<a.length;i++)for(let j=i+1;j<a.length;j++){const x=a[i],y=a[j];if(x.v>0&&y.v>0&&x.v!==y.v)pairs.push({a:x,b:y,r:Math.log(Math.max(x.v,y.v)/Math.min(x.v,y.v))});}});
+  const NUM={start(el){const P=pool('num');const isC=x=>/°C/.test(x.cat),val=x=>isC(x)?x.v+273.15:x.v; // °C: Reihenfolge über Kelvin, ohne Prozentanzeige
+    const cats={};P.forEach(x=>{const k=x._k+'|'+x.cat;(cats[k]=cats[k]||[]).push(x);});
+    const pairs=[];Object.values(cats).forEach(a=>{for(let i=0;i<a.length;i++)for(let j=i+1;j<a.length;j++){const x=a[i],y=a[j];const vx=val(x),vy=val(y);if(vx>0&&vy>0&&vx!==vy)pairs.push({a:x,b:y,r:Math.log(Math.max(vx,vy)/Math.min(vx,vy))});}});
     if(!pairs.length)return empty(el);pairs.sort((p,q)=>q.r-p.r);let streak=0;const used=new Set();
     const pickPair=()=>{const d=Math.min(1,streak/14),c=pairs.filter(p=>!used.has(p));const L=c.length?c:pairs;const idx=Math.round(d*(L.length-1)),w=Math.max(3,Math.round(L.length*.06));const lo=Math.max(0,idx-w),hi=Math.min(L.length,idx+w+1);const p=L[lo+Math.floor(Math.random()*(hi-lo))];used.add(p);return p;};
     const round=()=>{const pr=pickPair(),[a,b]=shuf([pr.a,pr.b]);const big=a.v>b.v?0:1,diff=Math.round((Math.exp(pr.r)-1)*100);
       el.innerHTML=`<div class="pz-card"><div class="pz-lbl"><span>${esc(a.cat)}</span><b>Serie ${streak}</b></div><div class="pz-qt">Was ist größer?</div><div class="pz-hl">${[a,b].map((x,i)=>`<button class="pz-opt" data-i="${i}"><span>${esc(x.n)}</span><b class="v" style="visibility:hidden">${esc(x.f)}</b></button>`).join('')}</div><div class="pz-fbx"></div></div>`;
       el.querySelectorAll('[data-i]').forEach(btn=>btn.onclick=()=>{const ok=+btn.dataset.i===big;say(ok?'Richtig':'Falsch');el.querySelectorAll('[data-i]').forEach(x=>{x.style.pointerEvents='none';x.querySelector('.v').style.visibility='visible';});btn.classList.add(ok?'ok':'bad');
-        const fb=el.querySelector('.pz-fbx');if(ok){streak++;fb.innerHTML=`<div class="pz-fb g"><b>Richtig</b> · Unterschied ${diff} %${streak%5===0?' · es wird knapper':''}</div>`;setTimeout(round,1300);}else{const rec=saveBest('num',streak);fb.innerHTML=`<div class="pz-fb r"><b>Serie beendet: ${streak}</b>${rec&&streak?' · neuer Bestwert':''}</div><button class="pz-pri">Neue Serie</button>`;fb.querySelector('.pz-pri').onclick=()=>NUM.start(el);}});};
+        const fb=el.querySelector('.pz-fbx');if(ok){streak++;fb.innerHTML=`<div class="pz-fb g"><b>Richtig</b>${isC(a)?'':' · Unterschied '+diff+' %'}${streak%5===0?' · es wird knapper':''}</div>`;setTimeout(round,1300);}else{const rec=saveBest('num',streak);fb.innerHTML=`<div class="pz-fb r"><b>Serie beendet: ${streak}</b>${rec&&streak?' · neuer Bestwert':''}</div><button class="pz-pri">Neue Serie</button>`;fb.querySelector('.pz-pri').onclick=()=>NUM.start(el);}});};
     round();}};
 
   /* ---------- 5 Memory ---------- */
@@ -160,7 +164,7 @@ const PAUSE=(function(){
         if(s.phase==='fb'){const ok=s.res[s.res.length-1].ok;h+=`<div class="pz-fb ${ok?'g':'r'}"><b>${ok?'Richtig · freie Fahrt ('+s.dt+' s)':(s.pick<0?'Zeit abgelaufen · ':'Falsch · ')+(s.route.key==='A'?'Stau an der Baustelle':'zähfließender Verkehr')+' (+'+s.dt+' s)'}</b>${q.e?'<br>'+esc(q.e):''}</div><button class="pz-pri" data-a="next">${s.qi+1<s.qs.length?'Weiterfahren':'Zur Einsatzstelle'}</button>`;}}
       else if(s.duel&&s.forfeit&&s.res.length<s.qs.length){h=`<div class="pz-lbl"><span>Duell beendet</span><b>Sieg durch Aufgabe</b></div><div class="pz-qt" style="font-size:1.2rem">${esc(s.opp.name)} hat aufgegeben. Du gewinnst.</div>${s.bil?`<div class="pz-fb">Bilanz gegen ${esc(s.opp.name)}: <b>${s.bil.w} : ${s.bil.l}</b>${s.bil.d?' · '+s.bil.d+' unentschieden':''}</div>`:''}<button class="pz-sec2" data-a="leave" style="align-self:flex-start">Zur Spieleauswahl</button>`;}
       else if(s.duel){const me=duelRes(s),op=s.opp.done;const right=me.right;h=`<div class="pz-lbl"><span>Status 4 · am Einsatzort</span><b>${me.score} Punkte</b></div>${op?`<div class="pz-qt" style="font-size:1.2rem">${s.forfeit?esc(s.opp.name)+' hat aufgegeben. Du gewinnst.':me.result==='w'?'Du gewinnst!':me.result==='l'?esc(s.opp.name)+' gewinnt.':'Unentschieden'}</div>
-          <table class="pz-vs"><tr><th></th><th>Du</th><th>${esc(s.opp.name)}</th></tr><tr><td>Punkte</td><td>${me.score}</td><td>${op.score}</td></tr><tr><td>Richtig</td><td>${right}/${s.qs.length}</td><td>${op.right}/${s.qs.length}</td></tr><tr><td>Eintreffzeit</td><td>${fmt(s.t)}</td><td>${fmt(op.t)}</td></tr><tr><td>Hilfsfrist ${fmt(hf())}</td><td>${s.win?'eingehalten':'überschritten'}</td><td>${op.t<=hf()?'eingehalten':'überschritten'}</td></tr></table>
+          <table class="pz-vs"><tr><th></th><th>Du</th><th>${esc(s.opp.name)}</th></tr><tr><td>Punkte</td><td>${me.score}</td><td>${op.score}</td></tr><tr><td>Richtig</td><td>${right}/${s.qs.length}</td><td>${op.right}/${s.qs.length}</td></tr><tr><td>Eintreffzeit</td><td>${fmt(s.t)}</td><td>${s.forfeit?'–':fmt(op.t)}</td></tr><tr><td>Hilfsfrist ${fmt(hf())}</td><td>${s.win?'eingehalten':'überschritten'}</td><td>${s.forfeit?'–':op.t<=hf()?'eingehalten':'überschritten'}</td></tr></table>
           ${s.bil?`<div class="pz-fb">Bilanz gegen ${esc(s.opp.name)}: <b>${s.bil.w} : ${s.bil.l}</b>${s.bil.d?' · '+s.bil.d+' unentschieden':''}</div>`:''}${s.res.some(r=>!r.ok)?`<div class="pz-lbl"><span>Zum Nacharbeiten</span></div><ul class="pz-res">${s.res.filter(r=>!r.ok).map(r=>`<li>${esc(r.q.q)}<br><small>Richtig: ${esc(r.q.o[r.q.c])}</small></li>`).join('')}</ul>`:''}${s.opp.gone?'':`<button class="pz-pri" data-a="rematch" ${s.rm?'disabled':''}>${s.rm?'Warte auf Zustimmung …':s.opp.rm?esc(s.opp.name)+' will Revanche · Annehmen':'Revanche'}</button>`}<button class="pz-sec2" data-a="leave" style="align-self:flex-start">Duell beenden</button>`:`<div class="pz-qt" style="font-size:1.1rem">Geschafft: ${fmt(s.t)} · ${right}/${s.qs.length} richtig</div><div class="pz-fb">Warte auf ${esc(s.opp.name)} (${s.opp.res.length}/${s.qs.length} Fragen) …</div><div class="pz-drv"><i></i><span>${esc(s.opp.name)} fährt noch</span></div>`}`;}
       else{const right=s.res.filter(r=>r.ok).length,rec=saveBest('fahrt',s.score);h=`<div class="pz-lbl"><span>Status 4 · am Einsatzort</span><b>${s.score} Punkte</b></div><div class="pz-qt" style="font-size:1.15rem">${s.win?'Hilfsfrist eingehalten':'Hilfsfrist überschritten'}</div><div class="pz-fb">Eintreffzeit <b>${fmt(s.t)}</b> · ${right}/${s.res.length} richtig · Route ${s.route.name}${rec?' · neuer Bestwert':''}</div>${s.res.some(r=>!r.ok)?`<div class="pz-lbl"><span>Zum Nacharbeiten</span></div><ul class="pz-res">${s.res.filter(r=>!r.ok).map(r=>`<li>${esc(r.q.q)}<br><small>Richtig: ${esc(r.q.o[r.q.c])}</small></li>`).join('')}</ul>`:''}<button class="pz-pri" data-a="new">Neuer Einsatz</button>`;}
       pn.innerHTML=h;}
@@ -179,10 +183,11 @@ const PAUSE=(function(){
     function duelFinish(){const s=st;s.sentFin=true;const r=duelRes(s);SESS.send({t:'fin',tm:s.t,score:r.score,right:r.right});duelCheck();}
     function duelCheck(){const s=st;if(!s||!s.duel||s.bilDone||s.phase!=='end'||!s.opp.done)return;s.bilDone=true;const r=duelRes(s);s.bil=SESS.record(s.opp.name,r.result);panel();}
     function tick(n){const s=st;const dtp=n-(s._ln||n);s._ln=n;
-      if(s.paused){if(s.dr)s.dr.t0+=dtp;if(s.askT0)s.askT0+=dtp;const e=document.querySelector('.pz-pc');if(e)e.textContent=Math.max(0,30-Math.floor((performance.now()-s.pausedAt)/1000));return;}
+      if(s.paused){if(s.dr)s.dr.t0+=dtp;if(s.askT0)s.askT0+=dtp;if(s.fbT0)s.fbT0+=dtp;const e=document.querySelector('.pz-pc');if(e)e.textContent=Math.max(0,30-Math.floor((performance.now()-s.pausedAt)/1000));return;}
       if(s.opp){const o=s.opp;o.p+=(o.tp-o.p)*Math.min(1,dtp/1000*2.2);}
       if(s.phase==='d-count'){const left=3-Math.floor((n-s.cd0)/1000);if(left!==s.cdLeft){s.cdLeft=left;if(left<=0){drive();}else panel();}return;}
       if(s.duel&&s.phase==='ask'){const el_=n-s.askT0,tm=document.querySelector('.pz-tmr i');if(tm)tm.style.width=Math.max(0,100-el_/300)+'%';if(el_>=30000){act('ans','-1');}}
+      if(s.duel&&s.phase==='fb'){if(!s.fbT0)s.fbT0=n;else if(n-s.fbT0>=15000){s.fbT0=0;act('next');return;}}else s.fbT0=0; // Gegner nicht beliebig aufhalten: nach ~15 s weiter
       if(s.phase==='drive'){const d=s.dr,k=Math.min(1,(n-d.t0)/d.dur),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;s.p=d.from+(d.to-d.from)*e;s.t=d.tt+s.route.base*(s.p-d.from);
         if(k>=1){if(s.qi<s.qs.length){s.phase='ask';s.askT0=performance.now();panel();}else{s.phase='end';s.p=1;s.win=s.t<=hf();const right=s.res.filter(r=>r.ok).length;s.score=Math.max(0,Math.round((s.win?1000+(hf()-s.t)*3:0)+right*50));panel();if(s.duel)duelFinish();}}}
       if(s.fx&&n-s.fxT>1500)s.fx=null;const tg=s.phase==='end'&&s.win?0:Math.min(1.3,s.t/hf());s.lvl+=(tg-s.lvl)*(s.phase==='end'&&s.win?.02:.08);}
@@ -244,7 +249,7 @@ const PAUSE=(function(){
       duelMsg(m){const s=st;if(!s||!s.duel)return;
         if(m.t==='a'){s.opp.res.push(!!m.ok);}else if(m.t==='p'){s.opp.tp=m.to;}else if(m.t==='fin'){s.opp.done={t:m.tm,score:m.score,right:m.right};s.opp.tp=1;duelCheck();panel();}
         else if(m.t==='rematch'){s.opp.rm=true;if(s.rm)SESS.rematch();else panel();}
-        else if(m.t==='bye'){if(s.phase==='end'&&s.opp.done){s.opp.gone=true;panel();}else{s.forfeit=true;s.opp.done={t:s.t+1,score:0,right:0};s.paused=false;if(s.phase!=='end'){s.phase='end';s.win=s.t<=hf();s.p=1;}duelCheck();panel();}}},
+        else if(m.t==='bye'){if(s.phase==='end'&&s.opp.done){s.opp.gone=true;panel();}else{s.forfeit=true;s.opp.gone=true;s.opp.done={t:s.t+1,score:0,right:0};s.paused=false;if(s.phase!=='end'){s.phase='end';s.win=s.t<=hf();s.p=1;}duelCheck();panel();}}},
       duelPause(on){const s=st;if(!s||!s.duel||(s.phase==='end'&&s.opp.done))return;if(on&&!s.paused){s.paused=true;s.pausedAt=performance.now();panel();}else if(!on&&s.paused){s.paused=false;panel();}},
       questions,pickSeeded,sig,count,MODS,PAL,
       stop(){cancelAnimationFrame(raf);raf=0;if(SESS&&SESS.close)SESS.close();SESS=null;},
@@ -255,6 +260,6 @@ const PAUSE=(function(){
     show(){root=document.getElementById('pause-root');if(!root)return;if(!cur)hub();},
     leave(){stop();pushed=false;if(root)root.innerHTML='';},
     back(){if(cur){toHub();return true;}return false;},
-    open, _fahrt:()=>FAHRT
+    open, _fahrt:()=>FAHRT, _wordCols:wordCols
   };
 })();
