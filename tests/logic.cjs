@@ -623,6 +623,21 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Jahrgang: leerer Plan, Plan-Formular, Ergänzung, eigene Prüfung, Glow, Export/Import', jg, { cur: true, empty: true, plan: true, noHtml: true, erg: true, ergSaved: true, ergDel: true, tabs: 5, own: true, ans: true, xs: true, hidden: true, back: true, mods: 'VAk,IdF', custom: true, exp: true, disc: true, imp: true, bad: true, master: true });
 
+  // ── Veröffentlichte Jahrgangs-Datei (jahrgaenge/<ID>.json) wird mit den eigenen Änderungen zusammengeführt ──
+  const jid = await page.evaluate(() => JG.list()[0].id);
+  await page.route('**/jahrgaenge/' + jid + '.json', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ format: 'bvi-jahrgang', v: 1, erg: [{ id: 'pub1', seite: 'v-vak-verwaltungsrecht', titel: 'Vom Jahrgang', text: '<script>x</script>' }], pr: { hinzu: [], weg: ['v-laufbahn-2023'] }, glow: ['vak'] }) }));
+  const pu = await page.evaluate(async id => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    localStorage.removeItem('bvi_jgd_' + id); JG.set(id); await w(800);
+    const d = JG.data(), r = { erg: d.erg.map(e => e.id), weg: d.pr.weg, glow: [...JG.glow()] };
+    NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
+    r.shown = !!document.querySelector('#v-vak-verwaltungsrecht .jg-e') && !document.querySelector('#v-vak-verwaltungsrecht .jg-e script');
+    JG.set(JG.MASTER); await w(300);
+    return r;
+  }, jid);
+  eq('Jahrgangs-Datei aus dem Ordner wird übernommen', pu, { erg: ['pub1'], weg: ['v-laufbahn-2023'], glow: ['vak'], shown: true });
+  await page.unroute('**/jahrgaenge/' + jid + '.json');
+
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
   const tp = await tctx.newPage();
