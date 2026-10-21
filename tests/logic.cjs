@@ -489,6 +489,39 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   ok('Widget-Daten: Einheiten mit Beginn, Ende, Titel, Raum', wu.n > 20 && wu.ok && wu.sorted);
 
+  // ── Abkürzungen antippen; Lernkarten teilen (Link und Code) ──
+  const ab = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    NAV.go('v-hlfs-stab', 'Stab'); await w(500);
+    const sp = document.querySelector('#v-hlfs-stab .abk-t');
+    r.marked = !!sp; r.noDouble = [...document.querySelectorAll('#v-hlfs-stab .acc-item')].every(it => { const k = [...it.querySelectorAll('.abk-t')].map(e => e.dataset.k); return new Set(k).size === k.length; });
+    sp.click(); await w(100);
+    const pop = document.getElementById('abk-pop'); r.pop = !pop.hidden && pop.textContent.includes(sp.dataset.k);
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(50); r.closed = pop.hidden;
+    return r;
+  });
+  eq('Abkürzungen: markiert, je Kapitel einmal, Tipp zeigt Erläuterung', ab, { marked: true, noDouble: true, pop: true, closed: true });
+  const sh = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    localStorage.removeItem('bvi_fc_custom'); CUSTOM.open(); await w(200);
+    for (const [q, a] of [['Was ist <b>A</b>?', 'Antwort & Umlaute äöü'], ['Zweite Frage', 'x'.repeat(900)]]) { document.getElementById('cu-q').value = q; document.getElementById('cu-a').value = a; document.getElementById('cu-save').click(); }
+    await w(100);
+    r.n1 = JSON.parse(localStorage.getItem('bvi_fc_custom')).length;
+    let link = null; Object.defineProperty(navigator, 'share', { value: o => { link = o.url; return Promise.resolve(); }, configurable: true });
+    document.getElementById('cu-share').click(); await w(500);
+    r.link = !!link && link.includes('?karten=BVIK');
+    r.noMail = !document.getElementById('cu-mail');
+    // andere Karten übernehmen: erst löschen, dann den Link einlesen
+    localStorage.removeItem('bvi_fc_custom'); FLASHCARD_DATA.splice(FLASHCARD_DATA.findIndex(c => c.own), FLASHCARD_DATA.filter(c => c.own).length);
+    document.getElementById('cu-code').value = 'Hier meine Karten: ' + link; document.getElementById('cu-fromcode').click(); await w(500);
+    const back = JSON.parse(localStorage.getItem('bvi_fc_custom') || '[]'); r.n2 = back.length; r.q = back[0] && back[0].q;
+    document.getElementById('cu-code').value = link; document.getElementById('cu-fromcode').click(); await w(300);
+    r.dupe = JSON.parse(localStorage.getItem('bvi_fc_custom')).length;
+    localStorage.removeItem('bvi_fc_custom'); CUSTOM.close(); delete navigator.share;
+    return r;
+  });
+  eq('Lernkarten teilen: Link, Übernehmen, keine Doppelten, ohne E-Mail', sh, { n1: 2, link: true, noMail: true, n2: 2, q: 'Was ist &lt;b&gt;A&lt;/b&gt;?', dupe: 2 });
+
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
   const tp = await tctx.newPage();

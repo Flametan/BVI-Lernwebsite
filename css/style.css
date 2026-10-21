@@ -2486,3 +2486,13 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 @media(max-width:700px){.sim-menu{grid-template-columns:minmax(0,1fr);}}
 .pz-mode{flex-wrap:wrap;}
 #m-hl-bar{max-width:calc(100vw - 16px);flex-wrap:wrap;justify-content:center;}
+
+/* Abkürzungen in Lernseiten antippen */
+.abk-t{border-bottom:1.5px dotted var(--m-accent-fg,#ffa412);cursor:help;}
+.abk-t:focus-visible{border-radius:3px;}
+#abk-pop{position:fixed;z-index:var(--z-modal,300);background:var(--m-card,#1d1d1d);color:var(--m-fg,#f3f1ec);border:1px solid var(--m-line,#2b2b2b);border-radius:14px;padding:12px 14px;font-size:.9rem;line-height:1.4;box-shadow:0 10px 30px rgba(0,0,0,.4);}
+#abk-pop[hidden]{display:none;}
+#abk-pop .abk-d{color:var(--m-muted,#a6a39b);margin-top:4px;font-size:.84rem;}
+#abk-pop button{margin-top:8px;background:none;border:0;padding:6px 0;color:var(--m-accent-fg,#ffa412);font:inherit;font-size:.84rem;font-weight:600;cursor:pointer;}
+#cu-qr svg{display:block;width:min(240px,100%);margin:10px auto 4px;background:#fff;border-radius:12px;padding:6px;}
+#cu-qr .cu-empty{margin-top:6px;}

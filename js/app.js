@@ -69,6 +69,7 @@ const NAV = (function(){
     if(typeof LP!=='undefined'){ LP.onShow(id); LP.init(id); }
     PAUSE_LOADER.onShow(id);
     A11Y.onShow();
+    if(isContentPage) ABKTIP.apply(id);
     // Update URL for direct linking
     const url=new URL(location.href);
     if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
@@ -2486,9 +2487,83 @@ const ABK = (function(){
       const cnt = document.getElementById('abk-count');
       if(cnt) cnt.textContent = term ? `${vis} Treffer` : `${crd.length} Einträge`;
     },
-    init(){ this.render(); document.getElementById('abk-search').value=''; this.filter(''); }
+    init(){ this.render(); document.getElementById('abk-search').value=''; this.filter(''); },
+    data(){ return DATA; }
   };
 })();
+
+/* ======================================================================
+   ABKTIP – Abkürzungen in Lernseiten antippen: Name und Erläuterung aus dem Abkürzungsverzeichnis
+====================================================================== */
+const ABKTIP=(function(){
+  // zu allgemeine Kürzel nicht markieren (zu viele Fehltreffer)
+  const SKIP=new Set(['Ma','SMART','CO','NA','PA','SP','OE','AS']);
+  const BLOCK='script,style,textarea,input,select,a,button,summary,svg,h1,h2,h3,.abk-t,.acc-num,.page-title,.sec-h,.lj-src,.quiz-src,.m-hl,#m-hl-bar';
+  let re=null, map=null, pop=null;
+  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function build(){
+    if(re||map) return !!re;
+    try{
+      map=new Map();
+      ABK.data().forEach(x=>{ if(x.a.length>=2&&!SKIP.has(x.a)&&!map.has(x.a)) map.set(x.a,x); });
+      const keys=[...map.keys()].sort((a,b)=>b.length-a.length).map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+      re=new RegExp('(?<![\\p{L}\\p{N}-])('+keys.join('|')+')(?![\\p{L}\\p{N}-])','gu');
+    }catch(e){ re=null; }
+    return !!re;
+  }
+  // je Kapitel (oder Seite) nur das erste Vorkommen einer Abkürzung markieren
+  function wrapBlock(root){
+    const seen=new Set(), w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.data.trim().length>1&&n.parentElement&&!n.parentElement.closest(BLOCK)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT});
+    const nodes=[]; let n; while((n=w.nextNode())) nodes.push(n);
+    nodes.forEach(node=>{
+      re.lastIndex=0; const t=node.data; let m, last=0, frag=null;
+      while((m=re.exec(t))){
+        if(seen.has(m[1])) continue;
+        seen.add(m[1]);
+        frag=frag||document.createDocumentFragment();
+        if(m.index>last) frag.appendChild(document.createTextNode(t.slice(last,m.index)));
+        const sp=document.createElement('span'); sp.className='abk-t'; sp.dataset.k=m[1]; sp.tabIndex=0; sp.setAttribute('role','button'); sp.textContent=m[1];
+        frag.appendChild(sp); last=m.index+m[1].length;
+      }
+      if(frag){ if(last<t.length) frag.appendChild(document.createTextNode(t.slice(last))); node.replaceWith(frag); }
+    });
+  }
+  function apply(id){
+    const v=document.getElementById(id); if(!v||v._abk||!v.querySelector('.pc')) return;
+    v._abk=true;
+    if(!build()) return;
+    const pc=v.querySelector('.pc'), items=[...pc.querySelectorAll('.acc-item')];
+    if(items.length) items.forEach(wrapBlock); else wrapBlock(pc);
+  }
+  function hide(){ if(pop) pop.hidden=true; }
+  function show(el){
+    const x=map&&map.get(el.dataset.k); if(!x) return;
+    if(!pop){
+      pop=document.createElement('div'); pop.id='abk-pop'; pop.hidden=true; pop.setAttribute('role','dialog'); pop.setAttribute('aria-label','Abkürzung');
+      document.body.appendChild(pop);
+      pop.addEventListener('click',e=>{ if(e.target.closest('[data-all]')){ hide(); NAV.go('v-abkuerzungen','Abkürzungen'); setTimeout(()=>{ const i=document.getElementById('abk-search'); if(i){ i.value=el.dataset.k; ABK.filter(el.dataset.k); } },120); } });
+    }
+    pop.innerHTML='<b>'+esc(x.a)+'</b> – '+esc(x.f)+(x.d?'<div class="abk-d">'+esc(x.d)+'</div>':'')+'<button type="button" data-all>Alle Abkürzungen ›</button>';
+    pop.hidden=false;
+    const r=el.getBoundingClientRect(), w=Math.min(320,innerWidth-24);
+    pop.style.width=w+'px';
+    pop.style.left=Math.max(12,Math.min(innerWidth-w-12,r.left+r.width/2-w/2))+'px';
+    const h=pop.offsetHeight, below=r.bottom+8+h<innerHeight-12;
+    pop.style.top=(below?r.bottom+8:Math.max(12,r.top-8-h))+'px';
+  }
+  document.addEventListener('click',e=>{
+    const t=e.target.closest&&e.target.closest('.abk-t');
+    if(t){ e.preventDefault(); show(t); return; }
+    if(pop&&!pop.hidden&&!e.target.closest('#abk-pop')) hide();
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape') hide();
+    if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('abk-t')){ e.preventDefault(); show(e.target); }
+  });
+  window.addEventListener('scroll',hide,{passive:true});
+  return {apply,hide};
+})();
+
 
 /* ======================================================================
    CHROMIUM-ERKENNUNG – Warnung beim APK-Download
@@ -2949,12 +3024,63 @@ const CUSTOM=(function(){
     const d=new Date(), p2=n=>String(n).padStart(2,'0');
     FILES.save('bvi-eigene-karten-'+d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())+'.json','application/json',JSON.stringify(data,null,1));
   }
-  function mailCards(){
-    const a=load();
-    if(!a.length){ TOAST.show('Noch keine eigenen Karten zum Senden',{type:'info'}); return; }
-    const txt=a.map((c,i)=>(i+1)+'. ['+c.cat.split(' · ')[0]+']\nFrage: '+plain(c.q)+'\nAntwort: '+plain(c.a)).join('\n\n');
-    if(txt.length>1500){ exportCards(); TOAST.show('Zu viele Karten für eine Mail – die Datei wurde gespeichert, bitte anhängen',{type:'info'}); }
-    location.href='mailto:fabian.flemig@gmx.de?subject='+encodeURIComponent('B VI – Eigene Lernkarten')+'&body='+encodeURIComponent('Meine Lernkarten für die App:\n\n'+(txt.length>1500?'(Datei im Anhang)':txt));
+  // ── Kartenstapel teilen: Link oder Code (Karten stecken im Link selbst, nichts läuft über einen Server) ──
+  const URL_APP='https://flametan.github.io/BVI-Lernwebsite/';
+  const toB64u=u8=>{ let b=''; for(let i=0;i<u8.length;i+=8192) b+=String.fromCharCode.apply(null,u8.subarray(i,i+8192)); return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const fromB64u=t=>{ const b=atob(t.replace(/-/g,'+').replace(/_/g,'/')+'==='.slice((t.length+3)%4)); const u=new Uint8Array(b.length); for(let i=0;i<b.length;i++) u[i]=b.charCodeAt(i); return u; };
+  async function pack(){
+    const a=load(), bytes=new TextEncoder().encode(JSON.stringify({v:1,k:a.map(c=>[c.cat.split(' · ')[0],plain(c.q),plain(c.a)])}));
+    if(typeof CompressionStream!=='undefined'){
+      try{ return 'BVIK1.'+toB64u(new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer())); }catch(e){}
+    }
+    return 'BVIK0.'+toB64u(bytes);
+  }
+  async function unpack(text){
+    const m=/BVIK([01])\.([A-Za-z0-9_-]+)/.exec(String(text||'')); if(!m) throw new Error('code');
+    let bytes=fromB64u(m[2]);
+    if(m[1]==='1') bytes=new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+    const j=JSON.parse(new TextDecoder().decode(bytes));
+    if(!j||!Array.isArray(j.k)) throw new Error('format');
+    return j.k.slice(0,300).map(x=>({modul:x[0],frage:x[1],antwort:x[2]}));
+  }
+  // Karten zu den vorhandenen hinzufügen (gleiche Fragen im selben Modul werden übersprungen)
+  function merge(items){
+    const all=load(), have=new Set(all.map(c=>c.cat.split(' · ')[0]+'|'+plain(c.q).trim())); let n=0;
+    items.forEach(k=>{
+      const m=MODS.includes(k.modul)?k.modul:'GAL', q=String(k.frage||'').slice(0,500), a=String(k.antwort||'').slice(0,1500);
+      if(!q.trim()||!a.trim()||have.has(m+'|'+q.trim())) return;
+      have.add(m+'|'+q.trim());
+      const c={id:'own'+Date.now().toString(36)+n,cat:m+' · Eigene Karte',q:html(q),a:html(a)};
+      all.push(c); FLASHCARD_DATA.push({...c,own:true}); n++;
+    });
+    save(all); if(box) list(); refresh();
+    return n;
+  }
+  async function fromCode(text,ask){
+    let items;
+    try{ items=await unpack(text); }catch(e){ TOAST.show('Das ist kein gültiger Karten-Link oder -Code',{type:'info'}); return; }
+    if(!items.length){ TOAST.show('Keine Karten gefunden',{type:'info'}); return; }
+    if(ask&&!confirm(items.length+' Lernkarten übernehmen?\n\nSie werden zu deinen eigenen Karten hinzugefügt.')) return;
+    const n=merge(items);
+    TOAST.show(n?n+' Karten importiert':'Alle Karten hatte ich schon',{type:n?'ok':'info'});
+  }
+  async function shareLink(){
+    if(!load().length){ TOAST.show('Noch keine eigenen Karten zum Teilen',{type:'info'}); return null; }
+    return URL_APP+'?karten='+await pack();
+  }
+  async function shareNow(){
+    const link=await shareLink(); if(!link) return;
+    const n=load().length;
+    if(navigator.share){ try{ await navigator.share({title:'B VI – Lernkarten',text:'Meine '+n+' Lernkarten für B VI. Link öffnen, dann werden sie übernommen:',url:link}); return; }catch(e){ if(e&&e.name==='AbortError') return; } }
+    try{ await navigator.clipboard.writeText(link); TOAST.show('Link kopiert – jetzt z. B. in WhatsApp einfügen',{type:'ok'}); }
+    catch(e){ box.querySelector('#cu-code').value=link; TOAST.show('Link steht unten im Feld – bitte kopieren',{type:'info'}); }
+  }
+  async function showQr(){
+    const link=await shareLink(); if(!link) return;
+    const el=box.querySelector('#cu-qr');
+    if(link.length>2300){ el.innerHTML='<div class="cu-empty">Zu viele Karten für einen QR-Code – bitte „Link teilen“ nutzen.</div>'; return; }
+    try{ await APPSHARE.qr(el,link); el.innerHTML+='<div class="cu-empty" style="text-align:center">Mit der Kamera scannen, der Link öffnet B VI</div>'; }
+    catch(e){ el.innerHTML='<div class="cu-empty">QR-Code konnte nicht erstellt werden – bitte „Link teilen“ nutzen.</div>'; }
   }
   function importCards(file){
     if(!file) return;
@@ -2963,16 +3089,7 @@ const CUSTOM=(function(){
       try{
         const j=JSON.parse(r.result);
         if(j.typ!=='eigene-karten'||!Array.isArray(j.karten)) throw new Error('format');
-        const have=new Set(load().map(c=>c.cat.split(' · ')[0]+'|'+plain(c.q).trim()));
-        const all=load(); let n=0;
-        j.karten.forEach(k=>{
-          const m=MODS.includes(k.modul)?k.modul:'GAL', q=String(k.frage||'').slice(0,500), a=String(k.antwort||'').slice(0,1500);
-          if(!q.trim()||!a.trim()||have.has(m+'|'+q.trim())) return;
-          have.add(m+'|'+q.trim());
-          const c={id:'own'+Date.now().toString(36)+n,cat:m+' · Eigene Karte',q:html(q),a:html(a)};
-          all.push(c); FLASHCARD_DATA.push({...c,own:true}); n++;
-        });
-        save(all); list(); refresh();
+        const n=merge(j.karten);
         TOAST.show(n?n+' Karten importiert':'Keine neuen Karten gefunden',{type:n?'ok':'info'});
       }catch(e){ TOAST.show('Datei nicht lesbar – bitte eine exportierte Kartendatei wählen',{type:'info'}); }
     };
@@ -2987,14 +3104,18 @@ const CUSTOM=(function(){
       +'<label>Antwort<textarea id="cu-a" rows="4" maxlength="1500"></textarea></label>'
       +'<button class="btn btn-gold" id="cu-save">Karte speichern</button>'
       +'<div class="cu-h">Meine Karten</div><div id="cu-list"></div>'
-      +'<div class="cu-io"><button class="btn btn-ghost" id="cu-exp">Karten exportieren</button><button class="btn btn-ghost" id="cu-mail">Per E-Mail senden</button><label class="btn btn-ghost" for="cu-imp">Karten importieren</label><input type="file" id="cu-imp" accept=".json,application/json" hidden></div>'
+      +'<div class="cu-h">Karten teilen</div><div class="cu-io"><button class="btn btn-ghost" id="cu-share">Link teilen</button><button class="btn btn-ghost" id="cu-qrb">QR-Code zeigen</button></div><div id="cu-qr"></div>'
+      +'<label>Link oder Code von jemand anderem<textarea id="cu-code" rows="2" placeholder="Link oder Code hier einfügen"></textarea></label><button class="btn btn-ghost" id="cu-fromcode">Karten übernehmen</button>'
+      +'<div class="cu-io"><button class="btn btn-ghost" id="cu-exp">Als Datei speichern</button><label class="btn btn-ghost" for="cu-imp">Aus Datei laden</label><input type="file" id="cu-imp" accept=".json,application/json" hidden></div>'
       +'</div>';
     document.body.appendChild(box);
     box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
     box.querySelector('#cu-save').onclick=add;
     box.querySelector('#cu-exp').onclick=exportCards;
-    box.querySelector('#cu-mail').onclick=mailCards;
+    box.querySelector('#cu-share').onclick=shareNow;
+    box.querySelector('#cu-qrb').onclick=showQr;
+    box.querySelector('#cu-fromcode').onclick=()=>{ const t=box.querySelector('#cu-code').value; if(t.trim()) fromCode(t,false).then(()=>{ box.querySelector('#cu-code').value=''; }); };
     box.querySelector('#cu-imp').onchange=e=>{ importCards(e.target.files[0]); e.target.value=''; };
   }
   // pre: {a: vorbelegte Antwort, view: Seite, von der der Text stammt} – für „Als Lernkarte“ aus einer Markierung
@@ -3009,7 +3130,7 @@ const CUSTOM=(function(){
     box.querySelector('#cu-q').focus({preventScroll:true});
   }
   function close(){ if(box) box.hidden=true; }
-  return {open,close};
+  return {open,close,fromCode};
 })();
 
 /* ======================================================================
@@ -3894,6 +4015,8 @@ const CHANGELOG=(function(){
       'Android-App: Das Startsymbol und das Startbild folgen jetzt auch dem Farbschema – schwarz im dunklen, hell (Farbton der Website) im hellen Design',
       'Startseite: Beim Wechsel zwischen Woche und Monaten starten die Animationen nicht mehr neu; die Umschalter sind wieder schmaler',
       'Android-App: Drei Widgets für den Startbildschirm zur Auswahl – „Nächste Einheit“, „Tagesplan“ und „Jetzt und danach“ mit Zeitraum, Raum, Restzeit und der Einheit danach (nach Unterrichtsende zeigen sie, was morgen ansteht); sie folgen Akzentfarbe und Hell/Dunkel',
+      'Lernkarten teilen: Eigene Karten als Link oder QR-Code an Kollegen schicken (die Karten stecken im Link, nichts läuft über einen Server); „Per E-Mail senden“ gibt es nicht mehr',
+      'Lernseiten: Abkürzungen (z. B. ELW, FwDV, HBKG) sind unterstrichen; ein Tipp zeigt Name und Erläuterung aus dem Abkürzungsverzeichnis',
       'Neu: Markierten Text auf einer Lernseite mit „Als Lernkarte“ direkt zu einer eigenen Lernkarte machen (Modul wird vorgewählt, die Frage schreibst du dazu)',
       'Updates: Bei einer neuen Version erscheint ein Hinweis „Aktualisieren“, statt dass die Seite mitten im Lernen neu lädt',
       'Stundenplan: Er springt von selbst zur aktuellen Kalenderwoche, wenn das Datum weiterläuft (Mitternacht) oder die App wieder in den Vordergrund kommt – außer du hast selbst in andere Wochen geblättert',
@@ -5917,7 +6040,13 @@ const APPSHARE=(function(){
     box.querySelector('.sh-x').focus({preventScroll:true});
   }
   function close(){ if(box) box.hidden=true; }
-  return {open,close};
+  // QR-Code für beliebigen Text in ein Element zeichnen (z. B. geteilte Lernkarten)
+  async function qr(el,text){
+    await loadLib();
+    const q=qrcode(0,'L'); q.addData(text); q.make();
+    el.innerHTML=q.createSvgTag({cellSize:4,margin:2,scalable:true});
+  }
+  return {open,close,qr};
 })();
 
 const INSTALL=(function(){
@@ -6710,6 +6839,14 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySele
 
 document.addEventListener('DOMContentLoaded',()=>{
   // Deep-link on load
+  // Geteilte Lernkarten: ?karten=… übernehmen (nach Rückfrage) und den Parameter aus der Adresse entfernen
+  (function(){
+    const u=new URL(location.href), kc=u.searchParams.get('karten');
+    if(!kc) return;
+    u.searchParams.delete('karten');
+    try{ history.replaceState(history.state,'',u.pathname+(u.search||'')+u.hash); }catch(e){}
+    setTimeout(()=>CUSTOM.fromCode('BVIK'+kc.replace(/^BVIK/,''),true),700);
+  })();
   const initId=new URLSearchParams(location.search).get('id')||location.hash.replace(/^#/,'');
   if(initId&&document.getElementById(initId)?.classList.contains('view')){
     const lbl=document.querySelector('#'+initId+' .page-title')?.textContent?.trim()||initId;
