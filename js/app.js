@@ -46,6 +46,7 @@ const NAV = (function(){
     if(id==='v-app') INSTALL.render();
     ETIMER.mount(id);
     if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); }
+    DANKE.hide();
     if(id==='v-home'){ SHELL.newQuip(); SHELL.renderHome(); }
     if(id==='v-pruefung') SHELL.renderExam();
     if(id==='v-settings') SHELL.syncSettings();
@@ -4023,6 +4024,7 @@ const CHANGELOG=(function(){
       'Lernseiten: Abkürzungen (z. B. ELW, FwDV, HBKG) sind beim ersten Vorkommen auf der Seite unterstrichen; ein Tipp zeigt Name und Erläuterung aus dem Abkürzungsverzeichnis',
       'Neu: Markierten Text auf einer Lernseite mit „Als Lernkarte“ direkt zu einer eigenen Lernkarte machen (Modul wird vorgewählt, die Frage schreibst du dazu)',
       'Updates: Bei einer neuen Version erscheint ein Hinweis „Aktualisieren“, statt dass die Seite mitten im Lernen neu lädt',
+      'Spendenlink: dezente Karte unten auf der Startseite; nach 10 Stunden Nutzung ein kleines „Danke“ (höchstens 2-mal, nur auf der Startseite, mit „Später“ und „Nicht mehr zeigen“)',
       'Stundenplan: Er springt von selbst zur aktuellen Kalenderwoche, wenn das Datum weiterläuft (Mitternacht) oder die App wieder in den Vordergrund kommt – außer du hast selbst in andere Wochen geblättert',
       'Fehlerbehebung: In Textfeldern (Suche, eigene Lernkarte) lassen sich „j“ und „f“ wieder tippen; Lesezeichen und „Zuletzt gesucht“ in der Suche funktionieren wieder; Markierungen funktionieren auch im Kapitel-Fenster auf Handy und Tablet',
       'Fehlerbehebung: Der Prüfungsmodus gibt bei Zeitablauf automatisch ab; Pomodoro startet nach Ablauf eine neue Runde; Klausur-Timer und Pomodoro laufen auch bei gesperrtem Bildschirm richtig weiter; ein abgelaufener Klausur-Timer meldet sich nicht mehr bei jedem Start',
@@ -6146,6 +6148,31 @@ const USAGE=(function(){
   };
 })();
 
+/* ── Danke-Hinweis: höchstens 2-mal, erstmals nach 10 h Nutzung, nur auf der Startseite ── */
+const DANKE=(function(){
+  const KEY='bvi_danke', URL='https://www.paypal.me/FabianFlemig', STEP=10*3600, MAX=2;
+  function load(){ try{ return Object.assign({n:0,next:STEP},JSON.parse(localStorage.getItem(KEY)||'{}')); }catch(e){ return {n:0,next:STEP}; } }
+  function save(d){ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){} }
+  function hide(){ document.getElementById('danke')?.remove(); }
+  function maybe(){
+    if(document.getElementById('danke')) return;
+    const d=load(), t=USAGE.total();
+    if(d.n>=MAX||t<d.next) return;
+    const h=Math.floor(t/3600);
+    const el=document.createElement('div'); el.id='danke'; el.setAttribute('role','status');
+    el.innerHTML='<div class="dk-t"><span class="dk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></span><div><b>Schon '+h+' Stunden gelernt – stark!</b><p>Wenn dir die Seite hilft, freue ich mich über eine kleine, freiwillige Spende. Danke dir!</p></div></div>'
+      +'<div class="dk-b"><a class="dk-go" href="'+URL+'" target="_blank" rel="noopener noreferrer">Spenden</a><button type="button" class="dk-later">Später</button><button type="button" class="dk-no">Nicht mehr zeigen</button></div>';
+    const set=o=>{ save(Object.assign(d,o)); hide(); };
+    el.querySelector('.dk-go').onclick=()=>set({n:MAX});
+    el.querySelector('.dk-later').onclick=()=>set({n:d.n+1,next:t+STEP});
+    el.querySelector('.dk-no').onclick=()=>set({n:MAX});
+    document.body.appendChild(el);
+    // Als gezeigt zählen, auch wenn nur weggewischt wird
+    save(Object.assign(d,{n:d.n+1,next:t+STEP}));
+  }
+  return {URL,maybe,hide};
+})();
+
 /* ── Bild-Vergrößerung (Lightbox) ───────────────────────────────────────── */
 const LIGHTBOX=(function(){
   let box=null, stage=null, content=null, open=false;
@@ -6484,6 +6511,7 @@ const SHELL=(function(){
     target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
     sim:'<path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z"/>',
     cal:'<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+    heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/>',
     cloud:'<path d="M18 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7"/><path d="M15 3h6v6M10 14 21 3"/>',
     exam:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
     cards:'<rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/>',
@@ -6842,9 +6870,11 @@ const SHELL=(function(){
       <details class="m-y1${wide?' static':''}"${y1Open||wide?' open':''} ontoggle="SHELL.y1(this.open)"><summary>1. Ausbildungsjahr</summary><div class="inner"><div class="m-rings r3">${MODS.filter(m=>m[5]===1).map(ringBtn).join('')}</div></div></details></div></div>`;
     const pause=`<div class="m-list m-pause">${row({ic:ic('cards'),t1:'Lernkarten',t2:cs.due?cs.due+' zur Wiederholung fällig · '+cs.known+' von '+cs.total+' gelernt':cs.known+' von '+cs.total+' gelernt · Karten üben',on:goJs('v-flashcards','Lernkarten')})}</div>`;
     const cloud=`<div class="m-list m-cloud"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2 m-cloud-x">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
+    const donate=`<a class="m-list m-donate m-donate-home" href="${DANKE.URL}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><div class="m-row m-go">${ic('heart')}<span class="m-tx"><span class="m-t1">Gefällt dir die Seite?</span><span class="m-t2">Kostenlos &amp; werbefrei – freiwillig unterstützen</span></span></div></a>`;
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
-      <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}</div></div>`;
+      <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}</div></div>`;
+    DANKE.maybe();
   }
 
   function renderExam(){
