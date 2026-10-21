@@ -80,11 +80,11 @@ const JGUI=(function(){
     const cur=JG.current(), list=JG.list();
     const opts=list.map(j=>'<option value="'+j.id+'"'+(j.id===cur?' selected':'')+'>'+E(j.label)+(j.id===JG.MASTER?' (Master)':'')+'</option>').join('');
     const master=JG.isMaster(), loc=JG.hasLocal();
-    root.innerHTML='<div class="m-row m-static m-wrap"><span class="m-tx"><span class="m-t1">Mein Jahrgang</span><span class="m-t2">'+(master?'Der Master: alle Inhalte der App':'Kopie des Masters mit eigenen Änderungen – neue Inhalte und Verbesserungen vom Master kommen automatisch')+'</span></span><select id="jg-sel" class="m-input" aria-label="Jahrgang">'+opts+'</select></div>'
-      +(master?'':'<button class="m-row m-go" id="jg-help"><span class="m-tx"><span class="m-t1">So funktioniert dein Jahrgang</span><span class="m-t2">Warum es die Seite gibt und wie du sie nutzt</span></span></button><button class="m-row m-go" id="jg-setup"><span class="m-tx"><span class="m-t1">Jahrgang einrichten</span><span class="m-t2">Checkliste: Stundenpläne, Klausurtermine, Link, Standorte, Lernkarten</span></span></button><button class="m-row" id="jg-exp"><span class="m-tx"><span class="m-t1">Änderungen exportieren</span><span class="m-t2">Eine Datei mit Plan, Ergänzungen und Prüfungen, zum Weitergeben per WhatsApp</span></span></button>'
+    root.innerHTML=(master?'':'<div class="m-list m-glow"><button class="m-row m-go" id="jg-help"><span class="m-tx"><span class="m-t1">So funktioniert dein Jahrgang</span><span class="m-t2">Warum es die Seite gibt und wie du sie nutzt</span></span></button></div>')+'<div class="m-list"><div class="m-row m-static m-wrap"><span class="m-tx"><span class="m-t1">Mein Jahrgang</span><span class="m-t2">'+(master?'Der Master: alle Inhalte der App':'Kopie des Masters mit eigenen Änderungen – neue Inhalte und Verbesserungen vom Master kommen automatisch')+'</span></span><select id="jg-sel" class="m-input" aria-label="Jahrgang">'+opts+'</select></div>'
+      +(master?'':'<button class="m-row m-go" id="jg-setup"><span class="m-tx"><span class="m-t1">Jahrgang einrichten</span><span class="m-t2">Checkliste: Stundenpläne, Link, Standorte, Lernkarten</span></span></button><button class="m-row" id="jg-exp"><span class="m-tx"><span class="m-t1">Änderungen exportieren</span><span class="m-t2">Eine Datei mit Plan, Ergänzungen und Prüfungen, zum Weitergeben per WhatsApp</span></span></button>'
       +'<label class="m-row" for="jg-imp" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Änderungen einlesen</span><span class="m-t2">Eine Datei von jemandem aus deinem Jahrgang</span></span><input type="file" id="jg-imp" accept=".json,application/json" hidden></label>'
       +(loc?'<button class="m-row" id="jg-dis"><span class="m-tx"><span class="m-t1">Meine Änderungen verwerfen</span><span class="m-t2">Zurück zum Stand des Masters (mit Rückgängig)</span></span></button>':''))
-      +(master?'':'<p class="m-note" style="padding:10px 16px 14px">'+NOTICE+'</p>');
+      +'</div>'+(master?'':'<p class="m-note" style="padding:0 4px">'+NOTICE+'</p>');
     $(root,'#jg-sel').onchange=e=>{ JG.set(e.target.value); };
     if(!master){
       $(root,'#jg-help').onclick=()=>NAV.go('v-jg-hilfe','So funktioniert dein Jahrgang');
@@ -526,7 +526,7 @@ const JGUI=(function(){
     const nx=$(el,'#jg-next'); if(nx) nx.onclick=()=>{ P.i++; P.ans=null; drawExam(); nx.blur(); };
   }
 
-  // ── Jahrgang einrichten: Klausurtermine, Lehrgangs-Link, Standorte, Lernkarten und die Checkliste dazu ──
+  // ── Jahrgang einrichten: Lehrgangs-Link, Standorte, Lernkarten und die Checkliste dazu ──
   const ORT0={ibk:['IBK','Heyrothsberge'],vak:['VAk','Berlin'],feuak:['FeuAK','Hamburg'],idf:['IdF','Münster']};
   function names(){
     const o=JG.data().orte;
@@ -547,18 +547,6 @@ const JGUI=(function(){
   }
   const saveField=(f,v,msg)=>{ const l=JG.local(); f(l,v); JG.saveLocal(l); if(msg) TOAST.show(msg,{type:'ok'}); };
 
-  function termineEditor(){
-    const rows=JG.data().termine.map(t=>({...t}));
-    const m=modal('Klausurtermine','<p class="jg-p">Der nächste Termin erscheint als Countdown auf der Startseite.</p><div id="jg-tm" class="jg-rows"></div><button type="button" class="jg-plus" id="jg-tm-add"><span>+</span> Termin</button><button class="btn btn-gold" id="jg-tm-s" type="button" style="margin-top:12px">Speichern</button>');
-    const box=$(m.body,'#jg-tm'), sync=()=>{ box.querySelectorAll('.jg-tr').forEach(r=>{ const x=rows[+r.dataset.i]; if(x){ x.date=$(r,'.jg-td').value; x.name=$(r,'.jg-tn').value; } }); };
-    const draw=()=>{ box.innerHTML=rows.map((t,i)=>'<div class="jg-tr jg-o2" data-i="'+i+'"><input type="date" class="m-input jg-td" value="'+E(t.date)+'" aria-label="Datum"><input type="text" class="m-input jg-tn" maxlength="60" placeholder="Name, z. B. Klausur IdF" value="'+E(t.name)+'"><button type="button" class="jg-cx jg-trx" aria-label="Termin entfernen">✕</button></div>').join('')||'<div class="cu-empty">Noch kein Termin.</div>'; };
-    draw();
-    m.body.addEventListener('click',e=>{
-      if(e.target.closest('#jg-tm-add')){ sync(); rows.push({date:'',name:''}); draw(); }
-      else if(e.target.closest('.jg-trx')){ sync(); rows.splice(+e.target.closest('.jg-tr').dataset.i,1); draw(); }
-      else if(e.target.closest('#jg-tm-s')){ sync(); const ok=rows.filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r.date)).map(r=>({date:r.date,name:r.name.trim()||'Klausur'})); saveField((l,v)=>{ l.termine=v; },ok,'Klausurtermine gespeichert'); m.close(); }
-    });
-  }
   function linkEditor(){
     const cur=JG.data().links.cloud||{titel:'Lehrgangs-Cloud',url:'',hinweis:''};
     const m=modal('Lehrgangs-Link','<p class="jg-p">Ein Link auf der Startseite, z. B. zur Cloud mit den Unterlagen. Schreib keine Passwörter hinein.</p><label class="jg-l">Titel<input type="text" id="jg-lt" class="m-input" maxlength="60" value="'+E(cur.titel)+'"></label><label class="jg-l">Adresse (https://…)<input type="url" id="jg-lu" class="m-input" maxlength="500" placeholder="https://" value="'+E(cur.url)+'"></label><label class="jg-l">Hinweis (freiwillig)<input type="text" id="jg-lh" class="m-input" maxlength="140" value="'+E(cur.hinweis)+'"></label><button class="btn btn-gold" id="jg-ls" type="button">Speichern</button>');
@@ -597,22 +585,20 @@ const JGUI=(function(){
   function checklist(){
     const draw=()=>{
       const d=JG.data(), pl=['ibk','vak','feuak','idf','idf2'].filter(k=>d.plane[k]).length, rn=d.pr.hinzu.length;
-      const item=(ok,t,s,b,act)=>'<div class="jg-ck-i"><span class="jg-ck-m'+(ok?' on':'')+'" aria-hidden="true">'+(ok?'✓':'○')+'</span><span class="m-tx"><span class="m-t1">'+t+'</span><span class="m-t2">'+s+'</span></span><button type="button" class="btn btn-ghost" data-a="'+act+'">'+b+'</button></div>';
+      const item=(ok,t,s,b,act)=>'<div class="jg-ck-i"><span class="m-tx"><span class="m-t1">'+t+'</span><span class="m-t2">'+s+'</span></span><button type="button" class="btn btn-ghost" data-a="'+act+'">'+b+'</button></div>';
       chk.m.body.innerHTML='<p class="jg-p">Mach aus der Kopie des Masters deinen Jahrgang. Alles ist freiwillig – am Ende exportierst du die Datei und schickst sie weiter.</p>'
         +item(pl>0,'Stundenpläne',pl+' von 5 Plänen (IBK, VAk, FeuAK, IdF Gruppe 1 und 2)','Öffnen','plan')
-        +item(d.termine.length>0,'Klausurtermine',d.termine.length?d.termine.length+' Termine':'Noch keiner – Countdown auf der Startseite','Bearbeiten','termine')
         +item(!!d.links.cloud,'Lehrgangs-Link',d.links.cloud?E(d.links.cloud.titel):'Noch keiner – z. B. Cloud mit den Unterlagen','Bearbeiten','link')
         +item(Object.keys(d.orte).length>0,'Standorte',Object.keys(d.orte).length?Object.keys(d.orte).map(k=>E(d.orte[k])).join(', '):'Standard: Heyrothsberge, Berlin, Hamburg, Münster','Bearbeiten','orte')
         +item(d.karten.length>0,'Lernkarten',d.karten.length+' Karten des Jahrgangs','Bearbeiten','karten')
         +item(rn>0||d.pr.weg.length>0||Object.keys(d.rel).length>0,'Prüfungen',rn+' eigene, '+d.pr.weg.length+' ausgeblendet','Öffnen','pruef')
         +item(d.erg.length>0||d.ausg.length>0,'Lernseiten',d.erg.length+' Ergänzungen und Kapitel, '+d.ausg.length+' ausgeblendet','Öffnen','lern')
-        +item(false,'Weitergeben','Die ganze Datei per WhatsApp schicken','Exportieren','export');
+        ;
     };
     chk={m:modal('Jahrgang einrichten','',''),draw}; draw();
     chk.m.body.addEventListener('click',e=>{
       const b=e.target.closest('button[data-a]'); if(!b) return; const a=b.dataset.a;
-      if(a==='termine') termineEditor(); else if(a==='link') linkEditor(); else if(a==='orte') orteEditor(); else if(a==='karten') kartenEditor();
-      else if(a==='export') exportFile();
+      if(a==='link') linkEditor(); else if(a==='orte') orteEditor(); else if(a==='karten') kartenEditor();
       else { chk.m.close(); if(a==='plan') NAV.tab('v-plan','Stundenplan'); else if(a==='pruef') NAV.tab('v-pruefung','Prüfung'); else NAV.go('v-jahr1','1. Jahr'); }
     });
   }

@@ -12449,7 +12449,7 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
         <span class="m-tx"><span class="m-t1">Lehrgang</span><span class="m-t2" id="acc-lg-sub"></span></span><svg class="m-acc-chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
       </button>
       <div class="m-acc-b" id="acc-lg-b" role="region" aria-labelledby="acc-lg-h" hidden>
-        <div class="m-list" id="jg-settings"></div>
+        <div class="m-stack" id="jg-settings"></div>
       </div>
     </div>
     <div class="m-acc">
@@ -12657,63 +12657,30 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
 </div>
 
 <!-- ============================================================ SO FUNKTIONIERT DEIN JAHRGANG ============================================================ -->
-<div id="v-jg-hilfe" class="view detail-view" data-nojg data-nolp>
+<div id="v-jg-hilfe" class="view detail-view" data-nojg data-nolp data-noabk>
   <div class="page-hero"><div class="phi">
     <p class="page-eyebrow">Lehrgang</p>
     <h1 class="page-title">So funktioniert dein <span class="accent">Jahrgang</span></h1>
-    <p class="page-lead">Warum es die Seite gibt und wie du sie für deinen Jahrgang nutzt.</p>
+    <p class="page-lead">Warum es die Seite gibt und wie ihr sie als Jahrgang nutzt.</p>
   </div></div>
-  <div class="pc">
-    <div class="m-card" style="margin-bottom:16px">
+  <div class="pc m-stack">
+    <div class="m-card">
       <div class="m-t1">In 5 Schritten</div>
-      <ol class="bl" style="margin:.6rem 0 0 1.2rem">
+      <ol class="jg-ul jg-ol">
         <li><strong>Jahrgang wählen:</strong> Einstellungen → Lehrgang → „Mein Jahrgang“.</li>
-        <li><strong>Einrichten:</strong> „Jahrgang einrichten“ führt dich durch Stundenpläne, Klausurtermine, Link, Standorte und Lernkarten.</li>
-        <li><strong>Ergänzen:</strong> Mit „Seite bearbeiten“ eigene Kapitel, Reiter, Prüfungen und Fragen anlegen.</li>
-        <li><strong>Exportieren:</strong> „Änderungen exportieren“ macht daraus eine Datei.</li>
-        <li><strong>Weitergeben:</strong> Schick mir die Datei per E-Mail, ich prüfe sie und veröffentliche sie für euren Jahrgang.</li>
+        <li><strong>Jemanden bestimmen:</strong> Euer Jahrgang legt eine Person fest, die sich um die Seite kümmert.</li>
+        <li><strong>Einrichten und ergänzen:</strong> Diese Person richtet alles ein und ergänzt Inhalte.</li>
+        <li><strong>Exportieren und teilen:</strong> Sie exportiert die Änderungen und teilt die Datei in eurer WhatsApp-Gruppe.</li>
+        <li><strong>Einlesen:</strong> Alle anderen lesen die Datei ein und sind auf demselben Stand.</li>
       </ol>
     </div>
-    <div class="acc-list">
-      <details class="acc-item"><summary><span class="acc-num">01</span><span class="acc-title">Warum gibt es die Seite?</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body"><ul class="bl">
-          <li><strong>Für meinen Lehrgang gebaut:</strong> Ich habe die Seite für mein eigenes Lernen im B-VI-Lehrgang BRef 04/2025 – AB 04/2026 gebaut.</li>
-          <li><strong>Alles an einem Ort:</strong> Lernstoff, Klausuren, Lernkarten und Pläne liegen gesammelt in einer App statt verstreut in Ordnern und PDFs, auf Handy, Tablet und PC.</li>
-          <li><strong>Nicht bei null anfangen:</strong> Jeder neue Jahrgang bekommt den Master als Grundlage und passt ihn an, statt alles neu zu bauen.</li>
-          <li><strong>Gemeinsam besser werden:</strong> Wer etwas verbessert oder ergänzt, kann es als Datei an den Jahrgang weitergeben.</li>
-        </ul></div></details>
-      <details class="acc-item"><summary><span class="acc-num">02</span><span class="acc-title">Master und Jahrgänge</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body"><ul class="bl">
-          <li><strong>Der Master</strong> (BRef 04/2025 – AB 04/2026) ist die Grundlage. Er lässt sich nicht verändern, dort gibt es keine Bearbeitungsfelder.</li>
-          <li><strong>Dein Jahrgang</strong> ist eine 1:1-Kopie des Masters plus deine eigene Ebene mit allen Änderungen. Der Master selbst bleibt dabei unberührt.</li>
-          <li><strong>Verbesserungen kommen automatisch:</strong> Wenn ich den Master verbessere, bekommt ihr das ohne Zutun. Eure Änderungen bleiben erhalten.</li>
-          <li><strong>Wer pflegt was:</strong> Ich pflege den Master. Die Jahrgänge pflegen sich selbst, und ich prüfe jede eingeschickte Datei, bevor sie für den Jahrgang veröffentlicht wird.</li>
-        </ul></div></details>
-      <details class="acc-item"><summary><span class="acc-num">03</span><span class="acc-title">Schritt für Schritt einrichten</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body"><ul class="bl">
-          <li><strong>Stundenpläne:</strong> Je Abschnitt (IBK, VAk, FeuAK, IdF) ein eigener Plan, bei IdF getrennt für Gruppe 1 und Gruppe 2. Du lädst eine Kalenderdatei, liest ein Foto oder einen Screenshot ein oder tippst die Termine ein. Mit „Als aktiven Stundenplan markieren“ legst du fest, welcher Plan Startseite und Widgets füttert.</li>
-          <li><strong>Klausurtermine:</strong> Der nächste Termin erscheint als Countdown auf der Startseite.</li>
-          <li><strong>Lehrgangs-Link:</strong> Ein Link auf der Startseite, z. B. zur Cloud. Schreib keine Passwörter hinein.</li>
-          <li><strong>Standorte:</strong> Wenn ein Abschnitt woanders stattfindet, ersetzt dein Ortsname den Standard in Überschriften und Kacheln.</li>
-          <li><strong>Lernkarten:</strong> Eigene Karten des Jahrgangs, die bei den Lernkarten auftauchen.</li>
-          <li><strong>Prüfungen:</strong> Oben auf der Prüfungsseite „Prüfungen bearbeiten“. Dann kannst du Prüfungen ausblenden oder hinzufügen und mit ★ festlegen, welche klausurrelevant sind. Nur die relevanten liefern Fragen für Einsatzfahrt und Duell.</li>
-          <li><strong>Eigene Fragen in einer Klausur:</strong> Auf der Klausurseite „Seite bearbeiten“ und dann „Eigene Frage“. Die Antwort kann Single-Choice, Multiple-Choice oder Freitext mit Musterlösung sein.</li>
-          <li><strong>Lernseiten:</strong> „Seite bearbeiten“ blendet Kapitel und Blöcke aus, ergänzt Text oder Bild in einem Kapitel und legt ein eigenes Kapitel an. Auf den Übersichtsseiten kannst du Reiter ausblenden und eigene Reiter anlegen, die du dann mit Kapiteln füllst.</li>
-          <li><strong>Rückgängig:</strong> Nach jedem Löschen gibt es „Rückgängig“, und „gelöschte wiederherstellen“ holt alles auf der Seite zurück.</li>
-        </ul></div></details>
-      <details class="acc-item"><summary><span class="acc-num">04</span><span class="acc-title">Weitergeben und Prüfen</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body"><ul class="bl">
-          <li><strong>Exportieren:</strong> Einstellungen → Lehrgang → „Änderungen exportieren“ erzeugt eine Datei mit allem, was du geändert hast.</li>
-          <li><strong>Schicken:</strong> Sende sie per E-Mail an <a href="mailto:fabian.flemig@gmx.de" style="color:var(--c-gold)">fabian.flemig@gmx.de</a>.</li>
-          <li><strong>Ich prüfe jede Datei</strong> und lade sie dann für euren Jahrgang hoch. Nach etwa zwei Minuten sehen alle in deinem Jahrgang den neuen Stand.</li>
-          <li><strong>Selber einlesen:</strong> Wer eine Datei von jemandem aus dem Jahrgang bekommt, liest sie unter „Änderungen einlesen“ ein.</li>
-          <li>Der Export enthält immer den ganzen Stand. Die neue Datei ersetzt also die alte.</li>
-        </ul></div></details>
-      <details class="acc-item"><summary><span class="acc-num">05</span><span class="acc-title">Das geht (noch) nicht</span><span class="acc-arrow">›</span></summary>
-        <div class="acc-body"><ul class="bl">
-          <li><strong>Änderungen liegen nur auf deinem Gerät,</strong> bis du sie exportierst. Es gibt keinen automatischen Abgleich zwischen Handy und PC.</li>
-          <li><strong>Die Texterkennung bei Fotos ist nicht perfekt.</strong> Darum zeigt dir die App das Ergebnis immer in einem Formular zum Ausbessern.</li>
-        </ul></div></details>
+    <div class="m-list jg-hl">
+      <details class="jg-hd"><summary><span class="m-t1">Warum gibt es die Seite?</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></summary><div class="jg-hb"><ul class="jg-ul"><li><strong>Für meinen Lehrgang gebaut:</strong> Ich habe die Seite für mein eigenes Lernen im Lehrgang BRef 04/2025 – AB 04/2026 gebaut.</li><li><strong>Alles an einem Ort:</strong> Lernstoff, Klausuren, Lernkarten und Pläne liegen gesammelt in einer App statt verstreut in Ordnern und PDFs, auf Handy, Tablet und PC.</li><li><strong>Nicht bei null anfangen:</strong> Jeder neue Jahrgang bekommt den Master als Grundlage und passt ihn an, statt alles neu zu bauen.</li><li><strong>Gemeinsam besser werden:</strong> Wer etwas verbessert oder ergänzt, kann es per Datei an den ganzen Jahrgang weitergeben.</li></ul></div></details>
+      <details class="jg-hd"><summary><span class="m-t1">Master und Jahrgang</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></summary><div class="jg-hb"><ul class="jg-ul"><li><strong>Der Master</strong> (BRef 04/2025 – AB 04/2026) ist die Grundlage. Er lässt sich nicht verändern, dort gibt es keine Bearbeitungsfelder.</li><li><strong>Euer Jahrgang</strong> ist eine 1:1-Kopie des Masters plus eine eigene Ebene mit allen Änderungen. Der Master bleibt dabei unberührt.</li><li><strong>Verbesserungen am Master</strong> kommen von selbst in euren Jahrgang. Eure eigenen Änderungen bleiben dabei erhalten.</li><li><strong>Ich pflege den Master</strong> und bin nur da, wenn es Probleme gibt. Ich kann nicht von jedem Lehrgang jede Kleinigkeit mitbekommen, deshalb pflegt ihr euren Jahrgang selbst.</li></ul></div></details>
+      <details class="jg-hd"><summary><span class="m-t1">Wer pflegt euren Jahrgang?</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></summary><div class="jg-hb"><ul class="jg-ul"><li><strong>Bestimmt eine Person</strong> in eurem Jahrgang, die sich um die Seite kümmert. Sie richtet alles ein, ergänzt Inhalte und sammelt die Wünsche der anderen. So gibt es einen Stand für alle statt vieler verschiedener.</li><li><strong>Exportieren:</strong> Einstellungen → Lehrgang → „Änderungen exportieren“ erzeugt eine Datei mit dem ganzen Stand.</li><li><strong>Teilen:</strong> Diese Person schickt die Datei in die WhatsApp-Gruppe eures Jahrgangs.</li><li><strong>Einlesen:</strong> Alle anderen laden die Datei unter Einstellungen → Lehrgang → „Änderungen einlesen“ hoch. Danach sind alle im Jahrgang auf demselben Stand.</li><li><strong>Bei jeder neuen Datei</strong> einfach noch einmal einlesen. Die neue Datei enthält immer alles.</li></ul></div></details>
+      <details class="jg-hd"><summary><span class="m-t1">Schritt für Schritt einrichten</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></summary><div class="jg-hb"><ul class="jg-ul"><li><strong>Stundenpläne:</strong> Je Abschnitt (IBK, VAk, FeuAK, IdF) ein eigener Plan, bei IdF getrennt für Gruppe 1 und Gruppe 2. Ihr ladet eine Kalenderdatei, lest ein Foto oder einen Screenshot ein oder tippt die Termine ein. Mit „Als aktiven Stundenplan markieren“ legt ihr fest, welcher Plan Startseite und Widgets füttert.</li><li><strong>Lehrgangs-Link:</strong> Ein Link auf der Startseite, z. B. zur Cloud. Schreibt keine Passwörter hinein.</li><li><strong>Standorte:</strong> Wenn ein Abschnitt woanders stattfindet, ersetzt euer Ortsname den Standard in Überschriften und Kacheln.</li><li><strong>Lernkarten:</strong> Eigene Karten des Jahrgangs, die bei den Lernkarten auftauchen.</li><li><strong>Prüfungen:</strong> Oben auf der Prüfungsseite „Prüfungen bearbeiten“. Dann lassen sich Prüfungen ausblenden oder hinzufügen und mit ★ als klausurrelevant markieren. Nur die relevanten liefern Fragen für Einsatzfahrt und Duell.</li><li><strong>Eigene Fragen in einer Klausur:</strong> Auf der Klausurseite „Seite bearbeiten“ und dann „Eigene Frage“. Die Antwort kann Single-Choice, Multiple-Choice oder Freitext mit Musterlösung sein.</li><li><strong>Lernseiten:</strong> „Seite bearbeiten“ blendet Kapitel und Blöcke aus, ergänzt Text oder Bild in einem Kapitel und legt ein eigenes Kapitel an. Auf den Übersichtsseiten lassen sich Reiter ausblenden und eigene Reiter anlegen, die ihr dann mit Kapiteln füllt.</li><li><strong>Rückgängig:</strong> Nach jedem Löschen gibt es „Rückgängig“, und „gelöschte wiederherstellen“ holt alles auf der Seite zurück.</li></ul></div></details>
+      <details class="jg-hd"><summary><span class="m-t1">Bei Problemen</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></summary><div class="jg-hb"><ul class="jg-ul"><li>Wenn etwas nicht klappt oder kaputt aussieht, schreib mir an <a href="mailto:fabian.flemig@gmx.de" style="color:var(--m-accent-fg)">fabian.flemig@gmx.de</a>.</li><li>Für die Inhalte und Änderungen eures Jahrgangs ist euer Jahrgang selbst zuständig.</li></ul></div></details>
+      <details class="jg-hd"><summary><span class="m-t1">Das geht (noch) nicht</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></summary><div class="jg-hb"><ul class="jg-ul"><li><strong>Änderungen liegen nur auf dem jeweiligen Gerät,</strong> bis die Datei exportiert wird. Es gibt keinen automatischen Abgleich zwischen Handy und PC.</li><li><strong>Die Texterkennung bei Fotos ist nicht perfekt.</strong> Darum zeigt die App das Ergebnis immer in einem Formular zum Ausbessern.</li></ul></div></details>
     </div>
   </div>
 </div>

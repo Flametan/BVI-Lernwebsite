@@ -2532,6 +2532,7 @@ const ABKTIP=(function(){
     });
   }
   function apply(id){
+    { const v0=document.getElementById(id); if(v0&&v0.hasAttribute('data-noabk')) return; }
     const v=document.getElementById(id); if(!v||v._abk||!v.querySelector('.pc')) return;
     v._abk=true;
     if(!build()) return;
@@ -4030,8 +4031,9 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Jahrgänge: Die Erklärseite beschreibt jetzt, dass jeder Jahrgang eine Person bestimmt, die die Seite pflegt, Änderungen exportiert und in der WhatsApp-Gruppe teilt; alle anderen lesen die Datei ein. Klausurtermine als Countdown für Jahrgänge sind entfernt.',
       'Jahrgänge: „So funktioniert dein Jahrgang“ in den Einstellungen erklärt, warum es die Seite gibt und wie sie funktioniert; „Prüfungen bearbeiten“ steht oben auf der Prüfungsseite, auf Übersichtsseiten lassen sich Reiter ausblenden und eigene Reiter mit Kapiteln anlegen; eigene Fragen können Single-Choice, Multiple-Choice oder Freitext sein; die Ergänzung im Kapitel hat nur noch Text und Bild',
-      'Jahrgang einrichten (Einstellungen → Lehrgang): Checkliste mit Stundenplänen, Klausurterminen, Lehrgangs-Link, Standorten und Lernkarten des Jahrgangs; die Datei trägt alles mit',
+      'Jahrgang einrichten (Einstellungen → Lehrgang): Checkliste mit Stundenplänen, Lehrgangs-Link, Standorten und Lernkarten des Jahrgangs; die Datei trägt alles mit',
       'Lernseiten: „+ Eigene Ergänzung“ und „+ Eigene Frage“ erscheinen erst nach „Seite bearbeiten“; Ergänzungen als Freitext, Single-Choice oder Multiple-Choice, dazu eigene Kapitel; das Kreuz sitzt rechts an der Frage',
       'Klausuren: In Jahrgängen lassen sich direkt auf der Prüfungsseite eigene Fragen hinzufügen, bearbeiten, entfernen und üben (sie zählen für Einsatzfahrt, wenn die Prüfung klausurrelevant ist)',
       'Stundenplan (Jahrgänge): Für IdF gibt es je einen Plan für Gruppe 1 und Gruppe 2 mit Umschalter; mit „Als aktiven Stundenplan markieren“ wählst du die Gruppe für Startseite und Widgets',
@@ -5658,7 +5660,7 @@ const IDF_PLAN = (function(){
     const row=(t1,t2,btn)=>`<div class="m-row m-static m-wrap"><span class="m-tx"><span class="m-t1">${t1}</span><span class="m-t2">${t2}</span></span>${btn}</div>`;
     const fileRow=`<label class="m-row" for="plan-file" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Kalenderdatei (.ics) laden</span><span class="m-t2">z. B. aus dem Kalender deiner Schule oder deines Betriebs</span></span><input type="file" id="plan-file" accept=".ics,text/calendar" hidden onchange="IDF_PLAN.importIcs(this.files[0]);this.value=''"></label>`;
     const ui=(fn,t1,t2)=>`<button class="m-row m-go" onclick="${fn}"><span class="m-tx"><span class="m-t1">${t1}</span><span class="m-t2">${t2}</span></span></button>`;
-    let h='<div class="m-sec" style="margin-top:1rem">'+(nm?'Plan für '+PTAB[_vkey()]:'Stundenplan wählen')+'</div><div class="m-list idf-src">';
+    let h='<div class="m-sec" style="margin:1rem 0 .6rem">'+(nm?'Plan für '+PTAB[_vkey()]:'Stundenplan wählen')+'</div><div class="m-list idf-src">';
     if(!nm) h+=row('IdF Münster · Modul 3.5',on?'Der mitgelieferte Plan, mit Gruppe 1 und 2':'Wird gerade angezeigt',on?'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'idf\')">Anzeigen</button>':'<span class="m-badge">aktiv</span>');
     if(cust) h+=row(esc(_cust.name),_cust.ev.length+' Termine'+(nm?'':' aus deiner Datei'),on&&!nm?'<span class="m-badge">aktiv</span>':nm?'':'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'custom\')">Anzeigen</button>');
     if(nm) h+=fileRow;   // Im Master lässt sich nichts ändern oder importieren
@@ -6788,8 +6790,8 @@ const SHELL=(function(){
   const DEF_EXAM=DEF_EXAMS[0];
   function defExam(){
     const t=new Date(); t.setHours(0,0,0,0);
-    let list=DEF_EXAMS;   // andere Jahrgänge: eigene Termine, sonst kein Countdown
-    if(!JG.isMaster()){ const tm=JG.data().termine; list=tm.length?tm:[{date:'2000-01-01',name:'Klausur'}]; }
+    let list=DEF_EXAMS;   // andere Jahrgänge: kein vorgegebener Termin (jeder kann seinen eigenen unter Einstellungen eintragen)
+    if(!JG.isMaster()) list=[{date:'2000-01-01',name:'Klausur'}];
     return list.find(e=>new Date(e.date+'T00:00')>=t)||list[list.length-1];
   }
   function examCfg(){

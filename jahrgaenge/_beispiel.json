@@ -58,12 +58,6 @@
     "v-vak-klausurhinweise": true
   },
   "bilder": {},
-  "termine": [
-    {
-      "date": "2027-02-15",
-      "name": "Klausur (Beispiel)"
-    }
-  ],
   "links": {
     "cloud": {
       "url": "https://beispiel.de/cloud",
