@@ -4031,6 +4031,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Nächste Klausur (Einstellungen → Lernen): Der Termin lässt sich mit „Termin entfernen“ wieder löschen (mit Rückgängig), und du wählst, welche Prüfung der Countdown öffnet',
       'Stundenplan: „Wichtige Termine in den Kalender übernehmen“ nimmt nur Schlüsseltermine (Akzentfarbe) und Exkursionen (grün) mit; „Kalender abonnieren“ und die Anzeige des aktiven Plans im Master sind entfernt',
       'Jahrgänge: Die Erklärseite beschreibt jetzt, dass jeder Jahrgang eine Person bestimmt, die die Seite pflegt, Änderungen exportiert und in der WhatsApp-Gruppe teilt; alle anderen lesen die Datei ein. Klausurtermine als Countdown für Jahrgänge sind entfernt.',
       'Jahrgänge: „So funktioniert dein Jahrgang“ in den Einstellungen erklärt, warum es die Seite gibt und wie sie funktioniert; „Prüfungen bearbeiten“ steht oben auf der Prüfungsseite, auf Übersichtsseiten lassen sich Reiter ausblenden und eigene Reiter mit Kapiteln anlegen; eigene Fragen können Single-Choice, Multiple-Choice oder Freitext sein; die Ergänzung im Kapitel hat nur noch Text und Bild',
@@ -6773,16 +6774,20 @@ const SHELL=(function(){
     const d=defExam();
     try{
       const o=JSON.parse(localStorage.getItem('bvi_exam')||'{}');
-      return {date:/^\d{4}-\d{2}-\d{2}$/.test(o.date||'')?o.date:d.date, name:((o.name||'').trim().slice(0,60))||d.name};
-    }catch(e){ return {...d}; }
+      return {date:/^\d{4}-\d{2}-\d{2}$/.test(o.date||'')?o.date:d.date, name:((o.name||'').trim().slice(0,60))||d.name, target:EXAMS.some(([,it])=>it.some(x=>x[0]===o.target))?o.target:'', off:!!o.off};
+    }catch(e){ return {...d,target:'',off:false}; }
   }
   function goalMin(){
     try{ const v=parseInt(localStorage.getItem('bvi_goal'),10); return v>=5&&v<=240?v:30; }catch(e){ return 30; }
   }
   // Ziel der Countdown-Karte: Klausur nach § 21 → Laufbahnklausuren, sonst Altklausur-Quiz IdF
-  function examTarget(){ return /§\s*21/.test(examCfg().name)?['v-laufbahn-2026','Laufbahnklausuren Juni 2026']:['v-idf-altklausur','Altklausur-Quiz IdF']; }
+  function examTarget(){
+    const t=examCfg().target;
+    if(t){ const it=EXAMS.flatMap(x=>x[1]).find(x=>x[0]===t); if(it) return [it[0],it[1]]; }
+    return /§\s*21/.test(examCfg().name)?['v-laufbahn-2026','Laufbahnklausuren Juni 2026']:['v-idf-altklausur','Altklausur-Quiz IdF']; }
   function daysToExam(){
     const t=new Date(); t.setHours(0,0,0,0);
+    if(examCfg().off) return -1;   // Termin entfernt: kein Countdown
     return Math.round((new Date(examCfg().date+'T00:00')-t)/864e5);
   }
   const hhmm=d=>String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
@@ -6968,8 +6973,13 @@ const SHELL=(function(){
     set('m-goal-val',goalMin()+' min');
     const tm=document.getElementById('m-timers-toggle'); if(tm) tm.checked=!document.documentElement.classList.contains('no-timers');
     const lb=BACKUP.last(); set('m-backup-last',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
-    const ex=examCfg(), di=document.getElementById('m-exam-date'), ni=document.getElementById('m-exam-name');
-    if(di) di.value=ex.date; if(ni) ni.value=ex.name===defExam().name&&!localStorage.getItem('bvi_exam')?'':ex.name;
+    const ex=examCfg(), di=document.getElementById('m-exam-date'), ni=document.getElementById('m-exam-name'), ti=document.getElementById('m-exam-target'), xb=document.getElementById('m-exam-clear');
+    if(di) di.value=ex.off?'':ex.date; if(ni) ni.value=ex.off?'':(ex.name===defExam().name&&!localStorage.getItem('bvi_exam')?'':ex.name);
+    if(ti){
+      if(!ti.options.length) ti.innerHTML='<option value="">Automatisch</option>'+EXAMS.map(([n,it],i)=>'<optgroup label="'+esc(n)+'">'+it.map(x=>'<option value="'+esc(x[0])+'">'+esc(x[1])+'</option>').join('')+'</optgroup>').join('');
+      ti.value=ex.off?'':ex.target;
+    }
+    if(xb) xb.hidden=ex.off;
     const tg=document.getElementById('m-notif-toggle'); if(tg) tg.checked=NOTIF.isEnabled();
     document.getElementById('m-cl-badge')?.classList.toggle('hidden',!CHANGELOG.isNew());
     document.getElementById('m-cl-badge2')?.classList.toggle('hidden',!CHANGELOG.isNew());
@@ -7069,7 +7079,15 @@ const SHELL=(function(){
     setExam(){
       const date=document.getElementById('m-exam-date')?.value, name=document.getElementById('m-exam-name')?.value||'';
       const o=examCfg(); if(/^\d{4}-\d{2}-\d{2}$/.test(date||'')) o.date=date;
-      try{ localStorage.setItem('bvi_exam',JSON.stringify({date:o.date,name:name.trim()})); }catch(e){}
+      const target=document.getElementById('m-exam-target')?.value||'';
+      if(o.off&&!/^\d{4}-\d{2}-\d{2}$/.test(date||'')){ try{ localStorage.setItem('bvi_exam',JSON.stringify({off:1,target})); }catch(e){} return; }   // ohne neues Datum bleibt der Termin entfernt
+      try{ localStorage.setItem('bvi_exam',JSON.stringify({date:o.date,name:name.trim(),target})); }catch(e){}
+      syncSettings(); if(document.getElementById('v-pruefung')?.classList.contains('active')) renderExam();
+    },
+    clearExam(){
+      let prev=null; try{ prev=localStorage.getItem('bvi_exam'); localStorage.setItem('bvi_exam',JSON.stringify({off:1})); }catch(e){}
+      syncSettings(); renderExam(); renderHome();
+      TOAST.show('Klausurtermin entfernt',{type:'ok',undo:()=>{ try{ prev===null?localStorage.removeItem('bvi_exam'):localStorage.setItem('bvi_exam',prev); }catch(e){} syncSettings(); renderExam(); renderHome(); }});
     },
     bookmark(){
       const v=document.querySelector('.view.active'); if(!v) return;

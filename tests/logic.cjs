@@ -836,6 +836,26 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     eq('Prüfskript: Beispiel ok, schlechte Datei wird bemängelt', { ok: ok.status === 0 && /Keine Fehler/.test(ok.stdout), bad: bad.status === 1 && /FEHLER/.test(bad.stdout) && /HTML/.test(bad.stdout) }, { ok: true, bad: true });
   }
 
+  // ── Klausurtermin: Ziel wählbar, Termin entfernbar ──
+  const ex = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    localStorage.removeItem('bvi_exam');
+    NAV.go('v-settings', 'E'); await w(300);
+    const d = new Date(Date.now() + 5 * 864e5), iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    document.getElementById('m-exam-date').value = iso; document.getElementById('m-exam-name').value = 'Meine Klausur';
+    document.getElementById('m-exam-target').value = 'v-simulator'; SHELL.setExam(); await w(200);
+    NAV.tab('v-pruefung', 'Prüfung'); await w(400);
+    const cd = document.querySelector('#m-countdown .m-count-go');
+    r.shown = !!cd && /Meine Klausur/.test(cd.innerText) && /v-simulator/.test(cd.getAttribute('onclick'));
+    NAV.go('v-settings', 'E'); await w(200); SHELL.clearExam(); await w(300);
+    NAV.tab('v-pruefung', 'Prüfung'); await w(300);
+    r.gone = !document.querySelector('#m-countdown .m-count-go') && /^\{"off":1/.test(localStorage.getItem('bvi_exam'));
+    NAV.go('v-settings', 'E'); await w(200); r.btnHidden = document.getElementById('m-exam-clear').hidden;
+    localStorage.removeItem('bvi_exam'); SHELL.syncSettings(); r.back = !document.getElementById('m-exam-clear').hidden;
+    return r;
+  });
+  eq('Klausurtermin: Ziel wählbar, entfernbar', ex, { shown: true, gone: true, btnHidden: true, back: true });
+
   // ── Veröffentlichte Jahrgangs-Datei (jahrgaenge/<ID>.json) wird mit den eigenen Änderungen zusammengeführt ──
   const jid = await page.evaluate(() => JG.list()[0].id);
   await page.route('**/jahrgaenge/' + jid + '.json', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ format: 'bvi-jahrgang', v: 1, erg: [{ id: 'pub1', seite: 'v-vak-verwaltungsrecht', titel: 'Vom Jahrgang', text: '<script>x</script>' }], pr: { hinzu: [], weg: ['v-laufbahn-2023'] }, rel: { 'v-vak-altklausur': false } }) }));
