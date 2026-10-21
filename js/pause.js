@@ -21,11 +21,13 @@ const PAUSE=(function(){
     grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
     scale:'<path d="M12 3v18M5 7h14M5 7l-3 7a4 4 0 0 0 6 0zM19 7l-3 7a4 4 0 0 0 6 0z"/>',
     pairs:'<rect x="3" y="5" width="8" height="12" rx="2"/><rect x="13" y="7" width="8" height="12" rx="2"/>',
+    duel:'<path d="M2 16V8a1 1 0 0 1 1-1h6v9M13 16V8a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v8"/><circle cx="5.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/>',
     truck:'<path d="M2 16V8a1 1 0 0 1 1-1h10v9M13 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M6 4h4"/>'
   };
   const svg=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
   const GAMES=[
     ['fahrt','truck','Einsatzfahrt','Nur Prüfungsfragen aus IBK, VAk, FeuAK und IdF · Route wählen, Hilfsfrist schaffen',()=>FAHRT],
+    ['duell','duel','Einsatzfahrt-Duell','Zu zweit live gegeneinander · Verbindung per QR-Code · gleiche Prüfungsfragen',()=>DUELLGAME],
     ['quiz','ladder','Quizleiter','8 Stufen, ein 50:50-Joker – wie weit kommst du?',()=>QUIZL],
     ['tf','bolt','Wahr oder Falsch','60 Sekunden, so viele Aussagen wie möglich',()=>TF],
     ['word','grid','Wörter-Raten','Ein Begriff mit 5 Buchstaben, sechs Versuche',()=>WORD],
@@ -36,10 +38,10 @@ const PAUSE=(function(){
   function hub(){stop();
     const card=([k,ic,t,d],big)=>`<button class="pz-game${big?' pz-big':''}" data-g="${k}"><span class="pz-gi">${svg(ic)}</span><span><b>${t}</b><small>${d}</small>${bestTxt(k)?`<em>${bestTxt(k)}</em>`:''}</span></button>`;
     // Einsatzfahrt immer mit Prüfungsfragen; der Umschalter gilt nur für die Spiele darunter
-    root.innerHTML=`<div class="pz-wrap"><div class="pz-grid">${card(GAMES[0],true)}</div>
+    root.innerHTML=`<div class="pz-wrap"><div class="pz-grid">${card(GAMES[0],true)}${card(GAMES[1],true)}</div>
     <div class="m-sec" style="margin:.4rem 0 -.2rem">Weitere Spiele · Fragen aus</div>
     <div class="pz-mode" role="tablist" aria-label="Fragen für die weiteren Spiele">${[['allg','Allgemeinwissen'],['fw','Feuerwehr'],['beides','Beides']].map(([k,t])=>`<button data-m="${k}" class="${mode===k?'on':''}">${t}</button>`).join('')}</div>
-    <div class="pz-grid">${GAMES.slice(1).map(g=>card(g,false)).join('')}</div></div>`;
+    <div class="pz-grid">${GAMES.slice(2).map(g=>card(g,false)).join('')}</div></div>`;
     root.querySelectorAll('[data-m]').forEach(x=>x.onclick=()=>{mode=x.dataset.m;set(MKEY,mode);hub();});
     root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
   }
@@ -113,9 +115,13 @@ const PAUSE=(function(){
       el.querySelectorAll('.pz-mc').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(busy||open.includes(i)||cards[i].m)return;open.push(i);if(open.length===2){moves++;const[a,c]=open;if(cards[a].k===cards[c].k){cards[a].m=cards[c].m=1;found++;open=[];draw();}else{busy=true;draw();setTimeout(()=>{open=[];busy=false;draw();},950);}}else draw();});};
     draw();}};
 
+  /* ---------- Einsatzfahrt-Duell: Verbindung und Lobby kommen aus js/duell.js (wird erst hier geladen) ---------- */
+  const JS={};const loadJs=src=>JS[src]||(JS[src]=new Promise((ok,fail)=>{const x=document.createElement('script');x.src=src;x.onload=ok;x.onerror=()=>{delete JS[src];fail();};document.body.appendChild(x);}));
+  const DUELLGAME={start(el){el.innerHTML='<div class="pz-card"><div class="pz-center">Lade Duell …</div></div>';loadJs('js/duell.js').then(()=>{if(cur===DUELLGAME&&el.isConnected)DUELL.start(el,FAHRT,loadJs);}).catch(()=>{el.innerHTML='<div class="pz-card"><div class="pz-center">Das Duell konnte nicht geladen werden. Bitte Verbindung prüfen.</div></div>';});},
+    stop(){if(typeof DUELL!=='undefined')DUELL.stop();FAHRT.stop();}};
   /* ---------- 6 Einsatzfahrt (Prüfungsfragen) ---------- */
   const FAHRT=(function(){
-    const HF=480,MODS=[['IBK','Transaktionsanalyse · Konflikte'],['VAk','Verwaltungsrecht'],['FeuAK','Haushalt · Management'],['IdF','Brandschutz · Stab']];
+    const HF=480,hf=()=>(st&&st.hf)||HF,MODS=[['IBK','Transaktionsanalyse · Konflikte'],['VAk','Verwaltungsrecht'],['FeuAK','Haushalt · Management'],['IdF','Brandschutz · Stab']];
     const ROUTES={A:{key:'A',name:'Hauptstraße',base:330,n:5,pen:65,bon:15,d:'kurz, aber Baustelle und Berufsverkehr',tags:['Fahrzeit 5:30','5 Fragen','falsch +65 s','richtig −15 s','ab 3 Fehlern zu spät']},
       B:{key:'B',name:'Ring',base:390,n:6,pen:30,bon:10,d:'länger, aber flüssig',tags:['Fahrzeit 6:30','6 Fragen','falsch +30 s','richtig −10 s','ab 4 Fehlern zu spät']}};
     const fmt=t=>{t=Math.max(0,Math.round(t));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');};
@@ -134,13 +140,26 @@ const PAUSE=(function(){
     const count=m=>questions().filter(q=>q.m===m).length;
     function pick(r){const pool=questions().filter(q=>sel.has(q.m)),bag=[];pool.forEach(q=>{for(let k=0;k<(q.g?3:1);k++)bag.push(q);});const out=[];while(out.length<r.n&&bag.length){const q=bag.splice(Math.floor(Math.random()*bag.length),1)[0];if(!out.includes(q))out.push(q);}
       return out.map(q=>{const ord=shuf(q.o.map((_,i)=>i));return{...q,o:ord.map(i=>q.o[i]),c:ord.indexOf(q.c)};});}
+    const rng=seed=>{let a=seed>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;};};
+    // Duell: aus Seed, Modulen und Anzahl entstehen auf beiden Geräten dieselben Fragen in derselben Reihenfolge
+    function pickSeeded(mods,n,seed){const R=rng(seed),bag=[];questions().filter(q=>mods.includes(q.m)).forEach(q=>{for(let k=0;k<(q.g?3:1);k++)bag.push(q);});const out=[];while(out.length<n&&bag.length){const q=bag.splice(Math.floor(R()*bag.length),1)[0];if(!out.includes(q))out.push(q);}
+      return out.map(q=>{const ord=q.o.map((_,i)=>i);for(let i=ord.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[ord[i],ord[j]]=[ord[j],ord[i]];}return{...q,o:ord.map(i=>q.o[i]),c:ord.indexOf(q.c)};});}
+    const hash=x=>{let h=5381;for(let i=0;i<x.length;i++)h=((h<<5)+h+x.charCodeAt(i))|0;return(h>>>0).toString(36);};
+    const sig=()=>hash(questions().map(q=>q.m+q.q.length+q.o.length).join('|'));
+    let SESS=null,SESS_NEXT=null;
     function newGame(){st={phase:'select',p:0,t:0,qs:[],qi:0,route:null,res:[],fx:null,fxT:0,lvl:0};PART=[];panel();}
     function panel(){const pn=el.querySelector('.pz-fp'),s=st,L='ABCDE';let h='';
-      if(s.phase==='select'){h=`<div class="pz-lbl"><span>Einsatzfahrt</span></div><div class="pz-qt">Aus welchen Modulen sollen die Fragen kommen?</div><div class="pz-chips">${MODS.map(([m,d])=>`<button class="pz-chip${sel.has(m)?' on':''}" data-a="tog" data-v="${m}"><b>${m}</b><small>${d}<br>${count(m)} Prüfungsfragen</small></button>`).join('')}</div><button class="pz-pri" data-a="route" ${sel.size?'':'disabled'}>Weiter: Einsatzmeldung</button>`;}
-      else if(s.phase==='route'){h=`<div class="pz-lbl"><span>Alarm · Einsatzmeldung</span><b>Hilfsfrist ${fmt(HF)}</b></div><div class="pz-qt">Feuer 2 · Wohnungsbrand, Musterstraße 12, Person vermisst</div>${Object.values(ROUTES).map(r=>`<button class="pz-route" data-a="go" data-v="${r.key}"><b>${r.key} · ${r.name}</b> <span class="pz-center" style="font-size:.78rem">${r.d}</span><div class="k">${r.tags.map(x=>`<span>${x}</span>`).join('')}</div></button>`).join('')}<button class="pz-sec2" data-a="sel" style="align-self:flex-start">‹ Module</button>`;}
+      if(s.paused){h=`<div class="pz-lbl"><span>Duell</span><b>pausiert</b></div><div class="pz-qt">Verbindung unterbrochen</div><div class="pz-fb">Das Spiel steht still. Kommt ${esc(s.opp.name)} nicht innerhalb von <b class="pz-pc">${Math.max(0,30-Math.floor((performance.now()-s.pausedAt)/1000))}</b> Sekunden zurück, gewinnst du.</div>`;}
+      else if(s.phase==='d-count'){h=`<div class="pz-lbl"><span>Duell gegen ${esc(s.opp.name)}</span><b>${s.qs.length} Fragen</b></div><div class="pz-big-n">${Math.max(1,s.cdLeft)}</div><div class="pz-center">Gleich geht es los. Gleiche Fragen, gleiche Strecke.</div>`;}
+      else if(s.phase==='select'){h=`<div class="pz-lbl"><span>Einsatzfahrt</span></div><div class="pz-qt">Aus welchen Modulen sollen die Fragen kommen?</div><div class="pz-chips">${MODS.map(([m,d])=>`<button class="pz-chip${sel.has(m)?' on':''}" data-a="tog" data-v="${m}"><b>${m}</b><small>${d}<br>${count(m)} Prüfungsfragen</small></button>`).join('')}</div><button class="pz-pri" data-a="route" ${sel.size?'':'disabled'}>Weiter: Einsatzmeldung</button>`;}
+      else if(s.phase==='route'){h=`<div class="pz-lbl"><span>Alarm · Einsatzmeldung</span><b>Hilfsfrist ${fmt(hf())}</b></div><div class="pz-qt">Feuer 2 · Wohnungsbrand, Musterstraße 12, Person vermisst</div>${Object.values(ROUTES).map(r=>`<button class="pz-route" data-a="go" data-v="${r.key}"><b>${r.key} · ${r.name}</b> <span class="pz-center" style="font-size:.78rem">${r.d}</span><div class="k">${r.tags.map(x=>`<span>${x}</span>`).join('')}</div></button>`).join('')}<button class="pz-sec2" data-a="sel" style="align-self:flex-start">‹ Module</button>`;}
       else if(s.phase==='drive'){h=`<div class="pz-lbl"><span>Einsatzfahrt · ${s.route.name}</span><b>${s.qi<s.qs.length?'Frage '+(s.qi+1)+'/'+s.qs.length:'Gleich da'}</b></div><div class="pz-drv"><i></i><span>Sondersignal · Status 3</span></div>`;}
-      else if(s.phase==='ask'||s.phase==='fb'){const q=s.qs[s.qi];h=`<div class="pz-lbl"><span>${esc(q.m)} · ${esc(q.src)}</span><b>${s.qi+1}/${s.qs.length}</b></div><div class="pz-qt">${esc(q.q)}</div>${q.o.map((o,i)=>{let c='';if(s.phase==='fb')c=i===q.c?' ok':i===s.pick?' bad':' dim';return`<button class="pz-opt${c}" data-a="ans" data-v="${i}" ${s.phase==='fb'?'disabled':''}><i>${L[i]}</i><span>${esc(o)}</span></button>`;}).join('')}`;
-        if(s.phase==='fb'){const ok=s.res[s.res.length-1].ok;h+=`<div class="pz-fb ${ok?'g':'r'}"><b>${ok?'Richtig · freie Fahrt ('+s.dt+' s)':'Falsch · '+(s.route.key==='A'?'Stau an der Baustelle':'zähfließender Verkehr')+' (+'+s.dt+' s)'}</b>${q.e?'<br>'+esc(q.e):''}</div><button class="pz-pri" data-a="next">${s.qi+1<s.qs.length?'Weiterfahren':'Zur Einsatzstelle'}</button>`;}}
+      else if(s.phase==='ask'||s.phase==='fb'){const q=s.qs[s.qi];h=`<div class="pz-lbl"><span>${esc(q.m)} · ${esc(q.src)}</span><b>${s.qi+1}/${s.qs.length}</b></div>${s.duel?'<div class="pz-tmr"><i></i></div>':''}<div class="pz-qt">${esc(q.q)}</div>${q.o.map((o,i)=>{let c='';if(s.phase==='fb')c=i===q.c?' ok':i===s.pick?' bad':' dim';return`<button class="pz-opt${c}" data-a="ans" data-v="${i}" ${s.phase==='fb'?'disabled':''}><i>${L[i]}</i><span>${esc(o)}</span></button>`;}).join('')}`;
+        if(s.phase==='fb'){const ok=s.res[s.res.length-1].ok;h+=`<div class="pz-fb ${ok?'g':'r'}"><b>${ok?'Richtig · freie Fahrt ('+s.dt+' s)':(s.pick<0?'Zeit abgelaufen · ':'Falsch · ')+(s.route.key==='A'?'Stau an der Baustelle':'zähfließender Verkehr')+' (+'+s.dt+' s)'}</b>${q.e?'<br>'+esc(q.e):''}</div><button class="pz-pri" data-a="next">${s.qi+1<s.qs.length?'Weiterfahren':'Zur Einsatzstelle'}</button>`;}}
+      else if(s.duel&&s.forfeit&&s.res.length<s.qs.length){h=`<div class="pz-lbl"><span>Duell beendet</span><b>Sieg durch Aufgabe</b></div><div class="pz-qt" style="font-size:1.2rem">${esc(s.opp.name)} hat aufgegeben. Du gewinnst.</div>${s.bil?`<div class="pz-fb">Bilanz gegen ${esc(s.opp.name)}: <b>${s.bil.w} : ${s.bil.l}</b>${s.bil.d?' · '+s.bil.d+' unentschieden':''}</div>`:''}<button class="pz-sec2" data-a="leave" style="align-self:flex-start">Zur Spieleauswahl</button>`;}
+      else if(s.duel){const me=duelRes(s),op=s.opp.done;const right=me.right;h=`<div class="pz-lbl"><span>Status 4 · am Einsatzort</span><b>${me.score} Punkte</b></div>${op?`<div class="pz-qt" style="font-size:1.2rem">${s.forfeit?esc(s.opp.name)+' hat aufgegeben. Du gewinnst.':me.result==='w'?'Du gewinnst!':me.result==='l'?esc(s.opp.name)+' gewinnt.':'Unentschieden'}</div>
+          <table class="pz-vs"><tr><th></th><th>Du</th><th>${esc(s.opp.name)}</th></tr><tr><td>Punkte</td><td>${me.score}</td><td>${op.score}</td></tr><tr><td>Richtig</td><td>${right}/${s.qs.length}</td><td>${op.right}/${s.qs.length}</td></tr><tr><td>Eintreffzeit</td><td>${fmt(s.t)}</td><td>${fmt(op.t)}</td></tr><tr><td>Hilfsfrist ${fmt(hf())}</td><td>${s.win?'eingehalten':'überschritten'}</td><td>${op.t<=hf()?'eingehalten':'überschritten'}</td></tr></table>
+          ${s.bil?`<div class="pz-fb">Bilanz gegen ${esc(s.opp.name)}: <b>${s.bil.w} : ${s.bil.l}</b>${s.bil.d?' · '+s.bil.d+' unentschieden':''}</div>`:''}${s.res.some(r=>!r.ok)?`<div class="pz-lbl"><span>Zum Nacharbeiten</span></div><ul class="pz-res">${s.res.filter(r=>!r.ok).map(r=>`<li>${esc(r.q.q)}<br><small>Richtig: ${esc(r.q.o[r.q.c])}</small></li>`).join('')}</ul>`:''}${s.opp.gone?'':`<button class="pz-pri" data-a="rematch" ${s.rm?'disabled':''}>${s.rm?'Warte auf Zustimmung …':s.opp.rm?esc(s.opp.name)+' will Revanche · Annehmen':'Revanche'}</button>`}<button class="pz-sec2" data-a="leave" style="align-self:flex-start">Duell beenden</button>`:`<div class="pz-qt" style="font-size:1.1rem">Geschafft: ${fmt(s.t)} · ${right}/${s.qs.length} richtig</div><div class="pz-fb">Warte auf ${esc(s.opp.name)} (${s.opp.res.length}/${s.qs.length} Fragen) …</div><div class="pz-drv"><i></i><span>${esc(s.opp.name)} fährt noch</span></div>`}`;}
       else{const right=s.res.filter(r=>r.ok).length,rec=saveBest('fahrt',s.score);h=`<div class="pz-lbl"><span>Status 4 · am Einsatzort</span><b>${s.score} Punkte</b></div><div class="pz-qt" style="font-size:1.15rem">${s.win?'Hilfsfrist eingehalten':'Hilfsfrist überschritten'}</div><div class="pz-fb">Eintreffzeit <b>${fmt(s.t)}</b> · ${right}/${s.res.length} richtig · Route ${s.route.name}${rec?' · neuer Bestwert':''}</div>${s.res.some(r=>!r.ok)?`<div class="pz-lbl"><span>Zum Nacharbeiten</span></div><ul class="pz-res">${s.res.filter(r=>!r.ok).map(r=>`<li>${esc(r.q.q)}<br><small>Richtig: ${esc(r.q.o[r.q.c])}</small></li>`).join('')}</ul>`:''}<button class="pz-pri" data-a="new">Neuer Einsatz</button>`;}
       pn.innerHTML=h;}
     function act(a,v){const s=st;
@@ -148,13 +167,23 @@ const PAUSE=(function(){
       else if(a==='route'){if(sel.size){s.phase='route';panel();}}
       else if(a==='sel'){s.phase='select';panel();}
       else if(a==='go'){s.route=ROUTES[v];s.qs=pick(s.route);s.stops=s.qs.map((_,i)=>(i+1)/(s.qs.length+1));drive();}
-      else if(a==='ans'){if(s.phase!=='ask')return;const i=+v,q=s.qs[s.qi],ok=i===q.c;s.phase='fb';s.pick=i;s.fx=ok?'ok':'bad';s.fxT=performance.now();s.dt=ok?-s.route.bon:s.route.pen;s.t+=s.dt;s.res.push({q,ok});panel();}
+      else if(a==='ans'){if(s.phase!=='ask')return;const i=+v,q=s.qs[s.qi],ok=i===q.c;s.phase='fb';s.pick=i;s.fx=ok?'ok':'bad';s.fxT=performance.now();s.dt=ok?-s.route.bon:s.route.pen;s.t+=s.dt;s.res.push({q,ok});if(s.duel)SESS.send({t:'a',ok});panel();}
       else if(a==='next'){s.qi++;drive();}
-      else if(a==='new')newGame();}
-    function drive(){const s=st,to=s.qi<s.qs.length?s.stops[s.qi]:1;s.phase='drive';s.dr={from:s.p,to,t0:performance.now(),dur:1900,tt:s.t};panel();}
-    function tick(n){const s=st;if(s.phase==='drive'){const d=s.dr,k=Math.min(1,(n-d.t0)/d.dur),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;s.p=d.from+(d.to-d.from)*e;s.t=d.tt+s.route.base*(s.p-d.from);
-        if(k>=1){if(s.qi<s.qs.length){s.phase='ask';panel();}else{s.phase='end';s.p=1;s.win=s.t<=HF;const right=s.res.filter(r=>r.ok).length;s.score=Math.max(0,Math.round((s.win?1000+(HF-s.t)*3:0)+right*50));panel();}}}
-      if(s.fx&&n-s.fxT>1500)s.fx=null;const tg=s.phase==='end'&&s.win?0:Math.min(1.3,s.t/HF);s.lvl+=(tg-s.lvl)*(s.phase==='end'&&s.win?.02:.08);}
+      else if(a==='new')newGame();
+      else if(a==='rematch'&&s.duel){s.rm=true;SESS.send({t:'rematch'});panel();if(s.opp.rm)SESS.rematch();}
+      else if(a==='leave'&&s.duel){PAUSE.back();}}
+    function drive(){const s=st,to=s.qi<s.qs.length?s.stops[s.qi]:1;if(s.duel)SESS.send({t:'p',to,tt:s.t});s.phase='drive';s.dr={from:s.p,to,t0:performance.now(),dur:1900,tt:s.t};panel();}
+    function duelRes(s){const right=s.res.filter(r=>r.ok).length,score=right*100+(s.win?300:0),op=s.opp.done;let result=null;if(op){result=s.forfeit?'w':score>op.score?'w':score<op.score?'l':s.t<op.t?'w':s.t>op.t?'l':'d';}return{right,score,result};}
+    function duelFinish(){const s=st;s.sentFin=true;const r=duelRes(s);SESS.send({t:'fin',tm:s.t,score:r.score,right:r.right});duelCheck();}
+    function duelCheck(){const s=st;if(!s||!s.duel||s.bilDone||s.phase!=='end'||!s.opp.done)return;s.bilDone=true;const r=duelRes(s);s.bil=SESS.record(s.opp.name,r.result);panel();}
+    function tick(n){const s=st;const dtp=n-(s._ln||n);s._ln=n;
+      if(s.paused){if(s.dr)s.dr.t0+=dtp;if(s.askT0)s.askT0+=dtp;const e=document.querySelector('.pz-pc');if(e)e.textContent=Math.max(0,30-Math.floor((performance.now()-s.pausedAt)/1000));return;}
+      if(s.opp){const o=s.opp;o.p+=(o.tp-o.p)*Math.min(1,dtp/1000*2.2);}
+      if(s.phase==='d-count'){const left=3-Math.floor((n-s.cd0)/1000);if(left!==s.cdLeft){s.cdLeft=left;if(left<=0){drive();}else panel();}return;}
+      if(s.duel&&s.phase==='ask'){const el_=n-s.askT0,tm=document.querySelector('.pz-tmr i');if(tm)tm.style.width=Math.max(0,100-el_/300)+'%';if(el_>=30000){act('ans','-1');}}
+      if(s.phase==='drive'){const d=s.dr,k=Math.min(1,(n-d.t0)/d.dur),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;s.p=d.from+(d.to-d.from)*e;s.t=d.tt+s.route.base*(s.p-d.from);
+        if(k>=1){if(s.qi<s.qs.length){s.phase='ask';s.askT0=performance.now();panel();}else{s.phase='end';s.p=1;s.win=s.t<=hf();const right=s.res.filter(r=>r.ok).length;s.score=Math.max(0,Math.round((s.win?1000+(hf()-s.t)*3:0)+right*50));panel();if(s.duel)duelFinish();}}}
+      if(s.fx&&n-s.fxT>1500)s.fx=null;const tg=s.phase==='end'&&s.win?0:Math.min(1.3,s.t/hf());s.lvl+=(tg-s.lvl)*(s.phase==='end'&&s.win?.02:.08);}
     // Szene „Glut“: Nachtszene mit Partikelfeuer, Brand wächst mit der Zeit
     const W=360,H=300,hx=205,hy=78,hw=120,hh=132,WIN=[];for(let j=0;j<3;j++)for(let i=0;i<3;i++)WIN.push({x:hx+16+i*36,y:hy+18+j*38,w:22,h:26,o:[4,3,5,7,1,6,0,8,2].indexOf(j*3+i)});
     const road=t=>[-10+t*215,268-Math.sin(t*Math.PI)*28-t*8];
@@ -183,20 +212,31 @@ const PAUSE=(function(){
       if(out)for(let i=0;i<4;i++)emit(cx+10,cy-14,SP.W,150+Math.random()*40,-160-Math.random()*40,.9,9,1);
       for(let i=PART.length-1;i>=0;i--){const p=PART[i];p.life-=dt;if(p.life<=0){PART.splice(i,1);continue;}if(p.spr===SP.W)p.vy+=260*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;const a=p.life/p.l0,sz=p.size*(p.add?a+.3:2-a);c.globalAlpha=p.add?a:a*.8;c.globalCompositeOperation=p.add?'lighter':'source-over';c.drawImage(p.spr,p.x-sz,p.y-sz,sz*2,sz*2);}
       c.globalAlpha=1;c.globalCompositeOperation='source-over';
+      if(s.opp){const[ox,oy]=road(s.opp.p),[ox2,oy2]=road(Math.min(1,s.opp.p+.01)),oa=Math.atan2(oy2-oy,ox2-ox);c.save();c.translate(ox,oy+13);c.rotate(oa);c.fillStyle='rgba(0,0,0,.35)';c.beginPath();c.ellipse(0,4,24,5,0,0,7);c.fill();const og=c.createLinearGradient(0,-16,0,2);og.addColorStop(0,'#5aa0ff');og.addColorStop(1,'#1b4fb0');c.fillStyle=og;c.fillRect(-22,-15,44,14);c.fillStyle='#e9eef8';c.fillRect(-22,-8,32,2);c.fillStyle='#9fd3ff';c.fillRect(10,-13,9,6);c.fillStyle='#111';[-13,12].forEach(x=>{c.beginPath();c.arc(x,0,4,0,7);c.fill();});c.restore();c.fillStyle='#8fc2ff';c.font='700 9px system-ui,sans-serif';c.textAlign='center';c.fillText(s.opp.name.slice(0,10),ox,oy+34);c.textAlign='left';}
       c.save();c.translate(cx,cy);c.rotate(ang);c.fillStyle='rgba(0,0,0,.35)';c.beginPath();c.ellipse(0,4,24,5,0,0,7);c.fill();const bg=c.createLinearGradient(0,-16,0,2);bg.addColorStop(0,'#ff4b3a');bg.addColorStop(1,'#a8141a');c.fillStyle=bg;c.fillRect(-22,-15,44,14);c.fillStyle='#e9eef8';c.fillRect(-22,-8,32,2);c.fillStyle='#9fd3ff';c.fillRect(10,-13,9,6);c.fillStyle='#111';[-13,12].forEach(x=>{c.beginPath();c.arc(x,0,4,0,7);c.fill();});
       const bl=Math.floor(n/130)%2;c.globalCompositeOperation='lighter';c.drawImage(SP.B,(bl?-4:6)-18,-34,36,36);c.globalCompositeOperation='source-over';c.fillStyle=bl?'#5ab4ff':'#cfe8ff';c.fillRect(-5,-18,12,3);c.restore();
       if(s.fx==='bad'){const v=c.createRadialGradient(W/2,H/2,80,W/2,H/2,240);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(239,60,60,.45)');c.fillStyle=v;c.fillRect(0,0,W,H);}
       c.restore();
-      const over=s.t>HF;c.fillStyle='rgba(255,255,255,.07)';c.strokeStyle='rgba(255,255,255,.14)';c.beginPath();c.rect(10,10,128,46);c.fill();c.stroke();c.fillStyle='rgba(255,255,255,.55)';c.font='600 9px system-ui,sans-serif';c.fillText('EINTREFFZEIT',22,26);c.fillStyle=over?'#ff7a6a':'#fff';c.font='800 21px system-ui,sans-serif';c.fillText(fmt(s.t),22,48);c.fillStyle='rgba(255,255,255,.45)';c.font='600 11px system-ui,sans-serif';c.fillText('/ '+fmt(HF),82,48);
+      const over=s.t>hf();c.fillStyle='rgba(255,255,255,.07)';c.strokeStyle='rgba(255,255,255,.14)';c.beginPath();c.rect(10,10,128,46);c.fill();c.stroke();c.fillStyle='rgba(255,255,255,.55)';c.font='600 9px system-ui,sans-serif';c.fillText('EINTREFFZEIT',22,26);c.fillStyle=over?'#ff7a6a':'#fff';c.font='800 21px system-ui,sans-serif';c.fillText(fmt(s.t),22,48);c.fillStyle='rgba(255,255,255,.45)';c.font='600 11px system-ui,sans-serif';c.fillText('/ '+fmt(hf()),82,48);
       c.lineWidth=5;c.strokeStyle='rgba(255,255,255,.12)';c.beginPath();c.arc(W-34,34,20,0,7);c.stroke();c.strokeStyle=lvl>=1?'#ff4a3a':'#ffa31a';c.lineCap='round';c.beginPath();c.arc(W-34,34,20,-Math.PI/2,-Math.PI/2+Math.min(1,lvl)*Math.PI*2);c.stroke();c.fillStyle='#fff';c.font='800 11px system-ui,sans-serif';c.textAlign='center';c.fillText(Math.round(Math.min(1,lvl)*100)+'%',W-34,38);c.font='600 7px system-ui,sans-serif';c.fillStyle='rgba(255,255,255,.55)';c.fillText('BRAND',W-34,66);
+      if(s.duel){const n_=s.qs.length,row=(y,label,res,col)=>{c.fillStyle=col;c.font='700 8px system-ui,sans-serif';c.fillText(label,10,y+3);for(let i=0;i<n_;i++){const r=res[i];c.fillStyle=r===undefined?'rgba(255,255,255,.25)':r?'#3fdf8f':'#ff5a4a';c.beginPath();c.arc(44+i*9,y,3,0,7);c.fill();}};row(66,'DU',s.res.map(r=>r.ok),'#ffb86b');row(78,s.opp.name.slice(0,6).toUpperCase(),s.opp.res,'#8fc2ff');c.fillStyle='#8fc2ff';c.beginPath();c.moveTo(20+(W-40)*s.opp.p,H-23);c.lineTo(16+(W-40)*s.opp.p,H-30);c.lineTo(24+(W-40)*s.opp.p,H-30);c.fill();}
       if(over&&s.phase==='end'){c.fillStyle='rgba(255,90,60,.9)';c.font='800 16px system-ui,sans-serif';c.fillText('FLASHOVER',hx+hw/2,hy+hh+22);}c.textAlign='left';
       c.fillStyle='rgba(255,255,255,.07)';c.fillRect(10,H-26,W-20,16);const tw=W-40;c.fillStyle='rgba(255,163,26,.85)';c.fillRect(20,H-20,Math.max(4,tw*s.p),4);(s.stops||[]).forEach((sp,i)=>{const r=s.res[i];c.fillStyle=r?(r.ok?'#3fdf8f':'#ff5a4a'):'rgba(255,255,255,.35)';c.beginPath();c.arc(20+tw*sp,H-18,4,0,7);c.fill();});
       raf=requestAnimationFrame(frame);}
-    return{start(body){el=body;el.innerHTML='<div class="pz-fahrt"><div class="pz-scr"><canvas width="720" height="600" aria-label="Einsatzfahrt: Fahrzeug, Route und Brandentwicklung"></canvas></div><div class="pz-card pz-fp"></div></div>';
+    function mount(body,init){SESS=SESS_NEXT;SESS_NEXT=null;el=body;el.innerHTML='<div class="pz-fahrt"><div class="pz-scr"><canvas width="720" height="600" aria-label="Einsatzfahrt: Fahrzeug, Route und Brandentwicklung"></canvas></div><div class="pz-card pz-fp"></div></div>';
         cv=el.querySelector('canvas');const dpr=Math.min(2,window.devicePixelRatio||1);cv.width=W*dpr;cv.height=H*dpr;ctx=cv.getContext('2d');ctx.scale(dpr,dpr);SP=SP||sprites();stars=[...Array(40)].map(()=>[Math.random()*W,Math.random()*120,Math.random()]);
         el.querySelector('.pz-fp').onclick=e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;act(b.dataset.a,b.dataset.v);};
-        newGame();cancelAnimationFrame(raf);last=0;raf=requestAnimationFrame(frame);},
-      stop(){cancelAnimationFrame(raf);raf=0;},
+        init();cancelAnimationFrame(raf);last=0;raf=requestAnimationFrame(frame);}
+    function duelInit(cfg,sess){const n=cfg.n;st={phase:'d-count',p:0,t:0,qs:pickSeeded(cfg.mods,n,cfg.seed),qi:0,res:[],fx:null,fxT:0,lvl:0,duel:1,hf:60*(n+1)+30,route:{key:'D',name:'Duell',base:60*(n+1),pen:30,bon:5},opp:{name:sess.opp,p:0,tp:0,res:[],done:null,rm:false},cd0:performance.now(),cdLeft:4,rm:false};st.stops=st.qs.map((_,i)=>(i+1)/(n+1));PART=[];panel();}
+    return{start(body){SESS_NEXT=null;mount(body,newGame);},
+      startDuel(body,sess){SESS_NEXT=sess;mount(body,()=>duelInit(sess.cfg,sess));},
+      duelMsg(m){const s=st;if(!s||!s.duel)return;
+        if(m.t==='a'){s.opp.res.push(!!m.ok);}else if(m.t==='p'){s.opp.tp=m.to;}else if(m.t==='fin'){s.opp.done={t:m.tm,score:m.score,right:m.right};s.opp.tp=1;duelCheck();panel();}
+        else if(m.t==='rematch'){s.opp.rm=true;if(s.rm)SESS.rematch();else panel();}
+        else if(m.t==='bye'){if(s.phase==='end'&&s.opp.done){s.opp.gone=true;panel();}else{s.forfeit=true;s.opp.done={t:s.t+1,score:0,right:0};s.paused=false;if(s.phase!=='end'){s.phase='end';s.win=s.t<=hf();s.p=1;}duelCheck();panel();}}},
+      duelPause(on){const s=st;if(!s||!s.duel||(s.phase==='end'&&s.opp.done))return;if(on&&!s.paused){s.paused=true;s.pausedAt=performance.now();panel();}else if(!on&&s.paused){s.paused=false;panel();}},
+      questions,pickSeeded,sig,count,MODS,
+      stop(){cancelAnimationFrame(raf);raf=0;if(SESS&&SESS.close)SESS.close();SESS=null;},
       _state:()=>st};
   })();
 

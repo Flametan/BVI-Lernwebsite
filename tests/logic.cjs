@@ -260,7 +260,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   ok('Kleine Pause: Karte auf der Startseite mit Satz', pz.card.length > 10);
   eq('Kleine Pause: 50 Sätze ohne Emojis', [pz.quips, pz.emoji], [50, false]);
-  eq('Kleine Pause: 6 Spiele', pz.games, 6);
+  eq('Kleine Pause: 7 Einträge (Einsatzfahrt, Duell und fünf weitere Spiele)', pz.games, 7);
   ok('Spiele haben Inhalte in allen drei Modi', pz.modes.every(m => m.quiz && m.tf && m.word && m.num && m.mem));
   ok('Zurück im Spiel führt zur Spieleauswahl (Browser-Zurück)', pz.modes.every(m => m.quizBack && m.tfBack && m.wordBack && m.numBack && m.memBack));
   ok('Quizleiter, Wörter-Raten, Memory reagieren', pz.modes.every(m => m.quizFb && m.wordRow === 5 && m.memCards === 12));
