@@ -2427,3 +2427,8 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .pz-tmr{height:5px;border-radius:3px;background:var(--m-raised);overflow:hidden;}.pz-tmr i{display:block;height:100%;width:100%;background:var(--m-accent);}
 .pz-vs{width:100%;border-collapse:collapse;font-size:.88rem;}.pz-vs td,.pz-vs th{padding:7px 6px;border-bottom:1px solid var(--m-line);text-align:left;}.pz-vs th{color:var(--m-muted);font-weight:600;font-size:.72rem;}.pz-vs td:not(:first-child),.pz-vs th:not(:first-child){text-align:right;}
 .pz-cam{display:flex;flex-direction:column;gap:10px;}
+.pz-cols{display:flex;gap:10px;flex-wrap:wrap;}
+.pz-col{width:44px;height:44px;border-radius:50%;border:3px solid transparent;cursor:pointer;padding:0;box-shadow:0 0 0 1px var(--m-line);}
+.pz-col.on{border-color:var(--m-fg);box-shadow:0 0 0 2px var(--m-accent);}
+.pz-col:disabled{opacity:.25;cursor:default;}
+.pz-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:-1px;box-shadow:0 0 0 1px var(--m-line);}
