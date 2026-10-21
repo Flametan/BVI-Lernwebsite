@@ -1,6 +1,6 @@
 {
   "name": "bvi-smoke-tests",
   "private": true,
-  "scripts": { "test": "node smoke.cjs && node logic.cjs" },
+  "scripts": { "test": "node smoke.cjs && node logic.cjs && node duell.cjs" },
   "devDependencies": { "playwright": "1.49.1" }
 }

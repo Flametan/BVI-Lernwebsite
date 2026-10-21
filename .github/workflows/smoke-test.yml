@@ -25,3 +25,4 @@ jobs:
           sleep 2
           node smoke.cjs
           node logic.cjs
+          node duell.cjs
