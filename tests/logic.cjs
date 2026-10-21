@@ -586,7 +586,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     IDF_PLAN.viewTab('idf'); await w(200);
     r.viewIdf = /Mathe/.test(document.getElementById('plan-inner').innerText) && IDF_PLAN.next().title === 'Recht';   // angezeigt: IdF, aktiv: VAk
     IDF_PLAN.setActive('idf'); await w(200);
-    r.noHtml = !document.getElementById('plan-inner').innerHTML.includes('<b>x</b>');
+    r.noHtml = ![...document.querySelectorAll('#plan-inner b')].some(b => b.textContent === 'x');   // der Text „<b>x</b>“ darf kein echtes Element werden (Attribute zählen nicht, ältere Browser schreiben „<“ dort unmaskiert)
     // Ergänzung auf einer Lernseite
     NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
     r.noPlusBefore = !document.querySelector('#v-vak-verwaltungsrecht .jg-add');
