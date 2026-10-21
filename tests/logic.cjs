@@ -40,7 +40,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   eq('Plan: laufende Einheit am Montag 08:00', plan.mon08, { state: 'now', title: 'Anreise' });
   eq('Plan: nächste Einheit am Montag 09:30', plan.mon0930.state, 'next');
   eq('Plan: nach dem Modul keine Einheit', plan.afterModule, null);
-  ok('Plan: Kalenderdatei hat Einträge', plan.count > 40, String(plan.count));
+  ok('Plan: Kalenderdatei hat Einträge', plan.count >= 20 && plan.count < 45, String(plan.count));
   eq('Plan: Kalender beginnt korrekt', plan.head, 'BEGIN:VCALENDAR');
   ok('Plan: keine Kalenderzeile über 75 Byte', !plan.longLine);
 

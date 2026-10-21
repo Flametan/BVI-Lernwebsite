@@ -2496,13 +2496,6 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 #abk-pop button{margin-top:8px;background:none;border:0;padding:6px 0;color:var(--m-accent-fg,#ffa412);font:inherit;font-size:.84rem;font-weight:600;cursor:pointer;}
 #cu-qr svg{display:block;width:min(240px,100%);margin:10px auto 4px;background:#fff;border-radius:12px;padding:6px;}
 #cu-qr .cu-empty{margin-top:6px;}
-#abo-ov{position:fixed;inset:0;z-index:var(--z-modal);background:rgba(0,0,0,.7);display:grid;place-items:center;padding:16px;}
-#abo-ov[hidden]{display:none;}
-.abo-p{font-size:.9rem;line-height:1.45;color:var(--m-muted);margin:6px 0;}
-.abo-s{font-size:.8rem;margin-top:12px;}
-.abo-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0;}
-.abo-row b{min-width:78px;}
-.abo-row .btn{text-decoration:none;text-align:center;font-size:.85rem;padding:8px 12px;}
 .idf-src .btn{font-size:.8rem;padding:6px 12px;}
 
 /* Jahrgänge: Fenster, Formulare, Ergänzungen, eigene Prüfungen */
