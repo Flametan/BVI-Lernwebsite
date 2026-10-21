@@ -7,25 +7,79 @@
     "idf": {
       "name": "IdF Münster",
       "ev": [
-        { "s": 1798876800000, "e": 1798882200000, "t": "Vorbeugender Brandschutz", "r": "B1-106", "n": "", "ad": 0 }
+        {
+          "s": 1798876800000,
+          "e": 1798882200000,
+          "t": "Vorbeugender Brandschutz",
+          "r": "B1-106",
+          "n": "",
+          "ad": 0
+        }
       ]
     }
   },
   "aktiv": "idf",
   "erg": [
-    { "id": "e1", "seite": "v-vak-verwaltungsrecht", "titel": "Merksatz", "text": "Text der Ergänzung.", "bild": null, "ts": 1798876800000 }
+    {
+      "id": "e1",
+      "seite": "v-vak-verwaltungsrecht",
+      "titel": "Merksatz",
+      "text": "Text der Ergänzung.",
+      "bild": null,
+      "ts": 1798876800000
+    }
   ],
   "pr": {
     "hinzu": [
       {
-        "id": "p1", "tab": "vak", "titel": "Klausur 02/2027", "ts": 1798876800000,
+        "id": "p1",
+        "tab": "vak",
+        "titel": "Klausur 02/2027",
+        "ts": 1798876800000,
         "fragen": [
-          { "q": "Was ist ein Verwaltungsakt?", "o": ["Eine hoheitliche Maßnahme zur Regelung eines Einzelfalls", "Ein Vertrag", "Ein Gesetz"], "c": 0, "e": "§ 35 VwVfG." }
+          {
+            "q": "Was ist ein Verwaltungsakt?",
+            "o": [
+              "Eine hoheitliche Maßnahme zur Regelung eines Einzelfalls",
+              "Ein Vertrag",
+              "Ein Gesetz"
+            ],
+            "c": 0,
+            "e": "§ 35 VwVfG."
+          }
         ]
       }
     ],
-    "weg": ["v-laufbahn-2023"]
+    "weg": [
+      "v-laufbahn-2023"
+    ]
   },
-  "rel": { "v-vak-klausurhinweise": true },
-  "bilder": {}
+  "rel": {
+    "v-vak-klausurhinweise": true
+  },
+  "bilder": {},
+  "termine": [
+    {
+      "date": "2027-02-15",
+      "name": "Klausur (Beispiel)"
+    }
+  ],
+  "links": {
+    "cloud": {
+      "url": "https://beispiel.de/cloud",
+      "titel": "Lehrgangs-Cloud",
+      "hinweis": "Unterlagen des Jahrgangs"
+    }
+  },
+  "karten": [
+    {
+      "id": "k1",
+      "modul": "VAk",
+      "q": "Beispielfrage?",
+      "a": "Beispielantwort"
+    }
+  ],
+  "orte": {
+    "vak": "Berlin"
+  }
 }
