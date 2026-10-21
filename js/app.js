@@ -1586,12 +1586,12 @@ const TOAST = (function(){
   let wrap;
   function container(){ if(!wrap){ wrap=document.createElement('div'); wrap.className='toast-wrap'; document.body.appendChild(wrap); } return wrap; }
   return {
-    show(msg, {type='',undo=null,duration=4200}={}){
+    show(msg, {type='',undo=null,duration=4200,label='Rückgängig'}={}){
       // gleiche Meldung nicht doppelt stapeln
       if([...container().querySelectorAll('.toast:not(.toast-out) .toast-msg')].some(e=>e.textContent===String(msg).replace(/<[^>]*>/g,''))) return;
       const t=document.createElement('div');
       t.className='toast'+(type?' toast-'+type:'');
-      t.innerHTML=`<span class="toast-msg">${msg}</span>${undo?'<button class="toast-undo">Rückgängig</button>':''}`;
+      t.innerHTML=`<span class="toast-msg">${msg}</span>${undo?'<button class="toast-undo">'+label+'</button>':''}`;
       if(undo) t.querySelector('.toast-undo').addEventListener('click',()=>{ undo(); this.dismiss(t); });
       container().appendChild(t);
       A11Y.say(msg);
@@ -2997,7 +2997,17 @@ const CUSTOM=(function(){
     box.querySelector('#cu-mail').onclick=mailCards;
     box.querySelector('#cu-imp').onchange=e=>{ importCards(e.target.files[0]); e.target.value=''; };
   }
-  function open(){ if(!box) build(); list(); box.hidden=false; box.querySelector('#cu-q').focus({preventScroll:true}); }
+  // pre: {a: vorbelegte Antwort, view: Seite, von der der Text stammt} – für „Als Lernkarte“ aus einer Markierung
+  function open(pre){
+    if(!box) build(); list(); box.hidden=false;
+    if(pre){
+      box.querySelector('#cu-a').value=String(pre.a||'').slice(0,1500);
+      box.querySelector('#cu-q').value='';
+      const m=({gal:'GAL',sfs:'SFS',hlfs:'HLFS',ibk:'IBK',vak:'VAk',feuak:'FeuAK',idf:'IdF'})[String(pre.view||'').split('-')[1]];
+      if(m) box.querySelector('#cu-m').value=m;
+    }
+    box.querySelector('#cu-q').focus({preventScroll:true});
+  }
   function close(){ if(box) box.hidden=true; }
   return {open,close};
 })();
@@ -3883,6 +3893,8 @@ const CHANGELOG=(function(){
       'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Stundenplan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links',
       'Android-App: Das Startsymbol und das Startbild folgen jetzt auch dem Farbschema – schwarz im dunklen, hell (Farbton der Website) im hellen Design',
       'Startseite: Beim Wechsel zwischen Woche und Monaten starten die Animationen nicht mehr neu; die Umschalter sind wieder schmaler',
+      'Neu: Markierten Text auf einer Lernseite mit „Als Lernkarte“ direkt zu einer eigenen Lernkarte machen (Modul wird vorgewählt, die Frage schreibst du dazu)',
+      'Updates: Bei einer neuen Version erscheint ein Hinweis „Aktualisieren“, statt dass die Seite mitten im Lernen neu lädt',
       'Stundenplan: Er springt von selbst zur aktuellen Kalenderwoche, wenn das Datum weiterläuft (Mitternacht) oder die App wieder in den Vordergrund kommt – außer du hast selbst in andere Wochen geblättert',
       'Fehlerbehebung: In Textfeldern (Suche, eigene Lernkarte) lassen sich „j“ und „f“ wieder tippen; Lesezeichen und „Zuletzt gesucht“ in der Suche funktionieren wieder; Markierungen funktionieren auch im Kapitel-Fenster auf Handy und Tablet',
       'Fehlerbehebung: Der Prüfungsmodus gibt bei Zeitablauf automatisch ab; Pomodoro startet nach Ablauf eine neue Runde; Klausur-Timer und Pomodoro laufen auch bei gesperrtem Bildschirm richtig weiter; ein abgelaufener Klausur-Timer meldet sich nicht mehr bei jedem Start',
@@ -5674,14 +5686,15 @@ const HL=(function(){
     if(!canAdd&&!hit.length) return hide();
     if(!bar) build();
     bar.querySelector('[data-a="add"]').hidden=!canAdd;
+    bar.querySelector('[data-a="card"]').hidden=!canAdd;
     bar.querySelector('[data-a="del"]').hidden=!hit.length;
     bar.hidden=false;
   }
   function build(){
     bar=document.createElement('div'); bar.id='m-hl-bar'; bar.hidden=true; bar.setAttribute('role','toolbar');
-    bar.innerHTML='<button data-a="add">Markieren</button><button data-a="del">Markierung entfernen</button>';
+    bar.innerHTML='<button data-a="add">Markieren</button><button data-a="card">Als Lernkarte</button><button data-a="del">Markierung entfernen</button>';
     ['mousedown','touchstart'].forEach(ev=>bar.addEventListener(ev,e=>e.preventDefault(),{passive:false}));
-    bar.addEventListener('click',e=>{ const a=e.target.closest('button')?.dataset.a; if(a==='add') add(); else if(a==='del') remove(); });
+    bar.addEventListener('click',e=>{ const a=e.target.closest('button')?.dataset.a; if(a==='add') add(); else if(a==='card') toCard(); else if(a==='del') remove(); });
     document.body.appendChild(bar);
   }
   function add(){
@@ -5695,6 +5708,14 @@ const HL=(function(){
     d[view]=list; save(d);
     sel.removeAllRanges(); apply(view);
     TOAST.show('Stelle markiert',{type:'ok'});
+  }
+  // Markierten Text als Antwort einer eigenen Lernkarte übernehmen; die Frage schreibt man selbst
+  function toCard(){
+    const sel=getSelection(); if(!sel||!sel.rangeCount) return;
+    const t=sel.toString().replace(/\s+/g,' ').trim(); if(t.length<2) return;
+    sel.removeAllRanges(); hide();
+    CUSTOM.open({a:t,view});
+    TOAST.show('Schreibe oben die Frage dazu',{type:'info'});
   }
   function remove(){
     const sel=getSelection(), r=sel&&sel.rangeCount?sel.getRangeAt(0):null; if(!r) return;
@@ -6742,11 +6763,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.addEventListener('visibilitychange', updateOnlineStatus);
   updateOnlineStatus();
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js').catch(()=>{});
-    // Seite automatisch neu laden, wenn ein neuer SW übernimmt
-    // Neu laden nur bei einem Update, nicht beim allerersten Besuch (sonst springt die Einführung)
+    // Neue Version: nicht mitten im Lernen neu laden, sondern einen Hinweis zeigen
     const hadSW=!!navigator.serviceWorker.controller;
-    navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(hadSW) window.location.reload(); });
+    let reloading=false;
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(hadSW&&!reloading){ reloading=true; location.reload(); } });
+    const offer=w=>{ if(!hadSW||!w) return; TOAST.show('Neue Version verfügbar',{type:'info',duration:600000,undo:()=>w.postMessage({type:'SKIP_WAITING'}),label:'Aktualisieren'}); };
+    navigator.serviceWorker.register('./sw.js').then(reg=>{
+      if(reg.waiting) offer(reg.waiting);
+      reg.addEventListener('updatefound',()=>{ const n=reg.installing; if(n) n.addEventListener('statechange',()=>{ if(n.state==='installed'&&navigator.serviceWorker.controller) offer(n); }); });
+      document.addEventListener('visibilitychange',()=>{ if(!document.hidden) reg.update().catch(()=>{}); });
+    }).catch(()=>{});
   }
   ABK.render(); ABK.filter('');
   console.log('%c B VI %c Lernwebsite '+APP_VERSION+' · flametan/BVI-Lernwebsite ',

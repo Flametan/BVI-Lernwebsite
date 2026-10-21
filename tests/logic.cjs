@@ -460,6 +460,27 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Woche/Monate ersetzt nur das Diagramm', rg, { same: true, bars: 12, back: 7 });
 
+  // ── Markierung → eigene Lernkarte ──
+  await page.setViewportSize({ width: 1280, height: 860 });
+  const hc = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
+    const p = [...document.querySelectorAll('#v-vak-verwaltungsrecht .acc-body p')].find(e => e.textContent.trim().length > 40);
+    p.closest('details') && (p.closest('details').open = true);
+    const rg = document.createRange(); rg.selectNodeContents(p); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(rg);
+    document.dispatchEvent(new Event('selectionchange')); await w(400);
+    const btn = document.querySelector('#m-hl-bar [data-a="card"]');
+    r.btn = !!btn && !btn.hidden;
+    btn && btn.click(); await w(200);
+    const box = document.getElementById('cu-a');
+    r.filled = !!box && box.value.length > 20 && box.value.trim() === p.textContent.replace(/\s+/g, ' ').trim().slice(0, 1500);
+    r.mod = document.getElementById('cu-m').value;
+    CUSTOM.close(); await w(100);
+    return r;
+  });
+  eq('Markierung: „Als Lernkarte“ füllt Antwort und Modul vor', hc, { btn: true, filled: true, mod: 'VAk' });
+  await page.setViewportSize({ width: 390, height: 844 });
+
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
   const tp = await tctx.newPage();
