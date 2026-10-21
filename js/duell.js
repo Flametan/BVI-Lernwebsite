@@ -133,9 +133,9 @@ const DUELL=(function(){
     if(root&&!root.querySelector('.pz-drv'))card('<div class="pz-lbl"><span>Verbinde</span></div><div class="pz-drv"><i></i><span>Verbindung wird aufgebaut …</span></div>');}
 
   /* ---------- Lobby ---------- */
-  const modsAvail=m=>F.questions().filter(q=>q.m===m).length;
+  const modsAvail=m=>F.baseQuestions().filter(q=>q.m===m).length;
   function lobby(){clearTimeout(tm);if(!root||gameOn)return;
-    const isH=role==='host',tot=F.questions().filter(q=>cfg.mods.includes(q.m)).length;
+    cfg.mods=cfg.mods.filter(m=>F.MODS.some(x=>x[0]===m&&modsAvail(m)>0));const isH=role==='host',tot=F.baseQuestions().filter(q=>cfg.mods.includes(q.m)).length;
     card(`<div class="pz-lbl"><span>Lobby</span><b>${esc(me)} gegen ${esc(opp||'…')}</b></div>
       ${!opp?'<div class="pz-drv"><i></i><span>Warte auf den Mitspieler …</span></div>':''}
       ${!sigOk?'<div class="pz-fb r"><b>Die App-Stände sind verschieden.</b> Bitte beide die Seite neu laden (Fragen müssen gleich sein).</div>':''}
@@ -143,7 +143,7 @@ const DUELL=(function(){
       ${oppCol>=0?`<div class="pz-fb"><span class="pz-dot" style="background:${F.PAL[oppCol][0]}"></span>${esc(opp||'Mitspieler')} fährt ${F.PAL[oppCol][2].toLowerCase()} von ${isH?'rechts':'links'}.</div>`:''}
       <div class="pz-qt">${isH?'Du stellst das Duell ein':esc(opp||'Spielleiter')+' stellt das Duell ein'}</div>
       <div class="pz-lbl"><span>Fragenzahl</span></div><div class="pz-seg">${[5,10,15].map(n=>`<button class="${cfg.n===n?'on':''}" data-a="n" data-v="${n}" ${isH?'':'disabled'}>${n}</button>`).join('')}</div>
-      <div class="pz-lbl"><span>Module</span></div><div class="pz-chips">${F.MODS.map(([m,d])=>`<button class="pz-chip${cfg.mods.includes(m)?' on':''}" data-a="m" data-v="${m}" ${isH?'':'disabled'}><b>${m}</b><small>${d}<br>${modsAvail(m)} Fragen</small></button>`).join('')}</div>
+      <div class="pz-lbl"><span>Module</span></div><div class="pz-chips">${F.MODS.filter(x=>modsAvail(x[0])>0).map(([m,d])=>`<button class="pz-chip${cfg.mods.includes(m)?' on':''}" data-a="m" data-v="${m}" ${isH?'':'disabled'}><b>${m}</b><small>${d}<br>${modsAvail(m)} Fragen</small></button>`).join('')}</div>
       <div class="pz-fb">Regeln: gleiche Fragen in gleicher Reihenfolge, 30 Sekunden pro Frage, Fahrzeit je Frage fest, falsch +30 s, richtig −5 s. Punkte: 100 je richtige Antwort, 300 bei eingehaltener Hilfsfrist; bei Gleichstand gewinnt die schnellere Zeit. ${tot<cfg.n?'<b>Für diese Auswahl gibt es nur '+tot+' Fragen.</b>':''}</div>
       ${isH?`<button class="pz-pri" data-a="go" ${opp&&ready.opp&&sigOk&&cfg.mods.length&&tot?'':'disabled'}>${!opp?'Warte auf Mitspieler':ready.opp?'Los geht’s':'Warte auf „Bereit“'}</button>`
            :`<button class="pz-pri" data-a="ready" ${opp&&sigOk?'':'disabled'}>${ready.me?'Bereit ✓ (tippen zum Zurücknehmen)':'Bereit'}</button>`}
@@ -158,7 +158,7 @@ const DUELL=(function(){
         const r=b[k]||{w:0,l:0,d:0};if(res==='w')r.w++;else if(res==='l')r.l++;else if(res==='d')r.d++;b[k]=r;put(BK,b);return r;},
       rematch(){if(role!=='host')return;const nc={n:c.n,mods:c.mods,seed:(Math.random()*2147483647)|0};send({t:'go',cfg:nc});launch(nc);}};
     F.startDuel(root,sess);}
-  function startHostGame(){const tot=F.questions().filter(q=>cfg.mods.includes(q.m)).length,c={n:Math.min(cfg.n,tot),mods:cfg.mods.slice(),seed:(Math.random()*2147483647)|0};put(MK,{n:cfg.n,mods:cfg.mods});send({t:'go',cfg:c});launch(c);}
+  function startHostGame(){const tot=F.baseQuestions().filter(q=>cfg.mods.includes(q.m)).length,c={n:Math.min(cfg.n,tot),mods:cfg.mods.slice(),seed:(Math.random()*2147483647)|0};put(MK,{n:cfg.n,mods:cfg.mods});send({t:'go',cfg:c});launch(c);}
 
   /* ---------- Nachrichten ---------- */
   function rx(m){lastRx=performance.now();if(down)setDown(false);

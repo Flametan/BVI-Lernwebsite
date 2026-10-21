@@ -46,6 +46,7 @@ const NAV = (function(){
     if(id==='v-app') INSTALL.render();
     ETIMER.mount(id);
     if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); }
+    DANKE.hide();
     if(id==='v-home'){ SHELL.newQuip(); SHELL.renderHome(); }
     if(id==='v-pruefung') SHELL.renderExam();
     if(id==='v-settings') SHELL.syncSettings();
@@ -69,7 +70,7 @@ const NAV = (function(){
     if(typeof LP!=='undefined'){ LP.onShow(id); LP.init(id); }
     PAUSE_LOADER.onShow(id);
     A11Y.onShow();
-    if(isContentPage) ABKTIP.apply(id);
+    if(isContentPage){ ABKTIP.apply(id); if(typeof JGUI!=='undefined') JGUI.mount(id); }
     // Update URL for direct linking
     const url=new URL(location.href);
     if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
@@ -1576,6 +1577,7 @@ const OVL=(function(){
 
 // Zurück-Taste der Android-App: "handled" (Fenster/Kapitel geschlossen), "exit" (Startseite) oder "back"
 window.bviBack=function(){
+  if(typeof JGUI!=='undefined'&&JGUI.closeTop()) return 'handled';
   if(OVL.closeTop()) return 'handled';
   if(typeof LIGHTBOX!=='undefined'&&LIGHTBOX.isOpen()){ LIGHTBOX.close(); return 'handled'; }
   if(typeof LP!=='undefined'&&LP.isOpen()){ LP.back(); return 'handled'; }
@@ -4016,11 +4018,13 @@ const CHANGELOG=(function(){
       'Android-App: Das Startsymbol und das Startbild folgen jetzt auch dem Farbschema – schwarz im dunklen, hell (Farbton der Website) im hellen Design',
       'Startseite: Beim Wechsel zwischen Woche und Monaten starten die Animationen nicht mehr neu; die Umschalter sind wieder schmaler',
       'Android-App: Drei Widgets für den Startbildschirm zur Auswahl – „Nächste Einheit“, „Tagesplan“ und „Jetzt und danach“ mit Zeitraum, Raum, Restzeit und der Einheit danach (nach Unterrichtsende zeigen sie, was morgen ansteht); sie folgen Akzentfarbe und Hell/Dunkel',
+      'Lehrgang: Unter Einstellungen den Jahrgang wählen (BRef/AB, jedes Halbjahr ein neuer). Alle Jahrgänge starten als 1:1-Kopie des Masters; Verbesserungen am Master kommen automatisch an. Pro Jahrgang: eigener Stundenplan (Kalenderdatei, Foto oder Screenshot mit Texterkennung, oder Eingabeformular), Ergänzungen zu jeder Lernseite mit „+“ (Text oder Bild, mit Texterkennung), eigene Prüfungen hinzufügen und löschen (mit Rückgängig), Reiter als „klausurrelevant“ mit Glow markieren (nur sie füttern Einsatzfahrt und Duell), und alle Änderungen als Datei exportieren und einlesen',
       'Stundenplan: Eigenen Stundenplan aus einer Kalenderdatei (.ics) laden – er ersetzt den IdF-Plan und alle Funktionen laufen weiter (nächste Einheit auf der Startseite, Widgets, Notizen, Kalender-Export); der IdF-Plan lässt sich als Kalender-Abo (Link, der sich selbst aktualisiert) in den eigenen Kalender einbinden',
       'Lernkarten teilen: Eigene Karten als Link oder QR-Code an Kollegen schicken (die Karten stecken im Link, nichts läuft über einen Server); „Per E-Mail senden“ gibt es nicht mehr',
       'Lernseiten: Abkürzungen (z. B. ELW, FwDV, HBKG) sind beim ersten Vorkommen auf der Seite unterstrichen; ein Tipp zeigt Name und Erläuterung aus dem Abkürzungsverzeichnis',
       'Neu: Markierten Text auf einer Lernseite mit „Als Lernkarte“ direkt zu einer eigenen Lernkarte machen (Modul wird vorgewählt, die Frage schreibst du dazu)',
       'Updates: Bei einer neuen Version erscheint ein Hinweis „Aktualisieren“, statt dass die Seite mitten im Lernen neu lädt',
+      'Spendenlink: dezente Karte unten auf der Startseite; nach 10 Stunden Nutzung ein kleines „Danke“ (höchstens 2-mal, nur auf der Startseite, mit „Später“ und „Nicht mehr zeigen“)',
       'Stundenplan: Er springt von selbst zur aktuellen Kalenderwoche, wenn das Datum weiterläuft (Mitternacht) oder die App wieder in den Vordergrund kommt – außer du hast selbst in andere Wochen geblättert',
       'Fehlerbehebung: In Textfeldern (Suche, eigene Lernkarte) lassen sich „j“ und „f“ wieder tippen; Lesezeichen und „Zuletzt gesucht“ in der Suche funktionieren wieder; Markierungen funktionieren auch im Kapitel-Fenster auf Handy und Tablet',
       'Fehlerbehebung: Der Prüfungsmodus gibt bei Zeitablauf automatisch ab; Pomodoro startet nach Ablauf eine neue Runde; Klausur-Timer und Pomodoro laufen auch bei gesperrtem Bildschirm richtig weiter; ein abgelaufener Klausur-Timer meldet sich nicht mehr bei jedem Start',
@@ -5480,13 +5484,27 @@ const IDF_PLAN = (function(){
 
   // ── Eigener Stundenplan aus einer Kalenderdatei (.ics): ersetzt den IdF-Plan, alle Funktionen laufen weiter ──
   const CKEY='bvi_plan_custom', SKEY='bvi_plan_src';
-  let _cust=null, _cw=null;
+  let _cust=null, _act=null, _cw=null, _cwa=null, _mode='view';   // _cust: angezeigter Plan, _act: aktiver Plan (Startseite, Widgets)
+  // Master-Jahrgang: eigener Plan optional (alter Speicherort); andere Jahrgänge: immer eigener Plan, ggf. noch leer
+  const _nonMaster=()=>typeof JG!=='undefined'&&!JG.isMaster();
+  const PTAB={ibk:'IBK',vak:'VAk',feuak:'FeuAK',idf:'IdF'};
+  const _actKey=()=>{ const d=JG.data(); return d.aktiv&&d.plane[d.aktiv]?d.aktiv:(JG.PLANKEYS.find(k=>d.plane[k])||null); };
+  function _vkey(){ try{ const k=localStorage.getItem('bvi_plan_view'); if(JG.PLANKEYS.includes(k)) return k; }catch(e){} return _actKey()||'idf'; }
   function _loadCust(){
-    try{ const j=JSON.parse(localStorage.getItem(CKEY)||'null'); _cust=j&&Array.isArray(j.ev)&&j.ev.length?j:null; }catch(e){ _cust=null; }
-    _cw=null;
+    if(_nonMaster()){ const d=JG.data(), ak=_actKey(); _cust=d.plane[_vkey()]||null; _act=ak?d.plane[ak]:null; }
+    else{ try{ const j=JSON.parse(localStorage.getItem(CKEY)||'null'); _cust=j&&Array.isArray(j.ev)&&j.ev.length?j:null; }catch(e){ _cust=null; } _act=_cust; }
+    _cw=null; _cwa=null;
   }
-  const _isCustom=()=>{ try{ return !!_cust&&localStorage.getItem(SKEY)==='custom'; }catch(e){ return false; } };
-  _loadCust();
+  const _isCustom=()=>{ if(_nonMaster()) return true; try{ return !!_cust&&localStorage.getItem(SKEY)==='custom'; }catch(e){ return false; } };
+  function _saveCust(res){
+    if(_nonMaster()){ const l=JG.local(), k=_vkey(); res.at=Date.now(); l.plane[k]=res; if(!l.aktiv) l.aktiv=k; JG.saveLocal(l); }
+    else{ try{ localStorage.setItem(CKEY,JSON.stringify(res)); localStorage.setItem(SKEY,'custom'); }catch(e){} }
+    _loadCust(); _manual=false; render(); pushWidget();
+    if(typeof SHELL!=='undefined') SHELL.renderHome();
+  }
+  // Andere Jahrgänge: zwischen den Abschnitten (IBK, VAk, FeuAK, IdF) wechseln und einen Plan als aktiv markieren
+  function viewTab(k){ if(!JG.PLANKEYS.includes(k)) return; try{ localStorage.setItem('bvi_plan_view',k); }catch(e){} _loadCust(); _manual=false; render(); }
+  function setActive(k){ const l=JG.local(); l.aktiv=k; JG.saveLocal(l); TOAST.show(PTAB[k]+'-Plan ist jetzt aktiv: Startseite und Widgets nutzen ihn',{type:'ok'}); }
   const _icsUnfold=t=>String(t).replace(/\r\n|\r/g,'\n').replace(/\n[ \t]/g,'').split('\n');
   const _icsText=v=>String(v||'').replace(/\\[nN]/g,' ').replace(/\\([,;\\])/g,'$1').replace(/\s+/g,' ').trim();
   // lokale Zeit in einer Zeitzone → UTC-Millisekunden (unbekannte Zeitzone: Zeit des Geräts)
@@ -5558,8 +5576,10 @@ const IDF_PLAN = (function(){
   const _isoWeek=d=>{ const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())); const n=t.getUTCDay()||7; t.setUTCDate(t.getUTCDate()+4-n); return Math.ceil(((t-Date.UTC(t.getUTCFullYear(),0,1))/864e5+1)/7); };
   // Termine in Wochen (Mo–So) mit Einträgen im Format des IdF-Plans umwandeln
   function _customWeeks(){
-    if(_cw) return _cw;
-    const ev=(_cust&&_cust.ev)||[]; if(!ev.length) return (_cw=[]);
+    const pl=_mode==='active'?_act:_cust;
+    if(_mode==='active'?_cwa:_cw) return _mode==='active'?_cwa:_cw;
+    const ev=(pl&&pl.ev)||[]; const keep=w=>{ if(_mode==='active') _cwa=w; else _cw=w; return w; };
+    if(!ev.length) return keep([]);
     const hm=ms=>{ const d=new Date(ms); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); };
     const days=new Map(), add=(ymd,raw)=>{ (days.get(ymd)||days.set(ymd,[]).get(ymd)).push(raw); };
     const clean=x=>String(x||'').replace(/\|/g,'/');
@@ -5573,9 +5593,9 @@ const IDF_PLAN = (function(){
     const ws=[]; let i=0;
     for(let m=mon(first);m<=last&&ws.length<110;m=new Date(m.getFullYear(),m.getMonth(),m.getDate()+7)){
       const dd=[]; for(let k=0;k<7;k++) dd.push(days.get(_ymd(new Date(m.getFullYear(),m.getMonth(),m.getDate()+k)))||[]);
-      ws.push([_isoWeek(m),++i,(_cust&&_cust.name)||'Eigener Plan',_ymd(m),'both',dd,null,'']);
+      ws.push([_isoWeek(m),++i,(pl&&pl.name)||'Eigener Plan',_ymd(m),'both',dd,null,'']);
     }
-    return (_cw=ws);
+    return keep(ws);
   }
   function importIcs(file){
     if(!file) return;
@@ -5584,9 +5604,7 @@ const IDF_PLAN = (function(){
       let res; try{ res=parseIcs(String(r.result)); }catch(e){ res=null; }
       if(!res||!res.ev.length){ TOAST.show('In der Datei wurden keine Termine gefunden – bitte eine Kalenderdatei (.ics) wählen',{type:'info'}); return; }
       res.name=res.name||String(file.name||'').replace(/\.[^.]+$/,'')||'Eigener Plan'; res.at=Date.now();
-      try{ localStorage.setItem(CKEY,JSON.stringify(res)); localStorage.setItem(SKEY,'custom'); }catch(e){}
-      _loadCust(); _manual=false; render(); pushWidget();
-      if(typeof SHELL!=='undefined') SHELL.renderHome();
+      _saveCust(res);
       TOAST.show(res.ev.length+' Termine aus „'+res.name+'“ geladen',{type:'ok'});
     };
     r.onerror=()=>TOAST.show('Datei konnte nicht gelesen werden');
@@ -5600,21 +5618,43 @@ const IDF_PLAN = (function(){
   }
   function removeCustom(){
     if(!confirm('Den geladenen eigenen Stundenplan entfernen?')) return;
-    try{ localStorage.removeItem(CKEY); localStorage.setItem(SKEY,'idf'); }catch(e){}
+    if(_nonMaster()){ const l=JG.local(), k=_vkey(); delete l.plane[k]; if(l.aktiv===k) l.aktiv=null; JG.saveLocal(l); }
+    else{ try{ localStorage.removeItem(CKEY); localStorage.setItem(SKEY,'idf'); }catch(e){} }
     _loadCust(); _manual=false; render(); pushWidget();
     if(typeof SHELL!=='undefined') SHELL.renderHome();
     TOAST.show('Eigener Plan entfernt',{type:'ok'});
   }
+  // Leiste ganz oben (andere Jahrgänge): Abschnitt wählen, Plan als aktiv markieren
+  function _tabsBar(){
+    if(!_nonMaster()) return '';
+    const d=JG.data(), vk=_vkey(), ak=_actKey();
+    const seg=JG.PLANKEYS.map(k=>`<button class="${k===vk?'active':''}" onclick="IDF_PLAN.viewTab('${k}')" aria-pressed="${k===vk}">${PTAB[k]}${ak===k?' ★':d.plane[k]?'':' ·'}</button>`).join('');
+    let act='';
+    if(d.plane[vk]) act=ak===vk?`<div class="idf-act on"><span class="m-badge">★ Aktiv</span><span class="m-t2">Startseite und Widgets zeigen diesen Plan</span></div>`:`<div class="idf-act"><button class="btn btn-gold" onclick="IDF_PLAN.setActive('${vk}')">Als aktiven Stundenplan markieren</button><span class="m-t2">Dann nutzen Startseite und Widgets diesen Plan</span></div>`;
+    return `<div class="m-card idf-tabs"><span class="m-seg idf-seg" role="group" aria-label="Abschnitt">${seg}</span>${act}</div>`;
+  }
   function _planControls(){
-    const cust=!!_cust, on=_isCustom();
+    const cust=!!_cust, on=_isCustom(), nm=_nonMaster();
     const row=(t1,t2,btn)=>`<div class="m-row m-static m-wrap"><span class="m-tx"><span class="m-t1">${t1}</span><span class="m-t2">${t2}</span></span>${btn}</div>`;
-    let h='<div class="m-sec" style="margin-top:1rem">Stundenplan wählen</div><div class="m-list idf-src">';
-    h+=row('IdF Münster · Modul 3.5',on?'Der mitgelieferte Plan, mit Gruppe 1 und 2':'Wird gerade angezeigt',on?'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'idf\')">Anzeigen</button>':'<span class="m-badge">aktiv</span>');
-    if(cust) h+=row(esc(_cust.name),_cust.ev.length+' Termine aus deiner Datei',on?'<span class="m-badge">aktiv</span>':'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'custom\')">Anzeigen</button>');
-    h+=`<label class="m-row" for="plan-file" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Eigenen Stundenplan laden</span><span class="m-t2">Kalenderdatei (.ics), z. B. aus dem Kalender deiner Schule oder deines Betriebs</span></span><input type="file" id="plan-file" accept=".ics,text/calendar" hidden onchange="IDF_PLAN.importIcs(this.files[0]);this.value=''"></label>`;
-    if(cust) h+=`<button class="m-row" onclick="IDF_PLAN.removeCustom()"><span class="m-tx"><span class="m-t1">Eigenen Plan entfernen</span></span></button>`;
+    const fileRow=`<label class="m-row" for="plan-file" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Kalenderdatei (.ics) laden</span><span class="m-t2">z. B. aus dem Kalender deiner Schule oder deines Betriebs</span></span><input type="file" id="plan-file" accept=".ics,text/calendar" hidden onchange="IDF_PLAN.importIcs(this.files[0]);this.value=''"></label>`;
+    const ui=(fn,t1,t2)=>`<button class="m-row m-go" onclick="${fn}"><span class="m-tx"><span class="m-t1">${t1}</span><span class="m-t2">${t2}</span></span></button>`;
+    let h='<div class="m-sec" style="margin-top:1rem">'+(nm?'Plan für '+PTAB[_vkey()]:'Stundenplan wählen')+'</div><div class="m-list idf-src">';
+    if(!nm) h+=row('IdF Münster · Modul 3.5',on?'Der mitgelieferte Plan, mit Gruppe 1 und 2':'Wird gerade angezeigt',on?'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'idf\')">Anzeigen</button>':'<span class="m-badge">aktiv</span>');
+    if(cust) h+=row(esc(_cust.name),_cust.ev.length+' Termine'+(nm?'':' aus deiner Datei'),on&&!nm?'<span class="m-badge">aktiv</span>':nm?'':'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'custom\')">Anzeigen</button>');
+    h+=fileRow;
+    if(typeof JGUI!=='undefined'){
+      h+=ui('JGUI.planPhoto()','Foto oder Screenshot einlesen','Die Termine werden erkannt und zum Ausbessern angezeigt');
+      h+=ui('JGUI.planEditor()','Termine von Hand eingeben oder ändern','Datum, Zeit, Titel und Raum');
+    }
+    if(cust&&(!nm||JG.local().plane[_vkey()])) h+=`<button class="m-row" onclick="IDF_PLAN.removeCustom()"><span class="m-tx"><span class="m-t1">Eigenen Plan entfernen</span></span></button>`;
     if(!on) h+=`<button class="m-row m-go" onclick="PLANABO.open()"><span class="m-tx"><span class="m-t1">Kalender abonnieren</span><span class="m-t2">Der IdF-Plan als Link, der sich selbst aktualisiert</span></span></button>`;
     return h+'</div>';
+  }
+  // Noch kein Plan für diesen Abschnitt (andere Jahrgänge): Hinweis und Wege zum Importieren
+  function _drawEmpty(el){
+    const ey=document.querySelector('#v-plan .page-eyebrow'), ld=document.querySelector('#v-plan .page-lead');
+    if(ey&&ld){ if(!ey.dataset.d){ ey.dataset.d=ey.textContent; ld.dataset.d=ld.textContent; } ey.style.textTransform='none'; ey.textContent=JG.labelOf(JG.current())+' · '+PTAB[_vkey()]; ld.textContent='Importiere oder erstelle den Stundenplan für diesen Abschnitt. Mit „Aktiv“ nutzen ihn Startseite und Widgets.'; }
+    el.innerHTML=_tabsBar()+'<div class="m-card"><div class="m-t1">Noch kein Stundenplan für '+PTAB[_vkey()]+'</div><div class="m-t2" style="margin-top:6px">Importiere ihn als Kalenderdatei (.ics), lies ein Foto oder einen Screenshot ein, oder gib die Termine selbst ein.</div></div>'+_planControls();
   }
   function _dayRaw(w,d,g){
     if(_isCustom()) return w[5][d]||[];
@@ -5650,14 +5690,14 @@ const IDF_PLAN = (function(){
 
   function _draw(){
     const el=document.getElementById('plan-inner'); if(!el) return;
-    const nxt=next(); _nk=nxt?_ymd(nxt.start)+'|'+nxt.title+'|'+(nxt.start.getHours()*60+nxt.start.getMinutes()):'';
+    const nxt=_next(); _nk=nxt?_ymd(nxt.start)+'|'+nxt.title+'|'+(nxt.start.getHours()*60+nxt.start.getMinutes()):'';
     const wk=_weeks[_wi]; if(!wk) return;
     const [kw,nr,thema,start,grp,days,tel,info]=wk;
     const today=new Date(); today.setHours(0,0,0,0);
     const base=new Date(start+'T00:00');
     const notStarted=today<new Date(_weeks[0][3]+'T00:00');
     const icon=d=>`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
-    let h=`<div class="m-card idf-head">
+    let h=_tabsBar()+`<div class="m-card idf-head">
       <div class="idf-row"><div><b class="idf-kw">KW ${kw}</b><span class="m-t2">Woche ${nr} von ${_isCustom()?_weeks.length:9}${grp==='both'&&!_isCustom()?' · beide Gruppen':''}</span></div>
         <div class="idf-nav"><button onclick="IDF_PLAN._nav(-1)" aria-label="Vorherige Woche"${_wi===0?' disabled':''}>${icon('m15 18-6-6 6-6')}</button><button onclick="IDF_PLAN._nav(1)" aria-label="Nächste Woche"${_wi===_weeks.length-1?' disabled':''}>${icon('m9 18 6-6-6-6')}</button></div></div>
       <div class="idf-pips">${_weeks.map((_,i)=>`<i class="${i<_wi?'done':i===_wi?'cur':''}"></i>`).join('')}</div>
@@ -5684,7 +5724,8 @@ const IDF_PLAN = (function(){
     const ey=document.querySelector('#v-plan .page-eyebrow'), ld=document.querySelector('#v-plan .page-lead');
     if(ey&&ld){
       if(!ey.dataset.d){ ey.dataset.d=ey.textContent; ld.dataset.d=ld.textContent; }
-      ey.textContent=_isCustom()?_cust.name:ey.dataset.d;
+      ey.style.textTransform=_nonMaster()?'none':'';
+      ey.textContent=_isCustom()?(_nonMaster()?JG.labelOf(JG.current())+' · '+PTAB[_vkey()]:_cust.name):ey.dataset.d;
       ld.textContent=_isCustom()?'Stundenplan für KW '+_weeks[0][0]+' bis '+_weeks[_weeks.length-1][0]+'. Es öffnet sich immer die aktuelle Woche.':ld.dataset.d;
     }
     el.innerHTML=h;
@@ -5692,7 +5733,7 @@ const IDF_PLAN = (function(){
 
   // Woche der laufenden bzw. nächsten Einheit (sonst die Woche von heute)
   function _curWeek(){
-    let wi=_autoIdx(); const nx=next();
+    let wi=_autoIdx(); const nx=_next();
     if(nx){
       const k=_weeks.findIndex(w=>{ const b=new Date(w[3]+'T00:00'), e=new Date(b); e.setDate(b.getDate()+7); return nx.start>=b&&nx.start<e; });
       if(k>=0) wi=k;
@@ -5706,16 +5747,17 @@ const IDF_PLAN = (function(){
     const wi=_curWeek();
     if(wi===_wi) return;
     _wi=wi; _draw();
-    const nx=next(), day=nx&&document.querySelector('#plan-inner .idf-day[data-ymd="'+_ymd(nx.start)+'"]');
+    const nx=_next(), day=nx&&document.querySelector('#plan-inner .idf-day[data-ymd="'+_ymd(nx.start)+'"]');
     if(day) requestAnimationFrame(()=>{ day.scrollIntoView({block:'start'}); });
   }
   document.addEventListener('visibilitychange',_follow);
   function render(){
     _grp=_savedGrp();
     _weeks=_buildWeeks();
+    if(!_weeks.length){ const el=document.getElementById('plan-inner'); if(el) _drawEmpty(el); return; }
     _manual=false; _wi=_curWeek();
     // Springt zur laufenden bzw. nächsten Einheit: richtige Woche, Tag nach oben scrollen
-    const nx=next(), key=nx&&_ymd(nx.start);
+    const nx=_next(), key=nx&&_ymd(nx.start);
     _draw();
     const day=key&&document.querySelector('#plan-inner .idf-day[data-ymd="'+key+'"]');
     if(day) requestAnimationFrame(()=>{ day.scrollIntoView({block:'start'}); });
@@ -5724,7 +5766,7 @@ const IDF_PLAN = (function(){
   setInterval(()=>{
     if(document.hidden||!document.getElementById('v-plan')?.classList.contains('active')) return;
     _follow();
-    const n=next(), k=n?_ymd(n.start)+'|'+n.title+'|'+(n.start.getHours()*60+n.start.getMinutes()):'';
+    const n=_next(), k=n?_ymd(n.start)+'|'+n.title+'|'+(n.start.getHours()*60+n.start.getMinutes()):'';
     if(k!==_nk) _draw();
   },30000);
   function _nav(d){ _manual=true; _wi=Math.max(0,Math.min(_weeks.length-1,_wi+d)); _draw(); }
@@ -5740,7 +5782,9 @@ const IDF_PLAN = (function(){
   }
   function _minutes(str){ const m=/(\d{1,2}):(\d{2})/.exec(str||''); return m?(+m[1])*60+(+m[2]):null; }
   // Laufende oder nächste Einheit nach Stundenplan der gewählten Gruppe; null, wenn das Modul vorbei ist
-  function next(now=new Date()){
+  // öffentlich (Startseite, Widgets): immer der aktive Plan; intern (Seite, Sprung zur Uhrzeit): der angezeigte Plan
+  function next(now){ _mode='active'; try{ return _next(now); }finally{ _mode='view'; } }
+  function _next(now=new Date()){
     for(const w of _buildWeeks(_savedGrp())){
       const base=new Date(w[3]+'T00:00');
       for(let d=0;d<w[5].length;d++){
@@ -5763,7 +5807,8 @@ const IDF_PLAN = (function(){
   }
 
   // Alle kommenden Einheiten (Beginn/Ende in ms) für die Startbildschirm-Widgets der Android-App
-  function units(){
+  function units(){ _mode='active'; try{ return _units(); }finally{ _mode='view'; } }
+  function _units(){
     const out=[], g=_savedGrp(), from=new Date(); from.setHours(0,0,0,0);
     for(const w of _buildWeeks(g)){
       const base=new Date(w[3]+'T00:00');
@@ -5794,7 +5839,7 @@ const IDF_PLAN = (function(){
     const fold=l=>{ let out='',cur=''; for(const ch of l){ if(new TextEncoder().encode(cur+ch).length>73){ out+=cur+'\r\n '; cur=''; } cur+=ch; } return out+cur; };
     const esc=t=>String(t).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
     const stamp=(()=>{const d=new Date();return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z';})();
-    const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//B VI Lernwebsite//Stundenplan Modul 3.5//DE','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:'+(_isCustom()?esc(_cust.name):'IdF Münster Modul 3.5 · Gruppe '+g[1])];
+    const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//B VI Lernwebsite//Stundenplan Modul 3.5//DE','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:'+(_isCustom()?esc((_cust&&_cust.name)||'Stundenplan'):'IdF Münster Modul 3.5 · Gruppe '+g[1])];
     let count=0;
     for(const w of _buildWeeks(g)){
       const base=new Date(w[3]+'T00:00');
@@ -5825,7 +5870,9 @@ const IDF_PLAN = (function(){
   }
 
   function summary(){
-    const ws=_buildWeeks(_savedGrp()), w=ws[_autoIdx(ws)];
+    const ws=_buildWeeks(_savedGrp());
+    if(!ws.length) return { kw:0, thema:'', over:false };
+    const w=ws[_autoIdx(ws)];
     const end=new Date(ws[ws.length-1][3]+'T00:00'); end.setDate(end.getDate()+5);
     return { kw:w[0], thema:w[2], over:new Date()>end };
   }
@@ -5836,9 +5883,15 @@ const IDF_PLAN = (function(){
   document.addEventListener('keydown',e=>{
     if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('#plan-inner .idf-tap')){ e.preventDefault(); PLANNOTE.open(e.target); }
   });
+  if(typeof JG!=='undefined') JG.on(()=>{
+    _loadCust(); _manual=false;
+    if(document.getElementById('v-plan')?.classList.contains('active')) render();
+    pushWidget();
+    if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome();
+  });
   _loadOv();
   pushWidget();
-  return { render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _grp:_setGrp, redraw:_draw };
+  return { viewTab, setActive, savePlan:_saveCust, getPlan:()=>_cust, render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _grp:_setGrp, redraw:_draw };
 })();
 
 /* ── Stundenplan als Kalender-Abo (Link, der sich selbst aktualisiert) ──────── */
@@ -6093,6 +6146,31 @@ const USAGE=(function(){
       });
     }
   };
+})();
+
+/* ── Danke-Hinweis: höchstens 2-mal, erstmals nach 10 h Nutzung, nur auf der Startseite ── */
+const DANKE=(function(){
+  const KEY='bvi_danke', URL='https://www.paypal.me/FabianFlemig', STEP=10*3600, MAX=2;
+  function load(){ try{ return Object.assign({n:0,next:STEP},JSON.parse(localStorage.getItem(KEY)||'{}')); }catch(e){ return {n:0,next:STEP}; } }
+  function save(d){ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){} }
+  function hide(){ document.getElementById('danke')?.remove(); }
+  function maybe(){
+    if(document.getElementById('danke')) return;
+    const d=load(), t=USAGE.total();
+    if(d.n>=MAX||t<d.next) return;
+    const h=Math.floor(t/3600);
+    const el=document.createElement('div'); el.id='danke'; el.setAttribute('role','status');
+    el.innerHTML='<div class="dk-t"><span class="dk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></span><div><b>Schon '+h+' Stunden gelernt – stark!</b><p>Wenn dir die Seite hilft, freue ich mich über eine kleine, freiwillige Spende. Danke dir!</p></div></div>'
+      +'<div class="dk-b"><a class="dk-go" href="'+URL+'" target="_blank" rel="noopener noreferrer">Spenden</a><button type="button" class="dk-later">Später</button><button type="button" class="dk-no">Nicht mehr zeigen</button></div>';
+    const set=o=>{ save(Object.assign(d,o)); hide(); };
+    el.querySelector('.dk-go').onclick=()=>set({n:MAX});
+    el.querySelector('.dk-later').onclick=()=>set({n:d.n+1,next:t+STEP});
+    el.querySelector('.dk-no').onclick=()=>set({n:MAX});
+    document.body.appendChild(el);
+    // Als gezeigt zählen, auch wenn nur weggewischt wird
+    save(Object.assign(d,{n:d.n+1,next:t+STEP}));
+  }
+  return {URL,maybe,hide};
 })();
 
 /* ── Bild-Vergrößerung (Lightbox) ───────────────────────────────────────── */
@@ -6424,7 +6502,7 @@ const SHELL=(function(){
       ['v-vak-fallbearbeitung','Fallbearbeitung','9-Punkte-Schema mit sechs Übungsfällen','pen',true],
       ['v-vak-klausurhinweise','Klausurhinweise','Prüfungsrelevante Themen und Definitionen','doc'],
       ['v-vak-klausurvorbereitung','Klausurvorbereitung VAk','Alle VAk-Materialien auf einen Blick','target']]],
-    ['Heyrothsberge',[
+    ['IBK Heyrothsberge',[
       ['v-simulator','Führungsdienstsimulator','8 Szenarien mit verzweigten Entscheidungen','sim',true]]]
   ];
   const ICON={
@@ -6433,6 +6511,7 @@ const SHELL=(function(){
     target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
     sim:'<path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z"/>',
     cal:'<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+    heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/>',
     cloud:'<path d="M18 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7"/><path d="M15 3h6v6M10 14 21 3"/>',
     exam:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
     cards:'<rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/>',
@@ -6791,9 +6870,11 @@ const SHELL=(function(){
       <details class="m-y1${wide?' static':''}"${y1Open||wide?' open':''} ontoggle="SHELL.y1(this.open)"><summary>1. Ausbildungsjahr</summary><div class="inner"><div class="m-rings r3">${MODS.filter(m=>m[5]===1).map(ringBtn).join('')}</div></div></details></div></div>`;
     const pause=`<div class="m-list m-pause">${row({ic:ic('cards'),t1:'Lernkarten',t2:cs.due?cs.due+' zur Wiederholung fällig · '+cs.known+' von '+cs.total+' gelernt':cs.known+' von '+cs.total+' gelernt · Karten üben',on:goJs('v-flashcards','Lernkarten')})}</div>`;
     const cloud=`<div class="m-list m-cloud"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2 m-cloud-x">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
+    const donate=`<a class="m-list m-donate m-donate-home" href="${DANKE.URL}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><div class="m-row m-go">${ic('heart')}<span class="m-tx"><span class="m-t1">Gefällt dir die Seite?</span><span class="m-t2">Kostenlos &amp; werbefrei – freiwillig unterstützen</span></span></div></a>`;
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
-      <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}</div></div>`;
+      <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}</div></div>`;
+    DANKE.maybe();
   }
 
   function renderExam(){
@@ -6805,11 +6886,20 @@ const SHELL=(function(){
     const dueQ=(typeof QUIZ!=='undefined'&&QUIZ.dueCount)?QUIZ.dueCount():0;
     const dueI=(typeof IDFQ!=='undefined'&&IDFQ.dueCount)?IDFQ.dueCount():0;
     const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2:id==='v-vak-altklausur'&&dueQ?`${t2} · ${dueQ} zur Wiederholung fällig`:id==='v-idf-altklausur'&&dueI?`${t2} · ${dueI} zur Wiederholung fällig`:t2,on:goJs(id,t1)});
-    const sec=([name,items])=>{
-      const hot=items.filter(x=>x[4]), rest=items.filter(x=>!x[4]);
-      return `<div class="m-col"><div class="m-sec">${esc(name)}</div>${hot.map(x=>`<div class="m-list m-glow">${card(x)}</div>`).join('')}${rest.length?`<div class="m-list">${rest.map(card).join('')}</div>`:''}</div>`;
+    // Reiter bleiben immer sichtbar; einzelne Prüfungen lassen sich ausblenden, eigene hinzufügen; „Glow“ je Reiter = klausurrelevant
+    const jd=JG.data(), weg=new Set(jd.pr.weg), gl=JG.glow(), edit=typeof JGUI!=='undefined'&&JGUI.isEditing();
+    const own=p=>row({ic:ic('doc'),t1:esc(p.titel),t2:p.fragen.length+' Fragen · eigene Prüfung',on:`JGUI.openExam('${p.id}')`});
+    const del=id=>edit?`<button type="button" class="jg-x" aria-label="Prüfung entfernen" onclick="JGUI.delExam('${id}')">✕</button>`:'';
+    const sec=([name,items],si)=>{
+      const key=JG.TABS[si][0], on=gl.has(key);
+      const vis=items.filter(x=>!weg.has(x[0])), adds=jd.pr.hinzu.filter(p=>p.tab===key);
+      const lists=[...vis.map(x=>`<div class="jg-rw">${card(x)}${del(x[0])}</div>`),...adds.map(p=>`<div class="jg-rw">${own(p)}${del(p.id)}</div>`)];
+      const head=`<div class="m-sec jg-sh">${esc(name)}${edit?`<button type="button" class="jg-gl${on?' on':''}" onclick="JGUI.setGlow('${key}')" aria-pressed="${on}" title="Klausurrelevant: Fragen für Einsatzfahrt und Duell">★ Klausurrelevant</button>`:''}</div>`;
+      return `<div class="m-col${on?' jg-hot':''}">${head}<div class="m-list${on?' m-glow':''}">${lists.join('')||'<div class="jg-none">Keine Prüfungen</div>'}</div></div>`;
     };
-    list.innerHTML=`<div class="m-areas">${EXAMS.map(sec).join('')}</div>`;
+    const hidden=EXAMS.reduce((n,[,it])=>n+it.filter(x=>weg.has(x[0])).length,0);
+    const tools=typeof JGUI==='undefined'?'':`<div class="jg-tools2"><button type="button" class="jg-plus" onclick="JGUI.examEditor()"><span>+</span> Prüfung hinzufügen</button><button type="button" class="btn btn-ghost" onclick="JGUI.toggleEdit()">${edit?'Fertig':'Prüfungen bearbeiten'}</button>${edit&&hidden?`<button type="button" class="btn btn-ghost" onclick="JGUI.restoreExams()">${hidden} ausgeblendete wiederherstellen</button>`:''}</div>${edit?'<div class="m-note" style="padding:6px 2px">Mit ★ legst du fest, welche Reiter klausurrelevant sind. Nur ihre Fragen kommen in Einsatzfahrt und Duell.</div>':''}`;
+    list.innerHTML=`<div class="m-areas">${EXAMS.map(sec).join('')}</div>${tools}`;
   }
 
   function renderFcSide(){
@@ -6911,6 +7001,7 @@ const SHELL=(function(){
     const nc=notes().length, bc=BOOKMARKS.getAll().length;
     const lb=BACKUP.last();
     set('acc-dar-sub',th+' · Schrift '+fs);
+    if(typeof JG!=='undefined') set('acc-lg-sub',JG.labelOf(JG.current())+(JG.isMaster()?' (Master)':''));
     set('acc-ler-sub','Tagesziel '+goalMin()+' min · Timer '+(document.documentElement.classList.contains('no-timers')?'aus':'an'));
     set('acc-eri-sub',NOTIF.isEnabled()?'Täglich um '+NOTIF.hour()+':00':'Aus');
     set('acc-dat-sub',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
