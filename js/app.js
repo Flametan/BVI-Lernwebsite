@@ -6255,7 +6255,7 @@ const SHELL=(function(){
     };
     const sec=USAGE.today(), goal=goalMin(), gp=Math.min(100,Math.round(sec/(goal*60)*100));
     const minToday=Math.floor(sec/60);
-    let cTitle="Los geht's", cSub='Starte mit den Lernkarten', cGo="NAV.tab('v-flashcards','Lernkarten')", cBtn='Starten';
+    let cTitle="Los geht's", cSub='Wähle ein Modul oder übe mit dem Altklausur-Quiz', cGo="NAV.tab('v-pruefung','Prüfung')", cBtn='Starten';
     if(recent&&document.getElementById(recent.id)){
       cTitle=recent.label; cGo=goJs(recent.id,recent.label); cBtn='Weiter';
       cSub=document.querySelector('#'+recent.id+' .page-eyebrow')?.textContent?.trim()||'';
