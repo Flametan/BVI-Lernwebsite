@@ -2441,3 +2441,9 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 /* Barrierefreiheit (B): sichtbarer Fokusrahmen bei Tastaturbedienung (Kontrast mindestens 3:1), Mausklicks bleiben unverändert */
 :focus-visible{outline:2px solid var(--m-accent-fg,#ffa412)!important;outline-offset:2px!important;}
 :where(.m-ri,.m-tab,.m-brand,.m-go,.m-row):focus-visible{outline-offset:-3px!important;border-radius:12px;}
+
+/* Barrierefreiheit (C): bei „Bewegung reduzieren“ stehen Seitenwechsel, Meldungen, Fenster, Ladeanzeigen und weiches Scrollen still */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important;}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.01ms!important;transition-delay:0s!important;}
+}
