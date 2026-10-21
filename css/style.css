@@ -2586,3 +2586,21 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 #danke .dk-no{padding:10px 8px;border:0;background:none;color:inherit;opacity:.6;font:inherit;font-size:.8rem}
 
 .m-list.m-donate:not(.m-donate-home){background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
+
+.jg-rw.hot{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 14%,var(--m-card)),var(--m-card) 70%);}
+.jg-st{flex:none;font-size:1.05rem;line-height:1;color:var(--m-muted);opacity:.45;}
+.jg-st.on{color:var(--m-accent-fg);opacity:1;}
+
+/* Seite bearbeiten: Kapitel und Blöcke löschen, Ergänzung im Kapitel */
+.jg-gone{display:none!important;}
+.jg-bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px;}
+.jg-cx,.jg-bx{width:32px;height:32px;border-radius:50%;border:0;background:var(--m-raised);color:var(--m-fg);cursor:pointer;font-size:.85rem;flex:none;}
+.jg-bx{position:absolute;right:8px;top:8px;z-index:2;}
+.jg-ed-on .info-card,.jg-ed-on .def-box{position:relative;padding-right:48px;}
+.jg-erg-k{display:flex;flex-direction:column;gap:12px;margin-top:1rem;}
+.jg-in{margin-top:1rem;}
+.lp-voll .acc-item>summary .jg-cx{pointer-events:auto;}
+.lp-card{position:relative;}
+.lp-card .jg-cx{position:absolute;right:12px;bottom:10px;display:grid;place-items:center;}
+.lp-win .jg-bx{position:absolute;}
+.lp-win .info-card:has(>.jg-bx),.lp-win .def-box:has(>.jg-bx){position:relative;padding-right:48px;}

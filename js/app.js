@@ -2784,7 +2784,7 @@ const LP=(function(){
   const mq=window.matchMedia('(min-width:1100px)');
   let win=null, cur=null, pushed=false, ignorePop=false;
   const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const items=v=>[...v.querySelectorAll('.pc .acc-item')];
+  const items=v=>[...v.querySelectorAll('.pc .acc-item:not(.jg-gone)')];
   const ckOf=d=>{ const t=d.querySelector('summary .acc-title,summary .acc-h'); return (t?t.textContent:d.querySelector('summary').textContent).trim().slice(0,80); };
   const titleOf=d=>{ const t=d.querySelector('summary .acc-title,summary .acc-h'); return ((t?t.textContent:d.querySelector('summary').textContent)||'').replace(/\s+/g,' ').trim(); };
   const numOf=(d,i)=>d.querySelector('summary .acc-num')?.textContent.trim()||String(i+1).padStart(2,'0');
@@ -2824,11 +2824,12 @@ const LP=(function(){
   }
   function render(v){
     const its=items(v), id=v._lp.id, box=v.querySelector('.lp-cards'); if(!box) return;
+    const ed=typeof JGUI!=='undefined'&&!!v.querySelector('.pc.jg-ed-on');
     box.innerHTML=its.map((d,i)=>{
-      const body=d.querySelector('.acc-body')||d.querySelector('.lp-held'); const txt=body?plain(body):'';
-      const min=Math.max(1,Math.round(txt.split(/\s+/).length/180));
+      const body=d.querySelector('.acc-body')||d.querySelector('.lp-held');
       const read=CHECKS.get(id,ckOf(d));
-      return '<button type="button" class="lp-card'+(read?' read':'')+'" data-i="'+i+'"><span class="acc-num">'+esc(numOf(d,i))+'</span><span class="t">'+esc(titleOf(d))+'</span><span class="acc-pts">'+(read?'✓ ':'')+min+' Min.</span><span class="pv">'+esc(body?preview(body):'')+'</span><span class="go">Kapitel öffnen ›</span></button>';
+      const ctl=ed?'<span class="jg-ctl jg-cx" role="button" tabindex="0" aria-label="Kapitel löschen" data-key="'+esc(JGUI.chapterKey(id,d))+'">✕</span>':'';
+      return '<button type="button" class="lp-card'+(read?' read':'')+'" data-i="'+i+'"><span class="acc-num">'+esc(numOf(d,i))+'</span><span class="t">'+esc(titleOf(d))+'</span>'+(read?'<span class="acc-pts">✓ gelesen</span>':'')+'<span class="pv">'+esc(body?preview(body):'')+'</span><span class="go">Kapitel öffnen ›</span>'+ctl+'</button>';
     }).join('');
   }
   function build(){
@@ -2977,7 +2978,7 @@ const LP=(function(){
     if(v._lp&&v.classList.contains('lp-ueber')){ open(v,i); return; }
     d.open=true; d.scrollIntoView({block:'start',behavior:'smooth'});
   }
-  return { init, focus, focusMode, togglePractice, canFocus:()=>{ const v=document.querySelector('.view.active'); return !!(v&&v._lp); }, canPractice:()=>cardsFor(document.querySelector('.view.active')?.id).length>0, isOpen:()=>!!cur, back,
+  return { init, refresh(id){ const v=document.getElementById(id); if(v&&v._lp&&v.classList.contains('lp-ueber')) render(v); }, held(){ return cur&&cur.body?{d:items(cur.v)[cur.i],body:cur.body}:null; }, focus, focusMode, togglePractice, canFocus:()=>{ const v=document.querySelector('.view.active'); return !!(v&&v._lp); }, canPractice:()=>cardsFor(document.querySelector('.view.active')?.id).length>0, isOpen:()=>!!cur, back,
     onShow(id){ if(cur) close(true); applyPrac(id); setTimeout(()=>tools(id),0); } };
 })();
 
@@ -4018,13 +4019,16 @@ const CHANGELOG=(function(){
       'Android-App: Das Startsymbol und das Startbild folgen jetzt auch dem Farbschema – schwarz im dunklen, hell (Farbton der Website) im hellen Design',
       'Startseite: Beim Wechsel zwischen Woche und Monaten starten die Animationen nicht mehr neu; die Umschalter sind wieder schmaler',
       'Android-App: Drei Widgets für den Startbildschirm zur Auswahl – „Nächste Einheit“, „Tagesplan“ und „Jetzt und danach“ mit Zeitraum, Raum, Restzeit und der Einheit danach (nach Unterrichtsende zeigen sie, was morgen ansteht); sie folgen Akzentfarbe und Hell/Dunkel',
-      'Lehrgang: Unter Einstellungen den Jahrgang wählen (BRef/AB, jedes Halbjahr ein neuer). Alle Jahrgänge starten als 1:1-Kopie des Masters; Verbesserungen am Master kommen automatisch an. Pro Jahrgang: eigener Stundenplan (Kalenderdatei, Foto oder Screenshot mit Texterkennung, oder Eingabeformular), Ergänzungen zu jeder Lernseite mit „+“ (Text oder Bild, mit Texterkennung), eigene Prüfungen hinzufügen und löschen (mit Rückgängig), Reiter als „klausurrelevant“ mit Glow markieren (nur sie füttern Einsatzfahrt und Duell), und alle Änderungen als Datei exportieren und einlesen',
+      'Lehrgang: Unter Einstellungen den Jahrgang wählen (BRef/AB, jedes Halbjahr ein neuer). Alle Jahrgänge starten als 1:1-Kopie des Masters; Verbesserungen am Master kommen automatisch an. Pro Jahrgang: eigener Stundenplan (Kalenderdatei, Foto oder Screenshot mit Texterkennung, oder Eingabeformular), Ergänzungen zu jeder Lernseite mit „+“ (Text oder Bild, mit Texterkennung), eigene Prüfungen hinzufügen und löschen (mit Rückgängig), einzelne Prüfungen als „klausurrelevant“ (★) markieren (nur sie füttern Einsatzfahrt und Duell), und alle Änderungen als Datei exportieren und einlesen',
       'Stundenplan: Eigenen Stundenplan aus einer Kalenderdatei (.ics) laden – er ersetzt den IdF-Plan und alle Funktionen laufen weiter (nächste Einheit auf der Startseite, Widgets, Notizen, Kalender-Export); der IdF-Plan lässt sich als Kalender-Abo (Link, der sich selbst aktualisiert) in den eigenen Kalender einbinden',
       'Lernkarten teilen: Eigene Karten als Link oder QR-Code an Kollegen schicken (die Karten stecken im Link, nichts läuft über einen Server); „Per E-Mail senden“ gibt es nicht mehr',
       'Lernseiten: Abkürzungen (z. B. ELW, FwDV, HBKG) sind beim ersten Vorkommen auf der Seite unterstrichen; ein Tipp zeigt Name und Erläuterung aus dem Abkürzungsverzeichnis',
       'Neu: Markierten Text auf einer Lernseite mit „Als Lernkarte“ direkt zu einer eigenen Lernkarte machen (Modul wird vorgewählt, die Frage schreibst du dazu)',
       'Updates: Bei einer neuen Version erscheint ein Hinweis „Aktualisieren“, statt dass die Seite mitten im Lernen neu lädt',
       'Spendenlink: dezente Karte unten auf der Startseite; nach 10 Stunden Nutzung ein kleines „Danke“ (höchstens 2-mal, nur auf der Startseite, mit „Später“ und „Nicht mehr zeigen“)',
+      'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
+      'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Kapitelkarten zeigen keine Lesezeit in Minuten mehr, nur noch ein Häkchen bei gelesenen Kapiteln',
       'Stundenplan: Er springt von selbst zur aktuellen Kalenderwoche, wenn das Datum weiterläuft (Mitternacht) oder die App wieder in den Vordergrund kommt – außer du hast selbst in andere Wochen geblättert',
       'Fehlerbehebung: In Textfeldern (Suche, eigene Lernkarte) lassen sich „j“ und „f“ wieder tippen; Lesezeichen und „Zuletzt gesucht“ in der Suche funktionieren wieder; Markierungen funktionieren auch im Kapitel-Fenster auf Handy und Tablet',
       'Fehlerbehebung: Der Prüfungsmodus gibt bei Zeitablauf automatisch ab; Pomodoro startet nach Ablauf eine neue Runde; Klausur-Timer und Pomodoro laufen auch bei gesperrtem Bildschirm richtig weiter; ein abgelaufener Klausur-Timer meldet sich nicht mehr bei jedem Start',
@@ -6505,6 +6509,7 @@ const SHELL=(function(){
     ['IBK Heyrothsberge',[
       ['v-simulator','Führungsdienstsimulator','8 Szenarien mit verzweigten Entscheidungen','sim',true]]]
   ];
+  JG.setExams(EXAMS);
   const ICON={
     doc:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
     pen:'<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>',
@@ -6885,20 +6890,21 @@ const SHELL=(function(){
     cd.innerHTML=days<0?'':`<button type="button" class="m-card m-count m-count-go" onclick="${goJs(tgt[0],tgt[1])}"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">${esc(examCfg().name)}</span><span class="m-t2">${new Date(examCfg().date+'T00:00').toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'long',year:'numeric'})}</span></div><span class="m-count-link">${esc(tgt[1])} <i>›</i></span></button>`;
     const dueQ=(typeof QUIZ!=='undefined'&&QUIZ.dueCount)?QUIZ.dueCount():0;
     const dueI=(typeof IDFQ!=='undefined'&&IDFQ.dueCount)?IDFQ.dueCount():0;
-    const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2:id==='v-vak-altklausur'&&dueQ?`${t2} · ${dueQ} zur Wiederholung fällig`:id==='v-idf-altklausur'&&dueI?`${t2} · ${dueI} zur Wiederholung fällig`:t2,on:goJs(id,t1)});
-    // Reiter bleiben immer sichtbar; einzelne Prüfungen lassen sich ausblenden, eigene hinzufügen; „Glow“ je Reiter = klausurrelevant
-    const jd=JG.data(), weg=new Set(jd.pr.weg), gl=JG.glow(), edit=typeof JGUI!=='undefined'&&JGUI.isEditing();
-    const own=p=>row({ic:ic('doc'),t1:esc(p.titel),t2:p.fragen.length+' Fragen · eigene Prüfung',on:`JGUI.openExam('${p.id}')`});
+    const jd=JG.data(), weg=new Set(jd.pr.weg), edit=typeof JGUI!=='undefined'&&JGUI.isEditing();
+    const rel=id=>JG.rel(id), star=id=>`<span class="jg-st${rel(id)?' on':''}" aria-hidden="true">★</span>`;
+    // Im Bearbeiten-Modus schaltet das Antippen einer Prüfung ihre Klausurrelevanz um; sonst öffnet es sie
+    const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2:id==='v-vak-altklausur'&&dueQ?`${t2} · ${dueQ} zur Wiederholung fällig`:id==='v-idf-altklausur'&&dueI?`${t2} · ${dueI} zur Wiederholung fällig`:t2,on:edit?`JGUI.setRel('${id}')`:goJs(id,t1),right:edit?star(id):''});
+    const own=p=>row({ic:ic('doc'),t1:esc(p.titel),t2:p.fragen.length+' Fragen · eigene Prüfung',on:edit?`JGUI.setRel('${p.id}')`:`JGUI.openExam('${p.id}')`,right:edit?star(p.id):''});
     const del=id=>edit?`<button type="button" class="jg-x" aria-label="Prüfung entfernen" onclick="JGUI.delExam('${id}')">✕</button>`:'';
+    const rw=(id,inner)=>`<div class="jg-rw${rel(id)?' hot':''}">${inner}${del(id)}</div>`;
     const sec=([name,items],si)=>{
-      const key=JG.TABS[si][0], on=gl.has(key);
+      const key=JG.TABS[si][0];
       const vis=items.filter(x=>!weg.has(x[0])), adds=jd.pr.hinzu.filter(p=>p.tab===key);
-      const lists=[...vis.map(x=>`<div class="jg-rw">${card(x)}${del(x[0])}</div>`),...adds.map(p=>`<div class="jg-rw">${own(p)}${del(p.id)}</div>`)];
-      const head=`<div class="m-sec jg-sh">${esc(name)}${edit?`<button type="button" class="jg-gl${on?' on':''}" onclick="JGUI.setGlow('${key}')" aria-pressed="${on}" title="Klausurrelevant: Fragen für Einsatzfahrt und Duell">★ Klausurrelevant</button>`:''}</div>`;
-      return `<div class="m-col${on?' jg-hot':''}">${head}<div class="m-list${on?' m-glow':''}">${lists.join('')||'<div class="jg-none">Keine Prüfungen</div>'}</div></div>`;
+      const lists=[...vis.map(x=>rw(x[0],card(x))),...adds.map(p=>rw(p.id,own(p)))];
+      return `<div class="m-col"><div class="m-sec jg-sh">${esc(name)}</div><div class="m-list">${lists.join('')||'<div class="jg-none">Keine Prüfungen</div>'}</div></div>`;
     };
     const hidden=EXAMS.reduce((n,[,it])=>n+it.filter(x=>weg.has(x[0])).length,0);
-    const tools=typeof JGUI==='undefined'?'':`<div class="jg-tools2"><button type="button" class="jg-plus" onclick="JGUI.examEditor()"><span>+</span> Prüfung hinzufügen</button><button type="button" class="btn btn-ghost" onclick="JGUI.toggleEdit()">${edit?'Fertig':'Prüfungen bearbeiten'}</button>${edit&&hidden?`<button type="button" class="btn btn-ghost" onclick="JGUI.restoreExams()">${hidden} ausgeblendete wiederherstellen</button>`:''}</div>${edit?'<div class="m-note" style="padding:6px 2px">Mit ★ legst du fest, welche Reiter klausurrelevant sind. Nur ihre Fragen kommen in Einsatzfahrt und Duell.</div>':''}`;
+    const tools=typeof JGUI==='undefined'?'':`<div class="jg-tools2"><button type="button" class="jg-plus" onclick="JGUI.examEditor()"><span>+</span> Prüfung hinzufügen</button><button type="button" class="btn btn-ghost" onclick="JGUI.toggleEdit()">${edit?'Fertig':'Prüfungen bearbeiten'}</button>${edit&&hidden?`<button type="button" class="btn btn-ghost" onclick="JGUI.restoreExams()">${hidden} ausgeblendete wiederherstellen</button>`:''}</div>${edit?'<div class="m-note" style="padding:6px 2px">Tippe eine Prüfung an, um sie klausurrelevant (★) zu machen oder abzuwählen. Nur relevante Prüfungen liefern Fragen für Einsatzfahrt und Duell.</div>':''}`;
     list.innerHTML=`<div class="m-areas">${EXAMS.map(sec).join('')}</div>${tools}`;
   }
 
