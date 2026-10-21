@@ -447,6 +447,19 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Stundenplan: springt bei Datumswechsel zur aktuellen Woche, nach eigenem Blättern nicht', pf, { followed: true, manualKept: true, resetOnShow: true });
 
+  // ── Woche/Monate: nur die Diagrammkarte wird ersetzt, der Rest der Startseite bleibt (keine neuen Animationen) ──
+  const rg = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    NAV.home(); await w(300);
+    const hello = document.querySelector('#v-home .m-hello'), mods = document.querySelector('#v-home .m-mods');
+    SHELL.setRange('month'); await w(100);
+    const r = { same: hello === document.querySelector('#v-home .m-hello') && mods === document.querySelector('#v-home .m-mods'), bars: document.querySelectorAll('#v-home .m-chart2 .m-pc').length };
+    SHELL.setRange('week'); await w(100);
+    r.back = document.querySelectorAll('#v-home .m-chart2 .m-pc').length;
+    return r;
+  });
+  eq('Woche/Monate ersetzt nur das Diagramm', rg, { same: true, bars: 12, back: 7 });
+
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
   const tp = await tctx.newPage();
