@@ -3882,6 +3882,7 @@ const CHANGELOG=(function(){
     {v:'3.0.0',ts:'2026-10-19T22:00',items:[
       'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Stundenplan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links',
       'Android-App: Das Startsymbol und das Startbild folgen jetzt auch dem Farbschema – schwarz im dunklen, hell (Farbton der Website) im hellen Design',
+      'Stundenplan: Er springt von selbst zur aktuellen Kalenderwoche, wenn das Datum weiterläuft (Mitternacht) oder die App wieder in den Vordergrund kommt – außer du hast selbst in andere Wochen geblättert',
       'Fehlerbehebung: In Textfeldern (Suche, eigene Lernkarte) lassen sich „j“ und „f“ wieder tippen; Lesezeichen und „Zuletzt gesucht“ in der Suche funktionieren wieder; Markierungen funktionieren auch im Kapitel-Fenster auf Handy und Tablet',
       'Fehlerbehebung: Der Prüfungsmodus gibt bei Zeitablauf automatisch ab; Pomodoro startet nach Ablauf eine neue Runde; Klausur-Timer und Pomodoro laufen auch bei gesperrtem Bildschirm richtig weiter; ein abgelaufener Klausur-Timer meldet sich nicht mehr bei jedem Start',
       'Fehlerbehebung: Fenster (Suche, Notiz, Pomodoro, Neuigkeiten) nehmen den Fokus auf, halten die Tab-Taste im Fenster und schließen mit Zurück oder Esc einzeln; die Zurück-Taste der Android-App schließt zuerst offene Fenster',
@@ -5400,16 +5401,32 @@ const IDF_PLAN = (function(){
     el.innerHTML=h;
   }
 
+  // Woche der laufenden bzw. nächsten Einheit (sonst die Woche von heute)
+  function _curWeek(){
+    let wi=_autoIdx(); const nx=next();
+    if(nx){
+      const k=_weeks.findIndex(w=>{ const b=new Date(w[3]+'T00:00'), e=new Date(b); e.setDate(b.getDate()+7); return nx.start>=b&&nx.start<e; });
+      if(k>=0) wi=k;
+    }
+    return wi;
+  }
+  let _manual=false;   // true, sobald jemand selbst in andere Wochen geblättert hat
+  // läuft das Datum weiter (Mitternacht, App wieder im Vordergrund), springt der Plan zur aktuellen Woche – außer es wurde selbst geblättert
+  function _follow(){
+    if(document.hidden||_manual||!document.getElementById('v-plan')?.classList.contains('active')||!_weeks.length) return;
+    const wi=_curWeek();
+    if(wi===_wi) return;
+    _wi=wi; _draw();
+    const nx=next(), day=nx&&document.querySelector('#plan-inner .idf-day[data-ymd="'+_ymd(nx.start)+'"]');
+    if(day) requestAnimationFrame(()=>{ day.scrollIntoView({block:'start'}); });
+  }
+  document.addEventListener('visibilitychange',_follow);
   function render(){
     _grp=_savedGrp();
     _weeks=_buildWeeks();
-    _wi=_autoIdx();
+    _manual=false; _wi=_curWeek();
     // Springt zur laufenden bzw. nächsten Einheit: richtige Woche, Tag nach oben scrollen
     const nx=next(), key=nx&&_ymd(nx.start);
-    if(nx){
-      const k=_weeks.findIndex(w=>{ const b=new Date(w[3]+'T00:00'), e=new Date(b); e.setDate(b.getDate()+7); return nx.start>=b&&nx.start<e; });
-      if(k>=0) _wi=k;
-    }
     _draw();
     const day=key&&document.querySelector('#plan-inner .idf-day[data-ymd="'+key+'"]');
     if(day) requestAnimationFrame(()=>{ day.scrollIntoView({block:'start'}); });
@@ -5417,10 +5434,11 @@ const IDF_PLAN = (function(){
   // Markierung folgt der Uhrzeit: alle 30 s prüfen, ob eine andere Einheit läuft bzw. ansteht
   setInterval(()=>{
     if(document.hidden||!document.getElementById('v-plan')?.classList.contains('active')) return;
+    _follow();
     const n=next(), k=n?_ymd(n.start)+'|'+n.title+'|'+(n.start.getHours()*60+n.start.getMinutes()):'';
     if(k!==_nk) _draw();
   },30000);
-  function _nav(d){ _wi=Math.max(0,Math.min(_weeks.length-1,_wi+d)); _draw(); }
+  function _nav(d){ _manual=true; _wi=Math.max(0,Math.min(_weeks.length-1,_wi+d)); _draw(); }
   function _setGrp(g){
     _grp=g;
     try{ localStorage.setItem('idf_plan_grp',g); }catch(e){}

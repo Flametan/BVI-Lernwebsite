@@ -426,6 +426,27 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   const ac = await page.evaluate(() => { const c = ['#FFA412', '#C9A84C', '#E5484D', '#3E8EF7', '#3DBE7A']; const lum = h => { const n = parseInt(h.slice(1), 16), f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return .2126 * f(n >> 16 & 255) + .7152 * f(n >> 8 & 255) + .0722 * f(n & 255); }; const out = []; c.forEach(h => { ACCENT.set(h); const on = getComputedStyle(document.documentElement).getPropertyValue('--m-on-accent').trim(); const L = lum(h), o = on === '#111' ? .0056 : 1; out.push(((Math.max(L, o) + .05) / (Math.min(L, o) + .05)) >= 4.5); }); ACCENT.set('#FFA412'); return out; });
   eq('Akzentfarben: Schrift auf Akzentfläche erreicht 4,5:1', ac, [true, true, true, true, true]);
 
+  // ── Stundenplan folgt dem Datum, solange nicht selbst geblättert wurde ──
+  const pf = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), Real = Date, r = {};
+    let off = 0; const base = Real.now();
+    window.Date = class extends Real { constructor(...a) { if (a.length) super(...a); else super(Real.now() + off); } static now() { return Real.now() + off; } };
+    const setNow = iso => { off = Real.parse(iso) - Real.now(); };
+    const snap = () => document.getElementById('plan-inner').innerText.slice(0, 400);
+    setNow('2026-10-27T10:00:00'); NAV.go('v-plan', 'Stundenplan'); await w(400);
+    const s1 = snap();
+    setNow('2026-11-03T10:00:00'); document.dispatchEvent(new Event('visibilitychange')); await w(300);
+    const s2 = snap(); r.followed = s1 !== s2;
+    IDF_PLAN._nav(-1); await w(100); const s3 = snap();
+    setNow('2026-11-10T10:00:00'); document.dispatchEvent(new Event('visibilitychange')); await w(300);
+    r.manualKept = snap() === s3;
+    NAV.home(); await w(100); NAV.go('v-plan', 'Stundenplan'); await w(400);
+    r.resetOnShow = snap() !== s3;
+    window.Date = Real;
+    return r;
+  });
+  eq('Stundenplan: springt bei Datumswechsel zur aktuellen Woche, nach eigenem Blättern nicht', pf, { followed: true, manualKept: true, resetOnShow: true });
+
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
   const tp = await tctx.newPage();
