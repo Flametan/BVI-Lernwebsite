@@ -2453,9 +2453,8 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
   .m-seg button,.m-step button{min-height:44px;min-width:44px;}
   .quiz-filter-btn,.quiz-cat-filter-btn,.quiz-type-btn,.sf-btn,.qfs-reset,.quiz-shuffle-btn,.related-chip,.fc-own-add,.quiz-mode-btn,.m-go2,.quiz-report-btn,.m-report button,.m-input,.theme-opt,.fs-opt,.btn{min-height:44px;}
   .theme-opt,.fs-opt{min-width:44px;}
-  .m-pc{min-width:44px;}
   .idf-item{min-height:44px;}
-  .idf-tel-row a{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;margin:-8px -4px 0;}
+  .idf-tel-row a{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;margin:-8px 0 0;}
   .quiz-bm-btn{min-width:44px;min-height:44px;}
   .m-tab{position:relative;}
   .m-tab::before{content:'';position:absolute;inset:-5px 0 -6px;}

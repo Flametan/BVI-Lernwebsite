@@ -3797,6 +3797,7 @@ const CHANGELOG=(function(){
   const ENTRIES=[
     {v:'3.0.0',ts:'2026-10-19T22:00',items:[
       'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Stundenplan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links',
+      'Startseite: Wochen- und Monatsdiagramm passt auf dem Handy wieder vollständig in die Karte',
       'Farbschema: Dunkel, Hell oder System (Einstellungen → Farbschema)',
       'Akzentfarbe wählbar (5 Vorgaben oder Farbkreis); sie färbt Navigation, Rahmen und Grafiken, in der Android-App auch das Symbol auf dem Startbildschirm',
       'Neues App-Symbol: die Flamme der Website',

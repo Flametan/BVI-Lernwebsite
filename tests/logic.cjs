@@ -315,6 +315,24 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   const css = await page.evaluate(async () => { const t = await (await fetch('css/style.css')).text(); return { rm: /prefers-reduced-motion:reduce\)\{\s*html\{scroll-behavior:auto!important/.test(t), fv: /:focus-visible\{outline:2px solid/.test(t), coarse: /Klickflächen auf Touch-Geräten mindestens 44 px/.test(t) }; });
   ok('CSS: Bewegung reduzieren, Fokusrahmen und 44-px-Klickflächen vorhanden', css.rm && css.fv && css.coarse);
 
+  // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
+  const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
+  const tp = await tctx.newPage();
+  await tp.addInitScript(() => localStorage.setItem('bvi_onboarded', '1'));
+  await tp.goto(BASE, { waitUntil: "load" });
+  await tp.waitForTimeout(800);
+  const chart = {};
+  for (const m of ['Woche', 'Monate']) {
+    chart[m] = await tp.evaluate(async m => {
+      [...document.querySelectorAll('.m-seg button')].find(b => b.textContent.trim() === m).click();
+      await new Promise(r => setTimeout(r, 300));
+      const pl = document.querySelector('.m-plot'), pr = pl.getBoundingClientRect();
+      return [...pl.querySelectorAll('.m-pc')].filter(e => { const q = e.getBoundingClientRect(); return q.right > pr.right + 1 || q.left < pr.left - 1 || q.right > innerWidth; }).length;
+    }, m);
+  }
+  eq('Diagramm Woche/Monate ragt nicht über den Rand (Touch, 360 px)', chart, { Woche: 0, Monate: 0 });
+  await tctx.close();
+
   for (const e of errors) fails.push('JavaScript-Fehler: ' + e);
   await browser.close();
   if (fails.length) { console.error('FEHLER:\n - ' + fails.join('\n - ')); process.exit(1); }
