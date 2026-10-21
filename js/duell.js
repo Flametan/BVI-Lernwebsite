@@ -5,11 +5,11 @@
    Wird erst beim Öffnen des Duells geladen (js/pause.js → DUELLGAME).
 ====================================================================== */
 const DUELL=(function(){
-  const NK='bvi_duell_name',BK='bvi_duell_bilanz',SK='bvi_duell_stun',MK='bvi_duell_cfg';
+  const CK='bvi_duell_col',NK='bvi_duell_name',BK='bvi_duell_bilanz',SK='bvi_duell_stun',MK='bvi_duell_cfg';
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const get=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}};
   const put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
-  let root=null,F=null,loadJs=null,pc=null,dc=null,role='',me='',opp='',cfg={n:5,mods:['VAk','IBK']},ready={me:false,opp:false},sigOk=true;
+  let root=null,F=null,loadJs=null,pc=null,dc=null,role='',me='',opp='',myCol=0,oppCol=-1,cfg={n:5,mods:['VAk','IBK']},ready={me:false,opp:false},sigOk=true;
   let hb=0,lastRx=0,down=false,downAt=0,stream=null,scanT=0,gameOn=false,alive=false,tm=0;
 
   /* ---------- Verbindungsdaten klein machen (nur das Nötige, ca. 250 Zeichen) ---------- */
@@ -41,11 +41,13 @@ const DUELL=(function(){
     card(`<div class="pz-lbl"><span>Einsatzfahrt-Duell</span><b>2 Spieler</b></div><div class="pz-qt">Wer ist schneller am Einsatzort?</div>
       <div class="pz-fb">Ihr spielt live dieselben Prüfungsfragen auf derselben Strecke und seht, wo der andere gerade ist. Verbunden werdet ihr direkt per QR-Code, ohne Anmeldung und ohne Server.</div>
       ${msg?`<div class="pz-fb r"><b>${esc(msg)}</b></div>`:''}
-      <label class="pz-fld">Dein Name<input class="pz-in" id="dn" maxlength="12" value="${esc(me)}" placeholder="z. B. Max"></label>
+      <label class="pz-fld">Dein Name<input class="pz-in" id="dn" maxlength="12" value="${esc(me)}" placeholder="z. B. Max"></label><div class="pz-fb" id="dnx"><b>${egg(me)?'Du Schlawiner ;)':''}</b></div>
       <label class="pz-chk"><input type="checkbox" id="ds" ${stun?'checked':''}><span>Hilfsdienst für Mobilfunk nutzen (nötig, wenn ihr nicht im selben WLAN seid)</span></label>
       <div class="pz-fb"><b>Datenschutz:</b> Dein Gegner sieht beim Verbinden deine IP-Adresse. Mit Hilfsdienst erfährt auch Google (STUN-Server) kurz deine IP-Adresse; Inhalte werden dort nicht übertragen. Ohne Hilfsdienst klappt die Verbindung nur im selben WLAN.</div>
       <button class="pz-pri" data-a="host">Duell eröffnen (du zeigst den QR-Code)</button><button class="pz-sec2" data-a="join" style="align-self:flex-start">Duell beitreten (du scannst)</button>`);
   }
+  // kleine Überraschung für einen bestimmten Namen; sonst läuft alles wie immer
+  const egg=n=>String(n||'').trim().replace(/\s+/g,' ').toLowerCase()==='pong lenis';
   function readIntro(){me=san((root.querySelector('#dn')||{}).value);put(NK,me);const s=root.querySelector('#ds');put(SK,s?s.checked:true);}
   async function qr(el,text){try{await loadJs('js/qrcode.min.js');const q=qrcode(0,'L');q.addData(text);q.make();el.innerHTML=q.createSvgTag({cellSize:4,margin:3,scalable:true});}catch(e){el.innerHTML='<div class="pz-fb">QR-Code konnte nicht erzeugt werden. Nutze den Kurzcode.</div>';}}
   const copy=async(t,btn)=>{try{await navigator.clipboard.writeText(t);}catch(e){const a=root.querySelector('.pz-code');if(a){a.select();try{document.execCommand('copy');}catch(x){}}}if(btn){const o=btn.textContent;btn.textContent='Kopiert';setTimeout(()=>btn.textContent=o,1400);}};
@@ -90,7 +92,7 @@ const DUELL=(function(){
   function mkPc(){const stun=get(SK,true);pc=new RTCPeerConnection({iceServers:stun?[{urls:'stun:stun.l.google.com:19302'}]:[]});
     pc.onconnectionstatechange=()=>{if(!pc)return;const s=pc.connectionState;if(s==='failed'||s==='closed')setDown(true);else if(s==='connected'){if(down&&dc&&dc.readyState==='open')lastRx=performance.now();}};
     pc.ondatachannel=e=>wire(e.channel);}
-  function wire(ch){dc=ch;dc.onopen=()=>{alive=true;lastRx=performance.now();send({t:'hello',name:me,sig:F.sig()});startHb();};dc.onmessage=e=>{let m;try{m=JSON.parse(e.data);}catch(x){return;}rx(m);};dc.onclose=()=>setDown(true);}
+  function wire(ch){dc=ch;let opened=false;const onOpen=()=>{if(opened)return;opened=true;alive=true;lastRx=performance.now();send({t:'hello',name:me,sig:F.sig(),col:myCol});startHb();};dc.onopen=onOpen;if(ch.readyState==='open')onOpen();dc.onmessage=e=>{let m;try{m=JSON.parse(e.data);}catch(x){return;}rx(m);};dc.onclose=()=>setDown(true);}
   const send=m=>{try{if(dc&&dc.readyState==='open')dc.send(JSON.stringify(m));}catch(e){}};
   function startHb(){clearInterval(hb);hb=setInterval(()=>{send({t:'ping'});if(performance.now()-lastRx>6000)setDown(true);if(down&&performance.now()-downAt>30000){setDown(false,true);giveUp();}},2000);}
   function setDown(on,force){if(on&&!down){down=true;downAt=performance.now();if(gameOn)F.duelPause(true);else if(alive)card('<div class="pz-qt">Verbindung unterbrochen</div><div class="pz-fb">Warte auf die Verbindung …</div>');}
@@ -98,7 +100,7 @@ const DUELL=(function(){
   function giveUp(){if(gameOn){F.duelMsg({t:'bye'});}else{intro('Die Verbindung ist abgebrochen.');}}
   function teardown(silent){clearInterval(hb);hb=0;clearTimeout(tm);if(!silent)send({t:'bye'});try{dc&&dc.close();}catch(e){}try{pc&&pc.close();}catch(e){}dc=pc=null;alive=false;down=false;gameOn=false;ready={me:false,opp:false};opp='';}
 
-  async function host(){readIntro();if(!window.RTCPeerConnection)return intro('Dieser Browser unterstützt keine direkte Verbindung (WebRTC).');
+  async function host(){readIntro();myCol=get(CK,0);oppCol=-1;if(!window.RTCPeerConnection)return intro('Dieser Browser unterstützt keine direkte Verbindung (WebRTC).');
     role='host';card('<div class="pz-center">Verbindungscode wird erzeugt …</div>');
     try{mkPc();wire(pc.createDataChannel('duell',{ordered:true}));await pc.setLocalDescription(await pc.createOffer());await gathered(pc);}catch(e){return intro('Der Verbindungscode konnte nicht erzeugt werden.');}
     const code=pack(pc.localDescription.sdp);
@@ -107,7 +109,7 @@ const DUELL=(function(){
       <button class="pz-pri" data-a="next1">Weiter: Antwort-Code scannen</button><button class="pz-sec2" data-a="cancel" style="align-self:flex-start">Abbrechen</button>`);
     root._code=code;qr(root.querySelector('#qr'),code);}
   function hostScan(){scanBox('Schritt 2 von 2 · Spieler 1','Scanne jetzt den Antwort-Code deines Mitspielers',async txt=>{try{await pc.setRemoteDescription({type:'answer',sdp:unpack(txt)});waitConn();}catch(e){intro('Der Antwort-Code ist ungültig. Bitte noch einmal von vorn.');}});}
-  async function join(){readIntro();if(!window.RTCPeerConnection)return intro('Dieser Browser unterstützt keine direkte Verbindung (WebRTC).');
+  async function join(){readIntro();myCol=get(CK,1);oppCol=-1;if(!window.RTCPeerConnection)return intro('Dieser Browser unterstützt keine direkte Verbindung (WebRTC).');
     role='guest';scanBox('Schritt 1 von 2 · Spieler 2','Scanne den Code von Spieler 1',async txt=>{
       try{mkPc();await pc.setRemoteDescription({type:'offer',sdp:unpack(txt)});card('<div class="pz-center">Antwort wird erzeugt …</div>');await pc.setLocalDescription(await pc.createAnswer());await gathered(pc);}catch(e){return intro('Der Code ist ungültig. Bitte noch einmal von vorn.');}
       const code=pack(pc.localDescription.sdp);
@@ -124,6 +126,8 @@ const DUELL=(function(){
     card(`<div class="pz-lbl"><span>Lobby</span><b>${esc(me)} gegen ${esc(opp||'…')}</b></div>
       ${!opp?'<div class="pz-drv"><i></i><span>Warte auf den Mitspieler …</span></div>':''}
       ${!sigOk?'<div class="pz-fb r"><b>Die App-Stände sind verschieden.</b> Bitte beide die Seite neu laden (Fragen müssen gleich sein).</div>':''}
+      <div class="pz-lbl"><span>Dein Fahrzeug · du fährst von ${isH?'links':'rechts'}</span></div><div class="pz-cols">${F.PAL.map((c,i)=>`<button class="pz-col${myCol===i?' on':''}" data-a="col" data-v="${i}" aria-label="${c[2]}" title="${c[2]}" style="background:linear-gradient(${c[0]},${c[1]})" ${oppCol===i?'disabled':''}></button>`).join('')}</div>
+      ${oppCol>=0?`<div class="pz-fb"><span class="pz-dot" style="background:${F.PAL[oppCol][0]}"></span>${esc(opp||'Mitspieler')} fährt ${F.PAL[oppCol][2].toLowerCase()} von ${isH?'rechts':'links'}.</div>`:''}
       <div class="pz-qt">${isH?'Du stellst das Duell ein':esc(opp||'Spielleiter')+' stellt das Duell ein'}</div>
       <div class="pz-lbl"><span>Fragenzahl</span></div><div class="pz-seg">${[5,10,15].map(n=>`<button class="${cfg.n===n?'on':''}" data-a="n" data-v="${n}" ${isH?'':'disabled'}>${n}</button>`).join('')}</div>
       <div class="pz-lbl"><span>Module</span></div><div class="pz-chips">${F.MODS.map(([m,d])=>`<button class="pz-chip${cfg.mods.includes(m)?' on':''}" data-a="m" data-v="${m}" ${isH?'':'disabled'}><b>${m}</b><small>${d}<br>${modsAvail(m)} Fragen</small></button>`).join('')}</div>
@@ -131,10 +135,12 @@ const DUELL=(function(){
       ${isH?`<button class="pz-pri" data-a="go" ${opp&&ready.opp&&sigOk&&cfg.mods.length&&tot?'':'disabled'}>${!opp?'Warte auf Mitspieler':ready.opp?'Los geht’s':'Warte auf „Bereit“'}</button>`
            :`<button class="pz-pri" data-a="ready" ${opp&&sigOk?'':'disabled'}>${ready.me?'Bereit ✓ (tippen zum Zurücknehmen)':'Bereit'}</button>`}
       <button class="pz-sec2" data-a="cancel" style="align-self:flex-start">Duell verlassen</button>`);}
+  // zwei gleiche Fahrzeugfarben vermeiden: der Mitspieler (Gast) weicht auf die nächste freie Farbe aus
+  function fixCol(){if(oppCol>=0&&myCol===oppCol&&role==='guest'){do{myCol=(myCol+1)%F.PAL.length;}while(myCol===oppCol);put(CK,myCol);send({t:'col',v:myCol});}}
   function sendCfg(){send({t:'cfg',n:cfg.n,mods:cfg.mods});}
 
   function launch(c){gameOn=true;stopScan();clearTimeout(tm);
-    const sess={cfg:c,opp:opp,send,close:()=>{send({t:'bye'});teardown(true);},
+    const sess={cfg:c,opp:opp,me:me,side:role==='host'?'L':'R',myCol:myCol,oppCol:oppCol<0?(myCol+1)%F.PAL.length:oppCol,send,close:()=>{send({t:'bye'});teardown(true);},
       record(name,res){const b=get(BK,{}),k=name.toLowerCase();const r=b[k]||{w:0,l:0,d:0};if(res==='w')r.w++;else if(res==='l')r.l++;else if(res==='d')r.d++;b[k]=r;put(BK,b);return r;},
       rematch(){if(role!=='host')return;const nc={n:c.n,mods:c.mods,seed:(Math.random()*2147483647)|0};send({t:'go',cfg:nc});launch(nc);}};
     F.startDuel(root,sess);}
@@ -144,7 +150,8 @@ const DUELL=(function(){
   function rx(m){lastRx=performance.now();if(down)setDown(false);
     switch(m.t){
       case 'ping':return;
-      case 'hello':opp=san(m.name);if(opp===me)opp+=' (2)';sigOk=m.sig===F.sig();if(role==='host')sendCfg();lobby();return;
+      case 'hello':opp=san(m.name);if(opp===me)opp+=' (2)';sigOk=m.sig===F.sig();oppCol=typeof m.col==='number'?m.col:-1;fixCol();if(role==='host')sendCfg();lobby();return;
+      case 'col':oppCol=m.v;fixCol();lobby();return;
       case 'cfg':if(role==='guest'){cfg={n:m.n,mods:m.mods};ready.me=false;send({t:'ready',v:false});lobby();}return;
       case 'ready':ready.opp=!!m.v;if(role==='host')lobby();return;
       case 'go':if(role==='guest'&&m.cfg)launch(m.cfg);return;
@@ -160,6 +167,7 @@ const DUELL=(function(){
     else if(a==='photo'){const i=root.querySelector('#ph');if(i)i.click();}
     else if(a==='paste'){const t=(root.querySelector('#pc')||{}).value;if(t&&t.trim()){stopScan();root._onCode&&root._onCode(t.trim());}}
     else if(a==='cancel'){stopScan();teardown(false);intro();}
+    else if(a==='col'){myCol=+v;put(CK,myCol);send({t:'col',v:myCol});lobby();}
     else if(a==='n'){if(cfg.n===+v)return;cfg.n=+v;sendCfg();lobby();}
     else if(a==='m'){const i=cfg.mods.indexOf(v);i>=0?cfg.mods.splice(i,1):cfg.mods.push(v);sendCfg();lobby();}
     else if(a==='ready'){ready.me=!ready.me;send({t:'ready',v:ready.me});lobby();}
@@ -167,7 +175,7 @@ const DUELL=(function(){
 
   return{
     start(el,fahrt,loader){root=el;F=fahrt;loadJs=loader;gameOn=false;const c=get(MK,null);if(c&&Array.isArray(c.mods))cfg={n:c.n||5,mods:c.mods};
-      el.onclick=onClick;if(!window.RTCPeerConnection){card('<div class="pz-qt">Nicht verfügbar</div><div class="pz-fb">Dieser Browser unterstützt keine direkte Verbindung zwischen Geräten (WebRTC).</div>');return;}intro();},
+      el.onclick=onClick;el.oninput=e=>{if(e.target.id==='dn'){const x=root.querySelector('#dnx');if(x)x.innerHTML='<b>'+(egg(e.target.value)?'Du Schlawiner ;)':'')+'</b>';}};if(!window.RTCPeerConnection){card('<div class="pz-qt">Nicht verfügbar</div><div class="pz-fb">Dieser Browser unterstützt keine direkte Verbindung zwischen Geräten (WebRTC).</div>');return;}intro();},
     stop(){stopScan();teardown(false);if(root)root.onclick=null;},
     _pack:pack,_unpack:unpack,_stopScan:stopScan
   };

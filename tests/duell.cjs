@@ -19,6 +19,9 @@ const eq = (n, a, b) => ok(n + ' (ist: ' + JSON.stringify(a) + ')', JSON.stringi
   };
   const A = await mk('Max'), B = await mk('Lena');
   // Verbindung per Kurzcode (Kamera gibt es im Test nicht)
+  // Namens-Gag: nur dieser eine Name löst den Text aus
+  await A.fill('#dn', 'Pong  Lenis'); ok('Gag: „Pong Lenis“ bekommt den Text', (await A.innerText('#dnx')).includes('Du Schlawiner ;)'));
+  await A.fill('#dn', 'Max'); ok('Gag: andere Namen bekommen nichts', (await A.innerText('#dnx')).trim() === '');
   await A.click('[data-a="host"]'); await A.waitForSelector('textarea.pz-code');
   const c1 = await A.inputValue('textarea.pz-code');
   ok('Verbindungscode ist kurz genug für einen QR-Code', c1.startsWith('D1~') && c1.length < 400);
@@ -50,10 +53,15 @@ const eq = (n, a, b) => ok(n + ' (ist: ' + JSON.stringify(a) + ')', JSON.stringi
   await B.click('[data-a="join"]'); await B.waitForSelector('#ph', { state: 'attached' });
   ok('Foto-Auswahl ist neben der Live-Kamera angeboten', await B.locator('[data-a="photo"]').count() === 1);
   await B.setInputFiles('#ph', { name: 'qr.png', mimeType: 'image/png', buffer: Buffer.from(png, 'base64') });
-  await B.waitForSelector('textarea.pz-code'); const c2 = await B.inputValue('textarea.pz-code');
+  await B.waitForSelector('#qr svg'); const c2 = await B.inputValue('textarea.pz-code[readonly]');   // erst warten, bis das Foto gelesen und der Antwort-Code da ist
   await A.fill('#pc', c2); await A.click('[data-a="paste"]');
   await A.waitForSelector('[data-a="go"]', { timeout: 30000 }); await B.waitForSelector('[data-a="ready"]');
   ok('Beide Spieler sind in der Lobby', (await A.innerText('.pz-card')).includes('MAX GEGEN LENA') || /Max gegen Lena/i.test(await A.innerText('.pz-card')));
+  // Farbwahl: Standardfarben verschieden, die Farbe des anderen ist gesperrt; Spieler 2 wählt Grün
+  const colsA = await A.locator('.pz-col.on').getAttribute('data-v'), colsB = await B.locator('.pz-col.on').getAttribute('data-v');
+  ok('Fahrzeugfarben verschieden (Standard)', colsA !== colsB);
+  ok('Farbe des Mitspielers ist gesperrt', await A.locator(`.pz-col[data-v="${colsB}"]`).isDisabled());
+  await B.click('.pz-col[data-v="3"]'); await A.waitForFunction(() => document.querySelector('.pz-col[data-v="3"]').disabled);
   await B.click('[data-a="ready"]'); await A.waitForFunction(() => !document.querySelector('[data-a="go"]').disabled);
   await A.click('[data-a="n"][data-v="10"]');
   await A.waitForFunction(() => document.querySelector('[data-a="go"]').disabled);   // geänderte Einstellung muss bestätigt werden
@@ -61,6 +69,8 @@ const eq = (n, a, b) => ok(n + ' (ist: ' + JSON.stringify(a) + ')', JSON.stringi
   await A.waitForFunction(() => !document.querySelector('[data-a="go"]').disabled);
   await A.click('[data-a="go"]');
   await A.waitForSelector('[data-a="ans"]', { timeout: 20000 }); await B.waitForSelector('[data-a="ans"]', { timeout: 20000 });
+  const side = await Promise.all([A, B].map(p => p.evaluate(() => { const s = PAUSE._fahrt()._state(); return s.duel; })));
+  ok('Duell-Szene läuft auf beiden Geräten', side[0] === 1 && side[1] === 1);
   const st = await Promise.all([A, B].map(p => p.evaluate(() => { const s = PAUSE._fahrt()._state(); return { n: s.qs.length, sig: s.qs.map(q => q.q.slice(0, 25) + '|' + q.c).join('~'), hf: s.hf }; })));
   eq('Fragenzahl 10 auf beiden Geräten', [st[0].n, st[1].n], [10, 10]);
   ok('Gleiche Fragen in gleicher Reihenfolge und Antwortposition', st[0].sig === st[1].sig);

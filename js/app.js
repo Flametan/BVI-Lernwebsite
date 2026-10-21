@@ -29,7 +29,7 @@ const NAV = (function(){
     if(id==='v-plan') IDF_PLAN.render();
     if(id==='v-app') INSTALL.render();
     ETIMER.mount(id);
-    if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); SHELL.renderCardGoal(); }
+    if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); }
     if(id==='v-home') SHELL.renderHome();
     if(id==='v-pruefung') SHELL.renderExam();
     if(id==='v-settings') SHELL.syncSettings();
@@ -2026,7 +2026,7 @@ const FC = (function(){
       const d=fcLoad();
       if(ok){ d[id]=sm2(d[id]||{},2); if(typeof STREAK!=='undefined') STREAK.record(); } else delete d[id];
       const weak=fcLoadWeak(); if(ok) weak.delete(id); else weak.add(id); fcSaveWeak(weak);
-      fcSave(d); SHELL.renderFcSide(); SHELL.updateBadges(); SHELL.cardDone();
+      fcSave(d); SHELL.renderFcSide();
     },
     answer(quality){
       if(!flipped) return;
@@ -2044,7 +2044,7 @@ const FC = (function(){
         if(typeof STREAK!=='undefined') STREAK.record();
       }
       const weak=fcLoadWeak(); if(q===2) weak.delete(card.id); else weak.add(card.id); fcSaveWeak(weak);
-      fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide(); SHELL.updateBadges(); SHELL.cardDone();
+      fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide();
     },
     setFilter(f){
       if(f==='starred'){
@@ -2960,7 +2960,7 @@ const ONBOARD=(function(){
   let _step=0;
   const TOTAL=6;
   function syncSetup(){
-    THEME.render(); ACCENT.render(); SHELL.syncCardGoal();
+    THEME.render(); ACCENT.render();
   }
   function setStep(n){
     _step=Math.max(0,Math.min(TOTAL-1,n));
@@ -3795,11 +3795,13 @@ const CHANGELOG=(function(){
       'Der Pfeil „Nach oben“ (Seitenanfang) ist überall entfernt',
       'Die Kopfzeile mit Zurück, Üben, Fokus, Notiz und Lesezeichen bleibt auf Inhaltsseiten beim Scrollen sichtbar',
       'Startseite: Die Modul-Kreise tragen einen kleinen Pfeil-Knopf (›) mit Rand in Kartenfarbe am Ring und pulsieren beim Öffnen der Seite kurz nacheinander, damit klar ist, dass man sie antippen kann',
-      'Neu: Kleine Pause – Karte auf der Startseite mit wechselndem Satz und eigene Seite mit sechs Spielen: Einsatzfahrt (Route wählen, Prüfungsfragen aus IBK, VAk, FeuAK oder IdF, Hilfsfrist schaffen, Brand wächst mit der Zeit), Quizleiter, Wahr oder Falsch, Wörter-Raten, Mehr oder weniger und Memory; Fragen wahlweise Allgemeinwissen, Feuerwehr oder beides',
-      'Kleine Pause: Zurück im Spiel führt zur Spieleauswahl; bei „Mehr oder weniger“ liegen die Werte mit jeder richtigen Antwort enger beieinander; auf dem Handy steht die Karte über dem 1. Ausbildungsjahr; keine Tagesserie mehr in der Kopfzeile der Startseite',
+      'Neu: Pausenraum – Karte auf der Startseite mit wechselndem Satz und eigene Seite mit sechs Spielen: Einsatzfahrt (Route wählen, Prüfungsfragen aus IBK, VAk, FeuAK oder IdF, Hilfsfrist schaffen, Brand wächst mit der Zeit), Quizleiter, Wahr oder Falsch, Wörter-Raten, Mehr oder weniger und Memory; Fragen wahlweise Allgemeinwissen, Feuerwehr oder beides',
+      'Pausenraum: Zurück im Spiel führt zur Spieleauswahl; bei „Mehr oder weniger“ liegen die Werte mit jeder richtigen Antwort enger beieinander; auf dem Handy steht die Karte über dem 1. Ausbildungsjahr; keine Tagesserie mehr in der Kopfzeile der Startseite',
       'Neu: Einsatzfahrt-Duell – zwei Spieler live gegeneinander; Verbindung direkt von Gerät zu Gerät per QR-Code (oder Kurzcode zum Kopieren), gleiche Prüfungsfragen in gleicher Reihenfolge, 5/10/15 Fragen, frei wählbare Module, 30 Sekunden pro Frage, beide Löschfahrzeuge und Richtig/Falsch des Gegners live sichtbar, Revanche, Bilanz gegen den Gegner, Pause von 30 Sekunden bei Verbindungsabbruch',
       'Duell: Die Kamera startet erst nach Tipp auf „Kamera starten“ mit kurzer Erklärung; bei verweigertem Zugriff steht der Weg in die Einstellungen da; die Android-App darf die Kamera jetzt nach Rückfrage nutzen (neue Android-App nötig); Kopfzeile zeigt „Prüfungsfragen“ statt „Allgemeinwissen“',
       'Duell: Alternativ zur Live-Kamera kann man den QR-Code über „Stattdessen Foto vom QR-Code aufnehmen“ fotografieren (Systemkamera des Geräts); das Foto wird in der App gelesen, auch wenn der Kamerazugriff gesperrt ist',
+      'Navigation: Der Pausenraum steht jetzt in der Tab-Leiste und am Desktop in der Seitenleiste (nicht mehr auf der Startseite); die Lernkarten sind über die Startseite erreichbar. Entfernt: die Einstellungen „Karten pro Tag“ und „Zahl bei den Lernkarten“ samt Tagesfortschritt der Karten',
+      'Duell: Das Haus steht in der Bildmitte, Spieler 1 fährt von links an, Spieler 2 von rechts; vor dem Spiel wählt jeder die Farbe seines Fahrzeugs (sechs Farben, doppelte Farben sind gesperrt)',
       'Startseite: Unter den Modul-Kreisen (1. und 2. Ausbildungsjahr) stehen keine Zahlen mehr (z. B. 3/3); das Tippen und der Fortschrittsring bleiben',
       'Einstellungen: Eintrag „Lernstatistik“ entfernt',
       'Lernseiten korrigiert: FwDV 8 (Tauchen) und FwDV 10 (tragbare Leitern), praktische Saughöhe einheitlich 7,5 m, LF 10 mit 1.200 l und HLF 20 mit 1.600 l nach DIN 14530-5 bzw. -27, Körperschutzformen 1–3 und Gefahrengruppen I–III nach FwDV 500, Absperrbereich 25 µSv/h, Führungsstufen B/C mit Führungstrupp/-staffel bzw. Führungsgruppe',
@@ -3809,10 +3811,10 @@ const CHANGELOG=(function(){
 'Lernseiten neu: Überblick mit Kapitelkarten (Titel, Lesezeit, Vorschau) – auf Handy und Tablet gleich, ohne Umschalter; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges/Nächstes Kapitel“, Stift (Notiz) und Lesezeichen oben; Zurück führt zur Übersicht; am Desktop als Volltext; die Suche springt direkt ins passende Kapitel; Vorlesefunktion entfernt; Tabellen am Handy automatisch lesbar (2 Spalten als Begriff/Erklärung, 3–4 Spalten als Karten, ab 5 Spalten mit fester erster Spalte) und überall im gleichen Stil',
       'Stundenplan springt beim Öffnen zur laufenden bzw. nächsten Einheit: richtige Woche, der aktuelle Tag steht oben (am Wochenende der nächste Montag); die laufende bzw. nächste Einheit leuchtet mit Farbverlauf und Glow und wechselt mit der Uhrzeit',
       'Abkürzungen als Karten zum Aufklappen (Kürzel und Name, Erläuterung per Tipp; auf Tablet 2, auf Desktop 3 Spalten) mit fest stehender Suchleiste, Kategorien-Überschriften und „Suche leeren“',
-      'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick, Kartenziel pro Tag (einstellbar) und wahlweise ohne Zahl am Tab',
+      'Quiz mit Wiederholung nach Plan (1, 3, 7, 14, 30 Tage) und Filter „Fällig“; Lernkarten mit allen Filtern auf einen Blick',
       'Lernseiten: Text markieren, Merken, Notiz direkt auf der Seite; Bilder und Diagramme per Tipp groß öffnen und zoomen; Inhaltsverzeichnis am Rand auf großen Bildschirmen; Fehler melden',
       'Einstellungen: Suche, Notizen, Lesezeichen, Pomodoro, Abkürzungen, Sicherung erstellen und einspielen, Klausurtermin einstellbar, freiwillige Unterstützung per PayPal',
-      'Ersteinrichtung beim ersten Start (Farbschema, Akzentfarbe, Kartenziel); Installationshilfe je Gerät und QR-Code zum Teilen der App',
+      'Ersteinrichtung beim ersten Start (Farbschema, Akzentfarbe); Installationshilfe je Gerät und QR-Code zum Teilen der App',
       'Lernkarten: eigene Karten anlegen, Filter „Schwach“ für Karten, die schwer waren oder nicht saßen',
       'Klausur-Timer (30 bis 90 Minuten) auf den Übungsklausuren; Notizen zu Stundenplan-Einträgen; Fehler melden per E-Mail oder GitHub',
       'Suche findet auch bei Tippfehlern und fehlenden Umlauten, Treffer in Gruppen (Seiten, Lernkarten, Notizen); eine Übersicht sammelt die schweren Lernkarten',
@@ -5872,7 +5874,7 @@ ETIMER.init();
 
 /* ── Mobil-Ansicht: Tab-Leiste, Startseite, Prüfung, Einstellungen ──────── */
 const SHELL=(function(){
-  const ROOTS={'v-home':'start','v-plan':'plan','v-pruefung':'exam','v-settings':'settings','v-flashcards':'learn'};
+  const ROOTS={'v-home':'start','v-plan':'plan','v-pruefung':'exam','v-settings':'settings','v-pause':'pause'};
   const MODS=[
     ['gal','GAL','Grundlehrgang','v-gal','GAL Grundlehrgang',1],
     ['sfs','SFS','Staatliche Feuerwehrschule Regensburg','v-sfs','SFS Regensburg',1],
@@ -6039,7 +6041,7 @@ const SHELL=(function(){
       "Auch die Wache macht jetzt Mittag. Fast alle.",
       "Die Verpflegungskomponente ist angefordert.",
       "Mittagsrapport: halb geschafft, halb satt.",
-      "Kleine Pause, große Wirkung.",
+      "Kurze Pause, große Wirkung.",
       "Heute auf dem Speiseplan: Brandschutz à la carte.",
       "Wer mittags lernt, verdaut doppelt.",
       "Erst essen, dann Einsatzplanung.",
@@ -6193,27 +6195,6 @@ const SHELL=(function(){
   function goalMin(){
     try{ const v=parseInt(localStorage.getItem('bvi_goal'),10); return v>=5&&v<=240?v:30; }catch(e){ return 30; }
   }
-  function cardGoal(){
-    try{ const v=parseInt(localStorage.getItem('bvi_cardgoal'),10); return v>=5&&v<=200?v:20; }catch(e){ return 20; }
-  }
-  const dayKey=()=>{ const t=new Date(); return t.getFullYear()+'-'+(t.getMonth()+1)+'-'+t.getDate(); };
-  function cardsToday(){
-    try{ const o=JSON.parse(localStorage.getItem('bvi_cards_day')||'{}'); return o.d===dayKey()?(o.n||0):0; }catch(e){ return 0; }
-  }
-  function syncCardGoal(){ document.querySelectorAll('#m-cardgoal-val,.ob-cardval').forEach(e=>{ e.textContent=cardGoal(); }); }
-  function tabNumOn(){ try{ return localStorage.getItem('bvi_tabnum')!=='0'; }catch(e){ return true; } }
-  function renderCardGoal(){
-    const el=document.getElementById('m-fc-goal'); if(!el) return;
-    const n=cardsToday(), g=cardGoal(), p=Math.min(100,Math.round(n/g*100));
-    el.classList.toggle('done',n>=g);
-    el.innerHTML=`<div class="m-fc-goal-t"><span>Heute gelernt</span><b>${n} / ${g} Karten${n>=g?' ✓':''}</b></div><div class="m-fc-goal-bar"><i style="width:${p}%"></i></div>`;
-  }
-  function cardDone(){
-    const n=cardsToday()+1, g=cardGoal();
-    try{ localStorage.setItem('bvi_cards_day',JSON.stringify({d:dayKey(),n})); }catch(e){}
-    renderCardGoal(); updateBadges();
-    if(n===g&&typeof TOAST!=='undefined') TOAST.show('Kartenziel für heute erreicht – stark!',{type:'ok'});
-  }
   // Ziel der Countdown-Karte: Klausur nach § 21 → Laufbahnklausuren, sonst Altklausur-Quiz IdF
   function examTarget(){ return /§\s*21/.test(examCfg().name)?['v-laufbahn-2026','Laufbahnklausuren Juni 2026']:['v-idf-altklausur','Altklausur-Quiz IdF']; }
   function daysToExam(){
@@ -6227,15 +6208,6 @@ const SHELL=(function(){
     const diff=Math.round((x-t)/864e5);
     return diff===0?'heute':diff===1?'morgen':d.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'});
   }
-  function updateBadges(){
-    const n=tabNumOn()?Math.max(0,cardGoal()-cardsToday()):0;
-    document.querySelectorAll('#m-tabbar [data-tab="learn"],#m-rail [data-tab="learn"]').forEach(b=>{
-      let s=b.querySelector('.m-tab-b'); if(!s){ s=document.createElement('span'); s.className='m-tab-b'; if(b.classList.contains('m-tab')) b.insertBefore(s,b.firstChild); else b.appendChild(s); }
-      s.textContent=n>99?'99+':n; s.hidden=!n;
-      s.setAttribute('aria-label',n+' Karten bis zum Tagesziel');
-    });
-  }
-
   function renderHome(){
     const el=document.getElementById('m-home');
     if(!el) return;
@@ -6285,7 +6257,7 @@ const SHELL=(function(){
     const wide=!!(window.matchMedia&&matchMedia('(min-width:701px)').matches);
     const mods=`<div class="m-card m-mods"><div class="m-modgrid2"><div class="m-r2"><div class="m-sec">2. Ausbildungsjahr</div><div class="m-rings">${MODS.filter(m=>m[5]===2).map(ringBtn).join('')}</div></div>
       <details class="m-y1${wide?' static':''}"${y1Open||wide?' open':''} ontoggle="SHELL.y1(this.open)"><summary>1. Ausbildungsjahr</summary><div class="inner"><div class="m-rings r3">${MODS.filter(m=>m[5]===1).map(ringBtn).join('')}</div></div></details></div></div>`;
-    const pause=`<div class="m-list m-pause">${row({ic:ic('cup'),t1:'Kleine Pause',t2:PAUSE_LOADER.quip(),on:goJs('v-pause','Kleine Pause')})}</div>`;
+    const pause=`<div class="m-list m-pause">${row({ic:ic('cards'),t1:'Lernkarten',t2:cs.due?cs.due+' zur Wiederholung fällig · '+cs.known+' von '+cs.total+' gelernt':cs.known+' von '+cs.total+' gelernt · Karten üben',on:goJs('v-flashcards','Lernkarten')})}</div>`;
     const cloud=`<div class="m-list m-cloud"><a class="m-row m-go" href="https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">Lehrgangs-Cloud</span><span class="m-t2 m-cloud-x">Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe</span></span></a></div>`;
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
@@ -6389,9 +6361,7 @@ const SHELL=(function(){
     set('m-version',APP_VERSION);
     set('m-notif-hour',NOTIF.hour()+':00');
     set('m-goal-val',goalMin()+' min');
-    set('m-cardgoal-val',cardGoal());
     const tm=document.getElementById('m-timers-toggle'); if(tm) tm.checked=!document.documentElement.classList.contains('no-timers');
-    const tn=document.getElementById('m-tabnum-toggle'); if(tn) tn.checked=tabNumOn();
     const lb=BACKUP.last(); set('m-backup-last',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
     const ex=examCfg(), di=document.getElementById('m-exam-date'), ni=document.getElementById('m-exam-name');
     if(di) di.value=ex.date; if(ni) ni.value=ex.name===defExam().name&&!localStorage.getItem('bvi_exam')?'':ex.name;
@@ -6399,6 +6369,8 @@ const SHELL=(function(){
     document.getElementById('m-cl-badge')?.classList.toggle('hidden',!CHANGELOG.isNew());
   }
 
+  // alte Einstellungen und Zähler der entfernten Funktionen „Karten pro Tag“ und „Zahl bei den Lernkarten“ löschen
+  ['bvi_cardgoal','bvi_tabnum','bvi_cards_day'].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
   function onShow(id,isContent,stack){
     const tab=stack.length&&ROOTS[stack[0].id]?ROOTS[stack[0].id]:'start';
     document.querySelectorAll('#m-tabbar [data-tab],#m-rail [data-tab]').forEach(b=>{
@@ -6414,7 +6386,6 @@ const SHELL=(function(){
     }
     document.getElementById('m-tb-actions')?.classList.toggle('hidden',!isContent);
     buildToc(id,isContent);
-    updateBadges();
     HL.apply(id);
     if(isContent){
       const pc=document.getElementById(id)?.querySelector('.pc');
@@ -6427,7 +6398,7 @@ const SHELL=(function(){
   }
 
   return {
-    onShow, renderHome, renderExam, renderNotes, renderFcSide, syncSettings, updateBadges,
+    onShow, renderHome, renderExam, renderNotes, renderFcSide, syncSettings,
     report(extra){
       const v=document.querySelector('.view.active'); if(!v) return;
       const title=v.querySelector('.page-title')?.textContent?.trim()||v.id;
@@ -6447,20 +6418,10 @@ const SHELL=(function(){
       try{ localStorage.setItem('bvi_goal',String(g)); }catch(e){}
       const e=document.getElementById('m-goal-val'); if(e) e.textContent=g+' min';
     },
-    stepCards(d){
-      const g=Math.min(200,Math.max(5,cardGoal()+d*5));
-      try{ localStorage.setItem('bvi_cardgoal',String(g)); }catch(e){}
-      syncCardGoal();
-      renderCardGoal(); updateBadges();
-    },
     setTimers(on){
       try{ localStorage.setItem('bvi_timers',on?'1':'0'); }catch(e){}
       document.documentElement.classList.toggle('no-timers',!on);
       if(!on&&typeof ETIMER!=='undefined') ETIMER.stop();
-    },
-    setTabNum(on){
-      try{ localStorage.setItem('bvi_tabnum',on?'1':'0'); }catch(e){}
-      updateBadges();
     },
     setRange(r){ chartRange=r==='month'?'month':'week'; renderHome(); },
     y1(open){ if(!document.querySelector('.m-y1.static')) y1Open=!!open; },
@@ -6469,7 +6430,6 @@ const SHELL=(function(){
       btn.parentElement.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));
       if(on) btn.classList.add('sel');
     },
-    cardDone, renderCardGoal, syncCardGoal,
     setExam(){
       const date=document.getElementById('m-exam-date')?.value, name=document.getElementById('m-exam-name')?.value||'';
       const o=examCfg(); if(/^\d{4}-\d{2}-\d{2}$/.test(date||'')) o.date=date;
@@ -6606,7 +6566,7 @@ const PAUSE_LOADER=(function(){
     'Pause ist keine verlorene Zeit, sondern Ladezeit.',
     'Einmal den Kopf durchlüften, dann weiter im Stoff.',
     'Wissen sacken lassen – und nebenbei ein bisschen spielen.',
-    'Kleine Pause, großer Effekt.',
+    'Kurze Pause, großer Effekt.',
     'Auch zwischen zwei Einsätzen gibt es eine Tasse Kaffee.',
     'Kurz abschalten, bevor der Akku leer ist.',
     'Wer Pausen macht, bleibt länger konzentriert.',

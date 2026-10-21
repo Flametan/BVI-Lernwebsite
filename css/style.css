@@ -1592,9 +1592,6 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 .m-input::placeholder{color:var(--m-dim);}
 .m-input:focus{outline:2px solid var(--m-accent);outline-offset:0;}
 .m-tab,.m-ri{position:relative;}
-.m-tab-b{position:absolute;top:0;left:calc(50% + 8px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--m-accent);color:var(--m-on-accent);font-size:.68rem;font-weight:700;display:grid;place-items:center;font-variant-numeric:tabular-nums;line-height:1;}
-.m-tab-b[hidden]{display:none;}
-.m-ri .m-tab-b{position:static;margin-left:auto;}
 
 /* Kalender-Knopf, Fehler melden */
 .m-cal-btn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;margin-top:1rem;padding:14px 16px;border-radius:16px;background:var(--m-card);color:var(--m-fg);font-family:var(--f-b);font-size:.95rem;font-weight:500;text-align:left;position:relative;padding-left:54px;}
@@ -1738,12 +1735,6 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 :root[data-theme="light"] svg.lb-img{background:#1b1b1b;}
 
 /* ── Kartenziel auf der Lernkarten-Seite ─────────────────────────────────── */
-.m-fc-goal{background:var(--m-card);border-radius:16px;padding:12px 16px;margin-bottom:12px;}
-.m-fc-goal-t{display:flex;justify-content:space-between;align-items:baseline;font-size:.82rem;color:var(--m-muted);margin-bottom:8px;}
-.m-fc-goal-t b{color:var(--m-fg);font-weight:600;}
-.m-fc-goal-bar{height:6px;border-radius:3px;background:var(--m-raised);overflow:hidden;}
-.m-fc-goal-bar i{display:block;height:100%;background:var(--m-accent);border-radius:3px;transition:width .3s;}
-@media(min-width:701px){#v-flashcards #m-fc-goal{grid-column:1 / -1;margin-bottom:0;}}
 
 /* ── Lernzeit: Umschalter Woche / Monate ─────────────────────────────────── */
 .m-seg-s button{min-width:0;height:28px;font-size:.74rem;padding:0 10px;}
@@ -1923,7 +1914,7 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 }
 
 /* ── Dezenter Farbverlauf an besonderen Stellen ──────────────────────────── */
-.m-count,.m-fc-goal.done,.idf-item.idf-now{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
+.m-count,.idf-item.idf-now{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
 .idf-item.idf-now{border-radius:12px;padding:8px 10px;margin:-8px -10px;}
 .m-list.m-donate{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
 
@@ -2436,3 +2427,8 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .pz-tmr{height:5px;border-radius:3px;background:var(--m-raised);overflow:hidden;}.pz-tmr i{display:block;height:100%;width:100%;background:var(--m-accent);}
 .pz-vs{width:100%;border-collapse:collapse;font-size:.88rem;}.pz-vs td,.pz-vs th{padding:7px 6px;border-bottom:1px solid var(--m-line);text-align:left;}.pz-vs th{color:var(--m-muted);font-weight:600;font-size:.72rem;}.pz-vs td:not(:first-child),.pz-vs th:not(:first-child){text-align:right;}
 .pz-cam{display:flex;flex-direction:column;gap:10px;}
+.pz-cols{display:flex;gap:10px;flex-wrap:wrap;}
+.pz-col{width:44px;height:44px;border-radius:50%;border:3px solid transparent;cursor:pointer;padding:0;box-shadow:0 0 0 1px var(--m-line);}
+.pz-col.on{border-color:var(--m-fg);box-shadow:0 0 0 2px var(--m-accent);}
+.pz-col:disabled{opacity:.25;cursor:default;}
+.pz-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:-1px;box-shadow:0 0 0 1px var(--m-line);}

@@ -215,14 +215,16 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Fokus-Lesemodus mit Pfeiltasten und Esc', dk.focus && /02 \/ 07/.test(dk.next) && dk.closed);
   await page.setViewportSize({ width: 390, height: 844 });
 
-  // ── Kleine Pause: Startseiten-Karte, Spiele, Einsatzfahrt ──
+  // ── Pausenraum: Startseiten-Karte, Spiele, Einsatzfahrt ──
   const pz = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
     NAV.home(); await w(300);
-    r.card = (document.querySelector('#m-home .m-pause .m-t2') || {}).textContent || '';
+    r.home = [...document.querySelectorAll('#m-home .m-row .m-t1')].map(e => e.textContent);
+    r.tabs = [...document.querySelectorAll('#m-tabbar [data-tab]')].map(b => b.textContent.trim());
     r.quips = PAUSE_LOADER.QUIPS.length;
     r.emoji = PAUSE_LOADER.QUIPS.some(q => /\p{Extended_Pictographic}/u.test(q));
-    NAV.go('v-pause', 'Kleine Pause'); await PAUSE_LOADER.load(); await w(300);
+    NAV.go('v-pause', 'Pausenraum'); await PAUSE_LOADER.load(); await w(300);
+    r.card = (document.getElementById('pause-quip') || {}).textContent || '';
     r.games = document.querySelectorAll('#pause-root [data-g]').length;
     r.modes = [];
     for (const m of ['allg', 'fw', 'beides']) {
@@ -258,9 +260,11 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.left = document.querySelector('#pause-root').innerHTML === '';
     return r;
   });
-  ok('Kleine Pause: Karte auf der Startseite mit Satz', pz.card.length > 10);
-  eq('Kleine Pause: 50 Sätze ohne Emojis', [pz.quips, pz.emoji], [50, false]);
-  eq('Kleine Pause: 7 Einträge (Einsatzfahrt, Duell und fünf weitere Spiele)', pz.games, 7);
+  ok('Pausenraum: Satz unter der Überschrift', pz.card.length > 10);
+  ok('Startseite: Lernkarten ja, Pausenraum-Karte nein', pz.home.includes('Lernkarten') && !pz.home.includes('Pausenraum'));
+  ok('Tab-Leiste: Pausenraum statt Lernkarten', pz.tabs.some(x => x.includes('Pausenraum')) && !pz.tabs.some(x => x.includes('Lernkarten')));
+  eq('Pausenraum: 50 Sätze ohne Emojis', [pz.quips, pz.emoji], [50, false]);
+  eq('Pausenraum: 7 Einträge (Einsatzfahrt, Duell und fünf weitere Spiele)', pz.games, 7);
   ok('Spiele haben Inhalte in allen drei Modi', pz.modes.every(m => m.quiz && m.tf && m.word && m.num && m.mem));
   ok('Zurück im Spiel führt zur Spieleauswahl (Browser-Zurück)', pz.modes.every(m => m.quizBack && m.tfBack && m.wordBack && m.numBack && m.memBack));
   ok('Quizleiter, Wörter-Raten, Memory reagieren', pz.modes.every(m => m.quizFb && m.wordRow === 5 && m.memCards === 12));
