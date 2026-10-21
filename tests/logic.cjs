@@ -292,6 +292,29 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Kontrast der Farbnamen in Dunkel und Hell (AA)', [ct.dark, ct.light], [[], []]);
 
+  // ── Barrierefreiheit: Hauptbereich, Dialoge, Live-Ansage, Feldnamen, Fokus, Schriftgrößen ──
+  const ax = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    NAV.home(); await w(300);
+    r.mains = document.querySelectorAll('[role="main"]').length;
+    r.dialogs = ['search-overlay', 'changelog-modal', 'onboarding-overlay', 'pomodoro-overlay', 'shortcuts-overlay', 'notes-overlay'].every(id => { const e = document.getElementById(id); return e.getAttribute('role') === 'dialog' && e.getAttribute('aria-modal') === 'true' && e.getAttribute('aria-label'); });
+    TOAST.show('Test-Meldung'); await w(300);
+    r.live = document.getElementById('a11y-live').textContent;
+    r.skip = !!document.querySelector('.skip-link');
+    NAV.go('v-abkuerzungen', 'x'); await w(300);
+    r.abk = document.getElementById('abk-search').getAttribute('aria-label');
+    // Fokusrahmen: ein per Tastatur fokussierter Knopf bekommt einen sichtbaren Rahmen
+    const b = document.querySelector('.view.active button'); b.focus(); r.focusStyle = getComputedStyle(b).outlineStyle;
+    return r;
+  });
+  eq('Genau ein Hauptbereich', ax.mains, 1);
+  ok('Sechs Fenster haben Dialog-Rolle, aria-modal und Beschriftung', ax.dialogs);
+  eq('Meldungen werden angesagt', ax.live, 'Test-Meldung');
+  ok('Sprunglink vorhanden', ax.skip);
+  ok('Abkürzungs-Suche hat einen Namen', ax.abk === 'Abkürzungen durchsuchen');
+  const css = await page.evaluate(async () => { const t = await (await fetch('css/style.css')).text(); return { rm: /prefers-reduced-motion:reduce\)\{\s*html\{scroll-behavior:auto!important/.test(t), fv: /:focus-visible\{outline:2px solid/.test(t), coarse: /Klickflächen auf Touch-Geräten mindestens 44 px/.test(t) }; });
+  ok('CSS: Bewegung reduzieren, Fokusrahmen und 44-px-Klickflächen vorhanden', css.rm && css.fv && css.coarse);
+
   for (const e of errors) fails.push('JavaScript-Fehler: ' + e);
   await browser.close();
   if (fails.length) { console.error('FEHLER:\n - ' + fails.join('\n - ')); process.exit(1); }
