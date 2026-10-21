@@ -34,14 +34,18 @@ const DUELL=(function(){
   const gathered=c=>new Promise(res=>{if(c.iceGatheringState==='complete')return res();const t=setTimeout(res,6000);c.addEventListener('icegatheringstatechange',()=>{if(c.iceGatheringState==='complete'){clearTimeout(t);res();}});});
 
   /* ---------- Anzeige ---------- */
+  // Bibliothek mit 100 Namen für den Platzhalter im Namensfeld: Männer, Frauen und erfundene Figuren; wechselt bei jedem Antippen
+  const NAMEN=["Max","Lukas","Jonas","Felix","Paul","Leon","Ben","Tim","Jan","Niklas","Moritz","Florian","Stefan","Thomas","Markus","Daniel","Tobias","Sebastian","Andreas","Michael","Christian","Matthias","Philipp","Fabian","David","Simon","Oliver","Kai","Jens","Torsten","Jörg","Holger","Uwe","Anna","Laura","Lena","Sophie","Marie","Julia","Lisa","Hannah","Emma","Mia","Clara","Nina","Sarah","Katrin","Sabine","Petra","Claudia","Birgit","Svenja","Johanna","Charlotte","Greta","Mara","Jana","Tanja","Nadine","Melanie","Carolin","Franziska","Leonie","Ida","Frieda","Mathilda","Frodo","Optimus Prime","Gandalf","Yoda","Neo","Shrek","Pikachu","Mario","Luigi","Zelda","Link","Sherlock","Batman","Hulk","Thor","Loki","Elsa","Simba","Nemo","Dumbledore","Hermine","Legolas","Aragorn","Gimli","Chewbacca","Leia","Han Solo","Darth Vader","Spock","Homer","Asterix","Obelix","Pumuckl","Tarzan"];
+  let lastN=-1;
+  const nextName=()=>{let i;do{i=Math.floor(Math.random()*NAMEN.length);}while(i===lastN);lastN=i;return NAMEN[i];};
   const card=h=>{if(root)root.innerHTML='<div class="pz-card">'+h+'</div>';};
-  const san=s=>String(s||'').replace(/[<>&"]/g,'').trim().slice(0,12)||'Spieler';
+  const san=s=>String(s||'').replace(/[<>&"]/g,'').trim().slice(0,14)||'Spieler';
   function intro(msg){stopScan();teardown(true);
     me=get(NK,'');const stun=get(SK,true);
     card(`<div class="pz-lbl"><span>Einsatzfahrt-Duell</span><b>2 Spieler</b></div><div class="pz-qt">Wer ist schneller am Einsatzort?</div>
       <div class="pz-fb">Ihr spielt live dieselben Prüfungsfragen auf derselben Strecke und seht, wo der andere gerade ist. Verbunden werdet ihr direkt per QR-Code, ohne Anmeldung und ohne Server.</div>
       ${msg?`<div class="pz-fb r"><b>${esc(msg)}</b></div>`:''}
-      <label class="pz-fld">Dein Name<input class="pz-in" id="dn" maxlength="12" value="${esc(me)}" placeholder="z. B. Max"></label><div class="pz-fb" id="dnx"><b>${egg(me)?'Du Schlawiner ;)':''}</b></div>
+      <label class="pz-fld">Dein Name<input class="pz-in" id="dn" maxlength="14" value="${esc(me)}" placeholder="z. B. ${esc(nextName())}"></label><div class="pz-fb" id="dnx"><b>${egg(me)?'Du Schlawiner ;)':''}</b></div>
       <label class="pz-chk"><input type="checkbox" id="ds" ${stun?'checked':''}><span>Hilfsdienst für Mobilfunk nutzen (nötig, wenn ihr nicht im selben WLAN seid)</span></label>
       <div class="pz-fb"><b>Datenschutz:</b> Dein Gegner sieht beim Verbinden deine IP-Adresse. Mit Hilfsdienst erfährt auch Google (STUN-Server) kurz deine IP-Adresse; Inhalte werden dort nicht übertragen. Ohne Hilfsdienst klappt die Verbindung nur im selben WLAN.</div>
       <button class="pz-pri" data-a="host">Duell eröffnen (du zeigst den QR-Code)</button><button class="pz-sec2" data-a="join" style="align-self:flex-start">Duell beitreten (du scannst)</button>`);
@@ -159,7 +163,8 @@ const DUELL=(function(){
       default:if(gameOn)F.duelMsg(m);}}
 
   /* ---------- Bedienung ---------- */
-  function onClick(e){const b=e.target.closest('[data-a]');if(!b||b.disabled||gameOn)return;const a=b.dataset.a,v=b.dataset.v;
+  function onClick(e){if(e.target.id==='dn'){e.target.placeholder='z. B. '+nextName();return;}
+   const b=e.target.closest('[data-a]');if(!b||b.disabled||gameOn)return;const a=b.dataset.a,v=b.dataset.v;
     if(a==='host')host();else if(a==='join')join();
     else if(a==='copy')copy(root._code,b);
     else if(a==='next1')hostScan();
@@ -177,6 +182,6 @@ const DUELL=(function(){
     start(el,fahrt,loader){root=el;F=fahrt;loadJs=loader;gameOn=false;const c=get(MK,null);if(c&&Array.isArray(c.mods))cfg={n:c.n||5,mods:c.mods};
       el.onclick=onClick;el.oninput=e=>{if(e.target.id==='dn'){const x=root.querySelector('#dnx');if(x)x.innerHTML='<b>'+(egg(e.target.value)?'Du Schlawiner ;)':'')+'</b>';}};if(!window.RTCPeerConnection){card('<div class="pz-qt">Nicht verfügbar</div><div class="pz-fb">Dieser Browser unterstützt keine direkte Verbindung zwischen Geräten (WebRTC).</div>');return;}intro();},
     stop(){stopScan();teardown(false);if(root)root.onclick=null;},
-    _pack:pack,_unpack:unpack,_stopScan:stopScan
+    _pack:pack,_unpack:unpack,_stopScan:stopScan,_names:NAMEN
   };
 })();

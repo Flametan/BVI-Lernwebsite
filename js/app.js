@@ -3802,6 +3802,7 @@ const CHANGELOG=(function(){
       'Duell: Alternativ zur Live-Kamera kann man den QR-Code über „Stattdessen Foto vom QR-Code aufnehmen“ fotografieren (Systemkamera des Geräts); das Foto wird in der App gelesen, auch wenn der Kamerazugriff gesperrt ist',
       'Navigation: Der Pausenraum steht jetzt in der Tab-Leiste und am Desktop in der Seitenleiste (nicht mehr auf der Startseite); die Lernkarten sind über die Startseite erreichbar. Entfernt: die Einstellungen „Karten pro Tag“ und „Zahl bei den Lernkarten“ samt Tagesfortschritt der Karten',
       'Duell: Das Haus steht in der Bildmitte, Spieler 1 fährt von links an, Spieler 2 von rechts; vor dem Spiel wählt jeder die Farbe seines Fahrzeugs (sechs Farben, doppelte Farben sind gesperrt)',
+      'Duell: Der Platzhalter im Namensfeld („z. B. …“) wechselt bei jedem Antippen und zeigt Namen aus einer Bibliothek von 100 Namen (männlich, weiblich und erfundene Figuren wie Frodo oder Optimus Prime); Namen dürfen bis 14 Zeichen lang sein',
       'Startseite: Unter den Modul-Kreisen (1. und 2. Ausbildungsjahr) stehen keine Zahlen mehr (z. B. 3/3); das Tippen und der Fortschrittsring bleiben',
       'Einstellungen: Eintrag „Lernstatistik“ entfernt',
       'Lernseiten korrigiert: FwDV 8 (Tauchen) und FwDV 10 (tragbare Leitern), praktische Saughöhe einheitlich 7,5 m, LF 10 mit 1.200 l und HLF 20 mit 1.600 l nach DIN 14530-5 bzw. -27, Körperschutzformen 1–3 und Gefahrengruppen I–III nach FwDV 500, Absperrbereich 25 µSv/h, Führungsstufen B/C mit Führungstrupp/-staffel bzw. Führungsgruppe',

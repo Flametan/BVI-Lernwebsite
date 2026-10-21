@@ -19,6 +19,13 @@ const eq = (n, a, b) => ok(n + ' (ist: ' + JSON.stringify(a) + ')', JSON.stringi
   };
   const A = await mk('Max'), B = await mk('Lena');
   // Verbindung per Kurzcode (Kamera gibt es im Test nicht)
+  // Platzhalter im Namensfeld: Bibliothek mit 100 verschiedenen Namen, wechselt bei jedem Antippen
+  const lib = await A.evaluate(() => DUELL._names);
+  ok('Namensbibliothek: 100 verschiedene Namen, höchstens 14 Zeichen', lib.length === 100 && new Set(lib).size === 100 && lib.every(n => n.length <= 14));
+  ok('Namensbibliothek enthält Frodo und Optimus Prime', lib.includes('Frodo') && lib.includes('Optimus Prime'));
+  const seen = new Set([await A.getAttribute('#dn', 'placeholder')]); let changed = true, prev = [...seen][0];
+  for (let i = 0; i < 6; i++) { await A.click('#dn'); const ph = await A.getAttribute('#dn', 'placeholder'); if (ph === prev) changed = false; prev = ph; seen.add(ph); }
+  ok('Platzhalter wechselt bei jedem Antippen', changed && seen.size >= 4 && [...seen].every(x => x.startsWith('z. B. ')));
   // Namens-Gag: nur dieser eine Name löst den Text aus
   await A.fill('#dn', 'Pong  Lenis'); ok('Gag: „Pong Lenis“ bekommt den Text', (await A.innerText('#dnx')).includes('Du Schlawiner ;)'));
   await A.fill('#dn', 'Max'); ok('Gag: andere Namen bekommen nichts', (await A.innerText('#dnx')).trim() === '');
