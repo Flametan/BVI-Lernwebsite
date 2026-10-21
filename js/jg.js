@@ -8,7 +8,7 @@
      { format:'bvi-jahrgang', v:1, jahrgang:'BRef 10/2026 - AB 10/2027', stand:'2027-01-12',
        plane:{ ibk|vak|feuak|idf|idf2 (IdF Gruppe 1/2) : { name, ev:[{s,e,t,r,n,ad}] } },  aktiv:'idf',
        erg:[{ id, seite, kap, typ:'text'|'sc'|'mc'|'kapitel', titel, text, o:[…], c:[…], erk, bild, ts }],   (sc/mc: text = Frage, o = Antworten, c = richtige Nummern)
-       termine:[{ date:'2026-12-14', name }],  links:{ cloud:{ url, titel, hinweis } },  karten:[{ id, modul, q, a }],  orte:{ ibk, vak, feuak, idf },
+       termine:[{ date:'2026-12-14', name }],  links:{ cloud:{ url, titel, hinweis } },  karten:[{ id, modul, q, a }],  orte:{ ibk, vak, feuak, idf },  reiter:[{ id, seite, titel, beschr }] (eigene Reiter auf einer Übersichtsseite),
        pr:{ hinzu:[{ id, tab, seite (optional: gehört zu dieser Prüfungsseite), titel, fragen:[{ q, o:[…], c:0, e:'' }], ts }], weg:['v-…', …] },
        rel:{ '<pruefung-id>':true|false },  ausg:['v-seite|a|<kennung>', …]  (ausgeblendete Kapitel/Blöcke)
        bilder:{ '<bild-id>':'data:image/jpeg;base64,…' } }
@@ -62,9 +62,9 @@ const JG=(function(){
   const str=(v,n)=>String(v==null?'':v).slice(0,n);
   const idOk=v=>/^[A-Za-z0-9_-]{1,40}$/.test(String(v))?String(v):null;
   const KMOD=['GAL','SFS','HLFS','IBK','VAk','FeuAK','IdF'];
-  const KEYOK=/^[a-z0-9]{1,12}(~\d{1,3})?$/, AUSOK=/^v-[a-z0-9-]{1,58}\|[ab]\|[a-z0-9]{1,12}(~\d{1,3})?$/;
+  const KEYOK=/^[a-z0-9]{1,12}(~\d{1,3})?$/, AUSOK=/^v-[a-z0-9-]{1,58}\|[abt]\|[a-z0-9]{1,12}(~\d{1,3})?$/;
   function clean(o){
-    const out={v:1,plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[],termine:[],links:{},karten:[],orte:{}};
+    const out={v:1,plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[],termine:[],links:{},karten:[],orte:{},reiter:[]};
     if(!o||typeof o!=='object') return out;
     const planOf=pl=>{
       if(!pl||!Array.isArray(pl.ev)) return null;
@@ -76,15 +76,9 @@ const JG=(function(){
     out.aktiv=PLANKEYS.includes(o.aktiv)?o.aktiv:null;
     (Array.isArray(o.erg)?o.erg:[]).slice(0,300).forEach(e=>{
       const id=e&&idOk(e.id); if(!id||!str(e.seite,60).startsWith('v-')) return;
-      const titel=str(e.titel,120).trim(), text=str(e.text,20000), typ=['sc','mc','kapitel'].includes(e.typ)?e.typ:'text';
+      const titel=str(e.titel,120).trim(), text=str(e.text,20000), typ=e.typ==='kapitel'?'kapitel':'text';
       const it={id,seite:str(e.seite,60),typ,kap:typ!=='kapitel'&&KEYOK.test(String(e.kap))?String(e.kap):null,titel,text,bild:e.bild&&idOk(e.bild)?String(e.bild):null,ts:Number.isFinite(+e.ts)?+e.ts:Date.now()};
-      if(typ==='sc'||typ==='mc'){
-        // Auswahlfrage: Frage, 2–6 Antworten, richtige Antwort(en), optional Erklärung
-        const o2=(Array.isArray(e.o)?e.o:[]).slice(0,6).map(x=>str(x,300).trim()), keep=[]; o2.forEach((x,i)=>{ if(x) keep.push(i); });
-        const opts=keep.map(i=>o2[i]), c=[...new Set((Array.isArray(e.c)?e.c:[]).map(x=>keep.indexOf(+x)).filter(i=>i>=0))];
-        if(!text.trim()||opts.length<2||!c.length||(typ==='sc'&&c.length!==1)) return;
-        it.o=opts; it.c=c.sort((a,b)=>a-b); it.erk=str(e.erk,1200).trim();
-      } else if(!titel&&!text&&!e.bild) return;
+      if(!titel&&!text&&!e.bild) return;
       if(typ==='kapitel'&&!titel) return;
       out.erg.push(it);
     });
@@ -92,14 +86,20 @@ const JG=(function(){
     (Array.isArray(pr.hinzu)?pr.hinzu:[]).slice(0,60).forEach(p=>{
       const id=p&&idOk(p.id); if(!id||!ALLTABS.includes(p.tab)) return;
       const fr=(Array.isArray(p.fragen)?p.fragen:[]).slice(0,300).map(f=>{
-        const opts=(Array.isArray(f&&f.o)?f.o:[]).slice(0,6).map(x=>str(x,300).trim()).filter(Boolean), c=+f.c;
-        const q=str(f&&f.q,600).trim();
-        return q&&opts.length>=2&&Number.isInteger(c)&&c>=0&&c<opts.length?{q,o:opts,c,e:str(f.e,1200).trim()}:null;
+        const q=str(f&&f.q,600).trim(), e=str(f&&f.e,1200).trim(), typ=f&&(f.typ==='mc'||f.typ==='text')?f.typ:'sc';
+        if(!q) return null;
+        if(typ==='text'){ const a=str(f.a,2000).trim(); return a?{q,typ,o:[],c:-1,a,e}:null; }
+        const raw=(Array.isArray(f.o)?f.o:[]).slice(0,6).map(x=>str(x,300).trim()), keep=[]; raw.forEach((x,i)=>{ if(x) keep.push(i); });
+        const opts=keep.map(i=>raw[i]);
+        if(opts.length<2) return null;
+        if(typ==='mc'){ const c=[...new Set((Array.isArray(f.c)?f.c:[]).map(x=>keep.indexOf(+x)).filter(i=>i>=0))].sort((x,y)=>x-y); return c.length?{q,typ,o:opts,c,a:'',e}:null; }
+        const c=keep.indexOf(+f.c); return c>=0?{q,typ,o:opts,c,a:'',e}:null;
       }).filter(Boolean);
       if(fr.length) out.pr.hinzu.push({id,tab:p.tab,seite:/^v-[a-z0-9-]{1,58}$/.test(String(p.seite))?String(p.seite):null,titel:str(p.titel,100).trim()||'Eigene Prüfung',fragen:fr,ts:Number.isFinite(+p.ts)?+p.ts:Date.now()});
     });
     out.pr.weg=(Array.isArray(pr.weg)?pr.weg:[]).slice(0,200).map(x=>str(x,60)).filter(x=>/^(v-[a-z0-9-]+|[A-Za-z0-9_-]+)$/.test(x));
     if(Array.isArray(o.ausg)) out.ausg=[...new Set(o.ausg.slice(0,600).map(x=>String(x)).filter(x=>AUSOK.test(x)))];
+    (Array.isArray(o.reiter)?o.reiter:[]).slice(0,100).forEach(r=>{ const id=r&&idOk(r.id), s=String(r&&r.seite), t=str(r&&r.titel,60).trim(); if(id&&/^v-[a-z0-9-]{1,58}$/.test(s)&&t) out.reiter.push({id,seite:s,titel:t,beschr:str(r.beschr,140).trim(),ts:Number.isFinite(+r.ts)?+r.ts:Date.now()}); });
     (Array.isArray(o.termine)?o.termine:[]).slice(0,20).forEach(t=>{ if(t&&/^\d{4}-\d{2}-\d{2}$/.test(String(t.date))) out.termine.push({date:String(t.date),name:str(t.name,60).trim()||'Klausur'}); });
     out.termine.sort((a,b)=>a.date<b.date?-1:1);
     const cl=o.links&&o.links.cloud; if(cl&&/^https:\/\/[^\s"'<>]{3,500}$/.test(String(cl.url))) out.links.cloud={url:String(cl.url),titel:str(cl.titel,60).trim(),hinweis:str(cl.hinweis,140).trim()};
@@ -115,7 +115,7 @@ const JG=(function(){
 
   // eigene und veröffentlichte Ebene zusammen (eigene gewinnt bei gleicher ID)
   function data(){
-    if(isMaster()) return {plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[],termine:[],links:{},karten:[],orte:{}};   // der Master ist nicht veränderbar
+    if(isMaster()) return {plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[],termine:[],links:{},karten:[],orte:{},reiter:[]};   // der Master ist nicht veränderbar
     const p=pubData(), l=local(), byId=(a,b)=>{ const m=new Map(); [...a,...b].forEach(x=>m.set(x.id,x)); return [...m.values()]; };
     return {
       plane:{...p.plane,...l.plane},
@@ -127,7 +127,8 @@ const JG=(function(){
       termine:l.termine.length?l.termine:p.termine,
       links:{...p.links,...l.links},
       karten:byId(p.karten,l.karten),
-      orte:{...p.orte,...l.orte}
+      orte:{...p.orte,...l.orte},
+      reiter:byId(p.reiter,l.reiter)
     };
   }
   // Klausurrelevanz gilt je Prüfung: Standard sind die hervorgehobenen Prüfungen des Masters (5. Eintrag) und eigene Prüfungen;
@@ -173,7 +174,7 @@ const JG=(function(){
     const d=data(), ids=new Set(d.erg.map(e=>e.bild).filter(Boolean)), bilder={};
     for(const i of ids){ const u=await img.get(i); if(okImg(u)) bilder[i]=u; }
     return JSON.stringify({format:'bvi-jahrgang',v:1,jahrgang:labelOf(current()),stand:new Date().toISOString().slice(0,10),
-      plane:d.plane,aktiv:d.aktiv,erg:d.erg,pr:d.pr,rel:d.rel,ausg:d.ausg,termine:d.termine,links:d.links,karten:d.karten,orte:d.orte,bilder},null,1);
+      plane:d.plane,aktiv:d.aktiv,erg:d.erg,pr:d.pr,rel:d.rel,ausg:d.ausg,termine:d.termine,links:d.links,karten:d.karten,orte:d.orte,reiter:d.reiter,bilder},null,1);
   }
   // Datei einlesen und zu den eigenen Änderungen hinzufügen; liefert Zahlen für die Rückmeldung
   async function importJson(text){
@@ -189,6 +190,7 @@ const JG=(function(){
     l.ausg=[...new Set([...l.ausg,...c.ausg])];
     if(c.termine.length) l.termine=c.termine;
     Object.assign(l.links,c.links); Object.assign(l.orte,c.orte);
+    c.reiter.forEach(r=>{ const i=l.reiter.findIndex(x=>x.id===r.id); if(i>=0) l.reiter[i]=r; else l.reiter.push(r); });
     c.karten.forEach(k=>{ const i=l.karten.findIndex(x=>x.id===k.id); if(i>=0) l.karten[i]=k; else l.karten.push(k); });
     let pl=0; Object.entries(c.plane).forEach(([k,v])=>{ l.plane[k]=v; pl+=v.ev.length; });
     if(c.aktiv) l.aktiv=c.aktiv;
@@ -198,7 +200,7 @@ const JG=(function(){
   // Alle eigenen Änderungen dieses Jahrgangs verwerfen (Rückgabe: vorheriger Stand zum Rückgängigmachen)
   function discard(){ const prev=lsGet(PRE+current()); try{ localStorage.removeItem(PRE+current()); }catch(e){} changed(); return prev; }
   function restore(prev){ if(prev) lsSet(PRE+current(),prev); changed(); }
-  const hasLocal=()=>{ const l=local(); return !!(Object.keys(l.plane).length||l.aktiv||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||Object.keys(l.rel).length||l.ausg.length||l.termine.length||Object.keys(l.links).length||l.karten.length||Object.keys(l.orte).length); };
+  const hasLocal=()=>{ const l=local(); return !!(Object.keys(l.plane).length||l.aktiv||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||Object.keys(l.rel).length||l.ausg.length||l.termine.length||Object.keys(l.links).length||l.karten.length||Object.keys(l.orte).length||l.reiter.length); };
 
   return { MASTER, TABS, PLANKEYS, list, labelOf, current, isMaster, data, local, saveLocal, glow, rel, setExams, examOf, load, set, on, ver:()=>ver, img, okImg,
     exportJson, importJson, discard, restore, hasLocal, empty, newId:()=>'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6) };

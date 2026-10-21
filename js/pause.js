@@ -146,7 +146,7 @@ const PAUSE=(function(){
         else if(q.type==='multi'){const wr=q.opts.map((_,i)=>i).filter(i=>!q.correct.includes(i));if(!wr.length)return;const ci=rnd(q.correct),sel=[ci,...wr.slice(0,3)];Q.push({m:'IdF',src:'Altklausur-Quiz IdF',g:1,q:strip(q.q).replace(/Welche Aussagen? (sind|ist) (richtig|zutreffend)\??/i,'Welche Aussage ist richtig?'),o:sel.map(i=>strip(q.opts[i])),c:0,e:strip(q.exp)});}});
       (D.exam||[]).forEach(q=>Q.push(q));
       // eigene Prüfungen aus den Jahrgangs-Änderungen (nur Einzelspiel; im Duell zählen nur die mitgelieferten Fragen)
-      if(typeof JG!=='undefined')JG.data().pr.hinzu.forEach(p=>{const t=JG.TABS.find(x=>x[0]===p.tab);if(t)p.fragen.forEach(f=>Q.push({m:t[2],src:p.titel,g:1,q:f.q,o:f.o.slice(),c:f.c,e:f.e||'',custom:1}));});
+      if(typeof JG!=='undefined')JG.data().pr.hinzu.forEach(p=>{const t=JG.TABS.find(x=>x[0]===p.tab);if(t)p.fragen.forEach(f=>{ if((f.typ||'sc')==='sc') Q.push({m:t[2],src:p.titel,g:1,q:f.q,o:f.o.slice(),c:f.c,e:f.e||'',custom:1}); });});
       // Fragen aus Prüfungen, die nicht klausurrelevant sind, fallen heraus
       if(typeof JG!=='undefined'){const SRC={'Altklausur-Quiz VAk':'v-vak-altklausur','Altklausur-Quiz IdF':'v-idf-altklausur'};JG.data().pr.hinzu.forEach(p=>SRC[p.titel]=p.seite||p.id);Q=Q.filter(q=>!SRC[q.src]||JG.rel(SRC[q.src]));}
       return Q;}

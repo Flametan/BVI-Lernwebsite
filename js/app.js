@@ -71,6 +71,7 @@ const NAV = (function(){
     PAUSE_LOADER.onShow(id);
     A11Y.onShow();
     if(isContentPage){ ABKTIP.apply(id); if(typeof JGUI!=='undefined') JGUI.mount(id); }
+    else if(typeof JGUI!=='undefined'&&/^v-(jahr1|jahr2|gal|sfs|hlfs|ibk|vak|feuak|idf)$/.test(id)) JGUI.mount(id);   // Übersichtsseiten: Reiter anpassen
     // Update URL for direct linking
     const url=new URL(location.href);
     if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
@@ -2808,6 +2809,7 @@ const LP=(function(){
   }
   function init(id){
     const v=document.getElementById(id); if(!v) return;
+    if(v.hasAttribute('data-nolp')) return;
     if(v._lp){ apply(v); return; }
     const list=v.querySelector('.pc .acc-list:not(.acc-cards)'); if(!list||items(v).length<3) return;
     v._lp={id};
@@ -4028,6 +4030,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Jahrgänge: „So funktioniert dein Jahrgang“ in den Einstellungen erklärt, warum es die Seite gibt und wie sie funktioniert; „Prüfungen bearbeiten“ steht oben auf der Prüfungsseite, auf Übersichtsseiten lassen sich Reiter ausblenden und eigene Reiter mit Kapiteln anlegen; eigene Fragen können Single-Choice, Multiple-Choice oder Freitext sein; die Ergänzung im Kapitel hat nur noch Text und Bild',
       'Jahrgang einrichten (Einstellungen → Lehrgang): Checkliste mit Stundenplänen, Klausurterminen, Lehrgangs-Link, Standorten und Lernkarten des Jahrgangs; die Datei trägt alles mit',
       'Lernseiten: „+ Eigene Ergänzung“ und „+ Eigene Frage“ erscheinen erst nach „Seite bearbeiten“; Ergänzungen als Freitext, Single-Choice oder Multiple-Choice, dazu eigene Kapitel; das Kreuz sitzt rechts an der Frage',
       'Klausuren: In Jahrgängen lassen sich direkt auf der Prüfungsseite eigene Fragen hinzufügen, bearbeiten, entfernen und üben (sie zählen für Einsatzfahrt, wenn die Prüfung klausurrelevant ist)',
@@ -6896,8 +6899,13 @@ const SHELL=(function(){
       return `<div class="m-col"><div class="m-sec jg-sh">${esc(name)}</div><div class="m-list">${lists.join('')||'<div class="jg-none">Keine Prüfungen</div>'}</div></div>`;
     };
     const hidden=EXAMS.reduce((n,[,it])=>n+it.filter(x=>weg.has(x[0])).length,0);
-    const tools=typeof JGUI==='undefined'||JG.isMaster()?'':`<div class="jg-tools2"><button type="button" class="jg-plus" onclick="JGUI.examEditor()"><span>+</span> Prüfung hinzufügen</button><button type="button" class="btn btn-ghost" onclick="JGUI.toggleEdit()">${edit?'Fertig':'Prüfungen bearbeiten'}</button>${edit&&hidden?`<button type="button" class="btn btn-ghost" onclick="JGUI.restoreExams()">${hidden} ausgeblendete wiederherstellen</button>`:''}</div>${edit?'<div class="m-note" style="padding:6px 2px">Tippe eine Prüfung an, um sie klausurrelevant (★) zu machen oder abzuwählen. Nur relevante Prüfungen liefern Fragen für Einsatzfahrt und Duell.</div>':''}`;
-    list.innerHTML=`<div class="m-areas">${EXAMS.map(sec).join('')}</div>${tools}`;
+    // Bearbeiten-Knopf oben auf der Seite; „Prüfung hinzufügen“ erst im Bearbeiten-Modus
+    const tools=typeof JGUI==='undefined'||JG.isMaster()?'':`<button type="button" class="btn btn-ghost" onclick="JGUI.toggleEdit()">${edit?'Fertig':'Prüfungen bearbeiten'}</button>${edit?`<button type="button" class="jg-plus" onclick="JGUI.examEditor()"><span>+</span> Prüfung hinzufügen</button>`:''}${edit&&hidden?`<button type="button" class="btn btn-ghost" onclick="JGUI.restoreExams()">${hidden} ausgeblendete wiederherstellen</button>`:''}`;
+    let eb=document.getElementById('jg-exam-bar');
+    if(!eb){ eb=document.createElement('div'); eb.id='jg-exam-bar'; cd.parentNode.insertBefore(eb,cd); }
+    eb.className=tools?'jg-bar':''; eb.innerHTML=tools;
+    const hint=edit&&tools?'<div class="m-note" style="padding:6px 2px">Tippe eine Prüfung an, um sie klausurrelevant (★) zu machen oder abzuwählen. Nur relevante Prüfungen liefern Fragen für Einsatzfahrt und Duell.</div>':'';
+    list.innerHTML=`${hint}<div class="m-areas">${EXAMS.map(sec).join('')}</div>`;
   }
 
   function renderFcSide(){

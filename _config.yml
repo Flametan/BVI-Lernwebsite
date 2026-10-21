@@ -2,6 +2,7 @@
 exclude:
   - android
   - tests
+  - tools
   - docs
   - .github
   - README.md

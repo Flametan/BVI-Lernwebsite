@@ -591,7 +591,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
     r.noPlusBefore = !document.querySelector('#v-vak-verwaltungsrecht .jg-add');
     document.querySelector('#v-vak-verwaltungsrecht .jg-be').click(); await w(200);
-    document.querySelector('#v-vak-verwaltungsrecht .jg-add[data-k=erg]').click(); await w(200);
+    document.querySelector('#v-vak-verwaltungsrecht .jg-in').click(); await w(200);
+    r.noTypes = !document.querySelector('.jg-ty') && !document.getElementById('jg-keep');
     document.getElementById('jg-et').value = 'Merksatz'; document.getElementById('jg-ex').value = 'Zeile 1\n\n<img src=x onerror=alert(1)>'; document.getElementById('jg-es').click(); await w(500);
     const e = document.querySelector('#v-vak-verwaltungsrecht .jg-e');
     r.erg = !!e && e.textContent.includes('Merksatz') && !e.querySelector('img[src="x"]');
@@ -641,7 +642,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     JG.discard(); JG.set(JG.MASTER); await w(300); r.master = JG.isMaster() && IDF_PLAN.next() !== null;
     return r;
   });
-  eq('Jahrgang: leerer Plan, Plan-Formular, Abschnitte, Ergänzung, eigene Prüfung, Glow, Export/Import', jg, { cur: true, empty: true, plan: true, active: true, vakEmpty: true, stillIdf: true, nowVak: true, viewIdf: true, noHtml: true, noPlusBefore: true, erg: true, ergSaved: true, ergDel: true, tabs: 5, own: true, ans: true, xs: true, hidden: true, back: true, tap: true, mods: 'VAk,IdF', custom: true, exp: true, disc: true, imp: true, bad: true, master: true });
+  eq('Jahrgang: leerer Plan, Plan-Formular, Abschnitte, Ergänzung, eigene Prüfung, Glow, Export/Import', jg, { cur: true, empty: true, plan: true, active: true, vakEmpty: true, stillIdf: true, nowVak: true, viewIdf: true, noHtml: true, noPlusBefore: true, noTypes: true, erg: true, ergSaved: true, ergDel: true, tabs: 5, own: true, ans: true, xs: true, hidden: true, back: true, tap: true, mods: 'VAk,IdF', custom: true, exp: true, disc: true, imp: true, bad: true, master: true });
 
   // ── Inhaltsseiten: Kapitel/Blöcke löschen, im Kapitel ergänzen, wiederherstellen ──
   const ch = await page.evaluate(async () => {
@@ -676,11 +677,11 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
     r.lesson = !document.querySelector('#v-vak-verwaltungsrecht .jg-be, #v-vak-verwaltungsrecht .jg-plus, #v-vak-verwaltungsrecht .jg-erg');
     NAV.tab('v-pruefung', 'Prüfung'); await w(400);
-    r.exam = !document.querySelector('#m-exam-list .jg-tools2') && !document.querySelector('#m-exam-list .jg-plus');
+    r.exam = !document.querySelector('#jg-exam-bar .btn, #jg-exam-bar .jg-plus') && !document.querySelector('#m-exam-list .jg-plus');
     r.hot = document.querySelectorAll('#m-exam-list .jg-rw.hot').length;
     r.rows = document.querySelectorAll('#m-exam-list .jg-rw').length;
     NAV.go('v-settings', 'E'); await w(300);
-    r.set = !document.getElementById('jg-exp') && !document.getElementById('jg-imp');
+    r.set = !document.getElementById('jg-exp') && !document.getElementById('jg-imp') && !document.getElementById('jg-help');
     NAV.go('v-plan', 'P'); await w(400);
     r.plan = !/Foto oder Screenshot|Termine von Hand|Kalenderdatei \(\.ics\)/.test(document.getElementById('v-plan').innerText);
     return r;
@@ -736,26 +737,10 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     JG.set(JG.list()[0].id); await w(300); JG.discard();
     NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(600);
     document.querySelector('#v-vak-verwaltungsrecht .jg-be').click(); await w(200);
-    // Single-Choice
-    document.querySelector('#v-vak-verwaltungsrecht .jg-add[data-k=erg]').click(); await w(200);
-    document.querySelector('.jg-ty [data-t=sc]').click(); await w(50);
-    setv('jg-cq', 'Was ist 2+2?'); const ot = document.querySelectorAll('.jg-ot'); ot[0].value = '3'; ot[1].value = '4'; ot[2].value = '5';
-    document.querySelectorAll('.jg-ok')[1].click(); document.getElementById('jg-ce').value = 'Rechnen'; document.getElementById('jg-es').click(); await w(400);
-    let card = document.querySelector('#v-vak-verwaltungsrecht .jg-ch');
-    card.querySelectorAll('input')[0].click(); card.querySelector('.jg-ck').click(); await w(100);
-    r.scBad = card.querySelector('.jg-cf').classList.contains('bad');
-    card.querySelectorAll('input')[1].click(); card.querySelector('.jg-ck').click(); await w(100);
-    r.scOk = card.querySelector('.jg-cf').classList.contains('ok') && card.querySelector('input').type === 'radio';
-    // Multiple-Choice
-    document.querySelector('#v-vak-verwaltungsrecht .jg-add[data-k=erg]').click(); await w(200);
-    document.querySelector('.jg-ty [data-t=mc]').click(); await w(50);
-    setv('jg-cq', 'Welche sind Primzahlen?'); const o2 = document.querySelectorAll('.jg-ot'); o2[0].value = '2'; o2[1].value = '4'; o2[2].value = '5';
-    document.querySelectorAll('.jg-ok')[0].click(); document.querySelectorAll('.jg-ok')[2].click(); document.getElementById('jg-es').click(); await w(400);
-    const l = JG.data().erg.filter(e => e.typ === 'mc')[0];
-    r.mc = !!l && l.c.length === 2 && JSON.stringify(l.c) === '[0,2]';
     // Eigenes Kapitel
     document.querySelector('#v-vak-verwaltungsrecht .jg-add[data-k=kap]').click(); await w(200);
-    r.kapNoTypes = !document.querySelector('.jg-ty');
+    r.kapNoTypes = !document.querySelector('.jg-ty') && !document.getElementById('jg-keep');
+    r.noErgBtn = !document.querySelector('#v-vak-verwaltungsrecht .jg-add[data-k=erg]');
     setv('jg-et', 'Mein Kapitel'); setv('jg-ex', 'Inhalt'); document.getElementById('jg-es').click(); await w(500);
     r.kap = !!document.querySelector('#v-vak-verwaltungsrecht .acc-item.jg-kap');
     // Einrichten: Termine
@@ -785,13 +770,76 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.karte = JG.data().karten.length === 1 && FLASHCARD_DATA.some(c => c.jg && /Testfrage/.test(c.q));
     // Export enthält alles; Verwerfen räumt auf
     const j = JSON.parse(await JG.exportJson());
-    r.exp = j.termine.length === 1 && !!j.links.cloud && j.orte.vak === 'Köln' && j.karten.length === 1 && j.erg.some(e => e.typ === 'mc') && j.erg.some(e => e.typ === 'kapitel');
+    r.exp = j.termine.length === 1 && !!j.links.cloud && j.orte.vak === 'Köln' && j.karten.length === 1 && j.erg.some(e => e.typ === 'kapitel');
     JG.discard(); await w(300);
     r.clean = !FLASHCARD_DATA.some(c => c.jg) && JG.data().termine.length === 0;
     JG.set(JG.MASTER); await w(300);
     return r;
   });
-  eq('Auswahlfragen, Kapitel, Jahrgang einrichten', su, { scBad: true, scOk: true, mc: true, kapNoTypes: true, kap: true, termine: true, countdown: true, noCloud: true, httpsOnly: true, cloud: true, orte: true, karte: true, exp: true, clean: true });
+  eq('Auswahlfragen, Kapitel, Jahrgang einrichten', su, { kapNoTypes: true, noErgBtn: true, kap: true, termine: true, countdown: true, noCloud: true, httpsOnly: true, cloud: true, orte: true, karte: true, exp: true, clean: true });
+
+  // ── Prüfungen: Bearbeiten-Knopf oben, Fragearten, eigene Reiter, Hilfeseite ──
+  const nw = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    const setv = (id, v) => { document.getElementById(id).value = v; };
+    JG.set(JG.list()[0].id); await w(300); JG.discard();
+    NAV.tab('v-pruefung', 'Prüfung'); await w(500);
+    const bar = document.getElementById('jg-exam-bar');
+    r.topBar = !!bar && /Prüfungen bearbeiten/.test(bar.innerText) && !bar.querySelector('.jg-plus') && !!(bar.compareDocumentPosition(document.getElementById('m-countdown')) & Node.DOCUMENT_POSITION_FOLLOWING);
+    bar.querySelector('.btn').click(); await w(300);
+    r.plusAfter = !!document.getElementById('jg-exam-bar').querySelector('.jg-plus');
+    document.getElementById('jg-exam-bar').querySelector('.btn').click(); await w(200);
+    // Fragearten
+    JGUI.examEditor(null, 'vak'); await w(200); setv('jg-pt', 'Arten');
+    const addQ = () => { document.getElementById('jg-qa').click(); return [...document.querySelectorAll('.jg-q')].pop(); };
+    let q = addQ(); q.querySelector('.jg-qty [data-t=mc]').click(); await w(50);
+    q = [...document.querySelectorAll('.jg-q')].pop(); q.querySelector('.jg-qt').value = 'Primzahlen?';
+    let os = q.querySelectorAll('.jg-o input[type=text]'); os[0].value = '2'; os[1].value = '4'; os[2].value = '5';
+    q.querySelectorAll('.jg-o input[type=checkbox]')[0].click(); q.querySelectorAll('.jg-o input[type=checkbox]')[2].click();
+    q = addQ(); q.querySelector('.jg-qty [data-t=text]').click(); await w(50);
+    q = [...document.querySelectorAll('.jg-q')].pop(); q.querySelector('.jg-qt').value = 'Nenne den Hauptstadt?'; q.querySelector('.jg-qa2').value = 'Berlin';
+    document.getElementById('jg-ps').click(); await w(500);
+    const p = JG.data().pr.hinzu.find(x => x.titel === 'Arten');
+    r.types = !!p && p.fragen[0].typ === 'mc' && JSON.stringify(p.fragen[0].c) === '[0,2]' && p.fragen[1].typ === 'text' && p.fragen[1].a === 'Berlin';
+    JGUI.openExam(p.id); await w(400);
+    document.querySelectorAll('.jg-opt input')[0].click(); document.querySelectorAll('.jg-opt input')[2].click(); document.getElementById('jg-chk2').click(); await w(200);
+    r.mcOk = !!document.querySelector('.jg-fb.ok'); document.getElementById('jg-next').click(); await w(200);
+    document.getElementById('jg-show').click(); await w(100); r.textShown = /Berlin/.test(document.getElementById('jg-pruefung-body').innerText);
+    document.getElementById('jg-know').click(); await w(200); r.done = /2 von 2 richtig/.test(document.getElementById('jg-pruefung-body').innerText);
+    r.notInFahrt = (await PAUSE_LOADER.load(), !PAUSE._fahrt().questions().some(x => x.custom && /Primzahlen|Hauptstadt/.test(x.q)));
+    // Eigene Reiter
+    NAV.go('v-vak', 'VAk'); await w(500);
+    const cards0 = document.querySelectorAll('#v-vak .topic-card:not(.jg-gone)').length;
+    document.querySelector('#v-vak .jg-be').click(); await w(200);
+    document.querySelector('#v-vak .jg-tx').click(); await w(300);
+    r.tileGone = document.querySelectorAll('#v-vak .topic-card:not(.jg-gone)').length === cards0 - 1;
+    document.querySelector('#v-vak .jg-add[data-k=reiter]').click(); await w(200); setv('jg-rn', 'Mein Reiter'); document.getElementById('jg-rs').click(); await w(400);
+    r.reiter = !!document.querySelector('#v-vak .jg-rt') && /Mein Reiter/.test(document.querySelector('#v-vak .jg-rt').innerText);
+    document.querySelector('#v-vak .jg-be').click(); await w(200);
+    document.querySelector('#v-vak .jg-rt').click(); await w(500);
+    r.opened = document.getElementById('v-jg-reiter').classList.contains('active') && /Mein Reiter/.test(document.querySelector('#v-jg-reiter .page-title').textContent);
+    document.querySelector('#v-jg-reiter .jg-be').click(); await w(200);
+    document.querySelector('#v-jg-reiter .jg-add[data-k=kap]').click(); await w(200); setv('jg-et', 'Erstes Kapitel'); setv('jg-ex', 'Inhalt'); document.getElementById('jg-es').click(); await w(500);
+    r.kapInReiter = !!document.querySelector('#v-jg-reiter .acc-item.jg-kap');
+    // Hilfeseite
+    NAV.go('v-settings', 'E'); await w(400);
+    r.helpBtn = !!document.getElementById('jg-help');
+    document.getElementById('jg-help').click(); await w(500);
+    r.help = document.getElementById('v-jg-hilfe').classList.contains('active') && !document.querySelector('#v-jg-hilfe .jg-be') && /fabian\.flemig@gmx\.de/.test(document.getElementById('v-jg-hilfe').innerHTML);
+    JG.discard(); JG.set(JG.MASTER); await w(300);
+    return r;
+  });
+  eq('Prüfungen oben bearbeiten, Fragearten, Reiter, Hilfe', nw, { topBar: true, plusAfter: true, types: true, mcOk: true, textShown: true, done: true, notInFahrt: true, tileGone: true, reiter: true, opened: true, kapInReiter: true, helpBtn: true, help: true });
+
+  // ── Prüfskript für Jahrgangs-Dateien ──
+  {
+    const cp = require('child_process'), pth = require('path'), fsx = require('fs'), os = require('os');
+    const run = f => cp.spawnSync('node', [pth.join(__dirname, '..', 'tools', 'pruefe-jahrgang.cjs'), f], { encoding: 'utf8' });
+    const ok = run(pth.join(__dirname, '..', 'jahrgaenge', '_beispiel.json'));
+    const badF = pth.join(os.tmpdir(), 'bvi-bad-jg.json'); fsx.writeFileSync(badF, JSON.stringify({ format: 'bvi-jahrgang', erg: [{ id: 'a', seite: 'v-x', text: '<b>x</b>' }], links: { cloud: { url: 'http://x.de' } } }));
+    const bad = run(badF);
+    eq('Prüfskript: Beispiel ok, schlechte Datei wird bemängelt', { ok: ok.status === 0 && /Keine Fehler/.test(ok.stdout), bad: bad.status === 1 && /FEHLER/.test(bad.stdout) && /HTML/.test(bad.stdout) }, { ok: true, bad: true });
+  }
 
   // ── Veröffentlichte Jahrgangs-Datei (jahrgaenge/<ID>.json) wird mit den eigenen Änderungen zusammengeführt ──
   const jid = await page.evaluate(() => JG.list()[0].id);
