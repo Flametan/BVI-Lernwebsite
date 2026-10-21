@@ -210,7 +210,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     return r;
   });
   eq('Desktop: Knöpfe Üben und Fokus sichtbar', dk.btns, [true, true]);
-  ok('Befehlspalette: Kapitel und Aktionen', dk.pal.includes('Kapitel dieser Seite') && dk.pal.includes('Aktionen'));
+  ok('Suche: Kapitel der Seite, keine Aktionen', dk.pal.includes('Kapitel dieser Seite') && !dk.pal.includes('Aktionen'));
+  ok('Suche: keine Filterleiste', !(await page.evaluate(() => !!document.querySelector('.sf-btn,.search-filter-row'))));
   ok('Lernkarten-Fenster ein- und ausblendbar', dk.prac && dk.pracOff);
   ok('Fokus-Lesemodus mit Pfeiltasten und Esc', dk.focus && /02 \/ 07/.test(dk.next) && dk.closed);
   await page.setViewportSize({ width: 390, height: 844 });

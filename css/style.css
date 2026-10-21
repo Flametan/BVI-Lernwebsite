@@ -481,10 +481,6 @@
   #apk-tile{border-color:rgba(249,115,22,0.45)!important;}
 
   /* ── SEARCH FILTER CHIPS ── */
-  .search-filter-row{display:flex;gap:.35rem;overflow-x:auto;padding:.5rem 1rem;border-bottom:1px solid var(--glass-b);scrollbar-width:none;}
-  .search-filter-row::-webkit-scrollbar{display:none;}
-  .sf-btn{font-size:.75rem;font-weight:500;padding:.2rem .55rem;border-radius:20px;border:1px solid var(--glass-b);background:var(--glass);color:var(--c-slate-l);cursor:pointer;transition-property:var(--tp);transition-duration:.22s;transition-timing-function:cubic-bezier(0.4,0,0.2,1);white-space:nowrap;flex-shrink:0;}
-  .sf-btn.active{border-color:var(--c-gold-rim);background:var(--c-gold-dim);color:var(--c-gold);}
 
   /* ── BOOKMARKS IN SEARCH ── */
   .bk-section{padding:.4rem 0;}
@@ -1374,10 +1370,7 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 .notes-area{margin:14px 18px 0;padding:12px 14px;border-radius:12px;background:var(--m-raised);color:var(--m-fg);font-size:.95rem;min-height:180px;}
 .notes-footer{border-top:0;color:var(--m-dim);padding:10px 18px 16px;font-size:.75rem;}
 /* Suche */
-.search-input-wrap,.search-filter-row{border-bottom:1px solid var(--m-line);}
-.search-filter-row{gap:6px;padding:10px 14px;}
-.sf-btn{border:0;background:var(--m-card);color:var(--m-muted);font-size:.78rem;padding:6px 12px;border-radius:20px;}
-.sf-btn.active{background:var(--m-accent);color:var(--m-on-accent);}
+.search-input-wrap{border-bottom:1px solid var(--m-line);}
 .search-footer{border-top:1px solid var(--m-line);}
 /* Lesezeichen */
 .bm-row{padding:0 10px 0 0;gap:6px;}
@@ -1670,7 +1663,7 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 /* Touch-Ziele: auf Touch-Geräten mindestens ca. 44 px */
 @media(pointer:coarse){
   .m-seg button,.m-step button{min-height:40px;min-width:40px;}
-  .quiz-filter-btn,.quiz-cat-filter-btn,.sf-btn,.qfs-reset,.quiz-shuffle-btn,.related-chip{min-height:40px;}
+  .quiz-filter-btn,.quiz-cat-filter-btn,.qfs-reset,.quiz-shuffle-btn,.related-chip{min-height:40px;}
   .idf-nav button,.m-tb-actions button{width:44px;height:44px;}
   .acc-check,.m-sw,.fb-dot,.quiz-bm-btn,.fc-star-btn,.fc-back-btn,.bm-remove{position:relative;}
   .acc-check::after,.m-sw::after,.fb-dot::after,.quiz-bm-btn::after,.fc-star-btn::after,.fc-back-btn::after,.bm-remove::after{content:'';position:absolute;inset:-8px;}
@@ -1807,7 +1800,6 @@ html.no-timers .uk-timer-box,html.no-timers .uk-timer-inline,html.no-timers .qui
 .kb-r{display:block;white-space:nowrap;}
 
 /* ── Fenster im hellen Design: weiße Karte, Filter-Chips abgesetzt ───────── */
-.sf-btn{background:var(--m-raised);}
 :root[data-theme="light"] .search-overlay,:root[data-theme="light"] .quiz-mastery-modal{background:rgba(20,20,20,.45)!important;}
 .search-result:hover,.search-result.sr-focus{background:var(--m-raised);}
 .search-footer kbd{background:var(--m-raised);border-color:var(--m-line);}
@@ -2451,7 +2443,7 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 /* Barrierefreiheit (D): Klickflächen auf Touch-Geräten mindestens 44 px (Apple 44 pt, WCAG 2.5.8 mindestens 24 px) */
 @media(pointer:coarse){
   .m-seg button,.m-step button{min-height:44px;min-width:44px;}
-  .quiz-filter-btn,.quiz-cat-filter-btn,.quiz-type-btn,.sf-btn,.qfs-reset,.quiz-shuffle-btn,.related-chip,.fc-own-add,.quiz-mode-btn,.m-go2,.quiz-report-btn,.m-report button,.m-input,.theme-opt,.fs-opt,.btn{min-height:44px;}
+  .quiz-filter-btn,.quiz-cat-filter-btn,.quiz-type-btn,.qfs-reset,.quiz-shuffle-btn,.related-chip,.fc-own-add,.quiz-mode-btn,.m-go2,.quiz-report-btn,.m-report button,.m-input,.theme-opt,.fs-opt,.btn{min-height:44px;}
   .theme-opt,.fs-opt{min-width:44px;}
   .idf-item{min-height:44px;}
   .idf-tel-row a{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;margin:-8px 0 0;}
