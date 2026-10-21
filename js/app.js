@@ -3798,6 +3798,7 @@ const CHANGELOG=(function(){
     {v:'3.0.0',ts:'2026-10-19T22:00',items:[
       'Neues App-Design auf Handy, Tablet und Desktop: Navigation mit Start, Stundenplan, Prüfung, Einstellungen und Lernen – unten als Tab-Leiste, auf dem Desktop als Seitenleiste links',
       'Android-App: Das Startsymbol und das Startbild folgen jetzt auch dem Farbschema – schwarz im dunklen, hell (Farbton der Website) im hellen Design',
+      'Einstellungen: fehlender Trennstrich zwischen „Sicherung einspielen“ und „Lernfortschritt zurücksetzen“ ergänzt; Erste-Schritte nennt jetzt den Pausenraum statt der Lernkarten',
       'Startseite: Wochen- und Monatsdiagramm passt auf dem Handy wieder vollständig in die Karte',
       'Einstellungen: Gruppen (Darstellung, Lernen, Erinnerung, Daten, Werkzeuge, App) klappen auf und zu und zeigen die aktuellen Werte; „Projekt unterstützen“ bleibt immer unten sichtbar',
       'Farbschema: Dunkel, Hell oder System (Einstellungen → Farbschema)',

@@ -341,6 +341,16 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Startsymbol: Farbe und hell/dunkel', icons, ['blue', 'blue_light', 'blue', 'orange']);
 
+  // ── Einstellungen: jede Zeile in „Daten“ hat einen Trennstrich; Erste-Schritte nennt den Pausenraum ──
+  const dat = await page.evaluate(() => {
+    const rows = [...document.querySelectorAll('#acc-dat-b .m-row')];
+    const sep = rows.slice(1).map(r => r.previousElementSibling && r.previousElementSibling.classList.contains('m-row'));
+    const ob = document.getElementById('onboarding-overlay').textContent;
+    return { sep, pause: /Pausenraum/.test(ob), karten: /Bereich\s*Lernkarten|, Lernkarten/.test(ob) };
+  });
+  ok('Daten: Trennstrich vor jeder Zeile', dat.sep.length === 4 && dat.sep.every(Boolean));
+  ok('Erste Schritte: Pausenraum statt Lernkarten', dat.pause && !dat.karten);
+
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
   const tp = await tctx.newPage();
