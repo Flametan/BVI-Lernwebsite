@@ -321,15 +321,15 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     NAV.go('v-settings', 'Einstellungen'); await new Promise(r => setTimeout(r, 300));
     const hs = [...document.querySelectorAll('#v-settings .m-acc-h')], r = { n: hs.length };
     r.closed = hs.every(h => document.getElementById(h.getAttribute('aria-controls')).hidden);
-    hs[0].click(); hs[1].click();
-    r.open = hs.map(h => h.getAttribute('aria-expanded'));
+    document.getElementById('acc-dar-h').click(); document.getElementById('acc-ler-h').click();
+    r.open = hs.map(h => h.id === 'acc-ler-h' ? h.getAttribute('aria-expanded') : h.getAttribute('aria-expanded'));
     r.vis = document.getElementById('m-timers-toggle').offsetParent !== null;
     r.sub = document.getElementById('acc-ler-sub').textContent;
     r.donate = !!document.querySelector('#v-settings .m-donate') && !document.querySelector('#v-settings .m-acc .m-donate');
     return r;
   });
-  eq('Einstellungen: sechs Gruppen, zu Beginn zugeklappt', [acc.n, acc.closed], [6, true]);
-  eq('Einstellungen: nur eine Gruppe offen', acc.open, ['false', 'true', 'false', 'false', 'false', 'false']);
+  eq('Einstellungen: sieben Gruppen, zu Beginn zugeklappt', [acc.n, acc.closed], [7, true]);
+  eq('Einstellungen: nur eine Gruppe offen', acc.open.filter(x => x === 'true').length, 1);
   ok('Einstellungen: Inhalt der offenen Gruppe sichtbar, Kurzinfo gefüllt', acc.vis && /^Tagesziel \d+ min/.test(acc.sub));
   ok('Einstellungen: Spende liegt außerhalb der Gruppen', acc.donate);
 
@@ -546,6 +546,82 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     return r;
   });
   eq('Eigener Plan: lesen, anzeigen, Widget-Daten, Export, zurück zum IdF-Plan', pi, { parsed: ['Test-Plan', 4, 'Mathe, Teil 1', 'Raum 12', true, true], custom: true, shown: true, next: 'Mathe, Teil 1', units: [3, true, 'Raum 12'], ics: true, back: [false, true] });
+
+  // ── Jahrgänge: Liste, Master plus eigene Änderungen, Plan, Ergänzungen, Prüfungen, Glow, Export/Import ──
+  const jl = await page.evaluate(() => {
+    const L = d => JG.list(d), lab = l => l.map(x => x.label);
+    return { a: lab(L(new Date(2026, 9, 21)))[0], b: lab(L(new Date(2026, 8, 30)))[0], c: lab(L(new Date(2039, 5, 15)))[0], n39: L(new Date(2039, 5, 15)).length, last: lab(L(new Date(2026, 9, 21))).pop(), master: JG.isMaster() };
+  });
+  eq('Jahrgangsliste endet beim neuesten begonnenen Jahrgang', jl, { a: 'BRef 10/2026 - AB 10/2027', b: 'BRef 04/2026 - AB 04/2026', c: 'BRef 04/2039 - AB 04/2040', n39: 29, last: 'BRef 04/2025 - AB 04/2025', master: true });
+  const pt = await page.evaluate(() => {
+    const d = JGUI.parsePlanText('Montag 26.10.\n08:00 - 09:30 Vorbeugender Brandschutz Raum B1-106\n09:45-11:15\nStabsarbeit\nDienstag 27.10.2026\n08:00 bis 09:30 Recht', new Date(2026, 9, 20));
+    const q = JGUI.parseQuestions('1. Was ist ein ELW?\na) Einsatzleitwagen\nb) Löschfahrzeug\nc) Rüstwagen\n2. Welche Frist gilt?\nA. 35 Tage\nB. 52 Tage');
+    return { n: d.length, first: [d[0].date, d[0].start, d[0].end, d[0].t, d[0].r], second: d[1].t, third: d[2].date, q: [q.length, q[0].q, q[0].o.length, q[0].c, q[1].o[1]] };
+  });
+  eq('Texterkennung: Termine und Fragen aus Text lesen', pt, { n: 3, first: ['2026-10-26', '08:00', '09:30', 'Vorbeugender Brandschutz', 'B1-106'], second: 'Stabsarbeit', third: '2026-10-27', q: [2, 'Was ist ein ELW?', 3, -1, '52 Tage'] });
+  const jg = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {}, id = JG.list()[0].id;
+    localStorage.removeItem('bvi_jgd_' + id);
+    JG.set(id); await w(400);
+    r.cur = JG.current() === id && !JG.isMaster();
+    NAV.go('v-plan', 'Stundenplan'); await w(400);
+    r.empty = /Noch kein Stundenplan/.test(document.getElementById('plan-inner').innerText) && IDF_PLAN.next() === null;
+    // Plan von Hand eingeben
+    JGUI.planEditor(); await w(200);
+    document.getElementById('jg-add').click(); await w(100);
+    const y = new Date().getFullYear() + 1, row = document.querySelector('.jg-row'), v = row.querySelectorAll('input');
+    v[0].value = y + '-03-02'; v[1].value = '08:00'; v[2].value = '09:30'; v[3].value = 'Mathe <b>x</b>'; v[4].value = 'A1';
+    document.getElementById('jg-save').click(); await w(400);
+    r.plan = IDF_PLAN.isCustom() && !!IDF_PLAN.getPlan() && IDF_PLAN.getPlan().ev.length === 1 && IDF_PLAN.next().title.startsWith('Mathe');
+    r.noHtml = !document.getElementById('plan-inner').innerHTML.includes('<b>x</b>');
+    // Ergänzung auf einer Lernseite
+    NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
+    document.querySelector('#v-vak-verwaltungsrecht .jg-plus').click(); await w(200);
+    document.getElementById('jg-et').value = 'Merksatz'; document.getElementById('jg-ex').value = 'Zeile 1\n\n<img src=x onerror=alert(1)>'; document.getElementById('jg-es').click(); await w(500);
+    const e = document.querySelector('#v-vak-verwaltungsrecht .jg-e');
+    r.erg = !!e && e.textContent.includes('Merksatz') && !e.querySelector('img[src="x"]');
+    const l = JG.local(); r.ergSaved = l.erg.length === 1;
+    e.querySelector('.jg-dl').click(); await w(300);
+    r.ergDel = JG.local().erg.length === 0 && !document.querySelector('#v-vak-verwaltungsrecht .jg-e');
+    // Prüfung hinzufügen, üben, entfernen, Glow
+    NAV.tab('v-pruefung', 'Prüfung'); await w(400);
+    r.tabs = document.querySelectorAll('#m-exam-list .m-col').length;
+    JGUI.examEditor(null, 'vak'); await w(200);
+    document.getElementById('jg-pt').value = 'Testprüfung';
+    document.getElementById('jg-qa').click(); await w(50);
+    let q = document.querySelector('.jg-q'); q.querySelector('.jg-qt').value = 'Was ist 1+1?';
+    const os = q.querySelectorAll('.jg-o input[type=text]'); os[0].value = '1'; os[1].value = '2'; os[2].value = '3';
+    q.querySelectorAll('input[type=radio]')[1].click();
+    document.getElementById('jg-ps').click(); await w(500);
+    r.own = /Testprüfung/.test(document.getElementById('m-exam-list').innerText);
+    JGUI.openExam(JG.data().pr.hinzu[0].id); await w(400);
+    document.querySelectorAll('.jg-opt')[1].click(); await w(100);
+    r.ans = !!document.querySelector('.jg-opt.ok') && /Richtig/.test(document.querySelector('.jg-fb').textContent);
+    NAV.tab('v-pruefung', 'Prüfung'); await w(300);
+    JGUI.toggleEdit(); await w(200);
+    const del = [...document.querySelectorAll('.jg-x')].length; r.xs = del > 3;
+    JGUI.delExam('v-laufbahn-2023'); await w(300);
+    r.hidden = !/Dez 2023/.test(document.getElementById('m-exam-list').innerText);
+    JGUI.restoreExams(); await w(300);
+    r.back = /Dez 2023/.test(document.getElementById('m-exam-list').innerText);
+    // Glow: nur Reiter mit Glow liefern Module für Einsatzfahrt/Duell
+    JGUI.setGlow('feuak'); JGUI.setGlow('ibk'); await w(200);
+    await PAUSE_LOADER.load();
+    const F = PAUSE._fahrt();
+    r.mods = F.MODS.map(m => m[0]).join(',');
+    r.custom = F.questions().some(x => x.custom && x.m === 'VAk') && !F.baseQuestions().some(x => x.custom);
+    JGUI.toggleEdit();
+    // Export, Verwerfen, Import
+    const txt = await JG.exportJson(), j = JSON.parse(txt);
+    r.exp = j.format === 'bvi-jahrgang' && j.pr.hinzu.length === 1 && Array.isArray(j.glow) && j.plan.ev.length === 1;
+    JG.discard(); await w(100); r.disc = !JG.hasLocal();
+    const n = await JG.importJson(txt); r.imp = n.pruefungen === 1 && n.plan === 1 && JG.hasLocal();
+    let bad = false; try{ await JG.importJson('{"format":"x"}'); }catch(e){ bad = true; } r.bad = bad;
+    // zurück zum Master
+    JG.discard(); JG.set(JG.MASTER); await w(300); r.master = JG.isMaster() && IDF_PLAN.next() !== null;
+    return r;
+  });
+  eq('Jahrgang: leerer Plan, Plan-Formular, Ergänzung, eigene Prüfung, Glow, Export/Import', jg, { cur: true, empty: true, plan: true, noHtml: true, erg: true, ergSaved: true, ergDel: true, tabs: 5, own: true, ans: true, xs: true, hidden: true, back: true, mods: 'VAk,IdF', custom: true, exp: true, disc: true, imp: true, bad: true, master: true });
 
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });

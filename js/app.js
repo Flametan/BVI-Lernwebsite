@@ -69,7 +69,7 @@ const NAV = (function(){
     if(typeof LP!=='undefined'){ LP.onShow(id); LP.init(id); }
     PAUSE_LOADER.onShow(id);
     A11Y.onShow();
-    if(isContentPage) ABKTIP.apply(id);
+    if(isContentPage){ ABKTIP.apply(id); if(typeof JGUI!=='undefined') JGUI.mount(id); }
     // Update URL for direct linking
     const url=new URL(location.href);
     if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
@@ -1576,6 +1576,7 @@ const OVL=(function(){
 
 // Zurück-Taste der Android-App: "handled" (Fenster/Kapitel geschlossen), "exit" (Startseite) oder "back"
 window.bviBack=function(){
+  if(typeof JGUI!=='undefined'&&JGUI.closeTop()) return 'handled';
   if(OVL.closeTop()) return 'handled';
   if(typeof LIGHTBOX!=='undefined'&&LIGHTBOX.isOpen()){ LIGHTBOX.close(); return 'handled'; }
   if(typeof LP!=='undefined'&&LP.isOpen()){ LP.back(); return 'handled'; }
@@ -5481,11 +5482,20 @@ const IDF_PLAN = (function(){
   // ── Eigener Stundenplan aus einer Kalenderdatei (.ics): ersetzt den IdF-Plan, alle Funktionen laufen weiter ──
   const CKEY='bvi_plan_custom', SKEY='bvi_plan_src';
   let _cust=null, _cw=null;
+  // Master-Jahrgang: eigener Plan optional (alter Speicherort); andere Jahrgänge: immer eigener Plan, ggf. noch leer
+  const _nonMaster=()=>typeof JG!=='undefined'&&!JG.isMaster();
   function _loadCust(){
-    try{ const j=JSON.parse(localStorage.getItem(CKEY)||'null'); _cust=j&&Array.isArray(j.ev)&&j.ev.length?j:null; }catch(e){ _cust=null; }
+    if(_nonMaster()){ const p=JG.data().plan; _cust=p&&Array.isArray(p.ev)&&p.ev.length?p:null; }
+    else{ try{ const j=JSON.parse(localStorage.getItem(CKEY)||'null'); _cust=j&&Array.isArray(j.ev)&&j.ev.length?j:null; }catch(e){ _cust=null; } }
     _cw=null;
   }
-  const _isCustom=()=>{ try{ return !!_cust&&localStorage.getItem(SKEY)==='custom'; }catch(e){ return false; } };
+  const _isCustom=()=>{ if(_nonMaster()) return true; try{ return !!_cust&&localStorage.getItem(SKEY)==='custom'; }catch(e){ return false; } };
+  function _saveCust(res){
+    if(_nonMaster()){ const l=JG.local(); l.plan=res; JG.saveLocal(l); }
+    else{ try{ localStorage.setItem(CKEY,JSON.stringify(res)); localStorage.setItem(SKEY,'custom'); }catch(e){} }
+    _loadCust(); _manual=false; render(); pushWidget();
+    if(typeof SHELL!=='undefined') SHELL.renderHome();
+  }
   _loadCust();
   const _icsUnfold=t=>String(t).replace(/\r\n|\r/g,'\n').replace(/\n[ \t]/g,'').split('\n');
   const _icsText=v=>String(v||'').replace(/\\[nN]/g,' ').replace(/\\([,;\\])/g,'$1').replace(/\s+/g,' ').trim();
@@ -5584,9 +5594,7 @@ const IDF_PLAN = (function(){
       let res; try{ res=parseIcs(String(r.result)); }catch(e){ res=null; }
       if(!res||!res.ev.length){ TOAST.show('In der Datei wurden keine Termine gefunden – bitte eine Kalenderdatei (.ics) wählen',{type:'info'}); return; }
       res.name=res.name||String(file.name||'').replace(/\.[^.]+$/,'')||'Eigener Plan'; res.at=Date.now();
-      try{ localStorage.setItem(CKEY,JSON.stringify(res)); localStorage.setItem(SKEY,'custom'); }catch(e){}
-      _loadCust(); _manual=false; render(); pushWidget();
-      if(typeof SHELL!=='undefined') SHELL.renderHome();
+      _saveCust(res);
       TOAST.show(res.ev.length+' Termine aus „'+res.name+'“ geladen',{type:'ok'});
     };
     r.onerror=()=>TOAST.show('Datei konnte nicht gelesen werden');
@@ -5600,21 +5608,34 @@ const IDF_PLAN = (function(){
   }
   function removeCustom(){
     if(!confirm('Den geladenen eigenen Stundenplan entfernen?')) return;
-    try{ localStorage.removeItem(CKEY); localStorage.setItem(SKEY,'idf'); }catch(e){}
+    if(_nonMaster()){ const l=JG.local(); l.plan=null; JG.saveLocal(l); }
+    else{ try{ localStorage.removeItem(CKEY); localStorage.setItem(SKEY,'idf'); }catch(e){} }
     _loadCust(); _manual=false; render(); pushWidget();
     if(typeof SHELL!=='undefined') SHELL.renderHome();
     TOAST.show('Eigener Plan entfernt',{type:'ok'});
   }
   function _planControls(){
-    const cust=!!_cust, on=_isCustom();
+    const cust=!!_cust, on=_isCustom(), nm=_nonMaster();
     const row=(t1,t2,btn)=>`<div class="m-row m-static m-wrap"><span class="m-tx"><span class="m-t1">${t1}</span><span class="m-t2">${t2}</span></span>${btn}</div>`;
-    let h='<div class="m-sec" style="margin-top:1rem">Stundenplan wählen</div><div class="m-list idf-src">';
-    h+=row('IdF Münster · Modul 3.5',on?'Der mitgelieferte Plan, mit Gruppe 1 und 2':'Wird gerade angezeigt',on?'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'idf\')">Anzeigen</button>':'<span class="m-badge">aktiv</span>');
-    if(cust) h+=row(esc(_cust.name),_cust.ev.length+' Termine aus deiner Datei',on?'<span class="m-badge">aktiv</span>':'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'custom\')">Anzeigen</button>');
-    h+=`<label class="m-row" for="plan-file" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Eigenen Stundenplan laden</span><span class="m-t2">Kalenderdatei (.ics), z. B. aus dem Kalender deiner Schule oder deines Betriebs</span></span><input type="file" id="plan-file" accept=".ics,text/calendar" hidden onchange="IDF_PLAN.importIcs(this.files[0]);this.value=''"></label>`;
-    if(cust) h+=`<button class="m-row" onclick="IDF_PLAN.removeCustom()"><span class="m-tx"><span class="m-t1">Eigenen Plan entfernen</span></span></button>`;
+    const fileRow=`<label class="m-row" for="plan-file" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Kalenderdatei (.ics) laden</span><span class="m-t2">z. B. aus dem Kalender deiner Schule oder deines Betriebs</span></span><input type="file" id="plan-file" accept=".ics,text/calendar" hidden onchange="IDF_PLAN.importIcs(this.files[0]);this.value=''"></label>`;
+    const ui=(fn,t1,t2)=>`<button class="m-row m-go" onclick="${fn}"><span class="m-tx"><span class="m-t1">${t1}</span><span class="m-t2">${t2}</span></span></button>`;
+    let h='<div class="m-sec" style="margin-top:1rem">'+(nm?'Dein Stundenplan':'Stundenplan wählen')+'</div><div class="m-list idf-src">';
+    if(!nm) h+=row('IdF Münster · Modul 3.5',on?'Der mitgelieferte Plan, mit Gruppe 1 und 2':'Wird gerade angezeigt',on?'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'idf\')">Anzeigen</button>':'<span class="m-badge">aktiv</span>');
+    if(cust) h+=row(esc(_cust.name),_cust.ev.length+' Termine'+(nm?'':' aus deiner Datei'),on&&!nm?'<span class="m-badge">aktiv</span>':nm?'':'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'custom\')">Anzeigen</button>');
+    h+=fileRow;
+    if(typeof JGUI!=='undefined'){
+      h+=ui('JGUI.planPhoto()','Foto oder Screenshot einlesen','Die Termine werden erkannt und zum Ausbessern angezeigt');
+      h+=ui('JGUI.planEditor()','Termine von Hand eingeben oder ändern','Datum, Zeit, Titel und Raum');
+    }
+    if(cust&&(!nm||JG.local().plan)) h+=`<button class="m-row" onclick="IDF_PLAN.removeCustom()"><span class="m-tx"><span class="m-t1">Eigenen Plan entfernen</span></span></button>`;
     if(!on) h+=`<button class="m-row m-go" onclick="PLANABO.open()"><span class="m-tx"><span class="m-t1">Kalender abonnieren</span><span class="m-t2">Der IdF-Plan als Link, der sich selbst aktualisiert</span></span></button>`;
     return h+'</div>';
+  }
+  // Noch kein Plan (andere Jahrgänge): Hinweis und Wege zum Importieren
+  function _drawEmpty(el){
+    const ey=document.querySelector('#v-plan .page-eyebrow'), ld=document.querySelector('#v-plan .page-lead');
+    if(ey&&ld){ if(!ey.dataset.d){ ey.dataset.d=ey.textContent; ld.dataset.d=ld.textContent; } ey.textContent=JG.labelOf(JG.current()); ld.textContent='Importiere deinen eigenen Stundenplan, dann erscheinen die Einheiten hier, auf der Startseite und im Widget.'; }
+    el.innerHTML='<div class="m-card"><div class="m-t1">Noch kein Stundenplan</div><div class="m-t2" style="margin-top:6px">Für diesen Jahrgang ist noch kein Plan hinterlegt. Importiere ihn als Kalenderdatei (.ics), lies ein Foto oder einen Screenshot ein, oder gib die Termine selbst ein.</div></div>'+_planControls();
   }
   function _dayRaw(w,d,g){
     if(_isCustom()) return w[5][d]||[];
@@ -5684,7 +5705,7 @@ const IDF_PLAN = (function(){
     const ey=document.querySelector('#v-plan .page-eyebrow'), ld=document.querySelector('#v-plan .page-lead');
     if(ey&&ld){
       if(!ey.dataset.d){ ey.dataset.d=ey.textContent; ld.dataset.d=ld.textContent; }
-      ey.textContent=_isCustom()?_cust.name:ey.dataset.d;
+      ey.textContent=_isCustom()?(_nonMaster()?JG.labelOf(JG.current())+' · '+_cust.name:_cust.name):ey.dataset.d;
       ld.textContent=_isCustom()?'Stundenplan für KW '+_weeks[0][0]+' bis '+_weeks[_weeks.length-1][0]+'. Es öffnet sich immer die aktuelle Woche.':ld.dataset.d;
     }
     el.innerHTML=h;
@@ -5713,6 +5734,7 @@ const IDF_PLAN = (function(){
   function render(){
     _grp=_savedGrp();
     _weeks=_buildWeeks();
+    if(!_weeks.length){ const el=document.getElementById('plan-inner'); if(el) _drawEmpty(el); return; }
     _manual=false; _wi=_curWeek();
     // Springt zur laufenden bzw. nächsten Einheit: richtige Woche, Tag nach oben scrollen
     const nx=next(), key=nx&&_ymd(nx.start);
@@ -5825,7 +5847,9 @@ const IDF_PLAN = (function(){
   }
 
   function summary(){
-    const ws=_buildWeeks(_savedGrp()), w=ws[_autoIdx(ws)];
+    const ws=_buildWeeks(_savedGrp());
+    if(!ws.length) return { kw:0, thema:'', over:false };
+    const w=ws[_autoIdx(ws)];
     const end=new Date(ws[ws.length-1][3]+'T00:00'); end.setDate(end.getDate()+5);
     return { kw:w[0], thema:w[2], over:new Date()>end };
   }
@@ -5836,9 +5860,15 @@ const IDF_PLAN = (function(){
   document.addEventListener('keydown',e=>{
     if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('#plan-inner .idf-tap')){ e.preventDefault(); PLANNOTE.open(e.target); }
   });
+  if(typeof JG!=='undefined') JG.on(()=>{
+    _loadCust(); _manual=false;
+    if(document.getElementById('v-plan')?.classList.contains('active')) render();
+    pushWidget();
+    if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome();
+  });
   _loadOv();
   pushWidget();
-  return { render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _grp:_setGrp, redraw:_draw };
+  return { savePlan:_saveCust, getPlan:()=>_cust, render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _grp:_setGrp, redraw:_draw };
 })();
 
 /* ── Stundenplan als Kalender-Abo (Link, der sich selbst aktualisiert) ──────── */
@@ -6424,7 +6454,7 @@ const SHELL=(function(){
       ['v-vak-fallbearbeitung','Fallbearbeitung','9-Punkte-Schema mit sechs Übungsfällen','pen',true],
       ['v-vak-klausurhinweise','Klausurhinweise','Prüfungsrelevante Themen und Definitionen','doc'],
       ['v-vak-klausurvorbereitung','Klausurvorbereitung VAk','Alle VAk-Materialien auf einen Blick','target']]],
-    ['Heyrothsberge',[
+    ['IBK Heyrothsberge',[
       ['v-simulator','Führungsdienstsimulator','8 Szenarien mit verzweigten Entscheidungen','sim',true]]]
   ];
   const ICON={
@@ -6805,11 +6835,20 @@ const SHELL=(function(){
     const dueQ=(typeof QUIZ!=='undefined'&&QUIZ.dueCount)?QUIZ.dueCount():0;
     const dueI=(typeof IDFQ!=='undefined'&&IDFQ.dueCount)?IDFQ.dueCount():0;
     const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2:id==='v-vak-altklausur'&&dueQ?`${t2} · ${dueQ} zur Wiederholung fällig`:id==='v-idf-altklausur'&&dueI?`${t2} · ${dueI} zur Wiederholung fällig`:t2,on:goJs(id,t1)});
-    const sec=([name,items])=>{
-      const hot=items.filter(x=>x[4]), rest=items.filter(x=>!x[4]);
-      return `<div class="m-col"><div class="m-sec">${esc(name)}</div>${hot.map(x=>`<div class="m-list m-glow">${card(x)}</div>`).join('')}${rest.length?`<div class="m-list">${rest.map(card).join('')}</div>`:''}</div>`;
+    // Reiter bleiben immer sichtbar; einzelne Prüfungen lassen sich ausblenden, eigene hinzufügen; „Glow“ je Reiter = klausurrelevant
+    const jd=JG.data(), weg=new Set(jd.pr.weg), gl=JG.glow(), edit=typeof JGUI!=='undefined'&&JGUI.isEditing();
+    const own=p=>row({ic:ic('doc'),t1:esc(p.titel),t2:p.fragen.length+' Fragen · eigene Prüfung',on:`JGUI.openExam('${p.id}')`});
+    const del=id=>edit?`<button type="button" class="jg-x" aria-label="Prüfung entfernen" onclick="JGUI.delExam('${id}')">✕</button>`:'';
+    const sec=([name,items],si)=>{
+      const key=JG.TABS[si][0], on=gl.has(key);
+      const vis=items.filter(x=>!weg.has(x[0])), adds=jd.pr.hinzu.filter(p=>p.tab===key);
+      const lists=[...vis.map(x=>`<div class="jg-rw">${card(x)}${del(x[0])}</div>`),...adds.map(p=>`<div class="jg-rw">${own(p)}${del(p.id)}</div>`)];
+      const head=`<div class="m-sec jg-sh">${esc(name)}${edit?`<button type="button" class="jg-gl${on?' on':''}" onclick="JGUI.setGlow('${key}')" aria-pressed="${on}" title="Klausurrelevant: Fragen für Einsatzfahrt und Duell">★ Klausurrelevant</button>`:''}</div>`;
+      return `<div class="m-col${on?' jg-hot':''}">${head}<div class="m-list${on?' m-glow':''}">${lists.join('')||'<div class="jg-none">Keine Prüfungen</div>'}</div></div>`;
     };
-    list.innerHTML=`<div class="m-areas">${EXAMS.map(sec).join('')}</div>`;
+    const hidden=EXAMS.reduce((n,[,it])=>n+it.filter(x=>weg.has(x[0])).length,0);
+    const tools=typeof JGUI==='undefined'?'':`<div class="jg-tools2"><button type="button" class="jg-plus" onclick="JGUI.examEditor()"><span>+</span> Prüfung hinzufügen</button><button type="button" class="btn btn-ghost" onclick="JGUI.toggleEdit()">${edit?'Fertig':'Prüfungen bearbeiten'}</button>${edit&&hidden?`<button type="button" class="btn btn-ghost" onclick="JGUI.restoreExams()">${hidden} ausgeblendete wiederherstellen</button>`:''}</div>${edit?'<div class="m-note" style="padding:6px 2px">Mit ★ legst du fest, welche Reiter klausurrelevant sind. Nur ihre Fragen kommen in Einsatzfahrt und Duell.</div>':''}`;
+    list.innerHTML=`<div class="m-areas">${EXAMS.map(sec).join('')}</div>${tools}`;
   }
 
   function renderFcSide(){
@@ -6911,6 +6950,7 @@ const SHELL=(function(){
     const nc=notes().length, bc=BOOKMARKS.getAll().length;
     const lb=BACKUP.last();
     set('acc-dar-sub',th+' · Schrift '+fs);
+    if(typeof JG!=='undefined') set('acc-lg-sub',JG.labelOf(JG.current())+(JG.isMaster()?' (Master)':''));
     set('acc-ler-sub','Tagesziel '+goalMin()+' min · Timer '+(document.documentElement.classList.contains('no-timers')?'aus':'an'));
     set('acc-eri-sub',NOTIF.isEnabled()?'Täglich um '+NOTIF.hour()+':00':'Aus');
     set('acc-dat-sub',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');

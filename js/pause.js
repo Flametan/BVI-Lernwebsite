@@ -127,28 +127,35 @@ const PAUSE=(function(){
     stop(){if(typeof DUELL!=='undefined')DUELL.stop();FAHRT.stop();}};
   /* ---------- 6 Einsatzfahrt (Prüfungsfragen) ---------- */
   const FAHRT=(function(){
-    const HF=480,hf=()=>(st&&st.hf)||HF,MODS=[['IBK','Transaktionsanalyse · Konflikte'],['VAk','Verwaltungsrecht'],['FeuAK','Haushalt · Management'],['IdF','Brandschutz · Stab']];
+    const HF=480,hf=()=>(st&&st.hf)||HF,ALLM=[['IBK','Transaktionsanalyse · Konflikte','ibk'],['VAk','Verwaltungsrecht','vak'],['FeuAK','Haushalt · Management','feuak'],['IdF','Brandschutz · Stab','idf']],MODS=[];
     const ROUTES={A:{key:'A',name:'Hauptstraße',base:330,n:5,pen:65,bon:15,d:'kurz, aber Baustelle und Berufsverkehr',tags:['Fahrzeit 5:30','5 Fragen','falsch +65 s','richtig −15 s','ab 3 Fehlern zu spät']},
       B:{key:'B',name:'Ring',base:390,n:6,pen:30,bon:10,d:'länger, aber flüssig',tags:['Fahrzeit 6:30','6 Fragen','falsch +30 s','richtig −10 s','ab 4 Fehlern zu spät']}};
     const fmt=t=>{t=Math.max(0,Math.round(t));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');};
     const strip=h=>{const d=document.createElement('div');d.innerHTML=String(h||'');return d.textContent.replace(/\s+/g,' ').trim();};
     let Q=null;
     // Fragen: VAk und IdF aus den Altklausur-Quizzen der App, FeuAK und IBK aus pause-data.js; leuchtende Tabs (g) zählen dreifach
-    function questions(){if(Q)return Q;Q=[];
+    // Module: nur Reiter mit „Glow“ (klausurrelevant); „Laufbahn“ nur mit eigenen Fragen
+    function refreshMods(){const g=typeof JG!=='undefined'?JG.glow():null;MODS.length=0;ALLM.forEach(([m,d,k])=>{if(!g||g.has(k))MODS.push([m,d]);});if((!g||g.has('laufbahn'))&&questions().some(q=>q.m==='Laufbahn'))MODS.push(['Laufbahn','Eigene Fragen']);return MODS;}
+    let Qv=-1;
+    function questions(){const v=typeof JG!=='undefined'?JG.ver():0;if(Q&&Qv===v)return Q;Qv=v;Q=[];
       const own=(D.exam||[]).some(q=>q.m==='VAk'||q.m==='IdF'); // überarbeitete Fragen aus pause-data.js haben Vorrang
       const vq=own?[]:typeof QUIZ!=='undefined'&&QUIZ.qs?QUIZ.qs():[];
       vq.filter(q=>q.type==='mc').forEach(q=>Q.push({m:'VAk',src:'Altklausur-Quiz VAk',g:1,q:strip(q.q),o:q.opts.map(strip),c:q.correct,e:strip(q.exp)}));
       (!own&&typeof IDF_QUIZ_Q!=='undefined'?IDF_QUIZ_Q:[]).forEach(q=>{
         if(q.type==='mc')Q.push({m:'IdF',src:'Altklausur-Quiz IdF',g:1,q:strip(q.q),o:q.opts.map(strip),c:q.correct,e:strip(q.exp)});
         else if(q.type==='multi'){const wr=q.opts.map((_,i)=>i).filter(i=>!q.correct.includes(i));if(!wr.length)return;const ci=rnd(q.correct),sel=[ci,...wr.slice(0,3)];Q.push({m:'IdF',src:'Altklausur-Quiz IdF',g:1,q:strip(q.q).replace(/Welche Aussagen? (sind|ist) (richtig|zutreffend)\??/i,'Welche Aussage ist richtig?'),o:sel.map(i=>strip(q.opts[i])),c:0,e:strip(q.exp)});}});
-      (D.exam||[]).forEach(q=>Q.push(q));return Q;}
+      (D.exam||[]).forEach(q=>Q.push(q));
+      // eigene Prüfungen aus den Jahrgangs-Änderungen (nur Einzelspiel; im Duell zählen nur die mitgelieferten Fragen)
+      if(typeof JG!=='undefined')JG.data().pr.hinzu.forEach(p=>{const t=JG.TABS.find(x=>x[0]===p.tab);if(t)p.fragen.forEach(f=>Q.push({m:t[2],src:p.titel,g:1,q:f.q,o:f.o.slice(),c:f.c,e:f.e||'',custom:1}));});
+      return Q;}
+    const baseQuestions=()=>questions().filter(q=>!q.custom);
     let sel=new Set(get('bvi_pause_mods',['VAk','IBK'])),st=null,el=null,cv=null,ctx=null,raf=0,PART=[],last=0,shake=0,lastFx=null,stars=[];
-    const count=m=>questions().filter(q=>q.m===m).length;
-    function pick(r){const pool=questions().filter(q=>sel.has(q.m)),bag=[];pool.forEach(q=>{for(let k=0;k<(q.g?3:1);k++)bag.push(q);});const out=[];while(out.length<r.n&&bag.length){const q=bag.splice(Math.floor(Math.random()*bag.length),1)[0];if(!out.includes(q))out.push(q);}
+    const count=(m,all)=>(all?questions():baseQuestions()).filter(q=>q.m===m).length;
+    function pick(r){refreshMods();const pool=questions().filter(q=>sel.has(q.m)&&MODS.some(x=>x[0]===q.m)),bag=[];pool.forEach(q=>{for(let k=0;k<(q.g?3:1);k++)bag.push(q);});const out=[];while(out.length<r.n&&bag.length){const q=bag.splice(Math.floor(Math.random()*bag.length),1)[0];if(!out.includes(q))out.push(q);}
       return out.map(q=>{const ord=shuf(q.o.map((_,i)=>i));return{...q,o:ord.map(i=>q.o[i]),c:ord.indexOf(q.c)};});}
     const rng=seed=>{let a=seed>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;};};
     // Duell: aus Seed, Modulen und Anzahl entstehen auf beiden Geräten dieselben Fragen in derselben Reihenfolge
-    function pickSeeded(mods,n,seed){const R=rng(seed),bag=[];questions().filter(q=>mods.includes(q.m)).forEach(q=>{for(let k=0;k<(q.g?3:1);k++)bag.push(q);});const out=[];while(out.length<n&&bag.length){const q=bag.splice(Math.floor(R()*bag.length),1)[0];if(!out.includes(q))out.push(q);}
+    function pickSeeded(mods,n,seed){const R=rng(seed),bag=[];baseQuestions().filter(q=>mods.includes(q.m)).forEach(q=>{for(let k=0;k<(q.g?3:1);k++)bag.push(q);});const out=[];while(out.length<n&&bag.length){const q=bag.splice(Math.floor(R()*bag.length),1)[0];if(!out.includes(q))out.push(q);}
       return out.map(q=>{const ord=q.o.map((_,i)=>i);for(let i=ord.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[ord[i],ord[j]]=[ord[j],ord[i]];}return{...q,o:ord.map(i=>q.o[i]),c:ord.indexOf(q.c)};});}
     const hash=x=>{let h=5381;for(let i=0;i<x.length;i++)h=((h<<5)+h+x.charCodeAt(i))|0;return(h>>>0).toString(36);};
     const sig=()=>hash(questions().map(q=>q.m+q.q.length+q.o.length).join('|'));
@@ -157,7 +164,7 @@ const PAUSE=(function(){
     function panel(){const pn=el.querySelector('.pz-fp'),s=st,L='ABCDE';let h='';
       if(s.paused){h=`<div class="pz-lbl"><span>Duell</span><b>pausiert</b></div><div class="pz-qt">Verbindung unterbrochen</div><div class="pz-fb">Das Spiel steht still. Kommt ${esc(s.opp.name)} nicht innerhalb von <b class="pz-pc">${Math.max(0,30-Math.floor((performance.now()-s.pausedAt)/1000))}</b> Sekunden zurück, gewinnst du.</div>`;}
       else if(s.phase==='d-count'){h=`<div class="pz-lbl"><span>Duell gegen ${esc(s.opp.name)}</span><b>${s.qs.length} Fragen</b></div><div class="pz-big-n">${Math.max(1,s.cdLeft)}</div><div class="pz-center">Gleich geht es los. Gleiche Fragen, gleiche Strecke.</div>`;}
-      else if(s.phase==='select'){h=`<div class="pz-lbl"><span>Einsatzfahrt</span></div><div class="pz-qt">Aus welchen Modulen sollen die Fragen kommen?</div><div class="pz-chips">${MODS.map(([m,d])=>`<button class="pz-chip${sel.has(m)?' on':''}" data-a="tog" data-v="${m}"><b>${m}</b><small>${d}<br>${count(m)} Prüfungsfragen</small></button>`).join('')}</div><button class="pz-pri" data-a="route" ${sel.size?'':'disabled'}>Weiter: Einsatzmeldung</button>`;}
+      else if(s.phase==='select'){h=`<div class="pz-lbl"><span>Einsatzfahrt</span></div><div class="pz-qt">Aus welchen Modulen sollen die Fragen kommen?</div>${refreshMods().length?'':'<div class="pz-fb">Noch kein Reiter als klausurrelevant markiert. Das geht in „Prüfung“ unter „Prüfungen bearbeiten“ mit ★ Klausurrelevant.</div>'}<div class="pz-chips">${MODS.map(([m,d])=>`<button class="pz-chip${sel.has(m)?' on':''}" data-a="tog" data-v="${m}"><b>${m}</b><small>${d}<br>${count(m,1)} Prüfungsfragen</small></button>`).join('')}</div><button class="pz-pri" data-a="route" ${MODS.some(x=>sel.has(x[0]))?'':'disabled'}>Weiter: Einsatzmeldung</button>`;}
       else if(s.phase==='route'){h=`<div class="pz-lbl"><span>Alarm · Einsatzmeldung</span><b>Hilfsfrist ${fmt(hf())}</b></div><div class="pz-qt">Feuer 2 · Wohnungsbrand, Musterstraße 12, Person vermisst</div>${Object.values(ROUTES).map(r=>`<button class="pz-route" data-a="go" data-v="${r.key}"><b>${r.key} · ${r.name}</b> <span class="pz-center" style="font-size:.78rem">${r.d}</span><div class="k">${r.tags.map(x=>`<span>${x}</span>`).join('')}</div></button>`).join('')}<button class="pz-sec2" data-a="sel" style="align-self:flex-start">‹ Module</button>`;}
       else if(s.phase==='drive'){h=`<div class="pz-lbl"><span>Einsatzfahrt · ${s.route.name}</span><b>${s.qi<s.qs.length?'Frage '+(s.qi+1)+'/'+s.qs.length:'Gleich da'}</b></div><div class="pz-drv"><i></i><span>Sondersignal · Status 3</span></div>`;}
       else if(s.phase==='ask'||s.phase==='fb'){const q=s.qs[s.qi];h=`<div class="pz-lbl"><span>${esc(q.m)} · ${esc(q.src)}</span><b>${s.qi+1}/${s.qs.length}</b></div>${s.duel?'<div class="pz-tmr"><i></i></div>':''}<div class="pz-qt">${esc(q.q)}</div>${q.o.map((o,i)=>{let c='';if(s.phase==='fb')c=i===q.c?' ok':i===s.pick?' bad':' dim';return`<button class="pz-opt${c}" data-a="ans" data-v="${i}" ${s.phase==='fb'?'disabled':''}><i>${L[i]}</i><span>${esc(o)}</span></button>`;}).join('')}`;
@@ -170,7 +177,7 @@ const PAUSE=(function(){
       pn.innerHTML=h;}
     function act(a,v){const s=st;
       if(a==='tog'){sel.has(v)?sel.delete(v):sel.add(v);set('bvi_pause_mods',[...sel]);panel();}
-      else if(a==='route'){if(sel.size){s.phase='route';panel();}}
+      else if(a==='route'){if(MODS.some(x=>sel.has(x[0]))){s.phase='route';panel();}}
       else if(a==='sel'){s.phase='select';panel();}
       else if(a==='go'){s.route=ROUTES[v];s.qs=pick(s.route);s.stops=s.qs.map((_,i)=>(i+1)/(s.qs.length+1));drive();}
       else if(a==='ans'){if(s.phase!=='ask')return;const i=+v,q=s.qs[s.qi],ok=i===q.c;say(ok?'Richtig':(i<0?'Zeit abgelaufen':'Falsch'));s.phase='fb';s.pick=i;s.fx=ok?'ok':'bad';s.fxT=performance.now();s.dt=ok?-s.route.bon:s.route.pen;s.t+=s.dt;s.res.push({q,ok});if(s.duel)SESS.send({t:'a',ok});panel();}
@@ -251,7 +258,7 @@ const PAUSE=(function(){
         else if(m.t==='rematch'){s.opp.rm=true;if(s.rm)SESS.rematch();else panel();}
         else if(m.t==='bye'){if(s.phase==='end'&&s.opp.done){s.opp.gone=true;panel();}else{s.forfeit=true;s.opp.gone=true;s.opp.done={t:s.t+1,score:0,right:0};s.paused=false;if(s.phase!=='end'){s.phase='end';s.win=s.t<=hf();s.p=1;}duelCheck();panel();}}},
       duelPause(on){const s=st;if(!s||!s.duel||(s.phase==='end'&&s.opp.done))return;if(on&&!s.paused){s.paused=true;s.pausedAt=performance.now();panel();}else if(!on&&s.paused){s.paused=false;panel();}},
-      questions,pickSeeded,sig,count,MODS,PAL,
+      questions,baseQuestions,pickSeeded,sig,count,get MODS(){return refreshMods();},refreshMods,PAL,
       stop(){cancelAnimationFrame(raf);raf=0;if(SESS&&SESS.close)SESS.close();SESS=null;},
       _state:()=>st};
   })();

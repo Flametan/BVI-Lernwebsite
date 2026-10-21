@@ -1,0 +1,157 @@
+/* ======================================================================
+   JG – Jahrgänge und ihre Änderungen am Master
+   Der Master (BRef 04/2025 – AB 04/2025) ist die App wie sie ausgeliefert wird. Jeder andere Jahrgang
+   startet als 1:1-Kopie und legt nur seine Änderungen darüber:
+     · veröffentlichte Ebene  jahrgaenge/<Jahrgang-ID>.json  (vom Betreuer ins Repository gelegt, nur lesen)
+     · eigene Ebene          im Browser gespeichert (Ergänzungen, Prüfungen, Glow, eigener Plan)
+   Datei-Format (Version 1), alles optional:
+     { format:'bvi-jahrgang', v:1, jahrgang:'BRef 10/2026 - AB 10/2027', stand:'2027-01-12',
+       plan:{ name, ev:[{s,e,t,r,n,ad}] },
+       erg:[{ id, seite, titel, text, bild, ts }],
+       pr:{ hinzu:[{ id, tab, titel, fragen:[{ q, o:[…], c:0, e:'' }], ts }], weg:['v-…', …] },
+       glow:['laufbahn','idf','feuak','vak','ibk'],
+       bilder:{ '<bild-id>':'data:image/jpeg;base64,…' } }
+====================================================================== */
+const JG=(function(){
+  const MASTER='BRef-04-2025_AB-04-2025', K='bvi_jg', PRE='bvi_jgd_', PUB='bvi_jgp_';
+  const TABS=[['laufbahn','Laufbahnprüfung','Laufbahn'],['idf','IdF Münster','IdF'],['feuak','FeuAK Hamburg','FeuAK'],['vak','VAk Berlin','VAk'],['ibk','IBK Heyrothsberge','IBK']];
+  const ALLTABS=TABS.map(t=>t[0]);
+  const pad=n=>String(n).padStart(2,'0');
+  let pub=null, pubImg={}, ver=0; const subs=[];
+  const lsGet=k=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } };
+  const lsSet=(k,v)=>{ try{ localStorage.setItem(k,v); }catch(e){} };
+
+  // ── Liste der Jahrgänge: Beginn April und Oktober, bis zum neuesten, der heute schon begonnen hat ──
+  // Annahme: Die BRef beginnen ein Jahr vor den AB; für BRef-Beginn ab 10/2026 steht deshalb AB im Folgejahr
+  const AB_OFFSET_FROM=202610;
+  function list(now){
+    now=now||new Date();
+    const ly=now.getFullYear(), lm=now.getMonth()+1>=10?10:now.getMonth()+1>=4?4:-1;   // neuester Beginn ≤ heute
+    const lastY=lm<0?ly-1:ly, lastM=lm<0?10:lm, out=[];
+    for(let y=2025,m=4;y*100+m<=lastY*100+lastM;){
+      const ab=y*100+m>=AB_OFFSET_FROM?y+1:y;
+      out.push({id:'BRef-'+pad(m)+'-'+y+'_AB-'+pad(m)+'-'+ab,label:'BRef '+pad(m)+'/'+y+' - AB '+pad(m)+'/'+ab,start:y*100+m});
+      if(m===4) m=10; else{ m=4; y++; }
+    }
+    return out.reverse();
+  }
+  const labelOf=id=>{ const j=list().find(x=>x.id===id); return j?j.label:String(id).replace(/_/g,' - ').replace(/-(\d\d)-/g,' $1/').replace(/-/g,'/'); };
+  function current(){ const id=lsGet(K); return id&&/^BRef-\d\d-\d{4}_AB-\d\d-\d{4}$/.test(id)?id:MASTER; }
+  const isMaster=()=>current()===MASTER;
+
+  // ── Bilder (IndexedDB, damit der kleine Speicher des Browsers für Lernstand und Notizen frei bleibt) ──
+  let _db=null;
+  function db(){
+    return _db||(_db=new Promise((ok,fail)=>{
+      try{
+        const r=indexedDB.open('bvi_img',1);
+        r.onupgradeneeded=()=>r.result.createObjectStore('i');
+        r.onsuccess=()=>ok(r.result); r.onerror=()=>fail(r.error);
+      }catch(e){ fail(e); }
+    }));
+  }
+  const tx=(mode,fn)=>db().then(d=>new Promise((ok,fail)=>{ const t=d.transaction('i',mode), s=t.objectStore('i'), rq=fn(s); t.oncomplete=()=>ok(rq&&rq.result); t.onerror=()=>fail(t.error); }));
+  const img={
+    put:(id,dataUrl)=>tx('readwrite',s=>s.put(dataUrl,id)),
+    get:async id=>{ if(pubImg[id]) return pubImg[id]; try{ return await tx('readonly',s=>s.get(id)); }catch(e){ return null; } },
+    del:id=>tx('readwrite',s=>s.delete(id)).catch(()=>{})
+  };
+  const okImg=u=>typeof u==='string'&&/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(u)&&u.length<700000;
+
+  // ── Daten prüfen und bereinigen (Dateien von anderen sind nie vertrauenswürdig) ──
+  const str=(v,n)=>String(v==null?'':v).slice(0,n);
+  const idOk=v=>/^[A-Za-z0-9_-]{1,40}$/.test(String(v))?String(v):null;
+  function clean(o){
+    const out={v:1,plan:null,erg:[],pr:{hinzu:[],weg:[]},glow:null};
+    if(!o||typeof o!=='object') return out;
+    if(o.plan&&Array.isArray(o.plan.ev)){
+      const ev=o.plan.ev.slice(0,3000).filter(e=>e&&Number.isFinite(+e.s)&&Number.isFinite(+e.e)&&+e.e>+e.s).map(e=>({s:+e.s,e:+e.e,t:str(e.t,140),r:str(e.r,60),n:str(e.n,140),ad:e.ad?1:0}));
+      if(ev.length) out.plan={name:str(o.plan.name,60)||'Eigener Plan',ev,at:Date.now()};
+    }
+    (Array.isArray(o.erg)?o.erg:[]).slice(0,300).forEach(e=>{
+      const id=e&&idOk(e.id); if(!id||!str(e.seite,60).startsWith('v-')) return;
+      const titel=str(e.titel,120).trim(), text=str(e.text,20000);
+      if(!titel&&!text&&!e.bild) return;
+      out.erg.push({id,seite:str(e.seite,60),titel,text,bild:e.bild&&idOk(e.bild)?String(e.bild):null,ts:Number.isFinite(+e.ts)?+e.ts:Date.now()});
+    });
+    const pr=o.pr||{};
+    (Array.isArray(pr.hinzu)?pr.hinzu:[]).slice(0,60).forEach(p=>{
+      const id=p&&idOk(p.id); if(!id||!ALLTABS.includes(p.tab)) return;
+      const fr=(Array.isArray(p.fragen)?p.fragen:[]).slice(0,300).map(f=>{
+        const opts=(Array.isArray(f&&f.o)?f.o:[]).slice(0,6).map(x=>str(x,300).trim()).filter(Boolean), c=+f.c;
+        const q=str(f&&f.q,600).trim();
+        return q&&opts.length>=2&&Number.isInteger(c)&&c>=0&&c<opts.length?{q,o:opts,c,e:str(f.e,1200).trim()}:null;
+      }).filter(Boolean);
+      if(fr.length) out.pr.hinzu.push({id,tab:p.tab,titel:str(p.titel,100).trim()||'Eigene Prüfung',fragen:fr,ts:Number.isFinite(+p.ts)?+p.ts:Date.now()});
+    });
+    out.pr.weg=(Array.isArray(pr.weg)?pr.weg:[]).slice(0,200).map(x=>str(x,60)).filter(x=>/^(v-[a-z0-9-]+|[A-Za-z0-9_-]+)$/.test(x));
+    if(Array.isArray(o.glow)) out.glow=o.glow.filter(x=>ALLTABS.includes(x));
+    return out;
+  }
+  const empty=()=>clean({});
+  function local(id){ id=id||current(); try{ return clean(JSON.parse(lsGet(PRE+id)||'null')); }catch(e){ return empty(); } }
+  function saveLocal(d,id){ id=id||current(); lsSet(PRE+id,JSON.stringify(d)); changed(); }
+  function pubData(){ return pub||empty(); }
+
+  // eigene und veröffentlichte Ebene zusammen (eigene gewinnt bei gleicher ID)
+  function data(){
+    const p=pubData(), l=local(), byId=(a,b)=>{ const m=new Map(); [...a,...b].forEach(x=>m.set(x.id,x)); return [...m.values()]; };
+    return {
+      plan:l.plan||p.plan,
+      erg:byId(p.erg,l.erg),
+      pr:{hinzu:byId(p.pr.hinzu,l.pr.hinzu),weg:[...new Set([...p.pr.weg,...l.pr.weg])]},
+      glow:l.glow||p.glow
+    };
+  }
+  const glow=()=>{ const g=data().glow; return new Set(g||ALLTABS); };   // ohne Angabe leuchten alle Reiter
+  function changed(){ ver++; subs.forEach(f=>{ try{ f(); }catch(e){} }); }
+  const on=f=>subs.push(f);
+
+  async function load(){
+    pub=null; pubImg={};
+    const id=current();
+    if(id===MASTER){ changed(); return; }   // der Master ist die App selbst
+    try{
+      const r=await fetch('jahrgaenge/'+id+'.json',{cache:'no-cache'});
+      if(r.ok){ const j=await r.json(); pub=clean(j); Object.entries((j&&j.bilder)||{}).forEach(([k,v])=>{ if(idOk(k)&&okImg(v)) pubImg[k]=v; }); lsSet(PUB+id,JSON.stringify(j&&{...j,bilder:undefined})); }
+    }catch(e){
+      try{ const c=JSON.parse(lsGet(PUB+id)||'null'); if(c) pub=clean(c); }catch(x){}   // offline: letzter Stand
+    }
+    changed();
+  }
+  function set(id){
+    if(!list().some(j=>j.id===id)&&id!==MASTER) return;
+    lsSet(K,id);
+    pub=null; pubImg={}; changed(); load();
+  }
+
+  // ── Export und Import ──
+  async function exportJson(){
+    const d=data(), ids=new Set(d.erg.map(e=>e.bild).filter(Boolean)), bilder={};
+    for(const i of ids){ const u=await img.get(i); if(okImg(u)) bilder[i]=u; }
+    return JSON.stringify({format:'bvi-jahrgang',v:1,jahrgang:labelOf(current()),stand:new Date().toISOString().slice(0,10),
+      plan:d.plan,erg:d.erg,pr:d.pr,glow:d.glow,bilder},null,1);
+  }
+  // Datei einlesen und zu den eigenen Änderungen hinzufügen; liefert Zahlen für die Rückmeldung
+  async function importJson(text){
+    let j; try{ j=JSON.parse(text); }catch(e){ throw new Error('json'); }
+    if(!j||j.format!=='bvi-jahrgang') throw new Error('format');
+    const c=clean(j), l=local(), have=new Set([...l.erg.map(e=>e.id)]), haveP=new Set(l.pr.hinzu.map(p=>p.id));
+    let ne=0, np=0, ni=0;
+    for(const [k,v] of Object.entries(j.bilder||{})){ if(idOk(k)&&okImg(v)&&ni<60){ await img.put(k,v); ni++; } }
+    c.erg.forEach(e=>{ const i=l.erg.findIndex(x=>x.id===e.id); if(i>=0) l.erg[i]=e; else{ l.erg.push(e); } if(!have.has(e.id)) ne++; });
+    c.pr.hinzu.forEach(p=>{ const i=l.pr.hinzu.findIndex(x=>x.id===p.id); if(i>=0) l.pr.hinzu[i]=p; else l.pr.hinzu.push(p); if(!haveP.has(p.id)) np++; });
+    l.pr.weg=[...new Set([...l.pr.weg,...c.pr.weg])];
+    if(c.glow) l.glow=c.glow;
+    if(c.plan) l.plan=c.plan;
+    saveLocal(l);
+    return {erg:ne,pruefungen:np,bilder:ni,plan:c.plan?c.plan.ev.length:0};
+  }
+  // Alle eigenen Änderungen dieses Jahrgangs verwerfen (Rückgabe: vorheriger Stand zum Rückgängigmachen)
+  function discard(){ const prev=lsGet(PRE+current()); try{ localStorage.removeItem(PRE+current()); }catch(e){} changed(); return prev; }
+  function restore(prev){ if(prev) lsSet(PRE+current(),prev); changed(); }
+  const hasLocal=()=>{ const l=local(); return !!(l.plan||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||l.glow); };
+
+  return { MASTER, TABS, list, labelOf, current, isMaster, data, local, saveLocal, glow, load, set, on, ver:()=>ver, img, okImg,
+    exportJson, importJson, discard, restore, hasLocal, empty, newId:()=>'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6) };
+})();
