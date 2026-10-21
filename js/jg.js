@@ -6,16 +6,16 @@
      · eigene Ebene          im Browser gespeichert (Ergänzungen, Prüfungen, Klausurrelevanz, eigener Plan)
    Datei-Format (Version 1), alles optional:
      { format:'bvi-jahrgang', v:1, jahrgang:'BRef 10/2026 - AB 10/2027', stand:'2027-01-12',
-       plane:{ ibk|vak|feuak|idf : { name, ev:[{s,e,t,r,n,ad}] } },  aktiv:'idf',
+       plane:{ ibk|vak|feuak|idf|idf2 (IdF Gruppe 1/2) : { name, ev:[{s,e,t,r,n,ad}] } },  aktiv:'idf',
        erg:[{ id, seite, titel, text, bild, ts }],
-       pr:{ hinzu:[{ id, tab, titel, fragen:[{ q, o:[…], c:0, e:'' }], ts }], weg:['v-…', …] },
-       nrel:[],  ausg:['v-seite|a|<kennung>', …]  (ausgeblendete Kapitel/Blöcke)
+       pr:{ hinzu:[{ id, tab, seite (optional: gehört zu dieser Prüfungsseite), titel, fragen:[{ q, o:[…], c:0, e:'' }], ts }], weg:['v-…', …] },
+       rel:{ '<pruefung-id>':true|false },  ausg:['v-seite|a|<kennung>', …]  (ausgeblendete Kapitel/Blöcke)
        bilder:{ '<bild-id>':'data:image/jpeg;base64,…' } }
 ====================================================================== */
 const JG=(function(){
   const MASTER='BRef-04-2025_AB-04-2026', K='bvi_jg', PRE='bvi_jgd_', PUB='bvi_jgp_';
   const TABS=[['laufbahn','Laufbahnprüfung','Laufbahn'],['idf','IdF Münster','IdF'],['feuak','FeuAK Hamburg','FeuAK'],['vak','VAk Berlin','VAk'],['ibk','IBK Heyrothsberge','IBK']];
-  const ALLTABS=TABS.map(t=>t[0]), PLANKEYS=['ibk','vak','feuak','idf'];   // Stundenpläne gibt es je Abschnitt
+  const ALLTABS=TABS.map(t=>t[0]), PLANKEYS=['ibk','vak','feuak','idf','idf2'];   // Stundenpläne je Abschnitt; IdF hat je einen für Gruppe 1 (idf) und Gruppe 2 (idf2)
   const pad=n=>String(n).padStart(2,'0');
   let pub=null, pubImg={}, ver=0; const subs=[];
   const lsGet=k=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } };
@@ -62,7 +62,7 @@ const JG=(function(){
   const idOk=v=>/^[A-Za-z0-9_-]{1,40}$/.test(String(v))?String(v):null;
   const KEYOK=/^[a-z0-9]{1,12}(~\d{1,3})?$/, AUSOK=/^v-[a-z0-9-]{1,58}\|[ab]\|[a-z0-9]{1,12}(~\d{1,3})?$/;
   function clean(o){
-    const out={v:1,plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},nrel:null,ausg:[]};
+    const out={v:1,plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[]};
     if(!o||typeof o!=='object') return out;
     const planOf=pl=>{
       if(!pl||!Array.isArray(pl.ev)) return null;
@@ -86,11 +86,11 @@ const JG=(function(){
         const q=str(f&&f.q,600).trim();
         return q&&opts.length>=2&&Number.isInteger(c)&&c>=0&&c<opts.length?{q,o:opts,c,e:str(f.e,1200).trim()}:null;
       }).filter(Boolean);
-      if(fr.length) out.pr.hinzu.push({id,tab:p.tab,titel:str(p.titel,100).trim()||'Eigene Prüfung',fragen:fr,ts:Number.isFinite(+p.ts)?+p.ts:Date.now()});
+      if(fr.length) out.pr.hinzu.push({id,tab:p.tab,seite:/^v-[a-z0-9-]{1,58}$/.test(String(p.seite))?String(p.seite):null,titel:str(p.titel,100).trim()||'Eigene Prüfung',fragen:fr,ts:Number.isFinite(+p.ts)?+p.ts:Date.now()});
     });
     out.pr.weg=(Array.isArray(pr.weg)?pr.weg:[]).slice(0,200).map(x=>str(x,60)).filter(x=>/^(v-[a-z0-9-]+|[A-Za-z0-9_-]+)$/.test(x));
     if(Array.isArray(o.ausg)) out.ausg=[...new Set(o.ausg.slice(0,600).map(x=>String(x)).filter(x=>AUSOK.test(x)))];
-    if(Array.isArray(o.nrel)) out.nrel=o.nrel.slice(0,300).map(x=>str(x,60)).filter(x=>/^(v-[a-z0-9-]+|[A-Za-z0-9_-]+)$/.test(x));
+    if(o.rel&&typeof o.rel==='object'&&!Array.isArray(o.rel)) Object.keys(o.rel).slice(0,300).forEach(k=>{ if(/^(v-[a-z0-9-]+|[A-Za-z0-9_-]+)$/.test(k)&&k.length<=60) out.rel[k]=!!o.rel[k]; });
     return out;
   }
   const empty=()=>clean({});
@@ -100,25 +100,32 @@ const JG=(function(){
 
   // eigene und veröffentlichte Ebene zusammen (eigene gewinnt bei gleicher ID)
   function data(){
+    if(isMaster()) return {plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[]};   // der Master ist nicht veränderbar
     const p=pubData(), l=local(), byId=(a,b)=>{ const m=new Map(); [...a,...b].forEach(x=>m.set(x.id,x)); return [...m.values()]; };
     return {
       plane:{...p.plane,...l.plane},
       aktiv:l.aktiv||p.aktiv,
       erg:byId(p.erg,l.erg),
       pr:{hinzu:byId(p.pr.hinzu,l.pr.hinzu),weg:[...new Set([...p.pr.weg,...l.pr.weg])]},
-      nrel:l.nrel||p.nrel,
+      rel:{...p.rel,...l.rel},
       ausg:[...new Set([...p.ausg,...l.ausg])]
     };
   }
-  // Klausurrelevanz gilt je Prüfung (nrel = nicht relevante IDs, Standard: alle relevant); ein Reiter zählt, wenn mindestens eine Prüfung darin relevant ist
+  // Klausurrelevanz gilt je Prüfung: Standard sind die hervorgehobenen Prüfungen des Masters (5. Eintrag) und eigene Prüfungen;
+  // rel hält die Abweichungen {id:true|false}. Ein Reiter zählt, wenn mindestens eine Prüfung darin relevant ist.
   let exams=null;
   const setExams=e=>{ exams=e; };
-  const rel=id=>!(data().nrel||[]).includes(id);
+  const rel=id=>{
+    const o=data().rel; if(Object.prototype.hasOwnProperty.call(o,id)) return !!o[id];
+    const it=exams&&exams.flatMap(x=>x[1]).find(x=>x[0]===id);
+    return it?!!it[4]:true;
+  };
+  const examOf=id=>{ if(!exams) return null; for(let i=0;i<exams.length;i++){ const it=exams[i][1].find(x=>x[0]===id); if(it) return {tab:TABS[i][0],titel:it[1]}; } return null; };
   const glow=()=>{
     if(!exams) return new Set(ALLTABS);
     const d=data(), weg=new Set(d.pr.weg), g=new Set();
     exams.forEach(([,items],i)=>{ if(items.some(x=>!weg.has(x[0])&&rel(x[0]))) g.add(TABS[i][0]); });
-    d.pr.hinzu.forEach(p=>{ if(rel(p.id)) g.add(p.tab); });
+    d.pr.hinzu.forEach(p=>{ if(rel(p.seite||p.id)) g.add(p.tab); });
     return g;
   };
   function changed(){ ver++; subs.forEach(f=>{ try{ f(); }catch(e){} }); }
@@ -147,7 +154,7 @@ const JG=(function(){
     const d=data(), ids=new Set(d.erg.map(e=>e.bild).filter(Boolean)), bilder={};
     for(const i of ids){ const u=await img.get(i); if(okImg(u)) bilder[i]=u; }
     return JSON.stringify({format:'bvi-jahrgang',v:1,jahrgang:labelOf(current()),stand:new Date().toISOString().slice(0,10),
-      plane:d.plane,aktiv:d.aktiv,erg:d.erg,pr:d.pr,nrel:d.nrel,ausg:d.ausg,bilder},null,1);
+      plane:d.plane,aktiv:d.aktiv,erg:d.erg,pr:d.pr,rel:d.rel,ausg:d.ausg,bilder},null,1);
   }
   // Datei einlesen und zu den eigenen Änderungen hinzufügen; liefert Zahlen für die Rückmeldung
   async function importJson(text){
@@ -159,7 +166,7 @@ const JG=(function(){
     c.erg.forEach(e=>{ const i=l.erg.findIndex(x=>x.id===e.id); if(i>=0) l.erg[i]=e; else{ l.erg.push(e); } if(!have.has(e.id)) ne++; });
     c.pr.hinzu.forEach(p=>{ const i=l.pr.hinzu.findIndex(x=>x.id===p.id); if(i>=0) l.pr.hinzu[i]=p; else l.pr.hinzu.push(p); if(!haveP.has(p.id)) np++; });
     l.pr.weg=[...new Set([...l.pr.weg,...c.pr.weg])];
-    if(c.nrel) l.nrel=c.nrel;
+    Object.assign(l.rel,c.rel);
     l.ausg=[...new Set([...l.ausg,...c.ausg])];
     let pl=0; Object.entries(c.plane).forEach(([k,v])=>{ l.plane[k]=v; pl+=v.ev.length; });
     if(c.aktiv) l.aktiv=c.aktiv;
@@ -169,8 +176,8 @@ const JG=(function(){
   // Alle eigenen Änderungen dieses Jahrgangs verwerfen (Rückgabe: vorheriger Stand zum Rückgängigmachen)
   function discard(){ const prev=lsGet(PRE+current()); try{ localStorage.removeItem(PRE+current()); }catch(e){} changed(); return prev; }
   function restore(prev){ if(prev) lsSet(PRE+current(),prev); changed(); }
-  const hasLocal=()=>{ const l=local(); return !!(Object.keys(l.plane).length||l.aktiv||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||l.nrel||l.ausg.length); };
+  const hasLocal=()=>{ const l=local(); return !!(Object.keys(l.plane).length||l.aktiv||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||Object.keys(l.rel).length||l.ausg.length); };
 
-  return { MASTER, TABS, PLANKEYS, list, labelOf, current, isMaster, data, local, saveLocal, glow, rel, setExams, load, set, on, ver:()=>ver, img, okImg,
+  return { MASTER, TABS, PLANKEYS, list, labelOf, current, isMaster, data, local, saveLocal, glow, rel, setExams, examOf, load, set, on, ver:()=>ver, img, okImg,
     exportJson, importJson, discard, restore, hasLocal, empty, newId:()=>'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6) };
 })();

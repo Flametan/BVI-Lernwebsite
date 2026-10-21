@@ -26,6 +26,6 @@
     ],
     "weg": ["v-laufbahn-2023"]
   },
-  "nrel": ["v-vak-klausurhinweise"],
+  "rel": { "v-vak-klausurhinweise": true },
   "bilder": {}
 }

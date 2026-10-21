@@ -621,9 +621,9 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     // einzelne Prüfung antippen (Bearbeiten-Modus): ★ wechselt, nicht der ganze Block
     const row0 = document.querySelector('.jg-rw'); const was = row0.classList.contains('hot');
     row0.querySelector('.m-row').click(); await w(300);
-    r.tap = document.querySelector('.jg-rw').classList.contains('hot') === !was && document.querySelectorAll('.jg-rw.hot').length === document.querySelectorAll('.jg-rw').length - 1;
+    r.tap = document.querySelector('.jg-rw').classList.contains('hot') === !was;
     document.querySelector('.jg-rw .m-row').click(); await w(300);
-    ['v-klausur-0826', 'v-klausurfragen', 'v-eingrenzung-klausur', 'v-feuak-altklausur', 'v-simulator'].forEach(id => JGUI.setRel(id)); await w(200);
+    ['v-klausur-0826', 'v-klausurfragen', 'v-eingrenzung-klausur', 'v-feuak-altklausur', 'v-simulator'].forEach(id => { if (JG.rel(id)) JGUI.setRel(id); }); await w(200);
     await PAUSE_LOADER.load();
     const F = PAUSE._fahrt();
     r.mods = F.MODS.map(m => m[0]).join(',');
@@ -631,7 +631,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     JGUI.toggleEdit();
     // Export, Verwerfen, Import
     const txt = await JG.exportJson(), j = JSON.parse(txt);
-    r.exp = j.format === 'bvi-jahrgang' && j.pr.hinzu.length === 1 && Array.isArray(j.nrel) && j.plane.idf.ev.length === 1 && j.plane.vak.ev.length === 1 && j.aktiv === 'idf';
+    r.exp = j.format === 'bvi-jahrgang' && j.pr.hinzu.length === 1 && typeof j.rel === 'object' && j.plane.idf.ev.length === 1 && j.plane.vak.ev.length === 1 && j.aktiv === 'idf';
     JG.discard(); await w(100); r.disc = !JG.hasLocal();
     const n = await JG.importJson(txt); r.imp = n.pruefungen === 1 && n.plan === 2 && JG.hasLocal();
     let bad = false; try{ await JG.importJson('{"format":"x"}'); }catch(e){ bad = true; } r.bad = bad;
@@ -644,7 +644,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   // ── Inhaltsseiten: Kapitel/Blöcke löschen, im Kapitel ergänzen, wiederherstellen ──
   const ch = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
-    JG.discard(); NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
+    JG.set(JG.list()[0].id); await w(300); JG.discard(); NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
     const pc = document.querySelector('#v-vak-verwaltungsrecht .pc'), n0 = pc.querySelectorAll('.acc-item:not(.jg-gone)').length;
     pc.querySelector('.jg-be').click(); await w(200);
     r.ctl = document.querySelectorAll('#v-vak-verwaltungsrecht .acc-item .jg-cx').length === n0 && document.querySelectorAll('#v-vak-verwaltungsrecht .jg-bx').length > 3;
@@ -662,14 +662,71 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     document.querySelector('#v-vak-verwaltungsrecht .jg-br').click(); await w(300);
     r.back = document.querySelectorAll('#v-vak-verwaltungsrecht .jg-gone').length === 0 && n0 === document.querySelectorAll('#v-vak-verwaltungsrecht .acc-item').length;
     const j = JSON.parse(await JG.exportJson()); r.exp = Array.isArray(j.ausg) && !!j.erg[0].kap;
-    JG.discard(); await w(200);
+    JG.discard(); JG.set(JG.MASTER); await w(300);
     return r;
   });
   eq('Inhaltsseiten: Kapitel und Blöcke löschen, im Kapitel ergänzen, wiederherstellen', ch, { ctl: true, inChap: true, gone: true, block: true, restoreBtn: true, back: true, exp: true });
 
+  // ── Master: nichts bearbeitbar, Farbverlauf nur bei den hervorgehobenen Prüfungen ──
+  const ma = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    JG.set(JG.MASTER); await w(300);
+    NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
+    r.lesson = !document.querySelector('#v-vak-verwaltungsrecht .jg-be, #v-vak-verwaltungsrecht .jg-plus, #v-vak-verwaltungsrecht .jg-erg');
+    NAV.tab('v-pruefung', 'Prüfung'); await w(400);
+    r.exam = !document.querySelector('#m-exam-list .jg-tools2') && !document.querySelector('#m-exam-list .jg-plus');
+    r.hot = document.querySelectorAll('#m-exam-list .jg-rw.hot').length;
+    r.rows = document.querySelectorAll('#m-exam-list .jg-rw').length;
+    NAV.go('v-settings', 'E'); await w(300);
+    r.set = !document.getElementById('jg-exp') && !document.getElementById('jg-imp');
+    NAV.go('v-plan', 'P'); await w(400);
+    r.plan = !/Foto oder Screenshot|Termine von Hand|Kalenderdatei \(\.ics\)/.test(document.getElementById('v-plan').innerText);
+    return r;
+  });
+  eq('Master: keine Bearbeitungsfelder, Farbverlauf nur bei hervorgehobenen Prüfungen', ma, { lesson: true, exam: true, hot: 6, rows: 12, set: true, plan: true });
+
+  // ── Eigene Fragen direkt in einer Klausur; IdF-Pläne für Gruppe 1 und 2 ──
+  const eq2 = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    JG.set(JG.list()[0].id); await w(300); JG.discard();
+    NAV.go('v-vak-altklausur', 'VAk'); await w(600);
+    r.btn = !!document.querySelector('#v-vak-altklausur .jg-qbox .jg-plus');
+    JGUI.examEditor(null, null, 'v-vak-altklausur'); await w(200);
+    r.hideName = document.getElementById('jg-pt').closest('label').style.display === 'none';
+    document.getElementById('jg-qa').click(); await w(50);
+    const q = document.querySelector('.jg-q'); q.querySelector('.jg-qt').value = 'Eigene Klausurfrage?';
+    const os = q.querySelectorAll('.jg-o input[type=text]'); os[0].value = 'A'; os[1].value = 'B';
+    q.querySelectorAll('input[type=radio]')[0].click();
+    document.getElementById('jg-ps').click(); await w(500);
+    const p = JG.data().pr.hinzu[0];
+    r.saved = !!p && p.seite === 'v-vak-altklausur' && p.tab === 'vak' && /1 eigene Frage/.test(document.querySelector('#v-vak-altklausur .jg-qbox').innerText);
+    NAV.tab('v-pruefung', 'Prüfung'); await w(300);
+    r.notListed = !/Eigene Klausurfrage|Eigene Fragen ·/.test(document.getElementById('m-exam-list').innerText);
+    await PAUSE_LOADER.load();
+    r.feeds = PAUSE._fahrt().questions().some(x => x.custom && x.q === 'Eigene Klausurfrage?');
+    JGUI.setRel('v-vak-altklausur'); await w(100);
+    r.offWhenIrrelevant = !PAUSE._fahrt().questions().some(x => x.custom && x.q === 'Eigene Klausurfrage?');
+    JGUI.setRel('v-vak-altklausur');
+    JGUI.examEditor(p.id, null, 'v-vak-altklausur'); await w(200);
+    document.querySelector('.jg-qd').click(); await w(50); document.getElementById('jg-ps').click(); await w(400);
+    r.removed = JG.data().pr.hinzu.length === 0;
+    // IdF: zwei Pläne
+    NAV.tab('v-plan', 'Plan'); await w(300);
+    const mk = (d, t) => ({ name: t, ev: [{ s: new Date(2099, 0, d, 8, 0).getTime(), e: new Date(2099, 0, d, 9, 0).getTime(), t, r: '', n: '', ad: 0 }] });
+    IDF_PLAN.viewTab('idf', true); IDF_PLAN.savePlan(mk(5, 'G1-Termin')); await w(200);
+    r.grpUi = !!document.querySelector('#v-plan .idf-gr') && document.querySelectorAll('#v-plan .idf-gr button').length === 2;
+    IDF_PLAN.viewTab('idf2', true); IDF_PLAN.savePlan(mk(6, 'G2-Termin')); await w(200);
+    const d = JG.data(); r.two = d.plane.idf.ev[0].t === 'G1-Termin' && d.plane.idf2.ev[0].t === 'G2-Termin';
+    IDF_PLAN.viewTab('idf'); await w(200); r.back2 = /Gruppe 2/.test(document.querySelector('#v-plan .idf-gr .active').textContent);
+    IDF_PLAN.setActive('idf2'); await w(200); const nx = IDF_PLAN.next(); r.act2 = !!nx && /G2-Termin/.test(JSON.stringify(nx));
+    JG.discard(); JG.set(JG.MASTER); await w(300);
+    return r;
+  });
+  eq('Eigene Fragen in Klausuren; IdF-Pläne für Gruppe 1 und 2', eq2, { btn: true, hideName: true, saved: true, notListed: true, feeds: true, offWhenIrrelevant: true, removed: true, grpUi: true, two: true, back2: true, act2: true });
+
   // ── Veröffentlichte Jahrgangs-Datei (jahrgaenge/<ID>.json) wird mit den eigenen Änderungen zusammengeführt ──
   const jid = await page.evaluate(() => JG.list()[0].id);
-  await page.route('**/jahrgaenge/' + jid + '.json', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ format: 'bvi-jahrgang', v: 1, erg: [{ id: 'pub1', seite: 'v-vak-verwaltungsrecht', titel: 'Vom Jahrgang', text: '<script>x</script>' }], pr: { hinzu: [], weg: ['v-laufbahn-2023'] }, nrel: ['v-vak-altklausur'] }) }));
+  await page.route('**/jahrgaenge/' + jid + '.json', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ format: 'bvi-jahrgang', v: 1, erg: [{ id: 'pub1', seite: 'v-vak-verwaltungsrecht', titel: 'Vom Jahrgang', text: '<script>x</script>' }], pr: { hinzu: [], weg: ['v-laufbahn-2023'] }, rel: { 'v-vak-altklausur': false } }) }));
   const pu = await page.evaluate(async id => {
     const w = ms => new Promise(r => setTimeout(r, ms));
     localStorage.removeItem('bvi_jgd_' + id); JG.set(id); await w(800);

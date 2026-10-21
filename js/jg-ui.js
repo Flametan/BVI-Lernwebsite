@@ -81,13 +81,15 @@ const JGUI=(function(){
     const opts=list.map(j=>'<option value="'+j.id+'"'+(j.id===cur?' selected':'')+'>'+E(j.label)+(j.id===JG.MASTER?' (Master)':'')+'</option>').join('');
     const master=JG.isMaster(), loc=JG.hasLocal();
     root.innerHTML='<div class="m-row m-static m-wrap"><span class="m-tx"><span class="m-t1">Mein Jahrgang</span><span class="m-t2">'+(master?'Der Master: alle Inhalte der App':'Kopie des Masters mit eigenen Änderungen – neue Inhalte und Verbesserungen vom Master kommen automatisch')+'</span></span><select id="jg-sel" class="m-input" aria-label="Jahrgang">'+opts+'</select></div>'
-      +'<button class="m-row" id="jg-exp"><span class="m-tx"><span class="m-t1">Änderungen exportieren</span><span class="m-t2">Eine Datei mit Plan, Ergänzungen und Prüfungen, zum Weitergeben per WhatsApp</span></span></button>'
+      +(master?'':'<button class="m-row" id="jg-exp"><span class="m-tx"><span class="m-t1">Änderungen exportieren</span><span class="m-t2">Eine Datei mit Plan, Ergänzungen und Prüfungen, zum Weitergeben per WhatsApp</span></span></button>'
       +'<label class="m-row" for="jg-imp" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Änderungen einlesen</span><span class="m-t2">Eine Datei von jemandem aus deinem Jahrgang</span></span><input type="file" id="jg-imp" accept=".json,application/json" hidden></label>'
-      +(loc?'<button class="m-row" id="jg-dis"><span class="m-tx"><span class="m-t1">Meine Änderungen verwerfen</span><span class="m-t2">Zurück zum Stand des Masters (mit Rückgängig)</span></span></button>':'')
-      +'<p class="m-note" style="padding:10px 16px 14px">'+NOTICE+'</p>';
+      +(loc?'<button class="m-row" id="jg-dis"><span class="m-tx"><span class="m-t1">Meine Änderungen verwerfen</span><span class="m-t2">Zurück zum Stand des Masters (mit Rückgängig)</span></span></button>':''))
+      +(master?'':'<p class="m-note" style="padding:10px 16px 14px">'+NOTICE+'</p>');
     $(root,'#jg-sel').onchange=e=>{ JG.set(e.target.value); };
-    $(root,'#jg-exp').onclick=exportFile;
-    $(root,'#jg-imp').onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(f) importFile(f); };
+    if(!master){
+      $(root,'#jg-exp').onclick=exportFile;
+      $(root,'#jg-imp').onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(f) importFile(f); };
+    }
     const d=$(root,'#jg-dis'); if(d) d.onclick=()=>{ if(!confirm('Alle eigenen Änderungen dieses Jahrgangs verwerfen?\n\nDer Plan, deine Ergänzungen, hinzugefügte und ausgeblendete Prüfungen sind danach weg.')) return; const prev=JG.discard(); TOAST.show('Änderungen verworfen',{type:'ok',undo:()=>JG.restore(prev)}); };
   }
   async function exportFile(){
@@ -205,14 +207,28 @@ const JGUI=(function(){
   const chapterKey=(id,d)=>{ const v=document.getElementById(id), p=v&&parts(id,v.querySelector('.pc')).find(x=>x.el===d); return p?p.key:''; };
   const ergHtml=e=>'<div class="m-card jg-e" data-id="'+E(e.id)+'"><div class="jg-eh"><b>'+E(e.titel||'Ergänzung')+'</b><span><button type="button" class="jg-ed" aria-label="Ergänzung bearbeiten">Bearbeiten</button><button type="button" class="jg-dl" aria-label="Ergänzung löschen">Löschen</button></span></div>'+para(e.text)+(e.bild?'<img class="jg-img" data-b="'+E(e.bild)+'" alt="Bild zur Ergänzung">':'')+'</div>';
   let editPage=null;
+  // Eigene Fragen direkt auf einer Prüfungsseite (nur in Jahrgängen)
+  function qBlock(id,v){
+    const pc=v.querySelector('.pc'); if(!pc) return;
+    pc.querySelectorAll(':scope > .jg-qbox').forEach(x=>x.remove());
+    if(JG.isMaster()||!JG.examOf(id)) return;
+    const p=JG.data().pr.hinzu.find(x=>x.seite===id), box=document.createElement('div'); box.className='jg-qbox';
+    box.innerHTML='<div class="m-sec">Eigene Fragen</div>'+(p
+      ?'<div class="m-card"><div class="m-t1">'+p.fragen.length+' eigene '+(p.fragen.length===1?'Frage':'Fragen')+'</div><div class="m-t2">'+E(p.fragen.slice(0,3).map(f=>f.q).join(' · ').slice(0,160))+'</div><div class="jg-tools2" style="margin-top:10px"><button type="button" class="btn btn-gold" onclick="JGUI.openExam(\''+p.id+'\')">Üben</button><button type="button" class="btn btn-ghost" onclick="JGUI.examEditor(\''+p.id+'\',null,\''+id+'\')">Bearbeiten oder entfernen</button></div></div>'
+      :'')
+      +'<button type="button" class="jg-plus" onclick="JGUI.examEditor(null,null,\''+id+'\')"><span>+</span> Eigene Frage hinzufügen</button>';
+    pc.appendChild(box);
+  }
   function mount(id){
     const v=document.getElementById(id); if(!v) return;
+    qBlock(id,v);
     const pc=v.querySelector('.pc'); if(!lessonLike(pc)) return;
+    if(JG.isMaster()) editPage=null;
     [pc,...document.querySelectorAll('.lp-win')].forEach(r=>r.querySelectorAll('.jg-ctl,.jg-erg-k').forEach(x=>x.remove()));
     pc.classList.toggle('jg-ed-on',editPage===id);
     const d=JG.data(), gone=new Set(d.ausg), mine=new Set(JG.local().ausg), all=parts(id,pc);
     all.forEach(p=>p.el.classList.toggle('jg-gone',gone.has(p.key)));
-    const ed=editPage===id, ks=new Map(all.filter(p=>p.kind==='a'&&!gone.has(p.key)).map(p=>[p.kap,p]));
+    const master=JG.isMaster(), ed=editPage===id&&!master, ks=new Map(all.filter(p=>p.kind==='a'&&!gone.has(p.key)).map(p=>[p.kap,p]));
     // Ergänzungen: in ihrem Kapitel, sonst unten auf der Seite
     const items=d.erg.filter(e=>e.seite===id).sort((a,b)=>a.ts-b.ts), rest=items.filter(e=>!(e.kap&&ks.has(e.kap)));
     ks.forEach((p,kap)=>{
@@ -228,6 +244,7 @@ const JGUI=(function(){
       if(p.kind==='a'){ const s=$(p.el,'summary'); if(s) s.insertBefore(b,$(s,'.acc-arrow')); } else p.el.insertBefore(b,p.el.firstChild);
     });
     let box=pc.querySelector(':scope > .jg-erg');
+    if(master){ if(box) box.remove(); if(typeof LP!=='undefined'&&LP.refresh) LP.refresh(id); return; }
     if(!box){ box=document.createElement('div'); box.className='jg-erg'; pc.appendChild(box); }
     box.innerHTML=(rest.length?'<div class="m-sec">Eigene Ergänzungen</div>':'')+rest.map(ergHtml).join('')
       +'<button type="button" class="jg-plus" aria-label="Eigene Ergänzung hinzufügen"><span>+</span> Eigene Ergänzung</button>';
@@ -293,8 +310,8 @@ const JGUI=(function(){
   const isEditing=()=>editing;
   function toggleEdit(){ editing=!editing; SHELL.renderExam(); }
   function setRel(id){
-    const l=JG.local(), n=new Set(JG.data().nrel||[]); if(n.has(id)) n.delete(id); else n.add(id);
-    l.nrel=[...n]; JG.saveLocal(l);
+    if(JG.isMaster()) return;
+    const l=JG.local(); l.rel[id]=!JG.rel(id); JG.saveLocal(l);
   }
   function delExam(id){
     const l=JG.local(), prev=JSON.stringify(l), i=l.pr.hinzu.findIndex(p=>p.id===id);
@@ -323,10 +340,13 @@ const JGUI=(function(){
     });
     push(); return qs;
   }
-  function examEditor(id,preTab){
+  function examEditor(id,preTab,seite){
     const cur=id?JG.data().pr.hinzu.find(p=>p.id===id):null;
+    seite=seite||(cur&&cur.seite)||null;
+    const info=seite?JG.examOf(seite):null;
     let qs=cur?cur.fragen.map(f=>({...f})):[];
     const m=modal(cur?'Prüfung bearbeiten':'Prüfung hinzufügen','<label class="jg-l">Reiter<select id="jg-tab" class="m-input">'+JG.TABS.map(t=>'<option value="'+t[0]+'"'+((cur?cur.tab:preTab||'idf')===t[0]?' selected':'')+'>'+E(t[1])+'</option>').join('')+'</select></label><label class="jg-l">Name der Prüfung<input type="text" id="jg-pt" class="m-input" maxlength="100" value="'+E(cur?cur.titel:'')+'" placeholder="z. B. Klausur 02/2027"></label><div class="jg-ocr-w"></div><div id="jg-qs"></div><button class="btn btn-ghost" id="jg-qa" type="button">+ Frage</button><p class="m-note" style="padding:0;margin:8px 0">'+NOTICE+'</p><button class="btn btn-gold" id="jg-ps" type="button">Speichern</button>','jg-wide');
+    if(info){ const t=$(m.body,'#jg-tab'),n=$(m.body,'#jg-pt'); [t,n].forEach(x=>{ if(x&&x.closest('label')) x.closest('label').style.display='none'; }); if(t) t.value=info.tab; if(n) n.value='Eigene Fragen · '+info.titel; }
     const box=$(m.body,'#jg-qs'), draw=()=>{ box.innerHTML=qs.map(qHtml).join('')||'<div class="cu-empty">Noch keine Fragen – mit „+ Frage“ anfangen oder ein Foto einlesen.</div>'; };
     const sync=()=>{ box.querySelectorAll('.jg-q').forEach(el=>{ const i=+el.dataset.i,q=qs[i]; if(!q) return; q.q=$(el,'.jg-qt').value; q.o=[...el.querySelectorAll('.jg-o input[type=text]')].map(x=>x.value); const r=el.querySelector('input[type=radio]:checked'); q.c=r?+r.value:-1; q.e=$(el,'.jg-qe').value; }); };
     draw();
@@ -347,8 +367,9 @@ const JGUI=(function(){
         });
         if(!titel){ TOAST.show('Bitte der Prüfung einen Namen geben',{type:'info'}); return; }
         if(bad){ TOAST.show(bad+' Fragen sind unvollständig: Frage, mindestens 2 Antworten und die richtige Antwort wählen',{type:'info'}); return; }
-        if(!fr.length){ TOAST.show('Bitte mindestens eine Frage eingeben',{type:'info'}); return; }
-        const l=JG.local(), item={id:cur?cur.id:JG.newId(),tab,titel,fragen:fr,ts:cur?cur.ts:Date.now()}, i=l.pr.hinzu.findIndex(p=>p.id===item.id);
+        if(!fr.length&&!info){ TOAST.show('Bitte mindestens eine Frage eingeben',{type:'info'}); return; }
+        const l=JG.local(), item={id:cur?cur.id:JG.newId(),tab:info?info.tab:tab,seite,titel,fragen:fr,ts:cur?cur.ts:Date.now()}, i=l.pr.hinzu.findIndex(p=>p.id===item.id);
+        if(!fr.length){ if(i>=0) l.pr.hinzu.splice(i,1); JG.saveLocal(l); m.close(); TOAST.show('Eigene Fragen entfernt',{type:'ok'}); return; }
         if(i>=0) l.pr.hinzu[i]=item; else l.pr.hinzu.push(item);
         JG.saveLocal(l); m.close(); TOAST.show('Prüfung gespeichert',{type:'ok'});
       }
