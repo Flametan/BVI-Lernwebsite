@@ -44,8 +44,12 @@ const eq = (n, a, b) => ok(n + ' (ist: ' + JSON.stringify(a) + ')', JSON.stringi
   await A.reload(); await A.waitForTimeout(800); await A.evaluate(() => NAV.go('v-pause', 'x')); await A.evaluate(() => PAUSE_LOADER.load()); await A.evaluate(() => PAUSE.open('duell')); await A.waitForSelector('[data-a="host"]');
   await A.click('[data-a="host"]'); await A.waitForSelector('textarea.pz-code');
   const c1b = await A.inputValue('textarea.pz-code');
+  const png = await A.evaluate(async () => { const svg = document.querySelector('#qr svg'); const w = 600; const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.outerHTML.replace('<svg', '<svg width="' + w + '" height="' + w + '"')); await img.decode(); const cv = document.createElement('canvas'); cv.width = cv.height = w + 80; const x = cv.getContext('2d'); x.fillStyle = '#ccc'; x.fillRect(0, 0, cv.width, cv.height); x.drawImage(img, 40, 40, w, w); return cv.toDataURL('image/png').split(',')[1]; });
   await A.click('[data-a="next1"]'); await A.waitForSelector('#pc');
-  await B.click('[data-a="join"]'); await B.waitForSelector('#pc'); await B.fill('#pc', c1b); await B.click('[data-a="paste"]');
+  // Foto statt Live-Kamera: der QR-Code von Spieler 1 wird als Bild aufgenommen und gelesen
+  await B.click('[data-a="join"]'); await B.waitForSelector('#ph', { state: 'attached' });
+  ok('Foto-Auswahl ist neben der Live-Kamera angeboten', await B.locator('[data-a="photo"]').count() === 1);
+  await B.setInputFiles('#ph', { name: 'qr.png', mimeType: 'image/png', buffer: Buffer.from(png, 'base64') });
   await B.waitForSelector('textarea.pz-code'); const c2 = await B.inputValue('textarea.pz-code');
   await A.fill('#pc', c2); await A.click('[data-a="paste"]');
   await A.waitForSelector('[data-a="go"]', { timeout: 30000 }); await B.waitForSelector('[data-a="ready"]');
