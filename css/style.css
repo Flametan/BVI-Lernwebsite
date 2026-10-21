@@ -1894,7 +1894,8 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
   #m-home .m-hgrid{grid-template-columns:5fr 7fr;grid-template-rows:auto auto 1fr auto;gap:20px;}
   #m-home .m-hl,#m-home .m-hr2{display:contents;}
   .m-cont2{grid-column:1;grid-row:1;}
-  .m-chart2{grid-column:2;grid-row:1 / span 3;}
+  .m-chart2{grid-column:2;grid-row:1 / span 2;}
+  .m-donate-home{grid-column:2;grid-row:3;align-self:start;}
   .m-pause{grid-column:1;grid-row:2;align-self:start;}
   .m-cloud{grid-column:1;grid-row:3;align-self:start;}
   .m-mods{grid-column:1 / -1;grid-row:4;}
@@ -1908,7 +1909,6 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 /* ── Dezenter Farbverlauf an besonderen Stellen ──────────────────────────── */
 .m-count,.idf-item.idf-now{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
 .idf-item.idf-now{border-radius:12px;padding:8px 10px;margin:-8px -10px;}
-.m-list.m-donate{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
 
 /* Handy: Startseite kompakter, damit die Ringe des 2. Ausbildungsjahrs ohne Scrollen sichtbar sind */
 @media(max-width:700px){
@@ -1944,7 +1944,7 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 /* Handy: Reihenfolge Weiterlernen, 2. Ausbildungsjahr, Verlauf, 1. Ausbildungsjahr, Cloud */
 @media(max-width:700px){
   #m-home .m-hl,#m-home .m-hr2,#m-home .m-mods,#m-home .m-modgrid2{display:contents;}
-  .m-cont2{order:1;}.m-r2{order:2;}.m-chart2{order:3;}.m-pause{order:4;}.m-y1{order:5;}.m-cloud{order:6;}
+  .m-cont2{order:1;}.m-r2{order:2;}.m-chart2{order:3;}.m-pause{order:4;}.m-y1{order:5;}.m-cloud{order:6;}.m-donate-home{order:7;}
   .m-chart2 .m-seg-s button{height:24px;font-size:.75rem;padding:0 9px;min-width:0;}
 }
 
@@ -2572,7 +2572,7 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 .idf-act{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
 .idf-act .btn{font-size:.85rem;padding:8px 14px;}
 
-.m-donate-home{display:block;background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
+.m-donate-home{display:block;}
 .m-donate-home .m-ic,.m-donate-home .m-row>svg{color:var(--m-accent-fg);}
 #danke{position:fixed;left:12px;right:12px;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:60;max-width:460px;margin:0 auto;padding:14px 16px;border-radius:18px;background:var(--m-card);color:var(--m-fg,inherit);border:1px solid color-mix(in srgb,var(--m-accent) 40%,transparent);box-shadow:0 10px 30px rgba(0,0,0,.3);animation:dk-in .35s ease both;}
 @keyframes dk-in{from{opacity:0;transform:translateY(12px)}}
@@ -2584,3 +2584,5 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 #danke .dk-go{flex:1;min-width:90px;text-align:center;padding:10px;border-radius:12px;background:var(--m-accent);color:#000;font-weight:700;text-decoration:none}
 #danke .dk-later{padding:10px 14px;border-radius:12px;border:1px solid currentColor;background:none;color:inherit;opacity:.85;font:inherit}
 #danke .dk-no{padding:10px 8px;border:0;background:none;color:inherit;opacity:.6;font:inherit;font-size:.8rem}
+
+.m-list.m-donate:not(.m-donate-home){background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
