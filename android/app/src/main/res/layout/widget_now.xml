@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root" android:layout_width="match_parent" android:layout_height="match_parent">
-  <ImageView android:id="@+id/bg" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="fitXY" android:src="@drawable/w_bg" android:tint="#1B1C1F" android:importantForAccessibility="no"/>
+  <ImageView android:id="@+id/bg" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="fitXY" android:src="@drawable/w_bg_glass" android:importantForAccessibility="no"/>
   <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="horizontal" android:padding="12dp">
     <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1.5" android:orientation="vertical">
     <TextView

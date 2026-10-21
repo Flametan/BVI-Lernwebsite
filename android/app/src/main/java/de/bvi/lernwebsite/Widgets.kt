@@ -11,6 +11,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.View
@@ -84,6 +86,30 @@ object Widgets {
         return b
     }
 
+    // Mischung aus zwei Farben (t = Anteil von a)
+    private fun mix(a: Int, b: Int, t: Float): Int {
+        val r = (Color.red(a) * t + Color.red(b) * (1 - t)).toInt()
+        val g = (Color.green(a) * t + Color.green(b) * (1 - t)).toInt()
+        val bl = (Color.blue(a) * t + Color.blue(b) * (1 - t)).toInt()
+        return Color.rgb(r, g, bl)
+    }
+
+    // Hintergrund mit Farbverlauf aus der Akzentfarbe (oben links) in die Grundfarbe, passend zur Widget-Größe
+    private fun glassBg(ctx: Context, pal: Pal, light: Boolean, wDp: Int, hDp: Int): Bitmap {
+        val d = ctx.resources.displayMetrics.density
+        val w = (wDp * d).toInt().coerceIn(240, 1100)
+        val h = (hDp * d).toInt().coerceIn(120, 800)
+        val b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        val c = Canvas(b)
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val end = if (light) Color.rgb(0xF4, 0xF4, 0xF1) else Color.rgb(0x15, 0x16, 0x1A)
+        val start = mix(pal.acc, if (light) Color.WHITE else end, if (light) 0.35f else 0.30f)
+        paint.shader = LinearGradient(0f, 0f, w * 0.8f, h.toFloat(), intArrayOf(start, end, end), floatArrayOf(0f, 0.72f, 1f), Shader.TileMode.CLAMP)
+        val r = 22f * d
+        c.drawRoundRect(RectF(0f, 0f, w.toFloat(), h.toFloat()), r, r, paint)
+        return b
+    }
+
     private fun openApp(ctx: Context): PendingIntent {
         val i = ctx.packageManager.getLaunchIntentForPackage(ctx.packageName) ?: Intent(ctx, MainActivity::class.java)
         i.putExtra("open", "plan")
@@ -122,14 +148,14 @@ object Widgets {
         else -> "Kein Unterricht geplant"
     }
 
-    fun build(ctx: Context, kind: Int): RemoteViews {
+    fun build(ctx: Context, kind: Int, wDp: Int, hDp: Int): RemoteViews {
         val now = System.currentTimeMillis()
         val s = Schedule.snap(Schedule.load(ctx), now)
         val pal = pal(ctx)
         return when (kind) {
             1 -> buildNext(ctx, s, pal, now)
             2 -> buildDay(ctx, s, pal, now)
-            else -> buildNow(ctx, s, pal, now)
+            else -> buildNow(ctx, s, pal, now, wDp, hDp)
         }
     }
 
@@ -220,9 +246,11 @@ object Widgets {
     }
 
     // Entwurf 5: Jetzt und danach (breit, 4×2)
-    private fun buildNow(ctx: Context, s: Snap, pal: Pal, now: Long): RemoteViews {
+    private fun buildNow(ctx: Context, s: Snap, pal: Pal, now: Long, wDp: Int, hDp: Int): RemoteViews {
         val v = RemoteViews(ctx.packageName, R.layout.widget_now)
-        base(ctx, v, pal)
+        v.setOnClickPendingIntent(R.id.root, openApp(ctx))
+        val light = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean("w_light", false)
+        v.setImageViewBitmap(R.id.bg, glassBg(ctx, pal, light, wDp, hDp))
         tint(v, R.id.cardBg, pal.card)
         val u = if (s.kind == Snap.NOW) s.cur else s.next
         val aft = if (s.kind == Snap.NOW) s.next else s.after
@@ -274,8 +302,12 @@ object Widgets {
             val ids = mgr.getAppWidgetIds(ComponentName(ctx, cls))
             if (ids.isEmpty()) continue
             any = true
-            val views = build(ctx, kind)
-            for (id in ids) mgr.updateAppWidget(id, views)
+            for (id in ids) {
+                val o = mgr.getAppWidgetOptions(id)
+                val w = o.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0).let { if (it > 0) it else 250 }
+                val h = o.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 0).let { if (it > 0) it else 110 }
+                mgr.updateAppWidget(id, build(ctx, kind, w, h))
+            }
         }
         val am = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if (any) {
