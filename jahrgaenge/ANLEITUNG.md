@@ -17,6 +17,20 @@ diesen Jahrgang wählt, bekommt die Datei automatisch dazu.
 (Die ID zeigt die App unter Einstellungen → Lehrgang → „Änderungen exportieren“ im Dateinamen:
 `bvi-<ID>.json`.)
 
+## Datei prüfen (Skript)
+
+Bevor du eine Datei hochlädst, lass sie vom Skript durchsehen:
+
+```
+node tools/pruefe-jahrgang.cjs <Datei.json>          # Zusammenfassung, Fehler und Warnungen
+node tools/pruefe-jahrgang.cjs <Datei.json> --voll   # zusätzlich alle Texte zum Durchlesen
+```
+
+Es zählt Pläne, Ergänzungen, Kapitel, Prüfungen, Fragen, Karten, Termine, Reiter und Bilder und warnt
+bei HTML oder Skriptteilen, Links, sehr langen Texten, fehlenden Bildern, falschem Dateinamen und
+einem Link-Hinweis mit „Passwort“. Bei echten Fehlern (kein gültiges Format, ungültiger Reiter,
+Termin oder Link) endet es mit Code 1. Das Skript braucht nur Node, sonst nichts.
+
 ## So kommt eine Datei in die App
 
 1. Jemand aus dem Jahrgang exportiert in der App: **Einstellungen → Lehrgang → Änderungen exportieren**
@@ -39,11 +53,13 @@ Alles ist optional (siehe `_beispiel.json`):
 * `erg` – Ergänzungen zu Lernseiten (`seite` ist die Seiten-ID, z. B. `v-vak-verwaltungsrecht`; `bild` verweist auf `bilder`).
 * `pr` – Prüfungen: `hinzu` (eigene Prüfungen mit Fragen und Antworten), `weg` (ausgeblendete mitgelieferte Prüfungen).
 * `rel` – Klausurrelevanz einzelner Prüfungen als `{ "<Prüfungs-ID>": true|false }`. Ohne Angabe gelten die im Master hervorgehobenen Prüfungen (und eigene Prüfungen) als relevant; relevante Prüfungen liefern die Fragen für Einsatzfahrt und Duell.
-* `erg` kann außer Text auch Auswahlfragen und eigene Kapitel enthalten: `typ` ist `text` (Standard), `sc` (Single-Choice), `mc` (Multiple-Choice) oder `kapitel`. Bei `sc`/`mc` ist `text` die Frage, `o` die Antworten, `c` die Nummern der richtigen Antworten (ab 0) und `erk` eine Erklärung. `kap` ordnet eine Ergänzung einem Kapitel zu.
+* `erg` kann außer Text auch eigene Kapitel enthalten: `typ` ist `text` (Standard) oder `kapitel`. `kap` ordnet eine Ergänzung einem Kapitel zu.
 * `termine` – Klausurtermine des Jahrgangs: `[{ "date": "2026-12-14", "name": "Klausur IdF" }]`. Der nächste erscheint als Countdown.
 * `links` – `{ "cloud": { "url": "https://…", "titel": "…", "hinweis": "…" } }`, nur `https`. Erscheint als Karte auf der Startseite. Keine Passwörter eintragen.
 * `karten` – Lernkarten des Jahrgangs: `[{ "id": "k1", "modul": "VAk", "q": "Frage", "a": "Antwort" }]` (Module: GAL, SFS, HLFS, IBK, VAk, FeuAK, IdF).
 * `orte` – Standorte statt der Standardnamen: `{ "ibk": "…", "vak": "…", "feuak": "…", "idf": "…" }`.
+* `reiter` – eigene Reiter auf einer Übersichtsseite: `[{ "id": "r1", "seite": "v-vak", "titel": "…", "beschr": "…" }]`. Ihre Kapitel stehen in `erg` mit `seite: "v-r-<id>"` und `typ: "kapitel"`.
+* Eigene Prüfungsfragen haben `typ`: `sc` (Single-Choice, `c` = Nummer), `mc` (Multiple-Choice, `c` = Liste) oder `text` (Freitext, `a` = Musterlösung).
 * `bilder` – die Bilder als `data:image/jpeg;base64,…` (die App verkleinert sie vor dem Speichern).
 
 ## Prüfen, bevor du veröffentlichst

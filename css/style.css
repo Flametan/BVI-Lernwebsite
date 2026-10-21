@@ -2602,17 +2602,6 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 .jg-ed-on .acc-item>summary .jg-cx{position:absolute;right:12px;top:50%;transform:translateY(-50%);z-index:2;}
 .lp-voll .acc-item>summary .jg-cx{pointer-events:auto;}
 /* Auswahlfragen als Ergänzung */
-.jg-ch .jg-cq p{margin:.4em 0;}
-.jg-co{display:flex;flex-direction:column;gap:8px;margin:10px 0;}
-.jg-ca{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:var(--m-raised);cursor:pointer;}
-.jg-ca input{margin-top:3px;flex:none;}
-.jg-ca.ok{box-shadow:inset 0 0 0 2px var(--ok,#2e9f5b);}
-.jg-ca.bad{box-shadow:inset 0 0 0 2px var(--bad,#d1453b);}
-.jg-cf{margin-top:10px;font-weight:600;}
-.jg-cf.ok{color:var(--ok,#2e9f5b);}
-.jg-cf.bad{color:var(--bad,#d1453b);}
-.jg-ty{display:flex;width:100%;margin-bottom:12px;}
-.jg-ty button{flex:1;}
 .jg-o2{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
 .jg-o2 .jg-ok{flex:none;width:20px;height:20px;}
 .jg-o2 .jg-ot{flex:1;min-width:0;}
@@ -2625,3 +2614,10 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 .jg-tr input[type=date]{flex:none;width:150px;}
 .jg-tr .jg-tn{flex:1;min-width:0;}
 .jg-trx{position:static;flex:none;}
+
+.pz-game[data-g="fahrt"]{background:linear-gradient(135deg,color-mix(in srgb,var(--m-accent) 18%,var(--m-card)),var(--m-card) 60%);}
+.jg-ed-on .topic-card,.jg-ed-on .glass-tile{position:relative;}
+.jg-tx{position:absolute;top:8px;right:8px;z-index:3;}
+.jg-qty{display:flex;width:100%;margin:6px 0;}
+.jg-qty button{flex:1;}
+.jg-opts label.jg-opt{display:flex;gap:10px;align-items:flex-start;cursor:pointer;}

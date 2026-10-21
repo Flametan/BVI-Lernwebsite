@@ -81,12 +81,13 @@ const JGUI=(function(){
     const opts=list.map(j=>'<option value="'+j.id+'"'+(j.id===cur?' selected':'')+'>'+E(j.label)+(j.id===JG.MASTER?' (Master)':'')+'</option>').join('');
     const master=JG.isMaster(), loc=JG.hasLocal();
     root.innerHTML='<div class="m-row m-static m-wrap"><span class="m-tx"><span class="m-t1">Mein Jahrgang</span><span class="m-t2">'+(master?'Der Master: alle Inhalte der App':'Kopie des Masters mit eigenen Änderungen – neue Inhalte und Verbesserungen vom Master kommen automatisch')+'</span></span><select id="jg-sel" class="m-input" aria-label="Jahrgang">'+opts+'</select></div>'
-      +(master?'':'<button class="m-row m-go" id="jg-setup"><span class="m-tx"><span class="m-t1">Jahrgang einrichten</span><span class="m-t2">Checkliste: Stundenpläne, Klausurtermine, Link, Standorte, Lernkarten</span></span></button><button class="m-row" id="jg-exp"><span class="m-tx"><span class="m-t1">Änderungen exportieren</span><span class="m-t2">Eine Datei mit Plan, Ergänzungen und Prüfungen, zum Weitergeben per WhatsApp</span></span></button>'
+      +(master?'':'<button class="m-row m-go" id="jg-help"><span class="m-tx"><span class="m-t1">So funktioniert dein Jahrgang</span><span class="m-t2">Warum es die Seite gibt und wie du sie nutzt</span></span></button><button class="m-row m-go" id="jg-setup"><span class="m-tx"><span class="m-t1">Jahrgang einrichten</span><span class="m-t2">Checkliste: Stundenpläne, Klausurtermine, Link, Standorte, Lernkarten</span></span></button><button class="m-row" id="jg-exp"><span class="m-tx"><span class="m-t1">Änderungen exportieren</span><span class="m-t2">Eine Datei mit Plan, Ergänzungen und Prüfungen, zum Weitergeben per WhatsApp</span></span></button>'
       +'<label class="m-row" for="jg-imp" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Änderungen einlesen</span><span class="m-t2">Eine Datei von jemandem aus deinem Jahrgang</span></span><input type="file" id="jg-imp" accept=".json,application/json" hidden></label>'
       +(loc?'<button class="m-row" id="jg-dis"><span class="m-tx"><span class="m-t1">Meine Änderungen verwerfen</span><span class="m-t2">Zurück zum Stand des Masters (mit Rückgängig)</span></span></button>':''))
       +(master?'':'<p class="m-note" style="padding:10px 16px 14px">'+NOTICE+'</p>');
     $(root,'#jg-sel').onchange=e=>{ JG.set(e.target.value); };
     if(!master){
+      $(root,'#jg-help').onclick=()=>NAV.go('v-jg-hilfe','So funktioniert dein Jahrgang');
       $(root,'#jg-setup').onclick=checklist;
       $(root,'#jg-exp').onclick=exportFile;
       $(root,'#jg-imp').onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(f) importFile(f); };
@@ -183,7 +184,7 @@ const JGUI=(function(){
   }
 
   // ── Ergänzungen auf Lernseiten („+“) ──
-  const lessonLike=pc=>!!pc&&!!pc.querySelector('.sec-h,.acc-item,.info-card');
+  const lessonLike=pc=>!!pc&&!!pc.querySelector('.sec-h,.acc-item,.info-card,.acc-list');
   function para(t){ return String(t||'').split(/\n{2,}/).map(p=>'<p>'+E(p).replace(/\n/g,'<br>')+'</p>').join(''); }
   async function fillImages(root){
     for(const im of root.querySelectorAll('img[data-b]')){ const u=await JG.img.get(im.dataset.b); if(u) im.src=u; else im.remove(); }
@@ -205,70 +206,89 @@ const JGUI=(function(){
     chs.forEach(d=>{ const b=bodyOf(d); if(b) b.querySelectorAll('.info-card,.def-box').forEach(blk); });
     return out;
   }
-  const chapterKey=(id,d)=>{ if(d.classList.contains('jg-kap')) return ''; const v=document.getElementById(id), p=v&&parts(id,v.querySelector('.pc')).find(x=>x.el===d); return p?p.key:''; };
+  const chapterKey=(vid,d)=>{ if(d.classList.contains('jg-kap')) return ''; const v=document.getElementById(vid), p=v&&parts(v.dataset.jg||vid,v.querySelector('.pc')).find(x=>x.el===d); return p?p.key:''; };
   const btns=ed=>ed?'<span><button type="button" class="jg-ed" aria-label="Ergänzung bearbeiten">Bearbeiten</button><button type="button" class="jg-dl" aria-label="Ergänzung löschen">Löschen</button></span>':'';
-  function ergHtml(e,ed){
-    if(e.typ==='sc'||e.typ==='mc'){
-      const t=e.typ==='mc'?'checkbox':'radio';
-      return '<div class="m-card jg-e jg-ch" data-id="'+E(e.id)+'"><div class="jg-eh"><b>'+E(e.titel||(e.typ==='mc'?'Multiple-Choice-Frage':'Single-Choice-Frage'))+'</b>'+btns(ed)+'</div>'
-        +'<div class="jg-cq">'+para(e.text)+'</div><div class="m-t2">'+(e.typ==='mc'?'Mehrere Antworten können richtig sein':'Eine Antwort ist richtig')+'</div>'
-        +'<div class="jg-co">'+e.o.map((o,i)=>'<label class="jg-ca"><input type="'+t+'" name="c'+E(e.id)+'" value="'+i+'"><span>'+E(o)+'</span></label>').join('')+'</div>'
-        +'<button type="button" class="btn btn-ghost jg-ck">Antwort prüfen</button><div class="jg-cf" aria-live="polite"></div></div>';
-    }
-    return '<div class="m-card jg-e" data-id="'+E(e.id)+'"><div class="jg-eh"><b>'+E(e.titel||'Ergänzung')+'</b>'+btns(ed)+'</div>'+para(e.text)+(e.bild?'<img class="jg-img" data-b="'+E(e.bild)+'" alt="Bild zur Ergänzung">':'')+'</div>';
-  }
+  const ergHtml=(e,ed)=>'<div class="m-card jg-e" data-id="'+E(e.id)+'"><div class="jg-eh"><b>'+E(e.titel||'Ergänzung')+'</b>'+btns(ed)+'</div>'+para(e.text)+(e.bild?'<img class="jg-img" data-b="'+E(e.bild)+'" alt="Bild zur Ergänzung">':'')+'</div>';
   // Eigenes Kapitel: erscheint wie ein mitgeliefertes Kapitel in der Gliederung
   function kapEl(e,n,ed){
     const det=document.createElement('details'); det.className='acc-item jg-kap';
     det.innerHTML='<summary><span class="acc-num">'+String(n).padStart(2,'0')+'</span><span class="acc-title">'+E(e.titel)+'</span><span class="acc-arrow">›</span></summary><div class="acc-body"><div class="jg-e jg-ek" data-id="'+E(e.id)+'">'+(ed?'<div class="jg-eh"><b></b>'+btns(true)+'</div>':'')+para(e.text)+(e.bild?'<img class="jg-img" data-b="'+E(e.bild)+'" alt="Bild zum Kapitel">':'')+'</div></div>';
     return det;
   }
+  // Logische Seiten-ID: eigene Reiter nutzen eine gemeinsame Ansicht mit wechselnder Kennung
+  const pageOf=v=>v.dataset.jg||v.id;
   let editPage=null;
   const ADD='<button type="button" class="jg-plus jg-add" data-k="';
-  function mount(id){
-    const v=document.getElementById(id); if(!v) return;
+  const RT_ICON='<svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2z"/><path d="M8 8h6M8 12h6"/></svg>';
+  function mount(vid){
+    const v=document.getElementById(vid); if(!v||v.hasAttribute('data-nojg')) return;
     const pc=v.querySelector('.pc'); if(!pc) return;
-    [pc,...document.querySelectorAll('.lp-win')].forEach(r=>r.querySelectorAll('.jg-ctl,.jg-erg-k,.jg-kap,.jg-qbox,.jg-erg').forEach(x=>x.remove()));
-    const master=JG.isMaster(), isEx=!!JG.examOf(id), lesson=lessonLike(pc);
-    if(master||(!lesson&&!isEx)){ if(master) editPage=null; pc.classList.remove('jg-ed-on'); if(typeof LP!=='undefined'&&LP.refresh) LP.refresh(id); return; }
-    const ed=editPage===id; pc.classList.toggle('jg-ed-on',ed);
+    const id=pageOf(v);
+    [pc,...document.querySelectorAll('.lp-win')].forEach(r=>r.querySelectorAll('.jg-ctl,.jg-erg-k,.jg-kap,.jg-qbox,.jg-erg,.jg-rt').forEach(x=>x.remove()));
+    const master=JG.isMaster(), isEx=!!JG.examOf(id);
+    const tiles=[...pc.querySelectorAll('.topic-card,.glass-tile')];
+    const hub=tiles.length>=2&&!pc.querySelector('.acc-item');
+    const lesson=!hub&&lessonLike(pc);
+    if(master||(!lesson&&!isEx&&!hub)){ if(master) editPage=null; pc.classList.remove('jg-ed-on'); if(typeof LP!=='undefined'&&LP.refresh) LP.refresh(vid); return; }
+    const ed=editPage===vid; pc.classList.toggle('jg-ed-on',ed);
     const d=JG.data(), gone=new Set(d.ausg), mine=new Set(JG.local().ausg);
-    const list=pc.querySelector('.acc-list:not(.acc-cards)');
-    const kaps=d.erg.filter(e=>e.seite===id&&e.typ==='kapitel').sort((a,b)=>a.ts-b.ts);
-    if(list) kaps.forEach(e=>list.appendChild(kapEl(e,list.querySelectorAll(':scope > .acc-item').length+1,ed)));
-    const all=parts(id,pc);
-    all.forEach(p=>p.el.classList.toggle('jg-gone',gone.has(p.key)));
-    const ks=new Map(all.filter(p=>p.kind==='a'&&!gone.has(p.key)).map(p=>[p.kap,p]));
-    // Ergänzungen: in ihrem Kapitel, sonst unten auf der Seite
-    const items=d.erg.filter(e=>e.seite===id&&e.typ!=='kapitel').sort((a,b)=>a.ts-b.ts), rest=items.filter(e=>!(e.kap&&ks.has(e.kap)));
-    ks.forEach((p,kap)=>{
-      const body=bodyOf(p.el); if(!body) return;
-      const own=items.filter(e=>e.kap===kap);
-      if(own.length){ const w=document.createElement('div'); w.className='jg-erg-k'; w.innerHTML=own.map(e=>ergHtml(e,ed)).join(''); body.appendChild(w); }
-      if(ed){ const b=document.createElement('button'); b.type='button'; b.className='jg-plus jg-ctl jg-in'; b.dataset.kap=kap; b.innerHTML='<span>+</span> Ergänzung in diesem Kapitel'; body.appendChild(b); }
-    });
-    if(ed) all.forEach(p=>{
-      if(gone.has(p.key)) return;
-      const b=document.createElement('button'); b.type='button'; b.className='jg-ctl '+(p.kind==='a'?'jg-cx':'jg-bx'); b.dataset.key=p.key;
-      b.setAttribute('aria-label',p.kind==='a'?'Kapitel löschen':'Block löschen'); b.textContent='✕';
-      if(p.kind==='a'){ const s=$(p.el,'summary'); if(s) s.insertBefore(b,$(s,'.acc-arrow')); } else p.el.insertBefore(b,p.el.firstChild);
-    });
-    // Seite unten: Ergänzungen und (nur im Bearbeiten-Modus) die Hinzufügen-Knöpfe
-    if(rest.length||ed){
-      const box=document.createElement('div'); box.className='jg-erg';
-      box.innerHTML=(rest.length?'<div class="m-sec">Eigene Ergänzungen</div>':'')+rest.map(e=>ergHtml(e,ed)).join('')
-        +(ed&&lesson?ADD+'erg" aria-label="Eigene Ergänzung hinzufügen"><span>+</span> Eigene Ergänzung</button>'+(list?ADD+'kap"><span>+</span> Eigenes Kapitel</button>':''):'');
-      pc.appendChild(box);
-    }
-    // Eigene Fragen auf einer Prüfungsseite
-    if(isEx){
-      const p=d.pr.hinzu.find(x=>x.seite===id);
-      if(p||ed){
-        const q=document.createElement('div'); q.className='jg-qbox';
-        q.innerHTML='<div class="m-sec">Eigene Fragen</div>'+(p
-          ?'<div class="m-card"><div class="m-t1">'+p.fragen.length+' eigene '+(p.fragen.length===1?'Frage':'Fragen')+'</div><div class="m-t2">'+E(p.fragen.slice(0,3).map(f=>f.q).join(' · ').slice(0,160))+'</div><div class="jg-tools2" style="margin-top:10px"><button type="button" class="btn btn-gold jg-qpl" data-p="'+p.id+'">Üben</button>'+(ed?'<button type="button" class="btn btn-ghost jg-qed" data-p="'+p.id+'">Bearbeiten oder entfernen</button>':'')+'</div></div>':'')
-          +(ed&&!p?ADD+'frage"><span>+</span> Eigene Frage hinzufügen</button>':'');
-        pc.appendChild(q);
+    let all=[];
+    if(hub){
+      // Übersichtsseite: Reiter ausblenden und eigene Reiter anlegen
+      const grid=tiles[0].parentNode, cls=tiles[0].className.split(/\s+/)[0];
+      d.reiter.filter(r=>r.seite===id).sort((a,b)=>a.ts-b.ts).forEach(r=>{
+        const t=document.createElement('div'); t.className=cls+' jg-rt'; t.dataset.r=r.id;
+        t.innerHTML=cls==='glass-tile'?RT_ICON.replace('tc-icon','tile-icon')+'<div class="tile-name">'+E(r.titel)+'</div><div class="tile-desc">'+E(r.beschr||'Eigener Reiter')+'</div>':RT_ICON+'<div class="tc-name">'+E(r.titel)+'</div><div class="tc-sub">'+E(r.beschr||'Eigener Reiter')+'</div>';
+        grid.appendChild(t);
+      });
+      [...pc.querySelectorAll('.topic-card,.glass-tile')].filter(t=>!t.classList.contains('jg-rt')).forEach(el=>{
+        const n=$(el,'.tc-name,.tile-name'), b=hash((n?n.textContent:el.textContent).replace(/\s+/g,' ').trim().slice(0,200));
+        all.push({el,kind:'t',key:id+'|t|'+b});
+      });
+      all.forEach(p=>p.el.classList.toggle('jg-gone',gone.has(p.key)));
+      if(ed){
+        all.forEach(p=>{ if(gone.has(p.key)) return; const b=document.createElement('button'); b.type='button'; b.className='jg-ctl jg-bx jg-tx'; b.dataset.key=p.key; b.setAttribute('aria-label','Reiter löschen'); b.textContent='✕'; p.el.insertBefore(b,p.el.firstChild); });
+        pc.querySelectorAll('.jg-rt').forEach(t=>{ const b=document.createElement('button'); b.type='button'; b.className='jg-ctl jg-bx jg-tx jg-rx'; b.dataset.r=t.dataset.r; b.setAttribute('aria-label','Reiter löschen'); b.textContent='✕'; t.insertBefore(b,t.firstChild); });
+        const box=document.createElement('div'); box.className='jg-erg'; box.innerHTML=ADD+'reiter"><span>+</span> Eigener Reiter</button><div class="m-note">Tippe einen eigenen Reiter an, um ihn zu bearbeiten. Mit ✕ blendest du Reiter aus.</div>'; pc.appendChild(box);
+      }
+    } else {
+      const list=pc.querySelector('.acc-list:not(.acc-cards)');
+      const kaps=d.erg.filter(e=>e.seite===id&&e.typ==='kapitel').sort((a,b)=>a.ts-b.ts);
+      if(list) kaps.forEach(e=>list.appendChild(kapEl(e,list.querySelectorAll(':scope > .acc-item').length+1,ed)));
+      all=parts(id,pc);
+      all.forEach(p=>p.el.classList.toggle('jg-gone',gone.has(p.key)));
+      const ks=new Map(all.filter(p=>p.kind==='a'&&!gone.has(p.key)).map(p=>[p.kap,p]));
+      // Ergänzungen: in ihrem Kapitel, sonst unten auf der Seite
+      const items=d.erg.filter(e=>e.seite===id&&e.typ!=='kapitel').sort((a,b)=>a.ts-b.ts), rest=items.filter(e=>!(e.kap&&ks.has(e.kap)));
+      ks.forEach((p,kap)=>{
+        const body=bodyOf(p.el); if(!body) return;
+        const own=items.filter(e=>e.kap===kap);
+        if(own.length){ const w=document.createElement('div'); w.className='jg-erg-k'; w.innerHTML=own.map(e=>ergHtml(e,ed)).join(''); body.appendChild(w); }
+        if(ed&&!isEx){ const b=document.createElement('button'); b.type='button'; b.className='jg-plus jg-ctl jg-in'; b.dataset.kap=kap; b.innerHTML='<span>+</span> Ergänzung in diesem Kapitel'; body.appendChild(b); }
+      });
+      if(ed) all.forEach(p=>{
+        if(gone.has(p.key)) return;
+        const b=document.createElement('button'); b.type='button'; b.className='jg-ctl '+(p.kind==='a'?'jg-cx':'jg-bx'); b.dataset.key=p.key;
+        b.setAttribute('aria-label',p.kind==='a'?'Kapitel löschen':'Block löschen'); b.textContent='✕';
+        if(p.kind==='a'){ const s=$(p.el,'summary'); if(s) s.insertBefore(b,$(s,'.acc-arrow')); } else p.el.insertBefore(b,p.el.firstChild);
+      });
+      // Seite unten: bestehende Ergänzungen und (nur im Bearbeiten-Modus) „Eigenes Kapitel“
+      const addKap=ed&&lesson&&!isEx&&!!list;
+      if(rest.length||addKap){
+        const box=document.createElement('div'); box.className='jg-erg';
+        box.innerHTML=(rest.length?'<div class="m-sec">Eigene Ergänzungen</div>':'')+rest.map(e=>ergHtml(e,ed)).join('')+(addKap?ADD+'kap"><span>+</span> Eigenes Kapitel</button>':'');
+        pc.appendChild(box);
+      }
+      // Eigene Fragen auf einer Prüfungsseite
+      if(isEx){
+        const p=d.pr.hinzu.find(x=>x.seite===id);
+        if(p||ed){
+          const q=document.createElement('div'); q.className='jg-qbox';
+          q.innerHTML='<div class="m-sec">Eigene Fragen</div>'+(p
+            ?'<div class="m-card"><div class="m-t1">'+p.fragen.length+' eigene '+(p.fragen.length===1?'Frage':'Fragen')+'</div><div class="m-t2">'+E(p.fragen.slice(0,3).map(f=>f.q).join(' · ').slice(0,160))+'</div><div class="jg-tools2" style="margin-top:10px"><button type="button" class="btn btn-gold jg-qpl" data-p="'+p.id+'">Üben</button>'+(ed?'<button type="button" class="btn btn-ghost jg-qed" data-p="'+p.id+'">Bearbeiten oder entfernen</button>':'')+'</div></div>':'')
+            +(ed&&!p?ADD+'frage"><span>+</span> Eigene Frage hinzufügen</button>':'');
+          pc.appendChild(q);
+        }
       }
     }
     const n=all.filter(p=>mine.has(p.key)).length;
@@ -276,41 +296,61 @@ const JGUI=(function(){
     bar.innerHTML='<button type="button" class="btn btn-ghost jg-be">'+(ed?'Fertig':'Seite bearbeiten')+'</button>'+(n?'<button type="button" class="btn btn-ghost jg-br">'+n+' gelöschte wiederherstellen</button>':'');
     pc.insertBefore(bar,pc.firstChild);
     fillImages(pc);
-    if(typeof LP!=='undefined'&&LP.refresh) LP.refresh(id);
+    if(typeof LP!=='undefined'&&LP.refresh) LP.refresh(vid);
   }
   function delPart(key){
     const l=JG.local(), prev=JSON.stringify(l);
     if(!l.ausg.includes(key)) l.ausg.push(key);
     JG.saveLocal(l);
-    TOAST.show(key.split('|')[1]==='a'?'Kapitel gelöscht':'Block gelöscht',{type:'ok',undo:()=>JG.saveLocal(JSON.parse(prev))});
+    TOAST.show(({a:'Kapitel',b:'Block',t:'Reiter'})[key.split('|')[1]]+' gelöscht',{type:'ok',undo:()=>JG.saveLocal(JSON.parse(prev))});
   }
   function restoreParts(id){
     const l=JG.local(), prev=JSON.stringify(l), n=l.ausg.filter(k=>k.startsWith(id+'|')).length;
     l.ausg=l.ausg.filter(k=>!k.startsWith(id+'|')); JG.saveLocal(l);
     TOAST.show(n+' gelöschte Inhalte sind wieder da',{type:'ok',undo:()=>JG.saveLocal(JSON.parse(prev))});
   }
-  function checkAnswer(card){
-    const it=JG.data().erg.find(x=>x.id===card.dataset.id); if(!it||!it.c) return;
-    const sel=[...card.querySelectorAll('input:checked')].map(i=>+i.value), ok=sel.length===it.c.length&&it.c.every(i=>sel.includes(i));
-    card.querySelectorAll('.jg-ca').forEach((l,i)=>{ l.classList.toggle('ok',it.c.includes(i)); l.classList.toggle('bad',sel.includes(i)&&!it.c.includes(i)); });
-    const fb=$(card,'.jg-cf'); fb.className='jg-cf '+(ok?'ok':'bad');
-    fb.innerHTML=(sel.length?(ok?'Richtig.':'Nicht ganz – richtig: '+E(it.c.map(i=>it.o[i]).join(' · '))):'Bitte erst eine Antwort wählen.')+(it.erk&&sel.length?'<div class="m-t2">'+E(it.erk)+'</div>':'');
-    A11Y.say(sel.length?(ok?'Richtig.':'Falsch.'):'Keine Antwort gewählt.');
+  // Eigener Reiter: anlegen/bearbeiten, löschen, öffnen
+  function reiterEditor(seite,id){
+    const cur=id?JG.data().reiter.find(r=>r.id===id):null;
+    const m=modal(cur?'Reiter bearbeiten':'Eigener Reiter','<label class="jg-l">Name<input type="text" id="jg-rn" class="m-input" maxlength="60" value="'+E(cur?cur.titel:'')+'"></label><label class="jg-l">Kurzbeschreibung (freiwillig)<input type="text" id="jg-rb" class="m-input" maxlength="140" value="'+E(cur?cur.beschr:'')+'"></label><p class="m-note" style="padding:0;margin:8px 0">Den Inhalt füllst du danach auf der Seite des Reiters mit „Seite bearbeiten“ und „Eigenes Kapitel“.</p><button class="btn btn-gold" id="jg-rs" type="button">Speichern</button>');
+    $(m.body,'#jg-rs').onclick=()=>{
+      const titel=$(m.body,'#jg-rn').value.trim(); if(!titel){ TOAST.show('Bitte dem Reiter einen Namen geben',{type:'info'}); return; }
+      const l=JG.local(), it={id:cur?cur.id:JG.newId(),seite:cur?cur.seite:seite,titel,beschr:$(m.body,'#jg-rb').value.trim(),ts:cur?cur.ts:Date.now()}, i=l.reiter.findIndex(r=>r.id===it.id);
+      if(i>=0) l.reiter[i]=it; else l.reiter.push(it);
+      JG.saveLocal(l); m.close(); TOAST.show('Reiter gespeichert',{type:'ok'});
+    };
+  }
+  function delReiter(id){
+    const l=JG.local(), prev=JSON.stringify(l), pid='v-r-'+id;
+    l.reiter=l.reiter.filter(r=>r.id!==id); l.erg=l.erg.filter(e=>e.seite!==pid);
+    JG.saveLocal(l); TOAST.show('Reiter gelöscht',{type:'ok',undo:()=>JG.saveLocal(JSON.parse(prev))});
+  }
+  function openReiter(id){
+    const r=JG.data().reiter.find(x=>x.id===id), v=document.getElementById('v-jg-reiter'); if(!r||!v) return;
+    v.dataset.jg='v-r-'+id; editPage=null;
+    const eb=$(v,'.page-eyebrow'), tt=$(v,'.page-title'), ld=$(v,'.page-lead');
+    if(eb) eb.textContent='Eigener Reiter'; if(tt) tt.textContent=r.titel; if(ld) ld.textContent=r.beschr||'Eigene Kapitel für diesen Reiter.';
+    NAV.go('v-jg-reiter',r.titel);
   }
   document.addEventListener('click',e=>{
     const v=document.querySelector('.view.active'); if(!v||!e.target.closest) return;
+    const pid=pageOf(v);
     const x=e.target.closest('.jg-cx,.jg-bx');
-    if(x){ e.preventDefault(); e.stopPropagation(); if(x.dataset.key) delPart(x.dataset.key); return; }
-    const inb=e.target.closest('.jg-in'); if(inb){ ergEditor(v.id,null,inb.dataset.kap); return; }
+    if(x){ e.preventDefault(); e.stopPropagation(); if(x.dataset.r) delReiter(x.dataset.r); else if(x.dataset.key) delPart(x.dataset.key); return; }
+    const tile=e.target.closest('.topic-card,.glass-tile');
+    if(tile&&v.querySelector('.pc.jg-ed-on')){   // im Bearbeiten-Modus öffnen Reiter nicht, eigene lassen sich bearbeiten
+      e.preventDefault(); e.stopPropagation(); if(tile.dataset.r) reiterEditor(null,tile.dataset.r); return;
+    }
+    const rt=e.target.closest('.jg-rt'); if(rt){ e.preventDefault(); e.stopPropagation(); openReiter(rt.dataset.r); return; }
+    const inb=e.target.closest('.jg-in'); if(inb){ ergEditor(pid,null,inb.dataset.kap); return; }
     if(e.target.closest('.jg-be')){ editPage=editPage===v.id?null:v.id; mount(v.id); return; }
-    if(e.target.closest('.jg-br')){ restoreParts(v.id); return; }
+    if(e.target.closest('.jg-br')){ restoreParts(pid); return; }
     const ad=e.target.closest('.jg-add');
-    if(ad){ const k=ad.dataset.k; if(k==='frage') examEditor(null,null,v.id); else ergEditor(v.id,null,null,k==='kap'?'kapitel':null); return; }
+    if(ad){ const k=ad.dataset.k; if(k==='frage') examEditor(null,null,pid); else if(k==='reiter') reiterEditor(pid); else ergEditor(pid,null,null,'kapitel'); return; }
     const qp=e.target.closest('.jg-qpl'); if(qp){ openExam(qp.dataset.p); return; }
-    const qe=e.target.closest('.jg-qed'); if(qe){ examEditor(qe.dataset.p,null,v.id); return; }
-    const ck=e.target.closest('.jg-ck'); if(ck){ checkAnswer(ck.closest('.jg-e')); return; }
+    const qe=e.target.closest('.jg-qed'); if(qe){ examEditor(qe.dataset.p,null,pid); return; }
     const c=e.target.closest('.jg-e'); if(!c) return;
-    if(e.target.closest('.jg-ed')) ergEditor(v.id,c.dataset.id);
+    if(e.target.closest('.jg-ed')) ergEditor(pid,c.dataset.id);
     else if(e.target.closest('.jg-dl')){
       const l=JG.local(), i=l.erg.findIndex(x=>x.id===c.dataset.id);
       if(i<0){ TOAST.show('Dieser Inhalt kommt vom Jahrgang und lässt sich nur in der Jahrgangs-Datei ändern',{type:'info'}); return; }
@@ -318,30 +358,14 @@ const JGUI=(function(){
       TOAST.show('Gelöscht',{type:'ok',undo:()=>{ JG.saveLocal(JSON.parse(prev)); }});
     }
   },true);
+  // Ergänzung in einem Kapitel (nur Text und Bild) oder ganzes eigenes Kapitel
   function ergEditor(seite,id,kap,mode){
     const cur=id?JG.data().erg.find(e=>e.id===id):null;
-    let typ=cur?cur.typ:(mode||'text');
-    const isKap=typ==='kapitel', rows=6, o0=cur&&cur.o?cur.o:[], c0=new Set(cur&&cur.c?cur.c:[]);
-    const seg=isKap?'':'<div class="m-seg jg-ty" role="group" aria-label="Art der Ergänzung"><button type="button" data-t="text">Freitext</button><button type="button" data-t="sc">Single-Choice</button><button type="button" data-t="mc">Multiple-Choice</button></div>';
-    const opt=i=>'<div class="jg-o2"><input type="radio" class="jg-ok" name="jg-ok" value="'+i+'" aria-label="Richtige Antwort"><input type="text" class="m-input jg-ot" maxlength="300" placeholder="Antwort '+(i+1)+'" value="'+E(o0[i]||'')+'"></div>';
-    const html=seg+'<label class="jg-l">'+(isKap?'Titel des Kapitels':'Überschrift')+'<input type="text" id="jg-et" class="m-input" maxlength="120" value="'+E(cur?cur.titel:'')+'"></label>'
-      +'<div id="jg-tx-sec"><label class="jg-l">Text<textarea id="jg-ex" class="m-input" rows="8" maxlength="20000" placeholder="Text eingeben oder aus einem Bild einlesen">'+E(cur&&cur.typ!=='sc'&&cur.typ!=='mc'?cur.text:'')+'</textarea></label><div class="jg-ocr-w"></div><div id="jg-ep" class="jg-ep"></div><label class="jg-chk"><input type="checkbox" id="jg-keep" checked> Bild zusätzlich anzeigen</label></div>'
-      +'<div id="jg-ch-sec" hidden><label class="jg-l">Frage<textarea id="jg-cq" class="m-input" rows="3" maxlength="2000">'+E(cur&&(cur.typ==='sc'||cur.typ==='mc')?cur.text:'')+'</textarea></label><div class="m-t2" id="jg-ch-hint"></div><div id="jg-co">'+Array.from({length:rows},(_,i)=>opt(i)).join('')+'</div><label class="jg-l">Erklärung (freiwillig)<textarea id="jg-ce" class="m-input" rows="2" maxlength="1200">'+E(cur&&cur.erk||'')+'</textarea></label></div>'
+    const typ=cur?(cur.typ==='kapitel'?'kapitel':'text'):(mode==='kapitel'?'kapitel':'text'), isKap=typ==='kapitel';
+    const html='<label class="jg-l">'+(isKap?'Titel des Kapitels':'Überschrift')+'<input type="text" id="jg-et" class="m-input" maxlength="120" value="'+E(cur?cur.titel:'')+'"></label>'
+      +'<label class="jg-l">Text<textarea id="jg-ex" class="m-input" rows="8" maxlength="20000" placeholder="Text eingeben oder aus einem Bild einlesen">'+E(cur?cur.text:'')+'</textarea></label><div class="jg-ocr-w"></div><div id="jg-ep" class="jg-ep"></div>'
       +'<p class="m-note" style="padding:0;margin:8px 0">'+NOTICE+'</p><button class="btn btn-gold" id="jg-es" type="button">Speichern</button>';
-    const m=modal(cur?(isKap?'Kapitel bearbeiten':'Ergänzung bearbeiten'):(isKap?'Eigenes Kapitel':'Eigene Ergänzung'),html);
-    // Antwortmarken: Single-Choice = Auswahlkreis, Multiple-Choice = Kästchen
-    const marks=()=>[...m.body.querySelectorAll('.jg-ok')];
-    const setType=t=>{
-      const prevSel=new Set(marks().filter(x=>x.checked).map(x=>+x.value)); typ=t;
-      m.body.querySelectorAll('.jg-ty button').forEach(b=>{ b.classList.toggle('active',b.dataset.t===t); b.setAttribute('aria-pressed',b.dataset.t===t); });
-      $(m.body,'#jg-tx-sec').hidden=t==='sc'||t==='mc'; $(m.body,'#jg-ch-sec').hidden=!(t==='sc'||t==='mc');
-      $(m.body,'#jg-ch-hint').textContent=t==='mc'?'Hake alle richtigen Antworten an.':'Wähle die eine richtige Antwort.';
-      marks().forEach(x=>{ x.type=t==='mc'?'checkbox':'radio'; x.checked=false; });
-      let first=true; marks().forEach(x=>{ if(prevSel.has(+x.value)&&(t==='mc'||first)){ x.checked=true; if(t!=='mc') first=false; } });
-    };
-    c0.forEach(i=>{ const x=marks()[i]; if(x) x.checked=true; });
-    if(!isKap) m.body.querySelector('.jg-ty').addEventListener('click',e=>{ const b=e.target.closest('button[data-t]'); if(b) setType(b.dataset.t); });
-    setType(typ);
+    const m=modal(cur?(isKap?'Kapitel bearbeiten':'Ergänzung bearbeiten'):(isKap?'Eigenes Kapitel':'Ergänzung in diesem Kapitel'),html);
     let imgData=null, imgId=cur&&cur.bild||null;
     const prev=$(m.body,'#jg-ep'), tx=$(m.body,'#jg-ex');
     if(imgId) JG.img.get(imgId).then(u=>{ if(u) prev.innerHTML='<img src="'+u+'" alt="" class="jg-img">'; });
@@ -350,25 +374,12 @@ const JGUI=(function(){
       const s=await shrink(f,1280,.7); imgData=s.dataUrl; prev.innerHTML='<img src="'+imgData+'" alt="" class="jg-img">';
     });
     $(m.body,'#jg-es').onclick=async()=>{
-      const titel=$(m.body,'#jg-et').value.trim();
-      const base={id:cur?cur.id:JG.newId(),seite,typ,kap:isKap?null:(cur?cur.kap:(kap||null)),titel,ts:cur?cur.ts:Date.now()};
-      let item;
-      if(typ==='sc'||typ==='mc'){
-        const text=$(m.body,'#jg-cq').value.trim(), o=[...m.body.querySelectorAll('.jg-ot')].map(x=>x.value.trim()), c=marks().filter(x=>x.checked).map(x=>+x.value).filter(i=>o[i]);
-        const n=o.filter(Boolean).length;
-        if(!text){ TOAST.show('Bitte die Frage eingeben',{type:'info'}); return; }
-        if(n<2){ TOAST.show('Bitte mindestens zwei Antworten eingeben',{type:'info'}); return; }
-        if(!c.length){ TOAST.show('Bitte die richtige Antwort markieren',{type:'info'}); return; }
-        item={...base,text,bild:null,o,c,erk:$(m.body,'#jg-ce').value.trim()};
-      } else {
-        const text=tx.value.trim();
-        if(isKap&&!titel){ TOAST.show('Bitte dem Kapitel einen Titel geben',{type:'info'}); return; }
-        if(!titel&&!text&&!imgData&&!imgId){ TOAST.show('Bitte Überschrift, Text oder Bild eingeben',{type:'info'}); return; }
-        const keep=$(m.body,'#jg-keep').checked;
-        let bild=keep?imgId:null;
-        if(imgData&&keep){ bild=JG.newId(); try{ await JG.img.put(bild,imgData); }catch(e){ bild=null; TOAST.show('Das Bild konnte nicht gespeichert werden',{type:'info'}); } }
-        item={...base,text,bild};
-      }
+      const titel=$(m.body,'#jg-et').value.trim(), text=tx.value.trim();
+      if(isKap&&!titel){ TOAST.show('Bitte dem Kapitel einen Titel geben',{type:'info'}); return; }
+      if(!titel&&!text&&!imgData&&!imgId){ TOAST.show('Bitte Überschrift, Text oder Bild eingeben',{type:'info'}); return; }
+      let bild=imgId;
+      if(imgData){ bild=JG.newId(); try{ await JG.img.put(bild,imgData); }catch(e){ bild=null; TOAST.show('Das Bild konnte nicht gespeichert werden',{type:'info'}); } }
+      const item={id:cur?cur.id:JG.newId(),seite,typ,kap:isKap?null:(cur?cur.kap:(kap||null)),titel,text,bild,ts:cur?cur.ts:Date.now()};
       const l=JG.local(), i=l.erg.findIndex(x=>x.id===item.id);
       if(i>=0) l.erg[i]=item; else l.erg.push(item);
       JG.saveLocal(l); m.close(); TOAST.show(isKap?'Kapitel gespeichert':'Ergänzung gespeichert',{type:'ok'});
@@ -394,9 +405,18 @@ const JGUI=(function(){
     l.pr.weg=[]; JG.saveLocal(l);
     TOAST.show('Ausgeblendete Prüfungen sind wieder da',{type:'ok',undo:()=>JG.saveLocal(JSON.parse(prev))});
   }
-  const qHtml=(q,i)=>'<div class="jg-q" data-i="'+i+'"><div class="jg-qh"><b>Frage '+(i+1)+'</b><button type="button" class="jg-qd" aria-label="Frage löschen">✕</button></div><textarea class="m-input jg-qt" rows="2" maxlength="600" placeholder="Frage" aria-label="Frage">'+E(q.q)+'</textarea>'
-    +[0,1,2,3].map(k=>'<label class="jg-o'+(q.c===k?' on':'')+'"><input type="radio" name="c'+i+'" value="'+k+'"'+(q.c===k?' checked':'')+' aria-label="Richtige Antwort"><input type="text" class="m-input" maxlength="300" placeholder="Antwort '+(k+1)+'" aria-label="Antwort '+(k+1)+'" value="'+E((q.o||[])[k]||'')+'"></label>').join('')
-    +'<textarea class="m-input jg-qe" rows="2" maxlength="1200" placeholder="Erklärung (optional)" aria-label="Erklärung">'+E(q.e||'')+'</textarea>'+(q.warn?'<div class="jg-warn">Bitte prüfen: erkannte Frage, Antworten und die richtige Antwort</div>':'')+'</div>';
+  const QT=[['sc','Single-Choice'],['mc','Multiple-Choice'],['text','Freitext']];
+  const isOn=(q,k)=>q.typ==='mc'?(Array.isArray(q.c)&&q.c.includes(k)):q.c===k;
+  const qHtml=(q,i)=>{
+    const t=q.typ||'sc';
+    return '<div class="jg-q" data-i="'+i+'"><div class="jg-qh"><b>Frage '+(i+1)+'</b><button type="button" class="jg-qd" aria-label="Frage löschen">✕</button></div>'
+      +'<div class="m-seg jg-qty" role="group" aria-label="Art der Frage">'+QT.map(([k,l])=>'<button type="button" data-t="'+k+'" class="'+(t===k?'active':'')+'" aria-pressed="'+(t===k)+'">'+l+'</button>').join('')+'</div>'
+      +'<textarea class="m-input jg-qt" rows="2" maxlength="600" placeholder="Frage" aria-label="Frage">'+E(q.q)+'</textarea>'
+      +(t==='text'
+        ?'<textarea class="m-input jg-qa2" rows="3" maxlength="2000" placeholder="Musterlösung" aria-label="Musterlösung">'+E(q.a||'')+'</textarea>'
+        :[0,1,2,3].map(k=>'<label class="jg-o'+(isOn(q,k)?' on':'')+'"><input type="'+(t==='mc'?'checkbox':'radio')+'" name="c'+i+'" value="'+k+'"'+(isOn(q,k)?' checked':'')+' aria-label="Richtige Antwort"><input type="text" class="m-input" maxlength="300" placeholder="Antwort '+(k+1)+'" aria-label="Antwort '+(k+1)+'" value="'+E((q.o||[])[k]||'')+'"></label>').join(''))
+      +'<textarea class="m-input jg-qe" rows="2" maxlength="1200" placeholder="Erklärung (optional)" aria-label="Erklärung">'+E(q.e||'')+'</textarea>'+(q.warn?'<div class="jg-warn">Bitte prüfen: erkannte Frage, Antworten und die richtige Antwort</div>':'')+'</div>';
+  };
   function parseQuestions(text){
     const lines=String(text).split('\n').map(l=>l.replace(/\s+/g,' ').trim()).filter(Boolean), qs=[]; let q=null, opt=null;
     const optRe=/^[(\[]?([a-eA-E1-5])[).\]:]\s+(.+)$/, qRe=/^(\d{1,3})\s?[.)]\s+(.+)$/;
@@ -418,25 +438,45 @@ const JGUI=(function(){
     const m=modal(cur?'Prüfung bearbeiten':'Prüfung hinzufügen','<label class="jg-l">Reiter<select id="jg-tab" class="m-input">'+JG.TABS.map(t=>'<option value="'+t[0]+'"'+((cur?cur.tab:preTab||'idf')===t[0]?' selected':'')+'>'+E(t[1])+'</option>').join('')+'</select></label><label class="jg-l">Name der Prüfung<input type="text" id="jg-pt" class="m-input" maxlength="100" value="'+E(cur?cur.titel:'')+'" placeholder="z. B. Klausur 02/2027"></label><div class="jg-ocr-w"></div><div id="jg-qs"></div><button class="btn btn-ghost" id="jg-qa" type="button">+ Frage</button><p class="m-note" style="padding:0;margin:8px 0">'+NOTICE+'</p><button class="btn btn-gold" id="jg-ps" type="button">Speichern</button>','jg-wide');
     if(info){ const t=$(m.body,'#jg-tab'),n=$(m.body,'#jg-pt'); [t,n].forEach(x=>{ if(x&&x.closest('label')) x.closest('label').style.display='none'; }); if(t) t.value=info.tab; if(n) n.value='Eigene Fragen · '+info.titel; }
     const box=$(m.body,'#jg-qs'), draw=()=>{ box.innerHTML=qs.map(qHtml).join('')||'<div class="cu-empty">Noch keine Fragen – mit „+ Frage“ anfangen oder ein Foto einlesen.</div>'; };
-    const sync=()=>{ box.querySelectorAll('.jg-q').forEach(el=>{ const i=+el.dataset.i,q=qs[i]; if(!q) return; q.q=$(el,'.jg-qt').value; q.o=[...el.querySelectorAll('.jg-o input[type=text]')].map(x=>x.value); const r=el.querySelector('input[type=radio]:checked'); q.c=r?+r.value:-1; q.e=$(el,'.jg-qe').value; }); };
+    const sync=()=>{ box.querySelectorAll('.jg-q').forEach(el=>{
+      const i=+el.dataset.i,q=qs[i]; if(!q) return; q.typ=q.typ||'sc'; q.q=$(el,'.jg-qt').value; q.e=$(el,'.jg-qe').value;
+      if(q.typ==='text'){ q.a=$(el,'.jg-qa2').value; return; }
+      q.o=[...el.querySelectorAll('.jg-o input[type=text]')].map(x=>x.value);
+      const ch=[...el.querySelectorAll('.jg-o input:not([type=text])')].filter(x=>x.checked).map(x=>+x.value);
+      q.c=q.typ==='mc'?ch:(ch.length?ch[0]:-1);
+    }); };
     draw();
     ocrPicker($(m.body,'.jg-ocr-w'),t=>{ sync(); const d=parseQuestions(t); if(!d.length){ TOAST.show('Es wurden keine Fragen mit Antworten (a) b) c) …) erkannt – bitte von Hand eingeben',{type:'info'}); return; } qs.push(...d); draw(); TOAST.show(d.length+' Fragen erkannt – bitte prüfen und die richtige Antwort wählen',{type:'info'}); });
-    m.body.addEventListener('change',e=>{ if(e.target.matches('input[type=radio]')){ const l=e.target.closest('.jg-q'); l.querySelectorAll('.jg-o').forEach(x=>x.classList.toggle('on',x.contains(e.target))); } });
+    m.body.addEventListener('change',e=>{ if(e.target.matches('input[type=radio]')){ const l=e.target.closest('.jg-q'); l.querySelectorAll('.jg-o').forEach(x=>x.classList.toggle('on',x.contains(e.target))); } else if(e.target.matches('input[type=checkbox]')){ e.target.closest('.jg-o').classList.toggle('on',e.target.checked); } });
     m.body.addEventListener('click',e=>{
-      if(e.target.closest('#jg-qa')){ sync(); qs.push({q:'',o:['','','',''],c:-1,e:''}); draw(); box.lastElementChild.querySelector('.jg-qt').focus(); }
+      const tb=e.target.closest('.jg-qty button');
+      if(tb){ sync(); const q=qs[+tb.closest('.jg-q').dataset.i], t=tb.dataset.t, cur0=q.typ||'sc'; if(t!==cur0){ if(t==='mc') q.c=q.c>=0&&typeof q.c==='number'?[q.c]:[]; else if(t==='sc') q.c=Array.isArray(q.c)&&q.c.length?q.c[0]:-1; q.typ=t; } draw(); return; }
+      if(e.target.closest('#jg-qa')){ sync(); qs.push({q:'',typ:'sc',o:['','','',''],c:-1,e:''}); draw(); box.lastElementChild.querySelector('.jg-qt').focus(); }
       else if(e.target.closest('.jg-qd')){ sync(); qs.splice(+e.target.closest('.jg-q').dataset.i,1); draw(); }
       else if(e.target.closest('#jg-ps')){
         sync();
         const titel=$(m.body,'#jg-pt').value.trim(), tab=$(m.body,'#jg-tab').value, fr=[]; let bad=0;
         qs.forEach(q=>{
+          const typ=q.typ||'sc';
+          if(typ==='text'){
+            if(!q.q.trim()&&!(q.a||'').trim()) return;
+            if(!q.q.trim()||!(q.a||'').trim()){ bad++; return; }
+            fr.push({q:q.q.trim(),typ,o:[],c:-1,a:q.a.trim(),e:(q.e||'').trim()}); return;
+          }
           const idx=[]; q.o.forEach((o,k)=>{ if(o.trim()) idx.push(k); });
-          const opts=idx.map(k=>q.o[k].trim()), c=idx.indexOf(q.c);
+          const opts=idx.map(k=>q.o[k].trim());
           if(!q.q.trim()&&!opts.length) return;
+          if(typ==='mc'){
+            const cs=(Array.isArray(q.c)?q.c:[]).map(k=>idx.indexOf(k)).filter(k=>k>=0);
+            if(!q.q.trim()||opts.length<2||!cs.length){ bad++; return; }
+            fr.push({q:q.q.trim(),typ,o:opts,c:cs,a:'',e:(q.e||'').trim()}); return;
+          }
+          const c=idx.indexOf(q.c);
           if(!q.q.trim()||opts.length<2||c<0){ bad++; return; }
-          fr.push({q:q.q.trim(),o:opts,c,e:(q.e||'').trim()});
+          fr.push({q:q.q.trim(),typ,o:opts,c,a:'',e:(q.e||'').trim()});
         });
         if(!titel){ TOAST.show('Bitte der Prüfung einen Namen geben',{type:'info'}); return; }
-        if(bad){ TOAST.show(bad+' Fragen sind unvollständig: Frage, mindestens 2 Antworten und die richtige Antwort wählen',{type:'info'}); return; }
+        if(bad){ TOAST.show(bad+' Fragen sind unvollständig: Frage und Antwort (bei Auswahlfragen mindestens 2 Antworten und die richtige Antwort) angeben',{type:'info'}); return; }
         if(!fr.length&&!info){ TOAST.show('Bitte mindestens eine Frage eingeben',{type:'info'}); return; }
         const l=JG.local(), item={id:cur?cur.id:JG.newId(),tab:info?info.tab:tab,seite,titel,fragen:fr,ts:cur?cur.ts:Date.now()}, i=l.pr.hinzu.findIndex(p=>p.id===item.id);
         if(!fr.length){ if(i>=0) l.pr.hinzu.splice(i,1); JG.saveLocal(l); m.close(); TOAST.show('Eigene Fragen entfernt',{type:'ok'}); return; }
@@ -459,15 +499,30 @@ const JGUI=(function(){
     if(P.i>=n){
       const ok=P.res.filter(r=>r.ok).length, wrong=P.res.filter(r=>!r.ok);
       el.innerHTML='<div class="m-card"><div class="m-t1">'+ok+' von '+n+' richtig</div><div class="m-bar" style="margin:10px 0"><i style="width:'+Math.round(ok/n*100)+'%"></i></div>'
-        +(wrong.length?'<div class="m-t2">Zum Nacharbeiten:</div>'+wrong.map(r=>'<div class="jg-wr"><b>'+E(r.q.q)+'</b><div>Richtig: '+E(r.q.o[r.q.c])+'</div>'+(r.q.e?'<div class="m-t2">'+E(r.q.e)+'</div>':'')+'</div>').join(''):'<div class="m-t2">Alles richtig!</div>')
+        +(wrong.length?'<div class="m-t2">Zum Nacharbeiten:</div>'+wrong.map(r=>'<div class="jg-wr"><b>'+E(r.q.q)+'</b><div>Richtig: '+E(r.q.typ==='text'?r.q.a:r.q.typ==='mc'?r.q.c.map(k=>r.q.o[k]).join(' · '):r.q.o[r.q.c])+'</div>'+(r.q.e?'<div class="m-t2">'+E(r.q.e)+'</div>':'')+'</div>').join(''):'<div class="m-t2">Alles richtig!</div>')
         +'<button class="btn btn-gold" id="jg-again" type="button" style="margin-top:12px">Nochmal</button></div>';
       $(el,'#jg-again').onclick=()=>{ P.i=0; P.res=[]; P.ans=null; drawExam(); }; return;
     }
-    const q=p.fragen[P.i], done=P.ans!==null;
-    el.innerHTML='<div class="m-card"><div class="m-t2">Frage '+(P.i+1)+' von '+n+'</div><div class="m-bar" style="margin:8px 0 12px"><i style="width:'+Math.round(P.i/n*100)+'%"></i></div><div class="m-t1" style="white-space:pre-wrap">'+E(q.q)+'</div>'
-      +'<div class="jg-opts">'+q.o.map((o,k)=>'<button type="button" class="jg-opt'+(done?(k===q.c?' ok':k===P.ans?' bad':''):'')+'" data-k="'+k+'"'+(done?' disabled':'')+'>'+E(o)+'</button>').join('')+'</div>'
-      +(done?'<div class="'+(P.ans===q.c?'jg-fb ok':'jg-fb bad')+'">'+(P.ans===q.c?'Richtig.':'Falsch – richtig ist: '+E(q.o[q.c]))+(q.e?'<div class="m-t2">'+E(q.e)+'</div>':'')+'</div><button class="btn btn-gold" id="jg-next" type="button">'+(P.i+1>=n?'Ergebnis':'Weiter')+'</button>':'')+'</div>';
-    el.querySelectorAll('.jg-opt').forEach(b=>b.onclick=()=>{ P.ans=+b.dataset.k; P.res.push({q,ok:P.ans===q.c}); A11Y.say(P.ans===q.c?'Richtig.':'Falsch.'); drawExam(); });
+    const q=p.fragen[P.i], t=q.typ||'sc', done=P.ans!==null;
+    const head='<div class="m-card"><div class="m-t2">Frage '+(P.i+1)+' von '+n+'</div><div class="m-bar" style="margin:8px 0 12px"><i style="width:'+Math.round(P.i/n*100)+'%"></i></div><div class="m-t1" style="white-space:pre-wrap">'+E(q.q)+'</div>';
+    const exp=q.e?'<div class="m-t2">'+E(q.e)+'</div>':'', nextBtn='<button class="btn btn-gold" id="jg-next" type="button">'+(P.i+1>=n?'Ergebnis':'Weiter')+'</button>';
+    if(t==='text'){
+      el.innerHTML=head+(done?'<div class="jg-fb ok"><b>Musterlösung</b><div style="white-space:pre-wrap">'+E(q.a)+'</div>'+exp+'</div><div class="jg-tools2" style="margin-top:10px"><button class="btn btn-gold" id="jg-know" type="button">Gewusst</button><button class="btn btn-ghost" id="jg-nope" type="button">Nicht gewusst</button></div>':'<button class="btn btn-gold" id="jg-show" type="button" style="margin-top:12px">Musterlösung zeigen</button>')+'</div>';
+      const sh=$(el,'#jg-show'); if(sh) sh.onclick=()=>{ P.ans=true; drawExam(); };
+      const rec=ok=>{ P.res.push({q,ok}); P.i++; P.ans=null; drawExam(); };
+      const kn=$(el,'#jg-know'), np=$(el,'#jg-nope'); if(kn) kn.onclick=()=>rec(true); if(np) np.onclick=()=>rec(false);
+      return;
+    }
+    if(t==='mc'){
+      const sel=Array.isArray(P.ans)?P.ans:[], good=q.c;
+      el.innerHTML=head+'<div class="m-t2">Mehrere Antworten können richtig sein</div><div class="jg-opts">'+q.o.map((o,k)=>'<label class="jg-opt'+(done?(good.includes(k)?' ok':sel.includes(k)?' bad':''):'')+'"><input type="checkbox" value="'+k+'"'+(sel.includes(k)?' checked':'')+(done?' disabled':'')+'> '+E(o)+'</label>').join('')+'</div>'
+        +(done?'<div class="'+(sel.length===good.length&&good.every(k=>sel.includes(k))?'jg-fb ok':'jg-fb bad')+'">'+(sel.length===good.length&&good.every(k=>sel.includes(k))?'Richtig.':'Nicht ganz – richtig: '+E(good.map(k=>q.o[k]).join(' · ')))+exp+'</div>'+nextBtn:'<button class="btn btn-gold" id="jg-chk2" type="button" style="margin-top:12px">Antwort prüfen</button>')+'</div>';
+      const ck=$(el,'#jg-chk2'); if(ck) ck.onclick=()=>{ const s=[...el.querySelectorAll('input:checked')].map(x=>+x.value); if(!s.length){ TOAST.show('Bitte mindestens eine Antwort wählen',{type:'info'}); return; } P.ans=s; P.res.push({q,ok:s.length===good.length&&good.every(k=>s.includes(k))}); A11Y.say(P.res[P.res.length-1].ok?'Richtig.':'Falsch.'); drawExam(); };
+    } else {
+      el.innerHTML=head+'<div class="jg-opts">'+q.o.map((o,k)=>'<button type="button" class="jg-opt'+(done?(k===q.c?' ok':k===P.ans?' bad':''):'')+'" data-k="'+k+'"'+(done?' disabled':'')+'>'+E(o)+'</button>').join('')+'</div>'
+        +(done?'<div class="'+(P.ans===q.c?'jg-fb ok':'jg-fb bad')+'">'+(P.ans===q.c?'Richtig.':'Falsch – richtig ist: '+E(q.o[q.c]))+exp+'</div>'+nextBtn:'')+'</div>';
+      el.querySelectorAll('.jg-opt').forEach(b=>b.onclick=()=>{ P.ans=+b.dataset.k; P.res.push({q,ok:P.ans===q.c}); A11Y.say(P.ans===q.c?'Richtig.':'Falsch.'); drawExam(); });
+    }
     const nx=$(el,'#jg-next'); if(nx) nx.onclick=()=>{ P.i++; P.ans=null; drawExam(); nx.blur(); };
   }
 
@@ -575,6 +630,6 @@ const JGUI=(function(){
   settings();
   JG.load();
 
-  return { settings, mount, chapterKey, names, checklist, closeTop, planEditor, planPhoto, parsePlanText, parseQuestions, ocr, isEditing, toggleEdit, setRel, delExam, restoreExams,
+  return { settings, mount, chapterKey, names, checklist, openReiter, closeTop, planEditor, planPhoto, parsePlanText, parseQuestions, ocr, isEditing, toggleEdit, setRel, delExam, restoreExams,
     examEditor, openExam, notice:NOTICE };
 })();
