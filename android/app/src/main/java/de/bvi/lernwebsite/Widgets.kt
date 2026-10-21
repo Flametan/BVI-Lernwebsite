@@ -136,6 +136,12 @@ object Widgets {
         v.setInt(id, "setColorFilter", color)
     }
 
+    // Innenabstand in dp (bei sehr niedrigen Widgets enger, damit der Inhalt Platz hat)
+    private fun pad(ctx: Context, v: RemoteViews, dp: Int) {
+        val px = (dp * ctx.resources.displayMetrics.density).toInt()
+        v.setViewPadding(R.id.pad, px, px, px, px)
+    }
+
     private fun base(ctx: Context, v: RemoteViews, pal: Pal) {
         tint(v, R.id.bg, pal.bg)
         v.setOnClickPendingIntent(R.id.root, openApp(ctx))
@@ -153,18 +159,25 @@ object Widgets {
         val s = Schedule.snap(Schedule.load(ctx), now)
         val pal = pal(ctx)
         return when (kind) {
-            1 -> buildNext(ctx, s, pal, now)
-            2 -> buildDay(ctx, s, pal, now)
+            1 -> buildNext(ctx, s, pal, now, hDp)
+            2 -> buildDay(ctx, s, pal, now, hDp)
             else -> buildNow(ctx, s, pal, now, wDp, hDp)
         }
     }
 
-    // Entwurf 1: Nächste Einheit (klein)
-    private fun buildNext(ctx: Context, s: Snap, pal: Pal, now: Long): RemoteViews {
+    // Fortschritt der laufenden Einheit (0 bis 1); ohne laufende Einheit bleibt der Zeitstrahl leer
+    private fun progress(s: Snap, u: Lesson, now: Long): Float =
+        if (s.kind == Snap.NOW) ((now - u.s).toFloat() / (u.e - u.s).toFloat()).coerceIn(0f, 1f) else 0f
+
+    // Entwurf 1: Nächste Einheit (klein, ab 2×1)
+    private fun buildNext(ctx: Context, s: Snap, pal: Pal, now: Long, hDp: Int): RemoteViews {
         val v = RemoteViews(ctx.packageName, R.layout.widget_next)
         base(ctx, v, pal)
+        val tiny = hDp < 100
+        if (tiny) pad(ctx, v, 6)
         val u = if (s.kind == Snap.NOW) s.cur else s.next
         val aft = if (s.kind == Snap.NOW) s.next else s.after
+        show(v, R.id.eyebrow, !tiny)
         txt(v, R.id.eyebrow, eyebrow(s, now), pal.acc)
         if (u == null) {
             txt(v, R.id.title, "Stundenplan in der App öffnen", pal.fg)
@@ -175,17 +188,13 @@ object Widgets {
             return v
         }
         txt(v, R.id.title, u.t, pal.fg)
-        txt(v, R.id.range, Schedule.range(u), pal.fg)
         val room = Schedule.room(u)
-        show(v, R.id.room, room.isNotEmpty())
+        txt(v, R.id.range, Schedule.range(u) + if (tiny && u.r.isNotBlank()) " · " + u.r else "", pal.fg)
+        show(v, R.id.room, room.isNotEmpty() && !tiny)
         txt(v, R.id.room, room, pal.mut)
-        val running = s.kind == Snap.NOW
-        show(v, R.id.bar, running)
-        if (running) {
-            val p = (now - u.s).toFloat() / (u.e - u.s).toFloat()
-            v.setImageViewBitmap(R.id.bar, bar(p, pal.card, pal.acc))
-        }
-        show(v, R.id.after, aft != null)
+        show(v, R.id.bar, true)
+        v.setImageViewBitmap(R.id.bar, bar(progress(s, u, now), pal.card, pal.acc))
+        show(v, R.id.after, aft != null && hDp >= 150)
         if (aft != null) {
             txt(v, R.id.afterTitle, "Danach " + Schedule.hhmm(aft.s) + " " + aft.t, pal.fg)
             val ar = Schedule.room(aft)
@@ -195,8 +204,8 @@ object Widgets {
         return v
     }
 
-    // Entwurf 3: Tagesplan (breit)
-    private fun buildDay(ctx: Context, s: Snap, pal: Pal, now: Long): RemoteViews {
+    // Entwurf 3: Tagesplan (breit, ab 4×1)
+    private fun buildDay(ctx: Context, s: Snap, pal: Pal, now: Long, hDp: Int): RemoteViews {
         val v = RemoteViews(ctx.packageName, R.layout.widget_day)
         base(ctx, v, pal)
         val title = when (s.kind) {
@@ -204,6 +213,8 @@ object Widgets {
             Snap.NONE -> "Stundenplan"
             else -> eyebrow(s, now)
         }
+        if (hDp < 100) pad(ctx, v, 5)
+        show(v, R.id.eyebrow, hDp >= 100)
         txt(v, R.id.eyebrow, title, pal.acc)
         val rows = intArrayOf(R.id.row1, R.id.row2, R.id.row3)
         val bgs = intArrayOf(R.id.rowBg1, R.id.rowBg2, R.id.rowBg3)
@@ -212,7 +223,8 @@ object Widgets {
         val subs = intArrayOf(R.id.sub1, R.id.sub2, R.id.sub3)
         val bars = intArrayOf(R.id.bar1, R.id.bar2, R.id.bar3)
         val rooms = intArrayOf(R.id.room1, R.id.room2, R.id.room3)
-        val list = s.list.take(3)
+        val maxRows = if (hDp < 100) 1 else if (hDp < 150) 2 else 3
+        val list = s.list.take(maxRows)
         for (i in 0 until 3) {
             val l = list.getOrNull(i)
             if (l == null && !(i == 0 && s.kind == Snap.NONE)) {
@@ -234,26 +246,28 @@ object Widgets {
             txt(v, times[i], Schedule.range(l), if (running) pal.onAcc else pal.acc)
             txt(v, titles[i], l.t, if (running) pal.onAcc else pal.fg)
             txt(v, rooms[i], Schedule.room(l), if (running) pal.onAcc else pal.mut)
-            show(v, subs[i], running)
-            show(v, bars[i], running)
-            if (running) {
-                txt(v, subs[i], "bis " + Schedule.hhmm(l.e) + " · noch " + Schedule.dur(l.e - now), pal.onAcc)
-                val p = (now - l.s).toFloat() / (l.e - l.s).toFloat()
-                v.setImageViewBitmap(bars[i], bar(p, 0x33000000, pal.onAcc))
-            }
+            // Zeitstrahl in der ersten Zeile immer; laufend gefüllt, sonst leer
+            val line = i == 0
+            show(v, subs[i], running && hDp >= 100)
+            show(v, bars[i], line)
+            if (running) txt(v, subs[i], "bis " + Schedule.hhmm(l.e) + " · noch " + Schedule.dur(l.e - now), pal.onAcc)
+            if (line) v.setImageViewBitmap(bars[i], bar(progress(s, l, now), if (running) 0x33000000 else pal.bg, if (running) pal.onAcc else pal.acc))
         }
         return v
     }
 
-    // Entwurf 5: Jetzt und danach (breit, 4×2)
+    // Entwurf 5: Jetzt und danach (breit, ab 4×1)
     private fun buildNow(ctx: Context, s: Snap, pal: Pal, now: Long, wDp: Int, hDp: Int): RemoteViews {
         val v = RemoteViews(ctx.packageName, R.layout.widget_now)
         v.setOnClickPendingIntent(R.id.root, openApp(ctx))
         val light = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean("w_light", false)
         v.setImageViewBitmap(R.id.bg, glassBg(ctx, pal, light, wDp, hDp))
         tint(v, R.id.cardBg, pal.card)
+        val tiny = hDp < 100
+        if (tiny) pad(ctx, v, 6)
         val u = if (s.kind == Snap.NOW) s.cur else s.next
         val aft = if (s.kind == Snap.NOW) s.next else s.after
+        show(v, R.id.eyebrow, !tiny)
         txt(v, R.id.eyebrow, eyebrow(s, now), pal.acc)
         if (u == null) {
             txt(v, R.id.title, "Stundenplan in der App öffnen", pal.fg)
@@ -265,25 +279,24 @@ object Widgets {
             return v
         }
         txt(v, R.id.title, u.t, pal.fg)
-        txt(v, R.id.range, Schedule.range(u), pal.fg)
         val room = Schedule.room(u)
-        show(v, R.id.room, room.isNotEmpty())
+        txt(v, R.id.range, Schedule.range(u) + if (tiny && u.r.isNotBlank()) " · " + u.r else "", pal.fg)
+        show(v, R.id.room, room.isNotEmpty() && !tiny)
         txt(v, R.id.room, room, pal.mut)
         val running = s.kind == Snap.NOW
-        show(v, R.id.left, running)
-        show(v, R.id.bar, running)
-        if (running) {
-            txt(v, R.id.left, "noch " + Schedule.dur(u.e - now), pal.acc)
-            val p = (now - u.s).toFloat() / (u.e - u.s).toFloat()
-            v.setImageViewBitmap(R.id.bar, bar(p, pal.card, pal.acc))
-        }
+        show(v, R.id.left, running && !tiny)
+        if (running) txt(v, R.id.left, "noch " + Schedule.dur(u.e - now), pal.acc)
+        show(v, R.id.bar, true)
+        v.setImageViewBitmap(R.id.bar, bar(progress(s, u, now), pal.card, pal.acc))
         show(v, R.id.card, aft != null)
         if (aft != null) {
+            show(v, R.id.afterLabel, !tiny)
             txt(v, R.id.afterLabel, "DANACH", pal.mut)
-            txt(v, R.id.afterTitle, aft.t, pal.fg)
+            txt(v, R.id.afterTitle, if (tiny) Schedule.hhmm(aft.s) + " " + aft.t else aft.t, pal.fg)
             txt(v, R.id.afterRange, Schedule.range(aft), pal.mut)
+            show(v, R.id.afterRange, !tiny)
             val ar = Schedule.room(aft)
-            show(v, R.id.afterRoom, ar.isNotEmpty())
+            show(v, R.id.afterRoom, ar.isNotEmpty() && !tiny)
             txt(v, R.id.afterRoom, ar, pal.mut)
         }
         return v

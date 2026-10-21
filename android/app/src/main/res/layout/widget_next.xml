@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root" android:layout_width="match_parent" android:layout_height="match_parent">
   <ImageView android:id="@+id/bg" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="fitXY" android:src="@drawable/w_bg" android:tint="#1B1C1F" android:importantForAccessibility="no"/>
-  <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="13dp">
+  <LinearLayout android:id="@+id/pad" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="13dp">
     <TextView
         android:id="@+id/eyebrow"
         android:layout_width="match_parent"
@@ -65,7 +65,7 @@
         android:autoSizeMaxTextSize="12sp"
         android:drawableStart="@drawable/ic_pin"
         android:drawablePadding="4dp"/>
-    <ImageView android:id="@+id/bar" android:layout_width="match_parent" android:layout_height="6dp" android:layout_marginTop="5dp" android:layout_marginBottom="6dp" android:scaleType="fitXY" android:importantForAccessibility="no"/>
+    <ImageView android:id="@+id/bar" android:layout_width="match_parent" android:layout_height="6dp" android:layout_marginTop="3dp" android:layout_marginBottom="4dp" android:scaleType="fitXY" android:importantForAccessibility="no"/>
     <LinearLayout android:id="@+id/after" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="3.4" android:orientation="vertical">
     <TextView
         android:id="@+id/afterTitle"
