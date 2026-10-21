@@ -647,7 +647,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     JG.discard(); NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
     const pc = document.querySelector('#v-vak-verwaltungsrecht .pc'), n0 = pc.querySelectorAll('.acc-item:not(.jg-gone)').length;
     pc.querySelector('.jg-be').click(); await w(200);
-    r.ctl = document.querySelectorAll('#v-vak-verwaltungsrecht .jg-cx').length === n0 && document.querySelectorAll('#v-vak-verwaltungsrecht .jg-bx').length > 3;
+    r.ctl = document.querySelectorAll('#v-vak-verwaltungsrecht .acc-item .jg-cx').length === n0 && document.querySelectorAll('#v-vak-verwaltungsrecht .jg-bx').length > 3;
     // Ergänzung im 2. Kapitel
     document.querySelectorAll('#v-vak-verwaltungsrecht .jg-in')[1].click(); await w(200);
     document.getElementById('jg-et').value = 'Mein Zusatz'; document.getElementById('jg-ex').value = 'Text'; document.getElementById('jg-es').click(); await w(500);
