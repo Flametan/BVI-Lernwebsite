@@ -47,7 +47,7 @@ const PAUSE=(function(){
   }
   function open(k){const g=GAMES.find(x=>x[0]===k);if(!g)return;stop();cur=g[4]();
     if(!pushed){try{history.pushState(Object.assign({},history.state,{pz:1}),'');pushed=true;}catch(e){}}
-    root.innerHTML=`<div class="pz-wrap"><div class="pz-head"><button class="pz-back">‹ Alle Spiele</button><span class="pz-center" style="font-size:.78rem">${k==='fahrt'?'Prüfungsfragen':mode==='allg'?'Allgemeinwissen':mode==='fw'?'Feuerwehr':'Allgemein + Feuerwehr'}</span></div><div class="pz-body"></div></div>`;
+    root.innerHTML=`<div class="pz-wrap"><div class="pz-head"><button class="pz-back">‹ Alle Spiele</button><span class="pz-center" style="font-size:.78rem">${k==='fahrt'||k==='duell'?'Prüfungsfragen':mode==='allg'?'Allgemeinwissen':mode==='fw'?'Feuerwehr':'Allgemein + Feuerwehr'}</span></div><div class="pz-body"></div></div>`;
     root.querySelector('.pz-back').onclick=toHub;cur.start(root.querySelector('.pz-body'));}
   function stop(){if(cur&&cur.stop)cur.stop();cur=null;}
   function toHub(){if(pushed)history.back();else hub();}

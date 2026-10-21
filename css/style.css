@@ -2435,3 +2435,4 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .pz-seg button.on{background:var(--m-accent);color:var(--m-on-accent);}.pz-seg button:disabled,.pz-chip:disabled{opacity:.6;cursor:default;}
 .pz-tmr{height:5px;border-radius:3px;background:var(--m-raised);overflow:hidden;}.pz-tmr i{display:block;height:100%;width:100%;background:var(--m-accent);}
 .pz-vs{width:100%;border-collapse:collapse;font-size:.88rem;}.pz-vs td,.pz-vs th{padding:7px 6px;border-bottom:1px solid var(--m-line);text-align:left;}.pz-vs th{color:var(--m-muted);font-weight:600;font-size:.72rem;}.pz-vs td:not(:first-child),.pz-vs th:not(:first-child){text-align:right;}
+.pz-cam{display:flex;flex-direction:column;gap:10px;}
