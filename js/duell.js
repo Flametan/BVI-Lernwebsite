@@ -54,7 +54,7 @@ const DUELL=(function(){
   function stopScan(){clearTimeout(scanT);scanT=0;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}}
   async function scan(box,onCode,onErr){
     stopScan();
-    try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});}catch(e){const n=e&&e.name;onErr(n==='NotAllowedError'||n==='SecurityError'?'Der Kamerazugriff wurde nicht erlaubt. Erlaube die Kamera in den Einstellungen deines Geräts (bei der Android-App: Einstellungen, Apps, B VI, Berechtigungen) und tippe dann noch einmal auf „Kamera starten“. Oder nutze den Kurzcode.':n==='NotFoundError'||n==='OverconstrainedError'?'Auf diesem Gerät wurde keine Kamera gefunden. Nutze den Kurzcode.':'Die Kamera lässt sich gerade nicht starten. Tippe noch einmal auf „Kamera starten“ oder nutze den Kurzcode.');return;}
+    try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});}catch(e){const n=e&&e.name;onErr(n==='NotAllowedError'||n==='SecurityError'?'Der Kamerazugriff wurde nicht erlaubt. Erlaube die Kamera in den Einstellungen deines Geräts (bei der Android-App: Einstellungen, Apps, B VI, Berechtigungen) und tippe dann noch einmal auf „Kamera starten“. Oder fotografiere den QR-Code über „Stattdessen Foto vom QR-Code aufnehmen“, oder nutze den Kurzcode.':n==='NotFoundError'||n==='OverconstrainedError'?'Auf diesem Gerät wurde keine Kamera gefunden. Nutze den Kurzcode.':'Die Kamera lässt sich gerade nicht starten. Tippe noch einmal auf „Kamera starten“ oder nutze den Kurzcode.');return;}
     const v=document.createElement('video');v.setAttribute('playsinline','');v.muted=true;v.srcObject=stream;box.innerHTML='';box.appendChild(v);
     try{await v.play();}catch(e){}
     let det=null;if('BarcodeDetector' in window){try{det=new BarcodeDetector({formats:['qr_code']});}catch(e){det=null;}}
@@ -71,11 +71,18 @@ const DUELL=(function(){
   function scanBox(title,hint,onCode){
     card(`<div class="pz-lbl"><span>${esc(title)}</span></div><div class="pz-qt">${esc(hint)}</div>
       <div class="pz-scan" id="sc" style="display:none"></div>
-      <div class="pz-cam" id="cm"><div class="pz-fb">Zum Scannen braucht die App kurz deine Kamera. Beim Tippen auf „Kamera starten“ fragt dein Gerät, ob die Kamera benutzt werden darf. Es wird nichts aufgenommen oder gespeichert.</div><button class="pz-pri" data-a="cam">Kamera starten</button></div>
+      <div class="pz-cam" id="cm"><div class="pz-fb">Zum Scannen braucht die App kurz deine Kamera. Beim Tippen auf „Kamera starten“ fragt dein Gerät, ob die Kamera benutzt werden darf. Es wird nichts aufgenommen oder gespeichert.</div><button class="pz-pri" data-a="cam">Kamera starten</button><button class="pz-sec2" data-a="photo" style="align-self:flex-start">Stattdessen Foto vom QR-Code aufnehmen</button><input type="file" id="ph" accept="image/*" capture="environment" hidden></div>
       <div class="pz-fb" id="se"></div>
       <div class="pz-lbl"><span>Oder Kurzcode einfügen</span></div><textarea class="pz-code" id="pc" rows="3" placeholder="D1~…"></textarea><button class="pz-sec2" data-a="paste" style="align-self:flex-start">Code übernehmen</button><button class="pz-sec2" data-a="cancel" style="align-self:flex-start">Abbrechen</button>`);
-    root._onCode=onCode;
+    root._onCode=onCode;const ph=root.querySelector('#ph');if(ph)ph.onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)photo(f);};
   }
+  // Foto vom QR-Code: funktioniert auch, wenn die Live-Kamera gesperrt ist (Systemkamera oder Dateiauswahl des Geräts)
+  async function decodeFile(f){const bmp=await createImageBitmap(f);let det=null;if('BarcodeDetector' in window){try{det=new BarcodeDetector({formats:['qr_code']});}catch(e){}}if(!det)await loadJs('js/jsqr.min.js');
+    for(const max of [1600,1000,640]){const k=Math.min(1,max/Math.max(bmp.width,bmp.height)),cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(bmp.width*k));cv.height=Math.max(1,Math.round(bmp.height*k));const x=cv.getContext('2d',{willReadFrequently:true});x.drawImage(bmp,0,0,cv.width,cv.height);
+      if(det){try{const r=await det.detect(cv);if(r&&r[0]&&r[0].rawValue)return r[0].rawValue;}catch(e){}}
+      const id=x.getImageData(0,0,cv.width,cv.height),r=jsQR(id.data,id.width,id.height,{inversionAttempts:'attemptBoth'});if(r&&r.data)return r.data;}
+    return null;}
+  async function photo(f){const se=root.querySelector('#se');if(se)se.innerHTML='<b>Foto wird gelesen …</b>';try{const code=await decodeFile(f);if(code){stopScan();root._onCode&&root._onCode(code);}else if(se)se.innerHTML='<b>Im Foto wurde kein QR-Code erkannt.</b> Geh etwas näher heran, achte auf gutes Licht und halte den ganzen Code im Bild. Oder nutze den Kurzcode.';}catch(e){if(se)se.innerHTML='<b>Das Foto konnte nicht gelesen werden.</b> Nutze den Kurzcode.';}}
   function startCam(){const cm=root.querySelector('#cm'),sc=root.querySelector('#sc'),se=root.querySelector('#se');if(!sc)return;
     if(cm)cm.style.display='none';sc.style.display='';sc.innerHTML='<div class="pz-fb" style="padding:30px 12px;text-align:center">Kamera wird gestartet …</div>';
     scan(sc,root._onCode,(m,why)=>{sc.style.display='none';if(cm)cm.style.display='';if(se)se.innerHTML='<b>'+esc(m)+'</b>';});}
@@ -150,6 +157,7 @@ const DUELL=(function(){
     else if(a==='copy')copy(root._code,b);
     else if(a==='next1')hostScan();
     else if(a==='cam')startCam();
+    else if(a==='photo'){const i=root.querySelector('#ph');if(i)i.click();}
     else if(a==='paste'){const t=(root.querySelector('#pc')||{}).value;if(t&&t.trim()){stopScan();root._onCode&&root._onCode(t.trim());}}
     else if(a==='cancel'){stopScan();teardown(false);intro();}
     else if(a==='n'){if(cfg.n===+v)return;cfg.n=+v;sendCfg();lobby();}
