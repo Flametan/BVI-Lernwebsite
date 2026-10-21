@@ -2584,3 +2584,5 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 #danke .dk-go{flex:1;min-width:90px;text-align:center;padding:10px;border-radius:12px;background:var(--m-accent);color:#000;font-weight:700;text-decoration:none}
 #danke .dk-later{padding:10px 14px;border-radius:12px;border:1px solid currentColor;background:none;color:inherit;opacity:.85;font:inherit}
 #danke .dk-no{padding:10px 8px;border:0;background:none;color:inherit;opacity:.6;font:inherit;font-size:.8rem}
+
+.m-list.m-donate:not(.m-donate-home){background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
