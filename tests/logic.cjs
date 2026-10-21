@@ -481,6 +481,14 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   eq('Markierung: „Als Lernkarte“ füllt Antwort und Modul vor', hc, { btn: true, filled: true, mod: 'VAk' });
   await page.setViewportSize({ width: 390, height: 844 });
 
+  // ── Android-Widgets: Stundenplan-Einheiten für die App ──
+  const wu = await page.evaluate(() => {
+    let sent = null; window.BVIAndroid = { setSchedule: j => { sent = j; }, setWidgetStyle: () => {}, setIcon: () => {} };
+    IDF_PLAN.pushWidget(); const u = JSON.parse(sent || '[]'); delete window.BVIAndroid;
+    return { n: u.length, ok: u.every(x => x.s < x.e && typeof x.t === 'string' && 'r' in x), sorted: u.every((x, i) => !i || u[i - 1].s <= x.s) };
+  });
+  ok('Widget-Daten: Einheiten mit Beginn, Ende, Titel, Raum', wu.n > 20 && wu.ok && wu.sorted);
+
   // ── Startseiten-Diagramm passt auf dem Touch-Handy in die Karte (Woche und Monate) ──
   const tctx = await browser.newContext({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true, serviceWorkers: 'block' });
   const tp = await tctx.newPage();
