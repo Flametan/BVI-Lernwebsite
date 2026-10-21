@@ -2565,3 +2565,9 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 .jg-opt.bad{border-color:#d4453b;background:color-mix(in srgb,#d4453b 18%,var(--m-raised));}
 .jg-fb{padding:10px 12px;border-radius:12px;margin-bottom:10px;}
 .jg-wr{margin-top:10px;padding-top:10px;border-top:1px solid var(--m-line);}
+
+.idf-tabs{display:flex;flex-direction:column;gap:10px;}
+.idf-seg{display:flex;width:100%;}
+.idf-seg button{flex:1;}
+.idf-act{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.idf-act .btn{font-size:.85rem;padding:8px 14px;}

@@ -1,35 +1,34 @@
 /* ======================================================================
    JG – Jahrgänge und ihre Änderungen am Master
-   Der Master (BRef 04/2025 – AB 04/2025) ist die App wie sie ausgeliefert wird. Jeder andere Jahrgang
+   Der Master (BRef 04/2025 – AB 04/2026) ist die App wie sie ausgeliefert wird. Jeder andere Jahrgang
    startet als 1:1-Kopie und legt nur seine Änderungen darüber:
      · veröffentlichte Ebene  jahrgaenge/<Jahrgang-ID>.json  (vom Betreuer ins Repository gelegt, nur lesen)
      · eigene Ebene          im Browser gespeichert (Ergänzungen, Prüfungen, Glow, eigener Plan)
    Datei-Format (Version 1), alles optional:
      { format:'bvi-jahrgang', v:1, jahrgang:'BRef 10/2026 - AB 10/2027', stand:'2027-01-12',
-       plan:{ name, ev:[{s,e,t,r,n,ad}] },
+       plane:{ ibk|vak|feuak|idf : { name, ev:[{s,e,t,r,n,ad}] } },  aktiv:'idf',
        erg:[{ id, seite, titel, text, bild, ts }],
        pr:{ hinzu:[{ id, tab, titel, fragen:[{ q, o:[…], c:0, e:'' }], ts }], weg:['v-…', …] },
        glow:['laufbahn','idf','feuak','vak','ibk'],
        bilder:{ '<bild-id>':'data:image/jpeg;base64,…' } }
 ====================================================================== */
 const JG=(function(){
-  const MASTER='BRef-04-2025_AB-04-2025', K='bvi_jg', PRE='bvi_jgd_', PUB='bvi_jgp_';
+  const MASTER='BRef-04-2025_AB-04-2026', K='bvi_jg', PRE='bvi_jgd_', PUB='bvi_jgp_';
   const TABS=[['laufbahn','Laufbahnprüfung','Laufbahn'],['idf','IdF Münster','IdF'],['feuak','FeuAK Hamburg','FeuAK'],['vak','VAk Berlin','VAk'],['ibk','IBK Heyrothsberge','IBK']];
-  const ALLTABS=TABS.map(t=>t[0]);
+  const ALLTABS=TABS.map(t=>t[0]), PLANKEYS=['ibk','vak','feuak','idf'];   // Stundenpläne gibt es je Abschnitt
   const pad=n=>String(n).padStart(2,'0');
   let pub=null, pubImg={}, ver=0; const subs=[];
   const lsGet=k=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } };
   const lsSet=(k,v)=>{ try{ localStorage.setItem(k,v); }catch(e){} };
 
   // ── Liste der Jahrgänge: Beginn April und Oktober, bis zum neuesten, der heute schon begonnen hat ──
-  // Annahme: Die BRef beginnen ein Jahr vor den AB; für BRef-Beginn ab 10/2026 steht deshalb AB im Folgejahr
-  const AB_OFFSET_FROM=202610;
+  // Die BRef beginnen ein Jahr vor den AB: zu BRef 04/2025 gehört AB 04/2026
   function list(now){
     now=now||new Date();
     const ly=now.getFullYear(), lm=now.getMonth()+1>=10?10:now.getMonth()+1>=4?4:-1;   // neuester Beginn ≤ heute
     const lastY=lm<0?ly-1:ly, lastM=lm<0?10:lm, out=[];
     for(let y=2025,m=4;y*100+m<=lastY*100+lastM;){
-      const ab=y*100+m>=AB_OFFSET_FROM?y+1:y;
+      const ab=y+1;
       out.push({id:'BRef-'+pad(m)+'-'+y+'_AB-'+pad(m)+'-'+ab,label:'BRef '+pad(m)+'/'+y+' - AB '+pad(m)+'/'+ab,start:y*100+m});
       if(m===4) m=10; else{ m=4; y++; }
     }
@@ -62,12 +61,16 @@ const JG=(function(){
   const str=(v,n)=>String(v==null?'':v).slice(0,n);
   const idOk=v=>/^[A-Za-z0-9_-]{1,40}$/.test(String(v))?String(v):null;
   function clean(o){
-    const out={v:1,plan:null,erg:[],pr:{hinzu:[],weg:[]},glow:null};
+    const out={v:1,plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},glow:null};
     if(!o||typeof o!=='object') return out;
-    if(o.plan&&Array.isArray(o.plan.ev)){
-      const ev=o.plan.ev.slice(0,3000).filter(e=>e&&Number.isFinite(+e.s)&&Number.isFinite(+e.e)&&+e.e>+e.s).map(e=>({s:+e.s,e:+e.e,t:str(e.t,140),r:str(e.r,60),n:str(e.n,140),ad:e.ad?1:0}));
-      if(ev.length) out.plan={name:str(o.plan.name,60)||'Eigener Plan',ev,at:Date.now()};
-    }
+    const planOf=pl=>{
+      if(!pl||!Array.isArray(pl.ev)) return null;
+      const ev=pl.ev.slice(0,3000).filter(e=>e&&Number.isFinite(+e.s)&&Number.isFinite(+e.e)&&+e.e>+e.s).map(e=>({s:+e.s,e:+e.e,t:str(e.t,140),r:str(e.r,60),n:str(e.n,140),ad:e.ad?1:0}));
+      return ev.length?{name:str(pl.name,60)||'Eigener Plan',ev,at:Date.now()}:null;
+    };
+    PLANKEYS.forEach(k=>{ const pl=planOf(o.plane&&o.plane[k]); if(pl) out.plane[k]=pl; });
+    if(!Object.keys(out.plane).length){ const old=planOf(o.plan); if(old) out.plane.idf=old; }   // ältere Dateien mit einem einzigen Plan
+    out.aktiv=PLANKEYS.includes(o.aktiv)?o.aktiv:null;
     (Array.isArray(o.erg)?o.erg:[]).slice(0,300).forEach(e=>{
       const id=e&&idOk(e.id); if(!id||!str(e.seite,60).startsWith('v-')) return;
       const titel=str(e.titel,120).trim(), text=str(e.text,20000);
@@ -97,7 +100,8 @@ const JG=(function(){
   function data(){
     const p=pubData(), l=local(), byId=(a,b)=>{ const m=new Map(); [...a,...b].forEach(x=>m.set(x.id,x)); return [...m.values()]; };
     return {
-      plan:l.plan||p.plan,
+      plane:{...p.plane,...l.plane},
+      aktiv:l.aktiv||p.aktiv,
       erg:byId(p.erg,l.erg),
       pr:{hinzu:byId(p.pr.hinzu,l.pr.hinzu),weg:[...new Set([...p.pr.weg,...l.pr.weg])]},
       glow:l.glow||p.glow
@@ -130,7 +134,7 @@ const JG=(function(){
     const d=data(), ids=new Set(d.erg.map(e=>e.bild).filter(Boolean)), bilder={};
     for(const i of ids){ const u=await img.get(i); if(okImg(u)) bilder[i]=u; }
     return JSON.stringify({format:'bvi-jahrgang',v:1,jahrgang:labelOf(current()),stand:new Date().toISOString().slice(0,10),
-      plan:d.plan,erg:d.erg,pr:d.pr,glow:d.glow,bilder},null,1);
+      plane:d.plane,aktiv:d.aktiv,erg:d.erg,pr:d.pr,glow:d.glow,bilder},null,1);
   }
   // Datei einlesen und zu den eigenen Änderungen hinzufügen; liefert Zahlen für die Rückmeldung
   async function importJson(text){
@@ -143,15 +147,16 @@ const JG=(function(){
     c.pr.hinzu.forEach(p=>{ const i=l.pr.hinzu.findIndex(x=>x.id===p.id); if(i>=0) l.pr.hinzu[i]=p; else l.pr.hinzu.push(p); if(!haveP.has(p.id)) np++; });
     l.pr.weg=[...new Set([...l.pr.weg,...c.pr.weg])];
     if(c.glow) l.glow=c.glow;
-    if(c.plan) l.plan=c.plan;
+    let pl=0; Object.entries(c.plane).forEach(([k,v])=>{ l.plane[k]=v; pl+=v.ev.length; });
+    if(c.aktiv) l.aktiv=c.aktiv;
     saveLocal(l);
-    return {erg:ne,pruefungen:np,bilder:ni,plan:c.plan?c.plan.ev.length:0};
+    return {erg:ne,pruefungen:np,bilder:ni,plan:pl};
   }
   // Alle eigenen Änderungen dieses Jahrgangs verwerfen (Rückgabe: vorheriger Stand zum Rückgängigmachen)
   function discard(){ const prev=lsGet(PRE+current()); try{ localStorage.removeItem(PRE+current()); }catch(e){} changed(); return prev; }
   function restore(prev){ if(prev) lsSet(PRE+current(),prev); changed(); }
-  const hasLocal=()=>{ const l=local(); return !!(l.plan||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||l.glow); };
+  const hasLocal=()=>{ const l=local(); return !!(Object.keys(l.plane).length||l.aktiv||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||l.glow); };
 
-  return { MASTER, TABS, list, labelOf, current, isMaster, data, local, saveLocal, glow, load, set, on, ver:()=>ver, img, okImg,
+  return { MASTER, TABS, PLANKEYS, list, labelOf, current, isMaster, data, local, saveLocal, glow, load, set, on, ver:()=>ver, img, okImg,
     exportJson, importJson, discard, restore, hasLocal, empty, newId:()=>'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6) };
 })();

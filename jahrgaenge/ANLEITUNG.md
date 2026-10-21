@@ -1,6 +1,6 @@
 # Jahrgangs-Dateien
 
-Jeder Jahrgang außer dem Master (BRef 04/2025 - AB 04/2025) startet als 1:1-Kopie der App.
+Jeder Jahrgang außer dem Master (BRef 04/2025 - AB 04/2026) startet als 1:1-Kopie der App.
 Die **Änderungen** eines Jahrgangs liegen als eine JSON-Datei in diesem Ordner. Wer in der App
 diesen Jahrgang wählt, bekommt die Datei automatisch dazu.
 
@@ -11,8 +11,8 @@ diesen Jahrgang wählt, bekommt die Datei automatisch dazu.
 | Jahrgang in der App | Dateiname |
 | --- | --- |
 | BRef 10/2026 - AB 10/2027 | `BRef-10-2026_AB-10-2027.json` |
-| BRef 04/2026 - AB 04/2026 | `BRef-04-2026_AB-04-2026.json` |
-| BRef 10/2025 - AB 10/2025 | `BRef-10-2025_AB-10-2025.json` |
+| BRef 04/2026 - AB 04/2027 | `BRef-04-2026_AB-04-2027.json` |
+| BRef 10/2025 - AB 10/2026 | `BRef-10-2025_AB-10-2026.json` |
 
 (Die ID zeigt die App unter Einstellungen → Lehrgang → „Änderungen exportieren“ im Dateinamen:
 `bvi-<ID>.json`.)
@@ -35,7 +35,7 @@ lesen sie in der App unter **Änderungen einlesen** ein, ohne dass du etwas ver�
 
 Alles ist optional (siehe `_beispiel.json`):
 
-* `plan` – Stundenplan (Termine mit Beginn, Ende, Titel, Raum). Der Plan wird auch für Startseite und Widgets benutzt.
+* `plane` – Stundenpläne je Abschnitt (`ibk`, `vak`, `feuak`, `idf`), jeweils mit Termine (Beginn, Ende, Titel, Raum); `aktiv` nennt den Abschnitt, dessen Plan Startseite und Widgets benutzen.
 * `erg` – Ergänzungen zu Lernseiten (`seite` ist die Seiten-ID, z. B. `v-vak-verwaltungsrecht`; `bild` verweist auf `bilder`).
 * `pr` – Prüfungen: `hinzu` (eigene Prüfungen mit Fragen und Antworten), `weg` (ausgeblendete mitgelieferte Prüfungen).
 * `glow` – Reiter, die als klausurrelevant leuchten und die Fragen für Einsatzfahrt und Duell liefern.

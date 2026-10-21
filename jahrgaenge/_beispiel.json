@@ -3,12 +3,15 @@
   "v": 1,
   "jahrgang": "BRef 10/2026 - AB 10/2027",
   "stand": "2027-01-12",
-  "plan": {
-    "name": "Mein Stundenplan",
-    "ev": [
-      { "s": 1798876800000, "e": 1798882200000, "t": "Vorbeugender Brandschutz", "r": "B1-106", "n": "", "ad": 0 }
-    ]
+  "plane": {
+    "idf": {
+      "name": "IdF Münster",
+      "ev": [
+        { "s": 1798876800000, "e": 1798882200000, "t": "Vorbeugender Brandschutz", "r": "B1-106", "n": "", "ad": 0 }
+      ]
+    }
   },
+  "aktiv": "idf",
   "erg": [
     { "id": "e1", "seite": "v-vak-verwaltungsrecht", "titel": "Merksatz", "text": "Text der Ergänzung.", "bild": null, "ts": 1798876800000 }
   ],

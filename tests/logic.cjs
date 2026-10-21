@@ -552,7 +552,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const L = d => JG.list(d), lab = l => l.map(x => x.label);
     return { a: lab(L(new Date(2026, 9, 21)))[0], b: lab(L(new Date(2026, 8, 30)))[0], c: lab(L(new Date(2039, 5, 15)))[0], n39: L(new Date(2039, 5, 15)).length, last: lab(L(new Date(2026, 9, 21))).pop(), master: JG.isMaster() };
   });
-  eq('Jahrgangsliste endet beim neuesten begonnenen Jahrgang', jl, { a: 'BRef 10/2026 - AB 10/2027', b: 'BRef 04/2026 - AB 04/2026', c: 'BRef 04/2039 - AB 04/2040', n39: 29, last: 'BRef 04/2025 - AB 04/2025', master: true });
+  eq('Jahrgangsliste endet beim neuesten begonnenen Jahrgang', jl, { a: 'BRef 10/2026 - AB 10/2027', b: 'BRef 04/2026 - AB 04/2027', c: 'BRef 04/2039 - AB 04/2040', n39: 29, last: 'BRef 04/2025 - AB 04/2026', master: true });
   const pt = await page.evaluate(() => {
     const d = JGUI.parsePlanText('Montag 26.10.\n08:00 - 09:30 Vorbeugender Brandschutz Raum B1-106\n09:45-11:15\nStabsarbeit\nDienstag 27.10.2026\n08:00 bis 09:30 Recht', new Date(2026, 9, 20));
     const q = JGUI.parseQuestions('1. Was ist ein ELW?\na) Einsatzleitwagen\nb) Löschfahrzeug\nc) Rüstwagen\n2. Welche Frist gilt?\nA. 35 Tage\nB. 52 Tage');
@@ -573,6 +573,19 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     v[0].value = y + '-03-02'; v[1].value = '08:00'; v[2].value = '09:30'; v[3].value = 'Mathe <b>x</b>'; v[4].value = 'A1';
     document.getElementById('jg-save').click(); await w(400);
     r.plan = IDF_PLAN.isCustom() && !!IDF_PLAN.getPlan() && IDF_PLAN.getPlan().ev.length === 1 && IDF_PLAN.next().title.startsWith('Mathe');
+    r.active = JG.data().aktiv === 'idf';
+    // zweiter Abschnitt (VAk) mit eigenem Plan: erst nach „Als aktiv markieren“ nutzen ihn Startseite und Widgets
+    IDF_PLAN.viewTab('vak'); await w(200);
+    r.vakEmpty = /Noch kein Stundenplan für VAk/.test(document.getElementById('plan-inner').innerText);
+    JGUI.planEditor(); await w(150); document.getElementById('jg-add').click(); await w(80);
+    { const v2 = document.querySelector('.jg-row').querySelectorAll('input'); v2[0].value = y + '-03-02'; v2[1].value = '10:00'; v2[2].value = '11:00'; v2[3].value = 'Recht'; v2[4].value = 'B2'; }
+    document.getElementById('jg-save').click(); await w(400);
+    r.stillIdf = IDF_PLAN.next().title.startsWith('Mathe') && JSON.parse((() => { let s = null; window.BVIAndroid = { setSchedule: j => { s = j; }, setWidgetStyle() {}, setIcon() {} }; IDF_PLAN.pushWidget(); delete window.BVIAndroid; return s; })())[0].t.startsWith('Mathe');
+    document.querySelector('.idf-act .btn-gold').click(); await w(400);
+    r.nowVak = JG.data().aktiv === 'vak' && IDF_PLAN.next().title === 'Recht';
+    IDF_PLAN.viewTab('idf'); await w(200);
+    r.viewIdf = /Mathe/.test(document.getElementById('plan-inner').innerText) && IDF_PLAN.next().title === 'Recht';   // angezeigt: IdF, aktiv: VAk
+    IDF_PLAN.setActive('idf'); await w(200);
     r.noHtml = !document.getElementById('plan-inner').innerHTML.includes('<b>x</b>');
     // Ergänzung auf einer Lernseite
     NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
@@ -613,15 +626,15 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     JGUI.toggleEdit();
     // Export, Verwerfen, Import
     const txt = await JG.exportJson(), j = JSON.parse(txt);
-    r.exp = j.format === 'bvi-jahrgang' && j.pr.hinzu.length === 1 && Array.isArray(j.glow) && j.plan.ev.length === 1;
+    r.exp = j.format === 'bvi-jahrgang' && j.pr.hinzu.length === 1 && Array.isArray(j.glow) && j.plane.idf.ev.length === 1 && j.plane.vak.ev.length === 1 && j.aktiv === 'idf';
     JG.discard(); await w(100); r.disc = !JG.hasLocal();
-    const n = await JG.importJson(txt); r.imp = n.pruefungen === 1 && n.plan === 1 && JG.hasLocal();
+    const n = await JG.importJson(txt); r.imp = n.pruefungen === 1 && n.plan === 2 && JG.hasLocal();
     let bad = false; try{ await JG.importJson('{"format":"x"}'); }catch(e){ bad = true; } r.bad = bad;
     // zurück zum Master
     JG.discard(); JG.set(JG.MASTER); await w(300); r.master = JG.isMaster() && IDF_PLAN.next() !== null;
     return r;
   });
-  eq('Jahrgang: leerer Plan, Plan-Formular, Ergänzung, eigene Prüfung, Glow, Export/Import', jg, { cur: true, empty: true, plan: true, noHtml: true, erg: true, ergSaved: true, ergDel: true, tabs: 5, own: true, ans: true, xs: true, hidden: true, back: true, mods: 'VAk,IdF', custom: true, exp: true, disc: true, imp: true, bad: true, master: true });
+  eq('Jahrgang: leerer Plan, Plan-Formular, Abschnitte, Ergänzung, eigene Prüfung, Glow, Export/Import', jg, { cur: true, empty: true, plan: true, active: true, vakEmpty: true, stillIdf: true, nowVak: true, viewIdf: true, noHtml: true, erg: true, ergSaved: true, ergDel: true, tabs: 5, own: true, ans: true, xs: true, hidden: true, back: true, mods: 'VAk,IdF', custom: true, exp: true, disc: true, imp: true, bad: true, master: true });
 
   // ── Veröffentlichte Jahrgangs-Datei (jahrgaenge/<ID>.json) wird mit den eigenen Änderungen zusammengeführt ──
   const jid = await page.evaluate(() => JG.list()[0].id);

@@ -5482,22 +5482,27 @@ const IDF_PLAN = (function(){
 
   // ── Eigener Stundenplan aus einer Kalenderdatei (.ics): ersetzt den IdF-Plan, alle Funktionen laufen weiter ──
   const CKEY='bvi_plan_custom', SKEY='bvi_plan_src';
-  let _cust=null, _cw=null;
+  let _cust=null, _act=null, _cw=null, _cwa=null, _mode='view';   // _cust: angezeigter Plan, _act: aktiver Plan (Startseite, Widgets)
   // Master-Jahrgang: eigener Plan optional (alter Speicherort); andere Jahrgänge: immer eigener Plan, ggf. noch leer
   const _nonMaster=()=>typeof JG!=='undefined'&&!JG.isMaster();
+  const PTAB={ibk:'IBK',vak:'VAk',feuak:'FeuAK',idf:'IdF'};
+  const _actKey=()=>{ const d=JG.data(); return d.aktiv&&d.plane[d.aktiv]?d.aktiv:(JG.PLANKEYS.find(k=>d.plane[k])||null); };
+  function _vkey(){ try{ const k=localStorage.getItem('bvi_plan_view'); if(JG.PLANKEYS.includes(k)) return k; }catch(e){} return _actKey()||'idf'; }
   function _loadCust(){
-    if(_nonMaster()){ const p=JG.data().plan; _cust=p&&Array.isArray(p.ev)&&p.ev.length?p:null; }
-    else{ try{ const j=JSON.parse(localStorage.getItem(CKEY)||'null'); _cust=j&&Array.isArray(j.ev)&&j.ev.length?j:null; }catch(e){ _cust=null; } }
-    _cw=null;
+    if(_nonMaster()){ const d=JG.data(), ak=_actKey(); _cust=d.plane[_vkey()]||null; _act=ak?d.plane[ak]:null; }
+    else{ try{ const j=JSON.parse(localStorage.getItem(CKEY)||'null'); _cust=j&&Array.isArray(j.ev)&&j.ev.length?j:null; }catch(e){ _cust=null; } _act=_cust; }
+    _cw=null; _cwa=null;
   }
   const _isCustom=()=>{ if(_nonMaster()) return true; try{ return !!_cust&&localStorage.getItem(SKEY)==='custom'; }catch(e){ return false; } };
   function _saveCust(res){
-    if(_nonMaster()){ const l=JG.local(); l.plan=res; JG.saveLocal(l); }
+    if(_nonMaster()){ const l=JG.local(), k=_vkey(); res.at=Date.now(); l.plane[k]=res; if(!l.aktiv) l.aktiv=k; JG.saveLocal(l); }
     else{ try{ localStorage.setItem(CKEY,JSON.stringify(res)); localStorage.setItem(SKEY,'custom'); }catch(e){} }
     _loadCust(); _manual=false; render(); pushWidget();
     if(typeof SHELL!=='undefined') SHELL.renderHome();
   }
-  _loadCust();
+  // Andere Jahrgänge: zwischen den Abschnitten (IBK, VAk, FeuAK, IdF) wechseln und einen Plan als aktiv markieren
+  function viewTab(k){ if(!JG.PLANKEYS.includes(k)) return; try{ localStorage.setItem('bvi_plan_view',k); }catch(e){} _loadCust(); _manual=false; render(); }
+  function setActive(k){ const l=JG.local(); l.aktiv=k; JG.saveLocal(l); TOAST.show(PTAB[k]+'-Plan ist jetzt aktiv: Startseite und Widgets nutzen ihn',{type:'ok'}); }
   const _icsUnfold=t=>String(t).replace(/\r\n|\r/g,'\n').replace(/\n[ \t]/g,'').split('\n');
   const _icsText=v=>String(v||'').replace(/\\[nN]/g,' ').replace(/\\([,;\\])/g,'$1').replace(/\s+/g,' ').trim();
   // lokale Zeit in einer Zeitzone → UTC-Millisekunden (unbekannte Zeitzone: Zeit des Geräts)
@@ -5569,8 +5574,10 @@ const IDF_PLAN = (function(){
   const _isoWeek=d=>{ const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())); const n=t.getUTCDay()||7; t.setUTCDate(t.getUTCDate()+4-n); return Math.ceil(((t-Date.UTC(t.getUTCFullYear(),0,1))/864e5+1)/7); };
   // Termine in Wochen (Mo–So) mit Einträgen im Format des IdF-Plans umwandeln
   function _customWeeks(){
-    if(_cw) return _cw;
-    const ev=(_cust&&_cust.ev)||[]; if(!ev.length) return (_cw=[]);
+    const pl=_mode==='active'?_act:_cust;
+    if(_mode==='active'?_cwa:_cw) return _mode==='active'?_cwa:_cw;
+    const ev=(pl&&pl.ev)||[]; const keep=w=>{ if(_mode==='active') _cwa=w; else _cw=w; return w; };
+    if(!ev.length) return keep([]);
     const hm=ms=>{ const d=new Date(ms); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); };
     const days=new Map(), add=(ymd,raw)=>{ (days.get(ymd)||days.set(ymd,[]).get(ymd)).push(raw); };
     const clean=x=>String(x||'').replace(/\|/g,'/');
@@ -5584,9 +5591,9 @@ const IDF_PLAN = (function(){
     const ws=[]; let i=0;
     for(let m=mon(first);m<=last&&ws.length<110;m=new Date(m.getFullYear(),m.getMonth(),m.getDate()+7)){
       const dd=[]; for(let k=0;k<7;k++) dd.push(days.get(_ymd(new Date(m.getFullYear(),m.getMonth(),m.getDate()+k)))||[]);
-      ws.push([_isoWeek(m),++i,(_cust&&_cust.name)||'Eigener Plan',_ymd(m),'both',dd,null,'']);
+      ws.push([_isoWeek(m),++i,(pl&&pl.name)||'Eigener Plan',_ymd(m),'both',dd,null,'']);
     }
-    return (_cw=ws);
+    return keep(ws);
   }
   function importIcs(file){
     if(!file) return;
@@ -5609,18 +5616,27 @@ const IDF_PLAN = (function(){
   }
   function removeCustom(){
     if(!confirm('Den geladenen eigenen Stundenplan entfernen?')) return;
-    if(_nonMaster()){ const l=JG.local(); l.plan=null; JG.saveLocal(l); }
+    if(_nonMaster()){ const l=JG.local(), k=_vkey(); delete l.plane[k]; if(l.aktiv===k) l.aktiv=null; JG.saveLocal(l); }
     else{ try{ localStorage.removeItem(CKEY); localStorage.setItem(SKEY,'idf'); }catch(e){} }
     _loadCust(); _manual=false; render(); pushWidget();
     if(typeof SHELL!=='undefined') SHELL.renderHome();
     TOAST.show('Eigener Plan entfernt',{type:'ok'});
+  }
+  // Leiste ganz oben (andere Jahrgänge): Abschnitt wählen, Plan als aktiv markieren
+  function _tabsBar(){
+    if(!_nonMaster()) return '';
+    const d=JG.data(), vk=_vkey(), ak=_actKey();
+    const seg=JG.PLANKEYS.map(k=>`<button class="${k===vk?'active':''}" onclick="IDF_PLAN.viewTab('${k}')" aria-pressed="${k===vk}">${PTAB[k]}${ak===k?' ★':d.plane[k]?'':' ·'}</button>`).join('');
+    let act='';
+    if(d.plane[vk]) act=ak===vk?`<div class="idf-act on"><span class="m-badge">★ Aktiv</span><span class="m-t2">Startseite und Widgets zeigen diesen Plan</span></div>`:`<div class="idf-act"><button class="btn btn-gold" onclick="IDF_PLAN.setActive('${vk}')">Als aktiven Stundenplan markieren</button><span class="m-t2">Dann nutzen Startseite und Widgets diesen Plan</span></div>`;
+    return `<div class="m-card idf-tabs"><span class="m-seg idf-seg" role="group" aria-label="Abschnitt">${seg}</span>${act}</div>`;
   }
   function _planControls(){
     const cust=!!_cust, on=_isCustom(), nm=_nonMaster();
     const row=(t1,t2,btn)=>`<div class="m-row m-static m-wrap"><span class="m-tx"><span class="m-t1">${t1}</span><span class="m-t2">${t2}</span></span>${btn}</div>`;
     const fileRow=`<label class="m-row" for="plan-file" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Kalenderdatei (.ics) laden</span><span class="m-t2">z. B. aus dem Kalender deiner Schule oder deines Betriebs</span></span><input type="file" id="plan-file" accept=".ics,text/calendar" hidden onchange="IDF_PLAN.importIcs(this.files[0]);this.value=''"></label>`;
     const ui=(fn,t1,t2)=>`<button class="m-row m-go" onclick="${fn}"><span class="m-tx"><span class="m-t1">${t1}</span><span class="m-t2">${t2}</span></span></button>`;
-    let h='<div class="m-sec" style="margin-top:1rem">'+(nm?'Dein Stundenplan':'Stundenplan wählen')+'</div><div class="m-list idf-src">';
+    let h='<div class="m-sec" style="margin-top:1rem">'+(nm?'Plan für '+PTAB[_vkey()]:'Stundenplan wählen')+'</div><div class="m-list idf-src">';
     if(!nm) h+=row('IdF Münster · Modul 3.5',on?'Der mitgelieferte Plan, mit Gruppe 1 und 2':'Wird gerade angezeigt',on?'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'idf\')">Anzeigen</button>':'<span class="m-badge">aktiv</span>');
     if(cust) h+=row(esc(_cust.name),_cust.ev.length+' Termine'+(nm?'':' aus deiner Datei'),on&&!nm?'<span class="m-badge">aktiv</span>':nm?'':'<button class="btn btn-ghost" onclick="IDF_PLAN.useSource(\'custom\')">Anzeigen</button>');
     h+=fileRow;
@@ -5628,15 +5644,15 @@ const IDF_PLAN = (function(){
       h+=ui('JGUI.planPhoto()','Foto oder Screenshot einlesen','Die Termine werden erkannt und zum Ausbessern angezeigt');
       h+=ui('JGUI.planEditor()','Termine von Hand eingeben oder ändern','Datum, Zeit, Titel und Raum');
     }
-    if(cust&&(!nm||JG.local().plan)) h+=`<button class="m-row" onclick="IDF_PLAN.removeCustom()"><span class="m-tx"><span class="m-t1">Eigenen Plan entfernen</span></span></button>`;
+    if(cust&&(!nm||JG.local().plane[_vkey()])) h+=`<button class="m-row" onclick="IDF_PLAN.removeCustom()"><span class="m-tx"><span class="m-t1">Eigenen Plan entfernen</span></span></button>`;
     if(!on) h+=`<button class="m-row m-go" onclick="PLANABO.open()"><span class="m-tx"><span class="m-t1">Kalender abonnieren</span><span class="m-t2">Der IdF-Plan als Link, der sich selbst aktualisiert</span></span></button>`;
     return h+'</div>';
   }
-  // Noch kein Plan (andere Jahrgänge): Hinweis und Wege zum Importieren
+  // Noch kein Plan für diesen Abschnitt (andere Jahrgänge): Hinweis und Wege zum Importieren
   function _drawEmpty(el){
     const ey=document.querySelector('#v-plan .page-eyebrow'), ld=document.querySelector('#v-plan .page-lead');
-    if(ey&&ld){ if(!ey.dataset.d){ ey.dataset.d=ey.textContent; ld.dataset.d=ld.textContent; } ey.style.textTransform='none'; ey.textContent=JG.labelOf(JG.current()); ld.textContent='Importiere deinen eigenen Stundenplan, dann erscheinen die Einheiten hier, auf der Startseite und im Widget.'; }
-    el.innerHTML='<div class="m-card"><div class="m-t1">Noch kein Stundenplan</div><div class="m-t2" style="margin-top:6px">Für diesen Jahrgang ist noch kein Plan hinterlegt. Importiere ihn als Kalenderdatei (.ics), lies ein Foto oder einen Screenshot ein, oder gib die Termine selbst ein.</div></div>'+_planControls();
+    if(ey&&ld){ if(!ey.dataset.d){ ey.dataset.d=ey.textContent; ld.dataset.d=ld.textContent; } ey.style.textTransform='none'; ey.textContent=JG.labelOf(JG.current())+' · '+PTAB[_vkey()]; ld.textContent='Importiere oder erstelle den Stundenplan für diesen Abschnitt. Mit „Aktiv“ nutzen ihn Startseite und Widgets.'; }
+    el.innerHTML=_tabsBar()+'<div class="m-card"><div class="m-t1">Noch kein Stundenplan für '+PTAB[_vkey()]+'</div><div class="m-t2" style="margin-top:6px">Importiere ihn als Kalenderdatei (.ics), lies ein Foto oder einen Screenshot ein, oder gib die Termine selbst ein.</div></div>'+_planControls();
   }
   function _dayRaw(w,d,g){
     if(_isCustom()) return w[5][d]||[];
@@ -5672,14 +5688,14 @@ const IDF_PLAN = (function(){
 
   function _draw(){
     const el=document.getElementById('plan-inner'); if(!el) return;
-    const nxt=next(); _nk=nxt?_ymd(nxt.start)+'|'+nxt.title+'|'+(nxt.start.getHours()*60+nxt.start.getMinutes()):'';
+    const nxt=_next(); _nk=nxt?_ymd(nxt.start)+'|'+nxt.title+'|'+(nxt.start.getHours()*60+nxt.start.getMinutes()):'';
     const wk=_weeks[_wi]; if(!wk) return;
     const [kw,nr,thema,start,grp,days,tel,info]=wk;
     const today=new Date(); today.setHours(0,0,0,0);
     const base=new Date(start+'T00:00');
     const notStarted=today<new Date(_weeks[0][3]+'T00:00');
     const icon=d=>`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
-    let h=`<div class="m-card idf-head">
+    let h=_tabsBar()+`<div class="m-card idf-head">
       <div class="idf-row"><div><b class="idf-kw">KW ${kw}</b><span class="m-t2">Woche ${nr} von ${_isCustom()?_weeks.length:9}${grp==='both'&&!_isCustom()?' · beide Gruppen':''}</span></div>
         <div class="idf-nav"><button onclick="IDF_PLAN._nav(-1)" aria-label="Vorherige Woche"${_wi===0?' disabled':''}>${icon('m15 18-6-6 6-6')}</button><button onclick="IDF_PLAN._nav(1)" aria-label="Nächste Woche"${_wi===_weeks.length-1?' disabled':''}>${icon('m9 18 6-6-6-6')}</button></div></div>
       <div class="idf-pips">${_weeks.map((_,i)=>`<i class="${i<_wi?'done':i===_wi?'cur':''}"></i>`).join('')}</div>
@@ -5707,7 +5723,7 @@ const IDF_PLAN = (function(){
     if(ey&&ld){
       if(!ey.dataset.d){ ey.dataset.d=ey.textContent; ld.dataset.d=ld.textContent; }
       ey.style.textTransform=_nonMaster()?'none':'';
-      ey.textContent=_isCustom()?(_nonMaster()?JG.labelOf(JG.current())+' · '+_cust.name:_cust.name):ey.dataset.d;
+      ey.textContent=_isCustom()?(_nonMaster()?JG.labelOf(JG.current())+' · '+PTAB[_vkey()]:_cust.name):ey.dataset.d;
       ld.textContent=_isCustom()?'Stundenplan für KW '+_weeks[0][0]+' bis '+_weeks[_weeks.length-1][0]+'. Es öffnet sich immer die aktuelle Woche.':ld.dataset.d;
     }
     el.innerHTML=h;
@@ -5715,7 +5731,7 @@ const IDF_PLAN = (function(){
 
   // Woche der laufenden bzw. nächsten Einheit (sonst die Woche von heute)
   function _curWeek(){
-    let wi=_autoIdx(); const nx=next();
+    let wi=_autoIdx(); const nx=_next();
     if(nx){
       const k=_weeks.findIndex(w=>{ const b=new Date(w[3]+'T00:00'), e=new Date(b); e.setDate(b.getDate()+7); return nx.start>=b&&nx.start<e; });
       if(k>=0) wi=k;
@@ -5729,7 +5745,7 @@ const IDF_PLAN = (function(){
     const wi=_curWeek();
     if(wi===_wi) return;
     _wi=wi; _draw();
-    const nx=next(), day=nx&&document.querySelector('#plan-inner .idf-day[data-ymd="'+_ymd(nx.start)+'"]');
+    const nx=_next(), day=nx&&document.querySelector('#plan-inner .idf-day[data-ymd="'+_ymd(nx.start)+'"]');
     if(day) requestAnimationFrame(()=>{ day.scrollIntoView({block:'start'}); });
   }
   document.addEventListener('visibilitychange',_follow);
@@ -5739,7 +5755,7 @@ const IDF_PLAN = (function(){
     if(!_weeks.length){ const el=document.getElementById('plan-inner'); if(el) _drawEmpty(el); return; }
     _manual=false; _wi=_curWeek();
     // Springt zur laufenden bzw. nächsten Einheit: richtige Woche, Tag nach oben scrollen
-    const nx=next(), key=nx&&_ymd(nx.start);
+    const nx=_next(), key=nx&&_ymd(nx.start);
     _draw();
     const day=key&&document.querySelector('#plan-inner .idf-day[data-ymd="'+key+'"]');
     if(day) requestAnimationFrame(()=>{ day.scrollIntoView({block:'start'}); });
@@ -5748,7 +5764,7 @@ const IDF_PLAN = (function(){
   setInterval(()=>{
     if(document.hidden||!document.getElementById('v-plan')?.classList.contains('active')) return;
     _follow();
-    const n=next(), k=n?_ymd(n.start)+'|'+n.title+'|'+(n.start.getHours()*60+n.start.getMinutes()):'';
+    const n=_next(), k=n?_ymd(n.start)+'|'+n.title+'|'+(n.start.getHours()*60+n.start.getMinutes()):'';
     if(k!==_nk) _draw();
   },30000);
   function _nav(d){ _manual=true; _wi=Math.max(0,Math.min(_weeks.length-1,_wi+d)); _draw(); }
@@ -5764,7 +5780,9 @@ const IDF_PLAN = (function(){
   }
   function _minutes(str){ const m=/(\d{1,2}):(\d{2})/.exec(str||''); return m?(+m[1])*60+(+m[2]):null; }
   // Laufende oder nächste Einheit nach Stundenplan der gewählten Gruppe; null, wenn das Modul vorbei ist
-  function next(now=new Date()){
+  // öffentlich (Startseite, Widgets): immer der aktive Plan; intern (Seite, Sprung zur Uhrzeit): der angezeigte Plan
+  function next(now){ _mode='active'; try{ return _next(now); }finally{ _mode='view'; } }
+  function _next(now=new Date()){
     for(const w of _buildWeeks(_savedGrp())){
       const base=new Date(w[3]+'T00:00');
       for(let d=0;d<w[5].length;d++){
@@ -5787,7 +5805,8 @@ const IDF_PLAN = (function(){
   }
 
   // Alle kommenden Einheiten (Beginn/Ende in ms) für die Startbildschirm-Widgets der Android-App
-  function units(){
+  function units(){ _mode='active'; try{ return _units(); }finally{ _mode='view'; } }
+  function _units(){
     const out=[], g=_savedGrp(), from=new Date(); from.setHours(0,0,0,0);
     for(const w of _buildWeeks(g)){
       const base=new Date(w[3]+'T00:00');
@@ -5818,7 +5837,7 @@ const IDF_PLAN = (function(){
     const fold=l=>{ let out='',cur=''; for(const ch of l){ if(new TextEncoder().encode(cur+ch).length>73){ out+=cur+'\r\n '; cur=''; } cur+=ch; } return out+cur; };
     const esc=t=>String(t).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
     const stamp=(()=>{const d=new Date();return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z';})();
-    const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//B VI Lernwebsite//Stundenplan Modul 3.5//DE','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:'+(_isCustom()?esc(_cust.name):'IdF Münster Modul 3.5 · Gruppe '+g[1])];
+    const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//B VI Lernwebsite//Stundenplan Modul 3.5//DE','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:'+(_isCustom()?esc((_cust&&_cust.name)||'Stundenplan'):'IdF Münster Modul 3.5 · Gruppe '+g[1])];
     let count=0;
     for(const w of _buildWeeks(g)){
       const base=new Date(w[3]+'T00:00');
@@ -5870,7 +5889,7 @@ const IDF_PLAN = (function(){
   });
   _loadOv();
   pushWidget();
-  return { savePlan:_saveCust, getPlan:()=>_cust, render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _grp:_setGrp, redraw:_draw };
+  return { viewTab, setActive, savePlan:_saveCust, getPlan:()=>_cust, render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _grp:_setGrp, redraw:_draw };
 })();
 
 /* ── Stundenplan als Kalender-Abo (Link, der sich selbst aktualisiert) ──────── */
