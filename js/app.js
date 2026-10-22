@@ -6432,7 +6432,7 @@ const BG=(function(){
     r.value=t===null?base:t;
     r.style.background='linear-gradient(90deg,'+(de.getAttribute('data-tone')==='beige'?'#000,#7d6c47 50%,#fff':'#000,#fff')+')';
     const b=document.getElementById('m-bg-reset'); if(b) b.hidden=t===null;
-    const s=document.getElementById('m-bg-sub'); if(s) s.textContent=t===null?'Von Schwarz bis Weiß':'Eigene Helligkeit: '+t+' %';
+    const s=document.getElementById('m-bg-sub'); if(s) s.textContent=t===null?'Hintergrund von Schwarz bis Weiß':'Hintergrund: eigene Helligkeit '+t+' %';
   }
   return {
     get, apply, sync, colors, hex, clear,
