@@ -103,14 +103,27 @@ const JGUI=(function(){
     }catch(e){ if(e&&e.name==='AbortError') return; }
     FILES.save(name,'application/json',text);
   }
+  // Datei einlesen: erst ansehen und nachfragen (Jahrgang der Datei, Ergänzen oder Stand ersetzen)
   function importFile(file){
     const r=new FileReader();
-    r.onload=async()=>{
-      try{
-        const n=await JG.importJson(String(r.result));
-        const parts=[]; if(n.erg) parts.push(n.erg+' Ergänzungen'); if(n.pruefungen) parts.push(n.pruefungen+' Prüfungen'); if(n.plan) parts.push('Plan mit '+n.plan+' Terminen');
-        TOAST.show('Eingelesen: '+(parts.join(', ')||'keine neuen Inhalte'),{type:'ok'});
-      }catch(e){ TOAST.show('Das ist keine Änderungsdatei dieser App',{type:'info'}); }
+    r.onload=()=>{
+      const text=String(r.result), info=JG.peek(text);
+      if(!info){ TOAST.show('Das ist keine Änderungsdatei dieser App',{type:'info'}); return; }
+      const mine=JG.labelOf(JG.current()), other=info.label&&info.label!==mine;
+      const parts=[]; if(info.erg) parts.push(info.erg+' Ergänzungen/Kapitel'); if(info.pruefungen) parts.push(info.pruefungen+' Prüfungen'); if(info.plan) parts.push(info.plan+' Pläne'); if(info.reiter) parts.push(info.reiter+' Reiter'); if(info.karten) parts.push(info.karten+' Lernkarten');
+      const m=modal('Änderungen einlesen','<p class="jg-p">Die Datei stammt aus <b>'+E(info.label||'einem Jahrgang')+'</b>'+(parts.length?' und enthält '+E(parts.join(', '))+'.':'.')+' Du bist in <b>'+E(mine)+'</b>.</p>'
+        +(other?'<p class="jg-warn" style="margin:8px 0">Die Datei gehört zu einem anderen Jahrgang. Du kannst sie trotzdem einlesen, zum Beispiel um von einem früheren Stand zu starten.</p>':'')
+        +'<label class="jg-chk" style="display:block;margin:10px 0"><input type="radio" name="jg-mode" value="add" checked> <b>Ergänzen</b> (empfohlen)<span class="m-t2" style="display:block;margin-left:24px">Fügt hinzu und ändert, was in der Datei steht. Eigenes, das nicht in der Datei steht, bleibt erhalten. Gelöschtes aus der Datei kommt dadurch nicht wieder weg.</span></label>'
+        +'<label class="jg-chk" style="display:block;margin:10px 0"><input type="radio" name="jg-mode" value="replace"> <b>Stand ersetzen</b><span class="m-t2" style="display:block;margin-left:24px">Dein Jahrgang wird genau wie die Datei: auch Gelöschtes und Eigenes, das nicht in der Datei steht, verschwindet. Mit Rückgängig.</span></label>'
+        +'<button class="btn btn-gold" id="jg-imp-go" type="button" style="margin-top:8px">Einlesen</button>');
+      $(m.body,'#jg-imp-go').onclick=async()=>{
+        const mode=m.body.querySelector('input[name=jg-mode]:checked').value, prev=JG.snapshot();
+        try{
+          const n=await JG.importJson(text,mode); m.close();
+          const done=[]; if(n.erg) done.push(n.erg+' Ergänzungen'); if(n.pruefungen) done.push(n.pruefungen+' Prüfungen'); if(n.plan) done.push('Plan mit '+n.plan+' Terminen');
+          TOAST.show((mode==='replace'?'Stand ersetzt: ':'Eingelesen: ')+(done.join(', ')||'keine neuen Inhalte'),{type:'ok',undo:()=>JG.restore(prev)});
+        }catch(e){ m.close(); TOAST.show('Das ist keine Änderungsdatei dieser App',{type:'info'}); }
+      };
     };
     r.readAsText(file);
   }
@@ -297,6 +310,17 @@ const JGUI=(function(){
     pc.insertBefore(bar,pc.firstChild);
     fillImages(pc);
     if(typeof LP!=='undefined'&&LP.refresh) LP.refresh(vid);
+  }
+  // Ausgeblendete Elemente einer Seite (für die Suche, ohne die Seite zu verändern)
+  function goneEls(vid){
+    const v=document.getElementById(vid); if(!v||JG.isMaster()) return [];
+    const pc=v.querySelector('.pc'); if(!pc) return [];
+    const id=v.dataset.jg||vid, gone=new Set(JG.data().ausg.filter(k=>k.startsWith(id+'|')));
+    if(!gone.size) return [];
+    const tiles=[...pc.querySelectorAll('.topic-card,.glass-tile')];
+    if(tiles.length>=2&&!pc.querySelector('.acc-item'))
+      return tiles.filter(el=>{ const n=$(el,'.tc-name,.tile-name'); return gone.has(id+'|t|'+hash((n?n.textContent:el.textContent).replace(/\s+/g,' ').trim().slice(0,200))); });
+    return parts(id,pc).filter(p=>gone.has(p.key)).map(p=>p.el);
   }
   function delPart(key){
     const l=JG.local(), prev=JSON.stringify(l);
@@ -617,12 +641,13 @@ const JGUI=(function(){
     if(a&&a.id==='v-pruefung') SHELL.renderExam();
     if(a&&a.id==='v-home') SHELL.renderHome();
     syncCards(); names();
+    if(typeof SEARCH!=='undefined'&&SEARCH.reset) SEARCH.reset();
     if(chk&&chk.m.body.isConnected) chk.draw();
     if(typeof SHELL!=='undefined') SHELL.syncSettings&&SHELL.syncSettings();
   });
   settings();
   JG.load();
 
-  return { settings, mount, chapterKey, names, checklist, openReiter, help, helpDone, closeTop, planEditor, planPhoto, parsePlanText, parseQuestions, ocr, isEditing, toggleEdit, setRel, delExam, restoreExams,
+  return { settings, mount, goneEls, chapterKey, names, checklist, openReiter, help, helpDone, closeTop, planEditor, planPhoto, parsePlanText, parseQuestions, ocr, isEditing, toggleEdit, setRel, delExam, restoreExams,
     examEditor, openExam, notice:NOTICE };
 })();

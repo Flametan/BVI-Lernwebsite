@@ -1298,12 +1298,14 @@ const SEARCH = (function(){
     Object.keys(VIEW_LABELS).forEach(vid => {
       const el = document.getElementById(vid); if(!el) return;
       const lbl = VIEW_LABELS[vid];
+      // Ausgeblendete Kapitel, Blöcke und Reiter des Jahrgangs gehören nicht in die Suche
+      const gone = (typeof JGUI!=='undefined'&&JGUI.goneEls) ? JGUI.goneEls(vid) : [], hid = n => gone.some(g => g.contains(n));
       el.querySelectorAll('.sec-h,.tc-name,.page-title,.def-box-label').forEach(h => {
-        const t = h.textContent.trim(); if(t.length < 3) return;
+        const t = h.textContent.trim(); if(t.length < 3 || hid(h)) return;
         idx.push({vid, lbl, title:t, snippet:'', boost:3, ch:chOf(h)});
       });
       el.querySelectorAll('.def-box p,.info-card p,.bl li,.step-desc,.hint p,.tc-sub,.ant-desc,.pillar ul li').forEach(p => {
-        const t = p.textContent.trim(); if(t.length < 8) return;
+        const t = p.textContent.trim(); if(t.length < 8 || hid(p)) return;
         const hdr = p.closest('.info-card,.def-box,.step-item');
         const ttl = hdr ? (hdr.querySelector('.info-card-title,.def-box-label,.step-title')||{}).textContent||lbl : lbl;
         idx.push({vid, lbl, title:ttl.trim(), snippet:t.slice(0,400), boost:1, ch:chOf(p)});
@@ -1360,6 +1362,20 @@ const SEARCH = (function(){
     return ws.some(w=>lev(w,t,max)<=max);
   }
   function fuzzyHas(e,t){ return fuzzyIn(e.w||(e.w=wordsOf(e.title+' '+e.snippet)),t); }
+  // Eigene Inhalte des Jahrgangs: Kapitel, Ergänzungen, Reiter
+  function jgEntries(){
+    if(typeof JG==='undefined'||JG.isMaster()) return [];
+    const d=JG.data(), out=[];
+    const rid=s=>/^v-r-/.test(s)?s.slice(4):null;
+    d.erg.forEach(e=>{
+      const r=rid(e.seite), rt=r&&d.reiter.find(x=>x.id===r);
+      if(r&&!rt) return;
+      const lbl=r?'Eigener Reiter · '+rt.titel:(VIEW_LABELS[e.seite]||e.seite);
+      out.push({vid:r?'v-jg-reiter':e.seite,lbl,title:(e.titel||'Ergänzung').trim(),snippet:String(e.text||'').slice(0,400),boost:e.typ==='kapitel'?3:1,jgReiter:r||null,ch:-1});
+    });
+    d.reiter.forEach(r=>out.push({vid:'v-jg-reiter',lbl:'Eigener Reiter',title:r.titel,snippet:r.beschr||'',boost:3,jgReiter:r.id,ch:-1}));
+    return out;
+  }
   function noteEntries(){
     const out=[];
     try{
@@ -1377,7 +1393,7 @@ const SEARCH = (function(){
   function doSearch(q){
     if(!q || q.length < 2) return [];
     const terms = norm(q).split(/\s+/).filter(Boolean);
-    const all = idx.concat(noteEntries());
+    const all = idx.concat(noteEntries(), jgEntries());
     const hayOf=e=>e.h||(e.isNote?norm(e.title+' '+e.snippet+' '+e.lbl):(e.h=norm(e.title+' '+e.snippet+' '+e.lbl)));
     let scored = all.map(e => {
       const hay = hayOf(e);
@@ -1474,6 +1490,7 @@ const SEARCH = (function(){
       inp.value = ''; inp.focus(); render('');
     },
     close(){ document.getElementById('search-overlay').classList.add('hidden'); results=[]; focusIdx=-1; },
+    reset(){ _indexBuilt=false; },
     toggle(){ document.getElementById('search-overlay').classList.contains('hidden') ? this.open() : this.close(); },
     query(q){ clearTimeout(_debounceTimer); _debounceTimer = setTimeout(()=>render(q.trim()), 150); },
     goBk(id,label){ this.close(); NAV.go(id,label||id); },
@@ -1490,6 +1507,7 @@ const SEARCH = (function(){
       saveHist(document.getElementById('search-input').value.trim());
       this.close();
       const lbl = r.lbl.split('·').pop().trim();
+      if(r.jgReiter&&typeof JGUI!=='undefined'){ JGUI.openReiter(r.jgReiter); return; }
       NAV.go(r.vid, lbl);
       if(r.ch>=0&&typeof LP!=='undefined') setTimeout(()=>LP.focus(r.vid,r.ch),80);
     },
@@ -4043,6 +4061,8 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Duell: Eigene Fragen des Jahrgangs zählen jetzt mit, wenn beide Spieler genau dieselben haben (die Lobby zeigt das an); sonst kommen nur die mitgelieferten Fragen dran',
+      'Änderungen einlesen: Rückfrage mit dem Jahrgang der Datei und Wahl „Ergänzen“ oder „Stand ersetzen“ (mit Rückgängig); die Suche findet eigene Kapitel, Ergänzungen und Reiter und zeigt ausgeblendete nicht mehr; die Erklärseite nennt Datenverlust-Risiko, Export statt Sicherung und weitere Grenzen',
       'Ersteinrichtung nur noch 2 Seiten plus Lehrgangs-Auswahl: Wer einen anderen Jahrgang als den Master wählt, landet auf „So funktioniert dein Jahrgang“ und kommt mit „Verstanden, lass mich in die App“ zur Startseite; aus den Einstellungen gibt es den Knopf nicht. Neu auf der Erklärseite: Die App-Datei lässt sich an den Jahrgang nach euch weitergeben',
       'Hintergrund-Regler (Einstellungen → Darstellung): Die Hintergrundhelligkeit lässt sich stufenlos von Schwarz bis Weiß einstellen, Karten, Linien und Texte passen sich an und bleiben lesbar; im Beige-Schema mit warmem Farbton',
       'Neues Farbschema „Beige“ (Einstellungen → Darstellung): warmer Leinen-Ton statt Grauweiß; in der Android-App mit passendem Startsymbol und beigem Startbild',

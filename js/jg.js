@@ -174,10 +174,10 @@ const JG=(function(){
       plane:d.plane,aktiv:d.aktiv,erg:d.erg,pr:d.pr,rel:d.rel,ausg:d.ausg,links:d.links,karten:d.karten,orte:d.orte,reiter:d.reiter,bilder},null,1);
   }
   // Datei einlesen und zu den eigenen Änderungen hinzufügen; liefert Zahlen für die Rückmeldung
-  async function importJson(text){
+  async function importJson(text,mode){
     let j; try{ j=JSON.parse(text); }catch(e){ throw new Error('json'); }
     if(!j||j.format!=='bvi-jahrgang') throw new Error('format');
-    const c=clean(j), l=local(), have=new Set([...l.erg.map(e=>e.id)]), haveP=new Set(l.pr.hinzu.map(p=>p.id));
+    const c=clean(j), l=mode==='replace'?empty():local(), have=new Set([...l.erg.map(e=>e.id)]), haveP=new Set(l.pr.hinzu.map(p=>p.id));
     let ne=0, np=0, ni=0;
     for(const [k,v] of Object.entries(j.bilder||{})){ if(idOk(k)&&okImg(v)&&ni<60){ await img.put(k,v); ni++; } }
     c.erg.forEach(e=>{ const i=l.erg.findIndex(x=>x.id===e.id); if(i>=0) l.erg[i]=e; else{ l.erg.push(e); } if(!have.has(e.id)) ne++; });
@@ -193,11 +193,19 @@ const JG=(function(){
     saveLocal(l);
     return {erg:ne,pruefungen:np,bilder:ni,plan:pl};
   }
+  // Datei ansehen, ohne etwas zu ändern: Jahrgang der Datei und Umfang (für die Rückfrage beim Einlesen)
+  function peek(text){
+    let j; try{ j=JSON.parse(text); }catch(e){ return null; }
+    if(!j||j.format!=='bvi-jahrgang') return null;
+    const c=clean(j);
+    return {label:str(j.jahrgang,60),erg:c.erg.length,pruefungen:c.pr.hinzu.length,plan:Object.keys(c.plane).length,reiter:c.reiter.length,karten:c.karten.length};
+  }
+  const snapshot=()=>lsGet(PRE+current());
   // Alle eigenen Änderungen dieses Jahrgangs verwerfen (Rückgabe: vorheriger Stand zum Rückgängigmachen)
   function discard(){ const prev=lsGet(PRE+current()); try{ localStorage.removeItem(PRE+current()); }catch(e){} changed(); return prev; }
   function restore(prev){ if(prev) lsSet(PRE+current(),prev); changed(); }
   const hasLocal=()=>{ const l=local(); return !!(Object.keys(l.plane).length||l.aktiv||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||Object.keys(l.rel).length||l.ausg.length||Object.keys(l.links).length||l.karten.length||Object.keys(l.orte).length||l.reiter.length); };
 
   return { MASTER, TABS, PLANKEYS, list, labelOf, current, isMaster, data, local, saveLocal, glow, rel, setExams, examOf, load, set, on, ver:()=>ver, img, okImg,
-    exportJson, importJson, discard, restore, hasLocal, empty, newId:()=>'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6) };
+    exportJson, importJson, peek, snapshot, discard, restore, hasLocal, empty, newId:()=>'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6) };
 })();
