@@ -14,7 +14,7 @@ diesen Jahrgang wählt, bekommt die Datei automatisch dazu.
 | BRef 04/2026 - AB 04/2027 | `BRef-04-2026_AB-04-2027.json` |
 | BRef 10/2025 - AB 10/2026 | `BRef-10-2025_AB-10-2026.json` |
 
-(Die ID zeigt die App unter Einstellungen → Lehrgang → „Änderungen exportieren“ im Dateinamen:
+(Die ID zeigt die App unter Einstellungen → Lehrgang → „Jahrgang exportieren“ im Dateinamen:
 `bvi-<ID>.json`.)
 
 ## Datei prüfen (Skript)
@@ -34,8 +34,8 @@ oder Link) endet es mit Code 1. Das Skript braucht nur Node, sonst nichts.
 ## So kommt eine Datei in die App
 
 **Normalweg: der Jahrgang pflegt sich selbst.** Der Jahrgang bestimmt eine Person, die sich um die Seite kümmert.
-Sie exportiert unter **Einstellungen → Lehrgang → Änderungen exportieren** und teilt die Datei in der WhatsApp-Gruppe
-des Jahrgangs. Alle anderen lesen sie unter **Änderungen einlesen** ein, damit sind alle auf demselben Stand.
+Sie exportiert unter **Einstellungen → Lehrgang → Jahrgang exportieren** und teilt die Datei in der WhatsApp-Gruppe
+des Jahrgangs. Alle anderen lesen sie unter **Jahrgang importieren** ein, damit sind alle auf demselben Stand.
 Du musst dafür nichts veröffentlichen und bist nur bei Problemen gefragt.
 
 **Optional: Datei im Repo veröffentlichen.** Wer die Datei fest in der App hinterlegen will, so dass alle im Jahrgang
@@ -49,7 +49,7 @@ Der Export enthält immer den **ganzen** Stand (veröffentlichte Datei plus Änd
 Die neue Datei ersetzt also die alte mit gleichem Namen.
 
 Alternativ: Eine Person pflegt alles, exportiert und schickt die Datei in die Gruppe. Die anderen
-lesen sie in der App unter **Änderungen einlesen** ein, ohne dass du etwas veröffentlichen musst.
+lesen sie in der App unter **Jahrgang importieren** ein, ohne dass du etwas veröffentlichen musst.
 
 ## Was in der Datei steht
 
