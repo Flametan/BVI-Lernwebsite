@@ -4061,6 +4061,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Stundenplan: Die Abschnitte der Fortschrittsleiste unter der Kalenderwoche sind größer, mit KW-Nummer, und springen beim Antippen direkt zur jeweiligen Woche',
       'Stundenplan Zivile Verteidigung (KW 50): Montag „Anreise“ 07:45–11:00 mit Navigation zur BABZ in Ahrweiler (Ramersbacher Str. 95), Programm ab mittags; Freitag „Abreise“ 14:00–14:45 (ohne Gewähr) zur Heimadresse',
       'Stundenplan IdF Münster: Die ganze Zeile „Anreise“ bzw. „Abreise“ ist der Knopf zu Maps, es öffnet sich keine Notiz mehr (nur „Adresse ändern“ öffnet die Adresseingabe)',
       'Stundenplan IdF Münster: „Abreise“ startet die Navigation zu deiner Heimadresse, die du dort einmal festlegst. Sie bleibt nur auf deinem Gerät und steckt in keiner Sicherung und keinem Export',
@@ -5817,7 +5818,7 @@ const IDF_PLAN = (function(){
     let h=_tabsBar()+`<div class="m-card idf-head">
       <div class="idf-row"><div><b class="idf-kw">KW ${kw}</b><span class="m-t2">Woche ${nr} von ${_isCustom()?_weeks.length:9}${grp==='both'&&!_isCustom()?' · beide Gruppen':''}</span></div>
         <div class="idf-nav"><button onclick="IDF_PLAN._nav(-1)" aria-label="Vorherige Woche"${_wi===0?' disabled':''}>${icon('m15 18-6-6 6-6')}</button><button onclick="IDF_PLAN._nav(1)" aria-label="Nächste Woche"${_wi===_weeks.length-1?' disabled':''}>${icon('m9 18 6-6-6-6')}</button></div></div>
-      <div class="idf-pips">${_weeks.map((_,i)=>`<i class="${i<_wi?'done':i===_wi?'cur':''}"></i>`).join('')}</div>
+      <div class="idf-pips">${_weeks.map((w,i)=>`<button type="button" class="${i<_wi?'done':i===_wi?'cur':''}" onclick="IDF_PLAN._go(${i})" aria-label="Zu KW ${w[0]} springen (Woche ${i+1} von ${_weeks.length})"${i===_wi?' aria-current="true"':''}><i></i><span>${w[0]}</span></button>`).join('')}</div>
       <div class="idf-row idf-row2"><span class="idf-thema">${esc(thema)}</span>
         ${_isCustom()?'':`<span class="m-seg" role="group" aria-label="Gruppe">${['g1','g2'].map(g=>`<button class="${_grp===g?'active':''}" onclick="IDF_PLAN._grp('${g}')">Gruppe ${g[1]}</button>`).join('')}</span>`}</div>
     </div>`;
@@ -5886,6 +5887,7 @@ const IDF_PLAN = (function(){
     const n=_next(), k=n?_ymd(n.start)+'|'+n.title+'|'+(n.start.getHours()*60+n.start.getMinutes()):'';
     if(k!==_nk) _draw();
   },30000);
+  function _go(i){ _manual=true; _wi=Math.max(0,Math.min(_weeks.length-1,i)); _draw(); }   // Sprung per Tipp auf einen Abschnitt der Fortschrittsleiste
   function _nav(d){ _manual=true; _wi=Math.max(0,Math.min(_weeks.length-1,_wi+d)); _draw(); }
   function _setGrp(g){
     _grp=g;
@@ -6016,7 +6018,7 @@ const IDF_PLAN = (function(){
   });
   _loadOv();
   pushWidget();
-  return { viewTab, setActive, savePlan:_saveCust, getPlan:()=>_cust, render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _grp:_setGrp, redraw:_draw };
+  return { viewTab, setActive, savePlan:_saveCust, getPlan:()=>_cust, render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _go, _grp:_setGrp, redraw:_draw };
 })();
 
 /* ── Dateien speichern (Browser: Download, Android-App: Ordner Downloads) ── */
