@@ -352,6 +352,23 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     a.click(); await w(200);
     return { found: true, href: a.href, blank: a.target === '_blank', noOpen: !document.querySelector('.pn-sheet') };
   });
+  // ── Heimadresse: „Abreise“ navigiert nach Hause; die Adresse steckt weder in Sicherung noch Export und lässt sich nicht einspielen ──
+  const home = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    const r = {}; localStorage.removeItem('bvi_heimadresse');
+    NAV.go('v-plan', 'Stundenplan'); await w(400);
+    r.setBtn = !!document.querySelector('#plan-inner button.idf-home-set');
+    document.querySelector('#plan-inner button.idf-home-set').click(); await w(100);
+    document.getElementById('hm-a').value = 'Musterweg 5, 12345 Beispielstadt'; document.getElementById('hm-s').click(); await w(300);
+    const a = document.querySelector('#plan-inner a.idf-map[aria-label^="Abreise"]');
+    r.link = !!a && /destination=Musterweg/.test(a.href) && a.target === '_blank';
+    let saved = null; const orig = FILES.save; FILES.save = (n, t, body) => { saved = body; }; BACKUP.export(); FILES.save = orig;
+    r.notInBackup = saved !== null && !/Musterweg|bvi_heimadresse/.test(saved);
+    localStorage.removeItem('bvi_heimadresse');
+    localStorage.setItem('bvi_heimadresse', 'Musterweg 5'); HOME.clear(); r.cleared = HOME.get() === '';
+    return r;
+  });
+  ok('Heimadresse: Abreise-Knopf, Navigations-Link, nicht in Sicherung, löschbar', home.setBtn && home.link && home.notInBackup && home.cleared, JSON.stringify(home));
   ok('Plan: Anreise ist ein Navigations-Link zum IdF Münster', nav.found && /google\.com\/maps\/dir/.test(nav.href) && /Wolbecker/.test(decodeURIComponent(nav.href)) && /48155/.test(decodeURIComponent(nav.href)) && nav.blank, JSON.stringify(nav));
 
   // ── Einstellungen: jede Zeile in „Daten“ hat einen Trennstrich; Erste-Schritte nennt den Pausenraum ──
@@ -1073,6 +1090,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
       JG.set(JG.list()[0].id); await w(300); const l = JG.local();
       l.erg.push({ id: 'e1', seite: 'v-vak-verwaltungsrecht', typ: 'kapitel', titel: 'Sicherungskapitel', text: 'T', ts: 1 }); JG.saveLocal(l);
       IDF_PLAN.viewTab('idf2', true); THEME.set('beige'); BG.set(60);
+      localStorage.setItem('bvi_heimadresse', 'Fremdweg 1');   // steckt in der gebauten Datei, darf aber nicht zurückkommen
       localStorage.setItem('bvi_jgp_BRef-10-2026_AB-10-2027', '{"format":"bvi-jahrgang"}');
       const d = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith('bvi_') || k === 'idf_plan_grp') d[k] = localStorage.getItem(k); }
       sessionStorage.setItem('bk', '1'); return d;
@@ -1080,8 +1098,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     await bp.evaluate(() => localStorage.clear());
     await bp.evaluate(d => { const keepKeys = Object.keys(d).filter(k => !k.startsWith('bvi_jgp_')); const f = new File([JSON.stringify({ app: 'bvi-lernwebsite', version: '3.0.0', exported: new Date().toISOString(), data: d })], 's.json'); BACKUP.import({ files: [f], value: '' }); }, dump);
     await bp.waitForTimeout(3500);
-    const back = await bp.evaluate(() => ({ jg: JG.current() !== JG.MASTER && JG.data().erg.some(e => e.title === 'Sicherungskapitel' || e.titel === 'Sicherungskapitel'), theme: localStorage.getItem('bvi_theme') === 'beige', bg: localStorage.getItem('bvi_bg') === '60', view: localStorage.getItem('bvi_plan_view') === 'idf2', grp: localStorage.getItem('bvi_plan_idfg') === 'idf2' }));
-    eq('Sicherung: Jahrgang, Änderungen, Farbschema und Plan-Ansicht kommen zurück', back, { jg: true, theme: true, bg: true, view: true, grp: true });
+    const back = await bp.evaluate(() => ({ jg: JG.current() !== JG.MASTER && JG.data().erg.some(e => e.title === 'Sicherungskapitel' || e.titel === 'Sicherungskapitel'), theme: localStorage.getItem('bvi_theme') === 'beige', bg: localStorage.getItem('bvi_bg') === '60', view: localStorage.getItem('bvi_plan_view') === 'idf2', grp: localStorage.getItem('bvi_plan_idfg') === 'idf2', home: localStorage.getItem('bvi_heimadresse') === null }));
+    eq('Sicherung: Jahrgang, Änderungen, Farbschema und Plan-Ansicht kommen zurück, die Heimadresse nicht', back, { jg: true, theme: true, bg: true, view: true, grp: true, home: true });
     await bctx.close();
   }
 
