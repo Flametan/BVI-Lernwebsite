@@ -71,7 +71,7 @@ const NAV = (function(){
     PAUSE_LOADER.onShow(id);
     A11Y.onShow();
     if(isContentPage){ ABKTIP.apply(id); if(typeof JGUI!=='undefined') JGUI.mount(id); }
-    else if(typeof JGUI!=='undefined'&&/^v-(jahr1|jahr2|gal|sfs|hlfs|ibk|vak|feuak|idf)$/.test(id)) JGUI.mount(id);   // Übersichtsseiten: Reiter anpassen
+    else if(typeof JGUI!=='undefined'&&/^v-(jahr1|jahr2|gal|sfs|hlfs|ibk|vak|feuak|idf|klausur)$/.test(id)) JGUI.mount(id);   // Übersichtsseiten: Reiter anpassen
     // Update URL for direct linking
     const url=new URL(location.href);
     if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
@@ -2019,6 +2019,12 @@ const FC = (function(){
       </div>`;
   }
 
+  // Jahrgang: Karte löschen (nur für diesen Jahrgang), dazu Rückgängig/Wiederholen und die gelöschten Karten zurückholen
+  function _jgBar(card){
+    if(typeof JGUI==='undefined'||JG.isMaster()) return '';
+    const n=JGUI.hiddenCards();
+    return `<div class="jg-bar fc-jgbar">${card.own?'':`<button type="button" class="btn btn-ghost" onclick="FC.delCard('${card.id}')">Karte löschen</button>`}${JGUI.histHtml()}${n?`<button type="button" class="btn btn-ghost" onclick="JGUI.restoreCards()">${n} gelöschte wiederherstellen</button>`:''}</div>`;
+  }
   function renderCard(){
     const box = document.getElementById('fc-container'); if(!box) return;
     if(curIdx >= deck.length){ renderEnd(); return; }
@@ -2055,6 +2061,7 @@ const FC = (function(){
         <div class="fc-swipe-ok">✓ Gewusst</div>
         <div class="fc-swipe-no">✗ Nicht gewusst</div>
       </div>
+      ${_jgBar(card)}
       <div class="fc-controls" id="fc-controls" style="display:none">
         <button class="fc-btn fc-no" onclick="FC.answer(false)">Nochmal<span class="fc-hint">gleich wieder</span></button>
         <button class="fc-btn fc-hard" onclick="FC.answer('hard')">Schwer<span class="fc-hint">in ${iHard} Tagen</span></button>
@@ -2186,6 +2193,12 @@ const FC = (function(){
       _reviewPos++;
       if(_reviewPos>=_seen.length){ _reviewPos=-1; renderCard(); }
       else renderReviewCard();
+    },
+    delCard(id){
+      const c=FLASHCARD_DATA.find(x=>x.id===id); if(!c||c.own||typeof JGUI==='undefined'||!JGUI.hideCard(id)) return;
+      deck=deck.filter(x=>x.id!==id); _seen=_seen.filter(x=>(x&&x.id!==undefined?x.id:x)!==id);
+      TOAST.show('Karte gelöscht – nur in deinem Jahrgang',{type:'ok'});
+      renderCard();
     },
     toggleStar(id){
       const starred=fcToggleStar(id);
@@ -4070,6 +4083,10 @@ const CHANGELOG=(function(){
       'Stundenplan IdF Münster: „Abreise“ startet die Navigation zu deiner Heimadresse, die du dort einmal festlegst. Sie bleibt nur auf deinem Gerät und steckt in keiner Sicherung und keinem Export',
       'Stundenplan IdF Münster: „Anreise“ ist antippbar und startet die Navigation zum Institut der Feuerwehr NRW (Wolbecker Straße 237, Münster) in der Karten-App',
       'Hilfe: neuer Abschnitt „Am Ende eures Lehrgangs“ – Jahrgänge können dir am Ende ihres B VI (einmal) ihre App-Datei schicken, damit sie fest in der App hinterlegt wird',
+      'Jahrgänge: Lernkarten lassen sich löschen (auch Karten des Masters, nur im eigenen Jahrgang; „Karte löschen“ unter der Lernkarte, „gelöschte wiederherstellen“ holt sie zurück). Die gelöschten Karten stehen im Jahrgangs-Export und gelten für alle, die ihn einlesen',
+      'Jahrgänge: „Rückgängig“ ist nicht mehr nur kurz eingeblendet, sondern dauerhaft sichtbar neben „Seite bearbeiten“ (auch bei Prüfungen, Lernkarten und im Karten-Fenster). Daneben gibt es „Wiederholen“, das die zurückgenommene Aktion erneut ausführt',
+      'Jahrgänge: Prüfungen und Klausurvorbereitung bleiben im Gleichklang – eine im Prüfung-Tab hinzugefügte Prüfung erscheint auch als Kachel auf der Übersichtsseite ihres Reiters (IBK, VAk, FeuAK, IdF), eine gelöschte Prüfung verschwindet dort ebenfalls, und umgekehrt',
+      'Jahrgänge: Unter „Kürzel und Standorte“ lassen sich jetzt auch die Kürzel (IBK, VAk, FeuAK, IdF) ändern. Kürzel und Ort ersetzen die Standardnamen überall, wo sie auf der Seite stehen, und stehen im Jahrgangs-Export',
       'Hinweis für iPhone und iPad: Apple löscht die Daten einer Website in Safari nach etwa 7 Tagen ohne Besuch. Das steht jetzt unter Einstellungen, bei der App-Installation und in der Hilfe – mit dem Rat, die App auf den Home-Bildschirm zu legen und ab und zu zu sichern',
       'Die Flamme im Kopf der Seite flackert deutlicher und ist jetzt gut zu erkennen',
       'Sicherung: Gewählter Jahrgang, eigene Jahrgangs-Änderungen und die Plan-Ansicht werden jetzt mitgesichert und wieder eingespielt (vorher gingen sie beim Einspielen verloren)',
@@ -7068,7 +7085,7 @@ const SHELL=(function(){
     };
     const hidden=EXAMS.reduce((n,[,it])=>n+it.filter(x=>weg.has(x[0])).length,0);
     // Bearbeiten-Knopf oben auf der Seite; „Prüfung hinzufügen“ erst im Bearbeiten-Modus
-    const tools=typeof JGUI==='undefined'||JG.isMaster()?'':`<button type="button" class="btn btn-ghost" onclick="JGUI.toggleEdit()">${edit?'Fertig':'Prüfungen bearbeiten'}</button>${edit?`<button type="button" class="jg-plus" onclick="JGUI.examEditor()"><span>+</span> Prüfung hinzufügen</button>`:''}${edit&&hidden?`<button type="button" class="btn btn-ghost" onclick="JGUI.restoreExams()">${hidden} ausgeblendete wiederherstellen</button>`:''}`;
+    const tools=typeof JGUI==='undefined'||JG.isMaster()?'':`<button type="button" class="btn btn-ghost" onclick="JGUI.toggleEdit()">${edit?'Fertig':'Prüfungen bearbeiten'}</button>${JGUI.histHtml()}${edit?`<button type="button" class="jg-plus" onclick="JGUI.examEditor()"><span>+</span> Prüfung hinzufügen</button>`:''}${edit&&hidden?`<button type="button" class="btn btn-ghost" onclick="JGUI.restoreExams()">${hidden} ausgeblendete wiederherstellen</button>`:''}`;
     let eb=document.getElementById('jg-exam-bar');
     if(!eb){ eb=document.createElement('div'); eb.id='jg-exam-bar'; cd.parentNode.insertBefore(eb,cd); }
     eb.className=tools?'jg-bar':''; eb.innerHTML=tools;
