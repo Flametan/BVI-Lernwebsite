@@ -371,6 +371,20 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     return r;
   });
   ok('Heimadresse: Abreise-Knopf, Navigations-Link, nicht in Sicherung, löschbar', home.setBtn && home.dialog && home.link && home.notInBackup && home.cleared, JSON.stringify(home));
+  // ── KW 50 (Zivile Verteidigung): Anreise zur BABZ Ahrweiler, Abreise zur Heimadresse ──
+  const babz = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    localStorage.setItem('bvi_heimadresse', 'Musterweg 5, 12345 Beispielstadt');
+    NAV.go('v-plan', 'Stundenplan'); await w(300);
+    for (let i = 0; i < 12; i++) IDF_PLAN._nav(-1);
+    for (let i = 0; i < 6; i++) IDF_PLAN._nav(1);
+    await w(300);
+    const links = [...document.querySelectorAll('#plan-inner a.idf-map')].map(a => decodeURIComponent(a.href));
+    const txt = document.getElementById('plan-inner').innerText;
+    localStorage.removeItem('bvi_heimadresse');
+    return { n: links.length, an: /Ramersbacher Str\. 95, 53474/.test(links[0] || ''), ab: /Musterweg/.test(links[1] || ''), zeiten: /07:45\s*11:00/.test(txt) && /14:00\s*14:45/.test(txt) && /ohne Gewähr/.test(txt) };
+  });
+  ok('Plan KW 50: Anreise 07:45–11:00 zur BABZ, Abreise 14:00–14:45 ohne Gewähr zur Heimadresse', babz.n === 2 && babz.an && babz.ab && babz.zeiten, JSON.stringify(babz));
   ok('Plan: ganze Anreise-Zeile führt zur Navigation zum IdF Münster, ohne Notiz', nav.found && /google\.com\/maps\/dir/.test(nav.href) && /Wolbecker/.test(decodeURIComponent(nav.href)) && /48155/.test(decodeURIComponent(nav.href)) && nav.blank && nav.rowGoes && nav.noNote, JSON.stringify(nav));
 
   // ── Einstellungen: jede Zeile in „Daten“ hat einen Trennstrich; Erste-Schritte nennt den Pausenraum ──

@@ -4061,6 +4061,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Stundenplan Zivile Verteidigung (KW 50): Montag „Anreise“ 07:45–11:00 mit Navigation zur BABZ in Ahrweiler (Ramersbacher Str. 95), Programm ab mittags; Freitag „Abreise“ 14:00–14:45 (ohne Gewähr) zur Heimadresse',
       'Stundenplan IdF Münster: Die ganze Zeile „Anreise“ bzw. „Abreise“ ist der Knopf zu Maps, es öffnet sich keine Notiz mehr (nur „Adresse ändern“ öffnet die Adresseingabe)',
       'Stundenplan IdF Münster: „Abreise“ startet die Navigation zu deiner Heimadresse, die du dort einmal festlegst. Sie bleibt nur auf deinem Gerät und steckt in keiner Sicherung und keinem Export',
       'Stundenplan IdF Münster: „Anreise“ ist antippbar und startet die Navigation zum Institut der Feuerwehr NRW (Wolbecker Straße 237, Münster) in der Karten-App',
@@ -5503,7 +5504,10 @@ const IDF_PLAN = (function(){
     [48,5,'Vorbeugender Brandschutz 2','2026-11-23','g2',VB2(['EVA|Vorbereitung Stellungnahme für Freitag anhand Unterlagen'],'7|Abreise|ar',SELBST)],
     [49,6,'Vorbeugender Brandschutz 3','2026-11-30','g2',[VB3_MO,VB3_DI,
       ['1-6|Exkursion Brandverhütungsschau praktisch|ex||Poloshirt, Büroschuhe genügen · inkl. Brandverhütungsschaubericht','7-8|Einsatzplanung||B1-106'],VB3_DO,VB3_FR]],
-    [50,7,'Zivile Verteidigung','2026-12-07','both',Array(5).fill(['ganztägig|Programm der BABZ|||Ahrweiler']),TEL.babz,
+    [50,7,'Zivile Verteidigung','2026-12-07','both',[
+      ['07:45-11:00|Anreise|ar||BABZ Ahrweiler, Ramersbacher Str. 95|babz','ab mittags|Programm der BABZ|||Ahrweiler · Start voraussichtlich Montag mittags'],
+      ...Array(3).fill(['ganztägig|Programm der BABZ|||Ahrweiler']),
+      ['ganztägig|Programm der BABZ|||Ahrweiler','14:00-14:45|Abreise|ar||Termin ohne Gewähr']],TEL.babz,
       'Die ganze Woche gestaltet die BABZ in Ahrweiler. Der genaue Stundenplan und Hinweise zu Anreise, Unterkunft, Verpflegung und Kleidung kommen als separates Dokument.'],
     [51,8,'Stab 3','2026-12-14','both',[
       ['1-2|Anreise|ar','3|Leistungsnachweis nach § 13 Abs. 3|hi|C-1|siehe Prüfungsleitfaden','11:00-11:30|MoFüSt NRW||C-1','11:30-13:00|Historie der Stabsarbeit & Stabsarbeit international||C-1','13:30-14:45|Historie der Stabsarbeit (Fortsetzung)','8|Lageeinweisung||C-1','18:15|Stabsrahmenübung »Unwetter«|hi||Lunchpaket packen · spätes Ende · Küchenwagen mitbringen'],
@@ -5529,12 +5533,14 @@ const IDF_PLAN = (function(){
     return i<0?[spec,'']:[spec.slice(0,i),spec.slice(i+1)];
   }
   // Anreise: Tipp öffnet die Karten-App mit Navigation zum IdF Münster (Android/iOS öffnen Google Maps bzw. fragen nach der Karten-App)
-  const IDF_MAPS='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent('Institut der Feuerwehr Nordrhein-Westfalen, Wolbecker Straße 237, 48155 Münster');
+  const mapsTo=a=>'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(a);
+  const IDF_MAPS=mapsTo('Institut der Feuerwehr Nordrhein-Westfalen, Wolbecker Straße 237, 48155 Münster');
+  const BABZ_MAPS=mapsTo('BABZ, Ramersbacher Str. 95, 53474 Bad Neuenahr-Ahrweiler-Godeneltern');
   const NAV_PIN='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>';
   // „Anreise“ → Navigation zum IdF; „Abreise“ → Navigation zur eigenen Heimadresse (erst festlegen, dann Link plus kleiner Knopf zum Ändern)
-  function _navTitle(title,ymd){
+  function _navTitle(title,ymd,nav){
     if(!ymd||!(!_isCustom()||/^idf/.test(_vkey()))) return esc(title);
-    if(title==='Anreise') return `<a class="idf-map" href="${IDF_MAPS}" target="_blank" rel="noopener noreferrer" aria-label="Anreise: Navigation zum Institut der Feuerwehr NRW starten">${NAV_PIN}${esc(title)}</a>`;
+    if(title==='Anreise') return `<a class="idf-map" href="${nav==='babz'?BABZ_MAPS:IDF_MAPS}" target="_blank" rel="noopener noreferrer" aria-label="Anreise: Navigation ${nav==='babz'?'zur BABZ in Ahrweiler':'zum Institut der Feuerwehr NRW'} starten">${NAV_PIN}${esc(title)}</a>`;
     if(title!=='Abreise') return esc(title);
     const a=HOME.get();
     return a?`<span class="idf-abr"><a class="idf-map" href="${esc(HOME.url(a))}" target="_blank" rel="noopener noreferrer" aria-label="Abreise: Navigation zur Heimadresse starten">${NAV_PIN}${esc(title)}</a><button type="button" class="idf-home idf-home-edit" onclick="event.stopPropagation();HOME.edit()" aria-label="Heimadresse ändern">Adresse ändern</button></span>`
@@ -5542,13 +5548,13 @@ const IDF_PLAN = (function(){
   }
   let _nk='';
   function _item(s,ymd){
-    const [t,title,cls='',room='',note='']=s.split('|');
+    const [t,title,cls='',room='',note='',nav='']=s.split('|');   // nav: 'babz' = Anreise führt zur BABZ statt zum IdF
     const [a,b]=_time(t);
     const meta=[note,room?(_isCustom()?room:'Raum '+room):''].filter(Boolean).join(' · ');
     const nk=ymd?ymd+'|'+t+'|'+title:'';
     const isNext=ymd&&_nk&&(ymd+'|'+title+'|'+_minutes(a))===_nk;
     const has=nk&&PLANNOTE.get(nk);
-    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}${nk?' idf-tap':''}${isNext?' idf-now':''}"${nk?` data-k="${esc(nk)}" tabindex="0" role="button"`:''}><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${_navTitle(title,ymd)}${has?' <i class="idf-pen" aria-label="Mit Notiz">✎</i>':''}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
+    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}${nk?' idf-tap':''}${isNext?' idf-now':''}"${nk?` data-k="${esc(nk)}" tabindex="0" role="button"`:''}><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${_navTitle(title,ymd,nav)}${has?' <i class="idf-pen" aria-label="Mit Notiz">✎</i>':''}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
   }
   const LUNCH=end=>`<div class="idf-item idf-lunch"><span class="idf-time">13:00<i>${end}</i></span><span class="idf-txt"><span class="idf-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v5a3 3 0 0 0 6 0V2M18 22V2c-2.5 1.5-4 4.5-4 8 0 2 1 3 4 3"/></svg>Mittagessen</span></span></div>`;
   function _start(spec){
