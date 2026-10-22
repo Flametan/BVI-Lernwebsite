@@ -348,9 +348,10 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     NAV.go('v-plan', 'Stundenplan'); await w(400);
     const a = document.querySelector('#plan-inner .idf-map');
     if (!a) return { found: false };
-    a.addEventListener('click', e => e.preventDefault());
-    a.click(); await w(200);
-    return { found: true, href: a.href, blank: a.target === '_blank', noOpen: !document.querySelector('.pn-sheet') };
+    let clicks = 0; a.addEventListener('click', e => { e.preventDefault(); clicks++; });
+    a.closest('.idf-item').querySelector('.idf-time').click(); await w(200);   // Tipp auf die Zeile, nicht auf das Wort
+    const ov = document.getElementById('pn-ov');
+    return { found: true, href: a.href, blank: a.target === '_blank', rowGoes: clicks === 1, noNote: !ov || ov.hidden };
   });
   // ── Heimadresse: „Abreise“ navigiert nach Hause; die Adresse steckt weder in Sicherung noch Export und lässt sich nicht einspielen ──
   const home = await page.evaluate(async () => {
@@ -358,7 +359,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const r = {}; localStorage.removeItem('bvi_heimadresse');
     NAV.go('v-plan', 'Stundenplan'); await w(400);
     r.setBtn = !!document.querySelector('#plan-inner button.idf-home-set');
-    document.querySelector('#plan-inner button.idf-home-set').click(); await w(100);
+    document.querySelector('#plan-inner button.idf-home-set').closest('.idf-item').querySelector('.idf-time').click(); await w(100);   // ganze Zeile öffnet die Adresseingabe
+    r.dialog = !document.getElementById('hm-ov').hidden;
     document.getElementById('hm-a').value = 'Musterweg 5, 12345 Beispielstadt'; document.getElementById('hm-s').click(); await w(300);
     const a = document.querySelector('#plan-inner a.idf-map[aria-label^="Abreise"]');
     r.link = !!a && /destination=Musterweg/.test(a.href) && a.target === '_blank';
@@ -368,8 +370,22 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     localStorage.setItem('bvi_heimadresse', 'Musterweg 5'); HOME.clear(); r.cleared = HOME.get() === '';
     return r;
   });
-  ok('Heimadresse: Abreise-Knopf, Navigations-Link, nicht in Sicherung, löschbar', home.setBtn && home.link && home.notInBackup && home.cleared, JSON.stringify(home));
-  ok('Plan: Anreise ist ein Navigations-Link zum IdF Münster', nav.found && /google\.com\/maps\/dir/.test(nav.href) && /Wolbecker/.test(decodeURIComponent(nav.href)) && /48155/.test(decodeURIComponent(nav.href)) && nav.blank, JSON.stringify(nav));
+  ok('Heimadresse: Abreise-Knopf, Navigations-Link, nicht in Sicherung, löschbar', home.setBtn && home.dialog && home.link && home.notInBackup && home.cleared, JSON.stringify(home));
+  // ── KW 50 (Zivile Verteidigung): Anreise zur BABZ Ahrweiler, Abreise zur Heimadresse ──
+  const babz = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    localStorage.setItem('bvi_heimadresse', 'Musterweg 5, 12345 Beispielstadt');
+    NAV.go('v-plan', 'Stundenplan'); await w(300);
+    for (let i = 0; i < 12; i++) IDF_PLAN._nav(-1);
+    for (let i = 0; i < 6; i++) IDF_PLAN._nav(1);
+    await w(300);
+    const links = [...document.querySelectorAll('#plan-inner a.idf-map')].map(a => decodeURIComponent(a.href));
+    const txt = document.getElementById('plan-inner').innerText;
+    localStorage.removeItem('bvi_heimadresse');
+    return { n: links.length, an: /Ramersbacher Str\. 95, 53474/.test(links[0] || ''), ab: /Musterweg/.test(links[1] || ''), zeiten: /07:45\s*11:00/.test(txt) && /14:00\s*14:45/.test(txt) && /ohne Gewähr/.test(txt) };
+  });
+  ok('Plan KW 50: Anreise 07:45–11:00 zur BABZ, Abreise 14:00–14:45 ohne Gewähr zur Heimadresse', babz.n === 2 && babz.an && babz.ab && babz.zeiten, JSON.stringify(babz));
+  ok('Plan: ganze Anreise-Zeile führt zur Navigation zum IdF Münster, ohne Notiz', nav.found && /google\.com\/maps\/dir/.test(nav.href) && /Wolbecker/.test(decodeURIComponent(nav.href)) && /48155/.test(decodeURIComponent(nav.href)) && nav.blank && nav.rowGoes && nav.noNote, JSON.stringify(nav));
 
   // ── Einstellungen: jede Zeile in „Daten“ hat einen Trennstrich; Erste-Schritte nennt den Pausenraum ──
   const dat = await page.evaluate(() => {
