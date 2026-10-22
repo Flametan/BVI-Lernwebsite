@@ -4031,6 +4031,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Abkürzungsverzeichnis: Dort wird kein Wort mehr als Abkürzung markiert',
       'Nächste Klausur (Einstellungen → Lernen): Der Termin lässt sich mit „Termin entfernen“ wieder löschen (mit Rückgängig), und du wählst, welche Prüfung der Countdown öffnet',
       'Stundenplan: „Wichtige Termine in den Kalender übernehmen“ nimmt nur Schlüsseltermine (Akzentfarbe) und Exkursionen (grün) mit; „Kalender abonnieren“ und die Anzeige des aktiven Plans im Master sind entfernt',
       'Jahrgänge: Die Erklärseite beschreibt jetzt, dass jeder Jahrgang eine Person bestimmt, die die Seite pflegt, Änderungen exportiert und in der WhatsApp-Gruppe teilt; alle anderen lesen die Datei ein. Klausurtermine als Countdown für Jahrgänge sind entfernt.',
