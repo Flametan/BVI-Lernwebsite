@@ -348,9 +348,10 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     NAV.go('v-plan', 'Stundenplan'); await w(400);
     const a = document.querySelector('#plan-inner .idf-map');
     if (!a) return { found: false };
-    a.addEventListener('click', e => e.preventDefault());
-    a.click(); await w(200);
-    return { found: true, href: a.href, blank: a.target === '_blank', noOpen: !document.querySelector('.pn-sheet') };
+    let clicks = 0; a.addEventListener('click', e => { e.preventDefault(); clicks++; });
+    a.closest('.idf-item').querySelector('.idf-time').click(); await w(200);   // Tipp auf die Zeile, nicht auf das Wort
+    const ov = document.getElementById('pn-ov');
+    return { found: true, href: a.href, blank: a.target === '_blank', rowGoes: clicks === 1, noNote: !ov || ov.hidden };
   });
   // ── Heimadresse: „Abreise“ navigiert nach Hause; die Adresse steckt weder in Sicherung noch Export und lässt sich nicht einspielen ──
   const home = await page.evaluate(async () => {
@@ -358,7 +359,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const r = {}; localStorage.removeItem('bvi_heimadresse');
     NAV.go('v-plan', 'Stundenplan'); await w(400);
     r.setBtn = !!document.querySelector('#plan-inner button.idf-home-set');
-    document.querySelector('#plan-inner button.idf-home-set').click(); await w(100);
+    document.querySelector('#plan-inner button.idf-home-set').closest('.idf-item').querySelector('.idf-time').click(); await w(100);   // ganze Zeile öffnet die Adresseingabe
+    r.dialog = !document.getElementById('hm-ov').hidden;
     document.getElementById('hm-a').value = 'Musterweg 5, 12345 Beispielstadt'; document.getElementById('hm-s').click(); await w(300);
     const a = document.querySelector('#plan-inner a.idf-map[aria-label^="Abreise"]');
     r.link = !!a && /destination=Musterweg/.test(a.href) && a.target === '_blank';
@@ -368,8 +370,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     localStorage.setItem('bvi_heimadresse', 'Musterweg 5'); HOME.clear(); r.cleared = HOME.get() === '';
     return r;
   });
-  ok('Heimadresse: Abreise-Knopf, Navigations-Link, nicht in Sicherung, löschbar', home.setBtn && home.link && home.notInBackup && home.cleared, JSON.stringify(home));
-  ok('Plan: Anreise ist ein Navigations-Link zum IdF Münster', nav.found && /google\.com\/maps\/dir/.test(nav.href) && /Wolbecker/.test(decodeURIComponent(nav.href)) && /48155/.test(decodeURIComponent(nav.href)) && nav.blank, JSON.stringify(nav));
+  ok('Heimadresse: Abreise-Knopf, Navigations-Link, nicht in Sicherung, löschbar', home.setBtn && home.dialog && home.link && home.notInBackup && home.cleared, JSON.stringify(home));
+  ok('Plan: ganze Anreise-Zeile führt zur Navigation zum IdF Münster, ohne Notiz', nav.found && /google\.com\/maps\/dir/.test(nav.href) && /Wolbecker/.test(decodeURIComponent(nav.href)) && /48155/.test(decodeURIComponent(nav.href)) && nav.blank && nav.rowGoes && nav.noNote, JSON.stringify(nav));
 
   // ── Einstellungen: jede Zeile in „Daten“ hat einen Trennstrich; Erste-Schritte nennt den Pausenraum ──
   const dat = await page.evaluate(() => {

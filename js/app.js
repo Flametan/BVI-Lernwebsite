@@ -4061,6 +4061,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Stundenplan IdF Münster: Die ganze Zeile „Anreise“ bzw. „Abreise“ ist der Knopf zu Maps, es öffnet sich keine Notiz mehr (nur „Adresse ändern“ öffnet die Adresseingabe)',
       'Stundenplan IdF Münster: „Abreise“ startet die Navigation zu deiner Heimadresse, die du dort einmal festlegst. Sie bleibt nur auf deinem Gerät und steckt in keiner Sicherung und keinem Export',
       'Stundenplan IdF Münster: „Anreise“ ist antippbar und startet die Navigation zum Institut der Feuerwehr NRW (Wolbecker Straße 237, Münster) in der Karten-App',
       'Hilfe: neuer Abschnitt „Am Ende eures Lehrgangs“ – Jahrgänge können dir am Ende ihres B VI (einmal) ihre App-Datei schicken, damit sie fest in der App hinterlegt wird',
@@ -5988,12 +5989,18 @@ const IDF_PLAN = (function(){
     return { kw:w[0], thema:w[2], over:new Date()>end };
   }
 
+  // Tipp auf einen Eintrag: An-/Abreise führen zu Maps (die ganze Zeile ist der Knopf, keine Notiz); ohne Heimadresse öffnet „Abreise“ die Adresseingabe; alles andere öffnet die Notiz
+  function _tap(it){
+    const go=it.querySelector('a.idf-map'); if(go){ go.click(); return; }
+    if(it.querySelector('button.idf-home-set')){ HOME.edit(); return; }
+    PLANNOTE.open(it);
+  }
   document.addEventListener('click',e=>{
-    if(e.target.closest('#plan-inner .idf-map,#plan-inner .idf-home')) return;   // Navigation bzw. Heimadresse: keine Notiz öffnen
-    const it=e.target.closest('#plan-inner .idf-tap'); if(it) PLANNOTE.open(it);
+    if(e.target.closest('#plan-inner .idf-map,#plan-inner .idf-home')) return;   // der Link bzw. Knopf selbst tut das Seine
+    const it=e.target.closest('#plan-inner .idf-tap'); if(it) _tap(it);
   });
   document.addEventListener('keydown',e=>{
-    if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('#plan-inner .idf-tap')){ e.preventDefault(); PLANNOTE.open(e.target); }
+    if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('#plan-inner .idf-tap')){ e.preventDefault(); _tap(e.target); }
   });
   if(typeof JG!=='undefined') JG.on(()=>{
     _loadCust(); _manual=false;
