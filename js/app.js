@@ -4061,6 +4061,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Stundenplan IdF Münster: „Anreise“ ist antippbar und startet die Navigation zum Institut der Feuerwehr NRW (Wolbecker Straße 237, Münster) in der Karten-App',
       'Hilfe: neuer Abschnitt „Am Ende eures Lehrgangs“ – Jahrgänge können dir am Ende ihres B VI (einmal) ihre App-Datei schicken, damit sie fest in der App hinterlegt wird',
       'Hinweis für iPhone und iPad: Apple löscht die Daten einer Website in Safari nach etwa 7 Tagen ohne Besuch. Das steht jetzt unter Einstellungen, bei der App-Installation und in der Hilfe – mit dem Rat, die App auf den Home-Bildschirm zu legen und ab und zu zu sichern',
       'Die Flamme im Kopf der Seite flackert deutlicher und ist jetzt gut zu erkennen',
@@ -5492,6 +5493,9 @@ const IDF_PLAN = (function(){
     const i=spec.indexOf('-');
     return i<0?[spec,'']:[spec.slice(0,i),spec.slice(i+1)];
   }
+  // Anreise: Tipp öffnet die Karten-App mit Navigation zum IdF Münster (Android/iOS öffnen Google Maps bzw. fragen nach der Karten-App)
+  const IDF_MAPS='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent('Institut der Feuerwehr Nordrhein-Westfalen, Wolbecker Straße 237, 48155 Münster');
+  const NAV_PIN='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>';
   let _nk='';
   function _item(s,ymd){
     const [t,title,cls='',room='',note='']=s.split('|');
@@ -5500,7 +5504,7 @@ const IDF_PLAN = (function(){
     const nk=ymd?ymd+'|'+t+'|'+title:'';
     const isNext=ymd&&_nk&&(ymd+'|'+title+'|'+_minutes(a))===_nk;
     const has=nk&&PLANNOTE.get(nk);
-    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}${nk?' idf-tap':''}${isNext?' idf-now':''}"${nk?` data-k="${esc(nk)}" tabindex="0" role="button"`:''}><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${esc(title)}${has?' <i class="idf-pen" aria-label="Mit Notiz">✎</i>':''}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
+    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}${nk?' idf-tap':''}${isNext?' idf-now':''}"${nk?` data-k="${esc(nk)}" tabindex="0" role="button"`:''}><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${ymd&&/^Anreise$/.test(title)&&(!_isCustom()||/^idf/.test(_vkey()))?`<a class="idf-map" href="${IDF_MAPS}" target="_blank" rel="noopener noreferrer" aria-label="Anreise: Navigation zum Institut der Feuerwehr NRW starten">${NAV_PIN}${esc(title)}</a>`:esc(title)}${has?' <i class="idf-pen" aria-label="Mit Notiz">✎</i>':''}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
   }
   const LUNCH=end=>`<div class="idf-item idf-lunch"><span class="idf-time">13:00<i>${end}</i></span><span class="idf-txt"><span class="idf-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v5a3 3 0 0 0 6 0V2M18 22V2c-2.5 1.5-4 4.5-4 8 0 2 1 3 4 3"/></svg>Mittagessen</span></span></div>`;
   function _start(spec){
@@ -5942,6 +5946,7 @@ const IDF_PLAN = (function(){
   }
 
   document.addEventListener('click',e=>{
+    if(e.target.closest('#plan-inner .idf-map')) return;   // Navigation: Link öffnen, keine Notiz
     const it=e.target.closest('#plan-inner .idf-tap'); if(it) PLANNOTE.open(it);
   });
   document.addEventListener('keydown',e=>{

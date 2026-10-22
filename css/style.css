@@ -2652,3 +2652,7 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 .bg-range::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--m-accent);border:3px solid var(--m-card);box-shadow:0 0 0 1px var(--m-line);}
 .jg-ok{width:100%;margin-top:4px;}
 .jg-ok{padding:14px 18px;font-size:1rem;}
+
+/* Stundenplan: Anreise als Navigations-Link */
+.idf-map{display:inline-flex;align-items:center;gap:5px;color:var(--m-accent-fg,var(--c-gold));text-decoration:underline;text-underline-offset:3px;font-weight:600;}
+.idf-map svg{flex-shrink:0;}

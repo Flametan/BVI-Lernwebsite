@@ -342,6 +342,18 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Startsymbol: Farbe und hell/dunkel', icons, ['blue', 'blue_light', 'blue', 'orange']);
 
+  // ── Stundenplan: „Anreise“ führt per Link zur Navigation zum IdF Münster, ohne die Notiz zu öffnen ──
+  const nav = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    NAV.go('v-plan', 'Stundenplan'); await w(400);
+    const a = document.querySelector('#plan-inner .idf-map');
+    if (!a) return { found: false };
+    a.addEventListener('click', e => e.preventDefault());
+    a.click(); await w(200);
+    return { found: true, href: a.href, blank: a.target === '_blank', noOpen: !document.querySelector('.pn-sheet') };
+  });
+  ok('Plan: Anreise ist ein Navigations-Link zum IdF Münster', nav.found && /google\.com\/maps\/dir/.test(nav.href) && /Wolbecker/.test(decodeURIComponent(nav.href)) && /48155/.test(decodeURIComponent(nav.href)) && nav.blank, JSON.stringify(nav));
+
   // ── Einstellungen: jede Zeile in „Daten“ hat einen Trennstrich; Erste-Schritte nennt den Pausenraum ──
   const dat = await page.evaluate(() => {
     const rows = [...document.querySelectorAll('#acc-dat-b .m-row')];
