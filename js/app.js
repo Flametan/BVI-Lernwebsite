@@ -6397,7 +6397,12 @@ const BG=(function(){
   function colors(t,warm){
     const h=warm?41:0, s=warm?38:0, dark=t<50;
     const bg=hsl(h,s,t), up=l=>hsl(h,s,Math.max(0,Math.min(100,l)));
-    const card=dark?up(t+4.5):(t>=93?[255,255,255]:up(t+7)), raised=dark?up(t+8):up(t-6), line=dark?up(t+10):up(t-12);
+    // Kacheln wie in Dunkel und Hell: immer ein Stück heller als der Hintergrund (Leuchtdichte-Verhältnis wie dort,
+    // Dunkel 1,12 / Hell 1,07); ganz am weißen Ende, wo es nicht heller geht, stattdessen ein Stück dunkler
+    const R=dark?1.12:1.07, tile=(want)=>{ for(let l=t;l<=100;l+=.5){ const c=up(l); if(ratio(c,bg)>=want) return c; } return null; };
+    let card=tile(R);
+    if(!card){ for(let l=t;l>=0;l-=.5){ card=up(l); if(ratio(card,bg)>=R) break; } }
+    const raised=dark?up(t+8):up(t-6), line=dark?up(t+10):up(t-12);
     // Textfarbe: die mit dem höheren Kontrast, im warmen Ton leicht bräunlich
     const light=warm?[237,229,214]:[237,237,237], darkc=warm?[40,31,20]:[26,26,26];
     let fg=ratio(light,bg)>ratio(darkc,bg)?light:darkc;
