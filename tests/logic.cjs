@@ -461,6 +461,30 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Jahrgang: eigene Kürzel und Standorte überall, im Export, rückholbar', nm, { hadDefault: true, exam: true, exported: true, safe: true, back: true });
 
+  // ── Rückgängig/Wiederholen für Einstellungen, Lernstand, Klausurtermin und Notizen (dauerhaft sichtbare Knöpfe) ──
+  const ud = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    const r = {}; const cf = window.confirm; window.confirm = () => true;
+    localStorage.setItem('bvi_fc', JSON.stringify({ g01: { interval: 3, ease: 2.5, reps: 2, nextReview: Date.now() + 1e8 } }));
+    localStorage.setItem('bvi_exam', JSON.stringify({ date: '2099-05-05', name: 'Test' }));
+    NAV.go('v-settings', 'E'); await w(400);
+    const bar = document.querySelector('#v-settings .ud-bar');
+    r.bar = !!bar && !!bar.querySelector('.ud-undo') && !!bar.querySelector('.ud-redo');
+    r.off = bar.querySelector('.ud-undo').disabled && bar.querySelector('.ud-redo').disabled;
+    SETTINGS.resetCards(); await w(200);
+    r.reset = localStorage.getItem('bvi_fc') === null && !bar.querySelector('.ud-undo').disabled;
+    bar.querySelector('.ud-undo').click(); await w(200);
+    r.undo = !!localStorage.getItem('bvi_fc') && bar.querySelector('.ud-undo').disabled && !bar.querySelector('.ud-redo').disabled;
+    bar.querySelector('.ud-redo').click(); await w(200);
+    r.redo = localStorage.getItem('bvi_fc') === null;
+    SHELL.clearExam(); await w(200); r.examOff = JSON.parse(localStorage.getItem('bvi_exam')).off === 1;
+    bar.querySelector('.ud-undo').click(); await w(200); r.examBack = JSON.parse(localStorage.getItem('bvi_exam')).date === '2099-05-05';
+    window.confirm = cf; localStorage.removeItem('bvi_exam'); localStorage.removeItem('bvi_fc');
+    r.noOldToast = !document.querySelector('.toast-undo');
+    return r;
+  });
+  eq('Rückgängig/Wiederholen bei Einstellungen und Lernstand', ud, { bar: true, off: true, reset: true, undo: true, redo: true, examOff: true, examBack: true, noOldToast: true });
+
   // ── Stundenplan: Abschnitte der Fortschrittsleiste springen direkt zur Woche ──
   const pips = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms));

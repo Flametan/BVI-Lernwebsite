@@ -1627,20 +1627,37 @@ const TOAST = (function(){
   };
 })();
 
+/* ── Rückgängig/Wiederholen für Einstellungen, Lernstand, Klausurtermin, Notizen und Jahrgangs-Import: dauerhaft sichtbare Knöpfe statt kurz eingeblendetem „Rückgängig“ ── */
+const UNDO=(function(){
+  const u=[], r=[];
+  const refresh=()=>{ document.querySelectorAll('.ud-undo').forEach(b=>{ b.disabled=!u.length; }); document.querySelectorAll('.ud-redo').forEach(b=>{ b.disabled=!r.length; }); };
+  const html=()=>'<button type="button" class="btn btn-ghost ud-undo" aria-label="Rückgängig"'+(u.length?'':' disabled')+'>↶ Rückgängig</button><button type="button" class="btn btn-ghost ud-redo" aria-label="Aktion wiederholen"'+(r.length?'':' disabled')+'>↷ Wiederholen</button>';
+  // undo/redo stellen jeweils den Stand vor bzw. nach der Aktion her
+  function push(label,undo,redo){ u.push({label,undo,redo}); if(u.length>30) u.shift(); r.length=0; refresh(); }
+  function back(){ const a=u.pop(); if(!a) return false; try{ a.undo(); }catch(e){} r.push(a); refresh(); TOAST.show(a.label+': rückgängig gemacht',{type:'ok'}); return true; }
+  function again(){ const a=r.pop(); if(!a) return false; try{ a.redo(); }catch(e){} u.push(a); refresh(); TOAST.show(a.label+': wiederholt',{type:'ok'}); return true; }
+  document.addEventListener('click',e=>{ const x=e.target.closest('.ud-undo,.ud-redo'); if(!x) return; e.preventDefault(); if(x.classList.contains('ud-undo')) back(); else again(); });
+  return {push,html,refresh,undo:back,redo:again};
+})();
+
 const SETTINGS = (function(){
   return {
     resetTopics(){
       const snap=localStorage.getItem('bvi_progress');
       if(!confirm('Lernfortschritt wirklich zurücksetzen?')) return;
       PROGRESS.reset();
-      TOAST.show('Themen-Fortschritt zurückgesetzt',{type:'ok',undo:()=>{ if(snap) localStorage.setItem('bvi_progress',snap); PROGRESS.updateUI(); }});
+      const after=localStorage.getItem('bvi_progress'), put=v=>{ if(v===null) localStorage.removeItem('bvi_progress'); else localStorage.setItem('bvi_progress',v); PROGRESS.updateUI(); };
+      UNDO.push('Themen-Fortschritt zurücksetzen',()=>put(snap),()=>put(after));
+      TOAST.show('Themen-Fortschritt zurückgesetzt',{type:'ok'});
     },
     resetCards(){
       const snap=localStorage.getItem('bvi_fc');
       if(!confirm('Lernkarten-Lernstand wirklich zurücksetzen?')) return;
       localStorage.removeItem('bvi_fc');
-      if(document.getElementById('v-flashcards').classList.contains('active')) FC.start();
-      TOAST.show('Lernkarten zurückgesetzt',{type:'ok',undo:()=>{ if(snap) localStorage.setItem('bvi_fc',snap); }});
+      const redraw=()=>{ if(document.getElementById('v-flashcards').classList.contains('active')) FC.start(); }, put=v=>{ if(v===null) localStorage.removeItem('bvi_fc'); else localStorage.setItem('bvi_fc',v); redraw(); };
+      redraw();
+      UNDO.push('Lernkarten zurücksetzen',()=>put(snap),()=>put(null));
+      TOAST.show('Lernkarten zurückgesetzt',{type:'ok'});
     },
     setFontSize(sz){
       document.documentElement.classList.remove('fs-sm','fs-lg','fs-xl');
@@ -1663,7 +1680,7 @@ const SETTINGS = (function(){
    NOTES – Seitennotizen (localStorage pro View)
 ====================================================================== */
 const NOTES = (function(){
-  let _view = null, _openKey = null, _prevNote = '', _undoTimer = null;
+  let _view = null, _openKey = null;
   const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz','v-plan','v-pruefung','v-settings','v-notizen']);
   function key(){ return _openKey||'bvi_note_'+(_view||'home'); }
   function getBtn(){
@@ -1707,17 +1724,11 @@ const NOTES = (function(){
     toggle(){ document.getElementById('notes-overlay').classList.contains('hidden') ? this.open() : this.close(); },
     clear(){
       const ta=document.getElementById('notes-textarea'); if(!ta) return;
-      _prevNote=ta.value;
-      ta.value=''; localStorage.removeItem(key()); updateBtn();
-      const bar=document.getElementById('notes-undo-bar');
-      if(bar){ bar.style.display='flex'; bar.classList.remove('hidden'); clearTimeout(_undoTimer); _undoTimer=setTimeout(()=>bar.style.display='none',6000); }
-    },
-    undoClear(){
-      const ta=document.getElementById('notes-textarea');
-      const bar=document.getElementById('notes-undo-bar');
-      if(ta&&_prevNote){ ta.value=_prevNote; localStorage.setItem(key(),_prevNote); updateBtn(); }
-      if(bar) bar.style.display='none';
-      clearTimeout(_undoTimer);
+      const k=key(), prev=ta.value;
+      ta.value=''; localStorage.removeItem(k); updateBtn();
+      if(!prev.trim()) return;
+      const show=v=>{ const t=document.getElementById('notes-textarea'); if(t&&key()===k) t.value=v; try{ v?localStorage.setItem(k,v):localStorage.removeItem(k); }catch(e){} updateBtn(); };
+      UNDO.push('Notiz löschen',()=>show(prev),()=>show(''));
     },
     share(){
       const ta = document.getElementById('notes-textarea');
@@ -2092,6 +2103,7 @@ const FC = (function(){
           <button class="btn btn-gold" onclick="FC.start()">Neu mischen & wiederholen</button>
           <button class="btn btn-ghost" onclick="FC.resetKnown()">Lernstand zurücksetzen</button>
         </div>
+        <div class="jg-bar ud-bar" style="justify-content:center;margin:.8rem 0 0">${UNDO.html()}</div>
       </div>`;
   }
   function renderReviewCard(){
@@ -2223,7 +2235,9 @@ const FC = (function(){
       const snap=localStorage.getItem('bvi_fc');
       if(!confirm('Lernkarten-Lernstand wirklich zurücksetzen?')) return;
       localStorage.removeItem('bvi_fc'); this.start();
-      TOAST.show('Lernstand zurückgesetzt',{type:'ok',undo:()=>{ if(snap){ localStorage.setItem('bvi_fc',snap); this.start(); } }});
+      const put=v=>{ if(v===null) localStorage.removeItem('bvi_fc'); else localStorage.setItem('bvi_fc',v); FC.start(); };
+      UNDO.push('Lernstand zurücksetzen',()=>put(snap),()=>put(null));
+      TOAST.show('Lernstand zurückgesetzt',{type:'ok'});
     },
     syncFilters(){ updateFilterButtons(); },
     resize(){ sizeCard(); },
@@ -4087,6 +4101,7 @@ const CHANGELOG=(function(){
       'Jahrgänge: „Rückgängig“ ist nicht mehr nur kurz eingeblendet, sondern dauerhaft sichtbar neben „Seite bearbeiten“ (auch bei Prüfungen, Lernkarten und im Karten-Fenster). Daneben gibt es „Wiederholen“, das die zurückgenommene Aktion erneut ausführt',
       'Jahrgänge: Prüfungen und Klausurvorbereitung bleiben im Gleichklang – eine im Prüfung-Tab hinzugefügte Prüfung erscheint auch als Kachel auf der Übersichtsseite ihres Reiters (IBK, VAk, FeuAK, IdF), eine gelöschte Prüfung verschwindet dort ebenfalls, und umgekehrt',
       'Jahrgänge: Unter „Kürzel und Standorte“ lassen sich jetzt auch die Kürzel (IBK, VAk, FeuAK, IdF) ändern. Kürzel und Ort ersetzen die Standardnamen überall, wo sie auf der Seite stehen, und stehen im Jahrgangs-Export',
+      'Rückgängig und Wiederholen sind jetzt auch an den übrigen Stellen dauerhaft sichtbar statt nur kurz eingeblendet: oben in den Einstellungen (Fortschritt und Lernkarten zurücksetzen, Klausurtermin entfernen, Jahrgang importieren oder verwerfen), nach „Lernstand zurücksetzen“ bei den Lernkarten und bei den Notizen (Notiz löschen)',
       'Hinweis für iPhone und iPad: Apple löscht die Daten einer Website in Safari nach etwa 7 Tagen ohne Besuch. Das steht jetzt unter Einstellungen, bei der App-Installation und in der Hilfe – mit dem Rat, die App auf den Home-Bildschirm zu legen und ab und zu zu sichern',
       'Die Flamme im Kopf der Seite flackert deutlicher und ist jetzt gut zu erkennen',
       'Sicherung: Gewählter Jahrgang, eigene Jahrgangs-Änderungen und die Plan-Ansicht werden jetzt mitgesichert und wieder eingespielt (vorher gingen sie beim Einspielen verloren)',
@@ -7291,7 +7306,9 @@ const SHELL=(function(){
     clearExam(){
       let prev=null; try{ prev=localStorage.getItem('bvi_exam'); localStorage.setItem('bvi_exam',JSON.stringify({off:1})); }catch(e){}
       syncSettings(); renderExam(); renderHome();
-      TOAST.show('Klausurtermin entfernt',{type:'ok',undo:()=>{ try{ prev===null?localStorage.removeItem('bvi_exam'):localStorage.setItem('bvi_exam',prev); }catch(e){} syncSettings(); renderExam(); renderHome(); }});
+      const put=v=>{ try{ v===null?localStorage.removeItem('bvi_exam'):localStorage.setItem('bvi_exam',v); }catch(e){} syncSettings(); renderExam(); renderHome(); };
+      UNDO.push('Klausurtermin entfernen',()=>put(prev),()=>put(JSON.stringify({off:1})));
+      TOAST.show('Klausurtermin entfernt',{type:'ok'});
     },
     bookmark(){
       const v=document.querySelector('.view.active'); if(!v) return;

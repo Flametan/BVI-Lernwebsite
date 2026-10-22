@@ -217,10 +217,7 @@
       </div>
     </div>
     <textarea id="notes-textarea" class="notes-area" placeholder="Deine Notizen zu dieser Seite – wird lokal gespeichert …"></textarea>
-    <div id="notes-undo-bar" class="hidden" style="display:flex;align-items:center;justify-content:space-between;padding:.55rem .85rem;background:color-mix(in srgb,var(--c-gold) 8%,transparent);border:1px solid color-mix(in srgb,var(--c-gold) 25%,transparent);border-radius:var(--r-sm);font-size:.82rem;color:var(--c-slate-l);margin-top:.5rem;">
-      <span>Notiz gelöscht</span>
-      <button onclick="NOTES.undoClear()" style="font-size:.78rem;font-weight:600;color:var(--c-gold);background:none;border:none;cursor:pointer;font-family:inherit;padding:0;">Rückgängig</button>
-    </div>
+    <div class="jg-bar ud-bar" style="margin:.5rem 0"><button type="button" class="btn btn-ghost ud-undo" aria-label="Rückgängig" disabled>↶ Rückgängig</button><button type="button" class="btn btn-ghost ud-redo" aria-label="Aktion wiederholen" disabled>↷ Wiederholen</button></div>
     <div class="notes-footer" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;">
       <span>Gespeichert in deinem Browser · nur du kannst diese Notizen sehen</span>
       <button class="btn btn-ghost" style="font-size:.75rem;padding:.2rem .6rem;flex-shrink:0" onclick="NOTES.exportAll()">
@@ -12421,6 +12418,7 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
     <h1 class="page-title">Einstellungen</h1>
   </div></div>
   <div class="pc m-stack">
+    <div class="jg-bar ud-bar"><button type="button" class="btn btn-ghost ud-undo" aria-label="Rückgängig" disabled>↶ Rückgängig</button><button type="button" class="btn btn-ghost ud-redo" aria-label="Aktion wiederholen" disabled>↷ Wiederholen</button></div>
     <button class="m-search" onclick="SEARCH.open()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4-4"/></svg>
       <span>Themen, Karten und Inhalte durchsuchen</span>

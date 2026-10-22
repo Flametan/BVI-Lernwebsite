@@ -216,7 +216,7 @@ const JG=(function(){
   const snapshot=()=>lsGet(PRE+current());
   // Alle eigenen Änderungen dieses Jahrgangs verwerfen (Rückgabe: vorheriger Stand zum Rückgängigmachen)
   function discard(){ const prev=lsGet(PRE+current()); record(current(),prev,null); try{ localStorage.removeItem(PRE+current()); }catch(e){} changed(); return prev; }
-  function restore(prev){ if(prev){ record(current(),lsGet(PRE+current()),prev); lsSet(PRE+current(),prev); } changed(); }
+  function restore(prev){ const id=current(); record(id,lsGet(PRE+id),prev||null); setRaw(id,prev||null); changed(); }
   const hasLocal=()=>{ const l=local(); return !!(Object.keys(l.plane).length||l.aktiv||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||Object.keys(l.rel).length||l.ausg.length||Object.keys(l.links).length||l.karten.length||l.kweg.length||Object.keys(l.orte).length||Object.keys(l.kuerzel).length||l.reiter.length); };
 
   return { MASTER, TABS, PLANKEYS, list, labelOf, current, isMaster, data, local, saveLocal, glow, rel, setExams, examOf, load, set, on, ver:()=>ver, img, okImg,
