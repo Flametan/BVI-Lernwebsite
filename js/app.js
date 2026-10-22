@@ -4061,6 +4061,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Hilfe: neuer Abschnitt „Am Ende eures Lehrgangs“ – Jahrgänge können dir gegen Ende ihres B VI ihre App-Datei schicken, damit sie fest in der App hinterlegt wird',
       'Hinweis für iPhone und iPad: Apple löscht die Daten einer Website in Safari nach etwa 7 Tagen ohne Besuch. Das steht jetzt unter Einstellungen, bei der App-Installation und in der Hilfe – mit dem Rat, die App auf den Home-Bildschirm zu legen und ab und zu zu sichern',
       'Die Flamme im Kopf der Seite flackert deutlicher und ist jetzt gut zu erkennen',
       'Sicherung: Gewählter Jahrgang, eigene Jahrgangs-Änderungen und die Plan-Ansicht werden jetzt mitgesichert und wieder eingespielt (vorher gingen sie beim Einspielen verloren)',
