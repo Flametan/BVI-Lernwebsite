@@ -6472,7 +6472,6 @@ const BG=(function(){
     const de=document.documentElement, base=de.getAttribute('data-tone')==='beige'?DEFAULTS.beige:de.getAttribute('data-theme')==='light'?DEFAULTS.light:DEFAULTS.dark;
     r.value=t===null?base:t;
     r.style.background='linear-gradient(90deg,'+(de.getAttribute('data-tone')==='beige'?'#000,#7d6c47 50%,#fff':'#000,#fff')+')';
-    const b=document.getElementById('m-bg-reset'); if(b) b.hidden=t===null;
     const s=document.getElementById('m-bg-sub'); if(s) s.textContent=t===null?'Hintergrund von Schwarz bis Weiß':'Hintergrund: eigene Helligkeit '+t+' %';
   }
   return {

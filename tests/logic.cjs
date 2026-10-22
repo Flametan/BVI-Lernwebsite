@@ -888,7 +888,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const tok = n => { const s = document.createElement('i'); s.style.color = 'var(' + n + ')'; document.body.appendChild(s); const c = parse(getComputedStyle(s).color); s.remove(); return c; };
     localStorage.removeItem('bvi_bg'); THEME.set('dark'); await w(100);
     NAV.go('v-settings', 'E'); await w(300);
-    r.row = !!document.getElementById('m-bg-range') && document.getElementById('m-bg-reset').hidden;
+    r.row = !!document.getElementById('m-bg-range') && !document.getElementById('m-bg-reset');
     BG.set(0); await w(100);
     r.black = parse(getComputedStyle(document.body).backgroundColor).join() === '0,0,0' && de.getAttribute('data-theme') === 'dark';
     BG.set(100); await w(100);
@@ -904,7 +904,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
       }
     }
     r.contrast = worst >= 4.5;
-    BG.set(40); await w(100); r.stored = localStorage.getItem('bvi_bg') === '40' && !document.getElementById('m-bg-reset').hidden;
+    BG.set(40); await w(100); r.stored = localStorage.getItem('bvi_bg') === '40'; 
     THEME.set('light'); await w(100); r.schemeResets = localStorage.getItem('bvi_bg') === null && BG.get() === null;
     BG.set(60); BG.reset(); await w(100); r.reset = BG.get() === null && !de.style.getPropertyValue('--m-bg');
     THEME.set('system'); await w(100);
