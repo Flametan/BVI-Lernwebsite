@@ -9,7 +9,7 @@ const DUELL=(function(){
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const get=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}};
   const put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
-  let root=null,F=null,loadJs=null,pc=null,dc=null,role='',me='',opp='',myCol=0,oppCol=-1,cfg={n:5,mods:['VAk','IBK']},ready={me:false,opp:false},sigOk=true;
+  let root=null,F=null,loadJs=null,pc=null,dc=null,role='',me='',opp='',myCol=0,oppCol=-1,oppCsig='',cfg={n:5,mods:['VAk','IBK']},ready={me:false,opp:false},sigOk=true;
   let hb=0,lastRx=0,down=false,downAt=0,stream=null,scanT=0,scanId=0,gameOn=false,alive=false,tm=0;
 
   /* ---------- Verbindungsdaten klein machen (nur das Nötige, ca. 250 Zeichen) ---------- */
@@ -101,7 +101,7 @@ const DUELL=(function(){
   function mkPc(){const stun=get(SK,true),p=pc=new RTCPeerConnection({iceServers:stun?[{urls:'stun:stun.l.google.com:19302'}]:[]});
     p.onconnectionstatechange=()=>{if(p!==pc)return;const s=p.connectionState;if(s==='failed'||s==='closed')setDown(true);else if(s==='connected'){if(down&&dc&&dc.readyState==='open')lastRx=performance.now();}};
     p.ondatachannel=e=>{if(p===pc)wire(e.channel);};}
-  function wire(ch){dc=ch;let opened=false;const onOpen=()=>{if(opened||ch!==dc)return;opened=true;alive=true;lastRx=performance.now();send({t:'hello',name:me,sig:F.sig(),col:myCol});startHb();};dc.onopen=onOpen;if(ch.readyState==='open')onOpen();dc.onmessage=e=>{if(ch!==dc)return;let m;try{m=JSON.parse(e.data);}catch(x){return;}rx(m);};dc.onclose=()=>{if(ch===dc)setDown(true);};}
+  function wire(ch){dc=ch;let opened=false;const onOpen=()=>{if(opened||ch!==dc)return;opened=true;alive=true;lastRx=performance.now();send({t:'hello',name:me,sig:F.sig(),csig:F.csig(),col:myCol});startHb();};dc.onopen=onOpen;if(ch.readyState==='open')onOpen();dc.onmessage=e=>{if(ch!==dc)return;let m;try{m=JSON.parse(e.data);}catch(x){return;}rx(m);};dc.onclose=()=>{if(ch===dc)setDown(true);};}
   const send=m=>{try{if(dc&&dc.readyState==='open')dc.send(JSON.stringify(m));}catch(e){}};
   function startHb(){clearInterval(hb);hb=setInterval(()=>{send({t:'ping'});if(performance.now()-lastRx>6000)setDown(true);if(down&&performance.now()-downAt>30000){setDown(false,true);giveUp();}},2000);}
   function setDown(on,force){if(on&&!down){down=true;downAt=performance.now();if(gameOn)F.duelPause(true);else if(alive)card('<div class="pz-qt">Verbindung unterbrochen</div><div class="pz-fb">Warte auf die Verbindung …</div>');}
@@ -133,12 +133,16 @@ const DUELL=(function(){
     if(root&&!root.querySelector('.pz-drv'))card('<div class="pz-lbl"><span>Verbinde</span></div><div class="pz-drv"><i></i><span>Verbindung wird aufgebaut …</span></div>');}
 
   /* ---------- Lobby ---------- */
-  const modsAvail=m=>F.baseQuestions().filter(q=>q.m===m).length;
+  // Eigene Fragen zählen nur, wenn beide dieselben haben
+  const sameCu=()=>!!F.csig()&&F.csig()===oppCsig;
+  const pool=()=>F.duelPool(sameCu());
+  const modsAvail=m=>pool().filter(q=>q.m===m).length;
   function lobby(){clearTimeout(tm);if(!root||gameOn)return;
-    cfg.mods=cfg.mods.filter(m=>F.MODS.some(x=>x[0]===m&&modsAvail(m)>0));const isH=role==='host',tot=F.baseQuestions().filter(q=>cfg.mods.includes(q.m)).length;
+    cfg.mods=cfg.mods.filter(m=>F.MODS.some(x=>x[0]===m&&modsAvail(m)>0));const isH=role==='host',tot=pool().filter(q=>cfg.mods.includes(q.m)).length;
     card(`<div class="pz-lbl"><span>Lobby</span><b>${esc(me)} gegen ${esc(opp||'…')}</b></div>
       ${!opp?'<div class="pz-drv"><i></i><span>Warte auf den Mitspieler …</span></div>':''}
       ${!sigOk?'<div class="pz-fb r"><b>Die App-Stände sind verschieden.</b> Bitte beide die Seite neu laden (Fragen müssen gleich sein).</div>':''}
+      ${F.csig()||oppCsig?(sameCu()?'<div class="pz-fb"><b>Eigene Fragen:</b> Ihr habt dieselben, sie zählen im Duell mit.</div>':'<div class="pz-fb"><b>Eigene Fragen:</b> Ihr habt unterschiedliche eigene Fragen, sie zählen im Duell nicht. Liest beide dieselbe Datei ein (Stand ersetzen), dann zählen sie.</div>'):''}
       <div class="pz-lbl"><span>Dein Fahrzeug · du fährst von ${isH?'links':'rechts'}</span></div><div class="pz-cols">${F.PAL.map((c,i)=>`<button class="pz-col${myCol===i?' on':''}" data-a="col" data-v="${i}" aria-label="${c[2]}" title="${c[2]}" style="background:linear-gradient(${c[0]},${c[1]})" ${oppCol===i?'disabled':''}></button>`).join('')}</div>
       ${oppCol>=0?`<div class="pz-fb"><span class="pz-dot" style="background:${F.PAL[oppCol][0]}"></span>${esc(opp||'Mitspieler')} fährt ${F.PAL[oppCol][2].toLowerCase()} von ${isH?'rechts':'links'}.</div>`:''}
       <div class="pz-qt">${isH?'Du stellst das Duell ein':esc(opp||'Spielleiter')+' stellt das Duell ein'}</div>
@@ -152,19 +156,20 @@ const DUELL=(function(){
   function fixCol(){if(oppCol>=0&&myCol===oppCol&&role==='guest'){do{myCol=(myCol+1)%F.PAL.length;}while(myCol===oppCol);put(CK,myCol);send({t:'col',v:myCol});}}
   function sendCfg(){send({t:'cfg',n:cfg.n,mods:cfg.mods});}
 
-  function launch(c){gameOn=true;stopScan();clearTimeout(tm);
+  function launch(c){if(c.cu&&F.csig()!==c.csig){send({t:'bye'});teardown(true);return intro('Eure eigenen Fragen sind nicht mehr gleich. Bitte das Duell neu starten.');}
+    gameOn=true;stopScan();clearTimeout(tm);
     const sess={cfg:c,opp:opp,me:me,side:role==='host'?'L':'R',myCol:myCol,oppCol:oppCol<0?(myCol+1)%F.PAL.length:oppCol,send,close:()=>{send({t:'bye'});teardown(true);},
       record(name,res){const b=Object.assign(Object.create(null),get(BK,{})),k=name.toLowerCase(); // ohne Prototyp: Namen wie „__proto__“ oder „constructor“ sind harmlos
         const r=b[k]||{w:0,l:0,d:0};if(res==='w')r.w++;else if(res==='l')r.l++;else if(res==='d')r.d++;b[k]=r;put(BK,b);return r;},
-      rematch(){if(role!=='host')return;const nc={n:c.n,mods:c.mods,seed:(Math.random()*2147483647)|0};send({t:'go',cfg:nc});launch(nc);}};
+      rematch(){if(role!=='host')return;const nc={n:c.n,mods:c.mods,seed:(Math.random()*2147483647)|0,cu:c.cu,csig:c.csig};send({t:'go',cfg:nc});launch(nc);}};
     F.startDuel(root,sess);}
-  function startHostGame(){const tot=F.baseQuestions().filter(q=>cfg.mods.includes(q.m)).length,c={n:Math.min(cfg.n,tot),mods:cfg.mods.slice(),seed:(Math.random()*2147483647)|0};put(MK,{n:cfg.n,mods:cfg.mods});send({t:'go',cfg:c});launch(c);}
+  function startHostGame(){const cu=sameCu()?1:0,tot=pool().filter(q=>cfg.mods.includes(q.m)).length,c={n:Math.min(cfg.n,tot),mods:cfg.mods.slice(),seed:(Math.random()*2147483647)|0,cu,csig:cu?F.csig():''};put(MK,{n:cfg.n,mods:cfg.mods});send({t:'go',cfg:c});launch(c);}
 
   /* ---------- Nachrichten ---------- */
   function rx(m){lastRx=performance.now();if(down)setDown(false);
     switch(m.t){
       case 'ping':return;
-      case 'hello':opp=san(m.name);if(opp===me)opp+=' (2)';sigOk=m.sig===F.sig();oppCol=typeof m.col==='number'?m.col:-1;fixCol();if(role==='host')sendCfg();lobby();return;
+      case 'hello':opp=san(m.name);if(opp===me)opp+=' (2)';sigOk=m.sig===F.sig();oppCsig=typeof m.csig==='string'?m.csig:'';oppCol=typeof m.col==='number'?m.col:-1;fixCol();if(role==='host')sendCfg();lobby();return;
       case 'col':oppCol=m.v;fixCol();lobby();return;
       case 'cfg':if(role==='guest'){cfg={n:m.n,mods:m.mods};ready.me=false;send({t:'ready',v:false});lobby();}return;
       case 'ready':ready.opp=!!m.v;if(role==='host')lobby();return;

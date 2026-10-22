@@ -1028,6 +1028,28 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     await rctx.close();
   }
 
+  // ── Duell mit eigenen Fragen: gleicher Fingerabdruck und gleiche Auswahl bei gleicher Datei, sonst nicht ──
+  const duq = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    JG.set(JG.list()[0].id); await w(300); JG.discard();
+    await PAUSE_LOADER.load(); const F = PAUSE._fahrt();
+    const mk = (id, t) => ({ id, tab: 'vak', seite: null, titel: t, ts: 1, fragen: [{ q: t + ' Frage A?', typ: 'sc', o: ['a', 'b', 'c'], c: 1, a: '', e: '' }, { q: t + ' Frage B?', typ: 'sc', o: ['x', 'y'], c: 0, a: '', e: '' }] });
+    const sig0 = F.sig(), cs0 = F.csig();
+    let l = JG.local(); l.pr.hinzu.push(mk('d1', 'Eins'), mk('d2', 'Zwei')); JG.saveLocal(l); await w(200);
+    const csA = F.csig(), pickA = JSON.stringify(F.pickSeeded(['VAk'], 400, 12345, 1).map(q => q.q + '|' + q.c));
+    r.sigStable = F.sig() === sig0 && cs0 === '' && csA !== '';
+    r.includes = F.pickSeeded(['VAk'], 400, 12345, 1).some(q => q.custom) && !F.pickSeeded(['VAk'], 400, 12345, 0).some(q => q.custom);
+    // andere Reihenfolge in der Datei: derselbe Fingerabdruck, dieselbe Auswahl
+    l = JG.local(); l.pr.hinzu.reverse(); JG.saveLocal(l); await w(200);
+    r.order = F.csig() === csA && JSON.stringify(F.pickSeeded(['VAk'], 400, 12345, 1).map(q => q.q + '|' + q.c)) === pickA;
+    // eine Frage anders: anderer Fingerabdruck
+    l = JG.local(); l.pr.hinzu[0].fragen[0].q = 'Geändert?'; JG.saveLocal(l); await w(200);
+    r.diff = F.csig() !== csA;
+    JG.discard(); JG.set(JG.MASTER); await w(300);
+    return r;
+  });
+  eq('Duell: eigene Fragen nur bei gleicher Datei', duq, { sigStable: true, includes: true, order: true, diff: true });
+
   // ── Veröffentlichte Jahrgangs-Datei (jahrgaenge/<ID>.json) wird mit den eigenen Änderungen zusammengeführt ──
   const jid = await page.evaluate(() => JG.list()[0].id);
   await page.route('**/jahrgaenge/' + jid + '.json', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ format: 'bvi-jahrgang', v: 1, erg: [{ id: 'pub1', seite: 'v-vak-verwaltungsrecht', titel: 'Vom Jahrgang', text: '<script>x</script>' }], pr: { hinzu: [], weg: ['v-laufbahn-2023'] }, rel: { 'v-vak-altklausur': false } }) }));

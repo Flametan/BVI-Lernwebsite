@@ -157,10 +157,15 @@ const PAUSE=(function(){
       return out.map(q=>{const ord=shuf(q.o.map((_,i)=>i));return{...q,o:ord.map(i=>q.o[i]),c:ord.indexOf(q.c)};});}
     const rng=seed=>{let a=seed>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;};};
     // Duell: aus Seed, Modulen und Anzahl entstehen auf beiden Geräten dieselben Fragen in derselben Reihenfolge
-    function pickSeeded(mods,n,seed){const R=rng(seed),bag=[];baseQuestions().filter(q=>mods.includes(q.m)).forEach(q=>{for(let k=0;k<(q.g?3:1);k++)bag.push(q);});const out=[];while(out.length<n&&bag.length){const q=bag.splice(Math.floor(R()*bag.length),1)[0];if(!out.includes(q))out.push(q);}
+    function pickSeeded(mods,n,seed,cu){const R=rng(seed),bag=[];duelPool(cu).filter(q=>mods.includes(q.m)).forEach(q=>{for(let k=0;k<(q.g?3:1);k++)bag.push(q);});const out=[];while(out.length<n&&bag.length){const q=bag.splice(Math.floor(R()*bag.length),1)[0];if(!out.includes(q))out.push(q);}
       return out.map(q=>{const ord=q.o.map((_,i)=>i);for(let i=ord.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[ord[i],ord[j]]=[ord[j],ord[i]];}return{...q,o:ord.map(i=>q.o[i]),c:ord.indexOf(q.c)};});}
     const hash=x=>{let h=5381;for(let i=0;i<x.length;i++)h=((h<<5)+h+x.charCodeAt(i))|0;return(h>>>0).toString(36);};
-    const sig=()=>hash(questions().map(q=>q.m+q.q.length+q.o.length).join('|'));
+    const sig=()=>hash(baseQuestions().map(q=>q.m+q.q.length+q.o.length).join('|'));   // Stand der mitgelieferten Fragen
+    // Eigene Fragen des Jahrgangs zählen im Duell nur, wenn beide genau dieselben haben (Fingerabdruck wird beim Verbinden verglichen)
+    const ck=q=>hash([q.m,q.q,q.o.join('\u0001'),q.c].join('\u0002'));
+    const customSorted=()=>questions().filter(q=>q.custom).sort((a,b)=>{const x=ck(a),y=ck(b);return x<y?-1:x>y?1:0;});
+    const csig=()=>{const c=customSorted();return c.length?hash(c.map(ck).join('|')):'';};
+    const duelPool=cu=>cu?baseQuestions().concat(customSorted()):baseQuestions();
     let SESS=null,SESS_NEXT=null;
     function newGame(){st={phase:'select',p:0,t:0,qs:[],qi:0,route:null,res:[],fx:null,fxT:0,lvl:0};PART=[];panel();}
     function panel(){const pn=el.querySelector('.pz-fp'),s=st,L='ABCDE';let h='';
@@ -252,7 +257,7 @@ const PAUSE=(function(){
         cv=el.querySelector('canvas');const dpr=Math.min(2,window.devicePixelRatio||1);cv.width=W*dpr;cv.height=H*dpr;ctx=cv.getContext('2d');ctx.scale(dpr,dpr);SP=SP||sprites();stars=[...Array(40)].map(()=>[Math.random()*W,Math.random()*120,Math.random()]);
         el.querySelector('.pz-fp').onclick=e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;act(b.dataset.a,b.dataset.v);};
         init();cancelAnimationFrame(raf);last=0;raf=requestAnimationFrame(frame);}
-    function duelInit(cfg,sess){const n=cfg.n;st={phase:'d-count',p:0,t:0,qs:pickSeeded(cfg.mods,n,cfg.seed),qi:0,res:[],fx:null,fxT:0,lvl:0,duel:1,hf:60*(n+1)+30,route:{key:'D',name:'Duell',base:60*(n+1),pen:30,bon:5},opp:{name:sess.opp,p:0,tp:0,res:[],done:null,rm:false},cd0:performance.now(),cdLeft:4,rm:false};st.stops=st.qs.map((_,i)=>(i+1)/(n+1));PART=[];panel();}
+    function duelInit(cfg,sess){const n=cfg.n;st={phase:'d-count',p:0,t:0,qs:pickSeeded(cfg.mods,n,cfg.seed,cfg.cu),qi:0,res:[],fx:null,fxT:0,lvl:0,duel:1,hf:60*(n+1)+30,route:{key:'D',name:'Duell',base:60*(n+1),pen:30,bon:5},opp:{name:sess.opp,p:0,tp:0,res:[],done:null,rm:false},cd0:performance.now(),cdLeft:4,rm:false};st.stops=st.qs.map((_,i)=>(i+1)/(n+1));PART=[];panel();}
     return{start(body){SESS_NEXT=null;mount(body,newGame);},
       startDuel(body,sess){SESS_NEXT=sess;mount(body,()=>duelInit(sess.cfg,sess));},
       duelMsg(m){const s=st;if(!s||!s.duel)return;
@@ -260,7 +265,7 @@ const PAUSE=(function(){
         else if(m.t==='rematch'){s.opp.rm=true;if(s.rm)SESS.rematch();else panel();}
         else if(m.t==='bye'){if(s.phase==='end'&&s.opp.done){s.opp.gone=true;panel();}else{s.forfeit=true;s.opp.gone=true;s.opp.done={t:s.t+1,score:0,right:0};s.paused=false;if(s.phase!=='end'){s.phase='end';s.win=s.t<=hf();s.p=1;}duelCheck();panel();}}},
       duelPause(on){const s=st;if(!s||!s.duel||(s.phase==='end'&&s.opp.done))return;if(on&&!s.paused){s.paused=true;s.pausedAt=performance.now();panel();}else if(!on&&s.paused){s.paused=false;panel();}},
-      questions,baseQuestions,pickSeeded,sig,count,get MODS(){return refreshMods();},refreshMods,PAL,
+      questions,baseQuestions,pickSeeded,sig,csig,duelPool,count,get MODS(){return refreshMods();},refreshMods,PAL,
       stop(){cancelAnimationFrame(raf);raf=0;if(SESS&&SESS.close)SESS.close();SESS=null;},
       _state:()=>st};
   })();

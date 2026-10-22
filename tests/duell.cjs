@@ -13,6 +13,8 @@ const eq = (n, a, b) => ok(n + ' (ist: ' + JSON.stringify(a) + ')', JSON.stringi
     p.on('pageerror', e => errors.push(name + ': ' + e.message));
     await p.addInitScript(n => { localStorage.setItem('bvi_onboarded', '1'); localStorage.setItem('bvi_duell_name', JSON.stringify(n)); localStorage.setItem('bvi_duell_stun', 'false'); }, name);
     await p.goto(URL); await p.waitForTimeout(800);
+    // beide Geräte haben dieselbe eingespielte Datei: eine gleiche eigene Frage im Jahrgang
+    await p.evaluate(async () => { const w = ms => new Promise(r => setTimeout(r, ms)); JG.set(JG.list()[0].id); await w(400); const l = JG.local(); l.pr.hinzu.push({ id: 'dq', tab: 'vak', seite: null, titel: 'Eigene', ts: 1, fragen: [{ q: 'Duell-Testfrage?', typ: 'sc', o: ['a', 'b'], c: 0, a: '', e: '' }] }); JG.saveLocal(l); await w(200); });
     await p.evaluate(() => NAV.go('v-pause', 'x')); await p.evaluate(() => PAUSE_LOADER.load()); await p.waitForTimeout(300);
     await p.evaluate(() => PAUSE.open('duell')); await p.waitForSelector('[data-a="host"]');
     return p;
@@ -64,6 +66,7 @@ const eq = (n, a, b) => ok(n + ' (ist: ' + JSON.stringify(a) + ')', JSON.stringi
   await A.fill('#pc', c2); await A.click('[data-a="paste"]');
   await A.waitForSelector('[data-a="go"]', { timeout: 30000 }); await B.waitForSelector('[data-a="ready"]');
   ok('Beide Spieler sind in der Lobby', (await A.innerText('.pz-card')).includes('MAX GEGEN LENA') || /Max gegen Lena/i.test(await A.innerText('.pz-card')));
+  ok('Lobby: gleiche eigene Fragen zählen im Duell mit', (await A.innerText('.pz-card')).includes('dieselben') && (await B.innerText('.pz-card')).includes('dieselben'));
   // Farbwahl: Standardfarben verschieden, die Farbe des anderen ist gesperrt; Spieler 2 wählt Grün
   const colsA = await A.locator('.pz-col.on').getAttribute('data-v'), colsB = await B.locator('.pz-col.on').getAttribute('data-v');
   ok('Fahrzeugfarben verschieden (Standard)', colsA !== colsB);
