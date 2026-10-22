@@ -1785,8 +1785,8 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 .idf-pen{font-style:normal;color:var(--m-accent-fg);font-size:.85em;}
 .pn-when{font-size:.8rem;color:var(--m-muted);padding-right:36px;}
 .pn-meta{font-size:.85rem;color:var(--m-muted);}
-#pn-ov{position:fixed;inset:0;z-index:var(--z-modal);background:rgba(0,0,0,.7);display:grid;place-items:center;padding:16px;overflow:auto;}
-#pn-ov[hidden]{display:none;}
+#pn-ov,#hm-ov{position:fixed;inset:0;z-index:var(--z-modal);background:rgba(0,0,0,.7);display:grid;place-items:center;padding:16px;overflow:auto;}
+#pn-ov[hidden],#hm-ov[hidden]{display:none;}
 #rp-ov{position:fixed;inset:0;z-index:var(--z-modal);background:rgba(0,0,0,.7);display:grid;place-items:center;padding:16px;}
 #rp-ov[hidden]{display:none;}
 #rp-ov .btn{text-decoration:none;text-align:center;}
@@ -2652,3 +2652,11 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 .bg-range::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--m-accent);border:3px solid var(--m-card);box-shadow:0 0 0 1px var(--m-line);}
 .jg-ok{width:100%;margin-top:4px;}
 .jg-ok{padding:14px 18px;font-size:1rem;}
+
+/* Stundenplan: Anreise als Navigations-Link */
+.idf-map{display:inline-flex;align-items:center;gap:5px;color:var(--m-accent-fg,var(--c-gold));text-decoration:underline;text-underline-offset:3px;font-weight:600;}
+.idf-map svg{flex-shrink:0;}
+.idf-home{background:none;border:0;padding:0;font:inherit;font-size:.78rem;font-weight:400;color:var(--m-muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
+button.idf-map{background:none;border:0;padding:0;font:inherit;font-weight:600;cursor:pointer;}
+.idf-abr{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.idf-home-edit{font-size:.66rem;opacity:.75;flex-shrink:0;padding:4px 0 4px 8px;}

@@ -4061,6 +4061,8 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Stundenplan IdF Münster: „Abreise“ startet die Navigation zu deiner Heimadresse, die du dort einmal festlegst. Sie bleibt nur auf deinem Gerät und steckt in keiner Sicherung und keinem Export',
+      'Stundenplan IdF Münster: „Anreise“ ist antippbar und startet die Navigation zum Institut der Feuerwehr NRW (Wolbecker Straße 237, Münster) in der Karten-App',
       'Hilfe: neuer Abschnitt „Am Ende eures Lehrgangs“ – Jahrgänge können dir am Ende ihres B VI (einmal) ihre App-Datei schicken, damit sie fest in der App hinterlegt wird',
       'Hinweis für iPhone und iPad: Apple löscht die Daten einer Website in Safari nach etwa 7 Tagen ohne Besuch. Das steht jetzt unter Einstellungen, bei der App-Installation und in der Hilfe – mit dem Rat, die App auf den Home-Bildschirm zu legen und ab und zu zu sichern',
       'Die Flamme im Kopf der Seite flackert deutlicher und ist jetzt gut zu erkennen',
@@ -5395,6 +5397,39 @@ const PLANNOTE=(function(){
   return {open,get:k=>all()[k]||''};
 })();
 
+/* ── Heimadresse für „Abreise“: nur auf diesem Gerät. Sie steckt in keiner Sicherung, keinem Jahrgangs-Export und keiner Kalenderdatei
+   (BACKUP.keep schließt sie aus, BACKUP.clean lehnt sie ab). ── */
+const HOME=(function(){
+  const KEY='bvi_heimadresse';
+  let box=null;
+  const get=()=>{ try{ return (localStorage.getItem(KEY)||'').slice(0,160); }catch(e){ return ''; } };
+  const clean=v=>String(v||'').replace(/[<>]/g,'').replace(/\s+/g,' ').trim().slice(0,160);
+  const url=a=>'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(a);
+  function build(){
+    box=document.createElement('div'); box.id='hm-ov'; box.hidden=true;
+    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Heimadresse');
+    box.innerHTML='<div class="cu-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t" style="padding:0">Meine Heimadresse</div>'
+      +'<p class="m-t2" style="margin:6px 0 12px">Mit ihr startet „Abreise“ im Stundenplan die Navigation nach Hause. Die Adresse bleibt nur auf diesem Gerät: Sie wird <strong>nicht gesichert und nicht exportiert</strong>.</p>'
+      +'<label>Adresse<input id="hm-a" class="m-input" type="text" maxlength="160" autocomplete="street-address" placeholder="Straße Nr., PLZ Ort"></label>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button type="button" class="btn btn-gold" id="hm-s">Speichern</button><button type="button" class="btn btn-ghost" id="hm-d">Adresse löschen</button></div></div>';
+    document.body.appendChild(box);
+    box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
+    box.querySelector('#hm-s').onclick=()=>{ const v=clean(box.querySelector('#hm-a').value); if(!v){ box.querySelector('#hm-a').focus(); return; } try{ localStorage.setItem(KEY,v); }catch(e){} close(); TOAST.show('Heimadresse gespeichert',{type:'ok'}); };
+    box.querySelector('#hm-d').onclick=()=>{ clear(); close(); TOAST.show('Heimadresse gelöscht',{type:'ok'}); };
+    box.querySelector('#hm-a').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); box.querySelector('#hm-s').click(); } });
+  }
+  function edit(){
+    if(!box) build();
+    box.querySelector('#hm-a').value=get();
+    box.querySelector('#hm-d').hidden=!get();
+    box.hidden=false; box.querySelector('#hm-a').focus({preventScroll:true});
+  }
+  function close(){ if(!box||box.hidden) return; box.hidden=true; if(typeof IDF_PLAN!=='undefined') IDF_PLAN.redraw(); }
+  function clear(){ try{ localStorage.removeItem(KEY); }catch(e){} }
+  return {get,edit,url,clear};
+})();
+
 const IDF_PLAN = (function(){
   // Eintrag: "Zeit|Titel|Art|Raum|Hinweis" · Zeit = UE ("1-2") oder Uhrzeit ("09:00-09:15", "19:00", "EVA")
   // Art: hi = Schlüsseltermin, ex = Exkursion, ar = Anreise/Abreise/frei
@@ -5492,6 +5527,18 @@ const IDF_PLAN = (function(){
     const i=spec.indexOf('-');
     return i<0?[spec,'']:[spec.slice(0,i),spec.slice(i+1)];
   }
+  // Anreise: Tipp öffnet die Karten-App mit Navigation zum IdF Münster (Android/iOS öffnen Google Maps bzw. fragen nach der Karten-App)
+  const IDF_MAPS='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent('Institut der Feuerwehr Nordrhein-Westfalen, Wolbecker Straße 237, 48155 Münster');
+  const NAV_PIN='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+  // „Anreise“ → Navigation zum IdF; „Abreise“ → Navigation zur eigenen Heimadresse (erst festlegen, dann Link plus kleiner Knopf zum Ändern)
+  function _navTitle(title,ymd){
+    if(!ymd||!(!_isCustom()||/^idf/.test(_vkey()))) return esc(title);
+    if(title==='Anreise') return `<a class="idf-map" href="${IDF_MAPS}" target="_blank" rel="noopener noreferrer" aria-label="Anreise: Navigation zum Institut der Feuerwehr NRW starten">${NAV_PIN}${esc(title)}</a>`;
+    if(title!=='Abreise') return esc(title);
+    const a=HOME.get();
+    return a?`<span class="idf-abr"><a class="idf-map" href="${esc(HOME.url(a))}" target="_blank" rel="noopener noreferrer" aria-label="Abreise: Navigation zur Heimadresse starten">${NAV_PIN}${esc(title)}</a><button type="button" class="idf-home idf-home-edit" onclick="event.stopPropagation();HOME.edit()" aria-label="Heimadresse ändern">Adresse ändern</button></span>`
+      :`<button type="button" class="idf-map idf-home-set" onclick="event.stopPropagation();HOME.edit()" aria-label="Abreise: Heimadresse festlegen">${NAV_PIN}${esc(title)} <span class="idf-home">Heimadresse festlegen</span></button>`;
+  }
   let _nk='';
   function _item(s,ymd){
     const [t,title,cls='',room='',note='']=s.split('|');
@@ -5500,7 +5547,7 @@ const IDF_PLAN = (function(){
     const nk=ymd?ymd+'|'+t+'|'+title:'';
     const isNext=ymd&&_nk&&(ymd+'|'+title+'|'+_minutes(a))===_nk;
     const has=nk&&PLANNOTE.get(nk);
-    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}${nk?' idf-tap':''}${isNext?' idf-now':''}"${nk?` data-k="${esc(nk)}" tabindex="0" role="button"`:''}><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${esc(title)}${has?' <i class="idf-pen" aria-label="Mit Notiz">✎</i>':''}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
+    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}${nk?' idf-tap':''}${isNext?' idf-now':''}"${nk?` data-k="${esc(nk)}" tabindex="0" role="button"`:''}><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${_navTitle(title,ymd)}${has?' <i class="idf-pen" aria-label="Mit Notiz">✎</i>':''}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
   }
   const LUNCH=end=>`<div class="idf-item idf-lunch"><span class="idf-time">13:00<i>${end}</i></span><span class="idf-txt"><span class="idf-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v5a3 3 0 0 0 6 0V2M18 22V2c-2.5 1.5-4 4.5-4 8 0 2 1 3 4 3"/></svg>Mittagessen</span></span></div>`;
   function _start(spec){
@@ -5942,6 +5989,7 @@ const IDF_PLAN = (function(){
   }
 
   document.addEventListener('click',e=>{
+    if(e.target.closest('#plan-inner .idf-map,#plan-inner .idf-home')) return;   // Navigation bzw. Heimadresse: keine Notiz öffnen
     const it=e.target.closest('#plan-inner .idf-tap'); if(it) PLANNOTE.open(it);
   });
   document.addEventListener('keydown',e=>{
@@ -5979,13 +6027,13 @@ const FILES=(function(){
 
 /* ── Sicherung: Lernstand, Notizen, Lesezeichen und Einstellungen als Datei ── */
 const BACKUP=(function(){
-  const keep=k=>(k.startsWith('bvi_')&&k!=='bvi_seen_version'&&k!=='bvi_last_backup'&&k!=='bvi_et_end'&&!k.startsWith('bvi_jgp_'))||k==='idf_plan_grp';   // bvi_jgp_ = Zwischenspeicher veröffentlichter Jahrgangs-Dateien
+  const keep=k=>(k.startsWith('bvi_')&&k!=='bvi_seen_version'&&k!=='bvi_last_backup'&&k!=='bvi_et_end'&&k!=='bvi_heimadresse'&&!k.startsWith('bvi_jgp_'))||k==='idf_plan_grp';   // bvi_jgp_ = Zwischenspeicher veröffentlichter Jahrgangs-Dateien
   // Form der Werte beim Einspielen prüfen: falsch geformte Daten würden die App dauerhaft stören
   const ARR=new Set(['bvi_bookmarks','bvi_recent','bvi_search_hist','bvi_fc_custom','bvi_fc_stars','bvi_fc_weak']);
   const NOJSON=new Set(['bvi_plan_src','bvi_theme','bvi_bg','bvi_accent','bvi_font_size','bvi_goal','bvi_timers','bvi_onboarded','bvi_exam','bvi_lp_fz','bvi_lp_prac','bvi_pause_mode','bvi_pause_mods','bvi_duell_name','bvi_duell_col','bvi_duell_stun','bvi_duell_cfg','idf_plan_grp']);
   const safeTxt=t=>String(t==null?'':t).replace(/</g,'&lt;').replace(/>/g,'&gt;');
   function clean(k,v){
-    if(typeof v!=='string'||v.length>2e6) return null;
+    if(typeof v!=='string'||v.length>2e6||k==='bvi_heimadresse') return null;
     if(/^bvi_note_v-[a-z0-9-]+$|^bvi_note_home$/.test(k)) return v;
     if(NOJSON.has(k)) return v;
     // Jahrgänge: gewählter Jahrgang, eigene Änderungen je Jahrgang, Plan-Ansicht
