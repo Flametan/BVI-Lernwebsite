@@ -864,6 +864,21 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Abkürzungsverzeichnis: kein Wort wird markiert', abkv, { cards: true, marks: 0 });
 
+  // ── Beige als Farbschema ──
+  const bg = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {}, de = document.documentElement;
+    THEME.set('beige'); await w(200);
+    r.beige = de.getAttribute('data-theme') === 'light' && de.getAttribute('data-tone') === 'beige' && getComputedStyle(document.body).backgroundColor === 'rgb(221, 207, 177)';
+    r.meta = document.querySelector('meta[name=theme-color]').content === '#ddcfb1';
+    r.btn = !!document.querySelector('#v-settings .theme-opt[data-mode=beige].active');
+    r.sub = localStorage.getItem('bvi_theme') === 'beige';
+    THEME.set('light'); await w(100); r.light = !de.hasAttribute('data-tone') && getComputedStyle(document.body).backgroundColor === 'rgb(244, 244, 241)';
+    THEME.set('dark'); await w(100); r.dark = de.getAttribute('data-theme') === 'dark' && !de.hasAttribute('data-tone');
+    THEME.set('system'); await w(100);
+    return r;
+  });
+  eq('Farbschema Beige', bg, { beige: true, meta: true, btn: true, sub: true, light: true, dark: true });
+
   // ── Veröffentlichte Jahrgangs-Datei (jahrgaenge/<ID>.json) wird mit den eigenen Änderungen zusammengeführt ──
   const jid = await page.evaluate(() => JG.list()[0].id);
   await page.route('**/jahrgaenge/' + jid + '.json', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ format: 'bvi-jahrgang', v: 1, erg: [{ id: 'pub1', seite: 'v-vak-verwaltungsrecht', titel: 'Vom Jahrgang', text: '<script>x</script>' }], pr: { hinzu: [], weg: ['v-laufbahn-2023'] }, rel: { 'v-vak-altklausur': false } }) }));

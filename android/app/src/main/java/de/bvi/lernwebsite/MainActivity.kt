@@ -28,8 +28,8 @@ import java.io.File
 
 open class MainActivity : AppCompatActivity() {
 
-    // Die helle Variante (MainActivityLight) startet mit weißem Fenster statt schwarzem
-    protected open val lightStart = false
+    // Die helle und die beige Variante (MainActivityLight, MainActivityBeige) starten mit hellem Fenster statt schwarzem
+    protected open val startColor = 0xFF0A0A0A.toInt()
 
     private lateinit var webView: WebView
     private val prefs by lazy { getSharedPreferences("bvi", MODE_PRIVATE) }
@@ -56,7 +56,9 @@ open class MainActivity : AppCompatActivity() {
         "orange" to "IconOrange", "gold" to "IconGold", "red" to "IconRed",
         "blue" to "IconBlue", "green" to "IconGreen",
         "orange_light" to "IconOrangeLight", "gold_light" to "IconGoldLight", "red_light" to "IconRedLight",
-        "blue_light" to "IconBlueLight", "green_light" to "IconGreenLight"
+        "blue_light" to "IconBlueLight", "green_light" to "IconGreenLight",
+        "orange_beige" to "IconOrangeBeige", "gold_beige" to "IconGoldBeige", "red_beige" to "IconRedBeige",
+        "blue_beige" to "IconBlueBeige", "green_beige" to "IconGreenBeige"
     )
 
     inner class IconBridge {
@@ -156,7 +158,7 @@ open class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         webView = WebView(this)
-        webView.setBackgroundColor(if (lightStart) 0xFFF4F4F1.toInt() else 0xFF0A0A0A.toInt())
+        webView.setBackgroundColor(startColor)
         setContentView(webView)
 
         webView.settings.apply {

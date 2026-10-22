@@ -2631,3 +2631,15 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 #jg-settings .m-glow{margin:12px 12px 4px;border-radius:14px;background:var(--m-raised);animation:none;box-shadow:0 0 0 1.5px color-mix(in srgb,var(--m-accent) 60%,transparent),0 0 12px color-mix(in srgb,var(--m-accent) 40%,transparent);}
 #read-prog{z-index:var(--z-float);}   /* über der oberen Leiste, sonst verdeckt sie den Fortschrittsbalken */
 @media(min-width:1100px){.idf-name{hyphens:auto;}}   /* lange Wörter in den schmalen Wochenspalten sauber trennen */
+
+/* ── Beige: helles Design mit warmem Leinen-Ton (data-tone="beige") ───────── */
+:root[data-theme="light"][data-tone="beige"]{
+  --m-bg:#ddcfb1;--m-card:#ebe0c9;--m-raised:#d1c19f;--m-line:#c2b18d;--m-bar:#ebe0c9;
+  --m-fg:#281f14;--m-muted:#5b4f3a;--m-dim:#68593f;
+  --c-bg:#ddcfb1;--c-navy:#ebe0c9;--c-navy-2:#ebe0c9;--c-navy-3:#d1c19f;--c-navy-4:#c2b18d;
+  --c-slate:#5b4f3a;--c-slate-l:#4a3f2d;--c-text:#2a2216;--c-text-b:#1a140b;
+  --glass:#ebe0c9;--glass-h:#f1e8d3;--glass-b:#c2b18d;
+  --sh:0 6px 24px rgba(70,45,10,.13);--sh-lg:0 16px 48px rgba(70,45,10,.20);
+  --b-1a1a1a:color-mix(in srgb,#ffffff 62%,#ddcfb1);--b-1a1d2e:color-mix(in srgb,#d5d7e1 62%,#ddcfb1);--b-1f1f1f:color-mix(in srgb,#e0e0e0 62%,#ddcfb1);--b-222222:color-mix(in srgb,#dddddd 62%,#ddcfb1);--b-2a2a2a:color-mix(in srgb,#d5d5d5 62%,#ddcfb1);--b-2e2e2e:color-mix(in srgb,#d1d1d1 62%,#ddcfb1);--b-303030:color-mix(in srgb,#cfcfcf 62%,#ddcfb1);--b-353535:color-mix(in srgb,#cacaca 62%,#ddcfb1);--b-3a3a3a:color-mix(in srgb,#c5c5c5 62%,#ddcfb1);--b-4a4a4a:color-mix(in srgb,#b5b5b5 62%,#ddcfb1);--b-8a97a2:#5d6a75;--b-bdbdbd:#424242;--b-cccccc:#333333;--b-d0d0d0:#2f2f2f;--b-eeeeee:#111111;
+}
+:root[data-theme="light"][data-tone="beige"] .m-emb{background:#ebe0c9;}
