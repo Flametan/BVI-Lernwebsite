@@ -35,7 +35,12 @@
 - **PWA** – Installierbar, Service Worker mit Offline-Fallback
 - **Farbschema** – Dunkel, Hell, Beige oder System, dazu ein Regler für die Hintergrundhelligkeit von Schwarz bis Weiß (Einstellungen)
 - **Jahrgänge** – Der Master (BRef 04/2025 - AB 04/2026) ist die Grundlage; jeder weitere Jahrgang passt Stundenplan (je Abschnitt, IdF Gruppe 1/2), Prüfungen und Fragen, Lernseiten (Kapitel ausblenden, eigene Kapitel und Reiter), Lernkarten, Link und Standorte an. Änderungen werden als Datei exportiert, in der WhatsApp-Gruppe geteilt und eingelesen. Anleitung: [`jahrgaenge/ANLEITUNG.md`](jahrgaenge/ANLEITUNG.md), Prüfskript für eingeschickte Dateien: `node tools/pruefe-jahrgang.cjs <Datei.json>`
+- **Ersteinrichtung** – beim ersten Start: Aussehen und Akzentfarbe, Lehrgang (Master oder Jahrgang) und eine Erklärseite zur Jahrgangs-Funktion
+- **Startseite** – Weiterlernen, Tagesziel, Lernzeit je Woche/Monat, „Als Nächstes“ aus dem Stundenplan, Klausurtermin-Countdown (einstellbar, im Master vorbelegt)
+- **Stundenplan** – je Abschnitt und IdF-Gruppe; nur wichtige Termine (Akzentfarbe/grün) lassen sich in den Kalender übernehmen
+- **Sicherung** – Lernstand, Notizen, Einstellungen und Jahrgangs-Änderungen als Datei sichern und einspielen; Bilder liegen nur im Jahrgangs-Export
 - **Pausenraum** – kleine Spiele, Einsatzfahrt mit Prüfungsfragen und Einsatzfahrt-Duell zu zweit (WebRTC)
+- **Datenschutz** – alles bleibt auf dem Gerät (LocalStorage/IndexedDB), keine Konten, kein Tracking; Hinweis in der App unter Einstellungen
 - **Android-App** – WebView mit Widgets und Startsymbol je Farbschema (`android/`)
 - **Bildansicht** – Bilder und Diagramme per Tipp groß öffnen und zoomen
 
@@ -45,7 +50,7 @@
 
 ```
 BVI-Lernwebsite/
-├── index.html          # Alle Views (~13.000 Zeilen)
+├── index.html          # Alle Views (~18.500 Zeilen)
 ├── css/
 │   └── style.css       # Design-System, alle Komponenten
 ├── js/
@@ -56,6 +61,8 @@ BVI-Lernwebsite/
 ├── jahrgaenge/         # optionale veröffentlichte Jahrgangs-Dateien (<ID>.json) und Anleitung
 ├── tools/              # Prüfskript für Jahrgangs-Dateien
 ├── tests/              # Playwright-Tests (smoke, logic, duell)
+├── docs/               # Testleitfaden (TESTLEITFADEN.md)
+├── .github/workflows/  # Pages-Deployment, Smoke-Test, APK-Build
 ├── android/            # Android-App (Kotlin)
 ├── sw.js               # Service Worker (Network-first für Core-Assets)
 ├── manifest.json       # PWA-Manifest
@@ -81,6 +88,29 @@ python3 -m http.server 8080
 ```
 
 Dann `http://localhost:8080` aufrufen. Ein HTTP-Server ist nötig, damit Service Worker und LocalStorage korrekt funktionieren.
+
+---
+
+## Tests
+
+```bash
+cd tests
+npm install                        # einmalig (Playwright)
+python3 -m http.server 8765 &      # im Repo-Hauptordner starten
+node smoke.cjs && node logic.cjs && node duell.cjs
+```
+
+`smoke.cjs` öffnet alle Ansichten in drei Größen, `logic.cjs` prüft die App-Logik (Jahrgänge, Sicherung, Plan, Suche), `duell.cjs` das Einsatzfahrt-Duell. Der Smoke-Test läuft auch bei jedem Push als GitHub Action. Manuelle Prüfpunkte: [`docs/TESTLEITFADEN.md`](docs/TESTLEITFADEN.md).
+
+---
+
+## Wartung
+
+- **Neue Lehrgänge** erscheinen automatisch in der Liste (jeweils ab 1. April und 1. Oktober); im Code ist nichts zu ergänzen.
+- **Master-Klausurtermine** stehen in `DEF_EXAMS` (`js/app.js`); nach dem letzten Termin blendet sich der Countdown von selbst aus.
+- **Jahrgangs-Dateien** (`jahrgaenge/<ID>.json`) sind optional; ohne sie arbeitet jeder Jahrgang mit den eigenen Einträgen.
+- **Android:** Die APK wird nur bei Änderungen unter `android/**` oder an `js/version.js` neu gebaut; Inhalte kommen über die Website.
+- **iPhone/iPad:** Safari löscht Website-Daten nach etwa 7 Tagen ohne Besuch. Als App auf dem Home-Bildschirm gilt das nicht; zusätzlich hilft die Sicherung.
 
 ---
 
