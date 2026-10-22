@@ -4031,6 +4031,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Hintergrund-Regler (Einstellungen → Darstellung): Die Hintergrundhelligkeit lässt sich stufenlos von Schwarz bis Weiß einstellen, Karten, Linien und Texte passen sich an und bleiben lesbar; im Beige-Schema mit warmem Farbton',
       'Neues Farbschema „Beige“ (Einstellungen → Darstellung): warmer Leinen-Ton statt Grauweiß; in der Android-App mit passendem Startsymbol und beigem Startbild',
       'Abkürzungsverzeichnis: Dort wird kein Wort mehr als Abkürzung markiert',
       'Nächste Klausur (Einstellungen → Lernen): Der Termin lässt sich mit „Termin entfernen“ wieder löschen (mit Rückgängig), und du wählst, welche Prüfung der Countdown öffnet',
@@ -5944,7 +5945,7 @@ const BACKUP=(function(){
   const keep=k=>(k.startsWith('bvi_')&&k!=='bvi_seen_version'&&k!=='bvi_last_backup'&&k!=='bvi_et_end')||k==='idf_plan_grp';
   // Form der Werte beim Einspielen prüfen: falsch geformte Daten würden die App dauerhaft stören
   const ARR=new Set(['bvi_bookmarks','bvi_recent','bvi_search_hist','bvi_fc_custom','bvi_fc_stars','bvi_fc_weak']);
-  const NOJSON=new Set(['bvi_plan_src','bvi_theme','bvi_accent','bvi_font_size','bvi_goal','bvi_timers','bvi_onboarded','bvi_exam','bvi_lp_fz','bvi_lp_prac','bvi_pause_mode','bvi_pause_mods','bvi_duell_name','bvi_duell_col','bvi_duell_stun','bvi_duell_cfg','idf_plan_grp']);
+  const NOJSON=new Set(['bvi_plan_src','bvi_theme','bvi_bg','bvi_accent','bvi_font_size','bvi_goal','bvi_timers','bvi_onboarded','bvi_exam','bvi_lp_fz','bvi_lp_prac','bvi_pause_mode','bvi_pause_mods','bvi_duell_name','bvi_duell_col','bvi_duell_stun','bvi_duell_cfg','idf_plan_grp']);
   const safeTxt=t=>String(t==null?'':t).replace(/</g,'&lt;').replace(/>/g,'&gt;');
   function clean(k,v){
     if(typeof v!=='string'||v.length>2e6) return null;
@@ -6377,6 +6378,69 @@ const REPORT=(function(){
 })();
 
 /* ── Farbschema: Dunkel / Hell / System ─────────────────────────────────── */
+/* ── Hintergrundhelligkeit: Regler von Schwarz bis Weiß ───────────────────────
+   Leitet Hintergrund, Karten, Linien und Textfarben aus einem Wert 0–100 ab; die Texte bleiben dabei lesbar
+   (Kontrast mindestens 4,5:1). Beige-Farbschema = warmer Farbton, sonst neutral. */
+const BG=(function(){
+  const KEY='bvi_bg', DEFAULTS={dark:7,light:95,beige:77};
+  const NAMES=['--m-bg','--m-card','--m-raised','--m-line','--m-bar','--m-fg','--m-muted','--m-dim','--c-bg','--c-navy','--c-navy-2','--c-navy-3','--c-navy-4','--c-slate','--c-slate-l','--c-text','--c-text-b','--glass','--glass-h','--glass-b'];
+  function get(){ try{ const v=parseInt(localStorage.getItem(KEY),10); return v>=0&&v<=100?v:null; }catch(e){ return null; } }
+  function hsl(h,s,l){   // → [r,g,b]
+    s/=100; l/=100; const k=n=>(n+h/30)%12, a=s*Math.min(l,1-l), f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));
+    return [Math.round(255*f(0)),Math.round(255*f(8)),Math.round(255*f(4))];
+  }
+  const hex=c=>'#'+c.map(v=>v.toString(16).padStart(2,'0')).join('');
+  const lum=c=>{ const f=v=>{ v/=255; return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4); }; return .2126*f(c[0])+.7152*f(c[1])+.0722*f(c[2]); };
+  const ratio=(a,b)=>{ const x=lum(a),y=lum(b); return (Math.max(x,y)+.05)/(Math.min(x,y)+.05); };
+  const mix=(a,b,w)=>a.map((v,i)=>Math.round(v+(b[i]-v)*w));   // w=0 → a, w=1 → b
+  // Farben für den Wert t (0–100); warm=true: Beige-Farbton
+  function colors(t,warm){
+    const h=warm?41:0, s=warm?38:0, dark=t<50;
+    const bg=hsl(h,s,t), up=l=>hsl(h,s,Math.max(0,Math.min(100,l)));
+    // Kacheln wie in Dunkel und Hell: immer ein Stück heller als der Hintergrund (Leuchtdichte-Verhältnis wie dort,
+    // Dunkel 1,12 / Hell 1,07); ganz am weißen Ende, wo es nicht heller geht, stattdessen ein Stück dunkler
+    const R=dark?1.12:1.07, tile=(want)=>{ for(let l=t;l<=100;l+=.5){ const c=up(l); if(ratio(c,bg)>=want) return c; } return null; };
+    let card=tile(R);
+    if(!card){ for(let l=t;l>=0;l-=.5){ card=up(l); if(ratio(card,bg)>=R) break; } }
+    const raised=dark?up(t+8):up(t-6), line=dark?up(t+10):up(t-12);
+    // Textfarbe: die mit dem höheren Kontrast, im warmen Ton leicht bräunlich
+    const light=warm?[237,229,214]:[237,237,237], darkc=warm?[40,31,20]:[26,26,26];
+    let fg=ratio(light,bg)>ratio(darkc,bg)?light:darkc;
+    if(ratio(fg,bg)<6){ const pure=[[255,255,255],[0,0,0]]; fg=pure.reduce((b,c)=>ratio(c,bg)>ratio(b,bg)?c:b,fg); }   // mittlere Töne: reines Weiß oder Schwarz für den bestmöglichen Kontrast
+    // gedämpfte Texte: so weit zum Hintergrund hin, wie der Kontrast 4,5:1 (Nebentext) bzw. 4,0:1 (ganz leise) erlaubt
+    const soft=min=>{ let w=0; for(let i=1;i<=20;i++){ const c=mix(fg,bg,i/20); if(ratio(c,bg)>=min) w=i/20; else break; } return mix(fg,bg,w); };
+    return {bg,card,raised,line,fg,muted:soft(5.2),dim:soft(4.6),dark,fgStrong:lum(fg)>.4?[255,255,255]:[17,17,17],glassH:dark?up(t+7):(t>=93?[250,250,248]:up(t+9))};
+  }
+  function clear(){ const st=document.documentElement.style; NAMES.forEach(n=>st.removeProperty(n)); }
+  function apply(){
+    const t=get(), de=document.documentElement;
+    if(t===null){ clear(); return; }
+    const warm=de.getAttribute('data-tone')==='beige', c=colors(t,warm), st=de.style, H=hex;
+    de.setAttribute('data-theme',c.dark?'dark':'light');
+    const set=(k,v)=>st.setProperty(k,v);
+    set('--m-bg',H(c.bg)); set('--m-card',H(c.card)); set('--m-raised',H(c.raised)); set('--m-line',H(c.line)); set('--m-bar',H(c.card));
+    set('--m-fg',H(c.fg)); set('--m-muted',H(c.muted)); set('--m-dim',H(c.dim));
+    set('--c-bg',H(c.bg)); set('--c-navy',H(c.card)); set('--c-navy-2',H(c.card)); set('--c-navy-3',H(c.raised)); set('--c-navy-4',H(c.line));
+    set('--c-slate',H(c.muted)); set('--c-slate-l',H(mix(c.fg,c.muted,.35))); set('--c-text',H(c.fg)); set('--c-text-b',H(c.fgStrong));
+    set('--glass',H(c.card)); set('--glass-h',H(c.glassH)); set('--glass-b',H(c.line));
+    const m=document.querySelector('meta[name=theme-color]'); if(m) m.content=H(c.bg);
+  }
+  function sync(){
+    const r=document.getElementById('m-bg-range'); if(!r) return;
+    const t=get(), mode=(()=>{ try{ return localStorage.getItem('bvi_theme')||'system'; }catch(e){ return 'system'; } })();
+    const de=document.documentElement, base=de.getAttribute('data-tone')==='beige'?DEFAULTS.beige:de.getAttribute('data-theme')==='light'?DEFAULTS.light:DEFAULTS.dark;
+    r.value=t===null?base:t;
+    r.style.background='linear-gradient(90deg,'+(de.getAttribute('data-tone')==='beige'?'#000,#7d6c47 50%,#fff':'#000,#fff')+')';
+    const b=document.getElementById('m-bg-reset'); if(b) b.hidden=t===null;
+    const s=document.getElementById('m-bg-sub'); if(s) s.textContent=t===null?'Hintergrund von Schwarz bis Weiß':'Hintergrund: eigene Helligkeit '+t+' %';
+  }
+  return {
+    get, apply, sync, colors, hex, clear,
+    set(v){ v=Math.max(0,Math.min(100,Math.round(+v))); try{ localStorage.setItem(KEY,String(v)); }catch(e){} apply(); sync(); try{ ACCENT.syncIcon(); }catch(e){} },
+    reset(){ try{ localStorage.removeItem(KEY); }catch(e){} clear(); THEME.render(); sync(); }
+  };
+})();
+
 const THEME=(function(){
   const KEY='bvi_theme', MODES=['dark','light','beige','system'];
   const mq=window.matchMedia?matchMedia('(prefers-color-scheme: light)'):null;
@@ -6387,13 +6451,14 @@ const THEME=(function(){
     document.documentElement.setAttribute('data-theme',l?'light':'dark');
     if(b) document.documentElement.setAttribute('data-tone','beige'); else document.documentElement.removeAttribute('data-tone');   // Beige = helles Design mit warmem Farbton
     const t=document.querySelector('meta[name=theme-color]'); if(t) t.content=b?'#ddcfb1':l?'#f4f4f1':'#121212';
+    BG.apply();   // eigene Hintergrundhelligkeit (falls gesetzt) legt sich über das Farbschema
     try{ ACCENT.syncIcon(); }catch(e){}   // beim ersten Aufruf ist ACCENT noch nicht angelegt
     document.querySelectorAll('.theme-opt').forEach(b=>{ const on=b.dataset.mode===m; b.classList.toggle('active',on); b.setAttribute('aria-pressed',on); });
   }
   if(mq) (mq.addEventListener?mq.addEventListener.bind(mq,'change'):mq.addListener.bind(mq))(()=>{ if(get()==='system') apply('system'); });
   return {
     init(){ apply(get()); },
-    set(m){ if(!MODES.includes(m)) return; try{ localStorage.setItem(KEY,m); }catch(e){} apply(m); },
+    set(m){ if(!MODES.includes(m)) return; try{ localStorage.setItem(KEY,m); localStorage.removeItem('bvi_bg'); }catch(e){} BG.clear(); apply(m); BG.sync(); },
     render(){ apply(get()); }
   };
 })();
@@ -6983,6 +7048,7 @@ const SHELL=(function(){
       ti.value=ex.off?'':ex.target;
     }
     if(xb) xb.hidden=ex.off;
+    BG.sync();
     const tg=document.getElementById('m-notif-toggle'); if(tg) tg.checked=NOTIF.isEnabled();
     document.getElementById('m-cl-badge')?.classList.toggle('hidden',!CHANGELOG.isNew());
     document.getElementById('m-cl-badge2')?.classList.toggle('hidden',!CHANGELOG.isNew());

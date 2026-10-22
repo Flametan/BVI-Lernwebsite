@@ -15,6 +15,7 @@
   var b=m==='beige',l=b||m==='light'||(m!=='dark'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);
   document.documentElement.setAttribute('data-theme',l?'light':'dark');
   if(b)document.documentElement.setAttribute('data-tone','beige');
+  try{var v=parseInt(localStorage.getItem('bvi_bg'),10);if(v>=0&&v<=100){l=v>=50;document.documentElement.setAttribute('data-theme',l?'light':'dark');var s=b?38:0,q=s/100*Math.min(v/100,1-v/100),f=function(n){var k=(n+(b?41:0)/30)%12;return Math.round(255*(v/100-q*Math.max(-1,Math.min(k-3,Math.min(9-k,1)))));},c='#'+[f(0),f(8),f(4)].map(function(x){return('0'+x.toString(16)).slice(-2);}).join('');document.documentElement.style.setProperty('--m-bg',c);document.documentElement.style.setProperty('--c-bg',c);}}catch(e){}
   var t=document.querySelector('meta[name=theme-color]');if(t)t.content=b?'#ddcfb1':l?'#f4f4f1':'#121212';})();</script>
   <link rel="icon" id="fav" type="image/svg+xml" href="icons/icon-512.svg"/>
   <meta name="mobile-web-app-capable" content="yes"/>
@@ -12460,15 +12461,19 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
       </button>
       <div class="m-acc-b" id="acc-dar-b" role="region" aria-labelledby="acc-dar-h" hidden>
 <div class="m-list">
-      <div class="m-row m-static">
+      <div class="m-row m-static m-wrap">
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span>
-        <span class="m-tx"><span class="m-t1">Farbschema</span></span>
+        <span class="m-tx"><span class="m-t1">Farbschema</span><span class="m-t2" id="m-bg-sub">Hintergrund von Schwarz bis Weiß</span></span>
         <span class="m-seg" role="group" aria-label="Farbschema">
           <button class="theme-opt" data-mode="dark" onclick="THEME.set('dark')">Dunkel</button>
           <button class="theme-opt" data-mode="light" onclick="THEME.set('light')">Hell</button>
           <button class="theme-opt" data-mode="beige" onclick="THEME.set('beige')">Beige</button>
           <button class="theme-opt" data-mode="system" onclick="THEME.set('system')">System</button>
         </span>
+        <div class="m-fields">
+          <input type="range" id="m-bg-range" class="bg-range" min="0" max="100" step="1" aria-label="Helligkeit des Hintergrunds von Schwarz bis Weiß" oninput="BG.set(this.value)">
+          <button type="button" class="btn btn-ghost" id="m-bg-reset" onclick="BG.reset()" hidden>Hintergrund zurücksetzen</button>
+        </div>
       </div>
       <div class="m-row m-static m-wrap">
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2a10 10 0 0 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.3A5.7 5.7 0 0 0 22 9.8C22 5.5 17.5 2 12 2z"/></svg></span>
