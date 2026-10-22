@@ -1631,7 +1631,7 @@ const TOAST = (function(){
 const UNDO=(function(){
   const u=[], r=[];
   const refresh=()=>{ document.querySelectorAll('.ud-undo').forEach(b=>{ b.disabled=!u.length; }); document.querySelectorAll('.ud-redo').forEach(b=>{ b.disabled=!r.length; }); };
-  const html=()=>'<button type="button" class="btn btn-ghost ud-undo" aria-label="Rückgängig"'+(u.length?'':' disabled')+'>↶ Rückgängig</button><button type="button" class="btn btn-ghost ud-redo" aria-label="Aktion wiederholen"'+(r.length?'':' disabled')+'>↷ Wiederholen</button>';
+  const html=()=>'<button type="button" class="btn btn-ghost ud-undo" aria-label="Rückgängig" title="Rückgängig"'+(u.length?'':' disabled')+'><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button><button type="button" class="btn btn-ghost ud-redo" aria-label="Aktion wiederholen" title="Wiederholen"'+(r.length?'':' disabled')+'><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>';
   // undo/redo stellen jeweils den Stand vor bzw. nach der Aktion her
   function push(label,undo,redo){ u.push({label,undo,redo}); if(u.length>30) u.shift(); r.length=0; refresh(); }
   function back(){ const a=u.pop(); if(!a) return false; try{ a.undo(); }catch(e){} r.push(a); refresh(); TOAST.show(a.label+': rückgängig gemacht',{type:'ok'}); return true; }
