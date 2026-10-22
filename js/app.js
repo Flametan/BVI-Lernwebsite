@@ -4064,6 +4064,7 @@ const CHANGELOG=(function(){
       'Einstellungen „Nächste Klausur“: Die Auswahl „Der Countdown öffnet“ folgt jetzt dem Prüfung-Tab – eigene Prüfungen des Jahrgangs stehen dort zur Wahl, ausgeblendete nicht mehr; ein nicht mehr vorhandenes Ziel fällt auf „Automatisch“ zurück',
       'Beige: Beim Verschieben des Hintergrund-Reglers bleiben die Kacheln so heller als der Hintergrund wie in der Voreinstellung (vorher wurden sie schwächer abgehoben), ebenso eingelassene Flächen und Linien',
       'Stundenplan: Die Abschnitte der Fortschrittsleiste unter der Kalenderwoche sind größer, mit KW-Nummer, und springen beim Antippen direkt zur jeweiligen Woche',
+      'Stundenplan: Die Navigation bei Anreise und Abreise startet gleich mit „Auto“ als Verkehrsmittel',
       'Stundenplan Zivile Verteidigung (KW 50): Montag „Anreise“ 07:45–11:00 mit Navigation zur BABZ in Ahrweiler (Ramersbacher Str. 95), Programm ab mittags; Freitag „Abreise“ 14:00–14:45 (ohne Gewähr) zur Heimadresse',
       'Stundenplan IdF Münster: Die ganze Zeile „Anreise“ bzw. „Abreise“ ist der Knopf zu Maps, es öffnet sich keine Notiz mehr (nur „Adresse ändern“ öffnet die Adresseingabe)',
       'Stundenplan IdF Münster: „Abreise“ startet die Navigation zu deiner Heimadresse, die du dort einmal festlegst. Sie bleibt nur auf deinem Gerät und steckt in keiner Sicherung und keinem Export',
@@ -5409,7 +5410,7 @@ const HOME=(function(){
   let box=null;
   const get=()=>{ try{ return (localStorage.getItem(KEY)||'').slice(0,160); }catch(e){ return ''; } };
   const clean=v=>String(v||'').replace(/[<>]/g,'').replace(/\s+/g,' ').trim().slice(0,160);
-  const url=a=>'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(a);
+  const url=a=>'https://www.google.com/maps/dir/?api=1&travelmode=driving&destination='+encodeURIComponent(a);
   function build(){
     box=document.createElement('div'); box.id='hm-ov'; box.hidden=true;
     box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Heimadresse');
@@ -5536,7 +5537,7 @@ const IDF_PLAN = (function(){
     return i<0?[spec,'']:[spec.slice(0,i),spec.slice(i+1)];
   }
   // Anreise: Tipp öffnet die Karten-App mit Navigation zum IdF Münster (Android/iOS öffnen Google Maps bzw. fragen nach der Karten-App)
-  const mapsTo=a=>'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(a);
+  const mapsTo=a=>'https://www.google.com/maps/dir/?api=1&travelmode=driving&destination='+encodeURIComponent(a);   // travelmode=driving: gleich „mit dem Auto“
   const IDF_MAPS=mapsTo('Institut der Feuerwehr Nordrhein-Westfalen, Wolbecker Straße 237, 48155 Münster');
   const BABZ_MAPS=mapsTo('BABZ, Ramersbacher Str. 95, 53474 Bad Neuenahr-Ahrweiler-Godeneltern');
   const NAV_PIN='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>';
