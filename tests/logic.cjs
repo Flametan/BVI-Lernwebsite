@@ -363,7 +363,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.dialog = !document.getElementById('hm-ov').hidden;
     document.getElementById('hm-a').value = 'Musterweg 5, 12345 Beispielstadt'; document.getElementById('hm-s').click(); await w(300);
     const a = document.querySelector('#plan-inner a.idf-map[aria-label^="Abreise"]');
-    r.link = !!a && /destination=Musterweg/.test(a.href) && a.target === '_blank';
+    r.link = !!a && /destination=Musterweg/.test(a.href) && /travelmode=driving/.test(a.href) && a.target === '_blank';
     let saved = null; const orig = FILES.save; FILES.save = (n, t, body) => { saved = body; }; BACKUP.export(); FILES.save = orig;
     r.notInBackup = saved !== null && !/Musterweg|bvi_heimadresse/.test(saved);
     localStorage.removeItem('bvi_heimadresse');
@@ -419,7 +419,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     return { n: links.length, an: /Ramersbacher Str\. 95, 53474/.test(links[0] || ''), ab: /Musterweg/.test(links[1] || ''), zeiten: /07:45\s*11:00/.test(txt) && /14:00\s*14:45/.test(txt) && /ohne Gewähr/.test(txt) };
   });
   ok('Plan KW 50: Anreise 07:45–11:00 zur BABZ, Abreise 14:00–14:45 ohne Gewähr zur Heimadresse', babz.n === 2 && babz.an && babz.ab && babz.zeiten, JSON.stringify(babz));
-  ok('Plan: ganze Anreise-Zeile führt zur Navigation zum IdF Münster, ohne Notiz', nav.found && /google\.com\/maps\/dir/.test(nav.href) && /Wolbecker/.test(decodeURIComponent(nav.href)) && /48155/.test(decodeURIComponent(nav.href)) && nav.blank && nav.rowGoes && nav.noNote, JSON.stringify(nav));
+  ok('Plan: ganze Anreise-Zeile führt zur Navigation zum IdF Münster, ohne Notiz', nav.found && /google\.com\/maps\/dir/.test(nav.href) && /Wolbecker/.test(decodeURIComponent(nav.href)) && /48155/.test(decodeURIComponent(nav.href)) && nav.blank && /travelmode=driving/.test(nav.href) && nav.rowGoes && nav.noNote, JSON.stringify(nav));
 
   // ── Einstellungen: jede Zeile in „Daten“ hat einen Trennstrich; Erste-Schritte nennt den Pausenraum ──
   const dat = await page.evaluate(() => {
