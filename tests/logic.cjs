@@ -371,6 +371,18 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     return r;
   });
   ok('Heimadresse: Abreise-Knopf, Navigations-Link, nicht in Sicherung, löschbar', home.setBtn && home.dialog && home.link && home.notInBackup && home.cleared, JSON.stringify(home));
+  // ── Stundenplan: Abschnitte der Fortschrittsleiste springen direkt zur Woche ──
+  const pips = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    NAV.go('v-plan', 'Stundenplan'); await w(300);
+    const b = document.querySelectorAll('#plan-inner .idf-pips button');
+    const r = { n: b.length, big: b[0].getBoundingClientRect().height >= 24 };
+    b[7].click(); await w(200); r.a = document.querySelector('#plan-inner .idf-kw').textContent;
+    document.querySelectorAll('#plan-inner .idf-pips button')[0].click(); await w(200); r.b = document.querySelector('#plan-inner .idf-kw').textContent;
+    return r;
+  });
+  eq('Plan: Fortschrittsleiste springt zur angetippten Woche', pips, { n: 9, big: true, a: 'KW 51', b: 'KW 44' });
+
   // ── KW 50 (Zivile Verteidigung): Anreise zur BABZ Ahrweiler, Abreise zur Heimadresse ──
   const babz = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms));
