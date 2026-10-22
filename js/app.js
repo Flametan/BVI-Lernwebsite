@@ -4061,6 +4061,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Beige: Beim Verschieben des Hintergrund-Reglers bleiben die Kacheln so heller als der Hintergrund wie in der Voreinstellung (vorher wurden sie schwächer abgehoben), ebenso eingelassene Flächen und Linien',
       'Stundenplan: Die Abschnitte der Fortschrittsleiste unter der Kalenderwoche sind größer, mit KW-Nummer, und springen beim Antippen direkt zur jeweiligen Woche',
       'Stundenplan Zivile Verteidigung (KW 50): Montag „Anreise“ 07:45–11:00 mit Navigation zur BABZ in Ahrweiler (Ramersbacher Str. 95), Programm ab mittags; Freitag „Abreise“ 14:00–14:45 (ohne Gewähr) zur Heimadresse',
       'Stundenplan IdF Münster: Die ganze Zeile „Anreise“ bzw. „Abreise“ ist der Knopf zu Maps, es öffnet sich keine Notiz mehr (nur „Adresse ändern“ öffnet die Adresseingabe)',
@@ -6504,17 +6505,19 @@ const BG=(function(){
     const bg=hsl(h,s,t), up=l=>hsl(h,s,Math.max(0,Math.min(100,l)));
     // Kacheln wie in Dunkel und Hell: immer ein Stück heller als der Hintergrund (Leuchtdichte-Verhältnis wie dort,
     // Dunkel 1,12 / Hell 1,07); ganz am weißen Ende, wo es nicht heller geht, stattdessen ein Stück dunkler
-    const R=dark?1.12:1.07, tile=(want)=>{ for(let l=t;l<=100;l+=.5){ const c=up(l); if(ratio(c,bg)>=want) return c; } return null; };
+    // Beige (hell): wie die Voreinstellung (Kachel 1,18 heller, eingelassene Flächen 1,15 und Linien 1,37 dunkler als der Hintergrund)
+    const R=dark?1.12:warm?1.18:1.07, tile=(want)=>{ for(let l=t;l<=100;l+=.5){ const c=up(l); if(ratio(c,bg)>=want) return c; } return null; };
+    const shade=want=>{ for(let l=t;l>=0;l-=.5){ const c=up(l); if(ratio(c,bg)>=want) return c; } return up(0); };
     let card=tile(R);
     if(!card){ for(let l=t;l>=0;l-=.5){ card=up(l); if(ratio(card,bg)>=R) break; } }
-    const raised=dark?up(t+8):up(t-6), line=dark?up(t+10):up(t-12);
+    const raised=dark?up(t+8):warm?shade(1.15):up(t-6), line=dark?up(t+10):warm?shade(1.37):up(t-12);
     // Textfarbe: die mit dem höheren Kontrast, im warmen Ton leicht bräunlich
     const light=warm?[237,229,214]:[237,237,237], darkc=warm?[40,31,20]:[26,26,26];
     let fg=ratio(light,bg)>ratio(darkc,bg)?light:darkc;
     if(ratio(fg,bg)<6){ const pure=[[255,255,255],[0,0,0]]; fg=pure.reduce((b,c)=>ratio(c,bg)>ratio(b,bg)?c:b,fg); }   // mittlere Töne: reines Weiß oder Schwarz für den bestmöglichen Kontrast
     // gedämpfte Texte: so weit zum Hintergrund hin, wie der Kontrast 4,5:1 (Nebentext) bzw. 4,0:1 (ganz leise) erlaubt
     const soft=min=>{ let w=0; for(let i=1;i<=20;i++){ const c=mix(fg,bg,i/20); if(ratio(c,bg)>=min) w=i/20; else break; } return mix(fg,bg,w); };
-    return {bg,card,raised,line,fg,muted:soft(5.2),dim:soft(4.6),dark,fgStrong:lum(fg)>.4?[255,255,255]:[17,17,17],glassH:dark?up(t+7):(t>=93?[250,250,248]:up(t+9))};
+    return {bg,card,raised,line,fg,muted:soft(5.2),dim:soft(4.6),dark,fgStrong:lum(fg)>.4?[255,255,255]:[17,17,17],glassH:dark?up(t+7):warm?(tile(1.26)||[250,248,242]):(t>=93?[250,250,248]:up(t+9))};
   }
   function clear(){ const st=document.documentElement.style; NAMES.forEach(n=>st.removeProperty(n)); }
   function apply(){
