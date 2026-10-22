@@ -4,4 +4,6 @@
     <color name="bvi_black">#0A0A0A</color>
     <color name="ic_launcher_background_light">#F4F4F1</color>
     <color name="bvi_white">#F4F4F1</color>
+    <color name="ic_launcher_background_beige">#DDCFB1</color>
+    <color name="bvi_beige">#DDCFB1</color>
 </resources>

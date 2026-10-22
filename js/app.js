@@ -4031,6 +4031,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Neues Farbschema „Beige“ (Einstellungen → Darstellung): warmer Leinen-Ton statt Grauweiß; in der Android-App mit passendem Startsymbol und beigem Startbild',
       'Abkürzungsverzeichnis: Dort wird kein Wort mehr als Abkürzung markiert',
       'Nächste Klausur (Einstellungen → Lernen): Der Termin lässt sich mit „Termin entfernen“ wieder löschen (mit Rückgängig), und du wählst, welche Prüfung der Countdown öffnet',
       'Stundenplan: „Wichtige Termine in den Kalender übernehmen“ nimmt nur Schlüsseltermine (Akzentfarbe) und Exkursionen (grün) mit; „Kalender abonnieren“ und die Anzeige des aktiven Plans im Master sind entfernt',
@@ -6377,14 +6378,15 @@ const REPORT=(function(){
 
 /* ── Farbschema: Dunkel / Hell / System ─────────────────────────────────── */
 const THEME=(function(){
-  const KEY='bvi_theme', MODES=['dark','light','system'];
+  const KEY='bvi_theme', MODES=['dark','light','beige','system'];
   const mq=window.matchMedia?matchMedia('(prefers-color-scheme: light)'):null;
   function get(){ try{ const m=localStorage.getItem(KEY); return MODES.includes(m)?m:'system'; }catch(e){ return 'system'; } }
-  function light(m){ return m==='light'||(m==='system'&&!!(mq&&mq.matches)); }
+  function light(m){ return m==='light'||m==='beige'||(m==='system'&&!!(mq&&mq.matches)); }
   function apply(m){
-    const l=light(m);
+    const l=light(m), b=m==='beige';
     document.documentElement.setAttribute('data-theme',l?'light':'dark');
-    const t=document.querySelector('meta[name=theme-color]'); if(t) t.content=l?'#f4f4f1':'#121212';
+    if(b) document.documentElement.setAttribute('data-tone','beige'); else document.documentElement.removeAttribute('data-tone');   // Beige = helles Design mit warmem Farbton
+    const t=document.querySelector('meta[name=theme-color]'); if(t) t.content=b?'#ddcfb1':l?'#f4f4f1':'#121212';
     try{ ACCENT.syncIcon(); }catch(e){}   // beim ersten Aufruf ist ACCENT noch nicht angelegt
     document.querySelectorAll('.theme-opt').forEach(b=>{ const on=b.dataset.mode===m; b.classList.toggle('active',on); b.setAttribute('aria-pressed',on); });
   }
@@ -6419,7 +6421,7 @@ const ACCENT=(function(){
   function favicon(c){
     const el=document.getElementById('fav'); if(!el) return;
     const d='M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z';
-    const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#0a0a0a"/><g transform="translate(-24.8 33.7) scale(23.4)"><path d="${d}" fill="${c}"/><path d="${d}" fill="#fff" fill-opacity=".65" transform="translate(12 17) scale(.52) translate(-12 -17)"/></g></svg>`;
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="${document.documentElement.getAttribute('data-tone')==='beige'?'#ddcfb1':'#0a0a0a'}"/><g transform="translate(-24.8 33.7) scale(23.4)"><path d="${d}" fill="${c}"/><path d="${d}" fill="#fff" fill-opacity=".65" transform="translate(12 17) scale(.52) translate(-12 -17)"/></g></svg>`;
     el.href='data:image/svg+xml,'+encodeURIComponent(svg);
   }
   // Android-App: Startsymbol in der nächstliegenden der 5 Vorgabefarben
@@ -6429,8 +6431,8 @@ const ACCENT=(function(){
     const [r,g,b]=rgb(c);
     let best=PRESETS[0],min=Infinity;
     PRESETS.forEach(p=>{const [x,y,z]=rgb(p[0]),d=(r-x)**2+(g-y)**2+(b-z)**2;if(d<min){min=d;best=p;}});
-    const light=document.documentElement.getAttribute('data-theme')==='light';
-    try{ BVIAndroid.setIcon(best[2]+(light?'_light':'')); }catch(e){}
+    const light=document.documentElement.getAttribute('data-theme')==='light', beige=document.documentElement.getAttribute('data-tone')==='beige';
+    try{ BVIAndroid.setIcon(best[2]+(beige?'_beige':light?'_light':'')); }catch(e){}
     try{ if(BVIAndroid.setWidgetStyle) BVIAndroid.setWidgetStyle(c,light); }catch(e){}
   }
   function render(){
@@ -6990,7 +6992,7 @@ const SHELL=(function(){
   // Kurzinfo unter jeder Einstellungs-Gruppe (zeigt die aktuellen Werte, auch wenn die Gruppe zu ist)
   function accSubs(){
     const set=(id,txt)=>{ const e=document.getElementById(id); if(e) e.textContent=txt; };
-    const th={dark:'Dunkel',light:'Hell',system:'System'}[localStorage.getItem('bvi_theme')]||'System';
+    const th={dark:'Dunkel',light:'Hell',beige:'Beige',system:'System'}[localStorage.getItem('bvi_theme')]||'System';
     const fs={sm:'A−',md:'A',lg:'A+',xl:'A++'}[localStorage.getItem('bvi_font_size')||'md']||'A';
     const nc=notes().length, bc=BOOKMARKS.getAll().length;
     const lb=BACKUP.last();

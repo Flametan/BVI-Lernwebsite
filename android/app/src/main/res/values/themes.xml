@@ -13,4 +13,10 @@
         <item name="android:windowBackground">@color/bvi_white</item>
         <item name="android:colorBackground">@color/bvi_white</item>
     </style>
+
+    <!-- Beiger Start: Fensterhintergrund im Beige der Website (Leinen) -->
+    <style name="Theme.BVI.Beige" parent="Theme.BVI">
+        <item name="android:windowBackground">@color/bvi_beige</item>
+        <item name="android:colorBackground">@color/bvi_beige</item>
+    </style>
 </resources>
