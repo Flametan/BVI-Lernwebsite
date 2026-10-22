@@ -856,6 +856,14 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Klausurtermin: Ziel wählbar, entfernbar', ex, { shown: true, gone: true, btnHidden: true, back: true });
 
+  // ── Abkürzungsverzeichnis: keine Markierung im Verzeichnis selbst ──
+  const abkv = await page.evaluate(async () => {
+    NAV.go('v-abkuerzungen', 'Abkürzungen'); await new Promise(r => setTimeout(r, 600));
+    const v = document.getElementById('v-abkuerzungen');
+    return { cards: v.querySelectorAll('.abk-card').length > 100, marks: v.querySelectorAll('.abk-t').length };
+  });
+  eq('Abkürzungsverzeichnis: kein Wort wird markiert', abkv, { cards: true, marks: 0 });
+
   // ── Veröffentlichte Jahrgangs-Datei (jahrgaenge/<ID>.json) wird mit den eigenen Änderungen zusammengeführt ──
   const jid = await page.evaluate(() => JG.list()[0].id);
   await page.route('**/jahrgaenge/' + jid + '.json', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ format: 'bvi-jahrgang', v: 1, erg: [{ id: 'pub1', seite: 'v-vak-verwaltungsrecht', titel: 'Vom Jahrgang', text: '<script>x</script>' }], pr: { hinzu: [], weg: ['v-laufbahn-2023'] }, rel: { 'v-vak-altklausur': false } }) }));
