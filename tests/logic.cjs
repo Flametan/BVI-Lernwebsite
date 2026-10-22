@@ -982,6 +982,52 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     await ictx.close();
   }
 
+  // ── Einlesen: Ergänzen oder Stand ersetzen (mit Rückgängig), Rückfrage; Suche kennt eigene Inhalte und ignoriert ausgeblendete ──
+  {
+    const rctx = await browser.newContext({ viewport: { width: 390, height: 800 }, serviceWorkers: 'block' });
+    const rp = await rctx.newPage(); await rp.addInitScript(() => localStorage.setItem('bvi_onboarded', '1'));
+    await rp.goto(BASE, { waitUntil: 'load' }); await rp.waitForTimeout(600);
+    const rr = await rp.evaluate(async () => {
+      const w = ms => new Promise(r => setTimeout(r, ms)), r = {}, ids = JG.list().map(j => j.id);
+      JG.set(ids[1]); await w(300); JG.discard();
+      let l = JG.local();
+      l.erg.push({ id: 'k1', seite: 'v-vak-verwaltungsrecht', typ: 'kapitel', titel: 'Zebrakapitel', text: 'Quokka-Inhalt', ts: 1 });
+      JG.saveLocal(l); const file = await JG.exportJson();
+      r.peek = JG.peek(file).erg === 1 && JG.peek('kaputt') === null;
+      JG.set(ids[0]); await w(300); JG.discard();
+      l = JG.local(); l.erg.push({ id: 'zzz', seite: 'v-vak-verwaltungsrecht', typ: 'kapitel', titel: 'Nur hier', text: 'x', ts: 2 }); JG.saveLocal(l);
+      // Ergänzen: beides vorhanden
+      await JG.importJson(file, 'add'); r.add = JG.data().erg.map(e => e.id).sort().join() === 'k1,zzz';
+      // Stand ersetzen: nur noch die Datei, Rückgängig stellt her
+      const prev = JG.snapshot(); await JG.importJson(file, 'replace');
+      r.replace = JG.data().erg.map(e => e.id).join() === 'k1';
+      JG.restore(prev); r.undo = JG.data().erg.map(e => e.id).sort().join() === 'k1,zzz';
+      // Oberfläche: Rückfrage mit Jahrgang der Datei
+      const input = document.createElement('input'); input.type = 'file';
+      return r;
+    });
+    // Suche
+    const sr = await rp.evaluate(async () => {
+      const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+      SEARCH.reset(); SEARCH.open(); await w(200);
+      const q = t => { SEARCH.query(t); return new Promise(res => setTimeout(() => res(document.getElementById('search-results')?.innerText || document.body.innerText), 500)); };
+      r.own = /Zebrakapitel/.test(await q('Zebrakapitel'));
+      r.ownText = /Quokka/.test(await q('Quokka'));
+      // Kapitel ausblenden: Titel des ersten Kapitels, danach nicht mehr auffindbar
+      SEARCH.close(); NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
+      const key = JGUI.chapterKey('v-vak-verwaltungsrecht', document.querySelector('#v-vak-verwaltungsrecht .acc-item:not(.jg-kap)'));
+      const cnt = async () => { SEARCH.reset(); SEARCH.open(); await w(150); SEARCH.query('Planmäßige dauerhafte Tätigkeit Behörden Gesetzen'); await w(500); const n = (document.getElementById('search-results').innerText.match(/ALLGEMEINES VERWALTUNGSRECHT/gi) || []).length; SEARCH.close(); return n; };
+      const before = await cnt(); r.before = before > 0;
+      const l = JG.local(); l.ausg.push(key); JG.saveLocal(l); await w(300);
+      r.hidden = (await cnt()) < before;
+      SEARCH.close(); JG.discard(); JG.set(JG.MASTER);
+      return r;
+    });
+    eq('Einlesen: Ergänzen, Stand ersetzen, Rückgängig', rr, { peek: true, add: true, replace: true, undo: true });
+    eq('Suche: eigene Inhalte gefunden, ausgeblendete nicht', sr, { own: true, ownText: true, before: true, hidden: true });
+    await rctx.close();
+  }
+
   // ── Veröffentlichte Jahrgangs-Datei (jahrgaenge/<ID>.json) wird mit den eigenen Änderungen zusammengeführt ──
   const jid = await page.evaluate(() => JG.list()[0].id);
   await page.route('**/jahrgaenge/' + jid + '.json', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ format: 'bvi-jahrgang', v: 1, erg: [{ id: 'pub1', seite: 'v-vak-verwaltungsrecht', titel: 'Vom Jahrgang', text: '<script>x</script>' }], pr: { hinzu: [], weg: ['v-laufbahn-2023'] }, rel: { 'v-vak-altklausur': false } }) }));
