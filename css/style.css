@@ -2658,3 +2658,5 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 .idf-map svg{flex-shrink:0;}
 .idf-home{background:none;border:0;padding:0;font:inherit;font-size:.78rem;font-weight:400;color:var(--m-muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
 button.idf-map{background:none;border:0;padding:0;font:inherit;font-weight:600;cursor:pointer;}
+.idf-abr{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.idf-home-edit{font-size:.66rem;opacity:.75;flex-shrink:0;padding:4px 0 4px 8px;}

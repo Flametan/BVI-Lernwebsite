@@ -5536,7 +5536,7 @@ const IDF_PLAN = (function(){
     if(title==='Anreise') return `<a class="idf-map" href="${IDF_MAPS}" target="_blank" rel="noopener noreferrer" aria-label="Anreise: Navigation zum Institut der Feuerwehr NRW starten">${NAV_PIN}${esc(title)}</a>`;
     if(title!=='Abreise') return esc(title);
     const a=HOME.get();
-    return a?`<a class="idf-map" href="${esc(HOME.url(a))}" target="_blank" rel="noopener noreferrer" aria-label="Abreise: Navigation zur Heimadresse starten">${NAV_PIN}${esc(title)}</a> <button type="button" class="idf-home" onclick="event.stopPropagation();HOME.edit()" aria-label="Heimadresse ändern">Adresse ändern</button>`
+    return a?`<span class="idf-abr"><a class="idf-map" href="${esc(HOME.url(a))}" target="_blank" rel="noopener noreferrer" aria-label="Abreise: Navigation zur Heimadresse starten">${NAV_PIN}${esc(title)}</a><button type="button" class="idf-home idf-home-edit" onclick="event.stopPropagation();HOME.edit()" aria-label="Heimadresse ändern">Adresse ändern</button></span>`
       :`<button type="button" class="idf-map idf-home-set" onclick="event.stopPropagation();HOME.edit()" aria-label="Abreise: Heimadresse festlegen">${NAV_PIN}${esc(title)} <span class="idf-home">Heimadresse festlegen</span></button>`;
   }
   let _nk='';
