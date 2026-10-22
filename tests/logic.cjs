@@ -879,6 +879,39 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Farbschema Beige', bg, { beige: true, meta: true, btn: true, sub: true, light: true, dark: true });
 
+  // ── Hintergrundhelligkeit: Regler von Schwarz bis Weiß ──
+  const bgr = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {}, de = document.documentElement;
+    const parse = s => (s.match(/\d+/g) || []).slice(0, 3).map(Number);
+    const L = c => { const f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return .2126 * f(c[0]) + .7152 * f(c[1]) + .0722 * f(c[2]); };
+    const cr = (a, b) => (Math.max(L(a), L(b)) + .05) / (Math.min(L(a), L(b)) + .05);
+    const tok = n => { const s = document.createElement('i'); s.style.color = 'var(' + n + ')'; document.body.appendChild(s); const c = parse(getComputedStyle(s).color); s.remove(); return c; };
+    localStorage.removeItem('bvi_bg'); THEME.set('dark'); await w(100);
+    NAV.go('v-settings', 'E'); await w(300);
+    r.row = !!document.getElementById('m-bg-range') && document.getElementById('m-bg-reset').hidden;
+    BG.set(0); await w(100);
+    r.black = parse(getComputedStyle(document.body).backgroundColor).join() === '0,0,0' && de.getAttribute('data-theme') === 'dark';
+    BG.set(100); await w(100);
+    r.white = parse(getComputedStyle(document.body).backgroundColor).join() === '255,255,255' && de.getAttribute('data-theme') === 'light';
+    // Lesbarkeit über den ganzen Regler (neutral und beige)
+    let worst = 99;
+    for (const tone of ['', 'beige']) {
+      if (tone) THEME.set('beige'); else THEME.set('dark');
+      for (let v = 0; v <= 100; v += 5) {
+        BG.set(v); await w(5);
+        const bgc = tok('--m-bg'), fg = tok('--m-fg'), mu = tok('--m-muted'), dm = tok('--m-dim');
+        worst = Math.min(worst, cr(fg, bgc), cr(mu, bgc), cr(dm, bgc));
+      }
+    }
+    r.contrast = worst >= 4.5;
+    BG.set(40); await w(100); r.stored = localStorage.getItem('bvi_bg') === '40' && !document.getElementById('m-bg-reset').hidden;
+    THEME.set('light'); await w(100); r.schemeResets = localStorage.getItem('bvi_bg') === null && BG.get() === null;
+    BG.set(60); BG.reset(); await w(100); r.reset = BG.get() === null && !de.style.getPropertyValue('--m-bg');
+    THEME.set('system'); await w(100);
+    return r;
+  });
+  eq('Hintergrund-Regler', bgr, { row: true, black: true, white: true, contrast: true, stored: true, schemeResets: true, reset: true });
+
   // ── Veröffentlichte Jahrgangs-Datei (jahrgaenge/<ID>.json) wird mit den eigenen Änderungen zusammengeführt ──
   const jid = await page.evaluate(() => JG.list()[0].id);
   await page.route('**/jahrgaenge/' + jid + '.json', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ format: 'bvi-jahrgang', v: 1, erg: [{ id: 'pub1', seite: 'v-vak-verwaltungsrecht', titel: 'Vom Jahrgang', text: '<script>x</script>' }], pr: { hinzu: [], weg: ['v-laufbahn-2023'] }, rel: { 'v-vak-altklausur': false } }) }));
