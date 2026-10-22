@@ -2648,3 +2648,5 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 .bg-range{-webkit-appearance:none;appearance:none;width:100%;height:12px;border-radius:999px;border:1px solid var(--m-line);outline-offset:4px;cursor:pointer;}
 .bg-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:30px;height:30px;border-radius:50%;background:var(--m-accent);border:3px solid var(--m-card);box-shadow:0 0 0 1px var(--m-line),0 2px 6px rgba(0,0,0,.3);}
 .bg-range::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--m-accent);border:3px solid var(--m-card);box-shadow:0 0 0 1px var(--m-line);}
+.jg-ok{width:100%;margin-top:4px;}
+.jg-ok{padding:14px 18px;font-size:1rem;}
