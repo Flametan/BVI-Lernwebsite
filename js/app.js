@@ -4061,6 +4061,8 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Hinweis für iPhone und iPad: Apple löscht die Daten einer Website in Safari nach etwa 7 Tagen ohne Besuch. Das steht jetzt unter Einstellungen, bei der App-Installation und in der Hilfe – mit dem Rat, die App auf den Home-Bildschirm zu legen und ab und zu zu sichern',
+      'Die Flamme im Kopf der Seite flackert deutlicher und ist jetzt gut zu erkennen',
       'Sicherung: Gewählter Jahrgang, eigene Jahrgangs-Änderungen und die Plan-Ansicht werden jetzt mitgesichert und wieder eingespielt (vorher gingen sie beim Einspielen verloren)',
       'Duell: Eigene Fragen des Jahrgangs zählen jetzt mit, wenn beide Spieler genau dieselben haben (die Lobby zeigt das an); sonst kommen nur die mitgelieferten Fragen dran',
       'Jahrgang importieren: Rückfrage mit dem Jahrgang der Datei und Wahl „Ergänzen“ oder „Stand ersetzen“ (mit Rückgängig); die Suche findet eigene Kapitel, Ergänzungen und Reiter und zeigt ausgeblendete nicht mehr; die Erklärseite nennt Datenverlust-Risiko, Export statt Sicherung und weitere Grenzen',
@@ -6470,7 +6472,6 @@ const BG=(function(){
     const de=document.documentElement, base=de.getAttribute('data-tone')==='beige'?DEFAULTS.beige:de.getAttribute('data-theme')==='light'?DEFAULTS.light:DEFAULTS.dark;
     r.value=t===null?base:t;
     r.style.background='linear-gradient(90deg,'+(de.getAttribute('data-tone')==='beige'?'#000,#7d6c47 50%,#fff':'#000,#fff')+')';
-    const b=document.getElementById('m-bg-reset'); if(b) b.hidden=t===null;
     const s=document.getElementById('m-bg-sub'); if(s) s.textContent=t===null?'Hintergrund von Schwarz bis Weiß':'Hintergrund: eigene Helligkeit '+t+' %';
   }
   return {
