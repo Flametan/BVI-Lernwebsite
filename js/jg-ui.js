@@ -11,7 +11,7 @@ const JGUI=(function(){
   // ── Fenster ──
   const stack=[];
   // Rückgängig und Wiederholen: dauerhaft sichtbar neben den Bearbeiten-Knöpfen (ausgegraut, solange es nichts gibt)
-  const histHtml=()=>'<button type="button" class="btn btn-ghost jg-undo" aria-label="Rückgängig"'+(JG.canUndo()?'':' disabled')+'>↶ Rückgängig</button><button type="button" class="btn btn-ghost jg-redo" aria-label="Aktion wiederholen"'+(JG.canRedo()?'':' disabled')+'>↷ Wiederholen</button>';
+  const histHtml=()=>'<button type="button" class="btn btn-ghost jg-undo" aria-label="Rückgängig" title="Rückgängig"'+(JG.canUndo()?'':' disabled')+'><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button><button type="button" class="btn btn-ghost jg-redo" aria-label="Aktion wiederholen" title="Wiederholen"'+(JG.canRedo()?'':' disabled')+'><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>';
   document.addEventListener('click',e=>{
     const u=e.target.closest('.jg-undo'), r=e.target.closest('.jg-redo'); if(!u&&!r) return;
     e.preventDefault();
@@ -100,7 +100,7 @@ const JGUI=(function(){
       $(root,'#jg-exp').onclick=exportFile;
       $(root,'#jg-imp').onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(f) importFile(f); };
     }
-    const d=$(root,'#jg-dis'); if(d) d.onclick=()=>{ if(!confirm('Alle eigenen Änderungen dieses Jahrgangs verwerfen?\n\nDer Plan, deine Ergänzungen, hinzugefügte und ausgeblendete Prüfungen sind danach weg.')) return; const prev=JG.discard(); TOAST.show('Änderungen verworfen',{type:'ok',undo:()=>JG.restore(prev)}); };
+    const d=$(root,'#jg-dis'); if(d) d.onclick=()=>{ if(!confirm('Alle eigenen Änderungen dieses Jahrgangs verwerfen?\n\nDer Plan, deine Ergänzungen, hinzugefügte und ausgeblendete Prüfungen sind danach weg.')) return; const prev=JG.discard(), after=JG.snapshot(); UNDO.push('Änderungen verwerfen',()=>JG.restore(prev),()=>JG.restore(after)); TOAST.show('Änderungen verworfen',{type:'ok'}); };
   }
   async function exportFile(){
     const text=await JG.exportJson(), id=JG.current();
@@ -129,7 +129,8 @@ const JGUI=(function(){
         try{
           const n=await JG.importJson(text,mode); m.close();
           const done=[]; if(n.erg) done.push(n.erg+' Ergänzungen'); if(n.pruefungen) done.push(n.pruefungen+' Prüfungen'); if(n.plan) done.push('Plan mit '+n.plan+' Terminen');
-          TOAST.show((mode==='replace'?'Stand ersetzt: ':'Importiert: ')+(done.join(', ')||'keine neuen Inhalte'),{type:'ok',undo:()=>JG.restore(prev)});
+          const after=JG.snapshot(); UNDO.push(mode==='replace'?'Stand ersetzen':'Import',()=>JG.restore(prev),()=>JG.restore(after));
+          TOAST.show((mode==='replace'?'Stand ersetzt: ':'Importiert: ')+(done.join(', ')||'keine neuen Inhalte'),{type:'ok'});
         }catch(e){ m.close(); TOAST.show('Das ist keine Änderungsdatei dieser App',{type:'info'}); }
       };
     };

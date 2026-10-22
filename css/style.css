@@ -2667,3 +2667,5 @@ button.idf-map{background:none;border:0;padding:0;font:inherit;font-weight:600;c
 /* Jahrgang: Rückgängig/Wiederholen dauerhaft sichtbar, ausgegraut ohne Verlauf */
 .jg-bar .btn:disabled{opacity:.4;cursor:default;}
 .fc-jgbar{margin:12px 0 0;justify-content:center;}
+/* Rückgängig/Wiederholen nur als Pfeil-Symbole, mit ausreichend großer Tippfläche */
+.jg-undo,.jg-redo,.ud-undo,.ud-redo{min-width:44px;min-height:44px;padding:0 12px;display:inline-flex;align-items:center;justify-content:center;}
