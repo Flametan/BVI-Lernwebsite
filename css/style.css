@@ -1227,8 +1227,8 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 .idf-nav{display:flex;gap:8px;flex-shrink:0;}
 .idf-nav button{width:38px;height:38px;border-radius:50%;background:var(--m-raised);color:var(--m-fg);display:grid;place-items:center;}
 .idf-nav button:disabled{opacity:.3;cursor:default;}
-.idf-pips{display:flex;gap:4px;}
-.idf-pips button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0 4px;background:none;border:0;cursor:pointer;color:var(--m-muted);font-family:inherit;}
+.idf-pips{display:flex;gap:0;}   /* kein Abstand zwischen den Tippflächen: jede Stelle der Leiste trifft eine Woche */
+.idf-pips button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 2px 12px;min-height:44px;background:none;border:0;cursor:pointer;color:var(--m-muted);font-family:inherit;}
 .idf-pips i{display:block;width:100%;height:8px;border-radius:4px;background:var(--m-raised);}
 .idf-pips span{font-size:.64rem;line-height:1;font-variant-numeric:tabular-nums;}
 .idf-pips .done i{background:color-mix(in srgb,var(--m-accent) 45%,transparent);}
