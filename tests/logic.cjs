@@ -1050,6 +1050,29 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Duell: eigene Fragen nur bei gleicher Datei', duq, { sigStable: true, includes: true, order: true, diff: true });
 
+  // ── Sicherung: Jahrgang, eigene Änderungen und Farbschema überstehen Sichern und Einspielen ──
+  {
+    const bctx = await browser.newContext({ viewport: { width: 390, height: 800 }, serviceWorkers: 'block' });
+    const bp = await bctx.newPage(); bp.on('dialog', d => d.accept());
+    await bp.addInitScript(() => { if (!sessionStorage.getItem('bk')) localStorage.setItem('bvi_onboarded', '1'); });
+    await bp.goto(BASE, { waitUntil: 'load' }); await bp.waitForTimeout(600);
+    const dump = await bp.evaluate(async () => {
+      const w = ms => new Promise(r => setTimeout(r, ms));
+      JG.set(JG.list()[0].id); await w(300); const l = JG.local();
+      l.erg.push({ id: 'e1', seite: 'v-vak-verwaltungsrecht', typ: 'kapitel', titel: 'Sicherungskapitel', text: 'T', ts: 1 }); JG.saveLocal(l);
+      IDF_PLAN.viewTab('idf2', true); THEME.set('beige'); BG.set(60);
+      localStorage.setItem('bvi_jgp_BRef-10-2026_AB-10-2027', '{"format":"bvi-jahrgang"}');
+      const d = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith('bvi_') || k === 'idf_plan_grp') d[k] = localStorage.getItem(k); }
+      sessionStorage.setItem('bk', '1'); return d;
+    });
+    await bp.evaluate(() => localStorage.clear());
+    await bp.evaluate(d => { const keepKeys = Object.keys(d).filter(k => !k.startsWith('bvi_jgp_')); const f = new File([JSON.stringify({ app: 'bvi-lernwebsite', version: '3.0.0', exported: new Date().toISOString(), data: d })], 's.json'); BACKUP.import({ files: [f], value: '' }); }, dump);
+    await bp.waitForTimeout(3500);
+    const back = await bp.evaluate(() => ({ jg: JG.current() !== JG.MASTER && JG.data().erg.some(e => e.title === 'Sicherungskapitel' || e.titel === 'Sicherungskapitel'), theme: localStorage.getItem('bvi_theme') === 'beige', bg: localStorage.getItem('bvi_bg') === '60', view: localStorage.getItem('bvi_plan_view') === 'idf2', grp: localStorage.getItem('bvi_plan_idfg') === 'idf2' }));
+    eq('Sicherung: Jahrgang, Änderungen, Farbschema und Plan-Ansicht kommen zurück', back, { jg: true, theme: true, bg: true, view: true, grp: true });
+    await bctx.close();
+  }
+
   // ── Veröffentlichte Jahrgangs-Datei (jahrgaenge/<ID>.json) wird mit den eigenen Änderungen zusammengeführt ──
   const jid = await page.evaluate(() => JG.list()[0].id);
   await page.route('**/jahrgaenge/' + jid + '.json', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ format: 'bvi-jahrgang', v: 1, erg: [{ id: 'pub1', seite: 'v-vak-verwaltungsrecht', titel: 'Vom Jahrgang', text: '<script>x</script>' }], pr: { hinzu: [], weg: ['v-laufbahn-2023'] }, rel: { 'v-vak-altklausur': false } }) }));

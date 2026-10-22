@@ -4061,15 +4061,16 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Sicherung: Gewählter Jahrgang, eigene Jahrgangs-Änderungen und die Plan-Ansicht werden jetzt mitgesichert und wieder eingespielt (vorher gingen sie beim Einspielen verloren)',
       'Duell: Eigene Fragen des Jahrgangs zählen jetzt mit, wenn beide Spieler genau dieselben haben (die Lobby zeigt das an); sonst kommen nur die mitgelieferten Fragen dran',
-      'Änderungen einlesen: Rückfrage mit dem Jahrgang der Datei und Wahl „Ergänzen“ oder „Stand ersetzen“ (mit Rückgängig); die Suche findet eigene Kapitel, Ergänzungen und Reiter und zeigt ausgeblendete nicht mehr; die Erklärseite nennt Datenverlust-Risiko, Export statt Sicherung und weitere Grenzen',
+      'Jahrgang importieren: Rückfrage mit dem Jahrgang der Datei und Wahl „Ergänzen“ oder „Stand ersetzen“ (mit Rückgängig); die Suche findet eigene Kapitel, Ergänzungen und Reiter und zeigt ausgeblendete nicht mehr; die Erklärseite nennt Datenverlust-Risiko, Export statt Sicherung und weitere Grenzen',
       'Ersteinrichtung nur noch 2 Seiten plus Lehrgangs-Auswahl: Wer einen anderen Jahrgang als den Master wählt, landet auf „So funktioniert dein Jahrgang“ und kommt mit „Verstanden, lass mich in die App“ zur Startseite; aus den Einstellungen gibt es den Knopf nicht. Neu auf der Erklärseite: Die App-Datei lässt sich an den Jahrgang nach euch weitergeben',
       'Hintergrund-Regler (Einstellungen → Darstellung): Die Hintergrundhelligkeit lässt sich stufenlos von Schwarz bis Weiß einstellen, Karten, Linien und Texte passen sich an und bleiben lesbar; im Beige-Schema mit warmem Farbton',
       'Neues Farbschema „Beige“ (Einstellungen → Darstellung): warmer Leinen-Ton statt Grauweiß; in der Android-App mit passendem Startsymbol und beigem Startbild',
       'Abkürzungsverzeichnis: Dort wird kein Wort mehr als Abkürzung markiert',
       'Nächste Klausur (Einstellungen → Lernen): Der Termin lässt sich mit „Termin entfernen“ wieder löschen (mit Rückgängig), und du wählst, welche Prüfung der Countdown öffnet',
       'Stundenplan: „Wichtige Termine in den Kalender übernehmen“ nimmt nur Schlüsseltermine (Akzentfarbe) und Exkursionen (grün) mit; „Kalender abonnieren“ und die Anzeige des aktiven Plans im Master sind entfernt',
-      'Jahrgänge: Die Erklärseite beschreibt jetzt, dass jeder Jahrgang eine Person bestimmt, die die Seite pflegt, Änderungen exportiert und in der WhatsApp-Gruppe teilt; alle anderen lesen die Datei ein. Klausurtermine als Countdown für Jahrgänge sind entfernt.',
+      'Jahrgänge: Die Erklärseite beschreibt jetzt, dass jeder Jahrgang eine Person bestimmt, die die Seite pflegt, den Jahrgang exportiert und in der WhatsApp-Gruppe teilt; alle anderen importieren die Datei. Klausurtermine als Countdown für Jahrgänge sind entfernt.',
       'Jahrgänge: „So funktioniert dein Jahrgang“ in den Einstellungen erklärt, warum es die Seite gibt und wie sie funktioniert; „Prüfungen bearbeiten“ steht oben auf der Prüfungsseite, auf Übersichtsseiten lassen sich Reiter ausblenden und eigene Reiter mit Kapiteln anlegen; eigene Fragen können Single-Choice, Multiple-Choice oder Freitext sein; die Ergänzung im Kapitel hat nur noch Text und Bild',
       'Jahrgang einrichten (Einstellungen → Lehrgang): Checkliste mit Stundenplänen, Lehrgangs-Link, Standorten und Lernkarten des Jahrgangs; die Datei trägt alles mit',
       'Lernseiten: „+ Eigene Ergänzung“ und „+ Eigene Frage“ erscheinen erst nach „Seite bearbeiten“; Ergänzungen als Freitext, Single-Choice oder Multiple-Choice, dazu eigene Kapitel; das Kreuz sitzt rechts an der Frage',
@@ -5975,7 +5976,7 @@ const FILES=(function(){
 
 /* ── Sicherung: Lernstand, Notizen, Lesezeichen und Einstellungen als Datei ── */
 const BACKUP=(function(){
-  const keep=k=>(k.startsWith('bvi_')&&k!=='bvi_seen_version'&&k!=='bvi_last_backup'&&k!=='bvi_et_end')||k==='idf_plan_grp';
+  const keep=k=>(k.startsWith('bvi_')&&k!=='bvi_seen_version'&&k!=='bvi_last_backup'&&k!=='bvi_et_end'&&!k.startsWith('bvi_jgp_'))||k==='idf_plan_grp';   // bvi_jgp_ = Zwischenspeicher veröffentlichter Jahrgangs-Dateien
   // Form der Werte beim Einspielen prüfen: falsch geformte Daten würden die App dauerhaft stören
   const ARR=new Set(['bvi_bookmarks','bvi_recent','bvi_search_hist','bvi_fc_custom','bvi_fc_stars','bvi_fc_weak']);
   const NOJSON=new Set(['bvi_plan_src','bvi_theme','bvi_bg','bvi_accent','bvi_font_size','bvi_goal','bvi_timers','bvi_onboarded','bvi_exam','bvi_lp_fz','bvi_lp_prac','bvi_pause_mode','bvi_pause_mods','bvi_duell_name','bvi_duell_col','bvi_duell_stun','bvi_duell_cfg','idf_plan_grp']);
@@ -5984,6 +5985,11 @@ const BACKUP=(function(){
     if(typeof v!=='string'||v.length>2e6) return null;
     if(/^bvi_note_v-[a-z0-9-]+$|^bvi_note_home$/.test(k)) return v;
     if(NOJSON.has(k)) return v;
+    // Jahrgänge: gewählter Jahrgang, eigene Änderungen je Jahrgang, Plan-Ansicht
+    if(k==='bvi_jg') return /^BRef-\d\d-\d{4}_AB-\d\d-\d{4}$/.test(v)?v:null;
+    if(/^bvi_jgd_BRef-\d\d-\d{4}_AB-\d\d-\d{4}$/.test(k)){ try{ const o=JSON.parse(v); return o&&typeof o==='object'&&!Array.isArray(o)?v:null; }catch(e){ return null; } }
+    if(k==='bvi_plan_view') return JG.PLANKEYS.includes(v)?v:null;
+    if(k==='bvi_plan_idfg') return v==='idf'||v==='idf2'?v:null;
     if(!/^bvi_[a-z0-9_]+$/.test(k)&&!/^bvi_checks_[\w-]+$/.test(k)) return null;
     let j; try{ j=JSON.parse(v); }catch(e){ return null; }
     if(j===null||typeof j!=='object') return null;

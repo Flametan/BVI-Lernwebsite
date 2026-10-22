@@ -33,7 +33,10 @@
 - **Lesezeichen & Notizen** – Seitenweise, persistiert per LocalStorage
 - **Fortschritts-Tracking** – Besuchte Themen mit Badge-Anzeige
 - **PWA** – Installierbar, Service Worker mit Offline-Fallback
-- **Farbschema** – Dunkel, Hell oder System (Einstellungen)
+- **Farbschema** – Dunkel, Hell, Beige oder System, dazu ein Regler für die Hintergrundhelligkeit von Schwarz bis Weiß (Einstellungen)
+- **Jahrgänge** – Der Master (BRef 04/2025 - AB 04/2026) ist die Grundlage; jeder weitere Jahrgang passt Stundenplan (je Abschnitt, IdF Gruppe 1/2), Prüfungen und Fragen, Lernseiten (Kapitel ausblenden, eigene Kapitel und Reiter), Lernkarten, Link und Standorte an. Änderungen werden als Datei exportiert, in der WhatsApp-Gruppe geteilt und eingelesen. Anleitung: [`jahrgaenge/ANLEITUNG.md`](jahrgaenge/ANLEITUNG.md), Prüfskript für eingeschickte Dateien: `node tools/pruefe-jahrgang.cjs <Datei.json>`
+- **Pausenraum** – kleine Spiele, Einsatzfahrt mit Prüfungsfragen und Einsatzfahrt-Duell zu zweit (WebRTC)
+- **Android-App** – WebView mit Widgets und Startsymbol je Farbschema (`android/`)
 - **Bildansicht** – Bilder und Diagramme per Tipp groß öffnen und zoomen
 
 ---
@@ -47,7 +50,13 @@ BVI-Lernwebsite/
 │   └── style.css       # Design-System, alle Komponenten
 ├── js/
 │   ├── app.js          # NAV, PROGRESS, SEARCH, FC, SIM, GH, ...
+│   ├── jg.js / jg-ui.js  # Jahrgänge: Daten und Oberfläche
+│   ├── pause.js / pause-data.js / duell.js  # Pausenraum, Einsatzfahrt, Duell
 │   └── version.js      # APP_VERSION (mit sw.js synchron halten)
+├── jahrgaenge/         # optionale veröffentlichte Jahrgangs-Dateien (<ID>.json) und Anleitung
+├── tools/              # Prüfskript für Jahrgangs-Dateien
+├── tests/              # Playwright-Tests (smoke, logic, duell)
+├── android/            # Android-App (Kotlin)
 ├── sw.js               # Service Worker (Network-first für Core-Assets)
 ├── manifest.json       # PWA-Manifest
 └── icons/

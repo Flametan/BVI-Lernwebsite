@@ -15,6 +15,9 @@ Ziel: herausfinden, wo jemand hängen bleibt, der die App zum ersten Mal sieht. 
 6. **Prüfung:** Die Klausur 08/2026 öffnen und einen 45-Minuten-Timer starten.
 7. **Fehler melden:** Auf einer Lernseite einen Fehler melden.
 8. **Installieren:** „Leg dir die App auf den Startbildschirm.“
+9. **Jahrgang:** In den Einstellungen einen anderen Jahrgang wählen und die Seite „So funktioniert dein Jahrgang“ finden. Danach: „Was machst du, damit dein Jahrgang denselben Stand hat?“
+10. **Eigenes Kapitel:** In einem Jahrgang auf einer Lernseite „Seite bearbeiten“ und ein eigenes Kapitel anlegen, dann den Jahrgang exportieren.
+11. **Hintergrund:** Das Farbschema „Beige“ wählen und den Hintergrund mit dem Regler dunkler machen.
 
 ## Beobachtungsbogen
 | Aufgabe | geschafft (ja/nein) | Zeit | Wo hängt es? | Zitat |

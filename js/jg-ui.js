@@ -81,8 +81,8 @@ const JGUI=(function(){
     const opts=list.map(j=>'<option value="'+j.id+'"'+(j.id===cur?' selected':'')+'>'+E(j.label)+(j.id===JG.MASTER?' (Master)':'')+'</option>').join('');
     const master=JG.isMaster(), loc=JG.hasLocal();
     root.innerHTML=(master?'':'<div class="m-list m-glow"><button class="m-row m-go" id="jg-help"><span class="m-tx"><span class="m-t1">So funktioniert dein Jahrgang</span><span class="m-t2">Warum es die Seite gibt und wie du sie nutzt</span></span></button></div>')+'<div class="m-list"><div class="m-row m-static m-wrap"><span class="m-tx"><span class="m-t1">Mein Jahrgang</span><span class="m-t2">'+(master?'Der Master: alle Inhalte der App':'Kopie des Masters mit eigenen Änderungen – neue Inhalte und Verbesserungen vom Master kommen automatisch')+'</span></span><select id="jg-sel" class="m-input" aria-label="Jahrgang">'+opts+'</select></div>'
-      +(master?'':'<button class="m-row m-go" id="jg-setup"><span class="m-tx"><span class="m-t1">Jahrgang einrichten</span><span class="m-t2">Checkliste: Stundenpläne, Link, Standorte, Lernkarten</span></span></button><button class="m-row" id="jg-exp"><span class="m-tx"><span class="m-t1">Änderungen exportieren</span><span class="m-t2">Eine Datei mit Plan, Ergänzungen und Prüfungen, zum Weitergeben per WhatsApp</span></span></button>'
-      +'<label class="m-row" for="jg-imp" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Änderungen einlesen</span><span class="m-t2">Eine Datei von jemandem aus deinem Jahrgang</span></span><input type="file" id="jg-imp" accept=".json,application/json" hidden></label>'
+      +(master?'':'<button class="m-row m-go" id="jg-setup"><span class="m-tx"><span class="m-t1">Jahrgang einrichten</span><span class="m-t2">Checkliste: Stundenpläne, Link, Standorte, Lernkarten</span></span></button><button class="m-row" id="jg-exp"><span class="m-tx"><span class="m-t1">Jahrgang exportieren</span><span class="m-t2">Eine Datei mit allen Änderungen deines Jahrgangs, zum Weitergeben per WhatsApp</span></span></button>'
+      +'<label class="m-row" for="jg-imp" style="cursor:pointer"><span class="m-tx"><span class="m-t1">Jahrgang importieren</span><span class="m-t2">Eine Datei von jemandem aus deinem Jahrgang oder vom Jahrgang davor</span></span><input type="file" id="jg-imp" accept=".json,application/json" hidden></label>'
       +(loc?'<button class="m-row" id="jg-dis"><span class="m-tx"><span class="m-t1">Meine Änderungen verwerfen</span><span class="m-t2">Zurück zum Stand des Masters (mit Rückgängig)</span></span></button>':''))
       +'</div>'+(master?'':'<p class="m-note" style="padding:0 4px">'+NOTICE+'</p>');
     $(root,'#jg-sel').onchange=e=>{ JG.set(e.target.value); };
@@ -111,17 +111,17 @@ const JGUI=(function(){
       if(!info){ TOAST.show('Das ist keine Änderungsdatei dieser App',{type:'info'}); return; }
       const mine=JG.labelOf(JG.current()), other=info.label&&info.label!==mine;
       const parts=[]; if(info.erg) parts.push(info.erg+' Ergänzungen/Kapitel'); if(info.pruefungen) parts.push(info.pruefungen+' Prüfungen'); if(info.plan) parts.push(info.plan+' Pläne'); if(info.reiter) parts.push(info.reiter+' Reiter'); if(info.karten) parts.push(info.karten+' Lernkarten');
-      const m=modal('Änderungen einlesen','<p class="jg-p">Die Datei stammt aus <b>'+E(info.label||'einem Jahrgang')+'</b>'+(parts.length?' und enthält '+E(parts.join(', '))+'.':'.')+' Du bist in <b>'+E(mine)+'</b>.</p>'
-        +(other?'<p class="jg-warn" style="margin:8px 0">Die Datei gehört zu einem anderen Jahrgang. Du kannst sie trotzdem einlesen, zum Beispiel um von einem früheren Stand zu starten.</p>':'')
+      const m=modal('Jahrgang importieren','<p class="jg-p">Die Datei stammt aus <b>'+E(info.label||'einem Jahrgang')+'</b>'+(parts.length?' und enthält '+E(parts.join(', '))+'.':'.')+' Du bist in <b>'+E(mine)+'</b>.</p>'
+        +(other?'<p class="jg-warn" style="margin:8px 0">Die Datei gehört zu einem anderen Jahrgang. Du kannst sie trotzdem importieren, zum Beispiel um von einem früheren Stand zu starten.</p>':'')
         +'<label class="jg-chk" style="display:block;margin:10px 0"><input type="radio" name="jg-mode" value="add" checked> <b>Ergänzen</b> (empfohlen)<span class="m-t2" style="display:block;margin-left:24px">Fügt hinzu und ändert, was in der Datei steht. Eigenes, das nicht in der Datei steht, bleibt erhalten. Gelöschtes aus der Datei kommt dadurch nicht wieder weg.</span></label>'
         +'<label class="jg-chk" style="display:block;margin:10px 0"><input type="radio" name="jg-mode" value="replace"> <b>Stand ersetzen</b><span class="m-t2" style="display:block;margin-left:24px">Dein Jahrgang wird genau wie die Datei: auch Gelöschtes und Eigenes, das nicht in der Datei steht, verschwindet. Mit Rückgängig.</span></label>'
-        +'<button class="btn btn-gold" id="jg-imp-go" type="button" style="margin-top:8px">Einlesen</button>');
+        +'<button class="btn btn-gold" id="jg-imp-go" type="button" style="margin-top:8px">Importieren</button>');
       $(m.body,'#jg-imp-go').onclick=async()=>{
         const mode=m.body.querySelector('input[name=jg-mode]:checked').value, prev=JG.snapshot();
         try{
           const n=await JG.importJson(text,mode); m.close();
           const done=[]; if(n.erg) done.push(n.erg+' Ergänzungen'); if(n.pruefungen) done.push(n.pruefungen+' Prüfungen'); if(n.plan) done.push('Plan mit '+n.plan+' Terminen');
-          TOAST.show((mode==='replace'?'Stand ersetzt: ':'Eingelesen: ')+(done.join(', ')||'keine neuen Inhalte'),{type:'ok',undo:()=>JG.restore(prev)});
+          TOAST.show((mode==='replace'?'Stand ersetzt: ':'Importiert: ')+(done.join(', ')||'keine neuen Inhalte'),{type:'ok',undo:()=>JG.restore(prev)});
         }catch(e){ m.close(); TOAST.show('Das ist keine Änderungsdatei dieser App',{type:'info'}); }
       };
     };
