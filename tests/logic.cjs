@@ -371,6 +371,28 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     return r;
   });
   ok('Heimadresse: Abreise-Knopf, Navigations-Link, nicht in Sicherung, löschbar', home.setBtn && home.dialog && home.link && home.notInBackup && home.cleared, JSON.stringify(home));
+  // ── Nächste Klausur: Die Auswahl des Countdown-Ziels folgt dem Prüfung-Tab (eigene Prüfungen dazu, ausgeblendete weg) ──
+  const exl = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    const r = {}; const id = JG.list()[0].id;
+    localStorage.removeItem('bvi_jgd_' + id); localStorage.removeItem('bvi_exam');
+    NAV.go('v-settings', 'E'); await w(300);
+    const base = [...document.querySelectorAll('#m-exam-target option')].map(o => o.value);
+    r.masterAll = base.includes('v-klausurfragen') && !base.includes('px1');
+    JG.set(id); await w(300);
+    const l = JG.local(); l.pr.hinzu.push({ id: 'px1', tab: 'idf', titel: 'Eigene Testprüfung', fragen: [{ q: 'F?', typ: 'sc', o: ['a', 'b'], c: [0] }], ts: 1 }); l.pr.weg.push('v-klausurfragen'); JG.saveLocal(l); await w(300);
+    NAV.go('v-settings', 'E'); await w(300);
+    const opts = [...document.querySelectorAll('#m-exam-target option')].map(o => o.value);
+    r.own = opts.includes('px1'); r.hidden = !opts.includes('v-klausurfragen');
+    localStorage.setItem('bvi_exam', JSON.stringify({ date: '2099-01-01', name: 'x', target: 'px1' }));
+    SHELL.renderExam(); r.goesOwn = document.getElementById('m-countdown').innerHTML.includes("JGUI.openExam('px1')");
+    localStorage.setItem('bvi_exam', JSON.stringify({ date: '2099-01-01', name: 'x', target: 'v-klausurfragen' }));
+    SHELL.renderExam(); r.hiddenFallsBack = !document.getElementById('m-countdown').innerHTML.includes('v-klausurfragen');
+    JG.set(JG.MASTER); await w(200); localStorage.removeItem('bvi_jgd_' + id); localStorage.removeItem('bvi_exam');
+    return r;
+  });
+  eq('Nächste Klausur: Auswahl folgt dem Prüfung-Tab', exl, { masterAll: true, own: true, hidden: true, goesOwn: true, hiddenFallsBack: true });
+
   // ── Stundenplan: Abschnitte der Fortschrittsleiste springen direkt zur Woche ──
   const pips = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms));

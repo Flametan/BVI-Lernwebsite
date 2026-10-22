@@ -4061,6 +4061,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Einstellungen „Nächste Klausur“: Die Auswahl „Der Countdown öffnet“ folgt jetzt dem Prüfung-Tab – eigene Prüfungen des Jahrgangs stehen dort zur Wahl, ausgeblendete nicht mehr; ein nicht mehr vorhandenes Ziel fällt auf „Automatisch“ zurück',
       'Beige: Beim Verschieben des Hintergrund-Reglers bleiben die Kacheln so heller als der Hintergrund wie in der Voreinstellung (vorher wurden sie schwächer abgehoben), ebenso eingelassene Flächen und Linien',
       'Stundenplan: Die Abschnitte der Fortschrittsleiste unter der Kalenderwoche sind größer, mit KW-Nummer, und springen beim Antippen direkt zur jeweiligen Woche',
       'Stundenplan Zivile Verteidigung (KW 50): Montag „Anreise“ 07:45–11:00 mit Navigation zur BABZ in Ahrweiler (Ramersbacher Str. 95), Programm ab mittags; Freitag „Abreise“ 14:00–14:45 (ohne Gewähr) zur Heimadresse',
@@ -6945,11 +6946,20 @@ const SHELL=(function(){
     if(!JG.isMaster()) list=[{date:'2000-01-01',name:'Klausur'}];
     return list.find(e=>new Date(e.date+'T00:00')>=t)||list[list.length-1];
   }
+  // Ziele für den Countdown: dieselben Prüfungen wie im Prüfung-Tab (Master ohne die ausgeblendeten, dazu die eigenen des Jahrgangs)
+  function examList(){
+    const jd=JG.data(), weg=new Set(jd.pr.weg);
+    return EXAMS.map(([name,items],si)=>{
+      const key=JG.TABS[si][0];
+      return [name,[...items.filter(x=>!weg.has(x[0])).map(x=>[x[0],x[1]]),...jd.pr.hinzu.filter(p=>p.tab===key&&!p.seite).map(p=>[p.id,p.titel,'own'])]];
+    }).filter(g=>g[1].length);
+  }
+  const examFind=id=>examList().flatMap(g=>g[1]).find(x=>x[0]===id);
   function examCfg(){
     const d=defExam();
     try{
       const o=JSON.parse(localStorage.getItem('bvi_exam')||'{}');
-      return {date:/^\d{4}-\d{2}-\d{2}$/.test(o.date||'')?o.date:d.date, name:((o.name||'').trim().slice(0,60))||d.name, target:EXAMS.some(([,it])=>it.some(x=>x[0]===o.target))?o.target:'', off:!!o.off};
+      return {date:/^\d{4}-\d{2}-\d{2}$/.test(o.date||'')?o.date:d.date, name:((o.name||'').trim().slice(0,60))||d.name, target:examFind(o.target)?o.target:'', off:!!o.off};
     }catch(e){ return {...d,target:'',off:false}; }
   }
   function goalMin(){
@@ -6958,7 +6968,7 @@ const SHELL=(function(){
   // Ziel der Countdown-Karte: Klausur nach § 21 → Laufbahnklausuren, sonst Altklausur-Quiz IdF
   function examTarget(){
     const t=examCfg().target;
-    if(t){ const it=EXAMS.flatMap(x=>x[1]).find(x=>x[0]===t); if(it) return [it[0],it[1]]; }
+    if(t){ const it=examFind(t); if(it) return it; }   // it = [id, Titel, 'own' bei eigener Prüfung]
     return /§\s*21/.test(examCfg().name)?['v-laufbahn-2026','Laufbahnklausuren Juni 2026']:['v-idf-altklausur','Altklausur-Quiz IdF']; }
   function daysToExam(){
     const t=new Date(); t.setHours(0,0,0,0);
@@ -7039,7 +7049,7 @@ const SHELL=(function(){
     if(!cd||!list) return;
     const days=daysToExam();
     const tgt=examTarget();
-    cd.innerHTML=days<0?'':`<button type="button" class="m-card m-count m-count-go" onclick="${goJs(tgt[0],tgt[1])}"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">${esc(examCfg().name)}</span><span class="m-t2">${new Date(examCfg().date+'T00:00').toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'long',year:'numeric'})}</span></div><span class="m-count-link">${esc(tgt[1])} <i>›</i></span></button>`;
+    cd.innerHTML=days<0?'':`<button type="button" class="m-card m-count m-count-go" onclick="${tgt[2]==='own'&&/^[\w-]+$/.test(tgt[0])?`JGUI.openExam('${tgt[0]}')`:goJs(tgt[0],tgt[1])}"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">${esc(examCfg().name)}</span><span class="m-t2">${new Date(examCfg().date+'T00:00').toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'long',year:'numeric'})}</span></div><span class="m-count-link">${esc(tgt[1])} <i>›</i></span></button>`;
     const dueQ=(typeof QUIZ!=='undefined'&&QUIZ.dueCount)?QUIZ.dueCount():0;
     const dueI=(typeof IDFQ!=='undefined'&&IDFQ.dueCount)?IDFQ.dueCount():0;
     const jd=JG.data(), weg=new Set(jd.pr.weg), edit=typeof JGUI!=='undefined'&&JGUI.isEditing()&&!JG.isMaster();
@@ -7151,7 +7161,7 @@ const SHELL=(function(){
     const ex=examCfg(), di=document.getElementById('m-exam-date'), ni=document.getElementById('m-exam-name'), ti=document.getElementById('m-exam-target'), xb=document.getElementById('m-exam-clear');
     if(di) di.value=ex.off?'':ex.date; if(ni) ni.value=ex.off?'':(ex.name===defExam().name&&!localStorage.getItem('bvi_exam')?'':ex.name);
     if(ti){
-      if(!ti.options.length) ti.innerHTML='<option value="">Automatisch</option>'+EXAMS.map(([n,it],i)=>'<optgroup label="'+esc(n)+'">'+it.map(x=>'<option value="'+esc(x[0])+'">'+esc(x[1])+'</option>').join('')+'</optgroup>').join('');
+      ti.innerHTML='<option value="">Automatisch</option>'+examList().map(([n,it])=>'<optgroup label="'+esc(n)+'">'+it.map(x=>'<option value="'+esc(x[0])+'">'+esc(x[1])+(x[2]?' (eigene)':'')+'</option>').join('')+'</optgroup>').join('');   // bei jedem Öffnen neu: folgt dem Prüfung-Tab
       ti.value=ex.off?'':ex.target;
     }
     if(xb) xb.hidden=ex.off;
