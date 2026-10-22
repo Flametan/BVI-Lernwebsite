@@ -393,6 +393,28 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Nächste Klausur: Auswahl folgt dem Prüfung-Tab', exl, { masterAll: true, own: true, hidden: true, goesOwn: true, hiddenFallsBack: true });
 
+  // ── Jahrgang: Lernkarten löschen, Rückgängig/Wiederholen dauerhaft sichtbar ──
+  const kl = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    const r = {}; const id = JG.list()[0].id; localStorage.removeItem('bvi_jgd_' + id);
+    const n0 = FLASHCARD_DATA.length; JG.set(id); await w(300);
+    r.undoOff = !JG.canUndo();
+    const first = FLASHCARD_DATA.find(c => !c.jg && !c.own);
+    JGUI.hideCard(first.id); await w(200);
+    r.hidden = FLASHCARD_DATA.length === n0 - 1 && !FLASHCARD_DATA.some(c => c.id === first.id) && JG.data().kweg.includes(first.id);
+    const ex = JSON.parse(await JG.exportJson()); r.exported = Array.isArray(ex.kweg) && ex.kweg.includes(first.id);
+    r.undo = JG.undo() && FLASHCARD_DATA.length === n0 && FLASHCARD_DATA.some(c => c.id === first.id);
+    r.redo = JG.redo() && FLASHCARD_DATA.length === n0 - 1;
+    NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(600);
+    const bar = document.querySelector('#v-vak-verwaltungsrecht .jg-ctl');
+    r.bar = !!bar && !!bar.querySelector('.jg-be') && !!bar.querySelector('.jg-undo') && !!bar.querySelector('.jg-redo') && !bar.querySelector('.jg-undo').disabled && bar.querySelector('.jg-redo').disabled;
+    JGUI.restoreCards(); await w(200); r.all = FLASHCARD_DATA.length === n0;
+    JG.set(JG.MASTER); await w(200); localStorage.removeItem('bvi_jgd_' + id);
+    r.master = FLASHCARD_DATA.length === n0;
+    return r;
+  });
+  eq('Jahrgang: Lernkarten löschen, Rückgängig und Wiederholen', kl, { undoOff: true, hidden: true, exported: true, undo: true, redo: true, bar: true, all: true, master: true });
+
   // ── Stundenplan: Abschnitte der Fortschrittsleiste springen direkt zur Woche ──
   const pips = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms));

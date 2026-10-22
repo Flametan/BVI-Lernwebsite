@@ -10,6 +10,14 @@ const JGUI=(function(){
 
   // ── Fenster ──
   const stack=[];
+  // Rückgängig und Wiederholen: dauerhaft sichtbar neben den Bearbeiten-Knöpfen (ausgegraut, solange es nichts gibt)
+  const histHtml=()=>'<button type="button" class="btn btn-ghost jg-undo" aria-label="Rückgängig"'+(JG.canUndo()?'':' disabled')+'>↶ Rückgängig</button><button type="button" class="btn btn-ghost jg-redo" aria-label="Aktion wiederholen"'+(JG.canRedo()?'':' disabled')+'>↷ Wiederholen</button>';
+  document.addEventListener('click',e=>{
+    const u=e.target.closest('.jg-undo'), r=e.target.closest('.jg-redo'); if(!u&&!r) return;
+    e.preventDefault();
+    const ok=u?JG.undo():JG.redo();
+    if(ok){ TOAST.show(u?'Rückgängig gemacht':'Wiederholt',{type:'ok'}); try{ if(document.querySelector('#fc-container .fc-outer,#fc-container .fc-end')&&typeof FC!=='undefined') FC.start(); }catch(x){} }
+  },true);
   function modal(title,html,cls){
     const ov=document.createElement('div'); ov.className='jg-ov'; ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true'); ov.setAttribute('aria-label',title);
     ov.innerHTML='<div class="jg-card '+(cls||'')+'"><button class="sh-x" aria-label="Schließen" type="button">×</button><div class="sh-t">'+E(title)+'</div><div class="jg-body">'+html+'</div></div>';
@@ -306,7 +314,7 @@ const JGUI=(function(){
     }
     const n=all.filter(p=>mine.has(p.key)).length;
     const bar=document.createElement('div'); bar.className='jg-bar jg-ctl';
-    bar.innerHTML='<button type="button" class="btn btn-ghost jg-be">'+(ed?'Fertig':'Seite bearbeiten')+'</button>'+(n?'<button type="button" class="btn btn-ghost jg-br">'+n+' gelöschte wiederherstellen</button>':'');
+    bar.innerHTML='<button type="button" class="btn btn-ghost jg-be">'+(ed?'Fertig':'Seite bearbeiten')+'</button>'+histHtml()+(n?'<button type="button" class="btn btn-ghost jg-br">'+n+' gelöschte wiederherstellen</button>':'');
     pc.insertBefore(bar,pc.firstChild);
     fillImages(pc);
     if(typeof LP!=='undefined'&&LP.refresh) LP.refresh(vid);
@@ -323,15 +331,15 @@ const JGUI=(function(){
     return parts(id,pc).filter(p=>gone.has(p.key)).map(p=>p.el);
   }
   function delPart(key){
-    const l=JG.local(), prev=JSON.stringify(l);
+    const l=JG.local();
     if(!l.ausg.includes(key)) l.ausg.push(key);
     JG.saveLocal(l);
-    TOAST.show(({a:'Kapitel',b:'Block',t:'Reiter'})[key.split('|')[1]]+' gelöscht',{type:'ok',undo:()=>JG.saveLocal(JSON.parse(prev))});
+    TOAST.show(({a:'Kapitel',b:'Block',t:'Reiter'})[key.split('|')[1]]+' gelöscht',{type:'ok'});
   }
   function restoreParts(id){
-    const l=JG.local(), prev=JSON.stringify(l), n=l.ausg.filter(k=>k.startsWith(id+'|')).length;
+    const l=JG.local(), n=l.ausg.filter(k=>k.startsWith(id+'|')).length;
     l.ausg=l.ausg.filter(k=>!k.startsWith(id+'|')); JG.saveLocal(l);
-    TOAST.show(n+' gelöschte Inhalte sind wieder da',{type:'ok',undo:()=>JG.saveLocal(JSON.parse(prev))});
+    TOAST.show(n+' gelöschte Inhalte sind wieder da',{type:'ok'});
   }
   // Eigener Reiter: anlegen/bearbeiten, löschen, öffnen
   function reiterEditor(seite,id){
@@ -345,9 +353,9 @@ const JGUI=(function(){
     };
   }
   function delReiter(id){
-    const l=JG.local(), prev=JSON.stringify(l), pid='v-r-'+id;
+    const l=JG.local(), pid='v-r-'+id;
     l.reiter=l.reiter.filter(r=>r.id!==id); l.erg=l.erg.filter(e=>e.seite!==pid);
-    JG.saveLocal(l); TOAST.show('Reiter gelöscht',{type:'ok',undo:()=>JG.saveLocal(JSON.parse(prev))});
+    JG.saveLocal(l); TOAST.show('Reiter gelöscht',{type:'ok'});
   }
   function openReiter(id){
     const r=JG.data().reiter.find(x=>x.id===id), v=document.getElementById('v-jg-reiter'); if(!r||!v) return;
@@ -378,8 +386,8 @@ const JGUI=(function(){
     else if(e.target.closest('.jg-dl')){
       const l=JG.local(), i=l.erg.findIndex(x=>x.id===c.dataset.id);
       if(i<0){ TOAST.show('Dieser Inhalt kommt vom Jahrgang und lässt sich nur in der Jahrgangs-Datei ändern',{type:'info'}); return; }
-      const prev=JSON.stringify(l); l.erg.splice(i,1); JG.saveLocal(l);
-      TOAST.show('Gelöscht',{type:'ok',undo:()=>{ JG.saveLocal(JSON.parse(prev)); }});
+      l.erg.splice(i,1); JG.saveLocal(l);
+      TOAST.show('Gelöscht',{type:'ok'});
     }
   },true);
   // Ergänzung in einem Kapitel (nur Text und Bild) oder ganzes eigenes Kapitel
@@ -419,15 +427,15 @@ const JGUI=(function(){
     const l=JG.local(); l.rel[id]=!JG.rel(id); JG.saveLocal(l);
   }
   function delExam(id){
-    const l=JG.local(), prev=JSON.stringify(l), i=l.pr.hinzu.findIndex(p=>p.id===id);
+    const l=JG.local(), i=l.pr.hinzu.findIndex(p=>p.id===id);
     if(i>=0) l.pr.hinzu.splice(i,1); else if(!l.pr.weg.includes(id)) l.pr.weg.push(id);
     JG.saveLocal(l);
-    TOAST.show('Prüfung entfernt',{type:'ok',undo:()=>JG.saveLocal(JSON.parse(prev))});
+    TOAST.show('Prüfung entfernt',{type:'ok'});
   }
   function restoreExams(){
-    const l=JG.local(); const prev=JSON.stringify(l);
+    const l=JG.local();
     l.pr.weg=[]; JG.saveLocal(l);
-    TOAST.show('Ausgeblendete Prüfungen sind wieder da',{type:'ok',undo:()=>JG.saveLocal(JSON.parse(prev))});
+    TOAST.show('Ausgeblendete Prüfungen sind wieder da',{type:'ok'});
   }
   const QT=[['sc','Single-Choice'],['mc','Multiple-Choice'],['text','Freitext']];
   const isOn=(q,k)=>q.typ==='mc'?(Array.isArray(q.c)&&q.c.includes(k)):q.c===k;
@@ -562,13 +570,28 @@ const JGUI=(function(){
       if(el.textContent!==t) el.textContent=t;
     });
   }
+  // Lernkarten-Stapel an den Jahrgang anpassen: gelöschte Master-Karten heraus (und bei Rückgängig wieder hinein), Karten des Jahrgangs dazu
+  const stash=new Map();   // ID → { c: Karte, i: ursprüngliche Stelle }
   function syncCards(){
     if(typeof FLASHCARD_DATA==='undefined') return;
     for(let i=FLASHCARD_DATA.length-1;i>=0;i--) if(FLASHCARD_DATA[i].jg) FLASHCARD_DATA.splice(i,1);
+    const d=JG.data(), kw=new Set(d.kweg);
+    [...stash.entries()].filter(([id])=>!kw.has(id)).sort((a,b)=>a[1].i-b[1].i).forEach(([id,x])=>{ FLASHCARD_DATA.splice(Math.min(x.i,FLASHCARD_DATA.length),0,x.c); stash.delete(id); });
+    kw.forEach(id=>{ if(id.startsWith('jg')||stash.has(id)) return; const i=FLASHCARD_DATA.findIndex(c=>c.id===id&&!c.own); if(i>=0){ stash.set(id,{c:FLASHCARD_DATA[i],i}); FLASHCARD_DATA.splice(i,1); } });
     const h=t=>E(t).replace(/\n/g,'<br>');
-    JG.data().karten.forEach(k=>FLASHCARD_DATA.push({id:'jg'+k.id,cat:k.modul+' · Jahrgang',q:h(k.q),a:h(k.a),jg:true}));
+    d.karten.forEach(k=>{ if(!kw.has('jg'+k.id)) FLASHCARD_DATA.push({id:'jg'+k.id,cat:k.modul+' · Jahrgang',q:h(k.q),a:h(k.a),jg:true}); });
     try{ if(typeof FC!=='undefined') FC.syncFilters(); if(typeof SHELL!=='undefined') SHELL.renderFcSide(); }catch(e){}
   }
+  // Eine Karte löschen (nur für diesen Jahrgang; Master-Karten bleiben im Master): ihre ID kommt in die Liste der gelöschten Karten
+  function hideCard(id){
+    if(JG.isMaster()||!/^[A-Za-z0-9_-]{1,40}$/.test(id)) return false;
+    const l=JG.local(); if(!l.kweg.includes(id)) l.kweg.push(id); JG.saveLocal(l); return true;
+  }
+  function restoreCards(){
+    const l=JG.local(), n=JG.data().kweg.length; l.kweg=[]; JG.saveLocal(l);
+    if(n) TOAST.show(n+' gelöschte Karten sind wieder da',{type:'ok'});
+  }
+  const hiddenCards=()=>JG.isMaster()?0:JG.data().kweg.length;
   const saveField=(f,v,msg)=>{ const l=JG.local(); f(l,v); JG.saveLocal(l); if(msg) TOAST.show(msg,{type:'ok'}); };
 
   function linkEditor(){
@@ -588,13 +611,14 @@ const JGUI=(function(){
   }
   function kartenEditor(){
     let edit=null;
-    const m=modal('Lernkarten des Jahrgangs','<p class="jg-p">Diese Karten gehören zum Jahrgang und stehen in der Jahrgangs-Datei. Du findest sie bei den Lernkarten.</p><div id="jg-kl"></div><label class="jg-l">Modul<select id="jg-km" class="m-input">'+['GAL','SFS','HLFS','IBK','VAk','FeuAK','IdF'].map(x=>'<option>'+x+'</option>').join('')+'</select></label><label class="jg-l">Frage<textarea id="jg-kq" class="m-input" rows="2" maxlength="600"></textarea></label><label class="jg-l">Antwort<textarea id="jg-ka" class="m-input" rows="3" maxlength="1500"></textarea></label><button class="btn btn-gold" id="jg-ks" type="button" style="margin-top:8px">Karte speichern</button>');
-    const draw=()=>{ const a=JG.data().karten; $(m.body,'#jg-kl').innerHTML=a.map(k=>'<div class="cu-item" data-id="'+E(k.id)+'"><div><b>'+E(k.modul)+'</b> '+E(k.q)+'</div><span><button type="button" class="jg-ke">Bearbeiten</button><button type="button" class="jg-kd">Löschen</button></span></div>').join('')||'<div class="cu-empty">Noch keine Karten.</div>'; };
+    const m=modal('Lernkarten des Jahrgangs','<p class="jg-p">Diese Karten gehören zum Jahrgang und stehen in der Jahrgangs-Datei. Du findest sie bei den Lernkarten.</p><div class="jg-bar" id="jg-kh" style="margin-top:8px"></div><div id="jg-kl"></div><label class="jg-l">Modul<select id="jg-km" class="m-input">'+['GAL','SFS','HLFS','IBK','VAk','FeuAK','IdF'].map(x=>'<option>'+x+'</option>').join('')+'</select></label><label class="jg-l">Frage<textarea id="jg-kq" class="m-input" rows="2" maxlength="600"></textarea></label><label class="jg-l">Antwort<textarea id="jg-ka" class="m-input" rows="3" maxlength="1500"></textarea></label><button class="btn btn-gold" id="jg-ks" type="button" style="margin-top:8px">Karte speichern</button>');
+    const draw=()=>{ const kh=$(m.body,'#jg-kh'); if(kh) kh.innerHTML=histHtml(); const a=JG.data().karten; $(m.body,'#jg-kl').innerHTML=a.map(k=>'<div class="cu-item" data-id="'+E(k.id)+'"><div><b>'+E(k.modul)+'</b> '+E(k.q)+'</div><span><button type="button" class="jg-ke">Bearbeiten</button><button type="button" class="jg-kd">Löschen</button></span></div>').join('')||'<div class="cu-empty">Noch keine Karten.</div>'; };
     draw();
     m.body.addEventListener('click',e=>{
+      if(e.target.closest('.jg-undo,.jg-redo')){ setTimeout(draw,0); return; }
       const it=e.target.closest('.cu-item');
       if(e.target.closest('.jg-ke')&&it){ const k=JG.data().karten.find(x=>x.id===it.dataset.id); if(k){ edit=k.id; $(m.body,'#jg-km').value=k.modul; $(m.body,'#jg-kq').value=k.q; $(m.body,'#jg-ka').value=k.a; } }
-      else if(e.target.closest('.jg-kd')&&it){ const l=JG.local(), prev=JSON.stringify(l); l.karten=l.karten.filter(x=>x.id!==it.dataset.id); JG.saveLocal(l); draw(); TOAST.show('Karte gelöscht',{type:'ok',undo:()=>{ JG.saveLocal(JSON.parse(prev)); draw(); }}); }
+      else if(e.target.closest('.jg-kd')&&it){ const l=JG.local(); l.karten=l.karten.filter(x=>x.id!==it.dataset.id); JG.saveLocal(l); draw(); TOAST.show('Karte gelöscht',{type:'ok'}); }
       else if(e.target.closest('#jg-ks')){
         const q=$(m.body,'#jg-kq').value.trim(), a=$(m.body,'#jg-ka').value.trim();
         if(!q||!a){ TOAST.show('Bitte Frage und Antwort eintragen',{type:'info'}); return; }
@@ -649,5 +673,5 @@ const JGUI=(function(){
   JG.load();
 
   return { settings, mount, goneEls, chapterKey, names, checklist, openReiter, help, helpDone, closeTop, planEditor, planPhoto, parsePlanText, parseQuestions, ocr, isEditing, toggleEdit, setRel, delExam, restoreExams,
-    examEditor, openExam, notice:NOTICE };
+    examEditor, openExam, histHtml, hideCard, restoreCards, hiddenCards, notice:NOTICE };
 })();

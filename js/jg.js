@@ -8,7 +8,7 @@
      { format:'bvi-jahrgang', v:1, jahrgang:'BRef 10/2026 - AB 10/2027', stand:'2027-01-12',
        plane:{ ibk|vak|feuak|idf|idf2 (IdF Gruppe 1/2) : { name, ev:[{s,e,t,r,n,ad}] } },  aktiv:'idf',
        erg:[{ id, seite, kap, typ:'text'|'sc'|'mc'|'kapitel', titel, text, o:[…], c:[…], erk, bild, ts }],   (sc/mc: text = Frage, o = Antworten, c = richtige Nummern)
-       links:{ cloud:{ url, titel, hinweis } },  karten:[{ id, modul, q, a }],  orte:{ ibk, vak, feuak, idf },  reiter:[{ id, seite, titel, beschr }] (eigene Reiter auf einer Übersichtsseite),
+       links:{ cloud:{ url, titel, hinweis } },  karten:[{ id, modul, q, a }],  kweg:[IDs gelöschter Lernkarten],  orte:{ ibk, vak, feuak, idf },  reiter:[{ id, seite, titel, beschr }] (eigene Reiter auf einer Übersichtsseite),
        pr:{ hinzu:[{ id, tab, seite (optional: gehört zu dieser Prüfungsseite), titel, fragen:[{ q, o:[…], c:0, e:'' }], ts }], weg:['v-…', …] },
        rel:{ '<pruefung-id>':true|false },  ausg:['v-seite|a|<kennung>', …]  (ausgeblendete Kapitel/Blöcke)
        bilder:{ '<bild-id>':'data:image/jpeg;base64,…' } }
@@ -64,7 +64,7 @@ const JG=(function(){
   const KMOD=['GAL','SFS','HLFS','IBK','VAk','FeuAK','IdF'];
   const KEYOK=/^[a-z0-9]{1,12}(~\d{1,3})?$/, AUSOK=/^v-[a-z0-9-]{1,58}\|[abt]\|[a-z0-9]{1,12}(~\d{1,3})?$/;
   function clean(o){
-    const out={v:1,plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[],links:{},karten:[],orte:{},reiter:[]};
+    const out={v:1,plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[],links:{},karten:[],kweg:[],orte:{},reiter:[]};
     if(!o||typeof o!=='object') return out;
     const planOf=pl=>{
       if(!pl||!Array.isArray(pl.ev)) return null;
@@ -102,18 +102,27 @@ const JG=(function(){
     (Array.isArray(o.reiter)?o.reiter:[]).slice(0,100).forEach(r=>{ const id=r&&idOk(r.id), s=String(r&&r.seite), t=str(r&&r.titel,60).trim(); if(id&&/^v-[a-z0-9-]{1,58}$/.test(s)&&t) out.reiter.push({id,seite:s,titel:t,beschr:str(r.beschr,140).trim(),ts:Number.isFinite(+r.ts)?+r.ts:Date.now()}); });
     const cl=o.links&&o.links.cloud; if(cl&&/^https:\/\/[^\s"'<>]{3,500}$/.test(String(cl.url))) out.links.cloud={url:String(cl.url),titel:str(cl.titel,60).trim(),hinweis:str(cl.hinweis,140).trim()};
     (Array.isArray(o.karten)?o.karten:[]).slice(0,300).forEach(k=>{ const id=k&&idOk(k.id), q=str(k&&k.q,600).trim(), a=str(k&&k.a,1500).trim(); if(id&&q&&a&&KMOD.includes(k.modul)) out.karten.push({id,modul:k.modul,q,a}); });
+    if(Array.isArray(o.kweg)) out.kweg=[...new Set(o.kweg.slice(0,600).map(idOk).filter(Boolean))];   // gelöschte Lernkarten (Master-Karten und Karten des Jahrgangs, jeweils die ID der Karte)
     ['ibk','vak','feuak','idf'].forEach(k=>{ const v=str(o.orte&&o.orte[k],40).replace(/[<>]/g,'').trim(); if(v) out.orte[k]=v; });
     if(o.rel&&typeof o.rel==='object'&&!Array.isArray(o.rel)) Object.keys(o.rel).slice(0,300).forEach(k=>{ if(/^(v-[a-z0-9-]+|[A-Za-z0-9_-]+)$/.test(k)&&k.length<=60) out.rel[k]=!!o.rel[k]; });
     return out;
   }
   const empty=()=>clean({});
   function local(id){ id=id||current(); try{ return clean(JSON.parse(lsGet(PRE+id)||'null')); }catch(e){ return empty(); } }
-  function saveLocal(d,id){ id=id||current(); lsSet(PRE+id,JSON.stringify(d)); changed(); }
+  // Verlauf zum Rückgängig-/Wiederholen-Machen: frühere Stände der eigenen Ebene des gewählten Jahrgangs, nur im Speicher
+  const H={id:null,u:[],r:[]};
+  const hist=id=>{ if(H.id!==id){ H.id=id; H.u=[]; H.r=[]; } return H; };
+  const setRaw=(id,v)=>{ try{ if(v===null) localStorage.removeItem(PRE+id); else localStorage.setItem(PRE+id,v); }catch(e){} };
+  function record(id,before,after){ if(before===after) return; const h=hist(id); h.u.push(before); if(h.u.length>50) h.u.shift(); h.r=[]; }
+  function saveLocal(d,id){ id=id||current(); const next=JSON.stringify(d); record(id,lsGet(PRE+id),next); lsSet(PRE+id,next); changed(); }
+  function undo(){ const id=current(), h=hist(id); if(!h.u.length) return false; h.r.push(lsGet(PRE+id)); setRaw(id,h.u.pop()); changed(); return true; }
+  function redo(){ const id=current(), h=hist(id); if(!h.r.length) return false; h.u.push(lsGet(PRE+id)); setRaw(id,h.r.pop()); changed(); return true; }
+  const canUndo=()=>hist(current()).u.length>0, canRedo=()=>hist(current()).r.length>0;
   function pubData(){ return pub||empty(); }
 
   // eigene und veröffentlichte Ebene zusammen (eigene gewinnt bei gleicher ID)
   function data(){
-    if(isMaster()) return {plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[],links:{},karten:[],orte:{},reiter:[]};   // der Master ist nicht veränderbar
+    if(isMaster()) return {plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[],links:{},karten:[],kweg:[],orte:{},reiter:[]};   // der Master ist nicht veränderbar
     const p=pubData(), l=local(), byId=(a,b)=>{ const m=new Map(); [...a,...b].forEach(x=>m.set(x.id,x)); return [...m.values()]; };
     return {
       plane:{...p.plane,...l.plane},
@@ -124,6 +133,7 @@ const JG=(function(){
       ausg:[...new Set([...p.ausg,...l.ausg])],
       links:{...p.links,...l.links},
       karten:byId(p.karten,l.karten),
+      kweg:[...new Set([...p.kweg,...l.kweg])],
       orte:{...p.orte,...l.orte},
       reiter:byId(p.reiter,l.reiter)
     };
@@ -162,7 +172,7 @@ const JG=(function(){
   }
   function set(id){
     if(!list().some(j=>j.id===id)&&id!==MASTER) return;
-    lsSet(K,id);
+    lsSet(K,id); H.id=null;   // Wechsel des Jahrgangs: Verlauf beginnt neu
     pub=null; pubImg={}; changed(); load();
   }
 
@@ -171,7 +181,7 @@ const JG=(function(){
     const d=data(), ids=new Set(d.erg.map(e=>e.bild).filter(Boolean)), bilder={};
     for(const i of ids){ const u=await img.get(i); if(okImg(u)) bilder[i]=u; }
     return JSON.stringify({format:'bvi-jahrgang',v:1,jahrgang:labelOf(current()),stand:new Date().toISOString().slice(0,10),
-      plane:d.plane,aktiv:d.aktiv,erg:d.erg,pr:d.pr,rel:d.rel,ausg:d.ausg,links:d.links,karten:d.karten,orte:d.orte,reiter:d.reiter,bilder},null,1);
+      plane:d.plane,aktiv:d.aktiv,erg:d.erg,pr:d.pr,rel:d.rel,ausg:d.ausg,links:d.links,karten:d.karten,kweg:d.kweg,orte:d.orte,reiter:d.reiter,bilder},null,1);
   }
   // Datei einlesen und zu den eigenen Änderungen hinzufügen; liefert Zahlen für die Rückmeldung
   async function importJson(text,mode){
@@ -188,6 +198,7 @@ const JG=(function(){
     Object.assign(l.links,c.links); Object.assign(l.orte,c.orte);
     c.reiter.forEach(r=>{ const i=l.reiter.findIndex(x=>x.id===r.id); if(i>=0) l.reiter[i]=r; else l.reiter.push(r); });
     c.karten.forEach(k=>{ const i=l.karten.findIndex(x=>x.id===k.id); if(i>=0) l.karten[i]=k; else l.karten.push(k); });
+    l.kweg=[...new Set([...l.kweg,...c.kweg])];
     let pl=0; Object.entries(c.plane).forEach(([k,v])=>{ l.plane[k]=v; pl+=v.ev.length; });
     if(c.aktiv) l.aktiv=c.aktiv;
     saveLocal(l);
@@ -198,14 +209,14 @@ const JG=(function(){
     let j; try{ j=JSON.parse(text); }catch(e){ return null; }
     if(!j||j.format!=='bvi-jahrgang') return null;
     const c=clean(j);
-    return {label:str(j.jahrgang,60),erg:c.erg.length,pruefungen:c.pr.hinzu.length,plan:Object.keys(c.plane).length,reiter:c.reiter.length,karten:c.karten.length};
+    return {label:str(j.jahrgang,60),erg:c.erg.length,pruefungen:c.pr.hinzu.length,plan:Object.keys(c.plane).length,reiter:c.reiter.length,karten:c.karten.length,geloescht:c.kweg.length};
   }
   const snapshot=()=>lsGet(PRE+current());
   // Alle eigenen Änderungen dieses Jahrgangs verwerfen (Rückgabe: vorheriger Stand zum Rückgängigmachen)
-  function discard(){ const prev=lsGet(PRE+current()); try{ localStorage.removeItem(PRE+current()); }catch(e){} changed(); return prev; }
-  function restore(prev){ if(prev) lsSet(PRE+current(),prev); changed(); }
-  const hasLocal=()=>{ const l=local(); return !!(Object.keys(l.plane).length||l.aktiv||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||Object.keys(l.rel).length||l.ausg.length||Object.keys(l.links).length||l.karten.length||Object.keys(l.orte).length||l.reiter.length); };
+  function discard(){ const prev=lsGet(PRE+current()); record(current(),prev,null); try{ localStorage.removeItem(PRE+current()); }catch(e){} changed(); return prev; }
+  function restore(prev){ if(prev){ record(current(),lsGet(PRE+current()),prev); lsSet(PRE+current(),prev); } changed(); }
+  const hasLocal=()=>{ const l=local(); return !!(Object.keys(l.plane).length||l.aktiv||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||Object.keys(l.rel).length||l.ausg.length||Object.keys(l.links).length||l.karten.length||l.kweg.length||Object.keys(l.orte).length||l.reiter.length); };
 
   return { MASTER, TABS, PLANKEYS, list, labelOf, current, isMaster, data, local, saveLocal, glow, rel, setExams, examOf, load, set, on, ver:()=>ver, img, okImg,
-    exportJson, importJson, peek, snapshot, discard, restore, hasLocal, empty, newId:()=>'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6) };
+    exportJson, importJson, peek, snapshot, discard, restore, undo, redo, canUndo, canRedo, hasLocal, empty, newId:()=>'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6) };
 })();

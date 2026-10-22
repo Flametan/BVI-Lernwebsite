@@ -2664,3 +2664,6 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 button.idf-map{background:none;border:0;padding:0;font:inherit;font-weight:600;cursor:pointer;}
 .idf-abr{display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .idf-home-edit{font-size:.66rem;opacity:.75;flex-shrink:0;padding:4px 0 4px 8px;}
+/* Jahrgang: Rückgängig/Wiederholen dauerhaft sichtbar, ausgegraut ohne Verlauf */
+.jg-bar .btn:disabled{opacity:.4;cursor:default;}
+.fc-jgbar{margin:12px 0 0;justify-content:center;}

@@ -14,7 +14,7 @@ if(!j||j.format!=='bvi-jahrgang'){ console.error('FEHLER: Das ist keine Jahrgang
 
 const TABS=['laufbahn','idf','feuak','vak','ibk'], PLAN=['ibk','vak','feuak','idf','idf2'], MODS=['GAL','SFS','HLFS','IBK','VAk','FeuAK','IdF'];
 const arr=v=>Array.isArray(v)?v:[], str=v=>typeof v==='string'?v:'';
-const KNOWN=['format','v','jahrgang','stand','plane','plan','aktiv','erg','pr','rel','ausg','links','karten','orte','reiter','bilder','nrel','glow'];
+const KNOWN=['format','v','jahrgang','stand','plane','plan','aktiv','erg','pr','rel','ausg','links','karten','kweg','orte','reiter','bilder','nrel','glow'];
 Object.keys(j).filter(k=>!KNOWN.includes(k)).forEach(k=>warn.push('Unbekanntes Feld „'+k+'“ (wird von der App ignoriert)'));
 
 // Verdächtige Texte: HTML, Skripte, Links
@@ -73,6 +73,7 @@ if(cl){ z('Lehrgangs-Link:',str(cl.titel),'→',str(cl.url)); sehen('Link Titel'
   if(/passwor|kennwort/i.test(str(cl.hinweis)+str(cl.titel))) warn.push('Im Link-Hinweis geht es um ein Passwort – bitte prüfen, dass keins drinsteht');
   if(h) warn.push('Link-Ziel prüfen: '+h); } else z('Lehrgangs-Link: keiner');
 const ka=arr(j.karten); dup('Lernkarten',ka.map(k=>k&&k.id)); z('Lernkarten:',ka.length);
+z('Gelöschte Lernkarten:',arr(j.kweg).length);
 ka.forEach((k,i)=>{ sehen('Karte '+(i+1)+' Frage',k.q); sehen('Karte '+(i+1)+' Antwort',k.a); if(!MODS.includes(k.modul)) fehler.push('Karte '+(i+1)+': unbekanntes Modul „'+k.modul+'“'); });
 const orte=j.orte||{}; z('Standorte:',Object.keys(orte).length?Object.keys(orte).map(k=>k+'='+orte[k]).join(', '):'Standard'); Object.values(orte).forEach(o=>sehen('Standort',o));
 const re=arr(j.reiter); dup('Reiter',re.map(r=>r&&r.id)); z('Eigene Reiter:',re.length?re.map(r=>str(r.titel)+' (auf '+str(r.seite)+')').join('; '):'keine'); re.forEach(r=>{ sehen('Reiter',r.titel); sehen('Reiter Beschreibung',r.beschr); });
