@@ -66,6 +66,7 @@ Alles ist optional (siehe `_beispiel.json`):
 * `kweg` – gelöschte Lernkarten: IDs der Karten, die in diesem Jahrgang nicht mehr erscheinen sollen (Master-Karten wie `g01` oder Karten des Jahrgangs wie `jgk1`). Die Karten bleiben im Master erhalten.
 * `karten` – Lernkarten des Jahrgangs: `[{ "id": "k1", "modul": "VAk", "q": "Frage", "a": "Antwort" }]` (Module: GAL, SFS, HLFS, IBK, VAk, FeuAK, IdF).
 * `orte` – Standorte statt der Standardnamen: `{ "ibk": "…", "vak": "…", "feuak": "…", "idf": "…" }`.
+* `kuerzel` – eigene Kürzel statt IBK, VAk, FeuAK und IdF (Buchstaben, Ziffern, Punkt und Bindestrich, höchstens 12 Zeichen): `{ "idf": "…" }`.
 * `reiter` – eigene Reiter auf einer Übersichtsseite: `[{ "id": "r1", "seite": "v-vak", "titel": "…", "beschr": "…" }]`. Ihre Kapitel stehen in `erg` mit `seite: "v-r-<id>"` und `typ: "kapitel"`.
 * Eigene Prüfungsfragen haben `typ`: `sc` (Single-Choice, `c` = Nummer), `mc` (Multiple-Choice, `c` = Liste) oder `text` (Freitext, `a` = Musterlösung).
 * `bilder` – die Bilder als `data:image/jpeg;base64,…` (die App verkleinert sie vor dem Speichern).

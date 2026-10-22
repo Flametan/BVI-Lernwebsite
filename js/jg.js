@@ -8,7 +8,7 @@
      { format:'bvi-jahrgang', v:1, jahrgang:'BRef 10/2026 - AB 10/2027', stand:'2027-01-12',
        plane:{ ibk|vak|feuak|idf|idf2 (IdF Gruppe 1/2) : { name, ev:[{s,e,t,r,n,ad}] } },  aktiv:'idf',
        erg:[{ id, seite, kap, typ:'text'|'sc'|'mc'|'kapitel', titel, text, o:[…], c:[…], erk, bild, ts }],   (sc/mc: text = Frage, o = Antworten, c = richtige Nummern)
-       links:{ cloud:{ url, titel, hinweis } },  karten:[{ id, modul, q, a }],  kweg:[IDs gelöschter Lernkarten],  orte:{ ibk, vak, feuak, idf },  reiter:[{ id, seite, titel, beschr }] (eigene Reiter auf einer Übersichtsseite),
+       links:{ cloud:{ url, titel, hinweis } },  karten:[{ id, modul, q, a }],  kweg:[IDs gelöschter Lernkarten],  orte:{ ibk, vak, feuak, idf },  kuerzel:{ ibk, vak, feuak, idf } (eigene Kürzel statt IBK/VAk/FeuAK/IdF),  reiter:[{ id, seite, titel, beschr }] (eigene Reiter auf einer Übersichtsseite),
        pr:{ hinzu:[{ id, tab, seite (optional: gehört zu dieser Prüfungsseite), titel, fragen:[{ q, o:[…], c:0, e:'' }], ts }], weg:['v-…', …] },
        rel:{ '<pruefung-id>':true|false },  ausg:['v-seite|a|<kennung>', …]  (ausgeblendete Kapitel/Blöcke)
        bilder:{ '<bild-id>':'data:image/jpeg;base64,…' } }
@@ -64,7 +64,7 @@ const JG=(function(){
   const KMOD=['GAL','SFS','HLFS','IBK','VAk','FeuAK','IdF'];
   const KEYOK=/^[a-z0-9]{1,12}(~\d{1,3})?$/, AUSOK=/^v-[a-z0-9-]{1,58}\|[abt]\|[a-z0-9]{1,12}(~\d{1,3})?$/;
   function clean(o){
-    const out={v:1,plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[],links:{},karten:[],kweg:[],orte:{},reiter:[]};
+    const out={v:1,plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[],links:{},karten:[],kweg:[],orte:{},kuerzel:{},reiter:[]};
     if(!o||typeof o!=='object') return out;
     const planOf=pl=>{
       if(!pl||!Array.isArray(pl.ev)) return null;
@@ -103,6 +103,7 @@ const JG=(function(){
     const cl=o.links&&o.links.cloud; if(cl&&/^https:\/\/[^\s"'<>]{3,500}$/.test(String(cl.url))) out.links.cloud={url:String(cl.url),titel:str(cl.titel,60).trim(),hinweis:str(cl.hinweis,140).trim()};
     (Array.isArray(o.karten)?o.karten:[]).slice(0,300).forEach(k=>{ const id=k&&idOk(k.id), q=str(k&&k.q,600).trim(), a=str(k&&k.a,1500).trim(); if(id&&q&&a&&KMOD.includes(k.modul)) out.karten.push({id,modul:k.modul,q,a}); });
     if(Array.isArray(o.kweg)) out.kweg=[...new Set(o.kweg.slice(0,600).map(idOk).filter(Boolean))];   // gelöschte Lernkarten (Master-Karten und Karten des Jahrgangs, jeweils die ID der Karte)
+    ['ibk','vak','feuak','idf'].forEach(k=>{ const v=str(o.kuerzel&&o.kuerzel[k],12).trim(); if(/^[A-Za-z0-9ÄÖÜäöüß.-]{1,12}$/.test(v)) out.kuerzel[k]=v; });
     ['ibk','vak','feuak','idf'].forEach(k=>{ const v=str(o.orte&&o.orte[k],40).replace(/[<>]/g,'').trim(); if(v) out.orte[k]=v; });
     if(o.rel&&typeof o.rel==='object'&&!Array.isArray(o.rel)) Object.keys(o.rel).slice(0,300).forEach(k=>{ if(/^(v-[a-z0-9-]+|[A-Za-z0-9_-]+)$/.test(k)&&k.length<=60) out.rel[k]=!!o.rel[k]; });
     return out;
@@ -122,7 +123,7 @@ const JG=(function(){
 
   // eigene und veröffentlichte Ebene zusammen (eigene gewinnt bei gleicher ID)
   function data(){
-    if(isMaster()) return {plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[],links:{},karten:[],kweg:[],orte:{},reiter:[]};   // der Master ist nicht veränderbar
+    if(isMaster()) return {plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[],links:{},karten:[],kweg:[],orte:{},kuerzel:{},reiter:[]};   // der Master ist nicht veränderbar
     const p=pubData(), l=local(), byId=(a,b)=>{ const m=new Map(); [...a,...b].forEach(x=>m.set(x.id,x)); return [...m.values()]; };
     return {
       plane:{...p.plane,...l.plane},
@@ -135,6 +136,7 @@ const JG=(function(){
       karten:byId(p.karten,l.karten),
       kweg:[...new Set([...p.kweg,...l.kweg])],
       orte:{...p.orte,...l.orte},
+      kuerzel:{...p.kuerzel,...l.kuerzel},
       reiter:byId(p.reiter,l.reiter)
     };
   }
@@ -181,7 +183,7 @@ const JG=(function(){
     const d=data(), ids=new Set(d.erg.map(e=>e.bild).filter(Boolean)), bilder={};
     for(const i of ids){ const u=await img.get(i); if(okImg(u)) bilder[i]=u; }
     return JSON.stringify({format:'bvi-jahrgang',v:1,jahrgang:labelOf(current()),stand:new Date().toISOString().slice(0,10),
-      plane:d.plane,aktiv:d.aktiv,erg:d.erg,pr:d.pr,rel:d.rel,ausg:d.ausg,links:d.links,karten:d.karten,kweg:d.kweg,orte:d.orte,reiter:d.reiter,bilder},null,1);
+      plane:d.plane,aktiv:d.aktiv,erg:d.erg,pr:d.pr,rel:d.rel,ausg:d.ausg,links:d.links,karten:d.karten,kweg:d.kweg,orte:d.orte,kuerzel:d.kuerzel,reiter:d.reiter,bilder},null,1);
   }
   // Datei einlesen und zu den eigenen Änderungen hinzufügen; liefert Zahlen für die Rückmeldung
   async function importJson(text,mode){
@@ -195,7 +197,7 @@ const JG=(function(){
     l.pr.weg=[...new Set([...l.pr.weg,...c.pr.weg])];
     Object.assign(l.rel,c.rel);
     l.ausg=[...new Set([...l.ausg,...c.ausg])];
-    Object.assign(l.links,c.links); Object.assign(l.orte,c.orte);
+    Object.assign(l.links,c.links); Object.assign(l.orte,c.orte); Object.assign(l.kuerzel,c.kuerzel);
     c.reiter.forEach(r=>{ const i=l.reiter.findIndex(x=>x.id===r.id); if(i>=0) l.reiter[i]=r; else l.reiter.push(r); });
     c.karten.forEach(k=>{ const i=l.karten.findIndex(x=>x.id===k.id); if(i>=0) l.karten[i]=k; else l.karten.push(k); });
     l.kweg=[...new Set([...l.kweg,...c.kweg])];
@@ -215,7 +217,7 @@ const JG=(function(){
   // Alle eigenen Änderungen dieses Jahrgangs verwerfen (Rückgabe: vorheriger Stand zum Rückgängigmachen)
   function discard(){ const prev=lsGet(PRE+current()); record(current(),prev,null); try{ localStorage.removeItem(PRE+current()); }catch(e){} changed(); return prev; }
   function restore(prev){ if(prev){ record(current(),lsGet(PRE+current()),prev); lsSet(PRE+current(),prev); } changed(); }
-  const hasLocal=()=>{ const l=local(); return !!(Object.keys(l.plane).length||l.aktiv||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||Object.keys(l.rel).length||l.ausg.length||Object.keys(l.links).length||l.karten.length||l.kweg.length||Object.keys(l.orte).length||l.reiter.length); };
+  const hasLocal=()=>{ const l=local(); return !!(Object.keys(l.plane).length||l.aktiv||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||Object.keys(l.rel).length||l.ausg.length||Object.keys(l.links).length||l.karten.length||l.kweg.length||Object.keys(l.orte).length||Object.keys(l.kuerzel).length||l.reiter.length); };
 
   return { MASTER, TABS, PLANKEYS, list, labelOf, current, isMaster, data, local, saveLocal, glow, rel, setExams, examOf, load, set, on, ver:()=>ver, img, okImg,
     exportJson, importJson, peek, snapshot, discard, restore, undo, redo, canUndo, canRedo, hasLocal, empty, newId:()=>'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6) };

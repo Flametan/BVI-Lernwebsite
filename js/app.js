@@ -71,7 +71,7 @@ const NAV = (function(){
     PAUSE_LOADER.onShow(id);
     A11Y.onShow();
     if(isContentPage){ ABKTIP.apply(id); if(typeof JGUI!=='undefined') JGUI.mount(id); }
-    else if(typeof JGUI!=='undefined'&&/^v-(jahr1|jahr2|gal|sfs|hlfs|ibk|vak|feuak|idf)$/.test(id)) JGUI.mount(id);   // Übersichtsseiten: Reiter anpassen
+    else if(typeof JGUI!=='undefined'&&/^v-(jahr1|jahr2|gal|sfs|hlfs|ibk|vak|feuak|idf|klausur)$/.test(id)) JGUI.mount(id);   // Übersichtsseiten: Reiter anpassen
     // Update URL for direct linking
     const url=new URL(location.href);
     if(id==='v-home') url.searchParams.delete('id'); else url.searchParams.set('id',id);
@@ -4085,6 +4085,8 @@ const CHANGELOG=(function(){
       'Hilfe: neuer Abschnitt „Am Ende eures Lehrgangs“ – Jahrgänge können dir am Ende ihres B VI (einmal) ihre App-Datei schicken, damit sie fest in der App hinterlegt wird',
       'Jahrgänge: Lernkarten lassen sich löschen (auch Karten des Masters, nur im eigenen Jahrgang; „Karte löschen“ unter der Lernkarte, „gelöschte wiederherstellen“ holt sie zurück). Die gelöschten Karten stehen im Jahrgangs-Export und gelten für alle, die ihn einlesen',
       'Jahrgänge: „Rückgängig“ ist nicht mehr nur kurz eingeblendet, sondern dauerhaft sichtbar neben „Seite bearbeiten“ (auch bei Prüfungen, Lernkarten und im Karten-Fenster). Daneben gibt es „Wiederholen“, das die zurückgenommene Aktion erneut ausführt',
+      'Jahrgänge: Prüfungen und Klausurvorbereitung bleiben im Gleichklang – eine im Prüfung-Tab hinzugefügte Prüfung erscheint auch als Kachel auf der Übersichtsseite ihres Reiters (IBK, VAk, FeuAK, IdF), eine gelöschte Prüfung verschwindet dort ebenfalls, und umgekehrt',
+      'Jahrgänge: Unter „Kürzel und Standorte“ lassen sich jetzt auch die Kürzel (IBK, VAk, FeuAK, IdF) ändern. Kürzel und Ort ersetzen die Standardnamen überall, wo sie auf der Seite stehen, und stehen im Jahrgangs-Export',
       'Hinweis für iPhone und iPad: Apple löscht die Daten einer Website in Safari nach etwa 7 Tagen ohne Besuch. Das steht jetzt unter Einstellungen, bei der App-Installation und in der Hilfe – mit dem Rat, die App auf den Home-Bildschirm zu legen und ab und zu zu sichern',
       'Die Flamme im Kopf der Seite flackert deutlicher und ist jetzt gut zu erkennen',
       'Sicherung: Gewählter Jahrgang, eigene Jahrgangs-Änderungen und die Plan-Ansicht werden jetzt mitgesichert und wieder eingespielt (vorher gingen sie beim Einspielen verloren)',

@@ -415,6 +415,52 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Jahrgang: Lernkarten löschen, Rückgängig und Wiederholen', kl, { undoOff: true, hidden: true, exported: true, undo: true, redo: true, bar: true, all: true, master: true });
 
+  // ── Prüfungen und Klausurvorbereitung (Übersichtsseiten) bleiben im Gleichklang ──
+  const ht = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    const r = {}; const id = JG.list()[0].id; localStorage.removeItem('bvi_jgd_' + id);
+    JG.set(id); await w(300);
+    const tile = (view, sel) => [...document.querySelectorAll('#' + view + ' .pc .topic-card, #' + view + ' .pc .glass-tile')].find(sel);
+    const l = JG.local(); l.pr.hinzu.push({ id: 'hx1', tab: 'feuak', titel: 'Eigene FeuAK-Klausur', fragen: [{ q: 'F?', typ: 'sc', o: ['a', 'b'], c: [0] }], ts: 1 }); JG.saveLocal(l); await w(300);
+    NAV.go('v-klausur', 'Klausurvorbereitung'); await w(500);
+    r.added = !!tile('v-klausur', t => t.classList.contains('jg-xt') && /Eigene FeuAK-Klausur/.test(t.textContent));
+    JGUI.delExam('hx1'); await w(300); NAV.go('v-klausur', 'Klausurvorbereitung'); await w(400);
+    r.removed = !tile('v-klausur', t => t.classList.contains('jg-xt'));
+    JGUI.delExam('v-klausurfragen'); await w(300); NAV.go('v-klausur', 'Klausurvorbereitung'); await w(500);
+    const kf = tile('v-klausur', t => /v-klausurfragen/.test(t.getAttribute('onclick') || ''));
+    r.hiddenHub = !!kf && kf.classList.contains('jg-gone');
+    r.otherShown = !tile('v-klausur', t => /v-klausur-0826/.test(t.getAttribute('onclick') || '')).classList.contains('jg-gone');
+    JGUI.restoreExams(); await w(300); NAV.go('v-klausur', 'Klausurvorbereitung'); await w(400);
+    r.back = !tile('v-klausur', t => /v-klausurfragen/.test(t.getAttribute('onclick') || '')).classList.contains('jg-gone');
+    // umgekehrt: Kachel auf der Übersichtsseite löschen → Prüfung auch im Prüfung-Tab weg
+    NAV.go('v-klausur', 'Klausurvorbereitung'); await w(500); document.querySelector('#v-klausur .jg-be').click(); await w(400);
+    const k2 = tile('v-klausur', t => /v-klausurfragen/.test(t.getAttribute('onclick') || ''));
+    k2.querySelector('.jg-tx').click(); await w(400);
+    r.reverse = JG.data().pr.weg.includes('v-klausurfragen');
+    document.querySelector('#v-klausur .jg-be')?.click(); JG.set(JG.MASTER); await w(200); localStorage.removeItem('bvi_jgd_' + id);
+    return r;
+  });
+  eq('Prüfungen: Prüfung-Tab und Klausurvorbereitung folgen einander', ht, { added: true, removed: true, hiddenHub: true, otherShown: true, back: true, reverse: true });
+
+  // ── Eigene Kürzel und Standorte erscheinen überall und gehen mit dem Export ──
+  const nm = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    const r = {}; const id = JG.list()[0].id; localStorage.removeItem('bvi_jgd_' + id);
+    JG.set(id); await w(300);
+    const txt = () => document.getElementById('m-exam-list').textContent;
+    NAV.go('v-pruefung', 'Prüfung'); await w(600);
+    r.hadDefault = /IdF Münster/.test(txt()) && /VAk Berlin/.test(txt());
+    const l = JG.local(); l.kuerzel = { idf: 'XYZ', vak: 'V-B' }; l.orte = { idf: 'Köln' }; JG.saveLocal(l); await w(700);
+    r.exam = txt().includes('XYZ Köln') && txt().includes('V-B Berlin') && !/IdF Münster|VAk Berlin/.test(txt());
+    const ex = JSON.parse(await JG.exportJson()); r.exported = !!ex.kuerzel && ex.kuerzel.idf === 'XYZ' && ex.orte.idf === 'Köln';
+    const pk = JG.peek(JSON.stringify({ format: 'bvi-jahrgang', kuerzel: { idf: '<b>x</b>', vak: 'OK1' } })); r.safe = !!pk;
+    const l2 = JG.local(); l2.kuerzel = {}; l2.orte = {}; JG.saveLocal(l2); await w(700);
+    r.back = /IdF Münster/.test(txt()) && /VAk Berlin/.test(txt());
+    JG.set(JG.MASTER); await w(200); localStorage.removeItem('bvi_jgd_' + id);
+    return r;
+  });
+  eq('Jahrgang: eigene Kürzel und Standorte überall, im Export, rückholbar', nm, { hadDefault: true, exam: true, exported: true, safe: true, back: true });
+
   // ── Stundenplan: Abschnitte der Fortschrittsleiste springen direkt zur Woche ──
   const pips = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms));
