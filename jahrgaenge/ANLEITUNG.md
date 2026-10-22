@@ -45,6 +45,8 @@ sie ohne Einlesen bekommen:
 2. Auf GitHub in diesen Ordner hochladen: *Add file → Upload files*, Dateiname wie oben, direkt auf `main`.
 3. Nach etwa zwei Minuten ist sie veröffentlicht. Alle in diesem Jahrgang sehen den Stand beim nächsten Öffnen.
 
+**Wunsch an die Jahrgänge:** Nur am Ende ihres B VI (einmal, nicht zwischendurch) sollen sie dir ihre App-Datei (in der App „App-Datei“ genannt, nicht „json“) per E-Mail schicken, freiwillig. Das steht in der Hilfe unter „Am Ende eures Lehrgangs“. Du prüfst die Datei (Skript oben) und lädst sie wie oben beschrieben hoch.
+
 Der Export enthält immer den **ganzen** Stand (veröffentlichte Datei plus Änderungen des Absenders).
 Die neue Datei ersetzt also die alte mit gleichem Namen.
 
