@@ -121,54 +121,36 @@
 <div id="onboarding-overlay" class="search-overlay hidden" role="dialog" aria-modal="true" aria-label="Ersteinrichtung">
   <div class="search-box ob-box" onclick="event.stopPropagation()">
     <div class="ob-steps">
-      <!-- Schritt 1 -->
+      <!-- Seite 1: Willkommen und Einrichten -->
       <div class="ob-step active">
         <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z"/></svg></div>
         <div class="ob-title">Willkommen bei B&nbsp;VI</div>
-        <div class="ob-desc">Deine Lernplattform für den Höheren Dienst – alles an einem Ort. In wenigen Schritten zeigen wir dir, was die App kann.</div>
-      </div>
-      <!-- Schritt 2: Einrichten -->
-      <div class="ob-step">
-        <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></div>
-        <div class="ob-title">Richte deine App ein</div>
+        <div class="ob-desc">Deine Lernplattform für den Höheren Dienst – alles an einem Ort. Such dir zuerst dein Aussehen aus:</div>
         <div class="ob-setup">
           <div class="ob-set-row"><span>Farbschema</span><span class="m-seg" role="group" aria-label="Farbschema"><button class="theme-opt" data-mode="dark" onclick="THEME.set('dark')">Dunkel</button><button class="theme-opt" data-mode="light" onclick="THEME.set('light')">Hell</button><button class="theme-opt" data-mode="beige" onclick="THEME.set('beige')">Beige</button><button class="theme-opt" data-mode="system" onclick="THEME.set('system')">System</button></span></div>
           <div class="ob-set-row"><span>Akzentfarbe</span><div class="m-swatches ob-accent" role="radiogroup" aria-label="Akzentfarbe"></div></div>
         </div>
         <div class="ob-desc">Alles lässt sich später in den Einstellungen ändern.</div>
       </div>
-      <!-- Schritt 2 -->
+      <!-- Seite 2: Zurechtfinden -->
       <div class="ob-step">
         <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div>
-        <div class="ob-title">Fünf Bereiche</div>
-        <div class="ob-desc">Unten (am Computer links) wechselst du zwischen <strong>Start</strong>, <strong>Stundenplan</strong>, <strong>Prüfung</strong>, <strong>Pausenraum</strong> und <strong>Einstellungen</strong>. Auf der Startseite siehst du, was als Nächstes im Stundenplan ansteht, und dein Tagesziel.</div>
+        <div class="ob-title">So findest du dich zurecht</div>
+        <div class="ob-desc"><strong>Unten</strong> (am Computer links) wechselst du zwischen Start, Stundenplan, Prüfung, Pausenraum und Einstellungen.<br><br>Das <strong>Altklausur-Quiz</strong> unter Prüfung wiederholt Fragen nach festem Plan, im Pausenraum lockerst du mit kleinen Spielen auf.<br><br>Auf jeder Lernseite findest du oben rechts <strong>Lesezeichen</strong> und <strong>Notiz</strong>; markierte Texte werden zu <strong>Markierungen</strong>. In den Einstellungen liegen Suche, Timer, Erinnerung und die <strong>Sicherung</strong>.</div>
       </div>
-      <!-- Schritt 3 -->
+      <!-- Seite 3: Lehrgang wählen -->
       <div class="ob-step">
-        <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></svg></div>
-        <div class="ob-title">Lernen und Wiederholen</div>
-        <div class="ob-desc">Das Altklausur-Quiz unter <strong>Prüfung</strong> wiederholt Fragen nach einem festen Plan, und die App zeigt dir, was heute fällig ist. Im <strong>Pausenraum</strong> lockerst du zwischendurch mit kleinen Spielen auf.</div>
-      </div>
-      <!-- Schritt 4 -->
-      <div class="ob-step">
-        <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
-        <div class="ob-title">Notizen, Lesezeichen, Markierungen</div>
-        <div class="ob-desc">Auf jeder Lernseite findest du oben rechts <strong>Lesezeichen</strong> und <strong>Notiz</strong>. Wählst du einen Text aus, kannst du ihn <strong>markieren</strong>.</div>
-      </div>
-      <!-- Schritt 5 -->
-      <div class="ob-step">
-        <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></div>
-        <div class="ob-title">Einstellungen</div>
-        <div class="ob-desc">Hier findest du die <strong>Suche</strong>, Pomodoro-Timer, Tagesziel, tägliche Erinnerung und deine <strong>Akzentfarbe</strong>. Mit der <strong>Sicherung</strong> nimmst du deinen Lernstand mit aufs nächste Gerät.</div>
+        <div class="ob-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg></div>
+        <div class="ob-title">Wähle deinen Lehrgang</div>
+        <div class="ob-desc">Der <strong>Master</strong> ist die Grundlage der App. Dein Jahrgang kann sie anpassen, zum Beispiel mit eigenem Stundenplan und eigenen Ergänzungen.</div>
+        <div class="ob-setup"><div class="ob-set-row"><span>Lehrgang</span><select id="ob-jg" class="m-input" aria-label="Lehrgang wählen"></select></div></div>
+        <div class="ob-desc">Bei einem anderen Jahrgang als dem Master zeigen wir dir als Nächstes kurz, wie er funktioniert. Wechseln kannst du später in den Einstellungen.</div>
       </div>
     </div>
     <div class="ob-dots">
-      <button type="button" class="ob-dot active" onclick="ONBOARD.goto(0)" aria-label="Schritt 1 von 6"></button>
-      <button type="button" class="ob-dot" onclick="ONBOARD.goto(1)" aria-label="Schritt 2 von 6"></button>
-      <button type="button" class="ob-dot" onclick="ONBOARD.goto(2)" aria-label="Schritt 3 von 6"></button>
-      <button type="button" class="ob-dot" onclick="ONBOARD.goto(3)" aria-label="Schritt 4 von 6"></button>
-      <button type="button" class="ob-dot" onclick="ONBOARD.goto(4)" aria-label="Schritt 5 von 6"></button>
-      <button type="button" class="ob-dot" onclick="ONBOARD.goto(5)" aria-label="Schritt 6 von 6"></button>
+      <button type="button" class="ob-dot active" onclick="ONBOARD.goto(0)" aria-label="Seite 1 von 3"></button>
+      <button type="button" class="ob-dot" onclick="ONBOARD.goto(1)" aria-label="Seite 2 von 3"></button>
+      <button type="button" class="ob-dot" onclick="ONBOARD.goto(2)" aria-label="Seite 3 von 3"></button>
     </div>
     <div class="ob-actions">
       <button class="btn btn-ghost ob-skip" onclick="ONBOARD.close()">Überspringen</button>
@@ -12689,9 +12671,11 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
       <details class="jg-hd"><summary><span class="m-t1">Master und Jahrgang</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></summary><div class="jg-hb"><ul class="jg-ul"><li><strong>Der Master</strong> (BRef 04/2025 – AB 04/2026) ist die Grundlage. Er lässt sich nicht verändern, dort gibt es keine Bearbeitungsfelder.</li><li><strong>Euer Jahrgang</strong> ist eine 1:1-Kopie des Masters plus eine eigene Ebene mit allen Änderungen. Der Master bleibt dabei unberührt.</li><li><strong>Verbesserungen am Master</strong> kommen von selbst in euren Jahrgang. Eure eigenen Änderungen bleiben dabei erhalten.</li><li><strong>Ich pflege den Master</strong> und bin nur da, wenn es Probleme gibt. Weil ich nicht jeden Jahrgang im Blick haben kann, habt ihr die Möglichkeit, euren Jahrgang selbst so zu gestalten, wie er für euch am besten passt.</li></ul></div></details>
       <details class="jg-hd"><summary><span class="m-t1">Wer pflegt euren Jahrgang?</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></summary><div class="jg-hb"><ul class="jg-ul"><li><strong>Bestimmt eine oder mehrere Personen</strong> in eurem Jahrgang, die sich um die Seite kümmern. Sie richten alles ein, ergänzen Inhalte und sammeln die Wünsche der anderen. So gibt es einen Stand für alle statt vieler verschiedener. Das ist ein Vorschlag, keine Pflicht.</li><li><strong>Exportieren:</strong> Einstellungen → Lehrgang → „Änderungen exportieren“ erzeugt eine Datei mit dem ganzen Stand.</li><li><strong>Teilen:</strong> Eine dieser Personen schickt die Datei in die WhatsApp-Gruppe eures Jahrgangs.</li><li><strong>Einlesen:</strong> Alle anderen laden die Datei unter Einstellungen → Lehrgang → „Änderungen einlesen“ hoch. Danach sind alle im Jahrgang auf demselben Stand.</li><li><strong>Bei jeder neuen Datei</strong> einfach noch einmal einlesen. Die neue Datei enthält immer alles.</li></ul></div></details>
       <details class="jg-hd"><summary><span class="m-t1">Schritt für Schritt einrichten</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></summary><div class="jg-hb"><ul class="jg-ul"><li><strong>Stundenpläne:</strong> Je Abschnitt (IBK, VAk, FeuAK, IdF) ein eigener Plan, bei IdF getrennt für Gruppe 1 und Gruppe 2. Ihr ladet eine Kalenderdatei, lest ein Foto oder einen Screenshot ein oder tippt die Termine ein. Mit „Als aktiven Stundenplan markieren“ legt ihr fest, welcher Plan Startseite und Widgets füttert.</li><li><strong>Lehrgangs-Link:</strong> Ein Link auf der Startseite, z. B. zur Cloud. Schreibt keine Passwörter hinein.</li><li><strong>Standorte:</strong> Wenn ein Abschnitt woanders stattfindet, ersetzt euer Ortsname den Standard in Überschriften und Kacheln.</li><li><strong>Lernkarten:</strong> Eigene Karten des Jahrgangs, die bei den Lernkarten auftauchen.</li><li><strong>Prüfungen:</strong> Oben auf der Prüfungsseite „Prüfungen bearbeiten“. Dann lassen sich Prüfungen ausblenden oder hinzufügen und mit ★ als klausurrelevant markieren. Nur die relevanten liefern Fragen für Einsatzfahrt und Duell.</li><li><strong>Eigene Fragen in einer Klausur:</strong> Auf der Klausurseite „Seite bearbeiten“ und dann „Eigene Frage“. Die Antwort kann Single-Choice, Multiple-Choice oder Freitext mit Musterlösung sein.</li><li><strong>Lernseiten:</strong> „Seite bearbeiten“ blendet Kapitel und Blöcke aus, ergänzt Text oder Bild in einem Kapitel und legt ein eigenes Kapitel an. Auf den Übersichtsseiten lassen sich Reiter ausblenden und eigene Reiter anlegen, die ihr dann mit Kapiteln füllt.</li><li><strong>Rückgängig:</strong> Nach jedem Löschen gibt es „Rückgängig“, und „gelöschte wiederherstellen“ holt alles auf der Seite zurück.</li></ul></div></details>
+      <details class="jg-hd"><summary><span class="m-t1">Für den Jahrgang nach euch</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></summary><div class="jg-hb"><ul class="jg-ul"><li>Als Jahrgang könnt ihr eure <strong>App-Datei</strong> (den Export unter „Änderungen exportieren“) auch dem Jahrgang nach euch geben.</li><li>Der nächste Jahrgang liest sie unter „Änderungen einlesen“ ein und <strong>fängt von eurem Stand an</strong>, statt bei null.</li><li>Danach kann er trotzdem alles auf der Seite weiter ändern, die Änderungen bleiben auch nach dem Schließen der App erhalten.</li></ul></div></details>
       <details class="jg-hd"><summary><span class="m-t1">Bei Problemen</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></summary><div class="jg-hb"><ul class="jg-ul"><li>Wenn etwas nicht klappt oder kaputt aussieht, schreib mir an <a href="mailto:fabian.flemig@gmx.de" style="color:var(--m-accent-fg)">fabian.flemig@gmx.de</a>.</li><li>Für die Inhalte und Änderungen eures Jahrgangs ist euer Jahrgang selbst zuständig.</li></ul></div></details>
       <details class="jg-hd"><summary><span class="m-t1">Das geht nicht</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></summary><div class="jg-hb"><ul class="jg-ul"><li><strong>Änderungen liegen nur auf dem jeweiligen Gerät,</strong> bis die Datei exportiert wird. Es gibt keinen automatischen Abgleich zwischen Handy und PC.</li><li><strong>Die Texterkennung bei Fotos ist nicht perfekt.</strong> Darum zeigt die App das Ergebnis immer in einem Formular zum Ausbessern.</li></ul></div></details>
     </div>
+    <button type="button" class="btn btn-gold jg-ok" id="jg-help-ok" hidden onclick="JGUI.helpDone()">Verstanden, lass mich in die App</button>
   </div>
 </div>
 

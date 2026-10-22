@@ -87,7 +87,7 @@ const JGUI=(function(){
       +'</div>'+(master?'':'<p class="m-note" style="padding:0 4px">'+NOTICE+'</p>');
     $(root,'#jg-sel').onchange=e=>{ JG.set(e.target.value); };
     if(!master){
-      $(root,'#jg-help').onclick=()=>NAV.go('v-jg-hilfe','So funktioniert dein Jahrgang');
+      $(root,'#jg-help').onclick=()=>help(false);
       $(root,'#jg-setup').onclick=checklist;
       $(root,'#jg-exp').onclick=exportFile;
       $(root,'#jg-imp').onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(f) importFile(f); };
@@ -603,6 +603,13 @@ const JGUI=(function(){
     });
   }
 
+  // Erklärseite: nach der Ersteinrichtung mit „Verstanden“-Knopf, aus den Einstellungen ohne
+  function help(first){
+    const b=document.getElementById('jg-help-ok'); if(b) b.hidden=!first;
+    NAV.go('v-jg-hilfe','So funktioniert dein Jahrgang');
+  }
+  function helpDone(){ const b=document.getElementById('jg-help-ok'); if(b) b.hidden=true; NAV.tab('v-home','Start'); }
+
   // Bei Änderungen am Jahrgang alles Betroffene neu zeichnen
   JG.on(()=>{
     settings();
@@ -616,6 +623,6 @@ const JGUI=(function(){
   settings();
   JG.load();
 
-  return { settings, mount, chapterKey, names, checklist, openReiter, closeTop, planEditor, planPhoto, parsePlanText, parseQuestions, ocr, isEditing, toggleEdit, setRel, delExam, restoreExams,
+  return { settings, mount, chapterKey, names, checklist, openReiter, help, helpDone, closeTop, planEditor, planPhoto, parsePlanText, parseQuestions, ocr, isEditing, toggleEdit, setRel, delExam, restoreExams,
     examEditor, openExam, notice:NOTICE };
 })();

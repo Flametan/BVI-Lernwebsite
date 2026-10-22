@@ -3195,9 +3195,14 @@ const RECENT=(function(){
 const ONBOARD=(function(){
   const KEY='bvi_onboarded';
   let _step=0;
-  const TOTAL=6;
+  const TOTAL=3;
   function syncSetup(){
     THEME.render(); ACCENT.render();
+  }
+  // Lehrgangsliste der letzten Seite (neueste zuerst, der Master ist vorgewählt)
+  function fillCourses(){
+    const sel=document.getElementById('ob-jg'); if(!sel||sel.options.length) return;
+    sel.innerHTML=JG.list().map(j=>'<option value="'+j.id+'"'+(j.id===JG.MASTER?' selected':'')+'>'+j.label+(j.id===JG.MASTER?' (Master)':'')+'</option>').join('');
   }
   function setStep(n){
     _step=Math.max(0,Math.min(TOTAL-1,n));
@@ -3205,14 +3210,21 @@ const ONBOARD=(function(){
     document.querySelectorAll('.ob-dot').forEach((el,i)=>el.classList.toggle('active',i===_step));
     const nextBtn=document.querySelector('.ob-next');
     if(nextBtn) nextBtn.textContent=_step===TOTAL-1?'Los geht\'s!':'Weiter →';
-    if(_step===1) syncSetup();
+    if(_step===0) syncSetup();
+    if(_step===2) fillCourses();
   }
   return {
     init(){
       if(localStorage.getItem(KEY)) return;
       document.getElementById('onboarding-overlay')?.classList.remove('hidden');
     },
-    next(){ if(_step<TOTAL-1){ setStep(_step+1); } else { this.close(); } },
+    next(){ if(_step<TOTAL-1){ setStep(_step+1); } else { this.finish(); } },
+    // Letzte Seite: Master → nichts weiter; anderer Jahrgang → wählen und die Erklärseite zeigen
+    finish(){
+      const id=document.getElementById('ob-jg')?.value||JG.MASTER;
+      this.close();
+      if(id!==JG.MASTER){ JG.set(id); if(typeof JGUI!=='undefined') JGUI.help(true); }
+    },
     goto(n){ setStep(n); },
     close(){
       document.getElementById('onboarding-overlay')?.classList.add('hidden');
@@ -4031,6 +4043,7 @@ const CHANGELOG=(function(){
       'Spendenlink: dezente Karte unten auf der Startseite (ohne Pop-up)',
       'Lernseiten bearbeiten: Mit „Seite bearbeiten“ lassen sich ganze Kapitel und einzelne Blöcke ausblenden, auch innerhalb eines Kapitels ergänzen, und „gelöschte wiederherstellen“ bringt alles zurück (zusätzlich gibt es Rückgängig direkt nach dem Löschen)',
       'Prüfungen: Klausurrelevanz (★) gilt jetzt je einzelne Prüfung statt für den ganzen Reiter',
+      'Ersteinrichtung nur noch 2 Seiten plus Lehrgangs-Auswahl: Wer einen anderen Jahrgang als den Master wählt, landet auf „So funktioniert dein Jahrgang“ und kommt mit „Verstanden, lass mich in die App“ zur Startseite; aus den Einstellungen gibt es den Knopf nicht. Neu auf der Erklärseite: Die App-Datei lässt sich an den Jahrgang nach euch weitergeben',
       'Hintergrund-Regler (Einstellungen → Darstellung): Die Hintergrundhelligkeit lässt sich stufenlos von Schwarz bis Weiß einstellen, Karten, Linien und Texte passen sich an und bleiben lesbar; im Beige-Schema mit warmem Farbton',
       'Neues Farbschema „Beige“ (Einstellungen → Darstellung): warmer Leinen-Ton statt Grauweiß; in der Android-App mit passendem Startsymbol und beigem Startbild',
       'Abkürzungsverzeichnis: Dort wird kein Wort mehr als Abkürzung markiert',

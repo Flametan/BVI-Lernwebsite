@@ -912,6 +912,76 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Hintergrund-Regler', bgr, { row: true, black: true, white: true, contrast: true, stored: true, schemeResets: true, reset: true });
 
+  // ── Ersteinrichtung: 3 Seiten, Lehrgang wählen, Erklärseite mit Verstanden-Knopf ──
+  const obRun = async mode => {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 800 }, serviceWorkers: 'block' });
+    const op = await ctx.newPage(); await op.goto(BASE, { waitUntil: 'load' }); await op.waitForTimeout(700);
+    const r = await op.evaluate(async mode => {
+      const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+      const ov = document.getElementById('onboarding-overlay');
+      r.shown = !ov.classList.contains('hidden') && document.querySelectorAll('.ob-step').length === 3 && document.querySelectorAll('.ob-dot').length === 3;
+      document.querySelector('.ob-next').click(); await w(100); document.querySelector('.ob-next').click(); await w(150);
+      const sel = document.getElementById('ob-jg');
+      r.last = /Lehrgang/.test(document.querySelector('.ob-step.active .ob-title').textContent) && sel.options.length > 3 && /Master/.test(sel.selectedOptions[0].textContent) && /Los geht/.test(document.querySelector('.ob-next').textContent);
+      if (mode === 'other') sel.value = JG.list()[0].id;
+      document.querySelector('.ob-next').click(); await w(600);
+      r.closed = ov.classList.contains('hidden') && localStorage.getItem('bvi_onboarded') === '1';
+      if (mode === 'master') {
+        r.stay = JG.isMaster() && document.getElementById('v-home').classList.contains('active') && !document.getElementById('v-jg-hilfe').classList.contains('active');
+      } else {
+        r.help = !JG.isMaster() && document.getElementById('v-jg-hilfe').classList.contains('active') && !document.getElementById('jg-help-ok').hidden;
+        r.text = /App-Datei/.test(document.getElementById('v-jg-hilfe').textContent);
+        document.getElementById('jg-help-ok').click(); await w(500);
+        r.home = document.getElementById('v-home').classList.contains('active');
+        // aus den Einstellungen: ohne Knopf
+        NAV.tab('v-settings', 'E'); await w(300); document.getElementById('jg-help').click(); await w(400);
+        r.noBtn = document.getElementById('v-jg-hilfe').classList.contains('active') && document.getElementById('jg-help-ok').hidden;
+      }
+      return r;
+    }, mode);
+    await ctx.close(); return r;
+  };
+  eq('Ersteinrichtung: Master bleibt auf der Startseite', await obRun('master'), { shown: true, last: true, closed: true, stay: true });
+  eq('Ersteinrichtung: anderer Jahrgang führt zur Erklärseite', await obRun('other'), { shown: true, last: true, closed: true, help: true, text: true, home: true, noBtn: true });
+
+  // ── Datei einlesen: Änderungen eines früheren Jahrgangs gehen in den neuen Jahrgang, bleiben nach dem Neuladen und lassen sich weiter ändern ──
+  {
+    const ictx = await browser.newContext({ viewport: { width: 390, height: 800 }, serviceWorkers: 'block' });
+    const ip = await ictx.newPage(); await ip.addInitScript(() => localStorage.setItem('bvi_onboarded', '1'));
+    await ip.goto(BASE, { waitUntil: 'load' }); await ip.waitForTimeout(600);
+    const exported = await ip.evaluate(async () => {
+      const w = ms => new Promise(r => setTimeout(r, ms)), ids = JG.list().map(j => j.id);
+      JG.set(ids[1]); await w(300); JG.discard();
+      const l = JG.local();
+      l.erg.push({ id: 'e1', seite: 'v-vak-verwaltungsrecht', typ: 'kapitel', titel: 'Altes Kapitel', text: 'Inhalt', ts: 1 });
+      l.pr.hinzu.push({ id: 'p1', tab: 'vak', titel: 'Alte Prüfung', fragen: [{ q: 'F?', typ: 'sc', o: ['a', 'b'], c: 0, e: '' }], ts: 1 });
+      l.links.cloud = { url: 'https://beispiel.de/c', titel: 'Alt', hinweis: '' }; l.ausg.push('v-vak-verwaltungsrecht|a|abc');
+      JG.saveLocal(l);
+      return await JG.exportJson();
+    });
+    await ip.evaluate(async txt => {
+      const w = ms => new Promise(r => setTimeout(r, ms)), ids = JG.list().map(j => j.id);
+      JG.set(ids[0]); await w(300);   // neuer Jahrgang, leer
+      await JG.importJson(txt); await w(200);
+    }, exported);
+    await ip.reload({ waitUntil: 'load' }); await ip.waitForTimeout(900);
+    const ir = await ip.evaluate(async () => {
+      const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+      const d = JG.data(), ids = JG.list().map(j => j.id);
+      r.kept = JG.current() === ids[0] && d.erg.some(e => e.id === 'e1') && d.pr.hinzu.some(p => p.id === 'p1') && !!d.links.cloud && d.ausg.length === 1;
+      // weiter änderbar: Kapitel bearbeiten und löschen, Prüfung löschen
+      const l = JG.local(); l.erg.find(e => e.id === 'e1').titel = 'Geändert'; l.erg = l.erg.filter(e => e.id !== 'zzz'); l.pr.hinzu = l.pr.hinzu.filter(p => p.id !== 'p1'); JG.saveLocal(l);
+      await w(200);
+      r.editable = JG.data().erg.find(e => e.id === 'e1').titel === 'Geändert' && !JG.data().pr.hinzu.some(p => p.id === 'p1');
+      NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(600);
+      r.shown = !!document.querySelector('#v-vak-verwaltungsrecht .acc-item.jg-kap');
+      JG.discard(); JG.set(JG.MASTER);
+      return r;
+    });
+    eq('Datei einlesen: Änderungen im neuen Jahrgang, nach Neuladen vorhanden, weiter änderbar', ir, { kept: true, editable: true, shown: true });
+    await ictx.close();
+  }
+
   // ── Veröffentlichte Jahrgangs-Datei (jahrgaenge/<ID>.json) wird mit den eigenen Änderungen zusammengeführt ──
   const jid = await page.evaluate(() => JG.list()[0].id);
   await page.route('**/jahrgaenge/' + jid + '.json', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ format: 'bvi-jahrgang', v: 1, erg: [{ id: 'pub1', seite: 'v-vak-verwaltungsrecht', titel: 'Vom Jahrgang', text: '<script>x</script>' }], pr: { hinzu: [], weg: ['v-laufbahn-2023'] }, rel: { 'v-vak-altklausur': false } }) }));
