@@ -4102,6 +4102,7 @@ const CHANGELOG=(function(){
       'Jahrgänge: Prüfungen und Klausurvorbereitung bleiben im Gleichklang – eine im Prüfung-Tab hinzugefügte Prüfung erscheint auch als Kachel auf der Übersichtsseite ihres Reiters (IBK, VAk, FeuAK, IdF), eine gelöschte Prüfung verschwindet dort ebenfalls, und umgekehrt',
       'Jahrgänge: Unter „Kürzel und Standorte“ lassen sich jetzt auch die Kürzel (IBK, VAk, FeuAK, IdF) ändern. Kürzel und Ort ersetzen die Standardnamen überall, wo sie auf der Seite stehen, und stehen im Jahrgangs-Export',
       'Rückgängig und Wiederholen sind jetzt auch an den übrigen Stellen dauerhaft sichtbar statt nur kurz eingeblendet: oben in den Einstellungen (Fortschritt und Lernkarten zurücksetzen, Klausurtermin entfernen, Jahrgang importieren oder verwerfen), nach „Lernstand zurücksetzen“ bei den Lernkarten und bei den Notizen (Notiz löschen)',
+      'Stundenplan in Jahrgängen: Zwischen der Reiterkarte (IBK, VAk, FeuAK, IdF) und der Karte darunter ist jetzt eine kleine Lücke',
       'Hinweis für iPhone und iPad: Apple löscht die Daten einer Website in Safari nach etwa 7 Tagen ohne Besuch. Das steht jetzt unter Einstellungen, bei der App-Installation und in der Hilfe – mit dem Rat, die App auf den Home-Bildschirm zu legen und ab und zu zu sichern',
       'Die Flamme im Kopf der Seite flackert deutlicher und ist jetzt gut zu erkennen',
       'Sicherung: Gewählter Jahrgang, eigene Jahrgangs-Änderungen und die Plan-Ansicht werden jetzt mitgesichert und wieder eingespielt (vorher gingen sie beim Einspielen verloren)',
