@@ -265,7 +265,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Startseite: Lernkarten ja, Pausenraum-Karte nein', pz.home.includes('Lernkarten') && !pz.home.includes('Pausenraum'));
   ok('Tab-Leiste: Pausenraum statt Lernkarten', pz.tabs.some(x => x.includes('Pausenraum')) && !pz.tabs.some(x => x.includes('Lernkarten')));
   eq('Pausenraum: 50 Sätze ohne Emojis', [pz.quips, pz.emoji], [50, false]);
-  eq('Pausenraum: 7 Einträge (Einsatzfahrt, Duell und fünf weitere Spiele)', pz.games, 7);
+  eq('Pausenraum: 8 Einträge (Einsatzfahrt, Duell, Snake und fünf weitere Spiele)', pz.games, 8);
   ok('Spiele haben Inhalte in allen drei Modi', pz.modes.every(m => m.quiz && m.tf && m.word && m.num && m.mem));
   ok('Zurück im Spiel führt zur Spieleauswahl (Browser-Zurück)', pz.modes.every(m => m.quizBack && m.tfBack && m.wordBack && m.numBack && m.memBack));
   ok('Quizleiter, Wörter-Raten, Memory reagieren', pz.modes.every(m => m.quizFb && m.wordRow === 5 && m.memCards === 12));
@@ -484,6 +484,33 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     return r;
   });
   eq('Rückgängig/Wiederholen bei Einstellungen und Lernstand', ud, { bar: true, off: true, reset: true, undo: true, redo: true, examOff: true, examBack: true, noOldToast: true });
+
+  // ── Pausenraum: Einsatzleitung-Snake direkt unter dem Duell, Herausforderungen wählbar ──
+  const sk = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    const r = {}; localStorage.removeItem('bvi_snake_opts');
+    NAV.go('v-pause', 'Pausenraum'); await w(600);
+    const names = [...document.querySelectorAll('#v-pause .pz-game b')].map(b => b.textContent);
+    r.order = names.indexOf('Einsatzleitung-Snake') === names.indexOf('Einsatzfahrt-Duell') + 1;
+    document.querySelector('#v-pause [data-g="snake"]').click();
+    for (let i = 0; i < 30 && !document.querySelector('.sn-board'); i++) await w(100);
+    r.board = document.querySelectorAll('.sn-c').length === 324;
+    r.default = document.querySelector('[data-o="water"]').classList.contains('on') && !document.querySelector('[data-o="air"]').classList.contains('on') && document.querySelector('.sn-air').hidden;
+    document.querySelector('[data-o="air"]').click(); await w(80);
+    r.air = !document.querySelector('.sn-air').hidden && JSON.parse(localStorage.getItem('bvi_snake_opts')).air === true;
+    document.querySelector('.sn-ov .pz-pri').click(); await w(60);
+    const S = SNAKE._state();
+    S.snake = [{ x: 9, y: 9 }, { x: 8, y: 9 }, { x: 7, y: 9 }]; S.dir = { x: 1, y: 0 }; S.next = { x: 1, y: 0 };
+    S.fires = new Set([15 * 18 + 15, 12 * 18 + 12]); S.water = { x: 10, y: 9 }; S.waterT = 50; S.item = { x: 1, y: 1 };
+    await w(260);
+    r.water = S.fires.size === 1 && !S.fires.has(12 * 18 + 12) && S.score === 15;
+    S.air = 0.1; await w(300); r.airOut = S.status === 'over' && /Atemluft/.test(S.over);
+    document.querySelector('.pz-back').click(); await w(200);
+    r.stopped = !!document.querySelector('#v-pause [data-g="snake"]');
+    localStorage.removeItem('bvi_snake_opts');
+    return r;
+  });
+  eq('Pausenraum: Einsatzleitung-Snake unter dem Duell, Atemluft und Löschwasser', sk, { order: true, board: true, default: true, air: true, water: true, airOut: true, stopped: true });
 
   // ── Stundenplan: Abschnitte der Fortschrittsleiste springen direkt zur Woche ──
   const pips = await page.evaluate(async () => {
