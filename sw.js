@@ -12,6 +12,7 @@ const PRECACHE = [
   './fonts/roboto-400-latin-ext.woff2',
   './fonts/roboto-400-latin.woff2',
   './js/jg.js',
+  './js/faq.js',
   './js/jg-ui.js',
   './js/app.js',
   './js/idf-data.js',

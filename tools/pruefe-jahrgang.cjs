@@ -14,7 +14,7 @@ if(!j||j.format!=='bvi-jahrgang'){ console.error('FEHLER: Das ist keine Jahrgang
 
 const TABS=['laufbahn','idf','feuak','vak','ibk'], PLAN=['ibk','vak','feuak','idf','idf2'], MODS=['GAL','SFS','HLFS','IBK','VAk','FeuAK','IdF'];
 const arr=v=>Array.isArray(v)?v:[], str=v=>typeof v==='string'?v:'';
-const KNOWN=['format','v','jahrgang','stand','plane','plan','aktiv','erg','pr','rel','ausg','links','karten','kweg','orte','kuerzel','reiter','bilder','nrel','glow'];
+const KNOWN=['format','v','jahrgang','stand','plane','plan','aktiv','erg','pr','rel','ausg','links','karten','kweg','orte','kuerzel','faq','reiter','bilder','nrel','glow'];
 Object.keys(j).filter(k=>!KNOWN.includes(k)).forEach(k=>warn.push('Unbekanntes Feld „'+k+'“ (wird von der App ignoriert)'));
 
 // Verdächtige Texte: HTML, Skripte, Links

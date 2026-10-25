@@ -513,6 +513,19 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   eq('Pausenraum: Einsatzleitung-Snake unter dem Duell, Atemluft und Löschwasser', sk, { order: true, board: true, default: true, air: true, water: true, airOut: true, stopped: true });
 
   // ── Pausenraum: Solitär direkt unter dem Snake; Antippen, Ziehen, Hinweise, Gewinn-Fenster ──
+  // ── Standort-FAQ ──
+  const faq = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    r.idf = FAQ.count('idf') > 15; r.leer = FAQ.count('vak') === 0 && FAQ.card('vak').includes('noch keine Angaben'); r.fremd = FAQ.card('xx') === '';
+    NAV.tab('v-plan', 'Stundenplan'); await w(300);
+    const c = document.querySelector('#plan-inner details.faq');
+    r.karte = !!c && !c.open && /Kühlschrank/.test(c.textContent) && /IdF Münster/.test(c.textContent);
+    const ar = IDF_PLAN.arrival(); r.arrival = !!ar && ar.key === 'idf' && /^\d{4}-\d\d-\d\d$/.test(ar.start);
+    IDF_PLAN.openFaq(); await w(300); r.offen = !!document.querySelector('#plan-inner details.faq[open]');
+    NAV.go('v-home', 'Start'); return r;
+  });
+  eq('FAQ: Standorte, Karte im Stundenplan, Startseiten-Link', faq, { idf: true, leer: true, fremd: true, karte: true, arrival: true, offen: true });
+
   const so = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms));
     const r = {}; localStorage.removeItem('bvi_solitaer_opts');
