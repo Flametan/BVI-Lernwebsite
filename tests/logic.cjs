@@ -553,7 +553,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     localStorage.removeItem('bvi_solitaer_opts'); const bb = JSON.parse(localStorage.getItem('bvi_pause_best') || '{}'); delete bb.solitaer; localStorage.setItem('bvi_pause_best', JSON.stringify(bb));
     return r;
   });
-  eq('Pausenraum: Solitär unter dem Snake (Antippen, Rückgängig, Hinweise, Ziehen 3, Gewinn-Fenster)', so, { order: true, deal: true, tap: true, undoRedo: true, hintsSaved: true, draw3: true, win: true, winClose: true, stopped: true, best: true });
+  eq('Pausenraum: Solitär unter dem Snake (Antippen, Rückgängig, Hinweise, Ziehen 3, Gewinn-Fenster)', so, { order: true, deal: true, tap: true, undoRedo: true, hintsSaved: true, draw3: true, dblFound: true, dblTab: true, dblNoop: true, win: true, winClose: true, stopped: true, best: true });
 
   // ── Stundenplan: Abschnitte der Fortschrittsleiste springen direkt zur Woche ──
   const pips = await page.evaluate(async () => {
