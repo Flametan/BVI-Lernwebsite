@@ -549,6 +549,10 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Pausenraum: Minesweeper (Stufen, erster Zug, Markieren, Tipp, Sieg, Niederlage)', mine, { order: 'solitaer,minesweeper', stufen: 'Leicht,Mittel,Schwer,Sehr schwer', leicht: true, mittel: '30/144', schwer: '56/256', sehr: '72/256', opts: true, erster: true, flagMode: true, unflag: true, rechtsklick: true, tipp: true, sieg: true, zu: true, niederlage: true, stopped: true });
 
+  // ── Ladebildschirm verschwindet nach dem Start ──
+  await page.waitForTimeout(700);
+  eq('Ladebildschirm: nach dem Start entfernt', await page.evaluate(() => !document.getElementById('sk') && typeof SK === 'function'), true);
+
   // ── Standort-FAQ ──
   const faq = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
