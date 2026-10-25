@@ -24,6 +24,7 @@ const PAUSE=(function(){
     scale:'<path d="M12 3v18M5 7h14M5 7l-3 7a4 4 0 0 0 6 0zM19 7l-3 7a4 4 0 0 0 6 0z"/>',
     pairs:'<rect x="3" y="5" width="8" height="12" rx="2"/><rect x="13" y="7" width="8" height="12" rx="2"/>',
     duel:'<path d="M2 16V8a1 1 0 0 1 1-1h6v9M13 16V8a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v8"/><circle cx="5.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/>',
+    cards:'<rect x="3.5" y="4" width="11" height="16" rx="2"/><path d="m16 7 4.2 1.4a1.5 1.5 0 0 1 1 1.9l-3 8.7"/><path d="M9 9v.01M9 15v.01"/>',
     flame:'<path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z"/>',
     truck:'<path d="M2 16V8a1 1 0 0 1 1-1h10v9M13 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M6 4h4"/>'
   };
@@ -32,6 +33,7 @@ const PAUSE=(function(){
     ['fahrt','truck','Einsatzfahrt','Nur Prüfungsfragen aus IBK, VAk, FeuAK und IdF · Route wählen, Hilfsfrist schaffen',()=>FAHRT],
     ['duell','duel','Einsatzfahrt-Duell','Zu zweit live gegeneinander · Verbindung per QR-Code · gleiche Prüfungsfragen',()=>DUELLGAME],
     ['snake','flame','Einsatzleitung-Snake','Löschzug durchs Feuer steuern · wähle Atemluft und Löschwasser als Herausforderung',()=>SNAKEGAME],
+    ['solitaer','cards','Solitär','Klondike mit Flammen, Löschern, Äxten und Leitern · Karten ziehen oder antippen',()=>SOLGAME],
     ['quiz','ladder','Quizleiter','8 Stufen, ein 50:50-Joker – wie weit kommst du?',()=>QUIZL],
     ['tf','bolt','Wahr oder Falsch','60 Sekunden, so viele Aussagen wie möglich',()=>TF],
     ['word','grid','Wörter-Raten','Ein Begriff mit 5 Buchstaben, sechs Versuche',()=>WORD],
@@ -42,16 +44,16 @@ const PAUSE=(function(){
   function hub(){stop();
     const card=([k,ic,t,d],big)=>`<button class="pz-game${big?' pz-big':''}" data-g="${k}"><span class="pz-gi">${svg(ic)}</span><span><b>${t}</b><small>${d}</small>${bestTxt(k)?`<em>${bestTxt(k)}</em>`:''}</span></button>`;
     // Einsatzfahrt immer mit Prüfungsfragen; der Umschalter gilt nur für die Spiele darunter
-    root.innerHTML=`<div class="pz-wrap"><div class="pz-grid">${card(GAMES[0],true)}${card(GAMES[1],true)}${card(GAMES[2],true)}</div>
+    root.innerHTML=`<div class="pz-wrap"><div class="pz-grid">${card(GAMES[0],true)}${card(GAMES[1],true)}${card(GAMES[2],true)}${card(GAMES[3],true)}</div>
     <div class="m-sec" style="margin:.4rem 0 -.2rem">Weitere Spiele · Fragen aus</div>
     <div class="pz-mode" role="tablist" aria-label="Fragen für die weiteren Spiele">${[['allg','Allgemeinwissen'],['fw','Feuerwehr'],['beides','Beides']].map(([k,t])=>`<button data-m="${k}" class="${mode===k?'on':''}">${t}</button>`).join('')}</div>
-    <div class="pz-grid">${GAMES.slice(3).map(g=>card(g,false)).join('')}</div></div>`;
+    <div class="pz-grid">${GAMES.slice(4).map(g=>card(g,false)).join('')}</div></div>`;
     root.querySelectorAll('[data-m]').forEach(x=>x.onclick=()=>{mode=x.dataset.m;set(MKEY,mode);hub();});
     root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
   }
   function open(k){const g=GAMES.find(x=>x[0]===k);if(!g)return;stop();cur=g[4]();
     if(!pushed){try{history.pushState(Object.assign({},history.state,{pz:1}),'');pushed=true;}catch(e){}}
-    root.innerHTML=`<div class="pz-wrap"><div class="pz-head"><button class="pz-back">‹ Alle Spiele</button><span class="pz-center" style="font-size:.78rem">${k==='fahrt'||k==='duell'?'Prüfungsfragen':k==='snake'?'Geschicklichkeit':mode==='allg'?'Allgemeinwissen':mode==='fw'?'Feuerwehr':'Allgemein + Feuerwehr'}</span></div><div class="pz-body"></div></div>`;
+    root.innerHTML=`<div class="pz-wrap"><div class="pz-head"><button class="pz-back">‹ Alle Spiele</button><span class="pz-center" style="font-size:.78rem">${k==='fahrt'||k==='duell'?'Prüfungsfragen':k==='snake'?'Geschicklichkeit':k==='solitaer'?'Kartenspiel':mode==='allg'?'Allgemeinwissen':mode==='fw'?'Feuerwehr':'Allgemein + Feuerwehr'}</span></div><div class="pz-body"></div></div>`;
     root.querySelector('.pz-back').onclick=toHub;cur.start(root.querySelector('.pz-body'));}
   function stop(){if(cur&&cur.stop)cur.stop();cur=null;}
   function toHub(){if(pushed)history.back();else hub();}
@@ -130,6 +132,9 @@ const PAUSE=(function(){
   /* ---------- Einsatzleitung-Snake: Spielcode kommt aus js/snake.js (wird erst hier geladen) ---------- */
   const SNAKEGAME={start(el){el.innerHTML='<div class="pz-card"><div class="pz-center">Lade Spiel …</div></div>';loadJs('js/snake.js').then(()=>{if(cur===SNAKEGAME&&el.isConnected)SNAKE.start(el);}).catch(()=>{el.innerHTML='<div class="pz-card"><div class="pz-center">Das Spiel konnte nicht geladen werden. Bitte Verbindung prüfen.</div></div>';});},
     stop(){if(typeof SNAKE!=='undefined')SNAKE.stop();}};
+  /* ---------- Solitär: Spielcode kommt aus js/solitaer.js (wird erst hier geladen) ---------- */
+  const SOLGAME={start(el){el.innerHTML='<div class="pz-card"><div class="pz-center">Lade Spiel …</div></div>';loadJs('js/solitaer.js').then(()=>{if(cur===SOLGAME&&el.isConnected)SOLITAER.start(el);}).catch(()=>{el.innerHTML='<div class="pz-card"><div class="pz-center">Das Spiel konnte nicht geladen werden. Bitte Verbindung prüfen.</div></div>';});},
+    stop(){if(typeof SOLITAER!=='undefined')SOLITAER.stop();}};
   /* ---------- 6 Einsatzfahrt (Prüfungsfragen) ---------- */
   const FAHRT=(function(){
     const HF=480,hf=()=>(st&&st.hf)||HF,ALLM=[['IBK','Transaktionsanalyse · Konflikte','ibk'],['VAk','Verwaltungsrecht','vak'],['FeuAK','Haushalt · Management','feuak'],['IdF','Brandschutz · Stab','idf']],MODS=[];

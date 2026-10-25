@@ -19,6 +19,7 @@ const PRECACHE = [
   './js/pause-data.js',
   './js/duell.js',
   './js/snake.js',
+  './js/solitaer.js',
   './js/jsqr.min.js',
   './js/version.js',
   './js/qrcode.min.js',
