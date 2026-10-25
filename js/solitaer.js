@@ -120,8 +120,8 @@ var SOL=(function(){
     root.innerHTML='<div class="pz-card so">'
      +'<div class="so-hud"><div><b data-h="score">0</b><span>Punkte</span></div><div><b data-h="moves">0</b><span>Züge</span></div><div><b data-h="time">0:00</b><span>Zeit</span></div><div><b data-h="best">–</b><span>Rekord</span></div></div>'
      +'<div class="so-tools"><button type="button" class="so-ib" data-a="undo" aria-label="Rückgängig" title="Rückgängig">'+ICO.undo+'</button><button type="button" class="so-ib" data-a="redo" aria-label="Aktion wiederholen" title="Wiederholen">'+ICO.redo+'</button><button type="button" class="so-ib" data-a="hint" aria-label="Tipp" title="Tipp">'+ICO.bulb+'</button>'
-     +'<span class="so-seg" role="group" aria-label="Karten ziehen"><button type="button" data-d="1">Ziehen 1</button><button type="button" data-d="3">Ziehen 3</button></span><button type="button" class="pz-sec2" data-a="new">Neues Spiel</button></div>'
-     +'<label class="so-sw"><span class="so-swt"><b>Hinweise</b><small>Passende Ziele leuchten beim Ziehen auf</small></span><input type="checkbox" class="m-switch" data-hints aria-label="Hinweise beim Ziehen und Ablegen"></label>'
+     +'<label class="so-hs" title="Passende Ziele leuchten beim Ziehen auf"><span>Hinweise</span><input type="checkbox" class="m-switch" data-hints aria-label="Hinweise beim Ziehen und Ablegen"></label></div>'
+     +'<div class="so-tools"><span class="so-seg" role="group" aria-label="Karten ziehen"><button type="button" data-d="1">Ziehen 1</button><button type="button" data-d="3">Ziehen 3</button></span><button type="button" class="so-new" data-a="new">Neues Spiel</button></div>'
      +'<div class="so-board"><div class="so-area"></div><div class="so-ov" hidden></div></div><div class="pz-fb so-msg" aria-live="polite"></div>'
      +'<div class="pz-fb">Karten ziehen und ablegen oder antippen · Doppeltipp = ins Fundament</div></div>';
     area=root.querySelector('.so-area'); ov=root.querySelector('.so-ov'); msg=root.querySelector('.so-msg');
@@ -132,7 +132,7 @@ var SOL=(function(){
   function render(){
     if(!root||!root.isConnected||!S) return;
     L=layout(); var cw=L.cw, ch=L.ch, gap=L.gap, x0=L.x0, h=[], pos=function(c){ return x0+c*(cw+gap); };
-    area.style.setProperty('--cw',cw+'px'); area.style.setProperty('--ch',ch+'px');
+    area.style.setProperty('--cw',cw+'px'); area.style.setProperty('--ch',ch+'px'); area.classList.toggle('so-narrow',cw<62);
     var selSet={}; if(sel) SOL.seqOf(S,sel).forEach(function(k){ selSet[k.s*20+k.r]=1; });
     var hs={}, ht=null; if(hintObj&&hintObj.from){ SOL.seqOf(S,hintObj.from).forEach(function(k){ hs[k.s*20+k.r]=1; }); ht=hintObj.to; }
     h.push('<div class="so-slot rec" data-t="stock" style="left:'+pos(0)+'px;top:6px">'+(S.stock.length?'':ICO.recycle)+'</div>');
