@@ -37,7 +37,7 @@
 - **Jahrgänge** – Der Master (BRef 04/2025 - AB 04/2026) ist die Grundlage; jeder weitere Jahrgang passt Stundenplan (je Abschnitt, IdF Gruppe 1/2), Prüfungen und Fragen, Lernseiten (Kapitel ausblenden, eigene Kapitel und Reiter), Lernkarten (auch Master-Karten löschbar), Link und Standorte an. Rückgängig und Wiederholen sind auf den Seiten dauerhaft sichtbar. Änderungen werden als Datei exportiert, in der WhatsApp-Gruppe geteilt und eingelesen. Anleitung: [`jahrgaenge/ANLEITUNG.md`](jahrgaenge/ANLEITUNG.md), Prüfskript für eingeschickte Dateien: `node tools/pruefe-jahrgang.cjs <Datei.json>`
 - **Ersteinrichtung** – beim ersten Start: Aussehen und Akzentfarbe, Lehrgang (Master oder Jahrgang) und eine Erklärseite zur Jahrgangs-Funktion
 - **Startseite** – Weiterlernen, Tagesziel, Lernzeit je Woche/Monat, „Als Nächstes“ aus dem Stundenplan, Klausurtermin-Countdown (einstellbar, im Master vorbelegt)
-- **Stundenplan** – je Abschnitt und IdF-Gruppe; nur wichtige Termine (Akzentfarbe/grün) lassen sich in den Kalender übernehmen
+- **Stundenplan** – je Abschnitt und IdF-Gruppe; nur wichtige Termine (Akzentfarbe/grün) lassen sich in den Kalender übernehmen; im IdF-Plan öffnet ein Tipp auf eine Einheit mit Raum den Raumplan als 3D-Ansicht des Geländes (Gebäude leuchtet, Raumnummer als Etikett)
 - **Sicherung** – Lernstand, Notizen, Einstellungen und Jahrgangs-Änderungen als Datei sichern und einspielen; Bilder liegen nur im Jahrgangs-Export
 - **Pausenraum** – kleine Spiele, Einsatzfahrt mit Prüfungsfragen, Einsatzfahrt-Duell zu zweit (WebRTC) Einsatzleitung-Snake mit wählbaren Herausforderungen (Atemluft, Löschwasser) , Solitär mit Feuerwehr-Kartenfarben (Karten antippen oder ziehen) und Minesweeper „Nachtsuche“ (vier Stufen, Markieren per langem Druck)
 - **Datenschutz** – alles bleibt auf dem Gerät (LocalStorage/IndexedDB), keine Konten, kein Tracking; Hinweis in der App unter Einstellungen
@@ -57,6 +57,7 @@ BVI-Lernwebsite/
 │   ├── app.js          # NAV, PROGRESS, SEARCH, FC, SIM, GH, ...
 │   ├── jg.js / jg-ui.js  # Jahrgänge: Daten und Oberfläche
 │   ├── pause.js / pause-data.js / duell.js / snake.js / solitaer.js / minesweeper.js  # Pausenraum, Einsatzfahrt, Duell, Snake, Solitär, Minesweeper
+│   ├── raumplan.js / three.min.js      # Raumplan IdF Münster in 3D (wird erst beim ersten Tipp geladen)
 │   ├── faq.js                          # FAQ zu den Standorten (Fragen, Antworten für IdF Münster, Karte im Stundenplan)
 │   └── version.js      # APP_VERSION (mit sw.js synchron halten)
 ├── jahrgaenge/         # optionale veröffentlichte Jahrgangs-Dateien (<ID>.json) und Anleitung
