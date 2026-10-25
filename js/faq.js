@@ -68,7 +68,54 @@ const FAQ=(function(){
       heizung:'Die Heizung war gut.',
       arzt:'Ja, alles ist in der Nähe.'
     },
-    vak:{}, feuak:{}
+    vak:{
+      wohnen:'Im ABION Spreebogen Waterside Hotel Berlin.',
+      zimmer:'Doppelzimmer mit eigenem Bad.',
+      kuehl:'Nein, einen Kühlschrank gab es nicht.',
+      technik:'Ja, alles ist vorhanden.',
+      handtuch:'Nein, Handtücher und Bettwäsche muss man nicht mitbringen.',
+      waesche:'Ja, im Hotel, aber es ist teuer.',
+      schluessel:'Der Schlüssel ist eine Zimmerkarte.',
+      essen:'Das Frühstück gibt es im Hotel. Mittag- und Abendessen muss man selbst organisieren.',
+      selbst:'Ein Supermarkt ist in der Nähe.',
+      sport:'Es gibt Sporträume, sie sind aber sehr schlecht. Ein Fitnessstudio ist direkt in der Nähe, außerdem gibt es eine Sauna.',
+      sportsachen:'Kleidung für die Sauna gibt es an der Rezeption.',
+      laufen:'Ja.',
+      abend:'Es gibt keinen klassischen Aufenthaltsraum.',
+      parken:'Parkplätze am Hotel, sie kosten aber viel.',
+      oepnv:'Sehr gut möglich.',
+      zeit:'Anreise am Sonntag vor dem ersten Lehrgangstag, Abreise direkt am letzten Lehrgangstag. Achtung: Über das Wochenende dazwischen ist man nicht untergebracht.',
+      melden:'An der Rezeption.',
+      kleidung:'Zivil.',
+      schutz:'Nein.',
+      arbeit:'Laptop und Schreibzeug bekommt man gestellt.',
+      heizung:'Die Heizung ist in Ordnung.',
+      arzt:'Ja, alles ist zu Fuß erreichbar.'
+    },
+    feuak:{
+      wohnen:'Im Hotel Panorama Hamburg-Billstedt.',
+      zimmer:'Doppelzimmer mit eigenem Bad.',
+      kuehl:'Ja, es gab einen Kühlschrank.',
+      technik:'Ja, alles ist vorhanden.',
+      handtuch:'Nein, Handtücher und Bettwäsche muss man nicht mitbringen.',
+      waesche:'Ja, im Hotel, aber es ist teuer. Man konnte auch an der FeuAK waschen.',
+      schluessel:'Der Schlüssel ist eine Zimmerkarte.',
+      essen:'Das Frühstück gibt es im Hotel, das Mittagessen an der FeuAK. Dort kann man auch ein Lunchpaket nehmen (Brötchen, Obst und Süßes).',
+      kost:'Vegetarisch und vegan ist möglich.',
+      selbst:'Ein Supermarkt ist in der Nähe.',
+      sport:'Es gibt Sporträume, sie sind aber sehr schlecht. Ein Fitnessstudio ist 5 Minuten zu Fuß entfernt.',
+      laufen:'Ja.',
+      abend:'Es gibt keinen klassischen Aufenthaltsraum.',
+      parken:'Parkplätze am Hotel, sie kosten aber etwas.',
+      oepnv:'Gut möglich.',
+      zeit:'Anreise am Sonntag vor dem ersten Lehrgangstag, Abreise am letzten Lehrgangstag. Achtung: Über das Wochenende dazwischen ist man nicht untergebracht.',
+      melden:'An der Rezeption.',
+      kleidung:'Hemd.',
+      schutz:'Nein.',
+      arbeit:'Laptop und Schreibzeug bekommt man gestellt.',
+      heizung:'Die Heizung ist in Ordnung.',
+      arzt:'Ja, alles ist zu Fuß erreichbar.'
+    }
   };
   const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   let want=false;   // Startseite → Stundenplan: Karte geöffnet anzeigen

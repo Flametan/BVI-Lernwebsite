@@ -2756,7 +2756,7 @@ button.idf-map{background:none;border:0;padding:0;font:inherit;font-weight:600;c
 @media(prefers-reduced-motion:reduce){.so-slot.hint,.so-c.hint{animation:none;box-shadow:0 0 0 3px var(--m-accent);}}
 
 /* FAQ zu den Standorten (Stundenplan) */
-.faq{padding:0;margin-top:1rem;}
+.faq{padding:0;margin:1rem 0 12px;}
 .faq>summary{list-style:none;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:14px 16px;min-height:44px;}
 .faq>summary::-webkit-details-marker{display:none;}
 .faq-t{font-weight:600;font-size:.95rem;}
