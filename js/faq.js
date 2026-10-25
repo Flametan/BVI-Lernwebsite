@@ -42,7 +42,33 @@ const FAQ=(function(){
       heizung:'Die Heizung funktioniert gut. Schlappen oder Hausschuhe sind von Vorteil.',
       arzt:'Alles ist in etwa 10 Minuten zu Fuß erreichbar.'
     },
-    ibk:{}, vak:{}, feuak:{}
+    ibk:{
+      wohnen:'Im ACHAT Hotel Magdeburg. Die Zimmer werden an der Rezeption vergeben.',
+      zimmer:'Doppelzimmer mit eigenem Bad.',
+      kuehl:'Nein.',
+      technik:'Ja, alles ist vorhanden.',
+      handtuch:'Nein, Handtücher und Bettwäsche muss man nicht mitbringen.',
+      waesche:'Ja, im Hotel ist es aber sehr teuer.',
+      schluessel:'Der Schlüssel ist eine Zimmerkarte. Ein Ersatz kostet nichts, die andere Karte wird dann aber deaktiviert.',
+      essen:'Das Frühstück gibt es im Hotel, Mittag- und Abendessen im IBK.',
+      zeiten:'Die genauen Uhrzeiten sind nicht mehr bekannt. Das Abendessen gibt es eine Stunde nach Ende des Unterrichts.',
+      kost:'Ja, man muss sich vorher anmelden. Zöliakie wird beachtet.',
+      selbst:'Ein Supermarkt ist in der Nähe.',
+      sport:'Der Sportraum ist schlecht, ein Fitnessstudio ist aber in der Nähe. Außerdem gibt es ein sehr kleines Schwimmbad und eine Sauna.',
+      sportsachen:'Badekleidung und Schlappen.',
+      laufen:'Ja.',
+      abend:'Es gibt einen Aufenthaltsraum in der obersten Etage.',
+      parken:'Rund um das Hotel kostenlos, aber begrenzt. Die Parkplätze des Hotels kosten etwas.',
+      oepnv:'Eine Bahnstation ist in der Nähe.',
+      zeit:'Anreise am Sonntag vor Unterrichtsbeginn, Auschecken am Morgen des letzten Lehrgangstages.',
+      melden:'An der Rezeption.',
+      kleidung:'Zivil.',
+      schutz:'Für einen Praxistag wird PSA benötigt.',
+      arbeit:'Laptop und Schreibzeug. Strom und Netz gibt es im Raum.',
+      heizung:'Die Heizung war gut.',
+      arzt:'Ja, alles ist in der Nähe.'
+    },
+    vak:{}, feuak:{}
   };
   const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   let want=false;   // Startseite → Stundenplan: Karte geöffnet anzeigen
