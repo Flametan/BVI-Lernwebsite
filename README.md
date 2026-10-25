@@ -57,6 +57,7 @@ BVI-Lernwebsite/
 │   ├── app.js          # NAV, PROGRESS, SEARCH, FC, SIM, GH, ...
 │   ├── jg.js / jg-ui.js  # Jahrgänge: Daten und Oberfläche
 │   ├── pause.js / pause-data.js / duell.js / snake.js / solitaer.js  # Pausenraum, Einsatzfahrt, Duell, Snake, Solitär
+│   ├── faq.js                          # FAQ zu den Standorten (Fragen, Antworten für IdF Münster, Karte im Stundenplan)
 │   └── version.js      # APP_VERSION (mit sw.js synchron halten)
 ├── jahrgaenge/         # optionale veröffentlichte Jahrgangs-Dateien (<ID>.json) und Anleitung
 ├── tools/              # Prüfskript für Jahrgangs-Dateien

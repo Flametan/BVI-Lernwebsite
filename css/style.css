@@ -2754,3 +2754,16 @@ button.idf-map{background:none;border:0;padding:0;font:inherit;font-weight:600;c
 .so-act{display:flex;flex-direction:column;gap:8px;width:100%;margin-top:6px;}.so-act .pz-pri{min-height:48px;}.so-act .pz-sec2{min-height:44px;border-radius:13px;}
 .so-msg{min-height:1.3em;}
 @media(prefers-reduced-motion:reduce){.so-slot.hint,.so-c.hint{animation:none;box-shadow:0 0 0 3px var(--m-accent);}}
+
+/* FAQ zu den Standorten (Stundenplan) */
+.faq{padding:0;margin-top:1rem;}
+.faq>summary{list-style:none;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:14px 16px;min-height:44px;}
+.faq>summary::-webkit-details-marker{display:none;}
+.faq-t{font-weight:600;font-size:.95rem;}
+.faq[open]>summary{border-bottom:1px solid var(--m-line,rgba(128,128,128,.2));}
+.faq-cat{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--m-muted);margin:14px 16px 4px;}
+.faq-q{border-top:1px solid var(--m-line,rgba(128,128,128,.15));}
+.faq-q>summary{cursor:pointer;padding:12px 16px;min-height:44px;font-size:.9rem;display:flex;align-items:center;}
+.faq-q p{margin:0;padding:0 16px 14px;font-size:.88rem;line-height:1.5;color:var(--m-muted);}
+.faq-none{margin:0;padding:14px 16px;font-size:.88rem;color:var(--m-muted);}
+.m-faqhint{margin-bottom:12px;}
