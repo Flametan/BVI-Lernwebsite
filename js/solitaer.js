@@ -260,7 +260,7 @@ var SOL=(function(){
     else if(a==='close'){ ovClosed=true; ov.hidden=true; }
     else if(a==='undo'){ S=SOL.undo(S); sel=null; hintObj=null; render(); }
     else if(a==='redo'){ S=SOL.redo(S); sel=null; hintObj=null; render(); }
-    else if(a==='hint'){ var hh=SOL.hint(S); hintObj=hh; saySm(!hh?'Keine Züge mehr möglich – starte ein neues Spiel.':hh.draw?'Tipp: Ziehe eine Karte vom Stapel.':'Tipp: Die markierte Karte lässt sich verschieben.'); sel=null; render(); clearTimeout(hintT); hintT=setTimeout(function(){ hintObj=null; if(S&&!S.won&&root&&root.isConnected) render(); },2600); }
+    else if(a==='hint'){ var hh=SOL.hint(S); hintObj=hh; if(!hh){ b.classList.remove('so-shake'); void b.offsetWidth; b.classList.add('so-shake'); } saySm(!hh?'Keine Züge mehr möglich – starte ein neues Spiel.':hh.draw?'Tipp: Ziehe eine Karte vom Stapel.':'Tipp: Die markierte Karte lässt sich verschieben.'); sel=null; render(); clearTimeout(hintT); hintT=setTimeout(function(){ hintObj=null; if(S&&!S.won&&root&&root.isConnected) render(); },2600); }
   }
   function onChange(e){ if(e.target.matches('[data-hints]')){ opts.hints=e.target.checked; lset(OKEY,opts); if(!opts.hints) saySm(''); } }
   function onResize(){ if(S&&!drag&&root&&root.isConnected) render(); }
