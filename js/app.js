@@ -4105,6 +4105,7 @@ const CHANGELOG=(function(){
       'Stundenplan in Jahrgängen: Zwischen der Reiterkarte (IBK, VAk, FeuAK, IdF) und der Karte darunter ist jetzt eine kleine Lücke',
       'Pausenraum: neues Spiel „Einsatzleitung-Snake“ direkt unter dem Duell. Du steuerst einen Trupp mit Schlauchleitung, sammelst Feuerlöscher und meidest die Flammen. Als Herausforderung wählbar: „Atemluft“ (der Vorrat sinkt, Druckluftflaschen füllen auf) und „Löschwasser“ (Aufnehmen löscht einen Brandherd), dazu drei Einsatzstufen',
       'Pausenraum: neues Spiel „Solitär“ direkt unter dem Snake – Klondike mit Flammen, Löschern, Äxten und Leitern als Kartenfarben und Feuerwehr-Namen für Ass, Bube, Dame und König. Karten antippen oder ziehen (die Karte hängt am Greifpunkt hinter dem Zeiger her und kippt dabei in 3D), Doppeltipp führt den passenden Zug aus (zuerst ins Fundament, sonst auf eine Spalte), dazu Rückgängig, Wiederholen, Tipp, Ziehen 1 oder 3 und einschaltbare Hinweise beim Ziehen',
+      'Ladebildschirm: Solange die Seite startet, zeigt sie jetzt einen Platzhalter-Bildschirm (graue Flächen im Aufbau der Startseite, in deinem Farbschema) statt einer leeren Fläche; sobald die App bereit ist, blendet er sich aus. Gilt für die Website und die Android-App',
       'Pausenraum: neues Spiel „Minesweeper“ direkt unter dem Solitär – im Dunkeln Brandherde aufspüren. Vier Stufen (Leicht 12, Mittel 30, Schwer 56, Sehr schwer 72 Brandherde), Antippen sucht ab, langes Drücken, Rechtsklick oder der Schalter „Markieren“ setzt die Markierung, Doppeltipp auf eine Zahl öffnet die Nachbarfelder. Dazu Tipp, Zeit und Rekord je Stufe sowie ein leuchtender Wärmebild-Cursor',
       'Neu: FAQ zu den Standorten. Im Stundenplan gibt es ganz oben die eingeklappte Karte „Vor der Anreise: FAQ“ mit Fragen zu Unterkunft, Verpflegung, Sport, Anreise, Kleidung und Organisation (für IdF Münster, IBK Heyrothsberge, VAk Berlin und FeuAK Hamburg). Fragen ohne Antwort werden ausgeblendet. 14 Tage vor dem ersten Plantag zeigt die Startseite einen Link dorthin. Jahrgänge können Antworten ändern und eigene Fragen in ihrer Jahrgangsdatei ergänzen',
       'Hinweis für iPhone und iPad: Apple löscht die Daten einer Website in Safari nach etwa 7 Tagen ohne Besuch. Das steht jetzt unter Einstellungen, bei der App-Installation und in der Hilfe – mit dem Rat, die App auf den Home-Bildschirm zu legen und ab und zu zu sichern',
@@ -7361,6 +7362,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   ONBOARD.init();
   OVL.init();
   CHANGELOG.check();
+  if(window.SK) requestAnimationFrame(()=>window.SK());
   if(typeof FALLBEARBEITUNG!=='undefined') { document.querySelectorAll('#v-vak-fallbearbeitung').forEach(()=>{}); }
   document.querySelectorAll('.pc table').forEach(t=>{
     if(t.closest('.tbl-wrap')) return;

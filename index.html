@@ -17,6 +17,23 @@
   if(b)document.documentElement.setAttribute('data-tone','beige');
   try{var v=parseInt(localStorage.getItem('bvi_bg'),10);if(v>=0&&v<=100){l=v>=50;document.documentElement.setAttribute('data-theme',l?'light':'dark');var s=b?38:0,q=s/100*Math.min(v/100,1-v/100),f=function(n){var k=(n+(b?41:0)/30)%12;return Math.round(255*(v/100-q*Math.max(-1,Math.min(k-3,Math.min(9-k,1)))));},c='#'+[f(0),f(8),f(4)].map(function(x){return('0'+x.toString(16)).slice(-2);}).join('');document.documentElement.style.setProperty('--m-bg',c);document.documentElement.style.setProperty('--c-bg',c);}}catch(e){}
   var t=document.querySelector('meta[name=theme-color]');if(t)t.content=b?'#ddcfb1':l?'#f4f4f1':'#121212';})();</script>
+  <style id="sk-css">
+    /* Platzhalter-Bildschirm: steht sofort da, solange die Seite lädt; die App blendet ihn nach dem Start aus (SK in app.js) */
+    #sk{position:fixed;inset:0;z-index:2147483000;background:var(--m-bg,#121212);display:flex;overflow:hidden;transition:opacity .25s ease;}
+    #sk.out{opacity:0;pointer-events:none;}
+    #sk i{display:block;background:var(--m-raised,#262626);border-radius:12px;animation:sk-p 1.4s ease-in-out infinite;}
+    #sk .sk-card{background:var(--m-card,#1d1d1d);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px;}
+    #sk .sk-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:14px;padding:calc(env(safe-area-inset-top,0px) + 22px) 16px 0;max-width:1100px;margin:0 auto;width:100%;}
+    #sk .sk-row{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;}
+    #sk .sk-rings{display:flex;gap:12px;justify-content:space-between;}#sk .sk-rings i{flex:1;aspect-ratio:1;max-width:84px;border-radius:50%;}
+    #sk .sk-rail{display:none;width:240px;flex:none;background:var(--m-bar,#0a0a0a);padding:24px 16px;flex-direction:column;gap:12px;}
+    #sk .sk-tabs{position:absolute;left:0;right:0;bottom:0;height:calc(62px + env(safe-area-inset-bottom,0px));background:var(--m-bar,#0a0a0a);display:flex;justify-content:space-around;align-items:center;padding-bottom:env(safe-area-inset-bottom,0px);}
+    #sk .sk-tabs i{width:44px;height:30px;border-radius:10px;}
+    @keyframes sk-p{50%{opacity:.5}}
+    @media(min-width:1100px){#sk .sk-rail{display:flex;}#sk .sk-tabs{display:none;}}
+    @media(prefers-reduced-motion:reduce){#sk i{animation:none;}#sk{transition:none;}}
+  </style>
+  <script>window.SK=function(){var e=document.getElementById('sk');if(!e)return;e.classList.add('out');setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e);},320);};setTimeout(function(){window.SK();},12000);</script>
   <link rel="icon" id="fav" type="image/svg+xml" href="icons/icon-512.svg"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -25,6 +42,16 @@
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 </head>
 <body>
+<div id="sk" aria-hidden="true">
+  <div class="sk-rail"><i style="height:40px;width:60%"></i><i style="height:44px"></i><i style="height:44px"></i><i style="height:44px"></i><i style="height:44px"></i></div>
+  <div class="sk-main">
+    <div class="sk-row"><div style="flex:1;display:flex;flex-direction:column;gap:10px"><i style="height:30px;width:62%"></i><i style="height:14px;width:80%"></i><i style="height:14px;width:36%"></i></div><i style="height:52px;width:34%"></i></div>
+    <div class="sk-card"><i style="height:14px;width:30%"></i><i style="height:24px;width:70%"></i><i style="height:14px;width:55%"></i><i style="height:42px;width:42%;margin-top:6px"></i></div>
+    <div class="sk-card"><i style="height:14px;width:42%"></i><div class="sk-rings"><i></i><i></i><i></i><i></i></div></div>
+    <div class="sk-card"><i style="height:54px"></i><i style="height:54px"></i><i style="height:54px"></i></div>
+  </div>
+  <div class="sk-tabs"><i></i><i></i><i style="width:56px;height:56px;border-radius:50%;margin-top:-26px"></i><i></i><i></i></div>
+</div>
 <a class="skip-link" href="#" onclick="A11Y.skip(event)">Zum Inhalt springen</a>
 <div id="a11y-live" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 <div class="offline-banner" id="offline-banner">
