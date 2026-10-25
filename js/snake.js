@@ -66,10 +66,12 @@ const SNAKE=(function(){
   function build(){
     const cells=[]; for(let i=0;i<N*N;i++) cells.push('<div class="sn-c"></div>');
     el.innerHTML=`<div class="pz-card sn">
+      <div class="sn-sec">Herausforderungen</div>
       <div class="sn-opts" role="group" aria-label="Herausforderungen">
-        <button type="button" class="sn-opt" data-o="air"><b></b><span>Luftvorrat sinkt, Flaschen nachfüllen</span></button>
-        <button type="button" class="sn-opt" data-o="water"><b></b><span>Aufnehmen löscht einen Brandherd</span></button></div>
-      <div class="sn-lv" role="group" aria-label="Einsatzstufe">${LEVELS.map((l,i)=>`<button type="button" class="sn-l" data-l="${i}"><b>${l.n}</b><span>${l.t}</span></button>`).join('')}</div>
+        <button type="button" role="checkbox" class="sn-opt" data-o="air"><i class="sn-cb" aria-hidden="true"></i><span><b>Atemluft</b><small>Luftvorrat sinkt</small></span></button>
+        <button type="button" role="checkbox" class="sn-opt" data-o="water"><i class="sn-cb" aria-hidden="true"></i><span><b>Löschwasser</b><small>löscht einen Brandherd</small></span></button></div>
+      <div class="sn-sec">Einsatzstufe</div>
+      <div class="sn-lv" role="group" aria-label="Einsatzstufe">${LEVELS.map((l,i)=>`<button type="button" class="sn-l" data-l="${i}"><b>Stufe ${i+1}</b><small>${l.t}</small></button>`).join('')}</div>
       <div class="sn-hud"><div><b data-h="score">0</b><span>Punkte</span></div><div><b data-h="best">0</b><span>Rekord</span></div><div><b data-h="len">3</b><span>Länge</span></div><div><b data-h="fires">0</b><span>Brandherde</span></div></div>
       <div class="sn-air" hidden><span>Atemluft</span><i><b></b></i></div>
       <div class="sn-wrap"><div class="sn-board" role="img" aria-label="Spielfeld Einsatzleitung-Snake">${cells.join('')}</div><div class="sn-ov"></div></div>
@@ -92,8 +94,8 @@ const SNAKE=(function(){
   function render(){
     if(!el||!el.isConnected) return;
     const run=S.status==='run';
-    el.querySelectorAll('[data-o]').forEach(b=>{ const on=!!opts[b.dataset.o]; b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); b.disabled=run; b.querySelector('b').textContent=(on?'✔ ':'')+(b.dataset.o==='air'?'Atemluft':'Löschwasser'); });
-    el.querySelectorAll('[data-l]').forEach(b=>{ b.classList.toggle('on',+b.dataset.l===level); b.disabled=run; });
+    el.querySelectorAll('[data-o]').forEach(b=>{ const on=!!opts[b.dataset.o]; b.classList.toggle('on',on); b.setAttribute('aria-checked',on); b.disabled=run; });
+    el.querySelectorAll('[data-l]').forEach(b=>{ const on=+b.dataset.l===level; b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); b.disabled=run; });
     const set=(k,v)=>{ const n=el.querySelector('[data-h="'+k+'"]'); if(n&&n.textContent!==String(v)) n.textContent=v; };
     set('score',S.score); set('best',Math.max(S.best,S.score)); set('len',S.snake.length); set('fires',S.fires.size);
     const air=el.querySelector('.sn-air'); air.hidden=!opts.air; if(opts.air){ air.classList.toggle('low',S.air<30); air.querySelector('b').style.width=Math.max(0,S.air)+'%'; }
