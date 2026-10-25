@@ -265,7 +265,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Startseite: Lernkarten ja, Pausenraum-Karte nein', pz.home.includes('Lernkarten') && !pz.home.includes('Pausenraum'));
   ok('Tab-Leiste: Pausenraum statt Lernkarten', pz.tabs.some(x => x.includes('Pausenraum')) && !pz.tabs.some(x => x.includes('Lernkarten')));
   eq('Pausenraum: 50 Sätze ohne Emojis', [pz.quips, pz.emoji], [50, false]);
-  eq('Pausenraum: 9 Einträge (Einsatzfahrt, Duell, Snake, Solitär und fünf weitere Spiele)', pz.games, 9);
+  eq('Pausenraum: 10 Einträge (Einsatzfahrt, Duell, Snake, Solitär, Minesweeper und fünf weitere Spiele)', pz.games, 10);
   ok('Spiele haben Inhalte in allen drei Modi', pz.modes.every(m => m.quiz && m.tf && m.word && m.num && m.mem));
   ok('Zurück im Spiel führt zur Spieleauswahl (Browser-Zurück)', pz.modes.every(m => m.quizBack && m.tfBack && m.wordBack && m.numBack && m.memBack));
   ok('Quizleiter, Wörter-Raten, Memory reagieren', pz.modes.every(m => m.quizFb && m.wordRow === 5 && m.memCards === 12));
@@ -513,6 +513,42 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   eq('Pausenraum: Einsatzleitung-Snake unter dem Duell, Atemluft und Löschwasser', sk, { order: true, board: true, default: true, air: true, water: true, airOut: true, stopped: true });
 
   // ── Pausenraum: Solitär direkt unter dem Snake; Antippen, Ziehen, Hinweise, Gewinn-Fenster ──
+  // ── Minesweeper im Pausenraum ──
+  const mine = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {}; localStorage.removeItem('bvi_minesweeper_opts');
+    NAV.go('v-pause', 'Pausenraum'); await PAUSE_LOADER.load(); await w(300);
+    r.order = [...document.querySelectorAll('#v-pause [data-g]')].slice(3, 5).map(x => x.dataset.g).join();
+    document.querySelector('#v-pause [data-g="minesweeper"]').click(); await w(800);
+    const S = () => MINESWEEPER._state(), cells = () => document.querySelectorAll('.mi-c');
+    r.stufen = [...document.querySelectorAll('.mi-seg [data-l]')].map(b => b.textContent).join();
+    r.leicht = cells().length === 81 && S().mines === 12;
+    ['mittel', 'schwer', 'sehr'].forEach(k => { document.querySelector('[data-l="' + k + '"]').click(); r[k] = S().mines + '/' + cells().length; });
+    document.querySelector('[data-l="leicht"]').click(); await w(60);
+    r.opts = JSON.parse(localStorage.getItem('bvi_minesweeper_opts')).level === 'leicht';
+    cells()[40].click(); await w(80);
+    r.erster = !S().cells[40].m && S().opened > 0 && !S().over;
+    // Markieren per Umschalter und Rechtsklick
+    const v = S().cells.findIndex(c => c.s === 0 && !c.m);
+    document.querySelector('[data-a="flag"]').click(); cells()[v].click(); await w(40); r.flagMode = S().cells[v].s === 2 && /markiert/.test(cells()[v].getAttribute('aria-label'));
+    cells()[v].click(); await w(40); document.querySelector('[data-a="flag"]').click(); r.unflag = S().cells[v].s === 0;
+    cells()[v].dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true })); await w(40); r.rechtsklick = S().cells[v].s === 2; cells()[v].dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+    // Tipp öffnet nichts, markiert ein sicheres Feld
+    document.querySelector('[data-a="hint"]').click(); await w(40); r.tipp = document.querySelectorAll('.mi-c.hint').length === 1;
+    // Gewinnen: alle sicheren Felder öffnen
+    S().cells.forEach((c, i) => { if (!c.m && c.s === 0) cells()[i].click(); }); await w(900);
+    r.sieg = S().won && !!document.querySelector('.so-ov:not([hidden]) .so-win') && JSON.parse(localStorage.getItem('bvi_pause_best')).minesweeper.leicht >= 0;
+    document.querySelector('.so-ov [data-a="close"]').click(); r.zu = document.querySelector('.so-ov').hidden;
+    // Verlieren
+    document.querySelector('[data-a="new"]').click(); await w(60); cells()[40].click(); await w(60);
+    const m = S().cells.findIndex(c => c.m); cells()[m].click(); await w(1200);
+    r.niederlage = S().over && !S().won && cells()[m].classList.contains('hit') && !!document.querySelector('.so-win');
+    document.querySelector('.pz-back').click(); await w(300);
+    r.stopped = MINESWEEPER._state() === null;
+    localStorage.removeItem('bvi_minesweeper_opts'); const bb = JSON.parse(localStorage.getItem('bvi_pause_best') || '{}'); delete bb.minesweeper; localStorage.setItem('bvi_pause_best', JSON.stringify(bb));
+    return r;
+  });
+  eq('Pausenraum: Minesweeper (Stufen, erster Zug, Markieren, Tipp, Sieg, Niederlage)', mine, { order: 'solitaer,minesweeper', stufen: 'Leicht,Mittel,Schwer,Sehr schwer', leicht: true, mittel: '30/144', schwer: '56/256', sehr: '72/256', opts: true, erster: true, flagMode: true, unflag: true, rechtsklick: true, tipp: true, sieg: true, zu: true, niederlage: true, stopped: true });
+
   // ── Standort-FAQ ──
   const faq = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
