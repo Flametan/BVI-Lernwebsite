@@ -128,7 +128,14 @@ var SOL=(function(){
     var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#fff6e0" d="'+SOL.SUITS[0].path+'"/></svg>';
     root.querySelector('.so').style.setProperty('--so-emb','url("data:image/svg+xml;utf8,'+encodeURIComponent(svg)+'")');
   }
-  function layout(){ var w=root.querySelector('.so-board').clientWidth||360, gap=Math.max(4,Math.round(w*.014)), cw=Math.floor((w-gap*6-12)/7); return {gap:gap,cw:cw,ch:Math.round(cw*1.42),x0:6,ty:Math.round(cw*1.42)+22}; }
+  // Auf dem Handy reicht das Spielfeld über die ganze Bildschirmbreite (größere Karten), sonst bleibt es in der Karte
+  function layout(){
+    var bd=root.querySelector('.so-board'), narrow=window.innerWidth<=700;
+    bd.style.marginLeft=''; bd.style.marginRight=''; bd.classList.remove('so-bleed');
+    if(narrow){ var r=bd.getBoundingClientRect(), vw=document.documentElement.clientWidth; bd.style.marginLeft=(-r.left)+'px'; bd.style.marginRight=(-(vw-r.right))+'px'; bd.classList.add('so-bleed'); }
+    var w=bd.clientWidth||360, gap=Math.max(3,Math.round(w*(narrow?.011:.014))), x0=narrow?4:6, cw=Math.floor((w-gap*6-x0*2)/7);
+    return {gap:gap,cw:cw,ch:Math.round(cw*1.42),x0:x0,ty:Math.round(cw*1.42)+22};
+  }
   function render(){
     if(!root||!root.isConnected||!S) return;
     L=layout(); var cw=L.cw, ch=L.ch, gap=L.gap, x0=L.x0, h=[], pos=function(c){ return x0+c*(cw+gap); };
