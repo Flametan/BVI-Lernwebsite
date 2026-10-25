@@ -132,9 +132,9 @@ var SOL=(function(){
   function build(){
     root.innerHTML='<div class="pz-card so">'
      +'<div class="so-hud"><div><b data-h="score">0</b><span>Punkte</span></div><div><b data-h="moves">0</b><span>Züge</span></div><div><b data-h="time">0:00</b><span>Zeit</span></div><div><b data-h="best">–</b><span>Rekord</span></div></div>'
-     +'<div class="so-tools"><button type="button" class="so-ib" data-a="undo" aria-label="Rückgängig" title="Rückgängig">'+ICO.undo+'</button><button type="button" class="so-ib" data-a="redo" aria-label="Aktion wiederholen" title="Wiederholen">'+ICO.redo+'</button><button type="button" class="so-ib" data-a="hint" aria-label="Tipp" title="Tipp">'+ICO.bulb+'</button>'
+     +'<div class="so-bar"><div class="so-tools"><button type="button" class="so-ib" data-a="undo" aria-label="Rückgängig" title="Rückgängig">'+ICO.undo+'</button><button type="button" class="so-ib" data-a="redo" aria-label="Aktion wiederholen" title="Wiederholen">'+ICO.redo+'</button><button type="button" class="so-ib" data-a="hint" aria-label="Tipp" title="Tipp">'+ICO.bulb+'</button>'
      +'<label class="so-hs" title="Passende Ziele leuchten beim Ziehen auf"><span>Hinweise</span><input type="checkbox" class="m-switch" data-hints aria-label="Hinweise beim Ziehen und Ablegen"></label></div>'
-     +'<div class="so-tools"><span class="so-seg" role="group" aria-label="Karten ziehen"><button type="button" data-d="1">Ziehen 1</button><button type="button" data-d="3">Ziehen 3</button></span><button type="button" class="so-new" data-a="new">Neues Spiel</button></div>'
+     +'<div class="so-tools"><span class="so-seg" role="group" aria-label="Karten ziehen"><button type="button" data-d="1">Ziehen 1</button><button type="button" data-d="3">Ziehen 3</button></span><button type="button" class="so-new" data-a="new">Neues Spiel</button></div></div>'
      +'<div class="so-board"><div class="so-area"></div><div class="so-ov" hidden></div></div><div class="pz-fb so-msg" aria-live="polite"></div>'
      +'<div class="pz-fb">Karten ziehen und ablegen oder antippen · Doppeltipp = Zug ausführen</div></div>';
     area=root.querySelector('.so-area'); ov=root.querySelector('.so-ov'); msg=root.querySelector('.so-msg');
