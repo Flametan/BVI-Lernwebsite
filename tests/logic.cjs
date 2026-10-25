@@ -265,7 +265,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Startseite: Lernkarten ja, Pausenraum-Karte nein', pz.home.includes('Lernkarten') && !pz.home.includes('Pausenraum'));
   ok('Tab-Leiste: Pausenraum statt Lernkarten', pz.tabs.some(x => x.includes('Pausenraum')) && !pz.tabs.some(x => x.includes('Lernkarten')));
   eq('Pausenraum: 50 Sätze ohne Emojis', [pz.quips, pz.emoji], [50, false]);
-  eq('Pausenraum: 8 Einträge (Einsatzfahrt, Duell, Snake und fünf weitere Spiele)', pz.games, 8);
+  eq('Pausenraum: 9 Einträge (Einsatzfahrt, Duell, Snake, Solitär und fünf weitere Spiele)', pz.games, 9);
   ok('Spiele haben Inhalte in allen drei Modi', pz.modes.every(m => m.quiz && m.tf && m.word && m.num && m.mem));
   ok('Zurück im Spiel führt zur Spieleauswahl (Browser-Zurück)', pz.modes.every(m => m.quizBack && m.tfBack && m.wordBack && m.numBack && m.memBack));
   ok('Quizleiter, Wörter-Raten, Memory reagieren', pz.modes.every(m => m.quizFb && m.wordRow === 5 && m.memCards === 12));
@@ -511,6 +511,43 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     return r;
   });
   eq('Pausenraum: Einsatzleitung-Snake unter dem Duell, Atemluft und Löschwasser', sk, { order: true, board: true, default: true, air: true, water: true, airOut: true, stopped: true });
+
+  // ── Pausenraum: Solitär direkt unter dem Snake; Antippen, Ziehen, Hinweise, Gewinn-Fenster ──
+  const so = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    const r = {}; localStorage.removeItem('bvi_solitaer_opts');
+    NAV.go('v-pause', 'Pausenraum'); await w(600);
+    const names = [...document.querySelectorAll('#v-pause .pz-game b')].map(b => b.textContent);
+    r.order = names.indexOf('Solitär') === names.indexOf('Einsatzleitung-Snake') + 1;
+    document.querySelector('#v-pause [data-g="solitaer"]').click();
+    for (let i = 0; i < 30 && !document.querySelector('.so-board'); i++) await w(100);
+    const S = () => SOLITAER._state();
+    r.deal = !!S() && SOLITAER._sol.total(S()) === 52 && document.querySelectorAll('.so-c.up').length >= 7;
+    // Antippen: Stapel ziehen
+    document.querySelector('.so-c[data-t="stock"]').dispatchEvent(new MouseEvent('click', { bubbles: true })); await w(60);
+    r.tap = S().waste.length === 1 && S().moves === 1;
+    // Rückgängig und Wiederholen
+    document.querySelector('[data-a="undo"]').click(); await w(40); const u = S().waste.length === 0;
+    document.querySelector('[data-a="redo"]').click(); await w(40); r.undoRedo = u && S().waste.length === 1;
+    // Hinweise ausschalten
+    const sw = document.querySelector('[data-hints]'); sw.checked = false; sw.dispatchEvent(new Event('change', { bubbles: true }));
+    r.hintsSaved = JSON.parse(localStorage.getItem('bvi_solitaer_opts')).hints === false;
+    sw.checked = true; sw.dispatchEvent(new Event('change', { bubbles: true }));
+    // Ziehen 3
+    document.querySelector('[data-d="3"]').click(); await w(60); r.draw3 = S().draw === 3 && JSON.parse(localStorage.getItem('bvi_solitaer_opts')).draw === 3;
+    document.querySelector('[data-d="1"]').click(); await w(60);
+    // Gewinn-Fenster
+    const g = S(); g.found = [0, 1, 2, 3].map(s => Array.from({ length: 13 }, (_, i) => ({ s, r: i + 1, up: true }))); g.tab = [[], [], [], [], [], [], []]; g.stock = []; g.waste = []; g.won = true; g.score = 500; g.moves = 90;
+    document.querySelector('[data-a="undo"]').disabled = false; window.dispatchEvent(new Event('resize')); await w(100);
+    r.win = !!document.querySelector('.so-win') && /500/.test(document.querySelector('.so-win').textContent);
+    document.querySelector('.so-ov [data-a="close"]').click(); await w(60); r.winClose = document.querySelector('.so-ov').hidden;
+    document.querySelector('.pz-back').click(); await w(300);
+    r.stopped = SOLITAER._state() === null && !!document.querySelector('#v-pause [data-g="solitaer"]');
+    const b = JSON.parse(localStorage.getItem('bvi_pause_best') || '{}'); r.best = b.solitaer === 500;
+    localStorage.removeItem('bvi_solitaer_opts'); const bb = JSON.parse(localStorage.getItem('bvi_pause_best') || '{}'); delete bb.solitaer; localStorage.setItem('bvi_pause_best', JSON.stringify(bb));
+    return r;
+  });
+  eq('Pausenraum: Solitär unter dem Snake (Antippen, Rückgängig, Hinweise, Ziehen 3, Gewinn-Fenster)', so, { order: true, deal: true, tap: true, undoRedo: true, hintsSaved: true, draw3: true, win: true, winClose: true, stopped: true, best: true });
 
   // ── Stundenplan: Abschnitte der Fortschrittsleiste springen direkt zur Woche ──
   const pips = await page.evaluate(async () => {

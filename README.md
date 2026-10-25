@@ -39,7 +39,7 @@
 - **Startseite** – Weiterlernen, Tagesziel, Lernzeit je Woche/Monat, „Als Nächstes“ aus dem Stundenplan, Klausurtermin-Countdown (einstellbar, im Master vorbelegt)
 - **Stundenplan** – je Abschnitt und IdF-Gruppe; nur wichtige Termine (Akzentfarbe/grün) lassen sich in den Kalender übernehmen
 - **Sicherung** – Lernstand, Notizen, Einstellungen und Jahrgangs-Änderungen als Datei sichern und einspielen; Bilder liegen nur im Jahrgangs-Export
-- **Pausenraum** – kleine Spiele, Einsatzfahrt mit Prüfungsfragen, Einsatzfahrt-Duell zu zweit (WebRTC) und Einsatzleitung-Snake mit wählbaren Herausforderungen (Atemluft, Löschwasser)
+- **Pausenraum** – kleine Spiele, Einsatzfahrt mit Prüfungsfragen, Einsatzfahrt-Duell zu zweit (WebRTC) Einsatzleitung-Snake mit wählbaren Herausforderungen (Atemluft, Löschwasser) und Solitär mit Feuerwehr-Kartenfarben (Karten antippen oder ziehen)
 - **Datenschutz** – alles bleibt auf dem Gerät (LocalStorage/IndexedDB), keine Konten, kein Tracking; Hinweis in der App unter Einstellungen
 - **Android-App** – WebView mit Widgets und Startsymbol je Farbschema (`android/`)
 - **Bildansicht** – Bilder und Diagramme per Tipp groß öffnen und zoomen
@@ -56,7 +56,7 @@ BVI-Lernwebsite/
 ├── js/
 │   ├── app.js          # NAV, PROGRESS, SEARCH, FC, SIM, GH, ...
 │   ├── jg.js / jg-ui.js  # Jahrgänge: Daten und Oberfläche
-│   ├── pause.js / pause-data.js / duell.js / snake.js  # Pausenraum, Einsatzfahrt, Duell, Snake
+│   ├── pause.js / pause-data.js / duell.js / snake.js / solitaer.js  # Pausenraum, Einsatzfahrt, Duell, Snake, Solitär
 │   └── version.js      # APP_VERSION (mit sw.js synchron halten)
 ├── jahrgaenge/         # optionale veröffentlichte Jahrgangs-Dateien (<ID>.json) und Anleitung
 ├── tools/              # Prüfskript für Jahrgangs-Dateien
