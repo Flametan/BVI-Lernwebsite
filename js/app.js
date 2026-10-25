@@ -1598,6 +1598,7 @@ const OVL=(function(){
 window.bviBack=function(){
   if(typeof JGUI!=='undefined'&&JGUI.closeTop()) return 'handled';
   if(OVL.closeTop()) return 'handled';
+  if(typeof RAUMPLAN!=='undefined'&&RAUMPLAN.isOpen()){ RAUMPLAN.close(); return 'handled'; }
   if(typeof LIGHTBOX!=='undefined'&&LIGHTBOX.isOpen()){ LIGHTBOX.close(); return 'handled'; }
   if(typeof LP!=='undefined'&&LP.isOpen()){ LP.back(); return 'handled'; }
   const v=document.querySelector('.view.active');
@@ -4105,6 +4106,7 @@ const CHANGELOG=(function(){
       'Stundenplan in Jahrgängen: Zwischen der Reiterkarte (IBK, VAk, FeuAK, IdF) und der Karte darunter ist jetzt eine kleine Lücke',
       'Pausenraum: neues Spiel „Einsatzleitung-Snake“ direkt unter dem Duell. Du steuerst einen Trupp mit Schlauchleitung, sammelst Feuerlöscher und meidest die Flammen. Als Herausforderung wählbar: „Atemluft“ (der Vorrat sinkt, Druckluftflaschen füllen auf) und „Löschwasser“ (Aufnehmen löscht einen Brandherd), dazu drei Einsatzstufen',
       'Pausenraum: neues Spiel „Solitär“ direkt unter dem Snake – Klondike mit Flammen, Löschern, Äxten und Leitern als Kartenfarben und Feuerwehr-Namen für Ass, Bube, Dame und König. Karten antippen oder ziehen (die Karte hängt am Greifpunkt hinter dem Zeiger her und kippt dabei in 3D), Doppeltipp führt den passenden Zug aus (zuerst ins Fundament, sonst auf eine Spalte), dazu Rückgängig, Wiederholen, Tipp, Ziehen 1 oder 3 und einschaltbare Hinweise beim Ziehen',
+      'Stundenplan IdF Münster: Ein Tipp auf eine Einheit mit Raum öffnet den Raumplan als 3D-Ansicht des Geländes – die Kamera fährt zum Gebäude, es leuchtet orange und über ihm steht die Raumnummer (bei mehreren Räumen je ein Chip, zum Beispiel bei der Klausur). Ziehen dreht, zwei Finger oder das Mausrad zoomen, dazu Draufsicht und Legende. Die Notizen zu Einheiten gibt es dafür nicht mehr',
       'Ladebildschirm: Solange die Seite startet, zeigt sie jetzt einen Platzhalter-Bildschirm (graue Flächen im Aufbau der Startseite, in deinem Farbschema) statt einer leeren Fläche; sobald die App bereit ist, blendet er sich aus. Gilt für die Website und die Android-App',
       'Pausenraum: neues Spiel „Minesweeper“ direkt unter dem Solitär – im Dunkeln Brandherde aufspüren. Vier Stufen (Leicht 12, Mittel 30, Schwer 56, Sehr schwer 72 Brandherde), Antippen sucht ab, langes Drücken, Rechtsklick oder der Schalter „Markieren“ setzt die Markierung, Doppeltipp auf eine Zahl öffnet die Nachbarfelder. Dazu Tipp, Zeit und Rekord je Stufe sowie ein leuchtender Wärmebild-Cursor',
       'Neu: FAQ zu den Standorten. Im Stundenplan gibt es ganz oben die eingeklappte Karte „Vor der Anreise: FAQ“ mit Fragen zu Unterkunft, Verpflegung, Sport, Anreise, Kleidung und Organisation (für IdF Münster, IBK Heyrothsberge, VAk Berlin und FeuAK Hamburg). Fragen ohne Antwort werden ausgeblendet. 14 Tage vor dem ersten Plantag zeigt die Startseite einen Link dorthin. Jahrgänge können Antworten ändern und eigene Fragen in ihrer Jahrgangsdatei ergänzen',
@@ -5402,45 +5404,6 @@ const UEBUNGSKLAUSUR = (function(){
 })();
 
 /* ── IdF Münster Stundenplan Modul 3.5 ──────────────────────────────────── */
-/* ── Notizen zu Stundenplan-Einträgen ───────────────────────────────────── */
-const PLANNOTE=(function(){
-  const KEY='bvi_plan_notes';
-  let box=null, cur='', el=null;
-  const all=()=>{ try{ return JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ return {}; } };
-  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  function build(){
-    box=document.createElement('div'); box.id='pn-ov'; box.hidden=true;
-    box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','Stundenplan-Eintrag');
-    box.innerHTML='<div class="cu-card"><button class="sh-x" aria-label="Schließen">×</button><div class="pn-when"></div><div class="sh-t pn-title" style="padding:0"></div><div class="pn-meta"></div>'
-      +'<label>Meine Notiz<textarea id="pn-t" rows="4" maxlength="800" placeholder="z. B. Unterlagen mitbringen"></textarea></label></div>';
-    document.body.appendChild(box);
-    box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
-    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
-    box.querySelector('#pn-t').addEventListener('input',e=>{
-      const a=all(); const v=e.target.value.trim();
-      if(v) a[cur]=v; else delete a[cur];
-      try{ localStorage.setItem(KEY,JSON.stringify(a)); }catch(x){}
-    });
-  }
-  function open(item){
-    if(!box) build();
-    el=item; cur=item.dataset.k;
-    const [ymd,,]=cur.split('|');
-    const d=new Date(ymd+'T00:00').toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
-    const t=item.querySelector('.idf-time'); 
-    box.querySelector('.pn-when').textContent=d+' · '+(t?t.textContent.replace(/(\d)(\d{2}:\d{2})/,'$1 – $2'):'');
-    box.querySelector('.pn-title').textContent=item.querySelector('.idf-name').textContent.replace(/\s*✎\s*$/,'');
-    const m=item.querySelector('.idf-meta'); box.querySelector('.pn-meta').textContent=m?m.textContent:'';
-    box.querySelector('#pn-t').value=all()[cur]||'';
-    box.hidden=false; box.querySelector('#pn-t').focus({preventScroll:true});
-  }
-  function close(){
-    if(!box||box.hidden) return; box.hidden=true;
-    if(typeof IDF_PLAN!=='undefined') IDF_PLAN.redraw();
-  }
-  return {open,get:k=>all()[k]||''};
-})();
-
 /* ── Heimadresse für „Abreise“: nur auf diesem Gerät. Sie steckt in keiner Sicherung, keinem Jahrgangs-Export und keiner Kalenderdatei
    (BACKUP.keep schließt sie aus, BACKUP.clean lehnt sie ab). ── */
 const HOME=(function(){
@@ -5588,15 +5551,25 @@ const IDF_PLAN = (function(){
     return a?`<span class="idf-abr"><a class="idf-map" href="${esc(HOME.url(a))}" target="_blank" rel="noopener noreferrer" aria-label="Abreise: Navigation zur Heimadresse starten">${NAV_PIN}${esc(title)}</a><button type="button" class="idf-home idf-home-edit" onclick="event.stopPropagation();HOME.edit()" aria-label="Heimadresse ändern">Adresse ändern</button></span>`
       :`<button type="button" class="idf-map idf-home-set" onclick="event.stopPropagation();HOME.edit()" aria-label="Abreise: Heimadresse festlegen">${NAV_PIN}${esc(title)} <span class="idf-home">Heimadresse festlegen</span></button>`;
   }
+  // Räume für den Raumplan: nur im IdF-Plan; Raum = Gebäude + Nummer (B1-106, C-205, A3-25), „Gebäude C“ nennt nur das Gebäude
+  const _BLD=/^(A[1-9]|B[1-4]|C|M6)$/;
+  const _idfView=()=>_nonMaster()?/^idf/.test(_vkey()):!_isCustom();
+  function _roomsOf(room){
+    const out=[], seen={};
+    String(room||'').replace(/(^|[^A-Za-z0-9])([ABCM]\d?)-(\w+)/g,(m,p,b,n)=>{ const r=b+'-'+n; if(_BLD.test(b)&&!seen[r]){ seen[r]=1; out.push({room:r,b}); } return m; });
+    return out;
+  }
+  const _bldOf=(room,note)=>{ const m=/Gebäude\s+(A[1-9]|B[1-4]|C|M6)(?![A-Za-z0-9])/.exec((room||'')+' '+(note||'')); return m?m[1]:''; };
   let _nk='';
   function _item(s,ymd){
     const [t,title,cls='',room='',note='',nav='']=s.split('|');   // nav: 'babz' = Anreise führt zur BABZ statt zum IdF
     const [a,b]=_time(t);
     const meta=[note,room?(_isCustom()?room:'Raum '+room):''].filter(Boolean).join(' · ');
-    const nk=ymd?ymd+'|'+t+'|'+title:'';
     const isNext=ymd&&_nk&&(ymd+'|'+title+'|'+_minutes(a))===_nk;
-    const has=nk&&PLANNOTE.get(nk);
-    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}${nk?' idf-tap':''}${isNext?' idf-now':''}"${nk?` data-k="${esc(nk)}" tabindex="0" role="button"`:''}><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${_navTitle(title,ymd,nav)}${has?' <i class="idf-pen" aria-label="Mit Notiz">✎</i>':''}</span>${meta?`<span class="idf-meta">${esc(meta)}</span>`:''}</span></div>`;
+    const hasNav=!!ymd&&(title==='Anreise'||title==='Abreise')&&(!_isCustom()||/^idf/.test(_vkey()));
+    const rooms=ymd&&_idfView()?_roomsOf(room):[], bd=rooms.length?'':(ymd&&_idfView()?_bldOf(room,note):'');
+    const tap=hasNav||rooms.length||bd;
+    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}${tap?' idf-tap':''}${isNext?' idf-now':''}"${tap?` tabindex="0" role="button"${rooms.length||bd?` data-rm="${esc(rooms.map(r=>r.room).join(','))}" data-bd="${esc(bd)}" aria-label="${esc(title+', '+(rooms.length?'Raum '+rooms.map(r=>r.room).join(', '):'Gebäude '+bd)+'. Raumplan öffnen')}"`:''}`:''}><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${_navTitle(title,ymd,nav)}</span>${meta?`<span class="idf-meta${rooms.length||bd?' idf-rm':''}">${rooms.length||bd?NAV_PIN:''}${esc(meta)}</span>`:''}</span></div>`;
   }
   const LUNCH=end=>`<div class="idf-item idf-lunch"><span class="idf-time">13:00<i>${end}</i></span><span class="idf-txt"><span class="idf-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v5a3 3 0 0 0 6 0V2M18 22V2c-2.5 1.5-4 4.5-4 8 0 2 1 3 4 3"/></svg>Mittagessen</span></span></div>`;
   function _start(spec){
@@ -6042,11 +6015,15 @@ const IDF_PLAN = (function(){
     return { kw:w[0], thema:w[2], over:new Date()>end };
   }
 
-  // Tipp auf einen Eintrag: An-/Abreise führen zu Maps (die ganze Zeile ist der Knopf, keine Notiz); ohne Heimadresse öffnet „Abreise“ die Adresseingabe; alles andere öffnet die Notiz
+  // Tipp auf einen Eintrag: An-/Abreise führen zu Maps (die ganze Zeile ist der Knopf); ohne Heimadresse öffnet „Abreise“ die Adresseingabe; Einheiten mit Raum öffnen den Raumplan
   function _tap(it){
     const go=it.querySelector('a.idf-map'); if(go){ go.click(); return; }
     if(it.querySelector('button.idf-home-set')){ HOME.edit(); return; }
-    PLANNOTE.open(it);
+    const rm=(it.dataset.rm||'').split(',').filter(Boolean), bd=it.dataset.bd||'';
+    if(!rm.length&&!bd) return;
+    const t=it.querySelector('.idf-time'), day=it.closest('.idf-day'), d=day&&day.dataset.ymd?new Date(day.dataset.ymd+'T00:00').toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'}):'';
+    const time=(d?d+' · ':'')+(t?t.textContent.replace(/(\d)(\d{2}:\d{2})/,'$1 – $2'):'');
+    RAUM.open({time,title:it.querySelector('.idf-name').textContent.trim(),rooms:_roomsOf(rm.join(' ')),building:bd},it);
   }
   document.addEventListener('click',e=>{
     if(e.target.closest('#plan-inner .idf-map,#plan-inner .idf-home')) return;   // der Link bzw. Knopf selbst tut das Seine
@@ -6063,7 +6040,19 @@ const IDF_PLAN = (function(){
   });
   _loadOv();
   pushWidget();
-  return { arrival, openFaq, viewTab, setActive, savePlan:_saveCust, getPlan:()=>_cust, render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _go, _grp:_setGrp, redraw:_draw };
+  return { roomsOf:_roomsOf, arrival, openFaq, viewTab, setActive, savePlan:_saveCust, getPlan:()=>_cust, render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _go, _grp:_setGrp, redraw:_draw };
+})();
+
+/* ── Raumplan (3D): Code und three.js werden erst beim ersten Tipp auf eine Einheit mit Raum geladen ── */
+const RAUM=(function(){
+  const JS={};
+  const load=src=>JS[src]||(JS[src]=new Promise((ok,no)=>{ const x=document.createElement('script'); x.src=src; x.onload=ok; x.onerror=()=>{ delete JS[src]; x.remove(); no(); }; document.body.appendChild(x); }));
+  function open(info,from){
+    if(typeof RAUMPLAN!=='undefined'){ RAUMPLAN.open(info,from); return; }
+    TOAST.show('Raumplan wird geladen …',{type:'info'});
+    load('js/three.min.js').then(()=>load('js/raumplan.js')).then(()=>RAUMPLAN.open(info,from)).catch(()=>TOAST.show('Der Raumplan konnte nicht geladen werden. Bitte Verbindung prüfen.',{type:'info'}));
+  }
+  return {open};
 })();
 
 /* ── Dateien speichern (Browser: Download, Android-App: Ordner Downloads) ── */

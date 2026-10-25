@@ -350,8 +350,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     if (!a) return { found: false };
     let clicks = 0; a.addEventListener('click', e => { e.preventDefault(); clicks++; });
     a.closest('.idf-item').querySelector('.idf-time').click(); await w(200);   // Tipp auf die Zeile, nicht auf das Wort
-    const ov = document.getElementById('pn-ov');
-    return { found: true, href: a.href, blank: a.target === '_blank', rowGoes: clicks === 1, noNote: !ov || ov.hidden };
+    return { found: true, href: a.href, blank: a.target === '_blank', rowGoes: clicks === 1, noNote: !document.querySelector('.rp-back') };
   });
   // ── Heimadresse: „Abreise“ navigiert nach Hause; die Adresse steckt weder in Sicherung noch Export und lässt sich nicht einspielen ──
   const home = await page.evaluate(async () => {
@@ -552,6 +551,28 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   // ── Ladebildschirm verschwindet nach dem Start ──
   await page.waitForTimeout(700);
   eq('Ladebildschirm: nach dem Start entfernt', await page.evaluate(() => !document.getElementById('sk') && typeof SK === 'function'), true);
+
+  // ── Raumplan: Tipp auf eine Einheit mit Raum öffnet den 3D-Plan, Notizen gibt es nicht mehr ──
+  const rp = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    r.parse = JSON.stringify(IDF_PLAN.roomsOf('B1-106, A3-25 · C-205, Raum 7')) === JSON.stringify([{ room: 'B1-106', b: 'B1' }, { room: 'A3-25', b: 'A3' }, { room: 'C-205', b: 'C' }]) && IDF_PLAN.roomsOf('X-12, Z9-3').length === 0;
+    r.noNotes = typeof PLANNOTE === 'undefined' && !document.getElementById('pn-ov');
+    NAV.go('v-plan', 'Stundenplan'); await w(300); IDF_PLAN._go(0); await w(300);
+    const it = [...document.querySelectorAll('#plan-inner .idf-tap[data-rm]')].find(x => /B1-106/.test(x.dataset.rm)) || document.querySelector('#plan-inner .idf-tap[data-rm]');
+    r.tapbar = !!it && it.getAttribute('role') === 'button' && /Raumplan öffnen/.test(it.getAttribute('aria-label'));
+    const rooms = it.dataset.rm.split(',');
+    it.click(); for (let i = 0; i < 40 && !document.querySelector('.rp-back'); i++) await w(100);
+    r.open = !!document.querySelector('.rp-back .rp-dlg[role="dialog"]');
+    r.chips = [...document.querySelectorAll('.rp-chip[data-i]')].map(b => b.dataset.i).filter(i => i !== '-1').length === rooms.length;
+    r.title = document.querySelector('.rp-title').textContent === it.querySelector('.idf-name').textContent.trim();
+    r.mount = RAUMPLAN.isOpen() && !!document.querySelector('.rp-host canvas, .rp-nogl');
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(100);
+    r.esc = !document.querySelector('.rp-back') && !RAUMPLAN.isOpen() && !document.body.classList.contains('rp-lock');
+    const noRoom = [...document.querySelectorAll('#plan-inner .idf-item')].find(x => !x.classList.contains('idf-tap') && !x.classList.contains('idf-lunch'));
+    if (noRoom) { noRoom.click(); await w(100); r.keinRaum = !document.querySelector('.rp-back'); } else r.keinRaum = true;
+    NAV.go('v-home', 'Start'); return r;
+  });
+  eq('Raumplan: Räume erkennen, Einheit öffnet 3D-Plan, Esc schließt, keine Notizen', rp, { parse: true, noNotes: true, tapbar: true, open: true, chips: true, title: true, mount: true, esc: true, keinRaum: true });
 
   // ── Standort-FAQ ──
   const faq = await page.evaluate(async () => {

@@ -22,6 +22,8 @@ const PRECACHE = [
   './js/snake.js',
   './js/solitaer.js',
   './js/minesweeper.js',
+  './js/raumplan.js',
+  './js/three.min.js',
   './js/jsqr.min.js',
   './js/version.js',
   './js/qrcode.min.js',
