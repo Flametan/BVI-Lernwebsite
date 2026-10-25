@@ -542,6 +542,10 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
       const n1 = E.bestMove(B, { t: 'tab', c: 0, i: 0 }); r.dblFound = n1 !== B && n1.found[0].length === 1;
       const n2 = E.bestMove(B, { t: 'tab', c: 1, i: 1 }); r.dblTab = n2 !== B && n2.tab[2].length === 2 && n2.tab[1][0].up === true;
       B.tab = [[K(0, 13)], [], [], [], [], [], []]; r.dblNoop = E.bestMove(B, { t: 'tab', c: 0, i: 0 }) === B; }
+    // Tipp ohne gültigen Zug: Knopf wackelt
+    { const X = S(); X.stock = []; X.waste = []; X.found = [[], [], [], []]; X.tab = [[{ s: 0, r: 13, up: true }], [{ s: 1, r: 13, up: true }], [], [], [], [], []].map((c, i) => i < 2 ? c : []);
+      X.tab[2] = [{ s: 2, r: 13, up: true }]; X.tab[3] = [{ s: 3, r: 13, up: true }];
+      document.querySelector('[data-a="hint"]').click(); await w(60); r.hintShake = document.querySelector('[data-a="hint"]').classList.contains('so-shake'); }
     // Gewinn-Fenster
     const g = S(); g.found = [0, 1, 2, 3].map(s => Array.from({ length: 13 }, (_, i) => ({ s, r: i + 1, up: true }))); g.tab = [[], [], [], [], [], [], []]; g.stock = []; g.waste = []; g.won = true; g.score = 500; g.moves = 90;
     document.querySelector('[data-a="undo"]').disabled = false; window.dispatchEvent(new Event('resize')); await w(100);
@@ -553,7 +557,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     localStorage.removeItem('bvi_solitaer_opts'); const bb = JSON.parse(localStorage.getItem('bvi_pause_best') || '{}'); delete bb.solitaer; localStorage.setItem('bvi_pause_best', JSON.stringify(bb));
     return r;
   });
-  eq('Pausenraum: Solitär unter dem Snake (Antippen, Rückgängig, Hinweise, Ziehen 3, Gewinn-Fenster)', so, { order: true, deal: true, tap: true, undoRedo: true, hintsSaved: true, draw3: true, dblFound: true, dblTab: true, dblNoop: true, win: true, winClose: true, stopped: true, best: true });
+  eq('Pausenraum: Solitär unter dem Snake (Antippen, Rückgängig, Hinweise, Ziehen 3, Gewinn-Fenster)', so, { order: true, deal: true, tap: true, undoRedo: true, hintsSaved: true, draw3: true, dblFound: true, dblTab: true, dblNoop: true, hintShake: true, win: true, winClose: true, stopped: true, best: true });
 
   // ── Stundenplan: Abschnitte der Fortschrittsleiste springen direkt zur Woche ──
   const pips = await page.evaluate(async () => {
