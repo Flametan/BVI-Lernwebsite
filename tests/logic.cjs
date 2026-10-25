@@ -536,6 +536,12 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     // Ziehen 3
     document.querySelector('[data-d="3"]').click(); await w(60); r.draw3 = S().draw === 3 && JSON.parse(localStorage.getItem('bvi_solitaer_opts')).draw === 3;
     document.querySelector('[data-d="1"]').click(); await w(60);
+    // Doppeltipp: Fundament zuerst, sonst beste Spalte, nie ganze Spalte in leere Spalte
+    { const E = SOLITAER._sol, K = (s, r, up = true) => ({ s, r, up }); const B = E.deal(1, 1);
+      B.stock = []; B.waste = []; B.found = [[], [], [], []]; B.tab = [[K(0, 1)], [K(1, 5, false), K(1, 4)], [K(2, 5)], [], [], [], []];
+      const n1 = E.bestMove(B, { t: 'tab', c: 0, i: 0 }); r.dblFound = n1 !== B && n1.found[0].length === 1;
+      const n2 = E.bestMove(B, { t: 'tab', c: 1, i: 1 }); r.dblTab = n2 !== B && n2.tab[2].length === 2 && n2.tab[1][0].up === true;
+      B.tab = [[K(0, 13)], [], [], [], [], [], []]; r.dblNoop = E.bestMove(B, { t: 'tab', c: 0, i: 0 }) === B; }
     // Gewinn-Fenster
     const g = S(); g.found = [0, 1, 2, 3].map(s => Array.from({ length: 13 }, (_, i) => ({ s, r: i + 1, up: true }))); g.tab = [[], [], [], [], [], [], []]; g.stock = []; g.waste = []; g.won = true; g.score = 500; g.moves = 90;
     document.querySelector('[data-a="undo"]').disabled = false; window.dispatchEvent(new Event('resize')); await w(100);

@@ -69,6 +69,19 @@ var SOL=(function(){
     }
     return {S:S,sel:selectable(S,tg)};
   }
+  // Doppeltipp: der passende Zug für diese Karte (zuerst ins Fundament, sonst auf die beste Spalte)
+  function bestMove(S,from){
+    var cards=seqOf(S,from); if(!cards.length) return S;
+    if(from.t!=='found'&&cards.length===1){ var n=tryMove(S,from,{t:'found',f:cards[0].s}); if(n!==S) return n; }
+    var best=null, bp=-1, c, col, p;
+    for(c=0;c<7;c++){
+      if(from.t==='tab'&&from.c===c) continue; var to={t:'tab',c:c}; if(!fits(S,cards,to)) continue; col=S.tab[c];
+      if(from.t==='tab'&&from.i===0&&!col.length) continue;                       // ganze Spalte in eine leere Spalte zu schieben bringt nichts
+      p=col.length?2:1; if(from.t==='tab'&&from.i>0&&!S.tab[from.c][from.i-1].up) p+=2;   // Karte darunter wird aufgedeckt
+      if(p>bp){ bp=p; best=to; }
+    }
+    return best?tryMove(S,from,best):S;
+  }
   function undo(S){ if(!S.h.length) return S; var c=JSON.parse(S.h[S.h.length-1]); c.h=S.h.slice(0,-1); c.r=S.r.concat([snap(S)]); return c; }
   function redo(S){ if(!S.r.length) return S; var c=JSON.parse(S.r[S.r.length-1]); c.r=S.r.slice(0,-1); c.h=S.h.concat([snap(S)]); return c; }
   function hint(S){
@@ -88,7 +101,7 @@ var SOL=(function(){
   function canAuto(S){ return !S.won&&S.stock.length===0&&S.waste.length===0&&S.tab.every(function(col){return col.every(function(k){return k.up;});}); }
   function autoStep(S){ for(var c=0;c<7;c++){ var col=S.tab[c]; if(!col.length) continue; var k=col[col.length-1], n=tryMove(S,{t:'tab',c:c,i:col.length-1},{t:'found',f:k.s}); if(n!==S) return n; } return S; }
   function total(S){ var n=S.stock.length+S.waste.length; S.found.forEach(function(f){n+=f.length;}); S.tab.forEach(function(c){n+=c.length;}); return n; }
-  return {SUITS:SUITS,RANKS:RANKS,RNAME:RNAME,deal:deal,act:act,tryMove:tryMove,drawStock:drawStock,autoTo:autoTo,undo:undo,redo:redo,hint:hint,canAuto:canAuto,autoStep:autoStep,seqOf:seqOf,selectable:selectable,same:same,total:total,rng:rng};
+  return {SUITS:SUITS,RANKS:RANKS,RNAME:RNAME,deal:deal,act:act,tryMove:tryMove,drawStock:drawStock,autoTo:autoTo,bestMove:bestMove,undo:undo,redo:redo,hint:hint,canAuto:canAuto,autoStep:autoStep,seqOf:seqOf,selectable:selectable,same:same,total:total,rng:rng};
 })();
 
   var BKEY='bvi_pause_best', OKEY='bvi_solitaer_opts';
@@ -123,17 +136,14 @@ var SOL=(function(){
      +'<label class="so-hs" title="Passende Ziele leuchten beim Ziehen auf"><span>Hinweise</span><input type="checkbox" class="m-switch" data-hints aria-label="Hinweise beim Ziehen und Ablegen"></label></div>'
      +'<div class="so-tools"><span class="so-seg" role="group" aria-label="Karten ziehen"><button type="button" data-d="1">Ziehen 1</button><button type="button" data-d="3">Ziehen 3</button></span><button type="button" class="so-new" data-a="new">Neues Spiel</button></div>'
      +'<div class="so-board"><div class="so-area"></div><div class="so-ov" hidden></div></div><div class="pz-fb so-msg" aria-live="polite"></div>'
-     +'<div class="pz-fb">Karten ziehen und ablegen oder antippen · Doppeltipp = ins Fundament</div></div>';
+     +'<div class="pz-fb">Karten ziehen und ablegen oder antippen · Doppeltipp = Zug ausführen</div></div>';
     area=root.querySelector('.so-area'); ov=root.querySelector('.so-ov'); msg=root.querySelector('.so-msg');
     var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#fff6e0" d="'+SOL.SUITS[0].path+'"/></svg>';
     root.querySelector('.so').style.setProperty('--so-emb','url("data:image/svg+xml;utf8,'+encodeURIComponent(svg)+'")');
   }
-  // Auf dem Handy reicht das Spielfeld über die ganze Bildschirmbreite (größere Karten), sonst bleibt es in der Karte
+  // Das Spielfeld bleibt in der Karte; auf dem Handy mit kleinerem Rand, damit die Karten möglichst groß sind
   function layout(){
-    var bd=root.querySelector('.so-board'), narrow=window.innerWidth<=700;
-    bd.style.marginLeft=''; bd.style.marginRight=''; bd.classList.remove('so-bleed');
-    if(narrow){ var r=bd.getBoundingClientRect(), vw=document.documentElement.clientWidth; bd.style.marginLeft=(-r.left)+'px'; bd.style.marginRight=(-(vw-r.right))+'px'; bd.classList.add('so-bleed'); }
-    var w=bd.clientWidth||360, gap=Math.max(3,Math.round(w*(narrow?.011:.014))), x0=narrow?4:6, cw=Math.floor((w-gap*6-x0*2)/7);
+    var bd=root.querySelector('.so-board'), narrow=window.innerWidth<=700, w=bd.clientWidth||360, gap=Math.max(3,Math.round(w*(narrow?.012:.014))), x0=narrow?4:6, cw=Math.floor((w-gap*6-x0*2)/7);
     return {gap:gap,cw:cw,ch:Math.round(cw*1.42),x0:x0,ty:Math.round(cw*1.42)+22};
   }
   function render(){
@@ -230,14 +240,18 @@ var SOL=(function(){
     if(opts.hints&&!cancel&&e) saySm('Dort passt die Karte nicht hin.');
     back(d);
   }
+  var lastTap={t:0,key:''};
   function onClickArea(e){
     if(noClick){ noClick=false; return; } if(!S||S.won) return; var tg=tgOf(e.target); if(!tg) return; begin(); hintObj=null; saySm('');
+    var key=tg.t+':'+tg.c+':'+tg.i+':'+tg.f, now=Date.now();
+    if(tg.t!=='stock'&&now-lastTap.t<360&&lastTap.key===key){      // Doppeltipp: gültigen Zug für diese Karte ausführen
+      lastTap.t=0; var from=tg.t==='tab'?{t:'tab',c:tg.c,i:tg.i}:tg.t==='waste'?{t:'waste'}:{t:'found',f:tg.f};
+      if(tg.t==='tab'&&tg.i<0) return; var n=SOL.bestMove(S,from);
+      if(n!==S){ S=n; sel=null; render(); } else { sel=null; render(); if(opts.hints) saySm('Für diese Karte gibt es keinen gültigen Zug.'); }
+      return;
+    }
+    lastTap={t:now,key:key};
     var r=SOL.act(S,sel,tg); S=r.S; sel=r.sel; render();
-  }
-  function onDbl(e){
-    if(!S||S.won) return; var tg=tgOf(e.target); if(!tg||tg.t==='stock') return;
-    var from=tg.t==='tab'?{t:'tab',c:tg.c,i:tg.i}:{t:tg.t,f:tg.f}; if(tg.t==='tab'&&tg.i!==S.tab[tg.c].length-1) return;
-    var n=SOL.autoTo(S,from); if(n!==S){ S=n; sel=null; render(); }
   }
   function onClickRoot(e){
     var d=e.target.closest('[data-d]'); if(d){ opts.draw=+d.dataset.d; lset(OKEY,opts); newGame(); return; }
@@ -254,7 +268,7 @@ var SOL=(function(){
   function on(t,ev,fn,o){ t.addEventListener(ev,fn,o); handlers.push([t,ev,fn,o]); }
   function start(host){
     stop(); root=host; opts=Object.assign({draw:1,hints:true},lget(OKEY,{})); build(); newGame();
-    on(area,'click',onClickArea); on(area,'dblclick',onDbl); on(area,'pointerdown',onDown);
+    on(area,'click',onClickArea); on(area,'pointerdown',onDown);
     on(root,'click',onClickRoot); on(root,'change',onChange);
     on(window,'pointermove',onMove,{passive:false}); on(window,'pointerup',onUpW); on(window,'pointercancel',onCancelW); on(window,'resize',onResize);
   }
