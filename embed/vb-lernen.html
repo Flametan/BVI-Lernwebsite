@@ -53,14 +53,15 @@ main{padding:18px 0 48px}
 .sec:first-of-type{margin-top:6px}
 .hero{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .hero .t:nth-child(odd):last-child{grid-column:1/-1}
+.hero.txt{grid-template-columns:minmax(0,1fr)}
 .t{border-radius:20px;padding:14px;color:#fff;position:relative;overflow:hidden;min-height:104px;background:linear-gradient(145deg,var(--c),color-mix(in srgb,var(--c) 78%,#000))}
 .t small{font-size:12px;opacity:.92;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
 .t b{display:block;font-size:42px;line-height:1.05;font-weight:900;font-variant-numeric:tabular-nums}
 .t b i{font-style:normal;font-size:16px;margin-left:4px;font-weight:800}
 .t>span{display:block;margin-top:6px;font-weight:700;font-size:15px;hyphens:manual;overflow-wrap:break-word}
-.t h4{font-size:17px;margin:2px 0 8px}
-.t .ch{display:inline-block;background:rgba(255,255,255,.22);border-radius:999px;padding:3px 10px;margin:0 4px 5px 0;font-size:13px;font-weight:600}
-.t svg.fl{position:absolute;right:-6px;bottom:-8px;width:68px;opacity:.22}
+.t h4{font-size:20px;margin:0 0 8px}
+.t .ch{display:block;padding:6px 0 6px 12px;border-left:4px solid rgba(255,255,255,.55);margin:6px 0;font-size:16px;line-height:1.35;font-weight:500}
+.t svg.fl{position:absolute;right:-6px;bottom:-8px;width:68px;opacity:.18;pointer-events:none}
 .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}
 .col{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--card)}
 .col h4{font-size:14px;margin-bottom:6px}
@@ -195,9 +196,9 @@ function viewTopic(){
   const t=byId(st.tab),cf=t.farben||['#e9b949','#e8892b','#d9482b','#a8201a'];
   let hero='';
   if(t.blick)hero=t.blick.map((k,i)=>`<div class="t" style="--c:${cf[i%cf.length]}"><small>Stufe ${i+1}</small><b>${esc(k[0])}<i>${esc(k[1])}</i></b><span>${esc(hy(k[2]))}</span><svg class="fl" viewBox="0 0 24 24" aria-hidden="true">${FLAME}</svg></div>`).join('');
-  else if(t.sort)hero=t.sort.kats.map((k,i)=>`<div class="t" style="--c:${cf[i%cf.length]}"><h4>${esc(hy(k))}</h4>${t.sort.items.filter(x=>x[1]===i).map(x=>`<span class="ch">${esc(x[0])}</span>`).join('')}<svg class="fl" viewBox="0 0 24 24" aria-hidden="true">${FLAME}</svg></div>`).join('');
+  else if(t.sort)hero=t.sort.kats.map((k,i)=>`<div class="t" style="--c:${cf[i%cf.length]}"><h4>${esc(hy(k))}</h4>${t.sort.items.filter(x=>x[1]===i).map(x=>`<p class="ch">${esc(x[0])}</p>`).join('')}<svg class="fl" viewBox="0 0 24 24" aria-hidden="true">${FLAME}</svg></div>`).join('');
   return `<h2 class="h2">${esc(t.titel)}</h2><p class="lead" style="margin-bottom:0">${esc(t.quelle)}</p>
-   <div class="sec">Auf einen Blick</div><div class="hero">${hero}</div>
+   <div class="sec">Auf einen Blick</div><div class="hero${t.blick?'':' txt'}">${hero}</div>
    ${t.extra&&LABS[t.extra]?'<div class="sec">Ausprobieren</div><div id="lab">'+LABS[t.extra]()+'</div>':''}
    <div class="sec">Ausführlich erklärt</div><div class="card"><div class="merke" style="margin:12px">Merke: ${esc(t.merke)}</div>${t.fakten.map(f=>`<div class="fact"><h4>${esc(f[0])}</h4><div>${md(f[1])}</div></div>`).join('')}</div>`;
 }
