@@ -4115,6 +4115,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'VB lernen: Aufbau wie die Taschenkarte Stabsarbeit – alle fünf Themen (Ziele, Aufenthaltsraum, Nutzungseinheit, Baustoffe, Standsicherheit) sind Reiter in einer festen Navigationsleiste oben; die Themenliste sowie Quiz und Sortieren sind entfallen',
       'VB-Prüfung lernen und Taschenkarte Stabsarbeit: Alle Aktionsknöpfe (Weiter, Prüfen, Nochmal, Quiz starten, Brand starten, Text kopieren usw.) stehen rechts',
       'Taschenkarte Stabsarbeit: „Weiter“ im Zeichen-Quiz steht rechts; die Zeichen im Quiz passen in ihre Kästen; die Reiter bleiben auch am Desktop beim Scrollen sichtbar (eingebettete Seiten stehen fest unter der Kopfleiste)',
       'VB-Prüfung lernen: Die Zurück-Taste (Handy und Browser) führt erst aus dem Thema, Quiz oder Sortierspiel zurück zur Themenliste und danach erst aus der Seite; „Weiter“ im Quiz steht rechts; die Kopfleiste der eingebetteten Seiten verdeckt die Reiter nicht mehr',
