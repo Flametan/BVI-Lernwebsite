@@ -4088,6 +4088,7 @@ const CHANGELOG=(function(){
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
       'Stundenplan: In allen Jahrgängen außer dem Master gibt es unter der FAQ den Knopf „Raumplan IdF Münster“; er öffnet das Gelände in 3D mit allen Gebäuden, Parkplätzen und Sammelplätzen, auch wenn der eigene Plan keine Räume enthält',
+      'Stundenplan IdF Münster: Jeder Tag zeigt jetzt auch Frühstück (6:30 bis 7:45 Uhr) und Abendessen (17:00 bis 19:00 Uhr, Essenausgabe bis 18:30 Uhr); am Abreisetag und in der BABZ-Woche entfällt das Abendessen bzw. beides',
       'Feinschliff: weichere Ecken wie bei iOS auf Karten, Listen und Knöpfen, Zahlen mit gleich breiten Ziffern, ausgewogene Überschriften, der Speiseplan lässt sich nach unten wischen, und bei sehr langsamer Verbindung zeigt die App nach 3 Sekunden die gespeicherte Seite statt zu warten',
       'Prüfung: Die wichtigen Klausuren (Laufbahnklausuren Juni 2026, Altklausur-Quiz IdF, Klausur 08/2026, die beiden oberen von VAk Berlin und der Führungsdienstsimulator) haben jetzt einen deutlich sichtbaren orangen Farbverlauf, auch im beigen und hellen Design',
       'Altklausur-Quiz IdF: Oben auf der Seite lässt sich der Themenbereich wählen – Alle, Vorbeugender Brandschutz oder Stabsarbeit. Im Lernmodus und im Prüfungsmodus (25 Fragen) kommen dann nur Fragen dieses Bereichs; die Auswahl bleibt beim nächsten Öffnen erhalten',
@@ -5598,6 +5599,8 @@ const IDF_PLAN = (function(){
     return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}${tap?' idf-tap':''}${isNext?' idf-now':''}"${tap?` tabindex="0" role="button"${lunch?` data-lunch="${lunch}" aria-label="Mittagessen, Speiseplan öffnen"`:''}${rooms.length||bd?` data-rm="${esc(rooms.map(r=>r.room).join(','))}" data-bd="${esc(bd)}" aria-label="${esc(title+', '+(rooms.length?'Raum '+rooms.map(r=>r.room).join(', '):'Gebäude '+bd)+'. Raumplan öffnen')}"`:''}`:''}><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${_navTitle(title,ymd,nav)}</span>${meta?`<span class="idf-meta${rooms.length||bd?' idf-rm':''}">${rooms.length||bd?NAV_PIN:''}${esc(meta)}</span>`:''}</span></div>`;
   }
   const LUNCH=(end,ymd)=>`<div class="idf-item idf-lunch${ymd&&_idfView()?' idf-tap':''}"${ymd&&_idfView()?` data-lunch="${ymd}" tabindex="0" role="button" aria-label="Mittagessen, Speiseplan öffnen"`:''}><span class="idf-time">13:00<i>${end}</i></span><span class="idf-txt"><span class="idf-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v5a3 3 0 0 0 6 0V2M18 22V2c-2.5 1.5-4 4.5-4 8 0 2 1 3 4 3"/></svg>Mittagessen</span></span></div>`;
+  // Frühstück und Abendessen (Zeiten laut IdF); wie das Mittagessen nur als Hinweis, kein Termin
+  const MEAL=(name,a,b,note)=>`<div class="idf-item idf-lunch"><span class="idf-time">${a}<i>${b}</i></span><span class="idf-txt"><span class="idf-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v5a3 3 0 0 0 6 0V2M18 22V2c-2.5 1.5-4 4.5-4 8 0 2 1 3 4 3"/></svg>${name}</span>${note?`<span class="idf-meta">${note}</span>`:''}</span></div>`;
   function _start(spec){
     const ue=/^(\d)(?:-\d)?$/.exec(spec);
     if(ue) return UE_S[ue[1]-1];
@@ -5622,10 +5625,13 @@ const IDF_PLAN = (function(){
     const starts=items.map(x=>_start(x.split('|')[0]));
     const html=items.map(x=>_item(x,ymd));
     if(!_isCustom()&&starts.some(Boolean)){
+      const babz=raw.some(x=>/BABZ/.test(x)), away=raw.some(x=>/^[^|]*\|Abreise\|/.test(x));   // BABZ-Woche hat eigene Verpflegung; am Abreisetag kein Abendessen
+      if(!babz&&!away){ let d=starts.findIndex(t=>t&&t>='17:00'); if(d<0) d=html.length; html.splice(d,0,MEAL('Abendessen','17:00','19:00','Essenausgabe bis 18:30 Uhr')); }
+      if(!babz) html.unshift(MEAL('Frühstück','06:30','07:45'));
       let at=0;
       starts.forEach((t,i)=>{ if(t&&t<'13:00') at=i+1; });
       const next=starts.slice(at).find(Boolean);
-      html.splice(at,0,LUNCH(next&&next>'13:00'&&next<'14:00'?next:'14:00',ymd));
+      html.splice(at+(babz?0:1),0,LUNCH(next&&next>'13:00'&&next<'14:00'?next:'14:00',ymd));
     }
     return html.join('');
   }
