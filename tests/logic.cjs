@@ -1538,6 +1538,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const hl = await fr.evaluate(() => {
       const pals = document.querySelectorAll('.hall .pal');
       pals[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      document.querySelector('#halldet [data-act="kplus"]').click();
       return { n: pals.length, det: document.getElementById('halldet').textContent.length > 40, sel: Object.keys(JSON.parse(localStorage.getItem('bvi_stk_lager_sel') || '{}')).length };
     });
     ok('Lagerhalle zeigt Paletten, Antippen legt sie in den Rechner', hl.n >= 12 && hl.det && hl.sel === 1);
