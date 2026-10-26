@@ -4077,6 +4077,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'Datenschutz: Vorbereitung für einen anonymen Besucherzähler ohne Cookies (GoatCounter); er ist noch ausgeschaltet. Auf der Datenschutzseite lässt sich das Zählen des eigenen Besuchs abschalten; die Angabe zu Notizen im Stundenplan ist entfernt, weil es sie nicht mehr gibt',
       'Startseite: Der Link zur FAQ vor der Anreise öffnet den Stundenplan jetzt ganz oben bei der FAQ statt bei der aktuellen Einheit',
       'FAQ zu den Standorten: Für das IdF Münster sind jetzt Essenszeiten, Getränke, Tagesablauf, Sporthalle, Strom und Netz sowie Waschmöglichkeiten eingetragen; der Laptop wird in keiner Antwort mehr erwähnt',
       'Lernseiten: Auf dem Desktop gibt es jetzt wie auf Handy und Tablet die Kapitelkarten; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges Kapitel“ und „Nächstes Kapitel“. Auf dem Tablet war die Leiste mit diesen Knöpfen unter der Tab-Leiste verdeckt und ist jetzt sichtbar. Die Seitenübersicht „Auf dieser Seite“ am rechten Rand entfällt dafür',
@@ -6057,6 +6058,30 @@ const IDF_PLAN = (function(){
   return { roomsOf:_roomsOf, arrival, openFaq, viewTab, setActive, savePlan:_saveCust, getPlan:()=>_cust, render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _go, _grp:_setGrp, redraw:_draw };
 })();
 
+/* ── Besucherzähler (GoatCounter): zählt nur Aufrufe, ohne Cookies und ohne IP-Speicherung; bleibt aus, solange CODE leer ist ── */
+const ZAEHLER=(function(){
+  const CODE='';   // Name der GoatCounter-Seite: https://<CODE>.goatcounter.com (leer = Zähler ausgeschaltet)
+  const KEY='bvi_zaehler';
+  const off=()=>{ try{ return localStorage.getItem(KEY)==='0'; }catch(e){ return false; } };
+  function set(on){ try{ if(on) localStorage.removeItem(KEY); else localStorage.setItem(KEY,'0'); }catch(e){} }
+  const endpoint=c=>/^[a-z0-9-]{2,40}$/.test(c)?'https://'+c+'.goatcounter.com/count':'';
+  // ?zaehler=aus auf diesem Gerät: die eigenen Besuche werden nicht gezählt (?zaehler=an macht es rückgängig)
+  function init(code,force){
+    const q=new URLSearchParams(location.search).get('zaehler'); if(q==='aus') set(false); else if(q==='an') set(true);
+    const ep=endpoint(code===undefined?CODE:code);
+    if(!ep||off()||navigator.doNotTrack==='1'||(navigator.webdriver&&!force)) return false;
+    if(document.getElementById('gc-script')) return true;
+    const s=document.createElement('script'); s.id='gc-script'; s.async=true; s.src='https://gc.zgo.at/count.js'; s.setAttribute('data-goatcounter',ep); document.body.appendChild(s);
+    return true;
+  }
+  function bind(){
+    const c=document.getElementById('dz-zaehler'); if(!c) return;
+    c.checked=!off(); c.onchange=()=>set(c.checked);
+    const row=document.getElementById('dz-zaehler-row'); if(row) row.hidden=!CODE;
+  }
+  return {init,bind,set,off,endpoint,active:()=>!!endpoint(CODE)};
+})();
+
 /* ── Speiseplan des IdF: Tipp auf „Mittagessen“ im Stundenplan öffnet den Plan des Tages (data/speiseplan.json, wöchentlich ergänzen) ── */
 const SPEISE=(function(){
   let ov=null, ret=null, data=null, onKey=null;
@@ -7401,6 +7426,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   ONBOARD.init();
   OVL.init();
   CHANGELOG.check();
+  ZAEHLER.init(); ZAEHLER.bind();
   if(window.SK) requestAnimationFrame(()=>window.SK());
   if(typeof FALLBEARBEITUNG!=='undefined') { document.querySelectorAll('#v-vak-fallbearbeitung').forEach(()=>{}); }
   document.querySelectorAll('.pc table').forEach(t=>{
