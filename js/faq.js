@@ -41,7 +41,7 @@ const FAQ=(function(){
       melden:'Beim Pförtner melden.',
       kleidung:'Hemd, Krawatte, Polo, Regenjacke von der Dienststelle und zivile Kleidung.',
       schutz:'Nein.',
-      arbeit:'Den Laptop bringt man selbst mit, er wird nirgends gestellt. Schreibzeug bekommt man gestellt. Strom und Netz sind in den Lehrräumen verfügbar.',
+      arbeit:'Laptop und Schreibzeug bringt man selbst mit, beides wird nicht gestellt. Strom und Netz sind in den Lehrräumen verfügbar.',
       waesche:'Auf dem Gelände gibt es keine Waschmöglichkeit. Ein Waschsalon ist in der Nähe.',
       heizung:'Die Heizung funktioniert gut. Schlappen oder Hausschuhe sind von Vorteil.',
       arzt:'Alles ist in etwa 10 Minuten zu Fuß erreichbar.'
