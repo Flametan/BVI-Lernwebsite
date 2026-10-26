@@ -4107,6 +4107,7 @@ const CHANGELOG=(function(){
       'Pausenraum: neues Spiel „Einsatzleitung-Snake“ direkt unter dem Duell. Du steuerst einen Trupp mit Schlauchleitung, sammelst Feuerlöscher und meidest die Flammen. Als Herausforderung wählbar: „Atemluft“ (der Vorrat sinkt, Druckluftflaschen füllen auf) und „Löschwasser“ (Aufnehmen löscht einen Brandherd), dazu drei Einsatzstufen',
       'Pausenraum: neues Spiel „Solitär“ direkt unter dem Snake – Klondike mit Flammen, Löschern, Äxten und Leitern als Kartenfarben und Feuerwehr-Namen für Ass, Bube, Dame und König. Karten antippen oder ziehen (die Karte hängt am Greifpunkt hinter dem Zeiger her und kippt dabei in 3D), Doppeltipp führt den passenden Zug aus (zuerst ins Fundament, sonst auf eine Spalte), dazu Rückgängig, Wiederholen, Tipp, Ziehen 1 oder 3 und einschaltbare Hinweise beim Ziehen',
       'Stundenplan IdF Münster: Ein Tipp auf eine Einheit mit Raum öffnet den Raumplan als 3D-Ansicht des Geländes – die Kamera fährt zum Gebäude, es leuchtet orange und über ihm steht die Raumnummer (bei mehreren Räumen je ein Chip, zum Beispiel bei der Klausur). Ziehen dreht, zwei Finger oder das Mausrad zoomen, dazu Draufsicht und Legende. Die Notizen zu Einheiten gibt es dafür nicht mehr',
+      'Stundenplan IdF Münster: In den Vorbeugender-Brandschutz-Wochen (Gruppe 1 die ersten drei, Gruppe 2 die letzten drei Wochen) zeigt „Erreichbarkeiten“ jetzt die Ansprechpersonen des VB mit Durchwahl (Heiko Böcking, Joachim Achtert, Stephanie Vöge), die VB-E-Mail-Adresse und die Adresse für Abwesenheiten. Vorher standen dort die Kontakte der Stabswochen',
       'Ladebildschirm: Solange die Seite startet, zeigt sie jetzt einen Platzhalter-Bildschirm (graue Flächen im Aufbau der Startseite, in deinem Farbschema) statt einer leeren Fläche; sobald die App bereit ist, blendet er sich aus. Gilt für die Website und die Android-App',
       'Pausenraum: neues Spiel „Minesweeper“ direkt unter dem Solitär – im Dunkeln Brandherde aufspüren. Vier Stufen (Leicht 12, Mittel 30, Schwer 56, Sehr schwer 72 Brandherde), Antippen sucht ab, langes Drücken, Rechtsklick oder der Schalter „Markieren“ setzt die Markierung, Doppeltipp auf eine Zahl öffnet die Nachbarfelder. Dazu Tipp, Zeit und Rekord je Stufe sowie ein leuchtender Wärmebild-Cursor',
       'Neu: FAQ zu den Standorten. Im Stundenplan gibt es ganz oben die eingeklappte Karte „Vor der Anreise: FAQ“ mit Fragen zu Unterkunft, Verpflegung, Sport, Anreise, Kleidung und Organisation (für IdF Münster, IBK Heyrothsberge, VAk Berlin und FeuAK Hamburg). Fragen ohne Antwort werden ausgeblendet. 14 Tage vor dem ersten Plantag zeigt die Startseite einen Link dorthin. Jahrgänge können Antworten ändern und eigene Fragen in ihrer Jahrgangsdatei ergänzen',
@@ -5444,6 +5445,7 @@ const IDF_PLAN = (function(){
   const UE_E=['08:30','09:15','10:30','11:15','12:15','13:00','14:45','15:30'];
   const TEL={
     spahl:[['Jörn Ruschenburg','-3202'],['Frank Spahlholz','-3223']],
+    vb:[['Heiko Böcking','-2220'],['Joachim Achtert','-2213'],['Stephanie Vöge','-2222'],['E-Mail VB','vb@idf.nrw.de'],['Abwesenheiten melden','poststelle@idf.nrw.de']],
     babz:[['Christoph Schaaf (BABZ)','0228 99550-5205'],['Thorsten Ohm (BABZ)','-5206']]
   };
   const SG='Sachgebiete 1 bis 4|hi|C-205, C-213, C-214, C-215|in vier Gruppen rollierend';
@@ -5848,8 +5850,8 @@ const IDF_PLAN = (function(){
         <div class="idf-items">${_dayItems(items,_ymd(d))}</div></div>`;
     }).join('')+'</div>';
     const full=(n,t)=>/^-/.test(t)?(/BABZ/.test(n)?'0228 99550':'0251 3112')+t:t;
-    const rows=[...(tel||TEL.spahl),['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>[n,full(n,t)]);
-    if(!_isCustom()) h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${rows.map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><a href="tel:+49${t.replace(/\D/g,'').replace(/^0/,'')}">${esc(t)}</a></div>`).join('')}</div>`;
+    const rows=[...(tel||(/^Vorbeugender Brandschutz/.test(thema)?TEL.vb:TEL.spahl)),['Pforte','-1400'],['Notruf','-0112']].map(([n,t])=>[n,full(n,t)]);
+    if(!_isCustom()) h+=`<div class="m-card idf-tel"><div class="m-t1">Erreichbarkeiten</div>${rows.map(([n,t])=>`<div class="idf-tel-row"><span>${esc(n)}</span><a href="${t.includes('@')?'mailto:'+esc(t):'tel:+49'+t.replace(/\D/g,'').replace(/^0/,'')}">${esc(t)}</a></div>`).join('')}</div>`;
     h+=`<button class="m-cal-btn" onclick="IDF_PLAN.exportIcs()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 13v5M9.5 15.5h5"/></svg>Wichtige Termine in den Kalender übernehmen<small>${_isCustom()?'Alle Termine deines Plans':'Gruppe '+_grp[1]+' · Schlüsseltermine und Exkursionen'} · mit Erinnerung 30 Minuten vorher</small></button>`;
     if(!_isCustom()) h+='<div class="idf-legend"><span><i class="hi"></i>Schlüsseltermin</span><span><i class="ex"></i>Exkursion</span><span><i class="ar"></i>An-/Abreise, frei</span><span>EVA = eigenverantwortliches Arbeiten</span></div>';
     h+=_planControls();
