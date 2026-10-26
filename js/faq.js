@@ -10,11 +10,11 @@ const FAQ=(function(){
   const QS=[
     ['wohnen',0,'Wo wohnt man?'],['zimmer',0,'Wie sind die Zimmer?'],['kuehl',0,'Gibt es einen Kühlschrank?'],['technik',0,'Gibt es WLAN, Fernseher und einen Schreibtisch?'],
     ['handtuch',0,'Muss man Handtücher und Bettwäsche mitbringen?'],['pflege',0,'Gibt es Seife und Shampoo?'],['waesche',0,'Kann man Wäsche waschen?'],['schluessel',0,'Wie funktioniert der Zimmerschlüssel?'],
-    ['essen',1,'Wo isst man und was kostet es?'],['zeiten',1,'Gibt es Frühstück und Abendessen, und wann?'],['kost',1,'Gibt es vegetarische oder besondere Kost?'],['selbst',1,'Kann man sich selbst versorgen?'],
+    ['essen',1,'Wo isst man und was kostet es?'],['zeiten',1,'Gibt es Frühstück und Abendessen, und wann?'],['getraenke',1,'Gibt es Getränke?'],['kost',1,'Gibt es vegetarische oder besondere Kost?'],['selbst',1,'Kann man sich selbst versorgen?'],
     ['sport',2,'Wie sind die Sportmöglichkeiten?'],['sportsachen',2,'Was muss man zum Sport mitbringen?'],['laufen',2,'Gibt es Laufstrecken in der Nähe?'],['abend',2,'Was kann man abends machen?'],
     ['parken',3,'Gibt es Parkplätze und was kosten sie?'],['oepnv',3,'Wie kommt man mit Bahn oder Bus hin?'],['zeit',3,'Wann reist man an und wieder ab?'],['melden',3,'Wo meldet man sich bei der Ankunft?'],
     ['kleidung',4,'Welche Kleidung wird erwartet?'],['schutz',4,'Braucht man Schutz- oder Einsatzkleidung?'],['arbeit',4,'Was braucht man zum Arbeiten (Laptop, Schreibzeug, Strom, Netz)?'],['heizung',4,'Wie ist die Heizung, und was sollte man gegen Kälte mitnehmen?'],
-    ['kontakt',5,'Wer ist Ansprechperson vor Ort?'],['haus',5,'Welche Hausregeln gibt es (Ruhezeiten, Rauchen, Alkohol)?'],['geld',5,'Kann man bar oder mit Karte zahlen?'],['arzt',5,'Gibt es Arzt, Apotheke und Supermarkt in der Nähe?'],['sonst',5,'Was sollte man sonst vor der Anreise wissen?']
+    ['kontakt',5,'Wer ist Ansprechperson vor Ort?'],['haus',5,'Welche Hausregeln gibt es (Ruhezeiten, Rauchen, Alkohol)?'],['geld',5,'Kann man bar oder mit Karte zahlen?'],['arzt',5,'Gibt es Arzt, Apotheke und Supermarkt in der Nähe?'],['tag',5,'Wie sieht der Tagesablauf aus?'],['sonst',5,'Was sollte man sonst vor der Anreise wissen?']
   ];
   const NAME={ibk:'IBK Heyrothsberge',vak:'VAk Berlin',feuak:'FeuAK Hamburg',idf:'IdF Münster'};
   const ANS={
@@ -27,9 +27,11 @@ const FAQ=(function(){
       pflege:'Ja, Seife und Shampoo gibt es.',
       schluessel:'Der Zimmerschlüssel ist ein Chip.',
       essen:'In der Mensa. Die Kosten sind im Lehrgang inbegriffen.',
-      zeiten:'Ja, es gibt beides. Die genauen Zeiten werden noch ergänzt.',
+      zeiten:'Frühstück von 6:30 bis 7:45 Uhr, Abendessen von 17:00 bis 19:00 Uhr (Essenausgabe bis 18:30 Uhr). Der Speiseraum ist von 8:30 bis 9:00 Uhr und von 11:30 bis 12:00 Uhr geschlossen.',
+      getraenke:'Wasserspender und Heißgetränke im Speiseraum stehen zur freien Verfügung.',
+      tag:'Frühstück 6:30–7:45 Uhr, Unterricht 7:45–15:30 Uhr, EVA (eigenverantwortliches Arbeiten) 15:30–17:30 Uhr, Abendessen 17:00–19:00 Uhr. Die EVA wird nicht so ernst genommen.',
       selbst:'Die Stadt ist zu Fuß erreichbar. Weitere Angaben zur Selbstversorgung werden noch ergänzt.',
-      sport:'Es gibt einen Sportraum.',
+      sport:'Es gibt einen Sportraum und eine Sporthalle mit eingeschränkten Nutzungszeiten: Montag und Mittwoch 17:30–19:00 Uhr Betriebssportgemeinschaft BezReg Münster, Dienstag 16:30–18:00 Uhr Betriebssport für IdF-Bedienstete, Donnerstag 16:30–18:00 Uhr Sportkurse für Teilnehmende. Bei den anderen Gruppen kann man einfach fragen, ob man mitmachen darf.',
       sportsachen:'Sportschuhe.',
       laufen:'Ja, am Kanal.',
       abend:'Die Stadt ist in der Nähe, außerdem gibt es einen Aufenthaltsraum.',
