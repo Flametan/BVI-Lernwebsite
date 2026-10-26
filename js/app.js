@@ -1598,6 +1598,7 @@ const OVL=(function(){
 window.bviBack=function(){
   if(typeof JGUI!=='undefined'&&JGUI.closeTop()) return 'handled';
   if(OVL.closeTop()) return 'handled';
+  if(typeof SPEISE!=='undefined'&&SPEISE.isOpen()){ SPEISE.close(); return 'handled'; }
   if(typeof RAUMPLAN!=='undefined'&&RAUMPLAN.isOpen()){ RAUMPLAN.close(); return 'handled'; }
   if(typeof LIGHTBOX!=='undefined'&&LIGHTBOX.isOpen()){ LIGHTBOX.close(); return 'handled'; }
   if(typeof LP!=='undefined'&&LP.isOpen()){ LP.back(); return 'handled'; }
@@ -4108,6 +4109,7 @@ const CHANGELOG=(function(){
       'Pausenraum: neues Spiel „Solitär“ direkt unter dem Snake – Klondike mit Flammen, Löschern, Äxten und Leitern als Kartenfarben und Feuerwehr-Namen für Ass, Bube, Dame und König. Karten antippen oder ziehen (die Karte hängt am Greifpunkt hinter dem Zeiger her und kippt dabei in 3D), Doppeltipp führt den passenden Zug aus (zuerst ins Fundament, sonst auf eine Spalte), dazu Rückgängig, Wiederholen, Tipp, Ziehen 1 oder 3 und einschaltbare Hinweise beim Ziehen',
       'Stundenplan IdF Münster: Ein Tipp auf eine Einheit mit Raum öffnet den Raumplan als 3D-Ansicht des Geländes – die Kamera fährt zum Gebäude, es leuchtet orange und über ihm steht die Raumnummer (bei mehreren Räumen je ein Chip, zum Beispiel bei der Klausur). Ziehen dreht, zwei Finger oder das Mausrad zoomen, dazu Draufsicht und Legende. Die Notizen zu Einheiten gibt es dafür nicht mehr',
       'Stundenplan IdF Münster: In den Vorbeugender-Brandschutz-Wochen (Gruppe 1 die ersten drei, Gruppe 2 die letzten drei Wochen) zeigt „Erreichbarkeiten“ jetzt die Ansprechpersonen des VB mit Durchwahl (Heiko Böcking, Joachim Achtert, Stephanie Vöge), die VB-E-Mail-Adresse und die Adresse für Abwesenheiten. Vorher standen dort die Kontakte der Stabswochen',
+      'Stundenplan IdF Münster: Ein Tipp auf „Mittagessen“ öffnet den Speiseplan des Tages (Stammessen, Beilage, vegetarisch, Dessert mit den Kürzeln vom Aushang); die anderen Tage der Woche stehen darunter, der gewählte Tag ist hervorgehoben. Der Speiseplan der aktuellen Woche ist eingetragen',
       'Raumplan: Das Gelände ist jetzt nach der detaillierten Übersichtskarte des Instituts nachgebaut – Gebäudeformen und Farben nach Nutzung (Unterrichtsgebäude, Sporthalle B4, Werkstatt und Fahrzeughalle B2 und B3, Parkhaus), Parkplätze P1 bis P7, Sammelplätze S1 bis S3, Haltestellen und Wolbecker Straße; die Legende ist angepasst',
       'Ladebildschirm: Solange die Seite startet, zeigt sie jetzt einen Platzhalter-Bildschirm (graue Flächen im Aufbau der Startseite, in deinem Farbschema) statt einer leeren Fläche; sobald die App bereit ist, blendet er sich aus. Gilt für die Website und die Android-App',
       'Pausenraum: neues Spiel „Minesweeper“ direkt unter dem Solitär – im Dunkeln Brandherde aufspüren. Vier Stufen (Leicht 12, Mittel 30, Schwer 56, Sehr schwer 72 Brandherde), Antippen sucht ab, langes Drücken, Rechtsklick oder der Schalter „Markieren“ setzt die Markierung, Doppeltipp auf eine Zahl öffnet die Nachbarfelder. Dazu Tipp, Zeit und Rekord je Stufe sowie ein leuchtender Wärmebild-Cursor',
@@ -5571,10 +5573,11 @@ const IDF_PLAN = (function(){
     const isNext=ymd&&_nk&&(ymd+'|'+title+'|'+_minutes(a))===_nk;
     const hasNav=!!ymd&&(title==='Anreise'||title==='Abreise')&&(!_isCustom()||/^idf/.test(_vkey()));
     const rooms=ymd&&_idfView()?_roomsOf(room):[], bd=rooms.length?'':(ymd&&_idfView()?_bldOf(room,note):'');
-    const tap=hasNav||rooms.length||bd;
-    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}${tap?' idf-tap':''}${isNext?' idf-now':''}"${tap?` tabindex="0" role="button"${rooms.length||bd?` data-rm="${esc(rooms.map(r=>r.room).join(','))}" data-bd="${esc(bd)}" aria-label="${esc(title+', '+(rooms.length?'Raum '+rooms.map(r=>r.room).join(', '):'Gebäude '+bd)+'. Raumplan öffnen')}"`:''}`:''}><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${_navTitle(title,ymd,nav)}</span>${meta?`<span class="idf-meta${rooms.length||bd?' idf-rm':''}">${rooms.length||bd?NAV_PIN:''}${esc(meta)}</span>`:''}</span></div>`;
+    const lunch=ymd&&_idfView()&&/^Mittagessen/i.test(title)?ymd:'';
+    const tap=hasNav||rooms.length||bd||lunch;
+    return `<div class="idf-item ${cls}${/^\d/.test(a)?'':' idf-wtime'}${tap?' idf-tap':''}${isNext?' idf-now':''}"${tap?` tabindex="0" role="button"${lunch?` data-lunch="${lunch}" aria-label="Mittagessen, Speiseplan öffnen"`:''}${rooms.length||bd?` data-rm="${esc(rooms.map(r=>r.room).join(','))}" data-bd="${esc(bd)}" aria-label="${esc(title+', '+(rooms.length?'Raum '+rooms.map(r=>r.room).join(', '):'Gebäude '+bd)+'. Raumplan öffnen')}"`:''}`:''}><span class="idf-time">${esc(a)}${b?`<i>${esc(b)}</i>`:''}</span><span class="idf-txt"><span class="idf-name">${_navTitle(title,ymd,nav)}</span>${meta?`<span class="idf-meta${rooms.length||bd?' idf-rm':''}">${rooms.length||bd?NAV_PIN:''}${esc(meta)}</span>`:''}</span></div>`;
   }
-  const LUNCH=end=>`<div class="idf-item idf-lunch"><span class="idf-time">13:00<i>${end}</i></span><span class="idf-txt"><span class="idf-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v5a3 3 0 0 0 6 0V2M18 22V2c-2.5 1.5-4 4.5-4 8 0 2 1 3 4 3"/></svg>Mittagessen</span></span></div>`;
+  const LUNCH=(end,ymd)=>`<div class="idf-item idf-lunch${ymd&&_idfView()?' idf-tap':''}"${ymd&&_idfView()?` data-lunch="${ymd}" tabindex="0" role="button" aria-label="Mittagessen, Speiseplan öffnen"`:''}><span class="idf-time">13:00<i>${end}</i></span><span class="idf-txt"><span class="idf-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v5a3 3 0 0 0 6 0V2M18 22V2c-2.5 1.5-4 4.5-4 8 0 2 1 3 4 3"/></svg>Mittagessen</span></span></div>`;
   function _start(spec){
     const ue=/^(\d)(?:-\d)?$/.exec(spec);
     if(ue) return UE_S[ue[1]-1];
@@ -5602,7 +5605,7 @@ const IDF_PLAN = (function(){
       let at=0;
       starts.forEach((t,i)=>{ if(t&&t<'13:00') at=i+1; });
       const next=starts.slice(at).find(Boolean);
-      html.splice(at,0,LUNCH(next&&next>'13:00'&&next<'14:00'?next:'14:00'));
+      html.splice(at,0,LUNCH(next&&next>'13:00'&&next<'14:00'?next:'14:00',ymd));
     }
     return html.join('');
   }
@@ -6022,6 +6025,7 @@ const IDF_PLAN = (function(){
   function _tap(it){
     const go=it.querySelector('a.idf-map'); if(go){ go.click(); return; }
     if(it.querySelector('button.idf-home-set')){ HOME.edit(); return; }
+    if(it.dataset.lunch){ SPEISE.open(it.dataset.lunch,it); return; }
     const rm=(it.dataset.rm||'').split(',').filter(Boolean), bd=it.dataset.bd||'';
     if(!rm.length&&!bd) return;
     const t=it.querySelector('.idf-time'), day=it.closest('.idf-day'), d=day&&day.dataset.ymd?new Date(day.dataset.ymd+'T00:00').toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'}):'';
@@ -6044,6 +6048,42 @@ const IDF_PLAN = (function(){
   _loadOv();
   pushWidget();
   return { roomsOf:_roomsOf, arrival, openFaq, viewTab, setActive, savePlan:_saveCust, getPlan:()=>_cust, render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _go, _grp:_setGrp, redraw:_draw };
+})();
+
+/* ── Speiseplan des IdF: Tipp auf „Mittagessen“ im Stundenplan öffnet den Plan des Tages (data/speiseplan.json, wöchentlich ergänzen) ── */
+const SPEISE=(function(){
+  let ov=null, ret=null, data=null, onKey=null;
+  const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const ROWS=[['stamm','Stammessen'],['beilage','Beilage'],['veg','Vegetarisch'],['dessert','Dessert']];
+  const load=()=>data?Promise.resolve(data):fetch('data/speiseplan.json',{cache:'no-cache'}).then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(j=>(data=j));
+  const dayHtml=(ymd,d,on)=>{
+    const dt=new Date(ymd+'T00:00'), h=dt.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
+    const rows=d?ROWS.filter(([k])=>d[k]&&d[k].t).map(([k,l])=>`<div class="sp-row"><span class="sp-l">${l}</span><span class="sp-t">${esc(d[k].t)}${d[k].a?` <small>(${esc(d[k].a)})</small>`:''}</span></div>`).join(''):'';
+    return `<section class="sp-day${on?' on':''}" data-d="${ymd}"${on?' aria-current="date"':''}><h3>${esc(h)}</h3>${rows||'<p class="sp-none">Für diesen Tag liegt noch kein Speiseplan vor.</p>'}</section>`;
+  };
+  function close(quiet){
+    if(!ov) return; document.removeEventListener('keydown',onKey,true); ov.remove(); ov=null; document.body.classList.remove('rp-lock');
+    if(!quiet&&ret&&ret.isConnected) try{ ret.focus({preventScroll:true}); }catch(e){}
+  }
+  function open(ymd,from){
+    close(true); ret=from||document.activeElement;
+    load().catch(()=>({tage:{}})).then(j=>{
+      const days=Object.keys(j.tage||{}).sort(), mon=new Date(ymd+'T00:00'); mon.setDate(mon.getDate()-((mon.getDay()+6)%7));
+      const fri=new Date(mon); fri.setDate(mon.getDate()+6);
+      const week=days.filter(k=>k>=_ymdOf(mon)&&k<=_ymdOf(fri));
+      const list=week.includes(ymd)?week:[...week,ymd].sort();
+      ov=document.createElement('div'); ov.className='rp-back sp-back';
+      ov.innerHTML=`<div class="sp-card" role="dialog" aria-modal="true" aria-label="Speiseplan"><div class="sp-head"><div><div class="sp-title">Speiseplan</div><div class="sp-sub">Speisenausgabe ${esc(j.ausgabe||'12:00 bis 13:30 Uhr')}${j.stand?' · Stand '+esc(j.stand):''}</div></div><button type="button" class="rp-close" aria-label="Schließen">Schließen</button></div><div class="sp-body">${list.map(k=>dayHtml(k,(j.tage||{})[k],k===ymd)).join('')}</div></div>`;
+      document.body.appendChild(ov); document.body.classList.add('rp-lock');
+      ov.addEventListener('click',e=>{ if(e.target===ov||e.target.closest('.rp-close')) close(); });
+      onKey=e=>{ if(e.key==='Escape'){ e.preventDefault(); e.stopPropagation(); close(); } };
+      document.addEventListener('keydown',onKey,true);
+      const cur=ov.querySelector('.sp-day.on'); if(cur) cur.scrollIntoView({block:'start'});
+      const cb=ov.querySelector('.rp-close'); if(cb) cb.focus({preventScroll:true});
+    });
+  }
+  const _ymdOf=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  return {open,close,isOpen:()=>!!ov};
 })();
 
 /* ── Raumplan (3D): Code und three.js werden erst beim ersten Tipp auf eine Einheit mit Raum geladen ── */

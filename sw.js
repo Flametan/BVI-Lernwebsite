@@ -29,6 +29,7 @@ const PRECACHE = [
   './js/qrcode.min.js',
   './manifest.json',
   './data/plan-overrides.json',
+  './data/speiseplan.json',
   './icons/icon-192.svg',
   './icons/icon-512.svg',
   './icons/icon-192.png',

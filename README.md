@@ -109,6 +109,7 @@ node smoke.cjs && node logic.cjs && node duell.cjs
 ## Wartung
 
 - **Neue Lehrgänge** erscheinen automatisch in der Liste (jeweils ab 1. April und 1. Oktober); im Code ist nichts zu ergänzen.
+- **Speiseplan IdF** (Tipp auf „Mittagessen“ im Stundenplan): Pro Woche neue Tage in `data/speiseplan.json` unter `tage` ergänzen (Schlüssel = Datum), `stand` anpassen; Tage ohne Eintrag zeigen „noch kein Speiseplan“.
 - **Master-Klausurtermine** stehen in `DEF_EXAMS` (`js/app.js`); nach dem letzten Termin blendet sich der Countdown von selbst aus.
 - **Jahrgangs-Dateien** (`jahrgaenge/<ID>.json`) sind optional; ohne sie arbeitet jeder Jahrgang mit den eigenen Einträgen.
 - **Android:** Die APK wird nur bei Änderungen unter `android/**` oder an `js/version.js` neu gebaut; Inhalte kommen über die Website.
