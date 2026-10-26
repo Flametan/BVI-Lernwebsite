@@ -1,10 +1,11 @@
 /* Lernstoff VB-Prüfung Münster. Neues Thema = ein weiteres Objekt in VBL.themen.
    Felder: id, kurz (Reitername), titel, quelle, merke, fakten [[Überschrift, Text]],
-   sort {kats:[...], items:[[Text, Index der Kategorie]]} (Übersicht „Auf einen Blick“), extra ('etk' = Regler zur Einheits-Temperaturzeitkurve).
+   sort {kats:[...], items:[[Text, Index der Kategorie]]} (Kacheln „Auf einen Blick“), farben [Kachelfarben], blick [[Zahl, Einheit, Text]] (optional, Zahlenkacheln statt Sortierkacheln), extra ('etk' = Regler zur Einheits-Temperaturzeitkurve).
    **fett** im Text wird fett dargestellt. */
 const VBL = { themen: [
 
 { id: 'ziele', kurz: 'Ziele', titel: 'Ziele des Vorbeugenden Brandschutzes', quelle: '§ 14 MBO (Aushang IdF, Dezernat B2)', extra: 'ziele',
+  farben: ['#3f9a54','#e58a00','#2f78d1','#a8201a'],
   merke: 'E – A – R – L: Entstehung, Ausbreitung, Rettung, Löschen.',
   fakten: [
     ['Brandentstehung', 'Der **Entstehung eines Brandes** wird vorgebeugt.'],
@@ -21,6 +22,7 @@ const VBL = { themen: [
 },
 
 { id: 'aufenthaltsraum', kurz: 'Aufenthaltsraum', titel: 'Aufenthaltsraum', quelle: '§ 2 Abs. 7 MBO (Aushang IdF)', extra: 'raeume',
+  farben: ['#2e8a4a','#b5352b'],
   merke: 'Nicht nur vorübergehend: Wohnen, Schlafen, Arbeiten. Nebenfunktion, Flur und Treppe: nein.',
   fakten: [
     ['Definition', 'Aufenthaltsräume sind Räume, die zum **nicht nur vorübergehenden Aufenthalt** von Menschen **bestimmt oder geeignet** sind.'],
@@ -35,6 +37,7 @@ const VBL = { themen: [
 },
 
 { id: 'nutzungseinheit', kurz: 'Nutzungseinheit', titel: 'Nutzungseinheit', quelle: 'OVG NRW, B. v. 07.07.1997, 10 A 3367/94 (Aushang IdF)', extra: 'nutzung',
+  farben: ['#2f78d1','#7b6f5a'],
   merke: 'Ein Zweck, eine Gruppe, keine bauliche Trennung nötig.',
   fakten: [
     ['Definition', 'Eine **räumliche Einheit**, die von einem einzelnen oder einer **Gruppe von Personen** für einen **gemeinsamen Zweck** so genutzt wird, dass eine **baulich nachhaltige Trennung** der einzelnen Räumlichkeiten **nicht erforderlich** ist.'],
@@ -48,6 +51,7 @@ const VBL = { themen: [
 },
 
 { id: 'baustoffe', kurz: 'Baustoffe', titel: 'Baustoffe: nichtbrennbar bis normalentflammbar', quelle: 'MVV TB, Anforderungen an Baustoffe (DIN 4102-1)', extra: 'baustoffe',
+  farben: ['#5a6b7d','#e8892b','#d9482b'],
   merke: 'Je höher die Anforderung, desto größer die Brandeinwirkung: nichtbrennbar (Vollbrand), schwerentflammbar (sich entwickelnder Brand), normalentflammbar (Entstehungsbrand).',
   fakten: [
     ['Nichtbrennbar', 'Auch bei **fortentwickeltem oder vollentwickeltem Brand** **kein Beitrag zum Brand**. Keine oder nur begrenzt bleibende Entzündung, geringstmögliche Rauchentwicklung, kein fortschreitendes Glimmen oder Schwelen, **kein brennendes Abtropfen oder Abfallen**. Der Schmelzpunkt liegt bei mindestens **1000 °C**.'],
@@ -63,6 +67,8 @@ const VBL = { themen: [
 },
 
 { id: 'standsicherheit', kurz: 'Standsicherheit', titel: 'Standsicherheit im Brandfall', quelle: 'MVV TB, Standsicherheit im Brandfall (DIN 4102-2)', extra: 'etk',
+  farben: ['#e9b949','#e8892b','#d9482b','#a8201a'],
+  blick: [['30', 'Min.', 'feuerhemmend'], ['60', 'Min.', 'hochfeuerhemmend'], ['90', 'Min.', 'feuerbeständig'], ['120', 'Min.', 'Feuerwiderstand mit Raumabschluss']],
   merke: '30 – 60 – 90 – 120: feuerhemmend, hochfeuerhemmend, feuerbeständig, Feuerwiderstand 120 Minuten.',
   fakten: [
     ['Grundsatz', 'Um die Standsicherheit nach § 12 MBO zu erfüllen, müssen **tragende Teile** auch unter Brandeinwirkung **über eine bestimmte Zeit standsicher** bleiben. Querschnittsänderungen, Durchdringungen und Verformungen durch die Brandeinwirkung sind zu berücksichtigen.'],
