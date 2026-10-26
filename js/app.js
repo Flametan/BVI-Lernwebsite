@@ -3,7 +3,7 @@
    NAV.go(id, label) · NAV.back() · NAV.home() · NAV.jumpTo(idx)
 ====================================================================== */
 const _NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app','v-klausurfragen','v-klausur-0826','v-laufbahn-2023','v-laufbahn-2026']);
-const _GOLD_VIEWS = new Set(['v-vak-klausurvorbereitung','v-feuak-bp-hub','v-feuak-analyse']);
+const _GOLD_VIEWS = new Set(['v-vak-klausurvorbereitung','v-feuak-bp-hub','v-feuak-analyse','v-idf-vb','v-idf-stabhub']);
 
 /* ── Speicher absichern: voller oder gesperrter localStorage darf die App nicht lahmlegen ── */
 (function(){
@@ -1195,7 +1195,7 @@ const PROGRESS = (function(){
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht'],
     feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    idf:  ['v-idf-brandschutz','v-idf-stab','v-idf-presse'],
+    idf:  ['v-idf-brandschutz','v-idf-vblernen','v-idf-stab','v-idf-stabskarte','v-idf-presse'],
   };
   // Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator): kein Haken, nicht im Fortschritt
   const EXAM_VIEWS = new Set(['v-vak-klausurvorbereitung','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung','v-feuak-altklausur','v-idf-altklausur','v-klausur','v-klausur-0826','v-klausurfragen','v-eingrenzung-klausur','v-simulator','v-laufbahn-2023','v-laufbahn-2026']);
@@ -1216,7 +1216,9 @@ const PROGRESS = (function(){
   // Sammelkacheln: Haken, sobald alle enthaltenen Themen besucht wurden
   const HUBS = {
     'v-feuak-bp-hub':['v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp'],
-    'v-feuak-analyse':['v-feuak-stakeholder','v-feuak-risikoanalyse']
+    'v-feuak-analyse':['v-feuak-stakeholder','v-feuak-risikoanalyse'],
+    'v-idf-vb':['v-idf-brandschutz','v-idf-vblernen'],
+    'v-idf-stabhub':['v-idf-stab','v-idf-stabskarte']
   };
 
   function updateUI(){
@@ -1276,8 +1278,10 @@ const SEARCH = (function(){
     'v-feuak-beschaffung':'FeuAK · Beschaffungspraxis',
     'v-feuak-stakeholder':'FeuAK · Stakeholder-Analyse',
     'v-feuak-risikoanalyse':'FeuAK · Prospektive Risikoanalyse',
-    'v-idf-brandschutz':'IdF · Vorbeugender Brandschutz',
-    'v-idf-stab':'IdF · Stabsarbeit',
+    'v-idf-vb':'IdF · Vorbeugender Brandschutz',
+    'v-idf-stabhub':'IdF · Stabsarbeit',
+    'v-idf-brandschutz':'IdF · Vorbeugender Brandschutz (Lernseite)',
+    'v-idf-stab':'IdF · Stabsarbeit (Lernseite)',
     'v-idf-stabskarte':'IdF · Taschenkarte Stabsarbeit',
     'v-idf-vblernen':'IdF · VB-Prüfung lernen',
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
@@ -4108,6 +4112,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'IdF Münster: Die Themen sind neu geordnet. „Vorbeugender Brandschutz“ und „Stabsarbeit“ sind jetzt eigene Kacheln; darin liegen jeweils die Lernseite und das interaktive Lernen (Brandofen, Quiz, Sortieren bzw. Taschenkarte). Die interaktiven Seiten bekommen wie die übrigen Themen einen Haken, sobald man sie geöffnet hat, und zählen zum IdF-Fortschritt.',
       'IdF · Vorbeugender Brandschutz: Neue interaktive Lernseite „VB-Prüfung lernen“ mit Definitionen und Aufgaben aus dem Unterricht (Ziele des Brandschutzes, Aufenthaltsraum, Nutzungseinheit, Baustoffklassen, Standsicherheit im Brandfall). Zum Ausprobieren gibt es einen Brandprüfstand, einen Brandofen mit Zeitregler, einen Grundriss und ein Gebäude zum Erkunden, dazu Quiz und Sortierspiel. Neue Themen lassen sich leicht ergänzen.',
       'Taschenkarte Stabsarbeit: Taktische Zeichen nach der Vorlage neu gezeichnet (Führungsstellen mit Fahne, Leitstelle mit Dach, Führungskräfte mit schwarzer Spitze, Personen, Schäden, Brände als rote Zacken, Gefahren, Fahrzeuge, Patientenablage, Versorgungsstellen mit schwarzem Boden, Größenordnung als Punkte); die ausgewählte Palette in der Lagerhalle ist klar hervorgehoben und wird erst mit Plus in den Rechner gelegt.',
       'IdF · Stabsarbeit: Neue interaktive Taschenkarte mit 7-Punkte-Plan, Stabsstruktur, taktischen Zeichen, Katastrophenschutzlager NRW (Lagerhalle im Querschnitt mit antippbaren Paletten und Anforderungsrechner) und der EVA-Übung zum Sachgebiet 4 Versorgung; zu jeder der drei Aufgaben gibt es am Ende eine recherchierte Musterlösung mit Quellen.',

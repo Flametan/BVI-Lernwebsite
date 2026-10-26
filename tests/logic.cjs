@@ -1574,10 +1574,14 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
       document.querySelector('[data-tab="spiel"]').click(); await w(50);
       click('[data-act="sstart"][data-id="aufenthaltsraum"]'); await w(50);
       r.sort = document.querySelectorAll('.cat').length;
+      document.querySelector('[data-tab="lernen"]').click(); document.querySelector('[data-tab="lernen"]').click(); await w(50);
+      click('[data-act="open"][data-id="ziele"]'); await w(50);
+      document.querySelector('[data-tab="lernen"]').click(); await w(50);
+      r.zurueck = document.querySelectorAll('[data-act="open"]').length;
       r.nums = !/A 2\.1|2\.1\.[23]/.test(VBL.themen.map(t => JSON.stringify(t)).join(''));
       return r;
     });
-    eq('VB-Lernseite: Labor, Quiz und Sortieren funktionieren', vr, { themen: 5, l1: 3, l3: 1, ofen: true, plan: 10, quiz: true, sort: 2, nums: true });
+    eq('VB-Lernseite: Labor, Quiz und Sortieren funktionieren', vr, { themen: 5, l1: 3, l3: 1, ofen: true, plan: 10, quiz: true, sort: 2, zurueck: 5, nums: true });
   }
 
   for (const e of errors) fails.push('JavaScript-Fehler: ' + e);
