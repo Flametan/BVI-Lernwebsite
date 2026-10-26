@@ -1195,7 +1195,7 @@ const PROGRESS = (function(){
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht'],
     feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    idf:  ['v-idf-brandschutz','v-idf-vblernen','v-idf-stab','v-idf-stabskarte','v-idf-presse'],
+    idf:  ['v-idf-brandschutz','v-idf-vblernen','v-idf-haus','v-idf-stab','v-idf-stabskarte','v-idf-presse'],
   };
   // Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator): kein Haken, nicht im Fortschritt
   const EXAM_VIEWS = new Set(['v-vak-klausurvorbereitung','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung','v-feuak-altklausur','v-idf-altklausur','v-klausur','v-klausur-0826','v-klausurfragen','v-eingrenzung-klausur','v-simulator','v-laufbahn-2023','v-laufbahn-2026']);
@@ -1217,7 +1217,7 @@ const PROGRESS = (function(){
   const HUBS = {
     'v-feuak-bp-hub':['v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp'],
     'v-feuak-analyse':['v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    'v-idf-vb':['v-idf-brandschutz','v-idf-vblernen'],
+    'v-idf-vb':['v-idf-brandschutz','v-idf-vblernen','v-idf-haus'],
     'v-idf-stabhub':['v-idf-stab','v-idf-stabskarte']
   };
 
@@ -1284,6 +1284,7 @@ const SEARCH = (function(){
     'v-idf-stab':'IdF · Stabsarbeit (Lernseite)',
     'v-idf-stabskarte':'IdF · Taschenkarte Stabsarbeit',
     'v-idf-vblernen':'IdF · VB-Prüfung lernen',
+    'v-idf-haus':'IdF · Brandabschnitt-Haus 3D',
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
     'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
@@ -2986,7 +2987,7 @@ const LP=(function(){
     'v-vak-jur-denken':['VAk · Jur. Denken'],'v-vak-verwaltungsrecht':['VAk · Verwaltungsrecht'],'v-vak-staatsrecht':['VAk · Staatsrecht'],'v-vak-einsatzrecht':['VAk · Einsatzrecht'],'v-vak-dienstrecht':['VAk · Dienstrecht'],
     'v-feuak-vwl':['FeuAK · VWL'],'v-feuak-haushalt':['FeuAK · Haushalt'],'v-feuak-pm':['FeuAK · PM'],'v-feuak-bedarfsplanung':['FeuAK · Bedarfsplanung'],'v-feuak-katsbp':['FeuAK · KatS-Bedarfsplanung'],
     'v-feuak-qm':['FeuAK · BSC/QM'],'v-feuak-stakeholder':['FeuAK · Stakeholderanalyse'],'v-feuak-risikoanalyse':['FeuAK · Prospektive Risikoanalyse'],'v-feuak-beschaffung':['FeuAK · Beschaffungspraxis','FeuAK · Vergabe'],
-    'v-idf-brandschutz':['IdF · Brandschutz'],'v-idf-stab':['IdF · Stabsarbeit'],'v-idf-stabskarte':['IdF · Taschenkarte'],'v-idf-vblernen':['IdF · VB lernen'],'v-idf-presse':['IdF · Presse']
+    'v-idf-brandschutz':['IdF · Brandschutz'],'v-idf-stab':['IdF · Stabsarbeit'],'v-idf-stabskarte':['IdF · Taschenkarte'],'v-idf-vblernen':['IdF · VB lernen'],'v-idf-haus':['IdF · Haus 3D'],'v-idf-presse':['IdF · Presse']
   };
   const cardsFor=id=>{ const c=PMAP[id]; return c&&typeof FLASHCARD_DATA!=='undefined'?FLASHCARD_DATA.filter(x=>c.includes(x.cat)):[]; };
   const PRKEY='bvi_lp_prac';
@@ -4092,6 +4093,7 @@ const KLAUSUR_HUB = (function(){
       var tb=document.getElementById('m-topbar'),bar=document.getElementById('m-tabbar');
       var top=tb?Math.max(0,Math.ceil(tb.getBoundingClientRect().bottom)):0;
       var bot=bar&&getComputedStyle(bar).display!=='none'?bar.offsetHeight:0;
+      var fab=bar&&bot?document.querySelector('.m-fab'):null;if(fab){var fr=fab.getBoundingClientRect();if(fr.height)bot=Math.max(bot,Math.ceil(innerHeight-fr.top));}
       var rail=document.getElementById('m-rail'),left=rail&&getComputedStyle(rail).display!=='none'?Math.round(rail.getBoundingClientRect().right):0;
       /* fest am Bildschirm: die Seite scrollt nicht mit, die Reiter der Karte bleiben immer sichtbar */
       f.style.position='fixed';f.style.left=left+'px';f.style.top=top+'px';f.style.width=(innerWidth-left)+'px';
@@ -4115,6 +4117,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'Neu im IdF-Bereich „Vorbeugender Brandschutz“: Das Brandabschnitt-Haus in 3D (React und three.js) – ein aufgeschnittenes Haus zum Drehen und Zoomen. Drei Modi: Erkunden (die vier Ziele nach § 14 MBO mit Wortlaut), Brand (Feuer und Rauch lassen sich per Zeitregler ausbreiten, vier Schutzmaßnahmen schalten die Ausbreitung ein oder aus) und Aufgabe (Menschen retten, mit Sternen und Quiz)',
       'VB lernen: Alle fünf Reiter haben denselben kompakten Aufbau – Definition bzw. Grundsatz oben, darunter der Merksatz, dann kleine Farbkacheln „Auf einen Blick“ (Punkte mit Komma getrennt), dann die Simulation; „Ausführlich erklärt“ entfällt. Aufenthaltsraum hat jetzt die Kachel „Bedingt“, Standsicherheit zeigt „mind. 30/60/90/120 Min.“ und die Kachel „Besondere Fälle“, Baustoffe nennt Abtropfen und § 26 MBO in den Kacheln',
       'VB lernen · Ziele: Der Merksatz steht oben, die vier Ziele sind nummerierte, aufklappbare Kacheln („Entstehung verhindern“, „Ausbreitung verhindern“, „Rettung ermöglichen“, „Löschen ermöglichen“) mit dem jeweiligen Satz aus § 14 MBO (alle beim Öffnen zugeklappt); die ausführliche Erklärung entfällt',
       'VB lernen: Die Definition (bei Aufenthaltsraum und Nutzungseinheit) steht jetzt als hervorgehobene Karte ganz oben direkt unter dem Titel',
