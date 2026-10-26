@@ -78,10 +78,12 @@ main{padding:18px 0 48px}
 .lab .read{font-weight:800;font-size:16px;font-variant-numeric:tabular-nums;margin:6px 0}
 .note{font-size:14px;color:var(--mute);margin:10px 0 0}
 .seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.segb{flex:1 1 90px;min-height:48px;padding:6px 8px;border-radius:12px;border:2px solid var(--line);background:var(--card);font-weight:700;font-size:14px;line-height:1.2}
+.segb{flex:1 1 90px;min-width:0;hyphens:manual;min-height:48px;padding:6px 8px;border-radius:12px;border:2px solid var(--line);background:var(--card);font-weight:700;font-size:14px;line-height:1.2}
 .segb small{display:block;font-weight:500;color:var(--mute);font-size:12px}
 .segb[aria-pressed="true"]{border-color:var(--or);background:var(--orsoft)}
-.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tile b{font-size:14px;hyphens:manual}
+.tile{min-width:0}
 .tile{border-radius:14px;padding:12px;border:2px solid var(--line);display:grid;gap:2px;justify-items:start;transition:background .2s,border-color .2s}
 .tile .fl{width:34px;height:34px;transform-origin:50% 100%;transform:scale(var(--s,1));transition:transform .25s}
 .tile.tok{border-color:var(--ok);background:var(--okbg)}.tile.tok .fl{color:var(--mute)}
@@ -122,14 +124,16 @@ function topicBtn(t,act){const s=Math.max(best[t.id]||0,0);return `<button class
 const FLAME='<path d="M12 2C12.5 7 7 9.5 7 15a5 5 0 0 0 10 0c0-2.6-1.6-4.4-2.7-6.2-.9 1.6-1.9 1.9-2.8-.4-.4-1.2-.4-3.4.5-6.4z" fill="currentColor"/>';
 const L={baustoffe:{lvl:1},etk:{cls:2,t:0,play:null},raeume:{g:{},chk:false},nutzung:{sc:'a'},ziele:{seen:{},cur:null}};
 const labHead=(t,sub)=>`<div class="card pad lab"><h3 style="font-size:17px;margin-bottom:4px">${t}</h3><p class="lead" style="margin-bottom:10px">${sub}</p>`;
+const HY=[['nichtbrennbar','nicht\u00ADbrenn\u00ADbar'],['schwerentflammbar','schwer\u00ADent\u00ADflamm\u00ADbar'],['normalentflammbar','normal\u00ADent\u00ADflamm\u00ADbar'],['leichtentflammbar','leicht\u00ADent\u00ADflamm\u00ADbar'],['Entstehungsbrand','Ent\u00ADste\u00ADhungs\u00ADbrand'],['entwickelnder','ent\u00ADwi\u00ADckelnder'],['hochfeuerhemmend','hoch\u00ADfeuer\u00ADhem\u00ADmend'],['feuerhemmend','feuer\u00ADhem\u00ADmend'],['feuerbeständig','feuer\u00ADbe\u00ADstän\u00ADdig'],['Feuerwiderstand','Feuer\u00ADwider\u00ADstand']];
+const hy=t=>HY.reduce((x,h)=>x.split(h[0]).join(h[1]),t);
 /* Baustoffe: Prüfstand mit Brandgröße */
 const BS=[['nichtbrennbar',3,'Auch beim Vollbrand kein Beitrag zum Brand.'],['schwerentflammbar',2,'Hält bis zum sich entwickelnden Brand: nur begrenzter Beitrag.'],['normalentflammbar',1,'Hält nur beim Entstehungsbrand.'],['leichtentflammbar',0,'Hält keinem Brand stand. Nur unter besonderen Bedingungen zulässig.']];
 const LV=['Entstehungsbrand','Sich entwickelnder Brand','Vollbrand'];
 function labBaustoffe(){
   const v=L.baustoffe.lvl;
   return labHead('Brandprüfstand','Wähle die Größe des Brandes und sieh, welcher Baustoff noch standhält.')+
-  `<div class="seg" role="group" aria-label="Brandgröße">${LV.map((n,i)=>`<button class="segb" data-act="lvl" data-i="${i+1}" aria-pressed="${v===i+1}">${n}</button>`).join('')}</div>
-  <div class="tiles">${BS.map(b=>{const ok=v<=b[1];return `<div class="tile ${ok?'tok':'tbad'}"><svg viewBox="0 0 24 24" class="fl" style="--s:${ok?0.55:1.1+v*0.12}" aria-hidden="true">${FLAME}</svg><b>${b[0]}</b><span>${ok?'hält stand':'trägt zum Brand bei'}</span></div>`}).join('')}</div>
+  `<div class="seg" role="group" aria-label="Brandgröße">${LV.map((n,i)=>`<button class="segb" data-act="lvl" data-i="${i+1}" aria-pressed="${v===i+1}">${hy(n)}</button>`).join('')}</div>
+  <div class="tiles">${BS.map(b=>{const ok=v<=b[1];return `<div class="tile ${ok?'tok':'tbad'}"><svg viewBox="0 0 24 24" class="fl" style="--s:${ok?0.55:1.1+v*0.12}" aria-hidden="true">${FLAME}</svg><b>${hy(b[0])}</b><span>${ok?'hält stand':'trägt zum Brand bei'}</span></div>`}).join('')}</div>
   <p class="note">${b2(v)}</p></div>`;
 }
 const b2=v=>v===1?'Beim Entstehungsbrand genügt „normalentflammbar“. Nur leichtentflammbare Stoffe tragen hier schon deutlich bei.':v===2?'Beim sich entwickelnden Brand müssen Baustoffe mindestens schwerentflammbar sein.':'Beim Vollbrand bleibt nur der nichtbrennbare Baustoff passiv.';
@@ -155,22 +159,22 @@ function ofenVis(){
 }
 function labEtk(){
   return labHead('Brandofen','Wähle ein Bauteil, starte den Brand und beobachte, wann die Standsicherheit endet.')+
-  `<div class="seg" role="group" aria-label="Feuerwiderstand">${CL.map((k,i)=>`<button class="segb" data-act="cls" data-i="${i}" aria-pressed="${L.etk.cls===i}">${k[0]}<small>${k[1]} Min.</small></button>`).join('')}</div>
+  `<div class="seg" role="group" aria-label="Feuerwiderstand">${CL.map((k,i)=>`<button class="segb" data-act="cls" data-i="${i}" aria-pressed="${L.etk.cls===i}">${hy(k[0])}<small>${k[1]} Min.</small></button>`).join('')}</div>
   <input type="range" id="etkr" min="0" max="120" step="1" value="${L.etk.t}" aria-label="Brandzeit in Minuten"><div class="row"><button class="btn pri" data-act="play">${L.etk.play?'Pause':'Brand starten'}</button><button class="btn" data-act="rewind">Zurück auf 0</button></div>
   <div id="ofen">${ofenVis()}</div><p class="note">Maßstab ist die Einheits-Temperaturzeitkurve: Schon nach 30 Minuten sind es rund 840 °C.</p></div>`;
 }
 /* Aufenthaltsräume: Grundriss antippen */
-const RM=[['Wohnzimmer',0,0,110,86,1],['Küche',110,0,70,86,1],['Büro',180,0,70,86,1],['Schlafzimmer',250,0,70,86,1],['Flur',0,86,320,28,0],['Bad',0,114,60,82,0],['Abstellraum',60,114,60,82,0],['Treppenraum',120,114,60,82,0],['Werkstatt, täglich genutzt',180,114,70,82,1],['Sportraum, selten und kurz genutzt',250,114,70,82,0]];
+const RM=[['Wohnzimmer',0,0,110,92,1,['Wohnzimmer']],['Küche',110,0,70,92,1,['Küche']],['Büro',180,0,70,92,1,['Büro']],['Schlafzimmer',250,0,70,92,1,['Schlaf-','zimmer']],['Flur',0,92,320,30,0,['Flur']],['Bad',0,122,60,90,0,['Bad']],['Abstellraum',60,122,60,90,0,['Abstell-','raum']],['Treppenraum',120,122,60,90,0,['Treppen-','raum']],['Werkstatt, täglich genutzt',180,122,70,90,1,['Werkstatt','täglich','genutzt']],['Sportraum, selten und kurz genutzt',250,122,70,90,0,['Sportraum','selten und','kurz genutzt']]];
 function labRaeume(){
   const g=L.raeume.g,chk=L.raeume.chk;let right=0;
   const sv=RM.map((r,i)=>{const v=g[i],ok=v!=null&&(v===r[5]);if(chk&&ok)right++;
     const fill=chk?(ok?'var(--okbg)':'var(--badbg)'):v===1?'color-mix(in srgb,var(--or) 30%,var(--card))':v===0?'var(--soft)':'var(--card)';
-    const lab=r[0].split(', ');
+    const lab=r[6],st_=chk?(ok?'richtig':'Soll: '+(r[5]?'Ja':'Nein')):v==null?'':v?'Ja':'Nein',scol=chk?(ok?'var(--ok)':'var(--bad)'):'var(--ord)',flat=r[4]<40;
+    const lines=flat?[r[0]+(st_?' · '+st_:'')]:lab.concat(st_?[st_]:[]);const y0=r[2]+r[4]/2-(lines.length-1)*6.5+3.5;
     return `<g class="room" role="button" tabindex="0" data-act="room" data-i="${i}" aria-label="${r[0]}: ${v==null?'noch nicht gewählt':v?'Aufenthaltsraum':'kein Aufenthaltsraum'}"><rect x="${r[1]+1}" y="${r[2]+1}" width="${r[3]-2}" height="${r[4]-2}" rx="6" fill="${fill}" stroke="var(--ink)" stroke-width="1.6"/>
-    ${lab.map((l,j)=>`<text x="${r[1]+r[3]/2}" y="${r[2]+r[4]/2-4+j*11-(r[4]<40?6:0)}" text-anchor="middle" font-size="${r[3]>200?10:8.6}" font-weight="700" fill="var(--ink)">${l.length>13&&r[3]<80?l.slice(0,12)+'.':l}</text>`).join('')}
-    <text x="${r[1]+r[3]/2}" y="${r[2]+r[4]/2+(lab.length*11)+(r[4]<40?0:2)}" text-anchor="middle" font-size="9" font-weight="800" fill="${chk?(ok?'var(--ok)':'var(--bad)'):'var(--ord)'}">${chk?(ok?'richtig':'Soll: '+(r[5]?'Ja':'Nein')):v==null?'':v?'Ja':'Nein'}</text></g>`}).join('');
+    ${lines.map((l,j)=>{const last=st_&&j===lines.length-1;return `<text x="${r[1]+r[3]/2}" y="${y0+j*13}" text-anchor="middle" font-size="${last||flat?10.5:11}" font-weight="${last?800:700}" fill="${last&&!flat?scol:'var(--ink)'}">${l}</text>`}).join('')}</g>`}).join('');
   return labHead('Grundriss prüfen','Tippe jeden Raum an: einmal für „Aufenthaltsraum“, zweimal für „kein Aufenthaltsraum“. Dann prüfen.')+
-  `<svg viewBox="0 0 320 196" class="plan" role="group" aria-label="Grundriss">${sv}</svg><div class="row" style="margin-top:10px"><button class="btn pri" data-act="rcheck">Prüfen</button><button class="btn" data-act="rreset">Neu</button>${chk?`<b>${right} von ${RM.length} richtig</b>`:''}</div>
+  `<svg viewBox="0 0 320 214" class="plan" role="group" aria-label="Grundriss">${sv}</svg><div class="row" style="margin-top:10px"><button class="btn pri" data-act="rcheck">Prüfen</button><button class="btn" data-act="rreset">Neu</button>${chk?`<b>${right} von ${RM.length} richtig</b>`:''}</div>
   <p class="note">Tipp: Der Flur dient dem Verkehr, die Werkstatt zählt nur bei mehr als seltener und kurzzeitiger Nutzung.</p></div>`;
 }
 /* Nutzungseinheit: eine Firma oder zwei */
@@ -178,7 +182,7 @@ function labNutzung(){
   const a=L.nutzung.sc==='a';
   const rooms=[['Open Space',0,0,150,120],['Konferenz',150,50,90,70],['WC',150,0,40,50],['Küche',190,0,50,50],['Büro',240,0,80,60],['Büro',240,60,80,60]];
   const col=i=>a?'color-mix(in srgb,var(--or) 32%,var(--card))':(i<=2?'color-mix(in srgb,#2f78d1 30%,var(--card))':'color-mix(in srgb,#2e9a46 30%,var(--card))');
-  const sv=rooms.map((r,i)=>`<rect x="${r[1]+1}" y="${r[2]+1}" width="${r[3]-2}" height="${r[4]-2}" rx="4" fill="${col(i)}" stroke="var(--ink)" stroke-width="1.2"/><text x="${r[1]+r[3]/2}" y="${r[2]+r[4]/2+3}" text-anchor="middle" font-size="9" font-weight="700" fill="var(--ink)">${r[0]}</text>`).join('')+(a?'':'<path d="M150 0V120" stroke="var(--bad)" stroke-width="5"/><text x="150" y="134" text-anchor="middle" font-size="9.5" font-weight="800" fill="var(--bad)">bauliche Trennung</text>');
+  const sv=rooms.map((r,i)=>`<rect x="${r[1]+1}" y="${r[2]+1}" width="${r[3]-2}" height="${r[4]-2}" rx="4" fill="${col(i)}" stroke="var(--ink)" stroke-width="1.2"/><text x="${r[1]+r[3]/2}" y="${r[2]+r[4]/2+3}" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--ink)">${r[0]}</text>`).join('')+(a?'':'<path d="M150 0V120" stroke="var(--bad)" stroke-width="5"/><text x="150" y="134" text-anchor="middle" font-size="10.5" font-weight="800" fill="var(--bad)">bauliche Trennung</text>');
   const ck=(ok,t)=>`<li class="${ok?'yes':'no'}"><b>${ok?'✓':'✗'}</b> ${t}</li>`;
   return labHead('Büroetage','Wie viele Nutzungseinheiten entstehen? Wechsle das Szenario.')+
   `<div class="seg" role="group" aria-label="Szenario"><button class="segb" data-act="sc" data-i="a" aria-pressed="${a}">Eine Firma</button><button class="segb" data-act="sc" data-i="b" aria-pressed="${!a}">Zwei Firmen</button></div>
@@ -219,10 +223,10 @@ function viewQuiz(){
     const wrong=q.wrong.map(w=>`<li><b>${esc(w.q)}</b><br>${esc(w.o[w.a])}</li>`).join('');
     return `<div class="card pad"><div class="big">${q.right} / ${q.list.length}</div><div style="text-align:center">${stars(s)}</div><p class="lead" style="text-align:center;margin-top:8px">${pct>=.9?'Sehr stark.':pct>=.7?'Gut, noch etwas Feinschliff.':'Noch einmal lesen und wiederholen.'}</p>
     ${wrong?`<h3 style="font-size:16px;margin:14px 0 6px">Das war noch falsch</h3><ul style="margin:0;padding-left:20px">${wrong}</ul>`:''}
-    <div class="row" style="margin-top:16px"><button class="btn pri" data-act="qstart" data-id="${q.id}">Nochmal</button><button class="btn" data-act="qend">Themenliste</button></div></div>`;
+    <div class="row" style="margin-top:16px"><button class="btn pri" data-act="qstart" data-id="${q.id}">Nochmal</button><button class="btn" data-act="qend">Themenliste</button><button class="btn" data-act="qtopic" data-id="${q.id}">Zum Thema</button></div></div>`;
   }
   const c=q.list[q.i],ans=q.ans;
-  return `<div class="stat"><span>Frage ${q.i+1} von ${q.list.length}</span><span class="sp"></span><span>${q.right} richtig</span></div><div class="bar"><i style="width:${q.i/q.list.length*100}%"></i></div>
+  return `<button class="back" data-act="qend">‹ Abbrechen</button><div class="stat"><span>Frage ${q.i+1} von ${q.list.length}</span><span class="sp"></span><span>${q.right} richtig</span></div><div class="bar"><i style="width:${q.i/q.list.length*100}%"></i></div>
   <div class="card pad"><p class="q">${esc(c.q)}</p><div class="opts">${c.oo.map((o,i)=>`<button class="opt ${ans!=null?(i===c.a2?'ok':i===ans?'bad':''):''}" data-act="qans" data-i="${i}" ${ans!=null?'disabled':''}>${esc(o)}</button>`).join('')}</div>
   ${ans!=null?`<div class="expl"><b>${ans===c.a2?'Richtig.':'Leider falsch.'}</b> ${esc(c.e)}</div><div class="row" style="margin-top:14px"><button class="btn pri" data-act="qnext">${q.i+1>=q.list.length?'Ergebnis':'Weiter'}</button></div>`:''}</div>`;
 }
@@ -238,9 +242,9 @@ function viewSpiel(){
   const g=st.sort;
   if(!g)return `<h2 class="h2">Sortieren</h2><p class="lead">Begriffe schnell der richtigen Kategorie zuordnen. Fehler kommen am Ende nochmal.</p><div class="list">${T.filter(t=>t.sort).map(t=>`<button class="card topic" data-act="sstart" data-id="${t.id}"><span><span class="t">${esc(t.titel)}</span><small>${t.sort.items.length} Karten${sbest[t.id]!=null?' · Bestzeit '+sbest[t.id].t+' s, '+sbest[t.id].f+' Fehler':''}</small></span></button>`).join('')}</div>`;
   const t=byId(g.id);
-  if(!g.queue.length)return `<div class="card pad"><div class="big">${g.fehler===0?'Fehlerfrei':g.fehler+' Fehler'}</div><p class="lead" style="text-align:center">${t.sort.items.length} Karten in ${g.dauer} Sekunden</p>${g.neu?'<p style="text-align:center;font-weight:800;color:var(--ok)">Neue Bestleistung</p>':''}<div class="row" style="margin-top:16px;justify-content:center"><button class="btn pri" data-act="sstart" data-id="${g.id}">Nochmal</button><button class="btn" data-act="send">Themenliste</button></div></div>`;
+  if(!g.queue.length)return `<div class="card pad"><div class="big">${g.fehler===0?'Fehlerfrei':g.fehler+' Fehler'}</div><p class="lead" style="text-align:center">${t.sort.items.length} Karten in ${g.dauer} Sekunden</p>${g.neu?'<p style="text-align:center;font-weight:800;color:var(--ok)">Neue Bestleistung</p>':''}<div class="row" style="margin-top:16px;justify-content:center"><button class="btn pri" data-act="sstart" data-id="${g.id}">Nochmal</button><button class="btn" data-act="send">Themenliste</button><button class="btn" data-act="qtopic" data-id="${g.id}">Zum Thema</button></div></div>`;
   const it=g.queue[0];
-  return `<div class="stat"><span>Noch ${g.queue.length}</span><span>Serie ${g.serie}</span><span class="sp"></span><span>Fehler ${g.fehler}</span></div><div class="bar"><i style="width:${(1-g.queue.length/g.gesamt)*100}%"></i></div>
+  return `<button class="back" data-act="send">‹ Abbrechen</button><div class="stat"><span>Noch ${g.queue.length}</span><span>Serie ${g.serie}</span><span class="sp"></span><span>Fehler ${g.fehler}</span></div><div class="bar"><i style="width:${(1-g.queue.length/g.gesamt)*100}%"></i></div>
   <div class="cardx ${g.flash||''}" id="cardx" aria-live="polite">${esc(it[0])}</div>
   <div class="cats">${t.sort.kats.map((k,i)=>`<button class="cat" data-act="scat" data-i="${i}">${esc(k)}</button>`).join('')}</div>${g.flash==='wrong'?`<p class="lead" style="margin-top:12px">Richtig wäre: <b>${esc(t.sort.kats[it[1]])}</b></p>`:''}`;
 }
@@ -260,13 +264,14 @@ function render(){
 }
 function top(){window.scrollTo(0,0);try{if(parent!==window)parent.postMessage({stk:'top'},location.origin)}catch(e){}}
 document.addEventListener('click',e=>{
-  const tb=e.target.closest('[data-tab]');if(tb){st.tab=tb.dataset.tab;render();top();return}
+  const tb=e.target.closest('[data-tab]');if(tb){const same=st.tab===tb.dataset.tab;stopPlay();st.tab=tb.dataset.tab;if(same){if(st.tab==='lernen')st.topic=null;else if(st.tab==='quiz')st.quiz=null;else st.sort=null;}render();top();return}
   const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,id=b.dataset.id;
   if(a==='open'){st.topic=id;}else if(a==='home'){st.topic=null;}
   else if(a==='qstart'){qStart(id);}
   else if(a==='qans'){const q=st.quiz;if(q.ans!=null)return;q.ans=+b.dataset.i;const c=q.list[q.i];if(q.ans===c.a2)q.right++;else q.wrong.push(c);}
   else if(a==='qnext'){const q=st.quiz;q.i++;q.ans=null;if(q.i>=q.list.length)qDone();}
   else if(a==='qend'){st.quiz=null;}
+  else if(a==='qtopic'){if(id&&id!=='all'){st.topic=id;st.tab='lernen';}else st.tab='lernen';st.quiz=null;st.sort=null;}
   else if(a==='sstart'){sStart(id);}
   else if(a==='scat'){sAnswer(+b.dataset.i);}
   else if(a==='send'){st.sort=null;}
@@ -280,7 +285,7 @@ document.addEventListener('click',e=>{
   else if(a==='sc'){L.nutzung.sc=b.dataset.i;paintLab();return}
   else if(a==='zhot'){const i=+b.dataset.i;L.ziele.cur=i;L.ziele.seen[i]=1;paintLab();return}
   stopPlay();
-  render();if(['open','home','qstart','sstart','qend','send'].includes(a))top();
+  render();if(['open','home','qstart','sstart','qend','send','qtopic'].includes(a))top();
 });
 document.addEventListener('input',e=>{if(e.target.id==='etkr'){stopPlay();L.etk.t=+e.target.value;paintLab()}});
 document.addEventListener('keydown',e=>{const g=e.target.closest&&e.target.closest('[role="button"][data-act]');if(g&&g.tagName!=='BUTTON'&&(e.key==='Enter'||e.key===' ')){e.preventDefault();g.dispatchEvent(new MouseEvent('click',{bubbles:true}))}});
