@@ -4077,7 +4077,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
-      'Datenschutz: Vorbereitung für einen anonymen Besucherzähler ohne Cookies (GoatCounter); er ist noch ausgeschaltet. Auf der Datenschutzseite lässt sich das Zählen des eigenen Besuchs abschalten; die Angabe zu Notizen im Stundenplan ist entfernt, weil es sie nicht mehr gibt',
+      'Datenschutz: Die App zählt jetzt anonym, wie viele Personen sie nutzen (Besucherzähler GoatCounter, ohne Cookies, ohne IP-Speicherung, ohne Lernstand). Auf der Datenschutzseite lässt sich das Zählen des eigenen Besuchs abschalten; die Angabe zu Notizen im Stundenplan ist entfernt, weil es sie nicht mehr gibt',
       'Startseite: Der Link zur FAQ vor der Anreise öffnet den Stundenplan jetzt ganz oben bei der FAQ statt bei der aktuellen Einheit',
       'FAQ zu den Standorten: Für das IdF Münster sind jetzt Essenszeiten, Getränke, Tagesablauf, Sporthalle, Strom und Netz sowie Waschmöglichkeiten eingetragen; der Laptop wird in keiner Antwort mehr erwähnt',
       'Lernseiten: Auf dem Desktop gibt es jetzt wie auf Handy und Tablet die Kapitelkarten; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges Kapitel“ und „Nächstes Kapitel“. Auf dem Tablet war die Leiste mit diesen Knöpfen unter der Tab-Leiste verdeckt und ist jetzt sichtbar. Die Seitenübersicht „Auf dieser Seite“ am rechten Rand entfällt dafür',
@@ -6060,7 +6060,7 @@ const IDF_PLAN = (function(){
 
 /* ── Besucherzähler (GoatCounter): zählt nur Aufrufe, ohne Cookies und ohne IP-Speicherung; bleibt aus, solange CODE leer ist ── */
 const ZAEHLER=(function(){
-  const CODE='';   // Name der GoatCounter-Seite: https://<CODE>.goatcounter.com (leer = Zähler ausgeschaltet)
+  const CODE='bvi-app';   // Name der GoatCounter-Seite: https://<CODE>.goatcounter.com (leer = Zähler ausgeschaltet)
   const KEY='bvi_zaehler';
   const off=()=>{ try{ return localStorage.getItem(KEY)==='0'; }catch(e){ return false; } };
   function set(on){ try{ if(on) localStorage.removeItem(KEY); else localStorage.setItem(KEY,'0'); }catch(e){} }

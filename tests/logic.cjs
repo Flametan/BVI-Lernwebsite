@@ -619,7 +619,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Version: version.js, sw.js, README und oberster Neuigkeiten-Eintrag stimmen überein', ver, { fmt: true, sw: true, top: true, readme: true });
 
-  // ── Besucherzähler: ohne Namen aus; mit Namen lädt er den Zähler, außer wenn der Besucher ihn abschaltet ──
+  // ── Besucherzähler: eingerichtet, Abschalten durch Besucher möglich ──
   const zc = await page.evaluate(() => {
     const r = {}; localStorage.removeItem('bvi_zaehler');
     r.leer = ZAEHLER.init('') === false && !document.getElementById('gc-script');
@@ -627,7 +627,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.testlauf = ZAEHLER.init('beispiel') === false;   // automatisierte Browser zählen nicht
     ZAEHLER.set(false); r.aus = ZAEHLER.off() && ZAEHLER.init('beispiel', true) === false && !document.getElementById('gc-script');
     ZAEHLER.set(true); r.an = !ZAEHLER.off();
-    r.dsb = !!document.getElementById('dz-zaehler') && document.getElementById('dz-zaehler-row').hidden === true;   // Hinweis erscheint erst, wenn der Zähler eingerichtet ist
+    r.dsb = !!document.getElementById('dz-zaehler') && document.getElementById('dz-zaehler-row').hidden === false && ZAEHLER.active();   // Datenschutz-Abschnitt ist sichtbar, weil der Zähler eingerichtet ist
     return r;
   });
   eq('Besucherzähler: aus ohne Namen, Abschalten durch Besucher, keine Zählung im Testlauf', zc, { leer: true, name: true, testlauf: true, aus: true, an: true, dsb: true });
