@@ -1279,6 +1279,7 @@ const SEARCH = (function(){
     'v-idf-brandschutz':'IdF · Vorbeugender Brandschutz',
     'v-idf-stab':'IdF · Stabsarbeit',
     'v-idf-stabskarte':'IdF · Taschenkarte Stabsarbeit',
+    'v-idf-vblernen':'IdF · VB-Prüfung lernen',
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
     'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
@@ -2981,7 +2982,7 @@ const LP=(function(){
     'v-vak-jur-denken':['VAk · Jur. Denken'],'v-vak-verwaltungsrecht':['VAk · Verwaltungsrecht'],'v-vak-staatsrecht':['VAk · Staatsrecht'],'v-vak-einsatzrecht':['VAk · Einsatzrecht'],'v-vak-dienstrecht':['VAk · Dienstrecht'],
     'v-feuak-vwl':['FeuAK · VWL'],'v-feuak-haushalt':['FeuAK · Haushalt'],'v-feuak-pm':['FeuAK · PM'],'v-feuak-bedarfsplanung':['FeuAK · Bedarfsplanung'],'v-feuak-katsbp':['FeuAK · KatS-Bedarfsplanung'],
     'v-feuak-qm':['FeuAK · BSC/QM'],'v-feuak-stakeholder':['FeuAK · Stakeholderanalyse'],'v-feuak-risikoanalyse':['FeuAK · Prospektive Risikoanalyse'],'v-feuak-beschaffung':['FeuAK · Beschaffungspraxis','FeuAK · Vergabe'],
-    'v-idf-brandschutz':['IdF · Brandschutz'],'v-idf-stab':['IdF · Stabsarbeit'],'v-idf-stabskarte':['IdF · Taschenkarte'],'v-idf-presse':['IdF · Presse']
+    'v-idf-brandschutz':['IdF · Brandschutz'],'v-idf-stab':['IdF · Stabsarbeit'],'v-idf-stabskarte':['IdF · Taschenkarte'],'v-idf-vblernen':['IdF · VB lernen'],'v-idf-presse':['IdF · Presse']
   };
   const cardsFor=id=>{ const c=PMAP[id]; return c&&typeof FLASHCARD_DATA!=='undefined'?FLASHCARD_DATA.filter(x=>c.includes(x.cat)):[]; };
   const PRKEY='bvi_lp_prac';
@@ -4079,18 +4080,24 @@ const KLAUSUR_HUB = (function(){
 /* ======================================================================
    CHANGELOG – Update-Feed mit Auto-Open bei neuer Version
 ====================================================================== */
-// Taschenkarte Stabsarbeit (iframe): füllt den Platz zwischen Kopfleiste und Tableiste, Tabs der Karte bleiben sichtbar
+// Eingebettete Seiten (iframe): füllen den Platz zwischen Kopfleiste und Tableiste, ihre Reiter bleiben sichtbar
 (function(){
   function fit(){
-    var f=document.getElementById('stkFrame');if(!f||!f.offsetParent)return;
-    var tb=document.getElementById('m-topbar'),bar=document.getElementById('m-tabbar');
-    var top=tb&&getComputedStyle(tb).position==='sticky'?tb.offsetHeight:0;
-    var bot=bar&&getComputedStyle(bar).display!=='none'?bar.offsetHeight:0;
-    f.style.top=top+'px';f.style.height=Math.max(300,innerHeight-top-bot)+'px';
+    document.querySelectorAll('iframe.emb-frame').forEach(function(f){
+      if(!f.offsetParent)return;
+      var tb=document.getElementById('m-topbar'),bar=document.getElementById('m-tabbar');
+      var top=tb&&getComputedStyle(tb).position==='sticky'?tb.offsetHeight:0;
+      var bot=bar&&getComputedStyle(bar).display!=='none'?bar.offsetHeight:0;
+      f.style.top=top+'px';f.style.height=Math.max(300,innerHeight-top-bot)+'px';
+    });
   }
   window.addEventListener('resize',fit);
   document.addEventListener('click',function(){setTimeout(fit,350)},true);
   window.addEventListener('popstate',function(){setTimeout(fit,350)});
+  window.addEventListener('message',function(e){
+    if(e.origin!==location.origin||!e.data||e.data.stk!=='top')return;
+    var f=document.querySelector('iframe.emb-frame');if(f&&f.offsetParent)f.scrollIntoView({block:'start'});
+  });
 })();
 const CHANGELOG=(function(){
   const KEY='bvi_seen_version';
@@ -4101,6 +4108,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'IdF · Vorbeugender Brandschutz: Neue interaktive Lernseite „VB-Prüfung lernen“ mit Definitionen und Aufgaben aus dem Unterricht (Ziele des Brandschutzes, Aufenthaltsraum, Nutzungseinheit, Baustoffklassen, Standsicherheit im Brandfall). Zum Ausprobieren gibt es einen Brandprüfstand, einen Brandofen mit Zeitregler, einen Grundriss und ein Gebäude zum Erkunden, dazu Quiz und Sortierspiel. Neue Themen lassen sich leicht ergänzen.',
       'Taschenkarte Stabsarbeit: Taktische Zeichen nach der Vorlage neu gezeichnet (Führungsstellen mit Fahne, Leitstelle mit Dach, Führungskräfte mit schwarzer Spitze, Personen, Schäden, Brände als rote Zacken, Gefahren, Fahrzeuge, Patientenablage, Versorgungsstellen mit schwarzem Boden, Größenordnung als Punkte); die ausgewählte Palette in der Lagerhalle ist klar hervorgehoben und wird erst mit Plus in den Rechner gelegt.',
       'IdF · Stabsarbeit: Neue interaktive Taschenkarte mit 7-Punkte-Plan, Stabsstruktur, taktischen Zeichen, Katastrophenschutzlager NRW (Lagerhalle im Querschnitt mit antippbaren Paletten und Anforderungsrechner) und der EVA-Übung zum Sachgebiet 4 Versorgung; zu jeder der drei Aufgaben gibt es am Ende eine recherchierte Musterlösung mit Quellen.',
       'Stundenplan: In allen Jahrgängen außer dem Master gibt es unter der FAQ den Knopf „Raumplan IdF Münster“; er öffnet das Gelände in 3D mit allen Gebäuden, Parkplätzen und Sammelplätzen, auch wenn der eigene Plan keine Räume enthält',

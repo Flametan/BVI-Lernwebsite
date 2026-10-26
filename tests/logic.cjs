@@ -1551,6 +1551,35 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     eq('Musterlösung zu allen drei EVA-Aufgaben', ml, [true, true, true]);
   }
 
+  // ── VB-Prüfung lernen (iframe): Labor, Quiz, Sortieren ──
+  await page.evaluate(() => NAV.go('v-idf-vblernen', 'VB lernen'));
+  await page.waitForTimeout(1200);
+  const vf = page.frames().find(f => /vb-lernen\.html/.test(f.url()));
+  ok('VB-Prüfung lernen lädt als iframe', !!vf);
+  if (vf) {
+    const vr = await vf.evaluate(async () => {
+      const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+      const click = s => document.querySelector(s).dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      r.themen = document.querySelectorAll('[data-act="open"]').length;
+      click('[data-act="open"][data-id="baustoffe"]'); await w(100);
+      click('[data-act="lvl"][data-i="1"]'); r.l1 = document.querySelectorAll('.tile.tok').length;
+      click('[data-act="lvl"][data-i="3"]'); r.l3 = document.querySelectorAll('.tile.tok').length;
+      click('[data-act="home"]'); click('[data-act="open"][data-id="standsicherheit"]'); await w(100);
+      const rg = document.getElementById('etkr'); rg.value = 100; rg.dispatchEvent(new Event('input', { bubbles: true })); r.ofen = /Zeit überschritten|verloren/.test(document.getElementById('ofen').textContent);
+      click('[data-act="home"]'); click('[data-act="open"][data-id="aufenthaltsraum"]'); await w(100);
+      click('[data-act="rcheck"]'); r.plan = document.querySelectorAll('.room').length;
+      document.querySelector('[data-tab="quiz"]').click(); await w(50);
+      click('[data-act="qstart"][data-id="ziele"]'); await w(50);
+      click('[data-act="qans"][data-i="0"]'); r.quiz = !!document.querySelector('.expl');
+      document.querySelector('[data-tab="spiel"]').click(); await w(50);
+      click('[data-act="sstart"][data-id="aufenthaltsraum"]'); await w(50);
+      r.sort = document.querySelectorAll('.cat').length;
+      r.nums = !/A 2\.1|2\.1\.[23]/.test(VBL.themen.map(t => JSON.stringify(t)).join(''));
+      return r;
+    });
+    eq('VB-Lernseite: Labor, Quiz und Sortieren funktionieren', vr, { themen: 5, l1: 3, l3: 1, ofen: true, plan: 10, quiz: true, sort: 2, nums: true });
+  }
+
   for (const e of errors) fails.push('JavaScript-Fehler: ' + e);
   await browser.close();
   if (fails.length) { console.error('FEHLER:\n - ' + fails.join('\n - ')); process.exit(1); }
