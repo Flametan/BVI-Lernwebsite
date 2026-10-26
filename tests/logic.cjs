@@ -1528,6 +1528,28 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   eq('Diagramm Woche/Monate ragt nicht über den Rand (Touch, 360 px)', chart, { Woche: 0, Monate: 0 });
   await tctx.close();
 
+  // ── Taschenkarte Stabsarbeit (iframe): Lagerhalle, Rechner, Musterlösungen ──
+  await page.evaluate(() => NAV.go('v-idf-stabskarte', 'Taschenkarte'));
+  await page.waitForTimeout(1200);
+  const fr = page.frames().find(f => /stabskarte\.html/.test(f.url()));
+  ok('Taschenkarte Stabsarbeit lädt als iframe', !!fr);
+  if (fr) {
+    await fr.evaluate(() => document.getElementById('tab-lager').click());
+    const hl = await fr.evaluate(() => {
+      const pals = document.querySelectorAll('.hall .pal');
+      pals[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      return { n: pals.length, det: document.getElementById('halldet').textContent.length > 40, sel: Object.keys(JSON.parse(localStorage.getItem('bvi_stk_lager_sel') || '{}')).length };
+    });
+    ok('Lagerhalle zeigt Paletten, Antippen legt sie in den Rechner', hl.n >= 12 && hl.det && hl.sel === 1);
+    await fr.evaluate(() => document.getElementById('tab-eva').click());
+    const ml = await fr.evaluate(() => {
+      const r = [];
+      for (let i = 0; i < 3; i++) { document.querySelectorAll('#panel-eva [data-act="estep"]')[i].click(); r.push(!!document.querySelector('#panel-eva .task details.ml li')); }
+      return r;
+    });
+    eq('Musterlösung zu allen drei EVA-Aufgaben', ml, [true, true, true]);
+  }
+
   for (const e of errors) fails.push('JavaScript-Fehler: ' + e);
   await browser.close();
   if (fails.length) { console.error('FEHLER:\n - ' + fails.join('\n - ')); process.exit(1); }

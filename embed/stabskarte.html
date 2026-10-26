@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Taschenkarte Stabsarbeit</title>
+<style>
+:root{
+  --bg:#f3f2ef;--card:#fff;--ink:#1d1d1b;--mute:#66665f;--line:#e2e0da;--soft:#ecebe6;
+  --or:#ffa412;--ord:#c2410c;--orsoft:#fff1d6;--onor:#1d1d1b;
+  --c-schwarz:#111;--c-rot:#d6221e;--c-blau:#1b5fc4;--c-gruen:#2e9a46;
+  --ok:#2e7d32;--bad:#c62828;--shadow:0 1px 2px rgba(0,0,0,.06),0 6px 18px rgba(30,25,10,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141413;--card:#1f1f1d;--ink:#f1f0ec;--mute:#aeada5;--line:#37362f;--soft:#2a2a27;
+  --or:#ffa412;--ord:#ffb547;--orsoft:#3a2a0f;
+  --c-schwarz:#f1f0ec;--c-rot:#ff5a52;--c-blau:#5aa9ff;--c-gruen:#46c566;
+  --ok:#66bb6a;--bad:#ff7b72;--shadow:0 1px 2px rgba(0,0,0,.4);
+}}
+:root[data-theme="dark"]{
+  --bg:#141413;--card:#1f1f1d;--ink:#f1f0ec;--mute:#aeada5;--line:#37362f;--soft:#2a2a27;
+  --ord:#ffb547;--orsoft:#3a2a0f;--c-schwarz:#f1f0ec;--c-rot:#ff5a52;--c-blau:#5aa9ff;--c-gruen:#46c566;--ok:#66bb6a;--bad:#ff7b72;--shadow:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;overflow-x:hidden}
+h1,h2,h3,h4{line-height:1.2;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation}
+:focus-visible{outline:3px solid var(--or);outline-offset:2px}
+.c-schwarz{color:var(--c-schwarz)}.c-rot{color:var(--c-rot)}.c-blau{color:var(--c-blau)}.c-gruen{color:var(--c-gruen)}
+.sg{display:block;width:100%;height:100%;overflow:visible}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+
+/* Kopf */
+.top{background:var(--card);border-top:6px solid var(--or);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:14px;padding-top:14px;padding-bottom:12px}
+.mark{flex:none;width:46px;height:46px;border-radius:12px;background:var(--or);display:grid;place-items:center}
+.mark svg{width:30px;height:30px}
+.top h1{font-size:clamp(20px,5.4vw,28px);font-weight:800;letter-spacing:-.01em}
+.top p{margin:2px 0 0;font-size:13px;color:var(--mute)}
+.tabs{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.tabs .wrap{display:flex;padding:0 8px}
+.tab{flex:1 1 0;min-width:0;min-height:52px;background:none;border:0;border-bottom:4px solid transparent;font-weight:700;font-size:14px;color:var(--mute);padding:6px 2px;position:relative}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--or)}
+.tab .lg{display:none}
+@media(min-width:700px){.tab{font-size:16px}.tab .sh{display:none}.tab .lg{display:inline}}
+main{padding:20px 0 56px}
+.panel[hidden]{display:none}
+.lead{color:var(--mute);margin:0 0 14px;font-size:15px}
+.h2{font-size:22px;font-weight:800;margin:26px 0 10px}
+.h2:first-child{margin-top:0}
+.h2 small{font-weight:500;color:var(--mute);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.pad{padding:16px}
+.btn{min-height:44px;padding:8px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-weight:700}
+.btn.pri{background:var(--or);border-color:var(--or);color:var(--onor)}
+.btn:active{transform:scale(.98)}
+.seg{display:inline-flex;background:var(--soft);border-radius:14px;padding:4px;gap:4px;max-width:100%;flex-wrap:wrap}
+.seg button{min-height:44px;padding:6px 10px;font-size:14px;border:0;background:none;border-radius:11px;font-weight:700;color:var(--mute)}
+.seg button[aria-pressed="true"],.seg button[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:thin}
+.chip{flex:none;min-height:44px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);font-weight:600;font-size:14px;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.callout{border-left:5px solid var(--or);background:var(--orsoft);border-radius:4px 12px 12px 4px;padding:10px 14px;font-weight:600}
+.callout.warn{border-color:var(--c-rot)}
+.note{font-size:13px;color:var(--mute)}
+.tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ord);background:var(--orsoft);border-radius:6px;padding:2px 7px}
+
+/* 7-Punkte */
+.plan-grid{display:grid;gap:14px}
+@media(min-width:900px){.plan-grid{grid-template-columns:1fr 360px;align-items:start}.plan-side{position:sticky;top:70px}}
+.ringcard{display:flex;align-items:center;gap:16px;padding:16px;margin-bottom:14px}
+.ring{flex:none;width:92px;height:92px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .tr{stroke:var(--soft)}.ring .pr{stroke:var(--or);transition:stroke-dashoffset .5s}
+.ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:1px;font-size:24px;font-weight:800}
+.ring b small{font-size:13px;font-weight:600;color:var(--mute)}
+.pcard{display:flex;flex-wrap:wrap;align-items:stretch;margin-bottom:10px;overflow:hidden}
+.pcard.done{border-color:var(--or)}
+.pc-head{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:12px;background:none;border:0;text-align:left;padding:12px 8px 12px 14px;min-height:64px}
+.num{flex:none;width:38px;height:38px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:800;font-size:18px}
+.pcard.done .num{background:var(--or);color:#1d1d1b}
+.pc-head .t{font-weight:800;font-size:17px;flex:1}
+.pc-head .chev{flex:none;width:18px;height:18px;transition:transform .2s;color:var(--mute)}
+.pc-head[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.chk{flex:none;width:64px;min-height:64px;border:0;border-left:1px solid var(--line);background:var(--soft);display:grid;place-items:center}
+.chk span{width:32px;height:32px;border-radius:9px;border:2.5px solid var(--mute);display:grid;place-items:center;color:transparent;font-weight:900;font-size:19px;background:var(--card)}
+.chk[aria-pressed="true"]{background:var(--orsoft)}
+.chk[aria-pressed="true"] span{background:var(--or);border-color:var(--or);color:#1d1d1b}
+.pc-body{flex-basis:100%;margin:0;padding:0 18px 14px 64px;list-style:none;color:var(--ink)}
+.pc-body[hidden]{display:none}
+.pc-body li{position:relative;padding:3px 0 3px 16px}
+.pc-body li::before{content:"";position:absolute;left:0;top:.8em;width:7px;height:7px;border-radius:2px;background:var(--or)}
+.game{padding:16px}
+.game h3{font-size:18px;margin-bottom:4px}
+.slots{display:grid;gap:6px;margin:10px 0;padding:0;list-style:none;counter-reset:s}
+.slots li{min-height:40px;border:2px dashed var(--line);border-radius:10px;padding:6px 10px;display:flex;gap:8px;align-items:center;font-size:14px}
+.slots li::before{counter-increment:s;content:counter(s);flex:none;width:24px;height:24px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:800;font-size:13px}
+.slots li.ok{border:2px solid var(--or);background:var(--orsoft);font-weight:700}
+.opts{display:grid;gap:8px;margin:10px 0}
+.opt{min-height:48px;text-align:left;padding:8px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-weight:600;font-size:15px}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.msg{min-height:24px;font-weight:700;margin:6px 0}
+.msg.ok{color:var(--ok)}.msg.bad{color:var(--bad)}
+
+/* Stab */
+.stab-grid{display:grid;gap:16px}
+@media(min-width:1000px){.stab-grid{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:start}.stab-det{position:sticky;top:70px}}
+.org{padding:16px 12px 18px}
+.org-top{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
+.leiter{background:#b50d0d;color:#fff;font-weight:800;border-radius:10px;padding:12px 22px;font-size:17px;text-align:center;box-shadow:0 4px 10px rgba(150,0,0,.25)}
+.beig{background:#f4b183;color:#4a2208;border-radius:999px;font-weight:700;font-size:13px;padding:7px 14px;text-align:center}
+.org-trunk{width:2px;height:16px;background:var(--mute);margin:0 auto}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px 10px;position:relative;padding-top:6px}
+.sgrid::before{content:"";position:absolute;left:25%;right:25%;top:0;height:2px;background:var(--mute)}
+@media(min-width:560px){.sgrid{grid-template-columns:repeat(6,1fr)}.sgrid::before{left:calc(100%/12);right:calc(100%/12)}}
+.sbox{position:relative;border:0;border-radius:12px;padding:10px 6px 10px;min-height:96px;text-align:center;font-weight:600;box-shadow:0 3px 8px rgba(0,0,0,.18);display:flex;flex-direction:column;justify-content:center;gap:2px}
+.sbox::before{content:"";position:absolute;left:50%;top:-6px;width:2px;height:6px;background:var(--mute)}
+.sbox .code{font-size:26px;font-weight:800;line-height:1}
+.sbox .nm{font-size:12.5px;line-height:1.2;font-style:italic}
+.sbox[aria-pressed="true"]{outline:4px solid var(--ink);outline-offset:2px}
+.sbox.rel{outline:3px dashed var(--ink);outline-offset:2px}
+.sbox.rel::after{content:"verknüpft";position:absolute;right:4px;top:3px;font-size:10px;font-weight:800;background:var(--ink);color:var(--bg);border-radius:4px;padding:0 4px}
+.det{padding:16px}
+.det-h{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.det-h .code{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-weight:800;font-size:22px;flex:none}
+.grp{margin:14px 0 0}
+.grp h4{color:var(--ord);font-size:16px;margin-bottom:4px}
+.grp ul{margin:0;padding:0;list-style:none}
+.grp li{position:relative;padding:3px 0 3px 18px}
+.grp li::before{content:"";position:absolute;left:2px;top:.85em;width:6px;height:6px;border-radius:50%;background:var(--ink)}
+.grp li .lnk{color:var(--ord);font-weight:800}
+.grp .empty{color:var(--mute);font-size:14px;font-style:italic}
+.net svg{width:100%;height:auto;display:block}
+.net .nd{cursor:pointer}
+.net .nd rect{stroke:var(--card);stroke-width:2}
+.net .nd:focus-visible rect{stroke:var(--ink);stroke-width:3}
+.net .ed{stroke:var(--mute);stroke-width:2.2;stroke-dasharray:5 4;fill:none}
+.net .ed.on{stroke:var(--ord);stroke-width:3.6;stroke-dasharray:none}
+.net text{font-family:inherit}
+.dep-list{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.dep-list li{display:flex;gap:10px;font-size:14px}
+.dep-list b{flex:none;width:26px;height:26px;border-radius:50%;background:var(--ord);color:var(--card);display:grid;place-items:center;font-size:13px}
+
+/* Zeichen */
+.legend{display:grid;gap:8px;padding:14px;margin-bottom:14px}
+@media(min-width:700px){.legend{grid-template-columns:repeat(4,1fr)}}
+.lg-i{display:flex;gap:10px;align-items:flex-start;text-align:left;background:none;border:1.5px solid var(--line);border-radius:12px;padding:10px;min-height:56px}
+.lg-i[aria-pressed="true"]{border-color:var(--ink);background:var(--soft)}
+.lg-i i{flex:none;width:22px;height:22px;border-radius:50%;margin-top:2px;background:currentColor}
+.lg-i span{font-size:13px;color:var(--ink);line-height:1.35}
+.lg-i b{display:block;font-size:15px}
+.search{width:100%;min-height:48px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);padding:8px 14px;margin-bottom:8px}
+.sgrid2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:600px){.sgrid2{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+.zc{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px 12px;min-height:120px;border-radius:14px;background:var(--card);border:1px solid var(--line);text-align:center}
+.zc .ico{width:100%;height:58px}
+.zc .nm{font-size:13px;font-weight:600;line-height:1.25;overflow-wrap:anywhere}
+.zc:hover{border-color:var(--or)}
+.gh{font-size:15px;font-weight:800;margin:18px 0 8px;color:var(--ord)}
+dialog{border:0;border-radius:20px;padding:0;max-width:min(440px,calc(100vw - 24px));width:100%;background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+.dlg{padding:20px;text-align:center}
+.dlg .big{width:200px;height:150px;margin:0 auto 8px}
+.dlg .four{display:flex;justify-content:center;gap:10px;margin:12px 0}
+.dlg .four div{width:64px;height:48px}
+.dlg h3{font-size:20px}
+.field{display:grid;gap:4px;font-weight:600;font-size:14px}
+.field input,.field select{min-height:48px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);padding:6px 10px;width:100%}
+.form{display:grid;gap:12px}
+@media(min-width:700px){.form.c2{grid-template-columns:1fr 1fr}.form.c4{grid-template-columns:repeat(4,1fr)}}
+.bigout{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:clamp(22px,7vw,34px);font-weight:800;letter-spacing:.02em;padding:12px;border-radius:12px;background:var(--soft);text-align:center;overflow-wrap:anywhere}
+.build-grid{display:grid;gap:14px}
+@media(min-width:900px){.build-grid{grid-template-columns:1fr 1fr;align-items:start}}
+.qbig{width:min(260px,70%);height:150px;margin:6px auto 12px}
+.qbar{height:8px;background:var(--soft);border-radius:4px;overflow:hidden;margin-bottom:10px}
+.qbar i{display:block;height:100%;background:var(--or);transition:width .3s}
+.qopts{display:grid;gap:8px}
+@media(min-width:700px){.qopts.two{grid-template-columns:1fr 1fr}}
+.qopt-sign{height:84px;display:grid;place-items:center;padding:6px}
+
+/* Lager */
+.sum-grid{display:grid;gap:12px}
+@media(min-width:700px){.sum-grid{grid-template-columns:repeat(3,1fr)}}
+.sum{padding:14px}
+.sum h3{font-size:14px;text-transform:uppercase;letter-spacing:.07em;color:var(--ord);margin-bottom:6px}
+.sum ul{margin:0;padding-left:18px}
+.sum.span{grid-column:1/-1}
+.sum big{display:block;font-size:30px;font-weight:800;line-height:1.1}
+.banner{display:flex;gap:12px;align-items:center;background:var(--c-rot);color:#fff;border-radius:14px;padding:12px 16px;font-weight:800;margin:14px 0}
+.banner svg{flex:none;width:34px;height:34px}
+.flow{display:grid;gap:0;margin:0;padding:0;list-style:none}
+@media(min-width:900px){.flow{grid-template-columns:repeat(5,1fr);gap:0}}
+.fl{position:relative;padding:14px 12px 14px 12px;text-align:center}
+.fl .bub{width:56px;height:56px;border-radius:50%;margin:0 auto 8px;background:var(--or);color:#1d1d1b;display:grid;place-items:center}
+.fl .bub svg{width:30px;height:30px}
+.fl b{display:block;font-size:15px}
+.fl span{display:block;font-size:13px;color:var(--mute);margin-top:2px}
+.fl::after{content:"";position:absolute;left:50%;bottom:-8px;width:12px;height:12px;border-right:3px solid var(--or);border-bottom:3px solid var(--or);transform:translateX(-50%) rotate(45deg)}
+.fl:last-child::after{display:none}
+@media(min-width:900px){.fl::after{left:auto;right:-8px;top:36px;bottom:auto;transform:rotate(-45deg)}}
+.cost{display:grid;gap:10px;align-items:stretch}
+@media(min-width:800px){.cost{grid-template-columns:1fr auto 1fr}}
+.cbox{padding:14px;border-radius:14px;border:2px solid var(--line)}
+.cbox h4{font-size:16px;margin-bottom:6px}
+.cbox ul{margin:0;padding-left:18px}
+.cbox.land{border-color:var(--c-blau)}.cbox.anf{border-color:var(--or);background:var(--orsoft)}
+.carrow{display:grid;place-items:center;text-align:center;font-size:13px;font-weight:700;color:var(--mute);padding:4px}
+.carrow svg{width:150px;height:70px}
+.kat-grid{display:grid;gap:12px}
+@media(min-width:800px){.kat-grid{grid-template-columns:1fr 1fr}}
+.kg{padding:14px}
+.kg-h{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.kg-h .n{flex:none;background:var(--or);color:#1d1d1b;font-weight:800;border-radius:8px;padding:2px 8px;font-size:15px}
+.kg-h h4{font-size:16px;flex:1}
+.stock{font-size:12px;font-weight:700;color:var(--mute);background:var(--soft);border-radius:999px;padding:2px 9px;white-space:nowrap}
+.pos{list-style:none;margin:0;padding:0;font-size:14px}
+.pos li{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-top:1px solid var(--line)}
+.pos li b{flex:none;font-weight:700;text-align:right}
+.pos em{display:block;font-style:normal;font-size:12px;color:var(--mute)}
+.je{margin:0;font-size:14px}
+.kg .add{margin-top:10px;width:100%}
+.calc-grid{display:grid;gap:14px}
+@media(min-width:900px){.calc-grid{grid-template-columns:1.1fr 1fr;align-items:start}.calc-out{position:sticky;top:70px}}
+.crow{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
+.crow .lbl{flex:1;min-width:0;font-size:15px}
+.crow .lbl small{display:block;color:var(--mute);font-size:12px}
+.step{display:flex;align-items:center;gap:4px}
+.step button{width:44px;height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-size:22px;font-weight:700;line-height:1}
+.step output{display:inline-block;min-width:34px;text-align:center;font-weight:800;font-size:18px}
+.crow.on .lbl{font-weight:700}
+.sch{font-weight:800;margin:14px 0 2px;color:var(--ord)}
+.out{width:100%;min-height:110px;border-radius:12px;border:1.5px solid var(--line);background:var(--soft);padding:12px;font-size:15px;line-height:1.55;resize:vertical}
+
+/* EVA */
+.sit{display:grid;gap:12px}
+@media(min-width:900px){.sit{grid-template-columns:1fr 1fr}.sit .full{grid-column:1/-1}}
+.sit .card{padding:14px;border-top:5px solid var(--c-schwarz)}
+.sit .card.rot{border-top-color:var(--c-rot)}.sit .card.blau{border-top-color:var(--c-blau)}
+.sit h3{font-size:14px;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.sit p{margin:0}
+.sketch{padding:8px;margin:14px 0}
+.sketch>svg{width:100%;max-width:620px;height:auto;display:block;margin:0 auto}
+.sk-t{font:600 11px "Segoe UI",system-ui,sans-serif;fill:var(--ink)}
+.stepper{display:flex;gap:8px;margin:0 0 12px}
+.stepper button{flex:1;min-height:52px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;padding:4px}
+.stepper button[aria-selected="true"]{border-color:var(--or);background:var(--orsoft)}
+.stepper .dot{width:24px;height:24px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:13px}
+.stepper .dot.d{background:var(--or);color:#1d1d1b}
+.stepper .tl{display:none}
+@media(min-width:600px){.stepper .tl{display:inline}}
+.task{padding:16px}
+.task h3{font-size:20px;margin-bottom:8px}
+.task ol{padding-left:0;list-style:none;margin:8px 0}
+.task ol li{margin:8px 0}
+.task textarea{width:100%;min-height:96px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);padding:10px 12px;resize:vertical;margin-top:4px}
+.hint{border:1.5px dashed var(--ord);border-radius:12px;padding:10px 12px;margin:12px 0;background:var(--orsoft)}
+.hint ul{margin:6px 0 0;padding-left:18px;font-size:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sp{flex:1}
+footer{border-top:1px solid var(--line);padding:16px 0 30px;color:var(--mute);font-size:13px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* Einbettung in die B-VI-App (iframe, ?embed=1): Kopf und Fuß entfallen, Farben kommen aus der App */
+html.emb .top,html.emb footer{display:none}
+html.emb body{background:transparent}
+html.emb main{padding-top:14px}
+/* Lagerhalle im Querschnitt */
+.hall{padding:8px}.hall svg{display:block;width:100%;height:auto}
+.hall .pal{cursor:pointer}
+.hall .pal .ring{fill:none;stroke:var(--or);stroke-width:3;opacity:0}
+.hall .pal[aria-pressed="true"] .ring,.hall .pal:focus-visible .ring{opacity:1}
+.hall .pal:focus-visible{outline:none}
+.hall .pal.dim{opacity:.25}
+.hall .pal:hover .pbox{filter:brightness(1.12)}
+.hall .cnt circle{fill:var(--ink)}.hall .cnt text{fill:var(--card);font-weight:800;font-size:11px;text-anchor:middle}
+.hdet h4{font-size:17px;margin:8px 0 6px}
+.hdet .scn{display:inline-block;color:#fff;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px}
+.hdet .hrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.hdet .hnum{min-width:34px;text-align:center;font-weight:800;font-size:18px}
+/* Musterlösung */
+.ml{margin-top:14px;border:2px solid var(--or);border-radius:14px;background:var(--card);overflow:hidden}
+.ml>summary{cursor:pointer;list-style:none;min-height:48px;padding:12px 16px;font-weight:800;display:flex;align-items:center;gap:10px}
+.ml>summary::-webkit-details-marker{display:none}
+.ml>summary::after{content:"+";margin-left:auto;font-size:22px;color:var(--ord)}
+.ml[open]>summary::after{content:"−"}
+.ml .mlb{padding:4px 16px 16px;font-size:15px}
+.ml h4{font-size:15px;margin:14px 0 4px;color:var(--ord)}
+.ml ul{margin:4px 0 4px 20px;padding:0}.ml li{margin:3px 0}
+.ml .q{font-size:12.5px;color:var(--mute);margin-top:12px}
+.ml .warn2{background:var(--soft);border-radius:10px;padding:8px 12px;font-size:13.5px;margin:8px 0}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="mark" aria-hidden="true"><svg viewBox="0 0 30 30"><rect x="3" y="4" width="24" height="22" rx="4" fill="#fff"/><path d="M8 11h14M8 16h14M8 21h9" stroke="#e8530e" stroke-width="2.6" stroke-linecap="round"/></svg></div>
+  <div><h1>Taschenkarte Stabsarbeit</h1><p id="quelle"></p></div>
+</div></header>
+<nav class="tabs" aria-label="Bereiche"><div class="wrap" role="tablist" id="tabs"></div></nav>
+<main><div class="wrap" id="panels"></div></main>
+<footer><div class="wrap">Lernhilfe nach Taschenkarte, Merkblatt Katastrophenschutzlager NRW und EVA-Aufgabe Sachgebiet 4 (IdF NRW). Alle Zeichnungen selbst erstellt. Eingaben bleiben nur in diesem Browser.</div></footer>
+
+<dialog id="dlg" aria-labelledby="dlg-t"><div class="dlg" id="dlg-in"></div></dialog>
+
+<script>
+const DATA={"taschenkarte":{"titel":"Taschenkarte Stabsarbeit","quelle":"Dezernat K2, IdF NRW · 2026 · DezernatK2@idf.nrw.de","siebenPunktePlan":[{"nr":1,"titel":"Einsatzstelle strukturieren","text":"Vorhandene Einsatzstruktur prüfen; Schwerpunkte identifizieren; Aufgabenpakete definieren; Einsatzabschnitte prüfen bzw. bilden; Einsatzabschnittsleiter benennen; Aufträge/Befehle erteilen; Abschnittsgrenzen festlegen"},{"nr":2,"titel":"Bereitstellungsräume festlegen","text":"BR-EL planen und benötigte Anzahl ermitteln; Meldeköpfe zuteilen und alarmieren; Raum- und Platzbedarf definieren; Konzepte und Vorplanungen überprüfen; Aufträge/Befehle zur Führung des BR-EL erteilen"},{"nr":3,"titel":"Eigenschutz vorsehen","text":"Technischer Eigenschutz; Medizinischer Eigenschutz; Psychosozialer Eigenschutz; zentral oder dezentral?; Ressourceneinsatz beachten; alle taktischen Einheiten informieren"},{"nr":4,"titel":"Grundschutz zuweisen","text":"Abstimmung mit der Leitstelle suchen; Zuweisen von Einheiten des RD und der FW für den Grundschutz im Zuständigkeitsbereich; Alarmierungswege festlegen"},{"nr":5,"titel":"Kommunikation planen","text":"Einsatzstruktur kommunikativ abbilden und fortschreiben; Befehl- und Meldewege aufzeigen; Umsetzen des Fleetmappings; Planung des Bedarfs an zusätzlichen Rufgruppen; weitere Kommunikationsmittel einsetzen und Redundanzen schaffen"},{"nr":6,"titel":"Vorhandene Kräfte einsetzen","text":"Einsetzen der verfügbaren (örtlichen) Einheiten, soweit sinnvoll; offene Nachforderungen der Abschnitte bedienen"},{"nr":7,"titel":"Nachforderung kalkulieren","text":"Sofort-Bedarfe ermitteln; Nachforderungen der Abschnitte und Stellen sammeln und auswerten; überörtlich nachfordern, um BR-EL zu füllen; NRW-Konzepte beachten"}],"stab":{"leiter":"Leiter des Stabes","beigeordnet":["Fachberater","Verbindungspersonen"],"sachgebiete":[{"id":"S1","name":"Personal / Innerer Dienst","gruppen":[{"titel":"Führen des inneren Stabsdienstes","punkte":["Festlegen und Sicherstellen des Geschäftsablaufes","Einrichten und Sichern der Führungsräume","Bereitstellen der Ausstattung","Ablösung des Stabspersonals","Anforderung von Fachberater(n) und Verbindungspersonen"]},{"titel":"Bereitstellen der Einsatzkräfte","punkte":["Alarmieren überörtlicher Einsatzkräfte, Ämter, Behörden, Organisationen und Reserven","Einrichten von Bereitstellungsräumen der Einsatzleitung – Absprache mit S3","Einrichten von Lotsenstellen für ortsunkundige Kräfte","Führen einer Kräfteübersicht"]}]},{"id":"S2","name":"Lage","gruppen":[{"titel":"Lagefeststellung","punkte":["Informationsbeschaffung, -bewertung und -auswertung (Erkunder, Lagemeldungen)"]},{"titel":"Lagedarstellung","punkte":["Lagekartenführung","Führen der Einsatzübersicht: Schadensart, -ausmaß, -anzahl; Einsatzabschnitte, -schwerpunkte"]},{"titel":"Prognose","punkte":[]},{"titel":"Information","punkte":["Meldewesen entsprechend Erlass, Aufsichtsbehörden (BezReg, IM)","Unterrichten nachgeordneter Stellen und der Befehlsstelle"]},{"titel":"Einsatzdokumentation","punkte":["Führen des Einsatztagebuches","Sammeln und Sicherstellen der Informationsträger","Erstellen des Abschlussberichtes"]}],"hinweis":"Mit Arbeitsaufnahme des Krisenstabes geht das Meldewesen auf diesen über."},{"id":"S3","name":"Einsatz","gruppen":[{"titel":"Koordination der Einsatzdurchführung","punkte":["Lagebeurteilung","Fassen des Entschlusses über die Einsatzdurchführung (Priorisierung, Abschnittsbildung, Struktur)","Örtliche Kräfte einsetzen und Nachforderungen bedienen","Beaufsichtigen und Kontrollieren der Einsatzdurchführung","Zusammenarbeiten mit Ämtern, Behörden und Organisationen (z.B. Polizei, Gesundheit, Umwelt, UWB)","Veranlassen von Sofortmaßnahmen für gefährdete Bevölkerung (z.B.: Warnung)"]},{"titel":"Ordnung des Schadensgebietes","punkte":["Festlegen der Führungsorganisation","Festlegen der Bereitstellungsräume und der Befehlsstelle","Einrichten von Sammelstellen","Festlegen und Freihalten von An- und Abmarschwegen","Anordnen von Absperrmaßnahmen und Räumungen","Grundschutz zuweisen, Abstimmung mit der Leitstelle"]},{"titel":"Antizipation","punkte":[]}]},{"id":"S4","name":"Versorgung","gruppen":[{"titel":"Sicherstellen der","punkte":["Versorgungsorganisation","Materialerhaltung für das Gerät"]},{"titel":"Heranziehen von","punkte":["Hilfsmitteln (z.B. Baustoffe, Tankkraftwagen, Räum- und Hebegeräte, Abstützmaterial)"]},{"titel":"Bereitstellen von","punkte":["Eigenschutz für Einsatzkräfte (medizinisch, technisch, psychosozial)","Verbrauchsgütern und Einsatzmitteln (z.B. Löschmittel, Kraftstoff, Atemschutzgeräte)","Verpflegung und Logistik","Unterkünften für Einsatzkräfte"]}]},{"id":"S5","name":"Presse- und Medienarbeit","gruppen":[{"titel":"Presse- und Medieninformation","punkte":["Sammeln, Auswählen und Aufbereiten von Informationen aus dem Einsatz","Erfassen, Dokumentieren und Auswerten der Presse- und Medienlage"]},{"titel":"Presse- und Medienbetreuung","punkte":["Informieren, Führen und Unterbringen der Presse- und Medienvertreter","Vorbereiten und Durchführen von Presse- und Medienkonferenzen"]},{"titel":"Presse- und Medienkoordination","punkte":["Bündeln, Abstimmen und Steuern der Presse- und Medienarbeit","Halten des ständigen Kontakts mit Presse und Medien"]},{"titel":"Presse- und Medieneinbindung in die Schadenbekämpfung","punkte":["Veranlassen und Betreuen von Informationstelefonen","Veranlassen von Warn- und Suchhinweisen für die Bevölkerung"]}],"hinweis":"Mit Arbeitsaufnahme des Krisenstabes arbeitet das S5 dem BuMA zu."},{"id":"S6","name":"Informations- und Kommunikationswesen","gruppen":[{"titel":"Planen des Informations- und Kommunikationseinsatzes","punkte":["Feststellen des Ist-Zustands der Funk- und Führungsorganisation","Anfordern von Rufgruppen über TTB","Schnittstellen zu anderen BOS","Ermitteln des Kräfte- und Materialbedarfs für den Kommunikationsbetrieb","Ausstattung der Befehlsstellen","fortlaufende Prognose mit S1, S3 und S4 bezüglich weiterer Bedarfe"]},{"titel":"Durchführen des Informations- und Kommunikationseinsatzes","punkte":["Führen der Informations- und Kommunikationseinheiten","Gewährleisten der Kommunikationssicherheit","Übermitteln von Befehlen, Meldungen und Informationen","Dokumentieren und Überwachen des Kommunikationsbetriebes","Einrichten von Meldediensten","Kontaktdaten der Ansprechstellen"]}]}]},"zeichen":{"hinweis":"Taktische Zeichen laut Taschenkarte (Zeichnung nach der Karte neu anfertigen, nicht kopieren)","gruppen":[{"titel":"Führungsstellen","eintraege":[{"id":"el","name":"Einsatzleitung","kurz":"EL"},{"id":"eal","name":"Einsatzabschnittsleitung","kurz":"EAL"},{"id":"lts","name":"Einheitliche Leitstelle für den Brandschutz, die Hilfeleistung, den Katastrophenschutz und den Rettungsdienst","kurz":"LtS"}]},{"titel":"Führungskräfte","eintraege":[{"id":"fk-el","name":"Einsatzleiter","kurz":"EL"},{"id":"fk-eal","name":"Einsatzabschnittsleiter","kurz":"EAL"},{"id":"fk-orgl","name":"Organisatorischer Leiter","kurz":"OrgL"},{"id":"fk-lna","name":"Leitender Notarzt","kurz":"LNA"}]},{"titel":"Betroffene Personen","eintraege":[{"id":"p","name":"Person"},{"id":"p-verl","name":"verletzte Person"},{"id":"p-versch","name":"verschüttete Person"},{"id":"p-tot","name":"tote Person"},{"id":"p-verm","name":"vermisste Person"}]},{"titel":"Schäden","eintraege":[{"id":"s-besch","name":"angeschlagen, beschädigt"},{"id":"s-teil","name":"teilzerstört, teilweise zusammengebrochen"},{"id":"s-total","name":"total zerstört, zusammengebrochen"},{"id":"s-teilbl","name":"teilblockiert"},{"id":"s-bl","name":"blockiert"}]},{"titel":"Brände","eintraege":[{"id":"b-entst","name":"Entstehungsbrand"},{"id":"b-fort","name":"fortentwickelter Brand"},{"id":"b-voll","name":"Vollbrand"}]},{"titel":"Besondere Gefahren","eintraege":[{"id":"g-hinw","name":"Hinweis auf vermutete Gefahr durch …"},{"id":"g-akut","name":"Akute Gefahr durch …"}]},{"titel":"Brandschutz / Feuerwehr","eintraege":[{"id":"loeschzug","name":"Löschzug"}]},{"titel":"Sanitäts- / Rettungswesen","eintraege":[{"id":"rtw","name":"Rettungswagen"},{"id":"nef","name":"Notarzteinsatzfahrzeug"},{"id":"pa","name":"Patientenablage"},{"id":"pa-arzt","name":"arztbesetzte Patientenablage"},{"id":"bhp","name":"Behandlungsplatz"}]},{"titel":"Räume an der Einsatzstelle","eintraege":[{"id":"vs-verpf","name":"Versorgungsstelle Verpflegung"},{"id":"vs-inst","name":"Versorgungsstelle Instandhaltung"},{"id":"vs-verbr","name":"Versorgungsstelle Verbrauchsgüter"},{"id":"hlp","name":"Hubschrauberlandeplatz"}]},{"titel":"Bereitstellungsraum","eintraege":[{"id":"br","name":"Bereitstellungsraum"},{"id":"br-mk","name":"Bereitstellungsraum mit Meldekopf"}]},{"titel":"Größenordnungszeichen (stehen über dem Zeichen für Einheit)","eintraege":[{"id":"gz-trupp","name":"Trupp","kurz":"•"},{"id":"gz-staffel","name":"Staffel","kurz":"• •"},{"id":"gz-gruppe","name":"Gruppe","kurz":"• • •"},{"id":"gz-zug","name":"Zug","kurz":"••• mit Strich"},{"id":"gz-verband","name":"Verband (Bereitschaft)","kurz":"Balken"}]}],"staerkeangaben":"Stärkeangaben: 1 / 3 / 15 / 19 = Helfer (Gruppen- und Staffelführer) / Verbands- und Zugführer / Gesamt. Beispiel 1 / 3 / 15 / 19: 1 Führer, 3 Unterführer, 15 Helfer, Gesamt 19.","zeitangaben":"010241mai26 = 01. Mai 2026, 02:41 Uhr; Kurzform 010241","farben":[{"farbe":"Schwarz","hex":"#111","text":"Allgemeine Lagen wie z.B. Gelände, Straßen und Zufahrtswege, Gebäude etc."},{"farbe":"Rot","hex":"#d6221e","text":"Gefahrenlage wie z.B. Brände, Schäden, betroffene Personen"},{"farbe":"Blau","hex":"#1b5fc4","text":"Eigene Lage wie z.B. Kräfte, EA-Grenzen, Maßnahmen etc."},{"farbe":"Grün","hex":"#2e9a46","text":"Sonstiges, Tendenzen wie z.B.: Wind, Ausbreitung"}]}},"katastrophenschutzlager":{"titel":"Katastrophenschutzlager NRW","quelle":"Hrsg.: IdF NRW, Dezernat K2 – Krisenmanagement und Forschung · Stand: Oktober 2026 · www.idf.nrw.de","zusammenfassung":[{"thema":"Standort","punkte":["Nähe Münster"]},{"thema":"Vorlaufzeit","punkte":["maximal 4 Stunden + Fahrzeit","Parallel eigene Logistik prüfen"]},{"thema":"Zweck","punkte":["Ergänzung kommunaler Einsatzmittel","Unterstützung bei langanhaltenden Lagen"]},{"thema":"Anforderung","punkte":["Nur vollständige Paletten","Palettenbezeichnung + Stückzahl","Betriebsmittel sind selbst zu stellen!"]},{"thema":"Anforderungsweg","punkte":["Über die Sofortmeldung stellt die örtliche Leitstelle das Anforderungsersuchen der Einsatzmittel. Zu nennen ist: die Kennzeichnung der gewählten Palette; eine benötigte Stückzahl; wird der Transport selbstständig organisiert oder durch die zuständige BezReg."]},{"thema":"Kosten","punkte":["Das Land NRW trägt die Kosten für die Anmietung der Lagerflächen, die Beschaffung der Erstausstattung und den Unterhalt. Die Kosten der Ersatzbeschaffung trägt die anfordernde Stelle.","Nach Übergabe sind die Einsatzmittel Eigentum des Anfordernden. Eine Rückgabe ist nicht möglich."]}],"ziel":["Schnelle Bereitstellung der Einsatzmittel","Einsatzmittel vorhalten, die kommunal nicht immer vorgehalten werden"],"lager":["Nähe Münster","Ausgabe der Einsatzmittel jederzeit möglich","Vorlaufzeit maximal 4 Stunden"],"aufbau":["Einsatzmittel sind auf Europaletten verladen","Abruf der Einsatzmittel unter Benennung der Paletten und notwendiger Stückzahl","Es können keine einzelnen Bestandteile einer Palette angefordert werden, nur vollständig","Betriebsmittel sind selbst zu stellen, eine entsprechende eigene Logistik muss parallel aufgebaut werden","Es werden Einsatzmittel für folgende Szenarien vorgehalten: Vegetationsbrandlagen, Sturmlagen, Hochwasserlagen, Unterbringungsmöglichkeiten und Versorgung von Einsatzkräften"],"anforderungsweg":{"ablauf":["Einsatzleitung stellt über ihre örtliche Leitstelle das Ersuchen per Anlage in der Sofortmeldung","Klare Bezeichnung der Einsatzmittel (Paletten) und benötigte Stückzahl an Paletten","Klar stellen: Transport durch eigene Kräfte oder durch die Bezirksregierung"],"beispiel":"Für die anhaltende Unwetterlage werden zwei Paletten 3.1 Pumpen und zwei Paletten 3.2 Stromaggregate benötigt. Der Transport wird mit eigenen Kräften gestellt."},"kosten":["Nach Übergabe der Materialsätze gehen diese in das Eigentum der Anfordernden über.","Eine Rückgabe ist nicht vorgesehen.","Die Kosten der Ersatzbeschaffung der angeforderten Materialsätze sind durch die anfordernde Stelle zu tragen."],"katalog":[{"nr":"1","szenario":"Vegetationsbrandlagen","gruppen":[{"nr":"1.1","name":"Schläuche und Armaturen","paletten":24,"positionen":[{"name":"C-Schlauch","laenge":"15 m","anzahl":"20 Stück"},{"name":"D-Schlauch","laenge":"15 m","anzahl":"20 Stück"},{"name":"D-Schlauch","laenge":"30 m","anzahl":"20 Stück"},{"name":"D-Hohlstrahlrohr","anzahl":"10 Stück"},{"name":"Verteiler C-DCD","anzahl":"10 Stück"},{"name":"Übergangsstück C-D","anzahl":"10 Stück"},{"name":"C-Mehrzweckstrahlrohr","anzahl":"10 Stück"},{"name":"D-Mehrzweckstrahlrohr","anzahl":"10 Stück"}]},{"nr":"1.2","name":"Werkzeuge","paletten":24,"positionen":[{"name":"Gorgui","anzahl":"10 Stück"},{"name":"Pulaski","anzahl":"10 Stück"},{"name":"Forest Fire Schaufel","anzahl":"10 Stück"},{"name":"Feuerpatsche","anzahl":"10 Stück"},{"name":"Löschrucksack (20 Liter)","anzahl":"10 Stück"}]},{"nr":"1.3","name":"Schutzausrüstung","paletten":12,"positionen":[{"name":"Feuerschutzkleidung Vegetationsbrand Jacke und Hose – S Gard Ranger Lite","anzahl":"90 Stück"},{"name":"Schutzhandschuhe – Askö Split Rescue","anzahl":"90 Stück (Paare)"},{"name":"FFP-3-Masken","anzahl":"90 Stück je 5 Masken"}]},{"nr":"1.4","name":"Helme","paletten":12,"positionen":[{"name":"Helm mit Zubehör Dräger HPS 3500 Basic","anzahl":"70 Stück"}]},{"nr":"1.5","name":"Faltbehälter – 30 m³","stueck":"10 Stück"}]},{"nr":"2","szenario":"Sturmlagen","gruppen":[{"nr":"2.1","name":"Helme","paletten":12,"je":"20 Stück"},{"nr":"2.2","name":"Set Motorkettensägen","paletten":40,"je":"24 Stück"}]},{"nr":"3","szenario":"Hochwasserlagen","gruppen":[{"nr":"3.1","name":"Pumpen","paletten":72,"positionen":[{"name":"Satz Tauchpumpe mit Zubehör Spechtenhauser Tegernsee TP 4/1","anzahl":"2 Stück"},{"name":"Satz Schmutzwasserpumpen mit Zubehör Spechtenhauser Mini-Chiemsee 1500","anzahl":"1 Stück"},{"name":"Leitungsroller 50 m (230 V, 3 Abgänge)","anzahl":"3 Stück"},{"name":"Wathose Ausführung S5 (Größe 45)","anzahl":"3 Stück"}]},{"nr":"3.2","name":"Stromaggregate","paletten":36,"positionen":[{"name":"Tragbare Stromerzeuger","zusatz":"Eisemann BSKA 14 E; RSS Cube 14 IT/TN mit Abgasschlauch und Starterbatterie","anzahl":"2 Stück"}]},{"nr":"3.3","name":"Sandsäcke","paletten":70,"je":"10.000 Stück"}]},{"nr":"4","szenario":"Logistik (Unterbringung und Versorgung)","gruppen":[{"nr":"4.1","name":"Aufenthaltszelte","paletten":12,"je":"4 Stück"},{"nr":"4.2","name":"Feldbetten","paletten":78,"je":"40 Stück"},{"nr":"4.3","name":"Klapptisch und -bänke","paletten":26,"je":"14 Stück"},{"nr":"4.4","name":"Mobile Tankstelle","stueck":"10 Stück, Fassungsvolumen 1.000 Liter"}]}],"hinweisPaletten":"Die Zahl in Klammern (z. B. 72 Paletten) ist die im Lager vorgehaltene Menge an Paletten der jeweiligen Gruppe; angefordert werden ganze Paletten."},"eva":{"titel":"EVA: Sachgebiet 4 – Versorgung","modul":"Modul 3.5 »Strategische Leitung und Führung« – EVA-Aufgabe","hilfsmittel":"Lernunterlage K2-140 „Das Sachgebiet 4 - Versorgung“, FwDV 100","szenario":{"allgemeineLage":"Musterstadt, Juni, moderates Wetter, Werktag, 13 Uhr","gefahrenlage":"Gasexplosion aus unbekannter Ursache in einem Mehrfamilienhaus (12 Parteien, -1/E/+3, geschlossene Bauweise). Das Erdgeschoss und die Obergeschosse sind vollständig zerstört, das Kellergeschoss ist unter dem Schutt begraben (siehe Foto). Die Erkundung ergab, dass 18 Personen in und neben dem Gebäude verletzt sind und 2 Personen vermisst werden.","eigeneLage":"Nach aktuellem Stand wurde die Brandbekämpfung und Rettung der Verletzten vom ersteintreffenden LZ der BF weitgehend bewältigt. Ein RZ der BF, ein LZ der FF und die Stadtwerke sind auf Anfahrt. Auch MANV 20 ist alarmiert und teilweise eingetroffen. Der Führungsstab übernimmt jetzt die Einsatzleitung in Führungsstufe D. Der Leiter des Stabes legt einen Schwerpunkt auf die Suche der zwei Vermissten in den Trümmern, hält deren Überlebenschancen aber für minimal. Gebildet werden ein EA Gebäude (3 Züge, Führungsstufe C) und ein EA Medizin (Einheiten aus MANV 20, Führungsstufe C).","rolle":"Sie leiten das Sachgebiet 4 Versorgung. Das ist vermutlich Neuland für Sie. Deshalb lesen Sie zur Einarbeitung die Lernunterlage K2-140."},"aufgaben":[{"nr":1,"titel":"Eigenschutz","text":"a) Legen Sie den Umfang des Eigenschutzes fest. b) Mit wem müssen Sie sich dabei abstimmen? c) Wie binden Sie den Eigenschutz führungstechnisch so an, dass zwischen „Mayday“ und „Beginn Rettung“ höchstens eine Minute vergeht? d) Wie stellen Sie sicher, dass der Eigenschutz nicht früher oder später wie eine „gewöhnliche“ Verstärkung oder Ablösung vor Ort in den Einsatz gebracht wird?"},{"nr":2,"titel":"Warmverpflegung","text":"Lagebesprechung 14 Uhr: Die Trümmersuche war bislang ohne Erfolg und soll laut Einsatzleiter bis 22 Uhr fortgesetzt werden. Ihr Vorschlag als Sachgebietsleiter, am späten Nachmittag Warmverpflegung für 100 Einsatzkräfte ausgeben zu lassen, wird befürwortet. Die Feuerwehr Musterstadt hat hierfür keine Einheit vorab festgelegt oder anderweitige Vorplanungen getroffen. Überlegen Sie drei Optionen und begründen Sie, welche Sie wählen würden."},{"nr":3,"titel":"Kosten","text":"Bis 16:30 Uhr haben Sie mit Ihren beiden Sachbearbeitenden Eigenschutz, Kaltgetränke, Warmverpflegung, Kraftstoffnachschub und Mobiltoiletten organisiert. Plötzlich fällt Ihnen auf, dass dadurch erhebliche Kosten auf die Stadtverwaltung Musterstadt zukommen werden. Was können Sie nun tun?"}],"hinweis":"Für diese Aufgaben gibt es keine Musterlösung. Bitte besprechen Sie die Ergebnisse mit anderen Teilnehmenden. Idealerweise erkennen Sie dabei die jeweiligen Vor- und Nachteile der gewählten Lösungen. Ansonsten: Fragen Sie bitte morgen den Dozenten im S4-Unterricht.","foto":"Das Foto im PDF (Trümmerlage nach Gasexplosion, von AP) wird NICHT übernommen; stattdessen eine selbst gezeichnete Lageskizze mit taktischen Zeichen."}};
+/* ===== gemeinsame Helfer (in beide Varianten inline eingebettet) ===== */
+const TK = DATA.taschenkarte, KSL = DATA.katastrophenschutzlager, EVA = DATA.eva;
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+function lsGet(k, def) { try { const v = localStorage.getItem(k); return v == null ? def : JSON.parse(v); } catch (e) { return def; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function copyText(text, done) {
+  const fallback = () => {
+    try {
+      const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.select();
+      const ok = document.execCommand && document.execCommand('copy'); document.body.removeChild(ta); done(!!ok);
+    } catch (e) { done(false); }
+  };
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => done(true), fallback);
+    else fallback();
+  } catch (e) { fallback(); }
+}
+
+/* ===== Taktische Zeichen: selbst gezeichnet (viewBox 0 0 80 60), Linienfarbe = currentColor ===== */
+const YEL = '#ffe600', INK = '#111';
+const _p = (d, o) => { o = o || {}; return `<path d="${d}" fill="${o.f || 'none'}" stroke="${o.s || 'currentColor'}" stroke-width="${o.w || 3}" stroke-linecap="round" stroke-linejoin="round"${o.x || ''}/>`; };
+const _r = (x, y, w, h, o) => { o = o || {}; return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${o.rx || 0}" fill="${o.f || 'none'}" stroke="${o.s || 'currentColor'}" stroke-width="${o.w || 3}" stroke-linejoin="round"/>`; };
+const _c = (cx, cy, r, o) => { o = o || {}; return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${o.f || 'none'}" stroke="${o.s || 'none'}" stroke-width="${o.w || 3}"/>`; };
+const _t = (t, x, y, s, f) => `<text x="${x}" y="${y}" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="${s}" fill="${f || 'currentColor'}">${t}</text>`;
+const DIA = 'M40 4L64 30L40 56L16 30Z';
+function hatch(x0, y0, x1, y1, step, w) {
+  let d = '';
+  for (let b = y0 - x1; b <= y1 - x0; b += step) { const a = Math.max(x0, y0 - b), c = Math.min(x1, y1 - b); if (a < c) d += `M${a} ${a + b}L${c} ${c + b}`; }
+  for (let b = x0 + y0; b <= x1 + y1; b += step) { const a = Math.max(x0, b - y1), c = Math.min(x1, b - y0); if (a < c) d += `M${a} ${b - a}L${c} ${b - c}`; }
+  return _p(d, { w: w || 1.4 });
+}
+const ydisc = (inner) => _c(40, 30, 23, { f: YEL, s: 'currentColor', w: 3.5 }) + inner;
+const fk = (abbr) => _p('M22 8L40 30L22 52L4 30Z') + _p('M4 30L22 21L40 30', { w: 2 }) + _t(abbr, 60, 35, 14);
+const tri = (n) => { let z = ''; const xs = n === 1 ? [40] : n === 2 ? [32, 48] : [26, 40, 54]; xs.forEach(x => { z += `M${x - 5} 50L${x - 1} 26L${x + 2} 40L${x + 5} 22`; }); return _p('M40 6L68 52L12 52Z') + _p(z, { w: 2.2 }); };
+const fzg = (lbl, plus) => _r(8, 10, 64, 30) + _p('M8 26H72', { w: 2 }) + _t(lbl, 24, 22, 11) + (plus ? _p('M40 29V38M35.5 33.5H44.5', { w: 2.4 }) : '') + _c(22, 47, 5, { s: 'currentColor', w: 2.6 }) + _c(58, 47, 5, { s: 'currentColor', w: 2.6 });
+const dots = (n, strich) => { const xs = n === 1 ? [40] : n === 2 ? [32, 48] : [24, 40, 56]; return xs.map(x => _c(x, 32, 6, { f: 'currentColor' })).join('') + (strich ? _p('M16 18H64', { w: 3 }) : ''); };
+const SYMS = {
+  el: () => _r(10, 10, 60, 34, { f: YEL }) + _p('M10 10V54') + _t('EL', 40, 35, 22, INK),
+  eal: () => _r(10, 10, 60, 34, { f: YEL }) + _p('M10 10V54') + _t('EAL', 40, 34, 20, INK),
+  lts: () => _c(40, 36, 19, { f: YEL, s: 'currentColor', w: 3.5 }) + _p('M17 24L40 9L63 24') + _p('M22 22L58 22', { w: 2 }) + _t('LtS', 40, 41, 15, INK),
+  'fk-el': () => fk('EL'), 'fk-eal': () => fk('EAL'), 'fk-orgl': () => fk('OrgL'), 'fk-lna': () => fk('LNA'),
+  p: () => _p(DIA),
+  'p-verl': () => _p(DIA) + _p('M40 4V56', { w: 2.4 }),
+  'p-versch': () => _p('M40 14L54 30L40 46L26 30Z') + _p('M40 3V14M40 46V57M26 30H54', { w: 2.6 }),
+  'p-tot': () => _p(DIA) + _p('M40 15V45M25 30H55', { w: 2.6 }),
+  'p-verm': () => `<g opacity=".55" transform="translate(5 -3)">${_p(DIA, { w: 2 })}</g>` + _p(DIA),
+  's-besch': () => _p('M20 8L60 52M60 8L20 52'),
+  's-teil': () => _p('M20 8L60 52M60 8L20 52') + _p('M29 8L51 52M51 8L29 52M40 8V52', { w: 1.6 }),
+  's-total': () => hatch(14, 6, 66, 54, 7, 1.6) + _p('M14 6L66 54M66 6L14 54', { w: 2.4 }),
+  's-teilbl': () => _p('M33 8V52', { w: 1.8 }) + _p('M44 8V52', { w: 3 }),
+  's-bl': () => _p('M20 8V52M32 8V52M44 8V52M56 8V52', { w: 2.2 }),
+  'b-entst': () => tri(1), 'b-fort': () => tri(2), 'b-voll': () => tri(3),
+  'g-hinw': () => _p('M10 8H70L40 54Z', { w: 2.6 }) + _t('?', 40, 33, 24),
+  'g-akut': () => _p('M10 8H70L40 54Z', { w: 3.2 }) + _t('!', 40, 33, 24),
+  loeschzug: () => _r(8, 18, 62, 34, { f: '#d6221e', s: 'currentColor' }) + _p('M70 18L44 35L70 52', { s: INK, w: 3 }) + _p('M8 18L8 52', { w: 3 }) + _c(24, 9, 4.5, { f: 'currentColor' }) + _c(40, 9, 4.5, { f: 'currentColor' }) + _c(56, 9, 4.5, { f: 'currentColor' }),
+  rtw: () => fzg('RTW', false), nef: () => fzg('NEF', true),
+  pa: () => _p('M40 6V54M26 20H54M31 10V30M49 10V30', { w: 2.6 }),
+  'pa-arzt': () => _p('M40 4V56M27 15H53M27 38H53', { w: 2.6 }),
+  bhp: () => _c(40, 30, 22, { s: 'currentColor' }) + _p('M40 8V52M18 30H62', { w: 2.4 }),
+  'vs-verpf': () => ydisc(_p('M50 19A13 13 0 1 0 50 41', { s: INK, w: 3.4 }) + _p('M36 30H54', { s: INK, w: 3 })),
+  'vs-inst': () => ydisc(_p('M23 30H57', { s: INK, w: 3.4 }) + _c(23, 30, 5, { s: INK, w: 3 }) + _c(57, 30, 5, { s: INK, w: 3 })),
+  'vs-verbr': () => ydisc(_p('M27 17H53L40 31V45M32 45H48', { s: INK, w: 3.4 })),
+  hlp: () => ydisc(_p('M25 19H55M40 19V40M30 40H50', { s: INK, w: 3.4 }) + _c(40, 19, 2.4, { f: INK })),
+  br: () => ydisc(_r(25, 22, 30, 18, { s: INK, rx: 5, w: 3 }) + _p('M25 27L40 36L55 27', { s: INK, w: 2.4 })),
+  'br-mk': () => ydisc(_t('M', 40, 28, 17, INK) + _r(27, 32, 26, 12, { s: INK, rx: 4, w: 2.6 })),
+  'gz-trupp': () => dots(1), 'gz-staffel': () => dots(2), 'gz-gruppe': () => dots(3), 'gz-zug': () => dots(3, true),
+  'gz-verband': () => `<rect x="33" y="14" width="14" height="32" fill="currentColor"/>`,
+  /* Hilfszeichen, nicht auf der Taschenkarte */
+  'h-gebaeude': () => _r(12, 10, 56, 40, { w: 2.4 }) + _p('M12 24H68', { w: 1.4 }) + _p('M26 24V50M54 24V50', { w: 1.4 }),
+  'h-wind': () => _p('M10 30H66M52 17L68 30L52 43', { w: 3.2 })
+};
+function sign(id, cls, extra) {
+  const f = SYMS[id]; if (!f) return '';
+  return `<svg class="sg ${cls || ''}" viewBox="0 0 80 60" aria-hidden="true" focusable="false" ${extra || ''}>${f()}</svg>`;
+}
+const HELP = [
+  { id: 'h-gebaeude', name: 'Gebäude (Hilfszeichen)', group: 'Hilfszeichen' },
+  { id: 'h-wind', name: 'Wind-/Ausbreitungspfeil (Hilfszeichen)', group: 'Hilfszeichen' }
+];
+const ALLSIGNS = [];
+TK.zeichen.gruppen.forEach(g => g.eintraege.forEach(e => ALLSIGNS.push(Object.assign({ group: g.titel }, e))));
+const SIGNBY = {}; ALLSIGNS.concat(HELP).forEach(s => SIGNBY[s.id] = s);
+const SHORTNAME = { lts: 'Einheitliche Leitstelle (LtS)' };
+function signName(s) { return SHORTNAME[s.id] || s.name; }
+const FARBEN = TK.zeichen.farben; /* Schwarz Rot Blau Grün */
+const FKEY = { 'Schwarz': 'schwarz', 'Rot': 'rot', 'Blau': 'blau', 'Grün': 'gruen' };
+
+/* ===== Katastrophenschutzlager: Rechner ===== */
+const NUMW = ['null', 'eine', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf'];
+const KGROUPS = []; KSL.katalog.forEach(s => s.gruppen.forEach(g => KGROUPS.push(Object.assign({ szenario: s.szenario, snr: s.nr }, g))));
+function kMax(g) { return g.paletten != null ? g.paletten : 10; }
+function kUnit(g) { return g.paletten != null ? 'Palette' : 'Stück'; }
+function ersuchenText(sel, lage, transport) {
+  const parts = KGROUPS.filter(g => sel[g.nr] > 0).map(g => {
+    const n = sel[g.nr];
+    if (g.paletten != null) return (n <= 12 ? NUMW[n] : n) + (n === 1 ? ' Palette ' : ' Paletten ') + g.nr + ' ' + g.name;
+    return n + ' Stück ' + g.nr + ' ' + g.name.replace(/ – .*$/, '');
+  });
+  if (!parts.length) return '';
+  const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(', ') + ' und ' + parts[parts.length - 1];
+  const verb = parts.length === 1 && sel[KGROUPS.filter(g => sel[g.nr] > 0)[0].nr] === 1 ? 'wird' : 'werden';
+  const tr = transport === 'bezreg' ? 'wird durch die zuständige Bezirksregierung organisiert' : 'wird mit eigenen Kräften gestellt';
+  return `Für ${lage || 'die anhaltende Unwetterlage'} ${verb} ${list} benötigt. Der Transport ${tr}.`;
+}
+function positionsHtml(g) {
+  if (g.positionen) return '<ul class="pos">' + g.positionen.map(p => `<li><span>${esc(p.name)}${p.laenge ? ' · ' + esc(p.laenge) : ''}${p.zusatz ? '<em>' + esc(p.zusatz) + '</em>' : ''}</span><b>${esc(p.anzahl)}</b></li>`).join('') + '</ul>';
+  if (g.je) return `<p class="je">je Palette: <b>${esc(g.je)}</b></p>`;
+  if (g.stueck) return `<p class="je"><b>${esc(g.stueck)}</b></p>`;
+  return '';
+}
+/* Aufgabentext EVA 1 in a) bis d) zerlegen */
+function evaParts(t) {
+  const m = t.split(/\s(?=[a-d]\)\s)/);
+  return m.length > 1 ? m : [t];
+}
+const EVA_HINTS = {
+  1: [
+    ['7-Punkte-Plan', 'Punkt 3 „Eigenschutz vorsehen“: ' + TK.siebenPunktePlan[2].text + '.'],
+    ['Sachgebiet 4', 'Bereitstellen von: Eigenschutz für Einsatzkräfte (medizinisch, technisch, psychosozial).']
+  ],
+  2: [
+    ['Sachgebiet 4', 'Bereitstellen von: Verpflegung und Logistik; Unterkünften für Einsatzkräfte. Sicherstellen der Versorgungsorganisation.'],
+    ['Taschenkarte', 'Zeichen „Versorgungsstelle Verpflegung“ für die Lageskizze.'],
+    ['Katastrophenschutzlager', 'Szenario 4 „Logistik (Unterbringung und Versorgung)“: Aufenthaltszelte, Feldbetten, Klapptisch und -bänke, Mobile Tankstelle. Vorlaufzeit maximal 4 Stunden + Fahrzeit.']
+  ],
+  3: [
+    ['Katastrophenschutzlager', 'Kosten: Nach Übergabe sind die Einsatzmittel Eigentum des Anfordernden, eine Rückgabe ist nicht möglich; die Kosten der Ersatzbeschaffung trägt die anfordernde Stelle.'],
+    ['Sachgebiet 4', 'Heranziehen und Bereitstellen von Hilfsmitteln, Verbrauchsgütern und Einsatzmitteln (z.B. Löschmittel, Kraftstoff, Atemschutzgeräte).']
+  ]
+};
+
+</script>
+<script>
+(function(){
+  if(!/[?&]embed=1/.test(location.search))return;
+  const de=document.documentElement,pd=()=>{try{return parent.document.documentElement}catch(e){return null}};
+  de.classList.add('emb');
+  const sync=()=>{const p=pd();if(!p)return;de.setAttribute('data-theme',p.getAttribute('data-theme')==='light'?'light':'dark');
+    try{const cs=parent.getComputedStyle(parent.document.body),r=getComputedStyle(parent.document.documentElement);const a=r.getPropertyValue('--accent').trim();if(a){de.style.setProperty('--or',a);}document.body.style.background='transparent';}catch(e){}};
+  sync();const p=pd();if(p)new MutationObserver(sync).observe(p,{attributes:true,attributeFilter:['data-theme','data-tone','style']});
+  const rep=()=>{try{parent.postMessage({stk:'h',h:document.documentElement.scrollHeight},location.origin)}catch(e){}};
+  addEventListener('load',rep);new ResizeObserver(rep).observe(document.body);
+})();
+</script>
+<script>
+(function(){
+const TABS=[['plan','7-Punkte-Plan','7-Punkte'],['stab','Stab','Stab'],['zeichen','Zeichen','Zeichen'],['lager','Lager','Lager'],['eva','EVA','EVA']];
+$('#quelle').textContent=TK.quelle;
+$('#tabs').innerHTML=TABS.map(t=>`<button class="tab" role="tab" id="tab-${t[0]}" aria-controls="panel-${t[0]}" aria-selected="false" tabindex="-1" data-tab="${t[0]}"><span class="lg">${t[1]}</span><span class="sh" aria-hidden="true">${t[2]}</span><span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">${t[1]}</span></button>`).join('');
+$('#panels').innerHTML=TABS.map(t=>`<section class="panel" role="tabpanel" id="panel-${t[0]}" aria-labelledby="tab-${t[0]}" hidden></section>`).join('');
+function showTab(id,focus){
+  TABS.forEach(t=>{const on=t[0]===id;const b=$('#tab-'+t[0]);b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;$('#panel-'+t[0]).hidden=!on;if(on&&focus)b.focus();});
+  try{history.replaceState(null,'','#'+id)}catch(e){}
+  window.scrollTo(0,0);try{if(parent!==window)parent.postMessage({stk:'top'},location.origin)}catch(e){}
+}
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)showTab(b.dataset.tab)});
+$('#tabs').addEventListener('keydown',e=>{
+  const ids=TABS.map(t=>t[0]);const cur=ids.findIndex(i=>$('#tab-'+i).getAttribute('aria-selected')==='true');let n=-1;
+  if(e.key==='ArrowRight')n=(cur+1)%ids.length;else if(e.key==='ArrowLeft')n=(cur+ids.length-1)%ids.length;else if(e.key==='Home')n=0;else if(e.key==='End')n=ids.length-1;
+  if(n>=0){e.preventDefault();showTab(ids[n],true);}
+});
+const chev='<svg class="chev" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 7l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+/* ========== 7-Punkte-Plan ========== */
+const PL=TK.siebenPunktePlan;
+let done=lsGet('bvi_stk_plan',[]).filter(n=>n>=1&&n<=7);
+let openSet=new Set([1]);
+let game={mode:'order',order:[],picked:[],miss:0,q:null,score:0,asked:0,answered:false,msg:'',cls:''};
+function newGame(){
+  if(game.mode==='order'){game.order=shuffle(PL.map(p=>p.nr));game.picked=[];game.miss=0;game.msg='Tippe die Schritte in der richtigen Reihenfolge an: Was kommt als Erstes?';game.cls='';}
+  else{newQ();}
+}
+function newQ(){
+  const p=PL[Math.floor(Math.random()*7)];
+  const others=shuffle(PL.filter(x=>x.nr!==p.nr)).slice(0,3);
+  game.q={p,opts:shuffle([p].concat(others))};game.answered=false;game.msg='Welcher Punkt des Plans ist das?';game.cls='';
+}
+function renderPlan(){
+  const n=done.length,C=2*Math.PI*40;
+  const side=`<div class="card ringcard"><div class="ring" role="img" aria-label="Fortschritt ${n} von 7 Punkten"><svg viewBox="0 0 100 100"><circle class="tr" cx="50" cy="50" r="40" fill="none" stroke-width="11"/><circle class="pr" cx="50" cy="50" r="40" fill="none" stroke-width="11" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-n/7)}"/></svg><b>${n}<small>/7</small></b></div>
+    <div><h2 style="font-size:19px;font-weight:800">${n===7?'Alle 7 Punkte erledigt':'Dein Fortschritt'}</h2><p class="note" style="margin:4px 0 8px">Hake jeden Punkt ab, sobald du ihn sicher kennst.</p><button class="btn" data-act="plan-reset">Zurücksetzen</button></div></div>`;
+  const cards=PL.map(p=>{const d=done.includes(p.nr),o=openSet.has(p.nr);
+    return `<article class="card pcard ${d?'done':''}"><button class="pc-head" data-act="plan-open" data-nr="${p.nr}" aria-expanded="${o}" aria-controls="pb${p.nr}"><span class="num">${p.nr}</span><span class="t">${esc(p.titel)}</span>${chev}</button><button class="chk" data-act="plan-chk" data-nr="${p.nr}" aria-pressed="${d}" aria-label="Punkt ${p.nr} ${esc(p.titel)} als erledigt markieren"><span aria-hidden="true">✓</span></button><ul class="pc-body" id="pb${p.nr}" ${o?'':'hidden'}>${p.text.split(';').map(s=>`<li>${esc(s.trim())}</li>`).join('')}</ul></article>`}).join('');
+  let g='';
+  if(game.mode==='order'){
+    g=`<ol class="slots" aria-label="Deine Reihenfolge">${PL.map((p,i)=>{const pk=game.picked[i];return pk?`<li class="ok">${esc(PL[pk-1].titel)}</li>`:'<li><span class="note">…</span></li>'}).join('')}</ol>
+    <div class="opts">${game.order.filter(x=>!game.picked.includes(x)).map(x=>`<button class="opt" data-act="g-pick" data-nr="${x}">${esc(PL[x-1].titel)}</button>`).join('')}</div>`;
+    if(game.picked.length===7)g+=`<p class="msg ok">Geschafft${game.miss?' mit '+game.miss+' Fehlgriff'+(game.miss>1?'en':''):' ohne Fehler'}.</p>`;
+  } else if(game.q){
+    g=`<blockquote style="margin:8px 0;padding:10px 12px;background:var(--soft);border-radius:12px;font-size:14px">${game.q.p.text.split(';').map(s=>esc(s.trim())).join(' · ')}</blockquote><div class="opts">${game.q.opts.map(o=>`<button class="opt ${game.answered?(o.nr===game.q.p.nr?'right':(o.picked?'wrong':'')):''}" data-act="g-ans" data-nr="${o.nr}" ${game.answered?'disabled':''}>${o.nr}. ${esc(o.titel)}</button>`).join('')}</div><p class="note">Richtig: ${game.score} von ${game.asked}</p>`;
+  }
+  const gcard=`<div class="card game"><h3>Reihenfolge üben</h3><div class="seg" role="group" aria-label="Übungsart"><button data-act="g-mode" data-m="order" aria-pressed="${game.mode==='order'}">Reihenfolge</button><button data-act="g-mode" data-m="match" aria-pressed="${game.mode==='match'}">Zuordnung</button></div><p class="msg ${game.cls}" aria-live="polite">${esc(game.msg)}</p>${g}<button class="btn" data-act="g-new">Neu mischen</button></div>`;
+  $('#panel-plan').innerHTML=`<h2 class="h2">Der 7-Punkte-Plan</h2><p class="lead">Sieben Schritte, immer in dieser Reihenfolge. Tippe einen Punkt an, um die Einzelaufgaben zu sehen.</p><div class="plan-grid"><div>${cards}<button class="btn" data-act="plan-all">Alle ${openSet.size===7?'zuklappen':'aufklappen'}</button></div><div class="plan-side">${side}${gcard}</div></div>`;
+}
+$('#panel-plan').addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,nr=+b.dataset.nr;
+  if(a==='plan-open'){openSet.has(nr)?openSet.delete(nr):openSet.add(nr);}
+  else if(a==='plan-chk'){done=done.includes(nr)?done.filter(x=>x!==nr):done.concat(nr).sort();lsSet('bvi_stk_plan',done);}
+  else if(a==='plan-reset'){done=[];lsSet('bvi_stk_plan',done);}
+  else if(a==='plan-all'){openSet=openSet.size===7?new Set():new Set([1,2,3,4,5,6,7]);}
+  else if(a==='g-mode'){game.mode=b.dataset.m;game.score=0;game.asked=0;newGame();}
+  else if(a==='g-new'){game.score=0;game.asked=0;newGame();}
+  else if(a==='g-pick'){
+    if(nr===game.picked.length+1){game.picked.push(nr);game.msg=game.picked.length<7?'Richtig. Und weiter: welcher Punkt ist Nr. '+(game.picked.length+1)+'?':'Alle sieben in der richtigen Reihenfolge.';game.cls='ok';}
+    else{game.miss++;game.msg='Noch nicht: Gesucht ist Punkt Nr. '+(game.picked.length+1)+'.';game.cls='bad';}
+  }
+  else if(a==='g-ans'){const o=game.q.opts.find(x=>x.nr===nr);o.picked=true;game.answered=true;game.asked++;if(nr===game.q.p.nr){game.score++;game.msg='Richtig.';game.cls='ok';}else{game.msg='Das war Punkt '+game.q.p.nr+': '+game.q.p.titel+'.';game.cls='bad';}
+    renderPlan();setTimeout(()=>{newQ();renderPlan();const x=$('.opt',$('#panel-plan'));},1400);return;}
+  const keep=document.activeElement&&document.activeElement.dataset?{a:document.activeElement.dataset.act,n:document.activeElement.dataset.nr}:null;
+  renderPlan();
+  if(keep&&keep.a&&keep.a!=='g-pick'){const el=$(`#panel-plan [data-act="${keep.a}"]${keep.n?`[data-nr="${keep.n}"]`:''}`);if(el)el.focus();}
+});
+newGame();renderPlan();
+
+/* ========== Stab ========== */
+const SG=TK.stab.sachgebiete;
+const SCOL={S1:['#e8420a','#fff'],S4:['#f7860e','#1d1d1b'],S2:['#f25a0c','#fff'],S5:['#f9a010','#1d1d1b'],S3:['#f2650c','#fff'],S6:['#fdb40f','#1d1d1b']};
+const ORDER=['S1','S4','S2','S5','S3','S6'];
+const DEPS=[
+  {a:'S1',b:'S3',lab:'Absprache',text:'Bereitstellungsräume der Einsatzleitung: S1 richtet sie ein, in Absprache mit S3 (S3 legt die Bereitstellungsräume fest).'},
+  {a:'S6',b:'S1',lab:'Prognose',text:'S6 stimmt eine fortlaufende Prognose bezüglich weiterer Bedarfe mit S1 ab …'},
+  {a:'S6',b:'S3',lab:'Prognose',text:'… mit S3 …'},
+  {a:'S6',b:'S4',lab:'Prognose',text:'… und mit S4.'}
+];
+let selS='S4';
+const NP={S1:[62,58],S3:[258,58],S6:[160,128],S4:[160,206],S2:[44,196],S5:[276,196]};
+function renderStab(){
+  const boxes=ORDER.map(id=>{const s=SG.find(x=>x.id===id),c=SCOL[id];const rel=DEPS.some(d=>(d.a===selS&&d.b===id)||(d.b===selS&&d.a===id));
+    return `<button class="sbox ${rel?'rel':''}" style="background:${c[0]};color:${c[1]}" data-act="sg" data-id="${id}" aria-pressed="${id===selS}" aria-label="${id} ${esc(s.name)}"><span class="code">${id}</span><span class="nm">${esc(s.name)}</span></button>`}).join('');
+  const org=`<div class="card org"><div class="org-top"><span class="beig">${esc(TK.stab.beigeordnet[0])}</span><span class="leiter">${esc(TK.stab.leiter)}</span><span class="beig">${esc(TK.stab.beigeordnet[1])}</span></div><div class="org-trunk"></div><div class="sgrid">${boxes}</div></div>`;
+  const s=SG.find(x=>x.id===selS),c=SCOL[selS];
+  const myDeps=DEPS.filter(d=>d.a===selS||d.b===selS);
+  const det=`<div class="card det" id="stab-det"><div class="det-h"><span class="code" style="background:${c[0]};color:${c[1]}">${s.id}</span><div><h3 style="font-size:20px">${esc(s.name)}</h3><span class="note">${s.gruppen.length} Aufgabengruppen</span></div></div>
+   ${s.gruppen.map(g=>`<div class="grp"><h4>${esc(g.titel)}</h4>${g.punkte.length?'<ul>'+g.punkte.map(p=>`<li>${esc(p).replace(/(S[1-6])\b/g,'<span class="lnk">$1</span>')}</li>`).join('')+'</ul>':'<p class="empty">Auf der Taschenkarte ohne weitere Stichpunkte.</p>'}</div>`).join('')}
+   ${s.hinweis?`<div class="callout" style="margin-top:14px">${esc(s.hinweis)}</div>`:''}
+   ${myDeps.length?`<p class="note" style="margin:14px 0 0"><b>Verknüpft mit:</b> ${[...new Set(myDeps.map(d=>d.a===selS?d.b:d.a))].join(', ')}. Details im Beziehungsnetz.</p>`:''}</div>`;
+  /* Netz */
+  const edges=DEPS.map((d,i)=>{const A=NP[d.a],B=NP[d.b],on=d.a===selS||d.b===selS;return `<path class="ed ${on?'on':''}" d="M${A[0]} ${A[1]}L${B[0]} ${B[1]}"/><g><circle cx="${(A[0]+B[0])/2}" cy="${(A[1]+B[1])/2}" r="10" fill="${on?'var(--ord)':'var(--mute)'}"/><text x="${(A[0]+B[0])/2}" y="${(A[1]+B[1])/2+4}" text-anchor="middle" font-size="11" font-weight="800" fill="var(--card)">${i+1}</text></g>`}).join('');
+  const nodes=['S1','S2','S3','S4','S5','S6'].map(id=>{const p=NP[id],c=SCOL[id];return `<g class="nd" data-act="sg" data-id="${id}" tabindex="0" role="button" aria-label="${id} ${esc(SG.find(x=>x.id===id).name)} anzeigen"><rect x="${p[0]-30}" y="${p[1]-20}" width="60" height="40" rx="12" fill="${c[0]}"${id===selS?' style="stroke:var(--ink);stroke-width:4"':''}/><text x="${p[0]}" y="${p[1]+7}" text-anchor="middle" font-size="19" font-weight="800" fill="${c[1]}">${id}</text></g>`}).join('');
+  const net=`<div class="card pad net"><h3 style="font-size:18px;margin-bottom:4px">Beziehungsnetz</h3><p class="note" style="margin:0 0 6px">Abhängigkeiten, die in den Aufgabentexten der Karte stehen.</p><svg viewBox="0 0 320 250" role="img" aria-label="Netz: S1 mit S3 und S6 mit S1, S3 und S4 sind im Text verknüpft">${edges}${nodes}<text x="44" y="236" text-anchor="middle" font-size="10" fill="var(--mute)">→ Krisenstab</text><text x="276" y="236" text-anchor="middle" font-size="10" fill="var(--mute)">→ BuMA</text></svg><ul class="dep-list"><li><b>1</b><span>${DEPS[0].text}</span></li><li><b>2</b><span>${DEPS[1].text}</span></li><li><b>3</b><span>${DEPS[2].text}</span></li><li><b>4</b><span>${DEPS[3].text}</span></li><li><b>→</b><span>S2: Mit Arbeitsaufnahme des Krisenstabes geht das Meldewesen auf diesen über. S5: arbeitet dann dem BuMA zu.</span></li></ul></div>`;
+  $('#panel-stab').innerHTML=`<h2 class="h2">Der Stab</h2><p class="lead">Der Leiter des Stabes führt sechs Sachgebiete, beraten von Fachberatern und Verbindungspersonen. Tippe ein Sachgebiet an.</p><div class="stab-grid"><div>${org}<div style="height:14px"></div>${net}</div><div class="stab-det">${det}</div></div>`;
+}
+$('#panel-stab').addEventListener('click',e=>{const b=e.target.closest('[data-act="sg"]');if(!b)return;selS=b.dataset.id;renderStab();
+  const nb=$(`#panel-stab .sbox[data-id="${selS}"]`);if(nb&&e.target.closest('.sbox'))nb.focus();
+  if(window.innerWidth<1000){const d=$('#stab-det');if(d)d.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'});}});
+$('#panel-stab').addEventListener('keydown',e=>{const b=e.target.closest('.nd');if(b&&(e.key==='Enter'||e.key===' ')){e.preventDefault();selS=b.dataset.id;renderStab();$(`#panel-stab .nd[data-id="${selS}"]`).focus();}});
+renderStab();
+
+/* ========== Zeichen ========== */
+let zs={view:'ref',color:'schwarz',q:'',grp:'Alle',quiz:null,bd:{fuehrer:1,unter:3,helfer:15,unit:'loeschzug',size:'gz-zug',txt:'1 / 3 / 15 / 19',time:'2026-05-01T02:41'}};
+const MON=['jan','feb','mrz','apr','mai','jun','jul','aug','sep','okt','nov','dez'];
+function zeitCode(v){const m=/^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)/.exec(v||'');if(!m)return '';return m[3]+m[4]+m[5]+MON[+m[2]-1]+m[1].slice(2);}
+function zCard(s,i){return `<button class="zc" data-act="zopen" data-id="${s.id}" aria-label="${esc(signName(s))}"><span class="ico c-${zs.color}">${sign(s.id)}</span><span class="nm">${esc(signName(s))}${s.kurz&&!/^gz/.test(s.id)&&s.kurz!==signName(s)?' <span class="note">('+esc(s.kurz)+')</span>':''}</span></button>`}
+function renderZeichen(){
+  const root=$('#panel-zeichen');
+  const sub=`<div class="seg" role="tablist" aria-label="Ansicht" style="margin-bottom:14px">${[['ref','Nachschlagen'],['quiz','Zeichen-Quiz'],['build','Baukasten']].map(v=>`<button role="tab" aria-selected="${zs.view===v[0]}" data-act="zview" data-v="${v[0]}">${v[1]}</button>`).join('')}</div>`;
+  let body='';
+  const legend=`<div class="card legend" role="group" aria-label="Farbwahl">${FARBEN.map(f=>{const k=FKEY[f.farbe];return `<button class="lg-i c-${k}" data-act="zcol" data-k="${k}" aria-pressed="${zs.color===k}"><i></i><span><b>${f.farbe}</b>${esc(f.text)}</span></button>`}).join('')}</div>`;
+  if(zs.view==='ref'){
+    const groups=['Alle'].concat(TK.zeichen.gruppen.map(g=>g.titel));
+    const short={'Größenordnungszeichen (stehen über dem Zeichen für Einheit)':'Größenordnung'};
+    const q=zs.q.trim().toLowerCase();
+    let html='';
+    TK.zeichen.gruppen.forEach(g=>{if(zs.grp!=='Alle'&&zs.grp!==g.titel)return;const es=g.eintraege.filter(e=>!q||(e.name+' '+(e.kurz||'')+' '+g.titel).toLowerCase().includes(q));if(!es.length)return;html+=`<h3 class="gh">${esc(g.titel)}</h3><div class="sgrid2">${es.map(zCard).join('')}</div>`});
+    if(!html)html='<p class="lead">Kein Zeichen gefunden.</p>';
+    body=`<p class="lead">${esc(TK.zeichen.hinweis.replace(/ \(.*$/,''))}. Die Farbe wählst du nach der Lage.</p>${legend}<label class="sr" for="zs" style="position:absolute;left:-9999px">Zeichen suchen</label><input id="zs" class="search" type="search" placeholder="Zeichen suchen, z. B. Patient, Brand, RTW" value="${esc(zs.q)}" autocomplete="off"><div class="chips" role="group" aria-label="Gruppe filtern">${groups.map(g=>`<button class="chip" data-act="zgrp" data-g="${esc(g)}" aria-pressed="${zs.grp===g}">${esc(short[g]||g)}</button>`).join('')}</div><div id="zlist">${html}</div>`;
+  } else if(zs.view==='quiz'){ body=quizHtml(); }
+  else body=buildHtml(legend);
+  root.innerHTML=`<h2 class="h2">Taktische Zeichen</h2>${sub}${body}`;
+  const si=$('#zs');if(si&&zs._focus){si.focus();si.setSelectionRange(si.value.length,si.value.length);zs._focus=false;}
+}
+function buildHtml(legend){
+  const b=zs.bd,gesamt=(+b.fuehrer||0)+(+b.unter||0)+(+b.helfer||0);
+  const sttxt=`${+b.fuehrer||0} / ${+b.unter||0} / ${+b.helfer||0} / ${gesamt}`;
+  const units=['loeschzug','rtw','nef','el','eal','bhp','br'];
+  const sizes=['','gz-trupp','gz-staffel','gz-gruppe','gz-zug','gz-verband'];
+  const comp=`<svg viewBox="0 0 120 130" role="img" aria-label="Zusammengesetztes Zeichen" style="width:100%;max-width:240px;display:block;margin:0 auto" class="c-${zs.color}"><svg x="30" y="${b.size?4:0}" width="60" height="45" viewBox="0 0 80 60">${b.size?SYMS[b.size]():''}</svg><svg x="10" y="36" width="100" height="75" viewBox="0 0 80 60">${SYMS[b.unit]()}</svg><text x="60" y="124" text-anchor="middle" font-family="Arial" font-weight="700" font-size="12" fill="currentColor">${esc(b.txt)}</text></svg>`;
+  return `<p class="lead">Spiele mit den Angaben, die auf der Karte stehen: Stärke, Zeit und Größenordnung.</p>${legend}<div class="build-grid">
+  <div class="card pad"><h3 style="font-size:18px">Stärkeangabe</h3><p class="note">${esc(TK.zeichen.staerkeangaben)}</p>
+   <div class="form c2" style="margin:10px 0"><label class="field">Verbands- und Zugführer<input type="number" min="0" max="99" inputmode="numeric" data-bd="fuehrer" value="${b.fuehrer}"></label><label class="field">Gruppen- und Staffelführer<input type="number" min="0" max="99" inputmode="numeric" data-bd="unter" value="${b.unter}"></label><label class="field">Helfer<input type="number" min="0" max="999" inputmode="numeric" data-bd="helfer" value="${b.helfer}"></label><label class="field">Gesamt (Summe)<input type="text" readonly value="${gesamt}"></label></div>
+   <div class="bigout" aria-live="polite">${sttxt}</div>
+   <p style="text-align:center"><button class="btn" data-act="bd-use">In Zeichen unten übernehmen</button></p></div>
+  <div class="card pad"><h3 style="font-size:18px">Zeitangabe</h3><p class="note">${esc(TK.zeichen.zeitangaben)}</p>
+   <label class="field" style="margin:10px 0">Datum und Uhrzeit<input type="datetime-local" data-bd="time" value="${b.time}"></label><div class="bigout" aria-live="polite">${zeitCode(b.time)||'–'}</div>
+   <p class="note">Aufbau: Tag, Uhrzeit, Monat, Jahr. Kurzform: nur Tag und Uhrzeit (${(zeitCode(b.time)||'').slice(0,6)}).</p>
+   <p style="text-align:center"><button class="btn" data-act="bd-time">Zeit im Zeichen unten anzeigen</button></p></div>
+  <div class="card pad" style="grid-column:1/-1"><h3 style="font-size:18px">Zeichen zusammenbauen</h3><p class="note">Größenordnungszeichen stehen über dem Zeichen für die Einheit. Darunter steht die Stärke.</p>
+   <div class="form c2" style="margin:10px 0"><label class="field">Einheit<select data-bd="unit">${units.map(u=>`<option value="${u}" ${b.unit===u?'selected':''}>${esc(SIGNBY[u].name)}</option>`).join('')}</select></label><label class="field">Größenordnung<select data-bd="size">${sizes.map(u=>`<option value="${u}" ${b.size===u?'selected':''}>${u?esc(SIGNBY[u].name):'keine'}</option>`).join('')}</select></label><label class="field" style="grid-column:1/-1">Beschriftung unter dem Zeichen<input type="text" maxlength="24" data-bd="txt" value="${esc(b.txt)}"></label></div>${comp}</div></div>`;
+}
+function newQuiz(mode){
+  const pool=shuffle(ALLSIGNS.filter(s=>!/^gz-/.test(s.id)||true)).slice(0,10);
+  zs.quiz={mode:mode||(zs.quiz?zs.quiz.mode:'s2n'),qs:pool,i:0,score:0,ans:null,fin:false};
+}
+function quizHtml(){
+  if(!zs.quiz)newQuiz('s2n');
+  const Q=zs.quiz;
+  const modes=`<div class="seg" role="group" aria-label="Quizart"><button data-act="qmode" data-m="s2n" aria-pressed="${Q.mode==='s2n'}">Zeichen → Name</button><button data-act="qmode" data-m="n2s" aria-pressed="${Q.mode==='n2s'}">Name → Zeichen</button></div>`;
+  if(Q.fin)return `<div class="card pad" style="text-align:center">${modes}<h3 style="font-size:26px;margin:18px 0 4px">${Q.score} von ${Q.qs.length}</h3><p class="lead">${Q.score>=9?'Sehr sicher.':Q.score>=6?'Solide, ein paar Zeichen noch üben.':'Schau noch einmal bei Nachschlagen vorbei.'}</p><button class="btn pri" data-act="qnew">Nochmal</button></div>`;
+  const cur=Q.qs[Q.i];
+  if(!Q.opts){const same=shuffle(ALLSIGNS.filter(s=>s.id!==cur.id&&s.group===cur.group));const rest=shuffle(ALLSIGNS.filter(s=>s.id!==cur.id&&s.group!==cur.group));Q.opts=shuffle([cur].concat(same.concat(rest).slice(0,3)));}
+  let q;
+  if(Q.mode==='s2n')q=`<div class="qbig c-schwarz" role="img" aria-label="Gesuchtes Zeichen">${sign(cur.id)}</div><div class="qopts">${Q.opts.map(o=>`<button class="opt ${Q.ans?(o.id===cur.id?'right':(o.id===Q.ans?'wrong':'')):''}" data-act="qans" data-id="${o.id}" ${Q.ans?'disabled':''}>${esc(signName(o))}</button>`).join('')}</div>`;
+  else q=`<p style="text-align:center;font-size:20px;font-weight:800;margin:8px 0 14px">${esc(signName(cur))}</p><div class="qopts two">${Q.opts.map(o=>`<button class="opt qopt-sign c-schwarz ${Q.ans?(o.id===cur.id?'right':(o.id===Q.ans?'wrong':'')):''}" data-act="qans" data-id="${o.id}" aria-label="Zeichen ${Q.opts.indexOf(o)+1}" ${Q.ans?'disabled':''}>${sign(o.id)}</button>`).join('')}</div>`;
+  const fb=Q.ans?`<p class="msg ${Q.ans===cur.id?'ok':'bad'}" aria-live="polite">${Q.ans===cur.id?'Richtig.':'Das war: '+esc(signName(cur))+'.'}</p><button class="btn pri" data-act="qnext">${Q.i===Q.qs.length-1?'Ergebnis':'Weiter'}</button>`:'<p class="msg"></p>';
+  return `<div class="card pad">${modes}<div style="margin-top:12px" class="note">Frage ${Q.i+1} von ${Q.qs.length} · richtig: ${Q.score}</div><div class="qbar"><i style="width:${Q.i/Q.qs.length*100}%"></i></div>${q}${fb}</div>`;
+}
+const pz=$('#panel-zeichen');
+pz.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  if(a==='zview'){zs.view=b.dataset.v;}
+  else if(a==='zcol'){zs.color=b.dataset.k;}
+  else if(a==='zgrp'){zs.grp=b.dataset.g;}
+  else if(a==='zopen'){openSign(b.dataset.id);return;}
+  else if(a==='qmode'){newQuiz(b.dataset.m);}
+  else if(a==='qnew'){newQuiz();}
+  else if(a==='qans'){zs.quiz.ans=b.dataset.id;if(b.dataset.id===zs.quiz.qs[zs.quiz.i].id)zs.quiz.score++;}
+  else if(a==='qnext'){const Q=zs.quiz;Q.ans=null;Q.opts=null;if(Q.i===Q.qs.length-1)Q.fin=true;else Q.i++;}
+  else if(a==='bd-use'){const bd=zs.bd;bd.txt=`${+bd.fuehrer||0} / ${+bd.unter||0} / ${+bd.helfer||0} / ${(+bd.fuehrer||0)+(+bd.unter||0)+(+bd.helfer||0)}`;}
+  else if(a==='bd-time'){zs.bd.txt=zeitCode(zs.bd.time);}
+  renderZeichen();
+  const f=$(`#panel-zeichen [data-act="${a}"]${b.dataset.id&&a==='zopen'?'':''}`);
+  if(a==='zview'){const t=$(`#panel-zeichen [data-v="${zs.view}"]`);if(t)t.focus();}
+  else if(a==='zcol'){const t=$(`#panel-zeichen [data-k="${zs.color}"]`);if(t)t.focus();}
+  else if(a==='zgrp'){const t=$$('#panel-zeichen .chip').find(c=>c.dataset.g===zs.grp);if(t)t.focus();}
+  else if(a==='qnext'||a==='qnew'){const t=$('#panel-zeichen .opt');if(t)t.focus();}
+  else if(a==='qans'){const t=$('#panel-zeichen [data-act="qnext"]');if(t)t.focus();}
+  else if(a==='qmode'){const t=$(`#panel-zeichen [data-m="${zs.quiz.mode}"]`);if(t)t.focus();}
+  else if(f)f.focus();
+});
+pz.addEventListener('input',e=>{
+  if(e.target.id==='zs'){zs.q=e.target.value;const pos=e.target.selectionStart;zs._focus=true;renderZeichen();}
+  else if(e.target.dataset.bd){const k=e.target.dataset.bd;zs.bd[k]=e.target.value;if(['fuehrer','unter','helfer','time'].includes(k)){const el=e.target;const id=k;const v=el.value;const p=el.selectionStart;renderZeichen();const n=$(`#panel-zeichen [data-bd="${id}"]`);if(n){n.focus();try{n.setSelectionRange(p,p)}catch(x){}}}}
+});
+pz.addEventListener('change',e=>{if(e.target.dataset.bd&&['unit','size'].includes(e.target.dataset.bd)){const k=e.target.dataset.bd;zs.bd[k]=e.target.value;renderZeichen();const n=$(`#panel-zeichen [data-bd="${k}"]`);if(n)n.focus();}});
+pz.addEventListener('keydown',e=>{if(e.target.dataset&&e.target.dataset.bd==='txt'&&e.type==='keydown'){}});
+function openSign(id){
+  const s=SIGNBY[id];const d=$('#dlg');
+  $('#dlg-in').innerHTML=`<div class="big c-${zs.color}">${sign(id)}</div><h3 id="dlg-t">${esc(signName(s))}</h3><p class="note">${esc(s.group)}${s.kurz?' · '+esc(s.kurz):''}</p><div class="four">${FARBEN.map(f=>`<div class="c-${FKEY[f.farbe]}" title="${f.farbe}">${sign(id)}</div>`).join('')}</div><p class="note">Dieselbe Zeichnung in Schwarz, Rot, Blau und Grün: die Farbe richtet sich nach der Lage.</p><button class="btn pri" id="dlg-x">Schließen</button>`;
+  d.showModal?d.showModal():d.setAttribute('open','');$('#dlg-x').focus();$('#dlg-x').onclick=()=>d.close?d.close():d.removeAttribute('open');
+}
+$('#dlg').addEventListener('click',e=>{if(e.target.id==='dlg')e.target.close()});
+renderZeichen();
+
+/* ========== Lager ========== */
+const HSC=[{n:'Vegetationsbrand',h:'#3f9a54'},{n:'Sturm',h:'#7b61c9'},{n:'Hochwasser',h:'#2f78d1'},{n:'Logistik',h:'#e58a00'}];
+const HSHORT={'1.5':'Faltbehälter','2.2':'Kettensägen','4.3':'Klapptische','4.4':'Tankstelle','1.1':'Schläuche','3.3':'Sandsäcke'};
+const hShort=g=>HSHORT[g.nr]||g.name.split(' ')[0];
+let hSel=null;
+function hallSvg(){
+  const cw=86,x0=8,lvl=[0,0,0,0];
+  let s='<svg viewBox="0 0 360 346" role="group" aria-label="Querschnitt der Lagerhalle mit Regalen und Paletten"><defs><linearGradient id="roofg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--line)"/><stop offset="1" stop-color="var(--soft)"/></linearGradient></defs>'
+   +'<path d="M0 52 L180 8 L360 52 Z" fill="url(#roofg)" stroke="var(--mute)" stroke-width="2"/><rect x="2" y="52" width="356" height="272" fill="var(--soft)" stroke="var(--mute)" stroke-width="2"/><rect x="0" y="324" width="360" height="20" fill="var(--line)"/>';
+  HSC.forEach((c,i)=>{const cx=x0+i*cw;s+=`<text x="${cx+40}" y="70" text-anchor="middle" font-size="10.5" font-weight="800" fill="${c.h}">${c.n}</text><path d="M${cx+2} 76 V324 M${cx+78} 76 V324" stroke="var(--mute)" stroke-width="3" opacity=".6"/>`;});
+  KGROUPS.forEach(g=>{
+    const si=+g.snr-1,l=lvl[si]++,cx=x0+si*cw,y=76+(4-l)*49.5,col=HSC[si].h,has=g.paletten!=null,n=kSel[g.nr]||0;
+    s+=`<g class="pal${kScen!=='all'&&String(g.snr)!==kScen?' dim':''}" role="button" tabindex="0" data-act="hall" data-nr="${g.nr}" aria-pressed="${hSel===g.nr}" aria-label="${g.nr} ${esc(g.name)}${has?'':' (Stückware)'}" transform="translate(${cx+2} ${y})">
+     <rect x="0" y="0" width="76" height="47" rx="6" fill="transparent"/><path d="M0 45 H76" stroke="#7d8591" stroke-width="3"/>
+     <g class="pbox"><rect x="4" y="3" width="68" height="28" rx="5" fill="${col}" ${has?'':'stroke="#fff" stroke-dasharray="4 3" stroke-width="1.5"'}/>
+     <text x="38" y="19" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">${g.nr}</text><text x="38" y="28" text-anchor="middle" font-size="7.5" font-weight="600" fill="#fff" opacity=".95">${esc(hShort(g))}</text>
+     ${has?'<g fill="#c8a06a" stroke="#8a6a3a" stroke-width=".8"><rect x="4" y="32" width="14" height="6"/><rect x="31" y="32" width="14" height="6"/><rect x="58" y="32" width="14" height="6"/><rect x="2" y="38" width="72" height="4" rx="1"/></g>':''}
+     <rect class="ring" x="1" y="1" width="74" height="44" rx="8"/>${n?`<g class="cnt"><circle cx="70" cy="6" r="9"/><text x="70" y="10">${n}</text></g>`:''}</g></g>`;
+  });
+  return s+'</svg>';
+}
+function hallDet(){
+  if(!hSel)return '<h4>Palette wählen</h4><p class="note">Tippe in der Halle eine Palette an. Hier erscheinen Inhalt und Stückzahl, und die Palette landet im Anforderungsrechner.</p>';
+  const g=KGROUPS.find(x=>x.nr===hSel),c=HSC[+g.snr-1],q=kSel[g.nr]||0;
+  return `<span class="scn" style="background:${c.h}">${esc(g.szenario)}</span><h4>${g.nr} ${esc(g.name)}</h4>${positionsHtml(g)}${g.paletten!=null?`<p style="margin:6px 0"><b>${g.paletten} Paletten</b> im Lager vorgehalten.</p>`:'<p class="note">Im Merkblatt ohne Palettenangabe, nur mit Stückzahl.</p>'}
+   <div class="hrow"><span class="note">Im Rechner:</span><button class="btn" data-act="kminus" data-nr="${g.nr}" aria-label="Eine weniger" ${q?'':'disabled'}>−</button><span class="hnum" aria-live="polite">${q}</span><button class="btn" data-act="kplus" data-nr="${g.nr}" aria-label="Eine mehr">+</button></div>`;
+}
+let kSel=lsGet('bvi_stk_lager_sel',{}),kTr=lsGet('bvi_stk_lager_tr','eigene'),kLage=lsGet('bvi_stk_lager_lage','die anhaltende Unwetterlage'),kScen='all',kMsg='';
+const iconSvg={
+  el:'<svg viewBox="0 0 30 30"><rect x="4" y="7" width="22" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M4 12h22" stroke="currentColor" stroke-width="2.6"/></svg>',
+  ls:'<svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="9" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15 9v6h5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>',
+  doc:'<svg viewBox="0 0 30 30"><path d="M8 4h10l5 5v17H8z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M12 15h8M12 20h8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>',
+  lager:'<svg viewBox="0 0 30 30"><path d="M3 12L15 5l12 7v13H3z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M10 25v-7h10v7" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>',
+  truck:'<svg viewBox="0 0 30 30"><path d="M3 8h14v12H3zM17 12h6l4 4v4H17z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><circle cx="9" cy="22" r="2.5" fill="currentColor"/><circle cx="22" cy="22" r="2.5" fill="currentColor"/></svg>'
+};
+function renderLager(){
+  const Z=KSL.zusammenfassung;
+  const sum=Z.map((z,i)=>`<div class="card sum ${z.thema==='Anforderungsweg'||z.thema==='Kosten'?'span':''}"><h3>${esc(z.thema)}</h3>${z.thema==='Vorlaufzeit'?'<big>max. 4 h</big>':''}${z.thema==='Standort'?'<big>Nähe Münster</big>':''}<ul>${z.punkte.filter(p=>!(z.thema==='Standort')).map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div>`).join('');
+  const ab=KSL.anforderungsweg.ablauf;
+  const flow=`<ol class="flow"><li class="fl"><div class="bub">${iconSvg.el}</div><b>Einsatzleitung</b><span>stellt das Ersuchen</span></li><li class="fl"><div class="bub"><svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="4" fill="currentColor"/><circle cx="15" cy="15" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/></svg></div><b>Örtliche Leitstelle</b><span>${esc(ab[0].replace('Einsatzleitung stellt über ihre örtliche Leitstelle das ',''))}</span></li><li class="fl"><div class="bub">${iconSvg.doc}</div><b>Ersuchen</b><span>${esc(ab[1])}</span></li><li class="fl"><div class="bub">${iconSvg.lager}</div><b>Lager bei Münster</b><span>Vorlaufzeit maximal 4 Stunden + Fahrzeit</span></li><li class="fl"><div class="bub">${iconSvg.truck}</div><b>Transport</b><span>${esc(ab[2].replace('Klar stellen: ',''))}</span></li></ol><div class="card pad" style="margin-top:8px"><span class="tag">Beispiel aus dem Merkblatt</span><p style="margin:6px 0 0">${esc(KSL.anforderungsweg.beispiel)}</p></div>`;
+  const arrow='<svg viewBox="0 0 150 70" aria-hidden="true"><path d="M8 22h110" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M104 10l16 12-16 12" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M118 56H34" stroke="var(--c-rot)" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 8"/><path d="M52 46l-16 10 16 10" fill="none" stroke="var(--c-rot)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M62 44l24 24M86 44L62 68" stroke="var(--c-rot)" stroke-width="5" stroke-linecap="round"/></svg>';
+  const cost=`<div class="cost"><div class="cbox land"><h4>Das Land NRW trägt</h4><ul><li>die Anmietung der Lagerflächen</li><li>die Beschaffung der Erstausstattung</li><li>den Unterhalt</li></ul></div><div class="carrow">${arrow}<span>Übergabe: Eigentum geht über.<br>Rückgabe nicht möglich.</span></div><div class="cbox anf"><h4>Die anfordernde Stelle</h4><ul><li>ist nach der Übergabe Eigentümer der Einsatzmittel</li><li>trägt die Kosten der Ersatzbeschaffung</li></ul></div></div>`;
+  const scens=[['all','Alle']].concat(KSL.katalog.map(s=>[s.nr,s.nr+'. '+s.szenario.replace(/ \(.*/,'')]));
+  const cat=KSL.katalog.filter(s=>kScen==='all'||s.nr===kScen).map(s=>`<h3 class="sch">${s.nr}. ${esc(s.szenario)}</h3><div class="kat-grid">${s.gruppen.map(g=>`<div class="card kg"><div class="kg-h"><span class="n">${g.nr}</span><h4>${esc(g.name)}</h4>${g.paletten!=null?`<span class="stock">${g.paletten} Paletten im Lager</span>`:''}</div>${positionsHtml(g)}<button class="btn add" data-act="kadd" data-nr="${g.nr}">Zum Ersuchen: ${g.paletten!=null?'+1 Palette':'+1 Stück'}${kSel[g.nr]?' (jetzt '+kSel[g.nr]+')':''}</button></div>`).join('')}</div>`).join('');
+  const rows=KSL.katalog.map(s=>`<div class="sch">${s.nr}. ${esc(s.szenario)}</div>`+s.gruppen.map(g=>{const n=kSel[g.nr]||0;return `<div class="crow ${n?'on':''}"><div class="lbl">${g.nr} ${esc(g.name.replace(/ – .*$/,''))}<small>${g.paletten!=null?'ganze Paletten, höchstens '+g.paletten:'Merkblatt nennt hier nur Stück, höchstens 10'}</small></div><div class="step"><button data-act="kminus" data-nr="${g.nr}" aria-label="${esc(g.name)}: eine ${kUnit(g)} weniger" ${n?'':'disabled'}>−</button><output aria-label="Anzahl ${esc(g.name)}">${n}</output><button data-act="kplus" data-nr="${g.nr}" aria-label="${esc(g.name)}: eine ${kUnit(g)} mehr" ${n>=kMax(g)?'disabled':''}>+</button></div></div>`}).join('')).join('');
+  const txt=ersuchenText(kSel,kLage,kTr);
+  const calc=`<div class="calc-grid"><div class="card pad"><h3 style="font-size:18px">Paletten wählen</h3><p class="note">Nur ganze Paletten. Palettenbezeichnung und Stückzahl gehören ins Ersuchen.</p>${rows}</div>
+   <div class="calc-out"><div class="card pad"><h3 style="font-size:18px;margin-bottom:8px">Ersuchen in der Sofortmeldung</h3>
+    <label class="field" style="margin-bottom:10px">Lage (nur für den Satzanfang)<input id="klage" type="text" maxlength="60" value="${esc(kLage)}"></label>
+    <div class="seg" role="group" aria-label="Transport" style="margin-bottom:10px"><button data-act="ktr" data-v="eigene" aria-pressed="${kTr==='eigene'}">Eigene Kräfte</button><button data-act="ktr" data-v="bezreg" aria-pressed="${kTr==='bezreg'}">Bezirksregierung</button></div>
+    <textarea class="out" id="kout" readonly aria-label="Text für das Ersuchen" placeholder="Wähle links Paletten aus. Der Text für das Ersuchen entsteht hier.">${esc(txt)}</textarea>
+    <div class="row" style="margin-top:10px"><button class="btn pri" data-act="kcopy" ${txt?'':'disabled'}>Text kopieren</button><button class="btn" data-act="kreset">Auswahl leeren</button><span class="note" id="kmsg" aria-live="polite">${esc(kMsg)}</span></div>
+    <div class="callout warn" style="margin-top:12px">Betriebsmittel sind selbst zu stellen! Eine eigene Logistik muss parallel aufgebaut werden.</div></div></div></div>`;
+  $('#panel-lager').innerHTML=`<h2 class="h2">Katastrophenschutzlager NRW</h2><p class="lead">${esc(KSL.ziel[0])}. ${esc(KSL.ziel[1])}.</p>
+   <div class="banner"><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M15 3L28 26H2z" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round"/><path d="M15 11v7M15 21.5v.5" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg><span>Betriebsmittel selbst stellen! Nur vollständige Paletten, keine einzelnen Bestandteile.</span></div>
+   <div class="sum-grid">${sum}</div>
+   <h2 class="h2">Anforderungsweg</h2>${flow}
+   <h2 class="h2">Kosten und Eigentum</h2>${cost}
+   <h2 class="h2">Die Lagerhalle im Querschnitt</h2><p class="lead">Vier Regalspalten, eine je Szenario. Palette antippen: Inhalt ansehen und in den Anforderungsrechner legen.</p><div class="card hall">${hallSvg()}</div><div class="card pad hdet" id="halldet" style="margin-top:12px">${hallDet()}</div>
+   <h2 class="h2">Katalog nach Szenarien</h2><p class="lead">${esc(KSL.hinweisPaletten)}</p><div class="chips" role="group" aria-label="Szenario">${scens.map(s=>`<button class="chip" data-act="kscen" data-s="${s[0]}" aria-pressed="${kScen===s[0]}">${esc(s[1])}</button>`).join('')}</div>${cat}
+   <h2 class="h2" id="rechner">Anforderungsrechner</h2>${calc}`;
+}
+const pl=$('#panel-lager');
+pl.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,nr=b.dataset.nr;const g=nr&&KGROUPS.find(x=>x.nr===nr);
+  const sy=window.scrollY;
+  if(a==='kscen')kScen=b.dataset.s;
+  else if(a==='hall'){hSel=nr;if(!kSel[nr]){kSel[nr]=1;lsSet('bvi_stk_lager_sel',kSel);}kMsg='';}
+  else if(a==='kplus'||a==='kadd'){kSel[nr]=Math.min(kMax(g),(kSel[nr]||0)+1);lsSet('bvi_stk_lager_sel',kSel);kMsg='';}
+  else if(a==='kminus'){kSel[nr]=Math.max(0,(kSel[nr]||0)-1);if(!kSel[nr])delete kSel[nr];lsSet('bvi_stk_lager_sel',kSel);kMsg='';}
+  else if(a==='ktr'){kTr=b.dataset.v;lsSet('bvi_stk_lager_tr',kTr);kMsg='';}
+  else if(a==='kreset'){kSel={};lsSet('bvi_stk_lager_sel',kSel);kMsg='';}
+  else if(a==='kcopy'){const t=ersuchenText(kSel,kLage,kTr);copyText(t,ok=>{kMsg=ok?'Kopiert.':'Kopieren nicht möglich, Text ist markiert.';if(!ok){const o=$('#kout');o.focus();o.select();}const m=$('#kmsg');if(m)m.textContent=kMsg;});return;}
+  renderLager();window.scrollTo(0,sy);
+  const t=$(`#panel-lager [data-act="${a==='kadd'?'kadd':a}"]${nr?`[data-nr="${nr}"]`:''}${b.dataset.v?`[data-v="${b.dataset.v}"]`:''}${b.dataset.s?`[data-s="${b.dataset.s}"]`:''}`);if(t&&!t.disabled)t.focus({preventScroll:true});
+});
+pl.addEventListener('keydown',e=>{const p=e.target.closest&&e.target.closest('.pal');if(p&&(e.key==='Enter'||e.key===' ')){e.preventDefault();p.dispatchEvent(new MouseEvent('click',{bubbles:true}));}});
+pl.addEventListener('input',e=>{if(e.target.id==='klage'){kLage=e.target.value;lsSet('bvi_stk_lager_lage',kLage);$('#kout').value=ersuchenText(kSel,kLage,kTr);}});
+renderLager();
+
+/* ========== EVA ========== */
+let evaStep=0;
+let notes=lsGet('bvi_stk_eva_notes',{}),evaDone=lsGet('bvi_stk_eva_done',[]);
+function skSign(id,x,y,w,cls){return `<svg x="${x}" y="${y}" width="${w}" height="${w*0.75}" viewBox="0 0 80 60" class="${cls}" overflow="visible">${SYMS[id]()}</svg>`}
+function lageskizze(){
+  const t=(x,y,s,a)=>`<text class="sk-t" x="${x}" y="${y}" text-anchor="${a||'middle'}">${s}</text>`;
+  return `<svg viewBox="0 0 360 290" role="img" aria-label="Lageskizze: zerstörtes Mehrfamilienhaus mit Einsatzabschnitten Gebäude und Medizin, Einsatzleitung, Löschzug, Versorgungsstelle">
+   <rect x="0" y="0" width="360" height="290" rx="10" fill="var(--soft)"/>
+   <rect x="0" y="214" width="360" height="28" fill="var(--line)"/><path d="M0 222H360" stroke="var(--mute)" stroke-width="1.5" stroke-dasharray="10 8"/>${t(352,237,'Straße','end')}
+   <rect x="8" y="26" width="42" height="130" fill="none" stroke="var(--c-schwarz)" stroke-width="2"/><rect x="310" y="26" width="42" height="130" fill="none" stroke="var(--c-schwarz)" stroke-width="2"/>
+   <rect x="82" y="38" width="196" height="90" fill="none" stroke="var(--c-schwarz)" stroke-width="2.4"/>
+   ${skSign('s-total',125,42,110,'c-rot')}
+   ${t(180,144,'Mehrfamilienhaus (-1/E/+3)')}
+   <rect x="62" y="22" width="236" height="134" fill="none" stroke="var(--c-blau)" stroke-width="2.4" stroke-dasharray="9 5" rx="4"/>${t(66,16,'EA Gebäude (3 Züge)','start')}
+   ${skSign('p-verm',90,46,28,'c-rot')}${skSign('p-verm',242,46,28,'c-rot')}
+   ${skSign('p-verl',90,92,28,'c-rot')}${skSign('p-verl',242,92,28,'c-rot')}
+   ${skSign('eal',9,6,34,'c-blau')}
+   ${skSign('el',306,166,44,'c-blau')}${t(328,208,'Einsatzleitung')}
+   ${skSign('loeschzug',14,162,50,'c-blau')}${t(40,208,'Löschzug')}
+   <rect x="86" y="172" width="206" height="36" fill="none" stroke="var(--c-blau)" stroke-width="2.4" stroke-dasharray="9 5" rx="4"/>${t(90,168,'EA Medizin','start')}
+   ${skSign('eal',92,176,34,'c-blau')}${skSign('bhp',136,177,30,'c-blau')}${skSign('pa-arzt',178,177,30,'c-blau')}${skSign('rtw',226,177,34,'c-blau')}
+   <g opacity=".6">${skSign('vs-verpf',14,248,44,'c-blau')}</g>${t(66,268,'Versorgungsstelle (noch festzulegen, Aufgabe 2)','start')}
+   </svg>`;
+}
+
+const ML={
+1:{lead:'Lage: Trümmersuche nach Gasexplosion, Einsturzgefahr, Schwerpunkt des Stabes. Der Eigenschutz hat drei Komponenten (K2-140, 3.8). Der Umfang folgt der Lagebewertung im Sachgebiet 4.',
+ teile:[
+ ['a) Umfang festlegen',['<b>Medizinisch:</b> Die Verletzten sind weitgehend versorgt, der EA Medizin (MANV 20) ist vor Ort. Verletzte Einsatzkräfte können direkt in die MANV-Struktur übergeben werden. Ergänzend sinnvoll: 1 RTW + 1 NEF oder eine Teileinheit Sanitätsdienst, nur für Einsatzkräfte reserviert, nahe der Einsatzstelle.','<b>Technisch:</b> Trümmer, Nachsturz, Gasreste. Sinnvoll ist ein einsatzbereiter technischer Rettungstrupp für die Rettung eigener Kräfte, zum Beispiel 1 Technischer Zug oder Teile davon mit Bergungs- und Stützmitteln. Er darf nicht in der Suche gebunden sein.','<b>Psychosozial:</b> Die Suche nach Vermissten, vermutlich ohne Erfolg, belastet. Fachberater PSNV-E aktivieren, Gesprächsangebote während der Ablösung und nach Einsatzende.','Unkritische Lagen können ohne Eigenschutz auskommen; hier ist die Gefährdung hoch, deshalb voller Umfang.']],
+ ['b) Abstimmung',['<b>Leiter des Stabes bzw. Einsatzleiter:</b> Freigabe von Umfang und Kräften.','<b>EA Gebäude:</b> Gefährdung, Trümmerlage, Einsatzdauer und Ablösung.','<b>EA Medizin / Leiter Rettungsdienst:</b> Mittel nicht doppelt binden, MANV-Übergabe.','<b>S2/S3 und S6:</b> Kräfte und Funk. <b>Fachberater PSNV-E</b> und gegebenenfalls Sicherheitsbeauftragter.']],
+ ['c) Eine Minute zwischen „Mayday“ und „Beginn Rettung“',['Standort, Umfang und Erreichbarkeit des Eigenschutzes allen Abschnitten mitteilen. Aktivierung <b>nach eigenem Ermessen</b> freigeben, ohne Umweg über den Stab (K2-140: lange Meldewege vermeiden).','Eigenschutz <b>an der Einsatzstelle</b> in Sichtweite oder Funkweite des EA Gebäude positionieren, eigener Funkkanal oder Mithören des Abschnittskanals, Notfallstichwort „Mayday“ vorab vereinbaren.','Alternative: Eigenschutz <b>abschnittsweise</b> im EA Gebäude bilden (wie ein Sicherheitstrupp nach FwDV 7), mit Auftrag „Rettung eigener Kräfte“. Ausgerüstet und in Bereitstellung, nicht mit Aufgaben belegt.']],
+ ['d) Nicht als normale Verstärkung einsetzen',['Klarer Auftrag und Kennzeichnung: „Eigenschutz, nur Rettung eigener Kräfte“. Im Einsatztagebuch und auf der Lagekarte als gesperrte Reserve führen.','Im Führungsstab festlegen: Zugriff nur durch Einsatzleiter oder S4 auf Anforderung. Alle Abschnittsführer und Leitstelle sind informiert.','Ersatz für eingesetzte Kräfte aus anderen Reserven; wird der Eigenschutz doch belegt, sofort ersetzen (Nachforderung). Ablösung des Eigenschutzes selbst vorplanen.']]],
+ qu:'Lernunterlage K2-140 „Sachgebiet Versorgung“, Abschnitt 3.8; FwDV 7 (Sicherheitstrupp als Merkhilfe).'},
+2:{lead:'Ziel: 100 Einsatzkräfte erhalten am späten Nachmittag (ca. 17–18 Uhr) eine warme Mahlzeit. Es gibt keine Vorplanung. Aufträge folgen „Führen mit Auftrag“: Portionen, Ort, Uhrzeit, Ansprechpartner vorgeben, die Menge muss nicht berechnet werden (K2-140, 3.1).',
+ teile:[
+ ['Option A: Einsatzeinheit Betreuung NRW mit Verpflegungsmodul',['Über Bezirksregierung bzw. Kreisleitstelle anfordern. Das Verpflegungsmodul ist auf 250 Portionen ausgelegt, mittlere Autarkie. Die Teileinheit Betreuung kann modular alarmiert werden.','<b>Vorteil:</b> Landeseinheitlich, Hygiene und Zubereitung aus einer Hand. <b>Nachteil:</b> Vorlauf und Anfahrt, geeigneter Ort mit befestigter Fläche sowie Trink- und Abwassernetz nötig. Für nur 100 Portionen überdimensioniert.']],
+ ['Option B: THW Fachgruppe Logistik-Verpflegung oder Logistikzug NRW',['FGr Log-V verpflegt etwa 250 Personen, Logistikzug NRW 175. Beide bringen Zubereitung, teils Zelte und Material mit.','<b>Vorteil:</b> Ortsfeste THW-Küchen im Umfeld nutzbar, hohe Durchhaltefähigkeit bis 22 Uhr und darüber hinaus. <b>Nachteil:</b> Anforderung über Amtshilfe/Stabsweg, Vorlaufzeit.']],
+ ['Option C: Caterer oder Großküche vor Ort',['Kostenübernahmeerklärung des Stabes (E-Mail genügt oft), Lieferung in Thermoboxen an die Einsatzstelle. Ausgabe durch eine Kraft der Feuerwehr oder des Katastrophenschutzes.','<b>Vorteil:</b> Meist am schnellsten bei kurzer Vorlaufzeit, genaue Portionszahl, keine Fahrzeuge blockiert. <b>Nachteil:</b> Hygiene und Qualität liegen beim Unternehmer, Kosten, Abhängigkeit vom Anbieter.']],
+ ['Empfehlung',['<b>Option C</b> als Sofortlösung für die Mahlzeit um 17–18 Uhr, parallel <b>Option A</b> (nur Teileinheit Betreuung) als Absicherung für längeren Einsatz. Begründung: Zeitfenster bis zum späten Nachmittag, nur 100 Portionen, keine Vorplanung. Ein Caterer liefert ohne großen Aufbau; die Einheit sichert Dauerbetrieb und Ersatz, falls der Einsatz länger dauert als bis 22 Uhr.','Rahmenbedingungen im Auftrag: 100 Portionen, Ausgabeort (nah an der Einsatzstelle, aber außerhalb der Gefahrenzone, mit Waschmöglichkeit für Hände und Gesicht und Ablegen der Schutzkleidung), Uhrzeit, Ansprechpartner, Kommunikationsweg. Dazu Kaltgetränke: 5 Liter je 12 Stunden für körperlich Arbeitende, 2 Liter für nicht körperlich Arbeitende. Keine Alkoholabgabe. Kostenfreigabe vorab beim Leiter des Stabes holen.']]],
+ qu:'Lernunterlage K2-140, Abschnitte 2.3–2.5 (Einsatzeinheit NRW, Logistikzug, THW) und 3.1 Verpflegung.'},
+3:{lead:'Wichtig: Kostenträger ist auch in Großschadenslagen die örtlich zuständige Gemeinde (§ 50 Abs. 2 BHKG). Die Einsatzleitung geht meist in Vorleistung; geklärt wird erst im Nachgang. Haushalts- und Vergaberecht gelten weiter (K2-140, 3.7).',
+ teile:[
+ ['Sofort tun',['<b>Dienstweg einhalten:</b> Beim Leiter des Stabes bzw. Einsatzleiter nachträglich die <b>Kostenfreigabe</b> einholen und den bisherigen Stand nennen. Bei höheren Summen den Kontakt zum Stab für außergewöhnliche Ereignisse, Krisenstab, Dezernat oder Hauptverwaltungsbeamten herstellen.','<b>Kostenübersicht führen:</b> Alle gebundenen und ausgegebenen Mittel auflisten (Eigenschutz, Getränke, Warmverpflegung, Kraftstoff, Mobiltoiletten), mit Menge, Lieferant, Preis. Meldung an den Stab, bevor die freigegebene Grenze erreicht ist. Andere Sachgebiete verursachen ebenfalls Kosten, deshalb eine Person im Stab, die die Gesamtsumme führt.','<b>Zahlungsweg klären:</b> Kostenübernahmeerklärung (formlos, per E-Mail, vom Stab oder der Verwaltung) für Lieferanten; bei Sofortzahlung Nebenkasse, Karte oder Scheck, Rufbereitschaft der Kämmerei.']],
+ ['Kosten begrenzen',['Haushaltsgrundsätze Notwendigkeit, Sparsamkeit und Wirtschaftlichkeit gegen Fürsorgepflicht und Einsatzerfolg abwägen. Teurere Lösungen nur, wenn die Lage es erfordert (zum Beispiel Kraftstoff an der Raststätte statt in der Stadt: bei 10.000 Litern 4.000 Euro Mehrkosten).','Wenn möglich Leistungen der Hilfsorganisationen und des THW nutzen, die in Vorleistung gehen und später abrechnen. Nachbestellungen mit Stab abstimmen.']],
+ ['Dokumentation',['Alle Entscheidungen und Freigaben mit Zeit und Person ins Einsatztagebuch. Zum Einsatzende die Kostendokumentation vollständig übergeben, damit die Stadtverwaltung abrechnen kann.','Erweiterung bei Amtshilfe: anfordernde Stelle direkt als Rechnungsadressat angeben.']]],
+ qu:'Lernunterlage K2-140, Abschnitt 3.7 Finanzen; § 50 Abs. 2 BHKG (Kostenträger Gemeinde).'}
+};
+function mlHtml(nr){const m=ML[nr];if(!m)return '';return `<details class="ml"><summary>Musterlösung zu Aufgabe ${nr}</summary><div class="mlb"><p>${esc(m.lead)}</p>${m.teile.map(t=>`<h4>${esc(t[0])}</h4><ul>${t[1].map(x=>`<li>${x}</li>`).join('')}</ul>`).join('')}<div class="warn2">Vorschlag aus den Unterlagen und dem Fachwissen abgeleitet. Es gibt keine amtliche Lösung, es gelten immer die örtlichen Vorgaben.</div><p class="q">Quellen: ${esc(m.qu)}</p></div></details>`;}
+function renderEva(){
+  const S=EVA.szenario;
+  const sit=`<div class="sit"><div class="card pad" style="grid-column:1/-1"><h3>Allgemeine Lage</h3><p>${esc(S.allgemeineLage)}</p></div><div class="card pad rot"><h3 style="color:var(--c-rot)">Gefahrenlage</h3><p>${esc(S.gefahrenlage.replace(' (siehe Foto)',''))}</p></div><div class="card pad blau"><h3 style="color:var(--c-blau)">Eigene Lage</h3><p>${esc(S.eigeneLage)}</p></div><div class="card pad" style="grid-column:1/-1;border-top-color:var(--or)"><h3 style="color:var(--ord)">Deine Rolle</h3><p>${esc(S.rolle)}</p><p class="note" style="margin-top:6px">Hilfsmittel: ${esc(EVA.hilfsmittel)}</p></div></div>`;
+  const sk=`<div class="card sketch">${lageskizze()}</div><p class="note">Eigene Lageskizze aus taktischen Zeichen, nicht maßstäblich. Rot: Gefahrenlage, Blau: eigene Lage (Kräfte, EA-Grenzen), Schwarz: Gebäude und Straße.</p>`;
+  const A=EVA.aufgaben,t=A[evaStep],k='a'+t.nr;
+  const stepper=`<div class="stepper" role="tablist" aria-label="Aufgaben">${A.map((a,i)=>`<button role="tab" aria-selected="${i===evaStep}" data-act="estep" data-i="${i}"><span class="dot ${evaDone.includes(a.nr)?'d':''}">${evaDone.includes(a.nr)?'✓':a.nr}</span><span class="tl">${esc(a.titel)}</span></button>`).join('')}</div>`;
+  const parts=evaParts(t.text);
+  let fields,intro='';
+  if(t.nr===1){fields=parts.map((p,i)=>{const lt='abcd'[i];return `<li><label for="n-${k}-${lt}"><b>${esc(p)}</b></label><textarea id="n-${k}-${lt}" data-nk="${k}${lt}" placeholder="Deine Notizen zu ${lt})">${esc(notes[k+lt]||'')}</textarea></li>`}).join('');fields=`<ol>${fields}</ol>`;}
+  else fields=`<p>${esc(t.text)}</p><label for="n-${k}" class="note">Deine Notizen</label><textarea id="n-${k}" data-nk="${k}" placeholder="Deine Gedanken, Optionen, Begründung …">${esc(notes[k]||'')}</textarea>`;
+  const hints=`<div class="hint"><span class="tag">Gedankenstütze aus den Unterlagen</span><ul>${EVA_HINTS[t.nr].map(h=>`<li><b>${esc(h[0])}:</b> ${esc(h[1])}</li>`).join('')}</ul></div>`;
+  const task=`<div class="card task"><h3>Aufgabe ${t.nr}: ${esc(t.titel)}</h3>${fields}${hints}<div class="row"><label class="row" style="gap:8px;min-height:44px"><input type="checkbox" data-act="edone" ${evaDone.includes(t.nr)?'checked':''} style="width:24px;height:24px;accent-color:var(--or)"> Aufgabe bearbeitet</label><span class="sp"></span><button class="btn" data-act="eprev" ${evaStep===0?'disabled':''}>Zurück</button><button class="btn pri" data-act="enext" ${evaStep===A.length-1?'disabled':''}>Weiter</button></div>${mlHtml(t.nr)}</div>`;
+  $('#panel-eva').innerHTML=`<h2 class="h2">${esc(EVA.titel)}</h2><p class="lead">${esc(EVA.modul)}</p>${sit}<h2 class="h2">Lageskizze</h2>${sk}<h2 class="h2">Aufgaben</h2>${stepper}${task}<div class="callout" style="margin-top:14px">${esc(EVA.hinweis)}</div><p class="row" style="margin-top:12px"><button class="btn" data-act="eclear">Alle Notizen leeren</button><span class="note" id="emsg" aria-live="polite"></span></p><p class="note">Notizen werden nur in diesem Browser gespeichert.</p>`;
+}
+const pe=$('#panel-eva');
+pe.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  if(a==='estep')evaStep=+b.dataset.i;else if(a==='eprev')evaStep=Math.max(0,evaStep-1);else if(a==='enext')evaStep=Math.min(2,evaStep+1);
+  else if(a==='eclear'){notes={};evaDone=[];lsDel('bvi_stk_eva_notes');lsDel('bvi_stk_eva_done');renderEva();$('#emsg').textContent='Notizen geleert.';return;}
+  else return;
+  renderEva();const t=$(`#panel-eva [data-act="${a}"]${b.dataset.i?`[data-i="${b.dataset.i}"]`:''}`);if(t&&!t.disabled)t.focus();
+});
+pe.addEventListener('change',e=>{if(e.target.dataset.act==='edone'){const n=EVA.aufgaben[evaStep].nr;evaDone=e.target.checked?evaDone.concat(n):evaDone.filter(x=>x!==n);lsSet('bvi_stk_eva_done',evaDone);renderEva();$('#panel-eva [data-act="edone"]').focus();}});
+pe.addEventListener('input',e=>{const k=e.target.dataset.nk;if(k){notes[k]=e.target.value;lsSet('bvi_stk_eva_notes',notes);}});
+renderEva();
+
+showTab((location.hash||'').slice(1)&&TABS.some(t=>t[0]===location.hash.slice(1))?location.hash.slice(1):'plan');
+})();
+</script>
+</body>
+</html>
