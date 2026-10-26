@@ -1564,9 +1564,9 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
       click('[data-act="open"][data-id="baustoffe"]'); await w(100);
       click('[data-act="lvl"][data-i="1"]'); r.l1 = document.querySelectorAll('.tile.tok').length;
       click('[data-act="lvl"][data-i="3"]'); r.l3 = document.querySelectorAll('.tile.tok').length;
-      click('[data-act="home"]'); click('[data-act="open"][data-id="standsicherheit"]'); await w(100);
+      click('[data-act="home"]'); await w(120); click('[data-act="open"][data-id="standsicherheit"]'); await w(100);
       const rg = document.getElementById('etkr'); rg.value = 100; rg.dispatchEvent(new Event('input', { bubbles: true })); r.ofen = /Zeit überschritten|verloren/.test(document.getElementById('ofen').textContent);
-      click('[data-act="home"]'); click('[data-act="open"][data-id="aufenthaltsraum"]'); await w(100);
+      click('[data-act="home"]'); await w(120); click('[data-act="open"][data-id="aufenthaltsraum"]'); await w(100);
       click('[data-act="rcheck"]'); r.plan = document.querySelectorAll('.room').length;
       document.querySelector('[data-tab="quiz"]').click(); await w(50);
       click('[data-act="qstart"][data-id="ziele"]'); await w(50);

@@ -4090,12 +4090,13 @@ const KLAUSUR_HUB = (function(){
     document.querySelectorAll('iframe.emb-frame').forEach(function(f){
       if(!f.offsetParent)return;
       var tb=document.getElementById('m-topbar'),bar=document.getElementById('m-tabbar');
-      var top=tb&&getComputedStyle(tb).position==='sticky'?tb.offsetHeight:0;
+      var top=tb&&getComputedStyle(tb).position==='sticky'?Math.max(0,Math.ceil(tb.getBoundingClientRect().bottom)):0;
       var bot=bar&&getComputedStyle(bar).display!=='none'?bar.offsetHeight:0;
       f.style.top=top+'px';f.style.height=Math.max(300,innerHeight-top-bot)+'px';
     });
   }
   window.addEventListener('resize',fit);
+  setInterval(fit,500);
   document.addEventListener('click',function(){setTimeout(fit,350)},true);
   window.addEventListener('popstate',function(){setTimeout(fit,350)});
   window.addEventListener('message',function(e){
@@ -4112,6 +4113,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'VB-Prüfung lernen: Die Zurück-Taste (Handy und Browser) führt erst aus dem Thema, Quiz oder Sortierspiel zurück zur Themenliste und danach erst aus der Seite; „Weiter“ im Quiz steht rechts; die Kopfleiste der eingebetteten Seiten verdeckt die Reiter nicht mehr',
       'IdF Münster: Die Themen sind neu geordnet. „Vorbeugender Brandschutz“ und „Stabsarbeit“ sind jetzt eigene Kacheln; darin liegen jeweils die Lernseite und das interaktive Lernen (Brandofen, Quiz, Sortieren bzw. Taschenkarte). Die interaktiven Seiten bekommen wie die übrigen Themen einen Haken, sobald man sie geöffnet hat, und zählen zum IdF-Fortschritt.',
       'IdF · Vorbeugender Brandschutz: Neue interaktive Lernseite „VB-Prüfung lernen“ mit Definitionen und Aufgaben aus dem Unterricht (Ziele des Brandschutzes, Aufenthaltsraum, Nutzungseinheit, Baustoffklassen, Standsicherheit im Brandfall). Zum Ausprobieren gibt es einen Brandprüfstand, einen Brandofen mit Zeitregler, einen Grundriss und ein Gebäude zum Erkunden, dazu Quiz und Sortierspiel. Neue Themen lassen sich leicht ergänzen.',
       'Taschenkarte Stabsarbeit: Taktische Zeichen nach der Vorlage neu gezeichnet (Führungsstellen mit Fahne, Leitstelle mit Dach, Führungskräfte mit schwarzer Spitze, Personen, Schäden, Brände als rote Zacken, Gefahren, Fahrzeuge, Patientenablage, Versorgungsstellen mit schwarzem Boden, Größenordnung als Punkte); die ausgewählte Palette in der Lagerhalle ist klar hervorgehoben und wird erst mit Plus in den Rechner gelegt.',

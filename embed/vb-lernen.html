@@ -228,7 +228,7 @@ function viewQuiz(){
   const c=q.list[q.i],ans=q.ans;
   return `<button class="back" data-act="qend">‹ Abbrechen</button><div class="stat"><span>Frage ${q.i+1} von ${q.list.length}</span><span class="sp"></span><span>${q.right} richtig</span></div><div class="bar"><i style="width:${q.i/q.list.length*100}%"></i></div>
   <div class="card pad"><p class="q">${esc(c.q)}</p><div class="opts">${c.oo.map((o,i)=>`<button class="opt ${ans!=null?(i===c.a2?'ok':i===ans?'bad':''):''}" data-act="qans" data-i="${i}" ${ans!=null?'disabled':''}>${esc(o)}</button>`).join('')}</div>
-  ${ans!=null?`<div class="expl"><b>${ans===c.a2?'Richtig.':'Leider falsch.'}</b> ${esc(c.e)}</div><div class="row" style="margin-top:14px"><button class="btn pri" data-act="qnext">${q.i+1>=q.list.length?'Ergebnis':'Weiter'}</button></div>`:''}</div>`;
+  ${ans!=null?`<div class="expl"><b>${ans===c.a2?'Richtig.':'Leider falsch.'}</b> ${esc(c.e)}</div><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn pri" data-act="qnext">${q.i+1>=q.list.length?'Ergebnis':'Weiter'}</button></div>`:''}</div>`;
 }
 function qStart(id){
   let pool=id==='all'?T.flatMap(t=>t.quiz.map(x=>Object.assign({tid:t.id},x))):byId(id).quiz.map(x=>Object.assign({tid:id},x));
@@ -262,19 +262,25 @@ function render(){
   document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===st.tab));
   $('#view').innerHTML=st.tab==='lernen'?viewLernen():st.tab==='quiz'?viewQuiz():viewSpiel();
 }
+/* Zurück-Taste (Handy, Browser): eine Ebene tiefer = ein Verlaufseintrag */
+let deep=false;
+function enter(){if(!deep){try{history.pushState({vbl:1},'')}catch(e){}deep=true}}
+function clearDeep(){st.topic=null;st.quiz=null;st.sort=null;stopPlay()}
+function leave(){if(deep){deep=false;try{history.back();return}catch(e){}}clearDeep();render()}
+window.addEventListener('popstate',()=>{deep=false;clearDeep();render();window.scrollTo(0,0)});
 function top(){window.scrollTo(0,0);try{if(parent!==window)parent.postMessage({stk:'top'},location.origin)}catch(e){}}
 document.addEventListener('click',e=>{
-  const tb=e.target.closest('[data-tab]');if(tb){const same=st.tab===tb.dataset.tab;stopPlay();st.tab=tb.dataset.tab;if(same){if(st.tab==='lernen')st.topic=null;else if(st.tab==='quiz')st.quiz=null;else st.sort=null;}render();top();return}
+  const tb=e.target.closest('[data-tab]');if(tb){const same=st.tab===tb.dataset.tab;stopPlay();st.tab=tb.dataset.tab;if(same){if(deep){leave();return}if(st.tab==='lernen')st.topic=null;else if(st.tab==='quiz')st.quiz=null;else st.sort=null;}render();top();return}
   const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,id=b.dataset.id;
-  if(a==='open'){st.topic=id;}else if(a==='home'){st.topic=null;}
-  else if(a==='qstart'){qStart(id);}
+  if(a==='open'){st.topic=id;enter();}else if(a==='home'){leave();return}
+  else if(a==='qstart'){qStart(id);enter();}
   else if(a==='qans'){const q=st.quiz;if(q.ans!=null)return;q.ans=+b.dataset.i;const c=q.list[q.i];if(q.ans===c.a2)q.right++;else q.wrong.push(c);}
   else if(a==='qnext'){const q=st.quiz;q.i++;q.ans=null;if(q.i>=q.list.length)qDone();}
-  else if(a==='qend'){st.quiz=null;}
+  else if(a==='qend'){leave();return}
   else if(a==='qtopic'){if(id&&id!=='all'){st.topic=id;st.tab='lernen';}else st.tab='lernen';st.quiz=null;st.sort=null;}
-  else if(a==='sstart'){sStart(id);}
+  else if(a==='sstart'){sStart(id);enter();}
   else if(a==='scat'){sAnswer(+b.dataset.i);}
-  else if(a==='send'){st.sort=null;}
+  else if(a==='send'){leave();return}
   else if(a==='lvl'){L.baustoffe.lvl=+b.dataset.i;paintLab();return}
   else if(a==='cls'){L.etk.cls=+b.dataset.i;paintLab();return}
   else if(a==='play'){if(L.etk.play){stopPlay()}else{if(L.etk.t>=120)L.etk.t=0;L.etk.play=setInterval(()=>{L.etk.t=Math.min(120,L.etk.t+1);if(L.etk.t>=120)stopPlay();paintLab()},110)}paintLab();return}
