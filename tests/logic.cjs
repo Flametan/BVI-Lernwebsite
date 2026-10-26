@@ -587,7 +587,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
     NAV.go('v-plan', 'Stundenplan'); await w(300); IDF_PLAN._grp('g1'); IDF_PLAN._go(0); await w(300);
     const day = [...document.querySelectorAll('#plan-inner .idf-day')];
-    const lunch = d => d.querySelector('.idf-lunch.idf-tap');
+    const lunch = d => d.querySelector('.idf-lunch[data-lunch]');
     r.tapbar = day.slice(0, 5).every(d => lunch(d) && lunch(d).dataset.lunch === d.dataset.ymd);
     const open = async d => { lunch(d).click(); for (let i = 0; i < 30 && !document.querySelector('.sp-card'); i++) await w(50); await w(50); };
     await open(day[2]);   // Mittwoch 28.10.
@@ -602,6 +602,24 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     IDF_PLAN._go(0); NAV.go('v-home', 'Start'); return r;
   });
   eq('Speiseplan: Mittagessen öffnet den Tag, Woche, leere Woche, Schließen', sp, { tapbar: true, card: true, mi: true, woche: true, esc: true, leer: true, zu: true });
+
+  // ── Essen: Speiseraum A3 in den Zeilen, Tipp auf Frühstück öffnet den Raumplan, Speiseplan hat den Knopf dazu ──
+  const meal = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    NAV.go('v-plan', 'Stundenplan'); await w(300); IDF_PLAN._grp('g1'); IDF_PLAN._go(0); await w(300);
+    const d = document.querySelectorAll('#plan-inner .idf-day')[1], rows = [...d.querySelectorAll('.idf-lunch')];
+    r.zeilen = rows.length === 3 && rows.every(x => /Speiseraum A3/.test(x.textContent));
+    const fr = rows.find(x => /Frühstück/.test(x.textContent)); fr.click(); for (let i = 0; i < 40 && !document.querySelector('.rp-back'); i++) await w(100);
+    r.plan = !!document.querySelector('.rp-back') && /Frühstück/.test(document.querySelector('.rp-title').textContent) && /A3/.test(document.querySelector('.rp-chips').textContent);
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(100);
+    d.querySelector('.idf-lunch[data-lunch]').click(); for (let i = 0; i < 30 && !document.querySelector('.sp-card'); i++) await w(50);
+    r.knopf = !!document.querySelector('.sp-room');
+    document.querySelector('.sp-room').click(); for (let i = 0; i < 40 && !document.querySelector('.rp-dlg'); i++) await w(100);
+    r.vomSpeiseplan = !!document.querySelector('.rp-dlg');
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(100); document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(100);
+    r.zu = !document.querySelector('.rp-back') && !document.querySelector('.sp-card'); NAV.go('v-home', 'Start'); return r;
+  });
+  eq('Essen: Speiseraum A3 in den Zeilen, Raumplan und Speiseplan-Knopf', meal, { zeilen: true, plan: true, knopf: true, vomSpeiseplan: true, zu: true });
 
   // ── Raumplan: Tipp auf eine Einheit mit Raum öffnet den 3D-Plan, Notizen gibt es nicht mehr ──
   const rp = await page.evaluate(async () => {
