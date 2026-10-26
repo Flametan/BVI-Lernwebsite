@@ -4077,6 +4077,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'Startseite: Der Link zur FAQ vor der Anreise öffnet den Stundenplan jetzt ganz oben bei der FAQ statt bei der aktuellen Einheit',
       'FAQ zu den Standorten: Für das IdF Münster sind jetzt Essenszeiten, Getränke, Tagesablauf, Sporthalle, Strom und Netz sowie Waschmöglichkeiten eingetragen; der Laptop wird in keiner Antwort mehr erwähnt',
       'Lernseiten: Auf dem Desktop gibt es jetzt wie auf Handy und Tablet die Kapitelkarten; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges Kapitel“ und „Nächstes Kapitel“. Auf dem Tablet war die Leiste mit diesen Knöpfen unter der Tab-Leiste verdeckt und ist jetzt sichtbar. Die Seitenübersicht „Auf dieser Seite“ am rechten Rand entfällt dafür',
       'Stundenplan IdF Münster: Ein Tipp auf „Mittagessen“ öffnet den Speiseplan des Tages (Stammessen, Beilage, vegetarisch, Dessert mit den Kürzeln vom Aushang); die anderen Tage der Woche stehen darunter, der gewählte Tag ist hervorgehoben. Der Speiseplan der aktuellen Woche ist eingetragen',
@@ -5899,6 +5900,7 @@ const IDF_PLAN = (function(){
     _weeks=_buildWeeks();
     if(!_weeks.length){ const el=document.getElementById('plan-inner'); if(el) _drawEmpty(el); return; }
     _manual=false; _wi=_curWeek();
+    if(_toFaq){ _draw(); window.scrollTo(0,0); requestAnimationFrame(()=>window.scrollTo(0,0)); return; }
     // Springt zur laufenden bzw. nächsten Einheit: richtige Woche, Tag nach oben scrollen
     const nx=_next(), key=nx&&_ymd(nx.start);
     _draw();
@@ -5953,7 +5955,8 @@ const IDF_PLAN = (function(){
   // Alle kommenden Einheiten (Beginn/Ende in ms) für die Startbildschirm-Widgets der Android-App
   // Erster Plantag und Standort des aktiven Plans (für den FAQ-Hinweis auf der Startseite)
   function arrival(){ _mode='active'; try{ const w=_buildWeeks(_savedGrp()), k=_nonMaster()?(_actKey()||'idf'):'idf'; return w.length?{key:k==='idf2'?'idf':k,start:w[0][3]}:null; }catch(e){ return null; }finally{ _mode='view'; } }
-  function openFaq(){ const a=arrival(); if(a&&_nonMaster()) viewTab(a.key,true); FAQ.want(); NAV.tab('v-plan','Stundenplan'); }
+  let _toFaq=false;   // true: der nächste Aufbau springt nicht zur aktuellen Einheit, sondern bleibt oben bei der FAQ
+  function openFaq(){ const a=arrival(); if(a&&_nonMaster()) viewTab(a.key,true); FAQ.want(); _toFaq=true; NAV.tab('v-plan','Stundenplan'); _toFaq=false; }
   function units(){ _mode='active'; try{ return _units(); }finally{ _mode='view'; } }
   function _units(){
     const out=[], g=_savedGrp(), from=new Date(); from.setHours(0,0,0,0);

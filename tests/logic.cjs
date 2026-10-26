@@ -627,10 +627,12 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const c = document.querySelector('#plan-inner details.faq');
     r.karte = !!c && !c.open && /Kühlschrank/.test(c.textContent) && /IdF Münster/.test(c.textContent);
     const ar = IDF_PLAN.arrival(); r.arrival = !!ar && ar.key === 'idf' && /^\d{4}-\d\d-\d\d$/.test(ar.start);
-    IDF_PLAN.openFaq(); await w(300); r.offen = !!document.querySelector('#plan-inner details.faq[open]');
+    IDF_PLAN._go(0); window.scrollTo(0, 900); await w(100);
+    IDF_PLAN.openFaq(); await w(400); r.offen = !!document.querySelector('#plan-inner details.faq[open]');
+    r.oben = window.scrollY < 40;
     NAV.go('v-home', 'Start'); return r;
   });
-  eq('FAQ: Standorte, Karte im Stundenplan, Startseiten-Link', faq, { idf: true, leer: true, alle: true, fremd: true, karte: true, arrival: true, offen: true });
+  eq('FAQ: Standorte, Karte im Stundenplan, Startseiten-Link', faq, { idf: true, leer: true, alle: true, fremd: true, karte: true, arrival: true, offen: true, oben: true });
 
   const so = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms));
