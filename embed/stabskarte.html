@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="../css/fonts.css">
 <title>Taschenkarte Stabsarbeit</title>
 <style>
 :root{
@@ -268,7 +269,8 @@ footer{border-top:1px solid var(--line);padding:16px 0 30px;color:var(--mute);fo
 
 /* Einbettung in die B-VI-App (iframe, ?embed=1): Kopf und Fuß entfallen, Farben kommen aus der App */
 html.emb .top,html.emb footer{display:none}
-html.emb body{background:transparent}
+html.emb body{background:var(--bg);font-family:var(--ff,inherit)}
+html.emb .tabs{box-shadow:none}
 html.emb main{padding-top:14px}
 /* Lagerhalle im Querschnitt */
 .hall{padding:8px}.hall svg{display:block;width:100%;height:auto}
@@ -451,8 +453,11 @@ const EVA_HINTS = {
   if(!/[?&]embed=1/.test(location.search))return;
   const de=document.documentElement,pd=()=>{try{return parent.document.documentElement}catch(e){return null}};
   de.classList.add('emb');
+  const MAP={'--bg':'--m-bg','--card':'--m-card','--soft':'--m-raised','--line':'--m-line','--ink':'--m-fg','--mute':'--m-muted','--or':'--m-accent','--ord':'--m-accent-fg','--onor':'--m-on-accent'};
   const sync=()=>{const p=pd();if(!p)return;de.setAttribute('data-theme',p.getAttribute('data-theme')==='light'?'light':'dark');
-    try{const cs=parent.getComputedStyle(parent.document.body),r=getComputedStyle(parent.document.documentElement);const a=r.getPropertyValue('--accent').trim();if(a){de.style.setProperty('--or',a);}document.body.style.background='transparent';}catch(e){}};
+    try{const cs=parent.getComputedStyle(p);for(const k in MAP){const v=cs.getPropertyValue(MAP[k]).trim();if(v)de.style.setProperty(k,v);}
+      const ac=cs.getPropertyValue('--m-accent').trim();if(ac)de.style.setProperty('--orsoft','color-mix(in srgb,'+ac+' 16%,'+cs.getPropertyValue('--m-card').trim()+')');
+      const ff=parent.getComputedStyle(parent.document.body).fontFamily;if(ff)de.style.setProperty('--ff',ff);}catch(e){}};
   sync();const p=pd();if(p)new MutationObserver(sync).observe(p,{attributes:true,attributeFilter:['data-theme','data-tone','style']});
   const rep=()=>{try{parent.postMessage({stk:'h',h:document.documentElement.scrollHeight},location.origin)}catch(e){}};
   addEventListener('load',rep);new ResizeObserver(rep).observe(document.body);

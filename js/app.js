@@ -4079,13 +4079,19 @@ const KLAUSUR_HUB = (function(){
 /* ======================================================================
    CHANGELOG – Update-Feed mit Auto-Open bei neuer Version
 ====================================================================== */
-// Taschenkarte Stabsarbeit (iframe): Höhe anpassen, bei Tabwechsel nach oben scrollen
-window.addEventListener('message',function(e){
-  if(e.origin!==location.origin||!e.data||!e.data.stk)return;
-  var f=document.getElementById('stkFrame');if(!f)return;
-  if(e.data.stk==='h'&&e.data.h)f.style.height=Math.max(e.data.h,400)+'px';
-  else if(e.data.stk==='top')f.scrollIntoView({block:'start'});
-});
+// Taschenkarte Stabsarbeit (iframe): füllt den Platz zwischen Kopfleiste und Tableiste, Tabs der Karte bleiben sichtbar
+(function(){
+  function fit(){
+    var f=document.getElementById('stkFrame');if(!f||!f.offsetParent)return;
+    var tb=document.getElementById('m-topbar'),bar=document.getElementById('m-tabbar');
+    var top=tb&&getComputedStyle(tb).position==='sticky'?tb.offsetHeight:0;
+    var bot=bar&&getComputedStyle(bar).display!=='none'?bar.offsetHeight:0;
+    f.style.top=top+'px';f.style.height=Math.max(300,innerHeight-top-bot)+'px';
+  }
+  window.addEventListener('resize',fit);
+  document.addEventListener('click',function(){setTimeout(fit,350)},true);
+  window.addEventListener('popstate',function(){setTimeout(fit,350)});
+})();
 const CHANGELOG=(function(){
   const KEY='bvi_seen_version';
   const _MON=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
