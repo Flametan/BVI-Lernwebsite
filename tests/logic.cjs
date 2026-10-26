@@ -568,6 +568,22 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Erreichbarkeiten: VB-Kontakte nur in den VB-Wochen', tel2, { vb: true, mail: true, tel: true, stab: true, g2stab: true, g2vb: true });
 
+  // ── Raumplan: Standort-Umrechnung (die drei Messpunkte landen auf ihren Gebäuden, weit entfernte Orte außerhalb) ──
+  const gpsT = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    NAV.go('v-plan', 'Stundenplan'); await w(300); IDF_PLAN._go(0); await w(300);
+    const it = document.querySelector('#plan-inner .idf-tap[data-rm]'); it.click(); for (let i = 0; i < 40 && !document.querySelector('.rp-back'); i++) await w(100);
+    const g = RAUMPLAN._geo, T = RAUMPLAN._gps, near = (id, lat, lon) => { const b = g.buildings.find(x => x.id === id), p = T.toMap(lat, lon); return Math.hypot(p[0] - b.lx, p[1] - b.ly) < 2; };
+    r.punkte = near('A7', 51.954231, 7.660568) && near('B3', 51.956414, 7.659978) && near('A3', 51.955326, 7.659865);
+    r.skala = T.scale > 1.5 && T.scale < 3;
+    r.mitte = T.outside(T.toMap(51.9552, 7.6601)) === 0;
+    r.weit = T.outside(T.toMap(52.52, 13.40)) > 300000;
+    r.knopf = !!document.querySelector('[data-a="gps"]');
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(100);
+    NAV.go('v-home', 'Start'); return r;
+  });
+  eq('Raumplan: Standort rechnet die Messpunkte auf die Gebäude um', gpsT, { punkte: true, skala: true, mitte: true, weit: true, knopf: true });
+
   // ── Speiseplan: Tipp auf „Mittagessen“ öffnet den Plan des Tages ──
   const sp = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
