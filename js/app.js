@@ -1278,6 +1278,7 @@ const SEARCH = (function(){
     'v-feuak-risikoanalyse':'FeuAK · Prospektive Risikoanalyse',
     'v-idf-brandschutz':'IdF · Vorbeugender Brandschutz',
     'v-idf-stab':'IdF · Stabsarbeit',
+    'v-idf-stabskarte':'IdF · Taschenkarte Stabsarbeit',
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
     'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
@@ -2980,7 +2981,7 @@ const LP=(function(){
     'v-vak-jur-denken':['VAk · Jur. Denken'],'v-vak-verwaltungsrecht':['VAk · Verwaltungsrecht'],'v-vak-staatsrecht':['VAk · Staatsrecht'],'v-vak-einsatzrecht':['VAk · Einsatzrecht'],'v-vak-dienstrecht':['VAk · Dienstrecht'],
     'v-feuak-vwl':['FeuAK · VWL'],'v-feuak-haushalt':['FeuAK · Haushalt'],'v-feuak-pm':['FeuAK · PM'],'v-feuak-bedarfsplanung':['FeuAK · Bedarfsplanung'],'v-feuak-katsbp':['FeuAK · KatS-Bedarfsplanung'],
     'v-feuak-qm':['FeuAK · BSC/QM'],'v-feuak-stakeholder':['FeuAK · Stakeholderanalyse'],'v-feuak-risikoanalyse':['FeuAK · Prospektive Risikoanalyse'],'v-feuak-beschaffung':['FeuAK · Beschaffungspraxis','FeuAK · Vergabe'],
-    'v-idf-brandschutz':['IdF · Brandschutz'],'v-idf-stab':['IdF · Stabsarbeit'],'v-idf-presse':['IdF · Presse']
+    'v-idf-brandschutz':['IdF · Brandschutz'],'v-idf-stab':['IdF · Stabsarbeit'],'v-idf-stabskarte':['IdF · Taschenkarte'],'v-idf-presse':['IdF · Presse']
   };
   const cardsFor=id=>{ const c=PMAP[id]; return c&&typeof FLASHCARD_DATA!=='undefined'?FLASHCARD_DATA.filter(x=>c.includes(x.cat)):[]; };
   const PRKEY='bvi_lp_prac';
@@ -4078,6 +4079,13 @@ const KLAUSUR_HUB = (function(){
 /* ======================================================================
    CHANGELOG – Update-Feed mit Auto-Open bei neuer Version
 ====================================================================== */
+// Taschenkarte Stabsarbeit (iframe): Höhe anpassen, bei Tabwechsel nach oben scrollen
+window.addEventListener('message',function(e){
+  if(e.origin!==location.origin||!e.data||!e.data.stk)return;
+  var f=document.getElementById('stkFrame');if(!f)return;
+  if(e.data.stk==='h'&&e.data.h)f.style.height=Math.max(e.data.h,400)+'px';
+  else if(e.data.stk==='top')f.scrollIntoView({block:'start'});
+});
 const CHANGELOG=(function(){
   const KEY='bvi_seen_version';
   const _MON=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
@@ -4087,6 +4095,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'IdF · Stabsarbeit: Neue interaktive Taschenkarte mit 7-Punkte-Plan, Stabsstruktur, taktischen Zeichen, Katastrophenschutzlager NRW (Lagerhalle im Querschnitt mit antippbaren Paletten und Anforderungsrechner) und der EVA-Übung zum Sachgebiet 4 Versorgung; zu jeder der drei Aufgaben gibt es am Ende eine recherchierte Musterlösung mit Quellen.',
       'Stundenplan: In allen Jahrgängen außer dem Master gibt es unter der FAQ den Knopf „Raumplan IdF Münster“; er öffnet das Gelände in 3D mit allen Gebäuden, Parkplätzen und Sammelplätzen, auch wenn der eigene Plan keine Räume enthält',
       'Stundenplan IdF Münster: Frühstück, Mittagessen und Abendessen nennen den Speiseraum (Gebäude A3); ein Tipp auf Frühstück oder Abendessen zeigt A3 im Raumplan, im Speiseplan gibt es dazu einen Knopf',
       'Stundenplan IdF Münster: Jeder Tag zeigt jetzt auch Frühstück (6:30 bis 7:45 Uhr) und Abendessen (17:00 bis 19:00 Uhr, Essenausgabe bis 18:30 Uhr); am Abreisetag und in der BABZ-Woche entfällt das Abendessen bzw. beides',

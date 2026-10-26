@@ -23,6 +23,7 @@ const PRECACHE = [
   './js/solitaer.js',
   './js/minesweeper.js',
   './js/raumplan.js',
+  './embed/stabskarte.html',
   './js/three.min.js',
   './js/jsqr.min.js',
   './js/version.js',
