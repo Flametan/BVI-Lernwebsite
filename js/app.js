@@ -4115,6 +4115,8 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'VB lernen: Die Texte in „Auf einen Blick“ stehen als Stichpunkte mit hellem Strich in breiten Farbkacheln (statt in schmalen Pillen)',
+      'VB lernen: Neues Seitenlayout auf allen fünf Reitern – oben „Auf einen Blick“ als farbige Kacheln (bei Standsicherheit mit den Minutenzahlen), dann „Ausprobieren“ mit der Simulation, darunter „Ausführlich erklärt“',
       'Startseite: Der FAQ-Hinweis „Vor der Anreise“ ist entfernt; die FAQ bleibt im Stundenplan',
       'VB lernen: Aufbau wie die Taschenkarte Stabsarbeit – alle fünf Themen (Ziele, Aufenthaltsraum, Nutzungseinheit, Baustoffe, Standsicherheit) sind Reiter in einer festen Navigationsleiste oben; die Themenliste sowie Quiz und Sortieren sind entfallen',
       'VB-Prüfung lernen und Taschenkarte Stabsarbeit: Alle Aktionsknöpfe (Weiter, Prüfen, Nochmal, Quiz starten, Brand starten, Text kopieren usw.) stehen rechts',
