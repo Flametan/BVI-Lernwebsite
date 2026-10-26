@@ -39,13 +39,14 @@ main{padding:18px 0 48px}
 .btn{min-height:46px;padding:8px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-weight:700}
 .btn.pri{background:var(--or);border-color:var(--or);color:var(--onor)}
 .btn:disabled{opacity:.5}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
 .sp{flex:1}
 .list{display:grid;gap:10px}
 .topic{display:flex;gap:12px;align-items:center;text-align:left;width:100%;padding:14px 16px;min-height:64px}
 .topic .t{font-weight:800}.topic small{display:block;color:var(--mute);font-weight:500;font-size:13px}
 .stars{margin-left:auto;white-space:nowrap;color:var(--or);letter-spacing:2px;font-size:18px}
 .stars i{color:var(--line);font-style:normal}
+.row.l{justify-content:flex-start}
 .back{background:none;border:0;color:var(--ord);font-weight:700;min-height:44px;padding:0 4px;margin-bottom:6px}
 .fact{padding:12px 16px;border-top:1px solid var(--line)}
 .fact:first-child{border-top:0}
@@ -242,7 +243,7 @@ function viewSpiel(){
   const g=st.sort;
   if(!g)return `<h2 class="h2">Sortieren</h2><p class="lead">Begriffe schnell der richtigen Kategorie zuordnen. Fehler kommen am Ende nochmal.</p><div class="list">${T.filter(t=>t.sort).map(t=>`<button class="card topic" data-act="sstart" data-id="${t.id}"><span><span class="t">${esc(t.titel)}</span><small>${t.sort.items.length} Karten${sbest[t.id]!=null?' · Bestzeit '+sbest[t.id].t+' s, '+sbest[t.id].f+' Fehler':''}</small></span></button>`).join('')}</div>`;
   const t=byId(g.id);
-  if(!g.queue.length)return `<div class="card pad"><div class="big">${g.fehler===0?'Fehlerfrei':g.fehler+' Fehler'}</div><p class="lead" style="text-align:center">${t.sort.items.length} Karten in ${g.dauer} Sekunden</p>${g.neu?'<p style="text-align:center;font-weight:800;color:var(--ok)">Neue Bestleistung</p>':''}<div class="row" style="margin-top:16px;justify-content:center"><button class="btn pri" data-act="sstart" data-id="${g.id}">Nochmal</button><button class="btn" data-act="send">Themenliste</button><button class="btn" data-act="qtopic" data-id="${g.id}">Zum Thema</button></div></div>`;
+  if(!g.queue.length)return `<div class="card pad"><div class="big">${g.fehler===0?'Fehlerfrei':g.fehler+' Fehler'}</div><p class="lead" style="text-align:center">${t.sort.items.length} Karten in ${g.dauer} Sekunden</p>${g.neu?'<p style="text-align:center;font-weight:800;color:var(--ok)">Neue Bestleistung</p>':''}<div class="row" style="margin-top:16px"><button class="btn pri" data-act="sstart" data-id="${g.id}">Nochmal</button><button class="btn" data-act="send">Themenliste</button><button class="btn" data-act="qtopic" data-id="${g.id}">Zum Thema</button></div></div>`;
   const it=g.queue[0];
   return `<button class="back" data-act="send">‹ Abbrechen</button><div class="stat"><span>Noch ${g.queue.length}</span><span>Serie ${g.serie}</span><span class="sp"></span><span>Fehler ${g.fehler}</span></div><div class="bar"><i style="width:${(1-g.queue.length/g.gesamt)*100}%"></i></div>
   <div class="cardx ${g.flash||''}" id="cardx" aria-live="polite">${esc(it[0])}</div>
