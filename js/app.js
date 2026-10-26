@@ -4088,21 +4088,23 @@ const KLAUSUR_HUB = (function(){
 (function(){
   function fit(){
     document.querySelectorAll('iframe.emb-frame').forEach(function(f){
-      if(!f.offsetParent)return;
+      var v=f.parentElement;if(!v||!v.classList.contains('active'))return;
       var tb=document.getElementById('m-topbar'),bar=document.getElementById('m-tabbar');
-      var top=tb&&getComputedStyle(tb).position==='sticky'?Math.max(0,Math.ceil(tb.getBoundingClientRect().bottom)):0;
+      var top=tb?Math.max(0,Math.ceil(tb.getBoundingClientRect().bottom)):0;
       var bot=bar&&getComputedStyle(bar).display!=='none'?bar.offsetHeight:0;
-      f.style.top=top+'px';f.style.height=Math.max(300,innerHeight-top-bot)+'px';
+      var rail=document.getElementById('m-rail'),left=rail&&getComputedStyle(rail).display!=='none'?Math.round(rail.getBoundingClientRect().right):0;
+      /* fest am Bildschirm: die Seite scrollt nicht mit, die Reiter der Karte bleiben immer sichtbar */
+      f.style.position='fixed';f.style.left=left+'px';f.style.top=top+'px';f.style.width=(innerWidth-left)+'px';
+      f.style.height=Math.max(300,innerHeight-top-bot)+'px';
+      var q=f.getBoundingClientRect();
+      if(Math.abs(q.left-left)>1)f.style.left=(left-(q.left-left))+'px';
+      if(Math.abs(q.top-top)>1)f.style.top=(top-(q.top-top))+'px';
     });
   }
   window.addEventListener('resize',fit);
   setInterval(fit,500);
   document.addEventListener('click',function(){setTimeout(fit,350)},true);
   window.addEventListener('popstate',function(){setTimeout(fit,350)});
-  window.addEventListener('message',function(e){
-    if(e.origin!==location.origin||!e.data||e.data.stk!=='top')return;
-    var f=document.querySelector('iframe.emb-frame');if(f&&f.offsetParent)f.scrollIntoView({block:'start'});
-  });
 })();
 const CHANGELOG=(function(){
   const KEY='bvi_seen_version';
@@ -4113,6 +4115,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'Taschenkarte Stabsarbeit: „Weiter“ im Zeichen-Quiz steht rechts; die Zeichen im Quiz passen in ihre Kästen; die Reiter bleiben auch am Desktop beim Scrollen sichtbar (eingebettete Seiten stehen fest unter der Kopfleiste)',
       'VB-Prüfung lernen: Die Zurück-Taste (Handy und Browser) führt erst aus dem Thema, Quiz oder Sortierspiel zurück zur Themenliste und danach erst aus der Seite; „Weiter“ im Quiz steht rechts; die Kopfleiste der eingebetteten Seiten verdeckt die Reiter nicht mehr',
       'IdF Münster: Die Themen sind neu geordnet. „Vorbeugender Brandschutz“ und „Stabsarbeit“ sind jetzt eigene Kacheln; darin liegen jeweils die Lernseite und das interaktive Lernen (Brandofen, Quiz, Sortieren bzw. Taschenkarte). Die interaktiven Seiten bekommen wie die übrigen Themen einen Haken, sobald man sie geöffnet hat, und zählen zum IdF-Fortschritt.',
       'IdF · Vorbeugender Brandschutz: Neue interaktive Lernseite „VB-Prüfung lernen“ mit Definitionen und Aufgaben aus dem Unterricht (Ziele des Brandschutzes, Aufenthaltsraum, Nutzungseinheit, Baustoffklassen, Standsicherheit im Brandfall). Zum Ausprobieren gibt es einen Brandprüfstand, einen Brandofen mit Zeitregler, einen Grundriss und ein Gebäude zum Erkunden, dazu Quiz und Sortierspiel. Neue Themen lassen sich leicht ergänzen.',
