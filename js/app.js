@@ -4115,6 +4115,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'Startseite: Der FAQ-Hinweis „Vor der Anreise“ ist entfernt; die FAQ bleibt im Stundenplan',
       'VB lernen: Aufbau wie die Taschenkarte Stabsarbeit – alle fünf Themen (Ziele, Aufenthaltsraum, Nutzungseinheit, Baustoffe, Standsicherheit) sind Reiter in einer festen Navigationsleiste oben; die Themenliste sowie Quiz und Sortieren sind entfallen',
       'VB-Prüfung lernen und Taschenkarte Stabsarbeit: Alle Aktionsknöpfe (Weiter, Prüfen, Nochmal, Quiz starten, Brand starten, Text kopieren usw.) stehen rechts',
       'Taschenkarte Stabsarbeit: „Weiter“ im Zeichen-Quiz steht rechts; die Zeichen im Quiz passen in ihre Kästen; die Reiter bleiben auch am Desktop beim Scrollen sichtbar (eingebettete Seiten stehen fest unter der Kopfleiste)',
@@ -7186,11 +7187,9 @@ const SHELL=(function(){
     const lk=JG.isMaster()?{url:'https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare',titel:'Lehrgangs-Cloud',hinweis:'Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe'}:JG.data().links.cloud;
     const cloud=lk?`<div class="m-list m-cloud"><a class="m-row m-go" href="${esc(lk.url)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">${esc(lk.titel||'Lehrgangs-Link')}</span>${lk.hinweis?`<span class="m-t2 m-cloud-x">${esc(lk.hinweis)}</span>`:''}</span></a></div>`:'';
     const donate=`<a class="m-list m-donate m-donate-home" href="${SPENDE_URL}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><div class="m-row m-go">${ic('heart')}<span class="m-tx"><span class="m-t1">Gefällt dir die Seite?</span><span class="m-t2">Kostenlos &amp; werbefrei – freiwillig unterstützen</span></span></div></a>`;
-    // Bis zu 14 Tage vor dem ersten Plantag: Hinweis auf die FAQ des Standorts
-    let faqHint=''; { const ar=IDF_PLAN.arrival(); if(ar&&FAQ.count(ar.key)){ const dd=Math.round((new Date(ar.start+'T00:00')-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/864e5); if(dd>=-1&&dd<=14) faqHint='<div class="m-list m-faqhint">'+row({ic:ic('doc'),t1:'Vor der Anreise: FAQ '+esc(FAQ.NAME[ar.key]),t2:'Unterkunft, Essen, Sport und Anreise',on:'IDF_PLAN.openFaq()'})+'</div>'; } }
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
-      <div class="m-hgrid"><div class="m-hl">${faqHint}${cont}${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}</div></div>`;
+      <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}</div></div>`;
   }
 
   function renderExam(){
