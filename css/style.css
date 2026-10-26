@@ -2877,7 +2877,3 @@ p,.m-t2,.idf-note,.page-lead{text-wrap:pretty;}
   .rp-dlg,.sp-card,.sp-day,.faq,.idf-head,.idf-note,.idf-raumbtn,.idf-tel,.pz-game,.pz-card,.pz-mode,.pz-mode button,.cu-card,.m-sheet,.toast,.m-toast{corner-shape:squircle;}
   .m-tab-fab,.m-tab.fab{corner-shape:round;}
 }
-/* Seitenwechsel mit weichem Übergang (View Transitions); die Tab-Leiste bleibt dabei stehen */
-#m-tabbar{view-transition-name:m-tabbar;}#m-rail{view-transition-name:m-rail;}#m-topbar{view-transition-name:m-topbar;}
-::view-transition-old(root),::view-transition-new(root){animation-duration:.2s;}
-html.vt .view.nav-forward,html.vt .view.nav-back{animation:none;}   /* sonst liefen zwei Animationen übereinander */
