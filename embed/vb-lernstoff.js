@@ -1,11 +1,12 @@
 /* Lernstoff VB-Prüfung Münster. Neues Thema = ein weiteres Objekt in VBL.themen.
-   Felder: id, kurz (Reitername), titel, quelle, merke, fakten [[Überschrift, Text]],
+   Felder: id, kurz (Reitername), kacheln [[Titel, Satz]] (aufklappbare Kacheln statt Textkarte; Merksatz steht dann oben, die ausführliche Erklärung entfällt), titel, quelle, merke, fakten [[Überschrift, Text]],
    sort {kats:[...], items:[[Text, Index der Kategorie]]} (Kacheln „Auf einen Blick“), farben [Kachelfarben], blick [[Zahl, Einheit, Text]] (optional, Zahlenkacheln statt Sortierkacheln), extra ('etk' = Regler zur Einheits-Temperaturzeitkurve).
    **fett** im Text wird fett dargestellt. */
 const VBL = { themen: [
 
 { id: 'ziele', kurz: 'Ziele', titel: 'Ziele des Vorbeugenden Brandschutzes', quelle: '§ 14 MBO (Aushang IdF, Dezernat B2)', extra: 'ziele',
   farben: ['#3f9a54','#e58a00','#2f78d1','#a8201a'],
+  kacheln: [['Entstehung verhindern', 'Der Entstehung eines Brandes wird vorgebeugt.'], ['Ausbreitung verhindern', 'Der Ausbreitung von Feuer und Rauch wird vorgebeugt.'], ['Rettung ermöglichen', 'Bei einem Brand ist die Rettung von Menschen und Tieren möglich.'], ['Löschen ermöglichen', 'Bei einem Brand sind wirksame Löscharbeiten möglich.']],
   merke: 'E – A – R – L: Entstehung, Ausbreitung, Rettung, Löschen.',
   fakten: [
     ['Brandentstehung', 'Der **Entstehung eines Brandes** wird vorgebeugt.'],
