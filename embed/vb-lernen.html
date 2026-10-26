@@ -66,13 +66,14 @@ main{padding:18px 0 48px}
 .acc .in .ch2{display:block;margin:5px 0;font-size:15.5px;line-height:1.35}
 .acc .in .ch2:before{content:"•";margin-right:8px}
 .hero.txt{grid-template-columns:minmax(0,1fr)}
-.t{border-radius:20px;padding:14px;color:#fff;position:relative;overflow:hidden;min-height:104px;background:linear-gradient(145deg,var(--c),color-mix(in srgb,var(--c) 78%,#000))}
+.t{border-radius:16px;padding:10px 14px 11px;color:#fff;position:relative;overflow:hidden;min-height:0;background:linear-gradient(145deg,var(--c),color-mix(in srgb,var(--c) 78%,#000))}
 .t small{font-size:12px;opacity:.92;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
-.t b{display:block;font-size:42px;line-height:1.05;font-weight:900;font-variant-numeric:tabular-nums}
+.t.num b u{text-decoration:none;font-size:13px;font-weight:800;opacity:.9;margin-right:4px;vertical-align:middle}
+.t b{display:block;font-size:34px;line-height:1.05;font-weight:900;font-variant-numeric:tabular-nums}
 .t b i{font-style:normal;font-size:16px;margin-left:4px;font-weight:800}
 .t>span{display:block;margin-top:6px;font-weight:700;font-size:15px;hyphens:manual;overflow-wrap:break-word}
-.t h4{font-size:20px;margin:0 0 8px}
-.t .ch{display:block;padding:6px 0 6px 12px;border-left:4px solid rgba(255,255,255,.55);margin:6px 0;font-size:16px;line-height:1.35;font-weight:500}
+.t h4{font-size:17px;margin:0 0 3px}
+.t p{margin:0;font-size:15px;line-height:1.4}
 .t svg.fl{position:absolute;right:-6px;bottom:-8px;width:68px;opacity:.18;pointer-events:none}
 .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}
 .col{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--card)}
@@ -206,18 +207,17 @@ function paintLab(){const e=$('#lab');if(e){const t=byId(st.tab);const keepSlide
 function stopPlay(){if(L.etk.play){clearInterval(L.etk.play);L.etk.play=null}}
 function viewTopic(){
   const t=byId(st.tab),cf=t.farben||['#e9b949','#e8892b','#d9482b','#a8201a'];
+  const fl=`<svg class="fl" viewBox="0 0 24 24" aria-hidden="true">${FLAME}</svg>`;
   let hero='';
-  if(t.blick)hero=t.blick.map((k,i)=>`<div class="t" style="--c:${cf[i%cf.length]}"><small>Stufe ${i+1}</small><b>${esc(k[0])}<i>${esc(k[1])}</i></b><span>${esc(hy(k[2]))}</span><svg class="fl" viewBox="0 0 24 24" aria-hidden="true">${FLAME}</svg></div>`).join('');
-  else if(t.kacheln)hero=t.kacheln.map((k,i)=>`<details class="t acc" style="--c:${cf[i%cf.length]}"><summary><span class="n">${i+1}</span><span class="tt"><h4>${esc(k[0])}</h4><div class="s">${esc(k[1])}</div></span><span class="tg" aria-hidden="true"></span></summary><div class="in">${t.sort.items.filter(x=>x[1]===i).map(x=>`<span class="ch2">${esc(x[0])}</span>`).join('')}</div><svg class="fl" viewBox="0 0 24 24" aria-hidden="true">${FLAME}</svg></details>`).join('');
-  else if(t.sort)hero=t.sort.kats.map((k,i)=>`<div class="t" style="--c:${cf[i%cf.length]}"><h4>${esc(hy(k))}</h4>${t.sort.items.filter(x=>x[1]===i).map(x=>`<p class="ch">${esc(x[0])}</p>`).join('')}<svg class="fl" viewBox="0 0 24 24" aria-hidden="true">${FLAME}</svg></div>`).join('');
-  const df=t.fakten.find(f=>f[0]==='Definition'),rest=t.fakten.filter(f=>f!==df);
-  const erkl=`<div class="card"><div class="merke" style="margin:12px">Merke: ${esc(t.merke)}</div>${rest.map(f=>`<div class="fact"><h4>${esc(f[0])}</h4><div>${md(f[1])}</div></div>`).join('')}</div>`;
+  if(t.blick)hero=t.blick.map((k,i)=>`<div class="t num" style="--c:${cf[i%cf.length]}"><b><u>mind.</u> ${esc(k[0])}<i>${esc(k[1])}</i></b><span>${esc(hy(k[2]))}</span>${fl}</div>`).join('');
+  else if(t.kacheln)hero=t.kacheln.map((k,i)=>`<details class="t acc" style="--c:${cf[i%cf.length]}"><summary><span class="n">${i+1}</span><span class="tt"><h4>${esc(k[0])}</h4><div class="s">${esc(k[1])}</div></span><span class="tg" aria-hidden="true"></span></summary><div class="in">${t.sort.items.filter(x=>x[1]===i).map(x=>`<span class="ch2">${esc(x[0])}</span>`).join('')}</div>${fl}</details>`).join('');
+  else hero=t.sort.kats.map((k,i)=>`<div class="t" style="--c:${cf[i%cf.length]}"><h4>${esc(hy(k))}</h4><p>${t.sort.items.filter(x=>x[1]===i).map(x=>esc(x[0])).join(', ')}</p>${fl}</div>`).join('');
+  const zus=(t.zusatz||[]).map(z=>`<div class="t" style="--c:#6b5a8a"><h4>${esc(z[0])}</h4><p>${esc(z[1])}</p>${fl}</div>`).join('');
   return `<h2 class="h2">${esc(t.titel)}</h2><p class="lead" style="margin-bottom:0">${esc(t.quelle)}</p>
-   ${df?`<div class="def"><h4>Definition</h4><div>${md(df[1])}</div></div>`:''}
-   ${t.kacheln?`<div class="sec">Merksatz</div><div class="merke">${esc(t.merke)}</div>`:''}
-   <div class="sec">Auf einen Blick</div><div class="hero${t.blick?'':' txt'}">${hero}</div>
-   ${t.extra&&LABS[t.extra]?'<div class="sec">Ausprobieren</div><div id="lab">'+LABS[t.extra]()+'</div>':''}
-   ${t.kacheln?'':`<div class="sec">Ausführlich erklärt</div>${erkl}`}`;
+   ${t.def?`<div class="def"><h4>${esc(t.def[0])}</h4><div>${md(t.def[1])}</div></div>`:''}
+   <div class="merke" style="margin:12px 0 0">${esc(t.merke)}</div>
+   <div class="sec">Auf einen Blick</div><div class="hero${t.blick?'':' txt'}">${hero}</div>${zus?'<div class="hero txt" style="margin-top:10px">'+zus+'</div>':''}
+   ${t.extra&&LABS[t.extra]?'<div class="sec">Ausprobieren</div><div id="lab">'+LABS[t.extra]()+'</div>':''}`;
 }
 function render(){
   document.querySelectorAll('.tab').forEach(b=>{const on=b.dataset.tab===st.tab;b.setAttribute('aria-selected',on);if(on)b.scrollIntoView({inline:'center',block:'nearest'})});

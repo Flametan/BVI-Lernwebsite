@@ -4115,6 +4115,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'VB lernen: Alle fünf Reiter haben denselben kompakten Aufbau – Definition bzw. Grundsatz oben, darunter der Merksatz, dann kleine Farbkacheln „Auf einen Blick“ (Punkte mit Komma getrennt), dann die Simulation; „Ausführlich erklärt“ entfällt. Aufenthaltsraum hat jetzt die Kachel „Bedingt“, Standsicherheit zeigt „mind. 30/60/90/120 Min.“ und die Kachel „Besondere Fälle“, Baustoffe nennt Abtropfen und § 26 MBO in den Kacheln',
       'VB lernen · Ziele: Der Merksatz steht oben, die vier Ziele sind nummerierte, aufklappbare Kacheln („Entstehung verhindern“, „Ausbreitung verhindern“, „Rettung ermöglichen“, „Löschen ermöglichen“) mit dem jeweiligen Satz aus § 14 MBO (alle beim Öffnen zugeklappt); die ausführliche Erklärung entfällt',
       'VB lernen: Die Definition (bei Aufenthaltsraum und Nutzungseinheit) steht jetzt als hervorgehobene Karte ganz oben direkt unter dem Titel',
       'VB lernen: Die Texte in „Auf einen Blick“ stehen als Stichpunkte mit hellem Strich in breiten Farbkacheln (statt in schmalen Pillen)',
