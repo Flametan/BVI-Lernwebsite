@@ -2841,3 +2841,15 @@ body.rp-lock{overflow:hidden;}
 .idf-tap:focus-visible{outline:2px solid var(--m-accent);outline-offset:2px;}
 .idf-rm{color:var(--m-accent-fg);}.idf-rm svg{width:12px;height:12px;vertical-align:-1px;margin-right:4px;}
 .rp-poi.q{font-style:normal;font-weight:800;font-size:.64rem;padding:1px 6px;height:18px;line-height:15px;background:#4a3f7a;color:#fff;opacity:.92;}.rp-poi.q.s{background:#2f8f5f;}
+
+/* Speiseplan (Stundenplan: Tipp auf Mittagessen) */
+.sp-card{background:var(--m-card);color:var(--m-fg);width:min(560px,100%);max-height:100dvh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;}
+@media(min-width:700px){.sp-card{height:min(720px,90vh);border-radius:22px;box-shadow:0 14px 48px rgba(0,0,0,.5);}}
+.sp-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:max(12px,env(safe-area-inset-top)) 12px 12px 16px;border-bottom:1px solid var(--m-line);}
+.sp-title{font-size:1.1rem;font-weight:700;}.sp-sub{font-size:.76rem;color:var(--m-muted);margin-top:2px;}
+.sp-body{flex:1;overflow:auto;padding:12px 16px max(18px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;}
+.sp-day{background:var(--m-raised);border-radius:16px;padding:12px 14px;border:2px solid transparent;}.sp-day.on{border-color:var(--m-accent);}
+.sp-day h3{margin:0 0 6px;font-size:.95rem;}.sp-day.on h3{color:var(--m-accent-fg);}
+.sp-row{display:flex;gap:10px;padding:5px 0;font-size:.9rem;line-height:1.35;}.sp-l{flex:0 0 92px;color:var(--m-muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.04em;padding-top:2px;}.sp-t{min-width:0;}.sp-t small{color:var(--m-muted);font-size:.72rem;}
+.sp-none{margin:0;color:var(--m-muted);font-size:.88rem;}
+.idf-lunch.idf-tap:focus-visible{outline:2px solid var(--m-accent);outline-offset:2px;}

@@ -568,6 +568,27 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Erreichbarkeiten: VB-Kontakte nur in den VB-Wochen', tel2, { vb: true, mail: true, tel: true, stab: true, g2stab: true, g2vb: true });
 
+  // ── Speiseplan: Tipp auf „Mittagessen“ öffnet den Plan des Tages ──
+  const sp = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    NAV.go('v-plan', 'Stundenplan'); await w(300); IDF_PLAN._grp('g1'); IDF_PLAN._go(0); await w(300);
+    const day = [...document.querySelectorAll('#plan-inner .idf-day')];
+    const lunch = d => d.querySelector('.idf-lunch.idf-tap');
+    r.tapbar = day.slice(0, 5).every(d => lunch(d) && lunch(d).dataset.lunch === d.dataset.ymd);
+    const open = async d => { lunch(d).click(); for (let i = 0; i < 30 && !document.querySelector('.sp-card'); i++) await w(50); await w(50); };
+    await open(day[2]);   // Mittwoch 28.10.
+    r.card = !!document.querySelector('.sp-card[role="dialog"]');
+    r.mi = /Currygeschnetzeltes/.test((document.querySelector('.sp-day.on') || {}).textContent || '') && /Mittwoch/.test((document.querySelector('.sp-day.on h3') || {}).textContent || '');
+    r.woche = document.querySelectorAll('.sp-day').length === 5 && /Schweineschnitzel/.test(document.querySelector('.sp-body').textContent);
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(100);
+    r.esc = !document.querySelector('.sp-card');
+    IDF_PLAN._go(1); await w(300); await open([...document.querySelectorAll('#plan-inner .idf-day')][0]);   // Woche ohne Daten
+    r.leer = /noch kein Speiseplan/.test((document.querySelector('.sp-day.on') || {}).textContent || '') && document.querySelectorAll('.sp-day').length === 1;
+    document.querySelector('.sp-card .rp-close').click(); await w(100); r.zu = !document.querySelector('.sp-card');
+    IDF_PLAN._go(0); NAV.go('v-home', 'Start'); return r;
+  });
+  eq('Speiseplan: Mittagessen öffnet den Tag, Woche, leere Woche, Schließen', sp, { tapbar: true, card: true, mi: true, woche: true, esc: true, leer: true, zu: true });
+
   // ── Raumplan: Tipp auf eine Einheit mit Raum öffnet den 3D-Plan, Notizen gibt es nicht mehr ──
   const rp = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};

@@ -1,0 +1,33 @@
+{
+  "hinweis": "Speiseplan des IdF Münster. Jede Woche neue Tage unter „tage“ ergänzen (Schlüssel = Datum JJJJ-MM-TT); alte Tage dürfen stehen bleiben. Die Kürzel in „a“ sind die Zusatzstoffe/Allergene wie auf dem Aushang.",
+  "stand": "23.10.2026, 05:20 Uhr",
+  "ausgabe": "12:00 bis 13:30 Uhr",
+  "tage": {
+    "2026-10-26": {
+      "stamm":   {"t": "Schweineschnitzel mit Camembert und Preiselbeeren überbacken", "a": "C, L, G/W"},
+      "beilage": {"t": "Kartoffelpüree", "a": "L"},
+      "veg":     {"t": "Waldpilz-Flammkuchen", "a": "C, L, G/W"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-10-27": {
+      "stamm":   {"t": "Falafeln im Pitabrot, Tzatziki", "a": "C, L, V, G/W"},
+      "veg":     {"t": "Kürbis-Maronen-Quiche", "a": "C, L, G/W"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-10-28": {
+      "stamm":   {"t": "Currygeschnetzeltes mit Früchten", "a": "L"},
+      "beilage": {"t": "Reis"},
+      "veg":     {"t": "Schupfnudelpfanne mit Gemüse", "a": "C, S, V, G/W"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-10-29": {
+      "stamm":   {"t": "Wildschweingulasch mit Waldpilzen"},
+      "beilage": {"t": "Rosenkohl und Spätzle", "a": "C, G/W"},
+      "veg":     {"t": "Rotes Thai-Curry mit Basmatireis", "a": "S, W"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-10-30": {
+      "stamm":   {"t": "Bauerntopf mit Hackfleisch und Gemüse", "a": "S"}
+    }
+  }
+}
