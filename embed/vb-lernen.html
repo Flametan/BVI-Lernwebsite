@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="../css/fonts.css">
+<title>VB-Prüfung lernen</title>
+<style>
+:root{
+  --bg:#f3f2ef;--card:#fff;--ink:#1d1d1b;--mute:#66665f;--line:#e2e0da;--soft:#ecebe6;
+  --or:#ffa412;--ord:#c2410c;--orsoft:#fff1d6;--onor:#1d1d1b;
+  --ok:#2e7d32;--bad:#c62828;--okbg:#e3f3e5;--badbg:#fbe4e2;--shadow:0 1px 2px rgba(0,0,0,.06),0 6px 18px rgba(30,25,10,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141413;--card:#1f1f1d;--ink:#f1f0ec;--mute:#aeada5;--line:#37362f;--soft:#2a2a27;--ord:#ffb547;--orsoft:#3a2a0f;
+  --ok:#66bb6a;--bad:#ff7b72;--okbg:#17321b;--badbg:#3a1a18;--shadow:0 1px 2px rgba(0,0,0,.4);
+}}
+:root[data-theme="dark"]{
+  --bg:#141413;--card:#1f1f1d;--ink:#f1f0ec;--mute:#aeada5;--line:#37362f;--soft:#2a2a27;--ord:#ffb547;--orsoft:#3a2a0f;
+  --ok:#66bb6a;--bad:#ff7b72;--okbg:#17321b;--badbg:#3a1a18;--shadow:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--ff,"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif);overflow-x:hidden}
+h1,h2,h3,h4{line-height:1.2;margin:0}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+:focus-visible{outline:3px solid var(--or);outline-offset:2px}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+.tabs{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;padding:0 8px}
+.tab{flex:1 1 0;min-height:52px;background:none;border:0;border-bottom:4px solid transparent;font-weight:700;font-size:15px;color:var(--mute)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--or)}
+main{padding:18px 0 48px}
+.h2{font-size:21px;font-weight:800;margin:0 0 6px}
+.lead{color:var(--mute);margin:0 0 14px;font-size:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.pad{padding:16px}
+.btn{min-height:46px;padding:8px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-weight:700}
+.btn.pri{background:var(--or);border-color:var(--or);color:var(--onor)}
+.btn:disabled{opacity:.5}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sp{flex:1}
+.list{display:grid;gap:10px}
+.topic{display:flex;gap:12px;align-items:center;text-align:left;width:100%;padding:14px 16px;min-height:64px}
+.topic .t{font-weight:800}.topic small{display:block;color:var(--mute);font-weight:500;font-size:13px}
+.stars{margin-left:auto;white-space:nowrap;color:var(--or);letter-spacing:2px;font-size:18px}
+.stars i{color:var(--line);font-style:normal}
+.back{background:none;border:0;color:var(--ord);font-weight:700;min-height:44px;padding:0 4px;margin-bottom:6px}
+.fact{padding:12px 16px;border-top:1px solid var(--line)}
+.fact:first-child{border-top:0}
+.fact h4{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--ord);margin-bottom:2px}
+.merke{background:var(--orsoft);border-radius:14px;padding:12px 16px;margin:12px 0;font-weight:600}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}
+.col{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--card)}
+.col h4{font-size:14px;margin-bottom:6px}
+.chip{display:inline-block;background:var(--soft);border-radius:999px;padding:4px 10px;margin:0 4px 6px 0;font-size:13.5px}
+.q{font-size:18px;font-weight:700;margin:6px 0 14px}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;min-height:52px;padding:10px 14px;border-radius:14px;border:2px solid var(--line);background:var(--card);font-weight:600}
+.opt.ok{border-color:var(--ok);background:var(--okbg)}
+.opt.bad{border-color:var(--bad);background:var(--badbg)}
+.opt:disabled{cursor:default}
+.expl{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--soft);font-size:15px}
+.bar{height:8px;background:var(--soft);border-radius:99px;overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;background:var(--or);transition:width .25s}
+.big{font-size:44px;font-weight:800;text-align:center;margin:8px 0}
+.cat{min-height:60px;font-weight:800;font-size:16px;border-radius:14px;border:2px solid var(--or);background:var(--card)}
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.cardx{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:22px 16px;text-align:center;font-size:20px;font-weight:800;margin:10px 0 16px;min-height:96px;display:grid;place-items:center}
+.cardx.good{border-color:var(--ok);background:var(--okbg)}
+.cardx.wrong{border-color:var(--bad);background:var(--badbg);animation:shk .3s}
+@keyframes shk{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@media (prefers-reduced-motion:reduce){.cardx.wrong{animation:none}.bar i{transition:none}}
+.stat{display:flex;gap:16px;font-weight:700;color:var(--mute);font-size:14px;margin-bottom:6px;font-variant-numeric:tabular-nums}
+.lab svg{display:block;width:100%;height:auto}
+.lab input[type=range]{width:100%;accent-color:var(--or);height:44px;margin:6px 0}
+.lab .read{font-weight:800;font-size:16px;font-variant-numeric:tabular-nums;margin:6px 0}
+.note{font-size:14px;color:var(--mute);margin:10px 0 0}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.segb{flex:1 1 90px;min-height:48px;padding:6px 8px;border-radius:12px;border:2px solid var(--line);background:var(--card);font-weight:700;font-size:14px;line-height:1.2}
+.segb small{display:block;font-weight:500;color:var(--mute);font-size:12px}
+.segb[aria-pressed="true"]{border-color:var(--or);background:var(--orsoft)}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tile{border-radius:14px;padding:12px;border:2px solid var(--line);display:grid;gap:2px;justify-items:start;transition:background .2s,border-color .2s}
+.tile .fl{width:34px;height:34px;transform-origin:50% 100%;transform:scale(var(--s,1));transition:transform .25s}
+.tile.tok{border-color:var(--ok);background:var(--okbg)}.tile.tok .fl{color:var(--mute)}
+.tile.tbad{border-color:var(--bad);background:var(--badbg)}.tile.tbad .fl{color:#e8501a}
+.tile span{font-size:13px;color:var(--mute)}
+.plan{max-height:340px}
+.room,.hot{cursor:pointer}
+.chk{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px}
+.chk .yes b{color:var(--ok)}.chk .no b{color:var(--bad)}
+@media (prefers-reduced-motion:reduce){.tile,.tile .fl{transition:none}}
+html.emb body{background:var(--bg)}
+</style>
+</head>
+<body>
+<div class="tabs"><div class="wrap" id="tabs" role="tablist"></div></div>
+<main><div class="wrap" id="view"></div></main>
+<script src="embed-sync.js"></script>
+<script src="vb-lernstoff.js"></script>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const md=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+const lsGet=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const T=VBL.themen,byId=id=>T.find(t=>t.id===id);
+const K_Q='bvi_vbl_quiz',K_S='bvi_vbl_sort';
+let best=lsGet(K_Q,{}),sbest=lsGet(K_S,{});
+let st={tab:'lernen',topic:null,quiz:null,sort:null};
+const TABS=[['lernen','Lernen'],['quiz','Quiz'],['spiel','Sortieren']];
+$('#tabs').innerHTML=TABS.map(t=>`<button class="tab" role="tab" data-tab="${t[0]}">${t[1]}</button>`).join('');
+const stars=n=>`<span class="stars" aria-label="${n} von 3 Sternen">${'★'.repeat(n)}<i>${'★'.repeat(3-n)}</i></span>`;
+const starsFor=(q)=>q>=0.9?3:q>=0.7?2:q>=0.5?1:0;
+function topicBtn(t,act){const s=Math.max(best[t.id]||0,0);return `<button class="card topic" data-act="${act}" data-id="${t.id}"><span><span class="t">${esc(t.titel)}</span><small>${esc(t.quelle)}</small></span>${stars(s)}</button>`}
+
+/* ---------- Labor: ausprobieren statt nur lesen ---------- */
+const FLAME='<path d="M12 2C12.5 7 7 9.5 7 15a5 5 0 0 0 10 0c0-2.6-1.6-4.4-2.7-6.2-.9 1.6-1.9 1.9-2.8-.4-.4-1.2-.4-3.4.5-6.4z" fill="currentColor"/>';
+const L={baustoffe:{lvl:1},etk:{cls:2,t:0,play:null},raeume:{g:{},chk:false},nutzung:{sc:'a'},ziele:{seen:{},cur:null}};
+const labHead=(t,sub)=>`<div class="card pad lab"><h3 style="font-size:17px;margin-bottom:4px">${t}</h3><p class="lead" style="margin-bottom:10px">${sub}</p>`;
+/* Baustoffe: Prüfstand mit Brandgröße */
+const BS=[['nichtbrennbar',3,'Auch beim Vollbrand kein Beitrag zum Brand.'],['schwerentflammbar',2,'Hält bis zum sich entwickelnden Brand: nur begrenzter Beitrag.'],['normalentflammbar',1,'Hält nur beim Entstehungsbrand.'],['leichtentflammbar',0,'Hält keinem Brand stand. Nur unter besonderen Bedingungen zulässig.']];
+const LV=['Entstehungsbrand','Sich entwickelnder Brand','Vollbrand'];
+function labBaustoffe(){
+  const v=L.baustoffe.lvl;
+  return labHead('Brandprüfstand','Wähle die Größe des Brandes und sieh, welcher Baustoff noch standhält.')+
+  `<div class="seg" role="group" aria-label="Brandgröße">${LV.map((n,i)=>`<button class="segb" data-act="lvl" data-i="${i+1}" aria-pressed="${v===i+1}">${n}</button>`).join('')}</div>
+  <div class="tiles">${BS.map(b=>{const ok=v<=b[1];return `<div class="tile ${ok?'tok':'tbad'}"><svg viewBox="0 0 24 24" class="fl" style="--s:${ok?0.55:1.1+v*0.12}" aria-hidden="true">${FLAME}</svg><b>${b[0]}</b><span>${ok?'hält stand':'trägt zum Brand bei'}</span></div>`}).join('')}</div>
+  <p class="note">${b2(v)}</p></div>`;
+}
+const b2=v=>v===1?'Beim Entstehungsbrand genügt „normalentflammbar“. Nur leichtentflammbare Stoffe tragen hier schon deutlich bei.':v===2?'Beim sich entwickelnden Brand müssen Baustoffe mindestens schwerentflammbar sein.':'Beim Vollbrand bleibt nur der nichtbrennbare Baustoff passiv.';
+/* Standsicherheit: Brandofen mit Zeitregler */
+const CL=[['feuerhemmend',30],['hochfeuerhemmend',60],['feuerbeständig',90],['Feuerwiderstand 120',120]];
+const etkT=t=>345*Math.log10(8*t+1)+20;
+function ofenVis(){
+  const c=CL[L.etk.cls],t=L.etk.t,temp=etkT(t),fail=t>c[1],over=Math.max(0,Math.min(1,(t-c[1])/25)),heat=Math.min(1,(temp-20)/1030);
+  const col=`color-mix(in srgb,#d6221e ${Math.round(heat*100)}%,#8a8f98)`;
+  const sag=Math.round(over*26);
+  const W=320,H=170,Lm=34,pw=278,ph=122,x=tt=>Lm+tt/120*pw,y=T_=>8+ph-(T_-20)/1080*ph;
+  let d='';for(let q=0;q<=120;q+=3)d+=(q?'L':'M')+x(q).toFixed(1)+' '+y(etkT(q)).toFixed(1);
+  return `<svg viewBox="0 0 ${W} ${H+70}" class="ofen" role="img" aria-label="Brandofen mit Bauteil und Temperaturkurve">
+   <rect x="2" y="4" width="316" height="86" rx="10" fill="${heat>0.02?`color-mix(in srgb,#ff7a1a ${Math.round(heat*38)}%,var(--soft))`:'var(--soft)'}" stroke="var(--line)" stroke-width="2"/>
+   ${heat>0.05?[40,90,140,190,240,280].map(fx=>`<g style="color:#ff8a1a;opacity:${0.4+heat*0.55}" transform="translate(${fx-8} ${86-Math.round(12+heat*14)}) scale(${(0.7+heat*0.5).toFixed(2)})">${FLAME}</g>`).join(''):''}
+   <path d="M20 34 Q160 ${34+sag} 300 34" fill="none" stroke="${col}" stroke-width="14" stroke-linecap="round"/>
+   <path d="M20 28V50M300 28V50" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>
+   ${fail?`<text x="160" y="${70}" text-anchor="middle" font-weight="800" font-size="12" fill="var(--bad)">Standsicherheit verloren</text>`:`<text x="160" y="16" text-anchor="middle" font-weight="800" font-size="11" fill="var(--ok)">${t===0?'Bauteil kalt':'Bauteil trägt'}</text>`}
+   <g transform="translate(0 96)"><path d="M${Lm} ${8+ph}H${W-8}M${Lm} 8V${8+ph}" stroke="currentColor" opacity=".5" fill="none"/>
+   ${CL.map(k=>`<path d="M${x(k[1])} 8V${8+ph}" stroke="${k[1]===c[1]?'var(--bad)':'var(--or)'}" stroke-width="${k[1]===c[1]?2.4:1.2}" stroke-dasharray="3 3"/><text x="${x(k[1])}" y="${H-24}" text-anchor="middle" font-size="9" fill="currentColor">${k[1]}</text>`).join('')}
+   <path d="${d}" fill="none" stroke="var(--bad)" stroke-width="2.4" stroke-linecap="round"/><circle cx="${x(t)}" cy="${y(temp)}" r="5" fill="var(--or)" stroke="currentColor" stroke-width="1.4"/></g></svg>
+   <div class="read">${t} Min. · ${Math.round(temp)} °C · ${fail?'Zeit überschritten':'Bauteil „'+c[0]+'“ hält noch '+(c[1]-t)+' Min.'}</div>`;
+}
+function labEtk(){
+  return labHead('Brandofen','Wähle ein Bauteil, starte den Brand und beobachte, wann die Standsicherheit endet.')+
+  `<div class="seg" role="group" aria-label="Feuerwiderstand">${CL.map((k,i)=>`<button class="segb" data-act="cls" data-i="${i}" aria-pressed="${L.etk.cls===i}">${k[0]}<small>${k[1]} Min.</small></button>`).join('')}</div>
+  <input type="range" id="etkr" min="0" max="120" step="1" value="${L.etk.t}" aria-label="Brandzeit in Minuten"><div class="row"><button class="btn pri" data-act="play">${L.etk.play?'Pause':'Brand starten'}</button><button class="btn" data-act="rewind">Zurück auf 0</button></div>
+  <div id="ofen">${ofenVis()}</div><p class="note">Maßstab ist die Einheits-Temperaturzeitkurve: Schon nach 30 Minuten sind es rund 840 °C.</p></div>`;
+}
+/* Aufenthaltsräume: Grundriss antippen */
+const RM=[['Wohnzimmer',0,0,110,86,1],['Küche',110,0,70,86,1],['Büro',180,0,70,86,1],['Schlafzimmer',250,0,70,86,1],['Flur',0,86,320,28,0],['Bad',0,114,60,82,0],['Abstellraum',60,114,60,82,0],['Treppenraum',120,114,60,82,0],['Werkstatt, täglich genutzt',180,114,70,82,1],['Sportraum, selten und kurz genutzt',250,114,70,82,0]];
+function labRaeume(){
+  const g=L.raeume.g,chk=L.raeume.chk;let right=0;
+  const sv=RM.map((r,i)=>{const v=g[i],ok=v!=null&&(v===r[5]);if(chk&&ok)right++;
+    const fill=chk?(ok?'var(--okbg)':'var(--badbg)'):v===1?'color-mix(in srgb,var(--or) 30%,var(--card))':v===0?'var(--soft)':'var(--card)';
+    const lab=r[0].split(', ');
+    return `<g class="room" role="button" tabindex="0" data-act="room" data-i="${i}" aria-label="${r[0]}: ${v==null?'noch nicht gewählt':v?'Aufenthaltsraum':'kein Aufenthaltsraum'}"><rect x="${r[1]+1}" y="${r[2]+1}" width="${r[3]-2}" height="${r[4]-2}" rx="6" fill="${fill}" stroke="var(--ink)" stroke-width="1.6"/>
+    ${lab.map((l,j)=>`<text x="${r[1]+r[3]/2}" y="${r[2]+r[4]/2-4+j*11-(r[4]<40?6:0)}" text-anchor="middle" font-size="${r[3]>200?10:8.6}" font-weight="700" fill="var(--ink)">${l.length>13&&r[3]<80?l.slice(0,12)+'.':l}</text>`).join('')}
+    <text x="${r[1]+r[3]/2}" y="${r[2]+r[4]/2+(lab.length*11)+(r[4]<40?0:2)}" text-anchor="middle" font-size="9" font-weight="800" fill="${chk?(ok?'var(--ok)':'var(--bad)'):'var(--ord)'}">${chk?(ok?'richtig':'Soll: '+(r[5]?'Ja':'Nein')):v==null?'':v?'Ja':'Nein'}</text></g>`}).join('');
+  return labHead('Grundriss prüfen','Tippe jeden Raum an: einmal für „Aufenthaltsraum“, zweimal für „kein Aufenthaltsraum“. Dann prüfen.')+
+  `<svg viewBox="0 0 320 196" class="plan" role="group" aria-label="Grundriss">${sv}</svg><div class="row" style="margin-top:10px"><button class="btn pri" data-act="rcheck">Prüfen</button><button class="btn" data-act="rreset">Neu</button>${chk?`<b>${right} von ${RM.length} richtig</b>`:''}</div>
+  <p class="note">Tipp: Der Flur dient dem Verkehr, die Werkstatt zählt nur bei mehr als seltener und kurzzeitiger Nutzung.</p></div>`;
+}
+/* Nutzungseinheit: eine Firma oder zwei */
+function labNutzung(){
+  const a=L.nutzung.sc==='a';
+  const rooms=[['Open Space',0,0,150,120],['Konferenz',150,50,90,70],['WC',150,0,40,50],['Küche',190,0,50,50],['Büro',240,0,80,60],['Büro',240,60,80,60]];
+  const col=i=>a?'color-mix(in srgb,var(--or) 32%,var(--card))':(i<=2?'color-mix(in srgb,#2f78d1 30%,var(--card))':'color-mix(in srgb,#2e9a46 30%,var(--card))');
+  const sv=rooms.map((r,i)=>`<rect x="${r[1]+1}" y="${r[2]+1}" width="${r[3]-2}" height="${r[4]-2}" rx="4" fill="${col(i)}" stroke="var(--ink)" stroke-width="1.2"/><text x="${r[1]+r[3]/2}" y="${r[2]+r[4]/2+3}" text-anchor="middle" font-size="9" font-weight="700" fill="var(--ink)">${r[0]}</text>`).join('')+(a?'':'<path d="M150 0V120" stroke="var(--bad)" stroke-width="5"/><text x="150" y="134" text-anchor="middle" font-size="9.5" font-weight="800" fill="var(--bad)">bauliche Trennung</text>');
+  const ck=(ok,t)=>`<li class="${ok?'yes':'no'}"><b>${ok?'✓':'✗'}</b> ${t}</li>`;
+  return labHead('Büroetage','Wie viele Nutzungseinheiten entstehen? Wechsle das Szenario.')+
+  `<div class="seg" role="group" aria-label="Szenario"><button class="segb" data-act="sc" data-i="a" aria-pressed="${a}">Eine Firma</button><button class="segb" data-act="sc" data-i="b" aria-pressed="${!a}">Zwei Firmen</button></div>
+  <svg viewBox="0 0 320 140" class="plan" role="img" aria-label="Büroetage">${sv}</svg>
+  <ul class="chk">${ck(true,'räumliche Einheit')}${ck(a,'gemeinsamer Zweck')}${ck(a,'keine bauliche Trennung nötig')}</ul>
+  <p class="note"><b>${a?'Ergebnis: eine Nutzungseinheit.':'Ergebnis: zwei Nutzungseinheiten.'}</b> ${a?'Alle Räume dienen demselben Zweck derselben Gruppe. Wände zwischen den Räumen sind nicht nötig.':'Zwei Firmen verfolgen verschiedene Zwecke. Zwischen ihnen ist eine baulich nachhaltige Trennung erforderlich.'}</p></div>`;
+}
+/* Ziele: Haus mit vier Fundstellen */
+const ZH=[['Entstehung vorbeugen','Zündquellen vermeiden, Brandlasten und Elektroinstallation sicher gestalten. Der Brand soll gar nicht erst entstehen.',60,150],['Ausbreitung von Feuer und Rauch verhindern','Brandwände, Trennwände und rauchdichte Abschlüsse halten Feuer und Rauch in ihrem Bereich.',160,90],['Rettung von Menschen und Tieren','Rettungswege und Fenster müssen so ausgelegt sein, dass die Rettung möglich bleibt.',250,150],['Wirksame Löscharbeiten','Zugang und Aufstellflächen für die Feuerwehr sowie Löschwasser machen den Löscheinsatz wirksam.',300,205]];
+function labZiele(){
+  const seen=L.ziele.seen,cur=L.ziele.cur,n=Object.keys(seen).length;
+  const hot=ZH.map((h,i)=>`<g class="hot" role="button" tabindex="0" data-act="zhot" data-i="${i}" aria-label="${h[0]}"><circle cx="${h[2]}" cy="${h[3]}" r="${cur===i?17:14}" fill="${seen[i]?'var(--ok)':'var(--or)'}" stroke="var(--ink)" stroke-width="2"/><text x="${h[2]}" y="${h[3]+5}" text-anchor="middle" font-weight="800" font-size="14" fill="#111">${seen[i]?'✓':i+1}</text></g>`).join('');
+  return labHead('Gebäude erkunden','Tippe die vier Punkte an. Jeder zeigt eines der Ziele aus § 14 MBO.')+
+  `<svg viewBox="0 0 340 240" class="plan" role="img" aria-label="Gebäudequerschnitt"><path d="M20 100L150 40L280 100Z" fill="var(--soft)" stroke="var(--ink)" stroke-width="2"/><rect x="30" y="100" width="240" height="110" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/><path d="M150 100V210" stroke="var(--ink)" stroke-width="6"/><rect x="190" y="130" width="34" height="30" fill="var(--soft)" stroke="var(--ink)" stroke-width="2"/><rect x="45" y="165" width="24" height="26" fill="var(--soft)" stroke="var(--ink)" stroke-width="2"/><path d="M0 210H340" stroke="var(--ink)" stroke-width="3"/><rect x="290" y="186" width="44" height="22" rx="4" fill="#d6221e" stroke="var(--ink)" stroke-width="2"/><circle cx="300" cy="210" r="5"/><circle cx="324" cy="210" r="5"/>${hot}</svg>
+  <div class="expl" style="min-height:76px">${cur==null?'Noch nichts ausgewählt. Entdeckt: '+n+' von 4.':`<b>${ZH[cur][0]}</b><br>${ZH[cur][1]}`}</div></div>`;
+}
+const LABS={baustoffe:labBaustoffe,etk:labEtk,raeume:labRaeume,nutzung:labNutzung,ziele:labZiele};
+function paintLab(){const e=$('#lab');if(e){const t=byId(st.topic);const keepSlider=t.extra==='etk';
+  if(keepSlider&&$('#ofen')){$('#ofen').innerHTML=ofenVis();const r=$('#etkr');if(r)r.value=L.etk.t;document.querySelectorAll('[data-act="cls"]').forEach((b,i)=>b.setAttribute('aria-pressed',i===L.etk.cls));const pb=document.querySelector('[data-act="play"]');if(pb)pb.textContent=L.etk.play?'Pause':'Brand starten';}
+  else e.innerHTML=LABS[t.extra]();}}
+function stopPlay(){if(L.etk.play){clearInterval(L.etk.play);L.etk.play=null}}
+function viewLernen(){
+  if(!st.topic)return `<h2 class="h2">Lernstoff VB-Prüfung</h2><p class="lead">Thema wählen, lesen, dann Quiz oder Sortierspiel. Neue Themen kommen laufend dazu.</p><div class="list">${T.map(t=>topicBtn(t,'open')).join('')}</div>`;
+  const t=byId(st.topic);
+  const cols=t.sort?`<h3 style="font-size:17px;margin:18px 0 0">Auf einen Blick</h3><div class="cols">${t.sort.kats.map((k,i)=>`<div class="col"><h4>${esc(k)}</h4>${t.sort.items.filter(x=>x[1]===i).map(x=>`<span class="chip">${esc(x[0])}</span>`).join('')}</div>`).join('')}</div>`:'';
+  return `<button class="back" data-act="home">‹ Alle Themen</button><h2 class="h2">${esc(t.titel)}</h2><p class="lead">${esc(t.quelle)}</p>
+   <div class="card">${t.fakten.map(f=>`<div class="fact"><h4>${esc(f[0])}</h4><div>${md(f[1])}</div></div>`).join('')}</div>
+   <div class="merke">Merke: ${esc(t.merke)}</div>${t.extra&&LABS[t.extra]?'<div id="lab" style="margin-top:14px">'+LABS[t.extra]()+'</div>':''}${cols}
+   <div class="row" style="margin-top:18px"><button class="btn pri" data-act="qstart" data-id="${t.id}">Quiz zu diesem Thema</button><button class="btn" data-act="sstart" data-id="${t.id}">Sortierspiel</button></div>`;
+}
+
+/* ---------- Quiz ---------- */
+function viewQuiz(){
+  const q=st.quiz;
+  if(!q)return `<h2 class="h2">Quiz</h2><p class="lead">Wähle ein Thema oder mische alles.</p><div class="list"><button class="card topic" data-act="qstart" data-id="all"><span><span class="t">Alles gemischt</span><small>10 Fragen aus allen Themen</small></span></button>${T.map(t=>topicBtn(t,'qstart')).join('')}</div>`;
+  if(q.i>=q.list.length){
+    const pct=q.right/q.list.length,s=starsFor(pct);
+    const wrong=q.wrong.map(w=>`<li><b>${esc(w.q)}</b><br>${esc(w.o[w.a])}</li>`).join('');
+    return `<div class="card pad"><div class="big">${q.right} / ${q.list.length}</div><div style="text-align:center">${stars(s)}</div><p class="lead" style="text-align:center;margin-top:8px">${pct>=.9?'Sehr stark.':pct>=.7?'Gut, noch etwas Feinschliff.':'Noch einmal lesen und wiederholen.'}</p>
+    ${wrong?`<h3 style="font-size:16px;margin:14px 0 6px">Das war noch falsch</h3><ul style="margin:0;padding-left:20px">${wrong}</ul>`:''}
+    <div class="row" style="margin-top:16px"><button class="btn pri" data-act="qstart" data-id="${q.id}">Nochmal</button><button class="btn" data-act="qend">Themenliste</button></div></div>`;
+  }
+  const c=q.list[q.i],ans=q.ans;
+  return `<div class="stat"><span>Frage ${q.i+1} von ${q.list.length}</span><span class="sp"></span><span>${q.right} richtig</span></div><div class="bar"><i style="width:${q.i/q.list.length*100}%"></i></div>
+  <div class="card pad"><p class="q">${esc(c.q)}</p><div class="opts">${c.oo.map((o,i)=>`<button class="opt ${ans!=null?(i===c.a2?'ok':i===ans?'bad':''):''}" data-act="qans" data-i="${i}" ${ans!=null?'disabled':''}>${esc(o)}</button>`).join('')}</div>
+  ${ans!=null?`<div class="expl"><b>${ans===c.a2?'Richtig.':'Leider falsch.'}</b> ${esc(c.e)}</div><div class="row" style="margin-top:14px"><button class="btn pri" data-act="qnext">${q.i+1>=q.list.length?'Ergebnis':'Weiter'}</button></div>`:''}</div>`;
+}
+function qStart(id){
+  let pool=id==='all'?T.flatMap(t=>t.quiz.map(x=>Object.assign({tid:t.id},x))):byId(id).quiz.map(x=>Object.assign({tid:id},x));
+  pool=shuffle(pool).slice(0,id==='all'?10:8).map(x=>{const idx=shuffle(x.o.map((_,i)=>i));const keepOrder=x.o.length===2;const order=keepOrder?[0,1]:idx;return Object.assign({},x,{oo:order.map(i=>x.o[i]),a2:order.indexOf(x.a)})});
+  st.quiz={id,list:pool,i:0,right:0,ans:null,wrong:[]};st.tab='quiz';
+}
+function qDone(){const q=st.quiz;if(q.id!=='all'){const s=starsFor(q.right/q.list.length);if(s>(best[q.id]||0)){best[q.id]=s;lsSet(K_Q,best);}}}
+
+/* ---------- Sortieren ---------- */
+function viewSpiel(){
+  const g=st.sort;
+  if(!g)return `<h2 class="h2">Sortieren</h2><p class="lead">Begriffe schnell der richtigen Kategorie zuordnen. Fehler kommen am Ende nochmal.</p><div class="list">${T.filter(t=>t.sort).map(t=>`<button class="card topic" data-act="sstart" data-id="${t.id}"><span><span class="t">${esc(t.titel)}</span><small>${t.sort.items.length} Karten${sbest[t.id]!=null?' · Bestzeit '+sbest[t.id].t+' s, '+sbest[t.id].f+' Fehler':''}</small></span></button>`).join('')}</div>`;
+  const t=byId(g.id);
+  if(!g.queue.length)return `<div class="card pad"><div class="big">${g.fehler===0?'Fehlerfrei':g.fehler+' Fehler'}</div><p class="lead" style="text-align:center">${t.sort.items.length} Karten in ${g.dauer} Sekunden</p>${g.neu?'<p style="text-align:center;font-weight:800;color:var(--ok)">Neue Bestleistung</p>':''}<div class="row" style="margin-top:16px;justify-content:center"><button class="btn pri" data-act="sstart" data-id="${g.id}">Nochmal</button><button class="btn" data-act="send">Themenliste</button></div></div>`;
+  const it=g.queue[0];
+  return `<div class="stat"><span>Noch ${g.queue.length}</span><span>Serie ${g.serie}</span><span class="sp"></span><span>Fehler ${g.fehler}</span></div><div class="bar"><i style="width:${(1-g.queue.length/g.gesamt)*100}%"></i></div>
+  <div class="cardx ${g.flash||''}" id="cardx" aria-live="polite">${esc(it[0])}</div>
+  <div class="cats">${t.sort.kats.map((k,i)=>`<button class="cat" data-act="scat" data-i="${i}">${esc(k)}</button>`).join('')}</div>${g.flash==='wrong'?`<p class="lead" style="margin-top:12px">Richtig wäre: <b>${esc(t.sort.kats[it[1]])}</b></p>`:''}`;
+}
+function sStart(id){const t=byId(id);st.sort={id,queue:shuffle(t.sort.items),gesamt:t.sort.items.length,fehler:0,serie:0,flash:'',t0:Date.now()};st.tab='spiel';}
+function sAnswer(i){
+  const g=st.sort,it=g.queue[0];
+  if(g.flash==='wrong'){g.flash='';g.queue.push(g.queue.shift());g.serie=0;return;}
+  if(i===it[1]){g.queue.shift();g.serie++;g.flash='';
+    if(!g.queue.length){g.dauer=Math.round((Date.now()-g.t0)/1000);const b=sbest[g.id];g.neu=!b||g.fehler<b.f||(g.fehler===b.f&&g.dauer<b.t);if(g.neu){sbest[g.id]={f:g.fehler,t:g.dauer};lsSet(K_S,sbest);}}}
+  else{g.fehler++;g.flash='wrong';}
+}
+
+/* ---------- Rendern ---------- */
+function render(){
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===st.tab));
+  $('#view').innerHTML=st.tab==='lernen'?viewLernen():st.tab==='quiz'?viewQuiz():viewSpiel();
+}
+function top(){window.scrollTo(0,0);try{if(parent!==window)parent.postMessage({stk:'top'},location.origin)}catch(e){}}
+document.addEventListener('click',e=>{
+  const tb=e.target.closest('[data-tab]');if(tb){st.tab=tb.dataset.tab;render();top();return}
+  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,id=b.dataset.id;
+  if(a==='open'){st.topic=id;}else if(a==='home'){st.topic=null;}
+  else if(a==='qstart'){qStart(id);}
+  else if(a==='qans'){const q=st.quiz;if(q.ans!=null)return;q.ans=+b.dataset.i;const c=q.list[q.i];if(q.ans===c.a2)q.right++;else q.wrong.push(c);}
+  else if(a==='qnext'){const q=st.quiz;q.i++;q.ans=null;if(q.i>=q.list.length)qDone();}
+  else if(a==='qend'){st.quiz=null;}
+  else if(a==='sstart'){sStart(id);}
+  else if(a==='scat'){sAnswer(+b.dataset.i);}
+  else if(a==='send'){st.sort=null;}
+  else if(a==='lvl'){L.baustoffe.lvl=+b.dataset.i;paintLab();return}
+  else if(a==='cls'){L.etk.cls=+b.dataset.i;paintLab();return}
+  else if(a==='play'){if(L.etk.play){stopPlay()}else{if(L.etk.t>=120)L.etk.t=0;L.etk.play=setInterval(()=>{L.etk.t=Math.min(120,L.etk.t+1);if(L.etk.t>=120)stopPlay();paintLab()},110)}paintLab();return}
+  else if(a==='rewind'){stopPlay();L.etk.t=0;paintLab();return}
+  else if(a==='room'){const i=+b.dataset.i,c=L.raeume.g[i];L.raeume.g[i]=c==null?1:c===1?0:null;if(L.raeume.g[i]==null)delete L.raeume.g[i];L.raeume.chk=false;paintLab();return}
+  else if(a==='rcheck'){L.raeume.chk=true;paintLab();return}
+  else if(a==='rreset'){L.raeume={g:{},chk:false};paintLab();return}
+  else if(a==='sc'){L.nutzung.sc=b.dataset.i;paintLab();return}
+  else if(a==='zhot'){const i=+b.dataset.i;L.ziele.cur=i;L.ziele.seen[i]=1;paintLab();return}
+  stopPlay();
+  render();if(['open','home','qstart','sstart','qend','send'].includes(a))top();
+});
+document.addEventListener('input',e=>{if(e.target.id==='etkr'){stopPlay();L.etk.t=+e.target.value;paintLab()}});
+document.addEventListener('keydown',e=>{const g=e.target.closest&&e.target.closest('[role="button"][data-act]');if(g&&g.tagName!=='BUTTON'&&(e.key==='Enter'||e.key===' ')){e.preventDefault();g.dispatchEvent(new MouseEvent('click',{bubbles:true}))}});
+render();
+})();
+</script>
+</body>
+</html>
