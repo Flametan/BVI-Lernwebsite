@@ -619,6 +619,29 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Version: version.js, sw.js, README und oberster Neuigkeiten-Eintrag stimmen überein', ver, { fmt: true, sw: true, top: true, readme: true });
 
+  // ── Altklausur-Quiz IdF: Themenbereich Vorbeugender Brandschutz / Stabsarbeit wählbar (Lern- und Prüfungsmodus) ──
+  const iq = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {}; localStorage.removeItem('bvi_idfq_cat');
+    NAV.go('v-idf-altklausur', 'IdF Quiz'); await w(500);
+    const btns = () => [...document.querySelectorAll('#quiz-topcat-idf .quiz-topcat-btn')];
+    r.knoepfe = btns().map(b => b.dataset.cat).join('|');
+    btns().find(b => b.dataset.cat === 'Stabsarbeit').click(); await w(150);
+    const cat = () => (document.getElementById('quiz-cat-idf') || {}).textContent;
+    const seen = new Set(); for (let i = 0; i < 6; i++) { seen.add(cat()); IDFQ.skip(); await w(30); }
+    r.lern = seen.size === 1 && /Stabsarbeit/.test([...seen][0]);
+    r.merk = localStorage.getItem('bvi_idfq_cat') === 'Stabsarbeit';
+    IDFQ.setMode('exam'); await w(200);
+    const qs = [...document.querySelectorAll('#quiz-exam-questions-idf .quiz-cat')].map(e => e.textContent);
+    r.pruef = qs.length === 25 && qs.every(t => t === 'Stabsarbeit');
+    btns().find(b => b.dataset.cat === 'Vorbeugender Brandschutz').click(); await w(200);
+    const qv = [...document.querySelectorAll('#quiz-exam-questions-idf .quiz-cat')].map(e => e.textContent);
+    r.pruefVb = qv.length === 25 && qv.every(t => t === 'Vorbeugender Brandschutz');
+    btns().find(b => b.dataset.cat === 'all').click(); await w(200);
+    r.alle = new Set([...document.querySelectorAll('#quiz-exam-questions-idf .quiz-cat')].map(e => e.textContent)).size === 2 && localStorage.getItem('bvi_idfq_cat') === null;
+    IDFQ.setMode('learn'); NAV.go('v-home', 'Start'); return r;
+  });
+  eq('Altklausur-Quiz IdF: Themenbereich wählen (Lernen und Prüfung)', iq, { knoepfe: 'all|Vorbeugender Brandschutz|Stabsarbeit', lern: true, merk: true, pruef: true, pruefVb: true, alle: true });
+
   // ── Standort-FAQ ──
   const faq = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
