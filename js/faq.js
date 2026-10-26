@@ -41,7 +41,7 @@ const FAQ=(function(){
       melden:'Beim Pförtner melden.',
       kleidung:'Hemd, Krawatte, Polo, Regenjacke von der Dienststelle und zivile Kleidung.',
       schutz:'Nein.',
-      arbeit:'Laptop und Schreibzeug bekommt man gestellt. Strom und Netz sind in den Lehrräumen verfügbar.',
+      arbeit:'Den Laptop bringt man selbst mit, er wird nirgends gestellt. Schreibzeug bekommt man gestellt. Strom und Netz sind in den Lehrräumen verfügbar.',
       waesche:'Auf dem Gelände gibt es keine Waschmöglichkeit. Ein Waschsalon ist in der Nähe.',
       heizung:'Die Heizung funktioniert gut. Schlappen oder Hausschuhe sind von Vorteil.',
       arzt:'Alles ist in etwa 10 Minuten zu Fuß erreichbar.'
@@ -69,7 +69,7 @@ const FAQ=(function(){
       melden:'An der Rezeption.',
       kleidung:'Zivil.',
       schutz:'Für einen Praxistag wird PSA benötigt.',
-      arbeit:'Laptop und Schreibzeug. Strom und Netz gibt es im Raum.',
+      arbeit:'Den Laptop bringt man selbst mit, er wird nirgends gestellt. Strom und Netz gibt es im Raum.',
       heizung:'Die Heizung war gut.',
       arzt:'Ja, alles ist in der Nähe.'
     },
@@ -94,7 +94,7 @@ const FAQ=(function(){
       melden:'An der Rezeption.',
       kleidung:'Zivil.',
       schutz:'Nein.',
-      arbeit:'Laptop und Schreibzeug bekommt man gestellt.',
+      arbeit:'Den Laptop bringt man selbst mit, er wird nirgends gestellt. Schreibzeug bekommt man gestellt.',
       heizung:'Die Heizung ist in Ordnung.',
       arzt:'Ja, alles ist zu Fuß erreichbar.'
     },
@@ -119,7 +119,7 @@ const FAQ=(function(){
       melden:'An der Rezeption.',
       kleidung:'Hemd.',
       schutz:'Nein.',
-      arbeit:'Laptop und Schreibzeug bekommt man gestellt.',
+      arbeit:'Den Laptop bringt man selbst mit, er wird nirgends gestellt. Schreibzeug bekommt man gestellt.',
       heizung:'Die Heizung ist in Ordnung.',
       arzt:'Ja, alles ist zu Fuß erreichbar.'
     }
