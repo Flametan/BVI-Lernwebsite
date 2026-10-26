@@ -2867,7 +2867,7 @@ const LP=(function(){
     apply(v);
   }
   function apply(v){
-    const wide=mq.matches, mode=wide?'voll':'ueber'; // Handy und Tablet: Kapitelkarten; Desktop: Volltext
+    const mode='ueber'; // Handy, Tablet und Desktop gleich: Kapitelkarten, ein Kapitel öffnet im eigenen Fenster (Vorheriges/Nächstes Kapitel)
     v.classList.add('lp-on'); v.classList.toggle('lp-ueber',mode==='ueber'); v.classList.toggle('lp-voll',mode==='voll');
     if(mode==='voll'){ items(v).forEach(d=>{ d.open=true; }); }
     if(mode==='ueber') render(v);
@@ -2963,7 +2963,7 @@ const LP=(function(){
   // ── Fokus-Lesemodus (Desktop) ──
   function focusMode(){
     const v=document.querySelector('.view.active'); if(!v||!v._lp) return;
-    const its=items(v); let i=0;
+    const cards=[...v.querySelectorAll('.lp-card')], its=cards.length&&cards[0].offsetParent?cards:items(v); let i=0;   // die Kapitelkarten (oder, ohne Karten, die Kapitel selbst) zeigen, wo man gerade liest
     its.forEach((d,k)=>{ if(d.getBoundingClientRect().top<window.innerHeight*0.4) i=k; });
     open(v,i,{focus:true});
   }
@@ -3020,7 +3020,7 @@ const LP=(function(){
     if(f) f.classList.toggle('hidden',!(v&&v._lp));
     if(p){ const has=cardsFor(id).length>0; p.classList.toggle('hidden',!has); p.classList.toggle('fab-active',has&&prefPrac()); }
   }
-  mq.addEventListener&&mq.addEventListener('change',()=>{ if(mq.matches&&cur) close(true); const v=document.querySelector('.view.active'); if(v&&v._lp) apply(v); });
+  mq.addEventListener&&mq.addEventListener('change',()=>{ const v=document.querySelector('.view.active'); if(v&&v._lp) apply(v); });
   // Suche: direkt zum Kapitel – im Überblick (Handy/Tablet) im Kapitel-Fenster, sonst Abschnitt aufklappen und hinscrollen
   function focus(id,i){
     const v=document.getElementById(id); if(!v) return;
@@ -4109,6 +4109,7 @@ const CHANGELOG=(function(){
       'Pausenraum: neues Spiel „Solitär“ direkt unter dem Snake – Klondike mit Flammen, Löschern, Äxten und Leitern als Kartenfarben und Feuerwehr-Namen für Ass, Bube, Dame und König. Karten antippen oder ziehen (die Karte hängt am Greifpunkt hinter dem Zeiger her und kippt dabei in 3D), Doppeltipp führt den passenden Zug aus (zuerst ins Fundament, sonst auf eine Spalte), dazu Rückgängig, Wiederholen, Tipp, Ziehen 1 oder 3 und einschaltbare Hinweise beim Ziehen',
       'Stundenplan IdF Münster: Ein Tipp auf eine Einheit mit Raum öffnet den Raumplan als 3D-Ansicht des Geländes – die Kamera fährt zum Gebäude, es leuchtet orange und über ihm steht die Raumnummer (bei mehreren Räumen je ein Chip, zum Beispiel bei der Klausur). Ziehen dreht, zwei Finger oder das Mausrad zoomen, dazu Draufsicht und Legende. Die Notizen zu Einheiten gibt es dafür nicht mehr',
       'Stundenplan IdF Münster: In den Vorbeugender-Brandschutz-Wochen (Gruppe 1 die ersten drei, Gruppe 2 die letzten drei Wochen) zeigt „Erreichbarkeiten“ jetzt die Ansprechpersonen des VB mit Durchwahl (Heiko Böcking, Joachim Achtert, Stephanie Vöge), die VB-E-Mail-Adresse und die Adresse für Abwesenheiten. Vorher standen dort die Kontakte der Stabswochen',
+      'Lernseiten: Auf dem Desktop gibt es jetzt wie auf Handy und Tablet die Kapitelkarten; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges Kapitel“ und „Nächstes Kapitel“. Auf dem Tablet war die Leiste mit diesen Knöpfen unter der Tab-Leiste verdeckt und ist jetzt sichtbar. Die Seitenübersicht „Auf dieser Seite“ am rechten Rand entfällt dafür',
       'Stundenplan IdF Münster: Ein Tipp auf „Mittagessen“ öffnet den Speiseplan des Tages (Stammessen, Beilage, vegetarisch, Dessert mit den Kürzeln vom Aushang); die anderen Tage der Woche stehen darunter, der gewählte Tag ist hervorgehoben. Der Speiseplan der aktuellen Woche ist eingetragen',
       'Raumplan: Das Gelände ist jetzt nach der detaillierten Übersichtskarte des Instituts nachgebaut – Gebäudeformen und Farben nach Nutzung (Unterrichtsgebäude, Sporthalle B4, Werkstatt und Fahrzeughalle B2 und B3, Parkhaus), Parkplätze P1 bis P7, Sammelplätze S1 bis S3, Haltestellen und Wolbecker Straße; die Legende ist angepasst',
       'Ladebildschirm: Solange die Seite startet, zeigt sie jetzt einen Platzhalter-Bildschirm (graue Flächen im Aufbau der Startseite, in deinem Farbschema) statt einer leeren Fläche; sobald die App bereit ist, blendet er sich aus. Gilt für die Website und die Android-App',
