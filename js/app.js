@@ -26,18 +26,6 @@ const NAV = (function(){
   let _dir = 'forward';
   let _activeEl = null; // cached active view element – avoids O(90) DOM scan per navigation
 
-  // Seitenwechsel als View Transition (weicher Übergang); aus bei „Bewegung reduzieren“ und in Testläufen.
-  // Das Umschalten läuft dann einen Moment später: wer danach auf die neue Seite zugreift, wartet auf NAV.ready().
-  let _vtP=Promise.resolve();
-  function vt(fn){
-    const ok=!!document.startViewTransition&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)&&!navigator.webdriver;
-    if(!ok){ fn(); _vtP=Promise.resolve(); return; }
-    const root=document.documentElement; root.classList.add('vt');
-    _vtP=new Promise(res=>{
-      try{ const t=document.startViewTransition(()=>{ try{ fn(); }finally{ res(); } }); t.finished.catch(()=>{}).finally(()=>root.classList.remove('vt')); }
-      catch(e){ root.classList.remove('vt'); fn(); res(); }
-    });
-  }
   function show(id){
     // O(2) view swap: deactivate previous, activate next
     if(!_activeEl) _activeEl = document.querySelector('.view.active');
@@ -93,14 +81,13 @@ const NAV = (function(){
   }
 
   return {
-    go(id,label){ _dir='forward'; stack.push({id,label}); history.pushState({stack:[...stack]},''); vt(()=>show(id)); },
-    back(){ if(typeof LP!=='undefined'&&LP.isOpen()){ LP.back(); return; } if(typeof PAUSE!=='undefined'&&_activeEl&&_activeEl.id==='v-pause'&&PAUSE.back()) return; if(!stack.length) return; _dir='back'; stack.pop(); const t=stack.length?stack[stack.length-1].id:'v-home'; vt(()=>show(t)); },
-    jumpTo(idx){ _dir=idx<stack.length-1?'back':'forward'; stack=stack.slice(0,idx+1); history.pushState({stack:[...stack]},''); const t=idx>=0?stack[idx].id:'v-home'; vt(()=>show(t)); },
-    home(){ _dir='back'; stack=[]; history.pushState({home:true},''); vt(()=>show('v-home')); },
-    tab(id,label){ _dir='forward'; stack=[{id,label}]; history.pushState({stack:[...stack]},''); vt(()=>show(id)); },
+    go(id,label){ _dir='forward'; stack.push({id,label}); history.pushState({stack:[...stack]},''); show(id); },
+    back(){ if(typeof LP!=='undefined'&&LP.isOpen()){ LP.back(); return; } if(typeof PAUSE!=='undefined'&&_activeEl&&_activeEl.id==='v-pause'&&PAUSE.back()) return; if(!stack.length) return; _dir='back'; stack.pop(); show(stack.length?stack[stack.length-1].id:'v-home'); },
+    jumpTo(idx){ _dir=idx<stack.length-1?'back':'forward'; stack=stack.slice(0,idx+1); history.pushState({stack:[...stack]},''); show(idx>=0?stack[idx].id:'v-home'); },
+    home(){ _dir='back'; stack=[]; history.pushState({home:true},''); show('v-home'); },
+    tab(id,label){ _dir='forward'; stack=[{id,label}]; history.pushState({stack:[...stack]},''); show(id); },
     depth(){ return stack.length; },
-    _restoreStack(s){ _dir='back'; stack=s; const t=s.length?s[s.length-1].id:'v-home'; vt(()=>show(t)); },
-    ready(){ return _vtP; }
+    _restoreStack(s){ _dir='back'; stack=s; show(s.length?s[s.length-1].id:'v-home'); }
   };
 })();
 
@@ -1522,7 +1509,7 @@ const SEARCH = (function(){
       const lbl = r.lbl.split('·').pop().trim();
       if(r.jgReiter&&typeof JGUI!=='undefined'){ JGUI.openReiter(r.jgReiter); return; }
       NAV.go(r.vid, lbl);
-      if(r.ch>=0&&typeof LP!=='undefined') NAV.ready().then(()=>setTimeout(()=>LP.focus(r.vid,r.ch),80));
+      if(r.ch>=0&&typeof LP!=='undefined') setTimeout(()=>LP.focus(r.vid,r.ch),80);
     },
     runHist(q){
       const inp=document.getElementById('search-input');
@@ -2606,7 +2593,7 @@ const ABKTIP=(function(){
     if(!pop){
       pop=document.createElement('div'); pop.id='abk-pop'; pop.hidden=true; pop.setAttribute('role','dialog'); pop.setAttribute('aria-label','Abkürzung');
       document.body.appendChild(pop);
-      pop.addEventListener('click',e=>{ if(e.target.closest('[data-all]')){ hide(); NAV.go('v-abkuerzungen','Abkürzungen'); NAV.ready().then(()=>{ const i=document.getElementById('abk-search'); if(i){ i.value=el.dataset.k; ABK.filter(el.dataset.k); } }); } });
+      pop.addEventListener('click',e=>{ if(e.target.closest('[data-all]')){ hide(); NAV.go('v-abkuerzungen','Abkürzungen'); setTimeout(()=>{ const i=document.getElementById('abk-search'); if(i){ i.value=el.dataset.k; ABK.filter(el.dataset.k); } },120); } });
     }
     pop.innerHTML='<b>'+esc(x.a)+'</b> – '+esc(x.f)+(x.d?'<div class="abk-d">'+esc(x.d)+'</div>':'')+'<button type="button" data-all>Alle Abkürzungen ›</button>';
     pop.hidden=false;
@@ -3224,7 +3211,7 @@ const WEAK=(function(){
   function close(){ if(box) box.hidden=true; }
   return {
     open,close,
-    cards(){ close(); NAV.tab('v-flashcards','Lernkarten'); NAV.ready().then(()=>FC.showWeak()); }
+    cards(){ close(); NAV.tab('v-flashcards','Lernkarten'); FC.showWeak(); }
   };
 })();
 
@@ -4101,7 +4088,7 @@ const CHANGELOG=(function(){
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
       'Stundenplan: In allen Jahrgängen außer dem Master gibt es unter der FAQ den Knopf „Raumplan IdF Münster“; er öffnet das Gelände in 3D mit allen Gebäuden, Parkplätzen und Sammelplätzen, auch wenn der eigene Plan keine Räume enthält',
-      'Feinschliff: Seitenwechsel mit weichem Übergang (die Tab-Leiste bleibt stehen), weichere Ecken wie bei iOS auf Karten, Listen und Knöpfen, Zahlen mit gleich breiten Ziffern, ausgewogene Überschriften, der Speiseplan lässt sich nach unten wischen, und bei sehr langsamer Verbindung zeigt die App nach 3 Sekunden die gespeicherte Seite statt zu warten',
+      'Feinschliff: weichere Ecken wie bei iOS auf Karten, Listen und Knöpfen, Zahlen mit gleich breiten Ziffern, ausgewogene Überschriften, der Speiseplan lässt sich nach unten wischen, und bei sehr langsamer Verbindung zeigt die App nach 3 Sekunden die gespeicherte Seite statt zu warten',
       'Prüfung: Die wichtigen Klausuren (Laufbahnklausuren Juni 2026, Altklausur-Quiz IdF, Klausur 08/2026, die beiden oberen von VAk Berlin und der Führungsdienstsimulator) haben jetzt einen deutlich sichtbaren orangen Farbverlauf, auch im beigen und hellen Design',
       'Altklausur-Quiz IdF: Oben auf der Seite lässt sich der Themenbereich wählen – Alle, Vorbeugender Brandschutz oder Stabsarbeit. Im Lernmodus und im Prüfungsmodus (25 Fragen) kommen dann nur Fragen dieses Bereichs; die Auswahl bleibt beim nächsten Öffnen erhalten',
       'Datenschutz: Die Angabe zu Notizen im Stundenplan ist entfernt, weil es sie nicht mehr gibt',

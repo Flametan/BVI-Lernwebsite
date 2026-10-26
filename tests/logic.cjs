@@ -13,7 +13,7 @@ const eq = (name, got, want) => {
 const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name} ${info}`); };
 
 (async () => {
-  const browser = await chromium.launch({ ...(EXEC ? { executablePath: EXEC } : {}), args: process.env.PW_NOWEBDRIVER ? ['--disable-blink-features=AutomationControlled'] : [] });
+  const browser = await chromium.launch(EXEC ? { executablePath: EXEC } : {});
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
   await ctx.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
   const page = await ctx.newPage();
@@ -581,10 +581,6 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     JG.set(JG.MASTER); await w(300); localStorage.removeItem('bvi_jgd_' + id); NAV.go('v-home', 'Start'); return r;
   });
   eq('Raumplan-Knopf nur in anderen Jahrgängen, öffnet das Gelände ohne Zielgebäude', rbn, { master: true, knopf: true, offen: true, zu: true });
-
-  // ── Seitenwechsel: ready() liefert ein Versprechen, auch wenn der Übergang ausgeschaltet ist ──
-  const rdy = await page.evaluate(async () => { NAV.go('v-abkuerzungen', 'Abk'); const p = NAV.ready(); await p; const ok = document.getElementById('v-abkuerzungen').classList.contains('active'); NAV.go('v-home', 'Start'); return [typeof p.then === 'function', ok]; });
-  eq('Seitenwechsel: NAV.ready() wartet auf die neue Seite', rdy, [true, true]);
 
   // ── Speiseplan: Tipp auf „Mittagessen“ öffnet den Plan des Tages ──
   const sp = await page.evaluate(async () => {

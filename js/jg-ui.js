@@ -543,7 +543,7 @@ const JGUI=(function(){
   let P=null;
   function openExam(id){
     const p=JG.data().pr.hinzu.find(x=>x.id===id); if(!p) return;
-    P={p,i:0,res:[],ans:null}; NAV.go('v-jg-pruefung',p.titel); NAV.ready().then(drawExam);
+    P={p,i:0,res:[],ans:null}; NAV.go('v-jg-pruefung',p.titel); drawExam();
   }
   function drawExam(){
     const el=document.getElementById('jg-pruefung-body'); if(!el||!P) return;
