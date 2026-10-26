@@ -2865,10 +2865,19 @@ html:has(.view.active.lp-ueber) #m-toc,html.lp-lock #m-toc{display:none!importan
 .idf-raumbtn{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;color:var(--m-fg);font:inherit;cursor:pointer;margin:0 0 12px;padding:12px 16px;min-height:56px;}
 .idf-rb-ic{flex:none;width:38px;height:38px;border-radius:12px;background:var(--m-accent-dim);color:var(--m-accent-fg);display:grid;place-items:center;}
 
-/* UX-Feinschliff: größere Trefferflächen, Ziffern gleich breit, ausgewogene Überschriften */
-.m-seg-s button,.pz-mode button,.idf-map{position:relative;}
-.m-seg-s button::after,.idf-map::after{content:"";position:absolute;left:-4px;right:-4px;top:-10px;bottom:-10px;}   /* Antippfläche mindestens 44 px, ohne das Aussehen zu ändern */
-.pz-mode button{min-height:44px;}
+/* UX-Feinschliff: Ziffern gleich breit, ausgewogene Überschriften */
 .m-val,.m-count-big,.m-nx-h,.m-nx-d,.idf-time,.idf-kw,.idf-dnum,.quiz-counter,.so-hud b,.mi-c,.rp-time,.sp-sub,.m-cont2-bot,.m-tc,time{font-variant-numeric:tabular-nums;}
 h1,h2,h3,.page-title,.m-t1,.sh-t,.lp-h,.sp-title,.rp-title{text-wrap:balance;}
 p,.m-t2,.idf-note,.page-lead{text-wrap:pretty;}
+
+/* Weiche Ecken (Squircle) wie bei iOS, wo der Browser es kann; sonst bleiben die normalen runden Ecken */
+@supports (corner-shape:squircle){
+  .m-card,.m-list,.m-note,.m-seg,.m-seg button,.m-ic,.m-modcard,.m-nx,.m-cal-btn,.m-go2,.m-count,.m-cont2,.lp-card,.acc-item,.info-card,.def-box,.glass-card,.glass-tile,.topic-card,.btn,
+  .quiz-opt,.quiz-mode-btn,.quiz-topcat-btn,.quiz-cat-filter-btn,.quiz-filter-btn,.quiz-exam-opt,.so-ib,.so-new,.so-seg,.so-seg button,.so-hud div,.so-board,.so-win,.so-stats div,.mi-wrap,
+  .rp-dlg,.sp-card,.sp-day,.faq,.idf-head,.idf-note,.idf-raumbtn,.idf-tel,.pz-game,.pz-card,.pz-mode,.pz-mode button,.cu-card,.m-sheet,.toast,.m-toast{corner-shape:squircle;}
+  .m-tab-fab,.m-tab.fab{corner-shape:round;}
+}
+/* Seitenwechsel mit weichem Übergang (View Transitions); die Tab-Leiste bleibt dabei stehen */
+#m-tabbar{view-transition-name:m-tabbar;}#m-rail{view-transition-name:m-rail;}#m-topbar{view-transition-name:m-topbar;}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.2s;}
+html.vt .view.nav-forward,html.vt .view.nav-back{animation:none;}   /* sonst liefen zwei Animationen übereinander */
