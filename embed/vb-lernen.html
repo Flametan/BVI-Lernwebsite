@@ -200,11 +200,13 @@ function viewTopic(){
   if(t.blick)hero=t.blick.map((k,i)=>`<div class="t" style="--c:${cf[i%cf.length]}"><small>Stufe ${i+1}</small><b>${esc(k[0])}<i>${esc(k[1])}</i></b><span>${esc(hy(k[2]))}</span><svg class="fl" viewBox="0 0 24 24" aria-hidden="true">${FLAME}</svg></div>`).join('');
   else if(t.sort)hero=t.sort.kats.map((k,i)=>`<div class="t" style="--c:${cf[i%cf.length]}"><h4>${esc(hy(k))}</h4>${t.sort.items.filter(x=>x[1]===i).map(x=>`<p class="ch">${esc(x[0])}</p>`).join('')}<svg class="fl" viewBox="0 0 24 24" aria-hidden="true">${FLAME}</svg></div>`).join('');
   const df=t.fakten.find(f=>f[0]==='Definition'),rest=t.fakten.filter(f=>f!==df);
+  const erkl=`<div class="card"><div class="merke" style="margin:12px">Merke: ${esc(t.merke)}</div>${rest.map(f=>`<div class="fact"><h4>${esc(f[0])}</h4><div>${md(f[1])}</div></div>`).join('')}</div>`;
   return `<h2 class="h2">${esc(t.titel)}</h2><p class="lead" style="margin-bottom:0">${esc(t.quelle)}</p>
    ${df?`<div class="def"><h4>Definition</h4><div>${md(df[1])}</div></div>`:''}
+   ${t.oben?`<div class="sec">Ausführlich erklärt</div>${erkl}`:''}
    <div class="sec">Auf einen Blick</div><div class="hero${t.blick?'':' txt'}">${hero}</div>
    ${t.extra&&LABS[t.extra]?'<div class="sec">Ausprobieren</div><div id="lab">'+LABS[t.extra]()+'</div>':''}
-   <div class="sec">Ausführlich erklärt</div><div class="card"><div class="merke" style="margin:12px">Merke: ${esc(t.merke)}</div>${rest.map(f=>`<div class="fact"><h4>${esc(f[0])}</h4><div>${md(f[1])}</div></div>`).join('')}</div>`;
+   ${t.oben?'':`<div class="sec">Ausführlich erklärt</div>${erkl}`}`;
 }
 function render(){
   document.querySelectorAll('.tab').forEach(b=>{const on=b.dataset.tab===st.tab;b.setAttribute('aria-selected',on);if(on)b.scrollIntoView({inline:'center',block:'nearest'})});
