@@ -2576,7 +2576,8 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 
 .m-list.m-donate:not(.m-donate-home){background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 17%,var(--m-card)),var(--m-card) 62%);}
 
-.jg-rw.hot{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 14%,var(--m-card)),var(--m-card) 70%);}
+.jg-rw.hot{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 38%,var(--m-card)),color-mix(in srgb,var(--m-accent) 8%,var(--m-card)) 78%);}
+.jg-rw.hot .m-row{background:none;}
 .jg-st{flex:none;font-size:1.05rem;line-height:1;color:var(--m-muted);opacity:.45;}
 .jg-st.on{color:var(--m-accent-fg);opacity:1;}
 
@@ -2861,3 +2862,5 @@ html:has(.view.active.lp-ueber) #m-toc,html.lp-lock #m-toc{display:none!importan
 .quiz-topcat-btn{min-height:44px;padding:0 16px;border-radius:14px;border:0;background:var(--m-raised);color:var(--m-muted);font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
 .quiz-topcat-btn small{font-size:.72rem;opacity:.8;font-variant-numeric:tabular-nums;}
 .quiz-topcat-btn.active{background:var(--m-accent);color:var(--m-on-accent);font-weight:700;}
+.idf-raumbtn{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;color:var(--m-fg);font:inherit;cursor:pointer;margin:0 0 12px;padding:12px 16px;min-height:56px;}
+.idf-rb-ic{flex:none;width:38px;height:38px;border-radius:12px;background:var(--m-accent-dim);color:var(--m-accent-fg);display:grid;place-items:center;}

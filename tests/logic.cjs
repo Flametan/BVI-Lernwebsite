@@ -568,6 +568,20 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Erreichbarkeiten: VB-Kontakte nur in den VB-Wochen', tel2, { vb: true, mail: true, tel: true, stab: true, g2stab: true, g2vb: true });
 
+  // ── Andere Jahrgänge: Knopf „Raumplan IdF Münster“ im Stundenplan (im Master nicht) ──
+  const rbn = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {}, id = JG.list()[0].id;
+    localStorage.removeItem('bvi_jgd_' + id);
+    NAV.go('v-plan', 'Stundenplan'); await w(300); r.master = !document.querySelector('#plan-inner .idf-raumbtn');
+    JG.set(id); await w(400); NAV.go('v-plan', 'Stundenplan'); await w(400);
+    const b = document.querySelector('#plan-inner .idf-raumbtn'); r.knopf = !!b && /Raumplan IdF Münster/.test(b.textContent);
+    b.click(); for (let i = 0; i < 40 && !document.querySelector('.rp-back'); i++) await w(100);
+    r.offen = !!document.querySelector('.rp-back .rp-dlg') && /Raumplan IdF Münster/.test(document.querySelector('.rp-title').textContent) && !document.querySelector('.rp-chip');
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(100); r.zu = !document.querySelector('.rp-back');
+    JG.set(JG.MASTER); await w(300); localStorage.removeItem('bvi_jgd_' + id); NAV.go('v-home', 'Start'); return r;
+  });
+  eq('Raumplan-Knopf nur in anderen Jahrgängen, öffnet das Gelände ohne Zielgebäude', rbn, { master: true, knopf: true, offen: true, zu: true });
+
   // ── Speiseplan: Tipp auf „Mittagessen“ öffnet den Plan des Tages ──
   const sp = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};

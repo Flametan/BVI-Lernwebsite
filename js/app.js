@@ -4087,6 +4087,8 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'Stundenplan: In allen Jahrgängen außer dem Master gibt es unter der FAQ den Knopf „Raumplan IdF Münster“; er öffnet das Gelände in 3D mit allen Gebäuden, Parkplätzen und Sammelplätzen, auch wenn der eigene Plan keine Räume enthält',
+      'Prüfung: Die wichtigen Klausuren (Laufbahnklausuren Juni 2026, Altklausur-Quiz IdF, Klausur 08/2026, die beiden oberen von VAk Berlin und der Führungsdienstsimulator) haben jetzt einen deutlich sichtbaren orangen Farbverlauf, auch im beigen und hellen Design',
       'Altklausur-Quiz IdF: Oben auf der Seite lässt sich der Themenbereich wählen – Alle, Vorbeugender Brandschutz oder Stabsarbeit. Im Lernmodus und im Prüfungsmodus (25 Fragen) kommen dann nur Fragen dieses Bereichs; die Auswahl bleibt beim nächsten Öffnen erhalten',
       'Datenschutz: Die Angabe zu Notizen im Stundenplan ist entfernt, weil es sie nicht mehr gibt',
       'Startseite: Der Link zur FAQ vor der Anreise öffnet den Stundenplan jetzt ganz oben bei der FAQ statt bei der aktuellen Einheit',
@@ -5810,7 +5812,7 @@ const IDF_PLAN = (function(){
   function _drawEmpty(el){
     const ey=document.querySelector('#v-plan .page-eyebrow'), ld=document.querySelector('#v-plan .page-lead');
     if(ey&&ld){ if(!ey.dataset.d){ ey.dataset.d=ey.textContent; ld.dataset.d=ld.textContent; } ey.style.textTransform='none'; ey.textContent=JG.labelOf(JG.current())+' · '+PTAB[_vkey()]; ld.textContent='Importiere oder erstelle den Stundenplan für diesen Abschnitt. Mit „Aktiv“ nutzen ihn Startseite und Widgets.'; }
-    el.innerHTML=_tabsBar()+FAQ.card(_faqKey())+'<div class="m-card"><div class="m-t1">Noch kein Stundenplan für '+PTAB[_vkey()]+'</div><div class="m-t2" style="margin-top:6px">Importiere ihn als Kalenderdatei (.ics), lies ein Foto oder einen Screenshot ein, oder gib die Termine selbst ein.</div></div>'+_planControls();
+    el.innerHTML=_tabsBar()+FAQ.card(_faqKey())+_raumBtn()+'<div class="m-card"><div class="m-t1">Noch kein Stundenplan für '+PTAB[_vkey()]+'</div><div class="m-t2" style="margin-top:6px">Importiere ihn als Kalenderdatei (.ics), lies ein Foto oder einen Screenshot ein, oder gib die Termine selbst ein.</div></div>'+_planControls();
   }
   function _dayRaw(w,d,g){
     if(_isCustom()) return w[5][d]||[];
@@ -5853,7 +5855,7 @@ const IDF_PLAN = (function(){
     const base=new Date(start+'T00:00');
     const notStarted=today<new Date(_weeks[0][3]+'T00:00');
     const icon=d=>`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
-    let h=_tabsBar()+FAQ.card(_faqKey())+`<div class="m-card idf-head">
+    let h=_tabsBar()+FAQ.card(_faqKey())+_raumBtn()+`<div class="m-card idf-head">
       <div class="idf-row"><div><b class="idf-kw">KW ${kw}</b><span class="m-t2">Woche ${nr} von ${_isCustom()?_weeks.length:9}${grp==='both'&&!_isCustom()?' · beide Gruppen':''}</span></div>
         <div class="idf-nav"><button onclick="IDF_PLAN._nav(-1)" aria-label="Vorherige Woche"${_wi===0?' disabled':''}>${icon('m15 18-6-6 6-6')}</button><button onclick="IDF_PLAN._nav(1)" aria-label="Nächste Woche"${_wi===_weeks.length-1?' disabled':''}>${icon('m9 18 6-6-6-6')}</button></div></div>
       <div class="idf-pips">${_weeks.map((w,i)=>`<button type="button" class="${i<_wi?'done':i===_wi?'cur':''}" onclick="IDF_PLAN._go(${i})" aria-label="Zu KW ${w[0]} springen (Woche ${i+1} von ${_weeks.length})"${i===_wi?' aria-current="true"':''}><i></i><span>${w[0]}</span></button>`).join('')}</div>
@@ -5967,6 +5969,8 @@ const IDF_PLAN = (function(){
   // Alle kommenden Einheiten (Beginn/Ende in ms) für die Startbildschirm-Widgets der Android-App
   // Erster Plantag und Standort des aktiven Plans (für den FAQ-Hinweis auf der Startseite)
   function arrival(){ _mode='active'; try{ const w=_buildWeeks(_savedGrp()), k=_nonMaster()?(_actKey()||'idf'):'idf'; return w.length?{key:k==='idf2'?'idf':k,start:w[0][3]}:null; }catch(e){ return null; }finally{ _mode='view'; } }
+  // Andere Jahrgänge (nicht der Master): Knopf zum Raumplan des IdF Münster, auch für Pläne ohne Raumangaben
+  const _raumBtn=()=>_nonMaster()?`<button type="button" class="m-card idf-raumbtn" onclick="RAUM.open({title:'Raumplan IdF Münster',time:'Gelände des Instituts',rooms:[],overview:true},this)"><span class="idf-rb-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg></span><span class="m-tx"><span class="m-t1">Raumplan IdF Münster</span><span class="m-t2">Gelände in 3D, Gebäude und Parkplätze</span></span></button>`:'';
   let _toFaq=false;   // true: der nächste Aufbau springt nicht zur aktuellen Einheit, sondern bleibt oben bei der FAQ
   function openFaq(){ const a=arrival(); if(a&&_nonMaster()) viewTab(a.key,true); FAQ.want(); _toFaq=true; NAV.tab('v-plan','Stundenplan'); _toFaq=false; }
   function units(){ _mode='active'; try{ return _units(); }finally{ _mode='view'; } }
