@@ -49,7 +49,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     NAV.tab('v-plan', 'x');
     const rows = [];
     for (let i = 0; i < 9; i++) {
-      rows.push([...document.querySelectorAll('.idf-tel-row a')].map(a => a.textContent));
+      rows.push([...document.querySelectorAll('.idf-tel-row a[href^="tel:"]')].map(a => a.textContent));
       IDF_PLAN._nav(1);
     }
     return rows;
@@ -551,6 +551,22 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   // ── Ladebildschirm verschwindet nach dem Start ──
   await page.waitForTimeout(700);
   eq('Ladebildschirm: nach dem Start entfernt', await page.evaluate(() => !document.getElementById('sk') && typeof SK === 'function'), true);
+
+  // ── Erreichbarkeiten: VB-Wochen zeigen die VB-Kontakte, Stabswochen die Stabs-Kontakte ──
+  const tel2 = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+    NAV.go('v-plan', 'Stundenplan'); await w(300); IDF_PLAN._grp('g1'); IDF_PLAN._go(0); await w(200);
+    const card = () => (document.querySelector('#plan-inner .idf-tel') || {}).textContent || '';
+    r.vb = /Böcking/.test(card()) && /Achtert/.test(card()) && /Vöge/.test(card()) && !/Spahlholz/.test(card());
+    const m = document.querySelector('#plan-inner .idf-tel a[href^="mailto:"]'); r.mail = !!m && m.getAttribute('href') === 'mailto:vb@idf.nrw.de';
+    const t = [...document.querySelectorAll('#plan-inner .idf-tel a[href^="tel:"]')].map(a => a.getAttribute('href'));
+    r.tel = t.includes('tel:+4925131122220') && t.includes('tel:+4925131122213') && t.includes('tel:+4925131122222');
+    IDF_PLAN._go(3); await w(200); r.stab = /Spahlholz/.test(card()) && !/Böcking/.test(card());
+    IDF_PLAN._grp('g2'); IDF_PLAN._go(0); await w(200); r.g2stab = /Spahlholz/.test(card());
+    IDF_PLAN._go(3); await w(200); r.g2vb = /Böcking/.test(card());
+    IDF_PLAN._grp('g1'); NAV.go('v-home', 'Start'); return r;
+  });
+  eq('Erreichbarkeiten: VB-Kontakte nur in den VB-Wochen', tel2, { vb: true, mail: true, tel: true, stab: true, g2stab: true, g2vb: true });
 
   // ── Raumplan: Tipp auf eine Einheit mit Raum öffnet den 3D-Plan, Notizen gibt es nicht mehr ──
   const rp = await page.evaluate(async () => {
