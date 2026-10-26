@@ -299,7 +299,7 @@ function select(i){ state.active=i; state.picked=null; if(ctl.ok){ ctl.setPicked
 function pick(id,fly){ state.picked=id; if(ctl.ok){ ctl.setPicked(id); if(fly) ctl.focusOn([id]); } paintUi(); }
 function build(info){
   var bids=T.groups.map(function(g){ return g.b; }), multi=T.items.length>1, gl=state.gl;
-  var chips='<span class="rp-lab">'+(multi?'Räume':'Raum')+'</span>'+(multi?'<button type="button" class="rp-chip" data-i="-1" aria-pressed="false">Alle</button>':'')+T.items.map(function(it,i){ return '<button type="button" class="rp-chip" data-i="'+i+'" aria-pressed="false" aria-label="'+esc(it.label)+', Gebäude '+it.b+' anzeigen">'+esc(it.label.replace(/^(Raum|Gebäude) /,''))+'</button>'; }).join('');
+  var chips=!T.groups.length?'<span class="rp-lab">Gebäude antippen: Name und Lage</span>':'<span class="rp-lab">'+(multi?'Räume':'Raum')+'</span>'+(multi?'<button type="button" class="rp-chip" data-i="-1" aria-pressed="false">Alle</button>':'')+T.items.map(function(it,i){ return '<button type="button" class="rp-chip" data-i="'+i+'" aria-pressed="false" aria-label="'+esc(it.label)+', Gebäude '+it.b+' anzeigen">'+esc(it.label.replace(/^(Raum|Gebäude) /,''))+'</button>'; }).join('');
   var labels='<div class="rp-labels" aria-hidden="true">'+G.buildings.map(function(b){ return '<span class="rp-bid" data-n="b:'+b.id+'">'+b.id+'</span>'; }).join('')+'<span class="rp-poi" data-n="p:canal">Dortmund-Ems-Kanal</span><span class="rp-poi" data-n="p:street">Wolbecker Straße</span><span class="rp-poi i" data-n="p:info">i</span>'+G.poi.map(function(o){ return '<span class="rp-poi q'+(o.k[0]==='S'?' s':'')+'" data-n="q:'+o.k+'">'+o.k+'</span>'; }).join('')
     +T.groups.map(function(g){ return '<div class="rp-grp" data-n="g:'+g.b+'">'+g.labels.map(function(l){ return '<span class="rp-rchip" data-l="'+esc(l)+'" data-b="'+g.b+'">'+esc(l)+'</span>'; }).join('')+'</div>'; }).join('')+'</div>';
   var plan;
@@ -314,7 +314,7 @@ function build(info){
   dlg=ov.querySelector('.rp-dlg');
 }
 function open(info,from){
-  close(true); ret=from||document.activeElement; T=targetsOf(info); if(!T.groups.length) return;
+  close(true); ret=from||document.activeElement; T=targetsOf(info); if(!T.groups.length&&!info.overview) return;   // overview: nur das Gelände zeigen, ohne Zielgebäude
   state={gl:null,top:false,legend:false,picked:null,active:T.items.length===1?0:-1};
   ov=document.createElement('div'); ov.className='rp-back'; document.body.appendChild(ov);
   var ok=ctl.init(); state.gl=ok; build(info); document.body.classList.add('rp-lock');
