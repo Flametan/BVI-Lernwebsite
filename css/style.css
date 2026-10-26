@@ -2855,6 +2855,3 @@ body.rp-lock{overflow:hidden;}
 .idf-lunch.idf-tap:focus-visible{outline:2px solid var(--m-accent);outline-offset:2px;}
 /* Desktop zeigt wie Handy und Tablet Kapitelkarten: die Seitenübersicht rechts („Auf dieser Seite“) entfällt */
 html:has(.view.active.lp-ueber) #m-toc,html.lp-lock #m-toc{display:none!important;}
-.rp-me{position:absolute;left:0;top:0;visibility:hidden;white-space:nowrap;font-weight:800;font-size:.7rem;padding:2px 9px;height:22px;line-height:18px;border-radius:11px;background:#1a73e8;color:#fff;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.4);will-change:transform;}
-.rp-gps{position:absolute;left:10px;top:58px;max-width:calc(100% - 80px);z-index:3;background:var(--rp-glass);border:1px solid var(--m-line);border-radius:14px;padding:8px 12px;font-size:.82rem;font-weight:600;box-shadow:0 2px 10px rgba(0,0,0,.25);}.rp-gps[hidden]{display:none;}
-.rp-cb[data-a=gps][aria-pressed=true]{background:#1a73e8;color:#fff;border-color:transparent;}

@@ -4077,7 +4077,6 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
-      'Raumplan: Der Knopf „Standort“ zeigt deine Position als blauen Punkt auf der Karte des IdF-Geländes (ungefähr 10 bis 20 Meter genau; die Position bleibt auf dem Gerät und wird nicht gespeichert oder gesendet). In der Android-App fragt die App dafür einmal nach der Standort-Erlaubnis; das braucht die neue App-Version',
       'Datenschutz: Die App zählt jetzt anonym, wie viele Personen sie nutzen (Besucherzähler GoatCounter, ohne Cookies, ohne IP-Speicherung, ohne Lernstand). Auf der Datenschutzseite lässt sich das Zählen des eigenen Besuchs abschalten; die Angabe zu Notizen im Stundenplan ist entfernt, weil es sie nicht mehr gibt',
       'Startseite: Der Link zur FAQ vor der Anreise öffnet den Stundenplan jetzt ganz oben bei der FAQ statt bei der aktuellen Einheit',
       'FAQ zu den Standorten: Für das IdF Münster sind jetzt Essenszeiten, Getränke, Tagesablauf, Sporthalle, Strom und Netz sowie Waschmöglichkeiten eingetragen; der Laptop wird in keiner Antwort mehr erwähnt',
