@@ -13,7 +13,7 @@ const FAQ=(function(){
     ['essen',1,'Wo isst man und was kostet es?'],['zeiten',1,'Gibt es Frühstück und Abendessen, und wann?'],['getraenke',1,'Gibt es Getränke?'],['kost',1,'Gibt es vegetarische oder besondere Kost?'],['selbst',1,'Kann man sich selbst versorgen?'],
     ['sport',2,'Wie sind die Sportmöglichkeiten?'],['sportsachen',2,'Was muss man zum Sport mitbringen?'],['laufen',2,'Gibt es Laufstrecken in der Nähe?'],['abend',2,'Was kann man abends machen?'],
     ['parken',3,'Gibt es Parkplätze und was kosten sie?'],['oepnv',3,'Wie kommt man mit Bahn oder Bus hin?'],['zeit',3,'Wann reist man an und wieder ab?'],['melden',3,'Wo meldet man sich bei der Ankunft?'],
-    ['kleidung',4,'Welche Kleidung wird erwartet?'],['schutz',4,'Braucht man Schutz- oder Einsatzkleidung?'],['arbeit',4,'Was braucht man zum Arbeiten (Laptop, Schreibzeug, Strom, Netz)?'],['heizung',4,'Wie ist die Heizung, und was sollte man gegen Kälte mitnehmen?'],
+    ['kleidung',4,'Welche Kleidung wird erwartet?'],['schutz',4,'Braucht man Schutz- oder Einsatzkleidung?'],['arbeit',4,'Was braucht man zum Arbeiten (Schreibzeug, Strom, Netz)?'],['heizung',4,'Wie ist die Heizung, und was sollte man gegen Kälte mitnehmen?'],
     ['kontakt',5,'Wer ist Ansprechperson vor Ort?'],['haus',5,'Welche Hausregeln gibt es (Ruhezeiten, Rauchen, Alkohol)?'],['geld',5,'Kann man bar oder mit Karte zahlen?'],['arzt',5,'Gibt es Arzt, Apotheke und Supermarkt in der Nähe?'],['tag',5,'Wie sieht der Tagesablauf aus?'],['sonst',5,'Was sollte man sonst vor der Anreise wissen?']
   ];
   const NAME={ibk:'IBK Heyrothsberge',vak:'VAk Berlin',feuak:'FeuAK Hamburg',idf:'IdF Münster'};
@@ -41,7 +41,7 @@ const FAQ=(function(){
       melden:'Beim Pförtner melden.',
       kleidung:'Hemd, Krawatte, Polo, Regenjacke von der Dienststelle und zivile Kleidung.',
       schutz:'Nein.',
-      arbeit:'Laptop und Schreibzeug bringt man selbst mit, beides wird nicht gestellt. Strom und Netz sind in den Lehrräumen verfügbar.',
+      arbeit:'Schreibzeug bringt man selbst mit, es wird nicht gestellt. Strom und Netz sind in den Lehrräumen verfügbar.',
       waesche:'Auf dem Gelände gibt es keine Waschmöglichkeit. Ein Waschsalon ist in der Nähe.',
       heizung:'Die Heizung funktioniert gut. Schlappen oder Hausschuhe sind von Vorteil.',
       arzt:'Alles ist in etwa 10 Minuten zu Fuß erreichbar.'
@@ -69,7 +69,7 @@ const FAQ=(function(){
       melden:'An der Rezeption.',
       kleidung:'Zivil.',
       schutz:'Für einen Praxistag wird PSA benötigt.',
-      arbeit:'Den Laptop bringt man selbst mit, er wird nirgends gestellt. Strom und Netz gibt es im Raum.',
+      arbeit:'Strom und Netz gibt es im Raum.',
       heizung:'Die Heizung war gut.',
       arzt:'Ja, alles ist in der Nähe.'
     },
@@ -94,7 +94,7 @@ const FAQ=(function(){
       melden:'An der Rezeption.',
       kleidung:'Zivil.',
       schutz:'Nein.',
-      arbeit:'Den Laptop bringt man selbst mit, er wird nirgends gestellt. Schreibzeug bekommt man gestellt.',
+      arbeit:'Schreibzeug bekommt man gestellt.',
       heizung:'Die Heizung ist in Ordnung.',
       arzt:'Ja, alles ist zu Fuß erreichbar.'
     },
@@ -119,7 +119,7 @@ const FAQ=(function(){
       melden:'An der Rezeption.',
       kleidung:'Hemd.',
       schutz:'Nein.',
-      arbeit:'Den Laptop bringt man selbst mit, er wird nirgends gestellt. Schreibzeug bekommt man gestellt.',
+      arbeit:'Schreibzeug bekommt man gestellt.',
       heizung:'Die Heizung ist in Ordnung.',
       arzt:'Ja, alles ist zu Fuß erreichbar.'
     }
