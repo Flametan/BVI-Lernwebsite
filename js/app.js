@@ -4077,6 +4077,8 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'Datenschutz: Vorbereitung für einen anonymen Besucherzähler ohne Cookies (GoatCounter); er ist noch ausgeschaltet. Auf der Datenschutzseite lässt sich das Zählen des eigenen Besuchs abschalten; die Angabe zu Notizen im Stundenplan ist entfernt, weil es sie nicht mehr gibt',
+      'Startseite: Der Link zur FAQ vor der Anreise öffnet den Stundenplan jetzt ganz oben bei der FAQ statt bei der aktuellen Einheit',
       'FAQ zu den Standorten: Für das IdF Münster sind jetzt Essenszeiten, Getränke, Tagesablauf, Sporthalle, Strom und Netz sowie Waschmöglichkeiten eingetragen; der Laptop wird in keiner Antwort mehr erwähnt',
       'Lernseiten: Auf dem Desktop gibt es jetzt wie auf Handy und Tablet die Kapitelkarten; ein Kapitel öffnet im eigenen Fenster mit „Vorheriges Kapitel“ und „Nächstes Kapitel“. Auf dem Tablet war die Leiste mit diesen Knöpfen unter der Tab-Leiste verdeckt und ist jetzt sichtbar. Die Seitenübersicht „Auf dieser Seite“ am rechten Rand entfällt dafür',
       'Stundenplan IdF Münster: Ein Tipp auf „Mittagessen“ öffnet den Speiseplan des Tages (Stammessen, Beilage, vegetarisch, Dessert mit den Kürzeln vom Aushang); die anderen Tage der Woche stehen darunter, der gewählte Tag ist hervorgehoben. Der Speiseplan der aktuellen Woche ist eingetragen',
@@ -5899,6 +5901,7 @@ const IDF_PLAN = (function(){
     _weeks=_buildWeeks();
     if(!_weeks.length){ const el=document.getElementById('plan-inner'); if(el) _drawEmpty(el); return; }
     _manual=false; _wi=_curWeek();
+    if(_toFaq){ _draw(); window.scrollTo(0,0); requestAnimationFrame(()=>window.scrollTo(0,0)); return; }
     // Springt zur laufenden bzw. nächsten Einheit: richtige Woche, Tag nach oben scrollen
     const nx=_next(), key=nx&&_ymd(nx.start);
     _draw();
@@ -5953,7 +5956,8 @@ const IDF_PLAN = (function(){
   // Alle kommenden Einheiten (Beginn/Ende in ms) für die Startbildschirm-Widgets der Android-App
   // Erster Plantag und Standort des aktiven Plans (für den FAQ-Hinweis auf der Startseite)
   function arrival(){ _mode='active'; try{ const w=_buildWeeks(_savedGrp()), k=_nonMaster()?(_actKey()||'idf'):'idf'; return w.length?{key:k==='idf2'?'idf':k,start:w[0][3]}:null; }catch(e){ return null; }finally{ _mode='view'; } }
-  function openFaq(){ const a=arrival(); if(a&&_nonMaster()) viewTab(a.key,true); FAQ.want(); NAV.tab('v-plan','Stundenplan'); }
+  let _toFaq=false;   // true: der nächste Aufbau springt nicht zur aktuellen Einheit, sondern bleibt oben bei der FAQ
+  function openFaq(){ const a=arrival(); if(a&&_nonMaster()) viewTab(a.key,true); FAQ.want(); _toFaq=true; NAV.tab('v-plan','Stundenplan'); _toFaq=false; }
   function units(){ _mode='active'; try{ return _units(); }finally{ _mode='view'; } }
   function _units(){
     const out=[], g=_savedGrp(), from=new Date(); from.setHours(0,0,0,0);
@@ -6052,6 +6056,30 @@ const IDF_PLAN = (function(){
   _loadOv();
   pushWidget();
   return { roomsOf:_roomsOf, arrival, openFaq, viewTab, setActive, savePlan:_saveCust, getPlan:()=>_cust, render, summary, next, units, pushWidget, ics, exportIcs, parseIcs, importIcs, useSource, removeCustom, isCustom:_isCustom, _nav, _go, _grp:_setGrp, redraw:_draw };
+})();
+
+/* ── Besucherzähler (GoatCounter): zählt nur Aufrufe, ohne Cookies und ohne IP-Speicherung; bleibt aus, solange CODE leer ist ── */
+const ZAEHLER=(function(){
+  const CODE='';   // Name der GoatCounter-Seite: https://<CODE>.goatcounter.com (leer = Zähler ausgeschaltet)
+  const KEY='bvi_zaehler';
+  const off=()=>{ try{ return localStorage.getItem(KEY)==='0'; }catch(e){ return false; } };
+  function set(on){ try{ if(on) localStorage.removeItem(KEY); else localStorage.setItem(KEY,'0'); }catch(e){} }
+  const endpoint=c=>/^[a-z0-9-]{2,40}$/.test(c)?'https://'+c+'.goatcounter.com/count':'';
+  // ?zaehler=aus auf diesem Gerät: die eigenen Besuche werden nicht gezählt (?zaehler=an macht es rückgängig)
+  function init(code,force){
+    const q=new URLSearchParams(location.search).get('zaehler'); if(q==='aus') set(false); else if(q==='an') set(true);
+    const ep=endpoint(code===undefined?CODE:code);
+    if(!ep||off()||navigator.doNotTrack==='1'||(navigator.webdriver&&!force)) return false;
+    if(document.getElementById('gc-script')) return true;
+    const s=document.createElement('script'); s.id='gc-script'; s.async=true; s.src='https://gc.zgo.at/count.js'; s.setAttribute('data-goatcounter',ep); document.body.appendChild(s);
+    return true;
+  }
+  function bind(){
+    const c=document.getElementById('dz-zaehler'); if(!c) return;
+    c.checked=!off(); c.onchange=()=>set(c.checked);
+    const row=document.getElementById('dz-zaehler-row'); if(row) row.hidden=!CODE;
+  }
+  return {init,bind,set,off,endpoint,active:()=>!!endpoint(CODE)};
 })();
 
 /* ── Speiseplan des IdF: Tipp auf „Mittagessen“ im Stundenplan öffnet den Plan des Tages (data/speiseplan.json, wöchentlich ergänzen) ── */
@@ -7398,6 +7426,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   ONBOARD.init();
   OVL.init();
   CHANGELOG.check();
+  ZAEHLER.init(); ZAEHLER.bind();
   if(window.SK) requestAnimationFrame(()=>window.SK());
   if(typeof FALLBEARBEITUNG!=='undefined') { document.querySelectorAll('#v-vak-fallbearbeitung').forEach(()=>{}); }
   document.querySelectorAll('.pc table').forEach(t=>{

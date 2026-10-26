@@ -619,6 +619,19 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Version: version.js, sw.js, README und oberster Neuigkeiten-Eintrag stimmen überein', ver, { fmt: true, sw: true, top: true, readme: true });
 
+  // ── Besucherzähler: ohne Namen aus; mit Namen lädt er den Zähler, außer wenn der Besucher ihn abschaltet ──
+  const zc = await page.evaluate(() => {
+    const r = {}; localStorage.removeItem('bvi_zaehler');
+    r.leer = ZAEHLER.init('') === false && !document.getElementById('gc-script');
+    r.name = ZAEHLER.endpoint('beispiel') === 'https://beispiel.goatcounter.com/count' && ZAEHLER.endpoint('Bad Name;') === '';
+    r.testlauf = ZAEHLER.init('beispiel') === false;   // automatisierte Browser zählen nicht
+    ZAEHLER.set(false); r.aus = ZAEHLER.off() && ZAEHLER.init('beispiel', true) === false && !document.getElementById('gc-script');
+    ZAEHLER.set(true); r.an = !ZAEHLER.off();
+    r.dsb = !!document.getElementById('dz-zaehler') && document.getElementById('dz-zaehler-row').hidden === true;   // Hinweis erscheint erst, wenn der Zähler eingerichtet ist
+    return r;
+  });
+  eq('Besucherzähler: aus ohne Namen, Abschalten durch Besucher, keine Zählung im Testlauf', zc, { leer: true, name: true, testlauf: true, aus: true, an: true, dsb: true });
+
   // ── Standort-FAQ ──
   const faq = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
@@ -627,10 +640,12 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const c = document.querySelector('#plan-inner details.faq');
     r.karte = !!c && !c.open && /Kühlschrank/.test(c.textContent) && /IdF Münster/.test(c.textContent);
     const ar = IDF_PLAN.arrival(); r.arrival = !!ar && ar.key === 'idf' && /^\d{4}-\d\d-\d\d$/.test(ar.start);
-    IDF_PLAN.openFaq(); await w(300); r.offen = !!document.querySelector('#plan-inner details.faq[open]');
+    IDF_PLAN._go(0); window.scrollTo(0, 900); await w(100);
+    IDF_PLAN.openFaq(); await w(400); r.offen = !!document.querySelector('#plan-inner details.faq[open]');
+    r.oben = window.scrollY < 40;
     NAV.go('v-home', 'Start'); return r;
   });
-  eq('FAQ: Standorte, Karte im Stundenplan, Startseiten-Link', faq, { idf: true, leer: true, alle: true, fremd: true, karte: true, arrival: true, offen: true });
+  eq('FAQ: Standorte, Karte im Stundenplan, Startseiten-Link', faq, { idf: true, leer: true, alle: true, fremd: true, karte: true, arrival: true, offen: true, oben: true });
 
   const so = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms));
