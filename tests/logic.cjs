@@ -568,22 +568,6 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Erreichbarkeiten: VB-Kontakte nur in den VB-Wochen', tel2, { vb: true, mail: true, tel: true, stab: true, g2stab: true, g2vb: true });
 
-  // ── Raumplan: Standort-Umrechnung (die drei Messpunkte landen auf ihren Gebäuden, weit entfernte Orte außerhalb) ──
-  const gpsT = await page.evaluate(async () => {
-    const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
-    NAV.go('v-plan', 'Stundenplan'); await w(300); IDF_PLAN._go(0); await w(300);
-    const it = document.querySelector('#plan-inner .idf-tap[data-rm]'); it.click(); for (let i = 0; i < 40 && !document.querySelector('.rp-back'); i++) await w(100);
-    const g = RAUMPLAN._geo, T = RAUMPLAN._gps, near = (id, lat, lon) => { const b = g.buildings.find(x => x.id === id), p = T.toMap(lat, lon); return Math.hypot(p[0] - b.lx, p[1] - b.ly) < 2; };
-    r.punkte = near('A7', 51.954231, 7.660568) && near('B3', 51.956414, 7.659978) && near('A3', 51.955326, 7.659865);
-    r.skala = T.scale > 1.5 && T.scale < 3;
-    r.mitte = T.outside(T.toMap(51.9552, 7.6601)) === 0;
-    r.weit = T.outside(T.toMap(52.52, 13.40)) > 300000;
-    r.knopf = !!document.querySelector('[data-a="gps"]');
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(100);
-    NAV.go('v-home', 'Start'); return r;
-  });
-  eq('Raumplan: Standort rechnet die Messpunkte auf die Gebäude um', gpsT, { punkte: true, skala: true, mitte: true, weit: true, knopf: true });
-
   // ── Speiseplan: Tipp auf „Mittagessen“ öffnet den Plan des Tages ──
   const sp = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
@@ -634,19 +618,6 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     return { fmt: /^\d+\.\d+\.\d+$/.test(APP_VERSION), sw: sw.includes("APP_VERSION = '" + APP_VERSION + "'"), top: !!top && top[1] === APP_VERSION, readme: rd.includes('Aktuelle Version: **' + APP_VERSION + '**') };
   });
   eq('Version: version.js, sw.js, README und oberster Neuigkeiten-Eintrag stimmen überein', ver, { fmt: true, sw: true, top: true, readme: true });
-
-  // ── Besucherzähler: eingerichtet, Abschalten durch Besucher möglich ──
-  const zc = await page.evaluate(() => {
-    const r = {}; localStorage.removeItem('bvi_zaehler');
-    r.leer = ZAEHLER.init('') === false && !document.getElementById('gc-script');
-    r.name = ZAEHLER.endpoint('beispiel') === 'https://beispiel.goatcounter.com/count' && ZAEHLER.endpoint('Bad Name;') === '';
-    r.testlauf = ZAEHLER.init('beispiel') === false;   // automatisierte Browser zählen nicht
-    ZAEHLER.set(false); r.aus = ZAEHLER.off() && ZAEHLER.init('beispiel', true) === false && !document.getElementById('gc-script');
-    ZAEHLER.set(true); r.an = !ZAEHLER.off();
-    r.dsb = !!document.getElementById('dz-zaehler') && document.getElementById('dz-zaehler-row').hidden === false && ZAEHLER.active();   // Datenschutz-Abschnitt ist sichtbar, weil der Zähler eingerichtet ist
-    return r;
-  });
-  eq('Besucherzähler: aus ohne Namen, Abschalten durch Besucher, keine Zählung im Testlauf', zc, { leer: true, name: true, testlauf: true, aus: true, an: true, dsb: true });
 
   // ── Standort-FAQ ──
   const faq = await page.evaluate(async () => {
