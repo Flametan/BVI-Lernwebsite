@@ -611,6 +611,14 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Raumplan: Räume erkennen, Einheit öffnet 3D-Plan, Esc schließt, keine Notizen', rp, { parse: true, noNotes: true, tapbar: true, open: true, chips: true, title: true, mount: true, esc: true, keinRaum: true });
 
+  // ── Versionsnummer: version.js, sw.js und oberster Eintrag der Neuigkeiten stimmen überein ──
+  const ver = await page.evaluate(async () => {
+    const sw = await (await fetch('sw.js')).text(), app = await (await fetch('js/app.js')).text(), rd = await (await fetch('README.md')).text();
+    const top = /const ENTRIES=\[\s*\{v:'([\d.]+)'/.exec(app);
+    return { fmt: /^\d+\.\d+\.\d+$/.test(APP_VERSION), sw: sw.includes("APP_VERSION = '" + APP_VERSION + "'"), top: !!top && top[1] === APP_VERSION, readme: rd.includes('Aktuelle Version: **' + APP_VERSION + '**') };
+  });
+  eq('Version: version.js, sw.js, README und oberster Neuigkeiten-Eintrag stimmen überein', ver, { fmt: true, sw: true, top: true, readme: true });
+
   // ── Standort-FAQ ──
   const faq = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
