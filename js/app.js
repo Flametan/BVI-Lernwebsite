@@ -4101,6 +4101,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
+      'Taschenkarte Stabsarbeit: Taktische Zeichen nach der Vorlage neu gezeichnet (Führungsstellen mit Fahne, Leitstelle mit Dach, Führungskräfte mit schwarzer Spitze, Personen, Schäden, Brände als rote Zacken, Gefahren, Fahrzeuge, Patientenablage, Versorgungsstellen mit schwarzem Boden, Größenordnung als Punkte); die ausgewählte Palette in der Lagerhalle ist klar hervorgehoben und wird erst mit Plus in den Rechner gelegt.',
       'IdF · Stabsarbeit: Neue interaktive Taschenkarte mit 7-Punkte-Plan, Stabsstruktur, taktischen Zeichen, Katastrophenschutzlager NRW (Lagerhalle im Querschnitt mit antippbaren Paletten und Anforderungsrechner) und der EVA-Übung zum Sachgebiet 4 Versorgung; zu jeder der drei Aufgaben gibt es am Ende eine recherchierte Musterlösung mit Quellen.',
       'Stundenplan: In allen Jahrgängen außer dem Master gibt es unter der FAQ den Knopf „Raumplan IdF Münster“; er öffnet das Gelände in 3D mit allen Gebäuden, Parkplätzen und Sammelplätzen, auch wenn der eigene Plan keine Räume enthält',
       'Stundenplan IdF Münster: Frühstück, Mittagessen und Abendessen nennen den Speiseraum (Gebäude A3); ein Tipp auf Frühstück oder Abendessen zeigt A3 im Raumplan, im Speiseplan gibt es dazu einen Knopf',
