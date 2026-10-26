@@ -26,7 +26,7 @@ const FAQ=(function(){
       handtuch:'Nein, Handtücher und Bettwäsche muss man nicht mitbringen.',
       pflege:'Ja, Seife und Shampoo gibt es.',
       schluessel:'Der Zimmerschlüssel ist ein Chip.',
-      essen:'In der Mensa. Die Kosten sind im Lehrgang inbegriffen.',
+      essen:'In der Mensa im Gebäude A3. Die Kosten sind im Lehrgang inbegriffen.',
       zeiten:'Frühstück von 6:30 bis 7:45 Uhr, Abendessen von 17:00 bis 19:00 Uhr (Essenausgabe bis 18:30 Uhr). Der Speiseraum ist von 8:30 bis 9:00 Uhr und von 11:30 bis 12:00 Uhr geschlossen.',
       getraenke:'Wasserspender und Heißgetränke im Speiseraum stehen zur freien Verfügung.',
       tag:'Frühstück 6:30–7:45 Uhr, Unterricht 7:45–15:30 Uhr, EVA (eigenverantwortliches Arbeiten) 15:30–17:30 Uhr, Abendessen 17:00–19:00 Uhr. Die EVA wird nicht so ernst genommen.',

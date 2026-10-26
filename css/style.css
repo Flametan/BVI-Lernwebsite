@@ -2877,3 +2877,4 @@ p,.m-t2,.idf-note,.page-lead{text-wrap:pretty;}
   .rp-dlg,.sp-card,.sp-day,.faq,.idf-head,.idf-note,.idf-raumbtn,.idf-tel,.pz-game,.pz-card,.pz-mode,.pz-mode button,.cu-card,.m-sheet,.toast,.m-toast{corner-shape:squircle;}
   .m-tab-fab,.m-tab.fab{corner-shape:round;}
 }
+.sp-room{margin:10px 16px 0;min-height:44px;border:0;border-radius:14px;background:var(--m-raised);color:var(--m-fg);font:inherit;font-weight:650;font-size:.85rem;cursor:pointer;}
