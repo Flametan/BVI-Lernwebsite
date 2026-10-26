@@ -821,8 +821,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   const hc = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
     NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
-    const p = [...document.querySelectorAll('#v-vak-verwaltungsrecht .acc-body p')].find(e => e.textContent.trim().length > 40);
-    p.closest('details') && (p.closest('details').open = true);
+    document.querySelector('#v-vak-verwaltungsrecht .lp-card').click(); await w(500);   // Kapitel öffnet im eigenen Fenster
+    const p = [...document.querySelectorAll('.lp-wbody .acc-body p')].find(e => e.textContent.trim().length > 40);
     const rg = document.createRange(); rg.selectNodeContents(p); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(rg);
     document.dispatchEvent(new Event('selectionchange')); await w(400);
     const btn = document.querySelector('#m-hl-bar [data-a="card"]');
@@ -831,7 +831,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const box = document.getElementById('cu-a');
     r.filled = !!box && box.value.length > 20 && box.value.trim() === p.textContent.replace(/\s+/g, ' ').trim().slice(0, 1500);
     r.mod = document.getElementById('cu-m').value;
-    CUSTOM.close(); await w(100);
+    CUSTOM.close(); await w(100); if (LP.isOpen()) LP.back(); await w(100);
     return r;
   });
   eq('Markierung: „Als Lernkarte“ füllt Antwort und Modul vor', hc, { btn: true, filled: true, mod: 'VAk' });
