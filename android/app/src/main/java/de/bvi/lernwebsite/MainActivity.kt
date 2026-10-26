@@ -15,6 +15,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.app.Activity
 import android.webkit.JavascriptInterface
+import android.webkit.GeolocationPermissions
 import android.webkit.PermissionRequest
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -49,6 +50,15 @@ open class MainActivity : AppCompatActivity() {
         if (r != null) {
             if (granted) r.grant(arrayOf(PermissionRequest.RESOURCE_VIDEO_CAPTURE)) else r.deny()
         }
+    }
+
+    // Standort für den Raumplan: Anfrage der Seite merken, Android-Berechtigung erfragen, dann freigeben
+    private var geoOrigin: String? = null
+    private var geoCallback: GeolocationPermissions.Callback? = null
+    private val geoPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        geoCallback?.invoke(geoOrigin, granted, false)
+        geoCallback = null
+        geoOrigin = null
     }
 
     // Startsymbole je Akzentfarbe (activity-alias im Manifest); Orange ist per Manifest aktiv
@@ -167,6 +177,7 @@ open class MainActivity : AppCompatActivity() {
             databaseEnabled = true
             allowFileAccess = false // es werden nur https-Seiten geladen, keine file://
             mediaPlaybackRequiresUserGesture = false
+            setGeolocationEnabled(true)
         }
 
         webView.addJavascriptInterface(IconBridge(), "BVIAndroid")
@@ -184,6 +195,22 @@ open class MainActivity : AppCompatActivity() {
                         camRequest?.deny()
                         camRequest = request
                         camPermission.launch(Manifest.permission.CAMERA)
+                    }
+                }
+            }
+
+            override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
+                runOnUiThread {
+                    // Nur für die eigene Seite; die Position wird nicht gespeichert (retain = false)
+                    if (Uri.parse(origin).host != "flametan.github.io") { callback.invoke(origin, false, false); return@runOnUiThread }
+                    if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                        callback.invoke(origin, true, false)
+                    } else {
+                        geoCallback?.invoke(geoOrigin, false, false)
+                        geoOrigin = origin
+                        geoCallback = callback
+                        geoPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                     }
                 }
             }
