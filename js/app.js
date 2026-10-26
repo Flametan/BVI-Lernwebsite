@@ -4115,7 +4115,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
-      'VB lernen · Ziele: Merksatz und ausführliche Erklärung stehen jetzt oben, darunter „Auf einen Blick“ und die Simulation',
+      'VB lernen · Ziele: Der Merksatz steht oben, die vier Ziele sind nummerierte, aufklappbare Kacheln („Entstehung verhindern“, „Ausbreitung verhindern“, „Rettung ermöglichen“, „Löschen ermöglichen“) mit dem jeweiligen Satz aus § 14 MBO; die ausführliche Erklärung entfällt',
       'VB lernen: Die Definition (bei Aufenthaltsraum und Nutzungseinheit) steht jetzt als hervorgehobene Karte ganz oben direkt unter dem Titel',
       'VB lernen: Die Texte in „Auf einen Blick“ stehen als Stichpunkte mit hellem Strich in breiten Farbkacheln (statt in schmalen Pillen)',
       'VB lernen: Neues Seitenlayout auf allen fünf Reitern – oben „Auf einen Blick“ als farbige Kacheln (bei Standsicherheit mit den Minutenzahlen), dann „Ausprobieren“ mit der Simulation, darunter „Ausführlich erklärt“',
