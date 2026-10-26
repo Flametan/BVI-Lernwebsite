@@ -2840,3 +2840,4 @@ body.rp-lock{overflow:hidden;}
 .rp-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;}.rp-sr ul{list-style:none;margin:0;padding:0;}
 .idf-tap:focus-visible{outline:2px solid var(--m-accent);outline-offset:2px;}
 .idf-rm{color:var(--m-accent-fg);}.idf-rm svg{width:12px;height:12px;vertical-align:-1px;margin-right:4px;}
+.rp-poi.q{font-style:normal;font-weight:800;font-size:.64rem;padding:1px 6px;height:18px;line-height:15px;background:#4a3f7a;color:#fff;opacity:.92;}.rp-poi.q.s{background:#2f8f5f;}
