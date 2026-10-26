@@ -4088,6 +4088,7 @@ const CHANGELOG=(function(){
   const ENTRIES=[
     {v:'3.0.1',ts:'2026-10-26T20:00',items:[
       'Stundenplan: In allen Jahrgängen außer dem Master gibt es unter der FAQ den Knopf „Raumplan IdF Münster“; er öffnet das Gelände in 3D mit allen Gebäuden, Parkplätzen und Sammelplätzen, auch wenn der eigene Plan keine Räume enthält',
+      'Feinschliff: Kleine Knöpfe (Woche/Monate, Allgemein/Feuerwehr/Beides, Anreise) haben eine größere Antippfläche, Zahlen stehen mit gleich breiten Ziffern, Überschriften brechen ausgewogen um, der Speiseplan lässt sich nach unten wischen, und bei sehr langsamer Verbindung zeigt die App nach 3 Sekunden die gespeicherte Seite statt zu warten',
       'Prüfung: Die wichtigen Klausuren (Laufbahnklausuren Juni 2026, Altklausur-Quiz IdF, Klausur 08/2026, die beiden oberen von VAk Berlin und der Führungsdienstsimulator) haben jetzt einen deutlich sichtbaren orangen Farbverlauf, auch im beigen und hellen Design',
       'Altklausur-Quiz IdF: Oben auf der Seite lässt sich der Themenbereich wählen – Alle, Vorbeugender Brandschutz oder Stabsarbeit. Im Lernmodus und im Prüfungsmodus (25 Fragen) kommen dann nur Fragen dieses Bereichs; die Auswahl bleibt beim nächsten Öffnen erhalten',
       'Datenschutz: Die Angabe zu Notizen im Stundenplan ist entfernt, weil es sie nicht mehr gibt',
@@ -6102,6 +6103,11 @@ const SPEISE=(function(){
       onKey=e=>{ if(e.key==='Escape'){ e.preventDefault(); e.stopPropagation(); close(); } };
       document.addEventListener('keydown',onKey,true);
       const cur=ov.querySelector('.sp-day.on'); if(cur) cur.scrollIntoView({block:'start'});
+      // Wischen nach unten (am Anfang der Liste) schließt das Fenster
+      const bd=ov.querySelector('.sp-body'), cd=ov.querySelector('.sp-card'); let y0=null, dy=0;
+      bd.addEventListener('touchstart',e=>{ y0=bd.scrollTop<=0&&e.touches.length===1?e.touches[0].clientY:null; dy=0; },{passive:true});
+      bd.addEventListener('touchmove',e=>{ if(y0===null) return; dy=e.touches[0].clientY-y0; if(dy>0&&bd.scrollTop<=0) cd.style.transform='translateY('+Math.min(dy,220)+'px)'; else if(dy<0){ y0=null; cd.style.transform=''; } },{passive:true});
+      bd.addEventListener('touchend',()=>{ if(y0!==null&&dy>110) close(); else cd.style.transform=''; y0=null; },{passive:true});
       const cb=ov.querySelector('.rp-close'); if(cb) cb.focus({preventScroll:true});
     });
   }

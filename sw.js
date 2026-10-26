@@ -96,12 +96,17 @@ self.addEventListener('fetch', e => {
 
   if(isCore){
     // Network-first: immer frisch vom Server, Cache nur als Offline-Fallback
-    e.respondWith(
+    // Bei langsamer Verbindung (länger als 3 s) erscheint die gespeicherte Seite sofort; die frische Version wird trotzdem geladen und abgelegt
+    const fromCache = () => caches.match(e.request, { ignoreSearch: true })
+      .then(r => r || (e.request.mode === 'navigate' ? caches.match('./index.html') : undefined));
+    e.respondWith(new Promise(resolve => {
+      let done = false;
+      const t = setTimeout(() => { fromCache().then(r => { if(r && !done){ done = true; resolve(r); } }); }, 3000);
       fetch(e.request, { cache: 'no-cache' }) // immer beim Server nachfragen, nicht aus dem Browser-Zwischenspeicher
         .then(store)
-        .catch(() => caches.match(e.request, { ignoreSearch: true })
-          .then(r => r || (e.request.mode === 'navigate' ? caches.match('./index.html') : undefined)))
-    );
+        .then(res => { clearTimeout(t); if(!done){ done = true; resolve(res); } })
+        .catch(() => { clearTimeout(t); if(!done) fromCache().then(r => { done = true; resolve(r || Response.error()); }); });
+    }));
   } else {
     // Cache-first für Icons/Bilder
     e.respondWith(
