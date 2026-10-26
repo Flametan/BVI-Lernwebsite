@@ -1560,28 +1560,22 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const vr = await vf.evaluate(async () => {
       const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
       const click = s => document.querySelector(s).dispatchEvent(new MouseEvent('click', { bubbles: true }));
-      r.themen = document.querySelectorAll('[data-act="open"]').length;
-      click('[data-act="open"][data-id="baustoffe"]'); await w(100);
+      const tab = id => { document.querySelector('[data-tab="' + id + '"]').click(); return w(100); };
+      r.reiter = document.querySelectorAll('.tab').length;
+      r.keinQuiz = !document.querySelector('[data-act="qstart"]') && !/Quiz|Sortieren/.test(document.getElementById('tabs').textContent);
+      await tab('baustoffe');
       click('[data-act="lvl"][data-i="1"]'); r.l1 = document.querySelectorAll('.tile.tok').length;
       click('[data-act="lvl"][data-i="3"]'); r.l3 = document.querySelectorAll('.tile.tok').length;
-      click('[data-act="home"]'); await w(120); click('[data-act="open"][data-id="standsicherheit"]'); await w(100);
+      await tab('standsicherheit');
       const rg = document.getElementById('etkr'); rg.value = 100; rg.dispatchEvent(new Event('input', { bubbles: true })); r.ofen = /Zeit überschritten|verloren/.test(document.getElementById('ofen').textContent);
-      click('[data-act="home"]'); await w(120); click('[data-act="open"][data-id="aufenthaltsraum"]'); await w(100);
+      await tab('aufenthaltsraum');
       click('[data-act="rcheck"]'); r.plan = document.querySelectorAll('.room').length;
-      document.querySelector('[data-tab="quiz"]').click(); await w(50);
-      click('[data-act="qstart"][data-id="ziele"]'); await w(50);
-      click('[data-act="qans"][data-i="0"]'); r.quiz = !!document.querySelector('.expl');
-      document.querySelector('[data-tab="spiel"]').click(); await w(50);
-      click('[data-act="sstart"][data-id="aufenthaltsraum"]'); await w(50);
-      r.sort = document.querySelectorAll('.cat').length;
-      document.querySelector('[data-tab="lernen"]').click(); document.querySelector('[data-tab="lernen"]').click(); await w(50);
-      click('[data-act="open"][data-id="ziele"]'); await w(50);
-      document.querySelector('[data-tab="lernen"]').click(); await w(50);
-      r.zurueck = document.querySelectorAll('[data-act="open"]').length;
+      await tab('nutzungseinheit'); click('[data-act="sc"][data-i="b"]'); r.nutz = /zwei Nutzungseinheiten/.test(document.getElementById('lab').textContent);
+      await tab('ziele'); click('[data-act="zhot"][data-i="2"]'); r.ziele = /Rettung/.test(document.getElementById('lab').textContent);
       r.nums = !/A 2\.1|2\.1\.[23]/.test(VBL.themen.map(t => JSON.stringify(t)).join(''));
       return r;
     });
-    eq('VB-Lernseite: Labor, Quiz und Sortieren funktionieren', vr, { themen: 5, l1: 3, l3: 1, ofen: true, plan: 10, quiz: true, sort: 2, zurueck: 5, nums: true });
+    eq('VB-Lernseite: Reiter und Labor funktionieren', vr, { reiter: 5, keinQuiz: true, l1: 3, l3: 1, ofen: true, plan: 10, nutz: true, ziele: true, nums: true });
   }
 
   for (const e of errors) fails.push('JavaScript-Fehler: ' + e);

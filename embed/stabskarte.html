@@ -267,6 +267,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
 .hint ul{margin:6px 0 0;padding-left:18px;font-size:14px}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .sp{flex:1}
+/* Aktionsknöpfe stehen rechts */
+.row{justify-content:flex-end}
+.panel>.btn,.card>.btn,.pad>.btn,.plan-grid>div>.btn,.bd-act,[data-act="qnew"],[data-act="g-new"],[data-act="plan-all"],[data-act="kadd"]{display:block;margin-left:auto}
+.btnbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 footer{border-top:1px solid var(--line);padding:16px 0 30px;color:var(--mute);font-size:13px}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 
@@ -598,11 +602,11 @@ function buildHtml(legend){
   <div class="card pad"><h3 style="font-size:18px">Stärkeangabe</h3><p class="note">${esc(TK.zeichen.staerkeangaben)}</p>
    <div class="form c2" style="margin:10px 0"><label class="field">Verbands- und Zugführer<input type="number" min="0" max="99" inputmode="numeric" data-bd="fuehrer" value="${b.fuehrer}"></label><label class="field">Gruppen- und Staffelführer<input type="number" min="0" max="99" inputmode="numeric" data-bd="unter" value="${b.unter}"></label><label class="field">Helfer<input type="number" min="0" max="999" inputmode="numeric" data-bd="helfer" value="${b.helfer}"></label><label class="field">Gesamt (Summe)<input type="text" readonly value="${gesamt}"></label></div>
    <div class="bigout" aria-live="polite">${sttxt}</div>
-   <p style="text-align:center"><button class="btn" data-act="bd-use">In Zeichen unten übernehmen</button></p></div>
+   <p style="text-align:right"><button class="btn" data-act="bd-use">In Zeichen unten übernehmen</button></p></div>
   <div class="card pad"><h3 style="font-size:18px">Zeitangabe</h3><p class="note">${esc(TK.zeichen.zeitangaben)}</p>
    <label class="field" style="margin:10px 0">Datum und Uhrzeit<input type="datetime-local" data-bd="time" value="${b.time}"></label><div class="bigout" aria-live="polite">${zeitCode(b.time)||'–'}</div>
    <p class="note">Aufbau: Tag, Uhrzeit, Monat, Jahr. Kurzform: nur Tag und Uhrzeit (${(zeitCode(b.time)||'').slice(0,6)}).</p>
-   <p style="text-align:center"><button class="btn" data-act="bd-time">Zeit im Zeichen unten anzeigen</button></p></div>
+   <p style="text-align:right"><button class="btn" data-act="bd-time">Zeit im Zeichen unten anzeigen</button></p></div>
   <div class="card pad" style="grid-column:1/-1"><h3 style="font-size:18px">Zeichen zusammenbauen</h3><p class="note">Größenordnungszeichen stehen über dem Zeichen für die Einheit. Darunter steht die Stärke.</p>
    <div class="form c2" style="margin:10px 0"><label class="field">Einheit<select data-bd="unit">${units.map(u=>`<option value="${u}" ${b.unit===u?'selected':''}>${esc(SIGNBY[u].name)}</option>`).join('')}</select></label><label class="field">Größenordnung<select data-bd="size">${sizes.map(u=>`<option value="${u}" ${b.size===u?'selected':''}>${u?esc(SIGNBY[u].name):'keine'}</option>`).join('')}</select></label><label class="field" style="grid-column:1/-1">Beschriftung unter dem Zeichen<input type="text" maxlength="24" data-bd="txt" value="${esc(b.txt)}"></label></div>${comp}</div></div>`;
 }

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <link rel="stylesheet" href="../css/fonts.css">
-<title>VB-Prüfung lernen</title>
+<title>Vorbeugender Brandschutz lernen</title>
 <style>
 :root{
   --bg:#f3f2ef;--card:#fff;--ink:#1d1d1b;--mute:#66665f;--line:#e2e0da;--soft:#ecebe6;
@@ -28,8 +28,9 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 :focus-visible{outline:3px solid var(--or);outline-offset:2px}
 .wrap{max-width:900px;margin:0 auto;padding:0 16px}
 .tabs{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
-.tabs .wrap{display:flex;padding:0 8px}
-.tab{flex:1 1 0;min-height:52px;background:none;border:0;border-bottom:4px solid transparent;font-weight:700;font-size:15px;color:var(--mute)}
+.tabs .wrap{display:flex;padding:0 8px;overflow-x:auto;scrollbar-width:none}
+.tabs .wrap::-webkit-scrollbar{display:none}
+.tab{flex:1 0 auto;white-space:nowrap;padding:0 14px;min-height:52px;background:none;border:0;border-bottom:4px solid transparent;font-weight:700;font-size:15px;color:var(--mute)}
 .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--or)}
 main{padding:18px 0 48px}
 .h2{font-size:21px;font-weight:800;margin:0 0 6px}
@@ -39,13 +40,10 @@ main{padding:18px 0 48px}
 .btn{min-height:46px;padding:8px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-weight:700}
 .btn.pri{background:var(--or);border-color:var(--or);color:var(--onor)}
 .btn:disabled{opacity:.5}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
 .sp{flex:1}
-.list{display:grid;gap:10px}
-.topic{display:flex;gap:12px;align-items:center;text-align:left;width:100%;padding:14px 16px;min-height:64px}
-.topic .t{font-weight:800}.topic small{display:block;color:var(--mute);font-weight:500;font-size:13px}
-.stars{margin-left:auto;white-space:nowrap;color:var(--or);letter-spacing:2px;font-size:18px}
-.stars i{color:var(--line);font-style:normal}
+.row.l{justify-content:flex-start}
+.expl{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--soft);font-size:15px}
 .back{background:none;border:0;color:var(--ord);font-weight:700;min-height:44px;padding:0 4px;margin-bottom:6px}
 .fact{padding:12px 16px;border-top:1px solid var(--line)}
 .fact:first-child{border-top:0}
@@ -55,24 +53,6 @@ main{padding:18px 0 48px}
 .col{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--card)}
 .col h4{font-size:14px;margin-bottom:6px}
 .chip{display:inline-block;background:var(--soft);border-radius:999px;padding:4px 10px;margin:0 4px 6px 0;font-size:13.5px}
-.q{font-size:18px;font-weight:700;margin:6px 0 14px}
-.opts{display:grid;gap:10px}
-.opt{text-align:left;min-height:52px;padding:10px 14px;border-radius:14px;border:2px solid var(--line);background:var(--card);font-weight:600}
-.opt.ok{border-color:var(--ok);background:var(--okbg)}
-.opt.bad{border-color:var(--bad);background:var(--badbg)}
-.opt:disabled{cursor:default}
-.expl{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--soft);font-size:15px}
-.bar{height:8px;background:var(--soft);border-radius:99px;overflow:hidden;margin-bottom:12px}
-.bar i{display:block;height:100%;background:var(--or);transition:width .25s}
-.big{font-size:44px;font-weight:800;text-align:center;margin:8px 0}
-.cat{min-height:60px;font-weight:800;font-size:16px;border-radius:14px;border:2px solid var(--or);background:var(--card)}
-.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
-.cardx{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:22px 16px;text-align:center;font-size:20px;font-weight:800;margin:10px 0 16px;min-height:96px;display:grid;place-items:center}
-.cardx.good{border-color:var(--ok);background:var(--okbg)}
-.cardx.wrong{border-color:var(--bad);background:var(--badbg);animation:shk .3s}
-@keyframes shk{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
-@media (prefers-reduced-motion:reduce){.cardx.wrong{animation:none}.bar i{transition:none}}
-.stat{display:flex;gap:16px;font-weight:700;color:var(--mute);font-size:14px;margin-bottom:6px;font-variant-numeric:tabular-nums}
 .lab svg{display:block;width:100%;height:auto}
 .lab input[type=range]{width:100%;accent-color:var(--or);height:44px;margin:6px 0}
 .lab .read{font-weight:800;font-size:16px;font-variant-numeric:tabular-nums;margin:6px 0}
@@ -109,17 +89,12 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const md=s=>esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
 const lsGet=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
 const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
-const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const T=VBL.themen,byId=id=>T.find(t=>t.id===id);
-const K_Q='bvi_vbl_quiz',K_S='bvi_vbl_sort';
-let best=lsGet(K_Q,{}),sbest=lsGet(K_S,{});
-let st={tab:'lernen',topic:null,quiz:null,sort:null};
-const TABS=[['lernen','Lernen'],['quiz','Quiz'],['spiel','Sortieren']];
-$('#tabs').innerHTML=TABS.map(t=>`<button class="tab" role="tab" data-tab="${t[0]}">${t[1]}</button>`).join('');
-const stars=n=>`<span class="stars" aria-label="${n} von 3 Sternen">${'★'.repeat(n)}<i>${'★'.repeat(3-n)}</i></span>`;
-const starsFor=(q)=>q>=0.9?3:q>=0.7?2:q>=0.5?1:0;
-function topicBtn(t,act){const s=Math.max(best[t.id]||0,0);return `<button class="card topic" data-act="${act}" data-id="${t.id}"><span><span class="t">${esc(t.titel)}</span><small>${esc(t.quelle)}</small></span>${stars(s)}</button>`}
-
+const hashTab=()=>{const h=(location.hash||'').slice(1);return T.some(t=>t.id===h)?h:null};
+let st={tab:hashTab()||lsGet('bvi_vbl_tab',T[0].id)};
+if(!byId(st.tab))st.tab=T[0].id;
+const TABS=T.map(t=>[t.id,t.kurz||t.titel]);
+$('#tabs').innerHTML=TABS.map(t=>`<button class="tab" role="tab" data-tab="${t[0]}">${esc(t[1])}</button>`).join('');
 /* ---------- Labor: ausprobieren statt nur lesen ---------- */
 const FLAME='<path d="M12 2C12.5 7 7 9.5 7 15a5 5 0 0 0 10 0c0-2.6-1.6-4.4-2.7-6.2-.9 1.6-1.9 1.9-2.8-.4-.4-1.2-.4-3.4.5-6.4z" fill="currentColor"/>';
 const L={baustoffe:{lvl:1},etk:{cls:2,t:0,play:null},raeume:{g:{},chk:false},nutzung:{sc:'a'},ziele:{seen:{},cur:null}};
@@ -200,98 +175,36 @@ function labZiele(){
   <div class="expl" style="min-height:76px">${cur==null?'Noch nichts ausgewählt. Entdeckt: '+n+' von 4.':`<b>${ZH[cur][0]}</b><br>${ZH[cur][1]}`}</div></div>`;
 }
 const LABS={baustoffe:labBaustoffe,etk:labEtk,raeume:labRaeume,nutzung:labNutzung,ziele:labZiele};
-function paintLab(){const e=$('#lab');if(e){const t=byId(st.topic);const keepSlider=t.extra==='etk';
+function paintLab(){const e=$('#lab');if(e){const t=byId(st.tab);const keepSlider=t.extra==='etk';
   if(keepSlider&&$('#ofen')){$('#ofen').innerHTML=ofenVis();const r=$('#etkr');if(r)r.value=L.etk.t;document.querySelectorAll('[data-act="cls"]').forEach((b,i)=>b.setAttribute('aria-pressed',i===L.etk.cls));const pb=document.querySelector('[data-act="play"]');if(pb)pb.textContent=L.etk.play?'Pause':'Brand starten';}
   else e.innerHTML=LABS[t.extra]();}}
 function stopPlay(){if(L.etk.play){clearInterval(L.etk.play);L.etk.play=null}}
-function viewLernen(){
-  if(!st.topic)return `<h2 class="h2">Lernstoff VB-Prüfung</h2><p class="lead">Thema wählen, lesen, dann Quiz oder Sortierspiel. Neue Themen kommen laufend dazu.</p><div class="list">${T.map(t=>topicBtn(t,'open')).join('')}</div>`;
-  const t=byId(st.topic);
+function viewTopic(){
+  const t=byId(st.tab);
   const cols=t.sort?`<h3 style="font-size:17px;margin:18px 0 0">Auf einen Blick</h3><div class="cols">${t.sort.kats.map((k,i)=>`<div class="col"><h4>${esc(k)}</h4>${t.sort.items.filter(x=>x[1]===i).map(x=>`<span class="chip">${esc(x[0])}</span>`).join('')}</div>`).join('')}</div>`:'';
-  return `<button class="back" data-act="home">‹ Alle Themen</button><h2 class="h2">${esc(t.titel)}</h2><p class="lead">${esc(t.quelle)}</p>
+  return `<h2 class="h2">${esc(t.titel)}</h2><p class="lead">${esc(t.quelle)}</p>
    <div class="card">${t.fakten.map(f=>`<div class="fact"><h4>${esc(f[0])}</h4><div>${md(f[1])}</div></div>`).join('')}</div>
-   <div class="merke">Merke: ${esc(t.merke)}</div>${t.extra&&LABS[t.extra]?'<div id="lab" style="margin-top:14px">'+LABS[t.extra]()+'</div>':''}${cols}
-   <div class="row" style="margin-top:18px"><button class="btn pri" data-act="qstart" data-id="${t.id}">Quiz zu diesem Thema</button><button class="btn" data-act="sstart" data-id="${t.id}">Sortierspiel</button></div>`;
+   <div class="merke">Merke: ${esc(t.merke)}</div>${t.extra&&LABS[t.extra]?'<div id="lab" style="margin-top:14px">'+LABS[t.extra]()+'</div>':''}${cols}`;
 }
-
-/* ---------- Quiz ---------- */
-function viewQuiz(){
-  const q=st.quiz;
-  if(!q)return `<h2 class="h2">Quiz</h2><p class="lead">Wähle ein Thema oder mische alles.</p><div class="list"><button class="card topic" data-act="qstart" data-id="all"><span><span class="t">Alles gemischt</span><small>10 Fragen aus allen Themen</small></span></button>${T.map(t=>topicBtn(t,'qstart')).join('')}</div>`;
-  if(q.i>=q.list.length){
-    const pct=q.right/q.list.length,s=starsFor(pct);
-    const wrong=q.wrong.map(w=>`<li><b>${esc(w.q)}</b><br>${esc(w.o[w.a])}</li>`).join('');
-    return `<div class="card pad"><div class="big">${q.right} / ${q.list.length}</div><div style="text-align:center">${stars(s)}</div><p class="lead" style="text-align:center;margin-top:8px">${pct>=.9?'Sehr stark.':pct>=.7?'Gut, noch etwas Feinschliff.':'Noch einmal lesen und wiederholen.'}</p>
-    ${wrong?`<h3 style="font-size:16px;margin:14px 0 6px">Das war noch falsch</h3><ul style="margin:0;padding-left:20px">${wrong}</ul>`:''}
-    <div class="row" style="margin-top:16px"><button class="btn pri" data-act="qstart" data-id="${q.id}">Nochmal</button><button class="btn" data-act="qend">Themenliste</button><button class="btn" data-act="qtopic" data-id="${q.id}">Zum Thema</button></div></div>`;
-  }
-  const c=q.list[q.i],ans=q.ans;
-  return `<button class="back" data-act="qend">‹ Abbrechen</button><div class="stat"><span>Frage ${q.i+1} von ${q.list.length}</span><span class="sp"></span><span>${q.right} richtig</span></div><div class="bar"><i style="width:${q.i/q.list.length*100}%"></i></div>
-  <div class="card pad"><p class="q">${esc(c.q)}</p><div class="opts">${c.oo.map((o,i)=>`<button class="opt ${ans!=null?(i===c.a2?'ok':i===ans?'bad':''):''}" data-act="qans" data-i="${i}" ${ans!=null?'disabled':''}>${esc(o)}</button>`).join('')}</div>
-  ${ans!=null?`<div class="expl"><b>${ans===c.a2?'Richtig.':'Leider falsch.'}</b> ${esc(c.e)}</div><div class="row" style="margin-top:14px;justify-content:flex-end"><button class="btn pri" data-act="qnext">${q.i+1>=q.list.length?'Ergebnis':'Weiter'}</button></div>`:''}</div>`;
-}
-function qStart(id){
-  let pool=id==='all'?T.flatMap(t=>t.quiz.map(x=>Object.assign({tid:t.id},x))):byId(id).quiz.map(x=>Object.assign({tid:id},x));
-  pool=shuffle(pool).slice(0,id==='all'?10:8).map(x=>{const idx=shuffle(x.o.map((_,i)=>i));const keepOrder=x.o.length===2;const order=keepOrder?[0,1]:idx;return Object.assign({},x,{oo:order.map(i=>x.o[i]),a2:order.indexOf(x.a)})});
-  st.quiz={id,list:pool,i:0,right:0,ans:null,wrong:[]};st.tab='quiz';
-}
-function qDone(){const q=st.quiz;if(q.id!=='all'){const s=starsFor(q.right/q.list.length);if(s>(best[q.id]||0)){best[q.id]=s;lsSet(K_Q,best);}}}
-
-/* ---------- Sortieren ---------- */
-function viewSpiel(){
-  const g=st.sort;
-  if(!g)return `<h2 class="h2">Sortieren</h2><p class="lead">Begriffe schnell der richtigen Kategorie zuordnen. Fehler kommen am Ende nochmal.</p><div class="list">${T.filter(t=>t.sort).map(t=>`<button class="card topic" data-act="sstart" data-id="${t.id}"><span><span class="t">${esc(t.titel)}</span><small>${t.sort.items.length} Karten${sbest[t.id]!=null?' · Bestzeit '+sbest[t.id].t+' s, '+sbest[t.id].f+' Fehler':''}</small></span></button>`).join('')}</div>`;
-  const t=byId(g.id);
-  if(!g.queue.length)return `<div class="card pad"><div class="big">${g.fehler===0?'Fehlerfrei':g.fehler+' Fehler'}</div><p class="lead" style="text-align:center">${t.sort.items.length} Karten in ${g.dauer} Sekunden</p>${g.neu?'<p style="text-align:center;font-weight:800;color:var(--ok)">Neue Bestleistung</p>':''}<div class="row" style="margin-top:16px;justify-content:center"><button class="btn pri" data-act="sstart" data-id="${g.id}">Nochmal</button><button class="btn" data-act="send">Themenliste</button><button class="btn" data-act="qtopic" data-id="${g.id}">Zum Thema</button></div></div>`;
-  const it=g.queue[0];
-  return `<button class="back" data-act="send">‹ Abbrechen</button><div class="stat"><span>Noch ${g.queue.length}</span><span>Serie ${g.serie}</span><span class="sp"></span><span>Fehler ${g.fehler}</span></div><div class="bar"><i style="width:${(1-g.queue.length/g.gesamt)*100}%"></i></div>
-  <div class="cardx ${g.flash||''}" id="cardx" aria-live="polite">${esc(it[0])}</div>
-  <div class="cats">${t.sort.kats.map((k,i)=>`<button class="cat" data-act="scat" data-i="${i}">${esc(k)}</button>`).join('')}</div>${g.flash==='wrong'?`<p class="lead" style="margin-top:12px">Richtig wäre: <b>${esc(t.sort.kats[it[1]])}</b></p>`:''}`;
-}
-function sStart(id){const t=byId(id);st.sort={id,queue:shuffle(t.sort.items),gesamt:t.sort.items.length,fehler:0,serie:0,flash:'',t0:Date.now()};st.tab='spiel';}
-function sAnswer(i){
-  const g=st.sort,it=g.queue[0];
-  if(g.flash==='wrong'){g.flash='';g.queue.push(g.queue.shift());g.serie=0;return;}
-  if(i===it[1]){g.queue.shift();g.serie++;g.flash='';
-    if(!g.queue.length){g.dauer=Math.round((Date.now()-g.t0)/1000);const b=sbest[g.id];g.neu=!b||g.fehler<b.f||(g.fehler===b.f&&g.dauer<b.t);if(g.neu){sbest[g.id]={f:g.fehler,t:g.dauer};lsSet(K_S,sbest);}}}
-  else{g.fehler++;g.flash='wrong';}
-}
-
-/* ---------- Rendern ---------- */
 function render(){
-  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===st.tab));
-  $('#view').innerHTML=st.tab==='lernen'?viewLernen():st.tab==='quiz'?viewQuiz():viewSpiel();
+  document.querySelectorAll('.tab').forEach(b=>{const on=b.dataset.tab===st.tab;b.setAttribute('aria-selected',on);if(on)b.scrollIntoView({inline:'center',block:'nearest'})});
+  $('#view').innerHTML=viewTopic();
 }
-/* Zurück-Taste (Handy, Browser): eine Ebene tiefer = ein Verlaufseintrag */
-let deep=false;
-function enter(){if(!deep){try{history.pushState({vbl:1},'')}catch(e){}deep=true}}
-function clearDeep(){st.topic=null;st.quiz=null;st.sort=null;stopPlay()}
-function leave(){if(deep){deep=false;try{history.back();return}catch(e){}}clearDeep();render()}
-window.addEventListener('popstate',()=>{deep=false;clearDeep();render();window.scrollTo(0,0)});
-function top(){window.scrollTo(0,0);try{if(parent!==window)parent.postMessage({stk:'top'},location.origin)}catch(e){}}
 document.addEventListener('click',e=>{
-  const tb=e.target.closest('[data-tab]');if(tb){const same=st.tab===tb.dataset.tab;stopPlay();st.tab=tb.dataset.tab;if(same){if(deep){leave();return}if(st.tab==='lernen')st.topic=null;else if(st.tab==='quiz')st.quiz=null;else st.sort=null;}render();top();return}
-  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,id=b.dataset.id;
-  if(a==='open'){st.topic=id;enter();}else if(a==='home'){leave();return}
-  else if(a==='qstart'){qStart(id);enter();}
-  else if(a==='qans'){const q=st.quiz;if(q.ans!=null)return;q.ans=+b.dataset.i;const c=q.list[q.i];if(q.ans===c.a2)q.right++;else q.wrong.push(c);}
-  else if(a==='qnext'){const q=st.quiz;q.i++;q.ans=null;if(q.i>=q.list.length)qDone();}
-  else if(a==='qend'){leave();return}
-  else if(a==='qtopic'){if(id&&id!=='all'){st.topic=id;st.tab='lernen';}else st.tab='lernen';st.quiz=null;st.sort=null;}
-  else if(a==='sstart'){sStart(id);enter();}
-  else if(a==='scat'){sAnswer(+b.dataset.i);}
-  else if(a==='send'){leave();return}
-  else if(a==='lvl'){L.baustoffe.lvl=+b.dataset.i;paintLab();return}
-  else if(a==='cls'){L.etk.cls=+b.dataset.i;paintLab();return}
-  else if(a==='play'){if(L.etk.play){stopPlay()}else{if(L.etk.t>=120)L.etk.t=0;L.etk.play=setInterval(()=>{L.etk.t=Math.min(120,L.etk.t+1);if(L.etk.t>=120)stopPlay();paintLab()},110)}paintLab();return}
-  else if(a==='rewind'){stopPlay();L.etk.t=0;paintLab();return}
-  else if(a==='room'){const i=+b.dataset.i,c=L.raeume.g[i];L.raeume.g[i]=c==null?1:c===1?0:null;if(L.raeume.g[i]==null)delete L.raeume.g[i];L.raeume.chk=false;paintLab();return}
-  else if(a==='rcheck'){L.raeume.chk=true;paintLab();return}
-  else if(a==='rreset'){L.raeume={g:{},chk:false};paintLab();return}
-  else if(a==='sc'){L.nutzung.sc=b.dataset.i;paintLab();return}
-  else if(a==='zhot'){const i=+b.dataset.i;L.ziele.cur=i;L.ziele.seen[i]=1;paintLab();return}
-  stopPlay();
-  render();if(['open','home','qstart','sstart','qend','send','qtopic'].includes(a))top();
+  const tb=e.target.closest('[data-tab]');
+  if(tb){stopPlay();st.tab=tb.dataset.tab;lsSet('bvi_vbl_tab',st.tab);try{history.replaceState(null,'','#'+st.tab)}catch(x){}render();window.scrollTo(0,0);return}
+  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  if(a==='lvl'){L.baustoffe.lvl=+b.dataset.i}
+  else if(a==='cls'){L.etk.cls=+b.dataset.i}
+  else if(a==='play'){if(L.etk.play){stopPlay()}else{if(L.etk.t>=120)L.etk.t=0;L.etk.play=setInterval(()=>{L.etk.t=Math.min(120,L.etk.t+1);if(L.etk.t>=120)stopPlay();paintLab()},110)}}
+  else if(a==='rewind'){stopPlay();L.etk.t=0}
+  else if(a==='room'){const i=+b.dataset.i,c=L.raeume.g[i];L.raeume.g[i]=c==null?1:c===1?0:null;if(L.raeume.g[i]==null)delete L.raeume.g[i];L.raeume.chk=false}
+  else if(a==='rcheck'){L.raeume.chk=true}
+  else if(a==='rreset'){L.raeume={g:{},chk:false}}
+  else if(a==='sc'){L.nutzung.sc=b.dataset.i}
+  else if(a==='zhot'){const i=+b.dataset.i;L.ziele.cur=i;L.ziele.seen[i]=1}
+  else return;
+  paintLab();
 });
 document.addEventListener('input',e=>{if(e.target.id==='etkr'){stopPlay();L.etk.t=+e.target.value;paintLab()}});
 document.addEventListener('keydown',e=>{const g=e.target.closest&&e.target.closest('[role="button"][data-act]');if(g&&g.tagName!=='BUTTON'&&(e.key==='Enter'||e.key===' ')){e.preventDefault();g.dispatchEvent(new MouseEvent('click',{bubbles:true}))}});
