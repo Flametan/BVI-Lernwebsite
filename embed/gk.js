@@ -55,14 +55,17 @@ const REQ={
 const TABLE={ '1a':['none','f30'],'1b':['none','f30'],'2':['f30','f30'],'3':['f30','f90'],'4':['f60','f90'],'5':['f90','f90'],'HH':['f90','f90']};
 const PARTS={
  decke:{n:'Decke',pl:'Decken'},
+ dach:{n:'Decke zum Dachraum',pl:'Decke zum Dachraum'},
  stuetze:{n:'Stütze',pl:'Stützen'},
  wand:{n:'Tragende Wand',pl:'Tragende Wände'},
  treppe:{n:'Treppenraum-Wand',pl:'Treppenraum'},
  trenn:{n:'Trennwand',pl:'Trennwände'},
  brand:{n:'Brandwand',pl:'Brandwand'}};
+let DGAR=true; // über dem Dachgeschoss sind Aufenthaltsräume möglich (Teile-Ansicht)
 function reqFor(gk,part,zone){
   const T=TABLE[gk],z=zone==='ke'?1:0;
   if(part==='brand')return 'bw';
+  if(part==='dach'){if(DGAR)return T[0];return gk==='1a'||gk==='1b'||gk==='2'?'none':'f30';}
   if(part==='treppe'){return gk==='3'?'f30':gk==='4'?'f60m':gk==='5'?'bw':gk==='HH'?'f90':'nt';}
   if(part==='trenn'){if(gk==='HH')return 'f30';const r=T[z];return (r==='none'||r==='f30')?'f30':r;}
   return T[z];
@@ -71,7 +74,7 @@ const RL=r=>r.s+(r.n?' ('+r.n+')':'');
 function explain(gk,part,zone){
   const g=GKS[gk],r=REQ[reqFor(gk,part,zone)],zn=zone==='ke'?'im Kellergeschoss':'im Obergeschoss';
   const nm=PARTS[part].n;
-  if(part==='brand')return {title:'Brandwand',req:r,text:'**Brandwand**: Anforderung **REIM 90 (F90-A-M)**. Abstand **≥ 5 m zu Innenecken**. Sie muss **0,30 m über die Bedachung** gezogen werden **oder beidseitig 0,50 m auskragen**.'};
+  if(part==='brand')return {title:'Brandwand',req:r,text:'**Brandwand** (§ 30 BauO NRW): feuerbeständig, nichtbrennbar und **auch unter zusätzlicher mechanischer Beanspruchung**, also **REIM 90 (F90-A-M)**. Abstand zur **inneren Ecke**: Lernseite und MBO **≥ 5 m**, nach **§ 30 Abs. 6 BauO NRW mindestens 3 m**. Sie muss **0,30 m über die Bedachung** gezogen werden **oder** mit einer **beidseitig 0,50 m auskragenden** feuerbeständigen Platte abschließen; bei **GK 1 bis 3** genügt **bis unter die Dachhaut**. Innere Brandwände in Abständen von **höchstens 40 m**.'};
   if(part==='treppe'){
     if(gk==='HH')return {title:'Treppenraum-Wand · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR 3.2.3)** haben die Wände der **notwendigen Treppenräume und ihrer Vorräume** die **Feuerwiderstandsfähigkeit der tragenden Bauteile**: **F90 (feuerbeständig)** bei h ≤ 60 m, bei h > 60 m **F120 (hochfeuerbeständig)**. Die Slider-Höhe bleibt bei max. 30 m, also gilt hier F90.'};
     if(gk==='3')return {title:'Treppenraum-Wand · GK 3',req:r,text:'Notwendige Treppenräume in **GK 3**: Wände **feuerhemmend (F30)**. Die Tür zum notwendigen Treppenraum ist eine **RS-Tür**.'};
@@ -79,9 +82,13 @@ function explain(gk,part,zone){
     if(gk==='5')return {title:'Treppenraum-Wand · GK 5',req:r,text:'Notwendige Treppenräume in **GK 5**: Wände in der **Bauart einer Brandwand**. Müssen beleuchtet sein; **ohne Fenster: Sicherheitsbeleuchtung**.'};
     return {title:'Treppenraum · '+g.n,req:r,text:'In **GK 1 und 2** sind notwendige Treppen **ohne eigenen Treppenraum** zulässig (§ 35 Abs. 1 BauO NRW). Anforderungen an Treppenraum-Wände gibt es dort daher nicht. Sie gelten erst ab GK 3 (F30), GK 4 (F60-M) und GK 5 (Brandwand-Bauart).'};
   }
+  if(part==='dach'){
+    const t1=DGAR?'Über dem Dachgeschoss sind **Aufenthaltsräume möglich**: Die Decke muss wie die Geschossdecken des Gebäudes sein (§ 31 Abs. 1 BauO NRW): **'+REQ[r.k].t+'**.':'Über dem Dachgeschoss sind **keine Aufenthaltsräume möglich**: Nach § 31 Abs. 1 Satz 3 Nr. 1 gilt die Geschossdecken-Anforderung für Geschosse im Dachraum dann nicht. Werden die Trennwände zum nicht ausgebauten Dachraum nur bis zur Rohdecke geführt, muss diese Decke aber **feuerhemmend (F30)** sein (§ 29 Abs. 4 Satz 2); bei **Wohngebäuden der GK 1 und 2** gilt § 29 nicht (Abs. 6).';
+    return {title:'Decke zum Dachraum',req:r,text:t1};}
+  if(part==='decke'&&zone==='ke')return {title:'Kellerdecke (Decke im Kellergeschoss)',req:r,text:'**Decken im Kellergeschoss** (§ 31 Abs. 2 BauO NRW): **GK 3 bis 5 feuerbeständig**, **GK 1 und 2 feuerhemmend**. Das ist die Decke über dem Keller, also die Kellerdecke. Dazu: Decken unter und über Räumen mit Explosions- oder erhöhter Brandgefahr müssen **feuerbeständig** sein (Wohngebäude GK 1 und 2 ausgenommen).'};
   if(part==='trenn'){
     if(gk==='HH')return {title:'Trennwand · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR 3.2.5)** müssen **Trennwände zwischen Nutzungseinheiten** und die **Wände notwendiger Flure** **feuerhemmend (F30)** sein. **Feuerbeständig (F90)** sind dagegen Brandwände, Wände von Installationsschächten, Trennwände von Räumen mit erhöhter Brandgefahr und Trennwände zwischen Aufenthaltsräumen und anders genutzten Räumen im Keller (MHHR 3.2.4). Diese Werte stehen in der MHHR, nicht auf der Lernseite.'};
-    return {title:'Trennwand · '+g.n,req:r,text:'**Trennwände** (zwischen Nutzungseinheiten): mindestens die Feuerwiderstandsfähigkeit der **tragenden Bauteile des Geschosses**, jedoch **mind. F30**. Türen: **T30-DS**. Hier: '+g.n+' '+zn+' = '+REQ[reqFor(gk,'decke',zone)].s+', Trennwand daher **'+r.s+'**.'};
+    return {title:'Trennwand · '+g.n,req:r,text:'**Trennwände** (zwischen Nutzungseinheiten): mindestens die Feuerwiderstandsfähigkeit der **tragenden Bauteile des Geschosses**, jedoch **mind. F30**. Türen: **T30-DS**. '+(gk==='1a'||gk==='1b'||gk==='2'?' **Bei Wohngebäuden der GK 1 und 2** gelten die Trennwandregeln nicht (§ 29 Abs. 6 BauO NRW).':'')+' Hier: '+g.n+' '+zn+' = '+REQ[reqFor(gk,'decke',zone)].s+', Trennwand daher **'+r.s+'**.'};
   }
   if(gk==='HH')return {title:nm+' · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR 3.1)** müssen **tragende und aussteifende Bauteile** (auch im Keller) **feuerbeständig (F90)** sein und aus **nichtbrennbaren Baustoffen** bestehen. Bei **mehr als 60 m Höhe** sind **120 Minuten** (F120, hochfeuerbeständig) verlangt. Geschossdecken sind raumabschließend mit der Feuerwiderstandsfähigkeit der tragenden Bauteile. Diese Werte stehen in der MHHR (Stand 2008/2012), nicht in der Tabelle der Lernseite.'};
   const row=TABLE[gk];
@@ -211,7 +218,7 @@ function createScene(canvas,host,cb){
   const bg=new THREE.Group();scene.add(bg);
   const structMeshes=[],trennList=[],floors=[];
   const secMats={};
-  const TINT={decke:['w',0.2],stuetze:['k',0.78],wand:['w',0],treppe:['k',0.84],trenn:['w',0.1],brand:['w',0]};
+  const TINT={dach:['w',0.2],decke:['w',0.2],stuetze:['k',0.78],wand:['w',0],treppe:['k',0.84],trenn:['w',0.1],brand:['w',0]};
   function secMat(req,dim,part){const k=req+(dim?'|d':'')+'|'+(part||'wand');if(!secMats[k]){const c=new THREE.Color(REQ[req].c),t=TINT[part||'wand'];
     if(t[0]==='w')c.lerp(new THREE.Color(0xffffff),t[1]);else c.multiplyScalar(t[1]);
     secMats[k]=dim?new THREE.MeshLambertMaterial({color:c,transparent:true,opacity:0.1,depthWrite:false}):new THREE.MeshLambertMaterial({color:c});}return secMats[k];}
@@ -219,7 +226,7 @@ function createScene(canvas,host,cb){
   const stairM=lm(0xaab2c2),holeM=lm(0x39435a);
   function mkS(par,part,zone,f,w,h,d,x,y,z,extra){const m=bx(par,w,h,d,x,y,z,secMat('none'));m.userData=Object.assign({part,zone,f},extra||{});const ed=new THREE.LineSegments(edgeG,edgeM);m.add(ed);m.userData.edge=ed;structMeshes.push(m);return m;}
   function buildStruct(g,zone,f){
-    mkS(g,'decke',zone,f,12,0.3,9,0,-0.15,0);
+    mkS(g,'decke',f===0&&zone==='og'?'ke':zone,f,12,0.3,9,0,-0.15,0,f===0&&zone==='og'?{kd:true}:f===-1?{bp:true,noPick:true}:null);
     mkS(g,'wand',zone,f,12,3,0.3,0,1.5,-4.35);
     mkS(g,'wand',zone,f,0.3,3,9,-5.85,1.5,0,{left:true});
     mkS(g,'wand',zone,f,0.3,3,9,5.85,1.5,0);
@@ -260,7 +267,7 @@ function createScene(canvas,host,cb){
   /* Dach */
   const roofG=new THREE.Group();bg.add(roofG);
   const roofShell=new THREE.Group(),roofStruct=new THREE.Group();roofG.add(roofShell,roofStruct);
-  mkS(roofStruct,'decke','og',99,12,0.3,9,0,-0.15,0);
+  mkS(roofStruct,'dach','og',99,12,0.3,9,0,-0.15,0);
   const gable=new THREE.Group(),flat=new THREE.Group();roofShell.add(gable,flat);
   {const sh=new THREE.Shape();sh.moveTo(-5.1,-0.1);sh.lineTo(5.1,-0.1);sh.lineTo(0,2.5);sh.lineTo(-5.1,-0.1);
    const g=new THREE.ExtrudeGeometry(sh,{depth:12,bevelEnabled:false});const m=new THREE.Mesh(g,roofM);m.rotation.y=Math.PI/2;m.position.set(-6,0,0);gable.add(m);}
@@ -292,7 +299,7 @@ function createScene(canvas,host,cb){
     const w=host.clientWidth,h=host.clientHeight;el.style.display='';const hw=(el.offsetWidth||60)/2+6;
     el.style.transform='translate('+clamp((tv.x*0.5+0.5)*w+(off?off[0]:0),hw,w-hw).toFixed(1)+'px,'+((-tv.y*0.5+0.5)*h+(off?off[1]:0)).toFixed(1)+'px) translate(-50%,-100%)';}
   /* ---------- Zustand ---------- */
-  const T={p:{okff:6,free:true,nne:1,ane:true,land:false},mode:'ext',color:null,label:null,gk:'1a',focus:null,bw:false,sel:null,rulers:true};
+  const T={p:{okff:6,free:true,nne:1,ane:true,land:false},mode:'ext',color:null,label:null,gk:'1a',focus:null,bw:false,sel:null,rulers:true,dgar:true};
   const C={W:12,gap:7,ok:6,viewH:16,col:new THREE.Color(0xc5ccd8),trimCol:new THREE.Color(0xe8ecf2),topY:3,sec:0,fw:0,fx:0,fy:0,fz:0,tx:0,ty:8};
   const cam={theta:0.3,phi:1.22,zoom:1},goal={theta:0.3,phi:1.22,zoom:1,focus:null};let flying=false;
   let dirty=true,asp=1,lastBadge='',lastNE='';
@@ -301,7 +308,8 @@ function createScene(canvas,host,cb){
   /* Abschnitt-Faerbung */
   function refreshSec(){if(typeof selMesh!=='undefined'&&selMesh&&selLine.parent){selLine.parent.remove(selLine);selLine.visible=false;selMesh=null;}
     const gk=T.gk,sec=T.mode==='sec';
-    const fm2=p=>!T.focus||(T.focus==='wand'?(p==='wand'||p==='trenn'||p==='brand'):T.focus===p);
+    const fm2=p=>!T.focus||(T.focus==='wand'?(p==='wand'||p==='trenn'||p==='brand'):T.focus==='decke'?(p==='decke'||p==='dach'):T.focus===p);
+    DGAR=T.dgar!==false;
     structMeshes.forEach(m=>{const u=m.userData;if(u.stair){m.visible=sec;return;}
       let part=u.part;if(u.left&&T.bw)part='brand';
       const dim=!fm2(part),req=reqFor(gk,part,u.zone);u.eff=part;u.dim=dim;
@@ -408,7 +416,7 @@ function createScene(canvas,host,cb){
   raf=requestAnimationFrame(frame);
   refreshSec();
   return {
-    set(patch){const needSec=('gk' in patch)||('focus' in patch)||('bw' in patch)||('mode' in patch)||(patch.p&&patch.p.nne!==T.p.nne);
+    set(patch){const needSec=('gk' in patch)||('dgar' in patch)||('focus' in patch)||('bw' in patch)||('mode' in patch)||(patch.p&&patch.p.nne!==T.p.nne);
       if(patch.p)patch=Object.assign({},patch,{p:Object.assign({},T.p,patch.p)});
       if('mode' in patch&&patch.mode!==T.mode)select(null);
       Object.assign(T,patch);if(needSec)refreshSec();dirty=true;},
@@ -515,7 +523,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .chp.on{background:var(--c);color:#fff;box-shadow:0 0 0 2px #fff6}.chp.on i{background:#fff}
 .chp.on.dk{color:#1a1a1a}
 .chp.f{--c:var(--ln)}.chp.f.on{background:var(--ac);color:#241503;border-color:var(--ac);box-shadow:none}
-.tiles{display:flex;gap:8px;margin-bottom:10px}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px}
 .tile{flex:1;border-radius:14px;padding:9px 8px;text-align:center;color:#fff;min-width:0;border:1px solid #fff3}
 .tile small{display:block;font-size:11px;font-weight:700;opacity:.92;line-height:1.15}
 .tile b{display:block;font-size:19px;line-height:1.2;margin-top:2px}
@@ -631,9 +639,10 @@ function TeileTab({p,setP,gk,teile,setTeile}){
   const cur=gk==='1a'||gk==='1b'?'1':gk;
   const T=TABLE[gk];
   const tiles=[
-    ['Kellergeschoss: tragende Teile',reqFor(gk,'wand','ke')],
+    ['Kellergeschoss: tragende Teile und Kellerdecke',reqFor(gk,'wand','ke')],
     ['Obergeschoss: tragende Teile',reqFor(gk,'wand','og')],
-    ['Treppenraum-Wände',reqFor(gk,'treppe','og')]];
+    ['Treppenraum-Wände',reqFor(gk,'treppe','og')],
+    ['Decke zum Dachraum',reqFor(gk,'dach','og')]];
   const sel=teile.sel,ex=sel?explain(gk,sel.part,sel.zone):null;
   return h('div',null,
     h('h3',{style:{marginTop:0}},'Beispielgebäude'),
@@ -644,8 +653,9 @@ function TeileTab({p,setP,gk,teile,setTeile}){
        :h('div',{className:'msg n'},'Tippe im aufgeschnittenen Gebäude ein Bauteil an (Decke, Stütze, Wand, Treppenraum), dann wird die Anforderung erklärt.'),
     h('h3',null,'Bauteile hervorheben'),
     h('div',{className:'chips'},[[null,'Alle'],['decke','Decken'],['stuetze','Stützen'],['wand','Wände'],['treppe','Treppenraum']].map(a=>h('button',{key:a[1],className:'chp f'+(teile.focus===a[0]?' on':''),onClick:()=>setTeile(t=>Object.assign({},t,{focus:a[0]}))},a[1]))),
+    h('div',{className:'card',style:{padding:'4px 14px',marginTop:10}},h(Switch,{on:teile.dgar!==false,onChange:v=>setTeile(t=>Object.assign({},t,{dgar:v,sel:null})),t:'Über dem Dachgeschoss: Aufenthaltsräume möglich',d:'Aus: Die Decke zum Dachraum wird anders bewertet (§ 31, § 29)'})),
     h('div',{className:'card',style:{padding:'4px 14px',marginTop:10}},h(Switch,{on:teile.bw,onChange:v=>setTeile(t=>Object.assign({},t,{bw:v,sel:null})),t:'Brandwand-Detail zeigen',d:'REIM 90 (F90-A-M), links am Gebäude'})),
-    teile.bw?h('div',{className:'card'},h('p',{style:{marginBottom:6}},B('**Brandwand** (REIM 90, F90-A-M): Abstand **≥ 5 m zu Innenecken**. Sie muss **0,30 m über Bedachung** gezogen oder **beidseitig 0,50 m auskragen**.')),h(BwDetail),h('div',{className:'mu',style:{fontSize:11.5,marginTop:6}},'Vereinfachte Darstellung, nicht maßstäblich.')):null);
+    teile.bw?h('div',{className:'card'},h('p',{style:{marginBottom:6}},B('**Brandwand** (REIM 90, F90-A-M): Abstand zur Innenecke **≥ 5 m (MBO, Lernseite) bzw. ≥ 3 m (BauO NRW)**. Sie muss **0,30 m über Bedachung** gezogen oder **beidseitig 0,50 m auskragen**.')),h(BwDetail),h('div',{className:'mu',style:{fontSize:11.5,marginTop:6}},'Vereinfachte Darstellung, nicht maßstäblich.')):null);
 }
 /* ---------- Quiz ---------- */
 function QuizTab({quiz,setQuiz,startQuiz,answer,next}){
@@ -702,7 +712,8 @@ function App(){
   const [tab,setTab]=useState('bau');
   const [p,setP]=useState(P0);
   const [seg,setSeg]=useState('regler');
-  const [teile,setTeile]=useState({focus:null,bw:false,sel:null});
+  const [teile,setTeile]=useState({focus:null,bw:false,sel:null,dgar:true});
+  DGAR=teile.dgar!==false;
   const [quiz,setQuiz]=useState(null);
   const api=useRef(null),pickRef=useRef(null);
   const wide=useWide();
@@ -726,7 +737,7 @@ function App(){
   const cl=classify(tab==='quiz'?ep:p);
   if(tab!=='quiz'){gk=cl.gk;color=GKS[gk].c;label={text:GKS[gk].n,sub:gk==='HH'?'MHHR':'',color:GKS[gk].c,dark:!!COLTXT(gk)};}
   if(tab==='teile')secMode=true;
-  const view={mode:secMode?'sec':'ext',p:ep,color,label,gk:gk||cl.gk,focus:tab==='teile'?teile.focus:null,bw:tab==='teile'&&teile.bw,rulers:!(tab==='quiz'&&sonder)};
+  const view={mode:secMode?'sec':'ext',p:ep,color,label,gk:gk||cl.gk,dgar:teile.dgar!==false,focus:tab==='teile'?teile.focus:null,bw:tab==='teile'&&teile.bw,rulers:!(tab==='quiz'&&sonder)};
   const vk=JSON.stringify(view);
   useEffect(()=>{api.current&&api.current.set(view);},[vk]);
   /* Kamera bei Moduswechsel */
@@ -738,7 +749,7 @@ function App(){
   /* Legende in der Szene */
   let legend=null;
   if(secMode){const g=view.gk;const ks=[];const add=k=>{if(!ks.includes(k))ks.push(k);};
-    add(reqFor(g,'wand','og'));add(reqFor(g,'wand','ke'));add(reqFor(g,'treppe','og'));if(ep.nne>=2)add(reqFor(g,'trenn','og'));if(view.bw)add('bw');
+    add(reqFor(g,'wand','og'));add(reqFor(g,'wand','ke'));add(reqFor(g,'treppe','og'));add(reqFor(g,'dach','og'));if(ep.nne>=2)add(reqFor(g,'trenn','og'));if(view.bw)add('bw');
     legend=h('div',{className:'slegend'},ks.map(k=>h('div',{key:k,className:'sl'},h('i',{style:{background:REQ[k].c}}),REQ[k].s==='keine'?'keine Anforderung':REQ[k].s+(REQ[k].n?' '+REQ[k].n:''))));}
   const hint=secMode?(tab==='teile'?'Tippe ein Bauteil an · Ziehen dreht · Pinch zoomt · vereinfachte Darstellung':'Aufgeschnittenes Gebäude · vereinfachte Darstellung'):'Ziehen dreht · Pinch/Scrollrad zoomt · vereinfachte Darstellung (ca. 3 m je Geschoss)';
   const stage=h(Stage,{onReady:ready,onPick:pickRef,sec:secMode},
