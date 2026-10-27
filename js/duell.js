@@ -61,7 +61,11 @@ const DUELL=(function(){
   const copy=async(t,btn)=>{try{await navigator.clipboard.writeText(t);}catch(e){const a=root.querySelector('.pz-code');if(a){a.select();try{document.execCommand('copy');}catch(x){}}}if(btn){const o=btn.textContent;btn.textContent='Kopiert';setTimeout(()=>btn.textContent=o,1400);}};
 
   /* ---------- Kamera: QR scannen ---------- */
-  function stopScan(){scanId++;clearTimeout(scanT);scanT=0;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}}
+  function haltScan(){scanId++;clearTimeout(scanT);scanT=0;}   // Suche beenden, Kamera bleibt an (aktive Kamera: das Gerät nennt dann seine echte WLAN-Adresse statt eines .local-Namens)
+  function stopScan(){haltScan();if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}}
+  // Ist die Kamera schon erlaubt, kurz öffnen, solange der Verbindungscode entsteht (ohne Rückfrage); sonst nichts tun
+  async function peekCam(){try{if(stream)return null;const q=await navigator.permissions.query({name:'camera'});if(q.state!=='granted')return null;return await navigator.mediaDevices.getUserMedia({video:{width:{ideal:160}},audio:false});}catch(e){return null;}}
+  const relCam=s=>{try{s&&s.getTracks().forEach(t=>t.stop());}catch(e){}};
   async function scan(box,onCode,onErr){
     stopScan();const id=scanId;
     try{const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});if(id!==scanId){s.getTracks().forEach(t=>t.stop());return;}stream=s;}catch(e){if(id!==scanId)return;const n=e&&e.name;onErr(n==='NotAllowedError'||n==='SecurityError'?'Der Kamerazugriff wurde nicht erlaubt. Erlaube die Kamera in den Einstellungen deines Geräts (bei der Android-App: Einstellungen, Apps, B VI, Berechtigungen) und tippe dann noch einmal auf „Kamera starten“. Oder fotografiere den QR-Code über „Stattdessen Foto vom QR-Code aufnehmen“, oder nutze den Kurzcode.':n==='NotFoundError'||n==='OverconstrainedError'?'Auf diesem Gerät wurde keine Kamera gefunden. Nutze den Kurzcode.':'Die Kamera lässt sich gerade nicht starten. Tippe noch einmal auf „Kamera starten“ oder nutze den Kurzcode.');return;}
@@ -73,8 +77,8 @@ const DUELL=(function(){
     const cv=document.createElement('canvas'),cx=cv.getContext('2d',{willReadFrequently:true});
     const step=async()=>{if(!stream||id!==scanId)return;
       if(v.readyState>=2&&v.videoWidth){try{
-        if(det){const r=await det.detect(v);if(id!==scanId)return;const c=r&&r[0]&&codeOf(r[0].rawValue);if(c){stopScan();onCode(c);return;}if(r&&r[0]&&r[0].rawValue)noCode();}
-        else{const k=Math.min(1,640/v.videoWidth);cv.width=Math.round(v.videoWidth*k);cv.height=Math.round(v.videoHeight*k);cx.drawImage(v,0,0,cv.width,cv.height);const id=cx.getImageData(0,0,cv.width,cv.height),r=jsQR(id.data,id.width,id.height);const c=r&&r.data&&codeOf(r.data);if(c){stopScan();onCode(c);return;}if(r&&r.data)noCode();}
+        if(det){const r=await det.detect(v);if(id!==scanId)return;const c=r&&r[0]&&codeOf(r[0].rawValue);if(c){haltScan();onCode(c);return;}if(r&&r[0]&&r[0].rawValue)noCode();}
+        else{const k=Math.min(1,640/v.videoWidth);cv.width=Math.round(v.videoWidth*k);cv.height=Math.round(v.videoHeight*k);cx.drawImage(v,0,0,cv.width,cv.height);const id=cx.getImageData(0,0,cv.width,cv.height),r=jsQR(id.data,id.width,id.height);const c=r&&r.data&&codeOf(r.data);if(c){haltScan();onCode(c);return;}if(r&&r.data)noCode();}
       }catch(e){}}
       scanT=setTimeout(step,det?120:220);};
     step();
@@ -111,25 +115,25 @@ const DUELL=(function(){
 
   async function host(){readIntro();myCol=get(CK,0);oppCol=-1;if(!window.RTCPeerConnection)return intro('Dieser Browser unterstützt keine direkte Verbindung (WebRTC).');
     role='host';card('<div class="pz-center">Verbindungscode wird erzeugt …</div>');
-    let my=null;
-    try{mkPc();my=pc;wire(my.createDataChannel('duell',{ordered:true}));await my.setLocalDescription(await my.createOffer());await gathered(my);}catch(e){if(my&&pc!==my)return;return intro('Der Verbindungscode konnte nicht erzeugt werden.');}
+    let my=null,pk=await peekCam();
+    try{mkPc();my=pc;wire(my.createDataChannel('duell',{ordered:true}));await my.setLocalDescription(await my.createOffer());await gathered(my);relCam(pk);}catch(e){relCam(pk);if(my&&pc!==my)return;return intro('Der Verbindungscode konnte nicht erzeugt werden.');}
     if(pc!==my)return; // während des Erzeugens verlassen
     const code=pack(my.localDescription.sdp);
     card(`<div class="pz-lbl"><span>Schritt 1 von 2 · Spieler 1</span></div><div class="pz-qt">Dein Mitspieler öffnet „Duell beitreten“ und scannt diesen Code</div><div class="pz-qr" id="qr"></div>
       <div class="pz-fb">Klappt der Scan nicht, schick den Kurzcode per Messenger:</div><textarea class="pz-code" readonly rows="3">${esc(code)}</textarea><button class="pz-sec2" data-a="copy" style="align-self:flex-start">Kurzcode kopieren</button>
       <button class="pz-pri" data-a="next1">Weiter: Antwort-Code scannen</button><button class="pz-sec2" data-a="cancel" style="align-self:flex-start">Abbrechen</button>`);
     root._code=code;qr(root.querySelector('#qr'),code);}
-  function hostScan(){scanBox('Schritt 2 von 2 · Spieler 1','Scanne jetzt den Antwort-Code deines Mitspielers',async txt=>{const my=pc;if(!my)return;try{await my.setRemoteDescription({type:'answer',sdp:unpack(txt)});if(pc!==my)return;waitConn(30000);}catch(e){if(pc!==my)return;intro('Der Antwort-Code ist ungültig. Bitte noch einmal von vorn.');}});}
+  function hostScan(){scanBox('Schritt 2 von 2 · Spieler 1','Scanne jetzt den Antwort-Code deines Mitspielers',async txt=>{const my=pc;if(!my)return;try{await my.setRemoteDescription({type:'answer',sdp:unpack(txt)});stopScan();if(pc!==my)return;waitConn(30000);}catch(e){stopScan();if(pc!==my)return;intro('Der Antwort-Code ist ungültig. Bitte noch einmal von vorn.');}});}
   async function join(){readIntro();myCol=get(CK,1);oppCol=-1;if(!window.RTCPeerConnection)return intro('Dieser Browser unterstützt keine direkte Verbindung (WebRTC).');
     role='guest';scanBox('Schritt 1 von 2 · Spieler 2','Scanne den Code von Spieler 1',async txt=>{
-      let my=null;
-      try{mkPc();my=pc;await my.setRemoteDescription({type:'offer',sdp:unpack(txt)});card('<div class="pz-center">Antwort wird erzeugt …</div>');await my.setLocalDescription(await my.createAnswer());await gathered(my);}catch(e){if(my&&pc!==my)return;return intro('Der Code ist ungültig. Bitte noch einmal von vorn.');}
+      let my=null,pk=stream?null:await peekCam();
+      try{mkPc();my=pc;await my.setRemoteDescription({type:'offer',sdp:unpack(txt)});card('<div class="pz-center">Antwort wird erzeugt …</div>');await my.setLocalDescription(await my.createAnswer());await gathered(my);stopScan();relCam(pk);}catch(e){stopScan();relCam(pk);if(my&&pc!==my)return;return intro('Der Code ist ungültig. Bitte noch einmal von vorn.');}
       if(pc!==my)return; // während des Erzeugens verlassen
       const code=pack(my.localDescription.sdp);
       card(`<div class="pz-lbl"><span>Schritt 2 von 2 · Spieler 2</span></div><div class="pz-qt">Spieler 1 scannt jetzt diesen Antwort-Code</div><div class="pz-qr" id="qr"></div>
         <div class="pz-fb">Oder per Messenger schicken:</div><textarea class="pz-code" readonly rows="3">${esc(code)}</textarea><button class="pz-sec2" data-a="copy" style="align-self:flex-start">Kurzcode kopieren</button><div class="pz-drv"><i></i><span>Warte auf die Verbindung …</span></div><button class="pz-sec2" data-a="cancel" style="align-self:flex-start">Abbrechen</button>`);
       root._code=code;qr(root.querySelector('#qr'),code);waitConn(120000);});}
-  function waitConn(ms){clearTimeout(tm);tm=setTimeout(()=>{if(!alive){stopScan();teardown(true);intro('Die Verbindung kam nicht zustande. Tipp: Beide im selben WLAN, oder den Hilfsdienst einschalten. In manchen Mobilfunknetzen ist keine direkte Verbindung möglich.');}},ms||30000);
+  function waitConn(ms){clearTimeout(tm);tm=setTimeout(()=>{if(!alive){stopScan();teardown(true);intro('Die Verbindung kam nicht zustande. Tipp: Beide im selben WLAN (in Gast- oder Schulnetzen sperrt manchmal die „Geräteisolierung“ die Verbindung zwischen Geräten), oder den Hilfsdienst einschalten. In manchen Mobilfunknetzen ist keine direkte Verbindung möglich.');}},ms||30000);
     if(root&&!root.querySelector('.pz-drv'))card('<div class="pz-lbl"><span>Verbinde</span></div><div class="pz-drv"><i></i><span>Verbindung wird aufgebaut …</span></div>');}
 
   /* ---------- Lobby ---------- */
