@@ -44,14 +44,14 @@ const QDEF=[
  [7,'ANE ≤ 400 m²?','GK 4 oder GK 5']];
 /* Anforderungen (Abschnitt 04/05/06) */
 const REQ={
- none:{k:'none',t:'keine Anforderung',s:'keine',c:'#8996ad'},
- f30:{k:'f30',t:'feuerhemmend (F30)',s:'F30',c:'#f4d03f'},
- f60:{k:'f60',t:'hochfeuerhemmend (F60)',s:'F60',c:'#ff9f2e'},
- f60m:{k:'f60m',t:'hochfeuerhemmend mit mech. Beanspruchung (F60-M)',s:'F60-M',c:'#f26a1b'},
- f90:{k:'f90',t:'feuerbeständig (F90)',s:'F90',c:'#e23b3b'},
- bw:{k:'bw',t:'Bauart einer Brandwand (REIM 90, F90-A-M)',s:'Brandwand',c:'#b0246e'},
- na:{k:'na',t:'in der Lernseite nicht angegeben',s:'keine Angabe',c:'#47546d'}};
-const TABLE={ '1a':['none','f30'],'1b':['none','f30'],'2':['none','f30'],'3':['f30','f90'],'4':['f60','f90'],'5':['f90','f90'],'HH':['na','na']};
+ none:{k:'none',t:'keine Anforderung',s:'keine',n:'',c:'#8996ad'},
+ f30:{k:'f30',t:'feuerhemmend (F30)',s:'F30',n:'feuerhemmend',c:'#f4d03f'},
+ f60:{k:'f60',t:'hochfeuerhemmend (F60)',s:'F60',n:'hochfeuerhemmend',c:'#ff9f2e'},
+ f60m:{k:'f60m',t:'hochfeuerhemmend mit mech. Beanspruchung (F60-M)',s:'F60-M',n:'hochfeuerhemmend, mechanisch beansprucht',c:'#f26a1b'},
+ f90:{k:'f90',t:'feuerbeständig (F90)',s:'F90',n:'feuerbeständig',c:'#e23b3b'},
+ bw:{k:'bw',t:'Bauart einer Brandwand (REIM 90, F90-A-M)',s:'Brandwand',n:'Bauart einer Brandwand',c:'#b0246e'},
+ na:{k:'na',t:'nicht angegeben',s:'keine Angabe',n:'',c:'#47546d'}};
+const TABLE={ '1a':['none','f30'],'1b':['none','f30'],'2':['none','f30'],'3':['f30','f90'],'4':['f60','f90'],'5':['f90','f90'],'HH':['f90','f90']};
 const PARTS={
  decke:{n:'Decke',pl:'Decken'},
  stuetze:{n:'Stütze',pl:'Stützen'},
@@ -63,30 +63,31 @@ function reqFor(gk,part,zone){
   const T=TABLE[gk],z=zone==='ke'?1:0;
   if(part==='brand')return 'bw';
   if(part==='treppe'){return gk==='3'?'f30':gk==='4'?'f60m':gk==='5'?'bw':gk==='HH'?'f90':'na';}
-  if(part==='trenn'){if(gk==='HH')return 'na';const r=T[z];return (r==='none'||r==='f30')?'f30':r;}
+  if(part==='trenn'){if(gk==='HH')return 'f30';const r=T[z];return (r==='none'||r==='f30')?'f30':r;}
   return T[z];
 }
+const RL=r=>r.s+(r.n?' ('+r.n+')':'');
 function explain(gk,part,zone){
   const g=GKS[gk],r=REQ[reqFor(gk,part,zone)],zn=zone==='ke'?'im Kellergeschoss':'im Obergeschoss';
   const nm=PARTS[part].n;
   if(part==='brand')return {title:'Brandwand',req:r,text:'**Brandwand**: Anforderung **REIM 90 (F90-A-M)**. Abstand **≥ 5 m zu Innenecken**. Sie muss **0,30 m über die Bedachung** gezogen werden **oder beidseitig 0,50 m auskragen**.'};
   if(part==='treppe'){
-    if(gk==='HH')return {title:'Treppenraum-Wand · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR)** gelten für Sicherheitstreppenräume Wände in **F90** (Höhe h ≤ 60 m), bei h > 60 m **F120**. Die Slider-Höhe bleibt bei max. 30 m, also gilt hier F90.'};
+    if(gk==='HH')return {title:'Treppenraum-Wand · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR 3.2.3)** haben die Wände der **notwendigen Treppenräume und ihrer Vorräume** die **Feuerwiderstandsfähigkeit der tragenden Bauteile**: **F90 (feuerbeständig)** bei h ≤ 60 m, bei h > 60 m **F120 (hochfeuerbeständig)**. Die Slider-Höhe bleibt bei max. 30 m, also gilt hier F90.'};
     if(gk==='3')return {title:'Treppenraum-Wand · GK 3',req:r,text:'Notwendige Treppenräume in **GK 3**: Wände **feuerhemmend (F30)**. Die Tür zum notwendigen Treppenraum ist eine **RS-Tür**.'};
     if(gk==='4')return {title:'Treppenraum-Wand · GK 4',req:r,text:'Notwendige Treppenräume in **GK 4**: Wände **hochfeuerhemmend mit mech. Beanspruchung (F60-M)**. Die Tür zum notwendigen Treppenraum ist eine **RS-Tür**.'};
     if(gk==='5')return {title:'Treppenraum-Wand · GK 5',req:r,text:'Notwendige Treppenräume in **GK 5**: Wände in der **Bauart einer Brandwand**. Müssen beleuchtet sein; **ohne Fenster: Sicherheitsbeleuchtung**.'};
     return {title:'Treppenraum-Wand · '+g.n,req:r,text:'Für **GK 1/2** nennt die Lernseite keine Anforderung an Treppenraum-Wände. Die Treppenraum-Regel gilt dort für GK 3 (F30), GK 4 (F60-M) und GK 5 (Brandwand-Bauart).'};
   }
   if(part==='trenn'){
-    if(gk==='HH')return {title:'Trennwand · Hochhaus',req:r,text:'Für Hochhäuser verweist die Lernseite auf die **MHHR**. Zur Trennwand nennt sie dort nur: Ausnahmen bei der Feuerlöschanlage nur bei NE ≤ 200 m² mit **F90-Trennwänden**.'};
+    if(gk==='HH')return {title:'Trennwand · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR 3.2.5)** müssen **Trennwände zwischen Nutzungseinheiten** und die **Wände notwendiger Flure** **feuerhemmend (F30)** sein. **Feuerbeständig (F90)** sind dagegen Brandwände, Wände von Installationsschächten, Trennwände von Räumen mit erhöhter Brandgefahr und Trennwände zwischen Aufenthaltsräumen und anders genutzten Räumen im Keller (MHHR 3.2.4). Diese Werte stehen in der MHHR, nicht auf der Lernseite.'};
     return {title:'Trennwand · '+g.n,req:r,text:'**Trennwände** (zwischen Nutzungseinheiten): mindestens die Feuerwiderstandsfähigkeit der **tragenden Bauteile des Geschosses**, jedoch **mind. F30**. Türen: **T30-DS**. Hier: '+g.n+' '+zn+' = '+REQ[reqFor(gk,'decke',zone)].s+', Trennwand daher **'+r.s+'**.'};
   }
-  if(gk==='HH')return {title:nm+' · Hochhaus',req:r,text:'Für das **Hochhaus (MHHR)** steht die Tabelle „Tragende Wände, Stützen und Decken“ der Lernseite nicht zur Verfügung (sie nennt GK 1 bis 5). Die Anforderungen der MHHR stehen in Abschnitt 06.'};
+  if(gk==='HH')return {title:nm+' · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR 3.1)** müssen **tragende und aussteifende Bauteile** (auch im Keller) **feuerbeständig (F90)** sein und aus **nichtbrennbaren Baustoffen** bestehen. Bei **mehr als 60 m Höhe** sind **120 Minuten** (F120, hochfeuerbeständig) verlangt. Geschossdecken sind raumabschließend mit der Feuerwiderstandsfähigkeit der tragenden Bauteile. Diese Werte stehen in der MHHR (Stand 2008/2012), nicht in der Tabelle der Lernseite.'};
   const row=TABLE[gk];
   const rs=gk==='1a'||gk==='1b'||gk==='2'?'GK 1/2':g.n;
   return {title:nm+' · '+zn.replace('im ','').replace('geschoss','geschoss'),req:r,
     text:'**'+PARTS[part].pl+'** '+zn+' bei **'+rs+'**: **'+r.t+'**.'+
-     ' Zum Vergleich: Obergeschoss '+REQ[row[0]].s+', Kellergeschoss '+REQ[row[1]].s+'.'+
+     ' Zum Vergleich: Kellergeschoss '+RL(REQ[row[1]])+', Obergeschoss '+RL(REQ[row[0]])+'.'+
      (zone==='ke'?' (Vereinfachung: die Decke über dem Keller zählt hier zum Kellergeschoss.)':'')};
 }
 /* Sonderbau-Check (Abschnitt 03) */
@@ -357,7 +358,7 @@ function createScene(canvas,host,cb){
   function lerpTo(o,k,t,e,dt,sp){const d=t-o[k];if(Math.abs(d)<(e||0.002)){if(o[k]!==t){o[k]=t;dirty=true;}return;}o[k]+=d*ease(dt,sp||9);dirty=true;}
   function frame(now){
     raf=requestAnimationFrame(frame);
-    const dt=Math.min(0.1,(now-last)/1000);last=now;time+=dt;
+    const nw=performance.now();const dt=Math.min(0.1,Math.max(1/120,(nw-last)/1000));last=nw;time+=dt;
     const sec=T.mode==='sec',p=T.p;
     // Stockwerke
     const nf=nFloors(p.okff);let y=0;
@@ -402,6 +403,7 @@ function createScene(canvas,host,cb){
     L.bw._on=sec&&T.bw;L.bw.innerHTML='<b>0,30 m</b> über Bedachung<br>REIM 90 (F90-A-M)';place(L.bw,-6,topY+(hh?1.2:3.4),0,[0,-10]);
     if(dirty||now-lastR>33){if(now-lastR>=30){lastR=now;dirty=false;renderer.render(scene,camera);}}
   }
+  floors.forEach((F,i)=>{F.G=i<nFloors(T.p.okff)?1:0;});
   raf=requestAnimationFrame(frame);
   refreshSec();
   return {
@@ -627,15 +629,15 @@ function TeileTab({p,setP,gk,teile,setTeile}){
   const cur=gk==='1a'||gk==='1b'||gk==='2'?'12':gk;
   const T=TABLE[gk];
   const tiles=[
-    ['Obergeschoss: tragende Teile',reqFor(gk,'wand','og')],
     ['Kellergeschoss: tragende Teile',reqFor(gk,'wand','ke')],
+    ['Obergeschoss: tragende Teile',reqFor(gk,'wand','og')],
     ['Treppenraum-Wände',reqFor(gk,'treppe','og')]];
   const sel=teile.sel,ex=sel?explain(gk,sel.part,sel.zone):null;
   return h('div',null,
     h('h3',{style:{marginTop:0}},'Beispielgebäude'),
     h('div',{className:'chips'},PRESETS.map(pr=>h('button',{key:pr.k,className:'chp '+COLTXT(pr.gk)+(cur===pr.k?' on':''),style:{'--c':pr.c},onClick:()=>{setP(pr.p);setTeile(t=>Object.assign({},t,{sel:null}));}},h('i'),pr.n))),
     h('h3',null,'Anforderung für '+GKS[gk].long),
-    h('div',{className:'tiles'},tiles.map((t,i)=>{const r=REQ[t[1]];return h('div',{key:i,className:'tile'+(['f30','none'].includes(r.k)?' dk':''),style:{background:r.c}},h('small',null,t[0]),h('b',null,r.s));})),
+    h('div',{className:'tiles'},tiles.map((t,i)=>{const r=REQ[t[1]];return h('div',{key:i,className:'tile'+(['f30','none'].includes(r.k)?' dk':''),style:{background:r.c}},h('small',null,t[0]),h('b',null,r.s),r.n?h('em',{style:{display:'block',fontStyle:'normal',fontSize:11.5,fontWeight:700,lineHeight:1.2,marginTop:2}},r.n):null);})),
     ex?h('div',{className:'card',style:{borderColor:ex.req.c,borderWidth:2}},h('div',{style:{display:'flex',gap:10,alignItems:'center',marginBottom:6}},h('div',{style:{width:16,height:16,borderRadius:5,background:ex.req.c,flex:'none'}}),h('h2',{style:{margin:0,fontSize:16}},ex.title)),h('p',{style:{marginBottom:4}},B(ex.text)),h('div',{className:'mu',style:{fontSize:12.5}},'Anforderung: ',h('b',{style:{color:'var(--tx)'}},ex.req.t)))
        :h('div',{className:'msg n'},'Tippe im aufgeschnittenen Gebäude ein Bauteil an (Decke, Stütze, Wand, Treppenraum), dann wird die Anforderung erklärt.'),
     h('h3',null,'Bauteile hervorheben'),
@@ -735,7 +737,7 @@ function App(){
   let legend=null;
   if(secMode){const g=view.gk;const ks=[];const add=k=>{if(!ks.includes(k))ks.push(k);};
     add(reqFor(g,'wand','og'));add(reqFor(g,'wand','ke'));add(reqFor(g,'treppe','og'));if(ep.nne>=2)add(reqFor(g,'trenn','og'));if(view.bw)add('bw');
-    legend=h('div',{className:'slegend'},ks.map(k=>h('div',{key:k,className:'sl'},h('i',{style:{background:REQ[k].c}}),REQ[k].s==='keine'?'keine Anforderung':REQ[k].s)));}
+    legend=h('div',{className:'slegend'},ks.map(k=>h('div',{key:k,className:'sl'},h('i',{style:{background:REQ[k].c}}),REQ[k].s==='keine'?'keine Anforderung':REQ[k].s+(REQ[k].n?' '+REQ[k].n:''))));}
   const hint=secMode?(tab==='teile'?'Tippe ein Bauteil an · Ziehen dreht · Pinch zoomt · vereinfachte Darstellung':'Aufgeschnittenes Gebäude · vereinfachte Darstellung'):'Ziehen dreht · Pinch/Scrollrad zoomt · vereinfachte Darstellung (ca. 3 m je Geschoss)';
   const stage=h(Stage,{onReady:ready,onPick:pickRef,sec:secMode},
     legend,
