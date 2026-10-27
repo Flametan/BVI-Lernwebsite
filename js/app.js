@@ -4120,6 +4120,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.2',ts:'2026-10-27T00:10',items:[
+      'Duell: Ein roter Hinweis ganz oben sagt klar, dass das Duell im Schul-WLAN (und in Gast- oder Firmennetzen) nicht funktioniert, und empfiehlt einen Hotspot vom Handy oder das WLAN zu Hause',
       'Duell: Verbindung im selben WLAN zuverlässiger – beim Beitreten bleibt die Kamera an, bis der Antwort-Code erzeugt ist (dann nennt das Gerät seine echte WLAN-Adresse statt eines .local-Namens, den manche Android-Geräte nicht auflösen können); ist die Kamera schon erlaubt, gilt das auch beim Eröffnen. Der Hinweis bei einem Fehlschlag nennt jetzt die Geräteisolierung von Gast- und Schulnetzen',
       'VB lernen · Standsicherheit: Die 120 Minuten heißen jetzt „hochfeuerbeständig“ (F120) wie in der Unterrichtsfolie, mit Raumabschluss bei den Besonderen Fällen',
       'Gebäudeklassen-Baukasten · Bauteile: Hinter F30, F60, F90 steht jetzt die bauaufsichtliche Benennung (feuerhemmend, hochfeuerhemmend, feuerbeständig); die Kachel Kellergeschoss steht links, Obergeschoss in der Mitte; beim Hochhaus sind die Werte nach der Muster-Hochhaus-Richtlinie ergänzt (tragende und aussteifende Bauteile feuerbeständig und nichtbrennbar, über 60 m Höhe 120 Minuten; Wände der notwendigen Treppenräume wie die tragenden Bauteile; Trennwände zwischen Nutzungseinheiten feuerhemmend)',

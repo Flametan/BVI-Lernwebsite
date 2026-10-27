@@ -2334,6 +2334,8 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .pz-sec2{background:var(--m-raised);color:var(--m-fg);border:0;border-radius:99px;padding:8px 14px;font-family:inherit;font-size:.82rem;cursor:pointer;}
 .pz-sec2:disabled{opacity:.35;}
 .pz-fb{font-size:.86rem;line-height:1.45;color:var(--m-muted);}
+.pz-warn{font-size:.92rem;line-height:1.45;color:var(--m-fg);background:color-mix(in srgb,#d6221e 14%,var(--m-card));border:1px solid color-mix(in srgb,#d6221e 55%,transparent);border-left:6px solid #d6221e;border-radius:12px;padding:12px 14px;}
+.pz-warn b{color:var(--k-ef4444,#d6221e);}
 .pz-fb b{color:var(--m-fg);}.pz-fb.g b{color:var(--pz-ok);}.pz-fb.r b{color:var(--pz-bad);}
 .pz-big-n{font-size:2.6rem;font-weight:800;text-align:center;line-height:1.1;}
 .pz-center{text-align:center;color:var(--m-muted);font-size:.9rem;}
