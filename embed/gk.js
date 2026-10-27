@@ -49,7 +49,7 @@ const REQ={
  f60:{k:'f60',t:'hochfeuerhemmend (F60)',s:'F60',n:'hochfeuerhemmend',c:'#ff9f2e'},
  f60m:{k:'f60m',t:'hochfeuerhemmend mit mech. Beanspruchung (F60-M)',s:'F60-M',n:'hochfeuerhemmend, mechanisch beansprucht',c:'#f26a1b'},
  f90:{k:'f90',t:'feuerbeständig (F90)',s:'F90',n:'feuerbeständig',c:'#e23b3b'},
- bw:{k:'bw',t:'Bauart einer Brandwand (REIM 90, F90-A-M)',s:'Brandwand',n:'Bauart einer Brandwand',c:'#b0246e'},
+ bw:{k:'bw',t:'Bauart einer Brandwand (REI 90-M, F 90-A)',s:'Brandwand',n:'Bauart einer Brandwand',c:'#b0246e'},
  nt:{k:'nt',t:'kein notwendiger Treppenraum erforderlich (§ 35 Abs. 1 BauO NRW)',s:'entfällt',n:'kein Treppenraum nötig',c:'#5b6b86'},
  na:{k:'na',t:'nicht angegeben',s:'keine Angabe',n:'',c:'#47546d'}};
 const TABLE={ '1a':['none','f30'],'1b':['none','f30'],'2':['f30','f30'],'3':['f30','f90'],'4':['f60','f90'],'5':['f90','f90'],'HH':['f90','f90']};
@@ -74,7 +74,7 @@ const RL=r=>r.s+(r.n?' ('+r.n+')':'');
 function explain(gk,part,zone){
   const g=GKS[gk],r=REQ[reqFor(gk,part,zone)],zn=zone==='ke'?'im Kellergeschoss':'im Obergeschoss';
   const nm=PARTS[part].n;
-  if(part==='brand')return {title:'Brandwand',req:r,text:'**Brandwand** (§ 30 BauO NRW): feuerbeständig, nichtbrennbar und **auch unter zusätzlicher mechanischer Beanspruchung**, also **REIM 90 (F90-A-M)**. Abstand zur **inneren Ecke**: Lernseite und MBO **≥ 5 m**, nach **§ 30 Abs. 6 BauO NRW mindestens 3 m**. Sie muss **0,30 m über die Bedachung** gezogen werden **oder** mit einer **beidseitig 0,50 m auskragenden** feuerbeständigen Platte abschließen; bei **GK 1 bis 3** genügt **bis unter die Dachhaut**. Innere Brandwände in Abständen von **höchstens 40 m**.'};
+  if(part==='brand')return {title:'Brandwand',req:r,text:'**Brandwand** (§ 30 BauO NRW): feuerbeständig, nichtbrennbar und **auch unter zusätzlicher mechanischer Beanspruchung**, also **REI 90-M (F 90-A)**. Abstand zur **inneren Ecke**: Lernseite und MBO **≥ 5 m**, nach **§ 30 Abs. 6 BauO NRW mindestens 3 m**. Sie muss **0,30 m über die Bedachung** gezogen werden **oder** mit einer **beidseitig 0,50 m auskragenden** feuerbeständigen Platte abschließen; bei **GK 1 bis 3** genügt **bis unter die Dachhaut**. Innere Brandwände in Abständen von **höchstens 40 m**.'};
   if(part==='treppe'){
     if(gk==='HH')return {title:'Treppenraum-Wand · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR 3.2.3)** haben die Wände der **notwendigen Treppenräume und ihrer Vorräume** die **Feuerwiderstandsfähigkeit der tragenden Bauteile**: **F90 (feuerbeständig)** bei h ≤ 60 m, bei h > 60 m **F120 (hochfeuerbeständig)**. Die Slider-Höhe bleibt bei max. 30 m, also gilt hier F90.'};
     if(gk==='3')return {title:'Treppenraum-Wand · GK 3',req:r,text:'Notwendige Treppenräume in **GK 3**: Wände **feuerhemmend (F30)**. Die Tür zum notwendigen Treppenraum ist eine **RS-Tür**.'};
@@ -409,7 +409,7 @@ function createScene(canvas,host,cb){
     [['z7',7],['z13',13],['z22',22]].forEach(a=>{L[a[0]]._on=rz;place(L[a[0]],6.9,a[1],5.9,[8,0]);});
     L.ok._on=rz;L.ok.textContent='OKFF '+fm(p.okff)+' m';place(L.ok,-7.1,C.ok+0.1,5.9,[-6,0]);
     place(badge,0,topY+(hh?7:4.2),0,[0,0]);
-    L.bw._on=sec&&T.bw;L.bw.innerHTML='<b>0,30 m</b> über Bedachung<br>REIM 90 (F90-A-M)';place(L.bw,-6,topY+(hh?1.2:3.4),0,[0,-10]);
+    L.bw._on=sec&&T.bw;L.bw.innerHTML='<b>0,30 m</b> über Bedachung<br>REI 90-M (F 90-A)';place(L.bw,-6,topY+(hh?1.2:3.4),0,[0,-10]);
     if(dirty||now-lastR>33){if(now-lastR>=30){lastR=now;dirty=false;renderer.render(scene,camera);}}
   }
   floors.forEach((F,i)=>{F.G=i<nFloors(T.p.okff)?1:0;});
@@ -655,8 +655,8 @@ function TeileTab({p,setP,gk,teile,setTeile}){
     h('h3',null,'Bauteile hervorheben'),
     h('div',{className:'chips'},[[null,'Alle'],['decke','Decken'],['stuetze','Stützen'],['wand','Wände'],['treppe','Treppenraum']].map(a=>h('button',{key:a[1],className:'chp f'+(teile.focus===a[0]?' on':''),onClick:()=>setTeile(t=>Object.assign({},t,{focus:a[0]}))},a[1]))),
     h('div',{className:'card',style:{padding:'4px 14px',marginTop:10}},h(Switch,{on:teile.dgar!==false,onChange:v=>setTeile(t=>Object.assign({},t,{dgar:v,sel:null})),t:'Über dem Dachgeschoss: Aufenthaltsräume möglich',d:'Aus: Die Decke zum Dachraum wird anders bewertet (§ 31, § 29)'})),
-    h('div',{className:'card',style:{padding:'4px 14px',marginTop:10}},h(Switch,{on:teile.bw,onChange:v=>setTeile(t=>Object.assign({},t,{bw:v,sel:null})),t:'Brandwand-Detail zeigen',d:'REIM 90 (F90-A-M), links am Gebäude'})),
-    teile.bw?h('div',{className:'card'},h('p',{style:{marginBottom:6}},B('**Brandwand** (REIM 90, F90-A-M): Abstand zur Innenecke **≥ 5 m (MBO, Lernseite) bzw. ≥ 3 m (BauO NRW)**. Sie muss **0,30 m über Bedachung** gezogen oder **beidseitig 0,50 m auskragen**.')),h(BwDetail),h('div',{className:'mu',style:{fontSize:11.5,marginTop:6}},'Vereinfachte Darstellung, nicht maßstäblich.')):null);
+    h('div',{className:'card',style:{padding:'4px 14px',marginTop:10}},h(Switch,{on:teile.bw,onChange:v=>setTeile(t=>Object.assign({},t,{bw:v,sel:null})),t:'Brandwand-Detail zeigen',d:'REI 90-M (F 90-A), links am Gebäude'})),
+    teile.bw?h('div',{className:'card'},h('p',{style:{marginBottom:6}},B('**Brandwand** (REI 90-M, F 90-A): Abstand zur Innenecke **≥ 5 m (MBO, Lernseite) bzw. ≥ 3 m (BauO NRW)**. Sie muss **0,30 m über Bedachung** gezogen oder **beidseitig 0,50 m auskragen**.')),h(BwDetail),h('div',{className:'mu',style:{fontSize:11.5,marginTop:6}},'Vereinfachte Darstellung, nicht maßstäblich.')):null);
 }
 /* ---------- Quiz ---------- */
 function QuizTab({quiz,setQuiz,startQuiz,answer,next}){
