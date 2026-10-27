@@ -50,8 +50,9 @@ const REQ={
  f60m:{k:'f60m',t:'hochfeuerhemmend mit mech. Beanspruchung (F60-M)',s:'F60-M',n:'hochfeuerhemmend, mechanisch beansprucht',c:'#f26a1b'},
  f90:{k:'f90',t:'feuerbeständig (F90)',s:'F90',n:'feuerbeständig',c:'#e23b3b'},
  bw:{k:'bw',t:'Bauart einer Brandwand (REIM 90, F90-A-M)',s:'Brandwand',n:'Bauart einer Brandwand',c:'#b0246e'},
+ nt:{k:'nt',t:'kein notwendiger Treppenraum erforderlich (§ 35 Abs. 1 BauO NRW)',s:'entfällt',n:'kein Treppenraum nötig',c:'#5b6b86'},
  na:{k:'na',t:'nicht angegeben',s:'keine Angabe',n:'',c:'#47546d'}};
-const TABLE={ '1a':['none','f30'],'1b':['none','f30'],'2':['none','f30'],'3':['f30','f90'],'4':['f60','f90'],'5':['f90','f90'],'HH':['f90','f90']};
+const TABLE={ '1a':['none','f30'],'1b':['none','f30'],'2':['f30','f30'],'3':['f30','f90'],'4':['f60','f90'],'5':['f90','f90'],'HH':['f90','f90']};
 const PARTS={
  decke:{n:'Decke',pl:'Decken'},
  stuetze:{n:'Stütze',pl:'Stützen'},
@@ -62,7 +63,7 @@ const PARTS={
 function reqFor(gk,part,zone){
   const T=TABLE[gk],z=zone==='ke'?1:0;
   if(part==='brand')return 'bw';
-  if(part==='treppe'){return gk==='3'?'f30':gk==='4'?'f60m':gk==='5'?'bw':gk==='HH'?'f90':'na';}
+  if(part==='treppe'){return gk==='3'?'f30':gk==='4'?'f60m':gk==='5'?'bw':gk==='HH'?'f90':'nt';}
   if(part==='trenn'){if(gk==='HH')return 'f30';const r=T[z];return (r==='none'||r==='f30')?'f30':r;}
   return T[z];
 }
@@ -76,7 +77,7 @@ function explain(gk,part,zone){
     if(gk==='3')return {title:'Treppenraum-Wand · GK 3',req:r,text:'Notwendige Treppenräume in **GK 3**: Wände **feuerhemmend (F30)**. Die Tür zum notwendigen Treppenraum ist eine **RS-Tür**.'};
     if(gk==='4')return {title:'Treppenraum-Wand · GK 4',req:r,text:'Notwendige Treppenräume in **GK 4**: Wände **hochfeuerhemmend mit mech. Beanspruchung (F60-M)**. Die Tür zum notwendigen Treppenraum ist eine **RS-Tür**.'};
     if(gk==='5')return {title:'Treppenraum-Wand · GK 5',req:r,text:'Notwendige Treppenräume in **GK 5**: Wände in der **Bauart einer Brandwand**. Müssen beleuchtet sein; **ohne Fenster: Sicherheitsbeleuchtung**.'};
-    return {title:'Treppenraum-Wand · '+g.n,req:r,text:'Für **GK 1/2** nennt die Lernseite keine Anforderung an Treppenraum-Wände. Die Treppenraum-Regel gilt dort für GK 3 (F30), GK 4 (F60-M) und GK 5 (Brandwand-Bauart).'};
+    return {title:'Treppenraum · '+g.n,req:r,text:'In **GK 1 und 2** sind notwendige Treppen **ohne eigenen Treppenraum** zulässig (§ 35 Abs. 1 BauO NRW). Anforderungen an Treppenraum-Wände gibt es dort daher nicht. Sie gelten erst ab GK 3 (F30), GK 4 (F60-M) und GK 5 (Brandwand-Bauart).'};
   }
   if(part==='trenn'){
     if(gk==='HH')return {title:'Trennwand · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR 3.2.5)** müssen **Trennwände zwischen Nutzungseinheiten** und die **Wände notwendiger Flure** **feuerhemmend (F30)** sein. **Feuerbeständig (F90)** sind dagegen Brandwände, Wände von Installationsschächten, Trennwände von Räumen mit erhöhter Brandgefahr und Trennwände zwischen Aufenthaltsräumen und anders genutzten Räumen im Keller (MHHR 3.2.4). Diese Werte stehen in der MHHR, nicht auf der Lernseite.'};
@@ -84,11 +85,11 @@ function explain(gk,part,zone){
   }
   if(gk==='HH')return {title:nm+' · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR 3.1)** müssen **tragende und aussteifende Bauteile** (auch im Keller) **feuerbeständig (F90)** sein und aus **nichtbrennbaren Baustoffen** bestehen. Bei **mehr als 60 m Höhe** sind **120 Minuten** (F120, hochfeuerbeständig) verlangt. Geschossdecken sind raumabschließend mit der Feuerwiderstandsfähigkeit der tragenden Bauteile. Diese Werte stehen in der MHHR (Stand 2008/2012), nicht in der Tabelle der Lernseite.'};
   const row=TABLE[gk];
-  const rs=gk==='1a'||gk==='1b'||gk==='2'?'GK 1/2':g.n;
+  const rs=gk==='2'?'GK 2':gk==='1a'||gk==='1b'?'GK 1':g.n;
   return {title:nm+' · '+zn.replace('im ','').replace('geschoss','geschoss'),req:r,
     text:'**'+PARTS[part].pl+'** '+zn+' bei **'+rs+'**: **'+r.t+'**.'+
      ' Zum Vergleich: Kellergeschoss '+RL(REQ[row[1]])+', Obergeschoss '+RL(REQ[row[0]])+'.'+
-     (zone==='ke'?' (Vereinfachung: die Decke über dem Keller zählt hier zum Kellergeschoss.)':'')};
+     (zone==='ke'?' (Vereinfachung: die Decke über dem Keller zählt hier zum Kellergeschoss.)':'')+(gk==='2'&&zone==='og'?' **Hinweis:** Die Tabelle der Lernseite nennt für GK 1/2 im Obergeschoss „keine Anforderung“. Nach **§ 27 Abs. 1 BauO NRW 2018** gilt aber **feuerhemmend in GK 2 und 3**; nur in GK 1 gibt es dort keine Anforderung.':'')};
 }
 /* Sonderbau-Check (Abschnitt 03) */
 const SONDER=[
@@ -132,7 +133,7 @@ function makeRound(){
   for(let i=0;i<2;i++){
     const g=pick(['1a','2','3','4','5']),zone=i?'ke':'og';
     const p=genParams(g);
-    cases.push({kind:'bt',p,gk:g,zone,text:GKS[g].long+(g==='1a'||g==='2'?' (bei GK 1/2 gilt dieselbe Zeile der Tabelle)':'')+', OKFF '+fm(p.okff)+' m.'});
+    cases.push({kind:'bt',p,gk:g,zone,text:GKS[g].long+''+', OKFF '+fm(p.okff)+' m.'});
   }
   return shuffle(cases);
 }
@@ -558,7 +559,8 @@ function Switch({on,onChange,t,d}){return h('div',{className:'sw',role:'switch',
   h('div',{className:'t'},h('b',null,t),d?h('span',null,d):null),h('div',{className:'tg'+(on?' on':'')}));}
 const NEC=['#ffe39a','#9fe0ff','#ffb3c7','#b9f0a8','#d2b6ff'];
 const PRESETS=[
- {k:'12',n:'GK 1/2',gk:'1a',c:GKS['1a'].c,p:{okff:6,free:true,nne:1,ane:true,land:false}},
+ {k:'1',n:'GK 1',gk:'1a',c:GKS['1a'].c,p:{okff:6,free:true,nne:1,ane:true,land:false}},
+ {k:'2',n:'GK 2',gk:'2',c:GKS['2'].c,p:{okff:6,free:false,nne:1,ane:true,land:false}},
  {k:'3',n:'GK 3',gk:'3',c:GKS['3'].c,p:{okff:6,free:true,nne:3,ane:true,land:false}},
  {k:'4',n:'GK 4',gk:'4',c:GKS['4'].c,p:{okff:12,free:true,nne:3,ane:true,land:false}},
  {k:'5',n:'GK 5',gk:'5',c:GKS['5'].c,p:{okff:18,free:true,nne:4,ane:true,land:false}},
@@ -626,7 +628,7 @@ function BwDetail(){
       'oder 0,50 m beidseitig auskragen'));
 }
 function TeileTab({p,setP,gk,teile,setTeile}){
-  const cur=gk==='1a'||gk==='1b'||gk==='2'?'12':gk;
+  const cur=gk==='1a'||gk==='1b'?'1':gk;
   const T=TABLE[gk];
   const tiles=[
     ['Kellergeschoss: tragende Teile',reqFor(gk,'wand','ke')],
@@ -677,7 +679,7 @@ function QuizTab({quiz,setQuiz,startQuiz,answer,next}){
     const ok=a.ok;
     let why;
     if(sonder)why='**'+c.s.n+'** ('+c.s.t+') → **'+c.s.v+'**.';
-    else if(c.kind==='bt'){const T=TABLE[c.gk];why=(c.gk==='1a'||c.gk==='2'?'GK 1/2':GKS[c.gk].n)+': Obergeschoss **'+REQ[T[0]].t+'**, Kellergeschoss **'+REQ[T[1]].t+'**.';}
+    else if(c.kind==='bt'){const T=TABLE[c.gk];why=(c.gk==='1a'?'GK 1':GKS[c.gk].n)+': Obergeschoss **'+REQ[T[0]].t+'**, Kellergeschoss **'+REQ[T[1]].t+'**.';}
     else{const cl=classify(c.p);why=cl.why;}
     fbCard=h('div',{className:'msg '+(ok?'g':'r')},h('div',{style:{fontWeight:800,fontSize:15,marginBottom:3}},ok?'Richtig!':'Leider falsch.'),B(why));
   }
