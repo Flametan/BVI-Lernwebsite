@@ -357,7 +357,7 @@ function createScene(canvas,host,cb){
   function lerpTo(o,k,t,e,dt,sp){const d=t-o[k];if(Math.abs(d)<(e||0.002)){if(o[k]!==t){o[k]=t;dirty=true;}return;}o[k]+=d*ease(dt,sp||9);dirty=true;}
   function frame(now){
     raf=requestAnimationFrame(frame);
-    const dt=Math.min(0.1,(now-last)/1000);last=now;time+=dt;
+    const nw=performance.now();const dt=Math.min(0.1,Math.max(1/120,(nw-last)/1000));last=nw;time+=dt;
     const sec=T.mode==='sec',p=T.p;
     // Stockwerke
     const nf=nFloors(p.okff);let y=0;
@@ -402,6 +402,7 @@ function createScene(canvas,host,cb){
     L.bw._on=sec&&T.bw;L.bw.innerHTML='<b>0,30 m</b> über Bedachung<br>REIM 90 (F90-A-M)';place(L.bw,-6,topY+(hh?1.2:3.4),0,[0,-10]);
     if(dirty||now-lastR>33){if(now-lastR>=30){lastR=now;dirty=false;renderer.render(scene,camera);}}
   }
+  floors.forEach((F,i)=>{F.G=i<nFloors(T.p.okff)?1:0;});
   raf=requestAnimationFrame(frame);
   refreshSec();
   return {
