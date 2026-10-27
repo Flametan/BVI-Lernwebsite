@@ -431,12 +431,12 @@ function createScene(canvas,host,cb){
 const h=React.createElement;
 const {useState,useEffect,useRef,useMemo,useCallback}=React;
 const css=`
-:root{--bg:#0d1522;--pn:#162132;--pn2:#1d2b40;--pn3:#243550;--tx:#eef2f8;--mu:#9aa8bd;--ac:#ffa412;--ok:#35d07f;--bad:#ff6a4d;--ln:rgba(255,255,255,.09)}
+:root{--bg:#0d1522;--pn:var(--card,#162132);--pn2:var(--soft,#1d2b40);--pn3:var(--line,#243550);--tx:var(--ink,#eef2f8);--mu:var(--mute,#9aa8bd);--ac:var(--or,#ffa412);--ok:#35d07f;--bad:#ff6a4d;--ln:var(--line,rgba(255,255,255,.09))}
 body{background:var(--bg);color:var(--tx);-webkit-tap-highlight-color:transparent}
 button{font-family:inherit}
 .app{display:flex;flex-direction:column;height:100%;height:100dvh}
-.stage{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:linear-gradient(180deg,#2c4a7a 0%,#3d6396 38%,#86a9c7 78%,#b6c8d4 100%)}
-.stage.sec{background:linear-gradient(180deg,#16233a 0%,#22375a 70%,#2d4670 100%)}
+.stage{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:var(--bg)}
+.stage.sec{background:var(--bg)}
 .stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;touch-action:none}
 .stage canvas:active{cursor:grabbing}
 .lbls{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:2}
@@ -473,7 +473,7 @@ p{margin:0 0 9px;line-height:1.45;font-size:14.5px}
 .ibtn svg{width:20px;height:20px}
 .hint{position:absolute;left:50%;transform:translateX(-50%);bottom:8px;width:max-content;max-width:calc(100% - 20px);text-align:center;font-size:11.5px;color:#e7edf7;pointer-events:none;z-index:4;background:rgba(13,21,34,.62);border-radius:10px;padding:4px 10px;line-height:1.3}
 .slegend{position:absolute;left:10px;top:10px;right:64px;display:flex;flex-wrap:wrap;gap:5px;z-index:4;pointer-events:none}
-.sl{display:flex;align-items:center;gap:6px;background:rgba(13,21,34,.78);border-radius:9px;padding:4px 8px;font-size:11.5px;font-weight:700;backdrop-filter:blur(4px)}
+.sl{display:flex;align-items:center;gap:6px;color:#fff;background:rgba(13,21,34,.78);border-radius:9px;padding:4px 8px;font-size:11.5px;font-weight:700;backdrop-filter:blur(4px)}
 .sl i{width:12px;height:12px;border-radius:4px;display:block}
 .seg{display:flex;background:var(--pn2);border-radius:14px;padding:4px;gap:4px;margin-bottom:8px;border:1px solid var(--ln)}
 .seg button{flex:1;min-height:44px;border:0;border-radius:11px;background:transparent;color:var(--mu);font:700 14px inherit;font-family:inherit;cursor:pointer;padding:0 6px}

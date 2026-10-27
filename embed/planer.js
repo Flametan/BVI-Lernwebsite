@@ -506,12 +506,13 @@ function simplify(pts){const o=[pts[0]];for(let i=1;i<pts.length-1;i++){const a=
 function createScene(canvas,host,cb){
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'default'});
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
-  const scene=new THREE.Scene();scene.background=new THREE.Color(0x0c1424);
+  const bgCol=()=>{try{return new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#0d1522');}catch(e){return new THREE.Color(0x0d1522);}};const scene=new THREE.Scene();scene.background=bgCol();
   const camera=new THREE.PerspectiveCamera(36,1,2,400);
   scene.add(new THREE.HemisphereLight(0xe3ebff,0x3a4259,1.0));
   const sun=new THREE.DirectionalLight(0xfff0dc,0.8);sun.position.set(-18,40,24);scene.add(sun);
   const planG=new THREE.Group(),lineG=new THREE.Group(),issG=new THREE.Group(),markG=new THREE.Group(),ovl=new THREE.Group(),perG=new THREE.Group();
   scene.add(planG,lineG,issG,markG,ovl,perG);
+  window.addEventListener('embtheme',()=>{scene.background=bgCol();try{S.dirty=true;}catch(e){}});
   const S={plan:null,A:null,W:40,H:18,tool:'view',sub:0,snap:1,locked:false,showLines:true,showIssues:true,dirty:true,aspect:1,marks:[],reveal:null,sel:null,time:0,evac:null,labels:true};
   const cam={theta:-0.32,phi:0.78,zoom:1,tx:0,tz:0};let goal=null;
   const dashMats={};
@@ -946,7 +947,7 @@ function rauchEdges(p,e0){ // Kanten quer über die Flurbreite
   return out;}
 
 const css=`
-:root{--bg:#0c1424;--pn:#141f33;--pn2:#1b2a42;--tx:#eef2f8;--mu:#9aa9c0;--ac:#ffa412;--ok:#35d07f;--bad:#ff5a47;--ln:rgba(255,255,255,.09);--blue:#6ea8ff}
+:root{--bg:#0c1424;--pn:var(--card,#141f33);--pn2:var(--soft,#1b2a42);--tx:var(--ink,#eef2f8);--mu:var(--mute,#9aa9c0);--ac:var(--or,#ffa412);--ok:#35d07f;--bad:#ff5a47;--ln:var(--line,rgba(255,255,255,.09));--blue:#6ea8ff}
 body{background:var(--bg);color:var(--tx);-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 .app{display:flex;flex-direction:column;height:100%;height:100dvh}
 .left{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;min-width:0}
@@ -1000,7 +1001,7 @@ p{margin:0 0 10px;line-height:1.45;font-size:14.5px}
 .rb{width:40px;height:40px;border-radius:14px;border:0;background:rgba(12,20,36,.78);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(5px);box-shadow:0 2px 10px rgba(0,0,0,.35);padding:0}
 .rb.on{background:var(--ac);color:#241503}
 .rb:disabled{opacity:.4}
-.chip{background:rgba(12,20,36,.78);backdrop-filter:blur(5px);border-radius:12px;padding:7px 11px;font-size:13px;font-weight:700;line-height:1.2;box-shadow:0 2px 10px rgba(0,0,0,.35);max-width:100%}
+.chip{color:#fff;background:rgba(12,20,36,.78);backdrop-filter:blur(5px);border-radius:12px;padding:7px 11px;font-size:13px;font-weight:700;line-height:1.2;box-shadow:0 2px 10px rgba(0,0,0,.35);max-width:100%}
 .chip small{display:block;font-weight:500;color:var(--mu);font-size:11.5px}
 .chip.tk{border:1.5px solid var(--ac);cursor:pointer}
 .score{display:flex;align-items:center;gap:9px;background:rgba(12,20,36,.82);backdrop-filter:blur(5px);border-radius:16px;padding:7px 12px 7px 8px;font-weight:800;font-size:14px;cursor:pointer;border:0;color:#fff;font-family:inherit;box-shadow:0 2px 10px rgba(0,0,0,.35);min-height:44px}

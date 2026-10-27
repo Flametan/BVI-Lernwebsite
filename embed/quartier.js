@@ -619,14 +619,11 @@ function rng(seed){let s=seed;return()=>{s=(s*1664525+1013904223)%4294967296;ret
 function createScene(canvas,cb){
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'default'});
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
-  const scene=new THREE.Scene();const SKY=0xcfe6f7;scene.background=new THREE.Color(SKY);scene.fog=new THREE.Fog(SKY,140,330);
+  const bgCol=()=>{try{return new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#0d1522');}catch(e){return new THREE.Color(0x0d1522);}};const scene=new THREE.Scene();scene.background=bgCol();scene.fog=new THREE.Fog(bgCol(),140,330);window.addEventListener('embtheme',()=>{const c=bgCol();scene.background=c;scene.fog.color.copy(c);});
   const camera=new THREE.PerspectiveCamera(38,1,0.5,600);
   scene.add(new THREE.HemisphereLight(0xeaf4ff,0x8a9a78,1.0));
   const sun=new THREE.DirectionalLight(0xfff1d6,0.9);sun.position.set(-40,70,50);scene.add(sun);
   // Himmel
-  { const g=new THREE.SphereGeometry(420,16,10),cols=[],p=g.attributes.position,top=new THREE.Color(0x6fb2ec),hor=new THREE.Color(SKY);
-    for(let i=0;i<p.count;i++){const y=p.getY(i)/420;const c=hor.clone().lerp(top,clamp((y+0.05)*1.6,0,1));cols.push(c.r,c.g,c.b);}
-    g.setAttribute('color',new THREE.Float32BufferAttribute(cols,3));scene.add(new THREE.Mesh(g,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.BackSide,fog:false,depthWrite:false})));}
   const Lm=(c,o)=>new THREE.MeshLambertMaterial(Object.assign({color:c},o||{}));
   const addBox=(w,hh,d,x,y,z,mat,par)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,hh,d),mat);m.position.set(x,y,z);(par||scene).add(m);return m;};
   // Boden
@@ -769,7 +766,7 @@ function createScene(canvas,cb){
 /* ===== Oberflaeche: Stil + kleine Bausteine ===== */
 const {useState,useEffect,useRef,useMemo,useCallback}=React;
 const CSS=`
-:root{--bg:#0c1320;--p:#131c2d;--p2:#1a2740;--p3:#233250;--t:#eaf0fa;--m:#9aabc7;--acc:#ffa412;--line:rgba(255,255,255,.09);--E:#ff7a4d;--A:#ffd23f;--R:#3ddc84;--L:#4cc3ff;--bad:#ff6b6b}
+:root{--bg:#0c1320;--p:var(--card,#131c2d);--p2:var(--soft,#1a2740);--p3:var(--line,#233250);--t:var(--ink,#eaf0fa);--m:var(--mute,#9aabc7);--acc:var(--or,#ffa412);--line:rgba(255,255,255,.09);--E:#ff7a4d;--A:#ffd23f;--R:#3ddc84;--L:#4cc3ff;--bad:#ff6b6b}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--t);font-size:16px;line-height:1.4}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
@@ -878,9 +875,9 @@ p{margin:0 0 8px}
 .gb button.on{opacity:1;border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.2)}
 .gb button.good{opacity:1;border-color:#fff;box-shadow:0 0 0 3px var(--R)}
 .gb button.bad{opacity:.45}
-.zcard{background:linear-gradient(160deg,#2b3d63,#1d2b49);border:2px solid rgba(255,255,255,.18);border-radius:18px;padding:16px 16px;margin:8px 0 10px;font-size:19px;font-weight:800;text-align:center;min-height:84px;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;cursor:grab;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.zcard{background:var(--p2);color:var(--t);border:2px solid var(--line);border-radius:18px;padding:16px 16px;margin:8px 0 10px;font-size:19px;font-weight:800;text-align:center;min-height:84px;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;cursor:grab;box-shadow:0 6px 16px rgba(0,0,0,.35)}
 .zcard.drag{opacity:.35}
-.ghost{position:fixed;left:0;top:0;z-index:99;pointer-events:none;background:linear-gradient(160deg,#3a5388,#26396a);border:2px solid var(--acc);border-radius:16px;padding:12px 16px;font-weight:800;font-size:17px;max-width:260px;text-align:center;box-shadow:0 10px 28px rgba(0,0,0,.5)}
+.ghost{position:fixed;left:0;top:0;z-index:99;pointer-events:none;color:var(--t);background:var(--p3);border:2px solid var(--acc);border-radius:16px;padding:12px 16px;font-weight:800;font-size:17px;max-width:260px;text-align:center;box-shadow:0 10px 28px rgba(0,0,0,.5)}
 .vchip{min-height:46px;padding:4px 12px;border-radius:12px;background:var(--p2);font-weight:800;font-size:14.5px;border:2px solid transparent;flex:1 1 auto}
 .vchip.hov{border-color:var(--acc);background:var(--p3)}
 .vchip.good{background:#14572f;border-color:var(--R)}.vchip.bad{background:#6b2222;border-color:var(--bad)}
