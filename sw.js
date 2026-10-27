@@ -1,4 +1,4 @@
-const APP_VERSION = '3.0.1'; // keep in sync with js/version.js
+const APP_VERSION = '3.0.2'; // keep in sync with js/version.js
 const CACHE = 'bvi-v' + APP_VERSION;
 const PRECACHE = [
   './',
@@ -27,6 +27,16 @@ const PRECACHE = [
   './embed/embed-sync.js',
   './embed/vb-lernen.html',
   './embed/vb-lernstoff.js',
+  './embed/haus.html',
+  './embed/haus.js',
+  './embed/gk.html',
+  './embed/gk.js',
+  './embed/planer.html',
+  './embed/planer.js',
+  './embed/quartier.html',
+  './embed/quartier.js',
+  './embed/lib/react.min.js',
+  './embed/lib/react-dom.min.js',
   './js/three.min.js',
   './js/jsqr.min.js',
   './js/version.js',
