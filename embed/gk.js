@@ -96,7 +96,7 @@ function explain(gk,part,zone){
   return {title:nm+' · '+zn.replace('im ','').replace('geschoss','geschoss'),req:r,
     text:'**'+PARTS[part].pl+'** '+zn+' bei **'+rs+'**: **'+r.t+'**.'+
      ' Zum Vergleich: Kellergeschoss '+RL(REQ[row[1]])+', Obergeschoss '+RL(REQ[row[0]])+'.'+
-     (zone==='ke'?' (Vereinfachung: die Decke über dem Keller zählt hier zum Kellergeschoss.)':'')+(gk==='2'&&zone==='og'?' **Hinweis:** Die Tabelle der Lernseite nennt für GK 1/2 im Obergeschoss „keine Anforderung“. Nach **§ 27 Abs. 1 BauO NRW 2018** gilt aber **feuerhemmend in GK 2 und 3**; nur in GK 1 gibt es dort keine Anforderung.':'')};
+     (zone==='ke'?' (Vereinfachung: die Decke über dem Keller zählt hier zum Kellergeschoss.)':'')+((gk==='1a'||gk==='1b')&&zone==='og'&&(part==='wand'||part==='stuetze')?' Die Übungsmatrix (Seite 133) nennt für GK 1 hier **„ausreichend lange Standsicherheit“**, also keine Feuerwiderstandsklasse.':'')+(gk==='2'&&zone==='og'?' **Hinweis:** Die Übungsmatrix (Seite 133) und **§ 27 Abs. 1 BauO NRW 2018** nennen für GK 2 **feuerhemmend**; nur in GK 1 gibt es dort keine F-Klasse. (Die ältere Lernseiten-Tabelle „GK 1/2: keine Anforderung“ weicht für GK 2 ab.)':'')};
 }
 /* Sonderbau-Check (Abschnitt 03) */
 const SONDER=[
@@ -559,6 +559,7 @@ const ICON={
  bau:SV({},[h('path',{key:1,d:'M3 21V9l7-5 7 5v12'}),h('path',{key:2,d:'M17 21V12h4v9M7 21v-5h4v5M7 11h.01M12 11h.01'})]),
  teile:SV({},[h('path',{key:1,d:'M12 3l9 5-9 5-9-5z'}),h('path',{key:2,d:'M3 13l9 5 9-5M3 17.5l9 5 9-5'})]),
  quiz:SV({},[h('circle',{key:1,cx:12,cy:12,r:9}),h('path',{key:2,d:'M8.5 12.5l2.5 2.5 4.5-5'})]),
+ matrix:SV({},[h('rect',{key:1,x:3,y:4,width:18,height:16,rx:2}),h('path',{key:2,d:'M3 10h18M3 15h18M9 4v16M15 4v16'})]),
  reset:SV({},[h('path',{key:1,d:'M3 12a9 9 0 1 0 3-6.7'}),h('path',{key:2,d:'M3 4v5h5'})])};
 function Star({on}){return h('svg',{viewBox:'0 0 24 24'},h('path',{d:'M12 2.5l2.9 6.2 6.8.8-5 4.7 1.3 6.7L12 17.6 6 20.9l1.3-6.7-5-4.7 6.8-.8z',fill:on?'#ffc83d':'#2c3a50',stroke:on?'#ffa412':'#3a4a63',strokeWidth:1.2,strokeLinejoin:'round'}));}
 function useWide(){const [w,s]=useState(()=>window.matchMedia('(min-width:900px)').matches);
@@ -707,6 +708,99 @@ function Stage({onReady,onPick,children,sec}){
   useEffect(()=>{const sc=createScene(cv.current,hostRef.current,{onPick:o=>onPick.current&&onPick.current(o)});onReady(sc);window.__gk=sc;return()=>sc.dispose();},[]);
   return h('div',{className:'stage'+(sec?' sec':''),ref:hostRef},h('canvas',{ref:cv}),children);
 }
+/* ---------- Matrix: Feuerwiderstand je Gebäudeklasse (Tabelle Seite 133, Lösung der Übungsmatrix) ---------- */
+const XW='Wohngebäude: keine / sonst: feuerhemmend',XKA='keine Anforderung',XFH='feuerhemmend',XHFH='hochfeuerhemmend',XFB='feuerbeständig';
+const MX=[
+ ['Nutzungseinheit','Tragende Wände',['ausreichend lange Standsicherheit',XFH,XFH,XHFH,XFB]],
+ ['Nutzungseinheit','Decken',[XKA,XFH,XFH,XHFH,XFB]],
+ ['Nutzungseinheit','Trennwand',[XW,XW,XFH,XHFH,XFB]],
+ ['Keller','Tragende Wände (Keller)',[XFH,XFH,XFB,XFB,XFB]],
+ ['Keller','Decken (Keller)',[XFH,XFH,XFB,XFB,XFB]],
+ ['Keller','Trennwand (Keller)',[XW,XW,XFB,XFB,XFB]],
+ ['Brandwand','Brandwand',[XKA,XKA,XKA,XKA,'feuerbeständig + A u. mechanisch']],
+ ['Brandwand','Wand anstelle Brandwand',[XHFH,XHFH,XHFH,'hochfeuerhemmend + M',XKA]],
+ ['Vertikale Wege','Aufzugfahrschacht',[XKA,XKA,XFH,XHFH,'feuerbeständig + A']],
+ ['Vertikale Wege','Notwendiger Treppenraum',[XKA,XKA,XFH,'hochfeuerhemmend + M','Bauart Brandwand']],
+ ['Rettungswege','Notwendiger Flur',[XKA,XKA,XFH,XFH,XFH]],
+ ['Rettungswege','Notwendiger Flur (Keller)',[XFH,XFH,XFB,XFB,XFB]]];
+const MXV={ /* Farbe und Kurzzeichen wie in der Übungsmatrix */
+ 'keine Anforderung':{o:0,bg:'#ffffff',fg:'#1a2233',z:'–',n:'keine Anforderung'},
+ 'ausreichend lange Standsicherheit':{o:1,bg:'#ffffff',fg:'#1a2233',z:'Stand­sicherheit',n:'ausreichend lange Standsicherheit'},
+ [XW]:{o:2,bg:'linear-gradient(135deg,#ffffff 50%,#ffff00 50%)',fg:'#1a2233',z:'Wohn. – / sonst F30',n:XW},
+ [XFH]:{o:3,bg:'#ffff00',fg:'#1a2233',z:'F30',n:XFH},
+ [XHFH]:{o:4,bg:'#ffc000',fg:'#1a2233',z:'F60',n:XHFH},
+ 'hochfeuerhemmend + M':{o:5,bg:'#7030a0',fg:'#ffffff',z:'F60 + M',n:'hochfeuerhemmend + M'},
+ [XFB]:{o:6,bg:'#ff0000',fg:'#ffffff',z:'F90',n:XFB},
+ 'feuerbeständig + A':{o:7,bg:'#ff0000',fg:'#ffffff',z:'F90 + A',n:'feuerbeständig + A'},
+ 'feuerbeständig + A u. mechanisch':{o:8,bg:'#7030a0',fg:'#ffffff',z:'F90 + A + M',n:'feuerbeständig + A u. mechanisch'},
+ 'Bauart Brandwand':{o:9,bg:'#7030a0',fg:'#ffffff',z:'Brandwand-Bauart',n:'Bauart Brandwand'}};
+const MXOPT=Object.keys(MXV).sort((a,b)=>MXV[a].o-MXV[b].o);
+const MXBER=['Nutzungseinheit','Keller','Brandwand','Vertikale Wege','Rettungswege'];
+const MXBN={'Nutzungseinheit':'Nutzungseinheit (oberirdisch)','Keller':'Keller','Brandwand':'Brandwand','Vertikale Wege':'Vertikale Wege','Rettungswege':'Rettungswege'};
+const MXGK=['GK 1','GK 2','GK 3','GK 4','GK 5'];
+function Chip({v,full}){const m=MXV[v];return h('span',{className:'mxc',style:{background:m.bg,color:m.fg}},full?m.n:m.z);}
+function MxLegend(){return h('div',{className:'mxlg'},
+  h('div',{className:'mxlr'},[['keine Anforderung','keine Anforderung'],[XFH,'F30 feuerhemmend'],[XHFH,'F60 hochfeuerhemmend'],[XFB,'F90 feuerbeständig'],['hochfeuerhemmend + M','Sonderanforderung']].map(a=>h('span',{key:a[0],className:'mxc',style:{background:MXV[a[0]].bg,color:MXV[a[0]].fg}},a[1]))),
+  h('div',{className:'mu',style:{fontSize:12.5}},'A = aus nichtbrennbaren Baustoffen · M = auch unter zusätzlicher mechanischer Beanspruchung. Quelle: Tabelle Seite 133 (Lösung der Übungsmatrix).'));}
+function MxByGK({gi,setGi}){
+  const groups={};MX.forEach(r=>{const v=r[2][gi];groups[v]=groups[v]||{};(groups[v][r[0]]=groups[v][r[0]]||[]).push(r[1]);});
+  const vals=Object.keys(groups).sort((a,b)=>MXV[a].o-MXV[b].o);
+  return h('div',null,
+    h('div',{className:'chips',style:{marginBottom:10}},MXGK.map((g,i)=>h('button',{key:g,className:'chp f'+(gi===i?' on':''),onClick:()=>setGi(i)},g))),
+    vals.map(v=>h('div',{key:v,className:'card mxg'},h('div',{className:'mxh'},h(Chip,{v,full:true})),
+      MXBER.filter(b=>groups[v][b]).map(b=>h('div',{key:b,className:'mxrow'},h('b',null,MXBN[b]),h('span',null,groups[v][b].join(', ').replace(/ \(Keller\)/g,'')))))));
+}
+function MxByPart(){
+  const out=[];
+  MXBER.forEach(b=>{const rows=MX.filter(r=>r[0]===b),merged=[];
+    rows.forEach(r=>{const k=r[2].join('|'),m=merged.find(x=>x.k===k);if(m)m.n.push(r[1]);else merged.push({k,n:[r[1]],v:r[2]});});
+    out.push(h('h3',{key:'h'+b,style:{margin:'14px 0 6px'}},MXBN[b]));
+    merged.forEach((m,i)=>out.push(h('div',{key:b+i,className:'card mxp'},h('div',{className:'mxn'},m.n.join(' · ')),
+      h('div',{className:'mxcells'},m.v.map((v,gi)=>h('div',{key:gi,className:'mxcell',style:{background:MXV[v].bg,color:MXV[v].fg}},h('small',null,MXGK[gi]),h('b',null,MXV[v].z)))),
+      h('div',{className:'mu',style:{fontSize:12,marginTop:6}},[...new Set(m.v)].map(v=>MXV[v].n).join(' · ')))));});
+  return h('div',null,out);
+}
+function MxPractice(){
+  const [gi,setGi]=useState(0);
+  const [ans,setAns]=useState({});
+  const [chk,setChk]=useState(false);
+  const key=(g,r)=>g+'-'+r;
+  const okOf=(g,r)=>ans[key(g,r)]===MX[r][2][g];
+  let total=0;MXGK.forEach((_,g)=>MX.forEach((_,r)=>{if(okOf(g,r))total++;}));
+  const perGK=MXGK.map((_,g)=>MX.reduce((n,_,r)=>n+(okOf(g,r)?1:0),0));
+  const answered=MXGK.map((_,g)=>MX.reduce((n,_,r)=>n+(ans[key(g,r)]?1:0),0));
+  return h('div',null,
+    h('div',{className:'chips',style:{marginBottom:8}},MXGK.map((g,i)=>h('button',{key:g,className:'chp f'+(gi===i?' on':''),onClick:()=>setGi(i)},g+' · '+(chk?perGK[i]:answered[i])+'/12'))),
+    h('div',{className:'mu',style:{marginBottom:8}},chk?'Auswertung: '+total+' von 60 richtig.':'Wähle für jedes Bauteil die Anforderung bei '+MXGK[gi]+'. Zum Prüfen unten tippen.'),
+    MXBER.map(b=>h('div',{key:b},h('h3',{style:{margin:'12px 0 6px'}},MXBN[b]),
+      MX.map((r,ri)=>r[0]!==b?null:h('div',{key:ri,className:'card mxq'},
+        h('label',null,h('span',{className:'mxn'},r[1]),
+          h('select',{value:ans[key(gi,ri)]||'',onChange:e=>{const v=e.target.value;setChk(false);setAns(a=>Object.assign({},a,{[key(gi,ri)]:v}));},style:ans[key(gi,ri)]?{background:MXV[ans[key(gi,ri)]].bg,color:MXV[ans[key(gi,ri)]].fg}:null},
+            h('option',{value:''},'Auswählen …'),MXOPT.map(o=>h('option',{key:o,value:o,style:{background:'#fff',color:'#1a2233'}},o)))),
+        chk&&ans[key(gi,ri)]?h('div',{className:'mxfb '+(okOf(gi,ri)?'ok':'bd')},okOf(gi,ri)?'richtig':'falsch, richtig ist: '+r[2][gi]):chk?h('div',{className:'mxfb bd'},'offen, richtig ist: '+r[2][gi]):null)))),
+    h('div',{className:'row2'},h('button',{className:'btn',onClick:()=>{setAns({});setChk(false);}},'Neu starten'),h('button',{className:'btn pri',onClick:()=>setChk(true)},'Prüfen')));
+}
+function MatrixTab(){
+  const [mode,setMode]=useState('gk');const [gi,setGi]=useState(2);
+  return h('div',{className:'mxwrap'},
+    h('div',{className:'seg sm'},[['gk','Nach Gebäudeklasse'],['bt','Nach Bauteil'],['ue','Üben']].map(a=>h('button',{key:a[0],className:mode===a[0]?'on':'',onClick:()=>setMode(a[0])},a[1]))),
+    mode!=='ue'?h(MxLegend):null,
+    mode==='gk'?h(MxByGK,{gi,setGi}):mode==='bt'?h(MxByPart):h(MxPractice));
+}
+const MXCSS=`
+.app.mx>:not(.panel){display:none}
+.app.mx .panel{height:100%;border-radius:0;box-shadow:none;width:100%;max-width:880px;margin:0 auto;flex:1 1 auto}
+.mxc{display:inline-block;padding:4px 10px;border-radius:999px;font-weight:800;font-size:13px;line-height:1.25;border:1px solid rgba(0,0,0,.25)}
+.mxlg{margin-bottom:10px}.mxlr{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.mxg .mxh{margin-bottom:8px}.mxrow{display:flex;flex-direction:column;gap:1px;padding:6px 0;border-top:1px solid var(--ln)}.mxrow b{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mu)}.mxrow span{font-size:15.5px;font-weight:600}
+.mxn{font-weight:800;font-size:15px;display:block;margin-bottom:6px}
+.mxcells{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.mxcell{border-radius:10px;padding:5px 3px;text-align:center;border:1px solid rgba(0,0,0,.25);min-height:54px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.mxcell small{font-size:10px;font-weight:700;opacity:.75}.mxcell b{font-size:11.5px;line-height:1.15;overflow-wrap:anywhere}
+.mxq label{display:flex;flex-direction:column;gap:6px}.mxq select{min-height:46px;border-radius:12px;border:2px solid var(--ln);background:var(--pn);color:var(--tx);font:600 15px inherit;font-family:inherit;padding:0 10px;width:100%}
+.mxfb{margin-top:6px;font-size:13px;font-weight:700}.mxfb.ok{color:#5fd38a}.mxfb.bd{color:#ff8a8a}
+.row2{display:flex;gap:10px;justify-content:flex-end;margin:14px 0 20px;flex-wrap:wrap}`;
+
 /* ---------- App ---------- */
 function App(){
   const [tab,setTab]=useState('bau');
@@ -759,9 +853,10 @@ function App(){
   let body;
   if(tab==='bau')body=h(BauTab,{p,setP,cl,wide,seg,setSeg,gotoTeile:()=>setTab('teile')});
   else if(tab==='teile')body=h(TeileTab,{p,setP,gk:cl.gk,teile,setTeile});
+  else if(tab==='matrix')body=h(MatrixTab);
   else body=h(QuizTab,{quiz,setQuiz,startQuiz,answer,next});
-  const tabs=h('div',{className:'tabs',role:'tablist'},[['bau','Baukasten'],['teile','Bauteile'],['quiz','Prüf-Quiz']].map(a=>h('button',{key:a[0],role:'tab','aria-selected':tab===a[0],className:'tab'+(tab===a[0]?' on':''),onClick:()=>setTab(a[0])},ICON[a[0]],a[1])));
-  return h('div',{className:'app'},stage,h('div',{className:'panel'},tabs,h('div',{className:'pbody',key:tab+(tab==='quiz'&&quiz?quiz.type+quiz.i+quiz.phase:'')},body)));
+  const tabs=h('div',{className:'tabs',role:'tablist'},[['bau','Baukasten'],['teile','Bauteile'],['matrix','Matrix'],['quiz','Prüf-Quiz']].map(a=>h('button',{key:a[0],role:'tab','aria-selected':tab===a[0],className:'tab'+(tab===a[0]?' on':''),onClick:()=>setTab(a[0])},ICON[a[0]],a[1])));
+  return h('div',{className:'app'+(tab==='matrix'?' mx':'')},stage,h('div',{className:'panel'},tabs,h('div',{className:'pbody',key:tab+(tab==='quiz'&&quiz?quiz.type+quiz.i+quiz.phase:'')},body)));
 }
-const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
+const st=document.createElement('style');st.textContent=css+MXCSS;document.head.appendChild(st);
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
