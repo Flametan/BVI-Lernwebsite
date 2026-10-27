@@ -49,6 +49,7 @@ const DUELL=(function(){
     card(`<div class="pz-lbl"><span>Einsatzfahrt-Duell</span><b>2 Spieler</b></div><div class="pz-qt">Wer ist schneller am Einsatzort?</div>
       <div class="pz-fb">Ihr spielt live dieselben Prüfungsfragen auf derselben Strecke und seht, wo der andere gerade ist. Verbunden werdet ihr direkt per QR-Code, ohne Anmeldung und ohne Server.</div>
       ${msg?`<div class="pz-fb r"><b>${esc(msg)}</b></div>`:''}
+      <div class="pz-warn" role="note"><b>Funktioniert nicht im Schul-WLAN.</b> Das Netz der Schule (und andere Gast- oder Firmennetze) sperrt die Verbindung zwischen zwei Geräten. Nutzt stattdessen <b>mobile Daten</b> (WLAN am Gerät ausschalten, Hilfsdienst unten eingeschaltet lassen; klappt nicht in jedem Mobilfunknetz), einen <b>Hotspot vom Handy</b> (beide Geräte darin) oder euer <b>WLAN zu Hause</b>.</div>
       <label class="pz-fld">Dein Name<input class="pz-in" id="dn" maxlength="14" value="${esc(me)}" placeholder="z. B. ${esc(nextName())}"></label><div class="pz-fb" id="dnx"><b>${egg(me)?'Du Schlawiner ;)':''}</b></div>
       <label class="pz-chk"><input type="checkbox" id="ds" ${stun?'checked':''}><span>Hilfsdienst für Mobilfunk nutzen (nötig, wenn ihr nicht im selben WLAN seid)</span></label>
       <div class="pz-fb"><b>Datenschutz:</b> Dein Gegner sieht beim Verbinden deine IP-Adresse. Mit Hilfsdienst erfährt auch Google (STUN-Server) kurz deine IP-Adresse; Inhalte werden dort nicht übertragen. Ohne Hilfsdienst klappt die Verbindung nur im selben WLAN.</div>
