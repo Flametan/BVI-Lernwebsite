@@ -125,7 +125,7 @@ $('#tabs').innerHTML=TABS.map(t=>`<button class="tab" role="tab" data-tab="${t[0
 const FLAME='<path d="M12 2C12.5 7 7 9.5 7 15a5 5 0 0 0 10 0c0-2.6-1.6-4.4-2.7-6.2-.9 1.6-1.9 1.9-2.8-.4-.4-1.2-.4-3.4.5-6.4z" fill="currentColor"/>';
 const L={baustoffe:{lvl:1},etk:{cls:2,t:0,play:null},raeume:{g:{},chk:false},nutzung:{sc:'a'},ziele:{seen:{},cur:null}};
 const labHead=(t,sub)=>`<div class="card pad lab"><h3 style="font-size:17px;margin-bottom:4px">${t}</h3><p class="lead" style="margin-bottom:10px">${sub}</p>`;
-const HY=[['nichtbrennbar','nicht\u00ADbrenn\u00ADbar'],['schwerentflammbar','schwer\u00ADent\u00ADflamm\u00ADbar'],['normalentflammbar','normal\u00ADent\u00ADflamm\u00ADbar'],['leichtentflammbar','leicht\u00ADent\u00ADflamm\u00ADbar'],['Entstehungsbrand','Ent\u00ADste\u00ADhungs\u00ADbrand'],['entwickelnder','ent\u00ADwi\u00ADckelnder'],['hochfeuerhemmend','hoch\u00ADfeuer\u00ADhem\u00ADmend'],['feuerhemmend','feuer\u00ADhem\u00ADmend'],['feuerbeständig','feuer\u00ADbestän\u00ADdig'],['Feuerwiderstand','Feuer\u00ADwider\u00ADstand']];
+const HY=[['nichtbrennbar','nicht\u00ADbrenn\u00ADbar'],['schwerentflammbar','schwer\u00ADent\u00ADflamm\u00ADbar'],['normalentflammbar','normal\u00ADent\u00ADflamm\u00ADbar'],['leichtentflammbar','leicht\u00ADent\u00ADflamm\u00ADbar'],['Entstehungsbrand','Ent\u00ADste\u00ADhungs\u00ADbrand'],['entwickelnder','ent\u00ADwi\u00ADckelnder'],['hochfeuerhemmend','hoch\u00ADfeuer\u00ADhem\u00ADmend'],['feuerhemmend','feuer\u00ADhem\u00ADmend'],['feuerbeständig','feuer\u00ADbestän\u00ADdig'],['hochfeuerbeständig','hoch\u00ADfeuer\u00ADbestän\u00ADdig'],['Feuerwiderstand','Feuer\u00ADwider\u00ADstand']];
 const hy=t=>HY.reduce((x,h)=>x.split(h[0]).join(h[1]),t);
 /* Baustoffe: Prüfstand mit Brandgröße */
 const BS=[['nichtbrennbar',3,'Auch beim Vollbrand kein Beitrag zum Brand.'],['schwerentflammbar',2,'Hält bis zum sich entwickelnden Brand: nur begrenzter Beitrag.'],['normalentflammbar',1,'Hält nur beim Entstehungsbrand.'],['leichtentflammbar',0,'Hält keinem Brand stand. Nur unter besonderen Bedingungen zulässig.']];
@@ -139,7 +139,7 @@ function labBaustoffe(){
 }
 const b2=v=>v===1?'Beim Entstehungsbrand genügt „normalentflammbar“. Nur leichtentflammbare Stoffe tragen hier schon deutlich bei.':v===2?'Beim sich entwickelnden Brand müssen Baustoffe mindestens schwerentflammbar sein.':'Beim Vollbrand bleibt nur der nichtbrennbare Baustoff passiv.';
 /* Standsicherheit: Brandofen mit Zeitregler */
-const CL=[['feuerhemmend',30],['hochfeuerhemmend',60],['feuerbeständig',90],['Feuerwiderstand 120',120]];
+const CL=[['feuerhemmend',30],['hochfeuerhemmend',60],['feuerbeständig',90],['hochfeuerbeständig',120]];
 const etkT=t=>345*Math.log10(8*t+1)+20;
 function ofenVis(){
   const c=CL[L.etk.cls],t=L.etk.t,temp=etkT(t),fail=t>c[1],over=Math.max(0,Math.min(1,(t-c[1])/25)),heat=Math.min(1,(temp-20)/1030);

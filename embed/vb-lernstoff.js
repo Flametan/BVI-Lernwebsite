@@ -52,9 +52,9 @@ const VBL = { themen: [
 { id: 'standsicherheit', kurz: 'Standsicherheit', titel: 'Standsicherheit im Brandfall', quelle: 'MVV TB, Standsicherheit im Brandfall (DIN 4102-2)', extra: 'etk',
   farben: ['#e9b949','#e8892b','#d9482b','#a8201a'],
   def: ['Grundsatz', 'Um die Standsicherheit nach § 12 MBO zu erfüllen, müssen **tragende Teile** auch unter Brandeinwirkung **über eine bestimmte Zeit standsicher** bleiben. Maßstab ist die **Einheits-Temperaturzeitkurve (ETK)** nach DIN 4102-2. Querschnittsänderungen, Durchdringungen und Verformungen sind zu berücksichtigen.'],
-  merke: '30 – 60 – 90 – 120: feuerhemmend, hochfeuerhemmend, feuerbeständig, Feuerwiderstand 120 Minuten.',
-  blick: [['30', 'Min.', 'feuerhemmend'], ['60', 'Min.', 'hochfeuerhemmend'], ['90', 'Min.', 'feuerbeständig'], ['120', 'Min.', 'Feuerwiderstand mit Raumabschluss']],
-  zusatz: [['Besondere Fälle', 'Für bestimmte Bauteile gelten 90 bzw. 60 Minuten. Bauteile aus brennbaren Baustoffen mit nichtbrennbarem Dämmstoff in den Hohlräumen und nichtbrennbarer Brandschutzbekleidung: 60 bzw. 90 Minuten. Bei 120 Minuten bestehen tragende und aussteifende Teile aus nichtbrennbaren Baustoffen.']]
+  merke: '30 – 60 – 90 – 120: feuerhemmend, hochfeuerhemmend, feuerbeständig, hochfeuerbeständig.',
+  blick: [['30', 'Min.', 'feuerhemmend'], ['60', 'Min.', 'hochfeuerhemmend'], ['90', 'Min.', 'feuerbeständig'], ['120', 'Min.', 'hochfeuerbeständig']],
+  zusatz: [['Besondere Fälle', 'Für bestimmte Bauteile gelten 90 bzw. 60 Minuten. Bauteile aus brennbaren Baustoffen mit nichtbrennbarem Dämmstoff in den Hohlräumen und nichtbrennbarer Brandschutzbekleidung: 60 bzw. 90 Minuten. Bei 120 Minuten (hochfeuerbeständig, F120) wird Standsicherheit und Raumabschluss verlangt, und tragende und aussteifende Teile bestehen aus nichtbrennbaren Baustoffen.']]
 }
 
 ] };
