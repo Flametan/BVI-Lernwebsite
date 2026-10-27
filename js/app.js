@@ -4120,6 +4120,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.2',ts:'2026-10-27T00:10',items:[
+      'Gebäudeklassen-Baukasten: Neuer Reiter „Matrix“ mit der kompletten Lösung der Übungsmatrix (Tabelle Seite 133, 12 Bauteile × GK 1 bis 5): nach Gebäudeklasse (gleiche Anforderungen zusammengefasst, nach Farbe sortiert), nach Bauteil (gleiche Zeilen zusammengefasst, fünf Farbfelder je Zeile) und zum Üben mit Auswahlfeldern, Auswertung und Punktzahl bis 60',
       'Gebäudeklassen-Baukasten · Bauteile nach BauO NRW 2018 geprüft: Die Decke über dem Keller ist jetzt die Kellerdecke und folgt der Kellerzeile (§ 31 Abs. 2); neu die Decke zum Dachraum mit Schalter „Aufenthaltsräume über dem Dachgeschoss möglich“ (§ 31 Abs. 1, § 29 Abs. 4); Brandwand: Abstand zur Innenecke 5 m (MBO, Lernseite) bzw. 3 m (BauO NRW), bei GK 1 bis 3 bis unter die Dachhaut; Hinweis zu Trennwänden in Wohngebäuden der GK 1 und 2',
       'Gebäudeklassen-Baukasten: GK 1 und GK 2 getrennt – nach § 27 Abs. 1 BauO NRW 2018 sind tragende Teile im Obergeschoss bei GK 2 feuerhemmend (bei GK 1 keine Anforderung), im Keller bei beiden feuerhemmend; bei GK 1 und 2 ist kein notwendiger Treppenraum erforderlich (§ 35 Abs. 1)',
       'Duell: Ein roter Hinweis ganz oben sagt klar, dass das Duell im Schul-WLAN (und in Gast- oder Firmennetzen) nicht funktioniert, und empfiehlt mobile Daten (WLAN aus, Hilfsdienst an), einen Hotspot vom Handy oder das WLAN zu Hause',
