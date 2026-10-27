@@ -2334,6 +2334,12 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .pz-sec2{background:var(--m-raised);color:var(--m-fg);border:0;border-radius:99px;padding:8px 14px;font-family:inherit;font-size:.82rem;cursor:pointer;}
 .pz-sec2:disabled{opacity:.35;}
 .pz-fb{font-size:.86rem;line-height:1.45;color:var(--m-muted);}
+/* Besonders wichtige Merkpunkte auf Lernseiten */
+.key-box{list-style:none;background:color-mix(in srgb,var(--m-accent) 14%,var(--m-card));border:1px solid color-mix(in srgb,var(--m-accent) 55%,transparent);border-left:6px solid var(--m-accent);border-radius:12px;padding:10px 12px;margin:6px 0 10px -4px;line-height:1.5}
+.key-box::marker{content:""}
+.key-box .key-tag{display:inline-block;background:var(--m-accent);color:var(--m-on-accent,#111);font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:2px 9px;margin:0 8px 4px 0}
+.key-box small{display:block;margin-top:6px;font-size:.82rem;color:var(--m-muted);line-height:1.45}
+mark.key-hl{background:var(--m-accent);color:var(--m-on-accent,#111);font-weight:800;border-radius:6px;padding:1px 7px;white-space:nowrap}
 .pz-warn{font-size:.92rem;line-height:1.45;color:var(--m-fg);background:color-mix(in srgb,#d6221e 14%,var(--m-card));border:1px solid color-mix(in srgb,#d6221e 55%,transparent);border-left:6px solid #d6221e;border-radius:12px;padding:12px 14px;}
 .pz-warn b{color:var(--k-ef4444,#d6221e);}
 .pz-fb b{color:var(--m-fg);}.pz-fb.g b{color:var(--pz-ok);}.pz-fb.r b{color:var(--pz-bad);}

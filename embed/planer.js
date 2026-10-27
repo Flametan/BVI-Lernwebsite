@@ -313,14 +313,14 @@ function analyze(p,o){
     {const is=[];let worst=0;fl.forEach(c=>{if(c.rlen>worst)worst=c.rlen;if(c.rlen>30)is.push(iss(c.rmid[0],c.rmid[1],c.name+': Rauchabschnitt '+fm(c.rlen)+' m (max. 30 m)','rauch:'+c.id,{blk:'spot',r:4}));});
      chk('rauch','Rauchabschnitte ≤ 30 m (RS-Türen)','04 · Rettungsweglängen',!is.length,fl.length?'Längster Abschnitt '+fm(worst)+' m':'Kein Flur geplant',is,'Rauchabschnitt-Tür (RS) quer in den Flur setzen, damit jeder Abschnitt höchstens 30 m lang ist.');}
     tuerCheck('04 · Notwendige Flure, Türen');
-    baCheck('05 · Brandabschnitte',b=>({a:1600,s:40}),'Brandabschnitt ≤ 40 m × 40 m (1.600 m²)','Brandwand (REIM 90) einziehen, die den Abschnitt teilt.');
+    baCheck('05 · Brandabschnitte',b=>({a:1600,s:40}),'Brandabschnitt ≤ 40 m × 40 m (1.600 m²)','Brandwand (REI 90-M) einziehen, die den Abschnitt teilt.');
     {const is=[];ecken.forEach((e,i)=>{let m=INF;bws.forEach(s=>{const d=segDist(e[0],e[1],s);if(d<m)m=d;});if(m<5)is.push(iss(e[0],e[1],'Brandwand nur '+fm(m)+' m von der Innenecke (min. 5 m)','eck:'+i,{blk:null,r:3}));});
      chk('eck','Brandwand ≥ 5 m von Innenecken','05 · Brandwände',!is.length,!bws.length?'Keine Brandwand geplant':(!ecken.length?'Grundriss ohne Innenecke':(is.length?'Zu nah an einer Innenecke':'Abstand eingehalten')),is,'Brandwand mindestens 5 m von der Innenecke entfernt anordnen.');}
     {let md=0;plain.forEach(c=>{if(c.dmax+0.5>md)md=c.dmax+0.5;plain.forEach(()=>{});if(c.far>=0)lines.push({pts:pathFrom(c.far),len:c.dmax+0.5,lim:null,bad:false,label:'Rettungsweg',room:c.id});});
      chk('rwl','Rettungsweglänge (Messlinie)','04 · Rettungswege',true,'Längster Weg '+fm(md)+' m bis zum Treppenraum. Für Standardgebäude nennt die Lernseite hier keinen Grenzwert.',[],'','info');}
     {const gk=o.gk,kg=o.kg;const tr=gk<=2?(kg?30:0):gk===3?(kg?90:30):gk===4?(kg?90:60):90;
      const nm=r=>r===0?'keine Anforderung':r===30?'feuerhemmend (F30)':r===60?'hochfeuerhemmend (F60)':'feuerbeständig (F90)';
-     chk('bt','Bauteile GK '+gk+' · '+(kg?'Kellergeschoss':'Obergeschoss'),'05 · Baulicher Brandschutz',true,'Tragende Wände, Stützen, Decken: '+nm(tr)+'. Trennwände mindestens wie das Geschoss, jedoch mind. F30'+(tr>30?' (hier F'+tr+')':'')+'. Treppenraumwände: '+(gk===3?'feuerhemmend (F30)':gk===4?'hochfeuerhemmend, mech. beansprucht (F60-M)':gk===5?'Bauart einer Brandwand':'nach GK')+'. Brandwand: REIM 90 (F90-A-M).',[],'','info');}
+     chk('bt','Bauteile GK '+gk+' · '+(kg?'Kellergeschoss':'Obergeschoss'),'05 · Baulicher Brandschutz',true,'Tragende Wände, Stützen, Decken: '+nm(tr)+'. Trennwände mindestens wie das Geschoss, jedoch mind. F30'+(tr>30?' (hier F'+tr+')':'')+'. Treppenraumwände: '+(gk===3?'feuerhemmend (F30)':gk===4?'hochfeuerhemmend, mech. beansprucht (F60-M)':gk===5?'Bauart einer Brandwand':'nach GK')+'. Brandwand: REI 90-M (F 90-A).',[],'','info');}
   }
   if(p.type==='vk'){
     rw2Check('07 · Rettungswege',comps.filter(c=>c.zone!==2),c=>2,'Jeder Verkaufsraum, Aufenthaltsraum und jede Ladenstraße braucht mindestens zwei voneinander unabhängige Rettungswege (Ausgänge oder Treppenräume).');
@@ -338,7 +338,7 @@ function analyze(p,o){
     {const is=[];let n=0;fl.forEach(c=>{n++;const w=compWidth(c);if(w.w<5){const cc=cxz(w.c);is.push(iss(cc[0],cc[1],c.name+' nur '+w.w+' m breit (mind. 5,00 m)','laden:'+c.id,{blk:'spot',r:3}));}});
      if(gcells.length&&gmin<2){const cc=cxz(gmc);is.push(iss(cc[0],cc[1],'Hauptgang nur '+gmin+' m breit (mind. 2,00 m)','gang',{blk:'spot',r:3}));}
      chk('laden','Ladenstraße ≥ 5,00 m · Hauptgang ≥ 2,00 m','07 · Rettungswegbreiten',!is.length,fl.length?'Schmalste Ladenstraße '+Math.min.apply(null,fl.map(c=>compWidth(c).w))+' m':'Keine Ladenstraße',is,'Flur-Fläche breiter malen (Ladenstraße mind. 5 m), Hauptgänge mind. 2 m.');}
-    baCheck('07 · Brandabschnitte',b=>({a:o.eg?(o.spr?10000:3000):(o.spr?5000:1500)}),o.eg?'Brandabschnitt erdgeschossig ≤ '+(o.spr?'10.000':'3.000')+' m²':'Brandabschnitt je Geschoss ≤ '+(o.spr?'5.000':'1.500')+' m²','Brandwand (REIM 90) einziehen oder Sprinkleranlage einschalten (Reiter Plan).');
+    baCheck('07 · Brandabschnitte',b=>({a:o.eg?(o.spr?10000:3000):(o.spr?5000:1500)}),o.eg?'Brandabschnitt erdgeschossig ≤ '+(o.spr?'10.000':'3.000')+' m²':'Brandabschnitt je Geschoss ≤ '+(o.spr?'5.000':'1.500')+' m²','Brandwand (REI 90-M) einziehen oder Sprinkleranlage einschalten (Reiter Plan).');
     {const big=bcs.some(b=>b.area>3000),need=!(o.eg&&!big);
      chk('spr','Sprinkleranlage','07 · Besondere Einrichtungen',!(need&&!o.spr),need?(o.spr?'Pflicht, vorhanden':'Pflicht, fehlt'):'Ausnahme: erdgeschossig und Brandabschnitt ≤ 3.000 m²',need&&!o.spr?[iss(cen[0],cen[1],'Sprinkleranlage fehlt','spr',{noPos:1})]:[],'Im Reiter Plan Sprinkleranlage einschalten.');}
     chk('einr','Weitere Pflichten (nicht planbar)','07 · Besondere Einrichtungen',true,'BMA mit automatischen Meldern zur Feuerwehr · Rauch- und Wärmeabzug (Verkaufsräume > 50 m², Lager > 200 m², Ladenstraßen) · Wandhydranten Typ F · Brandschutzbeauftragter.',[],'','info');
@@ -642,7 +642,7 @@ function createScene(canvas,host,cb){
       if(c.zone===2){const s=labelSprite('Treppenraum',{fs:24,bg:'rgba(26,110,64,.85)',px:14,lod:8});s.position.set(w2x(c.cx),0.3,w2z(c.cy));s.userData.lab=1;planG.add(s);}});
     A.dg.forEach(q=>{const t=DN[q.d]+(q.width>1&&(q.d===5||q.width>=2)?' · '+q.width+' m':'');const s=labelSprite(t,{fs:24,bg:'rgba(10,16,28,.88)',dot:DCSS[q.d],px:13,lod:13});s.position.set(w2x(q.cx),2.7,w2z(q.cz));s.userData.lab=1;planG.add(s);});
     // Brandwand-Beschriftung
-    if(A.bws.length){const s=labelSprite('REIM 90',{fs:24,bg:'rgba(150,40,25,.92)',px:13,lod:9});const b=A.bws[Math.floor(A.bws.length/2)];s.position.set(w2x((b[0]+b[2])/2),2.9,w2z((b[1]+b[3])/2));s.userData.lab=1;planG.add(s);}
+    if(A.bws.length){const s=labelSprite('REI 90-M',{fs:24,bg:'rgba(150,40,25,.92)',px:13,lod:9});const b=A.bws[Math.floor(A.bws.length/2)];s.position.set(w2x((b[0]+b[2])/2),2.9,w2z((b[1]+b[3])/2));s.userData.lab=1;planG.add(s);}
     // Messlinien
     A.lines.forEach(l=>{if(!l.pts||l.pts.length<2)return;const pts=simplify(l.pts).map(q=>[w2x(q[0]),w2z(q[1])]);
       const g=ribbon(pts,0.34,0.14,2.4);const m=new THREE.Mesh(g,dashMats[l.lim==null?'info':(l.bad?'bad':'ok')]);m.renderOrder=6;lineG.add(m);
@@ -910,7 +910,7 @@ function B(txt){return String(txt).split('**').map((s,i)=>i%2?h('b',{key:i},s):s
 const TOOLDEF=[
  {k:'view',n:'Ansicht',s:'Ansicht',hint:'Ziehen dreht die Ansicht, zwei Finger zoomen und verschieben.'},
  {k:'wall',n:'Trennwand',s:'Wand',hint:'Von Punkt zu Punkt ziehen (min. F30). Tippen auf eine Kante setzt oder entfernt ein 1-m-Stück.'},
- {k:'brand',n:'Brandwand',s:'Brandw.',hint:'Brandwand REIM 90 (F90-A-M) ziehen: teilt Brandabschnitte, 0,30 m über Dach, ≥ 5 m von Innenecken.'},
+ {k:'brand',n:'Brandwand',s:'Brandw.',hint:'Brandwand REI 90-M (F 90-A) ziehen: teilt Brandabschnitte, 0,30 m über Dach, ≥ 5 m von Innenecken.'},
  {k:'door',n:'Tür',s:'Tür',hint:'Wähle den Türtyp. Tippe auf eine Wand oder ziehe entlang der Wand für breitere Türen (1 m je Feld).'},
  {k:'rauch',n:'Rauchtür',s:'Rauchtür',hint:'Tippe auf den Flur: Eine RS-Tür wird über die ganze Flurbreite gesetzt und teilt den Rauchabschnitt.'},
  {k:'out',n:'Ausgang',s:'Ausgang',hint:'Ziehe an der Außenwand entlang: Ausgang ins Freie (1 m je Feld).'},
@@ -1239,7 +1239,7 @@ function App(){
     h('div',{className:'row'},h('button',{className:'btn sec',onClick:resetStart},'Startplan neu laden'),h('button',{className:'btn sec',onClick:emptyOf},'Leeres Geschoss')),
     h('div',{className:'lab'},'Raster beim Zeichnen'),h(Seg,{o:[[1,'1 m'],[5,'5 m']],v:snap,on:setSnap}),
     h('h3',null,'Legende'),
-    h('div',{className:'legend'},[['#c2452d','Brandwand REIM 90'],['#e9edf5','Trennwand'],['#5a6c8f','Außenwand'],['#58c47d','Treppenraum'],['#f0e5c3',T.hasFlur?T.flur:'Fläche'],['#6ea8ff','Tür DS'],['#3fd6c6','Tür RS'],['#ffb340','Tür T30-DS'],['#ff6f4a','Tür T30-RS'],['#3fe08a','Ausgang']].map((a,i)=>h('span',{key:i},h('i',{style:{background:a[0]}}),a[1]))),
+    h('div',{className:'legend'},[['#c2452d','Brandwand REI 90-M'],['#e9edf5','Trennwand'],['#5a6c8f','Außenwand'],['#58c47d','Treppenraum'],['#f0e5c3',T.hasFlur?T.flur:'Fläche'],['#6ea8ff','Tür DS'],['#3fd6c6','Tür RS'],['#ffb340','Tür T30-DS'],['#ff6f4a','Tür T30-RS'],['#3fe08a','Ausgang']].map((a,i)=>h('span',{key:i},h('i',{style:{background:a[0]}}),a[1]))),
     h('p',{className:'mu',style:{fontSize:12.5}},'Vereinfachte Darstellung. Maße in Metern, Raster 1 m. Die Werte folgen der Lernseite: '+T.sub+'.'));
   /* ---------- Panel: Aufgaben ---------- */
   const total=Object.keys(stars).reduce((s,k)=>s+(stars[k]||0),0);
