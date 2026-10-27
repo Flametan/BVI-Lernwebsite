@@ -6,6 +6,6 @@
   const sync=()=>{const p=pd();if(!p)return;de.setAttribute('data-theme',p.getAttribute('data-theme')==='light'?'light':'dark');
     try{const cs=parent.getComputedStyle(p);for(const k in MAP){const v=cs.getPropertyValue(MAP[k]).trim();if(v)de.style.setProperty(k,v);}
       const ac=cs.getPropertyValue('--m-accent').trim();if(ac)de.style.setProperty('--orsoft','color-mix(in srgb,'+ac+' 16%,'+cs.getPropertyValue('--m-card').trim()+')');
-      const ff=parent.getComputedStyle(parent.document.body).fontFamily;if(ff)de.style.setProperty('--ff',ff);}catch(e){}};
+      const ff=parent.getComputedStyle(parent.document.body).fontFamily;if(ff)de.style.setProperty('--ff',ff);}catch(e){}try{window.dispatchEvent(new Event('embtheme'));}catch(e){}};
   sync();const p=pd();if(p)new MutationObserver(sync).observe(p,{attributes:true,attributeFilter:['data-theme','data-tone','style']});
 })();

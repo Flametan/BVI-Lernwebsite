@@ -94,7 +94,7 @@ function routeFor(n){
 function createScene(canvas,host,cb){
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'default'});
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
-  const scene=new THREE.Scene();scene.background=new THREE.Color(0x0d1522);scene.fog=new THREE.Fog(0x0d1522,50,110);
+  const bgCol=()=>{try{return new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#0d1522');}catch(e){return new THREE.Color(0x0d1522);}};const scene=new THREE.Scene();scene.background=bgCol();scene.fog=new THREE.Fog(bgCol(),50,110);window.addEventListener('embtheme',()=>{const c=bgCol();scene.background=c;scene.fog.color.copy(c);try{S.dirty=true;}catch(e){}});
   const camera=new THREE.PerspectiveCamera(38,1,0.1,250);
   scene.add(new THREE.HemisphereLight(0xcfdcff,0x3a2c22,1.0));
   const sun=new THREE.DirectionalLight(0xfff0dc,0.75);sun.position.set(-10,18,16);scene.add(sun);
@@ -457,7 +457,7 @@ const PROT=[
  {k:'rwa',t:'Rauchabzug im Treppenraum',d:'hält den Rauch dünn'}];
 function B(txt){return String(txt).split('**').map((s,i)=>i%2?h('b',{key:i},s):s);}
 const css=`
-:root{--bg:#0d1522;--pn:#162132;--pn2:#1d2b40;--tx:#eef2f8;--mu:#9aa8bd;--ac:#ffa412;--ok:#35d07f;--bad:#ff6a4d;--ln:rgba(255,255,255,.09)}
+:root{--bg:#0d1522;--pn:var(--card,#162132);--pn2:var(--soft,#1d2b40);--tx:var(--ink,#eef2f8);--mu:var(--mute,#9aa8bd);--ac:var(--or,#ffa412);--ok:#35d07f;--bad:#ff6a4d;--ln:var(--line,rgba(255,255,255,.09))}
 body{background:var(--bg);color:var(--tx);-webkit-tap-highlight-color:transparent}
 .app{display:flex;flex-direction:column;height:100%;height:100dvh}
 .stage{position:relative;flex:1 1 auto;min-height:0;overflow:hidden}
