@@ -1005,6 +1005,7 @@ const MX=[
  ['Rettungswege','Notwendiger Flur (Keller)',[XFH,XFH,XFB,XFB,XFB]]];
 const MXV={ /* Farbe und Kurzzeichen wie in der Übungsmatrix */
  'keine Anforderung':{o:0,bg:'#ffffff',fg:'#1a2233',z:'–',n:'keine Anforderung'},
+ 'Ersatzwand zulässig (Zeile darunter)':{o:0.5,bg:'#dfe6f3',fg:'#1a2233',z:'Ersatzwand',n:'Ersatzwand zulässig (Zeile darunter)'},
  'ausreichend lange Standsicherheit':{o:1,bg:'#ffffff',fg:'#1a2233',z:'Stand­sicherheit',n:'ausreichend lange Standsicherheit'},
  [XW]:{o:2,bg:'linear-gradient(135deg,#ffffff 50%,#ffff00 50%)',fg:'#1a2233',z:'Wohn. – / sonst F30',n:XW},
  [XFH]:{o:3,bg:'#ffff00',fg:'#1a2233',z:'F30',n:XFH},

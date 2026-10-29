@@ -4118,6 +4118,7 @@ const CHANGELOG=(function(){
       'IdF → Vorbeugender Brandschutz: Gebäudeklassen-Baukasten in drei Varianten zur Auswahl, jeweils mit allen 80 Bauteilen der MBO (Rundgang, Katalog mit Vergleich, Abnahme zum Ausfüllen); neuer Bauteil-Katalog aus MBO und Lernseite mit 12 dokumentierten Abweichungen',
       'Lernseite Vorbeugender Brandschutz und Baukasten nach der MBO korrigiert: GK 2 im Obergeschoss feuerhemmend, Stichflur 15 m nur zum Sicherheitstreppenraum, Rauchabschnitte als Sollvorschrift, Brandabschnitte ohne feste Fläche, Tür zur Nutzungseinheit dicht schließend, Hubrettung ab Anleiterhöhe 8 m, Sicherheitsbeleuchtung ab 13 m Höhe, Brandwand-Abstand 5 m, Breite 2,50 m nur für Seitenteile und Oberlichte, Trennwände in Wohngebäuden GK 1/2 entfallen',
       'Baukasten: nur noch eine Version („Gebäudeklassen-Baukasten“, bisher Variante 2) mit Bauteil-Katalog; Katalog auf die 32 Bauteile mit Feuerwiderstandsangaben gekürzt, ohne Hochhaus; Hinweiskästen in hellem Design lesbar; Navigationsleiste bleibt beim Scrollen sichtbar; Varianten 1 und 3 sowie der alte Baukasten entfernt',
+      'Baukasten: Matrix-Tab lädt wieder (Fehler bei der Brandwand-Zeile behoben)',
       'Alle bisherigen Karten ohne Klausurbezug (GAL, SFS, HLFS und die Theoriekarten der vier Module) entfernt; Filter und Fortschritt zeigen nur noch IBK, VAk, FeuAK und IdF',
     ]},
     {v:'3.0.2',ts:'2026-10-27T00:10',items:[
