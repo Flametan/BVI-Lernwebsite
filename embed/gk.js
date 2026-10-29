@@ -1,3 +1,4 @@
+/* ===== Variante 2: Bauteil-Katalog mit Highlight ===== */
 /* ===== Fachlogik (nur Werte aus der Lernseite) ===== */
 const GKS={
  '1a':{n:'GK 1a',long:'Gebäudeklasse 1a',c:'#79d65b'},
@@ -71,33 +72,6 @@ function reqFor(gk,part,zone){
   return T[z];
 }
 const RL=r=>r.s+(r.n?' ('+r.n+')':'');
-function explain(gk,part,zone){
-  const g=GKS[gk],r=REQ[reqFor(gk,part,zone)],zn=zone==='ke'?'im Kellergeschoss':'im Obergeschoss';
-  const nm=PARTS[part].n;
-  if(part==='brand')return {title:'Brandwand',req:r,text:'**Brandwand** (§ 30 BauO NRW): feuerbeständig, nichtbrennbar und **auch unter zusätzlicher mechanischer Beanspruchung**, also **REI 90-M (F 90-A)**. Abstand zur **inneren Ecke** (§ 30 Abs. 6 MBO): **mindestens 5 m**; das entfällt bei einem Winkel über 120° oder bei einer 5 m langen öffnungslosen Außenwand. Sie muss **0,30 m über die Bedachung** gezogen werden **oder** mit einer **beidseitig 0,50 m auskragenden** feuerbeständigen Platte abschließen; bei **GK 1 bis 3** genügt **bis unter die Dachhaut**. Innere Brandwände in Abständen von **höchstens 40 m**.'};
-  if(part==='treppe'){
-    if(gk==='HH')return {title:'Treppenraum-Wand · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR 3.2.3)** haben die Wände der **notwendigen Treppenräume und ihrer Vorräume** die **Feuerwiderstandsfähigkeit der tragenden Bauteile**: **F90 (feuerbeständig)** bei h ≤ 60 m, bei h > 60 m **F120 (hochfeuerbeständig)**. Die Slider-Höhe bleibt bei max. 30 m, also gilt hier F90.'};
-    if(gk==='3')return {title:'Treppenraum-Wand · GK 3',req:r,text:'Notwendige Treppenräume in **GK 3**: Wände **feuerhemmend (F30)**. Die Tür zum notwendigen Treppenraum ist eine **RS-Tür**.'};
-    if(gk==='4')return {title:'Treppenraum-Wand · GK 4',req:r,text:'Notwendige Treppenräume in **GK 4**: Wände **hochfeuerhemmend mit mech. Beanspruchung (F60-M)**. Die Tür zum notwendigen Treppenraum ist eine **RS-Tür**.'};
-    if(gk==='5')return {title:'Treppenraum-Wand · GK 5',req:r,text:'Notwendige Treppenräume in **GK 5**: Wände in der **Bauart einer Brandwand**. Müssen beleuchtet sein; **ohne Fenster: Sicherheitsbeleuchtung**.'};
-    return {title:'Treppenraum · '+g.n,req:r,text:'In **GK 1 und 2** sind notwendige Treppen **ohne eigenen Treppenraum** zulässig (§ 35 Abs. 1 BauO NRW). Anforderungen an Treppenraum-Wände gibt es dort daher nicht. Sie gelten erst ab GK 3 (F30), GK 4 (F60-M) und GK 5 (Brandwand-Bauart).'};
-  }
-  if(part==='dach'){
-    const t1=DGAR?'Über dem Dachgeschoss sind **Aufenthaltsräume möglich**: Die Decke muss wie die Geschossdecken des Gebäudes sein (§ 31 Abs. 1 BauO NRW): **'+REQ[r.k].t+'**.':'Über dem Dachgeschoss sind **keine Aufenthaltsräume möglich**: Nach § 31 Abs. 1 Satz 3 Nr. 1 gilt die Geschossdecken-Anforderung für Geschosse im Dachraum dann nicht. Werden die Trennwände zum nicht ausgebauten Dachraum nur bis zur Rohdecke geführt, muss diese Decke aber **feuerhemmend (F30)** sein (§ 29 Abs. 4 Satz 2); bei **Wohngebäuden der GK 1 und 2** gilt § 29 nicht (Abs. 6).';
-    return {title:'Decke zum Dachraum',req:r,text:t1};}
-  if(part==='decke'&&zone==='ke')return {title:'Kellerdecke (Decke im Kellergeschoss)',req:r,text:'**Decken im Kellergeschoss** (§ 31 Abs. 2 BauO NRW): **GK 3 bis 5 feuerbeständig**, **GK 1 und 2 feuerhemmend**. Das ist die Decke über dem Keller, also die Kellerdecke. Dazu: Decken unter und über Räumen mit Explosions- oder erhöhter Brandgefahr müssen **feuerbeständig** sein (Wohngebäude GK 1 und 2 ausgenommen).'};
-  if(part==='trenn'){
-    if(gk==='HH')return {title:'Trennwand · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR 3.2.5)** müssen **Trennwände zwischen Nutzungseinheiten** und die **Wände notwendiger Flure** **feuerhemmend (F30)** sein. **Feuerbeständig (F90)** sind dagegen Brandwände, Wände von Installationsschächten, Trennwände von Räumen mit erhöhter Brandgefahr und Trennwände zwischen Aufenthaltsräumen und anders genutzten Räumen im Keller (MHHR 3.2.4). Diese Werte stehen in der MHHR, nicht auf der Lernseite.'};
-    return {title:'Trennwand · '+g.n,req:r,text:'**Trennwände** (zwischen Nutzungseinheiten): mindestens die Feuerwiderstandsfähigkeit der **tragenden Bauteile des Geschosses**, jedoch **mind. F30**. Türen: **T30-DS**. '+(gk==='1a'||gk==='1b'||gk==='2'?' **Bei Wohngebäuden der GK 1 und 2** gelten die Trennwandregeln nicht (§ 29 Abs. 6 BauO NRW).':'')+' Hier: '+g.n+' '+zn+' = '+REQ[reqFor(gk,'decke',zone)].s+', Trennwand daher **'+r.s+'**.'};
-  }
-  if(gk==='HH')return {title:nm+' · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR 3.1)** müssen **tragende und aussteifende Bauteile** (auch im Keller) **feuerbeständig (F90)** sein und aus **nichtbrennbaren Baustoffen** bestehen. Bei **mehr als 60 m Höhe** sind **120 Minuten** (F120, hochfeuerbeständig) verlangt. Geschossdecken sind raumabschließend mit der Feuerwiderstandsfähigkeit der tragenden Bauteile. Diese Werte stehen in der MHHR (Stand 2008/2012), nicht in der Tabelle der Lernseite.'};
-  const row=TABLE[gk];
-  const rs=gk==='2'?'GK 2':gk==='1a'||gk==='1b'?'GK 1':g.n;
-  return {title:nm+' · '+zn.replace('im ','').replace('geschoss','geschoss'),req:r,
-    text:'**'+PARTS[part].pl+'** '+zn+' bei **'+rs+'**: **'+r.t+'**.'+
-     ' Zum Vergleich: Kellergeschoss '+RL(REQ[row[1]])+', Obergeschoss '+RL(REQ[row[0]])+'.'+
-     (zone==='ke'?' (Vereinfachung: die Decke über dem Keller zählt hier zum Kellergeschoss.)':'')+((gk==='1a'||gk==='1b')&&zone==='og'&&(part==='wand'||part==='stuetze')?' Die Übungsmatrix (Seite 133) nennt für GK 1 hier **„ausreichend lange Standsicherheit“**, also keine Feuerwiderstandsklasse.':'')+(gk==='2'&&zone==='og'?' **Hinweis:** Die Übungsmatrix (Seite 133) und **§ 27 Abs. 1 BauO NRW 2018** nennen für GK 2 **feuerhemmend**; nur in GK 1 gibt es dort keine F-Klasse. (Die ältere Lernseiten-Tabelle „GK 1/2: keine Anforderung“ weicht für GK 2 ab.)':'')};
-}
 /* Sonderbau-Check (Abschnitt 03) */
 const SONDER=[
  {n:'Hochhäuser',t:'OKFF > 22 m',v:'MHHR'},
@@ -224,18 +198,34 @@ function createScene(canvas,host,cb){
     secMats[k]=dim?new THREE.MeshLambertMaterial({color:c,transparent:true,opacity:0.1,depthWrite:false}):new THREE.MeshLambertMaterial({color:c});}return secMats[k];}
   const edgeG=new THREE.EdgesGeometry(BOXG),edgeM=new THREE.LineBasicMaterial({color:0x141b2b,transparent:true,opacity:0.5});
   const stairM=lm(0xaab2c2),holeM=lm(0x39435a);
-  function mkS(par,part,zone,f,w,h,d,x,y,z,extra){const m=bx(par,w,h,d,x,y,z,secMat('none'));m.userData=Object.assign({part,zone,f},extra||{});const ed=new THREE.LineSegments(edgeG,edgeM);m.add(ed);m.userData.edge=ed;structMeshes.push(m);return m;}
+  /* Katalog-Hervorhebung: gemeinsame Materialien, nichts wird pro Auswahl neu erzeugt */
+  const DIMM=new THREE.MeshLambertMaterial({color:0x6b7894,transparent:true,opacity:0.1,depthWrite:false});
+  const hmats={};
+  function hmat(c){return hmats[c]||(hmats[c]=new THREE.MeshLambertMaterial({color:new THREE.Color(c).lerp(new THREE.Color(0xffffff),0.1),emissive:new THREE.Color(c).multiplyScalar(0.2)}));}
+  const extras=[],XM=lm(0xffffff);
+  function xb(par,key,zone,w,h,d,x,y,z,fix,rz){const m=bx(par,w,h,d,x,y,z,fix||XM);m.visible=false;if(rz)m.rotation.z=rz;m.userData={xk:key,zone,fix:!!fix};extras.push(m);return m;}
+  function mkS(par,part,zone,f,w,h,d,x,y,z,extra){const m=bx(par,w,h,d,x,y,z,secMat('none'));m.userData=Object.assign({part,zone,f,keys:[]},extra||{});const ed=new THREE.LineSegments(edgeG,edgeM);m.add(ed);m.userData.edge=ed;structMeshes.push(m);return m;}
   function buildStruct(g,zone,f){
-    mkS(g,'decke',f===0&&zone==='og'?'ke':zone,f,12,0.3,9,0,-0.15,0,f===0&&zone==='og'?{kd:true}:f===-1?{bp:true,noPick:true}:null);
-    mkS(g,'wand',zone,f,12,3,0.3,0,1.5,-4.35);
-    mkS(g,'wand',zone,f,0.3,3,9,-5.85,1.5,0,{left:true});
-    mkS(g,'wand',zone,f,0.3,3,9,5.85,1.5,0);
+    mkS(g,'decke',f===0&&zone==='og'?'ke':zone,f,12,0.3,9,0,-0.15,0,f===0&&zone==='og'?{kd:true,keys:['s:kd']}:f===-1?{bp:true,noPick:true,keys:['s:bp']}:{keys:['s:slab']});
+    mkS(g,'wand',zone,f,12,3,0.3,0,1.5,-4.35,{keys:['s:aussen']});
+    mkS(g,'wand',zone,f,0.3,3,9,-5.85,1.5,0,{left:true,keys:['s:aussen']});
+    mkS(g,'wand',zone,f,0.3,3,9,5.85,1.5,0,{keys:['s:aussen']});
     [-4.5,-1.5,1.5,4.5].forEach(x=>mkS(g,'stuetze',zone,f,0.55,3,0.55,x,1.5,3.7));
-    mkS(g,'wand',zone,f,8,3,0.25,-1.7,1.5,-1);
+    mkS(g,'wand',zone,f,8,3,0.25,-1.7,1.5,-1,{keys:['s:flurwand']});
     const t=mkS(g,'trenn',zone,f,0.18,3,5.2,0,1.5,1.6);trennList.push(t);
     mkS(g,'treppe',zone,f,3.2,3,0.2,3.9,1.5,-4.05);mkS(g,'treppe',zone,f,3.2,3,0.2,3.9,1.5,-0.9);
     mkS(g,'treppe',zone,f,0.2,3,3.15,2.3,1.5,-2.475);mkS(g,'treppe',zone,f,0.2,3,3.15,5.5,1.5,-2.475);
-    const fl=bx(g,2.6,0.14,3.9,0,0,0,stairM);fl.position.set(3.9,1.5,-2.475);fl.rotation.x=Math.PI/4;fl.userData={noPick:true};structMeshes.push(fl);fl.userData.stair=true;
+    const fl=bx(g,2.6,0.14,3.9,0,0,0,stairM);fl.position.set(3.9,1.5,-2.475);fl.rotation.x=Math.PI/4;fl.userData={noPick:true,zone,keys:['s:stair'],stair:true};structMeshes.push(fl);
+    /* Zusatzobjekte fuer den Katalog (unsichtbar, bis ein Bauteil sie braucht) */
+    xb(g,'flur',zone,7.4,0.12,3.0,-1.7,0.06,-2.6);
+    xb(g,'aufzug',zone,2.0,3,2.4,-4.6,1.5,-2.9);
+    xb(g,'schacht',zone,0.9,3,0.9,-1.2,1.5,-3.7);
+    xb(g,'durch',zone,0.22,3.3,0.22,-2.4,1.65,2.4);xb(g,'durch',zone,0.7,0.14,0.7,-2.4,0.07,2.4);xb(g,'durch',zone,3.2,0.2,0.2,0,2.2,2.9);xb(g,'durch',zone,0.22,0.55,0.55,0,2.2,2.9);
+    xb(g,'tuer_trenn',zone,0.5,2.2,1.2,0,1.1,2.6);
+    xb(g,'tuer_tr',zone,1.2,2.2,0.5,3.4,1.1,-0.9);
+    xb(g,'tuer_flur',zone,1.2,2.2,0.5,-3.4,1.1,-1);
+    xb(g,'fenster',zone,0.4,1.2,1.4,-5.85,1.5,2.2);xb(g,'fenster',zone,0.4,1.2,1.4,5.85,1.5,2.2);
+    xb(g,'balkon',zone,2.0,0.2,4,7.0,-0.1,1.8);xb(g,'balkon',zone,0.07,1.0,4,7.97,0.5,1.8);xb(g,'balkon',zone,2.0,1.0,0.07,7.0,0.5,3.8);xb(g,'balkon',zone,2.0,1.0,0.07,7.0,0.5,-0.2);
   }
   function buildFloor(f){
     const g=new THREE.Group(),shell=new THREE.Group(),st=new THREE.Group();g.add(shell,st);
@@ -269,16 +259,23 @@ function createScene(canvas,host,cb){
   const roofShell=new THREE.Group(),roofStruct=new THREE.Group();roofG.add(roofShell,roofStruct);
   mkS(roofStruct,'dach','og',99,12,0.3,9,0,-0.15,0);
   const gable=new THREE.Group(),flat=new THREE.Group();roofShell.add(gable,flat);
+  let gableMesh=null,flatMesh=null;
   {const sh=new THREE.Shape();sh.moveTo(-5.1,-0.1);sh.lineTo(5.1,-0.1);sh.lineTo(0,2.5);sh.lineTo(-5.1,-0.1);
-   const g=new THREE.ExtrudeGeometry(sh,{depth:12,bevelEnabled:false});const m=new THREE.Mesh(g,roofM);m.rotation.y=Math.PI/2;m.position.set(-6,0,0);gable.add(m);}
-  bx(flat,12.4,0.5,9.4,0,0.25,0,roofD);bx(flat,3.4,1.2,2.6,-3,1.1,-1.5,lm(0x7c879e));bx(flat,0.12,5,0.12,3.5,3,1,lm(0xc9d0dc));
+   const g=new THREE.ExtrudeGeometry(sh,{depth:12,bevelEnabled:false});const m=new THREE.Mesh(g,roofM);m.rotation.y=Math.PI/2;m.position.set(-6,0,0);gable.add(m);gableMesh=m;}
+  flatMesh=bx(flat,12.4,0.5,9.4,0,0.25,0,roofD);bx(flat,3.4,1.2,2.6,-3,1.1,-1.5,lm(0x7c879e));bx(flat,0.12,5,0.12,3.5,3,1,lm(0xc9d0dc));
   {const b=new THREE.Mesh(new THREE.SphereGeometry(0.28,8,6),bs(0xff4a3a));b.position.set(3.5,5.6,1);flat.add(b);}
   /* Brandwand-Detail */
   const bwG=new THREE.Group();roofG.add(bwG);const bwM=secMat('bw',false,'brand');
   {const sh=new THREE.Shape();sh.moveTo(-4.5,0);sh.lineTo(4.5,0);sh.lineTo(4.5,0.55);sh.lineTo(0,2.9);sh.lineTo(-4.5,0.55);sh.lineTo(-4.5,0);
-   const g=new THREE.ExtrudeGeometry(sh,{depth:0.3,bevelEnabled:false});const m=new THREE.Mesh(g,bwM);m.add(new THREE.LineSegments(new THREE.EdgesGeometry(g),edgeM));m.rotation.y=-Math.PI/2;m.position.set(-5.7,-0.1,0);m.userData={part:'brand',zone:'og',f:98};structMeshes.push(m);bwG.add(m);
-   const fb=bx(bwG,0.3,0.7,9,-5.85,0.25,0,bwM);fb.userData={part:'brand',zone:'og',f:97,flat:true};structMeshes.push(fb);
+   const g=new THREE.ExtrudeGeometry(sh,{depth:0.3,bevelEnabled:false});const m=new THREE.Mesh(g,bwM);m.add(new THREE.LineSegments(new THREE.EdgesGeometry(g),edgeM));m.rotation.y=-Math.PI/2;m.position.set(-5.7,-0.1,0);m.userData={part:'brand',zone:'og',f:98,keys:[]};structMeshes.push(m);bwG.add(m);
+   const fb=bx(bwG,0.3,0.7,9,-5.85,0.25,0,bwM);fb.userData={part:'brand',zone:'og',f:97,flat:true,keys:[]};structMeshes.push(fb);
    bwG.userData={gableMesh:m,flatMesh:fb};}
+  /* Aufstellflaeche mit Drehleiter (nur fuer den Katalog) */
+  {const red=lm(0xd9302a),wh=lm(0xf0f3f8);
+   xb(bg,'aufstell','og',5.8,0.16,13,-9.2,0.1,3);
+   xb(bg,'aufstell','og',2.4,2.0,6.2,-9.6,1.2,2.6,red);xb(bg,'aufstell','og',2.4,1.7,1.8,-9.6,1.05,6.6,red);
+   xb(bg,'aufstell','og',0.5,0.25,3.6,-7.8,2.08,2.2,wh,0);
+   const ld=extras[extras.length-1];ld.scale.set(3.6,0.25,0.5);ld.rotation.z=-0.3;}
   /* Hoehenmarken */
   const zg=new THREE.Group();bg.add(zg);
   const frameM=new THREE.MeshBasicMaterial({color:0xdfe9ff,transparent:true,opacity:0.7});
@@ -299,10 +296,10 @@ function createScene(canvas,host,cb){
     const w=host.clientWidth,h=host.clientHeight;el.style.display='';const hw=(el.offsetWidth||60)/2+6;
     el.style.transform='translate('+clamp((tv.x*0.5+0.5)*w+(off?off[0]:0),hw,w-hw).toFixed(1)+'px,'+((-tv.y*0.5+0.5)*h+(off?off[1]:0)).toFixed(1)+'px) translate(-50%,-100%)';}
   /* ---------- Zustand ---------- */
-  const T={p:{okff:6,free:true,nne:1,ane:true,land:false},mode:'ext',color:null,label:null,gk:'1a',focus:null,bw:false,sel:null,rulers:true,dgar:true};
+  const T={p:{okff:6,free:true,nne:1,ane:true,land:false},mode:'ext',color:null,label:null,gk:'1a',focus:null,bw:false,sel:null,rulers:true,dgar:true,hl:null};
   const C={W:12,gap:7,ok:6,viewH:16,col:new THREE.Color(0xc5ccd8),trimCol:new THREE.Color(0xe8ecf2),topY:3,sec:0,fw:0,fx:0,fy:0,fz:0,tx:0,ty:8};
   const cam={theta:0.3,phi:1.22,zoom:1},goal={theta:0.3,phi:1.22,zoom:1,focus:null};let flying=false;
-  let dirty=true,asp=1,lastBadge='',lastNE='';
+  let dirty=true,asp=1,lastBadge='',lastNE='',roofOn=false;
   function setSize(){const w=host.clientWidth||300,h=host.clientHeight||300;renderer.setSize(w,h,false);camera.aspect=w/h;asp=w/h;camera.updateProjectionMatrix();dirty=true;}
   const ro=new ResizeObserver(setSize);ro.observe(host);setSize();
   /* Abschnitt-Faerbung */
@@ -310,12 +307,20 @@ function createScene(canvas,host,cb){
     const gk=T.gk,sec=T.mode==='sec';
     const fm2=p=>!T.focus||(T.focus==='wand'?(p==='wand'||p==='trenn'||p==='brand'):T.focus==='decke'?(p==='decke'||p==='dach'):T.focus===p);
     DGAR=T.dgar!==false;
-    structMeshes.forEach(m=>{const u=m.userData;if(u.stair){m.visible=sec;return;}
+    const H=T.hl&&T.hl.length?T.hl:null;
+    structMeshes.forEach(m=>{const u=m.userData;
+      if(u.stair){m.visible=sec;if(H){const s=hitSpec(H,u.keys,u.zone);u.dim=!s;m.material=s?hmat(pcol(s,u.zone)):DIMM;}else{u.dim=false;m.material=stairM;}return;}
       let part=u.part;if(u.left&&T.bw)part='brand';
-      const dim=!fm2(part),req=reqFor(gk,part,u.zone);u.eff=part;u.dim=dim;
-      m.material=secMat(req,dim,part);if(u.edge)u.edge.visible=!dim;
+      u.eff=part;
+      if(H){const s=hitSpec(H,['p:'+part].concat(u.keys),u.zone);u.dim=!s;m.material=s?hmat(pcol(s,u.zone)):DIMM;if(u.edge)u.edge.visible=!!s;}
+      else{const dim=!fm2(part),req=reqFor(gk,part,u.zone);u.dim=dim;m.material=secMat(req,dim,part);if(u.edge)u.edge.visible=!dim;}
       if(part==='trenn')m.visible=T.p.nne>=2;});
+    extras.forEach(m=>{const u=m.userData,s=H&&hitSpec(H,['x:'+u.xk],u.zone);m.visible=!!s;if(s&&!u.fix)m.material=hmat(pcol(s,u.zone));});
+    const rs=H&&hitSpec(H,['x:dach'],'og');roofOn=!!rs;
+    gableMesh.material=rs?hmat(pcol(rs)):roofM;flatMesh.material=rs?hmat(pcol(rs)):roofD;
   }
+  function pcol(s,zone){return zone==='ke'&&s.ck?s.ck:s.c;}
+  function hitSpec(H,keys,zone){for(let i=0;i<H.length;i++){const s=H[i];if(s.z&&zone&&zone!==s.z)continue;for(let j=0;j<keys.length;j++)if(s.k.indexOf(keys[j])>=0)return s;}return null;}
   function refreshNE(){const n=T.p.nne;const key=n+'';if(key===lastNE)return;lastNE=key;
     floors.forEach(F=>{F.win.forEach((w,c)=>{if(w)w.material=glass[Math.floor(c*n/5)];});
       F.seps.forEach((s,i)=>{s.visible=Math.floor(i*n/5)!==Math.floor((i+1)*n/5);});});}
@@ -352,9 +357,10 @@ function createScene(canvas,host,cb){
   function deepVis(o){while(o){if(!o.visible)return false;o=o.parent;}return true;}
   function tap(cx,cy){if(T.mode!=='sec'){cb.onPick&&cb.onPick(null);return;}
     const r=canvas.getBoundingClientRect();mp.set((cx-r.left)/r.width*2-1,-((cy-r.top)/r.height)*2+1);ray.setFromCamera(mp,camera);
-    const list=structMeshes.filter(m=>!m.userData.noPick&&!m.userData.dim&&deepVis(m));
+    const hl=!!T.hl;
+    const list=structMeshes.filter(m=>!m.userData.noPick&&(hl||!m.userData.dim)&&deepVis(m));
     const hit=ray.intersectObjects(list,false);
-    if(hit.length){const m=hit[0].object,u=m.userData;select(m);cb.onPick&&cb.onPick({part:u.eff||u.part,zone:u.zone});}
+    if(hit.length){const hi=hl?(hit.find(x=>!x.object.userData.dim)||hit[0]):hit[0],m=hi.object,u=m.userData;if(!hl)select(m);cb.onPick&&cb.onPick({part:u.eff||u.part,zone:u.zone,sub:u.keys});}
     else{select(null);cb.onPick&&cb.onPick(null);}}
   let selMesh=null;const hiM={};
   function select(m){if(selLine.parent)selLine.parent.remove(selLine);selLine.visible=false;
@@ -377,7 +383,7 @@ function createScene(canvas,host,cb){
     const topY=y;C.topY=topY;
     kel.visible=sec;plinth.visible=sec;env.visible=!sec;
     roofG.position.y=topY;const hh=p.okff>22;
-    gable.visible=!hh;flat.visible=hh;roofShell.visible=!sec;roofStruct.visible=sec;
+    gable.visible=!hh;flat.visible=hh;roofShell.visible=!sec||roofOn;roofStruct.visible=sec;
     bwG.visible=sec&&T.bw;bwG.userData.gableMesh.visible=!hh;bwG.userData.flatMesh.visible=hh;
     // Breite, Nachbarn
     lerpTo(C,'W',p.ane?12:16,0.01,dt,7);bg.scale.x=C.W/12;
@@ -393,7 +399,7 @@ function createScene(canvas,host,cb){
     lerpTo(C,'viewH',sec?Math.max(7,topY+3.4):Math.max(16,topY+3.4+(hh?4:0)),0.01,dt,5);
     // Fokus
     const fwT=goal.focus?1:0;if(goal.focus){C.fx=goal.focus.x;C.fy=goal.focus.y;C.fz=goal.focus.z;}
-    if(sec&&goal.focus&&T.bw&&goal.focus.roof){C.fy=topY+goal.focus.y;}
+    if(sec&&goal.focus&&goal.focus.roof){C.fy=topY+goal.focus.y;}
     lerpTo(C,'fw',fwT,0.005,dt,5);
     // Kamera
     if(flying){let still=true;['theta','phi','zoom'].forEach(k=>{const d=goal[k]-cam[k];if(Math.abs(d)>0.002){cam[k]+=d*ease(dt,5);still=false;}else cam[k]=goal[k];});if(still)flying=false;dirty=true;}
@@ -416,7 +422,7 @@ function createScene(canvas,host,cb){
   raf=requestAnimationFrame(frame);
   refreshSec();
   return {
-    set(patch){const needSec=('gk' in patch)||('dgar' in patch)||('focus' in patch)||('bw' in patch)||('mode' in patch)||(patch.p&&patch.p.nne!==T.p.nne);
+    set(patch){const needSec=('hl' in patch)||('gk' in patch)||('dgar' in patch)||('focus' in patch)||('bw' in patch)||('mode' in patch)||(patch.p&&patch.p.nne!==T.p.nne);
       if(patch.p)patch=Object.assign({},patch,{p:Object.assign({},T.p,patch.p)});
       if('mode' in patch&&patch.mode!==T.mode)select(null);
       Object.assign(T,patch);if(needSec)refreshSec();dirty=true;},
@@ -429,7 +435,7 @@ function createScene(canvas,host,cb){
 }
 /* ===== Oberflaeche (React) ===== */
 const h=React.createElement;
-const {useState,useEffect,useRef,useMemo,useCallback}=React;
+const {useState,useEffect,useRef,useMemo,useCallback,useLayoutEffect}=React;
 const css=`
 :root{--bg:#0d1522;--pn:var(--card,#162132);--pn2:var(--soft,#1d2b40);--pn3:var(--line,#243550);--tx:var(--ink,#eef2f8);--mu:var(--mute,#9aa8bd);--ac:var(--or,#ffa412);--ok:#35d07f;--bad:#ff6a4d;--ln:var(--line,rgba(255,255,255,.09))}
 body{background:var(--bg);color:var(--tx);-webkit-tap-highlight-color:transparent}
@@ -529,9 +535,9 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .tile b{display:block;font-size:19px;line-height:1.2;margin-top:2px}
 .tile.dk{color:#1a1a1a}
 .msg{border-radius:14px;padding:10px 13px;font-weight:600;margin:0 0 10px;font-size:14px;line-height:1.35}
-.msg.g{background:rgba(53,208,127,.16);color:#7af2b0;border:1px solid rgba(53,208,127,.45)}
-.msg.r{background:rgba(255,106,77,.15);color:#ffa593;border:1px solid rgba(255,106,77,.45)}
-.msg.o{background:rgba(255,164,18,.14);color:#ffc462;border:1px solid rgba(255,164,18,.4)}
+.msg.g{background:rgba(53,208,127,.16);color:color-mix(in srgb,#17924f 62%,var(--tx));border:1px solid rgba(53,208,127,.45)}
+.msg.r{background:rgba(255,106,77,.15);color:color-mix(in srgb,#c8361a 62%,var(--tx));border:1px solid rgba(255,106,77,.45)}
+.msg.o{background:rgba(255,164,18,.14);color:color-mix(in srgb,#a85f00 66%,var(--tx));border:1px solid rgba(255,164,18,.4)}
 .msg.n{background:var(--pn2);color:var(--mu);border:1px solid var(--ln);font-weight:500}
 .opts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0}
 .opt{min-height:52px;border-radius:14px;border:2px solid var(--ln);background:var(--pn2);color:var(--tx);font:700 14.5px/1.2 inherit;font-family:inherit;cursor:pointer;padding:6px 10px;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center}
@@ -560,7 +566,9 @@ const ICON={
  teile:SV({},[h('path',{key:1,d:'M12 3l9 5-9 5-9-5z'}),h('path',{key:2,d:'M3 13l9 5 9-5M3 17.5l9 5 9-5'})]),
  quiz:SV({},[h('circle',{key:1,cx:12,cy:12,r:9}),h('path',{key:2,d:'M8.5 12.5l2.5 2.5 4.5-5'})]),
  matrix:SV({},[h('rect',{key:1,x:3,y:4,width:18,height:16,rx:2}),h('path',{key:2,d:'M3 10h18M3 15h18M9 4v16M15 4v16'})]),
- reset:SV({},[h('path',{key:1,d:'M3 12a9 9 0 1 0 3-6.7'}),h('path',{key:2,d:'M3 4v5h5'})])};
+ reset:SV({},[h('path',{key:1,d:'M3 12a9 9 0 1 0 3-6.7'}),h('path',{key:2,d:'M3 4v5h5'})]),
+ cmp:SV({},[h('rect',{key:1,x:3,y:5,width:7,height:14,rx:1.5}),h('rect',{key:2,x:14,y:5,width:7,height:14,rx:1.5})])};
+ICON.katalog=ICON.teile;
 function Star({on}){return h('svg',{viewBox:'0 0 24 24'},h('path',{d:'M12 2.5l2.9 6.2 6.8.8-5 4.7 1.3 6.7L12 17.6 6 20.9l1.3-6.7-5-4.7 6.8-.8z',fill:on?'#ffc83d':'#2c3a50',stroke:on?'#ffa412':'#3a4a63',strokeWidth:1.2,strokeLinejoin:'round'}));}
 function useWide(){const [w,s]=useState(()=>window.matchMedia('(min-width:900px)').matches);
   useEffect(()=>{const m=window.matchMedia('(min-width:900px)'),f=()=>s(m.matches);m.addEventListener?m.addEventListener('change',f):m.addListener(f);return()=>{m.removeEventListener?m.removeEventListener('change',f):m.removeListener(f);};},[]);return w;}
@@ -613,7 +621,7 @@ function BauTab({p,setP,cl,wide,gotoTeile,seg,setSeg}){
   const head=h('div',{className:'res',style:{'--c':g.c}},h('div',{className:'gb '+COLTXT(cl.gk)},g.n),h('div',{className:'gt'},h('b',null,g.long),h('span',null,info)));
   const hint=cl.gk==='2'&&!p.free?h('div',{className:'msg o'},'Hinweis: Gebäude GK 1 werden zu GK 2, sobald sie nicht mehr freistehen (z. B. angebaute Garage).'):null;
   const hh=cl.gk==='HH'?h('div',{className:'msg o'},'Prüfreihenfolge: 1. Rechtsgrundlage → 2. Gebäudeklasse → 3. Sonderbautatbestand → 4. Schutzziele.'):null;
-  const next=h('button',{className:'btn sec big',style:{marginTop:2},onClick:gotoTeile},'Bauteil-Anforderungen ansehen →');
+  const next=h('button',{className:'btn sec big',style:{marginTop:2},onClick:gotoTeile},'Bauteil-Katalog öffnen →');
   if(wide)return h('div',null,head,hint,hh,h(Controls,{p,setP}),h('h3',null,'Prüfpfad: wie das Ergebnis entsteht'),h(PathList,{cl,p}),h('div',{style:{height:10}}),next);
   return h('div',null,head,hint,hh,
     h('div',{className:'seg sm'},[['regler','Regler'],['pfad','Prüfpfad']].map(a=>h('button',{key:a[0],className:seg===a[0]?'on':'',onClick:()=>setSeg(a[0])},a[1]))),
@@ -636,28 +644,300 @@ function BwDetail(){
       h('text',{x:24,y:80,fill:'#ffa412',fontSize:12,fontWeight:700},'0,50 m je Seite')),
       'oder 0,50 m beidseitig auskragen'));
 }
-function TeileTab({p,setP,gk,teile,setTeile}){
-  const cur=gk==='1a'||gk==='1b'?'1':gk;
-  const T=TABLE[gk];
-  const tiles=[
-    ['Kellergeschoss: tragende Teile und Kellerdecke',reqFor(gk,'wand','ke')],
-    ['Obergeschoss: tragende Teile',reqFor(gk,'wand','og')],
-    ['Treppenraum-Wände',reqFor(gk,'treppe','og')],
-    ['Decke zum Dachraum',reqFor(gk,'dach','og')]];
-  const sel=teile.sel,ex=sel?explain(gk,sel.part,sel.zone):null;
-  return h('div',null,
-    h('h3',{style:{marginTop:0}},'Beispielgebäude'),
-    h('div',{className:'chips'},PRESETS.map(pr=>h('button',{key:pr.k,className:'chp '+COLTXT(pr.gk)+(cur===pr.k?' on':''),style:{'--c':pr.c},onClick:()=>{setP(pr.p);setTeile(t=>Object.assign({},t,{sel:null}));}},h('i'),pr.n))),
-    h('h3',null,'Anforderung für '+GKS[gk].long),
-    h('div',{className:'tiles'},tiles.map((t,i)=>{const r=REQ[t[1]];return h('div',{key:i,className:'tile'+(['f30','none'].includes(r.k)?' dk':''),style:{background:r.c}},h('small',null,t[0]),h('b',null,r.s),r.n?h('em',{style:{display:'block',fontStyle:'normal',fontSize:11.5,fontWeight:700,lineHeight:1.2,marginTop:2}},r.n):null);})),
-    ex?h('div',{className:'card',style:{borderColor:ex.req.c,borderWidth:2}},h('div',{style:{display:'flex',gap:10,alignItems:'center',marginBottom:6}},h('div',{style:{width:16,height:16,borderRadius:5,background:ex.req.c,flex:'none'}}),h('h2',{style:{margin:0,fontSize:16}},ex.title)),h('p',{style:{marginBottom:4}},B(ex.text)),h('div',{className:'mu',style:{fontSize:12.5}},'Anforderung: ',h('b',{style:{color:'var(--tx)'}},ex.req.t)))
-       :h('div',{className:'msg n'},'Tippe im aufgeschnittenen Gebäude ein Bauteil an (Decke, Stütze, Wand, Treppenraum), dann wird die Anforderung erklärt.'),
-    h('h3',null,'Bauteile hervorheben'),
-    h('div',{className:'chips'},[[null,'Alle'],['decke','Decken'],['stuetze','Stützen'],['wand','Wände'],['treppe','Treppenraum']].map(a=>h('button',{key:a[1],className:'chp f'+(teile.focus===a[0]?' on':''),onClick:()=>setTeile(t=>Object.assign({},t,{focus:a[0]}))},a[1]))),
-    h('div',{className:'card',style:{padding:'4px 14px',marginTop:10}},h(Switch,{on:teile.dgar!==false,onChange:v=>setTeile(t=>Object.assign({},t,{dgar:v,sel:null})),t:'Über dem Dachgeschoss: Aufenthaltsräume möglich',d:'Aus: Die Decke zum Dachraum wird anders bewertet (§ 31, § 29)'})),
-    h('div',{className:'card',style:{padding:'4px 14px',marginTop:10}},h(Switch,{on:teile.bw,onChange:v=>setTeile(t=>Object.assign({},t,{bw:v,sel:null})),t:'Brandwand-Detail zeigen',d:'REI 90-M (F 90-A), links am Gebäude'})),
-    teile.bw?h('div',{className:'card'},h('p',{style:{marginBottom:6}},B('**Brandwand** (REI 90-M, F 90-A): Abstand zur Innenecke **≥ 5 m (MBO, Lernseite) bzw. ≥ 3 m (BauO NRW)**. Sie muss **0,30 m über Bedachung** gezogen oder **beidseitig 0,50 m auskragen**.')),h(BwDetail),h('div',{className:'mu',style:{fontSize:11.5,marginTop:6}},'Vereinfachte Darstellung, nicht maßstäblich.')):null);
+/* ---------- Katalog: alle Bauteile der MBO (Daten aus gk-katalog.js) ---------- */
+const GK6=['1a','1b','2','3','4','5'];
+const GK7=GK6.concat('HH');
+const HC={bw:REQ.bw.c,f30:REQ.f30.c,f60:REQ.f60.c,f60m:REQ.f60m.c,f90:REQ.f90.c,none:'#8996ad',na:'#2f78c4'};
+const HCODE={bw:'BW',f30:'F30',f60:'F60',f60m:'F60-M',f90:'F90',none:'–'};
+const HNAME={bw:'Bauart Brandwand (REI 90-M, F 90-A)',f30:'feuerhemmend (REI 30, F 30)',f60:'hochfeuerhemmend (REI 60)',f60m:'hochfeuerhemmend, mechanisch beansprucht (F60-M)',f90:'feuerbeständig (REI 90, F 90)',none:'keine Anforderung',na:'sonstige Regel (Zahl = Textgruppe)'};
+const HDARK={f30:1,f60:1,f60m:1,none:1};
+function clsOf(t){
+  if(!t)return 'na';const s=String(t);
+  if(/^(keine|kein |nicht erforderlich|nicht einschl|nicht anwendbar|entfällt)/i.test(s))return 'none';
+  const m=/(Bauart Brandwand|REI 90-M|F 90-A)|(hochfeuerhemmend|REI 60)|(feuerhemmend|REI 30|F 30|T30)|(feuerbeständig|REI 90|T90)|(Brandwand)/.exec(s);
+  if(!m)return /\bkeine?\b/i.test(s)?'none':'na';
+  if(m[1]||m[5])return 'bw';
+  if(m[2])return /mechanisch|HFH-M/.test(s)?'f60m':'f60';
+  if(m[3])return 'f30';
+  return 'f90';
 }
+/* Interne Bezeichnungen aus den Abgleichstexten entfernen, Kapitelnummern weglassen */
+const san=t=>String(t==null?'':t)
+  .replace(/Detailtabelle derselben Seite und TABLE in gk\.js/g,'Detailtabelle derselben Seite und Baukasten')
+  .replace(/Übungsmatrix \(gk\.js MX\)/g,'Übungsmatrix').replace(/Übungsmatrix \(MX\)/g,'Übungsmatrix')
+  .replace(/Simulation \(reqFor "[a-z]+"\) bildet beide Fälle über den Schalter DGAR ab/,'Der Baukasten bildet beide Fälle über den Schalter „Aufenthaltsräume darüber“ ab')
+  .replace(/Simulation \(reqFor "trenn"\)/,'Der Baukasten')
+  .replace(/Simulation \(explain "brand"\)/g,'Der Baukasten').replace(/Sim \(explain "brand"\)/g,'Der Baukasten')
+  .replace(/Simulation \(Simulation:/g,'Baukasten (').replace(/\(Simulation: /g,'(Baukasten: ').replace(/Simulation/g,'Baukasten')
+  .replace(/ Abschnitt \d+/g,'').replace(/ in gk\.js/g,'');
+const NORM=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+const KB=KATALOG.bauteile.map(b=>{
+  const anyOG=GK6.some(g=>{const v=b.anf[g];return v&&(v.og!=null||v.ke!=null);});
+  const defs=anyOG?[['og','Obergeschoss'],['ke','Keller']]:[['t','Anforderung']];
+  const rows=defs.map(d=>{
+    const cells=GK6.map(g=>{const v=b.anf[g]||{};const t=d[0]==='t'?(v.t!=null?v.t:v.og):(v[d[0]]!=null?v[d[0]]:v.t);return {g,t,k:clsOf(t),gi:0};});
+    const grp=[];
+    cells.forEach(c=>{let gr=grp.find(x=>x.t===c.t);if(!gr){gr={t:c.t,k:c.k,gs:[]};grp.push(gr);}gr.gs.push(c.g);c.gi=grp.indexOf(gr);});
+    return {key:d[0],label:d[1],cells,grp};});
+  const hs=[];
+  GK6.forEach(g=>{const t=b.anf[g]&&b.anf[g].h;if(!t)return;let x=hs.find(y=>y.t===t);if(!x){x={t,gs:[]};hs.push(x);}x.gs.push(g);});
+  return {id:b.id,name:b.name,gruppe:b.gruppe,kurz:b.kurz,rg:b.rg,pos:b.pos,merksatz:b.merksatz,mbo:b.mbo,app:b.app,unklar:!!b.unklar,hh:b.hh,hhk:clsOf(b.hh),rows,hs,
+    prev:rows[0].cells.map(c=>c.k),
+    q:NORM([b.name,b.gruppe,b.rg,b.kurz,b.merksatz].join(' '))};});
+for(let i=KB.length-1;i>=0;i--)if(!KB[i].rows.some(r=>r.cells.some(c=>c.k!=='na'&&c.k!=='none')))KB.splice(i,1);
+const KBY={};KB.forEach(e=>KBY[e.id]=e);
+const KGRP=[];KB.forEach(e=>{if(KGRP.indexOf(e.gruppe)<0)KGRP.push(e.gruppe);});
+let _fq=null,_fg,_fr;
+function filterKat(q,grp){
+  const nq=NORM(q.trim());if(_fq===nq&&_fg===grp)return _fr;
+  const t=nq?nq.split(/\s+/):[];
+  _fr=KB.filter(e=>(!grp||e.gruppe===grp)&&t.every(x=>e.q.indexOf(x)>=0));_fq=nq;_fg=grp;return _fr;}
+/* Zuordnung Bauteil -> Hervorhebung im 3D-Haus (Schluessel siehe createScene) */
+const PK={'wand-tragend':[['p:wand'],'floor'],'stuetze':[['p:stuetze'],'floor'],'wand-aussen':[['s:aussen'],'floor'],'decke':[['s:slab','s:kd'],'floor'],'keller-decke':[['s:kd'],'kd'],'dach-decke':[['p:dach'],'roof'],'trennwand':[['p:trenn'],'floor'],
+  'tuer':[['x:tuer_trenn','x:tuer_tr','x:tuer_flur'],'floor'],'brandwand':[['p:brand'],'bw'],'dach':[['x:dach'],'roof'],'rettungsweg':[['x:flur','p:treppe','s:stair'],'floor'],'treppenraum':[['p:treppe','s:stair'],'floor'],
+  'flur':[['s:flurwand','x:flur'],'floor'],'aufstellflaeche':[['x:aufstell'],'ground'],'fenster':[['x:fenster'],'floor'],'aufzug':[['x:aufzug'],'floor'],'durchfuehrung':[['x:durch'],'floor'],'schacht':[['x:schacht'],'floor']};
+const ALLP=['p:wand','p:decke','p:stuetze','p:trenn','p:treppe'];
+const IK={
+  decke_explosion:[['s:slab','s:kd']],decke_anschluss:[['s:slab','s:aussen']],tw_balkon:[['x:balkon']],offener_gang:[['x:balkon','x:flur']],
+  trennwand_oeffnung:[['x:tuer_trenn']],brandwand_oeffnungen:[['p:brand'],'bw',null,true],
+  tuer_treppenraum_keller:[['x:tuer_tr']],tuer_treppenraum_flur:[['x:tuer_tr']],tuer_treppenraum_sonst:[['x:tuer_tr']],tuer_flur:[['x:tuer_flur']],
+  trennwand_keller:[['p:trenn'],'ke','ke'],keller_rw:[['p:treppe','s:stair'],'ke','ke'],keller_rauchableitung:[['x:fenster'],'ke','ke'],
+  rw_zwei:[['x:flur','p:treppe','s:stair','x:fenster','x:aufstell'],'all'],rw_rettungsgeraet:[['x:aufstell','x:fenster'],'ground'],leitung_rettungsweg:[['x:flur','p:treppe','s:stair']],
+  treppe_ohne_raum:[['s:stair']],baustoffklassen:[ALLP,'all'],bauteilklassen:[ALLP,'all'],bauteile_brennbar:[['p:wand','p:decke','p:stuetze'],'all'],daemmstoffe:[['s:aussen']],hochhaus_hinweis:[ALLP,'all'],blitzschutz:[['x:dach'],'roof']};
+function hlDef(e){const o=IK[e.id],p=PK[e.pos]||[ALLP,'all'];
+  return {k:o?o[0]:p[0],cam:(o&&o[1])||p[1],z:(o&&o[2])||null,bw:o?!!o[3]:e.pos==='brandwand'};}
+function buildHL(sel,gk){
+  if(!sel.length)return null;
+  const specs=[],cams=[];let bw=false;
+  sel.forEach(id=>{const e=KBY[id],d=hlDef(e),gi=Math.max(0,GK6.indexOf(gk));
+    const kOf=r=>gi<0?e.hhk:r.cells[gi].k;
+    const c=HC[kOf(e.rows[0])],ck=HC[kOf(e.rows[e.rows.length-1])];
+    specs.push({k:d.k,z:d.z,c,ck:ck!==c?ck:null});cams.push(d.cam);if(d.bw)bw=true;});
+  return {specs,cam:cams.every(x=>x===cams[0])?cams[0]:'all',bw};
+}
+const CAMS={
+  all:null,
+  floor:{theta:-0.45,phi:1.2,zoom:0.95,focus:null},
+  ke:{theta:-0.45,phi:1.15,zoom:0.8,focus:{x:0,y:-0.5,z:-0.5}},
+  kd:{theta:-0.45,phi:1.18,zoom:0.8,focus:{x:0,y:0.5,z:-0.5}},
+  roof:{theta:-0.55,phi:1.1,zoom:0.8,focus:{x:0,y:0.2,z:0,roof:true}},
+  bw:{theta:-1.0,phi:1.22,zoom:0.55,focus:{x:-5.5,y:1.2,z:0,roof:true}},
+  ground:{theta:-0.9,phi:1.2,zoom:0.9,focus:{x:-4,y:2,z:2}}};
+/* Tippen im Haus -> Katalogeintrag */
+function tapId(o){const sub=o.sub||[];
+  switch(o.part){
+    case 'wand':return sub.indexOf('s:flurwand')>=0?'flur_wand':'tw_wand';
+    case 'decke':return sub.indexOf('s:kd')>=0?'decke_keller':'decke';
+    case 'stuetze':return 'tw_stuetze';
+    case 'trenn':return o.zone==='ke'?'trennwand_keller':'trennwand_ne';
+    case 'treppe':return 'treppenraum_wand';
+    case 'dach':return 'dach_decke';
+    case 'brand':return 'brandwand_abschluss';}
+  return null;}
+const KP={'1a':PRESETS[0].p,'1b':{okff:6,free:true,nne:1,ane:true,land:true},'2':PRESETS[1].p,'3':PRESETS[2].p,'4':PRESETS[3].p,'5':PRESETS[4].p,'HH':PRESETS[5].p};
+const codeOf=c=>HCODE[c.k]||String(c.gi+1);
+const gkTxt=g=>g==='HH'?'HH':g;
+function GkChip({g,on,onClick}){const dk=COLTXT(g);
+  return h('span',{className:'kgs'+(on?' on':''),style:{background:GKS[g].c,color:dk?'#1a1a1a':'#fff'}},gkTxt(g));}
+const HSHORT={bw:'Brandwand-Bauart',f30:'feuerhemmend',f60:'hochfeuerhemmend',f60m:'hochfeuerhemmend + M',f90:'feuerbeständig',none:'keine Anforderung',na:'Regel im Text'};
+function legendOf(sel,gk){
+  const out=[],gi=Math.max(0,GK6.indexOf(gk)),two=sel.length>1;
+  sel.forEach((id,i)=>{const e=KBY[id],pre=i?'B ':'A ';
+    const kk=r=>gi<0?e.hhk:r.cells[gi].k;
+    const txt=k=>(HCODE[k]&&k!=='none'?HCODE[k]+' ':'')+HSHORT[k];
+    if(two){const nm=e.name.length>18?e.name.slice(0,17)+'…':e.name;
+      out.push({cs:e.rows.map(r=>HC[kk(r)]),t:pre+nm+': '+e.rows.map(r=>(e.rows.length>1?(r.key==='og'?'OG ':'Keller '):'')+(HCODE[kk(r)]||'Text')).join(' · ')});}
+    else if(e.rows.length>1)e.rows.forEach(r=>out.push({cs:[HC[kk(r)]],t:r.label+': '+txt(kk(r))}));
+    else out.push({cs:[HC[kk(e.rows[0])]],t:'Anforderung: '+txt(kk(e.rows[0]))});});
+  return out;}
+
+/* ---------- Liste ---------- */
+const KRow=React.memo(function KRow({e,mark,on,onTap}){
+  return h('button',{'data-id':e.id,className:'krow'+(mark?' m'+mark:'')+(on?' on':''),onClick:()=>onTap(e.id),'aria-pressed':!!(mark||on)},
+    mark?h('b',{className:'kab ab'+(mark==='A'?0:1)},mark):null,
+    h('div',{className:'nm'},h('b',null,e.name),h('span',null,e.rg)),
+    e.mbo?h('span',{className:'kflag',title:'Abweichung zwischen MBO und Lernseite'},'≠'):null,
+    e.unklar?h('span',{className:'kflag q',title:'nicht eindeutig in der MBO'},'?'):null,
+    h('div',{className:'mini','aria-hidden':'true'},e.prev.map((k,i)=>h('i',{key:i,style:{background:HC[k]}}))));
+});
+function AbwList(){
+  if(!KATALOG.abweichungen.length)return null;
+  return h('details',{className:'kabw'},h('summary',null,'Bekannte Abweichungen zwischen MBO und Lernseite ('+KATALOG.abweichungen.length+')'),
+    KATALOG.abweichungen.map((a,i)=>h('div',{key:i,className:'kmsg',style:{'--c':'#ffa412'}},h('b',null,san(a.thema)),h('p',null,h('b',null,'MBO: '),san(a.mbo)),h('p',{style:{marginBottom:0}},h('b',null,'Lernseite: '),san(a.app)))));
+}
+function KList({kat,setKat,choose,wide}){
+  const {q,grp,sel,cmp}=kat;
+  const byQ=filterKat(q,null),list=filterKat(q,grp);
+  const cnt={};byQ.forEach(e=>{cnt[e.gruppe]=(cnt[e.gruppe]||0)+1;});
+  const mk=id=>cmp?(sel[0]===id?'A':sel[1]===id?'B':''):'';
+  const rows=[];
+  KGRP.forEach(g=>{const items=list.filter(e=>e.gruppe===g);if(!items.length)return;
+    rows.push(h('h3',{key:'h'+g,className:'kgh2'},g+' · '+items.length));
+    items.forEach(e=>rows.push(h(KRow,{key:e.id,e,mark:mk(e.id),on:!cmp&&sel[0]===e.id,onTap:choose})));});
+  const slot=(i)=>{const id=sel[i],e=id&&KBY[id];
+    return h('button',{className:'kslot ab'+i+(e?' f':''),disabled:!e,onClick:()=>setKat(k=>({...k,sel:k.sel.filter((_,j)=>j!==i)})),'aria-label':e?'Auswahl '+(i?'B':'A')+' entfernen: '+e.name:'Bauteil '+(i?'B':'A')+' wählen'},
+      h('b',null,i?'B':'A'),h('span',null,e?e.name:'Bauteil antippen'),e?h('em',null,'×'):null);};
+  return h('div',{className:'kl'},
+    h('div',{className:'ksrow'},
+      h('div',{className:'ksearch'},h('input',{type:'search',value:q,placeholder:'Bauteil suchen …','aria-label':'Bauteile durchsuchen',onChange:e=>{const v=e.target.value;setKat(k=>({...k,q:v}));}}),
+        q?h('button',{className:'x','aria-label':'Suche löschen',onClick:()=>setKat(k=>({...k,q:''}))},'×'):null),
+      h('button',{className:'chp f kcmpb'+(cmp?' on':''),'aria-pressed':cmp,onClick:()=>setKat(k=>({...k,cmp:!k.cmp,sel:k.cmp?k.sel.slice(0,1):k.sel}))},ICON.cmp,'Vergleichen')),
+    h('div',{className:'kchips',role:'group','aria-label':'Gruppen'},
+      h('button',{className:'chp f'+(!grp?' on':''),onClick:()=>setKat(k=>({...k,grp:null}))},'Alle · '+byQ.length),
+      KGRP.map(g=>h('button',{key:g,className:'chp f'+(grp===g?' on':'')+(cnt[g]?'':' z'),onClick:()=>setKat(k=>({...k,grp:k.grp===g?null:g}))},g+' · '+(cnt[g]||0)))),
+    cmp?h('div',{className:'kcmp'},slot(0),slot(1)):null,
+    cmp&&!sel.length?h('div',{className:'msg n'},'Tippe zwei Bauteile an (in der Liste oder im Haus). Sie werden dann gegenübergestellt.'):null,
+    !list.length?h('div',{className:'msg n'},'Kein Bauteil gefunden. Suchbegriff ändern oder Gruppe „Alle“ wählen.'):null,
+    rows,
+    h(AbwList),
+    h('div',{style:{height:8}}));
+}
+/* ---------- Detail ---------- */
+function KTables({es,gk,setGk}){
+  const used={};
+  const body=[];
+  es.forEach((e,ei)=>{
+    if(es.length>1)body.push(h('div',{key:'t'+ei,className:'ktit'},h('b',{className:'kab ab'+ei},ei?'B':'A'),e.name));
+    e.rows.forEach(r=>{
+      body.push(h('div',{key:e.id+r.key+'c',className:'kcap'},r.label));
+      r.cells.forEach(c=>{used[c.k]=1;body.push(h('button',{key:e.id+r.key+c.g,className:'kcell'+(c.g===gk?' sel':'')+(HDARK[c.k]?' dk':''),style:{background:HC[c.k]},onClick:()=>setGk(c.g),'aria-label':GKS[c.g].long+': '+(HNAME[c.k])},codeOf(c)));});
+    });});
+  const leg=Object.keys(HC).filter(k=>used[k]);
+  return h('div',{className:'ktb'},
+    h('div',{className:'kcap2'},'Gebäudeklasse antippen: das Haus zeigt dann deren Werte'),
+    h('div',{className:'kgrid khead'},GK6.map(g=>h('button',{key:g,className:'kgc'+(g===gk?' on':'')+(COLTXT(g)?' dk':''),style:{background:GKS[g].c},onClick:()=>setGk(g),'aria-pressed':g===gk,'aria-label':GKS[g].long},gkTxt(g)))),
+    h('div',{className:'kgrid'},body),
+    h('div',{className:'klg'},leg.map(k=>h('span',{key:k},h('i',{style:{background:HC[k]}}),(HCODE[k]||'Zahl')+' '+HNAME[k]))));
+}
+function KWort({e,gk}){
+  const gi=gk;
+  const grpCard=(gr,i,key)=>h('div',{key,className:'kw',style:{'--c':HC[gr.k]}},
+    h('div',{className:'kwh'},h('b',{className:'kb'+(HDARK[gr.k]?' dk':'')},HCODE[gr.k]||String(i+1)),gr.gs.map(g=>h('span',{key:g,className:'kgw'+(g===gi?' on':'')},h(GkChip,{g})))),
+    h('p',null,san(gr.t)));
+  const out=[];
+  e.rows.forEach(r=>{out.push(h('h3',{key:'h'+r.key},e.rows.length>1?r.label+': Wortlaut':'Wortlaut je Gebäudeklasse'));r.grp.forEach((gr,i)=>out.push(grpCard(gr,i,r.key+i)));});
+  return h('div',null,out);
+}
+function KMeta({e}){
+  const bwd=e.id==='brandwand_dach'||e.id==='brandwand_ausfuehrung'||e.id==='brandwand_abschluss';
+  return h('div',null,
+    e.unklar?h('div',{className:'kmsg',style:{'--c':'#ffa412'}},h('b',null,'Hinweis: nicht eindeutig in der MBO.'),' Der Wert beruht auf der Lernseite bzw. einer Richtlinie und sollte vor einer Prüfung nachgeschlagen werden.'):null,
+    e.mbo?h('div',{className:'kmsg',style:{'--c':'#ff6a4d'}},h('b',null,'Abweichung: MBO und Lernseite sagen Unterschiedliches'),
+        h('p',null,h('span',{className:'kt1'},'MBO'),san(e.mbo)),
+        e.app?h('p',{style:{marginBottom:0}},h('span',{className:'kt1 l'},'Lernseite'),san(e.app)):null)
+      :e.app?h('div',{className:'kmsg',style:{'--c':'#5b6b86'}},h('b',null,'Abgleich mit der Lernseite'),h('p',{style:{marginBottom:0}},san(e.app))):null,
+    e.hs.length?h('div',null,h('h3',null,'Hinweise'),e.hs.map((x,i)=>h('div',{key:i,className:'kmsg',style:{'--c':'#5b6b86'}},
+        e.hs.length>1||x.gs.length<GK6.length?h('div',{className:'kwh'},x.gs.map(g=>h(GkChip,{key:g,g}))):null,h('p',{style:{marginBottom:0}},san(x.t))))):null,
+    h('div',{className:'kmsg ms',style:{'--c':'var(--ac)'}},h('b',null,'Merksatz'),h('p',{style:{marginBottom:0}},san(e.merksatz))),
+    h('div',{className:'kmsg',style:{'--c':'#5b6b86'}},h('b',null,'Rechtsgrundlage'),h('p',{style:{marginBottom:0}},san(e.rg))),
+    bwd?h('div',{className:'card'},h(BwDetail),h('div',{className:'mu',style:{fontSize:11.5,marginTop:6}},'Vereinfachte Darstellung, nicht maßstäblich.')):null);
+}
+function KDetail({es,gk,setGk,kat,setKat,choose,wide}){
+  const single=es.length===1,e=es[0];
+  const ids=filterKat(kat.q,kat.grp).map(x=>x.id),ix=single?ids.indexOf(e.id):-1;
+  const go=d=>{const id=ids[ix+d];if(id)choose(id);};
+  const nav=h('div',{className:'knav'},
+    wide?null:h('button',{className:'btn sec',onClick:()=>setKat(k=>({...k,view:'list'}))},'‹ Liste'),
+    single?h('button',{className:'btn sec sq','aria-label':'vorheriges Bauteil',disabled:ix<=0,onClick:()=>go(-1)},'‹'):null,
+    single?h('button',{className:'btn sec sq','aria-label':'nächstes Bauteil',disabled:ix<0||ix>=ids.length-1,onClick:()=>go(1)},'›'):null,
+    h('div',{style:{flex:1}}),
+    single?h('button',{className:'btn sec',onClick:()=>setKat(k=>({...k,cmp:true,view:'list'}))},ICON.cmp,'Vergleichen'):null,
+    wide?h('button',{className:'btn sec sq','aria-label':'Auswahl aufheben',onClick:()=>setKat(k=>({...k,sel:[]}))},'×'):null);
+  return h('div',{className:'kd'},nav,
+    single?h('div',null,h('div',{className:'ktag'},e.gruppe),h('h2',{style:{marginTop:2,marginBottom:0}},e.name))
+      :h('div',null,h('div',{className:'ktag'},'Vergleich'),h('h2',{style:{marginTop:2,fontSize:16,marginBottom:0}},es.map(x=>x.name).join('  ·  '))),
+    h(KTables,{es,gk,setGk}),
+    single?h('p',{className:'mu',style:{marginTop:12}},san(e.kurz)):es.map((x,i)=>h('p',{key:x.id,className:'mu',style:{marginTop:i?0:12}},h('b',{className:'kab ab'+i},i?'B':'A'),san(x.kurz))),
+    es.map((x,i)=>h('div',{key:x.id},es.length>1?h('h2',{className:'kbh'},h('b',{className:'kab ab'+i},i?'B':'A'),x.name):null,h(KWort,{e:x,gk}),h(KMeta,{e:x}))),
+    h('div',{style:{height:12}}));
+}
+function KatTab({kat,setKat,gk,setGk,choose,wide}){
+  const es=kat.sel.map(id=>KBY[id]),has=es.length>0;
+  const showDetail=has&&(wide||kat.view==='detail');
+  if(!wide){
+    return showDetail?h(KDetail,{key:kat.sel.join(),es,gk,setGk,kat,setKat,choose,wide}):h(KList,{kat,setKat,choose,wide});
+  }
+  return h('div',{className:'kt wide'+(has?' has':'')},h(KList,{kat,setKat,choose,wide}),has?h(KDetail,{key:kat.sel.join(),es,gk,setGk,kat,setKat,choose,wide}):null);
+}
+const KCSS=`
+.ksrow{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.ksearch{position:relative;flex:1;min-width:0}
+.ksearch input{width:100%;min-height:46px;border-radius:14px;border:2px solid var(--ln);background:var(--pn2);color:var(--tx);font:600 15px inherit;font-family:inherit;padding:0 44px 0 14px;-webkit-appearance:none;appearance:none}
+.ksearch input:focus{outline:none;border-color:var(--ac)}
+.ksearch input::-webkit-search-cancel-button{display:none}
+@media(max-width:899px){.app.kat .panel{height:60%}}
+.ksearch .x{position:absolute;right:1px;top:1px;width:44px;height:44px;border:0;background:transparent;color:var(--mu);font-size:24px;cursor:pointer}
+.kcmpb svg{width:18px;height:18px}
+.kchips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.kchips::-webkit-scrollbar{display:none}
+.kchips .chp{flex:none;white-space:nowrap}
+.kchips .chp.z{opacity:.45}
+.kgh2{position:sticky;top:-12px;z-index:1;margin:0;padding:12px 2px 6px;background:var(--pn)}
+.kt.wide .kgh2{top:0}
+.krow{display:flex;align-items:center;gap:10px;width:100%;min-height:56px;text-align:left;border:2px solid transparent;background:var(--pn2);border-radius:14px;padding:6px 10px;margin:0 0 6px;color:var(--tx);cursor:pointer;font-family:inherit}
+.krow.on{border-color:var(--ac)}
+.krow.mA{border-color:#4aa3e0}.krow.mB{border-color:#e08a4a}
+.krow .nm{flex:1;min-width:0}.krow .nm b{display:block;font-size:14.5px;line-height:1.25}.krow .nm span{display:block;font-size:12px;color:var(--mu);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini{display:flex;gap:2px;flex:none}.mini i{width:9px;height:26px;border-radius:3px;display:block}
+.kflag{flex:none;min-width:22px;height:22px;border-radius:7px;background:rgba(255,106,77,.22);color:#ff6a4d;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+.kflag.q{background:rgba(255,164,18,.25);color:#e08a00}
+.kab{flex:none;width:24px;height:24px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;margin-right:2px}
+.ab0{background:#2f78c4}.ab1{background:#c8691f}
+.kcmp{display:flex;gap:8px;margin-bottom:8px}
+.kslot{flex:1;min-width:0;min-height:48px;border-radius:14px;border:2px dashed var(--ln);background:transparent;color:var(--mu);display:flex;align-items:center;gap:8px;padding:0 8px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;text-align:left}
+.kslot b{flex:none;width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff}
+.kslot.ab0 b{background:#2f78c4}.kslot.ab1 b{background:#c8691f}
+.kslot span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kslot.f{border-style:solid;color:var(--tx);background:var(--pn2)}
+.kslot em{font-style:normal;font-size:20px;color:var(--mu)}
+.kabw{margin-top:14px}.kabw summary{min-height:44px;display:flex;align-items:center;font-weight:700;font-size:13.5px;cursor:pointer;color:var(--mu)}
+.kt.wide{display:flex;flex-direction:column;height:100%;min-height:0}
+.kt.wide .kl{flex:1 1 auto;overflow:auto;min-height:0;padding-right:4px}
+.kt.wide.has .kl{flex:0 0 38%}
+.kt.wide .kd{flex:1 1 auto;overflow:auto;min-height:0;border-top:2px solid var(--ln);margin-top:8px;padding:10px 4px 0 0}
+.pbody.katb{overflow:hidden;display:flex;flex-direction:column}
+.pbody.katb>.kt{flex:1;min-height:0}
+.knav{display:flex;gap:6px;align-items:center;margin:0 0 8px;padding:6px 0;flex-wrap:wrap;position:sticky;top:0;z-index:6;background:var(--pn)}
+.knav .btn{min-height:44px;padding:0 14px;font-size:14px;display:flex;align-items:center;gap:6px}
+.knav .btn svg{width:18px;height:18px}
+.knav .btn.sq{width:48px;padding:0;justify-content:center;font-size:24px;line-height:1}
+.knav .btn:disabled{opacity:.35}
+.ktag{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--ac)}
+.ktb{margin:8px 0 10px}
+.kcap2{font-size:12px;color:var(--mu);margin-bottom:6px}
+.kgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+.kgrid .ktit,.kgrid .kcap{grid-column:1/-1}
+.khead{margin-bottom:4px}
+.kgc{min-height:44px;border:0;border-radius:11px;color:#fff;font:800 14px inherit;font-family:inherit;cursor:pointer;opacity:.85}
+.kgc.dk{color:#1a1a1a}
+.kgc.on{opacity:1;box-shadow:0 0 0 3px var(--tx)}
+.kcap{font-size:11.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--mu);padding:8px 0 0}
+.ktit{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px;padding:10px 0 0}
+.kcell{min-height:46px;border:0;border-radius:10px;color:#fff;font:800 12.5px/1.1 inherit;font-family:inherit;cursor:pointer;padding:0 2px;overflow-wrap:anywhere}
+.kcell.dk{color:#1a1a1a}
+.kcell.sel{box-shadow:0 0 0 3px var(--tx)}
+.kcell.dup{opacity:.55}
+.klg{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:12px;color:var(--mu)}
+.klg span{display:inline-flex;align-items:center;gap:5px}.klg i{width:12px;height:12px;border-radius:4px;display:block;flex:none}
+.kw{background:var(--pn2);border-radius:14px;border:1px solid var(--ln);border-left:6px solid var(--c);padding:8px 12px;margin-bottom:8px}
+.kw p{margin:6px 0 0;font-size:14px;line-height:1.4}
+.kwh{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.kb{display:inline-block;min-width:40px;text-align:center;border-radius:8px;padding:3px 8px;font-weight:800;font-size:13px;background:var(--c);color:#fff;margin-right:3px}
+.kb.dk{color:#1a1a1a}
+.kw .kb{background:var(--c)}
+.kgs{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:26px;border-radius:8px;font-weight:800;font-size:12.5px;padding:0 6px}
+.kgw.on .kgs{box-shadow:0 0 0 3px var(--tx)}
+.kmsg{border-radius:14px;padding:10px 13px;margin:0 0 10px;font-size:14px;line-height:1.4;border:1px solid var(--ln);border-left:6px solid var(--c);background:color-mix(in srgb,var(--c) 13%,var(--pn2));color:var(--tx)}
+.kmsg p{margin:6px 0 0;font-size:14px}
+.kmsg.ms{font-size:14.5px}
+.kt1{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;border-radius:6px;padding:1px 7px;margin-right:7px;background:#2f78c4;color:#fff}
+.kt1.l{background:#c8691f}
+.kbh{display:flex;align-items:center;gap:8px;font-size:15.5px;margin:18px 0 0}
+.chp.f.on svg{color:#241503}
+@media(min-width:900px){.kslot{font-size:12.5px}}
+.sl span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px}
+`;
+
 /* ---------- Quiz ---------- */
 function QuizTab({quiz,setQuiz,startQuiz,answer,next}){
   if(!quiz)return null;
@@ -806,16 +1086,22 @@ function App(){
   const [tab,setTab]=useState('bau');
   const [p,setP]=useState(P0);
   const [seg,setSeg]=useState('regler');
-  const [teile,setTeile]=useState({focus:null,bw:false,sel:null,dgar:true});
-  DGAR=teile.dgar!==false;
+  const [kat,setKat]=useState({q:'',grp:null,sel:[],cmp:false,gk:null,view:'list'});
   const [quiz,setQuiz]=useState(null);
-  const api=useRef(null),pickRef=useRef(null);
+  const api=useRef(null),pickRef=useRef(null),pbRef=useRef(null),lsc=useRef(0);
   const wide=useWide();
   const startQuiz=useCallback(type=>{setQuiz({type,cases:type==='sonder'?makeSonder():makeRound(),i:0,ans:[],phase:'ask'});},[]);
   useEffect(()=>{if(tab==='quiz'&&!quiz)startQuiz('gk');},[tab]);
   const answer=(k,ok)=>setQuiz(q=>{const ans=q.ans.slice();ans[q.i]={pick:k,ok};return Object.assign({},q,{ans,phase:'fb'});});
   const next=()=>setQuiz(q=>q.i+1>=q.cases.length?Object.assign({},q,{phase:'end'}):Object.assign({},q,{i:q.i+1,phase:'ask'}));
-  pickRef.current=o=>setTeile(t=>Object.assign({},t,{sel:o}));
+  /* Katalog: Bauteil waehlen (Liste oder Tippen im Haus) */
+  const choose=useCallback(id=>setKat(k=>{
+    if(k.cmp){const had=k.sel.indexOf(id)>=0,s=had?k.sel.filter(x=>x!==id):k.sel.length<2?k.sel.concat(id):[k.sel[0],id];
+      if(!had&&s.length===2)return Object.assign({},k,{sel:s,view:'detail'});
+      return Object.assign({},k,{sel:s});}
+    return Object.assign({},k,{sel:[id],view:'detail'});}),[]);
+  const setGk=useCallback(g=>setKat(k=>Object.assign({},k,{gk:g})),[]);
+  pickRef.current=o=>{if(tab!=='katalog'||!o)return;const id=tapId(o);if(id)choose(id);};
   /* Welche Szene? */
   const qc=tab==='quiz'&&quiz&&quiz.phase!=='end'?quiz.cases[quiz.i]:null;
   let ep=p,color=null,label=null,secMode=false,gk=null;
@@ -830,33 +1116,44 @@ function App(){
   }
   const cl=classify(tab==='quiz'?ep:p);
   if(tab!=='quiz'){gk=cl.gk;color=GKS[gk].c;label={text:GKS[gk].n,sub:gk==='HH'?'MHHR':'',color:GKS[gk].c,dark:!!COLTXT(gk)};}
-  if(tab==='teile')secMode=true;
-  const view={mode:secMode?'sec':'ext',p:ep,color,label,gk:gk||cl.gk,dgar:teile.dgar!==false,focus:tab==='teile'?teile.focus:null,bw:tab==='teile'&&teile.bw,rulers:!(tab==='quiz'&&sonder)};
+  /* Katalog-Szene: gewaehlte Gebaeudeklasse, Hervorhebung */
+  const kgk=kat.gk||cl.gk;
+  let hl=null;
+  const hlMemo=useMemo(()=>tab==='katalog'?buildHL(kat.sel,kgk):null,[tab,kat.sel,kgk]);
+  if(tab==='katalog'){secMode=true;gk=kgk;if(kgk!==cl.gk)ep=KP[kgk];hl=hlMemo;}
+  const view={mode:secMode?'sec':'ext',p:ep,color,label,gk:gk||cl.gk,dgar:true,focus:null,bw:!!(hl&&hl.bw),hl:hl?hl.specs:null,rulers:!(tab==='quiz'&&sonder)};
   const vk=JSON.stringify(view);
   useEffect(()=>{api.current&&api.current.set(view);},[vk]);
-  /* Kamera bei Moduswechsel */
-  const camKey=secMode?(tab==='teile'&&teile.bw?'bw':'sec'):'ext';
-  useEffect(()=>{const a=api.current;if(!a)return;
-    if(camKey==='bw')a.fly({theta:-1.0,phi:1.22,zoom:0.55,focus:{x:-5.5,y:1.2,z:0,roof:true}});
-    else a.reset();},[camKey]);
+  /* Kamera bei Moduswechsel bzw. anderer Hervorhebung */
+  const camKey=tab==='katalog'?(hl?hl.cam:'sec'):secMode?'sec':'ext';
+  const flyCam=()=>{const a=api.current;if(!a)return;const c=CAMS[camKey];if(c)a.fly(c);else a.reset();};
+  useEffect(flyCam,[camKey]);
   const ready=sc=>{api.current=sc;sc.set(view);};
   /* Legende in der Szene */
   let legend=null;
-  if(secMode){const g=view.gk;const ks=[];const add=k=>{if(!ks.includes(k))ks.push(k);};
-    add(reqFor(g,'wand','og'));add(reqFor(g,'wand','ke'));add(reqFor(g,'treppe','og'));add(reqFor(g,'dach','og'));if(ep.nne>=2)add(reqFor(g,'trenn','og'));if(view.bw)add('bw');
+  if(tab==='katalog'){
+    const items=kat.sel.length?legendOf(kat.sel,kgk):[];
+    const old=[];if(!kat.sel.length){const add=k=>{if(!old.includes(k))old.push(k);};add(reqFor(kgk,'wand','og'));add(reqFor(kgk,'wand','ke'));add(reqFor(kgk,'treppe','og'));add(reqFor(kgk,'dach','og'));if(ep.nne>=2)add(reqFor(kgk,'trenn','og'));}
+    legend=h('div',{className:'slegend'},h('div',{className:'sl'},h('i',{style:{background:GKS[kgk].c}}),h('span',null,GKS[kgk].long)),
+      items.map((it,i)=>h('div',{key:i,className:'sl'},it.cs.map((c,j)=>h('i',{key:j,style:{background:c}})),h('span',null,it.t))),
+      old.map(k=>h('div',{key:k,className:'sl'},h('i',{style:{background:REQ[k].c}}),h('span',null,REQ[k].s==='keine'?'keine Anforderung':REQ[k].s+(REQ[k].n?' '+REQ[k].n:'')))));
+  }else if(secMode){const g=view.gk;const ks=[];const add=k=>{if(!ks.includes(k))ks.push(k);};
+    add(reqFor(g,'wand','og'));add(reqFor(g,'wand','ke'));add(reqFor(g,'treppe','og'));add(reqFor(g,'dach','og'));if(ep.nne>=2)add(reqFor(g,'trenn','og'));
     legend=h('div',{className:'slegend'},ks.map(k=>h('div',{key:k,className:'sl'},h('i',{style:{background:REQ[k].c}}),REQ[k].s==='keine'?'keine Anforderung':REQ[k].s+(REQ[k].n?' '+REQ[k].n:''))));}
-  const hint=secMode?(tab==='teile'?'Tippe ein Bauteil an · Ziehen dreht · Pinch zoomt · vereinfachte Darstellung':'Aufgeschnittenes Gebäude · vereinfachte Darstellung'):'Ziehen dreht · Pinch/Scrollrad zoomt · vereinfachte Darstellung (ca. 3 m je Geschoss)';
+  const hint=tab==='katalog'?(kat.sel.length?'Übriges Haus abgedunkelt · Bauteil im Haus antippen wählt es aus · Ziehen dreht · Pinch zoomt':'Wähle ein Bauteil in der Liste oder tippe es im Haus an · Ziehen dreht · vereinfachte Darstellung'):secMode?'Aufgeschnittenes Gebäude · vereinfachte Darstellung':'Ziehen dreht · Pinch/Scrollrad zoomt · vereinfachte Darstellung (ca. 3 m je Geschoss)';
   const stage=h(Stage,{onReady:ready,onPick:pickRef,sec:secMode},
     legend,
-    h('div',{className:'topr'},h('button',{className:'ibtn','aria-label':'Ansicht zurücksetzen',onClick:()=>{const a=api.current;if(!a)return;if(camKey==='bw')a.fly({theta:-1.0,phi:1.22,zoom:0.55,focus:{x:-5.5,y:1.2,z:0,roof:true}});else a.reset();}},ICON.reset)),
+    h('div',{className:'topr'},h('button',{className:'ibtn','aria-label':'Ansicht zurücksetzen',onClick:flyCam},ICON.reset)),
     h('div',{className:'hint'},hint));
   let body;
-  if(tab==='bau')body=h(BauTab,{p,setP,cl,wide,seg,setSeg,gotoTeile:()=>setTab('teile')});
-  else if(tab==='teile')body=h(TeileTab,{p,setP,gk:cl.gk,teile,setTeile});
+  if(tab==='bau')body=h(BauTab,{p,setP,cl,wide,seg,setSeg,gotoTeile:()=>setTab('katalog')});
+  else if(tab==='katalog')body=h(KatTab,{kat,setKat,gk:kgk,setGk,choose,wide});
   else if(tab==='matrix')body=h(MatrixTab);
   else body=h(QuizTab,{quiz,setQuiz,startQuiz,answer,next});
-  const tabs=h('div',{className:'tabs',role:'tablist'},[['bau','Baukasten'],['teile','Bauteile'],['matrix','Matrix'],['quiz','Prüf-Quiz']].map(a=>h('button',{key:a[0],role:'tab','aria-selected':tab===a[0],className:'tab'+(tab===a[0]?' on':''),onClick:()=>setTab(a[0])},ICON[a[0]],a[1])));
-  return h('div',{className:'app'+(tab==='matrix'?' mx':'')},stage,h('div',{className:'panel'},tabs,h('div',{className:'pbody',key:tab+(tab==='quiz'&&quiz?quiz.type+quiz.i+quiz.phase:'')},body)));
+  /* Scrollposition der Liste merken (schmale Ansicht) */
+  useLayoutEffect(()=>{const el=pbRef.current;if(!el||tab!=='katalog')return;el.scrollTop=kat.view==='list'||!kat.sel.length?lsc.current:0;},[tab,kat.view,kat.sel.join()]);
+  const tabs=h('div',{className:'tabs',role:'tablist'},[['bau','Baukasten'],['katalog','Katalog'],['matrix','Matrix'],['quiz','Prüf-Quiz']].map(a=>h('button',{key:a[0],role:'tab','aria-selected':tab===a[0],className:'tab'+(tab===a[0]?' on':''),onClick:()=>setTab(a[0])},ICON[a[0]],a[1])));
+  return h('div',{className:'app'+(tab==='matrix'?' mx':'')+(tab==='katalog'?' kat':'')},stage,h('div',{className:'panel'},tabs,h('div',{className:'pbody'+(tab==='katalog'&&wide?' katb':''),ref:pbRef,onScroll:e=>{if(tab==='katalog'&&kat.view==='list')lsc.current=e.target.scrollTop;},key:tab+(tab==='quiz'&&quiz?quiz.type+quiz.i+quiz.phase:'')},body)));
 }
-const st=document.createElement('style');st.textContent=css+MXCSS;document.head.appendChild(st);
+const st=document.createElement('style');st.textContent=css+MXCSS+KCSS;document.head.appendChild(st);
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
