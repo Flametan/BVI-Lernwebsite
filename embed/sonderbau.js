@@ -299,7 +299,8 @@ function createScene(canvas,host,cb){
         plate.visible=true;plate.scale.set(b.sh.w+3,0.12,b.sh.d+3);plate.position.set(b.x,0.09,b.z);}
       else{goal.tx=T0.x;goal.ty=T0.y;goal.tz=T0.z;goal.r=homeR();goal.th=-0.28;goal.ph=0.82;plate.visible=false;}}
     applyXray();kick();}
-  return {show,home(){show({focus:null,labels:labMode,xray:false});},
+  function screenOf(id){const b=B[id];applyCam();const v=new THREE.Vector3(b.x,b.h*0.35,b.z).project(camera);const r=canvas.getBoundingClientRect();return {x:r.left+(v.x*0.5+0.5)*r.width,y:r.top+(-v.y*0.5+0.5)*r.height};}
+  return {show,screenOf,home(){show({focus:null,labels:labMode,xray:false});},
     dispose(){if(raf)cancelAnimationFrame(raf);ro.disconnect();renderer.dispose();lbls.remove();}};
 }
 
