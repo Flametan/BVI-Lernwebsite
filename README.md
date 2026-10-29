@@ -11,17 +11,17 @@
 
 | Modul | Lernkarten (nur Prüfungswissen) |
 |---|---|
-| 🧠 IBK Heyrothsberge | 84 |
+| 🧠 IBK Heyrothsberge | 63 |
 | ⚖️ VAk Berlin | 141 |
 | 📊 FeuAK Hamburg | 86 |
 | 🏛️ IdF Münster | 100 |
-| **Gesamt** | **411** |
+| **Gesamt** | **390** |
 
 ---
 
 ## Features
 
-- **411 Lernkarten** (nur Prüfungswissen) – 3D-Flip-Animation, Know/Don't-Know-Bewertung, LocalStorage-Persistenz
+- **390 Lernkarten** (nur Prüfungswissen) – 3D-Flip-Animation, Know/Don't-Know-Bewertung, LocalStorage-Persistenz
 - **Fallbearbeitung** – 6 juristische Übungsfälle mit 9-Punkte-Schema (Realakt/VA-Differenzierung)
 - **Altklausur-Training** – VAk Berlin + FeuAK Hamburg Prüfungsvorbereitung
 - **Führungsdienstsimulator** – 8 verzweigte Entscheidungsszenarien mit Scoring
