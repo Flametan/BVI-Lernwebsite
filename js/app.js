@@ -1934,8 +1934,7 @@ const FC = (function(){
     const ownN=FLASHCARD_DATA.filter(c=>c.own).length;
     const weakN=fcLoadWeak().size;
     const allSel=CATS.every(c=>activeFilters.has(c));
-    const PRUEFUNG_CATS=['ibk','vak','feuak','idf'];
-    const isPruefung=!isStarred&&PRUEFUNG_CATS.every(c=>activeFilters.has(c))&&activeFilters.size===PRUEFUNG_CATS.length;
+    const isPruefung=false;   // seit es nur noch die vier Prüfungsmodule gibt, ist „Alle“ die Prüfungsauswahl
     document.querySelectorAll('.fc-f-btn').forEach(b=>{
       const df=b.dataset.filter;
       const base=b.dataset.label||'';
@@ -4114,6 +4113,7 @@ const CHANGELOG=(function(){
       'Lernkarten komplett neu: 387 Karten ausschließlich aus den Prüfungen mit Farbverlauf – IBK (Transaktionsanalyse und Konflikte aus der Zusammenfassung, 63), VAk (Altklausur-Quiz, Fallbearbeitung, Laufbahn Recht, 139), FeuAK (Klausur 08/2026, 85) und IdF (Altklausur-Quiz, Laufbahn Stabsarbeit/VB, 100)',
       'IdF → Vorbeugender Brandschutz: Tabs „Brandabschnitt-Haus in 3D“, „Brandschutzplaner“ und „Sonderbau-Quartier“ entfernt',
       'IdF → Vorbeugender Brandschutz → Lernseite: Inhalte der Zusammenfassung Oktober 2026 (Prüfschemata bis Schule) eingearbeitet – neue Punkte Begriffe, Baurecht, Grundsatzanforderungen, Baustoffe und Bauteile, Aufzüge, Versammlungsstätten, Schulen; Ergänzungen bei Rettungswegen, baulichem Brandschutz, Hochhäusern, Verkaufs-, Beherbergungs-, Industriebau und Garagen',
+      'Lernkarten: „Alle“ wird markiert, wenn man darauf tippt oder alle vier Module einzeln auswählt',
       'Alle bisherigen Karten ohne Klausurbezug (GAL, SFS, HLFS und die Theoriekarten der vier Module) entfernt; Filter und Fortschritt zeigen nur noch IBK, VAk, FeuAK und IdF',
     ]},
     {v:'3.0.2',ts:'2026-10-27T00:10',items:[
