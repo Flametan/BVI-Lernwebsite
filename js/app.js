@@ -4114,6 +4114,7 @@ const CHANGELOG=(function(){
       'IdF → Vorbeugender Brandschutz: Tabs „Brandabschnitt-Haus in 3D“, „Brandschutzplaner“ und „Sonderbau-Quartier“ entfernt',
       'IdF → Vorbeugender Brandschutz → Lernseite: Inhalte der Zusammenfassung Oktober 2026 (Prüfschemata bis Schule) eingearbeitet – neue Punkte Begriffe, Baurecht, Grundsatzanforderungen, Baustoffe und Bauteile, Aufzüge, Versammlungsstätten, Schulen; Ergänzungen bei Rettungswegen, baulichem Brandschutz, Hochhäusern, Verkaufs-, Beherbergungs-, Industriebau und Garagen',
       'Lernkarten: „Alle“ wird markiert, wenn man darauf tippt oder alle vier Module einzeln auswählt',
+      'Brandwand: REI 90-M gilt nach europäischer Norm (EN 13501-2), nach deutscher Norm (DIN 4102) heißt es F 90-A; „REIM 90“ überall durch REI 90-M ersetzt (Lernseite, Quiz)',
       'Alle bisherigen Karten ohne Klausurbezug (GAL, SFS, HLFS und die Theoriekarten der vier Module) entfernt; Filter und Fortschritt zeigen nur noch IBK, VAk, FeuAK und IdF',
     ]},
     {v:'3.0.2',ts:'2026-10-27T00:10',items:[
