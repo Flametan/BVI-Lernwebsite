@@ -1216,7 +1216,7 @@ const PROGRESS = (function(){
   const HUBS = {
     'v-feuak-bp-hub':['v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp'],
     'v-feuak-analyse':['v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    'v-idf-vb':['v-idf-brandschutz','v-idf-vblernen','v-idf-gk'],
+    'v-idf-vb':['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-gk1','v-idf-gk2','v-idf-gk3'],
     'v-idf-stabhub':['v-idf-stab','v-idf-stabskarte']
   };
 
@@ -1284,6 +1284,7 @@ const SEARCH = (function(){
     'v-idf-stabskarte':'IdF · Taschenkarte Stabsarbeit',
     'v-idf-vblernen':'IdF · VB-Prüfung lernen',
     'v-idf-gk':'IdF · Gebäudeklassen-Baukasten',
+    'v-idf-gk1':'IdF · Baukasten Variante 1','v-idf-gk2':'IdF · Baukasten Variante 2','v-idf-gk3':'IdF · Baukasten Variante 3',
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
     'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
@@ -4115,6 +4116,7 @@ const CHANGELOG=(function(){
       'IdF → Vorbeugender Brandschutz → Lernseite: Inhalte der Zusammenfassung Oktober 2026 (Prüfschemata bis Schule) eingearbeitet – neue Punkte Begriffe, Baurecht, Grundsatzanforderungen, Baustoffe und Bauteile, Aufzüge, Versammlungsstätten, Schulen; Ergänzungen bei Rettungswegen, baulichem Brandschutz, Hochhäusern, Verkaufs-, Beherbergungs-, Industriebau und Garagen',
       'Lernkarten: „Alle“ wird markiert, wenn man darauf tippt oder alle vier Module einzeln auswählt',
       'Brandwand: REI 90-M gilt nach europäischer Norm (EN 13501-2), nach deutscher Norm (DIN 4102) heißt es F 90-A; „REIM 90“ überall durch REI 90-M ersetzt (Lernseite, Quiz)',
+      'IdF → Vorbeugender Brandschutz: Gebäudeklassen-Baukasten in drei Varianten zur Auswahl, jeweils mit allen 80 Bauteilen der MBO (Rundgang, Katalog mit Vergleich, Abnahme zum Ausfüllen); neuer Bauteil-Katalog aus MBO und Lernseite mit 12 dokumentierten Abweichungen',
       'Alle bisherigen Karten ohne Klausurbezug (GAL, SFS, HLFS und die Theoriekarten der vier Module) entfernt; Filter und Fortschritt zeigen nur noch IBK, VAk, FeuAK und IdF',
     ]},
     {v:'3.0.2',ts:'2026-10-27T00:10',items:[
