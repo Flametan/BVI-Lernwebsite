@@ -1194,7 +1194,7 @@ const PROGRESS = (function(){
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht'],
     feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    idf:  ['v-idf-brandschutz','v-idf-vblernen','v-idf-haus','v-idf-gk','v-idf-planer','v-idf-quartier','v-idf-stab','v-idf-stabskarte','v-idf-presse'],
+    idf:  ['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-stab','v-idf-stabskarte','v-idf-presse'],
   };
   // Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator): kein Haken, nicht im Fortschritt
   const EXAM_VIEWS = new Set(['v-vak-klausurvorbereitung','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung','v-feuak-altklausur','v-idf-altklausur','v-klausur','v-klausur-0826','v-klausurfragen','v-eingrenzung-klausur','v-simulator','v-laufbahn-2023','v-laufbahn-2026']);
@@ -1216,7 +1216,7 @@ const PROGRESS = (function(){
   const HUBS = {
     'v-feuak-bp-hub':['v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp'],
     'v-feuak-analyse':['v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    'v-idf-vb':['v-idf-brandschutz','v-idf-vblernen','v-idf-haus','v-idf-gk','v-idf-planer','v-idf-quartier'],
+    'v-idf-vb':['v-idf-brandschutz','v-idf-vblernen','v-idf-gk'],
     'v-idf-stabhub':['v-idf-stab','v-idf-stabskarte']
   };
 
@@ -1283,10 +1283,7 @@ const SEARCH = (function(){
     'v-idf-stab':'IdF · Stabsarbeit (Lernseite)',
     'v-idf-stabskarte':'IdF · Taschenkarte Stabsarbeit',
     'v-idf-vblernen':'IdF · VB-Prüfung lernen',
-    'v-idf-haus':'IdF · Brandabschnitt-Haus 3D',
     'v-idf-gk':'IdF · Gebäudeklassen-Baukasten',
-    'v-idf-planer':'IdF · Brandschutzplaner',
-    'v-idf-quartier':'IdF · Sonderbau-Quartier',
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
     'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
@@ -4115,6 +4112,7 @@ const CHANGELOG=(function(){
   const ENTRIES=[
     {v:'3.0.3',ts:'2026-10-29T10:00',items:[
       'Lernkarten komplett neu: 387 Karten ausschließlich aus den Prüfungen mit Farbverlauf – IBK (Transaktionsanalyse und Konflikte aus der Zusammenfassung, 63), VAk (Altklausur-Quiz, Fallbearbeitung, Laufbahn Recht, 139), FeuAK (Klausur 08/2026, 85) und IdF (Altklausur-Quiz, Laufbahn Stabsarbeit/VB, 100)',
+      'IdF → Vorbeugender Brandschutz: Tabs „Brandabschnitt-Haus in 3D“, „Brandschutzplaner“ und „Sonderbau-Quartier“ entfernt',
       'Alle bisherigen Karten ohne Klausurbezug (GAL, SFS, HLFS und die Theoriekarten der vier Module) entfernt; Filter und Fortschritt zeigen nur noch IBK, VAk, FeuAK und IdF',
     ]},
     {v:'3.0.2',ts:'2026-10-27T00:10',items:[
