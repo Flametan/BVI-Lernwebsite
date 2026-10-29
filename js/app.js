@@ -4119,6 +4119,8 @@ const CHANGELOG=(function(){
       'Lernseite Vorbeugender Brandschutz und Baukasten nach der MBO korrigiert: GK 2 im Obergeschoss feuerhemmend, Stichflur 15 m nur zum Sicherheitstreppenraum, Rauchabschnitte als Sollvorschrift, Brandabschnitte ohne feste Fläche, Tür zur Nutzungseinheit dicht schließend, Hubrettung ab Anleiterhöhe 8 m, Sicherheitsbeleuchtung ab 13 m Höhe, Brandwand-Abstand 5 m, Breite 2,50 m nur für Seitenteile und Oberlichte, Trennwände in Wohngebäuden GK 1/2 entfallen',
       'Baukasten: nur noch eine Version („Gebäudeklassen-Baukasten“, bisher Variante 2) mit Bauteil-Katalog; Katalog auf die 32 Bauteile mit Feuerwiderstandsangaben gekürzt, ohne Hochhaus; Hinweiskästen in hellem Design lesbar; Navigationsleiste bleibt beim Scrollen sichtbar; Varianten 1 und 3 sowie der alte Baukasten entfernt',
       'Baukasten: Matrix-Tab lädt wieder (Fehler bei der Brandwand-Zeile behoben)',
+      'Baukasten: Gruppen-Chips im Katalog umbrechen statt zu scrollen (am PC nicht bedienbar); Matrix: Tab „Nach Bauteil“ steht jetzt vor „Nach Gebäudeklasse“ und ist die Startansicht',
+      'Untere Leiste: Tab „Pause/Karten“ mit geteiltem Symbol (Tasse / Karten); beim Antippen erscheint eine Auswahl mit Lernkarten und Pausenraum; am PC steht „Lernkarten“ zusätzlich in der Seitenleiste',
       'Alle bisherigen Karten ohne Klausurbezug (GAL, SFS, HLFS und die Theoriekarten der vier Module) entfernt; Filter und Fortschritt zeigen nur noch IBK, VAk, FeuAK und IdF',
     ]},
     {v:'3.0.2',ts:'2026-10-27T00:10',items:[
@@ -6801,7 +6803,19 @@ ETIMER.init();
 
 /* ── Mobil-Ansicht: Tab-Leiste, Startseite, Prüfung, Einstellungen ──────── */
 const SHELL=(function(){
-  const ROOTS={'v-home':'start','v-plan':'plan','v-pruefung':'exam','v-settings':'settings','v-pause':'pause'};
+  /* Pause / Karten: Tab öffnet eine Auswahl über der Leiste */
+  const PMENU=(function(){
+    const el=()=>document.getElementById('m-pmenu'), tb=()=>document.querySelector('#m-tabbar [data-tab="pause"]');
+    function place(){ const m=el(), t=tb(); if(!m||!t) return; const r=t.getBoundingClientRect(); const L=Math.max(8,Math.min(innerWidth-m.offsetWidth-8,r.left+r.width/2-m.offsetWidth/2)); m.style.left=L+'px'; m.style.setProperty('--pm-ax',(r.left+r.width/2-L)+'px'); m.style.bottom=(innerHeight-r.top+8)+'px'; }
+    function close(){ const m=el(); if(!m||m.hidden) return; m.hidden=true; tb()?.setAttribute('aria-expanded','false'); }
+    function open(){ const m=el(); if(!m) return; m.hidden=false; place(); tb()?.setAttribute('aria-expanded','true'); m.querySelector('button')?.focus({preventScroll:true}); }
+    document.addEventListener('click',e=>{ const m=el(); if(m&&!m.hidden&&!e.target.closest('#m-pmenu')&&!e.target.closest('#m-tabbar [data-tab="pause"]')) close(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
+    addEventListener('resize',close);
+    return { toggle(e){ e&&e.stopPropagation(); const m=el(); if(m&&m.hidden) open(); else close(); }, close, go(id,label){ close(); NAV.tab(id,label); } };
+  })();
+  window.PMENU=PMENU;
+  const ROOTS={'v-home':'start','v-plan':'plan','v-pruefung':'exam','v-settings':'settings','v-pause':'pause','v-flashcards':'pause'};
   const MODS=[
     ['gal','GAL','Grundlehrgang','v-gal','GAL Grundlehrgang',1],
     ['sfs','SFS','Staatliche Feuerwehrschule Regensburg','v-sfs','SFS Regensburg',1],
@@ -7367,8 +7381,11 @@ const SHELL=(function(){
   ['bvi_cardgoal','bvi_tabnum','bvi_cards_day'].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
   function onShow(id,isContent,stack){
     const tab=stack.length&&ROOTS[stack[0].id]?ROOTS[stack[0].id]:'start';
+    const rootId=stack.length?stack[0].id:'';
+    PMENU.close();
     document.querySelectorAll('#m-tabbar [data-tab],#m-rail [data-tab]').forEach(b=>{
-      const on=b.dataset.tab===tab;
+      const inRail=!!b.closest('#m-rail');
+      const on=inRail?(b.dataset.tab==='cards'?rootId==='v-flashcards':b.dataset.tab===tab&&rootId!=='v-flashcards'):b.dataset.tab===tab;
       b.classList.toggle('on',on);
       if(on) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
     });

@@ -2886,3 +2886,11 @@ p,.m-t2,.idf-note,.page-lead{text-wrap:pretty;}
   .m-tab-fab,.m-tab.fab{corner-shape:round;}
 }
 .sp-room{margin:10px 16px 0;min-height:44px;border:0;border-radius:14px;background:var(--m-raised);color:var(--m-fg);font:inherit;font-weight:650;font-size:.85rem;cursor:pointer;}
+
+/* Pause / Karten: Auswahl über der Tab-Leiste */
+#m-pmenu{position:fixed;z-index:var(--z-float-high,60);display:flex;flex-direction:column;gap:2px;padding:6px;min-width:190px;background:var(--m-card,#1e1e1e);border:1px solid var(--m-line,rgba(255,255,255,.12));border-radius:16px;box-shadow:0 12px 32px rgba(0,0,0,.4);}
+#m-pmenu[hidden]{display:none;}
+#m-pmenu button{display:flex;align-items:center;gap:12px;min-height:48px;padding:0 14px;border:0;border-radius:11px;background:transparent;color:var(--m-fg,#ededed);font:600 15px var(--f-b,system-ui);text-align:left;cursor:pointer;}
+#m-pmenu button:hover,#m-pmenu button:focus-visible{background:color-mix(in srgb,var(--m-accent,#ffa412) 16%,transparent);outline:none;}
+#m-pmenu svg{width:24px;height:24px;flex:none;color:var(--m-accent-fg,var(--m-accent,#ffa412));}
+#m-pmenu::after{content:"";position:absolute;bottom:-6px;left:var(--pm-ax,50%);width:12px;height:12px;background:inherit;border-right:1px solid var(--m-line,rgba(255,255,255,.12));border-bottom:1px solid var(--m-line,rgba(255,255,255,.12));transform:translateX(-50%) rotate(45deg);}
