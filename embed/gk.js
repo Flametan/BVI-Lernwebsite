@@ -868,8 +868,7 @@ const KCSS=`
 @media(max-width:899px){.app.kat .panel{height:60%}}
 .ksearch .x{position:absolute;right:1px;top:1px;width:44px;height:44px;border:0;background:transparent;color:var(--mu);font-size:24px;cursor:pointer}
 .kcmpb svg{width:18px;height:18px}
-.kchips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.kchips::-webkit-scrollbar{display:none}
+.kchips{display:flex;gap:6px;flex-wrap:wrap;padding:2px 0 8px}
 .kchips .chp{flex:none;white-space:nowrap}
 .kchips .chp.z{opacity:.45}
 .kgh2{position:sticky;top:-12px;z-index:1;margin:0;padding:12px 2px 6px;background:var(--pn)}
@@ -1062,9 +1061,9 @@ function MxPractice(){
     h('div',{className:'row2'},h('button',{className:'btn',onClick:()=>{setAns({});setChk(false);}},'Neu starten'),h('button',{className:'btn pri',onClick:()=>setChk(true)},'Prüfen')));
 }
 function MatrixTab(){
-  const [mode,setMode]=useState('gk');const [gi,setGi]=useState(2);
+  const [mode,setMode]=useState('bt');const [gi,setGi]=useState(2);
   return h('div',{className:'mxwrap'},
-    h('div',{className:'seg sm'},[['gk','Nach Gebäudeklasse'],['bt','Nach Bauteil'],['ue','Üben']].map(a=>h('button',{key:a[0],className:mode===a[0]?'on':'',onClick:()=>setMode(a[0])},a[1]))),
+    h('div',{className:'seg sm'},[['bt','Nach Bauteil'],['gk','Nach Gebäudeklasse'],['ue','Üben']].map(a=>h('button',{key:a[0],className:mode===a[0]?'on':'',onClick:()=>setMode(a[0])},a[1]))),
     mode!=='ue'?h(MxLegend):null,
     mode==='gk'?h(MxByGK,{gi,setGi}):mode==='bt'?h(MxByPart):h(MxPractice));
 }
