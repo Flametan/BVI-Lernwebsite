@@ -760,6 +760,7 @@ const KRow=React.memo(function KRow({e,mark,on,onTap}){
     h('div',{className:'mini','aria-hidden':'true'},e.prev.map((k,i)=>h('i',{key:i,style:{background:HC[k]}}))));
 });
 function AbwList(){
+  if(!KATALOG.abweichungen.length)return null;
   return h('details',{className:'kabw'},h('summary',null,'Bekannte Abweichungen zwischen MBO und Lernseite ('+KATALOG.abweichungen.length+')'),
     KATALOG.abweichungen.map((a,i)=>h('div',{key:i,className:'kmsg',style:{'--c':'#ffa412'}},h('b',null,san(a.thema)),h('p',null,h('b',null,'MBO: '),san(a.mbo)),h('p',{style:{marginBottom:0}},h('b',null,'Lernseite: '),san(a.app)))));
 }
@@ -998,7 +999,7 @@ const MX=[
  ['Keller','Tragende Wände (Keller)',[XFH,XFH,XFB,XFB,XFB]],
  ['Keller','Decken (Keller)',[XFH,XFH,XFB,XFB,XFB]],
  ['Keller','Trennwand (Keller)',[XW,XW,XFB,XFB,XFB]],
- ['Brandwand','Brandwand',[XKA,XKA,XKA,XKA,'feuerbeständig + A u. mechanisch']],
+ ['Brandwand','Brandwand',['Ersatzwand zulässig (Zeile darunter)','Ersatzwand zulässig (Zeile darunter)','Ersatzwand zulässig (Zeile darunter)','Ersatzwand zulässig (Zeile darunter)','feuerbeständig + A u. mechanisch']],
  ['Brandwand','Wand anstelle Brandwand',[XHFH,XHFH,XHFH,'hochfeuerhemmend + M',XKA]],
  ['Vertikale Wege','Aufzugfahrschacht',[XKA,XKA,XFH,XHFH,'feuerbeständig + A']],
  ['Vertikale Wege','Notwendiger Treppenraum',[XKA,XKA,XFH,'hochfeuerhemmend + M','Bauart Brandwand']],

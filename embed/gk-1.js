@@ -74,7 +74,7 @@ const RL=r=>r.s+(r.n?' ('+r.n+')':'');
 function explain(gk,part,zone){
   const g=GKS[gk],r=REQ[reqFor(gk,part,zone)],zn=zone==='ke'?'im Kellergeschoss':'im Obergeschoss';
   const nm=PARTS[part].n;
-  if(part==='brand')return {title:'Brandwand',req:r,text:'**Brandwand** (§ 30 BauO NRW): feuerbeständig, nichtbrennbar und **auch unter zusätzlicher mechanischer Beanspruchung**, also **REI 90-M (F 90-A)**. Abstand zur **inneren Ecke**: Lernseite und MBO **≥ 5 m**, nach **§ 30 Abs. 6 BauO NRW mindestens 3 m**. Sie muss **0,30 m über die Bedachung** gezogen werden **oder** mit einer **beidseitig 0,50 m auskragenden** feuerbeständigen Platte abschließen; bei **GK 1 bis 3** genügt **bis unter die Dachhaut**. Innere Brandwände in Abständen von **höchstens 40 m**.'};
+  if(part==='brand')return {title:'Brandwand',req:r,text:'**Brandwand** (§ 30 BauO NRW): feuerbeständig, nichtbrennbar und **auch unter zusätzlicher mechanischer Beanspruchung**, also **REI 90-M (F 90-A)**. Abstand zur **inneren Ecke** (§ 30 Abs. 6 MBO): **mindestens 5 m**; das entfällt bei einem Winkel über 120° oder bei einer 5 m langen öffnungslosen Außenwand. Sie muss **0,30 m über die Bedachung** gezogen werden **oder** mit einer **beidseitig 0,50 m auskragenden** feuerbeständigen Platte abschließen; bei **GK 1 bis 3** genügt **bis unter die Dachhaut**. Innere Brandwände in Abständen von **höchstens 40 m**.'};
   if(part==='treppe'){
     if(gk==='HH')return {title:'Treppenraum-Wand · Hochhaus',req:r,text:'Beim **Hochhaus (MHHR 3.2.3)** haben die Wände der **notwendigen Treppenräume und ihrer Vorräume** die **Feuerwiderstandsfähigkeit der tragenden Bauteile**: **F90 (feuerbeständig)** bei h ≤ 60 m, bei h > 60 m **F120 (hochfeuerbeständig)**. Die Slider-Höhe bleibt bei max. 30 m, also gilt hier F90.'};
     if(gk==='3')return {title:'Treppenraum-Wand · GK 3',req:r,text:'Notwendige Treppenräume in **GK 3**: Wände **feuerhemmend (F30)**. Die Tür zum notwendigen Treppenraum ist eine **RS-Tür**.'};
@@ -904,7 +904,7 @@ const MX=[
  ['Keller','Tragende Wände (Keller)',[XFH,XFH,XFB,XFB,XFB]],
  ['Keller','Decken (Keller)',[XFH,XFH,XFB,XFB,XFB]],
  ['Keller','Trennwand (Keller)',[XW,XW,XFB,XFB,XFB]],
- ['Brandwand','Brandwand',[XKA,XKA,XKA,XKA,'feuerbeständig + A u. mechanisch']],
+ ['Brandwand','Brandwand',['Ersatzwand zulässig (Zeile darunter)','Ersatzwand zulässig (Zeile darunter)','Ersatzwand zulässig (Zeile darunter)','Ersatzwand zulässig (Zeile darunter)','feuerbeständig + A u. mechanisch']],
  ['Brandwand','Wand anstelle Brandwand',[XHFH,XHFH,XHFH,'hochfeuerhemmend + M',XKA]],
  ['Vertikale Wege','Aufzugfahrschacht',[XKA,XKA,XFH,XHFH,'feuerbeständig + A']],
  ['Vertikale Wege','Notwendiger Treppenraum',[XKA,XKA,XFH,'hochfeuerhemmend + M','Bauart Brandwand']],

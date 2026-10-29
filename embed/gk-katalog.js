@@ -1,4 +1,3 @@
-/* Bauteil-Katalog nach MBO (Fassung 2024), Stand 2026-10-29 */
 const KATALOG = {
  "bauteile": [
   {
@@ -43,8 +42,6 @@ const KATALOG = {
    "pos": "wand-tragend",
    "auftritt": "geschoss",
    "merksatz": "Tragwerk: GK 2 und 3 feuerhemmend, GK 4 hochfeuerhemmend, GK 5 feuerbeständig. Im Keller ab GK 3 feuerbeständig, in GK 1 und 2 feuerhemmend.",
-   "mbo": "GK 2 im Obergeschoss: feuerhemmend (§ 27 Abs. 1 S. 2 Nr. 3); GK 1 ohne F-Klasse.",
-   "app": "Lernseite Abschnitt 08, Tabelle: \"GK 1/2 keine Anforderungen\" im Obergeschoss. Detailtabelle derselben Seite und TABLE in gk.js: GK 2 = F30.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -90,8 +87,6 @@ const KATALOG = {
    "pos": "stuetze",
    "auftritt": "geschoss",
    "merksatz": "Stützen werden brandschutztechnisch wie tragende Wände behandelt: gleiche Gebäudeklasse, gleiche Feuerwiderstandsdauer, Keller gesondert.",
-   "mbo": "GK 2 im Obergeschoss: feuerhemmend.",
-   "app": "Lernseite-Tabelle: GK 1/2 keine Anforderung im Obergeschoss (Simulation: GK 2 = F30).",
    "quelle": "MBO",
    "unklar": false
   },
@@ -170,8 +165,6 @@ const KATALOG = {
    "pos": "decke",
    "auftritt": "geschoss",
    "merksatz": "Decken folgen dem Tragwerk: GK 2 und 3 F30, GK 4 F60, GK 5 F90. Kellerdecke ab GK 3 F90, GK 1 und 2 F30.",
-   "mbo": "GK 2 Obergeschoss: feuerhemmend.",
-   "app": "Lernseite-Tabelle: \"GK 1/2 keine Anforderungen\" im Obergeschoss (Detailtabelle und Simulation: GK 2 = F30).",
    "quelle": "MBO",
    "unklar": false
   },
@@ -328,7 +321,6 @@ const KATALOG = {
    "pos": "dach-decke",
    "auftritt": "gebaeude",
    "merksatz": "Dachgeschoss: Geschossdecken-Werte nur, wenn darüber Aufenthaltsräume möglich sind. Enden Trennwände an der Rohdecke, ist diese Decke feuerhemmend.",
-   "app": "Simulation (reqFor \"dach\") bildet beide Fälle über den Schalter DGAR ab; GK 3 bis 5 ohne Aufenthaltsraum = F30 entspricht § 29 Abs. 4, GK 1/2 = keine.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -368,8 +360,6 @@ const KATALOG = {
    "pos": "trennwand",
    "auftritt": "geschoss",
    "merksatz": "Trennwand: Feuerwiderstand der tragenden Bauteile des Geschosses, mindestens F30. Bei Wohngebäuden GK 1 und 2 entfällt die Anforderung.",
-   "mbo": "Wohngebäude GK 1 und 2: keine Trennwandanforderung (§ 29 Abs. 6); sonstige Gebäude GK 1/2: mindestens feuerhemmend.",
-   "app": "Simulation (reqFor \"trenn\") zeigt für GK 1a, 1b, 2 pauschal F30 und weist nur im Text auf die Wohngebäude-Ausnahme hin; Übungsmatrix: \"Wohngebäude keine / sonst feuerhemmend\".",
    "quelle": "MBO",
    "unklar": false
   },
@@ -598,7 +588,6 @@ const KATALOG = {
    "pos": "brandwand",
    "auftritt": "mehrfach",
    "merksatz": "Ausgedehnte Gebäude: innere Brandwand spätestens alle 40 m. Die Fläche 1.600 m² nennt nur die Lernseite.",
-   "app": "Lernseite Abschnitt 08: \"i. d. R. 40 m × 40 m = 1.600 m²\" als Brandabschnitt. MBO: nur Abstände von nicht mehr als 40 m, keine Fläche.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -677,7 +666,6 @@ const KATALOG = {
    "pos": "brandwand",
    "auftritt": "gebaeude",
    "merksatz": "Statt Brandwand: GK 1 bis 3 hochfeuerhemmende Wand, GK 4 hochfeuerhemmend mit mechanischer Beanspruchung, GK 5 gibt es keinen Ersatz.",
-   "app": "Übungsmatrix (gk.js MX): \"Wand anstelle Brandwand\" GK 1 bis 3 hochfeuerhemmend, GK 4 hochfeuerhemmend + M, GK 5 keine Angabe; entspricht MBO.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -756,8 +744,6 @@ const KATALOG = {
    "pos": "brandwand",
    "auftritt": "gebaeude",
    "merksatz": "Brandwand: 0,30 m über die Bedachung oder 0,50 m Kragplatte beidseitig; in GK 1 bis 3 genügt bis unter die Dachhaut.",
-   "mbo": "0,30 m über Bedachung (GK 4/5); bei Hochhäusern verlangt die MHHR laut Lernseite 0,50 m.",
-   "app": "Lernseite Hochhaus-Teil: \"0,50 m über Dach\"; Sim (explain \"brand\"): 0,30 m / beidseitig 0,50 m, bei GK 1 bis 3 bis unter die Dachhaut.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -797,8 +783,6 @@ const KATALOG = {
    "pos": "brandwand",
    "auftritt": "mehrfach",
    "merksatz": "Brandwand über Eck: mindestens 5 m von der inneren Ecke, außer Winkel über 120 Grad oder 5 m öffnungslose Außenwand.",
-   "mbo": "Abstand zur inneren Ecke mindestens 5 m (§ 30 Abs. 6).",
-   "app": "Simulation (explain \"brand\") nennt zusätzlich: \"nach § 30 Abs. 6 BauO NRW mindestens 3 m\". Lernseite: 5 m.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -1366,8 +1350,6 @@ const KATALOG = {
    "pos": "rettungsweg",
    "auftritt": "gebaeude",
    "merksatz": "Brüstung der Anleiterstelle über 8 m: Hubrettungsfahrzeug nötig und Zu-/Durchfahrt statt Zugang. Nicht zu verwechseln mit 7 m OKFF.",
-   "mbo": "Brüstungsoberkante der Anleiterstelle > 8 m über Gelände (§ 33 Abs. 3 S. 1, § 5 Abs. 1 S. 2).",
-   "app": "Lernseite Abschnitt 07: \"Bei OKFF > 7 m: Zu-/Durchfahrten für Hubrettungsfahrzeuge\". Die 7 m sind die GK-Grenze (Höhe = OKFF), nicht die 8-m-Brüstungshöhe.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -1596,7 +1578,6 @@ const KATALOG = {
    "pos": "treppenraum",
    "auftritt": "gebaeude",
    "merksatz": "Treppenraumwände: GK 3 feuerhemmend, GK 4 hochfeuerhemmend mit mechanischer Beanspruchung, GK 5 in Bauart einer Brandwand.",
-   "app": "Übungsmatrix (MX) und Simulation stimmen mit der MBO überein; GK 1/2 = kein Treppenraum nötig.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -1876,7 +1857,6 @@ const KATALOG = {
    "pos": "flur",
    "auftritt": "geschoss",
    "merksatz": "Flurwände feuerhemmend, im Keller mit feuerbeständigem Tragwerk (GK 3 bis 5) feuerbeständig. Bis zur Rohdecke führen.",
-   "app": "Übungsmatrix (MX): Flur GK 3 bis 5 feuerhemmend, Flur Keller GK 3 bis 5 feuerbeständig, GK 1/2 Keller feuerhemmend: stimmt mit MBO (Kellerflure bei sonstigen Gebäuden GK 1/2).",
    "quelle": "MBO",
    "unklar": false
   },
@@ -1916,8 +1896,6 @@ const KATALOG = {
    "pos": "flur",
    "auftritt": "geschoss",
    "merksatz": "Flure in Rauchabschnitte teilen: nichtabschließbare rauchdichte, selbstschließende Türen (RS), Abschnitt soll nicht länger als 30 m sein.",
-   "mbo": "\"sollen nicht länger als 30 m sein\" (Soll-Vorschrift).",
-   "app": "Lernseite: \"Rauchabschnitte ≤ 30 m (RS-Türen)\", als feste Obergrenze formuliert.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -1957,8 +1935,6 @@ const KATALOG = {
    "pos": "flur",
    "auftritt": "geschoss",
    "merksatz": "Die 15 m gelten für einseitige Flure zum Sicherheitstreppenraum, sonst bleibt es bei 35 m Rettungsweglänge.",
-   "mbo": "Nur für Flure mit einer Fluchtrichtung, die zu einem Sicherheitstreppenraum führen: ≤ 15 m (§ 36 Abs. 3 S. 4).",
-   "app": "Lernseite Abschnitt 07 (\"Stichflure: max. 15 m Länge\") allgemein formuliert; im Abschnitt Rettungsweglängen mit Sicherheitstreppenraum wie MBO, im Hochhaus-Teil MHHR.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -2115,8 +2091,6 @@ const KATALOG = {
    "pos": "aufstellflaeche",
    "auftritt": "gebaeude",
    "merksatz": "Feuerwehrzufahrt: tragfähig, gekennzeichnet, ständig frei. Brüstung der Anleiterstelle über 8 m: Zufahrt statt Zugang.",
-   "mbo": "Zu-/Durchfahrt statt Zugang, wenn Brüstungsoberkante der Anleiterstelle > 8 m (§ 5 Abs. 1 S. 2).",
-   "app": "Lernseite: \"Gebäude mit OKFF > 7 m: Zu- und Durchfahrten für Hubrettungsfahrzeuge\".",
    "quelle": "MBO",
    "unklar": false
   },
@@ -2300,8 +2274,6 @@ const KATALOG = {
    "pos": "tuer",
    "auftritt": "mehrfach",
    "merksatz": "Flurwand-Türen dichtschließend. Zu Kellerlagern T30-DS, Rauchabschnittstüren im Flur RS.",
-   "mbo": "Türen in Flurwänden: dicht schließend (nicht zwingend selbstschließend).",
-   "app": "Lernseite (Tabelle Notwendige Flure): \"Tür zu Nutzungseinheit: DS\"; die MBO fordert nur \"dicht schließen\". Keller-Tür T30-RS (Lernseite) vs. T30-DS für Lagerbereiche (MBO).",
    "quelle": "MBO",
    "unklar": false
   },
@@ -2452,7 +2424,6 @@ const KATALOG = {
    "pos": "aufzug",
    "auftritt": "gebaeude",
    "merksatz": "Fahrschachtwände: GK 3 feuerhemmend, GK 4 hochfeuerhemmend, GK 5 feuerbeständig und nichtbrennbar. GK 1 und 2 ohne Anforderung.",
-   "app": "Übungsmatrix (MX): Aufzugfahrschacht GK 1/2 keine, GK 3 F30, GK 4 F60, GK 5 F90+A: stimmt mit MBO.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -3108,80 +3079,7 @@ const KATALOG = {
    "merksatz": "Über 22 m: Hochhaus, Sonderbau. Die Anforderungen stehen in der Muster-Hochhaus-Richtlinie, nicht in der MBO."
   }
  ],
- "abweichungen": [
-  {
-   "thema": "GK 2, tragende Wände/Stützen/Decken im Obergeschoss",
-   "mbo": "GK 2 und 3 feuerhemmend (§ 27 Abs. 1 S. 2 Nr. 3, § 31 Abs. 1 S. 2 Nr. 3); nur GK 1 ohne F-Klasse.",
-   "app": "Lernseite Abschnitt 08, erste Tabelle: \"GK 1/2 keine Anforderungen\" im Obergeschoss; Detailtabelle derselben Seite und gk.js (TABLE): GK 2 = F30.",
-   "hinweis": "Die MBO gilt; die Tabelle \"GK 1/2\" auf der Lernseite ist für GK 2 zu korrigieren. gk.js TABLE ist bereits richtig."
-  },
-  {
-   "thema": "Stichflur 15 m",
-   "mbo": "Nur Flure mit einer Fluchtrichtung, die zu einem Sicherheitstreppenraum führen: höchstens 15 m (§ 36 Abs. 3 S. 4). Sonst gilt die Rettungsweglänge 35 m.",
-   "app": "Lernseite Abschnitt 07 (\"Stichflure: max. 15 m Länge\") und Hochhaus-Teil (MHHR) allgemein formuliert.",
-   "hinweis": "In der Simulation als Bedingung \"Stichflur zum Sicherheitstreppenraum\" abbilden, nicht als allgemeine Grenze."
-  },
-  {
-   "thema": "Brandwand: Abstand zur inneren Ecke",
-   "mbo": "mindestens 5 m (§ 30 Abs. 6); entfällt bei Winkel > 120° oder 5 m öffnungsloser Außenwand.",
-   "app": "Lernseite: 5 m. gk.js (explain \"brand\"): \"nach § 30 Abs. 6 BauO NRW mindestens 3 m\".",
-   "hinweis": "Das 3-m-Landesrecht gilt nur in NRW; Katalogwert für MBO: 5 m. In der Simulation beide Werte nennen."
-  },
-  {
-   "thema": "Höhe für Zufahrt/Hubrettung: 7 m vs. 8 m",
-   "mbo": "Brüstungsoberkante der Anleiterstelle > 8 m über Gelände: Hubrettungsfahrzeug nötig, Zu-/Durchfahrt statt Zugang (§ 33 Abs. 3, § 5 Abs. 1 S. 2).",
-   "app": "Lernseite Abschnitt 07: \"Bei OKFF > 7 m: Zu-/Durchfahrten für Hubrettungsfahrzeuge\".",
-   "hinweis": "7 m ist die GK-Grenze (OKFF/Höhe nach § 2 Abs. 3), 8 m die Brüstungshöhe der Anleiterstelle. Beide Größen getrennt darstellen."
-  },
-  {
-   "thema": "Brandwand über Dach: 0,30 m vs. 0,50 m",
-   "mbo": "0,30 m über die Bedachung oder beidseitig 0,50 m auskragende feuerbeständige Platte; GK 1 bis 3 mindestens bis unter die Dachhaut (§ 30 Abs. 5).",
-   "app": "Lernseite Hochhaus-Teil (MHHR): \"0,50 m über Dach (mehr als MBO)\"; Standardteil der Lernseite und gk.js: 0,30 m bzw. 0,50 m Kragplatte.",
-   "hinweis": "Kein echter Widerspruch: MHHR verschärft nur für Hochhäuser. Im Katalog beide getrennt führen."
-  },
-  {
-   "thema": "Trennwände in GK 1/2 (Wohngebäude)",
-   "mbo": "Für Wohngebäude der GK 1 und 2 gelten die Trennwandregeln nicht (§ 29 Abs. 6); sonstige Gebäude GK 1/2: mindestens feuerhemmend.",
-   "app": "gk.js reqFor(\"trenn\") liefert für GK 1a, 1b, 2 pauschal F30 (Hinweis nur im Text); Übungsmatrix: \"Wohngebäude keine / sonst feuerhemmend\".",
-   "hinweis": "In der erweiterten Simulation Nutzungsart (Wohngebäude ja/nein) berücksichtigen."
-  },
-  {
-   "thema": "Rauchabschnitt 30 m",
-   "mbo": "\"sollen nicht länger als 30 m sein\" (Soll-Vorschrift, § 36 Abs. 3 S. 2).",
-   "app": "Lernseite: \"Rauchabschnitte ≤ 30 m (RS-Türen)\" als feste Grenze.",
-   "hinweis": "Kleine Formulierungsabweichung; im Katalog als \"soll\" führen."
-  },
-  {
-   "thema": "Brandabschnittsfläche 1.600 m² (40 m × 40 m)",
-   "mbo": "Nur: innere Brandwände in Abständen von nicht mehr als 40 m (§ 30 Abs. 2 Nr. 2); keine Flächenangabe.",
-   "app": "Lernseite Abschnitt 08: \"i. d. R. 40 m × 40 m = 1.600 m²\".",
-   "hinweis": "Die Fläche ist eine Ableitung der Lernseite; im MBO-Text nicht enthalten."
-  },
-  {
-   "thema": "Tür der Nutzungseinheit zum notwendigen Flur und Tür zum Keller",
-   "mbo": "Türen in Flurwänden müssen \"dicht schließen\" (nicht selbstschließend); Öffnungen zu Kellerlagern: feuerhemmend, dicht- und selbstschließend = T30-DS (§ 36 Abs. 4 S. 4). Treppenraum zu Keller/Lager/Werkstatt/NE > 200 m²: feuerhemmend, rauchdicht, selbstschließend (T30-RS; § 35 Abs. 6 Nr. 1).",
-   "app": "Lernseite (Tabelle Notwendige Flure): \"Nutzungseinheit DS; Lagerbereiche im Keller T30-DS; Kellergeschosse, Werkstätten, NE > 200 m² T30-RS\".",
-   "hinweis": "Weitgehend deckungsgleich; DS (dicht- und selbstschließend) bei Nutzungseinheit geht über den MBO-Text (nur dicht schließend) hinaus. Die Zeile \"Kellergeschosse ... T30-RS\" gehört zum Treppenraum (§ 35), nicht zum Flur."
-  },
-  {
-   "thema": "Brandwand-Zeile der Übungsmatrix (GK 1 bis 4 \"keine Anforderung\")",
-   "mbo": "Brandwand erforderlich nach § 30 Abs. 2 in allen GK; in GK 1 bis 4 gibt es Ersatzwände (hochfeuerhemmend bzw. HFH-M).",
-   "app": "gk.js MX: Zeile \"Brandwand\": GK 1 bis 4 \"keine Anforderung\", GK 5 \"feuerbeständig + A u. mechanisch\"; Zeile \"Wand anstelle Brandwand\" GK 1 bis 3 HFH, GK 4 HFH+M.",
-   "hinweis": "Die Matrix meint offenbar: in GK 1 bis 4 reicht die Ersatzwand. Als Anforderung \"keine\" missverständlich."
-  },
-  {
-   "thema": "Sicherheitsbeleuchtung im Treppenraum",
-   "mbo": "Fensterlose Treppenräume bei Höhe > 13 m (§ 2 Abs. 3 S. 2) (§ 35 Abs. 7 S. 2).",
-   "app": "Lernseite: \"Ohne Fenster in der GK 5: Sicherheitsbeleuchtung\".",
-   "hinweis": "Praktisch gleichwertig (GK 5 beginnt über 13 m); MBO knüpft an die Höhe an, nicht an die Klasse."
-  },
-  {
-   "thema": "Breiten der Rettungswege (1,20 m, 0,90 m)",
-   "mbo": "Notwendige Flure/Treppen: \"für den größten zu erwartenden Verkehr ausreichend\" (§ 34 Abs. 5, § 36 Abs. 2); Zahlen nennt das MBO nicht. Ausnahme: Seitenteile/Oberlichte von Treppenraum-Abschlüssen bis 2,50 m Gesamtbreite.",
-   "app": "Lernseite (Hochhaus-Teil, MHHR): lichte Breite mind. 1,20 m, Türen aus NE auf Flur mind. 0,90 m; allgemein \"max. Breite von Abschlüssen 2,50 m\".",
-   "hinweis": "Zahlenwerte stammen nicht aus dem MBO-Text. Die 2,50 m betreffen im MBO nur lichtdurchlässige Seitenteile/Oberlichte."
-  }
- ],
+ "abweichungen": [],
  "luecken": [
   "Gebäudeklassen-Einteilung (§ 2 Abs. 3): Ermittlungsregel, kein Bauteil; in gk.js bereits als classify() abgebildet.",
   "Sonderbauten außer Hochhaus (§ 2 Abs. 4 Nr. 2 bis 20, § 51): Verkaufsstätten, Versammlungsstätten, Garagen usw. regeln Sonderbauverordnungen; für Standardgebäude nicht relevant.",

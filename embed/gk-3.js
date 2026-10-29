@@ -1000,7 +1000,7 @@ const MX=[
  ['Keller','Tragende Wände (Keller)',[XFH,XFH,XFB,XFB,XFB]],
  ['Keller','Decken (Keller)',[XFH,XFH,XFB,XFB,XFB]],
  ['Keller','Trennwand (Keller)',[XW,XW,XFB,XFB,XFB]],
- ['Brandwand','Brandwand',[XKA,XKA,XKA,XKA,'feuerbeständig + A u. mechanisch']],
+ ['Brandwand','Brandwand',['Ersatzwand zulässig (Zeile darunter)','Ersatzwand zulässig (Zeile darunter)','Ersatzwand zulässig (Zeile darunter)','Ersatzwand zulässig (Zeile darunter)','feuerbeständig + A u. mechanisch']],
  ['Brandwand','Wand anstelle Brandwand',[XHFH,XHFH,XHFH,'hochfeuerhemmend + M',XKA]],
  ['Vertikale Wege','Aufzugfahrschacht',[XKA,XKA,XFH,XHFH,'feuerbeständig + A']],
  ['Vertikale Wege','Notwendiger Treppenraum',[XKA,XKA,XFH,'hochfeuerhemmend + M','Bauart Brandwand']],
