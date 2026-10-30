@@ -4116,7 +4116,8 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
-    {v:'3.0.4',ts:'2026-10-30T09:00',items:[
+    {v:'3.1.0',ts:'2026-10-30T09:00',items:[
+      'Version 3.1: Stabsarbeit in fünf Reiter, neue IdF-Tabs (Zivile Verteidigung, EU-Katastrophenschutz), Simulationen (Sonderbauten, Stab aufbauen, Pressegespräch, Warn-Simulation), Gebäudeklassen-Baukasten mit MBO-Katalog, neue Lernkarten nur zu den Prüfungen, Tab „Pause/Karten“',
       'Startseite: neuer Reiter „Pausenraum“ unter den Lernkarten',
       'Simulationen (Sonderbauten, Stab aufbauen, Pressegespräch, Warn-Simulation) bekommen beim Besuch einen Haken und zählen zum Themenfortschritt',
       'IdF → Stabsarbeit: „Stab aufbauen (Simulation)“ steht jetzt direkt hinter „Werkzeuge der Stabsarbeit“ und vor der Taschenkarte',
