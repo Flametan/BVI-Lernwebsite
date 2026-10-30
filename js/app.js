@@ -4354,7 +4354,7 @@ const CHANGELOG=(function(){
   const ENTRIES=[
     {v:'3.1.0',ts:'2026-10-30T09:00',items:[
       'Lernkarten: Feuerwiderstand überall in beiden Schreibweisen, z. B. „REI 30 (F 30)“',
-      'Einstellungen → Navigationsleiste: Platz in der Vorschau antippen und per Dropdown den Tab wählen oder zwei Tabs auf einem Platz zusammenlegen (Auswahl beim Antippen, Symbol aus beiden Tabs mit Schrägstrich); fünf Plätze, der Mittelknopf bleibt in der Mitte, die Einstellungen immer rechts; Zurücksetzen',
+      'Einstellungen → Navigationsleiste: Platz in der Vorschau antippen und per Dropdown den Tab wählen oder zwei Tabs auf einem Platz zusammenlegen (Auswahl beim Antippen, Symbol aus beiden Tabs mit Schrägstrich); fünf Plätze, der Mittelknopf bleibt in der Mitte, die Einstellungen immer rechts; es müssen nicht alle sechs Tabs in der Leiste stehen; Zurücksetzen',
       'Lernkarten: Modul-Auswahl (Alle, IBK, VAk, FeuAK, IdF) steht in einer Reihe; Symbol des Tabs „Pause/Karten“ nicht mehr abgeschnitten',
       'Gebäudeklassen-Baukasten: Prüf-Quiz ohne Hochhaus als Antwortoption und ohne Hochhaus-Fälle',
       'Abkürzung für Oberkante Fertigfußboden einheitlich OKFF (statt FOK)',
@@ -7092,7 +7092,7 @@ const SHELL=(function(){
     function valid(c){
       if(!c||!Array.isArray(c.slots)||c.slots.length!==5) return false;
       if(!c.slots.every(x=>Array.isArray(x)&&x.length>=1&&x.length<=2&&x.every(t=>IDS.includes(t)))) return false;
-      const all=[].concat(...c.slots); if(all.length!==IDS.length||new Set(all).size!==IDS.length) return false;
+      const all=[].concat(...c.slots); if(new Set(all).size!==all.length) return false;   // jeder Tab höchstens einmal
       return c.slots[SETI][0]==='settings';
     }
     function load(){ try{ const c=JSON.parse(localStorage.getItem(KEY)||'null'); if(valid(c)) return c; }catch(e){} return clone(DEF); }
@@ -7118,19 +7118,19 @@ const SHELL=(function(){
     /* ---- Einstellungen ---- */
     const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     const pos=id=>{ for(let i=0;i<5;i++){ const m=cfg.slots[i].indexOf(id); if(m>=0) return [i,m]; } return null; };
-    const pairIdx=()=>cfg.slots.findIndex(x=>x.length===2);
+    const unplaced=()=>IDS.filter(t=>!pos(t));
     function renderSettings(){
       const el=document.getElementById('nav-edit'); if(!el) return;
-      const sl=cfg.slots, i=sel, cur=sl[i], pk=pairIdx();
+      const sl=cfg.slots, i=sel, cur=sl[i], up=unplaced();
       const prev='<div class="nb-prev" role="group" aria-label="Plätze der Navigationsleiste">'+sl.map((s,k)=>'<button type="button" class="nb-p'+(k===FABI?' nb-fab':'')+(k===i?' nb-sel':'')+'" aria-pressed="'+(k===i)+'" aria-label="Platz '+(k+1)+': '+esc(label(s))+'" onclick="NAVBAR.select('+k+')">'+(s.length===1?svg(IC[s[0]]):pairSvg(s[0],s[1]))+'<span>'+esc(label(s))+'</span></button>').join('')+'</div>';
-      const tabOpts=IDS.filter(t=>t!=='settings'||i===SETI).map(t=>'<option value="'+t+'"'+(t===cur[0]?' selected':'')+'>'+esc(T[t].n)+'</option>').join('');
-      const partnerOpts='<option value=""'+(cur.length===1?' selected':'')+(i===pk?' disabled':'')+'>Einzeln (ohne zweiten Tab)</option>'+IDS.filter(t=>t!==cur[0]&&t!=='settings').map(t=>'<option value="'+t+'"'+(cur[1]===t?' selected':'')+'>mit „'+esc(T[t].n)+'“ zusammenlegen</option>').join('');
-      el.innerHTML='<p class="nb-t">Tippe oben auf den Platz, den du ändern willst, und wähle darunter den Tab. Der mittlere Platz bleibt der Mittelknopf, die Einstellungen stehen immer ganz rechts. Weil es sechs Tabs, aber fünf Plätze gibt, teilen sich immer genau zwei Tabs einen Platz (beim Antippen erscheint dann eine Auswahl).</p>'
+      const tabOpts=IDS.filter(t=>t!=='settings'||i===SETI).map(t=>'<option value="'+t+'"'+(t===cur[0]?' selected':'')+'>'+esc(T[t].n)+(up.includes(t)?' (zurzeit nicht in der Leiste)':'')+'</option>').join('');
+      const partnerOpts='<option value=""'+(cur.length===1?' selected':'')+'>Einzeln (ohne zweiten Tab)</option>'+IDS.filter(t=>t!==cur[0]&&t!=='settings').map(t=>'<option value="'+t+'"'+(cur[1]===t?' selected':'')+'>mit „'+esc(T[t].n)+'“ zusammenlegen'+(up.includes(t)?' (zurzeit nicht in der Leiste)':'')+'</option>').join('');
+      el.innerHTML='<p class="nb-t">Tippe oben auf den Platz, den du ändern willst, und wähle darunter den Tab. Der mittlere Platz bleibt der Mittelknopf, die Einstellungen stehen immer ganz rechts. Ein Platz kann einzeln bleiben oder sich mit einem zweiten Tab teilen (beim Antippen erscheint dann eine Auswahl). Es müssen nicht alle sechs Tabs in der Leiste stehen.</p>'
         +'<div class="nb-h">Leiste (antippen zum Ändern)</div>'+prev
         +'<div class="nb-panel"><div class="nb-h">Platz '+(i+1)+(i===FABI?' · Mittelknopf':i===SETI?' · Einstellungen':'')+'</div>'
         +'<label class="nb-f">Tab<select onchange="NAVBAR.setTab(this.value)"'+(i===SETI?' disabled':'')+'>'+tabOpts+'</select></label>'
         +'<label class="nb-f">Platz teilen<select onchange="NAVBAR.setPartner(this.value)">'+partnerOpts+'</select></label>'
-        +(i===pk?'<p class="nb-t nb-sm">Dieser Platz teilt sich zwei Tabs. Um das zu ändern, wähle bei einem anderen Platz „zusammenlegen“; dann wandert die Teilung dorthin.</p>':'<p class="nb-t nb-sm">Wählst du hier „zusammenlegen“, wandert die Teilung von Platz '+(pk+1)+' hierher.</p>')
+        +(up.length?'<p class="nb-t nb-sm">Nicht in der Leiste: '+up.map(t=>esc(T[t].n)).join(', ')+'. Du erreichst sie weiterhin über die Startseite und die Seitenleiste am PC.</p>':'<p class="nb-t nb-sm">Alle sechs Tabs stehen in der Leiste.</p>')
         +'</div><div class="nb-act"><button type="button" class="btn btn-ghost" onclick="NAVBAR.reset()">Zurücksetzen</button></div>';
     }
     function commit(){ save(); render(); renderSettings(); }
@@ -7139,15 +7139,29 @@ const SHELL=(function(){
       init(){ render(); renderSettings(); },
       render, renderSettings, go, mark(){ apply(); },
       select(i){ sel=i; renderSettings(); },
-      setTab(id){ if(sel===SETI||id==='settings'||!IDS.includes(id)) return; const p=[sel,0], q=pos(id); if(!q||(q[0]===p[0]&&q[1]===p[1])) return; swap(p,q); commit(); },
+      setTab(id){
+        if(sel===SETI||id==='settings'||!IDS.includes(id)) return;
+        const p=[sel,0], q=pos(id);
+        if(!q) cfg.slots[sel][0]=id;                 // war nicht in der Leiste: ersetzt den bisherigen Tab
+        else if(q[0]===p[0]&&q[1]===p[1]) return;
+        else swap(p,q);                              // stand schon in der Leiste: beide tauschen den Platz
+        commit();
+      },
       setPartner(id){
-        const i=sel, k=pairIdx();
-        if(!id){ return renderSettings(); }   // „Einzeln“ ist nur an Plätzen ohne Teilung gewählt; dort ändert sich nichts
-        if(!IDS.includes(id)||id==='settings'||id===cfg.slots[i][0]) return;
-        const q=pos(id); if(!q) return;
-        if(i===k){ if(cfg.slots[i][1]===id) return; swap([i,1],q); }
-        else if(q[0]===k){ cfg.slots[k].splice(q[1],1); cfg.slots[i].push(id); }
-        else { const P=cfg.slots[k][1]; cfg.slots[k].splice(1,1); cfg.slots[q[0]][q[1]]=P; cfg.slots[i].push(id); }
+        const i=sel, cur=cfg.slots[i];
+        if(!id){ if(cur.length===2){ cur.splice(1,1); commit(); } else renderSettings(); return; }
+        if(!IDS.includes(id)||id==='settings'||id===cur[0]||cur[1]===id) return;
+        const freed=cur.length===2?cur[1]:null;      // bisheriger Partner wird frei
+        const q=pos(id);
+        if(q){
+          if(cfg.slots[q[0]].length===2) cfg.slots[q[0]].splice(q[1],1);
+          else {                                     // Platz würde leer: mit einem freien Tab füllen
+            const filler=freed||unplaced().find(t=>t!==id)||(()=>{ const k=cfg.slots.findIndex((x,n)=>n!==i&&x.length===2); return k>=0?cfg.slots[k].splice(1,1)[0]:null; })();
+            if(!filler) return renderSettings();
+            cfg.slots[q[0]][0]=filler;
+          }
+        }
+        cur.length=1; cur.push(id);
         commit();
       },
       reset(){ cfg=clone(DEF); sel=FABI; try{ localStorage.removeItem(KEY); localStorage.removeItem('bvi_nav'); }catch(e){} render(); renderSettings(); },
