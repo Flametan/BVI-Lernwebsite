@@ -9,6 +9,7 @@ const GKS={
  '5':{n:'GK 5',long:'Gebäudeklasse 5',c:'#f0643c'},
  'HH':{n:'Hochhaus',long:'Hochhaus (MHHR)',c:'#e0489a'}};
 const GKORDER=['1a','1b','2','3','4','5','HH'];
+const QORDER=GKORDER.filter(g=>g!=='HH');   // Prüf-Quiz ohne Hochhaus
 const fm=(x,d)=>(Math.round(x*10)/10).toFixed(d==null?1:d).replace('.',',');
 const nFloors=okff=>Math.floor(okff/3+1e-9)+1;
 const NUMW=['','eine','zwei','drei','vier','fünf'];
@@ -109,7 +110,7 @@ function describe(p){
   return noun+', '+(p.free?'freistehend':'an ein Nachbargebäude angebaut')+', '+(p.nne===1?'1 Nutzungseinheit':p.nne+' Nutzungseinheiten')+', größte NE etwa '+area+' m²'+(p.land?', land-/forstwirtschaftlich genutzt':'')+'. OKFF der obersten NE: '+fm(p.okff)+' m.';
 }
 function makeRound(){
-  const targets=shuffle(GKORDER).slice(0,6),cases=[];
+  const targets=shuffle(QORDER).slice(0,6),cases=[];
   targets.forEach(g=>{const p=genParams(g);cases.push({kind:'gk',p,gk:g,text:describe(p)});});
   for(let i=0;i<2;i++){
     const g=pick(['1a','2','3','4','5']),zone=i?'ke':'og';
@@ -962,7 +963,7 @@ function QuizTab({quiz,setQuiz,startQuiz,answer,next}){
     opts=['none','f30','f60','f90'].map(k=>({k,t:REQ[k].t,c:REQ[k].c,ok:k===right,w1:true}));
   }else{
     q=h('div',{className:'card'},h('p',{className:'mu',style:{marginBottom:2}},'Bestimme die Gebäudeklasse'),h('p',{style:{marginBottom:0}},B(c.text.replace(/OKFF der obersten NE: ([\d,]+ m)\./,'OKFF der obersten NE: **$1**.'))));
-    opts=GKORDER.map(k=>({k,t:k==='HH'?'Hochhaus (MHHR)':GKS[k].n,c:GKS[k].c,ok:k===c.gk,w1:k==='HH'}));
+    opts=QORDER.map(k=>({k,t:GKS[k].n,c:GKS[k].c,ok:k===c.gk}));
   }
   let fbCard=null;
   if(fb){
