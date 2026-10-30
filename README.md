@@ -11,17 +11,18 @@
 
 | Modul | Lernkarten (nur Prüfungswissen) |
 |---|---|
+| 📝 Laufbahnklausur (Juni 2026, Dezember 2023) | 313 |
 | 🧠 IBK Heyrothsberge | 63 |
-| ⚖️ VAk Berlin | 139 |
-| 📊 FeuAK Hamburg | 85 |
-| 🏛️ IdF Münster | 100 |
-| **Gesamt** | **387** |
+| ⚖️ VAk Berlin | 110 |
+| 📊 FeuAK Hamburg | 62 |
+| 🏛️ IdF Münster | 75 |
+| **Gesamt** | **623** |
 
 ---
 
 ## Features
 
-- **387 Lernkarten** (nur Prüfungswissen) – 3D-Flip-Animation, Know/Don't-Know-Bewertung, LocalStorage-Persistenz
+- **623 Lernkarten** (nur Prüfungswissen) – 3D-Flip-Animation, Know/Don't-Know-Bewertung, LocalStorage-Persistenz
 - **Fallbearbeitung** – 6 juristische Übungsfälle mit 9-Punkte-Schema (Realakt/VA-Differenzierung)
 - **Altklausur-Training** – VAk Berlin + FeuAK Hamburg Prüfungsvorbereitung
 - **Führungsdienstsimulator** – 8 verzweigte Entscheidungsszenarien mit Scoring

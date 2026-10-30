@@ -61,7 +61,7 @@ const JG=(function(){
   // ── Daten prüfen und bereinigen (Dateien von anderen sind nie vertrauenswürdig) ──
   const str=(v,n)=>String(v==null?'':v).slice(0,n);
   const idOk=v=>/^[A-Za-z0-9_-]{1,40}$/.test(String(v))?String(v):null;
-  const KMOD=['GAL','SFS','HLFS','IBK','VAk','FeuAK','IdF'];
+  const KMOD=['Laufbahn','GAL','SFS','HLFS','IBK','VAk','FeuAK','IdF'];
   const KEYOK=/^[a-z0-9]{1,12}(~\d{1,3})?$/, AUSOK=/^v-[a-z0-9-]{1,58}\|[abt]\|[a-z0-9]{1,12}(~\d{1,3})?$/;
   function clean(o){
     const out={v:1,plane:{},aktiv:null,erg:[],pr:{hinzu:[],weg:[]},rel:{},ausg:[],links:{},karten:[],kweg:[],orte:{},kuerzel:{},reiter:[],faq:{}};
