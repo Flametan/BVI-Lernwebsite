@@ -4117,6 +4117,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.0',ts:'2026-10-30T09:00',items:[
+      'Lernkarten: Modul-Auswahl (Alle, IBK, VAk, FeuAK, IdF) steht in einer Reihe; Symbol des Tabs „Pause/Karten“ nicht mehr abgeschnitten',
       'Gebäudeklassen-Baukasten: Prüf-Quiz ohne Hochhaus als Antwortoption und ohne Hochhaus-Fälle',
       'Abkürzung für Oberkante Fertigfußboden einheitlich OKFF (statt FOK)',
       'Version 3.1: Stabsarbeit in fünf Reiter, neue IdF-Tabs (Zivile Verteidigung, EU-Katastrophenschutz), Simulationen (Sonderbauten, Stab aufbauen, Pressegespräch, Warn-Simulation), Gebäudeklassen-Baukasten mit MBO-Katalog, neue Lernkarten nur zu den Prüfungen, Tab „Pause/Karten“',
