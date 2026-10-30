@@ -1194,10 +1194,10 @@ const PROGRESS = (function(){
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht'],
     feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    idf:  ['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-stabskarte','v-idf-presse','v-idf-zv','v-idf-ucpm'],
+    idf:  ['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-sonderbau','v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte','v-idf-presse','v-idf-sim-pressesim','v-idf-sim-warnsim','v-idf-zv','v-idf-ucpm'],
   };
-  // Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulatoren): kein Haken, nicht im Fortschritt
-  const EXAM_VIEWS = new Set(['v-vak-klausurvorbereitung','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung','v-feuak-altklausur','v-idf-altklausur','v-klausur','v-klausur-0826','v-klausurfragen','v-eingrenzung-klausur','v-simulator','v-laufbahn-2023','v-laufbahn-2026','v-idf-sonderbau','v-idf-sim-stabbau','v-idf-sim-pressesim','v-idf-sim-warnsim']);
+  // Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator): kein Haken, nicht im Fortschritt
+  const EXAM_VIEWS = new Set(['v-vak-klausurvorbereitung','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung','v-feuak-altklausur','v-idf-altklausur','v-klausur','v-klausur-0826','v-klausurfragen','v-eingrenzung-klausur','v-simulator','v-laufbahn-2023','v-laufbahn-2026']);
   const LEAF_PARENT = {};
   Object.keys(GROUPS).forEach(g => GROUPS[g].forEach(v => { LEAF_PARENT[v] = g; }));
 
@@ -1216,8 +1216,8 @@ const PROGRESS = (function(){
   const HUBS = {
     'v-feuak-bp-hub':['v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp'],
     'v-feuak-analyse':['v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    'v-idf-vb':['v-idf-brandschutz','v-idf-vblernen','v-idf-gk'],
-    'v-idf-stabhub':['v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-stabskarte']
+    'v-idf-vb':['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-sonderbau'],
+    'v-idf-stabhub':['v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte']
   };
 
   function updateUI(){
@@ -4117,7 +4117,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.4',ts:'2026-10-30T09:00',items:[
-      'Simulationen (Sonderbauten, Stab aufbauen, Pressegespräch, Warn-Simulation) bekommen beim Besuch keinen Haken mehr und zählen nicht zum Themenfortschritt',
+      'Simulationen (Sonderbauten, Stab aufbauen, Pressegespräch, Warn-Simulation) bekommen beim Besuch einen Haken und zählen zum Themenfortschritt',
       'IdF → Stabsarbeit: „Stab aufbauen (Simulation)“ steht jetzt direkt hinter „Werkzeuge der Stabsarbeit“ und vor der Taschenkarte',
       'IdF: Taschenkarte Stabsarbeit steht jetzt als letzter Reiter in der Stabsarbeit; Planspiel-Trainer, Eskalationsleiter und „Lernunterlagen und Prüfungshinweise“ wieder entfernt',
       'Neue Simulationen (IdF): Stab aufbauen mit Vordruck-Trainer (Stabsarbeit), Pressegespräch, Eskalationsleiter Zivile Verteidigung, Warn-Simulation und Planspiel-Trainer mit eigenen Szenarien (Erkundung, Lagebeurteilung, Organisations- und Kommunikationsschema, Aufträge)',
