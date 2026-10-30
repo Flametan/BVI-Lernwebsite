@@ -340,7 +340,7 @@ function selBox(g,k,f,opts,cur,sol,checked,label){
    opts.map(o=>'<option value="'+o[0]+'"'+(cur===o[0]?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select></label>';
 }
 function fbox(ok,txt){return '<div class="fb '+(ok?'ok':'bad')+'"><b>'+(ok?'Richtig.':'Nicht ganz.')+'</b> '+esc(txt)+'</div>';}
-function ptsCard(label,pts,max,extra){return '<div class="card acc"><div class="lbl">'+label+'</div><div><span class="big">'+Math.round(pts*10)/10+'</span> <span class="mu">von '+max+' Punkten</span></div>'+(extra?'<p class="sm" style="margin-top:6px">'+extra+'</p>':'')+'</div>';}
+function ptsCard(label,pts,max,extra){return '<div class="card acc"><div class="lbl">'+label+'</div><div><span class="big">'+Math.round(pts)+'</span> <span class="mu">von '+max+' Punkten</span></div>'+(extra?'<p class="sm" style="margin-top:6px">'+extra+'</p>':'')+'</div>';}
 function lageBild(){
   const sc=S.sc;let h='<details><summary>Lagebild: '+esc(sc.n)+'</summary><div class="in">';
   h+=sc.lage.map(p=>'<p class="sm">'+esc(p)+'</p>').join('');

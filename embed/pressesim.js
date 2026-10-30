@@ -127,7 +127,7 @@ function check(){
     c.blocks.forEach(b=>{if(!b.good){if(!c.seq.includes(b))r.pts++;else r.errs.push({h:'Im O-Ton verwendet: „'+b.t+'“',w:BADWHY[b.kind]});}
       else{if(!c.seq.includes(b))r.errs.push({h:'Im O-Ton fehlt: „'+b.t+'“ ('+KIND[b.k]+')',w:'Dieser Baustein gehört zum Kern des Statements. '+OT_NOTE});
         else{const gi=g.indexOf(b);const bad=g.slice(0,gi).some(x=>x.k>b.k);if(bad)r.errs.push({h:'Reihenfolge falsch: „'+b.t+'“ ('+KIND[b.k]+') steht zu spät oder zu früh',w:OT_NOTE});else r.pts++;}}});c.ro=r;}
-  S.checked=true;render(false);
+  S.checked=true;render(true);
 }
 function next(){
   const c=S.cur;
