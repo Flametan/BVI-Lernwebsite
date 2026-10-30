@@ -1,4 +1,4 @@
-const APP_VERSION = '3.0.3'; // keep in sync with js/version.js
+const APP_VERSION = '3.0.4'; // keep in sync with js/version.js
 const CACHE = 'bvi-v' + APP_VERSION;
 const PRECACHE = [
   './',
@@ -30,6 +30,8 @@ const PRECACHE = [
   './embed/gk.html',
   './embed/gk.js',
   './embed/gk-katalog.js',
+  './embed/sonderbau.html',
+  './embed/sonderbau.js',
   './embed/lib/react.min.js',
   './embed/lib/react-dom.min.js',
   './js/three.min.js',
