@@ -1217,7 +1217,7 @@ const PROGRESS = (function(){
     'v-feuak-bp-hub':['v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp'],
     'v-feuak-analyse':['v-feuak-stakeholder','v-feuak-risikoanalyse'],
     'v-idf-vb':['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-sonderbau'],
-    'v-idf-stabhub':['v-idf-sim-stabbau','v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-stabskarte']
+    'v-idf-stabhub':['v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte']
   };
 
   function updateUI(){
@@ -4117,6 +4117,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.4',ts:'2026-10-30T09:00',items:[
+      'IdF → Stabsarbeit: „Stab aufbauen (Simulation)“ steht jetzt direkt hinter „Werkzeuge der Stabsarbeit“ und vor der Taschenkarte',
       'IdF: Taschenkarte Stabsarbeit steht jetzt als letzter Reiter in der Stabsarbeit; Planspiel-Trainer, Eskalationsleiter und „Lernunterlagen und Prüfungshinweise“ wieder entfernt',
       'Neue Simulationen (IdF): Stab aufbauen mit Vordruck-Trainer (Stabsarbeit), Pressegespräch, Eskalationsleiter Zivile Verteidigung, Warn-Simulation und Planspiel-Trainer mit eigenen Szenarien (Erkundung, Lagebeurteilung, Organisations- und Kommunikationsschema, Aufträge)',
       'Krisenstab: Grafiken zu Aktivierungsprozess, erster Verwaltungsstabssitzung (mit modifizierter Eisenhower-Matrix und Auftragsliste) und Folgesitzungen nachgebaut; Quiz-Frage 49 und Karte zur Zusammenlegung der Sachgebiete um „S4 mit S1“ und „S2 mit S3“ ergänzt',
