@@ -4082,12 +4082,13 @@ const KLAUSUR_HUB = (function(){
 // Eingebettete Seiten (iframe): füllen den Platz zwischen Kopfleiste und Tableiste, ihre Reiter bleiben sichtbar
 (function(){
   function fit(){
+    var any=false;
     document.querySelectorAll('iframe.emb-frame').forEach(function(f){
       var v=f.parentElement;if(!v||!v.classList.contains('active'))return;
+      any=true;
       var tb=document.getElementById('m-topbar'),bar=document.getElementById('m-tabbar');
       var top=tb?Math.max(0,Math.ceil(tb.getBoundingClientRect().bottom)):0;
       var bot=bar&&getComputedStyle(bar).display!=='none'?bar.offsetHeight:0;
-      var fab=bar&&bot?document.querySelector('.m-fab'):null;if(fab){var fr=fab.getBoundingClientRect();if(fr.height)bot=Math.max(bot,Math.ceil(innerHeight-fr.top));}
       var rail=document.getElementById('m-rail'),left=rail&&getComputedStyle(rail).display!=='none'?Math.round(rail.getBoundingClientRect().right):0;
       /* fest am Bildschirm: die Seite scrollt nicht mit, die Reiter der Karte bleiben immer sichtbar */
       f.style.position='fixed';f.style.left=left+'px';f.style.top=top+'px';f.style.width=(innerWidth-left)+'px';
@@ -4096,6 +4097,8 @@ const KLAUSUR_HUB = (function(){
       if(Math.abs(q.left-left)>1)f.style.left=(left-(q.left-left))+'px';
       if(Math.abs(q.top-top)>1)f.style.top=(top-(q.top-top))+'px';
     });
+    /* Eingebettete Seiten: Tableiste ohne herausragenden Mittelknopf, damit zwischen beiden Leisten kein Spalt bleibt */
+    document.body.classList.toggle('emb-on',any);
   }
   window.addEventListener('resize',fit);
   setInterval(fit,500);
@@ -4111,6 +4114,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.4',ts:'2026-10-30T09:00',items:[
+      'Eingebettete Seiten (Baukasten, Sonderbauten, VB-Prüfung lernen, Stabskarte): zwischen der Seiten-Leiste und der unteren Navigationsleiste bleibt kein Spalt mehr; der Prüfung-Knopf ragt dort nicht mehr über die Leiste',
       'IdF → Vorbeugender Brandschutz: neue Simulation „Sonderbauten“ – Quartier mit allen sieben Sonderbau-Typen der Lernseite, Röntgenblick und Quiz',
     ]},
     {v:'3.0.3',ts:'2026-10-29T10:00',items:[
