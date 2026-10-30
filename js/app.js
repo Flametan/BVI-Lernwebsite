@@ -4116,6 +4116,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.4',ts:'2026-10-30T09:00',items:[
+      'IdF-Lernseiten: wichtige Grafiken der Zusammenfassung als eigene Diagramme nachgebaut (Zwei-Stäbe-Modell, Aufbau der Einsatzleitung, Krisenstab mit Zeitablauf und Zusammensetzung, Meldungsarten, Human Factors mit „dreckigem Dutzend“, Gesamtverteidigung, Pakt für den Bevölkerungsschutz, Regelkreis, Risikoanalyse, KRITIS-Sektoren, Weg der länderübergreifenden Hilfe, Warnsystem, Kapazitätenpyramide)',
       'IdF-Prüfungsfragen an die neuen Stabsarbeit-Seiten angepasst (Bürgertelefon liegt bei der BuMA, Schichtplanung des S1, Großeinsatzlagen, 7-Punkte-Plan Punkt 7 in der Laufbahn-Musterlösung)',
       'IdF → Stabsarbeit: fünf neue Reiter zu Begrifflichkeiten, Gliederung der Einsatzleitung, Gliederung des Krisenstabs, Human Factors und Werkzeugen der Stabsarbeit (aus der Zusammenfassung Oktober 2026); IdF Münster: neue Tabs „Zivile Verteidigung“, „EU-Katastrophenschutz (UCPM)“ und „Lernunterlagen und Prüfungshinweise“; Presse- und Öffentlichkeitsarbeit um Grenzen des Auskunftsanspruchs und Pressestatements ergänzt',
       'Eingebettete Seiten (Baukasten, Sonderbauten, VB-Prüfung lernen, Stabskarte): zwischen der Seiten-Leiste und der unteren Navigationsleiste bleibt kein Spalt mehr; der Prüfung-Knopf ragt dort nicht mehr über die Leiste',
