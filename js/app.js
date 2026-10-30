@@ -4354,7 +4354,7 @@ const CHANGELOG=(function(){
   const ENTRIES=[
     {v:'3.1.0',ts:'2026-10-30T09:00',items:[
       'Lernkarten: Feuerwiderstand überall in beiden Schreibweisen, z. B. „REI 30 (F 30)“',
-      'Einstellungen → Navigationsleiste: Reihenfolge der sechs Tabs frei wählbar, benachbarte Tabs können sich einen Platz teilen (Auswahl beim Antippen, Symbol aus beiden Tabs mit Schrägstrich), höchstens 5 Plätze, Mittelknopf frei wählbar, Zurücksetzen',
+      'Einstellungen → Navigationsleiste: Platz in der Vorschau antippen und per Dropdown den Tab wählen oder zwei Tabs auf einem Platz zusammenlegen (Auswahl beim Antippen, Symbol aus beiden Tabs mit Schrägstrich); fünf Plätze, der Mittelknopf bleibt in der Mitte, die Einstellungen immer rechts; Zurücksetzen',
       'Lernkarten: Modul-Auswahl (Alle, IBK, VAk, FeuAK, IdF) steht in einer Reihe; Symbol des Tabs „Pause/Karten“ nicht mehr abgeschnitten',
       'Gebäudeklassen-Baukasten: Prüf-Quiz ohne Hochhaus als Antwortoption und ohne Hochhaus-Fälle',
       'Abkürzung für Oberkante Fertigfußboden einheitlich OKFF (statt FOK)',
@@ -7066,10 +7066,10 @@ ETIMER.init();
 
 /* ── Mobil-Ansicht: Tab-Leiste, Startseite, Prüfung, Einstellungen ──────── */
 const SHELL=(function(){
-  /* Navigationsleiste: Reihenfolge, Zusammenlegungen und Mittelknopf einstellbar; zwei Tabs teilen sich einen Platz */
+  /* Navigationsleiste: fünf feste Plätze; der mittlere ist der Mittelknopf, der rechte gehört den Einstellungen.
+     Jeder Platz zeigt einen Tab oder zwei (Auswahl beim Antippen). Einstellbar über Dropdowns in den Einstellungen. */
   const NAVBAR=(function(){
-    const KEY='bvi_nav', MAX=5;
-    const D=(a,b)=>({a,b});
+    const KEY='bvi_nav2', FABI=2, SETI=4;
     const IC={
       start:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
       plan:'<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
@@ -7085,30 +7085,28 @@ const SHELL=(function(){
       cards:{n:'Lernkarten',s:'Karten',go:()=>NAV.tab('v-flashcards','Lernkarten')},
       settings:{n:'Einstellungen',s:'Einst.',go:()=>NAV.tab('v-settings','Einstellungen')}};
     const IDS=Object.keys(T);
-    const DEF={order:['start','plan','exam','pause','cards','settings'],join:{pause:true},fab:'exam'};
+    const DEF={slots:[['start'],['plan'],['exam'],['pause','cards'],['settings']]};
     const clone=o=>JSON.parse(JSON.stringify(o));
     const svg=(inner,cls)=>'<svg'+(cls?' class="'+cls+'"':'')+' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+inner+'</svg>';
     const pairSvg=(a,b,cls)=>svg('<g transform="translate(-.5 6.5) scale(.5)" stroke-width="3.4">'+IC[a]+'</g><g transform="translate(12.5 6.5) scale(.5)" stroke-width="3.4">'+IC[b]+'</g><path d="M14.2 3.5 9.8 20.5" stroke-width="1.6"/>',cls);
-    function slots(c){ const r=[]; for(let i=0;i<c.order.length;i++){ const a=c.order[i]; if(c.join[a]&&i+1<c.order.length){ r.push([a,c.order[i+1]]); i++; } else r.push([a]); } return r; }
     function valid(c){
-      if(!c||!Array.isArray(c.order)||c.order.length!==IDS.length||new Set(c.order).size!==IDS.length||!c.order.every(x=>IDS.includes(x))) return false;
-      if(c.order[c.order.length-1]!=='settings') return false;   // Einstellungen bleiben immer ganz rechts
-      if(typeof c.join!=='object'||!c.join) return false;
-      return slots(c).length<=MAX;
+      if(!c||!Array.isArray(c.slots)||c.slots.length!==5) return false;
+      if(!c.slots.every(x=>Array.isArray(x)&&x.length>=1&&x.length<=2&&x.every(t=>IDS.includes(t)))) return false;
+      const all=[].concat(...c.slots); if(all.length!==IDS.length||new Set(all).size!==IDS.length) return false;
+      return c.slots[SETI][0]==='settings';
     }
-    function load(){ try{ const c=JSON.parse(localStorage.getItem(KEY)||'null'); if(valid(c)&&(c.fab===null||IDS.includes(c.fab))) return c; }catch(e){} return clone(DEF); }
-    let cfg=load(), draft=null;
-    function save(c){ try{ localStorage.setItem(KEY,JSON.stringify(c)); }catch(e){} }
+    function load(){ try{ const c=JSON.parse(localStorage.getItem(KEY)||'null'); if(valid(c)) return c; }catch(e){} return clone(DEF); }
+    let cfg=load(), sel=FABI;
+    function save(){ try{ localStorage.setItem(KEY,JSON.stringify(cfg)); }catch(e){} }
     const key=s=>s.join(' ');
     function label(s){ return s.length===1?T[s[0]].n:s.map(x=>T[x].s).join('/'); }
     function curTab(){ return window.__navTab||'start'; }
     function apply(){ const t=curTab(); document.querySelectorAll('#m-tabbar [data-tabs],#m-rail [data-tab]').forEach(b=>{ const on=(b.dataset.tabs||b.dataset.tab||'').split(' ').includes(t); b.classList.toggle('on',on); if(on) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }); }
     function render(){
       const bar=document.getElementById('m-tabbar'); if(!bar) return;
-      const sl=slots(cfg);
-      bar.style.gridTemplateColumns='repeat('+sl.length+',1fr)';
-      bar.innerHTML=sl.map(s=>{
-        const fab=cfg.fab&&s.includes(cfg.fab);
+      bar.style.gridTemplateColumns='repeat(5,1fr)';
+      bar.innerHTML=cfg.slots.map((s,i)=>{
+        const fab=i===FABI;
         const ic=s.length===1?svg(IC[s[0]]):pairSvg(s[0],s[1]);
         const click=s.length===1?'NAVBAR.go(\''+s[0]+'\')':'PMENU.toggle(event,this)';
         const attrs=s.length===1?'':' aria-haspopup="menu" aria-expanded="false" aria-controls="m-pmenu"';
@@ -7119,31 +7117,40 @@ const SHELL=(function(){
     function go(id){ PMENU.close(); T[id].go(); }
     /* ---- Einstellungen ---- */
     const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const pos=id=>{ for(let i=0;i<5;i++){ const m=cfg.slots[i].indexOf(id); if(m>=0) return [i,m]; } return null; };
+    const pairIdx=()=>cfg.slots.findIndex(x=>x.length===2);
     function renderSettings(){
       const el=document.getElementById('nav-edit'); if(!el) return;
-      const c=draft||cfg, sl=slots(c), ok=sl.length<=MAX;
-      const prev='<div class="nb-prev" style="grid-template-columns:repeat('+sl.length+',1fr)">'+sl.map(s=>{ const fab=c.fab&&s.includes(c.fab); return '<div class="nb-p'+(fab?' nb-fab':'')+'">'+(s.length===1?svg(IC[s[0]]):pairSvg(s[0],s[1]))+'<span>'+esc(label(s))+'</span></div>'; }).join('')+'</div>';
-      let pairStart={}; sl.forEach(s=>{ if(s.length===2) pairStart[s[0]]=true; });
-      const second={}; sl.forEach(s=>{ if(s.length===2) second[s[1]]=true; });
-      const rows=c.order.map((id,i)=>'<div class="nb-row'+(second[id]?' nb-sec':'')+'"><span class="nb-ic">'+svg(IC[id])+'</span><span class="nb-n">'+esc(T[id].n)+'</span>'
-        +'<span class="nb-btns"><button type="button" aria-label="'+esc(T[id].n)+' nach oben" '+(i===0||id==='settings'?'disabled':'')+' onclick="NAVBAR.move(\''+id+'\',-1)">▲</button><button type="button" aria-label="'+esc(T[id].n)+' nach unten" '+(i>=c.order.length-2?'disabled':'')+' onclick="NAVBAR.move(\''+id+'\',1)">▼</button></span>'
-        +(i<c.order.length-1&&!second[id]?'<label class="nb-l"><input type="checkbox" '+(c.join[id]?'checked':'')+' onchange="NAVBAR.join(\''+id+'\',this.checked)"> mit „'+esc(T[c.order[i+1]].n)+'“ teilen</label>':'<span class="nb-l nb-mu">'+(second[id]?'teilt sich den Platz mit dem Tab davor':(id==='settings'?'steht immer ganz rechts und kann nicht entfernt werden':''))+'</span>')
-        +'<label class="nb-l"><input type="radio" name="nb-fab" '+(c.fab&&(c.fab===id)?'checked':'')+' onchange="NAVBAR.fab(\''+id+'\')"> Mittelknopf</label></div>').join('');
-      el.innerHTML='<p class="nb-t">Ordne die Tabs in der Reihenfolge, in der sie in der Leiste stehen sollen. Mit „teilen“ legst du zwei benachbarte Tabs auf einen Platz; beim Antippen erscheint dann eine Auswahl. Es gibt höchstens '+MAX+' Plätze. Die Einstellungen stehen immer ganz rechts.</p>'
-        +'<div class="nb-h">Vorschau</div>'+prev
-        +'<div class="nb-st'+(ok?'':' nb-bad')+'">'+(ok?sl.length+' von '+MAX+' Plätzen belegt':'Zu viele Plätze ('+sl.length+'): lege mindestens '+(sl.length-MAX)+' Tab(s) mit einem anderen zusammen. Bis dahin bleibt die letzte gültige Leiste aktiv.')+'</div>'
-        +'<div class="nb-rows">'+rows+'</div>'
-        +'<div class="nb-act"><label class="nb-l"><input type="radio" name="nb-fab" '+(c.fab===null?'checked':'')+' onchange="NAVBAR.fab(null)"> Kein Mittelknopf</label><button type="button" class="btn btn-ghost" onclick="NAVBAR.reset()">Zurücksetzen</button></div>';
+      const sl=cfg.slots, i=sel, cur=sl[i], pk=pairIdx();
+      const prev='<div class="nb-prev" role="group" aria-label="Plätze der Navigationsleiste">'+sl.map((s,k)=>'<button type="button" class="nb-p'+(k===FABI?' nb-fab':'')+(k===i?' nb-sel':'')+'" aria-pressed="'+(k===i)+'" aria-label="Platz '+(k+1)+': '+esc(label(s))+'" onclick="NAVBAR.select('+k+')">'+(s.length===1?svg(IC[s[0]]):pairSvg(s[0],s[1]))+'<span>'+esc(label(s))+'</span></button>').join('')+'</div>';
+      const tabOpts=IDS.filter(t=>t!=='settings'||i===SETI).map(t=>'<option value="'+t+'"'+(t===cur[0]?' selected':'')+'>'+esc(T[t].n)+'</option>').join('');
+      const partnerOpts='<option value=""'+(cur.length===1?' selected':'')+(i===pk?' disabled':'')+'>Einzeln (ohne zweiten Tab)</option>'+IDS.filter(t=>t!==cur[0]&&t!=='settings').map(t=>'<option value="'+t+'"'+(cur[1]===t?' selected':'')+'>mit „'+esc(T[t].n)+'“ zusammenlegen</option>').join('');
+      el.innerHTML='<p class="nb-t">Tippe oben auf den Platz, den du ändern willst, und wähle darunter den Tab. Der mittlere Platz bleibt der Mittelknopf, die Einstellungen stehen immer ganz rechts. Weil es sechs Tabs, aber fünf Plätze gibt, teilen sich immer genau zwei Tabs einen Platz (beim Antippen erscheint dann eine Auswahl).</p>'
+        +'<div class="nb-h">Leiste (antippen zum Ändern)</div>'+prev
+        +'<div class="nb-panel"><div class="nb-h">Platz '+(i+1)+(i===FABI?' · Mittelknopf':i===SETI?' · Einstellungen':'')+'</div>'
+        +'<label class="nb-f">Tab<select onchange="NAVBAR.setTab(this.value)"'+(i===SETI?' disabled':'')+'>'+tabOpts+'</select></label>'
+        +'<label class="nb-f">Platz teilen<select onchange="NAVBAR.setPartner(this.value)">'+partnerOpts+'</select></label>'
+        +(i===pk?'<p class="nb-t nb-sm">Dieser Platz teilt sich zwei Tabs. Um das zu ändern, wähle bei einem anderen Platz „zusammenlegen“; dann wandert die Teilung dorthin.</p>':'<p class="nb-t nb-sm">Wählst du hier „zusammenlegen“, wandert die Teilung von Platz '+(pk+1)+' hierher.</p>')
+        +'</div><div class="nb-act"><button type="button" class="btn btn-ghost" onclick="NAVBAR.reset()">Zurücksetzen</button></div>';
     }
-    function commit(c){ if(slots(c).length<=MAX){ cfg=c; draft=null; save(cfg); render(); } else { draft=c; } renderSettings(); }
-    function edit(fn){ const c=clone(draft||cfg); fn(c); commit(c); }
+    function commit(){ save(); render(); renderSettings(); }
+    function swap(p,q){ const t=cfg.slots[p[0]][p[1]]; cfg.slots[p[0]][p[1]]=cfg.slots[q[0]][q[1]]; cfg.slots[q[0]][q[1]]=t; }
     return {
       init(){ render(); renderSettings(); },
       render, renderSettings, go, mark(){ apply(); },
-      move(id,d){ edit(c=>{ if(id==='settings') return; const i=c.order.indexOf(id), j=i+d; if(j<0||j>=c.order.length-1) return; [c.order[i],c.order[j]]=[c.order[j],c.order[i]]; }); },
-      join(id,on){ edit(c=>{ if(on) c.join[id]=true; else delete c.join[id]; /* keine Ketten: der nächste Tab teilt nicht weiter */ if(on){ const i=c.order.indexOf(id); const nx=c.order[i+1]; if(nx) delete c.join[nx]; const pv=c.order[i-1]; if(pv) delete c.join[pv]; } }); },
-      fab(id){ edit(c=>{ c.fab=id; }); },
-      reset(){ draft=null; cfg=clone(DEF); try{ localStorage.removeItem(KEY); }catch(e){} render(); renderSettings(); },
+      select(i){ sel=i; renderSettings(); },
+      setTab(id){ if(sel===SETI||id==='settings'||!IDS.includes(id)) return; const p=[sel,0], q=pos(id); if(!q||(q[0]===p[0]&&q[1]===p[1])) return; swap(p,q); commit(); },
+      setPartner(id){
+        const i=sel, k=pairIdx();
+        if(!id){ return renderSettings(); }   // „Einzeln“ ist nur an Plätzen ohne Teilung gewählt; dort ändert sich nichts
+        if(!IDS.includes(id)||id==='settings'||id===cfg.slots[i][0]) return;
+        const q=pos(id); if(!q) return;
+        if(i===k){ if(cfg.slots[i][1]===id) return; swap([i,1],q); }
+        else if(q[0]===k){ cfg.slots[k].splice(q[1],1); cfg.slots[i].push(id); }
+        else { const P=cfg.slots[k][1]; cfg.slots[k].splice(1,1); cfg.slots[q[0]][q[1]]=P; cfg.slots[i].push(id); }
+        commit();
+      },
+      reset(){ cfg=clone(DEF); sel=FABI; try{ localStorage.removeItem(KEY); localStorage.removeItem('bvi_nav'); }catch(e){} render(); renderSettings(); },
       pairOf(btn){ return (btn.dataset.tabs||'').split(' ').filter(Boolean); },
       T, IC, svg
     };

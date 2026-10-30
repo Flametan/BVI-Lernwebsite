@@ -2964,3 +2964,14 @@ body.emb-on .m-fab svg{width:22px;height:22px;}
 .nb-l input{width:20px;height:20px;accent-color:var(--m-accent);}
 .nb-mu{color:var(--m-muted);}
 .nb-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;}
+
+/* Navigationsleiste einstellen: Plätze antippen, Dropdowns darunter */
+.nb-prev{grid-template-columns:repeat(5,minmax(0,1fr));}
+button.nb-p{appearance:none;border:2px solid transparent;background:transparent;font-family:inherit;cursor:pointer;border-radius:12px;padding:6px 2px;min-height:64px;justify-content:flex-start;}
+button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var(--m-accent) 12%,transparent);color:var(--m-fg);}
+.nb-panel{display:flex;flex-direction:column;gap:.55rem;padding:.8rem;border-radius:14px;background:var(--m-card);}
+.nb-f{display:flex;flex-direction:column;gap:4px;font-size:.78rem;font-weight:600;color:var(--m-muted);}
+.nb-f select{min-height:46px;padding:0 10px;border-radius:10px;border:1px solid var(--m-line);background:var(--m-bg,#fff);color:var(--m-fg);font:500 .95rem var(--f-b,system-ui);}
+.nb-f select:disabled{opacity:.6;}
+.nb-sm{font-size:.76rem;margin:0;}
+#nav-edit{padding-left:.8rem;padding-right:.8rem;}
