@@ -1874,9 +1874,9 @@ function launchConfetti(){
    FC – Flashcard-Engine
 ====================================================================== */
 const FC = (function(){
-  const CATS = ['ibk','vak','feuak','idf'];
+  const CATS = ['laufbahn','ibk','vak','feuak','idf'];
   let deck=[], curIdx=0, flipped=false, sess={known:0,unknown:0};
-  let activeFilters = new Set(CATS);
+  let activeFilters = new Set(['laufbahn']);
   let _seen = [], _reviewPos = -1;
 
   const SR_DAYS = [0,1,3,7,14,30];
@@ -2185,20 +2185,20 @@ const FC = (function(){
     },
     setFilter(f){
       if(f==='starred'){
-        activeFilters=activeFilters.has('starred')?new Set(CATS):new Set(['starred']);
+        activeFilters=activeFilters.has('starred')?new Set(['laufbahn']):new Set(['starred']);
       } else if(f==='own'){
-        activeFilters=activeFilters.has('own')?new Set(CATS):new Set(['own']);
+        activeFilters=activeFilters.has('own')?new Set(['laufbahn']):new Set(['own']);
       } else if(f==='weak'){
-        activeFilters=activeFilters.has('weak')?new Set(CATS):new Set(['weak']);
+        activeFilters=activeFilters.has('weak')?new Set(['laufbahn']):new Set(['weak']);
       } else if(f==='all'){
-        activeFilters=new Set(CATS);
+        activeFilters=new Set(['laufbahn']);
       } else if(f==='pruefung'){
         activeFilters=new Set(['ibk','vak','feuak','idf']);
         updateFilterButtons(); this.start(); return;
       } else {
         activeFilters.delete('starred'); activeFilters.delete('weak'); activeFilters.delete('own');
         if(activeFilters.size===CATS.length) activeFilters=new Set([f]);
-        else if(activeFilters.has(f)){ activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(CATS); }
+        else if(activeFilters.has(f)){ activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(['laufbahn']); }
         else activeFilters.add(f);
       }
       updateFilterButtons();
@@ -3040,7 +3040,7 @@ const LP=(function(){
    CUSTOM – Eigene Lernkarten
 ====================================================================== */
 const CUSTOM=(function(){
-  const KEY='bvi_fc_custom', MODS=['GAL','SFS','HLFS','IBK','VAk','FeuAK','IdF'];
+  const KEY='bvi_fc_custom', MODS=['Laufbahn','IBK','VAk','FeuAK','IdF'];
   let box=null;
   const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const html=t=>esc(t.trim()).replace(/\n/g,'<br>');
@@ -3105,7 +3105,7 @@ const CUSTOM=(function(){
   function merge(items){
     const all=load(), have=new Set(all.map(c=>c.cat.split(' · ')[0]+'|'+plain(c.q).trim())); let n=0;
     items.forEach(k=>{
-      const m=MODS.includes(k.modul)?k.modul:'GAL', q=String(k.frage||'').slice(0,500), a=String(k.antwort||'').slice(0,1500);
+      const m=MODS.includes(k.modul)?k.modul:'Laufbahn', q=String(k.frage||'').slice(0,500), a=String(k.antwort||'').slice(0,1500);
       if(!q.trim()||!a.trim()||have.has(m+'|'+q.trim())) return;
       have.add(m+'|'+q.trim());
       const c={id:'own'+Date.now().toString(36)+n,cat:m+' · Eigene Karte',q:html(q),a:html(a)};
@@ -7377,7 +7377,7 @@ const SHELL=(function(){
   function renderFcSide(){
     const el=document.getElementById('m-fc-side'); if(!el) return;
     let fc={}; try{ fc=JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch(e){}
-    const cats=[['ibk','IBK'],['vak','VAk'],['feuak','FeuAK'],['idf','IdF']];
+    const cats=[['laufbahn','Laufbahn'],['ibk','IBK'],['vak','VAk'],['feuak','FeuAK'],['idf','IdF']];
     const rows=cats.map(([k,l])=>{
       const cs=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(k));
       const p=cs.length?Math.round(cs.filter(c=>fc[c.id]).length/cs.length*100):0;
