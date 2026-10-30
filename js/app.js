@@ -1194,7 +1194,7 @@ const PROGRESS = (function(){
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht'],
     feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    idf:  ['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-sonderbau','v-idf-stab','v-idf-stabskarte','v-idf-presse'],
+    idf:  ['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-sonderbau','v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-stabskarte','v-idf-presse','v-idf-zv','v-idf-ucpm','v-idf-hinweise'],
   };
   // Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator): kein Haken, nicht im Fortschritt
   const EXAM_VIEWS = new Set(['v-vak-klausurvorbereitung','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung','v-feuak-altklausur','v-idf-altklausur','v-klausur','v-klausur-0826','v-klausurfragen','v-eingrenzung-klausur','v-simulator','v-laufbahn-2023','v-laufbahn-2026']);
@@ -1217,7 +1217,7 @@ const PROGRESS = (function(){
     'v-feuak-bp-hub':['v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp'],
     'v-feuak-analyse':['v-feuak-stakeholder','v-feuak-risikoanalyse'],
     'v-idf-vb':['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-sonderbau'],
-    'v-idf-stabhub':['v-idf-stab','v-idf-stabskarte']
+    'v-idf-stabhub':['v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-stabskarte']
   };
 
   function updateUI(){
@@ -1285,6 +1285,8 @@ const SEARCH = (function(){
     'v-idf-vblernen':'IdF · VB-Prüfung lernen',
     'v-idf-gk':'IdF · Gebäudeklassen-Baukasten',
     'v-idf-sonderbau':'IdF · Sonderbauten',
+    'v-idf-s51':'IdF · Stabsarbeit · Begrifflichkeiten','v-idf-s52':'IdF · Stabsarbeit · Gliederung der Einsatzleitung','v-idf-s53':'IdF · Stabsarbeit · Gliederung des Krisenstabs','v-idf-s54':'IdF · Stabsarbeit · Human Factors','v-idf-s55':'IdF · Stabsarbeit · Werkzeuge',
+    'v-idf-zv':'IdF · Zivile Verteidigung','v-idf-ucpm':'IdF · EU-Katastrophenschutz (UCPM)','v-idf-hinweise':'IdF · Lernunterlagen und Prüfungshinweise',
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
     'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
@@ -4114,6 +4116,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.4',ts:'2026-10-30T09:00',items:[
+      'IdF → Stabsarbeit: fünf neue Reiter zu Begrifflichkeiten, Gliederung der Einsatzleitung, Gliederung des Krisenstabs, Human Factors und Werkzeugen der Stabsarbeit (aus der Zusammenfassung Oktober 2026); IdF Münster: neue Tabs „Zivile Verteidigung“, „EU-Katastrophenschutz (UCPM)“ und „Lernunterlagen und Prüfungshinweise“; Presse- und Öffentlichkeitsarbeit um Grenzen des Auskunftsanspruchs und Pressestatements ergänzt',
       'Eingebettete Seiten (Baukasten, Sonderbauten, VB-Prüfung lernen, Stabskarte): zwischen der Seiten-Leiste und der unteren Navigationsleiste bleibt kein Spalt mehr; der Prüfung-Knopf ragt dort nicht mehr über die Leiste',
       'IdF → Vorbeugender Brandschutz: neue Simulation „Sonderbauten“ – Quartier mit allen sieben Sonderbau-Typen der Lernseite, Röntgenblick und Quiz',
     ]},
