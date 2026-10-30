@@ -4117,6 +4117,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.0',ts:'2026-10-30T09:00',items:[
+      'Abkürzung für Oberkante Fertigfußboden einheitlich OKFF (statt FOK)',
       'Version 3.1: Stabsarbeit in fünf Reiter, neue IdF-Tabs (Zivile Verteidigung, EU-Katastrophenschutz), Simulationen (Sonderbauten, Stab aufbauen, Pressegespräch, Warn-Simulation), Gebäudeklassen-Baukasten mit MBO-Katalog, neue Lernkarten nur zu den Prüfungen, Tab „Pause/Karten“',
       'Startseite: neuer Reiter „Pausenraum“ unter den Lernkarten',
       'Simulationen (Sonderbauten, Stab aufbauen, Pressegespräch, Warn-Simulation) bekommen beim Besuch einen Haken und zählen zum Themenfortschritt',
