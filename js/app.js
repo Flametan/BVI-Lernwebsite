@@ -1194,7 +1194,7 @@ const PROGRESS = (function(){
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
     vak:  ['v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht'],
     feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    idf:  ['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-sonderbau','v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-stabskarte','v-idf-presse','v-idf-zv','v-idf-ucpm','v-idf-hinweise'],
+    idf:  ['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-sonderbau','v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-stabskarte','v-idf-presse','v-idf-zv','v-idf-ucpm'],
   };
   // Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator): kein Haken, nicht im Fortschritt
   const EXAM_VIEWS = new Set(['v-vak-klausurvorbereitung','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung','v-feuak-altklausur','v-idf-altklausur','v-klausur','v-klausur-0826','v-klausurfragen','v-eingrenzung-klausur','v-simulator','v-laufbahn-2023','v-laufbahn-2026']);
@@ -1286,8 +1286,8 @@ const SEARCH = (function(){
     'v-idf-gk':'IdF · Gebäudeklassen-Baukasten',
     'v-idf-sonderbau':'IdF · Sonderbauten',
     'v-idf-s51':'IdF · Stabsarbeit · Begrifflichkeiten','v-idf-s52':'IdF · Stabsarbeit · Gliederung der Einsatzleitung','v-idf-s53':'IdF · Stabsarbeit · Gliederung des Krisenstabs','v-idf-s54':'IdF · Stabsarbeit · Human Factors','v-idf-s55':'IdF · Stabsarbeit · Werkzeuge',
-    'v-idf-sim-stabbau':'IdF · Simulation Stab aufbauen','v-idf-sim-pressesim':'IdF · Simulation Pressegespräch','v-idf-sim-eskalation':'IdF · Simulation Eskalationsleiter','v-idf-sim-warnsim':'IdF · Simulation Warn-Simulation','v-idf-sim-planspiel':'IdF · Simulation Planspiel-Trainer',
-    'v-idf-zv':'IdF · Zivile Verteidigung','v-idf-ucpm':'IdF · EU-Katastrophenschutz (UCPM)','v-idf-hinweise':'IdF · Lernunterlagen und Prüfungshinweise',
+    'v-idf-sim-stabbau':'IdF · Simulation Stab aufbauen','v-idf-sim-pressesim':'IdF · Simulation Pressegespräch','v-idf-sim-warnsim':'IdF · Simulation Warn-Simulation',
+    'v-idf-zv':'IdF · Zivile Verteidigung','v-idf-ucpm':'IdF · EU-Katastrophenschutz (UCPM)',
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
     'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
@@ -4117,6 +4117,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.4',ts:'2026-10-30T09:00',items:[
+      'IdF: Taschenkarte Stabsarbeit steht jetzt als letzter Reiter in der Stabsarbeit; Planspiel-Trainer, Eskalationsleiter und „Lernunterlagen und Prüfungshinweise“ wieder entfernt',
       'Neue Simulationen (IdF): Stab aufbauen mit Vordruck-Trainer (Stabsarbeit), Pressegespräch, Eskalationsleiter Zivile Verteidigung, Warn-Simulation und Planspiel-Trainer mit eigenen Szenarien (Erkundung, Lagebeurteilung, Organisations- und Kommunikationsschema, Aufträge)',
       'Krisenstab: Grafiken zu Aktivierungsprozess, erster Verwaltungsstabssitzung (mit modifizierter Eisenhower-Matrix und Auftragsliste) und Folgesitzungen nachgebaut; Quiz-Frage 49 und Karte zur Zusammenlegung der Sachgebiete um „S4 mit S1“ und „S2 mit S3“ ergänzt',
       'Vorbeugender Brandschutz: Grafik „Türen im Gebäude“ (T30-RS, DS, DSS, RS je Nutzung) nachgebaut und in die Lernseite eingefügt',
