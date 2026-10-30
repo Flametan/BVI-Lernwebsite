@@ -98,7 +98,7 @@
     <span>Prüfung</span>
   </button>
   <button class="m-tab" data-tab="pause" onclick="PMENU.toggle(event)" aria-haspopup="menu" aria-expanded="false" aria-controls="m-pmenu">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(-1.6 5) scale(.68)" stroke-width="2.7"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17M8 2.5c-.6 1 .6 1.8 0 3M12 2.5c-.6 1 .6 1.8 0 3"/></g><g transform="translate(11 5.2) scale(.64)" stroke-width="2.8"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></g><path d="M14.6 2.5 9.4 21.5" stroke-width="1.7"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(-1.6 5) scale(.68)" stroke-width="2.7"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17M8 2.5c-.6 1 .6 1.8 0 3M12 2.5c-.6 1 .6 1.8 0 3"/></g><g transform="translate(10.2 5.4) scale(.6)" stroke-width="3"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></g><path d="M14.6 2.5 9.4 21.5" stroke-width="1.7"/></svg>
     <span>Pause/Karten</span>
   </button>
   <button class="m-tab" data-tab="settings" onclick="NAV.tab('v-settings','Einstellungen')">
@@ -14019,6 +14019,15 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
         </span>
       </div>
     </div>
+      </div>
+    </div>
+    <div class="m-acc">
+      <button class="m-acc-h" id="acc-nav-h" aria-expanded="false" aria-controls="acc-nav-b" onclick="SHELL.acc(this)">
+        <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="15" width="18" height="6" rx="2"/><path d="M7 18h.01M12 18h.01M17 18h.01M6 4h12v7H6z"/></svg></span>
+        <span class="m-tx"><span class="m-t1">Navigationsleiste</span><span class="m-t2">Reihenfolge, geteilte Plätze und Mittelknopf</span></span>
+      </button>
+      <div class="m-acc-b" id="acc-nav-b" role="region" aria-labelledby="acc-nav-h" hidden>
+        <div class="m-stack" id="nav-edit"></div>
       </div>
     </div>
     <div class="m-acc">

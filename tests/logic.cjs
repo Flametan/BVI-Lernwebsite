@@ -328,7 +328,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.donate = !!document.querySelector('#v-settings .m-donate') && !document.querySelector('#v-settings .m-acc .m-donate');
     return r;
   });
-  eq('Einstellungen: sieben Gruppen, zu Beginn zugeklappt', [acc.n, acc.closed], [7, true]);
+  eq('Einstellungen: acht Gruppen, zu Beginn zugeklappt', [acc.n, acc.closed], [8, true]);
   eq('Einstellungen: nur eine Gruppe offen', acc.open.filter(x => x === 'true').length, 1);
   ok('Einstellungen: Inhalt der offenen Gruppe sichtbar, Kurzinfo gefüllt', acc.vis && /^Tagesziel \d+ min/.test(acc.sub));
   ok('Einstellungen: Spende liegt außerhalb der Gruppen', acc.donate);

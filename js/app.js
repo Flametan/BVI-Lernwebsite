@@ -4117,6 +4117,8 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.0',ts:'2026-10-30T09:00',items:[
+      'Einstellungen → Navigationsleiste: Reihenfolge der sechs Tabs frei wählbar, benachbarte Tabs können sich einen Platz teilen (Auswahl beim Antippen, Symbol aus beiden Tabs mit Schrägstrich), höchstens 5 Plätze, Mittelknopf frei wählbar, Zurücksetzen',
+      'Lernkarten: Modul-Auswahl (Alle, IBK, VAk, FeuAK, IdF) steht in einer Reihe; Symbol des Tabs „Pause/Karten“ nicht mehr abgeschnitten',
       'Gebäudeklassen-Baukasten: Prüf-Quiz ohne Hochhaus als Antwortoption und ohne Hochhaus-Fälle',
       'Abkürzung für Oberkante Fertigfußboden einheitlich OKFF (statt FOK)',
       'Version 3.1: Stabsarbeit in fünf Reiter, neue IdF-Tabs (Zivile Verteidigung, EU-Katastrophenschutz), Simulationen (Sonderbauten, Stab aufbauen, Pressegespräch, Warn-Simulation), Gebäudeklassen-Baukasten mit MBO-Katalog, neue Lernkarten nur zu den Prüfungen, Tab „Pause/Karten“',
@@ -6827,19 +6829,104 @@ ETIMER.init();
 
 /* ── Mobil-Ansicht: Tab-Leiste, Startseite, Prüfung, Einstellungen ──────── */
 const SHELL=(function(){
-  /* Pause / Karten: Tab öffnet eine Auswahl über der Leiste */
+  /* Navigationsleiste: Reihenfolge, Zusammenlegungen und Mittelknopf einstellbar; zwei Tabs teilen sich einen Platz */
+  const NAVBAR=(function(){
+    const KEY='bvi_nav', MAX=5;
+    const D=(a,b)=>({a,b});
+    const IC={
+      start:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+      plan:'<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+      exam:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+      pause:'<path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17M8 2.5c-.6 1 .6 1.8 0 3M12 2.5c-.6 1 .6 1.8 0 3"/>',
+      cards:'<rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/>',
+      settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'};
+    const T={
+      start:{n:'Start',s:'Start',go:()=>NAV.home()},
+      plan:{n:'Stundenplan',s:'Plan',go:()=>NAV.tab('v-plan','Stundenplan')},
+      exam:{n:'Prüfung',s:'Prüfung',go:()=>NAV.tab('v-pruefung','Prüfung')},
+      pause:{n:'Pausenraum',s:'Pause',go:()=>NAV.tab('v-pause','Pausenraum')},
+      cards:{n:'Lernkarten',s:'Karten',go:()=>NAV.tab('v-flashcards','Lernkarten')},
+      settings:{n:'Einstellungen',s:'Einst.',go:()=>NAV.tab('v-settings','Einstellungen')}};
+    const IDS=Object.keys(T);
+    const DEF={order:['start','plan','exam','pause','cards','settings'],join:{pause:true},fab:'exam'};
+    const clone=o=>JSON.parse(JSON.stringify(o));
+    const svg=(inner,cls)=>'<svg'+(cls?' class="'+cls+'"':'')+' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+inner+'</svg>';
+    const pairSvg=(a,b,cls)=>svg('<g transform="translate(-.5 6.5) scale(.5)" stroke-width="3.4">'+IC[a]+'</g><g transform="translate(12.5 6.5) scale(.5)" stroke-width="3.4">'+IC[b]+'</g><path d="M14.2 3.5 9.8 20.5" stroke-width="1.6"/>',cls);
+    function slots(c){ const r=[]; for(let i=0;i<c.order.length;i++){ const a=c.order[i]; if(c.join[a]&&i+1<c.order.length){ r.push([a,c.order[i+1]]); i++; } else r.push([a]); } return r; }
+    function valid(c){
+      if(!c||!Array.isArray(c.order)||c.order.length!==IDS.length||new Set(c.order).size!==IDS.length||!c.order.every(x=>IDS.includes(x))) return false;
+      if(c.order[c.order.length-1]!=='settings') return false;   // Einstellungen bleiben immer ganz rechts
+      if(typeof c.join!=='object'||!c.join) return false;
+      return slots(c).length<=MAX;
+    }
+    function load(){ try{ const c=JSON.parse(localStorage.getItem(KEY)||'null'); if(valid(c)&&(c.fab===null||IDS.includes(c.fab))) return c; }catch(e){} return clone(DEF); }
+    let cfg=load(), draft=null;
+    function save(c){ try{ localStorage.setItem(KEY,JSON.stringify(c)); }catch(e){} }
+    const key=s=>s.join(' ');
+    function label(s){ return s.length===1?T[s[0]].n:s.map(x=>T[x].s).join('/'); }
+    function curTab(){ return window.__navTab||'start'; }
+    function apply(){ const t=curTab(); document.querySelectorAll('#m-tabbar [data-tabs],#m-rail [data-tab]').forEach(b=>{ const on=(b.dataset.tabs||b.dataset.tab||'').split(' ').includes(t); b.classList.toggle('on',on); if(on) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }); }
+    function render(){
+      const bar=document.getElementById('m-tabbar'); if(!bar) return;
+      const sl=slots(cfg);
+      bar.style.gridTemplateColumns='repeat('+sl.length+',1fr)';
+      bar.innerHTML=sl.map(s=>{
+        const fab=cfg.fab&&s.includes(cfg.fab);
+        const ic=s.length===1?svg(IC[s[0]]):pairSvg(s[0],s[1]);
+        const click=s.length===1?'NAVBAR.go(\''+s[0]+'\')':'PMENU.toggle(event,this)';
+        const attrs=s.length===1?'':' aria-haspopup="menu" aria-expanded="false" aria-controls="m-pmenu"';
+        return '<button class="m-tab'+(fab?' m-tab-center':'')+'" data-tab="'+s[0]+'" data-tabs="'+key(s)+'" onclick="'+click+'"'+attrs+'>'+(fab?'<span class="m-fab">'+ic+'</span>':ic)+'<span>'+label(s)+'</span></button>';
+      }).join('');
+      apply();
+    }
+    function go(id){ PMENU.close(); T[id].go(); }
+    /* ---- Einstellungen ---- */
+    const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    function renderSettings(){
+      const el=document.getElementById('nav-edit'); if(!el) return;
+      const c=draft||cfg, sl=slots(c), ok=sl.length<=MAX;
+      const prev='<div class="nb-prev" style="grid-template-columns:repeat('+sl.length+',1fr)">'+sl.map(s=>{ const fab=c.fab&&s.includes(c.fab); return '<div class="nb-p'+(fab?' nb-fab':'')+'">'+(s.length===1?svg(IC[s[0]]):pairSvg(s[0],s[1]))+'<span>'+esc(label(s))+'</span></div>'; }).join('')+'</div>';
+      let pairStart={}; sl.forEach(s=>{ if(s.length===2) pairStart[s[0]]=true; });
+      const second={}; sl.forEach(s=>{ if(s.length===2) second[s[1]]=true; });
+      const rows=c.order.map((id,i)=>'<div class="nb-row'+(second[id]?' nb-sec':'')+'"><span class="nb-ic">'+svg(IC[id])+'</span><span class="nb-n">'+esc(T[id].n)+'</span>'
+        +'<span class="nb-btns"><button type="button" aria-label="'+esc(T[id].n)+' nach oben" '+(i===0||id==='settings'?'disabled':'')+' onclick="NAVBAR.move(\''+id+'\',-1)">▲</button><button type="button" aria-label="'+esc(T[id].n)+' nach unten" '+(i>=c.order.length-2?'disabled':'')+' onclick="NAVBAR.move(\''+id+'\',1)">▼</button></span>'
+        +(i<c.order.length-1&&!second[id]?'<label class="nb-l"><input type="checkbox" '+(c.join[id]?'checked':'')+' onchange="NAVBAR.join(\''+id+'\',this.checked)"> mit „'+esc(T[c.order[i+1]].n)+'“ teilen</label>':'<span class="nb-l nb-mu">'+(second[id]?'teilt sich den Platz mit dem Tab davor':(id==='settings'?'steht immer ganz rechts und kann nicht entfernt werden':''))+'</span>')
+        +'<label class="nb-l"><input type="radio" name="nb-fab" '+(c.fab&&(c.fab===id)?'checked':'')+' onchange="NAVBAR.fab(\''+id+'\')"> Mittelknopf</label></div>').join('');
+      el.innerHTML='<p class="nb-t">Ordne die Tabs in der Reihenfolge, in der sie in der Leiste stehen sollen. Mit „teilen“ legst du zwei benachbarte Tabs auf einen Platz; beim Antippen erscheint dann eine Auswahl. Es gibt höchstens '+MAX+' Plätze. Die Einstellungen stehen immer ganz rechts.</p>'
+        +'<div class="nb-h">Vorschau</div>'+prev
+        +'<div class="nb-st'+(ok?'':' nb-bad')+'">'+(ok?sl.length+' von '+MAX+' Plätzen belegt':'Zu viele Plätze ('+sl.length+'): lege mindestens '+(sl.length-MAX)+' Tab(s) mit einem anderen zusammen. Bis dahin bleibt die letzte gültige Leiste aktiv.')+'</div>'
+        +'<div class="nb-rows">'+rows+'</div>'
+        +'<div class="nb-act"><label class="nb-l"><input type="radio" name="nb-fab" '+(c.fab===null?'checked':'')+' onchange="NAVBAR.fab(null)"> Kein Mittelknopf</label><button type="button" class="btn btn-ghost" onclick="NAVBAR.reset()">Zurücksetzen</button></div>';
+    }
+    function commit(c){ if(slots(c).length<=MAX){ cfg=c; draft=null; save(cfg); render(); } else { draft=c; } renderSettings(); }
+    function edit(fn){ const c=clone(draft||cfg); fn(c); commit(c); }
+    return {
+      init(){ render(); renderSettings(); },
+      render, renderSettings, go, mark(){ apply(); },
+      move(id,d){ edit(c=>{ if(id==='settings') return; const i=c.order.indexOf(id), j=i+d; if(j<0||j>=c.order.length-1) return; [c.order[i],c.order[j]]=[c.order[j],c.order[i]]; }); },
+      join(id,on){ edit(c=>{ if(on) c.join[id]=true; else delete c.join[id]; /* keine Ketten: der nächste Tab teilt nicht weiter */ if(on){ const i=c.order.indexOf(id); const nx=c.order[i+1]; if(nx) delete c.join[nx]; const pv=c.order[i-1]; if(pv) delete c.join[pv]; } }); },
+      fab(id){ edit(c=>{ c.fab=id; }); },
+      reset(){ draft=null; cfg=clone(DEF); try{ localStorage.removeItem(KEY); }catch(e){} render(); renderSettings(); },
+      pairOf(btn){ return (btn.dataset.tabs||'').split(' ').filter(Boolean); },
+      T, IC, svg
+    };
+  })();
+  window.NAVBAR=NAVBAR;
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>NAVBAR.init()); else NAVBAR.init();
+  /* Pause / Karten und andere geteilte Plätze: Tab öffnet eine Auswahl über der Leiste */
   const PMENU=(function(){
-    const el=()=>document.getElementById('m-pmenu'), tb=()=>document.querySelector('#m-tabbar [data-tab="pause"]');
-    function place(){ const m=el(), t=tb(); if(!m||!t) return; const r=t.getBoundingClientRect(); const L=Math.max(8,Math.min(innerWidth-m.offsetWidth-8,r.left+r.width/2-m.offsetWidth/2)); m.style.left=L+'px'; m.style.setProperty('--pm-ax',(r.left+r.width/2-L)+'px'); m.style.bottom=(innerHeight-r.top+8)+'px'; }
-    function close(){ const m=el(); if(!m||m.hidden) return; m.hidden=true; tb()?.setAttribute('aria-expanded','false'); }
-    function open(){ const m=el(); if(!m) return; m.hidden=false; place(); tb()?.setAttribute('aria-expanded','true'); m.querySelector('button')?.focus({preventScroll:true}); }
-    document.addEventListener('click',e=>{ const m=el(); if(m&&!m.hidden&&!e.target.closest('#m-pmenu')&&!e.target.closest('#m-tabbar [data-tab="pause"]')) close(); });
+    let anchor=null;
+    const el=()=>document.getElementById('m-pmenu');
+    function place(){ const m=el(), t=anchor; if(!m||!t) return; const r=t.getBoundingClientRect(); const L=Math.max(8,Math.min(innerWidth-m.offsetWidth-8,r.left+r.width/2-m.offsetWidth/2)); m.style.left=L+'px'; m.style.setProperty('--pm-ax',(r.left+r.width/2-L)+'px'); m.style.bottom=(innerHeight-r.top+8)+'px'; }
+    function close(){ const m=el(); if(!m||m.hidden) return; m.hidden=true; if(anchor) anchor.setAttribute('aria-expanded','false'); anchor=null; }
+    function open(btn){ const m=el(); if(!m) return; const ids=NAVBAR.pairOf(btn); m.innerHTML=ids.map(id=>'<button role="menuitem" onclick="NAVBAR.go(\''+id+'\')">'+NAVBAR.svg(NAVBAR.IC[id])+'<span>'+NAVBAR.T[id].n+'</span></button>').join(''); anchor=btn; m.hidden=false; place(); btn.setAttribute('aria-expanded','true'); m.querySelector('button')?.focus({preventScroll:true}); }
+    document.addEventListener('click',e=>{ const m=el(); if(m&&!m.hidden&&!e.target.closest('#m-pmenu')&&!e.target.closest('#m-tabbar [aria-haspopup]')) close(); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
     addEventListener('resize',close);
-    return { toggle(e){ e&&e.stopPropagation(); const m=el(); if(m&&m.hidden) open(); else close(); }, close, go(id,label){ close(); NAV.tab(id,label); } };
+    return { toggle(e,btn){ e&&e.stopPropagation(); const m=el(); if(m&&m.hidden||anchor!==btn){ close(); open(btn); } else close(); }, close };
   })();
   window.PMENU=PMENU;
-  const ROOTS={'v-home':'start','v-plan':'plan','v-pruefung':'exam','v-settings':'settings','v-pause':'pause','v-flashcards':'pause'};
+  const ROOTS={'v-home':'start','v-plan':'plan','v-pruefung':'exam','v-settings':'settings','v-pause':'pause','v-flashcards':'cards'};
   const MODS=[
     ['gal','GAL','Grundlehrgang','v-gal','GAL Grundlehrgang',1],
     ['sfs','SFS','Staatliche Feuerwehrschule Regensburg','v-sfs','SFS Regensburg',1],
@@ -7405,11 +7492,10 @@ const SHELL=(function(){
   ['bvi_cardgoal','bvi_tabnum','bvi_cards_day'].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
   function onShow(id,isContent,stack){
     const tab=stack.length&&ROOTS[stack[0].id]?ROOTS[stack[0].id]:'start';
-    const rootId=stack.length?stack[0].id:'';
+    window.__navTab=tab;
     PMENU.close();
-    document.querySelectorAll('#m-tabbar [data-tab],#m-rail [data-tab]').forEach(b=>{
-      const inRail=!!b.closest('#m-rail');
-      const on=inRail?(b.dataset.tab==='cards'?rootId==='v-flashcards':b.dataset.tab===tab&&rootId!=='v-flashcards'):b.dataset.tab===tab;
+    document.querySelectorAll('#m-tabbar [data-tabs],#m-rail [data-tab]').forEach(b=>{
+      const on=(b.dataset.tabs||b.dataset.tab||'').split(' ').includes(tab);
       b.classList.toggle('on',on);
       if(on) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
     });
