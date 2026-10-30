@@ -1151,7 +1151,7 @@ const FLASHCARD_DATA = [
   {"id":"k-idf-71","cat":"IdF · Stabsarbeit","q":"Welche Aussagen zum Krisenstab sind richtig?","a":"Aufgaben werden in den bestehenden <strong>Behördenstrukturen und Zuständigkeiten</strong> (Soziales, Polizei, Gesundheit) abgearbeitet. Er ist keine Führungsstufe E und arbeitet nicht grundsätzlich im selben Raum oder mit derselben Lagedarstellung wie der Führungsstab."},
   {"id":"k-idf-72","cat":"IdF · Stabsarbeit","q":"Wer beruft den Krisenstab in NRW ein, und wo gibt es ihn?","a":"Der <strong>Hauptverwaltungsbeamte (HVB)</strong>. Den Krisenstab gibt es in Kreisen und kreisfreien Städten; in kreisangehörigen Kommunen den <strong>Stab für außergewöhnliche Ereignisse (SAE)</strong>."},
   {"id":"k-idf-73","cat":"IdF · Stabsarbeit","q":"Welche Stellung haben Sachgebietsleiter im Führungsstab?","a":"Sie sind dem <strong>Leiter des Stabes</strong> unterstellt, handeln im Aufgabengebiet <strong>eigenverantwortlich und selbstständig</strong> und versorgen den Leiter des Stabes mit Informationen. Keine Unterstellung unter den S3."},
-  {"id":"k-idf-74","cat":"IdF · Stabsarbeit","q":"Welche Funktionen werden bei einem Führungsstab mit nur 4 Personen zusammengelegt?","a":"<strong>S5 zu S2</strong> und <strong>S6 zu S3</strong>."},
+  {"id":"k-idf-74","cat":"IdF · Stabsarbeit","q":"Welche Sachgebiete werden bei zu wenig Personal im Führungsstab zusammengefasst?","a":"<strong>S4 mit S1</strong>, <strong>S2 mit S3</strong>, <strong>S5 zu S2</strong> und <strong>S6 zu S3</strong>."},
   {"id":"k-idf-75","cat":"IdF · Stabsarbeit","q":"Wofür steht <strong>Führungsstufe D</strong> nach FwDV 100?","a":"Für den <strong>Führungsstab</strong> (S1–S6) bei mehreren Verbänden, Großeinsatzlagen und Katastrophen. Die Führungsstaffel gehört zur Stufe C. Der KBM ist nicht zwingend beteiligt."},
   {"id":"k-idf-76","cat":"IdF · Stabsarbeit","q":"Welches Fahrzeug eignet sich zum stabsmäßigen Arbeiten einer Führungsgruppe?","a":"Der <strong>ELW 2</strong>. ELW 1, KdoW und MTW reichen dafür nicht aus."},
   {"id":"k-idf-77","cat":"IdF · Stabsarbeit","q":"Was besagt die <strong>Auftragstaktik</strong> zum Befehl?","a":"Ziel und Zweck vorgeben, das Wie entscheidet der Geführte. <strong>Je weiter in die Zukunft</strong> ein Befehl reicht, desto freier ist er. Bei Gefahr oder besserer Ortskenntnis darf abgewichen werden; Kommunikation ist keine Einbahnstraße."},
@@ -1217,7 +1217,7 @@ const PROGRESS = (function(){
     'v-feuak-bp-hub':['v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp'],
     'v-feuak-analyse':['v-feuak-stakeholder','v-feuak-risikoanalyse'],
     'v-idf-vb':['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-sonderbau'],
-    'v-idf-stabhub':['v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-stabskarte']
+    'v-idf-stabhub':['v-idf-sim-stabbau','v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-stabskarte']
   };
 
   function updateUI(){
@@ -1286,6 +1286,7 @@ const SEARCH = (function(){
     'v-idf-gk':'IdF · Gebäudeklassen-Baukasten',
     'v-idf-sonderbau':'IdF · Sonderbauten',
     'v-idf-s51':'IdF · Stabsarbeit · Begrifflichkeiten','v-idf-s52':'IdF · Stabsarbeit · Gliederung der Einsatzleitung','v-idf-s53':'IdF · Stabsarbeit · Gliederung des Krisenstabs','v-idf-s54':'IdF · Stabsarbeit · Human Factors','v-idf-s55':'IdF · Stabsarbeit · Werkzeuge',
+    'v-idf-sim-stabbau':'IdF · Simulation Stab aufbauen','v-idf-sim-pressesim':'IdF · Simulation Pressegespräch','v-idf-sim-eskalation':'IdF · Simulation Eskalationsleiter','v-idf-sim-warnsim':'IdF · Simulation Warn-Simulation','v-idf-sim-planspiel':'IdF · Simulation Planspiel-Trainer',
     'v-idf-zv':'IdF · Zivile Verteidigung','v-idf-ucpm':'IdF · EU-Katastrophenschutz (UCPM)','v-idf-hinweise':'IdF · Lernunterlagen und Prüfungshinweise',
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
@@ -4116,6 +4117,8 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.0.4',ts:'2026-10-30T09:00',items:[
+      'Neue Simulationen (IdF): Stab aufbauen mit Vordruck-Trainer (Stabsarbeit), Pressegespräch, Eskalationsleiter Zivile Verteidigung, Warn-Simulation und Planspiel-Trainer mit eigenen Szenarien (Erkundung, Lagebeurteilung, Organisations- und Kommunikationsschema, Aufträge)',
+      'Krisenstab: Grafiken zu Aktivierungsprozess, erster Verwaltungsstabssitzung (mit modifizierter Eisenhower-Matrix und Auftragsliste) und Folgesitzungen nachgebaut; Quiz-Frage 49 und Karte zur Zusammenlegung der Sachgebiete um „S4 mit S1“ und „S2 mit S3“ ergänzt',
       'Vorbeugender Brandschutz: Grafik „Türen im Gebäude“ (T30-RS, DS, DSS, RS je Nutzung) nachgebaut und in die Lernseite eingefügt',
       'IdF-Lernseiten: wichtige Grafiken der Zusammenfassung als eigene Diagramme nachgebaut (Zwei-Stäbe-Modell, Aufbau der Einsatzleitung, Krisenstab mit Zeitablauf und Zusammensetzung, Meldungsarten, Human Factors mit „dreckigem Dutzend“, Gesamtverteidigung, Pakt für den Bevölkerungsschutz, Regelkreis, Risikoanalyse, KRITIS-Sektoren, Weg der länderübergreifenden Hilfe, Warnsystem, Kapazitätenpyramide)',
       'IdF-Prüfungsfragen an die neuen Stabsarbeit-Seiten angepasst (Bürgertelefon liegt bei der BuMA, Schichtplanung des S1, Großeinsatzlagen, 7-Punkte-Plan Punkt 7 in der Laufbahn-Musterlösung)',

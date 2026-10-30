@@ -2932,3 +2932,6 @@ body.emb-on .m-fab svg{width:22px;height:22px;}
 .dg-door{display:grid;grid-template-columns:5.2rem minmax(0,1fr);gap:.5rem;align-items:center;}
 .dg-door .dg-box{font-weight:700;color:var(--c-text-b);padding:.4rem .3rem;}
 .dg-dt{font-size:.8rem;line-height:1.35;color:var(--c-text);}
+
+.dg-mx .dg-box{min-height:3.4rem;display:flex;flex-direction:column;justify-content:center;}
+.dg-aufg{grid-template-columns:repeat(auto-fit,minmax(88px,1fr));}

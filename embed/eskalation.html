@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Eskalationsleiter Zivile Verteidigung</title>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#0f1520;--card:#162132;--soft:#1f2d44;--line:#2a3b57;--ink:#eef2f8;--mute:#9aa8bd;--or:#ffa412;--ord:#ffa412;--onor:#1a1000;--ok:#2fbf80;--bad:#f2606a;--orsoft:color-mix(in srgb,var(--or) 16%,var(--card))}
+:root[data-theme="light"]{--ok:#16805a;--bad:#c43843}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--ff,"Segoe UI",system-ui,Arial,sans-serif);overflow:hidden;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+.app{display:flex;flex-direction:column;height:100%}
+.top{padding:10px 16px 6px;flex:none}
+.top small{display:block;color:var(--or);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.top h1{margin:1px 0 0;font-size:18px;line-height:1.2}
+.main{flex:1;min-height:0;overflow:auto;padding:4px 16px 14px;-webkit-overflow-scrolling:touch}
+.tabs{flex:none;display:flex;gap:6px;padding:6px 10px calc(6px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card)}
+.tab{flex:1;min-height:50px;border:0;border-radius:12px;background:transparent;color:var(--mute);font-weight:700;font-size:13.5px}
+.tab.on{background:var(--orsoft);color:var(--or)}
+.seg{display:flex;gap:6px;margin:4px 0 10px}
+.seg button{flex:1;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--mute);font-weight:600;font-size:13.5px;padding:0 6px}
+.seg button.on{background:var(--or);border-color:var(--or);color:var(--onor);font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px}
+.card h2{margin:0 0 6px;font-size:16px;line-height:1.25}
+.card h3{margin:0 0 6px;font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.lead{color:var(--mute);font-size:13px;line-height:1.4;margin:0 0 8px}
+.grid{display:block}
+@media(min-width:900px){.top{order:0}.tabs{order:1;border-top:0;border-bottom:1px solid var(--line);padding:6px 24px}.tab{flex:0 0 160px}.main{order:2}}
+@media(min-width:760px){.grid{display:grid;grid-template-columns:minmax(280px,380px) 1fr;gap:14px;align-items:start}.main{padding:6px 24px 18px}.top{padding:12px 24px 6px}.top h1{font-size:21px}}
+.reg{display:flex;align-items:center;gap:10px;margin:0 0 8px}
+.reg input{flex:1;height:44px;accent-color:var(--or);margin:0}
+.reg span{font-size:12px;color:var(--mute);min-width:64px;text-align:right}
+.stairs{display:flex;flex-direction:column;gap:5px}
+.st{min-height:48px;width:100%;text-align:left;border-radius:10px;background:var(--soft);border:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:4px 10px;font-size:14.5px;line-height:1.25}
+.st i{font-style:normal;flex:none;width:26px;height:26px;border-radius:50%;background:var(--line);display:grid;place-items:center;font-size:12.5px;font-weight:700}
+.st em{font-style:normal;margin-left:auto;flex:none;font-size:11px;font-weight:700;color:var(--or);border:1px solid var(--or);border-radius:8px;padding:2px 6px}
+.st.past{border-color:color-mix(in srgb,var(--or) 50%,var(--line))}
+.st.on{background:var(--or);color:var(--onor);border-color:var(--or);font-weight:700}
+.st.on i{background:var(--onor);color:var(--or)}.st.on em{color:var(--onor);border-color:var(--onor)}
+.rows{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:118px 1fr;gap:10px;font-size:13.5px;line-height:1.4}
+.row b{color:var(--or);font-size:10.5px;text-transform:uppercase;letter-spacing:0;overflow-wrap:anywhere;padding-top:2px}
+.row .na{color:var(--mute);font-style:italic}
+@media(max-width:380px){.row{grid-template-columns:1fr;gap:1px}}
+.ph{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.ph button{min-height:64px;border-radius:10px;border:1px solid var(--line);background:var(--soft);padding:6px 3px;font-size:11.5px;line-height:1.25;text-align:center;hyphens:auto;overflow-wrap:anywhere}
+.ph b{display:block;font-size:15px;color:var(--or)}
+.ph .on{border-color:var(--or);background:var(--orsoft)}
+ul.b{margin:0;padding-left:18px;font-size:13.5px;line-height:1.45}ul.b li{margin-bottom:5px}
+.dur{display:inline-block;margin-top:2px;font-size:12.5px;color:var(--or);font-weight:700}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px;line-height:1.35}.tbl td{padding:6px 4px;border-top:1px solid var(--line);vertical-align:top}.tbl td:first-child{font-weight:700;width:36%}
+.mut{color:var(--mute);font-size:12.5px;line-height:1.4}
+.btn{min-height:48px;border-radius:12px;border:0;background:var(--or);color:var(--onor);font-weight:700;font-size:15px;padding:0 18px}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.4;cursor:default}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.btns .btn{flex:1;min-width:130px}
+.prog{display:flex;gap:4px;margin:2px 0 8px}.prog span{flex:1;height:6px;border-radius:3px;background:var(--line)}.prog .ok{background:var(--ok)}.prog .bad{background:var(--bad)}.prog .cur{background:var(--or)}
+.qmeta{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);margin-bottom:4px}
+.qt{display:inline-block;font-size:11px;font-weight:700;color:var(--or);text-transform:uppercase;letter-spacing:.05em}
+.q{font-size:15.5px;line-height:1.35;font-weight:600;margin:2px 0 10px}
+.opts{display:grid;gap:8px}
+.opt{min-height:48px;width:100%;text-align:left;border-radius:10px;border:1px solid var(--line);background:var(--soft);padding:8px 12px;font-size:14px;line-height:1.35;display:flex;gap:10px;align-items:center}
+.opt .m{flex:none;width:24px;height:24px;border-radius:50%;border:2px solid var(--mute);display:grid;place-items:center;font-size:12px;font-weight:700}
+.opt.chk .m{background:var(--or);border-color:var(--or);color:var(--onor)}
+.opt.sq .m{border-radius:6px}
+.opt.on{border-color:var(--or);background:var(--orsoft)}
+.opt.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 20%,var(--card))}
+.opt.ok .m{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 20%,var(--card))}
+.opt.bad .m{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt.miss{border-style:dashed;border-color:var(--ok)}
+.zrow{border:1px solid var(--line);border-radius:10px;background:var(--soft);padding:8px 10px}
+.zrow.ok{border-color:var(--ok)}.zrow.bad{border-color:var(--bad)}
+.zt{font-size:14px;line-height:1.35;margin-bottom:6px}
+.zo{display:flex;flex-wrap:wrap;gap:6px}
+.zo button{min-height:44px;flex:1;min-width:64px;border-radius:9px;border:1px solid var(--line);background:var(--card);padding:4px 8px;font-size:13px;font-weight:600;line-height:1.2}
+.zo button.on{background:var(--or);border-color:var(--or);color:var(--onor)}
+.zo button.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.zo button.bad{background:var(--bad);border-color:var(--bad);color:#fff}
+.zo button.miss{border-color:var(--ok);border-style:dashed}
+.fb{border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.45;margin:10px 0 4px;border:1px solid var(--line);background:var(--card)}
+.fb.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.fb.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.fb b{display:block;margin-bottom:2px}
+.fb.ok b{color:color-mix(in srgb,var(--ok) 75%,var(--ink))}.fb.bad b{color:color-mix(in srgb,var(--bad) 75%,var(--ink))}
+.score{font-size:34px;font-weight:800;color:var(--or);line-height:1.1}
+.rev{display:grid;gap:6px;margin-top:6px}
+.rv{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.35;padding:6px 8px;border-radius:8px;background:var(--soft);border-left:4px solid var(--line)}
+.rv.ok{border-left-color:var(--ok)}.rv.bad{border-left-color:var(--bad)}
+.rv span:first-child{font-weight:800;flex:none}
+:focus-visible{outline:3px solid var(--or);outline-offset:2px}
+@media(prefers-reduced-motion:no-preference){.st,.opt,.zo button{transition:background .12s,border-color .12s}}
+</style></head>
+<body><div class="app" id="app"></div>
+<script src="embed-sync.js"></script><script src="eskalation.js"></script></body></html>
