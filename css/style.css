@@ -2927,3 +2927,8 @@ body.emb-on .m-fab svg{width:22px;height:22px;}
 .dg-g6{grid-template-columns:repeat(auto-fit,minmax(105px,1fr));}
 .dg-svg{display:block;width:100%;max-width:340px;height:auto;margin:0 auto;color:var(--c-slate-l);}
 @media(max-width:520px){.dg-g3{grid-template-columns:minmax(0,1fr);}.dg-row{flex-wrap:wrap}.dg-row>.dg-arr{flex:1 1 100%;flex-direction:row;gap:.4rem}}
+
+.dg-doors{display:flex;flex-direction:column;gap:.35rem;}
+.dg-door{display:grid;grid-template-columns:5.2rem minmax(0,1fr);gap:.5rem;align-items:center;}
+.dg-door .dg-box{font-weight:700;color:var(--c-text-b);padding:.4rem .3rem;}
+.dg-dt{font-size:.8rem;line-height:1.35;color:var(--c-text);}
