@@ -151,7 +151,7 @@ const S={tab:'leiter',view:'stufen',stufe:0,phase:0,quiz:null,seen:[],store:load
 let scrollKeep=0;
 /* Aufgaben-Instanz */
 function mk(def){const n=def.t==='o'?def.items.length:def.t==='z'?def.items.length:def.o.length;
- let ord=[...Array(n).keys()];ord=shuffle(ord);
+ let ord=[...Array(n).keys()];ord=(def.t==='c'&&/^Phase /.test(def.o[0]))?ord:shuffle(ord);
  if(def.t==='o'){let tries=0;while(ord.every((v,i)=>v===i)&&tries++<9)ord=shuffle(ord);}
  const val=def.t==='m'?[]:def.t==='o'?[]:def.t==='z'?def.items.map(()=>-1):-1;
  return {def,ord,val,done:false,ok:false,part:''};}

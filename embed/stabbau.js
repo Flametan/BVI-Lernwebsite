@@ -272,7 +272,7 @@ function renderV(){
   const r=V.res;
   h+='<div class="res"><div class="big2">'+r.pts+' von '+r.max+' Punkten</div><h2>'+r.p+' % richtig</h2><p>'+esc(r.msg)+' Pro Meldung gibt es 1 Punkt für den Weg und je 1 Punkt für jeden der vier Durchschläge.</p>';
   h+='<div class="stat"><span>Weg richtig<b>'+r.weg+' von '+r.n+'</b></span>'+FARBEN.map(f=>'<span>'+f.n+'<b>'+r.col[f.id]+' von '+r.n+'</b></span>').join('')+'</div>';
-  if(r.errs.length)h+='<p><b>Zum Wiederholen:</b></p><ul>'+r.errs.map(e=>'<li>'+esc(e)+'</li>').join('')+'</ul>';else h+='<p>Alles richtig verteilt.</p>';
+  if(r.errs.length)h+='<p><b>Zum Wiederholen:</b></p><ul>'+r.errs.map(e=>'<li>„'+esc(e.t)+'“<br>'+e.items.map(esc).join('<br>')+'</li>').join('')+'</ul>';else h+='<p>Alles richtig verteilt.</p>';
   h+='<button type="button" class="btn" data-a="vagain" data-v="'+V.len+'">Nochmal (neue Meldungen)</button></div>';
   return h+table();
  }
@@ -325,9 +325,11 @@ function toTop(){const m=$('#main');if(window.innerWidth<900)m.scrollTop=0;}
 function nextRow(){const f=FARBEN.find(f=>!V.ans[f.id]);V.row=f?f.id:V.row;}
 function finishV(){
  const n=V.log.length;let pts=0,wegOk=0;const col={W:0,R:0,G:0,N:0};const errs=[];
- V.log.forEach((l,k)=>{
-  const m=MSGS[l.id];if(l.wegOk){pts++;wegOk++;}else errs.push('Weg: „'+m.t+'“ ist '+(m.w==='Gesprächsnotiz'?'eine ':'ein ')+m.w+'.');
-  FARBEN.forEach(f=>{if(l.ans[f.id].ok){pts++;col[f.id]++;}else errs.push(m.w+', '+f.n+': '+OPT[TAB[m.w][f.id]]+'. ('+m.t.slice(0,48)+(m.t.length>48?'…':'')+')');});
+ V.log.forEach(l=>{
+  const m=MSGS[l.id];const it=[];
+  if(l.wegOk){pts++;wegOk++;}else it.push('Weg: Das ist '+(m.w==='Gesprächsnotiz'?'eine ':'ein ')+m.w+'.');
+  FARBEN.forEach(f=>{if(l.ans[f.id].ok){pts++;col[f.id]++;}else it.push(f.n+': '+OPT[TAB[m.w][f.id]]+'.');});
+  if(it.length)errs.push({t:m.t,items:it});
  });
  const max=n*5,p=pct(pts,max);const bk='vor'+V.len;const old=setBest(bk,p);
  V.done=true;V.res={pts,max,p,n,weg:wegOk,col,errs,msg:bestTxt(bk,old,p)};
