@@ -2268,6 +2268,13 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .view.lp-focus{z-index:var(--z-reader);}
 .lp-fm,.lp-fp{display:none;}
 .lp-bar{display:none;height:3px;background:var(--m-raised);flex:none;}.lp-bar i{display:block;height:100%;width:0;background:var(--m-accent);transition:width .15s;}
+/* Desktop: Kopfleiste (#m-topbar) liegt über dem Kapitelfenster → eigene Kopfzeile darunter, doppelte Knöpfe aus; Üben-Panel verdeckt das Fenster nicht mehr */
+@media(min-width:1100px){
+  .lp-win:not(.focus){padding-top:64px;}
+  .lp-win:not(.focus) .lp-wh .m-tb-actions{display:none;}
+  body.lp-prac .lp-win:not(.focus){width:calc(100vw - var(--lp-l,0px) - var(--lpw) - 24px);}
+  body.lp-prac .lp-win.focus{right:calc(var(--lpw) + 24px)!important;}
+}
 .lp-win.focus{left:0!important;right:0!important;width:auto!important;top:0;bottom:0;background:var(--m-bg);}
 .lp-win.focus .lp-fm,.lp-win.focus .lp-fp{display:grid;width:auto;min-width:42px;padding:0 12px;border-radius:99px;font-weight:600;}
 .lp-win.focus .lp-bar{display:block;}
