@@ -158,7 +158,7 @@
   .acc-body ul li{position:relative;padding-left:1.1rem;overflow-wrap:break-word;word-break:break-word;}
   .acc-body ul li::before{content:'▸';color:var(--c-gold);font-size:.75rem;position:absolute;left:0;top:.35em;}
   .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;margin:.75rem 0;}
-  .tbl-wrap>table{margin:0;min-width:max-content;width:100%;}
+  .tbl-wrap>table{margin:0;min-width:0;width:100%;}
   .acc-body table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.75rem 0;}
   .acc-body table th{font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--c-gold);background:var(--c-gold-dim);padding:.4rem .65rem;text-align:left;border-bottom:1px solid var(--c-gold-rim);}
   .acc-body table td{padding:.4rem .65rem;border-bottom:1px solid var(--w04);vertical-align:top;}
@@ -2192,7 +2192,7 @@ html.lp-lock,html.lp-lock body{overflow:hidden;}
 
 /* Tabellen: einheitliches Aussehen, am Handy Karten bzw. Begriff/Erklärung bzw. feste erste Spalte */
 table.tb{border-collapse:collapse;width:100%;font-size:.9rem;}
-table.tb th{background:var(--m-raised)!important;color:var(--m-muted)!important;font-size:.75rem!important;font-weight:500!important;letter-spacing:.06em;text-transform:uppercase;text-align:left;padding:.55rem .75rem!important;border:0!important;}
+table.tb th{background:var(--m-raised)!important;color:var(--m-fg)!important;font-size:.8rem!important;font-weight:700!important;letter-spacing:.06em;text-transform:uppercase;text-align:left;padding:.55rem .75rem!important;border:0!important;}
 table.tb td{padding:.6rem .75rem!important;border:0!important;border-bottom:1px solid var(--m-line)!important;background:none!important;vertical-align:top;}
 table.tb tr:last-child td{border-bottom:0!important;}
 table.tb td:first-child{font-weight:600;}
@@ -2213,13 +2213,13 @@ table.tb td:first-child{font-weight:600;}
   table.tb-dl tbody{display:block;}
   table.tb-dl tr{display:flex;gap:12px;}
   table.tb-dl th,table.tb-dl td{display:block;}
-  table.tb-dl th:first-child,table.tb-dl td:first-child{flex:0 0 32%;}
+  table.tb-dl th:first-child,table.tb-dl td:first-child{flex:0 0 40%;}
   table.tb-dl th:last-child,table.tb-dl td:last-child{flex:1;min-width:0;}
   table.tb-dl td:first-child{color:var(--m-accent-fg);}
   table.tb-dl tr:not(:first-child) td{border-top:1px solid var(--m-line)!important;border-bottom:0!important;}
   table.tb-wide{min-width:560px;width:auto;}
   table.tb-wide td,table.tb-wide th{min-width:96px;}
-  table.tb-wide td:first-child,table.tb-wide th:first-child{position:sticky;left:0;z-index:var(--z-base);background:var(--m-card)!important;color:var(--m-accent-fg);box-shadow:6px 0 8px -6px #000;}
+  table.tb-wide td:first-child,table.tb-wide th:first-child{position:sticky;left:0;z-index:var(--z-base);background:var(--m-bg)!important;color:var(--m-accent-fg);box-shadow:6px 0 8px -6px #000;}
   table.tb-wide th:first-child{background:var(--m-raised)!important;}
 }
 table.tb tr{border:0!important;}
@@ -2268,6 +2268,13 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .view.lp-focus{z-index:var(--z-reader);}
 .lp-fm,.lp-fp{display:none;}
 .lp-bar{display:none;height:3px;background:var(--m-raised);flex:none;}.lp-bar i{display:block;height:100%;width:0;background:var(--m-accent);transition:width .15s;}
+/* Tabellen in Lernseiten: Nummernspalte nie umbrechen, letzte Spalte nicht zu schmal, Kopfzeile besser lesbar */
+@media(min-width:701px){
+  .tbl-wrap>table.tb-nr td:first-child,.tbl-wrap>table.tb-nr th:first-child{white-space:nowrap;width:1%;}
+  .tbl-wrap>table td,.tbl-wrap>table th{overflow-wrap:normal;word-break:normal;}
+  .tbl-wrap>table.tb-nr td:last-child{min-width:9em;}
+  table.tb-wide td,table.tb-wide th{padding-left:.5rem!important;padding-right:.5rem!important;overflow-wrap:break-word;}
+}
 /* Desktop: Kopfleiste (#m-topbar) liegt über dem Kapitelfenster → eigene Kopfzeile darunter, doppelte Knöpfe aus; Üben-Panel verdeckt das Fenster nicht mehr */
 @media(min-width:1100px){
   .lp-win:not(.focus){padding-top:64px;}
@@ -2982,3 +2989,23 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .nb-f select:disabled{opacity:.6;}
 .nb-sm{font-size:.76rem;margin:0;}
 #nav-edit{padding-left:.8rem;padding-right:.8rem;}
+
+/* Gebäudeschnitt Türen */
+.hs-svg{max-width:520px;}
+.hs-svg .hs-roof{fill:var(--c-gold-dim);stroke:var(--c-gold-rim);stroke-width:1.5;}
+.hs-svg .hs-body{fill:var(--glass);stroke:var(--c-gold-rim);stroke-width:1.5;}
+.hs-svg .hs-keller{fill:var(--c-gold-dim);opacity:.7;}
+.hs-svg .hs-stair{fill:none;stroke:var(--c-gold);stroke-width:1.5;stroke-dasharray:4 3;}
+.hs-svg .hs-line{stroke:var(--c-gold-rim);stroke-width:1;}
+.hs-svg .hs-st{fill:none;stroke:currentColor;stroke-width:1.2;opacity:.55;}
+.hs-svg .hs-flur{fill:var(--c-gold-dim);opacity:.8;}
+.hs-svg .hs-ground{stroke:var(--c-slate-l);stroke-width:1.5;stroke-dasharray:6 4;}
+.hs-svg .hs-badge,.hs-svg .hs-door{stroke-width:1.2;}
+.hs-svg .hs-red{fill:var(--c-red-dim);stroke:var(--c-red-l);}
+.hs-svg .hs-ok{fill:var(--c-ok-dim);stroke:var(--c-ok);}
+.hs-svg .hs-blue{fill:var(--c-blue-dim);stroke:var(--c-blue);}
+.hs-svg .hs-gold{fill:var(--c-gold-dim);stroke:var(--c-gold);}
+.hs-svg text{fill:var(--c-text);font-family:inherit;}
+.hs-svg .hs-t{font-size:13px;}
+.hs-svg .hs-b{font-size:12px;font-weight:700;fill:var(--c-text-b);}
+.hs-svg .hs-sm{font-size:10.5px;fill:var(--c-slate-l);}
