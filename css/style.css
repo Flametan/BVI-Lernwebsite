@@ -2988,3 +2988,23 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .nb-f select:disabled{opacity:.6;}
 .nb-sm{font-size:.76rem;margin:0;}
 #nav-edit{padding-left:.8rem;padding-right:.8rem;}
+
+/* Gebäudeschnitt Türen */
+.hs-svg{max-width:520px;}
+.hs-svg .hs-roof{fill:var(--c-gold-dim);stroke:var(--c-gold-rim);stroke-width:1.5;}
+.hs-svg .hs-body{fill:var(--glass);stroke:var(--c-gold-rim);stroke-width:1.5;}
+.hs-svg .hs-keller{fill:var(--c-gold-dim);opacity:.7;}
+.hs-svg .hs-stair{fill:none;stroke:var(--c-gold);stroke-width:1.5;stroke-dasharray:4 3;}
+.hs-svg .hs-line{stroke:var(--c-gold-rim);stroke-width:1;}
+.hs-svg .hs-st{fill:none;stroke:currentColor;stroke-width:1.2;opacity:.55;}
+.hs-svg .hs-flur{fill:var(--c-gold-dim);opacity:.8;}
+.hs-svg .hs-ground{stroke:var(--c-slate-l);stroke-width:1.5;stroke-dasharray:6 4;}
+.hs-svg .hs-badge,.hs-svg .hs-door{stroke-width:1.2;}
+.hs-svg .hs-red{fill:var(--c-red-dim);stroke:var(--c-red-l);}
+.hs-svg .hs-ok{fill:var(--c-ok-dim);stroke:var(--c-ok);}
+.hs-svg .hs-blue{fill:var(--c-blue-dim);stroke:var(--c-blue);}
+.hs-svg .hs-gold{fill:var(--c-gold-dim);stroke:var(--c-gold);}
+.hs-svg text{fill:var(--c-text);font-family:inherit;}
+.hs-svg .hs-t{font-size:13px;}
+.hs-svg .hs-b{font-size:12px;font-weight:700;fill:var(--c-text-b);}
+.hs-svg .hs-sm{font-size:10.5px;fill:var(--c-slate-l);}

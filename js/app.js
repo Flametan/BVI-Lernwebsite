@@ -4352,7 +4352,7 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
-    {v:'3.1.2',ts:'2026-11-01T09:00',items:['Tabellen in den Lernseiten (z. B. Sonderbauten): am PC nicht mehr über 2500 px breit, Nummern brechen nicht mehr um, Kopfzeile deutlich lesbarer.','IdF-Quiz „Aussagen aus Sicht von Bauherren oder Planern“ und zugehörige Lernkarte korrigiert (richtig: B, C, D, E).','Lernseiten am PC: Der Üben-Modus verdeckt das Kapitel nicht mehr, und oben links erscheint kein doppelter Knopf mehr.',
+    {v:'3.1.2',ts:'2026-11-01T09:00',items:['Vorbeugender Brandschutz: neuer Gebäudeschnitt zu den Türen (T30-RS, RS, DS, DSS) vom notwendigen Treppenraum in jede Nutzung.','Tabellen in den Lernseiten (z. B. Sonderbauten): am PC nicht mehr über 2500 px breit, Nummern brechen nicht mehr um, Kopfzeile deutlich lesbarer.','IdF-Quiz „Aussagen aus Sicht von Bauherren oder Planern“ und zugehörige Lernkarte korrigiert (richtig: B, C, D, E).','Lernseiten am PC: Der Üben-Modus verdeckt das Kapitel nicht mehr, und oben links erscheint kein doppelter Knopf mehr.',
       'Platzhalter-Bildschirm beim Laden passt sich an Handy, Tablet und PC an (Tab-Leiste oder Seitenleiste, ein bis drei Spalten) und an die geöffnete Seite (Startseite, Stundenplan, Liste, Themenübersicht, Lernkarten, Lernseite)',
       'Startseite: „Lernkarten“ und „Pausenraum“ stehen wieder beide sichtbar untereinander in einer Karte (am PC und Tablet war „Lernkarten“ verdeckt)',
     ]},
