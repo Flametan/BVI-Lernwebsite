@@ -2270,9 +2270,10 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .lp-bar{display:none;height:3px;background:var(--m-raised);flex:none;}.lp-bar i{display:block;height:100%;width:0;background:var(--m-accent);transition:width .15s;}
 /* Tabellen in Lernseiten: Nummernspalte nie umbrechen, letzte Spalte nicht zu schmal, Kopfzeile besser lesbar */
 @media(min-width:701px){
-  .tbl-wrap>table td:first-child,.tbl-wrap>table th:first-child{white-space:nowrap;width:1%;}
+  .tbl-wrap>table.tb-nr td:first-child,.tbl-wrap>table.tb-nr th:first-child{white-space:nowrap;width:1%;}
   .tbl-wrap>table td,.tbl-wrap>table th{overflow-wrap:normal;word-break:normal;}
-  .tbl-wrap>table td:last-child{min-width:9em;}
+  .tbl-wrap>table.tb-nr td:last-child{min-width:9em;}
+  table.tb-wide td,table.tb-wide th{padding-left:.5rem!important;padding-right:.5rem!important;overflow-wrap:break-word;}
 }
 /* Desktop: Kopfleiste (#m-topbar) liegt über dem Kapitelfenster → eigene Kopfzeile darunter, doppelte Knöpfe aus; Üben-Panel verdeckt das Fenster nicht mehr */
 @media(min-width:1100px){
