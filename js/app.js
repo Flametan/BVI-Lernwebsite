@@ -4352,7 +4352,7 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
-    {v:'3.1.2',ts:'2026-11-01T09:00',items:[
+    {v:'3.1.2',ts:'2026-11-01T09:00',items:['Lernseiten am PC: Der Üben-Modus verdeckt das Kapitel nicht mehr, und oben links erscheint kein doppelter Knopf mehr.',
       'Platzhalter-Bildschirm beim Laden passt sich an Handy, Tablet und PC an (Tab-Leiste oder Seitenleiste, ein bis drei Spalten) und an die geöffnete Seite (Startseite, Stundenplan, Liste, Themenübersicht, Lernkarten, Lernseite)',
       'Startseite: „Lernkarten“ und „Pausenraum“ stehen wieder beide sichtbar untereinander in einer Karte (am PC und Tablet war „Lernkarten“ verdeckt)',
     ]},
