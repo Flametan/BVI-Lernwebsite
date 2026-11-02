@@ -4395,7 +4395,8 @@ const CHANGELOG=(function(){
       'Neue Tabs: IBK Führen von Gruppen, Führung, Autoritäten, Führungsstile, Onboarding, Projektarbeiten; VAk Lernarbeitsblatt Berlin; FeuAK BWL, Rechnungswesen, Prüfungsleistung, Lernarbeitsblätter Hamburg; IdF eigene Tabs für 4.1–4.7, 5.1–5.5, 6.1–6.2, 7.1–7.11 und 8.1–8.3.',
       'Neue Schaubilder (zum Vergrößern antippen), aus dem Lerntext gebaut.',
       'NRW-Recht (BHKG, OBG, LDG, LBG) im VAk-Reiter ergänzt, da danach geprüft wird.',
-      'Die alte Gesamtseite „Stabsarbeit“ wurde in die Tabs 5.1–5.5 übernommen.'
+      'Die alte Gesamtseite „Stabsarbeit“ wurde in die Tabs 5.1–5.5 übernommen.',
+      'Warn-Simulation jetzt im Tab 7.9 (Warnung durch den Bund), Pressegespräch-Simulation im Tab 6.2; beide nicht mehr auf der IdF-Startseite.'
     ]},
     {v:'3.1.2',ts:'2026-11-01T09:00',items:['Vorbeugender Brandschutz: neuer Gebäudeschnitt zu den Türen (T30-RS, RS, DS, DSS) vom notwendigen Treppenraum in jede Nutzung.','Alle Tabellen in den Lernseiten geprüft: am PC und Tablet nirgends mehr zu breit, Nummernspalten brechen nicht um, Kopfzeilen deutlich lesbarer; am Handy breitere Begriffsspalte und stimmige feste erste Spalte.','IdF-Quiz „Aussagen aus Sicht von Bauherren oder Planern“ und zugehörige Lernkarte korrigiert (richtig: B, C, D, E).','Lernseiten am PC: Der Üben-Modus verdeckt das Kapitel nicht mehr, und oben links erscheint kein doppelter Knopf mehr.',
       'Platzhalter-Bildschirm beim Laden passt sich an Handy, Tablet und PC an (Tab-Leiste oder Seitenleiste, ein bis drei Spalten) und an die geöffnete Seite (Startseite, Stundenplan, Liste, Themenübersicht, Lernkarten, Lernseite)',
