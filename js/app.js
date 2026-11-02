@@ -3140,7 +3140,7 @@ const LP=(function(){
     const v=document.getElementById(id); if(!v) return;
     if(v.hasAttribute('data-nolp')) return;
     if(v._lp){ apply(v); return; }
-    const list=v.querySelector('.pc .acc-list:not(.acc-cards)'); if(!list||items(v).length<3) return;
+    const list=v.querySelector('.pc .acc-list:not(.acc-cards)'); if(!list||items(v).length<1) return;
     v._lp={id};
     const cards=document.createElement('div'); cards.className='lp-cards';
     list.parentNode.insertBefore(cards,list);
@@ -4398,6 +4398,7 @@ const CHANGELOG=(function(){
       'Die alte Gesamtseite „Stabsarbeit“ wurde in die Tabs 5.1–5.5 übernommen.',
       'Korrekturen: keine Gliederungsnummern mehr in den Überschriften, Überschrift und Kapitelliste in einer Spalte, Kapitelfenster ohne leere Zeile oben, breiterer Fokus-Modus (Fokus-Knopf bei geöffnetem Kapitel funktioniert jetzt), Tab IBK Projektarbeiten entfernt, eigene Symbole für neue Hub-Karten.',
       'Schaubilder: im hellen und beigen Design wieder gut lesbar (feste helle Schrift auf dunklem Grund), blasse Schriftfarben aufgehellt; am Handy bleibt die Schrift lesbar (seitlich wischen oder antippen zum Vergrößern).',
+      'Einheitliches Design: auch Tabs mit nur einem oder zwei Kapiteln zeigen jetzt die Kapitelkarten (vorher aufgeklappt und über die volle Breite).',
       'Speiseplan IdF Münster für 02.–06.11.2026 ergänzt.',
       'Warn-Simulation jetzt im Tab 7.9 (Warnung durch den Bund), Pressegespräch-Simulation im Tab 6.2; beide nicht mehr auf der IdF-Startseite.'
     ]},
