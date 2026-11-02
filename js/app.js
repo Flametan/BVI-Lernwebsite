@@ -4362,7 +4362,7 @@ const KLAUSUR_HUB = (function(){
       var tb=document.getElementById('m-topbar'),bar=document.getElementById('m-tabbar');
       var top=tb?Math.max(0,Math.ceil(tb.getBoundingClientRect().bottom)):0;
       var bot=bar&&getComputedStyle(bar).display!=='none'?bar.offsetHeight:0;
-      var rail=document.getElementById('m-rail'),left=rail&&getComputedStyle(rail).display!=='none'?Math.round(rail.getBoundingClientRect().right):0;
+      var rail=document.getElementById('m-rail'),left=rail&&getComputedStyle(rail).display!=='none'?Math.max(0,Math.round(rail.getBoundingClientRect().right)):0;
       /* fest am Bildschirm: die Seite scrollt nicht mit, die Reiter der Karte bleiben immer sichtbar */
       f.style.position='fixed';f.style.left=left+'px';f.style.top=top+'px';f.style.width=(innerWidth-left)+'px';
       f.style.height=Math.max(300,innerHeight-top-bot)+'px';
@@ -4397,6 +4397,7 @@ const CHANGELOG=(function(){
       'Schaubilder: im hellen und beigen Design wieder gut lesbar (feste helle Schrift auf dunklem Grund), blasse Schriftfarben aufgehellt; am Handy bleibt die Schrift lesbar (seitlich wischen oder antippen zum Vergrößern).',
       'Tab-Leiste (Handy/Tablet): „Icon Fill“ – das aktive Symbol füllt sich von der Mitte aus mit der Akzentfarbe, springt kurz und bekommt einen Punkt; beim Antippen hat jedes Symbol eine eigene kleine Animation (Haus hüpft, Kalender schwingt, Häkchen wird gezeichnet, Tasse kippt, Karten mischen, Zahnrad dreht).',
       'Einsatzfahrt, Quiz und Lernkarten nur noch aus Prüfungen mit Farbverlauf (IBK: Transaktionsanalyse, Konfliktmanagement): 8 „Ergänzung“-Fragen aus dem IdF-Quiz, 10 FeuAK-Fragen aus nicht hervorgehobenen Prüfungen und 3 Lernkarten ohne Prüfungsbezug entfernt.',
+      'Desktop: Seitenleiste jetzt als Side Drawer – Hamburger-Knopf oben links, der Drawer federt herein, die Einträge laufen nacheinander ein. Mit dem Pin lässt er sich anheften (dann wie bisher feste Seitenleiste); die Einstellung wird gemerkt.',
       'Einheitliches Design: auch Tabs mit nur einem oder zwei Kapiteln zeigen jetzt die Kapitelkarten (vorher aufgeklappt und über die volle Breite).',
       'Speiseplan IdF Münster für 02.–06.11.2026 ergänzt.',
       'Warn-Simulation jetzt im Tab 7.9 (Warnung durch den Bund), Pressegespräch-Simulation im Tab 6.2; beide nicht mehr auf der IdF-Startseite.'
@@ -8118,3 +8119,30 @@ const PAUSE_LOADER=(function(){
   }
   return { quip, onShow, load, QUIPS };
 })();
+
+/* ── Desktop-Seitenleiste: Drawer (Hamburger) oder angeheftet ─────────────── */
+const RAIL=(function(){
+  const KEY='bvi_rail_pin', mq=window.matchMedia('(min-width:1100px)');
+  let open=false;
+  const b=()=>document.body, ham=()=>document.getElementById('m-ham'), pinB=()=>document.getElementById('m-pin');
+  const pinned=()=>b().classList.contains('rail-pin');
+  function setOpen(o){
+    open=!!o&&!pinned()&&mq.matches;
+    b().classList.toggle('rail-open',open);
+    const h=ham(); if(h){ h.classList.toggle('open',open); h.setAttribute('aria-expanded',open); h.setAttribute('aria-label',open?'Menü schließen':'Menü öffnen'); }
+    const r=document.getElementById('m-rail'); if(r) r.inert=!open&&!pinned()&&mq.matches;
+    if(open){ const f=document.querySelector('#m-rail .m-ri.on')||document.querySelector('#m-rail .m-ri'); setTimeout(()=>{ try{ f&&f.focus({preventScroll:true}); }catch(e){} },420); }
+  }
+  function sync(){ const p=pinned(), pb=pinB(); if(pb){ pb.setAttribute('aria-pressed',p); pb.setAttribute('aria-label',p?'Seitenleiste lösen (Drawer)':'Seitenleiste anheften'); pb.title=p?'Lösen':'Anheften'; } setOpen(false); }
+  function init(){
+    document.querySelectorAll('#m-rail > .m-brand, #m-rail .m-ri').forEach((e,i)=>e.style.setProperty('--i',i));
+    document.getElementById('m-rail')?.addEventListener('click',e=>{ if(!pinned()&&e.target.closest('.m-ri,.m-brand')) setTimeout(()=>setOpen(false),180); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&open){ setOpen(false); try{ ham()&&ham().focus(); }catch(x){} } });
+    (mq.addEventListener?mq.addEventListener.bind(mq,'change'):mq.addListener.bind(mq))(()=>sync());
+    sync();
+  }
+  return { init, toggle(){ setOpen(!open); }, close(){ setOpen(false); },
+    pin(){ const p=!pinned(); b().classList.toggle('rail-pin',p); try{ localStorage.setItem(KEY,p?'1':'0'); }catch(e){} sync(); window.dispatchEvent(new Event('resize')); } };
+})();
+window.RAIL=RAIL;
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>RAIL.init()); else RAIL.init();

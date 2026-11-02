@@ -3071,3 +3071,32 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .m-tab.tap[data-ic="settings"] .m-tic{animation:ic-spin .8s cubic-bezier(.3,1.1,.4,1);}
 @keyframes ic-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.m-tab.tap .m-tic,.m-tab.tap .m-fab,.m-tab.tap .m-tic svg>*,.m-tab.tap .m-fab svg>path{animation:none!important;}.m-tab .m-tic>svg.f,.m-tab .m-dot{transition-duration:.01ms!important;}}
+
+/* ── Desktop: Side Drawer (Hamburger) oder angeheftete Seitenleiste ───────── */
+.m-ham,.m-pin,#m-dim{display:none;}
+@media(min-width:1100px){
+  .m-ham{position:fixed;left:16px;top:12px;width:44px;height:44px;border-radius:14px;border:0;background:var(--m-card);color:var(--m-fg);z-index:153;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18);transition:background .25s,color .25s,transform .3s cubic-bezier(.34,1.56,.64,1);}
+  body:not(.rail-pin) .m-ham{display:block;}
+  .m-ham span{position:absolute;left:12px;width:20px;height:2.5px;border-radius:2px;background:currentColor;transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .2s,top .25s .12s;}
+  .m-ham span:nth-child(1){top:14px}.m-ham span:nth-child(2){top:21px}.m-ham span:nth-child(3){top:28px}
+  .m-ham.open{background:var(--m-accent);color:var(--m-on-accent);}
+  .m-ham.open span{transition:top .2s,transform .45s .15s cubic-bezier(.34,1.56,.64,1),opacity .2s;}
+  .m-ham.open span:nth-child(1){top:21px;transform:rotate(45deg)}.m-ham.open span:nth-child(2){opacity:0}.m-ham.open span:nth-child(3){top:21px;transform:rotate(-45deg)}
+  .m-ham:active{transform:scale(.92);}
+  #m-dim{display:block;position:fixed;inset:0;z-index:151;background:rgba(0,0,0,.42);opacity:0;pointer-events:none;transition:opacity .3s;}
+  body.rail-open:not(.rail-pin) #m-dim{opacity:1;pointer-events:auto;}
+  .m-pin{display:grid;place-items:center;position:absolute;top:calc(var(--rt,22px) + 6px);right:14px;width:36px;height:36px;border-radius:11px;border:0;background:var(--b-1f1f1f);color:var(--m-muted);cursor:pointer;z-index:2;transition:background .25s,color .25s;}
+  .m-pin svg{width:19px;height:19px;transform:rotate(35deg);transition:transform .45s cubic-bezier(.34,1.56,.64,1);}
+  body.rail-pin .m-pin{background:var(--m-accent);color:var(--m-on-accent);}
+  body.rail-pin .m-pin svg{transform:rotate(0);}
+  /* nicht angeheftet: Seitenleiste ist ein Drawer, der von links hereinfedert */
+  body:not(.rail-pin){padding-left:0;}
+  body:not(.rail-pin) #m-rail{--rt:72px;padding-top:calc(72px + env(safe-area-inset-top,0px));z-index:152;border-right:0;border-radius:0 22px 22px 0;box-shadow:none;visibility:hidden;transform:translateX(-106%);transition:transform .45s cubic-bezier(.4,0,.6,1),box-shadow .3s,visibility 0s .45s;}
+  body.rail-open:not(.rail-pin) #m-rail{visibility:visible;transform:none;box-shadow:8px 0 30px rgba(0,0,0,.3);transition:transform .6s cubic-bezier(.3,1.35,.5,1),box-shadow .3s,visibility 0s;}
+  body:not(.rail-pin) #m-rail>.m-brand,body:not(.rail-pin) #m-rail .m-ri{opacity:0;transform:translateX(-24px);}
+  body.rail-open:not(.rail-pin) #m-rail>.m-brand,body.rail-open:not(.rail-pin) #m-rail .m-ri{opacity:1;transform:none;transition:opacity .3s,transform .5s cubic-bezier(.34,1.56,.64,1),background .15s;transition-delay:calc(var(--i,0)*55ms + 160ms),calc(var(--i,0)*55ms + 160ms),0s;}
+  body:not(.rail-pin) #et-pill{left:50%;}
+}
+@media(min-width:1100px) and (max-width:1260px){body:not(.rail-pin) #m-topbar{padding-left:70px;}}
+@media(prefers-reduced-motion:reduce){body:not(.rail-pin) #m-rail,body.rail-open:not(.rail-pin) #m-rail,.m-ham span,#m-dim,body.rail-open:not(.rail-pin) #m-rail>.m-brand,body.rail-open:not(.rail-pin) #m-rail .m-ri{transition-duration:.01ms!important;transition-delay:0s!important;}}
+@media(min-width:1100px){#m-rail>.m-brand{padding-right:54px;}}
