@@ -1674,7 +1674,7 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 }
 
 /* ── Bild-Vergrößerung ───────────────────────────────────────────────────── */
-img.pdf-img,img.pdf-img-sm,.diagram-wrap svg{cursor:zoom-in;}
+img.pdf-img,img.pdf-img-sm,.diagram-wrap svg,svg.dg-svg{cursor:zoom-in;}
 #lb{position:fixed;inset:0;z-index:var(--z-critical);background:#050505;display:flex;flex-direction:column;}
 #lb[hidden]{display:none;}
 .lb-stage{flex:1;min-height:0;overflow:hidden;touch-action:none;display:flex;align-items:center;justify-content:center;user-select:none;-webkit-user-select:none;}

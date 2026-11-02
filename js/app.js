@@ -6777,7 +6777,7 @@ const LIGHTBOX=(function(){
     if(open) return;
     const img=e.target.closest('img.pdf-img,img.pdf-img-sm');
     if(img){ const c=img.cloneNode(); c.className='lb-img'; c.removeAttribute('style'); c.draggable=false; show(c,img.alt); return; }
-    const svg=e.target.closest('.diagram-wrap svg');
+    const svg=e.target.closest('.diagram-wrap svg,svg.dg-svg');
     if(svg&&!e.target.closest('a,button')){
       const c=svg.cloneNode(true); c.classList.add('lb-img'); c.removeAttribute('style'); c.removeAttribute('width'); c.removeAttribute('height');
       show(c,svg.getAttribute('aria-label')||'');
