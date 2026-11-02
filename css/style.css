@@ -1728,6 +1728,9 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 :root[data-theme="light"]{--b-1a1a1a:#ffffff;--b-1a1d2e:#d5d7e1;--b-1f1f1f:#e0e0e0;--b-222222:#dddddd;--b-2a2a2a:#d5d5d5;--b-2e2e2e:#d1d1d1;--b-303030:#cfcfcf;--b-353535:#cacaca;--b-3a3a3a:#c5c5c5;--b-4a4a4a:#b5b5b5;--b-8a97a2:#5d6a75;--b-bdbdbd:#424242;--b-cccccc:#333333;--b-d0d0d0:#2f2f2f;--b-eeeeee:#111111;}
 /* Dunkle Inseln im hellen Design: Diagramme sind für dunklen Grund gezeichnet */
 :root[data-theme="light"] .diagram-wrap{background:#1b1b1b;border-color:#2b2b2b;}
+/* Schaubilder und Vergrößerung haben immer dunklen Grund: feste helle Farben, auch im hellen/beigen Design */
+.diagram-wrap,.lb-content{--c-gold:#FFA412;--c-gold-l:#ffc46b;--c-text:#e8eaed;--c-text-b:#ffffff;--c-slate-l:#c9ced6;--c-red-l:#ff7b7b;--c-ok:#52c28f;--c-blue:#6fb0ff;color:#e8eaed;}
+
 :root[data-theme="light"] .diagram-caption{color:#a3a3a3;}
 :root[data-theme="light"] svg.lb-img{background:#1b1b1b;}
 
@@ -2277,7 +2280,7 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 }
 /* Desktop: Kopfleiste (#m-topbar) liegt über dem Kapitelfenster → eigene Kopfzeile darunter, doppelte Knöpfe aus; Üben-Panel verdeckt das Fenster nicht mehr */
 @media(min-width:1100px){
-  .lp-win:not(.focus){padding-top:64px;}
+  body:has(.lp-win.on:not(.focus)) #m-back{visibility:hidden;}   /* das Kapitelfenster hat seinen eigenen Zurück-Knopf: keine freie Zeile mehr darüber */
   .lp-win:not(.focus) .lp-wh .m-tb-actions{display:none;}
   body.lp-prac .lp-win:not(.focus){width:calc(100vw - var(--lp-l,0px) - var(--lpw) - 24px);}
   body.lp-prac .lp-win.focus{right:calc(var(--lpw) + 24px)!important;}
@@ -3009,3 +3012,22 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .hs-svg .hs-t{font-size:13px;}
 .hs-svg .hs-b{font-size:12px;font-weight:700;fill:var(--c-text-b);}
 .hs-svg .hs-sm{font-size:10.5px;fill:var(--c-slate-l);}
+
+/* Lernseiten-Tabs am PC/Tablet: Überschrift, Kopfleiste und Kapitelliste in einer Spalte (zentriert) */
+@media(min-width:701px){
+  .view.lp-ueber .page-hero .phi,.view.lp-ueber .pc{max-width:780px;margin-left:auto!important;margin-right:auto!important;}
+  body:has(.view.active.lp-ueber:not(.lp-win)) #m-topbar{max-width:780px;margin-left:auto!important;margin-right:auto!important;}
+}
+/* Fokus-Modus am PC: breitere Lesespalte statt schmalem Streifen */
+@media(min-width:1100px){
+  .lp-win.focus .lp-wbody{padding-left:max(24px,calc((100% - 1060px)/2));padding-right:max(24px,calc((100% - 1060px)/2));}
+  .lp-win.focus .diagram-wrap{max-width:980px!important;}
+  .lp-win.focus .lp-pg button{max-width:340px;}
+}
+/* Schaubilder am Handy: Schrift soll lesbar bleiben, deshalb seitlich wischbar (oder antippen zum Vergrößern) */
+.sv-hint{display:none;}
+@media(max-width:700px){
+  .diagram-wrap{overflow-x:auto;}
+  .diagram-wrap svg{min-width:var(--svg-min,0);}
+  .diagram-wrap[data-wide] .sv-hint{display:block;text-align:center;font-size:.72rem;color:#9aa4b2;margin-top:.5rem;}
+}

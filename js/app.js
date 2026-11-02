@@ -1427,7 +1427,7 @@ const PROGRESS = (function(){
     gal:  ['v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht'],
     sfs:  ['v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc'],
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
-    ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-ibk-fuehren-gruppen','v-ibk-fuehrung','v-ibk-autoritaeten','v-ibk-fuehrungsstile','v-ibk-onboarding','v-ibk-projektarbeiten'],
+    ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-ibk-fuehren-gruppen','v-ibk-fuehrung','v-ibk-autoritaeten','v-ibk-fuehrungsstile','v-ibk-onboarding'],
     vak:  ['v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-lernarbeitsblatt'],
     feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse','v-feuak-bwl','v-feuak-rechnungswesen','v-feuak-pruefung','v-feuak-lernblatt-hh','v-feuak-lernblatt-2026'],
     idf:  ['v-idf-vblernen','v-idf-gk','v-idf-sonderbau','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte','v-idf-sim-pressesim','v-idf-sim-warnsim','v-idf-vb-41','v-idf-vb-42','v-idf-vb-43','v-idf-vb-44','v-idf-vb-45','v-idf-vb-46','v-idf-vb-47','v-idf-p61','v-idf-p62','v-idf-z70','v-idf-z71','v-idf-z72','v-idf-z73','v-idf-z74','v-idf-z75','v-idf-z76','v-idf-z77','v-idf-z78','v-idf-z79','v-idf-z710','v-idf-z711','v-idf-u81','v-idf-u82','v-idf-u83'],
@@ -1534,7 +1534,6 @@ const SEARCH = (function(){
     'v-ibk-autoritaeten':'IBK · Autoritäten und Kompetenzen',
     'v-ibk-fuehrungsstile':'IBK · Führungsstile',
     'v-ibk-onboarding':'IBK · Onboarding',
-    'v-ibk-projektarbeiten':'IBK · Projektarbeiten',
     'v-vak-lernarbeitsblatt':'VAk · Lernarbeitsblatt Berlin',
     'v-feuak-bwl':'FeuAK · BWL',
     'v-feuak-rechnungswesen':'FeuAK · Rechnungswesen',
@@ -3244,6 +3243,7 @@ const LP=(function(){
   });
   // ── Fokus-Lesemodus (Desktop) ──
   function focusMode(){
+    if(cur&&win&&win.classList.contains('on')){ cur.focus=!cur.focus; win.classList.toggle('focus',cur.focus); cur.v.classList.toggle('lp-focus',cur.focus); bar(); return; }   // Kapitel ist schon offen: nur umschalten
     const v=document.querySelector('.view.active'); if(!v||!v._lp) return;
     const cards=[...v.querySelectorAll('.lp-card')], its=cards.length&&cards[0].offsetParent?cards:items(v); let i=0;   // die Kapitelkarten (oder, ohne Karten, die Kapitel selbst) zeigen, wo man gerade liest
     its.forEach((d,k)=>{ if(d.getBoundingClientRect().top<window.innerHeight*0.4) i=k; });
@@ -4392,10 +4392,13 @@ const CHANGELOG=(function(){
     {v:'3.1.3',ts:'2026-11-02T09:00',items:[
       'Lernseiten an die neue Zusammenfassung (V3.0) angepasst: IBK, VAk, FeuAK und IdF (Vorbeugender Brandschutz, Stabsarbeit, Presse, Zivile Verteidigung, EU-Katastrophenschutz).',
       'Je Unterpunkt der Zusammenfassung ein eigener Tab, gefüllt mit den Unter-Unterpunkten als Kapitel; vorhandene Inhalte bleiben erhalten und stehen jetzt im passenden Tab.',
-      'Neue Tabs: IBK Führen von Gruppen, Führung, Autoritäten, Führungsstile, Onboarding, Projektarbeiten; VAk Lernarbeitsblatt Berlin; FeuAK BWL, Rechnungswesen, Prüfungsleistung, Lernarbeitsblätter Hamburg; IdF eigene Tabs für 4.1–4.7, 5.1–5.5, 6.1–6.2, 7.1–7.11 und 8.1–8.3.',
+      'Neue Tabs: IBK Führen von Gruppen, Führung, Autoritäten, Führungsstile, Onboarding; VAk Lernarbeitsblatt Berlin; FeuAK BWL, Rechnungswesen, Prüfungsleistung, Lernarbeitsblätter Hamburg; IdF eigene Tabs für 4.1–4.7, 5.1–5.5, 6.1–6.2, 7.1–7.11 und 8.1–8.3.',
       'Neue Schaubilder (zum Vergrößern antippen), aus dem Lerntext gebaut.',
       'NRW-Recht (BHKG, OBG, LDG, LBG) im VAk-Reiter ergänzt, da danach geprüft wird.',
       'Die alte Gesamtseite „Stabsarbeit“ wurde in die Tabs 5.1–5.5 übernommen.',
+      'Korrekturen: keine Gliederungsnummern mehr in den Überschriften, Überschrift und Kapitelliste in einer Spalte, Kapitelfenster ohne leere Zeile oben, breiterer Fokus-Modus (Fokus-Knopf bei geöffnetem Kapitel funktioniert jetzt), Tab IBK Projektarbeiten entfernt, eigene Symbole für neue Hub-Karten.',
+      'Schaubilder: im hellen und beigen Design wieder gut lesbar (feste helle Schrift auf dunklem Grund), blasse Schriftfarben aufgehellt; am Handy bleibt die Schrift lesbar (seitlich wischen oder antippen zum Vergrößern).',
+      'Speiseplan IdF Münster für 02.–06.11.2026 ergänzt.',
       'Warn-Simulation jetzt im Tab 7.9 (Warnung durch den Bund), Pressegespräch-Simulation im Tab 6.2; beide nicht mehr auf der IdF-Startseite.'
     ]},
     {v:'3.1.2',ts:'2026-11-01T09:00',items:['Vorbeugender Brandschutz: neuer Gebäudeschnitt zu den Türen (T30-RS, RS, DS, DSS) vom notwendigen Treppenraum in jede Nutzung.','Alle Tabellen in den Lernseiten geprüft: am PC und Tablet nirgends mehr zu breit, Nummernspalten brechen nicht um, Kopfzeilen deutlich lesbarer; am Handy breitere Begriffsspalte und stimmige feste erste Spalte.','IdF-Quiz „Aussagen aus Sicht von Bauherren oder Planern“ und zugehörige Lernkarte korrigiert (richtig: B, C, D, E).','Lernseiten am PC: Der Üben-Modus verdeckt das Kapitel nicht mehr, und oben links erscheint kein doppelter Knopf mehr.',
@@ -7942,6 +7945,14 @@ document.addEventListener('DOMContentLoaded',()=>{
   CHANGELOG.check();
   if(window.SK) requestAnimationFrame(()=>window.SK());
   if(typeof FALLBEARBEITUNG!=='undefined') { document.querySelectorAll('#v-vak-fallbearbeitung').forEach(()=>{}); }
+  // Schaubilder: kleinste Schrift soll am Handy lesbar bleiben (~9,5 px); sonst seitlich wischbar, Tippen vergrößert
+  document.querySelectorAll('.diagram-wrap svg').forEach(svg=>{
+    const vb=(svg.getAttribute('viewBox')||'').split(/[ ,]+/).map(Number); if(!(vb[2]>0)) return;
+    let min=99; svg.querySelectorAll('text').forEach(t=>{ const f=parseFloat(getComputedStyle(t).fontSize); if(f>0&&f<min) min=f; });
+    if(min===99) return;
+    const need=Math.min(760,Math.ceil(vb[2]*9.5/min));
+    if(need>300){ svg.style.setProperty('--svg-min',need+'px'); const w=svg.closest('.diagram-wrap'); if(w){ w.dataset.wide='1'; if(!w.querySelector('.sv-hint')){ const h=document.createElement('div'); h.className='sv-hint'; h.textContent='← wischen · antippen zum Vergrößern →'; w.appendChild(h); } } }
+  });
   document.querySelectorAll('.pc table').forEach(t=>{
     // Tabellen mit reiner Nummernspalte (z. B. Sonderbau-Nr.): Nummer nie umbrechen
     const f=[...t.querySelectorAll('tr')].slice(1).map(r=>r.cells[0]&&r.cells[0].textContent.trim()).filter(x=>x!==undefined);
