@@ -4397,6 +4397,7 @@ const CHANGELOG=(function(){
       'Schaubilder: im hellen und beigen Design wieder gut lesbar (feste helle Schrift auf dunklem Grund), blasse Schriftfarben aufgehellt; am Handy bleibt die Schrift lesbar (seitlich wischen oder antippen zum Vergrößern).',
       'Tab-Leiste (Handy/Tablet): „Icon Fill“ – das aktive Symbol füllt sich von der Mitte aus mit der Akzentfarbe, springt kurz und bekommt einen Punkt; beim Antippen hat jedes Symbol eine eigene kleine Animation (Haus hüpft, Kalender schwingt, Häkchen wird gezeichnet, Tasse kippt, Karten mischen, Zahnrad dreht).',
       'Einsatzfahrt, Quiz und Lernkarten nur noch aus Prüfungen mit Farbverlauf (IBK: Transaktionsanalyse, Konfliktmanagement): 8 „Ergänzung“-Fragen aus dem IdF-Quiz, 10 FeuAK-Fragen aus nicht hervorgehobenen Prüfungen und 3 Lernkarten ohne Prüfungsbezug entfernt.',
+      'Tab-Leiste: Zahnrad bleibt in der Mitte frei, der Dampf der Tasse steigt auf und neuer kommt aus der Tasse, die Lernkarten wechseln zweimal Vorder- und Hintergrund (hintere Karte dunkler), zwei Symbole auf einem Platz tauschen zweimal die Plätze; der Mittelknopf kann wieder zwei Symbole teilen.',
       'Desktop: Seitenleiste jetzt als Side Drawer – Hamburger-Knopf oben links, der Drawer federt herein, die Einträge laufen nacheinander ein. Mit dem Pin lässt er sich anheften (dann wie bisher feste Seitenleiste); die Einstellung wird gemerkt.',
       'Einheitliches Design: auch Tabs mit nur einem oder zwei Kapiteln zeigen jetzt die Kapitelkarten (vorher aufgeklappt und über die volle Breite).',
       'Speiseplan IdF Münster für 02.–06.11.2026 ergänzt.',
@@ -7142,9 +7143,12 @@ const SHELL=(function(){
       start:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
       plan:'<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
       exam:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
-      pause:'<path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17M8 2.5c-.6 1 .6 1.8 0 3M12 2.5c-.6 1 .6 1.8 0 3"/>',
-      cards:'<rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/>',
+      pause:'<path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17"/><path class="st1" d="M8 2.5c-.6 1 .6 1.8 0 3"/><path class="st2" d="M12 2.5c-.6 1 .6 1.8 0 3"/>',
+      cards:'<rect class="cf" x="2.5" y="7" width="15" height="14" rx="2.5"/><path class="cb" d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/>',
       settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'};
+    // gefüllte Ebene: Lernkarten als zwei geschlossene Karten (hintere dunkler, vordere davor; die Kopie cb2 ist für den Tauscheffekt)
+    const ICF={cards:'<rect class="cb" x="6.5" y="3.5" width="14.5" height="13.5" rx="2.5"/><rect class="cf" x="2.5" y="7" width="15" height="14" rx="2.5"/><rect class="cb2" x="6.5" y="3.5" width="14.5" height="13.5" rx="2.5"/>'};
+    ICF.settings=IC.settings.replace(/^(<circle[^>]*\/>)([\s\S]*)$/,'$2$1');   // Zahnrad: erst Körper, dann der Kreis darüber, so bleibt die Mitte frei
     const T={
       start:{n:'Start',s:'Start',go:()=>NAV.home()},
       plan:{n:'Stundenplan',s:'Plan',go:()=>NAV.tab('v-plan','Stundenplan')},
@@ -7156,7 +7160,7 @@ const SHELL=(function(){
     const DEF={slots:[['start'],['plan'],['exam'],['pause','cards'],['settings']]};
     const clone=o=>JSON.parse(JSON.stringify(o));
     const svg=(inner,cls)=>'<svg'+(cls?' class="'+cls+'"':'')+' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+inner+'</svg>';
-    const pairSvg=(a,b,cls)=>svg('<g transform="translate(-.5 6.5) scale(.5)" stroke-width="3.4">'+IC[a]+'</g><g transform="translate(12.5 6.5) scale(.5)" stroke-width="3.4">'+IC[b]+'</g><path d="M14.2 3.5 9.8 20.5" stroke-width="1.6"/>',cls);
+    const pairSvg=(a,b,cls)=>{ const f=cls==='f', g=x=>(f&&ICF[x])||IC[x]; return svg('<g class="pa pa1"><g transform="translate(-.5 6.5) scale(.5)" stroke-width="3.4">'+g(a)+'</g></g><g class="pa pa2"><g transform="translate(12.5 6.5) scale(.5)" stroke-width="3.4">'+g(b)+'</g></g><path d="M14.2 3.5 9.8 20.5" stroke-width="1.6"/>',cls); };
     function valid(c){
       if(!c||!Array.isArray(c.slots)||c.slots.length!==5) return false;
       if(!c.slots.every(x=>Array.isArray(x)&&x.length>=1&&x.length<=2&&x.every(t=>IDS.includes(t)))) return false;
@@ -7178,7 +7182,7 @@ const SHELL=(function(){
         const click='NAVBAR.tap(this);'+(one?'NAVBAR.go(\''+s[0]+'\')':'PMENU.toggle(event,this)');
         const attrs=one?'':' aria-haspopup="menu" aria-expanded="false" aria-controls="m-pmenu"';
         // Icon Fill: Umriss-Ebene (o) und gefüllte Ebene (f); die gefüllte füllt sich beim aktiven Tab von der Mitte aus, dazu ein Punkt
-        const ic=fab?svg(IC[s[0]]):'<span class="m-tic">'+(one?svg(IC[s[0]],'o')+svg(IC[s[0]],'f'):pairSvg(s[0],s[1],'o')+pairSvg(s[0],s[1],'f'))+'</span>';
+        const ic=fab?(one?svg(IC[s[0]]):pairSvg(s[0],s[1])):'<span class="m-tic">'+(one?svg(IC[s[0]],'o')+svg(ICF[s[0]]||IC[s[0]],'f'):pairSvg(s[0],s[1],'o')+pairSvg(s[0],s[1],'f'))+'</span>';
         return '<button class="m-tab'+(fab?' m-tab-center':'')+'" data-tab="'+s[0]+'" data-tabs="'+key(s)+'" data-ic="'+(one?s[0]:'pair')+'" onclick="'+click+'"'+attrs+'>'+(fab?'':'<i class="m-dot"></i>')+(fab?'<span class="m-fab">'+ic+'</span>':ic)+'<span>'+label(s)+'</span></button>';
       }).join('');
       apply();
