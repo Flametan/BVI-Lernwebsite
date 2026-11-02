@@ -1,6 +1,6 @@
 {
   "hinweis": "Speiseplan des IdF Münster. Jede Woche neue Tage unter „tage“ ergänzen (Schlüssel = Datum JJJJ-MM-TT); alte Tage dürfen stehen bleiben. Die Kürzel in „a“ sind die Zusatzstoffe/Allergene wie auf dem Aushang.",
-  "stand": "23.10.2026, 05:20 Uhr",
+  "stand": "23.10.2026, 05:19 Uhr",
   "ausgabe": "12:00 bis 13:30 Uhr",
   "tage": {
     "2026-10-26": {
@@ -28,6 +28,34 @@
     },
     "2026-10-30": {
       "stamm":   {"t": "Bauerntopf mit Hackfleisch und Gemüse", "a": "S"}
+    },
+    "2026-11-02": {
+      "stamm":   {"t": "Cordon bleu", "a": "C, L, G/W"},
+      "beilage": {"t": "Kartoffelpüree und Mischgemüse", "a": "L"},
+      "veg":     {"t": "Zucchini Mac and Cheese", "a": "C, L, V, G/W"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-03": {
+      "stamm":   {"t": "Spaghetti mit Pesto", "a": "C, V, G/W"},
+      "beilage": {"t": "Parmesan", "a": "L"},
+      "veg":     {"t": "Eier in Senfsoße mit Kartoffeln"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-04": {
+      "stamm":   {"t": "Lachslasagne mit Spinat und Käse überbacken", "a": "C, D, L, G/W"},
+      "veg":     {"t": "Sauerkrautauflauf mit Birne und Weintrauben", "a": "L, V"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-05": {
+      "stamm":   {"t": "Currywurst", "a": "8"},
+      "beilage": {"t": "Pommes frites"},
+      "veg":     {"t": "Gemüsepfanne mit Kartoffeln und Spiegelei", "a": "C, S, V"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-06": {
+      "stamm":   {"t": "Flank Steak Baguette", "a": "C, L, G/W"},
+      "veg":     {"t": "Kartoffelpizza", "a": "L, V"},
+      "dessert": {"t": "Vario"}
     }
   }
 }
