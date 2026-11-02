@@ -1427,10 +1427,10 @@ const PROGRESS = (function(){
     gal:  ['v-gal-organisation','v-gal-brandlehre','v-gal-fahrzeuge','v-gal-einsatz','v-gal-atemgifte','v-gal-atemschutz','v-gal-vb','v-gal-loeschlehre','v-gal-loeschmittel-schaum','v-gal-loeschwasserversorgung','v-gal-beamtenrecht','v-gal-beihilferecht','v-gal-brandbekaempfung','v-gal-einsatztechnik','v-gal-erstehilfe','v-gal-grundlagen','v-gal-fahrzeugnormung','v-gal-fuehrung','v-gal-fwdven','v-gal-gabc','v-gal-geraetepruefung','v-gal-hbkg','v-gal-kartenkunde','v-gal-knoten','v-gal-staatsbuerger','v-gal-th-verkehr','v-gal-leitern','v-gal-uvv','v-gal-waermebildkamera','v-gal-armaturen','v-gal-maschinist','v-gal-psa','v-gal-personalvertretungsrecht'],
     sfs:  ['v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc'],
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
-    ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit'],
-    vak:  ['v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht'],
-    feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    idf:  ['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-sonderbau','v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte','v-idf-presse','v-idf-sim-pressesim','v-idf-sim-warnsim','v-idf-zv','v-idf-ucpm'],
+    ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-ibk-fuehren-gruppen','v-ibk-fuehrung','v-ibk-autoritaeten','v-ibk-fuehrungsstile','v-ibk-onboarding','v-ibk-projektarbeiten'],
+    vak:  ['v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-lernarbeitsblatt'],
+    feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse','v-feuak-bwl','v-feuak-rechnungswesen','v-feuak-pruefung','v-feuak-lernblatt-hh','v-feuak-lernblatt-2026'],
+    idf:  ['v-idf-vblernen','v-idf-gk','v-idf-sonderbau','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte','v-idf-sim-pressesim','v-idf-sim-warnsim','v-idf-vb-41','v-idf-vb-42','v-idf-vb-43','v-idf-vb-44','v-idf-vb-45','v-idf-vb-46','v-idf-vb-47','v-idf-p61','v-idf-p62','v-idf-z70','v-idf-z71','v-idf-z72','v-idf-z73','v-idf-z74','v-idf-z75','v-idf-z76','v-idf-z77','v-idf-z78','v-idf-z79','v-idf-z710','v-idf-z711','v-idf-u81','v-idf-u82','v-idf-u83'],
   };
   // Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator): kein Haken, nicht im Fortschritt
   const EXAM_VIEWS = new Set(['v-vak-klausurvorbereitung','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung','v-feuak-altklausur','v-idf-altklausur','v-klausur','v-klausur-0826','v-klausurfragen','v-eingrenzung-klausur','v-simulator','v-laufbahn-2023','v-laufbahn-2026']);
@@ -1452,8 +1452,11 @@ const PROGRESS = (function(){
   const HUBS = {
     'v-feuak-bp-hub':['v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp'],
     'v-feuak-analyse':['v-feuak-stakeholder','v-feuak-risikoanalyse'],
-    'v-idf-vb':['v-idf-brandschutz','v-idf-vblernen','v-idf-gk','v-idf-sonderbau'],
-    'v-idf-stabhub':['v-idf-stab','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte']
+    'v-idf-vb':['v-idf-vb-41','v-idf-vb-42','v-idf-vb-43','v-idf-vb-44','v-idf-vb-45','v-idf-vb-46','v-idf-vb-47','v-idf-vblernen','v-idf-gk','v-idf-sonderbau'],
+    'v-idf-stabhub':['v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte'],
+    'v-idf-presse':['v-idf-p61','v-idf-p62'],
+    'v-idf-zv':['v-idf-z70','v-idf-z71','v-idf-z72','v-idf-z73','v-idf-z74','v-idf-z75','v-idf-z76','v-idf-z77','v-idf-z78','v-idf-z79','v-idf-z710','v-idf-z711'],
+    'v-idf-ucpm':['v-idf-u81','v-idf-u82','v-idf-u83']
   };
 
   function updateUI(){
@@ -1515,8 +1518,6 @@ const SEARCH = (function(){
     'v-feuak-risikoanalyse':'FeuAK · Prospektive Risikoanalyse',
     'v-idf-vb':'IdF · Vorbeugender Brandschutz',
     'v-idf-stabhub':'IdF · Stabsarbeit',
-    'v-idf-brandschutz':'IdF · Vorbeugender Brandschutz (Lernseite)',
-    'v-idf-stab':'IdF · Stabsarbeit (Lernseite)',
     'v-idf-stabskarte':'IdF · Taschenkarte Stabsarbeit',
     'v-idf-vblernen':'IdF · VB-Prüfung lernen',
     'v-idf-gk':'IdF · Gebäudeklassen-Baukasten',
@@ -1528,6 +1529,42 @@ const SEARCH = (function(){
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
     'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
     'v-idf-presse':'IdF · Presse- & Öffentlichkeitsarbeit',
+    'v-ibk-fuehren-gruppen':'IBK · Führen von Gruppen',
+    'v-ibk-fuehrung':'IBK · Führung und Führungsaufgaben',
+    'v-ibk-autoritaeten':'IBK · Autoritäten und Kompetenzen',
+    'v-ibk-fuehrungsstile':'IBK · Führungsstile',
+    'v-ibk-onboarding':'IBK · Onboarding',
+    'v-ibk-projektarbeiten':'IBK · Projektarbeiten',
+    'v-vak-lernarbeitsblatt':'VAk · Lernarbeitsblatt Berlin',
+    'v-feuak-bwl':'FeuAK · BWL',
+    'v-feuak-rechnungswesen':'FeuAK · Rechnungswesen',
+    'v-feuak-pruefung':'FeuAK · Prüfungsleistung Hamburg',
+    'v-feuak-lernblatt-hh':'FeuAK · Lernarbeitsblatt Hamburg',
+    'v-feuak-lernblatt-2026':'FeuAK · Lernarbeitsblatt Hamburg BVI April 2026',
+    'v-idf-vb-41':'IdF · Wichtige Prüfschemata',
+    'v-idf-vb-42':'IdF · Begriffe des VB',
+    'v-idf-vb-43':'IdF · Gebäudeklassen',
+    'v-idf-vb-44':'IdF · Baurecht',
+    'v-idf-vb-45':'IdF · Grundsatzanforderungen',
+    'v-idf-vb-46':'IdF · Bau nach MBO',
+    'v-idf-vb-47':'IdF · Sonderbau',
+    'v-idf-p61':'IdF · Rechtsgrundlagen & Grundsätze der Pressearbeit',
+    'v-idf-p62':'IdF · Presse- und Medienarbeit bei der Feuerwehr',
+    'v-idf-z70':'IdF · Genfer Konventionen',
+    'v-idf-z71':'IdF · Konzeption Zivile Verteidigung',
+    'v-idf-z72':'IdF · Regelkreis im Bevölkerungsschutz',
+    'v-idf-z73':'IdF · Risikoanalyse im Bevölkerungsschutz',
+    'v-idf-z74':'IdF · Gesamtszenario',
+    'v-idf-z75':'IdF · KRITIS – Kritische Infrastrukturen',
+    'v-idf-z76':'IdF · Länderübergreifende Hilfe & Fähigkeitsmanagement',
+    'v-idf-z77':'IdF · Weißer Katastrophenschutz',
+    'v-idf-z78':'IdF · Einsatz der Bundeswehr im Inneren',
+    'v-idf-z79':'IdF · Warnung durch den Bund',
+    'v-idf-z710':'IdF · Zivile Alarmplanung',
+    'v-idf-z711':'IdF · Feuerwehren in der Zivilen Verteidigung',
+    'v-idf-u81':'IdF · Weg des Hilfeersuchens',
+    'v-idf-u82':'IdF · Rechtsgrundlagen und Akteure',
+    'v-idf-u83':'IdF · ECPP Kapazitätenpyramide',
   };
 
   function stripHtml(s){ const d=document.createElement('div');d.innerHTML=s;return d.textContent||''; }
@@ -3219,7 +3256,7 @@ const LP=(function(){
     'v-ibk-ta':['IBK · Transaktionsanalyse'],'v-ibk-konflikt':['IBK · Konflikte'],
     'v-feuak-vwl':['FeuAK · VWL'],'v-feuak-haushalt':['FeuAK · Haushalt'],'v-feuak-pm':['FeuAK · PM'],'v-feuak-bedarfsplanung':['FeuAK · Bedarfsplanung'],
     'v-feuak-qm':['FeuAK · QM'],'v-feuak-beschaffung':['FeuAK · Vergabe'],
-    'v-idf-brandschutz':['IdF · Brandschutz'],'v-idf-stab':['IdF · Stabsarbeit']
+    'v-idf-vb-41':['IdF · Brandschutz'],'v-idf-vb-42':['IdF · Brandschutz'],'v-idf-vb-43':['IdF · Brandschutz'],'v-idf-vb-44':['IdF · Brandschutz'],'v-idf-vb-45':['IdF · Brandschutz'],'v-idf-vb-46':['IdF · Brandschutz'],'v-idf-vb-47':['IdF · Brandschutz'],'v-idf-s51':['IdF · Stabsarbeit'],'v-idf-s52':['IdF · Stabsarbeit'],'v-idf-s53':['IdF · Stabsarbeit'],'v-idf-s54':['IdF · Stabsarbeit'],'v-idf-s55':['IdF · Stabsarbeit']
   };
 
   const cardsFor=id=>{ const c=PMAP[id]; return c&&typeof FLASHCARD_DATA!=='undefined'?FLASHCARD_DATA.filter(x=>c.includes(x.cat)):[]; };
@@ -4352,6 +4389,14 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.1.3',ts:'2026-11-02T09:00',items:[
+      'Lernseiten an die neue Zusammenfassung (V3.0) angepasst: IBK, VAk, FeuAK und IdF (Vorbeugender Brandschutz, Stabsarbeit, Presse, Zivile Verteidigung, EU-Katastrophenschutz).',
+      'Je Unterpunkt der Zusammenfassung ein eigener Tab, gefüllt mit den Unter-Unterpunkten als Kapitel; vorhandene Inhalte bleiben erhalten und stehen jetzt im passenden Tab.',
+      'Neue Tabs: IBK Führen von Gruppen, Führung, Autoritäten, Führungsstile, Onboarding, Projektarbeiten; VAk Lernarbeitsblatt Berlin; FeuAK BWL, Rechnungswesen, Prüfungsleistung, Lernarbeitsblätter Hamburg; IdF eigene Tabs für 4.1–4.7, 5.1–5.5, 6.1–6.2, 7.1–7.11 und 8.1–8.3.',
+      'Neue Schaubilder (zum Vergrößern antippen), aus dem Lerntext gebaut.',
+      'NRW-Recht (BHKG, OBG, LDG, LBG) im VAk-Reiter ergänzt, da danach geprüft wird.',
+      'Die alte Gesamtseite „Stabsarbeit“ wurde in die Tabs 5.1–5.5 übernommen.'
+    ]},
     {v:'3.1.2',ts:'2026-11-01T09:00',items:['Vorbeugender Brandschutz: neuer Gebäudeschnitt zu den Türen (T30-RS, RS, DS, DSS) vom notwendigen Treppenraum in jede Nutzung.','Alle Tabellen in den Lernseiten geprüft: am PC und Tablet nirgends mehr zu breit, Nummernspalten brechen nicht um, Kopfzeilen deutlich lesbarer; am Handy breitere Begriffsspalte und stimmige feste erste Spalte.','IdF-Quiz „Aussagen aus Sicht von Bauherren oder Planern“ und zugehörige Lernkarte korrigiert (richtig: B, C, D, E).','Lernseiten am PC: Der Üben-Modus verdeckt das Kapitel nicht mehr, und oben links erscheint kein doppelter Knopf mehr.',
       'Platzhalter-Bildschirm beim Laden passt sich an Handy, Tablet und PC an (Tab-Leiste oder Seitenleiste, ein bis drei Spalten) und an die geöffnete Seite (Startseite, Stundenplan, Liste, Themenübersicht, Lernkarten, Lernseite)',
       'Startseite: „Lernkarten“ und „Pausenraum“ stehen wieder beide sichtbar untereinander in einer Karte (am PC und Tablet war „Lernkarten“ verdeckt)',
@@ -5241,17 +5286,17 @@ const CHANGELOG=(function(){
 const RELATED={
   'v-hlfs-fuehrungsvorgang':[['v-sfs-fwdv3','SFS Führung/FwDV3'],['v-ibk-konflikt','IBK Konflikt'],['v-ibk-ta','IBK TA']],
   'v-hlfs-gabc':[['v-gal-atemgifte','GAL Atemgifte'],['v-gal-gabc','GAL G-ABC'],['v-sfs-abc','SFS Geräte/ABC']],
-  'v-hlfs-vb':[['v-gal-vb','GAL Vorbeugen'],['v-idf-brandschutz','IdF VB']],
+  'v-hlfs-vb':[['v-gal-vb','GAL Vorbeugen'],['v-idf-vb','IdF VB']],
   'v-hlfs-manv':[['v-gal-erstehilfe','GAL Erste Hilfe'],['v-ibk-psnv','IBK PSNV']],
   'v-hlfs-zugfuehrer':[['v-sfs-fwdv3','SFS FwDV3/Führung'],['v-hlfs-fuehrungsvorgang','HLFS Führungsvorgang'],['v-ibk-zeit','IBK Zeitmanagement']],
-  'v-hlfs-stab':[['v-idf-stab','IdF Stabsarbeit'],['v-ibk-pm','IBK PM'],['v-ibk-zeit','IBK Zeitmanagement']],
+  'v-hlfs-stab':[['v-idf-stabhub','IdF Stabsarbeit'],['v-ibk-pm','IBK PM'],['v-ibk-zeit','IBK Zeitmanagement']],
   'v-hlfs-tunnel':[['v-gal-atemschutz','GAL Atemschutz']],
   'v-ibk-ta':[['v-ibk-konflikt','IBK Konflikt'],['v-sfs-methodik','SFS Methodik'],['v-ibk-stress','IBK Stress']],
   'v-ibk-konflikt':[['v-ibk-ta','IBK TA'],['v-ibk-stress','IBK Stress'],['v-hlfs-fuehrungsvorgang','HLFS Führung']],
   'v-ibk-stress':[['v-ibk-psnv','IBK PSNV'],['v-ibk-bgm','IBK BGM'],['v-ibk-konflikt','IBK Konflikt']],
   'v-ibk-psnv':[['v-ibk-stress','IBK Stress'],['v-hlfs-manv','HLFS MANV']],
   'v-ibk-bgm':[['v-ibk-stress','IBK Stress'],['v-ibk-psnv','IBK PSNV']],
-  'v-ibk-pm':[['v-hlfs-stab','HLFS Stab'],['v-idf-stab','IdF Stabsarbeit'],['v-ibk-zeit','IBK Zeitmanagement'],['v-feuak-pm','FeuAK PM']],
+  'v-ibk-pm':[['v-hlfs-stab','HLFS Stab'],['v-idf-stabhub','IdF Stabsarbeit'],['v-ibk-zeit','IBK Zeitmanagement'],['v-feuak-pm','FeuAK PM']],
   'v-ibk-zeit':[['v-ibk-pm','IBK PM'],['v-hlfs-zugfuehrer','HLFS Zugführer']],
   'v-vak-verwaltungsrecht':[['v-vak-staatsrecht','Staatsrecht'],['v-vak-einsatzrecht','Einsatzrecht'],['v-vak-dienstrecht','Dienstrecht'],['v-vak-altklausur','Altklausur-Quiz']],
   'v-vak-staatsrecht':[['v-vak-verwaltungsrecht','Verwaltungsrecht'],['v-gal-staatsbuerger','GAL Staatsbürgerkunde']],
@@ -5264,15 +5309,26 @@ const RELATED={
   'v-feuak-qm':[['v-feuak-haushalt','Haushalt'],['v-feuak-bedarfsplanung','Bedarfsplanung']],
   'v-feuak-pm':[['v-ibk-pm','IBK PM'],['v-ibk-zeit','IBK Zeitmanagement'],['v-feuak-bedarfsplanung','Bedarfsplanung']],
   'v-feuak-planspiel':[['v-hlfs-manv','HLFS MANV & OLRD'],['v-feuak-altklausur','Altklausur']],
-  'v-idf-brandschutz':[['v-hlfs-vb','HLFS VB'],['v-gal-vb','GAL Vorbeugen']],
-  'v-idf-stab':[['v-hlfs-stab','HLFS Stab'],['v-ibk-pm','IBK PM']],
-  'v-idf-presse':[['v-ibk-konflikt','IBK Konflikt'],['v-ibk-ta','IBK TA']],
+'v-idf-vb-41':[['v-hlfs-vb','HLFS VB'],['v-gal-vb','GAL Vorbeugen']],
+  'v-idf-vb-42':[['v-hlfs-vb','HLFS VB'],['v-gal-vb','GAL Vorbeugen']],
+  'v-idf-vb-43':[['v-hlfs-vb','HLFS VB'],['v-gal-vb','GAL Vorbeugen']],
+  'v-idf-vb-44':[['v-hlfs-vb','HLFS VB'],['v-gal-vb','GAL Vorbeugen']],
+  'v-idf-vb-45':[['v-hlfs-vb','HLFS VB'],['v-gal-vb','GAL Vorbeugen']],
+  'v-idf-vb-46':[['v-hlfs-vb','HLFS VB'],['v-gal-vb','GAL Vorbeugen']],
+  'v-idf-vb-47':[['v-hlfs-vb','HLFS VB'],['v-gal-vb','GAL Vorbeugen']],
+'v-idf-s51':[['v-hlfs-stab','HLFS Stab'],['v-ibk-pm','IBK PM']],
+  'v-idf-s52':[['v-hlfs-stab','HLFS Stab'],['v-ibk-pm','IBK PM']],
+  'v-idf-s53':[['v-hlfs-stab','HLFS Stab'],['v-ibk-pm','IBK PM']],
+  'v-idf-s54':[['v-hlfs-stab','HLFS Stab'],['v-ibk-pm','IBK PM']],
+  'v-idf-s55':[['v-hlfs-stab','HLFS Stab'],['v-ibk-pm','IBK PM']],
+  'v-idf-p61':[['v-ibk-konflikt','IBK Konflikt'],['v-ibk-ta','IBK TA']],
+  'v-idf-p62':[['v-ibk-konflikt','IBK Konflikt'],['v-ibk-ta','IBK TA']],
   'v-sfs-fwdv3':[['v-hlfs-zugfuehrer','HLFS Zugführer'],['v-hlfs-fuehrungsvorgang','HLFS Führungsvorgang']],
   'v-sfs-methodik':[['v-ibk-ta','IBK TA'],['v-ibk-stress','IBK Stress'],['v-hlfs-fuehrungsvorgang','HLFS Führung']],
   'v-sfs-rechtsgrundlagen':[['v-vak-verwaltungsrecht','VAk Verwaltungsrecht'],['v-vak-einsatzrecht','VAk Einsatzrecht']],
   'v-gal-beamtenrecht':[['v-vak-dienstrecht','VAk Dienstrecht'],['v-gal-beihilferecht','GAL Beihilferecht']],
   'v-gal-hbkg':[['v-vak-einsatzrecht','VAk Einsatzrecht']],
-  'v-gal-vb':[['v-hlfs-vb','HLFS VB'],['v-idf-brandschutz','IdF VB']],
+  'v-gal-vb':[['v-hlfs-vb','HLFS VB'],['v-idf-vb','IdF VB']],
   'v-gal-staatsbuerger':[['v-vak-staatsrecht','VAk Staatsrecht']],
   'v-gal-gabc':[['v-hlfs-gabc','HLFS GABC'],['v-sfs-abc','SFS ABC']],
   'v-gal-atemschutz':[['v-hlfs-tunnel','HLFS Tunnel']],

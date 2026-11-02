@@ -110,12 +110,12 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
 
   // ── Fortschritt: Sammelkacheln ──
   const hub = await page.evaluate(() => {
-    ['v-feuak-bedarfsplanung', 'v-feuak-rdbp', 'v-feuak-katsbp'].forEach(v => NAV.go(v, v));
-    NAV.tab('v-feuak', 'x');
-    const card = [...document.querySelectorAll('.topic-card')].find(c => (c.getAttribute('onclick') || '').includes("'v-feuak-bp-hub'"));
+    ['v-idf-p61', 'v-idf-p62'].forEach(v => NAV.go(v, v));
+    NAV.tab('v-idf', 'x');
+    const card = [...document.querySelectorAll('.topic-card')].find(c => (c.getAttribute('onclick') || '').includes("'v-idf-presse'"));
     return !!(card && card.querySelector('.tc-check'));
   });
-  ok('Fortschritt: Sammelkachel Bedarfsplanung bekommt den Haken', hub);
+  ok('Fortschritt: Sammelkachel Presse bekommt den Haken', hub);
 
   // ── Farbschema ──
   const theme = await page.evaluate(() => { THEME.set('light'); const a = document.documentElement.dataset.theme; THEME.set('dark'); return [a, document.documentElement.dataset.theme]; });
@@ -167,10 +167,10 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     res.read = JSON.parse(localStorage.getItem('bvi_checks_v-vak-verwaltungsrecht') || '{}');
     return res;
   });
-  eq('Lernseite: sieben Kapitelkarten', lp.cards, 7);
+  eq('Lernseite: neun Kapitelkarten', lp.cards, 9);
   ok('Lernseite: Kapitel öffnet im Fenster', lp.open && lp.bodyMoved);
-  eq('Lernseite: Weiter öffnet nächstes Kapitel', lp.chapter, 'Kapitel 04 / 07');
-  ok('Lernseite: Zurück schließt das Fenster und gibt den Inhalt zurück', lp.closed && lp.bodyBack === 7);
+  eq('Lernseite: Weiter öffnet nächstes Kapitel', lp.chapter, 'Kapitel 04 / 09');
+  ok('Lernseite: Zurück schließt das Fenster und gibt den Inhalt zurück', lp.closed && lp.bodyBack === 9);
   ok('Lernseite: geöffnete Kapitel gelten als gelesen', Object.keys(lp.read).length >= 2);
 
   // ── Suche springt ins Kapitel, Vorlesefunktion ist entfernt ──
@@ -184,7 +184,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     return { view: document.querySelector('.view.active').id, win: LP.isOpen(), eb: document.querySelector('.lp-eb')?.textContent, tts: typeof TTS, btn: !!document.getElementById('m-tts') };
   });
   eq('Suche: öffnet die passende Lernseite', sj.view, 'v-vak-verwaltungsrecht');
-  ok('Suche: springt ins Kapitel', sj.win && /Kapitel 0\d \/ 07/.test(sj.eb || ''));
+  ok('Suche: springt ins Kapitel', sj.win && /Kapitel 0\d \/ 09/.test(sj.eb || ''));
   ok('Vorlesefunktion entfernt', sj.tts === 'undefined' && !sj.btn);
 
   // ── Desktop: Befehlspalette, Fokus-Lesemodus, Lernkarten-Fenster ──
@@ -213,7 +213,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Suche: Kapitel der Seite, keine Aktionen', dk.pal.includes('Kapitel dieser Seite') && !dk.pal.includes('Aktionen'));
   ok('Suche: keine Filterleiste', !(await page.evaluate(() => !!document.querySelector('.sf-btn,.search-filter-row'))));
   ok('Lernkarten-Fenster ein- und ausblendbar', dk.prac && dk.pracOff);
-  ok('Fokus-Lesemodus mit Pfeiltasten und Esc', dk.focus && /02 \/ 07/.test(dk.next) && dk.closed);
+  ok('Fokus-Lesemodus mit Pfeiltasten und Esc', dk.focus && /02 \/ 09/.test(dk.next) && dk.closed);
   await page.setViewportSize({ width: 390, height: 844 });
 
   // ── Pausenraum: Startseiten-Karte, Spiele, Einsatzfahrt ──
