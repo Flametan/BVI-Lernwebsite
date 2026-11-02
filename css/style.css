@@ -3112,3 +3112,20 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 @media(min-width:1100px) and (max-width:1260px){body:not(.rail-pin) #m-topbar{padding-left:70px;}}
 @media(prefers-reduced-motion:reduce){body:not(.rail-pin) #m-rail,body.rail-open:not(.rail-pin) #m-rail,.m-ham span,#m-dim,body.rail-open:not(.rail-pin) #m-rail>.m-brand,body.rail-open:not(.rail-pin) #m-rail .m-ri{transition-duration:.01ms!important;transition-delay:0s!important;}}
 @media(min-width:1100px){#m-rail>.m-brand{padding-right:54px;}}
+
+/* Pin im Drawer auf Höhe des X; Desktop-Startseite: Prüfung-Knopf und Zahnrad */
+@media(min-width:1100px){
+  body:not(.rail-pin) .m-pin{top:12px;width:44px;height:44px;border-radius:14px;}
+  body:not(.rail-pin) .m-pin svg{width:21px;height:21px;}
+  body:not(.rail-pin) #m-rail>.m-brand{padding-right:10px;}
+  .m-home-actions{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin:-1.2rem 0 .4rem;}
+  .m-ha-exam{display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 20px 0 16px;border-radius:99px;border:0;background:var(--m-accent);color:var(--m-on-accent);font:700 .92rem inherit;font-family:inherit;cursor:pointer;box-shadow:0 4px 14px color-mix(in srgb,var(--m-accent) 40%,transparent);transition:transform .3s cubic-bezier(.34,1.56,.64,1);}
+  .m-ha-exam svg{width:21px;height:21px;}
+  .m-ha-set{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:1px solid var(--m-line,var(--w06));background:var(--m-card);color:var(--m-fg);cursor:pointer;transition:transform .5s cubic-bezier(.3,1.1,.4,1),background .2s;}
+  .m-ha-set svg{width:22px;height:22px;transition:transform .6s cubic-bezier(.3,1.1,.4,1);}
+  .m-ha-set:hover svg{transform:rotate(90deg);}
+  .m-ha-exam:hover,.m-ha-set:hover{transform:translateY(-1px);}
+  .m-ha-exam:active,.m-ha-set:active{transform:scale(.94);}
+}
+.m-home-actions{display:none;}
+@media(min-width:1100px){.m-home-actions{display:flex;}}
