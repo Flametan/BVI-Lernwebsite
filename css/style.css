@@ -3129,3 +3129,11 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 }
 .m-home-actions{display:none;}
 @media(min-width:1100px){.m-home-actions{display:flex;}}
+
+@media(min-width:1100px){
+  .m-home-actions{justify-content:space-between;}
+  .m-ha-btns{display:inline-flex;align-items:center;gap:10px;}
+  .m-brand-home{padding:0;cursor:pointer;}
+  #m-rail>.m-brand,.m-brand-home{--bh:1;}
+  .m-brand-home .m-emb{width:40px;height:40px;}
+}
