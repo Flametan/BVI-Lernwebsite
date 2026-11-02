@@ -3135,5 +3135,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
   .m-ha-btns{display:inline-flex;align-items:center;gap:10px;}
   .m-brand-home{padding:0;cursor:pointer;}
   #m-rail>.m-brand,.m-brand-home{--bh:1;}
-  .m-brand-home .m-emb{width:40px;height:40px;}
+  .m-brand-home .m-emb{width:44px;height:44px;}
+  .m-brand-home .m-emb svg{width:40px;height:40px;}
 }
