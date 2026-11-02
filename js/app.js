@@ -4398,6 +4398,7 @@ const CHANGELOG=(function(){
       'Tab-Leiste (Handy/Tablet): „Icon Fill“ – das aktive Symbol füllt sich von der Mitte aus mit der Akzentfarbe, springt kurz und bekommt einen Punkt; beim Antippen hat jedes Symbol eine eigene kleine Animation (Haus hüpft, Kalender schwingt, Häkchen wird gezeichnet, Tasse kippt, Karten mischen, Zahnrad dreht).',
       'Einsatzfahrt, Quiz und Lernkarten nur noch aus Prüfungen mit Farbverlauf (IBK: Transaktionsanalyse, Konfliktmanagement): 8 „Ergänzung“-Fragen aus dem IdF-Quiz, 10 FeuAK-Fragen aus nicht hervorgehobenen Prüfungen und 3 Lernkarten ohne Prüfungsbezug entfernt.',
       'Tab-Leiste: Zahnrad bleibt in der Mitte frei, der Dampf der Tasse steigt auf und neuer kommt aus der Tasse, die Lernkarten wechseln zweimal Vorder- und Hintergrund (hintere Karte dunkler), zwei Symbole auf einem Platz tauschen zweimal die Plätze; der Mittelknopf kann wieder zwei Symbole teilen.',
+      'Desktop-Startseite: Knopf „Prüfung“ und Zahnrad für die Einstellungen oben rechts; im Drawer steht der Pin jetzt auf Höhe des X.',
       'Desktop: Seitenleiste jetzt als Side Drawer – Hamburger-Knopf oben links, der Drawer federt herein, die Einträge laufen nacheinander ein. Mit dem Pin lässt er sich anheften (dann wie bisher feste Seitenleiste); die Einstellung wird gemerkt.',
       'Einheitliches Design: auch Tabs mit nur einem oder zwei Kapiteln zeigen jetzt die Kapitelkarten (vorher aufgeklappt und über die volle Breite).',
       'Speiseplan IdF Münster für 02.–06.11.2026 ergänzt.',
@@ -7672,6 +7673,7 @@ const SHELL=(function(){
     const cloud=lk?`<div class="m-list m-cloud"><a class="m-row m-go" href="${esc(lk.url)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">${esc(lk.titel||'Lehrgangs-Link')}</span>${lk.hinweis?`<span class="m-t2 m-cloud-x">${esc(lk.hinweis)}</span>`:''}</span></a></div>`:'';
     const donate=`<a class="m-list m-donate m-donate-home" href="${SPENDE_URL}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><div class="m-row m-go">${ic('heart')}<span class="m-tx"><span class="m-t1">Gefällt dir die Seite?</span><span class="m-t2">Kostenlos &amp; werbefrei – freiwillig unterstützen</span></span></div></a>`;
     el.innerHTML=`
+      <div class="m-home-actions"><button type="button" class="m-ha-exam" onclick="NAV.tab('v-pruefung','Prüfung')">${NAVBAR.svg(NAVBAR.IC.exam)}<span>Prüfung</span></button><button type="button" class="m-ha-set" aria-label="Einstellungen" title="Einstellungen" onclick="NAV.tab('v-settings','Einstellungen')">${NAVBAR.svg(NAVBAR.IC.settings)}</button></div>
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
       <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}</div></div>`;
   }
