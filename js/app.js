@@ -4398,6 +4398,7 @@ const CHANGELOG=(function(){
       'Die alte Gesamtseite „Stabsarbeit“ wurde in die Tabs 5.1–5.5 übernommen.',
       'Korrekturen: keine Gliederungsnummern mehr in den Überschriften, Überschrift und Kapitelliste in einer Spalte, Kapitelfenster ohne leere Zeile oben, breiterer Fokus-Modus (Fokus-Knopf bei geöffnetem Kapitel funktioniert jetzt), Tab IBK Projektarbeiten entfernt, eigene Symbole für neue Hub-Karten.',
       'Schaubilder: im hellen und beigen Design wieder gut lesbar (feste helle Schrift auf dunklem Grund), blasse Schriftfarben aufgehellt; am Handy bleibt die Schrift lesbar (seitlich wischen oder antippen zum Vergrößern).',
+      'Tab-Leiste (Handy/Tablet): „Icon Fill“ – das aktive Symbol füllt sich von der Mitte aus mit der Akzentfarbe, springt kurz und bekommt einen Punkt; beim Antippen hat jedes Symbol eine eigene kleine Animation (Haus hüpft, Kalender schwingt, Häkchen wird gezeichnet, Tasse kippt, Karten mischen, Zahnrad dreht).',
       'Einheitliches Design: auch Tabs mit nur einem oder zwei Kapiteln zeigen jetzt die Kapitelkarten (vorher aufgeklappt und über die volle Breite).',
       'Speiseplan IdF Münster für 02.–06.11.2026 ergänzt.',
       'Warn-Simulation jetzt im Tab 7.9 (Warnung durch den Bund), Pressegespräch-Simulation im Tab 6.2; beide nicht mehr auf der IdF-Startseite.'
@@ -7174,11 +7175,12 @@ const SHELL=(function(){
       const bar=document.getElementById('m-tabbar'); if(!bar) return;
       bar.style.gridTemplateColumns='repeat(5,1fr)';
       bar.innerHTML=cfg.slots.map((s,i)=>{
-        const fab=i===FABI;
-        const ic=s.length===1?svg(IC[s[0]]):pairSvg(s[0],s[1]);
-        const click=s.length===1?'NAVBAR.go(\''+s[0]+'\')':'PMENU.toggle(event,this)';
-        const attrs=s.length===1?'':' aria-haspopup="menu" aria-expanded="false" aria-controls="m-pmenu"';
-        return '<button class="m-tab'+(fab?' m-tab-center':'')+'" data-tab="'+s[0]+'" data-tabs="'+key(s)+'" onclick="'+click+'"'+attrs+'>'+(fab?'<span class="m-fab">'+ic+'</span>':ic)+'<span>'+label(s)+'</span></button>';
+        const fab=i===FABI, one=s.length===1;
+        const click='NAVBAR.tap(this);'+(one?'NAVBAR.go(\''+s[0]+'\')':'PMENU.toggle(event,this)');
+        const attrs=one?'':' aria-haspopup="menu" aria-expanded="false" aria-controls="m-pmenu"';
+        // Icon Fill: Umriss-Ebene (o) und gefüllte Ebene (f); die gefüllte füllt sich beim aktiven Tab von der Mitte aus, dazu ein Punkt
+        const ic=fab?svg(IC[s[0]]):'<span class="m-tic">'+(one?svg(IC[s[0]],'o')+svg(IC[s[0]],'f'):pairSvg(s[0],s[1],'o')+pairSvg(s[0],s[1],'f'))+'</span>';
+        return '<button class="m-tab'+(fab?' m-tab-center':'')+'" data-tab="'+s[0]+'" data-tabs="'+key(s)+'" data-ic="'+(one?s[0]:'pair')+'" onclick="'+click+'"'+attrs+'>'+(fab?'':'<i class="m-dot"></i>')+(fab?'<span class="m-fab">'+ic+'</span>':ic)+'<span>'+label(s)+'</span></button>';
       }).join('');
       apply();
     }
@@ -7234,6 +7236,8 @@ const SHELL=(function(){
       },
       reset(){ cfg=clone(DEF); sel=FABI; try{ localStorage.removeItem(KEY); localStorage.removeItem('bvi_nav'); }catch(e){} render(); renderSettings(); },
       pairOf(btn){ return (btn.dataset.tabs||'').split(' ').filter(Boolean); },
+      // kurze, zum Symbol passende Klick-Animation (Hüpfen, Wackeln, Drehen, Häkchen zeichnen …)
+      tap(btn){ if(!btn) return; btn.classList.remove('tap'); void btn.offsetWidth; btn.classList.add('tap'); clearTimeout(btn._tp); btn._tp=setTimeout(()=>btn.classList.remove('tap'),900); },
       T, IC, svg
     };
   })();
