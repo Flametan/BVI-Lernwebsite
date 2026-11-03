@@ -4386,6 +4386,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.1.4',ts:'2026-11-03T09:00',items:[
+      'Stundenplan KW 50 (Zivile Verteidigung): das BABZ-Programm vom 30.10.2026 eingetragen (Montag bis Donnerstag mit Referenten, Pausen und Exkursion GMLZ, Abreise Donnerstag ab ca. 15:30); in der BABZ-Woche gibt es keine automatische Mittagessen-Zeile mehr.'
+    ]},
     {v:'3.1.3',ts:'2026-11-02T09:00',items:[
       'Lernseiten an die neue Zusammenfassung (V3.0) angepasst: IBK, VAk, FeuAK und IdF (Vorbeugender Brandschutz, Stabsarbeit, Presse, Zivile Verteidigung, EU-Katastrophenschutz).',
       'Je Unterpunkt der Zusammenfassung ein eigener Tab, gefüllt mit den Unter-Unterpunkten als Kapitel; vorhandene Inhalte bleiben erhalten und stehen jetzt im passenden Tab.',
@@ -5935,10 +5938,34 @@ const IDF_PLAN = (function(){
     [49,6,'Vorbeugender Brandschutz 3','2026-11-30','g2',[VB3_MO,VB3_DI,
       ['1-6|Exkursion Brandverhütungsschau praktisch|ex||Poloshirt, Büroschuhe genügen · inkl. Brandverhütungsschaubericht','7-8|Einsatzplanung||B1-106'],VB3_DO,VB3_FR]],
     [50,7,'Zivile Verteidigung','2026-12-07','both',[
-      ['07:45-11:00|Anreise|ar||BABZ Ahrweiler, Ramersbacher Str. 95|babz','ab mittags|Programm der BABZ|||Ahrweiler · Start voraussichtlich Montag mittags'],
-      ...Array(3).fill(['ganztägig|Programm der BABZ|||Ahrweiler']),
-      ['ganztägig|Programm der BABZ|||Ahrweiler','14:00-14:45|Abreise|ar||Termin ohne Gewähr']],TEL.babz,
-      'Die ganze Woche gestaltet die BABZ in Ahrweiler. Der genaue Stundenplan und Hinweise zu Anreise, Unterkunft, Verpflegung und Kleidung kommen als separates Dokument.'],
+      ['bis 12:30|Anreise|ar||BABZ Ahrweiler, Ramersbacher Str. 95|babz',
+       '12:45-13:30|Begrüßung & Organisatorisches|hi||Abteilungsleiter B (BABZ) · Seminaradministration, VS-NfD-Verpflichtung · Frank Meurer, Christoph Schaaf, Thorsten Ohm · Konferenzgebäude BABZ',
+       '13:30-14:15|Einsatzkräfte im Zivilschutz|||Erfahrungsbericht aus der Ukraine · Felix Hecker · Konferenzgebäude BABZ',
+       '14:45-16:15|Grundlagen Gesamtverteidigung & Gesamtszenario Zivile Verteidigung|||Verfassungs- und völkerrechtlicher Rahmen · Sicherheitspolitische Ziele und Interessen · Zivile Verteidigung und ihre vier Säulen · Eskalationsverlauf vom Frieden zur Landesverteidigung (Stufen I–IV: hybride Bedrohungen, Aufmarsch, Bündnis- und Landesverteidigung) · Gesetzeslage entlang des Eskalationsverlaufs · Alexander Esser, Robin Kwast · Konferenzgebäude BABZ',
+       '16:15|Freie Zeit & Abendessen|ar||Zeit zur freien Verfügung',
+       '18:00-ca. 19:30|Vortrag & Diskussion: Einfluss der Zeitenwende auf die Deutschen Feuerwehren|hi||angefragt · Frank Meurer, N.N. (Akademie für Verfassungsschutz), Christoph Schaaf, Thorsten Ohm · Konferenzgebäude BABZ'],
+      ['08:30-09:15|KRITIS vor dem Hintergrund komplexer geopolitischer Herausforderungen|||Kritische & verteidigungswichtige Infrastruktur in Deutschland · Kommunale Perspektive auf Kritische Infrastrukturen · Stefan Mertens, Dr. Kai Fürstenberg · Konferenzgebäude BABZ',
+       '09:15-10:00|Die Zivile Alarmplanung in Deutschland|||Reaktionsfähigkeit in Krisensituationen über Ressort- und Verwaltungsgrenzen hinweg · Josef Kanders · Konferenzgebäude BABZ',
+       '10:15-11:45|Die Zivile Alarmplanung in Deutschland (Fortsetzung)|||Reaktionsfähigkeit in Krisensituationen über Ressort- und Verwaltungsgrenzen hinweg · Josef Kanders · Konferenzgebäude BABZ',
+       '11:45-12:45|Mittagspause|ar||Konferenzgebäude BABZ',
+       '12:45-14:15|Exkurs: Militärische Verteidigung|||Strukturen der Bundeswehr · Zivil-Militärische Zusammenarbeit in der Gesamtverteidigung · Der Operationsplan und die Drehscheibe Deutschland · OberstLt Erwin Langer, OberstLt Felix Schramm, BrdDir Nick Taubert · Konferenzgebäude BABZ',
+       '14:45-16:15|Feuerwehren in der Zivilen Verteidigung|hi||Brandschutz der Bundeswehr · Nichtpolizeiliche Gefahrenabwehr: mögliche Szenarien · Einsatzgrundsätze und Informationsquellen · OberstLt Felix Schramm, BrdDir Nick Taubert, OberstLt Erwin Langer · Konferenzgebäude BABZ',
+       '16:15|Freie Zeit & Abendessen|ar||Zeit zur freien Verfügung',
+       'abends|Exkursion zum Gemeinsamen Melde- und Lagezentrum (GMLZ)|ex||Transfer zum BBK-Standort Bonn-Lengsdorf wird vom BBK sichergestellt · BBK L.6 · BBK Bonn-Lengsdorf'],
+      ['08:30-10:00|Weißer Katastrophenschutz im Zivilschutz: Erfordernis einer breiten Ausbildung|||Erfordernis eines neuen Mindsets in Ausbildung und Planung · Neue Herausforderungen und Einsatzdimensionen · Fritjof Brüne · Konferenzgebäude BABZ',
+       '10:15-11:45|C-B-RN in der Zivilen Verteidigung|||Einblick in die Risikoanalyse des Bundes · Kampfstoffe, Waffen, Wirkmittel · Dr. Jan Kämpen · Konferenzgebäude BABZ',
+       '11:45-12:45|Mittagspause|ar||Konferenzgebäude BABZ',
+       '12:45-14:15|Arbeiten an Stationen (Kleingruppen)|hi||Alle Stationen im Wechsel: Fähigkeitsmanagement von Bund und Ländern (FäM) · Psychosoziale Notfallversorgung für Einsatzkräfte unter Zivilschutzbedingungen · Möglichkeiten der Fernerkundung · Spezifische Aspekte des Warndienstes (angefragt) · Anne Eversheim, Fachzentrum Resilienz und Traumaprävention (FRT), Marie-Luise Kautz · Konferenzgebäude BABZ',
+       '14:45-16:15|Arbeiten an Stationen (Fortsetzung)|hi||Alle Stationen im Wechsel: Fähigkeitsmanagement von Bund und Ländern (FäM) · Psychosoziale Notfallversorgung für Einsatzkräfte unter Zivilschutzbedingungen · Möglichkeiten der Fernerkundung · Spezifische Aspekte des Warndienstes (angefragt) · Konferenzgebäude BABZ',
+       'abends|Abendverpflegung über Grillhütte|ar||Konferenzgebäude BABZ'],
+      ['09:00-10:00|Vorstellung Gemeinsames Kompetenzzentrum Bevölkerungsschutz (GeKoB)|||Heiko Pereira Wolf · Konferenzgebäude BABZ',
+       '10:15-11:45|Methode: World-Café|||Vorbereitung der Podiumsdiskussion: Vortragsinhalte mit der eigenen Berufserfahrung verschneiden · richtungsweisende Aspekte für die künftige Führungstätigkeit sammeln · Herausforderungen für die eigene Rolle in der Zivilen Verteidigung ableiten · Seminarteilnehmer in Kleingruppen · Konferenzgebäude BABZ',
+       '11:45-12:45|Mittagspause|ar||Konferenzgebäude BABZ',
+       '12:45-14:15|Podiumsdiskussion: Feuerwehren in der Zivilen Verteidigung|hi||Mathias Bessel (Deutscher Feuerwehrverband, AK ZMZ) · Frank Meurer (Abteilungsleiter BABZ) · Oberst i.G. Armin Schaus (J9 ZMZ, Operatives Führungskommando der Bundeswehr) · Heiko Pereira Wolf (Stv. Leitung GeKoB, Ländervertreter Thüringen) · Christoph Schaaf, Thorsten Ohm · Konferenzgebäude BABZ',
+       '14:45-15:30|Zusammenfassung der Veranstaltung|hi||Rückblick, Ausblick, Evaluation BBK · Evaluation IdF · Christoph Schaaf, Thorsten Ohm · Konferenzgebäude BABZ',
+       'ab ca. 15:30|Abreise|ar||Programmende laut BABZ am Donnerstag'],
+      []],TEL.babz,
+      'Die Woche gestaltet die BABZ in Ahrweiler (Konferenzgebäude, Ramersbacher Str. 95), Modul 3.5 „Strategische Leitung und Führung“, Veranstaltungsnummer 23.060/26/50-06. Programmstand 30.10.2026. Pausen können bei Bedarf verlaufsabhängig durchgeführt werden. Nach dem Programm vom Stand 30.10. endet die Woche am Donnerstag um 15:30 Uhr.'],
     [51,8,'Stab 3','2026-12-14','both',[
       ['1-2|Anreise|ar','3|Leistungsnachweis nach § 13 Abs. 3|hi|C-1|siehe Prüfungsleitfaden','11:00-11:30|MoFüSt NRW||C-1','11:30-13:00|Historie der Stabsarbeit & Stabsarbeit international||C-1','13:30-14:45|Historie der Stabsarbeit (Fortsetzung)','8|Lageeinweisung||C-1','18:15|Stabsrahmenübung »Unwetter«|hi||Lunchpaket packen · spätes Ende · Küchenwagen mitbringen'],
       ['1-6|unterrichtsfrei|ar','7-8|Übungsauswertung||C-205'],
@@ -6030,7 +6057,7 @@ const IDF_PLAN = (function(){
       let at=0;
       starts.forEach((t,i)=>{ if(t&&t<'13:00') at=i+1; });
       const next=starts.slice(at).find(Boolean);
-      html.splice(at+(babz?0:1),0,LUNCH(next&&next>'13:00'&&next<'14:00'?next:'14:00',ymd));
+      if(!babz) html.splice(at+1,0,LUNCH(next&&next>'13:00'&&next<'14:00'?next:'14:00',ymd));   // BABZ-Programm nennt die Mittagspause selbst
     }
     return html.join('');
   }
