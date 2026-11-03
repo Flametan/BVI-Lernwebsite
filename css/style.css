@@ -3033,55 +3033,66 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 }
 
 /* ── Tab-Leiste: Icon Fill (Symbol füllt sich von der Mitte, Pop, Punkt) + Klick-Animation je Symbol ── */
-.m-tab .m-tic{position:relative;display:block;width:24px;height:24px;flex:none;}
-.m-tab .m-tic>svg{position:absolute;inset:0;width:24px;height:24px;overflow:visible;}
-.m-tab .m-tic>svg.f{fill:var(--m-accent);stroke:var(--m-on-accent);color:var(--m-on-accent);clip-path:circle(0% at 50% 56%);transition:clip-path .45s cubic-bezier(.3,.9,.4,1);}
-.m-tab.on .m-tic>svg.f{clip-path:circle(80% at 50% 56%);}
-.m-tab.on .m-tic>svg.o{opacity:0;transition:opacity .2s .15s;}
-.m-tab .m-tic>svg.f .st1,.m-tab .m-tic>svg.f .st2{fill:none;}
-.m-tab[data-ic="settings"] .m-tic>svg.f circle{fill:var(--m-bar);}   /* Zahnrad: Mitte bleibt frei */
-.m-tab .m-tic>svg.f .cb,.m-tab .m-tic>svg.f .cb2{fill:color-mix(in srgb,var(--m-accent) 66%,#000);}   /* hintere Karte dunkler */
-.m-tab .m-tic>svg.f .cb2{opacity:0;}
-.m-tab:active>.m-tic{opacity:.55;}
+:is(.m-tab,.m-ri) .m-tic{position:relative;display:block;width:24px;height:24px;flex:none;}
+:is(.m-tab,.m-ri) .m-tic>svg{position:absolute;inset:0;width:24px;height:24px;overflow:visible;}
+:is(.m-tab,.m-ri) .m-tic>svg.f{fill:var(--m-accent);stroke:var(--m-on-accent);color:var(--m-on-accent);clip-path:circle(0% at 50% 56%);transition:clip-path .45s cubic-bezier(.3,.9,.4,1);}
+:is(.m-tab,.m-ri).on .m-tic>svg.f{clip-path:circle(80% at 50% 56%);}
+:is(.m-tab,.m-ri).on .m-tic>svg.o{opacity:0;transition:opacity .2s .15s;}
+:is(.m-tab,.m-ri) .m-tic>svg.f .st1,:is(.m-tab,.m-ri) .m-tic>svg.f .st2{fill:none;}
+:is(.m-tab,.m-ri)[data-ic="settings"] .m-tic>svg.f circle{fill:var(--m-bar);}
+.m-ri[data-ic="settings"].on .m-tic>svg.f circle{fill:color-mix(in srgb,var(--m-accent) 15%,var(--m-bar));}   /* Zahnrad: Mitte bleibt frei */
+:is(.m-tab,.m-ri) .m-tic>svg.f .cb,:is(.m-tab,.m-ri) .m-tic>svg.f .cb2{fill:color-mix(in srgb,var(--m-accent) 66%,#000);}   /* hintere Karte dunkler */
+:is(.m-tab,.m-ri) .m-tic>svg.f .cb2{opacity:0;}
+:is(.m-tab,.m-ri):active>.m-tic{opacity:.55;}
 /* Klick-Animation: Symbole in der Leiste (.m-tic) und im Mittelknopf (.m-fab>svg) */
-.m-tab.tap .m-tic{animation:ic-pop .55s cubic-bezier(.34,1.56,.64,1);}
+:is(.m-tab,.m-ri).tap .m-tic{animation:ic-pop .55s cubic-bezier(.34,1.56,.64,1);}
 .m-tab-center.tap .m-fab{animation:ic-pop .55s cubic-bezier(.34,1.56,.64,1);}
 @keyframes ic-pop{0%{transform:scale(1)}35%{transform:scale(1.28)}70%{transform:scale(.94)}100%{transform:scale(1)}}
 /* Start: Haus hüpft */
-.m-tab.tap[data-ic="start"] :is(.m-tic,.m-fab>svg){animation:ic-hop .6s cubic-bezier(.3,1.4,.5,1);}
+:is(.m-tab,.m-ri).tap[data-ic="start"] :is(.m-tic,.m-fab>svg){animation:ic-hop .6s cubic-bezier(.3,1.4,.5,1);}
 @keyframes ic-hop{0%{transform:none}30%{transform:translateY(-6px) scale(1.1,.95)}55%{transform:translateY(0) scale(.95,1.08)}78%{transform:translateY(-2px)}100%{transform:none}}
 /* Stundenplan: Kalender schwingt am Aufhänger */
-.m-tab.tap[data-ic="plan"] :is(.m-tic,.m-fab>svg){animation:ic-cal .7s ease-out;transform-origin:50% 12%;}
+:is(.m-tab,.m-ri).tap[data-ic="plan"] :is(.m-tic,.m-fab>svg){animation:ic-cal .7s ease-out;transform-origin:50% 12%;}
 @keyframes ic-cal{0%{transform:rotate(0)}20%{transform:rotate(-13deg)}45%{transform:rotate(10deg)}70%{transform:rotate(-5deg)}100%{transform:rotate(0)}}
 /* Prüfung: Häkchen wird gezeichnet */
-.m-tab.tap[data-ic="exam"] .m-fab svg>path:last-child{stroke-dasharray:10;animation:ic-check .6s .1s ease-out both;}
+:is(.m-tab,.m-ri).tap[data-ic="exam"] .m-fab svg>path:last-child{stroke-dasharray:10;animation:ic-check .6s .1s ease-out both;}
 @keyframes ic-check{from{stroke-dashoffset:10}to{stroke-dashoffset:0}}
 /* Pausenraum: Dampf steigt auf und verschwindet nach oben, neuer Dampf kommt aus der Tasse */
-.m-tab.tap[data-ic="pause"] :is(.m-tic,.m-fab>svg){animation:none;}
-.m-tab.tap[data-ic="pause"] .st1{animation:ic-steam 1s ease-in-out;}
-.m-tab.tap[data-ic="pause"] .st2{animation:ic-steam 1s .18s ease-in-out both;}
+:is(.m-tab,.m-ri).tap[data-ic="pause"] :is(.m-tic,.m-fab>svg){animation:none;}
+:is(.m-tab,.m-ri).tap[data-ic="pause"] .st1{animation:ic-steam 1s ease-in-out;}
+:is(.m-tab,.m-ri).tap[data-ic="pause"] .st2{animation:ic-steam 1s .18s ease-in-out both;}
 @keyframes ic-steam{0%{transform:translateY(0);opacity:1}38%{transform:translateY(-7px);opacity:0}39%{transform:translateY(4px);opacity:0}100%{transform:translateY(0);opacity:1}}
 /* Lernkarten: vordere Karte geht nach hinten, hintere nach vorne – zweimal (Tausch und zurück) */
-.m-tab.tap[data-ic="cards"] :is(.m-tic,.m-fab>svg){animation:none;}
-.m-tab.tap[data-ic="cards"] .cf{animation:ic-cf 1.1s ease-in-out;}
-.m-tab.tap[data-ic="cards"] :is(.cb,.cb2){animation:ic-cb 1.1s ease-in-out;}
-.m-tab.tap[data-ic="cards"] .m-tic>svg.f .cb{animation:ic-cb 1.1s ease-in-out,ic-vis-a 1.1s step-end;}
-.m-tab.tap[data-ic="cards"] .m-tic>svg.f .cb2{animation:ic-cb 1.1s ease-in-out,ic-vis-b 1.1s step-end;}
+:is(.m-tab,.m-ri).tap[data-ic="cards"] :is(.m-tic,.m-fab>svg){animation:none;}
+:is(.m-tab,.m-ri).tap[data-ic="cards"] .cf{animation:ic-cf 1.1s ease-in-out;}
+:is(.m-tab,.m-ri).tap[data-ic="cards"] :is(.cb,.cb2){animation:ic-cb 1.1s ease-in-out;}
+:is(.m-tab,.m-ri).tap[data-ic="cards"] .m-tic>svg.f .cb{animation:ic-cb 1.1s ease-in-out,ic-vis-a 1.1s step-end;}
+:is(.m-tab,.m-ri).tap[data-ic="cards"] .m-tic>svg.f .cb2{animation:ic-cb 1.1s ease-in-out,ic-vis-b 1.1s step-end;}
 @keyframes ic-cf{0%{transform:none}40%,60%{transform:translate(4px,-4px)}100%{transform:none}}
 @keyframes ic-cb{0%{transform:none}40%,60%{transform:translate(-4px,4px)}100%{transform:none}}
 @keyframes ic-vis-a{0%{opacity:1}20%{opacity:0}80%{opacity:1}}
 @keyframes ic-vis-b{0%{opacity:0}20%{opacity:1}80%{opacity:0}}
 /* geteilter Platz: die zwei Symbole tauschen zweimal die Plätze (Mischeffekt) */
-.m-tab.tap[data-ic="pair"] :is(.m-tic,.m-fab>svg){animation:none;}
-.m-tab.tap[data-ic="pair"] .pa1{animation:ic-pa1 1s ease-in-out;}
-.m-tab.tap[data-ic="pair"] .pa2{animation:ic-pa2 1s ease-in-out;}
+:is(.m-tab,.m-ri).tap[data-ic="pair"] :is(.m-tic,.m-fab>svg){animation:none;}
+:is(.m-tab,.m-ri).tap[data-ic="pair"] .pa1{animation:ic-pa1 1s ease-in-out;}
+:is(.m-tab,.m-ri).tap[data-ic="pair"] .pa2{animation:ic-pa2 1s ease-in-out;}
 @keyframes ic-pa1{0%{transform:translate(0,0)}20%{transform:translate(6.5px,-6px)}40%,55%{transform:translate(13px,0)}78%{transform:translate(6.5px,6px)}100%{transform:translate(0,0)}}
 @keyframes ic-pa2{0%{transform:translate(0,0)}20%{transform:translate(-6.5px,6px)}40%,55%{transform:translate(-13px,0)}78%{transform:translate(-6.5px,-6px)}100%{transform:translate(0,0)}}
 /* Einstellungen: Zahnrad dreht sich */
-.m-tab.tap[data-ic="settings"] .m-tic{animation:ic-spin .8s cubic-bezier(.3,1.1,.4,1);}
+:is(.m-tab,.m-ri).tap[data-ic="settings"] .m-tic{animation:ic-spin .8s cubic-bezier(.3,1.1,.4,1);}
 @keyframes ic-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-@media(prefers-reduced-motion:reduce){.m-tab.tap *{animation:none!important;}.m-tab .m-tic>svg.f}
+@media(prefers-reduced-motion:reduce){:is(.m-tab,.m-ri).tap *{animation:none!important;}:is(.m-tab,.m-ri) .m-tic>svg.f}
 
+/* Seitenleiste (Desktop): gleiche Logik wie die Tab-Leiste am Handy */
+.m-ri .m-tic{width:22px;height:22px;}
+.m-ri .m-tic>svg{width:22px;height:22px;}
+.m-ri-cta .m-tic>svg.f{display:none;}
+.m-ri-cta.on .m-tic>svg.o{opacity:1;}
+.m-ri.tap[data-ic="exam"] .m-tic svg>path:last-child{stroke-dasharray:10;animation:ic-check .6s .1s ease-out both;}
+.m-ri.tap[data-ic="exam"] .m-tic{animation:ic-pop .55s cubic-bezier(.34,1.56,.64,1);}
+.m-ri-search.tap>svg{animation:ic-search .7s ease-in-out;transform-origin:30% 70%;}
+@keyframes ic-search{0%{transform:rotate(0)}25%{transform:rotate(-22deg)}55%{transform:rotate(18deg)}80%{transform:rotate(-6deg)}100%{transform:rotate(0)}}
+@media(prefers-reduced-motion:reduce){.m-ri.tap *{animation:none!important;}}
 /* ── Desktop: Side Drawer (Hamburger) oder angeheftete Seitenleiste ───────── */
 .m-ham,.m-pin,#m-dim{display:none;}
 @media(min-width:1100px){

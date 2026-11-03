@@ -4387,6 +4387,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.4',ts:'2026-11-03T09:00',items:[
+      'Desktop-Seitenleiste: Symbole wie in der Tab-Leiste am Handy – das aktive Symbol ist ausgefüllt und jedes Symbol hat beim Antippen seine kleine Animation.',
       'Desktop: am Rand steht immer ein schmaler Balken mit den Symbolen; er klappt zur vollen Seitenleiste auf, sobald die Maus darüber fährt (kein Hamburger-Knopf mehr).',
       'Rechnungswesen (FeuAK): Buchungsbelege 8 Jahre aufbewahren (seit 2025), Bücher, Konten, Inventare und Jahresabschlüsse 10 Jahre.',
       'Tab-Leiste: der Punkt unter dem aktiven Symbol ist entfernt.',
@@ -7272,7 +7273,7 @@ const SHELL=(function(){
       pairOf(btn){ return (btn.dataset.tabs||'').split(' ').filter(Boolean); },
       // kurze, zum Symbol passende Klick-Animation (Hüpfen, Wackeln, Drehen, Häkchen zeichnen …)
       tap(btn){ if(!btn) return; btn.classList.remove('tap'); void btn.offsetWidth; btn.classList.add('tap'); clearTimeout(btn._tp); btn._tp=setTimeout(()=>btn.classList.remove('tap'),900); },
-      T, IC, svg
+      T, IC, ICF, svg
     };
   })();
   window.NAVBAR=NAVBAR;
@@ -8170,6 +8171,15 @@ const RAIL=(function(){
   function sync(){ const p=pinned(), pb=pinB(); if(pb){ pb.setAttribute('aria-pressed',p); pb.setAttribute('aria-label',p?'Seitenleiste lösen':'Seitenleiste anheften'); pb.title=p?'Lösen':'Anheften'; } setOpen(false); }
   function init(){
     document.querySelectorAll('#m-rail .m-ri').forEach(e=>{ const t=(e.textContent||'').replace(/\s+/g,' ').replace(/Strg K/,'').trim(); if(t){ e.title=t; e.setAttribute('aria-label',t); } });   // eingeklappt zeigt der Balken nur Symbole: Name als Tooltip
+    // Symbole wie in der Tab-Leiste am Handy: Umriss + gefüllte Ebene (Icon Fill) und kleine Klick-Animation je Symbol
+    const N=window.NAVBAR;
+    if(N) document.querySelectorAll('#m-rail .m-ri[data-tab]').forEach(btn=>{
+      const id=btn.dataset.tab, old=btn.querySelector(':scope>svg'); if(!old||!N.IC[id]) return;
+      btn.dataset.ic=id;
+      const w=document.createElement('span'); w.className='m-tic'; w.innerHTML=N.svg(N.IC[id],'o')+N.svg(N.ICF[id]||N.IC[id],'f'); btn.replaceChild(w,old);
+      btn.addEventListener('click',()=>N.tap(btn));
+    });
+    const sb=document.querySelector('#m-rail .m-ri-search'); if(sb){ sb.dataset.ic='search'; sb.addEventListener('click',()=>{ window.NAVBAR&&NAVBAR.tap(sb); }); }
     const r=rail(); if(!r) return;
     // Maus: Balken klappt beim Darüberfahren auf und beim Wegfahren zu
     r.addEventListener('pointerenter',e=>{ if(e.pointerType==='mouse') setOpen(true); });
@@ -8178,7 +8188,8 @@ const RAIL=(function(){
     r.addEventListener('focusin',e=>{ if(e.target.matches&&e.target.matches(':focus-visible')) setOpen(true); });
     r.addEventListener('focusout',e=>{ if(!r.contains(e.relatedTarget)) setOpen(false); });
     // Touch (Tablet quer): Tipp auf eine freie Stelle des Balkens klappt ihn auf/zu
-    r.addEventListener('click',e=>{ if(e.target===r) setOpen(!open); else if(!pinned()&&e.target.closest('.m-ri,.m-brand')) setTimeout(()=>setOpen(false),120); });
+    let ptr='mouse'; r.addEventListener('pointerdown',e=>{ ptr=e.pointerType||'mouse'; });
+    r.addEventListener('click',e=>{ if(e.target===r) setOpen(!open); else if(!pinned()&&ptr!=='mouse'&&e.target.closest('.m-ri,.m-brand')) setTimeout(()=>setOpen(false),120); });   // Maus: schließt erst beim Wegfahren; Touch/Stift: nach der Auswahl
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&open) setOpen(false); });
     (mq.addEventListener?mq.addEventListener.bind(mq,'change'):mq.addListener.bind(mq))(()=>sync());
     sync();
