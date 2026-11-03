@@ -2166,7 +2166,6 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .lp-cards{display:none;flex-direction:column;gap:10px;}
 .lp-ueber .lp-cards{display:flex;}
 .lp-ueber .pc .acc-list{display:none;}
-@media(min-width:701px){.lp-ueber .lp-cards{max-width:780px;margin:0 auto;}}
 .lp-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:12px;row-gap:8px;align-items:center;text-align:left;background:var(--m-card);border:0;border-radius:16px;padding:14px 16px;width:100%;color:var(--m-fg);font-family:inherit;cursor:pointer;}
 .lp-card:hover{background:var(--b-222222);}
 .lp-card .t{font-weight:600;font-size:1rem;min-width:0;}
@@ -3013,11 +3012,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .hs-svg .hs-b{font-size:12px;font-weight:700;fill:var(--c-text-b);}
 .hs-svg .hs-sm{font-size:10.5px;fill:var(--c-slate-l);}
 
-/* Lernseiten-Tabs am PC/Tablet: Überschrift, Kopfleiste und Kapitelliste in einer Spalte (zentriert) */
-@media(min-width:701px){
-  .view.lp-ueber .page-hero .phi,.view.lp-ueber .pc{max-width:780px;margin-left:auto!important;margin-right:auto!important;}
-  body:has(.view.active.lp-ueber:not(.lp-win)) #m-topbar{max-width:780px;margin-left:auto!important;margin-right:auto!important;}
-}
 /* Fokus-Modus am PC: breitere Lesespalte statt schmalem Streifen */
 @media(min-width:1100px){
   .lp-win.focus .lp-wbody{padding-left:max(24px,calc((100% - 1060px)/2));padding-right:max(24px,calc((100% - 1060px)/2));}
