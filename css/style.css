@@ -3140,18 +3140,23 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 /* ── Desktop: Drawer mit schmalem Icon-Balken am Rand (eingeklappt nur Symbole, ausgeklappt volle Seitenleiste) ── */
 @media(min-width:1100px){
   body:not(.rail-pin){padding-left:64px;}
-  body:not(.rail-pin) #m-rail{visibility:visible;transform:none;width:64px;padding:calc(72px + env(safe-area-inset-top,0px)) 8px 18px;overflow:hidden;border-right:1px solid var(--b-222222);border-radius:0;box-shadow:none;
+  body:not(.rail-pin) #m-rail{visibility:visible;transform:none;width:64px;padding:calc(22px + env(safe-area-inset-top,0px)) 8px 18px;overflow:hidden;border-right:1px solid var(--b-222222);border-radius:0;box-shadow:none;
     transition:width .55s cubic-bezier(.3,1.25,.5,1),padding .4s,border-radius .4s,box-shadow .3s;}
-  body.rail-open:not(.rail-pin) #m-rail{width:248px;padding:calc(72px + env(safe-area-inset-top,0px)) 14px 18px;border-right-color:transparent;border-radius:0 22px 22px 0;box-shadow:8px 0 30px rgba(0,0,0,.3);}
+  body.rail-open:not(.rail-pin) #m-rail{width:248px;padding:calc(22px + env(safe-area-inset-top,0px)) 14px 18px;border-right-color:transparent;border-radius:0 22px 22px 0;box-shadow:8px 0 30px rgba(0,0,0,.3);}
   body:not(.rail-pin) #m-rail>.m-brand,body:not(.rail-pin) #m-rail .m-ri{opacity:1;transform:none;transition-delay:0s;}
   #m-rail .m-ri{white-space:nowrap;}
   body:not(.rail-pin) #m-rail .m-ri{transition:font-size .3s,gap .3s,padding .3s,background .15s;}
   body:not(.rail-pin):not(.rail-open) #m-rail .m-ri{font-size:0;gap:0;justify-content:center;padding:11px 0;}
-  body:not(.rail-pin):not(.rail-open) #m-rail>.m-brand{display:none;}
+  body:not(.rail-pin):not(.rail-open) #m-rail>.m-brand{font-size:0;padding:4px 0 18px;justify-content:center;}
+  body:not(.rail-pin):not(.rail-open) #m-rail>.m-brand>span:not(.m-emb){display:none;}
+  body:not(.rail-pin):not(.rail-open) #m-rail>.m-brand .m-emb{width:40px;height:40px;}
+  body:not(.rail-pin):not(.rail-open) #m-rail>.m-brand .m-emb svg{width:34px;height:34px;}
   body:not(.rail-pin):not(.rail-open) .m-ri-search kbd{display:none;}
   body:not(.rail-pin):not(.rail-open) .m-pin{display:none;}
-  body:not(.rail-pin) .m-ham{left:10px;box-shadow:none;background:transparent;}
-  body:not(.rail-pin) .m-ham.open{background:var(--m-accent);}
+  body:not(.rail-pin) .m-pin{top:calc(var(--rt,22px) + 6px);width:36px;height:36px;border-radius:11px;}
+  body:not(.rail-pin) #m-rail>.m-brand{padding-right:54px;}
+  .m-ham,#m-dim{display:none!important;}
   body:not(.rail-pin) #et-pill{left:calc(64px + (100vw - 64px) / 2);}
 }
 @media(min-width:1100px) and (max-width:1260px){body:not(.rail-pin) #m-topbar{padding-left:40px;}}
+@media(min-width:1100px){body:not(.rail-pin) #m-rail{--rt:22px;}}
