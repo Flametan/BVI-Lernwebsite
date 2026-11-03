@@ -4394,6 +4394,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.4',ts:'2026-11-03T09:00',items:[
+      'Lernseiten: Kapitelübersicht (Titel, Kopfleiste, Kapitelkarten) ist am Tablet und PC jetzt genauso breit wie die Themenübersicht davor.',
       'Lernseiten: Kapitel-Fenster reicht nach dem Drehen aufs Querformat wieder bis zum unteren Rand (vorher blieb ein Streifen der Seite darunter sichtbar).',
       'Desktop-Seitenleiste: Symbole wie in der Tab-Leiste am Handy – das aktive Symbol ist ausgefüllt und jedes Symbol hat beim Antippen seine kleine Animation.',
       'Desktop: am Rand steht immer ein schmaler Balken mit den Symbolen; er klappt zur vollen Seitenleiste auf, sobald die Maus darüber fährt (kein Hamburger-Knopf mehr).',
