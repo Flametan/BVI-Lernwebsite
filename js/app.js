@@ -3207,14 +3207,21 @@ const LP=(function(){
   function fzIdx(){ try{ const i=parseInt(localStorage.getItem('bvi_lp_fz'),10); return i>=0&&i<FZ.length?i:2; }catch(e){ return 2; } }
   function fz(d){ const i=Math.max(0,Math.min(FZ.length-1,fzIdx()+d)); try{ localStorage.setItem('bvi_lp_fz',String(i)); }catch(e){} applyFz(); }
   function applyFz(){ win&&win.style.setProperty('--lp-fz',FZ[fzIdx()]+'px'); }
+  // Lage des Kapitel-Fensters: links/Breite wie die Seite, unten bis zur Tab-Leiste (nur wenn sie sichtbar ist; sonst Wert entfernen, z. B. nach Drehen aufs Querformat)
+  function place(){
+    if(!win||!cur) return;
+    const r=cur.v.getBoundingClientRect(); win.style.setProperty('--lp-l',Math.max(0,r.left)+'px'); win.style.setProperty('--lp-w',r.width+'px');
+    const tb=document.getElementById('m-tabbar');
+    if(tb&&tb.offsetHeight) win.style.setProperty('--lp-tb',tb.offsetHeight+'px'); else win.style.removeProperty('--lp-tb');
+  }
+  window.addEventListener('resize',()=>{ if(cur&&win&&win.classList.contains('on')) place(); });
   function open(v,i,opt){
     if(!win) build();
     const focus=!!(opt&&opt.focus);
     cur={v,i,body:null,focus};
     win.classList.toggle('focus',focus); v.classList.toggle('lp-focus',focus);
     v.appendChild(win); v.classList.add('lp-open'); document.documentElement.classList.add('lp-lock');
-    const r=v.getBoundingClientRect(); win.style.setProperty('--lp-l',Math.max(0,r.left)+'px'); win.style.setProperty('--lp-w',r.width+'px');
-    const tb=document.getElementById('m-tabbar'); if(tb&&tb.offsetHeight) win.style.setProperty('--lp-tb',tb.offsetHeight+'px'); // echte Höhe der Tab-Leiste: kein Durchscheinen der Ebene darunter
+    place();
     load(i); win.classList.add('on');
     if(!pushed){ try{ history.pushState(Object.assign({},history.state||{},{lp:1}),''); pushed=true; }catch(e){} }
   }
@@ -4387,6 +4394,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.4',ts:'2026-11-03T09:00',items:[
+      'Lernseiten: Kapitel-Fenster reicht nach dem Drehen aufs Querformat wieder bis zum unteren Rand (vorher blieb ein Streifen der Seite darunter sichtbar).',
       'Desktop-Seitenleiste: Symbole wie in der Tab-Leiste am Handy – das aktive Symbol ist ausgefüllt und jedes Symbol hat beim Antippen seine kleine Animation.',
       'Desktop: am Rand steht immer ein schmaler Balken mit den Symbolen; er klappt zur vollen Seitenleiste auf, sobald die Maus darüber fährt (kein Hamburger-Knopf mehr).',
       'Rechnungswesen (FeuAK): Buchungsbelege 8 Jahre aufbewahren (seit 2025), Bücher, Konten, Inventare und Jahresabschlüsse 10 Jahre.',
