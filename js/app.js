@@ -4386,6 +4386,9 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.1.4',ts:'2026-11-03T09:00',items:[
+      'Stundenplan KW 50 (Zivile Verteidigung): das BABZ-Programm vom 30.10.2026 eingetragen (Montag bis Donnerstag mit Referenten, Pausen und Exkursion GMLZ, Abreise Donnerstag ab ca. 15:30); in der BABZ-Woche gibt es keine automatische Mittagessen-Zeile mehr.'
+    ]},
     {v:'3.1.3',ts:'2026-11-02T09:00',items:[
       'Lernseiten an die neue Zusammenfassung (V3.0) angepasst: IBK, VAk, FeuAK und IdF (Vorbeugender Brandschutz, Stabsarbeit, Presse, Zivile Verteidigung, EU-Katastrophenschutz).',
       'Je Unterpunkt der Zusammenfassung ein eigener Tab, gefüllt mit den Unter-Unterpunkten als Kapitel; vorhandene Inhalte bleiben erhalten und stehen jetzt im passenden Tab.',
@@ -4397,7 +4400,6 @@ const CHANGELOG=(function(){
       'Schaubilder: im hellen und beigen Design wieder gut lesbar (feste helle Schrift auf dunklem Grund), blasse Schriftfarben aufgehellt; am Handy bleibt die Schrift lesbar (seitlich wischen oder antippen zum Vergrößern).',
       'Tab-Leiste (Handy/Tablet): „Icon Fill“ – das aktive Symbol füllt sich von der Mitte aus mit der Akzentfarbe, springt kurz und bekommt einen Punkt; beim Antippen hat jedes Symbol eine eigene kleine Animation (Haus hüpft, Kalender schwingt, Häkchen wird gezeichnet, Tasse kippt, Karten mischen, Zahnrad dreht).',
       'Einsatzfahrt, Quiz und Lernkarten nur noch aus Prüfungen mit Farbverlauf (IBK: Transaktionsanalyse, Konfliktmanagement): 8 „Ergänzung“-Fragen aus dem IdF-Quiz, 10 FeuAK-Fragen aus nicht hervorgehobenen Prüfungen und 3 Lernkarten ohne Prüfungsbezug entfernt.',
-      'Stundenplan KW 50 (Zivile Verteidigung): das BABZ-Programm vom 30.10.2026 eingetragen (Montag bis Donnerstag mit Referenten, Pausen und Exkursion GMLZ, Abreise Donnerstag ab ca. 15:30); in der BABZ-Woche gibt es keine automatische Mittagessen-Zeile mehr.',
       'Tab-Leiste: Zahnrad bleibt in der Mitte frei, der Dampf der Tasse steigt auf und neuer kommt aus der Tasse, die Lernkarten wechseln zweimal Vorder- und Hintergrund (hintere Karte dunkler), zwei Symbole auf einem Platz tauschen zweimal die Plätze; der Mittelknopf kann wieder zwei Symbole teilen.',
       'Desktop-Startseite: Marke (Flamme, B VI), Knopf „Prüfung“ und Zahnrad für die Einstellungen oben rechts; im Drawer steht der Pin jetzt auf Höhe des X.',
       'Desktop: Seitenleiste jetzt als Side Drawer – Hamburger-Knopf oben links, der Drawer federt herein, die Einträge laufen nacheinander ein. Mit dem Pin lässt er sich anheften (dann wie bisher feste Seitenleiste); die Einstellung wird gemerkt.',
