@@ -4387,6 +4387,8 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.4',ts:'2026-11-03T09:00',items:[
+      'Desktop: der Drawer lässt am Rand immer einen schmalen Balken mit den Symbolen stehen; der Hamburger-Knopf klappt ihn zur vollen Seitenleiste auf.',
+      'Rechnungswesen (FeuAK): Buchungsbelege 8 Jahre aufbewahren (seit 2025), Bücher, Konten, Inventare und Jahresabschlüsse 10 Jahre.',
       'Tab-Leiste: der Punkt unter dem aktiven Symbol ist entfernt.',
       'Stundenplan KW 50 (Zivile Verteidigung): das BABZ-Programm vom 30.10.2026 eingetragen (Montag bis Donnerstag mit Referenten, Pausen und Exkursion GMLZ, Abreise Donnerstag ab ca. 15:30); in der BABZ-Woche gibt es keine automatische Mittagessen-Zeile mehr.'
     ]},
@@ -8164,12 +8166,12 @@ const RAIL=(function(){
     open=!!o&&!pinned()&&mq.matches;
     b().classList.toggle('rail-open',open);
     const h=ham(); if(h){ h.classList.toggle('open',open); h.setAttribute('aria-expanded',open); h.setAttribute('aria-label',open?'Menü schließen':'Menü öffnen'); }
-    const r=document.getElementById('m-rail'); if(r) r.inert=!open&&!pinned()&&mq.matches;
     if(open){ const f=document.querySelector('#m-rail .m-ri.on')||document.querySelector('#m-rail .m-ri'); setTimeout(()=>{ try{ f&&f.focus({preventScroll:true}); }catch(e){} },420); }
   }
   function sync(){ const p=pinned(), pb=pinB(); if(pb){ pb.setAttribute('aria-pressed',p); pb.setAttribute('aria-label',p?'Seitenleiste lösen (Drawer)':'Seitenleiste anheften'); pb.title=p?'Lösen':'Anheften'; } setOpen(false); }
   function init(){
     document.querySelectorAll('#m-rail > .m-brand, #m-rail .m-ri').forEach((e,i)=>e.style.setProperty('--i',i));
+    document.querySelectorAll('#m-rail .m-ri').forEach(e=>{ const t=(e.textContent||'').replace(/\s+/g,' ').replace(/Strg K/,'').trim(); if(t){ e.title=t; e.setAttribute('aria-label',t); } });   // eingeklappt zeigt der Balken nur Symbole: Name als Tooltip
     document.getElementById('m-rail')?.addEventListener('click',e=>{ if(!pinned()&&e.target.closest('.m-ri,.m-brand')) setTimeout(()=>setOpen(false),180); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&open){ setOpen(false); try{ ham()&&ham().focus(); }catch(x){} } });
     (mq.addEventListener?mq.addEventListener.bind(mq,'change'):mq.addListener.bind(mq))(()=>sync());
