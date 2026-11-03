@@ -4387,6 +4387,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.4',ts:'2026-11-03T09:00',items:[
+      'Tab-Leiste: der Punkt unter dem aktiven Symbol ist entfernt.',
       'Stundenplan KW 50 (Zivile Verteidigung): das BABZ-Programm vom 30.10.2026 eingetragen (Montag bis Donnerstag mit Referenten, Pausen und Exkursion GMLZ, Abreise Donnerstag ab ca. 15:30); in der BABZ-Woche gibt es keine automatische Mittagessen-Zeile mehr.'
     ]},
     {v:'3.1.3',ts:'2026-11-02T09:00',items:[
@@ -7209,9 +7210,9 @@ const SHELL=(function(){
         const fab=i===FABI, one=s.length===1;
         const click='NAVBAR.tap(this);'+(one?'NAVBAR.go(\''+s[0]+'\')':'PMENU.toggle(event,this)');
         const attrs=one?'':' aria-haspopup="menu" aria-expanded="false" aria-controls="m-pmenu"';
-        // Icon Fill: Umriss-Ebene (o) und gefüllte Ebene (f); die gefüllte füllt sich beim aktiven Tab von der Mitte aus, dazu ein Punkt
+        // Icon Fill: Umriss-Ebene (o) und gefüllte Ebene (f); die gefüllte füllt sich beim aktiven Tab von der Mitte aus
         const ic=fab?(one?svg(IC[s[0]]):pairSvg(s[0],s[1])):'<span class="m-tic">'+(one?svg(IC[s[0]],'o')+svg(ICF[s[0]]||IC[s[0]],'f'):pairSvg(s[0],s[1],'o')+pairSvg(s[0],s[1],'f'))+'</span>';
-        return '<button class="m-tab'+(fab?' m-tab-center':'')+'" data-tab="'+s[0]+'" data-tabs="'+key(s)+'" data-ic="'+(one?s[0]:'pair')+'" onclick="'+click+'"'+attrs+'>'+(fab?'':'<i class="m-dot"></i>')+(fab?'<span class="m-fab">'+ic+'</span>':ic)+'<span>'+label(s)+'</span></button>';
+        return '<button class="m-tab'+(fab?' m-tab-center':'')+'" data-tab="'+s[0]+'" data-tabs="'+key(s)+'" data-ic="'+(one?s[0]:'pair')+'" onclick="'+click+'"'+attrs+'>'+(fab?'<span class="m-fab">'+ic+'</span>':ic)+'<span>'+label(s)+'</span></button>';
       }).join('');
       apply();
     }

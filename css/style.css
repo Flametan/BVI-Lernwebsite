@@ -3042,8 +3042,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .m-tab[data-ic="settings"] .m-tic>svg.f circle{fill:var(--m-bar);}   /* Zahnrad: Mitte bleibt frei */
 .m-tab .m-tic>svg.f .cb,.m-tab .m-tic>svg.f .cb2{fill:color-mix(in srgb,var(--m-accent) 66%,#000);}   /* hintere Karte dunkler */
 .m-tab .m-tic>svg.f .cb2{opacity:0;}
-.m-tab .m-dot{position:absolute;left:50%;bottom:-3px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--m-accent);transform:scale(0);transition:transform .45s .1s cubic-bezier(.34,1.8,.5,1);}
-.m-tab.on .m-dot{transform:scale(1);}
 .m-tab:active>.m-tic{opacity:.55;}
 /* Klick-Animation: Symbole in der Leiste (.m-tic) und im Mittelknopf (.m-fab>svg) */
 .m-tab.tap .m-tic{animation:ic-pop .55s cubic-bezier(.34,1.56,.64,1);}
@@ -3082,7 +3080,7 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 /* Einstellungen: Zahnrad dreht sich */
 .m-tab.tap[data-ic="settings"] .m-tic{animation:ic-spin .8s cubic-bezier(.3,1.1,.4,1);}
 @keyframes ic-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-@media(prefers-reduced-motion:reduce){.m-tab.tap *{animation:none!important;}.m-tab .m-tic>svg.f,.m-tab .m-dot{transition-duration:.01ms!important;}}
+@media(prefers-reduced-motion:reduce){.m-tab.tap *{animation:none!important;}.m-tab .m-tic>svg.f}
 
 /* ── Desktop: Side Drawer (Hamburger) oder angeheftete Seitenleiste ───────── */
 .m-ham,.m-pin,#m-dim{display:none;}
