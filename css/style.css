@@ -2284,6 +2284,15 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
   body.lp-prac .lp-win:not(.focus){width:calc(100vw - var(--lp-l,0px) - var(--lpw) - 24px);}
   body.lp-prac .lp-win.focus{right:calc(var(--lpw) + 24px)!important;}
 }
+/* Tablet/PC: Kopfleiste liegt über dem Kapitelfenster – durchsichtig, damit dessen Zurück-Knopf sichtbar und bedienbar bleibt */
+@media(min-width:701px){
+  body:has(.lp-win.on:not(.focus)) #m-topbar{background:transparent!important;pointer-events:none;}
+  body:has(.lp-win.on:not(.focus)) #m-topbar .m-tb-actions{pointer-events:auto;}
+}
+/* Lernseiten-Übersicht (Titel, Kopfleiste, Kapitelkarten) mittig; kein Platz für das ausgeblendete Inhaltsverzeichnis rechts */
+@media(min-width:701px){
+  .view.lp-ueber .page-hero .phi,.view.lp-ueber .pc,body:has(.view.active.lp-ueber:not(.lp-win)) #m-topbar{margin-left:auto!important;margin-right:auto!important;}
+}
 .lp-win.focus{left:0!important;right:0!important;width:auto!important;top:0;bottom:0;background:var(--m-bg);}
 .lp-win.focus .lp-fm,.lp-win.focus .lp-fp{display:grid;width:auto;min-width:42px;padding:0 12px;border-radius:99px;font-weight:600;}
 .lp-win.focus .lp-bar{display:block;}

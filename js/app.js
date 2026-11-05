@@ -4393,6 +4393,10 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.1.5',ts:'2026-11-05T09:00',items:[
+      'Lernseiten (Tablet/PC): Die Kapitelübersicht steht wieder mittig auf der Seite.',
+      'Lernseiten (Tablet/PC): Im geöffneten Kapitel ist der Zurück-Knopf zur Übersicht oben links wieder sichtbar.',
+    ]},
     {v:'3.1.4',ts:'2026-11-03T09:00',items:[
       'Startseite: Die Zeilen „Lernkarten“ und „Pausenraum“ sind entfernt (beides bleibt über die Navigation erreichbar). Am Desktop und am Tablet im Querformat entfallen oben das B-VI-Zeichen sowie Prüfung und Einstellungen (erreichbar über die Seitenleiste).',
       'Lernseiten: Kapitelübersicht (Titel, Kopfleiste, Kapitelkarten) ist am Tablet und PC jetzt genauso breit wie die Themenübersicht davor.',
