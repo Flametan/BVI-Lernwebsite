@@ -3326,3 +3326,4 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .lb-sum{margin:14px 0;}
 .lb-sum.good{border:1.5px solid var(--c-ok,#3aa76d);}
 .lb-sum.warn{border:1.5px solid var(--m-accent);}
+.lb-sol .acc-check,.lb-sol .acc-check-wrap{display:none!important;}
