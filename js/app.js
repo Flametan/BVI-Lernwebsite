@@ -1752,6 +1752,16 @@ const SEARCH = (function(){
       return head+`<div class="search-result" data-idx="${i}" onclick="SEARCH.go(${i})"><span class="sr-section">${xss(r.lbl)}</span><div><div class="sr-title">${hl(xss(r.title),q)}${r.fuzzy?' <i class="sr-fz">ähnlich</i>':''}</div>${r.snippet?`<div class="sr-snippet">${hl(xss(contextSnippet(r.snippet,q)),q)}</div>`:''}</div></div>`;
     }).join('');
     focusIdx = -1;
+    drop(el);
+  }
+
+  // Live-Vorschläge fallen nacheinander ein (45 ms Abstand, höchstens 12)
+  function drop(el){ el.querySelectorAll('.search-result').forEach((r,i)=>{ r.style.setProperty('--d',Math.min(i,12)*45+'ms'); r.classList.add('sr-drop'); }); }
+  function syncClear(){ const i=document.getElementById('search-input'), c=document.getElementById('search-clear'); if(c&&i) c.hidden=!i.value; }
+  let _typeT=0;
+  function typePlaceholder(inp){
+    clearTimeout(_typeT); const full='Suchen …'; let n=0; inp.placeholder='';
+    (function step(){ if(n<=full.length){ inp.placeholder=full.slice(0,n++); _typeT=setTimeout(step,45); } })();
   }
 
   function setFocus(i){
@@ -1766,12 +1776,33 @@ const SEARCH = (function(){
       buildIndex();
       document.getElementById('search-overlay').classList.remove('hidden');
       const inp = document.getElementById('search-input');
-      inp.value = ''; inp.focus(); render('');
+      inp.value = ''; inp.focus(); render(''); syncClear();
+      // Icon Expand: der runde Knopf zieht sich zur Suchleiste auf, der Platzhalter wird getippt
+      const box=document.querySelector('#search-overlay .search-box');
+      if(box&&!matchMedia('(prefers-reduced-motion:reduce)').matches){ box.classList.remove('sr-expand'); void box.offsetWidth; box.classList.add('sr-expand'); typePlaceholder(inp); }
+    },
+    // Clear Field: die Buchstaben fallen weg, der Platzhalter blendet wieder ein
+    clearField(){
+      const inp=document.getElementById('search-input'), fall=document.getElementById('search-fall'); if(!inp) return;
+      const txt=inp.value; clearTimeout(_debounceTimer);
+      if(txt&&fall&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+        fall.innerHTML=[...txt].map((c,i)=>`<i style="--dx:${(Math.random()*30-15).toFixed(0)}px;--r:${(Math.random()*80-40).toFixed(0)}deg;animation-delay:${i*18}ms">${c===' '?'&nbsp;':xss(c)}</i>`).join('');
+        setTimeout(()=>{ fall.innerHTML=''; }, 650+txt.length*18);
+      }
+      inp.value=''; syncClear(); render(''); inp.classList.remove('sr-ph-in'); void inp.offsetWidth; inp.classList.add('sr-ph-in'); inp.focus();
+    },
+    // Search Loading: beim Absenden dreht sich das Symbol, Platzhalter-Zeilen schimmern, dann blenden die Treffer ein
+    load(q){
+      const el=document.getElementById('search-results'), ic=document.querySelector('#search-overlay .search-ic'); if(!el) return;
+      if(matchMedia('(prefers-reduced-motion:reduce)').matches){ render(q); return; }
+      if(ic) ic.classList.add('sr-spin');
+      el.innerHTML='<div class="sr-skel" aria-hidden="true">'+'<div class="sr-sk-row"><i></i><b></b><u></u></div>'.repeat(4)+'</div>';
+      setTimeout(()=>{ render(q); el.classList.remove('sr-fade'); void el.offsetWidth; el.classList.add('sr-fade'); if(ic) ic.classList.remove('sr-spin'); },520);
     },
     close(){ document.getElementById('search-overlay').classList.add('hidden'); results=[]; focusIdx=-1; },
     reset(){ _indexBuilt=false; },
     toggle(){ document.getElementById('search-overlay').classList.contains('hidden') ? this.open() : this.close(); },
-    query(q){ clearTimeout(_debounceTimer); _debounceTimer = setTimeout(()=>render(q.trim()), 150); },
+    query(q){ clearTimeout(_debounceTimer); syncClear(); _debounceTimer = setTimeout(()=>render(q.trim()), 120); },
     goBk(id,label){ this.close(); NAV.go(id,label||id); },
     removeBk(id){ if(typeof BOOKMARKS!=='undefined') BOOKMARKS.remove(id); renderBookmarks(); },
     keydown(e){
@@ -1779,6 +1810,7 @@ const SEARCH = (function(){
       if(e.key==='ArrowDown'){ e.preventDefault(); setFocus(Math.min(focusIdx+1,results.length-1)); return; }
       if(e.key==='ArrowUp'){ e.preventDefault(); setFocus(Math.max(focusIdx-1,0)); return; }
       if(e.key==='Enter' && focusIdx>=0){ this.go(focusIdx); return; }
+      if(e.key==='Enter'){ const q=e.target.value.trim(); if(q){ clearTimeout(_debounceTimer); saveHist(q); this.load(q); } return; }
     },
     go(i){
       const r = results[i]; if(!r) return;
@@ -4406,6 +4438,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.5',ts:'2026-11-05T09:00',items:[
+      'Suche: Beim Öffnen zieht sich der runde Knopf zur Suchleiste auf und der Platzhalter wird getippt. Die Vorschläge fallen beim Tippen nacheinander ein, Treffer sind fett. Mit dem ✕ fallen die Buchstaben weg. Beim Absenden dreht sich das Symbol, Platzhalter-Zeilen schimmern und die Treffer blenden ein.',
       'Themenübersichten: Die Karten bauen sich ebenfalls nacheinander auf.',
       'Lernkarten: Beim Umdrehen hebt sich die Karte kurz an und dreht sich mit Tiefe (Flip with depth). Beim Wischen folgt die Karte dem Finger, neigt sich bis 12° und wird bei Schwung weggeschnippt (Follow, then fling).',
       'Lernseiten: Die Kapitelkarten einer Lernseite bauen sich nacheinander auf (Cascade, don\'t dump).',
