@@ -1500,7 +1500,7 @@ const SEARCH = (function(){
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
     'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
-    'v-lb-start':'Laufbahnprüfung · Laufbahn Dezember','v-lb-ibk1':'Laufbahn · IBK Klausur 1','v-lb-ibk2':'Laufbahn · IBK Klausur 2','v-lb-vb':'Laufbahn · VB Klausur IdF NRW',
+    'v-lb-start':'Laufbahnprüfung · Dezember','v-lb-ibk1':'Laufbahn · IBK Klausur 1','v-lb-ibk2':'Laufbahn · IBK Klausur 2','v-lb-vb':'Laufbahn · VB Klausur IdF NRW',
     'v-idf-presse':'IdF · Presse- & Öffentlichkeitsarbeit',
     'v-ibk-fuehren-gruppen':'IBK · Führen von Gruppen',
     'v-ibk-fuehrung':'IBK · Führung und Führungsaufgaben',
@@ -4415,6 +4415,11 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.5',ts:'2026-11-05T09:00',items:[
+      'Startseite: Die Karte „Los geht\'s“ (Weiterlernen) ist entfernt.',
+      'Startseite: Die Standorte stehen jetzt als Liste mit Umschalter „2. / 1. Ausbildungsjahr“ (Handy). Jede Zeile zeigt Ring, Ort, Fortschrittsbalken und Prozent und öffnet den Standort.',
+      'Einstellungen (Handy): aufgeräumter. Acht Gruppen sind jetzt fünf (Aussehen, Lernen & Erinnerung, Daten & Werkzeuge …), die Karten sind kompakter, Rückgängig/Wiederholen und Suche sitzen als kleine Symbole oben rechts, die Navigationsleiste hat eine eigene Seite und die Spende ist eine Zeile, die sich aufklappen lässt.',
+      'Prüfung: Die Zeile mit dem Farbverlauf heißt jetzt „Laufbahnprüfung“. Untertitel sind auf zwei Zeilen begrenzt.',
+      'Kleinigkeiten: Keine Schrift mehr unter 12 px, Startseite (Handy) ohne extra Datumszeile, „Bewegung reduzieren“ schaltet alle Animationen ab.',
       'Lernseiten: Auf den Übersichten von IBK, VAk, FeuAK und IdF fehlt die Prüfungskarte (Simulator, Klausurvorbereitung, Altklausur-Quiz), weil es sie schon unter „Prüfung“ gibt.',
       'Prüfung: „Laufbahn“ gibt es nur im Master-Jahrgang. Das Passwortfeld öffnet sich beim Antippen als Fenster über der Seite.',
       'Prüfung: „Laufbahn“ steht ganz oben und hat den Farbverlauf (statt der Juni-2026-Klausuren). ',
@@ -7349,7 +7354,7 @@ const SHELL=(function(){
   ];
   const EXAMS=[
     ['Laufbahnprüfung',[
-      ['v-lb-start','Laufbahn','IBK-Klausuren und VB-Übungsklausur mit Musterlösungen · Passwort nötig','doc',true],
+      ['v-lb-start','Laufbahnprüfung','IBK-Klausuren und VB-Übungsklausur mit Musterlösungen · Passwort nötig','doc',true],
       ['v-laufbahn-2026','Laufbahnklausuren Juni 2026','Recht, Management, Stabsarbeit, Vorbeugender Brandschutz · Musterlösungen','doc'],
       ['v-laufbahn-2023','Laufbahnklausuren Dez 2023','Führungsvorgang, Recht, Management, Heyrothsberge · Musterlösungen','doc']]],
     ['IdF Münster',[
@@ -7726,8 +7731,6 @@ const SHELL=(function(){
       cTitle=recent.label; cGo=goJs(recent.id,recent.label); cBtn='Weiter';
       cSub=document.querySelector('#'+recent.id+' .page-eyebrow')?.textContent?.trim()||'';
     }
-    const cont=`<div class="m-card m-cont2"><div class="m-cont2-top"><div class="m-tx"><span class="m-eyebrow">Weiterlernen</span><span class="m-cont2-t">${esc(cTitle)}</span>${cSub?`<span class="m-t2">${esc(cSub)}</span>`:''}</div>${homeRing(gp,gp+'%',gp+' Prozent des Tagesziels')}</div>
-      <div class="m-cont2-bot"><button class="m-go2" onclick="${cGo}">${cBtn} ${svg('play')}</button><span class="m-t2">Ziel heute: ${minToday} / ${goal} min</span></div></div>`;
     // Nächste Einheit oben rechts: im Unterricht die laufende (grau) und die folgende (orange), sonst die kommende
     const stamp=d=>(dayWord(d)==='heute'?'':dayWord(d)==='morgen'?'morgen ':d.toLocaleDateString('de-DE',{weekday:'short'})+' ')+hhmm(d);
     let nextBox='';
@@ -7739,20 +7742,23 @@ const SHELL=(function(){
       nextBox=`<button class="m-nx" onclick="NAV.tab('v-plan','Stundenplan')" aria-label="Zum Stundenplan"><span class="m-nx-d">${esc(dt)}</span>${head}</button>`;
     }
     const chartCard=chartHtml();
-    const ringBtn=m=>{
-      const c=cnt[m[0]]||{done:0,total:0};
-      return `<button class="m-ringbtn" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen"><span class="m-rw">${homeRing(pct(c),m[1],m[1])}</span></button>`; // nur der Ring, ohne Zahl
+    // Standort-Liste: Umschalter 2./1. Jahr (Handy), je Standort eine Zeile mit Ring, Ort, Fortschrittsbalken und Prozent
+    const MODSUB={ibk:'Heyrothsberge · Führung, Kommunikation',vak:'Berlin · Verwaltungsrecht',feuak:'Hamburg · Haushalt, Management',idf:'Münster · Brandschutz, Stab',gal:'Grundlehrgang',sfs:'Regensburg',hlfs:'Kassel'};
+    const stRow=m=>{
+      const c=cnt[m[0]]||{done:0,total:0}, p=pct(c);
+      return `<button class="m-modrow" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen"><span class="m-mring">${homeRing(p,String(p),m[1])}</span><span class="m-tx"><span class="m-t1">${esc(m[1])}</span><span class="m-t2">${esc(MODSUB[m[0]]||m[2])}</span><span class="m-mbar"><i style="width:${p}%"></i></span></span><span class="m-chv" aria-hidden="true">›</span></button>`;
     };
-    const wide=!!(window.matchMedia&&matchMedia('(min-width:701px)').matches);
-    const mods=`<div class="m-card m-mods"><div class="m-modgrid2"><div class="m-r2"><div class="m-sec">2. Ausbildungsjahr</div><div class="m-rings">${MODS.filter(m=>m[5]===2).map(ringBtn).join('')}</div></div>
-      <details class="m-y1${wide?' static':''}"${y1Open||wide?' open':''} ontoggle="SHELL.y1(this.open)"><summary>1. Ausbildungsjahr</summary><div class="inner"><div class="m-rings r3">${MODS.filter(m=>m[5]===1).map(ringBtn).join('')}</div></div></details></div></div>`;
+    let hy='2'; try{ hy=localStorage.getItem('bvi_home_year')==='1'?'1':'2'; }catch(e){}
+    const mods=`<div class="m-card m-mods" data-y="${hy}"><div class="m-seg2" role="tablist" aria-label="Ausbildungsjahr"><button type="button" role="tab" class="${hy==='2'?'on':''}" aria-selected="${hy==='2'}" onclick="SHELL.setYear('2')">2. Ausbildungsjahr</button><button type="button" role="tab" class="${hy==='1'?'on':''}" aria-selected="${hy==='1'}" onclick="SHELL.setYear('1')">1. Ausbildungsjahr</button></div>
+      <div class="m-modgrid2"><div class="m-yl" data-yr="2"><div class="m-sec">2. Ausbildungsjahr</div><div class="m-modlist">${MODS.filter(m=>m[5]===2).map(stRow).join('')}</div></div>
+      <div class="m-yl" data-yr="1"><div class="m-sec">1. Ausbildungsjahr</div><div class="m-modlist">${MODS.filter(m=>m[5]===1).map(stRow).join('')}</div></div></div></div>`;
     const pause='';
     const lk=JG.isMaster()?{url:'https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare',titel:'Lehrgangs-Cloud',hinweis:'Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe'}:JG.data().links.cloud;
     const cloud=lk?`<div class="m-list m-cloud"><a class="m-row m-go" href="${esc(lk.url)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">${esc(lk.titel||'Lehrgangs-Link')}</span>${lk.hinweis?`<span class="m-t2 m-cloud-x">${esc(lk.hinweis)}</span>`:''}</span></a></div>`:'';
     const donate=`<a class="m-list m-donate m-donate-home" href="${SPENDE_URL}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><div class="m-row m-go">${ic('heart')}<span class="m-tx"><span class="m-t1">Gefällt dir die Seite?</span><span class="m-t2">Kostenlos &amp; werbefrei – freiwillig unterstützen</span></span></div></a>`;
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
-      <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}</div></div>`;
+      <div class="m-hgrid"><div class="m-hl">${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}</div></div>`;
   }
 
   function renderExam(){
@@ -7892,10 +7898,8 @@ const SHELL=(function(){
     const lb=BACKUP.last();
     set('acc-dar-sub',th+' · Schrift '+fs);
     if(typeof JG!=='undefined') set('acc-lg-sub',JG.labelOf(JG.current())+(JG.isMaster()?' (Master)':''));
-    set('acc-ler-sub','Tagesziel '+goalMin()+' min · Timer '+(document.documentElement.classList.contains('no-timers')?'aus':'an'));
-    set('acc-eri-sub',NOTIF.isEnabled()?'Täglich um '+NOTIF.hour()+':00':'Aus');
-    set('acc-dat-sub',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
-    set('acc-wer-sub',nc+(nc===1?' Notiz':' Notizen')+' · '+bc+' Lesezeichen');
+    set('acc-ler-sub','Tagesziel '+goalMin()+' min · Timer '+(document.documentElement.classList.contains('no-timers')?'aus':'an')+' · Erinnerung '+(NOTIF.isEnabled()?NOTIF.hour()+':00':'aus'));
+    set('acc-dat-sub',(lb?'Gesichert '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert')+' · '+nc+(nc===1?' Notiz':' Notizen')+' · '+bc+' Lesezeichen');
   }
   document.addEventListener('click',e=>{ if(e.target.closest('#v-settings')) setTimeout(accSubs,0); });
   document.addEventListener('change',e=>{ if(e.target.closest('#v-settings')) setTimeout(accSubs,0); });
@@ -7969,6 +7973,7 @@ const SHELL=(function(){
       old.replaceWith(t.content.firstElementChild);
       document.querySelector('#v-home .m-chart2 .m-seg-s button.active')?.focus({preventScroll:true});
     },
+    setYear(y){ try{ localStorage.setItem('bvi_home_year',y); }catch(e){} const m=document.querySelector('#v-home .m-mods'); if(!m) return; m.dataset.y=y; m.querySelectorAll('.m-seg2 button').forEach((b,i)=>{ const on=(i===0)===(y==='2'); b.classList.toggle('on',on); b.setAttribute('aria-selected',on); }); },
     y1(open){ if(!document.querySelector('.m-y1.static')) y1Open=!!open; },
     pick(btn){
       const on=!btn.classList.contains('sel');

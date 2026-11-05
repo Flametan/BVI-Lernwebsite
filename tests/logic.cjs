@@ -328,7 +328,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.donate = !!document.querySelector('#v-settings .m-donate') && !document.querySelector('#v-settings .m-acc .m-donate');
     return r;
   });
-  eq('Einstellungen: acht Gruppen, zu Beginn zugeklappt', [acc.n, acc.closed], [8, true]);
+  eq('Einstellungen: fünf Gruppen, zu Beginn zugeklappt', [acc.n, acc.closed], [5, true]);
   eq('Einstellungen: nur eine Gruppe offen', acc.open.filter(x => x === 'true').length, 1);
   ok('Einstellungen: Inhalt der offenen Gruppe sichtbar, Kurzinfo gefüllt', acc.vis && /^Tagesziel \d+ min/.test(acc.sub));
   ok('Einstellungen: Spende liegt außerhalb der Gruppen', acc.donate);
@@ -763,7 +763,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
 
   // ── Einstellungen: jede Zeile in „Daten“ hat einen Trennstrich; Erste-Schritte nennt den Pausenraum ──
   const dat = await page.evaluate(() => {
-    const rows = [...document.querySelectorAll('#acc-dat-b .m-row')];
+    const rows = [...document.querySelectorAll('#acc-dat-b .m-sub:first-child .m-row')];
     const sep = rows.slice(1).map(r => r.previousElementSibling && r.previousElementSibling.classList.contains('m-row'));
     const ob = document.getElementById('onboarding-overlay').textContent;
     return { sep, pause: /Pausenraum/.test(ob), karten: /Bereich\s*Lernkarten|, Lernkarten/.test(ob) };
@@ -778,9 +778,9 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const seen = new Set();
     for (let i = 0; i < 8; i++) { NAV.go('v-settings', 'x'); await w(60); NAV.home(); await w(120); seen.add(document.querySelector('.m-quip').textContent); }
     const a = document.querySelector('.m-quip').textContent; SHELL.renderHome(); const b = document.querySelector('.m-quip').textContent;
-    return { tag: d.tagName, href: /paypal\.me/.test(d.href), note: d.contains(d.querySelector('.m-note')), many: seen.size, same: a === b };
+    const lnk = d.querySelector('a[href]'); return { tag: d.tagName, href: !!lnk && /paypal\.me/.test(lnk.href), note: d.contains(d.querySelector('.m-note')), many: seen.size, same: a === b };
   });
-  ok('Spende: ganze Karte ist ein Link', dq.tag === 'A' && dq.href && dq.note);
+  ok('Spende: eine Zeile, aufklappbar, mit Link zu PayPal', dq.tag === 'DETAILS' && dq.href && dq.note);
   ok('Startseite: Satz wechselt beim erneuten Aufrufen, bleibt beim Neuzeichnen', dq.many >= 4 && dq.same);
 
   // ── Fehlerbehebungen aus dem Bugtest ──

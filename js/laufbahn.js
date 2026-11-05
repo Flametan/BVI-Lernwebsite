@@ -46,7 +46,7 @@ const LB=(function(){
     if(hash(inp.value.trim().toLowerCase())===HASH){
       try{ sessionStorage.setItem(SKEY,'1'); }catch(x){}
       err.hidden=true; inp.value=''; mask(inp);
-      if(f.dataset.go){ closeModal(); if(typeof SHELL!=='undefined'&&SHELL.renderExam) SHELL.renderExam(); NAV.go('v-lb-start','Laufbahn'); }
+      if(f.dataset.go){ closeModal(); if(typeof SHELL!=='undefined'&&SHELL.renderExam) SHELL.renderExam(); NAV.go('v-lb-start','Laufbahnprüfung'); }
       else render();
     } else {
       err.hidden=false; inp.setAttribute('aria-invalid','true');
@@ -58,13 +58,13 @@ const LB=(function(){
   let modal=null, lastFocus=null;
   function closeModal(){ if(!modal) return; modal.classList.remove('on'); modal.setAttribute('aria-hidden','true'); const f=lastFocus; lastFocus=null; if(f&&f.focus) f.focus({preventScroll:true}); }
   function ask(btn){
-    if(ok()){ NAV.go('v-lb-start','Laufbahn'); return; }
+    if(ok()){ NAV.go('v-lb-start','Laufbahnprüfung'); return; }
     if(!modal){
-      modal=document.createElement('div'); modal.id='lb-modal'; modal.className='lb-modal'; modal.setAttribute('role','dialog'); modal.setAttribute('aria-modal','true'); modal.setAttribute('aria-label','Passwort für Laufbahn'); modal.setAttribute('aria-hidden','true');
+      modal=document.createElement('div'); modal.id='lb-modal'; modal.className='lb-modal'; modal.setAttribute('role','dialog'); modal.setAttribute('aria-modal','true'); modal.setAttribute('aria-label','Passwort für Laufbahnprüfung'); modal.setAttribute('aria-hidden','true');
       modal.innerHTML=`<div class="lb-modal-bg" onclick="LB.closeModal()"></div><div class="lb-modal-box">
         <button type="button" class="lb-modal-x" aria-label="Schließen" onclick="LB.closeModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
         <div class="lb-lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
-        <h2>Laufbahn ist geschützt</h2>
+        <h2>Laufbahnprüfung ist geschützt</h2>
         <form class="lb-form lb-inform" data-go="1" onsubmit="return LB.submit(event)" autocomplete="off">
           <label class="lb-lab">Passwort</label>
           <div class="lb-pwrap"><span class="lb-mask" aria-hidden="true"></span>
