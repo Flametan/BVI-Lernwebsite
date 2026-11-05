@@ -1946,10 +1946,14 @@ const SETTINGS = (function(){
       localStorage.setItem('bvi_font_size',sz);
       this._restoreFsUI();
     },
+    fsSlide(v){ this.setFontSize(['sm','md','lg','xl'][+v]||'md'); },
     restoreFontSize(){ this.setFontSize(localStorage.getItem('bvi_font_size')||'md'); },
     _restoreFsUI(){
       const sz=localStorage.getItem('bvi_font_size')||'md';
-      document.querySelectorAll('.fs-opt').forEach(b=>b.classList.toggle('active',b.dataset.sz===sz));
+      const i=Math.max(0,['sm','md','lg','xl'].indexOf(sz)), r=document.getElementById('fs-range'), tg=document.getElementById('fs-tag');
+      if(r) r.value=i;
+      if(tg){ tg.textContent=['A−','A','A+','A++'][i]; tg.style.left='calc(14px + (100% - 28px) * '+(i/3)+')'; }
+      const fill=document.getElementById('fs-sl'); if(fill) fill.style.setProperty('--p',(i/3*100)+'%');
     },
     async toggleNotif(on){ if(typeof NOTIF!=='undefined') await NOTIF.setEnabled(on); },
     setNotifHour(h){ if(typeof NOTIF!=='undefined') NOTIF.setHour(h); }
@@ -2249,13 +2253,15 @@ const FC = (function(){
 
   function setupSwipe(outer){
     if(!outer) return;
-    let x0=0, y0=0, live=false, dx=0, pid=-1;
-    const THR=80;
+    let x0=0, y0=0, live=false, dx=0, pid=-1, lt=0, lx=0, vx=0;
+    const THR=80, TILT=12;
     const hOk=outer.querySelector('.fc-swipe-ok');
     const hNo=outer.querySelector('.fc-swipe-no');
+    const tilt=d=>Math.max(-TILT,Math.min(TILT,d*0.08));
+    const reset=()=>{ outer.style.transform=''; hOk.style.opacity='0'; hNo.style.opacity='0'; };
 
     outer.addEventListener('pointerdown',e=>{
-      x0=e.clientX; y0=e.clientY; live=true; dx=0; pid=e.pointerId;
+      x0=e.clientX; y0=e.clientY; live=true; dx=0; pid=e.pointerId; lt=performance.now(); lx=e.clientX; vx=0;
       outer.setPointerCapture(e.pointerId);
     });
 
@@ -2266,8 +2272,10 @@ const FC = (function(){
       if(Math.abs(dy)>Math.abs(dx)+5){live=false;outer.style.transform='';return;}
       if(Math.abs(dx)<5) return;
       e.preventDefault();
+      const now=performance.now(); if(now>lt){ vx=(e.clientX-lx)/(now-lt); lt=now; lx=e.clientX; }
       outer.style.transition='none';
-      outer.style.transform=`translateX(${dx}px) rotate(${dx*0.06}deg)`;
+      // Die Karte folgt dem Finger und neigt sich dabei bis 12°
+      outer.style.transform=`translateX(${dx}px) rotate(${tilt(dx)}deg)`;
       if(flipped){
         const p=Math.min(Math.abs(dx)/THR,1);
         hOk.style.opacity=dx>0?p:0; hNo.style.opacity=dx<0?p:0;
@@ -2277,24 +2285,24 @@ const FC = (function(){
     outer.addEventListener('pointerup',e=>{
       if(e.pointerId!==pid||!live) return;
       live=false;
-      outer.style.transition='';
       if(Math.abs(dx)<8){
-        outer.style.transform=''; FC.flip();
-      } else if(flipped&&Math.abs(dx)>=THR){
-        const dir=dx>0?1:-1;
-        outer.style.transition='transform .28s ease,opacity .28s ease';
-        outer.style.transform=`translateX(${dir*window.innerWidth}px) rotate(${dir*25}deg)`;
+        outer.style.transition=''; outer.style.transform=''; FC.flip();
+      } else if(flipped&&(Math.abs(dx)>=THR||Math.abs(vx)>0.6)){
+        // Wegschnippen: Schwung des Fingers bestimmt die Richtung und das Tempo
+        const dir=(Math.abs(vx)>0.6?vx:dx)>0?1:-1;
+        const ms=Math.max(180,Math.min(320,320-Math.abs(vx)*120));
+        outer.style.transition=`transform ${ms}ms cubic-bezier(.4,0,.9,.6),opacity ${ms}ms ease`;
+        outer.style.transform=`translateX(${dir*window.innerWidth*1.1}px) translateY(-30px) rotate(${dir*TILT}deg)`;
         outer.style.opacity='0';
-        setTimeout(()=>FC.answer(dx>0),260);
+        setTimeout(()=>FC.answer(dir>0),ms-20);
       } else {
-        outer.style.transform=''; hOk.style.opacity='0'; hNo.style.opacity='0';
+        outer.style.transition='transform .45s cubic-bezier(.34,1.56,.64,1)'; reset();
       }
     });
 
     outer.addEventListener('pointercancel',e=>{
       if(e.pointerId!==pid) return;
-      live=false; outer.style.transform=''; outer.style.transition='';
-      hOk.style.opacity='0'; hNo.style.opacity='0';
+      live=false; outer.style.transition='transform .3s ease'; reset();
     });
   }
 
@@ -2424,7 +2432,11 @@ const FC = (function(){
       flipped=!flipped;
       const inner=document.getElementById('fc-inner');
       const ctrl=document.getElementById('fc-controls');
-      if(inner) inner.classList.toggle('flipped',flipped);
+      if(inner){
+        inner.classList.remove('fc-lift'); void inner.offsetWidth;   // Animation neu starten
+        inner.classList.add('fc-lift'); inner.classList.toggle('flipped',flipped);
+        inner.addEventListener('animationend',()=>inner.classList.remove('fc-lift'),{once:true});
+      }
       if(ctrl) ctrl.style.display=flipped?'flex':'none';
     },
     // Karte außerhalb des Kartenstapels bewerten (z. B. im Übungs-Fenster neben der Lernseite)
@@ -4393,6 +4405,14 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.1.5',ts:'2026-11-05T09:00',items:[
+      'Lernkarten: Beim Umdrehen hebt sich die Karte kurz an und dreht sich mit Tiefe (Flip with depth). Beim Wischen folgt die Karte dem Finger, neigt sich bis 12° und wird bei Schwung weggeschnippt (Follow, then fling).',
+      'Lernseiten: Die Kapitelkarten einer Lernseite bauen sich nacheinander auf (Cascade, don\'t dump).',
+      'Einstellungen: Die Schriftgröße wird jetzt mit einem Schieberegler (vier Stufen, mitlaufende Wertmarke) eingestellt statt mit vier Knöpfen.',
+      'Einstellungen: Bei „Navigationsleiste“ fehlt der Pfeil rechts nicht mehr.',
+      'Lernseiten (Tablet/PC): Die Kapitelübersicht steht wieder mittig auf der Seite.',
+      'Lernseiten (Tablet/PC): Im geöffneten Kapitel ist der Zurück-Knopf zur Übersicht oben links wieder sichtbar.',
+    ]},
     {v:'3.1.4',ts:'2026-11-03T09:00',items:[
       'Startseite: Die Zeilen „Lernkarten“ und „Pausenraum“ sind entfernt (beides bleibt über die Navigation erreichbar). Am Desktop und am Tablet im Querformat entfallen oben das B-VI-Zeichen sowie Prüfung und Einstellungen (erreichbar über die Seitenleiste).',
       'Lernseiten: Kapitelübersicht (Titel, Kopfleiste, Kapitelkarten) ist am Tablet und PC jetzt genauso breit wie die Themenübersicht davor.',

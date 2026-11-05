@@ -17130,15 +17130,14 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
         <span class="m-tx"><span class="m-t1">Akzentfarbe</span><span class="m-t2">Farbe für Navigation, Knöpfe und Hervorhebungen</span></span>
         <div id="m-accent" class="m-swatches" role="radiogroup" aria-label="Akzentfarbe"></div>
       </div>
-      <div class="m-row m-static">
+      <div class="m-row m-static m-wrap">
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 19 5-14 5 14M5 14h6M15 19l3.5-9 3.5 9M16.2 16h4.6"/></svg></span>
-        <span class="m-tx"><span class="m-t1">Schriftgröße</span></span>
-        <span class="m-seg">
-          <button class="fs-opt" data-sz="sm" onclick="SETTINGS.setFontSize('sm')">A−</button>
-          <button class="fs-opt" data-sz="md" onclick="SETTINGS.setFontSize('md')">A</button>
-          <button class="fs-opt" data-sz="lg" onclick="SETTINGS.setFontSize('lg')">A+</button>
-          <button class="fs-opt" data-sz="xl" onclick="SETTINGS.setFontSize('xl')">A++</button>
-        </span>
+        <span class="m-tx"><span class="m-t1">Schriftgröße</span><span class="m-t2" id="fs-sample">So groß erscheint der Text in der App.</span></span>
+        <div class="fs-sl" id="fs-sl">
+          <span class="fs-a fs-a-s" aria-hidden="true">A</span>
+          <span class="fs-trk"><span class="fs-tag" id="fs-tag" aria-hidden="true">A</span><input type="range" id="fs-range" class="fs-range" min="0" max="3" step="1" value="1" aria-label="Schriftgröße" oninput="SETTINGS.fsSlide(this.value)"></span>
+          <span class="fs-a fs-a-l" aria-hidden="true">A</span>
+        </div>
       </div>
     </div>
       </div>
@@ -17146,7 +17145,7 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
     <div class="m-acc">
       <button class="m-acc-h" id="acc-nav-h" aria-expanded="false" aria-controls="acc-nav-b" onclick="SHELL.acc(this)">
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="15" width="18" height="6" rx="2"/><path d="M7 18h.01M12 18h.01M17 18h.01M6 4h12v7H6z"/></svg></span>
-        <span class="m-tx"><span class="m-t1">Navigationsleiste</span><span class="m-t2">Reihenfolge, geteilte Plätze und Mittelknopf</span></span>
+        <span class="m-tx"><span class="m-t1">Navigationsleiste</span><span class="m-t2">Reihenfolge, geteilte Plätze und Mittelknopf</span></span><svg class="m-acc-chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
       </button>
       <div class="m-acc-b" id="acc-nav-b" role="region" aria-labelledby="acc-nav-h" hidden>
         <div class="m-stack" id="nav-edit"></div>
