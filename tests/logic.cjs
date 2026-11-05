@@ -1105,7 +1105,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.plan = !/Foto oder Screenshot|Termine von Hand|Kalenderdatei \(\.ics\)/.test(document.getElementById('v-plan').innerText);
     return r;
   });
-  eq('Master: keine Bearbeitungsfelder, Farbverlauf nur bei hervorgehobenen Prüfungen', ma, { lesson: true, exam: true, hot: 6, rows: 12, set: true, plan: true });
+  eq('Master: keine Bearbeitungsfelder, Farbverlauf nur bei hervorgehobenen Prüfungen', ma, { lesson: true, exam: true, hot: 6, rows: 13, set: true, plan: true });
 
   // ── Eigene Fragen direkt in einer Klausur; IdF-Pläne für Gruppe 1 und 2 ──
   const eq2 = await page.evaluate(async () => {
