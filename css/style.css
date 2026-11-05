@@ -3327,3 +3327,23 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .lb-sum.good{border:1.5px solid var(--c-ok,#3aa76d);}
 .lb-sum.warn{border:1.5px solid var(--m-accent);}
 .lb-sol .acc-check,.lb-sol .acc-check-wrap{display:none!important;}
+
+/* ── Desktop: Premium Sidebar – schwebende, abgerundete Symbolleiste mit Sprechblasen-Namen ── */
+@media(min-width:1100px){
+  body:not(.rail-pin){padding-left:98px;}
+  body:not(.rail-pin) #et-pill{left:calc(98px + (100vw - 98px) / 2);}
+  body:not(.rail-pin) #m-rail{left:14px;top:14px;bottom:14px;width:68px;padding:16px 10px 14px;overflow:visible;align-items:center;gap:6px;border:1px solid var(--m-line,rgba(128,128,128,.25));border-radius:24px;box-shadow:0 12px 36px rgba(0,0,0,.16);}
+  body:not(.rail-pin) #m-rail>.m-brand{order:-2;padding:0;margin:0;}
+  body:not(.rail-pin):not(.rail-open) .m-pin,body:not(.rail-pin) .m-pin{display:grid;order:-1;position:static;margin:2px 0 12px;width:38px;height:38px;border-radius:12px;}
+  body:not(.rail-pin) .m-pin::after{content:"";position:absolute;}
+  body:not(.rail-pin) #m-rail .m-ri{position:relative;width:48px;height:48px;padding:0;border-radius:14px;justify-content:center;overflow:visible;}
+  body:not(.rail-pin) #m-rail .m-ri-cta{margin:4px 0;}
+  body:not(.rail-pin) #m-rail .m-rail-foot{width:100%;display:flex;justify-content:center;}
+  /* Sprechblase mit Pfeil (Name des Tabs) */
+  body:not(.rail-pin) #m-rail [data-tip]::after,body:not(.rail-pin) #m-rail [data-tip]::before{position:absolute;pointer-events:none;opacity:0;transition:opacity .15s ease,transform .22s cubic-bezier(.34,1.56,.64,1);z-index:30;}
+  body:not(.rail-pin) #m-rail [data-tip]::after{content:attr(data-tip);left:calc(100% + 18px);top:50%;transform:translate(-8px,-50%);padding:9px 15px;border-radius:13px;white-space:nowrap;font-size:.88rem;font-weight:600;line-height:1.2;font-family:inherit;letter-spacing:0;background:color-mix(in srgb,var(--m-accent) 20%,var(--m-card,#fff));color:var(--m-accent-fg,var(--m-fg));box-shadow:0 8px 26px rgba(0,0,0,.2);}
+  body:not(.rail-pin) #m-rail [data-tip]::before{content:"";left:calc(100% + 13px);top:50%;width:11px;height:11px;margin-top:-5px;transform:translateX(-8px) rotate(45deg);border-radius:3px;background:color-mix(in srgb,var(--m-accent) 20%,var(--m-card,#fff));}
+  body:not(.rail-pin) #m-rail [data-tip]:hover::after,body:not(.rail-pin) #m-rail [data-tip]:focus-visible::after{opacity:1;transform:translate(0,-50%);}
+  body:not(.rail-pin) #m-rail [data-tip]:hover::before,body:not(.rail-pin) #m-rail [data-tip]:focus-visible::before{opacity:1;transform:translateX(0) rotate(45deg);}
+}
+@media(min-width:1100px) and (prefers-reduced-motion:reduce){body:not(.rail-pin) #m-rail [data-tip]::after,body:not(.rail-pin) #m-rail [data-tip]::before{transition:none;}}

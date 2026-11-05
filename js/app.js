@@ -4415,6 +4415,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.5',ts:'2026-11-05T09:00',items:[
+      'Desktop: Die Seitenleiste ist jetzt eine „Premium Sidebar“ – eine schwebende, abgerundete Leiste nur mit Symbolen. Beim Darüberfahren erscheint der Name des Tabs als Sprechblase neben dem Symbol. Mit dem Pin lässt sie sich wie bisher ganz anheften.',
       'Laufbahn: Industriebau kommt nicht mehr vor (Konzept „Logistikhalle“ sowie die zugehörigen VB-Fragen und -Lernkarten entfernt).',
       'Suche: Beim Öffnen zieht sich der runde Knopf zur Suchleiste auf und der Platzhalter wird getippt. Die Vorschläge fallen beim Tippen nacheinander ein, Treffer sind fett. Mit dem ✕ fallen die Buchstaben weg. Beim Absenden dreht sich das Symbol, Platzhalter-Zeilen schimmern und die Treffer blenden ein.',
       'Themenübersichten: Die Karten bauen sich ebenfalls nacheinander auf.',
@@ -8210,9 +8211,9 @@ const RAIL=(function(){
     open=!!o&&!pinned()&&mq.matches;
     b().classList.toggle('rail-open',open);
   }
-  function sync(){ const p=pinned(), pb=pinB(); if(pb){ pb.setAttribute('aria-pressed',p); pb.setAttribute('aria-label',p?'Seitenleiste lösen':'Seitenleiste anheften'); pb.title=p?'Lösen':'Anheften'; } setOpen(false); }
+  function sync(){ const p=pinned(), pb=pinB(); if(pb){ pb.setAttribute('aria-pressed',p); pb.setAttribute('aria-label',p?'Seitenleiste lösen':'Seitenleiste anheften'); pb.dataset.tip=p?'Seitenleiste lösen':'Seitenleiste anheften'; pb.removeAttribute('title'); } setOpen(false); }
   function init(){
-    document.querySelectorAll('#m-rail .m-ri').forEach(e=>{ const t=(e.textContent||'').replace(/\s+/g,' ').replace(/Strg K/,'').trim(); if(t){ e.title=t; e.setAttribute('aria-label',t); } });   // eingeklappt zeigt der Balken nur Symbole: Name als Tooltip
+    document.querySelectorAll('#m-rail .m-ri').forEach(e=>{ const t=(e.textContent||'').replace(/\s+/g,' ').replace(/Strg K/,'').trim(); if(t){ e.dataset.tip=t; e.setAttribute('aria-label',t); } });   // eingeklappt zeigt der Balken nur Symbole: Name als Tooltip
     // Symbole wie in der Tab-Leiste am Handy: Umriss + gefüllte Ebene (Icon Fill) und kleine Klick-Animation je Symbol
     const N=window.NAVBAR;
     if(N) document.querySelectorAll('#m-rail .m-ri[data-tab]').forEach(btn=>{
@@ -8223,15 +8224,7 @@ const RAIL=(function(){
     });
     const sb=document.querySelector('#m-rail .m-ri-search'); if(sb){ sb.dataset.ic='search'; sb.addEventListener('click',()=>{ window.NAVBAR&&NAVBAR.tap(sb); }); }
     const r=rail(); if(!r) return;
-    // Maus: Balken klappt beim Darüberfahren auf und beim Wegfahren zu
-    r.addEventListener('pointerenter',e=>{ if(e.pointerType==='mouse') setOpen(true); });
-    r.addEventListener('pointerleave',e=>{ if(e.pointerType==='mouse'){ clearTimeout(tm); tm=setTimeout(()=>setOpen(false),160); } });
-    // Tastatur: Fokus im Balken zeigt die Beschriftungen
-    r.addEventListener('focusin',e=>{ if(e.target.matches&&e.target.matches(':focus-visible')) setOpen(true); });
-    r.addEventListener('focusout',e=>{ if(!r.contains(e.relatedTarget)) setOpen(false); });
-    // Touch (Tablet quer): Tipp auf eine freie Stelle des Balkens klappt ihn auf/zu
-    let ptr='mouse'; r.addEventListener('pointerdown',e=>{ ptr=e.pointerType||'mouse'; });
-    r.addEventListener('click',e=>{ if(e.target===r) setOpen(!open); else if(!pinned()&&ptr!=='mouse'&&e.target.closest('.m-ri,.m-brand')) setTimeout(()=>setOpen(false),120); });   // Maus: schließt erst beim Wegfahren; Touch/Stift: nach der Auswahl
+    // Premium-Sidebar: kein Aufklappen beim Darüberfahren; der Name des Tabs erscheint als Sprechblase (CSS, data-tip). Anheften über den Pin.
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&open) setOpen(false); });
     (mq.addEventListener?mq.addEventListener.bind(mq,'change'):mq.addListener.bind(mq))(()=>sync());
     sync();
