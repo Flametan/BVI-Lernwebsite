@@ -1749,14 +1749,23 @@ const SEARCH = (function(){
   }
 
   return {
-    open(){
+    open(trigger){
       buildIndex();
       document.getElementById('search-overlay').classList.remove('hidden');
       const inp = document.getElementById('search-input');
       inp.value = ''; inp.focus(); render(''); syncClear();
       // Icon Expand: der runde Knopf zieht sich zur Suchleiste auf, der Platzhalter wird getippt
       const box=document.querySelector('#search-overlay .search-box');
-      if(box&&!matchMedia('(prefers-reduced-motion:reduce)').matches){ box.classList.remove('sr-expand'); void box.offsetWidth; box.classList.add('sr-expand'); typePlaceholder(inp); }
+      if(box&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+        box.classList.remove('sr-expand');
+        if(trigger&&trigger.getBoundingClientRect&&box.animate){
+          // Icon Expand: das Suchfeld wächst aus dem angetippten Symbol heraus
+          const t=trigger.getBoundingClientRect(), r=box.getBoundingClientRect();
+          const dx=(t.left+t.width/2)-(r.left+r.width/2), dy=(t.top+t.height/2)-(r.top+r.height/2), s=Math.max(.06,t.height/Math.max(r.height,1));
+          box.animate([{transform:`translate(${dx}px,${dy}px) scale(${s})`,opacity:0,borderRadius:'60px'},{transform:`translate(${dx*.25}px,${dy*.25}px) scale(.8)`,opacity:1,borderRadius:'36px',offset:.35},{transform:'none',opacity:1,borderRadius:'24px'}],{duration:480,easing:'cubic-bezier(.2,.9,.2,1)'});
+        } else { void box.offsetWidth; box.classList.add('sr-expand'); }
+        typePlaceholder(inp);
+      }
     },
     // Clear Field: die Buchstaben fallen weg, der Platzhalter blendet wieder ein
     clearField(){
@@ -4414,6 +4423,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Einstellungen: Die Lupe hat etwas Abstand zum Rand, und das Suchfeld wächst aus dem Symbol heraus. Die Zeile „Navigationsleiste“ hat nur noch einen Pfeil.',
       'Prüfung: Nur die „Laufbahnprüfung“ hat noch einen Farbverlauf. Bei allen anderen steht stattdessen ein kleiner Stern in der Zeile (gefüllt = wichtig für Einsatzfahrt und Lernkarten). In anderen Lehrgängen tippst du den Stern direkt an, um Prüfungen als wichtig zu markieren oder abzuwählen.',
       'Ladebildschirm (Skeleton) auf jeder Seite ans neue Aussehen angepasst: Startseite mit Standort-Karten, Einstellungen (fünf Karten), Prüfungsliste, Lernseiten mit Kapitelkarten, Themenraster; am PC mit der schwebenden Seitenleiste. Dazu Platzhalter für Lernkarten, Pausenraum und eingebettete Seiten. „Bewegung reduzieren“ schaltet das Schimmern ab.',
       'Startseite: Die Standorte sind wieder einzelne Karten mit Prozent im Ring und passenden Farben.',
