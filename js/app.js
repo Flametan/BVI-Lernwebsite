@@ -27,6 +27,7 @@ const NAV = (function(){
   let _activeEl = null; // cached active view element – avoids O(90) DOM scan per navigation
 
   function show(id){
+    if(typeof LB!=='undefined') id=LB.guard(id);   // gesperrter Bereich: ohne Passwort zur Sperrseite
     // O(2) view swap: deactivate previous, activate next
     if(!_activeEl) _activeEl = document.querySelector('.view.active');
     const next = document.getElementById(id);
@@ -48,6 +49,7 @@ const NAV = (function(){
     if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); }
     if(id==='v-home'){ SHELL.newQuip(); SHELL.renderHome(); }
     if(id==='v-pruefung') SHELL.renderExam();
+    if(typeof LB!=='undefined') LB.onShow(id);
     if(typeof JGUI!=='undefined'&&JGUI.names) setTimeout(JGUI.names,0);
     if(id==='v-settings') SHELL.syncSettings();
     if(id==='v-notizen') SHELL.renderNotes();
@@ -1525,6 +1527,7 @@ const SEARCH = (function(){
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
     'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
+    'v-lb-start':'Laufbahnprüfung · Laufbahn Dezember','v-lb-ibk1':'Laufbahn · IBK Klausur 1','v-lb-ibk2':'Laufbahn · IBK Klausur 2','v-lb-vb':'Laufbahn · VB Klausur IdF NRW',
     'v-idf-presse':'IdF · Presse- & Öffentlichkeitsarbeit',
     'v-ibk-fuehren-gruppen':'IBK · Führen von Gruppen',
     'v-ibk-fuehrung':'IBK · Führung und Führungsaufgaben',
@@ -1575,6 +1578,7 @@ const SEARCH = (function(){
     _indexBuilt = true;
     idx = [];
     Object.keys(VIEW_LABELS).forEach(vid => {
+      if(/^v-lb-/.test(vid)) return;   // gesperrter Bereich nicht in der Suche
       const el = document.getElementById(vid); if(!el) return;
       const lbl = VIEW_LABELS[vid];
       // Ausgeblendete Kapitel, Blöcke und Reiter des Jahrgangs gehören nicht in die Suche
@@ -7368,7 +7372,8 @@ const SHELL=(function(){
   const EXAMS=[
     ['Laufbahnprüfung',[
       ['v-laufbahn-2026','Laufbahnklausuren Juni 2026','Recht, Management, Stabsarbeit, Vorbeugender Brandschutz · Musterlösungen','doc',true],
-      ['v-laufbahn-2023','Laufbahnklausuren Dez 2023','Führungsvorgang, Recht, Management, Heyrothsberge · Musterlösungen','doc']]],
+      ['v-laufbahn-2023','Laufbahnklausuren Dez 2023','Führungsvorgang, Recht, Management, Heyrothsberge · Musterlösungen','doc'],
+      ['v-lb-start','Laufbahn','IBK-Klausuren und VB-Übungsklausur mit Musterlösungen · Passwort nötig','doc']]],
     ['IdF Münster',[
       ['v-idf-altklausur','Altklausur-Quiz IdF',(typeof IDF_QUIZ_Q!=='undefined'?IDF_QUIZ_Q.length:0)+' Fragen · Vorbeugender Brandschutz & Stabsarbeit · Lern- und Prüfungsmodus','doc',true]]],
     ['FeuAK Hamburg',[

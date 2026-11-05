@@ -5803,6 +5803,34 @@
   </div>
 </div>
 
+<div id="v-lb-start" class="view detail-view">
+  <div class="page-hero"><div class="phi"><p class="page-eyebrow">Prüfung · Laufbahnprüfung</p><h1 class="page-title"><span class="accent">Laufbahn</span> Dezember</h1><p class="page-lead">Zwei IBK-Klausuren und eine Übungsklausur zum Vorbeugenden Brandschutz mit Musterlösungen.</p></div></div>
+  <div class="pc">
+    <form id="lb-gate" class="lb-gate" onsubmit="return LB.submit(event)" autocomplete="off">
+      <div class="lb-lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+      <h2>Dieser Bereich ist geschützt</h2>
+      <p class="lb-sub">Gib das Passwort ein, um die Klausuren und Musterlösungen zu öffnen.</p>
+      <label class="lb-lab" for="lb-pw">Passwort</label>
+      <div class="lb-pwrap" id="lb-pwrap">
+        <span class="lb-mask" id="lb-mask" aria-hidden="true"></span>
+        <input id="lb-pw" class="lb-input" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" oninput="LB.typed()">
+        <button type="button" class="lb-eye" id="lb-eye" aria-label="Passwort anzeigen" aria-pressed="false" onclick="LB.toggle()"><svg class="lb-eye-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="lb-slash" d="M3 3l18 18"/></svg></button>
+      </div>
+      <p class="lb-err-t" id="lb-err" role="alert" hidden>Das Passwort stimmt nicht.</p>
+      <button type="submit" class="m-go2 lb-go">Entsperren</button>
+    </form>
+    <div id="lb-hub" class="cg cg-2" hidden>
+      <div class="topic-card" onclick="NAV.go('v-lb-ibk1','IBK Klausur 1')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><div class="tc-name">IBK Klausur 1: Ausbildung – Wertschätzung</div><div class="tc-sub">Konflikt in der Teeküche · Transaktionsanalyse, Kommunikation, Onboarding, Zeitmanagement · mit Musterlösung</div></div>
+      <div class="topic-card" onclick="NAV.go('v-lb-ibk2','IBK Klausur 2')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div class="tc-name">IBK Klausur 2: Schichtwechsel – Pünktlichkeit</div><div class="tc-sub">Streit vor dem Schichtwechsel · Aktionsplan, Belastungen, Maslow, Generationen, Gesundheitsmanagement · mit Musterlösung</div></div>
+      <div class="topic-card" onclick="NAV.go('v-lb-vb','VB Übungsklausur')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg><div class="tc-name">VB Klausur IdF NRW: Brandschutzkonzept</div><div class="tc-sub">Konzept lesen, Mängel finden, zu mindestens 5 Punkten begründet Stellung nehmen · drei Übungskonzepte</div></div>
+      <button type="button" class="btn btn-ghost lb-relock" onclick="LB.lock()">Bereich wieder sperren</button>
+    </div>
+  </div>
+</div>
+<div id="v-lb-vb" class="view detail-view">
+  <div class="page-hero"><div class="phi"><p class="page-eyebrow">Laufbahn · Vorbeugender Brandschutz</p><h1 class="page-title">VB-Klausur <span class="accent">IdF NRW</span></h1><p class="page-lead">Bereite dich auf das Gespräch mit dem Bauherrn vor: Lies das Konzept, nimm zu mindestens 5 Punkten Stellung (Problem, Begründung aus Feuerwehrsicht, Lösungsvorschlag). Rechtsgrundlagen sind nicht nötig. Die Konzepte sind frei erfunden und enthalten bewusst Mängel.</p></div></div>
+  <div class="pc"><div id="lb-vb-root"></div></div>
+</div>
 <div id="v-laufbahn-2026" class="view detail-view">
   <div class="page-hero"><div class="phi">
     <p class="page-eyebrow">Laufbahnprüfung · Schriftliche Klausuren</p>
@@ -23206,6 +23234,8 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
 <script src="js/jg.js"></script>
 <script src="js/faq.js"></script>
 <script src="js/idf-data.js"></script>
+<script src="js/laufbahn-data.js"></script>
+<script src="js/laufbahn.js"></script>
 <script src="js/app.js"></script>
 <script src="js/jg-ui.js"></script>
 </body>
