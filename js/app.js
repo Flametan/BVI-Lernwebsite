@@ -1500,7 +1500,7 @@ const SEARCH = (function(){
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
     'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
-    'v-lb-start':'Laufbahnprüfung · Laufbahn Dezember','v-lb-ibk1':'Laufbahn · IBK Klausur 1','v-lb-ibk2':'Laufbahn · IBK Klausur 2','v-lb-vb':'Laufbahn · VB Klausur IdF NRW',
+    'v-lb-start':'Laufbahnprüfung · Dezember','v-lb-ibk1':'Laufbahn · IBK Klausur 1','v-lb-ibk2':'Laufbahn · IBK Klausur 2','v-lb-vb':'Laufbahn · VB Klausur IdF NRW',
     'v-idf-presse':'IdF · Presse- & Öffentlichkeitsarbeit',
     'v-ibk-fuehren-gruppen':'IBK · Führen von Gruppen',
     'v-ibk-fuehrung':'IBK · Führung und Führungsaufgaben',
@@ -4415,6 +4415,9 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.5',ts:'2026-11-05T09:00',items:[
+      'Einstellungen (Handy): aufgeräumter. Acht Gruppen sind jetzt fünf (Aussehen, Lernen & Erinnerung, Daten & Werkzeuge …), die Karten sind kompakter, Rückgängig/Wiederholen und Suche sitzen als kleine Symbole oben rechts, die Navigationsleiste hat eine eigene Seite und die Spende ist eine Zeile, die sich aufklappen lässt.',
+      'Prüfung: Die Zeile mit dem Farbverlauf heißt jetzt „Laufbahnprüfung“. Untertitel sind auf zwei Zeilen begrenzt.',
+      'Kleinigkeiten: Keine Schrift mehr unter 12 px, Startseite (Handy) ohne extra Datumszeile, „Bewegung reduzieren“ schaltet alle Animationen ab.',
       'Lernseiten: Auf den Übersichten von IBK, VAk, FeuAK und IdF fehlt die Prüfungskarte (Simulator, Klausurvorbereitung, Altklausur-Quiz), weil es sie schon unter „Prüfung“ gibt.',
       'Prüfung: „Laufbahn“ gibt es nur im Master-Jahrgang. Das Passwortfeld öffnet sich beim Antippen als Fenster über der Seite.',
       'Prüfung: „Laufbahn“ steht ganz oben und hat den Farbverlauf (statt der Juni-2026-Klausuren). ',
@@ -7349,7 +7352,7 @@ const SHELL=(function(){
   ];
   const EXAMS=[
     ['Laufbahnprüfung',[
-      ['v-lb-start','Laufbahn','IBK-Klausuren und VB-Übungsklausur mit Musterlösungen · Passwort nötig','doc',true],
+      ['v-lb-start','Laufbahnprüfung','IBK-Klausuren und VB-Übungsklausur mit Musterlösungen · Passwort nötig','doc',true],
       ['v-laufbahn-2026','Laufbahnklausuren Juni 2026','Recht, Management, Stabsarbeit, Vorbeugender Brandschutz · Musterlösungen','doc'],
       ['v-laufbahn-2023','Laufbahnklausuren Dez 2023','Führungsvorgang, Recht, Management, Heyrothsberge · Musterlösungen','doc']]],
     ['IdF Münster',[
@@ -7892,10 +7895,8 @@ const SHELL=(function(){
     const lb=BACKUP.last();
     set('acc-dar-sub',th+' · Schrift '+fs);
     if(typeof JG!=='undefined') set('acc-lg-sub',JG.labelOf(JG.current())+(JG.isMaster()?' (Master)':''));
-    set('acc-ler-sub','Tagesziel '+goalMin()+' min · Timer '+(document.documentElement.classList.contains('no-timers')?'aus':'an'));
-    set('acc-eri-sub',NOTIF.isEnabled()?'Täglich um '+NOTIF.hour()+':00':'Aus');
-    set('acc-dat-sub',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
-    set('acc-wer-sub',nc+(nc===1?' Notiz':' Notizen')+' · '+bc+' Lesezeichen');
+    set('acc-ler-sub','Tagesziel '+goalMin()+' min · Timer '+(document.documentElement.classList.contains('no-timers')?'aus':'an')+' · Erinnerung '+(NOTIF.isEnabled()?NOTIF.hour()+':00':'aus'));
+    set('acc-dat-sub',(lb?'Gesichert '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert')+' · '+nc+(nc===1?' Notiz':' Notizen')+' · '+bc+' Lesezeichen');
   }
   document.addEventListener('click',e=>{ if(e.target.closest('#v-settings')) setTimeout(accSubs,0); });
   document.addEventListener('change',e=>{ if(e.target.closest('#v-settings')) setTimeout(accSubs,0); });

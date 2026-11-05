@@ -3367,3 +3367,31 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .lb-modal-x{position:absolute;right:12px;top:12px;width:34px;height:34px;border:0;border-radius:50%;background:var(--m-raised,rgba(128,128,128,.15));color:inherit;display:grid;place-items:center;cursor:pointer;padding:0;}
 @keyframes lbModal{from{opacity:0;transform:translateY(24px) scale(.96);}to{opacity:1;transform:none;}}
 @media(prefers-reduced-motion:reduce){.lb-modal-box,.lb-modal-bg{animation:none;}}
+
+/* ── Einstellungen (Handy): aufgeräumt – Werkzeuge oben rechts, kompakte Karten, Untergruppen, einzeilige Spende ── */
+#v-settings .page-hero .phi{position:relative;}
+.set-tools{position:absolute;right:0;top:0;display:flex;align-items:center;gap:6px;}
+.set-tools .jg-bar{margin:0;padding:0;display:flex;gap:6px;border:0;background:none;}
+.set-tools .btn{width:40px;height:40px;min-height:40px;padding:0;border-radius:50%;display:grid;place-items:center;}
+.set-tools .ud-bar:has(.ud-undo:disabled):has(.ud-redo:disabled){display:none;}
+#v-settings .page-title{padding-right:140px;}
+#v-settings .m-acc-h{padding:13px 16px;gap:12px;}
+#v-settings .m-acc-h .m-ic{background:none;width:24px;height:24px;padding:0;border-radius:0;color:var(--m-accent-fg,var(--m-accent));}
+#v-settings .m-acc-h .m-ic svg{width:22px;height:22px;}
+#v-settings .m-acc-h .m-t1{font-size:1rem;}
+#v-settings .m-acc-h .m-t2{font-size:.8rem;margin-top:1px;}
+#v-settings .m-acc-h .m-t2:empty{display:none;}
+.m-sub+.m-sub{margin-top:14px;padding-top:12px;border-top:1px solid var(--m-line,rgba(128,128,128,.22));}
+.m-sub-h{font-size:.76rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--m-muted,inherit);margin:0 0 6px 2px;}
+.m-donate>summary{list-style:none;cursor:pointer;}
+.m-donate>summary::-webkit-details-marker{display:none;}
+.m-donate[open]>summary .m-acc-chv{transform:rotate(90deg);}
+.m-donate>.m-note{margin:8px 16px 10px;}
+.m-donate .m-donate-btn{margin:0 16px 16px;display:flex;justify-content:center;text-decoration:none;}
+.nb-h{font-size:.75rem;}
+@media(max-width:700px){.m-nx-d{display:none;}}
+/* Prüfungsliste: Untertitel höchstens zwei Zeilen */
+#v-pruefung .m-row .m-t2{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;white-space:normal;}
+/* „Bewegung reduzieren“ schaltet alle Animationen und Übergänge ab */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}}
+.m-donate[open]>summary::after{transform:rotate(90deg);}
