@@ -4415,6 +4415,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.5',ts:'2026-11-05T09:00',items:[
+      'Prüfung: „Laufbahn“ steht ganz oben und hat den Farbverlauf (statt der Juni-2026-Klausuren). Beim Antippen der gesperrten Zeile schiebt sich das Passwortfeld darüber ein; nach dem Entsperren öffnet sich der Bereich sofort.',
       'Desktop: Die Seitenleiste ist jetzt eine „Premium Sidebar“ – eine schwebende, abgerundete Leiste nur mit Symbolen. Beim Darüberfahren erscheint der Name des Tabs als Sprechblase neben dem Symbol. Mit dem Pin lässt sie sich wie bisher ganz anheften.',
       'Laufbahn: Industriebau kommt nicht mehr vor (Konzept „Logistikhalle“ sowie die zugehörigen VB-Fragen und -Lernkarten entfernt).',
       'Suche: Beim Öffnen zieht sich der runde Knopf zur Suchleiste auf und der Platzhalter wird getippt. Die Vorschläge fallen beim Tippen nacheinander ein, Treffer sind fett. Mit dem ✕ fallen die Buchstaben weg. Beim Absenden dreht sich das Symbol, Platzhalter-Zeilen schimmern und die Treffer blenden ein.',
@@ -7346,9 +7347,9 @@ const SHELL=(function(){
   ];
   const EXAMS=[
     ['Laufbahnprüfung',[
-      ['v-laufbahn-2026','Laufbahnklausuren Juni 2026','Recht, Management, Stabsarbeit, Vorbeugender Brandschutz · Musterlösungen','doc',true],
-      ['v-laufbahn-2023','Laufbahnklausuren Dez 2023','Führungsvorgang, Recht, Management, Heyrothsberge · Musterlösungen','doc'],
-      ['v-lb-start','Laufbahn','IBK-Klausuren und VB-Übungsklausur mit Musterlösungen · Passwort nötig','doc']]],
+      ['v-lb-start','Laufbahn','IBK-Klausuren und VB-Übungsklausur mit Musterlösungen · Passwort nötig','doc',true],
+      ['v-laufbahn-2026','Laufbahnklausuren Juni 2026','Recht, Management, Stabsarbeit, Vorbeugender Brandschutz · Musterlösungen','doc'],
+      ['v-laufbahn-2023','Laufbahnklausuren Dez 2023','Führungsvorgang, Recht, Management, Heyrothsberge · Musterlösungen','doc']]],
     ['IdF Münster',[
       ['v-idf-altklausur','Altklausur-Quiz IdF',(typeof IDF_QUIZ_Q!=='undefined'?IDF_QUIZ_Q.length:0)+' Fragen · Vorbeugender Brandschutz & Stabsarbeit · Lern- und Prüfungsmodus','doc',true]]],
     ['FeuAK Hamburg',[
@@ -7763,10 +7764,10 @@ const SHELL=(function(){
     const jd=JG.data(), weg=new Set(jd.pr.weg), edit=typeof JGUI!=='undefined'&&JGUI.isEditing()&&!JG.isMaster();
     const rel=id=>JG.rel(id), star=id=>`<span class="jg-st${rel(id)?' on':''}" aria-hidden="true">★</span>`;
     // Im Bearbeiten-Modus schaltet das Antippen einer Prüfung ihre Klausurrelevanz um; sonst öffnet es sie
-    const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2:id==='v-vak-altklausur'&&dueQ?`${t2} · ${dueQ} zur Wiederholung fällig`:id==='v-idf-altklausur'&&dueI?`${t2} · ${dueI} zur Wiederholung fällig`:t2,on:edit?`JGUI.setRel('${id}')`:goJs(id,t1),right:edit?star(id):''});
+    const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2:id==='v-vak-altklausur'&&dueQ?`${t2} · ${dueQ} zur Wiederholung fällig`:id==='v-idf-altklausur'&&dueI?`${t2} · ${dueI} zur Wiederholung fällig`:t2,on:edit?`JGUI.setRel('${id}')`:(id==='v-lb-start'&&typeof LB!=='undefined'?'LB.ask(this)':goJs(id,t1)),right:edit?star(id):(id==='v-lb-start'&&typeof LB!=='undefined'&&!LB.ok()?'<svg class="lb-row-lock" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="gesperrt"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>':'')});
     const own=p=>row({ic:ic('doc'),t1:esc(p.titel),t2:p.fragen.length+' Fragen · eigene Prüfung',on:edit?`JGUI.setRel('${p.id}')`:`JGUI.openExam('${p.id}')`,right:edit?star(p.id):''});
     const del=id=>edit?`<button type="button" class="jg-x" aria-label="Prüfung entfernen" onclick="JGUI.delExam('${id}')">✕</button>`:'';
-    const rw=(id,inner)=>`<div class="jg-rw${rel(id)?' hot':''}">${inner}${del(id)}</div>`;
+    const rw=(id,inner)=>`<div class="jg-rw${rel(id)?' hot':''}">${id==='v-lb-start'&&typeof LB!=='undefined'&&!LB.ok()?LB.inlineHtml():''}${inner}${del(id)}</div>`;
     const sec=([name,items],si)=>{
       const key=JG.TABS[si][0];
       const vis=items.filter(x=>!weg.has(x[0])), adds=jd.pr.hinzu.filter(p=>p.tab===key&&!p.seite);

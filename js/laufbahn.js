@@ -18,40 +18,60 @@ const LB=(function(){
   const $=id=>document.getElementById(id);
   function ok(){ try{ return sessionStorage.getItem(SKEY)==='1'; }catch(e){ return false; } }
 
-  /* ── Passwortfeld: Punkte werden nacheinander zu Buchstaben (und zurück) ── */
-  function mask(){
-    const inp=$('lb-pw'), m=$('lb-mask'); if(!inp||!m) return;
-    const er=$('lb-err'); if(er) er.hidden=true; inp.removeAttribute('aria-invalid');
+  /* ── Passwortfeld: Punkte werden nacheinander zu Buchstaben (und zurück); ein Feld, mehrere Orte (Sperrseite, Prüfungsliste) ── */
+  const wrapOf=el=>el&&el.closest('.lb-form');
+  function mask(inp){
+    const f=wrapOf(inp), m=f&&f.querySelector('.lb-mask'); if(!m) return;
+    const er=f.querySelector('.lb-err-t'); if(er) er.hidden=true; inp.removeAttribute('aria-invalid');
     const v=inp.value, on=m.classList.contains('show');
-    const old=m.children.length;
-    if(old>v.length){ while(m.children.length>v.length) m.removeChild(m.lastChild); }
+    while(m.children.length>v.length) m.removeChild(m.lastChild);
     for(let i=0;i<v.length;i++){
       let el=m.children[i];
       if(!el){ el=document.createElement('i'); el.style.setProperty('--i',i); el.innerHTML='<b class="d">•</b><b class="c"></b>'; m.appendChild(el); if(on) el.classList.add('rv'); }
       el.lastChild.textContent=v[i];
     }
   }
-  function toggle(){
-    const m=$('lb-mask'), eye=$('lb-eye'); if(!m) return;
+  function toggle(btn){
+    const f=wrapOf(btn), m=f.querySelector('.lb-mask'), inp=f.querySelector('.lb-input');
     const on=!m.classList.contains('show');
     m.classList.toggle('show',on);
-    eye.setAttribute('aria-pressed',on?'true':'false'); eye.setAttribute('aria-label',on?'Passwort verbergen':'Passwort anzeigen'); eye.classList.toggle('on',on);
+    btn.setAttribute('aria-pressed',on?'true':'false'); btn.setAttribute('aria-label',on?'Passwort verbergen':'Passwort anzeigen'); btn.classList.toggle('on',on);
     const items=[...m.children], n=items.length;
     items.forEach((el,i)=>{ el.style.setProperty('--i',on?i:(n-1-i)); el.classList.toggle('rv',on); });   // beim Verbergen von hinten nach vorn
-    $('lb-pw').focus();
+    inp.focus();
   }
   function submit(e){
     if(e) e.preventDefault();
-    const inp=$('lb-pw'), err=$('lb-err'), wrap=$('lb-pwrap');
+    const f=wrapOf(e&&e.target), inp=f.querySelector('.lb-input'), err=f.querySelector('.lb-err-t'), wrap=f.querySelector('.lb-pwrap');
     if(hash(inp.value.trim().toLowerCase())===HASH){
       try{ sessionStorage.setItem(SKEY,'1'); }catch(x){}
-      err.hidden=true; inp.value=''; mask(); render();
+      err.hidden=true; inp.value=''; mask(inp);
+      if(f.dataset.go){ if(typeof SHELL!=='undefined'&&SHELL.renderExam) SHELL.renderExam(); NAV.go('v-lb-start','Laufbahn'); }
+      else render();
     } else {
       err.hidden=false; inp.setAttribute('aria-invalid','true');
       wrap.classList.remove('shake'); void wrap.offsetWidth; wrap.classList.add('shake');
     }
     return false;
   }
+  // Prüfungsliste: Antippen der gesperrten Zeile schiebt das Passwortfeld darüber ein
+  function ask(btn){
+    if(ok()){ NAV.go('v-lb-start','Laufbahn'); return; }
+    const box=btn.closest('.jg-rw').querySelector('.lb-inl'); if(!box) return;
+    const open=!box.classList.contains('open');
+    box.classList.toggle('open',open); box.setAttribute('aria-hidden',open?'false':'true');
+    if(open) setTimeout(()=>{ const i=box.querySelector('.lb-input'); if(i) i.focus({preventScroll:true}); },280);
+  }
+  function inlineHtml(){
+    return `<div class="lb-inl" aria-hidden="true"><div class="lb-inl-in"><form class="lb-form lb-inform" data-go="1" onsubmit="return LB.submit(event)" autocomplete="off">
+      <label class="lb-lab">Passwort für „Laufbahn“</label>
+      <div class="lb-pwrap"><span class="lb-mask" aria-hidden="true"></span>
+        <input class="lb-input" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Passwort" oninput="LB.typed(this)">
+        <button type="button" class="lb-eye" aria-label="Passwort anzeigen" aria-pressed="false" onclick="LB.toggle(this)">${EYE}</button></div>
+      <p class="lb-err-t" role="alert" hidden>Das Passwort stimmt nicht.</p>
+      <button type="submit" class="m-go2 lb-go">Entsperren</button></form></div></div>`;
+  }
+  const EYE='<svg class="lb-eye-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="lb-slash" d="M3 3l18 18"/></svg>';
   function lock(){ try{ sessionStorage.removeItem(SKEY); }catch(e){} render(); }
 
   function render(){
@@ -139,7 +159,7 @@ const LB=(function(){
   }
 
   return {
-    ok, submit, toggle, typed:mask, lock, render,
+    ok, submit, toggle, typed:mask, lock, render, ask, inlineHtml,
     onShow(id){
       if(id==='v-lb-start'){ if(!shown){ shown=true; } render(); }
       if(id==='v-lb-vb') vbInit();

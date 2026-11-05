@@ -3347,3 +3347,12 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
   body:not(.rail-pin) #m-rail [data-tip]:hover::before,body:not(.rail-pin) #m-rail [data-tip]:focus-visible::before{opacity:1;transform:translateX(0) rotate(45deg);}
 }
 @media(min-width:1100px) and (prefers-reduced-motion:reduce){body:not(.rail-pin) #m-rail [data-tip]::after,body:not(.rail-pin) #m-rail [data-tip]::before{transition:none;}}
+
+/* Prüfungsliste: Passwortfeld klappt über der gesperrten Laufbahn-Zeile auf */
+.lb-inl{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s cubic-bezier(.3,1.1,.5,1);}
+.lb-inl.open{grid-template-rows:1fr;}
+.lb-inl-in{overflow:hidden;min-height:0;}
+.lb-inform{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px;}
+.lb-inform .lb-lab{margin:0;}
+.lb-row-lock{color:var(--m-muted,inherit);flex:none;}
+@media(prefers-reduced-motion:reduce){.lb-inl{transition:none;}}
