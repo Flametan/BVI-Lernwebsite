@@ -46,7 +46,7 @@ const LB=(function(){
     if(hash(inp.value.trim().toLowerCase())===HASH){
       try{ sessionStorage.setItem(SKEY,'1'); }catch(x){}
       err.hidden=true; inp.value=''; mask(inp);
-      if(f.dataset.go){ if(typeof SHELL!=='undefined'&&SHELL.renderExam) SHELL.renderExam(); NAV.go('v-lb-start','Laufbahn'); }
+      if(f.dataset.go){ closeModal(); if(typeof SHELL!=='undefined'&&SHELL.renderExam) SHELL.renderExam(); NAV.go('v-lb-start','Laufbahn'); }
       else render();
     } else {
       err.hidden=false; inp.setAttribute('aria-invalid','true');
@@ -54,22 +54,30 @@ const LB=(function(){
     }
     return false;
   }
-  // Prüfungsliste: Antippen der gesperrten Zeile schiebt das Passwortfeld darüber ein
+  // Prüfungsliste: Antippen der gesperrten Zeile öffnet das Passwortfenster eine Ebene darüber
+  let modal=null, lastFocus=null;
+  function closeModal(){ if(!modal) return; modal.classList.remove('on'); modal.setAttribute('aria-hidden','true'); const f=lastFocus; lastFocus=null; if(f&&f.focus) f.focus({preventScroll:true}); }
   function ask(btn){
     if(ok()){ NAV.go('v-lb-start','Laufbahn'); return; }
-    const box=btn.closest('.jg-rw').querySelector('.lb-inl'); if(!box) return;
-    const open=!box.classList.contains('open');
-    box.classList.toggle('open',open); box.setAttribute('aria-hidden',open?'false':'true');
-    if(open) setTimeout(()=>{ const i=box.querySelector('.lb-input'); if(i) i.focus({preventScroll:true}); },280);
-  }
-  function inlineHtml(){
-    return `<div class="lb-inl" aria-hidden="true"><div class="lb-inl-in"><form class="lb-form lb-inform" data-go="1" onsubmit="return LB.submit(event)" autocomplete="off">
-      <label class="lb-lab">Passwort für „Laufbahn“</label>
-      <div class="lb-pwrap"><span class="lb-mask" aria-hidden="true"></span>
-        <input class="lb-input" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Passwort" oninput="LB.typed(this)">
-        <button type="button" class="lb-eye" aria-label="Passwort anzeigen" aria-pressed="false" onclick="LB.toggle(this)">${EYE}</button></div>
-      <p class="lb-err-t" role="alert" hidden>Das Passwort stimmt nicht.</p>
-      <button type="submit" class="m-go2 lb-go">Entsperren</button></form></div></div>`;
+    if(!modal){
+      modal=document.createElement('div'); modal.id='lb-modal'; modal.className='lb-modal'; modal.setAttribute('role','dialog'); modal.setAttribute('aria-modal','true'); modal.setAttribute('aria-label','Passwort für Laufbahn'); modal.setAttribute('aria-hidden','true');
+      modal.innerHTML=`<div class="lb-modal-bg" onclick="LB.closeModal()"></div><div class="lb-modal-box">
+        <button type="button" class="lb-modal-x" aria-label="Schließen" onclick="LB.closeModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        <div class="lb-lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+        <h2>Laufbahn ist geschützt</h2>
+        <form class="lb-form lb-inform" data-go="1" onsubmit="return LB.submit(event)" autocomplete="off">
+          <label class="lb-lab">Passwort</label>
+          <div class="lb-pwrap"><span class="lb-mask" aria-hidden="true"></span>
+            <input class="lb-input" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Passwort" oninput="LB.typed(this)">
+            <button type="button" class="lb-eye" aria-label="Passwort anzeigen" aria-pressed="false" onclick="LB.toggle(this)">${EYE}</button></div>
+          <p class="lb-err-t" role="alert" hidden>Das Passwort stimmt nicht.</p>
+          <button type="submit" class="m-go2 lb-go">Entsperren</button></form></div>`;
+      document.body.appendChild(modal);
+      document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&modal.classList.contains('on')){ e.stopPropagation(); closeModal(); } },true);
+    }
+    lastFocus=btn||document.activeElement;
+    modal.classList.add('on'); modal.setAttribute('aria-hidden','false');
+    setTimeout(()=>{ const i=modal.querySelector('.lb-input'); if(i) i.focus({preventScroll:true}); },120);
   }
   const EYE='<svg class="lb-eye-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="lb-slash" d="M3 3l18 18"/></svg>';
   function lock(){ try{ sessionStorage.removeItem(SKEY); }catch(e){} render(); }
@@ -159,12 +167,13 @@ const LB=(function(){
   }
 
   return {
-    ok, submit, toggle, typed:mask, lock, render, ask, inlineHtml,
+    ok, submit, toggle, typed:mask, lock, render, ask, closeModal,
     onShow(id){
       if(id==='v-lb-start'){ if(!shown){ shown=true; } render(); }
       if(id==='v-lb-vb') vbInit();
     },
-    guard(id){ return /^v-lb-(ibk|vb)/.test(id)&&!ok()?'v-lb-start':id; },
+    // Laufbahn gibt es nur im Master-Jahrgang; ohne Passwort geht es zur Sperrseite
+    guard(id){ if(!/^v-lb-/.test(id)) return id; if(typeof JG!=='undefined'&&!JG.isMaster()) return 'v-pruefung'; return /^v-lb-(ibk|vb)/.test(id)&&!ok()?'v-lb-start':id; },
     pick(id){ st.k=id; save(); vbRender(); window.scrollTo({top:0}); },
     type,
     eval(){ const k=K(); st.ev[k.id]=1; save(); vbRender(); window.scrollTo({top:0,behavior:'smooth'}); },

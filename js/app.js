@@ -4415,7 +4415,9 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.5',ts:'2026-11-05T09:00',items:[
-      'Prüfung: „Laufbahn“ steht ganz oben und hat den Farbverlauf (statt der Juni-2026-Klausuren). Beim Antippen der gesperrten Zeile schiebt sich das Passwortfeld darüber ein; nach dem Entsperren öffnet sich der Bereich sofort.',
+      'Lernseiten: Auf den Übersichten von IBK, VAk, FeuAK und IdF fehlt die Prüfungskarte (Simulator, Klausurvorbereitung, Altklausur-Quiz), weil es sie schon unter „Prüfung“ gibt.',
+      'Prüfung: „Laufbahn“ gibt es nur im Master-Jahrgang. Das Passwortfeld öffnet sich beim Antippen als Fenster über der Seite.',
+      'Prüfung: „Laufbahn“ steht ganz oben und hat den Farbverlauf (statt der Juni-2026-Klausuren). ',
       'Desktop: Die Seitenleiste ist jetzt eine „Premium Sidebar“ – eine schwebende, abgerundete Leiste nur mit Symbolen. Beim Darüberfahren erscheint der Name des Tabs als Sprechblase neben dem Symbol. Mit dem Pin lässt sie sich wie bisher ganz anheften.',
       'Laufbahn: Industriebau kommt nicht mehr vor (Konzept „Logistikhalle“ sowie die zugehörigen VB-Fragen und -Lernkarten entfernt).',
       'Suche: Beim Öffnen zieht sich der runde Knopf zur Suchleiste auf und der Platzhalter wird getippt. Die Vorschläge fallen beim Tippen nacheinander ein, Treffer sind fett. Mit dem ✕ fallen die Buchstaben weg. Beim Absenden dreht sich das Symbol, Platzhalter-Zeilen schimmern und die Treffer blenden ein.',
@@ -7767,10 +7769,10 @@ const SHELL=(function(){
     const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2:id==='v-vak-altklausur'&&dueQ?`${t2} · ${dueQ} zur Wiederholung fällig`:id==='v-idf-altklausur'&&dueI?`${t2} · ${dueI} zur Wiederholung fällig`:t2,on:edit?`JGUI.setRel('${id}')`:(id==='v-lb-start'&&typeof LB!=='undefined'?'LB.ask(this)':goJs(id,t1)),right:edit?star(id):(id==='v-lb-start'&&typeof LB!=='undefined'&&!LB.ok()?'<svg class="lb-row-lock" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="gesperrt"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>':'')});
     const own=p=>row({ic:ic('doc'),t1:esc(p.titel),t2:p.fragen.length+' Fragen · eigene Prüfung',on:edit?`JGUI.setRel('${p.id}')`:`JGUI.openExam('${p.id}')`,right:edit?star(p.id):''});
     const del=id=>edit?`<button type="button" class="jg-x" aria-label="Prüfung entfernen" onclick="JGUI.delExam('${id}')">✕</button>`:'';
-    const rw=(id,inner)=>`<div class="jg-rw${rel(id)?' hot':''}">${id==='v-lb-start'&&typeof LB!=='undefined'&&!LB.ok()?LB.inlineHtml():''}${inner}${del(id)}</div>`;
+    const rw=(id,inner)=>`<div class="jg-rw${rel(id)?' hot':''}">${inner}${del(id)}</div>`;
     const sec=([name,items],si)=>{
       const key=JG.TABS[si][0];
-      const vis=items.filter(x=>!weg.has(x[0])), adds=jd.pr.hinzu.filter(p=>p.tab===key&&!p.seite);
+      const vis=items.filter(x=>!weg.has(x[0])&&!(x[0]==='v-lb-start'&&!JG.isMaster())), adds=jd.pr.hinzu.filter(p=>p.tab===key&&!p.seite);
       const lists=[...vis.map(x=>rw(x[0],card(x))),...adds.map(p=>rw(p.id,own(p)))];
       return `<div class="m-col"><div class="m-sec jg-sh">${esc(name)}</div><div class="m-list">${lists.join('')||'<div class="jg-none">Keine Prüfungen</div>'}</div></div>`;
     };
