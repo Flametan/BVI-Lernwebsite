@@ -4406,6 +4406,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.5',ts:'2026-11-05T09:00',items:[
+      'Themenübersichten: Die Karten bauen sich ebenfalls nacheinander auf.',
       'Lernkarten: Beim Umdrehen hebt sich die Karte kurz an und dreht sich mit Tiefe (Flip with depth). Beim Wischen folgt die Karte dem Finger, neigt sich bis 12° und wird bei Schwung weggeschnippt (Follow, then fling).',
       'Lernseiten: Die Kapitelkarten einer Lernseite bauen sich nacheinander auf (Cascade, don\'t dump).',
       'Einstellungen: Die Schriftgröße wird jetzt mit einem Schieberegler (vier Stufen, mitlaufende Wertmarke) eingestellt statt mit vier Knöpfen.',
