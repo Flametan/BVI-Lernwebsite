@@ -2317,14 +2317,11 @@ const FC = (function(){
 
   function showSkeleton(){
     const box = document.getElementById('fc-container'); if(!box) return;
-    box.innerHTML = `
-      <div class="fc-skeleton-line fc-skeleton-stats"></div>
-      <div class="fc-skeleton-line fc-skeleton-nav"></div>
-      <div class="fc-skeleton-card"></div>
-      <div class="fc-skeleton-ctrl">
-        <div class="fc-skeleton-btn"></div>
-        <div class="fc-skeleton-btn"></div>
-      </div>`;
+    box.innerHTML = `<div class="sk" aria-hidden="true">
+      <div class="sk-pills"><i class="sk-b"></i><i class="sk-b"></i><i class="sk-b"></i></div>
+      <i class="sk-b sk-line" style="width:46%;margin:14px auto 12px"></i>
+      <div class="sk-card sk-fc"><i class="sk-b sk-line" style="width:90px;height:12px"></i><i class="sk-b sk-line" style="width:88%"></i><i class="sk-b sk-line" style="width:74%"></i><i class="sk-b sk-line" style="width:58%"></i></div>
+      <div class="sk-ctl"><i class="sk-b"></i><i class="sk-b"></i></div></div>`;
   }
 
   // Jahrgang: Karte löschen (nur für diesen Jahrgang), dazu Rückgängig/Wiederholen und die gelöschten Karten zurückholen
@@ -4382,6 +4379,8 @@ const KLAUSUR_HUB = (function(){
 ====================================================================== */
 // Eingebettete Seiten (iframe): füllen den Platz zwischen Kopfleiste und Tableiste, ihre Reiter bleiben sichtbar
 (function(){
+  // Skeleton: schimmernde Fläche, bis die eingebettete Seite geladen ist
+  document.querySelectorAll('iframe.emb-frame').forEach(function(f){ var ok=function(){ f.classList.add('ld'); }; f.addEventListener('load',ok); setTimeout(ok,6000); });
   function fit(){
     var any=false;
     document.querySelectorAll('iframe.emb-frame').forEach(function(f){
@@ -4414,6 +4413,12 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Ladebildschirm (Skeleton) auf jeder Seite ans neue Aussehen angepasst: Startseite mit Standort-Karten, Einstellungen (fünf Karten), Prüfungsliste, Lernseiten mit Kapitelkarten, Themenraster; am PC mit der schwebenden Seitenleiste. Dazu Platzhalter für Lernkarten, Pausenraum und eingebettete Seiten. „Bewegung reduzieren“ schaltet das Schimmern ab.',
+      'Startseite: Die Standorte sind wieder einzelne Karten mit Prozent im Ring und passenden Farben.',
+      'Startseite: Die Standort-Liste passt jetzt zum Rest der App (eine Karte mit Trennlinien, Umschalter wie bei „Woche / Monate“) und zeigt den Fortschritt in Prozent.',
+      'Update: Mit der neuen Version lädt die App alle Seiten neu, damit auch die aufgeräumten Einstellungen erscheinen.',
+    ]},
     {v:'3.1.5',ts:'2026-11-05T09:00',items:[
       'Startseite: Die Karte „Los geht\'s“ (Weiterlernen) ist entfernt.',
       'Startseite: Die Standorte stehen jetzt als Liste mit Umschalter „2. / 1. Ausbildungsjahr“ (Handy). Jede Zeile zeigt Ring, Ort, Fortschrittsbalken und Prozent und öffnet den Standort.',
@@ -7743,10 +7748,11 @@ const SHELL=(function(){
     }
     const chartCard=chartHtml();
     // Standort-Liste: Umschalter 2./1. Jahr (Handy), je Standort eine Zeile mit Ring, Ort, Fortschrittsbalken und Prozent
-    const MODSUB={ibk:'Heyrothsberge · Führung, Kommunikation',vak:'Berlin · Verwaltungsrecht',feuak:'Hamburg · Haushalt, Management',idf:'Münster · Brandschutz, Stab',gal:'Grundlehrgang',sfs:'Regensburg',hlfs:'Kassel'};
+    const MODSUB={ibk:'Heyrothsberge · Führung',vak:'Berlin · Verwaltungsrecht',feuak:'Hamburg · Haushalt',idf:'Münster · Brandschutz',gal:'Grundlehrgang',sfs:'Regensburg',hlfs:'Kassel'};
+    const stRing=(p,aria)=>{ const r=44,c=2*Math.PI*r; return `<svg class="m-hring" viewBox="0 0 100 100" role="img" aria-label="${esc(aria)}: ${p} %"><circle cx="50" cy="50" r="${r}" class="bg"/>${p>0?`<circle cx="50" cy="50" r="${r}" class="fg" stroke-dasharray="${c*p/100} ${c}" transform="rotate(-90 50 50)"/>`:''}<text x="50" y="57" text-anchor="middle" font-size="25">${p}%</text></svg>`; };
     const stRow=m=>{
       const c=cnt[m[0]]||{done:0,total:0}, p=pct(c);
-      return `<button class="m-modrow" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen"><span class="m-mring">${homeRing(p,String(p),m[1])}</span><span class="m-tx"><span class="m-t1">${esc(m[1])}</span><span class="m-t2">${esc(MODSUB[m[0]]||m[2])}</span><span class="m-mbar"><i style="width:${p}%"></i></span></span><span class="m-chv" aria-hidden="true">›</span></button>`;
+      return `<button class="m-modrow" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen"><span class="m-mring">${stRing(p,m[1])}</span><span class="m-tx"><span class="m-t1">${esc(m[1])}</span><span class="m-t2">${esc(MODSUB[m[0]]||m[2])}</span><span class="m-mbar"><i style="width:${p}%"></i></span></span><span class="m-chv" aria-hidden="true">›</span></button>`;
     };
     let hy='2'; try{ hy=localStorage.getItem('bvi_home_year')==='1'?'1':'2'; }catch(e){}
     const mods=`<div class="m-card m-mods" data-y="${hy}"><div class="m-seg2" role="tablist" aria-label="Ausbildungsjahr"><button type="button" role="tab" class="${hy==='2'?'on':''}" aria-selected="${hy==='2'}" onclick="SHELL.setYear('2')">2. Ausbildungsjahr</button><button type="button" role="tab" class="${hy==='1'?'on':''}" aria-selected="${hy==='1'}" onclick="SHELL.setYear('1')">1. Ausbildungsjahr</button></div>
@@ -8203,6 +8209,7 @@ const PAUSE_LOADER=(function(){
   function onShow(id){
     if(id!=='v-pause'){ if(typeof PAUSE!=='undefined') PAUSE.leave(); return; }
     const q=document.getElementById('pause-quip'); if(q) q.textContent=quip();
+    const pr=document.getElementById('pause-root'); if(pr&&typeof PAUSE==='undefined'&&!pr.firstElementChild) pr.innerHTML='<div class="sk" aria-hidden="true"><div class="sk-grid">'+'<div class="sk-card sk-game"><i class="sk-b sk-ic"></i><i class="sk-b sk-line" style="width:70%"></i><i class="sk-b sk-line" style="width:90%;height:10px"></i></div>'.repeat(6)+'</div></div>';
     load().then(()=>{ if(typeof PAUSE!=='undefined'&&document.getElementById('v-pause').classList.contains('active')) PAUSE.show(); });
   }
   return { quip, onShow, load, QUIPS };
