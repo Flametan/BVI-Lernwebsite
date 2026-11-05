@@ -444,6 +444,7 @@ const JGUI=(function(){
   let editing=false;
   const isEditing=()=>editing;
   function toggleEdit(){ editing=!editing; SHELL.renderExam(); }
+  function starExam(id){ if(JG.isMaster()) return; setRel(id); SHELL.renderExam(); }
   function setRel(id){
     if(JG.isMaster()) return;
     const l=JG.local(); l.rel[id]=!JG.rel(id); JG.saveLocal(l);
@@ -725,6 +726,6 @@ const JGUI=(function(){
   settings();
   JG.load();
 
-  return { settings, mount, goneEls, chapterKey, names, checklist, openReiter, help, helpDone, closeTop, planEditor, planPhoto, parsePlanText, parseQuestions, ocr, isEditing, toggleEdit, setRel, delExam, restoreExams,
+  return { settings, mount, goneEls, chapterKey, names, checklist, openReiter, help, helpDone, closeTop, planEditor, planPhoto, parsePlanText, parseQuestions, ocr, isEditing, toggleEdit, setRel, starExam, delExam, restoreExams,
     examEditor, openExam, histHtml, hideCard, restoreCards, hiddenCards, notice:NOTICE };
 })();

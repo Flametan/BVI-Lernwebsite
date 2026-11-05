@@ -4414,6 +4414,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Prüfung: Keine Farbverläufe mehr. Stattdessen steht ein kleiner Stern in der Zeile (gefüllt = wichtig für Einsatzfahrt und Lernkarten). In anderen Lehrgängen tippst du den Stern direkt an, um Prüfungen als wichtig zu markieren oder abzuwählen.',
       'Ladebildschirm (Skeleton) auf jeder Seite ans neue Aussehen angepasst: Startseite mit Standort-Karten, Einstellungen (fünf Karten), Prüfungsliste, Lernseiten mit Kapitelkarten, Themenraster; am PC mit der schwebenden Seitenleiste. Dazu Platzhalter für Lernkarten, Pausenraum und eingebettete Seiten. „Bewegung reduzieren“ schaltet das Schimmern ab.',
       'Startseite: Die Standorte sind wieder einzelne Karten mit Prozent im Ring und passenden Farben.',
       'Startseite: Die Standort-Liste passt jetzt zum Rest der App (eine Karte mit Trennlinien, Umschalter wie bei „Woche / Monate“) und zeigt den Fortschritt in Prozent.',
@@ -7781,7 +7782,10 @@ const SHELL=(function(){
     const card=([id,t1,t2,k])=>row({ic:ic(k),t1,t2:id==='v-vak-altklausur'&&dueQ?`${t2} · ${dueQ} zur Wiederholung fällig`:id==='v-idf-altklausur'&&dueI?`${t2} · ${dueI} zur Wiederholung fällig`:t2,on:edit?`JGUI.setRel('${id}')`:(id==='v-lb-start'&&typeof LB!=='undefined'?'LB.ask(this)':goJs(id,t1)),right:edit?star(id):(id==='v-lb-start'&&typeof LB!=='undefined'&&!LB.ok()?'<svg class="lb-row-lock" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="gesperrt"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>':'')});
     const own=p=>row({ic:ic('doc'),t1:esc(p.titel),t2:p.fragen.length+' Fragen · eigene Prüfung',on:edit?`JGUI.setRel('${p.id}')`:`JGUI.openExam('${p.id}')`,right:edit?star(p.id):''});
     const del=id=>edit?`<button type="button" class="jg-x" aria-label="Prüfung entfernen" onclick="JGUI.delExam('${id}')">✕</button>`:'';
-    const rw=(id,inner)=>`<div class="jg-rw${rel(id)?' hot':''}">${inner}${del(id)}</div>`;
+    const master=JG.isMaster();
+    // kleiner Stern statt Farbverlauf: gefüllt = wichtig für Einsatzfahrt und Lernkarten; in anderen Lehrgängen direkt antippbar
+    const starB=id=>{ if(edit) return ''; const on=!!rel(id); return master?(on?'<span class="jg-starbtn on" role="img" aria-label="Klausurrelevant">★</span>':''):`<button type="button" class="jg-starbtn${on?' on':''}" aria-pressed="${on}" aria-label="${on?'Als wichtig markiert – antippen zum Entfernen':'Als wichtig markieren'}" onclick="JGUI.starExam('${id}')">★</button>`; };
+    const rw=(id,inner)=>`<div class="jg-rw${rel(id)?' hot':''}">${inner}${starB(id)}${del(id)}</div>`;
     const sec=([name,items],si)=>{
       const key=JG.TABS[si][0];
       const vis=items.filter(x=>!weg.has(x[0])&&!(x[0]==='v-lb-start'&&!JG.isMaster())), adds=jd.pr.hinzu.filter(p=>p.tab===key&&!p.seite);
@@ -7795,7 +7799,8 @@ const SHELL=(function(){
     if(!eb){ eb=document.createElement('div'); eb.id='jg-exam-bar'; cd.parentNode.insertBefore(eb,cd); }
     eb.className=tools?'jg-bar':''; eb.innerHTML=tools;
     const hint=edit&&tools?'<div class="m-note" style="padding:6px 2px">Tippe eine Prüfung an, um sie klausurrelevant (★) zu machen oder abzuwählen. Nur relevante Prüfungen liefern Fragen für Einsatzfahrt und Duell.</div>':'';
-    list.innerHTML=`${hint}<div class="m-areas">${EXAMS.map(sec).join('')}</div>`;
+    const legend=edit?'':`<div class="m-note jg-legend"><span class="jg-st on" aria-hidden="true">★</span> wichtig für Einsatzfahrt und Lernkarten${master?'':' · zum Ändern den Stern antippen'}</div>`;
+    list.innerHTML=`${hint}${legend}<div class="m-areas">${EXAMS.map(sec).join('')}</div>`;
   }
 
   function renderFcSide(){
