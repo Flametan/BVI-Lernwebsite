@@ -4415,6 +4415,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.5',ts:'2026-11-05T09:00',items:[
+      'Startseite: Die Standorte stehen jetzt als Liste mit Umschalter „2. / 1. Ausbildungsjahr“ (Handy). Jede Zeile zeigt Ring, Ort, Fortschrittsbalken und Prozent und öffnet den Standort.',
       'Einstellungen (Handy): aufgeräumter. Acht Gruppen sind jetzt fünf (Aussehen, Lernen & Erinnerung, Daten & Werkzeuge …), die Karten sind kompakter, Rückgängig/Wiederholen und Suche sitzen als kleine Symbole oben rechts, die Navigationsleiste hat eine eigene Seite und die Spende ist eine Zeile, die sich aufklappen lässt.',
       'Prüfung: Die Zeile mit dem Farbverlauf heißt jetzt „Laufbahnprüfung“. Untertitel sind auf zwei Zeilen begrenzt.',
       'Kleinigkeiten: Keine Schrift mehr unter 12 px, Startseite (Handy) ohne extra Datumszeile, „Bewegung reduzieren“ schaltet alle Animationen ab.',
@@ -7742,13 +7743,16 @@ const SHELL=(function(){
       nextBox=`<button class="m-nx" onclick="NAV.tab('v-plan','Stundenplan')" aria-label="Zum Stundenplan"><span class="m-nx-d">${esc(dt)}</span>${head}</button>`;
     }
     const chartCard=chartHtml();
-    const ringBtn=m=>{
-      const c=cnt[m[0]]||{done:0,total:0};
-      return `<button class="m-ringbtn" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen"><span class="m-rw">${homeRing(pct(c),m[1],m[1])}</span></button>`; // nur der Ring, ohne Zahl
+    // Standort-Liste: Umschalter 2./1. Jahr (Handy), je Standort eine Zeile mit Ring, Ort, Fortschrittsbalken und Prozent
+    const MODSUB={ibk:'Heyrothsberge · Führung, Kommunikation',vak:'Berlin · Verwaltungsrecht',feuak:'Hamburg · Haushalt, Management',idf:'Münster · Brandschutz, Stab',gal:'Grundlehrgang',sfs:'Regensburg',hlfs:'Kassel'};
+    const stRow=m=>{
+      const c=cnt[m[0]]||{done:0,total:0}, p=pct(c);
+      return `<button class="m-modrow" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen"><span class="m-mring">${homeRing(p,String(p),m[1])}</span><span class="m-tx"><span class="m-t1">${esc(m[1])}</span><span class="m-t2">${esc(MODSUB[m[0]]||m[2])}</span><span class="m-mbar"><i style="width:${p}%"></i></span></span><span class="m-chv" aria-hidden="true">›</span></button>`;
     };
-    const wide=!!(window.matchMedia&&matchMedia('(min-width:701px)').matches);
-    const mods=`<div class="m-card m-mods"><div class="m-modgrid2"><div class="m-r2"><div class="m-sec">2. Ausbildungsjahr</div><div class="m-rings">${MODS.filter(m=>m[5]===2).map(ringBtn).join('')}</div></div>
-      <details class="m-y1${wide?' static':''}"${y1Open||wide?' open':''} ontoggle="SHELL.y1(this.open)"><summary>1. Ausbildungsjahr</summary><div class="inner"><div class="m-rings r3">${MODS.filter(m=>m[5]===1).map(ringBtn).join('')}</div></div></details></div></div>`;
+    let hy='2'; try{ hy=localStorage.getItem('bvi_home_year')==='1'?'1':'2'; }catch(e){}
+    const mods=`<div class="m-card m-mods" data-y="${hy}"><div class="m-seg2" role="tablist" aria-label="Ausbildungsjahr"><button type="button" role="tab" class="${hy==='2'?'on':''}" aria-selected="${hy==='2'}" onclick="SHELL.setYear('2')">2. Ausbildungsjahr</button><button type="button" role="tab" class="${hy==='1'?'on':''}" aria-selected="${hy==='1'}" onclick="SHELL.setYear('1')">1. Ausbildungsjahr</button></div>
+      <div class="m-modgrid2"><div class="m-yl" data-yr="2"><div class="m-sec">2. Ausbildungsjahr</div><div class="m-modlist">${MODS.filter(m=>m[5]===2).map(stRow).join('')}</div></div>
+      <div class="m-yl" data-yr="1"><div class="m-sec">1. Ausbildungsjahr</div><div class="m-modlist">${MODS.filter(m=>m[5]===1).map(stRow).join('')}</div></div></div></div>`;
     const pause='';
     const lk=JG.isMaster()?{url:'https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare',titel:'Lehrgangs-Cloud',hinweis:'Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe'}:JG.data().links.cloud;
     const cloud=lk?`<div class="m-list m-cloud"><a class="m-row m-go" href="${esc(lk.url)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">${esc(lk.titel||'Lehrgangs-Link')}</span>${lk.hinweis?`<span class="m-t2 m-cloud-x">${esc(lk.hinweis)}</span>`:''}</span></a></div>`:'';
@@ -7970,6 +7974,7 @@ const SHELL=(function(){
       old.replaceWith(t.content.firstElementChild);
       document.querySelector('#v-home .m-chart2 .m-seg-s button.active')?.focus({preventScroll:true});
     },
+    setYear(y){ try{ localStorage.setItem('bvi_home_year',y); }catch(e){} const m=document.querySelector('#v-home .m-mods'); if(!m) return; m.dataset.y=y; m.querySelectorAll('.m-seg2 button').forEach((b,i)=>{ const on=(i===0)===(y==='2'); b.classList.toggle('on',on); b.setAttribute('aria-selected',on); }); },
     y1(open){ if(!document.querySelector('.m-y1.static')) y1Open=!!open; },
     pick(btn){
       const on=!btn.classList.contains('sel');

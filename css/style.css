@@ -1953,7 +1953,7 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 /* Handy: Reihenfolge Weiterlernen, 2. Ausbildungsjahr, Verlauf, 1. Ausbildungsjahr, Cloud */
 @media(max-width:700px){
   #m-home .m-hl,#m-home .m-hr2,#m-home .m-mods,#m-home .m-modgrid2{display:contents;}
-  .m-cont2{order:1;}.m-r2{order:2;}.m-chart2{order:3;}.m-pause{order:4;}.m-y1{order:5;}.m-cloud{order:6;}.m-donate-home{order:7;}
+  .m-cont2{order:1;}.m-mods{order:2;}.m-chart2{order:3;}.m-pause{order:4;}.m-y1{order:5;}.m-cloud{order:6;}.m-donate-home{order:7;}
   .m-chart2 .m-seg-s button{height:24px;font-size:.75rem;padding:0 9px;min-width:0;}
 }
 
@@ -3395,3 +3395,24 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 /* „Bewegung reduzieren“ schaltet alle Animationen und Übergänge ab */
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}}
 .m-donate[open]>summary::after{transform:rotate(90deg);}
+
+/* Startseite: Standort-Liste mit Umschalter (Option 1) */
+.m-seg2{display:flex;background:var(--m-raised,rgba(128,128,128,.12));border-radius:14px;padding:4px;margin-bottom:12px;}
+.m-seg2 button{flex:1;border:0;background:none;padding:9px 6px;border-radius:11px;font-family:inherit;font-size:.86rem;font-weight:600;color:var(--m-muted);cursor:pointer;}
+.m-seg2 button.on{background:var(--m-card);color:var(--m-fg);box-shadow:0 1px 4px rgba(0,0,0,.14);}
+.m-yl>.m-sec{display:none;}
+.m-modlist{display:flex;flex-direction:column;gap:8px;}
+.m-modrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--m-raised,rgba(128,128,128,.08));border:0;border-radius:16px;padding:10px 14px;color:var(--m-fg);font-family:inherit;cursor:pointer;transition:transform .15s;}
+.m-modrow:active{transform:scale(.98);}
+.m-mring{width:54px;height:54px;flex:none;display:block;}
+.m-modrow .m-hring{width:54px;height:54px;display:block;}
+.m-modrow .m-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.m-modrow .m-t1{font-weight:700;}
+.m-modrow .m-t2{font-size:.8rem;color:var(--m-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.m-mbar{display:block;height:6px;border-radius:9px;background:rgba(128,128,128,.25);margin-top:5px;overflow:hidden;}
+.m-mbar i{display:block;height:100%;border-radius:9px;background:var(--m-accent);min-width:0;}
+.m-modrow .m-chv{color:var(--m-muted);font-size:1.3rem;}
+@media(max-width:700px){.m-mods[data-y="2"] .m-yl[data-yr="1"],.m-mods[data-y="1"] .m-yl[data-yr="2"]{display:none;}}
+@media(min-width:701px){.m-seg2{display:none;}.m-yl>.m-sec{display:block;}.m-modgrid2{align-items:start;}}
+.m-yl>.m-sec{margin:0 0 10px;}
+.m-modrow .m-hring .bg{stroke:rgba(128,128,128,.3);}
