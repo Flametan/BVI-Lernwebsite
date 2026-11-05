@@ -1946,10 +1946,14 @@ const SETTINGS = (function(){
       localStorage.setItem('bvi_font_size',sz);
       this._restoreFsUI();
     },
+    fsSlide(v){ this.setFontSize(['sm','md','lg','xl'][+v]||'md'); },
     restoreFontSize(){ this.setFontSize(localStorage.getItem('bvi_font_size')||'md'); },
     _restoreFsUI(){
       const sz=localStorage.getItem('bvi_font_size')||'md';
-      document.querySelectorAll('.fs-opt').forEach(b=>b.classList.toggle('active',b.dataset.sz===sz));
+      const i=Math.max(0,['sm','md','lg','xl'].indexOf(sz)), r=document.getElementById('fs-range'), tg=document.getElementById('fs-tag');
+      if(r) r.value=i;
+      if(tg){ tg.textContent=['A−','A','A+','A++'][i]; tg.style.left='calc(14px + (100% - 28px) * '+(i/3)+')'; }
+      const fill=document.getElementById('fs-sl'); if(fill) fill.style.setProperty('--p',(i/3*100)+'%');
     },
     async toggleNotif(on){ if(typeof NOTIF!=='undefined') await NOTIF.setEnabled(on); },
     setNotifHour(h){ if(typeof NOTIF!=='undefined') NOTIF.setHour(h); }
@@ -4394,6 +4398,8 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.5',ts:'2026-11-05T09:00',items:[
+      'Einstellungen: Die Schriftgröße wird jetzt mit einem Schieberegler (vier Stufen, mitlaufende Wertmarke) eingestellt statt mit vier Knöpfen.',
+      'Einstellungen: Bei „Navigationsleiste“ fehlt der Pfeil rechts nicht mehr.',
       'Lernseiten (Tablet/PC): Die Kapitelübersicht steht wieder mittig auf der Seite.',
       'Lernseiten (Tablet/PC): Im geöffneten Kapitel ist der Zurück-Knopf zur Übersicht oben links wieder sichtbar.',
     ]},
