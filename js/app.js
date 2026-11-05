@@ -4415,6 +4415,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.5',ts:'2026-11-05T09:00',items:[
+      'Startseite: Die Karte „Los geht\'s“ (Weiterlernen) ist entfernt.',
       'Startseite: Die Standorte stehen jetzt als Liste mit Umschalter „2. / 1. Ausbildungsjahr“ (Handy). Jede Zeile zeigt Ring, Ort, Fortschrittsbalken und Prozent und öffnet den Standort.',
       'Einstellungen (Handy): aufgeräumter. Acht Gruppen sind jetzt fünf (Aussehen, Lernen & Erinnerung, Daten & Werkzeuge …), die Karten sind kompakter, Rückgängig/Wiederholen und Suche sitzen als kleine Symbole oben rechts, die Navigationsleiste hat eine eigene Seite und die Spende ist eine Zeile, die sich aufklappen lässt.',
       'Prüfung: Die Zeile mit dem Farbverlauf heißt jetzt „Laufbahnprüfung“. Untertitel sind auf zwei Zeilen begrenzt.',
@@ -7730,8 +7731,6 @@ const SHELL=(function(){
       cTitle=recent.label; cGo=goJs(recent.id,recent.label); cBtn='Weiter';
       cSub=document.querySelector('#'+recent.id+' .page-eyebrow')?.textContent?.trim()||'';
     }
-    const cont=`<div class="m-card m-cont2"><div class="m-cont2-top"><div class="m-tx"><span class="m-eyebrow">Weiterlernen</span><span class="m-cont2-t">${esc(cTitle)}</span>${cSub?`<span class="m-t2">${esc(cSub)}</span>`:''}</div>${homeRing(gp,gp+'%',gp+' Prozent des Tagesziels')}</div>
-      <div class="m-cont2-bot"><button class="m-go2" onclick="${cGo}">${cBtn} ${svg('play')}</button><span class="m-t2">Ziel heute: ${minToday} / ${goal} min</span></div></div>`;
     // Nächste Einheit oben rechts: im Unterricht die laufende (grau) und die folgende (orange), sonst die kommende
     const stamp=d=>(dayWord(d)==='heute'?'':dayWord(d)==='morgen'?'morgen ':d.toLocaleDateString('de-DE',{weekday:'short'})+' ')+hhmm(d);
     let nextBox='';
@@ -7759,7 +7758,7 @@ const SHELL=(function(){
     const donate=`<a class="m-list m-donate m-donate-home" href="${SPENDE_URL}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><div class="m-row m-go">${ic('heart')}<span class="m-tx"><span class="m-t1">Gefällt dir die Seite?</span><span class="m-t2">Kostenlos &amp; werbefrei – freiwillig unterstützen</span></span></div></a>`;
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
-      <div class="m-hgrid"><div class="m-hl">${cont}${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}</div></div>`;
+      <div class="m-hgrid"><div class="m-hl">${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}</div></div>`;
   }
 
   function renderExam(){

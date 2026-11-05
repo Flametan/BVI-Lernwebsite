@@ -3416,3 +3416,12 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 @media(min-width:701px){.m-seg2{display:none;}.m-yl>.m-sec{display:block;}.m-modgrid2{align-items:start;}}
 .m-yl>.m-sec{margin:0 0 10px;}
 .m-modrow .m-hring .bg{stroke:rgba(128,128,128,.3);}
+/* Desktop-Startseite ohne „Weiterlernen“-Karte: links Cloud und Spende, rechts Wochenübersicht, darunter die Standorte */
+@media(min-width:1100px){
+  #m-home .m-hgrid{grid-template-rows:auto auto auto;}
+  .m-cloud{grid-column:1;grid-row:1;align-self:start;}
+  .m-donate-home{grid-column:1;grid-row:2;align-self:start;}
+  .m-chart2{grid-column:2;grid-row:1 / span 2;}
+  .m-mods{grid-column:1 / -1;grid-row:3;}
+}
+@media(min-width:701px){.m-mods .m-modgrid2{display:grid;grid-template-columns:1fr 1fr;column-gap:28px;row-gap:12px;}}
