@@ -3483,3 +3483,7 @@ button.jg-starbtn.on:hover{opacity:1;}
 /* Standort-Karten: beim Drücken dunkler wie alle anderen Kacheln (auch die letzte Karte jeder Liste) */
 .m-modlist .m-modrow:last-child{background:var(--m-card);}
 .m-modrow:active,.m-modlist .m-modrow:active,.m-modlist .m-modrow:last-child:active,.m-modlist .m-modrow:hover,.m-modlist .m-modrow:last-child:hover{background:var(--m-raised);}
+
+/* nur die Laufbahnprüfung behält den Farbverlauf */
+.jg-rw.lbg{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 38%,var(--m-card)),color-mix(in srgb,var(--m-accent) 8%,var(--m-card)) 78%);}
+.jg-rw.lbg .m-row{background:none;}

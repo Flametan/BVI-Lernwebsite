@@ -4414,7 +4414,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
-      'Prüfung: Keine Farbverläufe mehr. Stattdessen steht ein kleiner Stern in der Zeile (gefüllt = wichtig für Einsatzfahrt und Lernkarten). In anderen Lehrgängen tippst du den Stern direkt an, um Prüfungen als wichtig zu markieren oder abzuwählen.',
+      'Prüfung: Nur die „Laufbahnprüfung“ hat noch einen Farbverlauf. Bei allen anderen steht stattdessen ein kleiner Stern in der Zeile (gefüllt = wichtig für Einsatzfahrt und Lernkarten). In anderen Lehrgängen tippst du den Stern direkt an, um Prüfungen als wichtig zu markieren oder abzuwählen.',
       'Ladebildschirm (Skeleton) auf jeder Seite ans neue Aussehen angepasst: Startseite mit Standort-Karten, Einstellungen (fünf Karten), Prüfungsliste, Lernseiten mit Kapitelkarten, Themenraster; am PC mit der schwebenden Seitenleiste. Dazu Platzhalter für Lernkarten, Pausenraum und eingebettete Seiten. „Bewegung reduzieren“ schaltet das Schimmern ab.',
       'Startseite: Die Standorte sind wieder einzelne Karten mit Prozent im Ring und passenden Farben.',
       'Startseite: Die Standort-Liste passt jetzt zum Rest der App (eine Karte mit Trennlinien, Umschalter wie bei „Woche / Monate“) und zeigt den Fortschritt in Prozent.',
@@ -7785,7 +7785,7 @@ const SHELL=(function(){
     const master=JG.isMaster();
     // kleiner Stern statt Farbverlauf: gefüllt = wichtig für Einsatzfahrt und Lernkarten; in anderen Lehrgängen direkt antippbar
     const starB=id=>{ if(edit) return ''; const on=!!rel(id); return master?(on?'<span class="jg-starbtn on" role="img" aria-label="Klausurrelevant">★</span>':''):`<button type="button" class="jg-starbtn${on?' on':''}" aria-pressed="${on}" aria-label="${on?'Als wichtig markiert – antippen zum Entfernen':'Als wichtig markieren'}" onclick="JGUI.starExam('${id}')">★</button>`; };
-    const rw=(id,inner)=>`<div class="jg-rw${rel(id)?' hot':''}">${inner}${starB(id)}${del(id)}</div>`;
+    const rw=(id,inner)=>`<div class="jg-rw${rel(id)?' hot':''}${id==='v-lb-start'?' lbg':''}">${inner}${starB(id)}${del(id)}</div>`;
     const sec=([name,items],si)=>{
       const key=JG.TABS[si][0];
       const vis=items.filter(x=>!weg.has(x[0])&&!(x[0]==='v-lb-start'&&!JG.isMaster())), adds=jd.pr.hinzu.filter(p=>p.tab===key&&!p.seite);
