@@ -3425,3 +3425,19 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
   .m-mods{grid-column:1 / -1;grid-row:3;}
 }
 @media(min-width:701px){.m-mods .m-modgrid2{display:grid;grid-template-columns:1fr 1fr;column-gap:28px;row-gap:12px;}}
+
+/* Startseite: Standort-Liste im Stil der übrigen Listen (eine Karte, Trennlinien, kleiner Umschalter) */
+.m-mods{padding:6px 14px 8px;}
+.m-seg2{background:none;padding:6px 0 6px;margin:0 0 2px;gap:6px;border-radius:0;}
+.m-seg2 button{flex:none;padding:7px 14px;border-radius:10px;font-size:.88rem;}
+.m-seg2 button.on{background:var(--m-raised);box-shadow:none;color:var(--m-fg);}
+.m-modlist{gap:0;}
+.m-modrow{background:none;border-radius:0;padding:12px 2px;border-bottom:1px solid var(--m-line,rgba(128,128,128,.2));}
+.m-modlist .m-modrow:last-child{border-bottom:0;}
+.m-modrow:hover{background:var(--m-raised);}
+.m-mring{width:48px;height:48px;}
+.m-modrow .m-hring{width:48px;height:48px;}
+.m-modrow .m-hring text{font-weight:700;}
+.m-mbar{height:4px;margin-top:6px;}
+@media(min-width:701px){.m-mods{padding:14px 18px 10px;}.m-modrow{border-radius:12px;padding:10px 8px;}}
+.m-sub-h{margin:10px 0 4px;padding:0 16px;}.m-sub:first-child .m-sub-h{margin-top:4px;}

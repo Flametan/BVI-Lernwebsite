@@ -4414,6 +4414,10 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
+    {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Startseite: Die Standort-Liste passt jetzt zum Rest der App (eine Karte mit Trennlinien, Umschalter wie bei „Woche / Monate“) und zeigt den Fortschritt in Prozent.',
+      'Update: Mit der neuen Version lädt die App alle Seiten neu, damit auch die aufgeräumten Einstellungen erscheinen.',
+    ]},
     {v:'3.1.5',ts:'2026-11-05T09:00',items:[
       'Startseite: Die Karte „Los geht\'s“ (Weiterlernen) ist entfernt.',
       'Startseite: Die Standorte stehen jetzt als Liste mit Umschalter „2. / 1. Ausbildungsjahr“ (Handy). Jede Zeile zeigt Ring, Ort, Fortschrittsbalken und Prozent und öffnet den Standort.',
@@ -7743,10 +7747,11 @@ const SHELL=(function(){
     }
     const chartCard=chartHtml();
     // Standort-Liste: Umschalter 2./1. Jahr (Handy), je Standort eine Zeile mit Ring, Ort, Fortschrittsbalken und Prozent
-    const MODSUB={ibk:'Heyrothsberge · Führung, Kommunikation',vak:'Berlin · Verwaltungsrecht',feuak:'Hamburg · Haushalt, Management',idf:'Münster · Brandschutz, Stab',gal:'Grundlehrgang',sfs:'Regensburg',hlfs:'Kassel'};
+    const MODSUB={ibk:'Heyrothsberge · Führung',vak:'Berlin · Verwaltungsrecht',feuak:'Hamburg · Haushalt',idf:'Münster · Brandschutz',gal:'Grundlehrgang',sfs:'Regensburg',hlfs:'Kassel'};
+    const stRing=(p,aria)=>{ const r=44,c=2*Math.PI*r; return `<svg class="m-hring" viewBox="0 0 100 100" role="img" aria-label="${esc(aria)}: ${p} %"><circle cx="50" cy="50" r="${r}" class="bg"/>${p>0?`<circle cx="50" cy="50" r="${r}" class="fg" stroke-dasharray="${c*p/100} ${c}" transform="rotate(-90 50 50)"/>`:''}<text x="50" y="57" text-anchor="middle" font-size="25">${p}%</text></svg>`; };
     const stRow=m=>{
       const c=cnt[m[0]]||{done:0,total:0}, p=pct(c);
-      return `<button class="m-modrow" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen"><span class="m-mring">${homeRing(p,String(p),m[1])}</span><span class="m-tx"><span class="m-t1">${esc(m[1])}</span><span class="m-t2">${esc(MODSUB[m[0]]||m[2])}</span><span class="m-mbar"><i style="width:${p}%"></i></span></span><span class="m-chv" aria-hidden="true">›</span></button>`;
+      return `<button class="m-modrow" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen"><span class="m-mring">${stRing(p,m[1])}</span><span class="m-tx"><span class="m-t1">${esc(m[1])}</span><span class="m-t2">${esc(MODSUB[m[0]]||m[2])}</span><span class="m-mbar"><i style="width:${p}%"></i></span></span><span class="m-chv" aria-hidden="true">›</span></button>`;
     };
     let hy='2'; try{ hy=localStorage.getItem('bvi_home_year')==='1'?'1':'2'; }catch(e){}
     const mods=`<div class="m-card m-mods" data-y="${hy}"><div class="m-seg2" role="tablist" aria-label="Ausbildungsjahr"><button type="button" role="tab" class="${hy==='2'?'on':''}" aria-selected="${hy==='2'}" onclick="SHELL.setYear('2')">2. Ausbildungsjahr</button><button type="button" role="tab" class="${hy==='1'?'on':''}" aria-selected="${hy==='1'}" onclick="SHELL.setYear('1')">1. Ausbildungsjahr</button></div>
