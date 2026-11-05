@@ -3489,3 +3489,7 @@ button.jg-starbtn.on:hover{opacity:1;}
 .jg-rw.lbg .m-row{background:none;}
 .set-tools{right:8px;top:4px;}
 #v-settings .page-title{padding-right:150px;}
+
+/* Suche: ohne Eingabe nur das Suchfeld */
+.search-box.sr-empty .search-results,.search-box.sr-empty .search-footer{display:none;}
+.search-box.sr-empty .search-input-wrap{border-bottom:0;}

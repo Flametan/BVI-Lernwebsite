@@ -1719,6 +1719,7 @@ const SEARCH = (function(){
 
   function render(q){
     const el = document.getElementById('search-results');
+    const sb=document.querySelector('#search-overlay .search-box'); if(sb) sb.classList.toggle('sr-empty',!q);   // ohne Eingabe nur das Suchfeld, keine Fläche darunter
     if(!q){ results=quick(''); focusIdx=-1; renderBookmarks(); return; }
     results = [...quick(q), ...doSearch(q)];
     if(!results.length){ el.innerHTML='<div class="search-empty">Keine Treffer für <strong>'+xss(q)+'</strong></div>'; focusIdx=-1; return; }
@@ -4423,6 +4424,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Suche: Ohne Eingabe steht nur das Suchfeld da; die Fläche darunter erscheint erst beim Tippen.',
       'Einstellungen: Die Lupe hat etwas Abstand zum Rand, und das Suchfeld wächst aus dem Symbol heraus. Die Zeile „Navigationsleiste“ hat nur noch einen Pfeil.',
       'Prüfung: Nur die „Laufbahnprüfung“ hat noch einen Farbverlauf. Bei allen anderen steht stattdessen ein kleiner Stern in der Zeile (gefüllt = wichtig für Einsatzfahrt und Lernkarten). In anderen Lehrgängen tippst du den Stern direkt an, um Prüfungen als wichtig zu markieren oder abzuwählen.',
       'Ladebildschirm (Skeleton) auf jeder Seite ans neue Aussehen angepasst: Startseite mit Standort-Karten, Einstellungen (fünf Karten), Prüfungsliste, Lernseiten mit Kapitelkarten, Themenraster; am PC mit der schwebenden Seitenleiste. Dazu Platzhalter für Lernkarten, Pausenraum und eingebettete Seiten. „Bewegung reduzieren“ schaltet das Schimmern ab.',
