@@ -3441,3 +3441,28 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .m-mbar{height:4px;margin-top:6px;}
 @media(min-width:701px){.m-mods{padding:14px 18px 10px;}.m-modrow{border-radius:12px;padding:10px 8px;}}
 .m-sub-h{margin:10px 0 4px;padding:0 16px;}.m-sub:first-child .m-sub-h{margin-top:4px;}
+
+/* Standorte als einzelne Karten (wie die übrigen Karten der Seite), Prozent im Ring */
+.m-card.m-mods,.m-mods{background:none;box-shadow:none;border-radius:0;padding:0;}
+.m-seg2{padding:2px 0 10px;margin:0;}
+.m-modlist{gap:8px;}
+.m-modrow,.m-modlist .m-modrow:last-child{background:var(--m-card);border-radius:16px;padding:12px 14px;border:0;}
+.m-modrow:hover{background:var(--m-raised);}
+@media(min-width:701px){.m-mods{padding:0;}.m-modrow{border-radius:16px;padding:12px 14px;}.m-yl>.m-sec{margin:4px 0 10px;}}
+
+/* ── Skeleton: gemeinsamer Stil (Karten wie in der App, schimmernde Platzhalter) ── */
+.sk{--sk-a:rgba(128,128,128,.13);--sk-b:rgba(128,128,128,.26);}
+.sk-b{display:block;border-radius:8px;background:linear-gradient(100deg,var(--sk-a) 30%,var(--sk-b) 50%,var(--sk-a) 70%);background-size:300% 100%;animation:srShim 1.2s linear infinite;}
+.sk-line{height:14px;margin-bottom:8px;}
+.sk-card{background:var(--m-card,rgba(128,128,128,.08));border-radius:16px;padding:14px;margin-top:10px;}
+.sk-row{display:flex;align-items:center;gap:14px;}.sk-row>div{flex:1;min-width:0;}
+.sk-ring{width:48px;height:48px;border-radius:50%;flex:none;}
+.sk-pills{display:flex;gap:8px;}.sk-pills .sk-b{width:118px;height:34px;border-radius:11px;}
+.sk-fc{max-width:580px;height:250px;margin:0 auto 14px;display:flex;flex-direction:column;justify-content:center;gap:4px;padding:22px;}
+.sk-ctl{display:flex;gap:10px;justify-content:center;}.sk-ctl .sk-b{flex:1;max-width:190px;height:42px;border-radius:12px;}
+.sk-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sk-game{display:flex;flex-direction:column;gap:6px;height:112px;margin-top:0;}.sk-ic{width:38px;height:38px;border-radius:12px;margin-bottom:6px;}
+.sk-home{padding:14px 0;}
+@media(min-width:701px){.sk-grid{grid-template-columns:repeat(3,1fr);}.sk-home{max-width:900px;}}
+iframe.emb-frame:not(.ld){background:linear-gradient(100deg,rgba(128,128,128,.10) 30%,rgba(128,128,128,.22) 50%,rgba(128,128,128,.10) 70%);background-size:300% 100%;animation:srShim 1.2s linear infinite;}
+@media(prefers-reduced-motion:reduce){.sk-b,iframe.emb-frame:not(.ld){animation:none!important;}}

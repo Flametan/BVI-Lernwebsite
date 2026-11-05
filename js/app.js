@@ -2317,14 +2317,11 @@ const FC = (function(){
 
   function showSkeleton(){
     const box = document.getElementById('fc-container'); if(!box) return;
-    box.innerHTML = `
-      <div class="fc-skeleton-line fc-skeleton-stats"></div>
-      <div class="fc-skeleton-line fc-skeleton-nav"></div>
-      <div class="fc-skeleton-card"></div>
-      <div class="fc-skeleton-ctrl">
-        <div class="fc-skeleton-btn"></div>
-        <div class="fc-skeleton-btn"></div>
-      </div>`;
+    box.innerHTML = `<div class="sk" aria-hidden="true">
+      <div class="sk-pills"><i class="sk-b"></i><i class="sk-b"></i><i class="sk-b"></i></div>
+      <i class="sk-b sk-line" style="width:46%;margin:14px auto 12px"></i>
+      <div class="sk-card sk-fc"><i class="sk-b sk-line" style="width:90px;height:12px"></i><i class="sk-b sk-line" style="width:88%"></i><i class="sk-b sk-line" style="width:74%"></i><i class="sk-b sk-line" style="width:58%"></i></div>
+      <div class="sk-ctl"><i class="sk-b"></i><i class="sk-b"></i></div></div>`;
   }
 
   // Jahrgang: Karte löschen (nur für diesen Jahrgang), dazu Rückgängig/Wiederholen und die gelöschten Karten zurückholen
@@ -4382,6 +4379,8 @@ const KLAUSUR_HUB = (function(){
 ====================================================================== */
 // Eingebettete Seiten (iframe): füllen den Platz zwischen Kopfleiste und Tableiste, ihre Reiter bleiben sichtbar
 (function(){
+  // Skeleton: schimmernde Fläche, bis die eingebettete Seite geladen ist
+  document.querySelectorAll('iframe.emb-frame').forEach(function(f){ var ok=function(){ f.classList.add('ld'); }; f.addEventListener('load',ok); setTimeout(ok,6000); });
   function fit(){
     var any=false;
     document.querySelectorAll('iframe.emb-frame').forEach(function(f){
@@ -4415,6 +4414,8 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Ladebildschirm (Skeleton) auf jeder Seite ans neue Aussehen angepasst: Startseite mit Standort-Karten, Einstellungen (fünf Karten), Prüfungsliste, Lernseiten mit Kapitelkarten, Themenraster; am PC mit der schwebenden Seitenleiste. Dazu Platzhalter für Lernkarten, Pausenraum und eingebettete Seiten. „Bewegung reduzieren“ schaltet das Schimmern ab.',
+      'Startseite: Die Standorte sind wieder einzelne Karten mit Prozent im Ring und passenden Farben.',
       'Startseite: Die Standort-Liste passt jetzt zum Rest der App (eine Karte mit Trennlinien, Umschalter wie bei „Woche / Monate“) und zeigt den Fortschritt in Prozent.',
       'Update: Mit der neuen Version lädt die App alle Seiten neu, damit auch die aufgeräumten Einstellungen erscheinen.',
     ]},
@@ -8208,6 +8209,7 @@ const PAUSE_LOADER=(function(){
   function onShow(id){
     if(id!=='v-pause'){ if(typeof PAUSE!=='undefined') PAUSE.leave(); return; }
     const q=document.getElementById('pause-quip'); if(q) q.textContent=quip();
+    const pr=document.getElementById('pause-root'); if(pr&&typeof PAUSE==='undefined'&&!pr.firstElementChild) pr.innerHTML='<div class="sk" aria-hidden="true"><div class="sk-grid">'+'<div class="sk-card sk-game"><i class="sk-b sk-ic"></i><i class="sk-b sk-line" style="width:70%"></i><i class="sk-b sk-line" style="width:90%;height:10px"></i></div>'.repeat(6)+'</div></div>';
     load().then(()=>{ if(typeof PAUSE!=='undefined'&&document.getElementById('v-pause').classList.contains('active')) PAUSE.show(); });
   }
   return { quip, onShow, load, QUIPS };
