@@ -48,6 +48,7 @@ const NAV = (function(){
     ETIMER.mount(id);
     if(id==='v-flashcards'){ FC.syncFilters(); SHELL.renderFcSide(); }
     if(id==='v-home'){ SHELL.newQuip(); SHELL.renderHome(); }
+    if(typeof GAME!=='undefined') GAME.onShow(id);
     if(id==='v-pruefung') SHELL.renderExam();
     if(typeof LB!=='undefined') LB.onShow(id);
     if(typeof JGUI!=='undefined'&&JGUI.names) setTimeout(JGUI.names,0);
@@ -1978,20 +1979,28 @@ const SETTINGS = (function(){
       UNDO.push('Lernkarten zurücksetzen',()=>put(snap),()=>put(null));
       TOAST.show('Lernkarten zurückgesetzt',{type:'ok'});
     },
-    setFontSize(sz){
-      document.documentElement.classList.remove('fs-sm','fs-lg','fs-xl');
-      if(sz!=='md') document.documentElement.classList.add('fs-'+sz);
-      localStorage.setItem('bvi_font_size',sz);
-      this._restoreFsUI();
+    // Schriftgröße stufenlos: Position 0 bis 3 (14 px bis 20 px, 16 px = Standard); alte Werte sm/md/lg/xl werden übernommen
+    fsPos(){
+      const v=localStorage.getItem('bvi_font_size'), L={sm:0,md:1,lg:2,xl:3};
+      const n=v in L?L[v]:parseFloat(v);
+      return isFinite(n)?Math.min(3,Math.max(0,n)):1;
     },
-    fsSlide(v){ this.setFontSize(['sm','md','lg','xl'][+v]||'md'); },
-    restoreFontSize(){ this.setFontSize(localStorage.getItem('bvi_font_size')||'md'); },
-    _restoreFsUI(){
-      const sz=localStorage.getItem('bvi_font_size')||'md';
-      const i=Math.max(0,['sm','md','lg','xl'].indexOf(sz)), r=document.getElementById('fs-range'), tg=document.getElementById('fs-tag');
-      if(r) r.value=i;
-      if(tg){ tg.textContent=['A−','A','A+','A++'][i]; tg.style.left='calc(14px + (100% - 28px) * '+(i/3)+')'; }
-      const fill=document.getElementById('fs-sl'); if(fill) fill.style.setProperty('--p',(i/3*100)+'%');
+    setFontSize(pos,save){
+      const p=Math.min(3,Math.max(0,+pos||0)), px=14+2*p, h=document.documentElement;
+      h.style.fontSize=px+'px';
+      h.classList.remove('fs-sm','fs-lg','fs-xl');
+      if(p<.5) h.classList.add('fs-sm'); else if(p>=2.5) h.classList.add('fs-xl'); else if(p>=1.5) h.classList.add('fs-lg');
+      if(save!==false){ try{ localStorage.setItem('bvi_font_size',String(Math.round(p*100)/100)); }catch(e){} }
+      this._restoreFsUI(p);
+    },
+    fsSlide(v){ this.setFontSize(v); },
+    restoreFontSize(){ this.setFontSize(this.fsPos(),false); },
+    _restoreFsUI(p){
+      if(p===undefined) p=this.fsPos();
+      const r=document.getElementById('fs-range'), tg=document.getElementById('fs-tag');
+      if(r&&document.activeElement!==r) r.value=p;
+      if(tg){ tg.textContent=Math.round((14+2*p)/16*100)+' %'; tg.style.left='calc(14px + (100% - 28px) * '+(p/3)+')'; }
+      const fill=document.getElementById('fs-sl'); if(fill) fill.style.setProperty('--p',(p/3*100)+'%');
     },
     async toggleNotif(on){ if(typeof NOTIF!=='undefined') await NOTIF.setEnabled(on); },
     setNotifHour(h){ if(typeof NOTIF!=='undefined') NOTIF.setHour(h); }
@@ -2478,6 +2487,7 @@ const FC = (function(){
     rateExternal(id,ok){
       const d=fcLoad();
       if(ok){ d[id]=sm2(d[id]||{},2); if(typeof STREAK!=='undefined') STREAK.record(); } else delete d[id];
+      if(typeof GAME!=='undefined') GAME.event('card',!!ok);
       const weak=fcLoadWeak(); if(ok) weak.delete(id); else weak.add(id); fcSaveWeak(weak);
       fcSave(d); SHELL.renderFcSide();
     },
@@ -2498,6 +2508,7 @@ const FC = (function(){
       }
       const weak=fcLoadWeak(); if(q===2) weak.delete(card.id); else weak.add(card.id); fcSaveWeak(weak);
       fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide();
+      if(typeof GAME!=='undefined') GAME.event('card',q>0);
     },
     setFilter(f){
       if(f==='starred'){
@@ -3919,6 +3930,7 @@ function makeQuiz(cfg){
       $('quiz-skip').classList.add('hidden');$('quiz-next').classList.remove('hidden');
       _masteryMap[q.id]=ok?'ok':'err';saveMastery();srsUpdate(q.id,ok);updateDueBtn();
       _posHistory[_cur]={userIdx:idx,correct:ok};
+      if(typeof GAME!=='undefined') GAME.event('quiz',ok);
       if(!ok&&!_retried.has(q.id)){_retried.add(q.id);_order.push(q.id);_retriedCount++;const rt=$('quiz-retry-tag');if(rt){rt.textContent='+'+_retriedCount+' ↻';rt.classList.add('qrt-flash');setTimeout(()=>rt.classList.remove('qrt-flash'),600);}}
       if(ok)_sessionCorrect++;else _sessionWrong++;
       renderMastery();renderMasteryCats();
@@ -3931,6 +3943,7 @@ function makeQuiz(cfg){
       const rb=$v().querySelector('.quiz-reveal-btn');if(rb)rb.disabled=true;
       if(!_masteryMap[q.id]||_masteryMap[q.id]==='err')_masteryMap[q.id]='ok';
       saveMastery();srsUpdate(q.id,true);updateDueBtn();_posHistory[_cur]={userIdx:null,correct:true};
+      if(typeof GAME!=='undefined') GAME.event('quiz',true);
       renderMastery();renderMasteryCats();
     },
     _toggle(i){
@@ -3950,6 +3963,7 @@ function makeQuiz(cfg){
       $('quiz-skip').classList.add('hidden');$('quiz-next').classList.remove('hidden');
       _masteryMap[q.id]=ok?'ok':'err';saveMastery();srsUpdate(q.id,ok);updateDueBtn();
       _posHistory[_cur]={userIdx:null,sel:[...sel],correct:ok};
+      if(typeof GAME!=='undefined') GAME.event('quiz',ok);
       if(!ok&&!_retried.has(q.id)){_retried.add(q.id);_order.push(q.id);_retriedCount++;const rt=$('quiz-retry-tag');if(rt)rt.textContent='+'+_retriedCount+' ↻';}
       if(ok)_sessionCorrect++;else _sessionWrong++;
       renderMastery();renderMasteryCats();
@@ -4443,6 +4457,11 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Die Flamme der Serie pulsiert: grau, solange du heute noch nicht gelernt hast, orange bei aktiver Serie. Die App-Tour zeigt die Serie jetzt in einem eigenen Schritt.',
+      'Schriftgröße: Der Regler arbeitet jetzt stufenlos (statt in vier Sprüngen); die Anzeige nennt die Größe in Prozent.',
+      'Neu: Belohnungen. Neben „Lernstoff“ auf der Startseite zeigt ein Flammen-Symbol deine Lern-Serie. Antippen klappt Dienstgrad, Tagesaufgaben, Einsatz-Alarm der Woche und Lernpfad auf. In den Einstellungen kannst du die Belohnungen ausschalten.',
+      'Neu: Dienstgrade von Brandmeister bis Leitender Branddirektor (mittlerer Dienst rot, gehobener Dienst silber, höherer Dienst gold). Punkte gibt es für Lernkarten, Quizfragen und Einsatzfahrten.',
+      'Neu: Abzeichen mit Titeln, Combo bei richtigen Antworten in Folge mit Konfetti, neue Abzeichen erscheinen als kleiner Tropfen oben und ein Wochen-Rückblick zum Teilen.',
       'Einsatzfahrt: Bei der Auswahl 5, 10 oder 15 Fragen steht jetzt, wie viele Fehler erlaubt sind (statt der Zeit-Chips), z. B. „1 Fehler erlaubt · ab dem 2. Fehler kommst du zu spät“.',
       'Suche: Auf allen Unterseiten (Lehrgang, Themen-Übersichten, Lernseiten) steht oben rechts eine Lupe. Sie sucht in dieser Ebene und in den Ebenen darunter.',
       'Suche: Auf jeder Ebene wird nur der Inhalt dieser Seite durchsucht (im IdF-Tab nur IdF, in Stabsarbeit nur Stabsarbeit). Ein Feld „Suche in …“ im Suchfeld zeigt den Bereich; mit ✕ suchst du überall.',
@@ -6887,6 +6906,7 @@ const USAGE=(function(){
       return Array.from({length:7},(_,i)=>{ const x=new Date(mo); x.setDate(mo.getDate()+i); return d[key(x)]||0; });
     },
     total(){ return Object.values(load()).reduce((a,b)=>a+b,0); },
+    days(){ return load(); },
     // letzte n Monate (ältester zuerst) mit Sekunden je Monat
     months(n){
       const d=load(), now=new Date();
@@ -7802,7 +7822,9 @@ const SHELL=(function(){
       return `<button class="m-modrow" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen"><span class="m-mring">${stRing(p,m[1])}</span><span class="m-tx"><span class="m-t1">${esc(m[1])}</span><span class="m-t2">${esc(MODSUB[m[0]]||m[2])}</span><span class="m-mbar"><i style="width:${p}%"></i></span></span><span class="m-chv" aria-hidden="true">›</span></button>`;
     };
     let hy='2'; try{ hy=localStorage.getItem('bvi_home_year')==='1'?'1':'2'; }catch(e){}
-    const mods=`<div class="m-card m-mods" data-y="${hy}"><div class="m-seg2"><span class="m-seg2-l">Lernstoff</span><span class="m-mini" role="tablist" aria-label="Ausbildungsjahr"><button type="button" role="tab" class="${hy==='2'?'on':''}" aria-selected="${hy==='2'}" onclick="SHELL.setYear('2')">2. Jahr</button><button type="button" role="tab" class="${hy==='1'?'on':''}" aria-selected="${hy==='1'}" onclick="SHELL.setYear('1')">1. Jahr</button></span></div>
+    const gm=(typeof GAME!=='undefined')?GAME.homeHtml():{chip:'',panel:''};
+    const mods=`<div class="m-card m-mods" data-y="${hy}"><div class="m-seg2"><span class="m-seg2-w"><span class="m-seg2-l">Lernstoff</span>${gm.chip}</span><span class="m-mini" role="tablist" aria-label="Ausbildungsjahr"><button type="button" role="tab" class="${hy==='2'?'on':''}" aria-selected="${hy==='2'}" onclick="SHELL.setYear('2')">2. Jahr</button><button type="button" role="tab" class="${hy==='1'?'on':''}" aria-selected="${hy==='1'}" onclick="SHELL.setYear('1')">1. Jahr</button></span></div>
+      ${gm.panel}
       <div class="m-modgrid2"><div class="m-yl" data-yr="2"><div class="m-sec">2. Ausbildungsjahr</div><div class="m-modlist">${MODS.filter(m=>m[5]===2).map(stRow).join('')}</div></div>
       <div class="m-yl" data-yr="1"><div class="m-sec">1. Ausbildungsjahr</div><div class="m-modlist">${MODS.filter(m=>m[5]===1).map(stRow).join('')}</div></div></div></div>`;
     const pause='';
@@ -7931,6 +7953,7 @@ const SHELL=(function(){
     set('m-version',APP_VERSION);
     set('m-notif-hour',NOTIF.hour()+':00');
     set('m-goal-val',goalMin()+' min');
+    const gt=document.getElementById('m-game-toggle'); if(gt&&typeof GAME!=='undefined') gt.checked=GAME.isOn();
     const tm=document.getElementById('m-timers-toggle'); if(tm) tm.checked=!document.documentElement.classList.contains('no-timers');
     const lb=BACKUP.last(); set('m-backup-last',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
     const ex=examCfg(), di=document.getElementById('m-exam-date'), ni=document.getElementById('m-exam-name'), ti=document.getElementById('m-exam-target'), xb=document.getElementById('m-exam-clear');
@@ -7951,7 +7974,7 @@ const SHELL=(function(){
   function accSubs(){
     const set=(id,txt)=>{ const e=document.getElementById(id); if(e) e.textContent=txt; };
     const th={dark:'Dunkel',light:'Hell',beige:'Beige',system:'System'}[localStorage.getItem('bvi_theme')]||'System';
-    const fs={sm:'A−',md:'A',lg:'A+',xl:'A++'}[localStorage.getItem('bvi_font_size')||'md']||'A';
+    const fs=Math.round((14+2*SETTINGS.fsPos())/16*100)+' %';
     const nc=notes().length, bc=BOOKMARKS.getAll().length;
     const lb=BACKUP.last();
     set('acc-dar-sub',th+' · Schrift '+fs);

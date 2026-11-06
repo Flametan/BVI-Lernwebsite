@@ -19,6 +19,7 @@ const PRECACHE = [
   './js/laufbahn-data.js',
   './js/laufbahn.js',
   './js/tour.js',
+  './js/game.js',
   './js/pause.js',
   './js/pause-data.js',
   './js/duell.js',

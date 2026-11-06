@@ -17652,6 +17652,14 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
         <div class="m-stack" id="nav-edit"></div>
   </div>
 </div>
+<div id="v-game" class="view detail-view">
+  <div class="page-hero"><div class="phi"><p class="page-eyebrow">Belohnungen</p><h1 class="page-title">Rang &amp; <span class="accent">Abzeichen</span></h1><p class="page-lead">Punkte gibt es für Lernkarten, Quizfragen und Einsatzfahrten. Ab bestimmten Rängen und Abzeichen schaltest du Titel frei.</p></div></div>
+  <div class="pc"><div id="game-body"></div></div>
+</div>
+<div id="v-week" class="view detail-view">
+  <div class="page-hero"><div class="phi"><p class="page-eyebrow">Belohnungen</p><h1 class="page-title">Wochen-<span class="accent">Rückblick</span></h1><p class="page-lead">Das hast du diese Woche geschafft. Du kannst den Rückblick als Text teilen.</p></div></div>
+  <div class="pc"><div id="week-body"></div></div>
+</div>
 <div id="v-settings" class="view detail-view">
   <div class="page-hero"><div class="phi">
     <p class="page-eyebrow">App &amp; Werkzeuge</p>
@@ -17702,7 +17710,7 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
         <span class="m-tx"><span class="m-t1">Schriftgröße</span><span class="m-t2" id="fs-sample">So groß erscheint der Text in der App.</span></span>
         <div class="fs-sl" id="fs-sl">
           <span class="fs-a fs-a-s" aria-hidden="true">A</span>
-          <span class="fs-trk"><span class="fs-tag" id="fs-tag" aria-hidden="true">A</span><input type="range" id="fs-range" class="fs-range" min="0" max="3" step="1" value="1" aria-label="Schriftgröße" oninput="SETTINGS.fsSlide(this.value)"></span>
+          <span class="fs-trk"><span class="fs-tag" id="fs-tag" aria-hidden="true">A</span><input type="range" id="fs-range" class="fs-range" min="0" max="3" step="0.01" value="1" aria-label="Schriftgröße" oninput="SETTINGS.fsSlide(this.value)"></span>
           <span class="fs-a fs-a-l" aria-hidden="true">A</span>
         </div>
       </div>
@@ -17730,6 +17738,11 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
           <button onclick="SHELL.stepGoal(1)" aria-label="5 Minuten mehr">+</button>
         </span>
       </div>
+      <label class="m-row" for="m-game-toggle">
+        <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .2 1.6 1 2.3 2 2.3C10.5 9 11 6 12 3z"/></svg></span>
+        <span class="m-tx"><span class="m-t1">Belohnungen anzeigen</span><span class="m-t2">Serie, Dienstgrade, Abzeichen und Tagesaufgaben auf der Startseite</span></span>
+        <input type="checkbox" id="m-game-toggle" class="m-switch" checked onchange="GAME.setOff(!this.checked)">
+      </label>
       <label class="m-row" for="m-timers-toggle">
         <span class="m-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/><path d="M9 2h6"/></svg></span>
         <span class="m-tx"><span class="m-t1">Timer bei Klausuren</span><span class="m-t2">Countdown im Prüfungsmodus und bei den Übungsklausuren</span></span>
@@ -23759,6 +23772,7 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
 <script src="js/laufbahn-data.js"></script>
 <script src="js/laufbahn.js"></script>
 <script src="js/tour.js"></script>
+<script src="js/game.js"></script>
 <script src="js/app.js"></script>
 <script src="js/jg-ui.js"></script>
 </body>

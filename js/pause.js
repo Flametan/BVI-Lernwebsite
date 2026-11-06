@@ -220,7 +220,7 @@ const PAUSE=(function(){
       if(s.duel&&s.phase==='ask'){const el_=n-s.askT0,tm=document.querySelector('.pz-tmr i');if(tm)tm.style.width=Math.max(0,100-el_/300)+'%';if(el_>=30000){act('ans','-1');}}
       if(s.duel&&s.phase==='fb'){if(!s.fbT0)s.fbT0=n;else if(n-s.fbT0>=15000){s.fbT0=0;act('next');return;}}else s.fbT0=0; // Gegner nicht beliebig aufhalten: nach ~15 s weiter
       if(s.phase==='drive'){const d=s.dr,k=Math.min(1,(n-d.t0)/d.dur),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;s.p=d.from+(d.to-d.from)*e;s.t=d.tt+s.route.base*(s.p-d.from);
-        if(k>=1){if(s.qi<s.qs.length){s.phase='ask';s.askT0=performance.now();panel();}else{s.phase='end';s.p=1;s.win=s.t<=hf();const right=s.res.filter(r=>r.ok).length;s.score=Math.max(0,Math.round((s.win?1000+(hf()-s.t)*3:0)+right*50));panel();if(s.duel)duelFinish();}}}
+        if(k>=1){if(s.qi<s.qs.length){s.phase='ask';s.askT0=performance.now();panel();}else{s.phase='end';s.p=1;s.win=s.t<=hf();if(typeof GAME!=='undefined')GAME.event('fahrt',s.win);const right=s.res.filter(r=>r.ok).length;s.score=Math.max(0,Math.round((s.win?1000+(hf()-s.t)*3:0)+right*50));panel();if(s.duel)duelFinish();}}}
       if(s.fx&&n-s.fxT>1500)s.fx=null;const tg=s.phase==='end'&&s.win?0:Math.min(1.3,s.t/hf());s.lvl+=(tg-s.lvl)*(s.phase==='end'&&s.win?.02:.08);}
     // Szene „Glut“: Nachtszene mit Partikelfeuer, Brand wächst mit der Zeit
     const W=360,H=300,hy=78,hw=120,hh=132;let hx=205,WIN=[];
