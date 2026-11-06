@@ -216,7 +216,7 @@ const GAME=(function(){
 
   function chip(){
     const s=load(), st=streak(), r=rankOf(s.xp);
-    return `<button type="button" class="g-chip${st.todayDone?' on':''}" id="g-chip" aria-expanded="false" aria-controls="g-panel" aria-label="Belohnungen: ${st.cur} Tage Serie, ${esc(r.n)}" onclick="GAME.toggle(this)"><span class="g-fl${st.todayDone?' on':''}">${flameIc(15)}</span><b>${st.cur}</b></button>`;
+    return `<button type="button" class="g-chip${st.cur>0?' on':''}" id="g-chip" aria-expanded="false" aria-controls="g-panel" aria-label="Belohnungen: ${st.cur} Tage Serie, ${esc(r.n)}" onclick="GAME.toggle(this)"><span class="g-fl${st.cur>0?' on':''}">${flameIc(15)}</span><b>${st.cur}</b></button>`;
   }
   function pathNext(){
     if(typeof MODS==='undefined'||typeof PROGRESS==='undefined') return null;
@@ -260,7 +260,7 @@ const GAME=(function(){
   function refresh(){
     const p=document.getElementById('g-panel'), c=document.getElementById('g-chip');
     if(p&&!p.hidden) p.innerHTML=panel();
-    if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.todayDone); c.classList.toggle('on',st.todayDone); }
+    if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.cur>0); c.classList.toggle('on',st.cur>0); }
   }
   function setPath(on){ load().path=on?1:0; save(); refresh(); }
   function setOff(off){ load().off=off?1:0; save(); if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome(); }
