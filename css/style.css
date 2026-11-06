@@ -3988,3 +3988,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .g-fzp.has{color:#5aa9ff;opacity:1;}
 .g-ri .g-fzp+.g-fzp{margin-left:2px;}
 .g-ri:has(.g-fzp){display:flex;width:auto;padding:0 8px;gap:3px;}
+/* Startseite: Abstand zwischen Datum und „Lernstoff“ halbiert */
+@media(max-width:700px){
+  #m-home .m-hello+.m-hgrid{margin-top:-5px;}
+}
