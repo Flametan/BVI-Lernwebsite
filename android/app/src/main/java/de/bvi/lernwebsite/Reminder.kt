@@ -67,8 +67,6 @@ class ReminderReceiver : BroadcastReceiver() {
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val prefs = context.getSharedPreferences("bvi", Context.MODE_PRIVATE)
-        StreakIcon.schedule(context)
-        StreakIcon.refresh(context)
         if (prefs.getBoolean("reminder_on", false)) {
             Reminder.schedule(context, prefs.getInt("reminder_hour", 18))
         }
