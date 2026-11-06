@@ -3992,3 +3992,28 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 @media(max-width:700px){
   #m-home .m-hello+.m-hgrid{margin-top:-5px;}
 }
+
+/* Startseite: Dienstgrad statt „Lernstoff“, Jahr-Schalter mit gleitender Pille */
+.m-seg2-w{min-width:0;flex:1 1 auto;}
+.g-rklab{display:inline-flex;align-items:center;gap:8px;min-width:0;max-width:100%;border:0;background:none;padding:2px 4px 2px 0;font-family:inherit;font-size:.8rem;font-weight:700;color:var(--m-fg);cursor:pointer;border-radius:10px;}
+.g-rklab>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
+.g-rklab .g-sh{flex:none;}
+.m-seg2-w .g-chip{flex:none;}
+.m-seg2 .m-mini{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;flex:none;isolation:isolate;}
+.m-mini-ind{position:absolute;z-index:-1;top:2px;bottom:2px;left:2px;width:calc((100% - 4px)/2);border-radius:99px;background:var(--m-card);box-shadow:0 1px 3px rgba(0,0,0,.18);transform:translateX(0);transition:transform .38s cubic-bezier(.34,1.45,.5,1);will-change:transform;}
+.m-mods[data-y="1"] .m-mini-ind{transform:translateX(100%);}
+.m-seg2 .m-mini button,.m-seg2 .m-mini button.on{background:none;box-shadow:none;text-align:center;transition:color .25s ease;}
+.m-seg2 .m-mini button.on{color:var(--m-fg);}
+.m-mods .m-yl{animation:yrIn .3s ease-out;}
+@keyframes yrIn{from{opacity:0;transform:translateX(var(--yr-dx,10px));}to{opacity:1;transform:none;}}
+.m-mods[data-y="1"] .m-yl{--yr-dx:-10px;}
+@media(prefers-reduced-motion:reduce){.m-mini-ind{transition:none;}.m-mods .m-yl{animation:none;}}
+.m-seg2 .g-rklab{flex:0 1 auto;min-width:0;padding:2px 4px 2px 0;border-radius:10px;font-size:.8rem;background:none;box-shadow:none;}
+.m-seg2 .g-chip{flex:none;}
+@media(max-width:400px){
+  .m-seg2 .m-mini button{padding:5px 9px;font-size:.76rem;}
+  .m-seg2 .g-rklab{font-size:.76rem;gap:6px;}
+  .m-seg2 .g-rklab .g-sh{transform:scale(.88);transform-origin:left center;margin-right:-3px;}
+  .m-seg2-w{gap:6px;}
+  .m-seg2 .g-chip{padding:0 8px 0 6px;min-width:0;}
+}

@@ -40,6 +40,7 @@ const CHANGELOG_ENTRIES=[
       'Tour: Der Spotlight bei „Dein Lernstoff“ und „Deine Lernzeit“ sitzt wieder genau auf dem Bereich (die Seite scrollte weich und wurde währenddessen vermessen). „Überspringen“ entfällt; oben rechts auf der Karte beendet ein ✕ die Tour.',
       'Tour (andere Lehrgänge): Neuer Schritt zu Export und Import der Lehrgangsdaten.',
       'Tour: Kein Neuladen und kein verzögertes Verschieben des Spotlights mehr bei „Weiter“. Die Seite wird nur noch gewechselt, wenn der nächste Schritt auf einer anderen Seite liegt; dann blendet der Rahmen erst am Ziel ein.',
+      'Startseite: Der Jahr-Schalter (2. Jahr / 1. Jahr) hat eine gleitende Pille mit weicher Animation; die Standort-Karten blenden beim Wechsel sanft ein. Statt „Lernstoff“ steht links jetzt dein aktueller Dienstgrad mit Schulterstück (Antippen öffnet Rang & Abzeichen).',
       'Lernkarten: Sind alle Filter (Laufbahn und alle Standorte) gewählt, bleibt die Auswahl bestehen und nichts wird mehr abgewählt.',
       'Lernkarten: Die „Alle“-Erkennung bei den Standort-Filtern ist entfernt; jeder Filter zeigt nur noch seinen eigenen Zustand.',
       'Lernkarten: Wählt man alle Standorte nacheinander an, bleiben sie jetzt alle ausgewählt (vorher erloschen alle Filter). Ein erneuter Tipp nimmt einen Standort wieder heraus.',

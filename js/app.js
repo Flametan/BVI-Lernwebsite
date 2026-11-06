@@ -6266,8 +6266,8 @@ const SHELL=(function(){
       return `<button class="m-modrow" onclick="${goJs(m[3],m[4])}" aria-label="${esc(m[1])}: ${c.done} von ${c.total} Themen"><span class="m-mring">${stRing(p,m[1])}</span><span class="m-tx"><span class="m-t1">${esc(m[1])}</span><span class="m-t2">${esc(MODSUB[m[0]]||m[2])}</span><span class="m-mbar"><i style="width:${p}%"></i></span></span><span class="m-chv" aria-hidden="true">›</span></button>`;
     };
     let hy='2'; try{ hy=localStorage.getItem('bvi_home_year')==='1'?'1':'2'; }catch(e){}
-    const gm=(typeof GAME!=='undefined')?GAME.homeHtml():{chip:'',panel:''};
-    const mods=`<div class="m-card m-mods" data-y="${hy}"><div class="m-seg2"><span class="m-seg2-w"><span class="m-seg2-l">Lernstoff</span>${gm.chip}</span><span class="m-mini" role="tablist" aria-label="Ausbildungsjahr"><button type="button" role="tab" class="${hy==='2'?'on':''}" aria-selected="${hy==='2'}" onclick="SHELL.setYear('2')">2. Jahr</button><button type="button" role="tab" class="${hy==='1'?'on':''}" aria-selected="${hy==='1'}" onclick="SHELL.setYear('1')">1. Jahr</button></span></div>
+    const gm=(typeof GAME!=='undefined')?GAME.homeHtml():{chip:'',panel:'',rank:''};
+    const mods=`<div class="m-card m-mods" data-y="${hy}"><div class="m-seg2"><span class="m-seg2-w">${gm.rank||''}${gm.chip}</span><span class="m-mini" role="tablist" aria-label="Ausbildungsjahr"><i class="m-mini-ind" aria-hidden="true"></i><button type="button" role="tab" class="${hy==='2'?'on':''}" aria-selected="${hy==='2'}" onclick="SHELL.setYear('2')">2. Jahr</button><button type="button" role="tab" class="${hy==='1'?'on':''}" aria-selected="${hy==='1'}" onclick="SHELL.setYear('1')">1. Jahr</button></span></div>
       ${gm.panel}
       <div class="m-modgrid2"><div class="m-yl" data-yr="2"><div class="m-sec">2. Ausbildungsjahr</div><div class="m-modlist">${MODS.filter(m=>m[5]===2).map(stRow).join('')}</div></div>
       <div class="m-yl" data-yr="1"><div class="m-sec">1. Ausbildungsjahr</div><div class="m-modlist">${MODS.filter(m=>m[5]===1).map(stRow).join('')}</div></div></div></div>`;
