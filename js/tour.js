@@ -49,6 +49,7 @@ const TOUR=(function(){
     document.body.appendChild(root); hole=$('#tour-hole'); tip=$('#tour-tip');
     root.addEventListener('click',e=>{ const b=e.target.closest('[data-tour]'); if(!b) return; const a=b.dataset.tour; if(a==='next') go(i+1); else if(a==='prev') go(i-1); else if(a==='again') go(0); else close(); });
     window.addEventListener('resize',()=>{ if(i>=0) place(); });
+    window.addEventListener('scroll',()=>{ if(i>=0&&!busy) place(); },true);
     document.addEventListener('keydown',e=>{ if(i<0) return; if(e.key==='Escape'){ e.preventDefault(); close(); } else if(e.key==='ArrowRight'){ e.preventDefault(); go(i+1); } else if(e.key==='ArrowLeft'&&i>0){ e.preventDefault(); go(i-1); } },true);
   }
 
@@ -79,9 +80,9 @@ const TOUR=(function(){
   function render(){
     const s=STEPS[i], last=i===STEPS.length-1;
     const dots=STEPS.map((_,k)=>'<i class="'+(k===i?'on':'')+'"></i>').join('');
-    tip.innerHTML='<div class="tour-st">Schritt '+(i+1)+' von '+STEPS.length+'</div><h3>'+s.t+'</h3><p>'+s.x+'</p><div class="tour-nav"><div class="tour-dots" aria-hidden="true">'+dots+'</div>'
+    tip.innerHTML='<button type="button" class="tour-x" data-tour="skip" aria-label="Tour beenden"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button><div class="tour-st">Schritt '+(i+1)+' von '+STEPS.length+'</div><h3>'+s.t+'</h3><p>'+s.x+'</p><div class="tour-nav"><div class="tour-dots" aria-hidden="true">'+dots+'</div>'
       +(i>0&&!last?'<button type="button" class="tour-b2" data-tour="prev">Zurück</button>':'')
-      +(last?'<button type="button" class="tour-b2" data-tour="again">Nochmal</button>':'<button type="button" class="tour-b3" data-tour="skip">Überspringen</button>')
+      +(last?'<button type="button" class="tour-b2" data-tour="again">Nochmal</button>':'')
       +'<button type="button" class="tour-b1" data-tour="next">'+(last?'Fertig':'Weiter')+'</button></div>';
   }
 
@@ -100,9 +101,11 @@ const TOUR=(function(){
     const changed=before!==cur();   // Seitenwechsel: Spotlight kurz ausblenden und erst am fertigen Ziel wieder einblenden
     document.documentElement.classList.add('tour-lock');
     if(changed){ root.classList.add('jump'); hole.style.opacity='0'; }
+    const mine=n;
     setTimeout(()=>{
+      if(i!==mine){ busy=0; return; }   // Tour wurde inzwischen beendet
       const t=s.target&&s.target(), el=Array.isArray(t)?t.find(vis):t;
-      if(el&&el.scrollIntoView&&vis(el)){ const r=el.getBoundingClientRect(); if(r.top<70||r.bottom>innerHeight-80) el.scrollIntoView({block:'center'}); }
+      if(el&&el.scrollIntoView&&vis(el)){ const r=el.getBoundingClientRect(); if(r.top<70||r.bottom>innerHeight-80) el.scrollIntoView({block:'center',behavior:'instant'}); }
       root.classList.add('on'); render();
       requestAnimationFrame(()=>{ place(); busy=0; const nb=$('.tour-b1',root); if(nb) nb.focus({preventScroll:true}); setTimeout(()=>root.classList.remove('jump'),60); });
     },changed?420:30);
