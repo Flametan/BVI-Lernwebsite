@@ -125,6 +125,61 @@ open class MainActivity : AppCompatActivity() {
             } catch (e: Exception) { false }
         }
 
+        // PNG-Bild (Base64) im Ordner Bilder ablegen; liefert die Adresse oder null (z. B. fehlende Berechtigung)
+        private fun storeImage(filename: String, base64: String): Uri? {
+            val bytes = android.util.Base64.decode(base64, android.util.Base64.DEFAULT)
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val values = ContentValues().apply {
+                    put(MediaStore.Images.Media.DISPLAY_NAME, filename)
+                    put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+                    put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/B VI")
+                    put(MediaStore.Images.Media.IS_PENDING, 1)
+                }
+                val u = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+                u?.let {
+                    contentResolver.openOutputStream(it)?.use { os -> os.write(bytes) }
+                    values.clear(); values.put(MediaStore.Images.Media.IS_PENDING, 0)
+                    contentResolver.update(it, values, null, null)
+                }
+                u
+            } else {
+                if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                    runOnUiThread {
+                        ActivityCompat.requestPermissions(this@MainActivity,
+                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 78)
+                    }
+                    return null
+                }
+                val bmp = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                val s = MediaStore.Images.Media.insertImage(contentResolver, bmp, filename, null)
+                if (s != null) Uri.parse(s) else null
+            }
+        }
+
+        // Bild in der Galerie speichern (Ordner Bilder/B VI)
+        @JavascriptInterface
+        fun saveImage(filename: String, base64: String): Boolean =
+            try { storeImage(filename, base64) != null } catch (e: Exception) { false }
+
+        // Bild speichern und das Teilen-Menü von Android öffnen (WhatsApp, Instagram, ...)
+        @JavascriptInterface
+        fun shareImage(filename: String, base64: String, text: String): Boolean {
+            return try {
+                val uri = storeImage(filename, base64) ?: return false
+                runOnUiThread {
+                    try {
+                        val send = Intent(Intent.ACTION_SEND).setType("image/png")
+                            .putExtra(Intent.EXTRA_STREAM, uri)
+                            .putExtra(Intent.EXTRA_TEXT, text)
+                            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        startActivity(Intent.createChooser(send, "Teilen").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                    } catch (e: Exception) { /* keine App zum Teilen */ }
+                }
+                true
+            } catch (e: Exception) { false }
+        }
+
         // Tägliche Erinnerung: "ok" = geplant, "ask" = Berechtigung wird erfragt, Antwort per NOTIF._nativeResult
         @JavascriptInterface
         fun setReminder(on: Boolean, hour: Int): String {
