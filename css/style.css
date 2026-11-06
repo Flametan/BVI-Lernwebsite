@@ -3751,3 +3751,22 @@ button.g-rank-go:active{background:var(--m-raised);}
 html.lp-lock #m-topbar #m-back{visibility:hidden;pointer-events:none;}
 /* Kapitel-Fenster: senkrecht scrollen und zoomen bleibt dem Browser, waagerechtes Wischen gehört dem Kapitelwechsel (Tabellen/Schaubilder scrollen als eigene Bereiche weiter) */
 .lp-wbody{touch-action:pan-y pinch-zoom;}
+
+/* Laufbahn-Passwortfeld: nur das Eingabefeld (wie die Suche); falsch = rot wackeln, richtig = grüner Haken */
+.lbf-box .search-input-wrap{padding:.85rem 1rem .85rem 1.1rem;}
+.lbf-ic{position:relative;width:22px;height:22px;flex:none;color:var(--c-slate,var(--m-muted));}
+.lbf-ic svg{position:absolute;inset:0;width:22px;height:22px;transition:opacity .2s,transform .35s cubic-bezier(.34,1.56,.64,1),color .2s;}
+.lbf-ic .ck{opacity:0;transform:scale(.4);}
+.lbf-ic .ck path{stroke-dasharray:24;stroke-dashoffset:24;}
+.lbf-box.lbf-ok .lbf-ic .lk{opacity:0;transform:scale(.4);}
+.lbf-box.lbf-ok .lbf-ic .ck{opacity:1;transform:none;color:#2fbf71;}
+.lbf-box.lbf-ok .lbf-ic .ck path{animation:lbfDraw .45s .1s ease forwards;}
+@keyframes lbfDraw{to{stroke-dashoffset:0;}}
+.search-box.lbf-box.lbf-ok{border-color:#2fbf71!important;box-shadow:0 0 0 4px rgba(47,191,113,.25),0 20px 60px rgba(0,0,0,.45)!important;}
+.search-box.lbf-box.lbf-bad{border-color:#e5484d!important;box-shadow:0 0 0 4px rgba(229,72,77,.22),0 20px 60px rgba(0,0,0,.45)!important;animation:lbShake .4s ease;}
+.lbf-box.lbf-bad .lbf-ic{color:#e5484d;}
+.lbf-box.lbf-bad .lbf-input{color:#e5484d;}
+.lbf-input{letter-spacing:.08em;}
+.lbf-input::placeholder{letter-spacing:0;}
+@media(prefers-reduced-motion:reduce){.search-box.lbf-box.lbf-bad{animation:none;}.lbf-box.lbf-ok .lbf-ic .ck path{animation:none;stroke-dashoffset:0;}.lbf-ic svg{transition:none;}}
+.lbf-input:focus,.lbf-input:focus-visible{outline:none;box-shadow:none;}

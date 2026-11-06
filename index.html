@@ -215,6 +215,19 @@
     <div class="search-footer"><span><kbd>↑↓</kbd> navigieren</span><span><kbd>↵</kbd> öffnen</span><span><kbd>Esc</kbd> schließen</span></div>
   </div>
 </div>
+<!-- LAUFBAHN: Passwortfeld (wächst wie die Suche aus dem Knopf heraus) -->
+<div id="lb-field" class="search-overlay hidden" role="dialog" aria-modal="true" aria-label="Passwort für die Laufbahnprüfung" onclick="LB.closeModal()">
+  <form class="search-box sr-empty lbf-box" onclick="event.stopPropagation()" onsubmit="return LB.fieldSubmit(event)" autocomplete="off">
+    <div class="search-input-wrap">
+      <span class="lbf-ic" aria-hidden="true">
+        <svg class="lk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        <svg class="ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+      </span>
+      <input id="lb-field-input" class="search-input lbf-input" type="password" placeholder="Passwort" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Passwort" enterkeyhint="go" oninput="LB.fieldTyped(this)">
+      <button type="button" class="search-close-btn" onclick="LB.closeModal()" title="Schließen (Esc)" aria-label="Schließen">✕</button>
+    </div>
+  </form>
+</div>
 <!-- CHANGELOG OVERLAY -->
 <div id="changelog-modal" class="search-overlay hidden" role="dialog" aria-modal="true" aria-label="Neuerungen" onclick="if(event.target===this)CHANGELOG.close()">
   <div class="changelog-box" onclick="event.stopPropagation()">

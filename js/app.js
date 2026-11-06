@@ -1301,15 +1301,19 @@ const SEARCH = (function(){
       // Icon Expand: der runde Knopf zieht sich zur Suchleiste auf, der Platzhalter wird getippt
       const box=document.querySelector('#search-overlay .search-box');
       if(box&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
-        box.classList.remove('sr-expand');
-        if(trigger&&trigger.getBoundingClientRect&&box.animate){
-          // Icon Expand: das Suchfeld wächst aus dem angetippten Symbol heraus
-          const t=trigger.getBoundingClientRect(), r=box.getBoundingClientRect();
-          const dx=(t.left+t.width/2)-(r.left+r.width/2), dy=(t.top+t.height/2)-(r.top+r.height/2), s=Math.max(.06,t.height/Math.max(r.height,1));
-          box.animate([{transform:`translate(${dx}px,${dy}px) scale(${s})`,opacity:0,borderRadius:'60px'},{transform:`translate(${dx*.25}px,${dy*.25}px) scale(.8)`,opacity:1,borderRadius:'36px',offset:.35},{transform:'none',opacity:1,borderRadius:'24px'}],{duration:480,easing:'cubic-bezier(.2,.9,.2,1)'});
-        } else { void box.offsetWidth; box.classList.add('sr-expand'); }
+        this.expand(box,trigger);
         typePlaceholder(inp);
       }
+    },
+    // Icon Expand: das Feld wächst aus dem angetippten Symbol/Knopf heraus (auch für das Passwortfeld der Laufbahn)
+    expand(box,trigger){
+      if(!box||matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+      box.classList.remove('sr-expand');
+      if(trigger&&trigger.getBoundingClientRect&&box.animate){
+        const t=trigger.getBoundingClientRect(), r=box.getBoundingClientRect();
+        const dx=(t.left+t.width/2)-(r.left+r.width/2), dy=(t.top+t.height/2)-(r.top+r.height/2), s=Math.max(.06,t.height/Math.max(r.height,1));
+        box.animate([{transform:`translate(${dx}px,${dy}px) scale(${s})`,opacity:0,borderRadius:'60px'},{transform:`translate(${dx*.25}px,${dy*.25}px) scale(.8)`,opacity:1,borderRadius:'36px',offset:.35},{transform:'none',opacity:1,borderRadius:'24px'}],{duration:480,easing:'cubic-bezier(.2,.9,.2,1)'});
+      } else { void box.offsetWidth; box.classList.add('sr-expand'); }
     },
     // Suchbereich aufheben: überall suchen
     widen(){ scope=null; syncScope(); const inp=document.getElementById('search-input'); if(inp){ inp.placeholder='Suchen …'; inp.focus(); render(inp.value.trim()); } },
@@ -1391,7 +1395,7 @@ const OVL=(function(){
     'search-overlay':()=>SEARCH.close(), 'shortcuts-overlay':()=>document.getElementById('shortcuts-overlay').classList.add('hidden'),
     'pomodoro-overlay':()=>POMO.close(), 'onboarding-overlay':()=>ONBOARD.close(),
     'quiz-mastery-modal':()=>QUIZ.closeMastery(), 'quiz-mastery-modal-idf':()=>IDFQ.closeMastery(),
-    'notes-overlay':()=>NOTES.close(), 'changelog-modal':()=>CHANGELOG.close()
+    'notes-overlay':()=>NOTES.close(), 'changelog-modal':()=>CHANGELOG.close(), 'lb-field':()=>LB.closeModal()
   };
   const order=[], opener={}; let skip=0;
   const el=id=>document.getElementById(id);

@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.0',ts:'2026-11-06T10:00',items:[
+      'Laufbahnprüfung: Statt eines Fensters erscheint nur ein Passwortfeld, das wie die Suche aus dem Knopf herauswächst. Ein falsches Passwort lässt das Feld rot wackeln, das richtige zeigt einen grünen Haken und öffnet die Seite.',
       'Lernseiten: „Nächstes Kapitel“ und „Vorheriges Kapitel“ gehen jetzt über das Seitenende hinaus. Nach dem letzten Kapitel öffnet sich die nächste Seite der Übersicht, zurück genauso.',
       'Lernseiten (Touch): Mit einem Wisch nach links oder rechts wechselst du das Kapitel, wie bei den Lernkarten. In scrollbaren Tabellen und Schaubildern scrollt der Wisch weiter wie gewohnt; senkrechtes Wischen, Zoomen und Antippen von Bildern bleiben unverändert.',
       'Lernseiten: Im Kapitelfenster verdeckt der Zurück-Knopf der Kopfleiste (mit dem Seitentitel) die Überschrift nicht mehr.',

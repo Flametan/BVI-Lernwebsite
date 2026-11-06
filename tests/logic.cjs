@@ -213,6 +213,26 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Lernseite: Wisch nach links/rechts wechselt das Kapitel (Touch), Maus, Rand und kurze Wische nicht', [sw.start, sw.links, sw.rechts, sw.maus, sw.rand, sw.kurz], ['Kapitel 03', 'Kapitel 04', 'Kapitel 03', 'Kapitel 03', 'Kapitel 03', 'Kapitel 03']);
 
+  // ── Laufbahn: Passwortfeld wie die Suche; falsch = rot, richtig = grüner Haken und weiter ──
+  const lbf = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), res = {};
+    try { sessionStorage.removeItem('bvi_lb_ok'); } catch (e) {}
+    NAV.tab('v-pruefung', 'Prüfung'); await w(300);
+    const o = document.getElementById('lb-field'), inp = document.getElementById('lb-field-input'), box = o.querySelector('.search-box');
+    LB.ask(document.body); await w(100);
+    res.open = !o.classList.contains('hidden');
+    inp.value = 'falsch'; LB.fieldSubmit({ preventDefault() {} }); await w(100);
+    res.bad = box.classList.contains('lbf-bad') && !box.classList.contains('lbf-ok') && !LB.ok();
+    inp.value = 'Feuer'; LB.fieldTyped(inp); res.cleared = !box.classList.contains('lbf-bad');
+    LB.fieldSubmit({ preventDefault() {} }); await w(100);
+    res.okState = box.classList.contains('lbf-ok') && LB.ok(); res.stillHere = document.querySelector('.view.active').id;
+    await w(1100);
+    res.view = document.querySelector('.view.active').id; res.closed = o.classList.contains('hidden');
+    try { sessionStorage.removeItem('bvi_lb_ok'); } catch (e) {}
+    NAV.home(); return res;
+  });
+  eq('Laufbahn: Passwortfeld öffnet; falsch = rot; richtig = grüner Haken, danach die Laufbahn-Seite', [lbf.open, lbf.bad, lbf.cleared, lbf.okState, lbf.stillHere, lbf.view, lbf.closed], [true, true, true, true, 'v-pruefung', 'v-lb-start', true]);
+
   // ── Suche springt ins Kapitel, Vorlesefunktion ist entfernt ──
   const sj = await page.evaluate(async () => {
     NAV.home();
