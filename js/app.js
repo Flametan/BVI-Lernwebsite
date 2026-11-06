@@ -4457,7 +4457,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
-      'Startseite (Tablet und PC): Das 2. Ausbildungsjahr steht groß in zwei Spalten, das 1. Jahr folgt kompakt darunter. Bei Münster steht jetzt „VB und Stabsarbeit“ statt „Brandschutz“.',
+      'Startseite (Tablet und PC): Das 2. Ausbildungsjahr steht groß in zwei Spalten, das 1. Jahr folgt kompakt darunter. Bei Münster steht jetzt „VB & Stabsarbeit“ statt „Brandschutz“.',
       'Desktop: Die schmale Seitenleiste klappt beim Darüberfahren über den Inhalt auf (mit Namen der Bereiche). Der Pin zum Anheften ist in der schmalen Leiste nicht mehr zu sehen und erscheint erst beim Aufklappen.',
       'Einstellungen: Das Suchsymbol sieht jetzt aus wie auf der Startseite (gleiche Größe, Farbe und Lupe) und sitzt bei jeder Breite an derselben Stelle.',
       'Wochen-Rückblick: „Teilen“ und „Bild speichern“ funktionieren jetzt in der Android-App (Teilen-Menü mit WhatsApp und Instagram, Bild landet in Bilder/B VI) und zeigen immer eine Rückmeldung. Dafür ist die neue App-Version nötig.',
@@ -7826,7 +7826,7 @@ const SHELL=(function(){
     const nextBox=`<button type="button" class="m-hsearch" aria-label="Suchen" title="Suchen" onclick="SEARCH.open(this)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.5"/><path d="m20 20-3.5-3.5"/></svg></button>`;
     const chartCard=chartHtml();
     // Standort-Liste: Umschalter 2./1. Jahr (Handy), je Standort eine Zeile mit Ring, Ort, Fortschrittsbalken und Prozent
-    const MODSUB={ibk:'Heyrothsberge · Führung',vak:'Berlin · Verwaltungsrecht',feuak:'Hamburg · Haushalt',idf:'Münster · VB und Stabsarbeit',gal:'Grundlehrgang',sfs:'Regensburg',hlfs:'Kassel'};
+    const MODSUB={ibk:'Heyrothsberge · Führung',vak:'Berlin · Verwaltungsrecht',feuak:'Hamburg · Haushalt',idf:'Münster · VB & Stabsarbeit',gal:'Grundlehrgang',sfs:'Regensburg',hlfs:'Kassel'};
     const stRing=(p,aria)=>{ const r=44,c=2*Math.PI*r; return `<svg class="m-hring" viewBox="0 0 100 100" role="img" aria-label="${esc(aria)}: ${p} %"><circle cx="50" cy="50" r="${r}" class="bg"/>${p>0?`<circle cx="50" cy="50" r="${r}" class="fg" stroke-dasharray="${c*p/100} ${c}" transform="rotate(-90 50 50)"/>`:''}<text x="50" y="57" text-anchor="middle" font-size="25">${p}%</text></svg>`; };
     const stRow=m=>{
       const c=cnt[m[0]]||{done:0,total:0}, p=pct(c);
