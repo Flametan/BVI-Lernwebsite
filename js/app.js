@@ -949,6 +949,7 @@ const PROGRESS = (function(){
     if(!LEAF_PARENT[viewId]) return;
     const d = load(); d[viewId] = true; save(d);
     updateUI();
+    if(typeof GAME!=='undefined'&&GAME.progress) GAME.progress();
   }
 
   let _cardCache = null;
@@ -6398,6 +6399,7 @@ const SHELL=(function(){
     set('m-notif-hour',NOTIF.hour()+':00');
     set('m-goal-val',goalMin()+' min');
     const gt=document.getElementById('m-game-toggle'); if(gt&&typeof GAME!=='undefined') gt.checked=GAME.isOn();
+    const gs=document.getElementById('m-game-small'); if(gs&&typeof GAME!=='undefined') gs.checked=GAME.isSmall();
     const tm=document.getElementById('m-timers-toggle'); if(tm) tm.checked=!document.documentElement.classList.contains('no-timers');
     const lb=BACKUP.last(); set('m-backup-last',lb?'Letzte Sicherung: '+lb.toLocaleDateString('de-DE'):'Noch nie gesichert');
     const ex=examCfg(), di=document.getElementById('m-exam-date'), ni=document.getElementById('m-exam-name'), ti=document.getElementById('m-exam-target'), xb=document.getElementById('m-exam-clear');
@@ -6460,7 +6462,7 @@ const SHELL=(function(){
   }
 
   return {
-    onShow, renderHome, newQuip, renderExam, renderNotes, renderFcSide, syncSettings,
+    onShow, renderHome, newQuip, renderExam, renderNotes, renderFcSide, syncSettings, goalMin, daysToExam, mods:()=>MODS,
     report(extra){
       const v=document.querySelector('.view.active'); if(!v) return;
       const title=v.querySelector('.page-title')?.textContent?.trim()||v.id;
