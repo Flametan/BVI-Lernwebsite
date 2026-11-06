@@ -59,7 +59,7 @@ const GAME=(function(){
 
   let queue=[], showing=false, combo=0, ST=null;
 
-  function blank(){ return {xp:0,days:{},badges:{},title:'',done:{},tot:{cards:0,quizOk:0,fahrt:0,combo:0,allTasks:0,alarm:0},alarm:{},path:0,off:0,fz:{have:0,used:{},last:''}}; }
+  function blank(){ return {xp:0,days:{},badges:{},title:'',done:{},tot:{cards:0,quizOk:0,fahrt:0,combo:0,allTasks:0,alarm:0},alarm:{},path:0,off:0,fz:{have:0,used:{},last:''},seen:{}}; }
   function load(){
     if(ST) return ST;
     let j=null; try{ j=JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){}
@@ -67,6 +67,7 @@ const GAME=(function(){
     ST.tot=Object.assign(blank().tot,ST.tot||{});
     ['days','badges','done','alarm'].forEach(k=>{ if(!ST[k]||typeof ST[k]!=='object') ST[k]={}; });
     if(!ST.fz||typeof ST.fz!=='object') ST.fz={have:0,used:{},last:''};
+    if(!ST.seen||typeof ST.seen!=='object') ST.seen={};
     if(!ST.fz.used||typeof ST.fz.used!=='object') ST.fz.used={};
     ST.fz.have=Math.max(0,Math.min(FZ_MAX,ST.fz.have|0));
     return ST;
@@ -262,6 +263,74 @@ const GAME=(function(){
     toast(n+' Lernkarten heute',pick(MOTI[tier],'m'+tier),['check','bolt','flame','star','star','flame'][tier]);
     if(tier>=2) confetti();
   }
+
+  /* ── Kleine Hinweise (Gooey Drop): selten, mit Tages-/Ereignisschlüssel, nur wenn gerade nichts anderes läuft ── */
+  const SOFT_MAX=3; let softN=0;
+  function soft(key,t,sub,ic,imp){
+    const s=load(); if(s.off) return false;
+    if(!imp&&(s.small===0||softN>=SOFT_MAX||showing||queue.length||document.hidden)) return false;
+    if(s.seen[key]) return false;
+    s.seen[key]=today(); if(!imp) softN++;
+    const ks=Object.keys(s.seen); if(ks.length>300) ks.sort((a,b)=>String(s.seen[a]).localeCompare(String(s.seen[b]))).slice(0,ks.length-300).forEach(k=>delete s.seen[k]);
+    save(); toast(t,sub,ic); return true;
+  }
+  const P_GOAL=m=>[m+' Minuten gelernt. Das Tagesziel steht.','Tagesziel erreicht, alles darüber ist Bonus.',m+' Minuten konsequent gelernt.','Heute hast du geliefert, '+m+' Minuten.'];
+  const P_DAY=['Die Serie lebt.','Dranbleiben zahlt sich aus.','Jeder Tag zählt, heute auch.','Du bleibst in der Spur.','Gewohnheit schlägt Motivation.'];
+  const P_BACK=['Schön, dass du wieder da bist. Zehn Karten sind ein guter Einstieg.','Willkommen zurück. Fang einfach klein an.','Pause vorbei, jetzt geht es weiter.','Gut, dass du wieder dabei bist.'];
+  const P_CD={100:'Genug Zeit, wenn du jetzt anfängst.',50:'Halbzeit. Plane feste Lernslots ein.',30:'Noch ein Monat. Jetzt wird wiederholt.',14:'Zwei Wochen. Übe gezielt die schwachen Karten.',7:'Letzte Woche. Ruhig bleiben, Stoff festigen.'};
+  const P_PCT={25:'Das erste Viertel ist geschafft.',50:'Halbzeit, du bist voll im Stoff.',75:'Drei Viertel, bald ist es geschafft.'};
+  function checkGoal(){
+    if(typeof USAGE==='undefined'||typeof SHELL==='undefined'||!SHELL.goalMin) return;
+    const gm=SHELL.goalMin(); if(USAGE.today()>=gm*60) soft('goal:'+today(),'Tagesziel geschafft',pick(P_GOAL(gm),'goal'),'sun',true);
+  }
+  function checkStreakDay(){
+    const st=streak(); if(!st.todayDone||st.cur<2||MILES.includes(st.cur)||st.cur%FZ_EVERY===0) return;
+    soft('day:'+today(),'Tag '+st.cur+' in Folge',pick(P_DAY,'day'),'flame');
+  }
+  let pinit=false;
+  function progress(){
+    try{
+      if(typeof PROGRESS==='undefined'||typeof SHELL==='undefined'||!SHELL.mods) return;
+      const s=load(), cnt=PROGRESS.counts(), first=!s.seen.pinit;
+      SHELL.mods().forEach(m=>{
+        const c=cnt[m[0]]; if(!c||!c.total) return; const pct=Math.floor(c.done/c.total*100);
+        [25,50,75,100].forEach(th=>{
+          const k='p:'+m[0]+':'+th; if(pct<th||s.seen[k]) return;
+          if(first){ s.seen[k]=today(); return; }
+          if(th===100){ if(soft(k,m[1]+' abgeschlossen','Alle Themen durch. Starke Arbeit!','star',true)) confetti(); }
+          else soft(k,m[1]+': '+th+' % geschafft',P_PCT[th],'check');
+        });
+      });
+      if(first){ s.seen.pinit=today(); save(); }
+    }catch(e){}
+  }
+  function checkCountdown(){
+    if(typeof SHELL==='undefined'||!SHELL.daysToExam) return;
+    const d=SHELL.daysToExam(); if(d<0) return;
+    const ths=[100,50,30,14,7], th=ths.filter(x=>d<=x).pop(); if(th===undefined) return;
+    const ex=(()=>{ try{ return (JSON.parse(localStorage.getItem('bvi_exam')||'{}').date||'')+''; }catch(e){ return ''; } })();
+    const s=load(), k='ex:'+th+':'+ex;
+    ths.filter(x=>x>th).forEach(x=>{ s.seen['ex:'+x+':'+ex]=s.seen['ex:'+x+':'+ex]||today(); });
+    soft(k,'Noch '+d+' '+(d===1?'Tag':'Tage')+' bis zur Prüfung',P_CD[th],'bell');
+  }
+  function lastActDays(){
+    const s=load(), use=(typeof USAGE!=='undefined'&&USAGE.days)?USAGE.days():{}; let best=null;
+    const ks=new Set([...Object.keys(s.days).filter(k=>s.days[k].xp>0),...Object.keys(use).filter(k=>(use[k]||0)>=60)]);
+    ks.forEach(k=>{ if(k<today()&&(best===null||k>best)) best=k; });
+    if(!best) return null; const [y,m,d]=best.split('-').map(Number); return Math.round((new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate())-new Date(y,m-1,d))/864e5);
+  }
+  function checkStart(){
+    const st=streak();
+    const gap=lastActDays();
+    if(gap!==null&&gap>=3&&!st.todayDone&&soft('back:'+today(),'Willkommen zurück',pick(P_BACK,'back'),'sun')) return;
+    if(st.cur>0&&!st.todayDone&&new Date().getHours()>=RISK_HOUR&&soft('risk:'+today(),'Serie in Gefahr','Deine '+st.cur+'-Tage-Serie läuft heute ab. Eine Karte reicht.','flame')) return;
+    checkCountdown();
+  }
+  setTimeout(()=>{ progress(); checkStart(); },3600);
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') setTimeout(checkStart,1200); });
+  setInterval(()=>{ if(!document.hidden) checkGoal(); },60000);
+  function setSmall(on){ load().small=on?1:0; save(); }
+  function isSmall(){ return load().small!==0; }
   function event(type,ok){
     try{
       const s=load(), pre=rankOf(s.xp), rec=dayRec(today());
@@ -278,6 +347,7 @@ const GAME=(function(){
       const post=rankOf(s.xp);
       if(post.i>pre.i) toast('Beförderung: '+post.n,GROUPS[post.g].n+' · '+s.xp+' Punkte','star'), confetti();
       save(); refresh();
+      if(type!=='fahrt'){ checkGoal(); checkStreakDay(); progress(); }
     }catch(e){}
   }
 
@@ -299,9 +369,9 @@ const GAME=(function(){
     return `<button type="button" class="g-chip${chipCls(st)}" id="g-chip" aria-expanded="false" aria-controls="g-panel" aria-label="Belohnungen: ${st.cur} Tage Serie${st.risk?' in Gefahr':''}, ${esc(r.n)}" onclick="GAME.toggle(this)"><span class="g-fl${st.cur>0&&st.todayDone?' on':''}">${flameIc(15)}</span><b>${st.cur}</b></button>`;
   }
   function pathNext(){
-    if(typeof MODS==='undefined'||typeof PROGRESS==='undefined') return null;
+    if(typeof SHELL==='undefined'||!SHELL.mods||typeof PROGRESS==='undefined') return null;
     const cnt=PROGRESS.counts(); let best=null;
-    MODS.forEach(m=>{ const c=cnt[m[0]]||{done:0,total:0}; if(!c.total||c.done>=c.total) return; const p=c.done/c.total; if(!best||p<best.p) best={p,m,c}; });
+    SHELL.mods().forEach(m=>{ const c=cnt[m[0]]||{done:0,total:0}; if(!c.total||c.done>=c.total) return; const p=c.done/c.total; if(!best||p<best.p) best={p,m,c}; });
     return best;
   }
   function panel(){
@@ -462,5 +532,5 @@ const GAME=(function(){
   }
 
   function onShow(id){ if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek(); }
-  return {event,cheer,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
+  return {event,cheer,progress,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
