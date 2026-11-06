@@ -3466,3 +3466,30 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 @media(min-width:701px){.sk-grid{grid-template-columns:repeat(3,1fr);}.sk-home{max-width:900px;}}
 iframe.emb-frame:not(.ld){background:linear-gradient(100deg,rgba(128,128,128,.10) 30%,rgba(128,128,128,.22) 50%,rgba(128,128,128,.10) 70%);background-size:300% 100%;animation:srShim 1.2s linear infinite;}
 @media(prefers-reduced-motion:reduce){.sk-b,iframe.emb-frame:not(.ld){animation:none!important;}}
+
+/* Prüfungsliste: kein Farbverlauf, stattdessen ein kleiner Stern in der Zeile */
+.jg-rw.hot{background:none;}
+.jg-rw{position:relative;}
+.jg-starbtn{position:absolute;right:44px;top:50%;transform:translateY(-50%);width:34px;height:34px;display:grid;place-items:center;border:0;background:none;padding:0;font-size:1.15rem;line-height:1;color:var(--m-muted);opacity:.4;cursor:pointer;border-radius:50%;}
+span.jg-starbtn{cursor:default;pointer-events:none;}
+.jg-starbtn.on{color:var(--m-accent);opacity:1;}
+button.jg-starbtn:hover{background:var(--m-raised);opacity:.9;}
+button.jg-starbtn.on:hover{opacity:1;}
+.jg-rw:has(.jg-starbtn) .m-row{padding-right:84px;}
+.jg-legend{display:flex;align-items:center;gap:6px;padding:2px 2px 8px;}
+.jg-legend .jg-st{opacity:1;color:var(--m-accent);}
+.jg-starbtn{right:8px;}
+.jg-rw:has(.jg-starbtn) .m-row{padding-right:50px;}
+/* Standort-Karten: beim Drücken dunkler wie alle anderen Kacheln (auch die letzte Karte jeder Liste) */
+.m-modlist .m-modrow:last-child{background:var(--m-card);}
+.m-modrow:active,.m-modlist .m-modrow:active,.m-modlist .m-modrow:last-child:active,.m-modlist .m-modrow:hover,.m-modlist .m-modrow:last-child:hover{background:var(--m-raised);}
+
+/* nur die Laufbahnprüfung behält den Farbverlauf */
+.jg-rw.lbg{background:linear-gradient(160deg,color-mix(in srgb,var(--m-accent) 38%,var(--m-card)),color-mix(in srgb,var(--m-accent) 8%,var(--m-card)) 78%);}
+.jg-rw.lbg .m-row{background:none;}
+.set-tools{right:8px;top:4px;}
+#v-settings .page-title{padding-right:150px;}
+
+/* Suche: ohne Eingabe nur das Suchfeld */
+.search-box.sr-empty .search-results,.search-box.sr-empty .search-footer{display:none;}
+.search-box.sr-empty .search-input-wrap{border-bottom:0;}
