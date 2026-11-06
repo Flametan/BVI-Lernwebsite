@@ -4443,6 +4443,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Einsatzfahrt: Bei der Auswahl 5, 10 oder 15 Fragen steht jetzt, wie viele Fehler erlaubt sind (statt der Zeit-Chips), z. B. „1 Fehler erlaubt · ab dem 2. Fehler kommst du zu spät“.',
       'Suche: Auf allen Unterseiten (Lehrgang, Themen-Übersichten, Lernseiten) steht oben rechts eine Lupe. Sie sucht in dieser Ebene und in den Ebenen darunter.',
       'Suche: Auf jeder Ebene wird nur der Inhalt dieser Seite durchsucht (im IdF-Tab nur IdF, in Stabsarbeit nur Stabsarbeit). Ein Feld „Suche in …“ im Suchfeld zeigt den Bereich; mit ✕ suchst du überall.',
       'Startseite: Oben rechts steht jetzt eine Lupe statt des Kastens „nächste Einheit“. Antippen: Das Suchfeld wächst aus dem Symbol, die Tastatur öffnet sich sofort, mit ✕ löschst du, Esc oder Zurück schließen. Die nächste Einheit findest du im Stundenplan.',

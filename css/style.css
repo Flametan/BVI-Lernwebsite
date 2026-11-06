@@ -3579,3 +3579,4 @@ html.tour-lock{overflow:hidden;}
 @media(max-width:1099px){.m-tb-search{width:44px;height:44px;}}
 body:has(.lp-win.on:not(.focus)) #m-topbar .m-tb-search{pointer-events:auto;}
 @media(prefers-reduced-motion:reduce){.m-tb-search{transition:none;}}
+.pz-rl{margin-top:4px;font-size:.86rem;color:var(--m-muted);}
