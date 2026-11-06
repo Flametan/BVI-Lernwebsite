@@ -40,6 +40,7 @@ const CHANGELOG_ENTRIES=[
       'Tour: Der Spotlight bei „Dein Lernstoff“ und „Deine Lernzeit“ sitzt wieder genau auf dem Bereich (die Seite scrollte weich und wurde währenddessen vermessen). „Überspringen“ entfällt; oben rechts auf der Karte beendet ein ✕ die Tour.',
       'Tour (andere Lehrgänge): Neuer Schritt zu Export und Import der Lehrgangsdaten.',
       'Tour: Kein Neuladen und kein verzögertes Verschieben des Spotlights mehr bei „Weiter“. Die Seite wird nur noch gewechselt, wenn der nächste Schritt auf einer anderen Seite liegt; dann blendet der Rahmen erst am Ziel ein.',
+      'Lernkarten: Wählt man alle Standorte nacheinander an, bleiben sie jetzt alle ausgewählt (vorher erloschen alle Filter). Ein erneuter Tipp nimmt einen Standort wieder heraus.',
       'Desktop und Touch: Tippt oder klickt man bei der schmalen Seitenleiste auf ein Symbol, bleibt sie schmal und klappt nicht auf. Erst beim erneuten Darüberfahren erweitert sie sich wieder.',
       'Startseite (Handy): Der Abstand zwischen dem Datum und der Zeile „Lernstoff“ mit der Serie ist halbiert.',
       'Startseite: Die Lücke zwischen „Lernstoff“ und den Standort-Karten ist halbiert.',
