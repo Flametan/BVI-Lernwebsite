@@ -949,7 +949,6 @@ const PROGRESS = (function(){
     if(!LEAF_PARENT[viewId]) return;
     const d = load(); d[viewId] = true; save(d);
     updateUI();
-    if(typeof GAME!=='undefined'&&GAME.progress) GAME.progress();
   }
 
   let _cardCache = null;
