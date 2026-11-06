@@ -40,6 +40,8 @@ const CHANGELOG_ENTRIES=[
       'Tour: Der Spotlight bei „Dein Lernstoff“ und „Deine Lernzeit“ sitzt wieder genau auf dem Bereich (die Seite scrollte weich und wurde währenddessen vermessen). „Überspringen“ entfällt; oben rechts auf der Karte beendet ein ✕ die Tour.',
       'Tour (andere Lehrgänge): Neuer Schritt zu Export und Import der Lehrgangsdaten.',
       'Tour: Kein Neuladen und kein verzögertes Verschieben des Spotlights mehr bei „Weiter“. Die Seite wird nur noch gewechselt, wenn der nächste Schritt auf einer anderen Seite liegt; dann blendet der Rahmen erst am Ziel ein.',
+      'Lernkarten: Die Zahlen auf den Filter-Reitern (z. B. „Laufbahn 12/286“) zählen jetzt sofort mit, wenn du Karten bewertest, auch beim Üben neben der Lernseite.',
+      'Lernkarten: Fragen, die nur nach dem Gegenteil fragten („Was ist kein Schutzziel …?“, „Was gehört nicht in …?“), sind positiv und beantwortbar umformuliert (§ 14 MBO, Personalfaktor, Verfassungsorgane, Verhältnismäßigkeit, Beamtenverhältnisse, Disziplinarrecht). Die Folgefragen der sechs Fälle nennen jetzt den Sachverhalt, sodass sie ohne die Vorkarte lösbar sind.',
       'Ladebildschirm: Das Skeleton der Startseite zeigt jetzt Schulterstück, Serie und Jahr-Schalter wie die neue Startseite; oben rechts sitzt auf dem Handy der runde Such-Knopf.',
       'Dienstgrad „Leitender Branddirektor“: Die vier Punkte auf dem Schulterstück haben jetzt Abstand zum Rand.',
       'Animationen lassen sich nicht mehr reduzieren: Die Rücksicht auf die Geräte-Einstellung „Bewegung reduzieren“ ist entfernt, alle Animationen laufen immer.',
