@@ -4457,6 +4457,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Ladebildschirm: Auf Tablet und PC entspricht das Skeleton der Startseite jetzt dem neuen Aufbau (Cloud und Spende, Wochenübersicht, Lernstoff mit beiden Ausbildungsjahren). Auch auf dem Handy sitzen „Lernstoff“ und die Serie wie in der App.',
       'Tablet: Die Startseite ist neu angeordnet. Die Standorte beider Ausbildungsjahre stehen nebeneinander über die volle Breite und laufen nicht mehr seitlich aus dem Bild; „Lernstoff“ und die Serie sitzen darüber.',
       'Belohnungsfeld: Der extra Knopf „Rang & Abzeichen“ entfällt, die Rang-Zeile oben führt dorthin.',
       'Wochen-Rückblick: Wird jetzt als Bild im Story-Format geteilt (WhatsApp, Instagram und andere Apps) oder gespeichert. Ein Tipp auf den Rang im Belohnungsfeld öffnet „Rang & Abzeichen“.',
