@@ -10,24 +10,28 @@ import android.content.pm.PackageManager
 import java.util.Calendar
 
 /**
- * Startsymbol mit kleiner Streak-Flamme (wie bei Duolingo).
- * Je Farbe/Design gibt es drei Aliase: ohne Flamme, "_s1" (Flamme brennt) und "_s2" (Flamme droht zu erlöschen).
+ * Startsymbol mit roter Streak-Zahl oben rechts (wie bei Duolingo).
+ * Ohne Serie gilt das normale Symbol der gewählten Farbe. Mit Serie gibt es je Design (dunkel, hell, beige) und Tageszahl 1 bis 30 ("n1" bis "n30";
+ * "n31" zeigt "30+") zwei Aliase: "_s1" (Flamme brennt) und "_s2" (Flamme droht zu erlöschen, wird matt).
  * Zustand: keine Serie = 0, Serie und heute gelernt = 1, Serie, aber heute noch nicht gelernt und es ist nach 18 Uhr = 2.
  * Ein täglicher Alarm um 18:00 und 00:30 schaltet das Symbol auch dann um, wenn die App nicht läuft.
  */
 object StreakIcon {
     private val BASES = listOf("orange", "gold", "red", "blue", "green")
     private val TONES = listOf("", "_light", "_beige")
-    private val SUFFIXES = listOf("", "_s1", "_s2")
+    private const val MAX_N = 31   // 31 steht für "30+"
     private const val RISK_HOUR = 18
     private const val REQ_EVENING = 9218
     private const val REQ_NIGHT = 9230
 
-    /** Alle gültigen Namen, z. B. "orange_light_s1" -> Alias "IconOrangeLightS1" */
+    private fun aliasOf(n: String) = "Icon" + n.split("_").joinToString("") { p -> p.replaceFirstChar { c -> c.uppercase() } }
+
+    /** Alle gültigen Namen, z. B. "orange_light" -> "IconOrangeLight", "beige_n7_s1" -> "IconBeigeN7S1" */
     val aliases: Map<String, String> = HashMap<String, String>().apply {
-        for (b in BASES) for (t in TONES) for (s in SUFFIXES) {
-            val n = b + t + s
-            put(n, "Icon" + n.split("_").joinToString("") { p -> p.replaceFirstChar { c -> c.uppercase() } })
+        for (b in BASES) for (t in TONES) put(b + t, aliasOf(b + t))
+        for (t in listOf("", "light_", "beige_")) for (n in 1..MAX_N) for (s in 1..2) {
+            val name = t + "n" + n + "_s" + s
+            put(name, aliasOf(name))
         }
     }
 
@@ -49,14 +53,17 @@ object StreakIcon {
     fun wanted(ctx: Context): String {
         val p = prefs(ctx)
         val base = p.getString("base_icon", "orange") ?: "orange"
-        val st = state(p.getInt("streak_days", 0), p.getString("streak_last", "") ?: "")
-        return base + (if (st == 1) "_s1" else if (st == 2) "_s2" else "")
+        val days = p.getInt("streak_days", 0)
+        val st = state(days, p.getString("streak_last", "") ?: "")
+        if (st == 0) return base
+        val tone = if (base.endsWith("_light")) "light_" else if (base.endsWith("_beige")) "beige_" else ""
+        return tone + "n" + minOf(days, MAX_N) + "_s" + st
     }
 
     /** Aus der Seite: Grundfarbe/-design des Symbols (z. B. "orange_light") */
     fun setBase(ctx: Context, name: String) {
-        val base = name.removeSuffix("_s1").removeSuffix("_s2")
-        if (!aliases.containsKey(base)) return
+        val base = name
+        if (!BASES.any { b -> TONES.any { t -> base == b + t } }) return
         prefs(ctx).edit().putString("base_icon", base).putString("pending_icon", wanted(ctx)).apply()
     }
 
@@ -71,18 +78,21 @@ object StreakIcon {
     fun apply(ctx: Context, name: String) {
         val target = aliases[name] ?: return
         val pm = ctx.packageManager
+        val p = prefs(ctx)
         fun comp(alias: String) = ComponentName(ctx.packageName, ctx.packageName + "." + alias)
-        fun isOn(alias: String) = when (pm.getComponentEnabledSetting(comp(alias))) {
-            PackageManager.COMPONENT_ENABLED_STATE_ENABLED -> true
-            PackageManager.COMPONENT_ENABLED_STATE_DEFAULT -> alias == "IconOrange"
-            else -> false
-        }
-        if (isOn(target)) return
+        val cur = p.getString("icon_on", null)
+        if (cur == target) return
         try {
             pm.setComponentEnabledSetting(comp(target), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP)
-            aliases.values.filter { it != target }.forEach {
-                pm.setComponentEnabledSetting(comp(it), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP)
+            if (cur != null) {
+                pm.setComponentEnabledSetting(comp(cur), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP)
+            } else {
+                // erster Wechsel mit dieser Version: alle übrigen Aliase ausschalten (nur einmal)
+                aliases.values.filter { it != target }.forEach {
+                    pm.setComponentEnabledSetting(comp(it), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP)
+                }
             }
+            p.edit().putString("icon_on", target).apply()
         } catch (e: Exception) {
             // Manche Launcher blockieren den Wechsel; dann bleibt das bisherige Symbol
         }
