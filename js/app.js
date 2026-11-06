@@ -4424,6 +4424,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Startseite: Oben rechts steht jetzt eine Lupe statt des Kastens „nächste Einheit“. Antippen: Das Suchfeld wächst aus dem Symbol, die Tastatur öffnet sich sofort, mit ✕ löschst du, Esc oder Zurück schließen. Die nächste Einheit findest du im Stundenplan.',
       'Einstellungen: Der Titel „Einstellungen“ bricht nicht mehr vor dem letzten Buchstaben um. Das Tagesziel stellst du weiter unter „Lernen & Erinnerung“ ein; der Lernzeit-Graph übernimmt es sofort.',
       'Lernzeit-Graph: Das Tagesziel steht als Rahmen hinter jedem Tag (Woche); wer das Ziel schafft, bekommt ein ✓ über dem Balken. Darunter steht die durchschnittliche Lernzeit pro Tag (Woche: bis heute, Monate: laufender Monat).',
       'Tour: Der Spotlight bei „Dein Lernstoff“ und „Deine Lernzeit“ sitzt wieder genau auf dem Bereich (die Seite scrollte weich und wurde währenddessen vermessen). „Überspringen“ entfällt; oben rechts auf der Karte beendet ein ✕ die Tour.',
@@ -7768,16 +7769,8 @@ const SHELL=(function(){
       cTitle=recent.label; cGo=goJs(recent.id,recent.label); cBtn='Weiter';
       cSub=document.querySelector('#'+recent.id+' .page-eyebrow')?.textContent?.trim()||'';
     }
-    // Nächste Einheit oben rechts: im Unterricht die laufende (grau) und die folgende (orange), sonst die kommende
-    const stamp=d=>(dayWord(d)==='heute'?'':dayWord(d)==='morgen'?'morgen ':d.toLocaleDateString('de-DE',{weekday:'short'})+' ')+hhmm(d);
-    let nextBox='';
-    if(nx){
-      const aft=nx.state==='now'?IDF_PLAN.next(new Date(nx.end.getTime()+60000)):null;
-      const head=nx.state==='now'&&aft?`<span class="m-nx-cur">Jetzt · ${esc(nx.title)}</span><span class="m-nx-h">Danach ${stamp(aft.start)}</span><span class="m-nx-t">${esc(aft.title)}</span>`
-        :`<span class="m-nx-h">${nx.state==='now'?'Jetzt · bis '+hhmm(nx.end):stamp(nx.start)}</span><span class="m-nx-t">${esc(nx.title)}</span>`;
-      const dt=nx.start.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'});
-      nextBox=`<button class="m-nx" onclick="NAV.tab('v-plan','Stundenplan')" aria-label="Zum Stundenplan"><span class="m-nx-d">${esc(dt)}</span>${head}</button>`;
-    }
+    // Oben rechts: Lupe wie in Top-Apps (Tipp: Suchfeld wächst aus dem Symbol, Tastatur öffnet sich); die nächste Einheit steht im Stundenplan
+    const nextBox=`<button type="button" class="m-hsearch" aria-label="Suchen" title="Suchen" onclick="SEARCH.open(this)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.5"/><path d="m20 20-3.5-3.5"/></svg></button>`;
     const chartCard=chartHtml();
     // Standort-Liste: Umschalter 2./1. Jahr (Handy), je Standort eine Zeile mit Ring, Ort, Fortschrittsbalken und Prozent
     const MODSUB={ibk:'Heyrothsberge · Führung',vak:'Berlin · Verwaltungsrecht',feuak:'Hamburg · Haushalt',idf:'Münster · Brandschutz',gal:'Grundlehrgang',sfs:'Regensburg',hlfs:'Kassel'};
