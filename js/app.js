@@ -4457,6 +4457,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Desktop: Die schmale Seitenleiste klappt beim Darüberfahren über den Inhalt auf (mit Namen der Bereiche). Der Pin zum Anheften ist in der schmalen Leiste nicht mehr zu sehen und erscheint erst beim Aufklappen.',
       'Einstellungen: Das Suchsymbol sieht jetzt aus wie auf der Startseite (gleiche Größe, Farbe und Lupe) und sitzt bei jeder Breite an derselben Stelle.',
       'Wochen-Rückblick: „Teilen“ und „Bild speichern“ funktionieren jetzt in der Android-App (Teilen-Menü mit WhatsApp und Instagram, Bild landet in Bilder/B VI) und zeigen immer eine Rückmeldung. Dafür ist die neue App-Version nötig.',
       'Das aufgeklappte Belohnungsfeld auf der Startseite reicht auf Tablet und PC immer bis zum Rand.',
@@ -8324,12 +8325,20 @@ const RAIL=(function(){
     const sb=document.querySelector('#m-rail .m-ri-search'); if(sb){ sb.dataset.ic='search'; sb.addEventListener('click',()=>{ window.NAVBAR&&NAVBAR.tap(sb); }); }
     const r=rail(); if(!r) return;
     // Premium-Sidebar: kein Aufklappen beim Darüberfahren; der Name des Tabs erscheint als Sprechblase (CSS, data-tip). Anheften über den Pin.
+    // Beim Darüberfahren (oder Tastatur-Fokus, Antippen) klappt die schmale Leiste über den Inhalt auf; Pin erscheint erst dann
+    let hv=0;
+    const want=o=>{ clearTimeout(hv); hv=setTimeout(()=>setOpen(o),o?90:260); };
+    r.addEventListener('mouseenter',()=>want(true));
+    r.addEventListener('mouseleave',()=>want(false));
+    r.addEventListener('focusin',()=>{ if(!r.matches(':hover')) want(true); });
+    r.addEventListener('focusout',e=>{ if(!r.contains(e.relatedTarget)) want(false); });
+    r.addEventListener('click',e=>{ if(!open&&!pinned()&&mq.matches&&!e.target.closest('.m-ri')) want(true); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&open) setOpen(false); });
     (mq.addEventListener?mq.addEventListener.bind(mq,'change'):mq.addListener.bind(mq))(()=>sync());
     sync();
   }
   return { init, toggle(){ setOpen(!open); }, close(){ setOpen(false); },
-    pin(){ const p=!pinned(); b().classList.toggle('rail-pin',p); try{ localStorage.setItem(KEY,p?'1':'0'); }catch(e){} sync(); window.dispatchEvent(new Event('resize')); } };
+    pin(){ const p=!pinned(); setOpen(false); b().classList.toggle('rail-pin',p); try{ localStorage.setItem(KEY,p?'1':'0'); }catch(e){} sync(); window.dispatchEvent(new Event('resize')); } };
 })();
 window.RAIL=RAIL;
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>RAIL.init()); else RAIL.init();
