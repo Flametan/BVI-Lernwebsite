@@ -3516,3 +3516,10 @@ html.tour-lock{overflow:hidden;}
 .m-tourcard .m-ic svg{width:22px;height:22px;}
 .m-tourcard .m-t1{font-size:1rem;}.m-tourcard .m-t2{font-size:.8rem;}
 @media(prefers-reduced-motion:reduce){.tour-hole,.tour-tip{transition:none;}}
+
+/* Jahr-Umschalter: kleiner Pill-Schalter rechts neben „Lernstoff“ */
+.m-seg2{display:flex;justify-content:space-between;align-items:center;gap:8px;background:none;padding:0 2px 8px;margin:0;border-radius:0;}
+.m-seg2-l{font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--m-muted);}
+.m-mini{display:inline-flex;background:var(--m-raised);border-radius:99px;padding:2px;}
+.m-seg2 .m-mini button{flex:none;border:0;background:none;padding:5px 12px;border-radius:99px;font-family:inherit;font-size:.8rem;font-weight:700;color:var(--m-muted);cursor:pointer;min-height:30px;}
+.m-seg2 .m-mini button.on{background:var(--m-card);color:var(--m-fg);box-shadow:0 1px 3px rgba(0,0,0,.18);}
