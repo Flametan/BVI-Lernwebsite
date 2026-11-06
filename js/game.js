@@ -283,7 +283,7 @@ const GAME=(function(){
   }
   /* Bereich auf der Startseite (Symbol + aufklappbares Feld); bei ausgeschalteten Belohnungen leer */
   /* aktueller Dienstgrad mit Schulterstück (ersetzt die Überschrift „Lernstoff“ auf der Startseite) */
-  function rankLabel(){ const r=rankOf(load().xp); return `<button type="button" class="g-rklab" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen" onclick="GAME.openRank()">${shoulder(r,30)}<span>${esc(r.n)}</span></button>`; }
+  function rankLabel(){ const r=rankOf(load().xp); return `<button type="button" class="g-rklab" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen" onclick="GAME.openRank()">${shoulder(r,45)}<span>${esc(r.n)}</span></button>`; }
   function homeHtml(){ return load().off?{chip:'',panel:'',rank:''}:{rank:rankLabel(),chip:chip(),panel:`<div class="g-panel" id="g-panel" hidden>${panel()}</div>`}; }
   let _open=false;
   function toggle(btn){
