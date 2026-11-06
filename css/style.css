@@ -3570,3 +3570,12 @@ html.tour-lock{overflow:hidden;}
 .search-scope[hidden]{display:none;}
 .search-scope .ss-t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .search-scope:focus-visible{outline:2px solid var(--m-fg);outline-offset:2px;}
+
+/* Kopfleiste: Lupe rechts auf jeder Unterseite (sucht in dieser Ebene und darunter) */
+.m-tb-right{display:flex;align-items:center;gap:6px;margin-left:auto;}
+.m-tb-search{flex:none;width:42px;height:42px;border-radius:50%;border:0;background:var(--m-card);color:var(--m-fg);display:grid;place-items:center;cursor:pointer;transition:transform .15s,background .15s;}
+.m-tb-search:active{transform:scale(.92);background:var(--m-raised);}
+.m-tb-search:focus-visible{outline:2px solid var(--m-accent);outline-offset:2px;}
+@media(max-width:1099px){.m-tb-search{width:44px;height:44px;}}
+body:has(.lp-win.on:not(.focus)) #m-topbar .m-tb-search{pointer-events:auto;}
+@media(prefers-reduced-motion:reduce){.m-tb-search{transition:none;}}

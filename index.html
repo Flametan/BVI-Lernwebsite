@@ -135,6 +135,7 @@
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     <span id="m-back-lbl">Start</span>
   </button>
+  <div class="m-tb-right">
   <div id="m-tb-actions" class="m-tb-actions hidden">
     <button id="m-practice" class="hidden" onclick="LP.togglePractice()" aria-label="Lernkarten zu dieser Seite ein- oder ausblenden">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></svg>
@@ -148,6 +149,8 @@
     <button id="m-note" onclick="NOTES.toggle()" aria-label="Notiz zu dieser Seite">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
     </button>
+  </div>
+  <button type="button" id="m-tb-search" class="m-tb-search" onclick="SEARCH.open(this)" aria-label="Suchen" title="Suchen"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.5"/><path d="m20 20-3.5-3.5"/></svg></button>
   </div>
 </div>
 <button id="m-pomo" class="hidden" onclick="POMO.open()" aria-label="Pomodoro-Timer öffnen">
