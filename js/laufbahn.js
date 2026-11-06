@@ -69,10 +69,27 @@ const LB=(function(){
     const box=o.querySelector('.search-box');
     box.classList.remove('lbf-bad','lbf-ok'); inp.value=''; inp.readOnly=false; inp.removeAttribute('aria-invalid');
     lastFocus=btn||document.activeElement;
+    anchor=btn&&btn.getBoundingClientRect?btn:null;
     o.classList.remove('hidden');
+    place();
     if(typeof SEARCH!=='undefined'&&SEARCH.expand) SEARCH.expand(box,btn);
-    setTimeout(()=>inp.focus({preventScroll:true}),30);
+    setTimeout(()=>{ inp.focus({preventScroll:true}); place(); },30);
   }
+  // Das Feld liegt genau über der angetippten Zeile (nicht oben an der Seite); bei geöffneter Tastatur wandert es in den sichtbaren Bereich
+  let anchor=null;
+  function place(){
+    const o=$('lb-field'); if(!o||o.classList.contains('hidden')) return;
+    const box=o.querySelector('.search-box');
+    if(!anchor||!anchor.isConnected){ o.classList.remove('lbf-at'); box.style.cssText=''; return; }
+    o.classList.add('lbf-at');
+    const r=anchor.getBoundingClientRect(), vv=window.visualViewport, vw=vv?vv.width:window.innerWidth, vh=vv?vv.height:window.innerHeight, vt=vv?vv.offsetTop:0, vl=vv?vv.offsetLeft:0;
+    const w=Math.min(Math.max(r.width,Math.min(300,vw-24)),Math.min(720,vw-24)), h=box.offsetHeight||58;
+    const left=Math.max(vl+12,Math.min(vl+vw-w-12,r.left+(r.width-w)/2));
+    const top=Math.max(vt+8,Math.min(vt+vh-h-8,r.top+(r.height-h)/2));
+    box.style.width=w+'px'; box.style.left=left+'px'; box.style.top=top+'px';
+  }
+  if(window.visualViewport){ visualViewport.addEventListener('resize',place); visualViewport.addEventListener('scroll',place); }
+  window.addEventListener('resize',place);
   function fieldTyped(inp){ const box=inp.closest('.search-box'); if(box) box.classList.remove('lbf-bad'); inp.removeAttribute('aria-invalid'); }
   function fieldSubmit(e){
     if(e) e.preventDefault();
