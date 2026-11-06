@@ -3978,3 +3978,11 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 @container seg (min-width:380px){.g-rklab>span:last-child{display:inline;}}
 .g-sh4{gap:8%;}
 .g-sh4 i{width:14%;}
+
+/* Meldung „Gooey Drop“ (Variante 3): feste Höhe, Breite wird per Skript animiert */
+.g-drop{height:52px;padding:0 18px 0 11px;box-sizing:border-box;overflow:hidden;white-space:nowrap;}
+.g-dt{flex:none;}
+.g-dt b em{font-style:normal;display:inline-block;white-space:pre;}
+.g-shine{position:absolute;top:0;bottom:0;width:40px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);opacity:0;pointer-events:none;}
+.g-fx{position:absolute;left:0;right:0;top:0;height:0;pointer-events:none;}
+.g-ring{position:absolute;left:50%;border-radius:50%;border:3px solid var(--m-accent);opacity:0;}
