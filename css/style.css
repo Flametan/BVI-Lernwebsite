@@ -3711,3 +3711,19 @@ button.g-rank-go:active{background:var(--m-raised);}
 @media(min-width:701px) and (max-width:1099px){.set-tools{right:32px;top:32px;}}
 @media(min-width:1100px){.set-tools{right:48px;top:0;}}
 @media(min-width:701px) and (max-width:1099px){#v-settings .page-hero{position:relative;}#v-settings .page-hero .phi{position:static;}}
+
+/* ── Desktop-Seitenleiste: schmal mit Symbolen, beim Darüberfahren klappt sie über den Inhalt auf; der Pin zum Anheften erscheint erst dann ── */
+@media(min-width:1100px){
+  body:not(.rail-pin):not(.rail-open) .m-pin{display:none!important;}
+  body:not(.rail-pin) #m-rail{transition:width .3s cubic-bezier(.3,1.1,.5,1),box-shadow .3s;}
+  body.rail-open:not(.rail-pin) #m-rail{left:14px;top:14px;bottom:14px;width:248px;padding:16px 12px 14px;align-items:stretch;overflow:hidden;border:1px solid var(--m-line,rgba(128,128,128,.25));border-radius:24px;box-shadow:0 18px 48px rgba(0,0,0,.28);}
+  body.rail-open:not(.rail-pin) #m-rail>.m-brand{font-size:inherit;justify-content:flex-start;gap:10px;padding:4px 52px 14px 6px;}
+  body.rail-open:not(.rail-pin) #m-rail>.m-brand>span:not(.m-emb){display:block;}
+  body.rail-open:not(.rail-pin) #m-rail>.m-brand .m-emb{width:40px;height:40px;}
+  body.rail-open:not(.rail-pin) .m-pin{display:grid!important;position:absolute;top:18px;right:14px;margin:0;width:38px;height:38px;border-radius:12px;order:0;}
+  body.rail-open:not(.rail-pin) #m-rail .m-ri{width:100%;height:auto;min-height:48px;padding:11px 14px;font-size:.95rem;gap:14px;justify-content:flex-start;}
+  body.rail-open:not(.rail-pin) #m-rail .m-rail-foot{width:100%;display:block;}
+  body.rail-open:not(.rail-pin) .m-ri-search kbd{display:inline-block;}
+  body.rail-open:not(.rail-pin) #m-rail [data-tip]::after,body.rail-open:not(.rail-pin) #m-rail [data-tip]::before{display:none;}
+}
+@media(min-width:1100px) and (prefers-reduced-motion:reduce){body:not(.rail-pin) #m-rail{transition:none;}}
