@@ -1781,9 +1781,7 @@ const FC = (function(){
       const weak=fcLoadWeak();
       return shuffle(FLASHCARD_DATA.filter(c=>weak.has(c.id)));
     }
-    const base = activeFilters.size===CATS.length ? [...FLASHCARD_DATA]
-      : FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f)));
-    return shuffle(base);
+    return shuffle(FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f))));
   }
 
   function updateFilterButtons(){
@@ -1794,13 +1792,10 @@ const FC = (function(){
     const isOwn=activeFilters.has('own');
     const ownN=FLASHCARD_DATA.filter(c=>c.own).length;
     const weakN=fcLoadWeak().size;
-    const allSel=CATS.every(c=>activeFilters.has(c));
-    const isPruefung=false;   // seit es nur noch die vier Prüfungsmodule gibt, ist „Alle“ die Prüfungsauswahl
     document.querySelectorAll('.fc-f-btn').forEach(b=>{
       const df=b.dataset.filter;
       const base=b.dataset.label||'';
       if(df==='all'){
-        b.classList.toggle('active',allSel&&!isPruefung&&!isStarred);
         b.innerHTML=`<b>${base}</b><small>${FLASHCARD_DATA.length}</small>`;
       } else if(df==='starred'){
         b.classList.toggle('active',activeFilters.has('starred'));
@@ -1814,8 +1809,7 @@ const FC = (function(){
         b.classList.toggle('active',isWeak);
         b.classList.toggle('hidden',weakN===0&&!isWeak);
         b.innerHTML=`<b>${base}</b><small>${weakN}</small>`;
-      } else if(df==='pruefung'){
-        b.classList.toggle('active',isPruefung);
+      } else if(df==='pruefung'){ /* kein eigener Zustand */
       } else if(df){
         const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df));
         const knownCnt=cats.filter(c=>known[c.id]).length;
