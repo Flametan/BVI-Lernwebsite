@@ -6740,13 +6740,16 @@ const RAIL=(function(){
     const r=rail(); if(!r) return;
     // Premium-Sidebar: kein Aufklappen beim Darüberfahren; der Name des Tabs erscheint als Sprechblase (CSS, data-tip). Anheften über den Pin.
     // Beim Darüberfahren (oder Tastatur-Fokus, Antippen) klappt die schmale Leiste über den Inhalt auf; Pin erscheint erst dann
-    let hv=0;
-    const want=o=>{ clearTimeout(hv); hv=setTimeout(()=>setOpen(o),o?90:260); };
+    // Klick auf ein Symbol: Leiste bleibt schmal (kein Aufklappen), bis die Maus sie verlässt
+    let hv=0, hold=false;
+    const want=o=>{ clearTimeout(hv); if(o&&hold) return; hv=setTimeout(()=>setOpen(o),o?90:260); };
+    r.addEventListener('pointerdown',e=>{ if(e.target.closest('.m-ri')&&!pinned()){ hold=true; clearTimeout(hv); setOpen(false); } });
+    document.addEventListener('pointerdown',e=>{ if(!r.contains(e.target)) hold=false; },true);
     r.addEventListener('mouseenter',()=>want(true));
-    r.addEventListener('mouseleave',()=>want(false));
+    r.addEventListener('mouseleave',()=>{ hold=false; want(false); });
     r.addEventListener('focusin',()=>{ if(!r.matches(':hover')) want(true); });
     r.addEventListener('focusout',e=>{ if(!r.contains(e.relatedTarget)) want(false); });
-    r.addEventListener('click',e=>{ if(!open&&!pinned()&&mq.matches&&!e.target.closest('.m-ri')) want(true); });
+    r.addEventListener('click',e=>{ if(!open&&!hold&&!pinned()&&mq.matches&&!e.target.closest('.m-ri')) want(true); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&open) setOpen(false); });
     (mq.addEventListener?mq.addEventListener.bind(mq,'change'):mq.addListener.bind(mq))(()=>sync());
     sync();
