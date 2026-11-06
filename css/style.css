@@ -3557,3 +3557,10 @@ html.tour-lock{overflow:hidden;}
 .m-pg .m-pb.dim{opacity:1;background:color-mix(in srgb,var(--m-accent) 58%,var(--m-card));}
 /* Einstellungen: Titel bricht nicht mehr um (Platz nur für die Lupe rechts) */
 #v-settings .page-title{padding-right:56px;white-space:nowrap;word-break:keep-all;overflow-wrap:normal;}
+
+/* Startseite: Lupe oben rechts (44 px Touch-Fläche, sichtbarer Fokus, Druck-Feedback) */
+.m-hsearch{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--m-card);color:var(--m-fg);display:grid;place-items:center;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.12);transition:transform .15s,background .15s;}
+.m-hsearch:hover{background:var(--m-raised);}
+.m-hsearch:active{transform:scale(.92);background:var(--m-raised);}
+.m-hsearch:focus-visible{outline:2px solid var(--m-accent);outline-offset:3px;}
+@media(prefers-reduced-motion:reduce){.m-hsearch{transition:none;}}

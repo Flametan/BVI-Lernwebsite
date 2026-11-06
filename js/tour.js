@@ -19,7 +19,7 @@ const TOUR=(function(){
   const home=()=>{ if(cur()!=='v-home') NAV.home(); }, tab=(v,l)=>()=>{ if(cur()!==v) NAV.tab(v,l); };
   const ALL=[
     {t:'Willkommen in der App',x:'Hier lernst du für B VI: Lernseiten, Prüfungen, Lernkarten und Stundenplan an einem Ort. Die Tour zeigt dir in 2 Minuten alles Wichtige.',go:home,target:null},
-    {t:'Deine Startseite',x:'Oben begrüßt dich die App und zeigt Datum und die nächste Unterrichtseinheit. Von hier aus kommst du überall hin.',go:home,target:()=>$('#v-home .m-hello')},
+    {t:'Deine Startseite',x:'Oben begrüßt dich die App und zeigt das Datum. Mit der Lupe rechts suchst du in allen Themen, Karten und Inhalten. Von hier aus kommst du überall hin.',go:home,target:()=>$('#v-home .m-hello')},
     {t:'Dein Lernstoff',x:'Jeder Lehrgangsort hat einen Ring mit deinem Fortschritt in Prozent. Oben rechts wechselst du zwischen dem 2. und 1. Jahr. Antippen öffnet die Lernseiten.',go:home,target:()=>[$('#v-home .m-seg2'),...document.querySelectorAll('#v-home .m-yl')]},
     {t:'Deine Lernzeit',x:'Das Diagramm zeigt, wie viele Minuten du diese Woche gelernt hast. So behältst du dein Tagesziel im Blick.',go:home,target:()=>$('#v-home .m-chart2')},
     {t:'Tab: Start',x:'Mit „Start“ kommst du jederzeit zurück auf diese Seite.',go:home,target:()=>tabEl('start')},
