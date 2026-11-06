@@ -6743,7 +6743,8 @@ const RAIL=(function(){
     // Klick auf ein Symbol: Leiste bleibt schmal (kein Aufklappen), bis die Maus sie verlässt
     let hv=0, hold=false;
     const want=o=>{ clearTimeout(hv); if(o&&hold) return; hv=setTimeout(()=>setOpen(o),o?90:260); };
-    r.addEventListener('pointerdown',e=>{ if(e.pointerType!=='touch'&&e.target.closest('.m-ri')&&!pinned()){ hold=true; clearTimeout(hv); setOpen(false); } });
+    r.addEventListener('pointerdown',e=>{ if(e.target.closest('.m-ri')&&!pinned()){ hold=true; clearTimeout(hv); setOpen(false); } });
+    document.addEventListener('pointerdown',e=>{ if(!r.contains(e.target)) hold=false; },true);
     r.addEventListener('mouseenter',()=>want(true));
     r.addEventListener('mouseleave',()=>{ hold=false; want(false); });
     r.addEventListener('focusin',()=>{ if(!r.matches(':hover')) want(true); });
