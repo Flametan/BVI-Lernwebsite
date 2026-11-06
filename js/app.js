@@ -97,6 +97,10 @@ const NAV = (function(){
     home(){ _dir='back'; stack=[]; history.pushState({home:true},''); show('v-home'); },
     tab(id,label){ _dir='forward'; stack=[{id,label}]; history.pushState({stack:[...stack]},''); show(id); },
     depth(){ return stack.length; },
+    // Seite davor im Verlauf (z. B. die Themenübersicht, von der man kam)
+    parent(){ return stack.length>1?stack[stack.length-2].id:null; },
+    // Aktuelle Seite durch eine andere ersetzen (Kapitel-Blättern über Seitengrenzen), ohne neuen Verlaufseintrag
+    replace(id,label){ _dir='forward'; if(stack.length) stack[stack.length-1]={id,label}; else stack=[{id,label}]; try{ history.replaceState(Object.assign({},history.state||{},{stack:[...stack]}),''); }catch(e){} show(id); },
     _restoreStack(s){ _dir='back'; stack=s; show(s.length?s[s.length-1].id:'v-home'); }
   };
 })();
@@ -974,7 +978,7 @@ const PROGRESS = (function(){
   }
 
   function counts(){ const v=load(),r={}; Object.keys(GROUPS).forEach(g=>{ r[g]={done:GROUPS[g].filter(x=>v[x]).length,total:GROUPS[g].length}; }); return r; }
-  return { track, updateUI, counts, reset(){ localStorage.removeItem('bvi_progress'); updateUI(); } };
+  return { track, updateUI, counts, groupOf:v=>GROUPS[LEAF_PARENT[v]]||null, invalidate(){ _cardCache=null; }, reset(){ localStorage.removeItem('bvi_progress'); updateUI(); } };
 })();
 
 /* ======================================================================
@@ -2749,6 +2753,7 @@ const LP=(function(){
     win.querySelector('.lp-fm').onclick=()=>fz(-1);
     win.querySelector('.lp-fp').onclick=()=>fz(1);
     { let q=0; win.querySelector('.lp-wbody').addEventListener('scroll',()=>{ if(q) return; q=requestAnimationFrame(()=>{ q=0; bar(); }); },{passive:true}); } // pro Frame höchstens einmal rechnen
+    swipe(win.querySelector('.lp-wbody'));
     win.querySelector('.lp-prev').onclick=()=>go(cur.i-1);
     win.querySelector('.lp-next').onclick=()=>go(cur.i+1);
     const mo=new MutationObserver(sync);
@@ -2771,8 +2776,9 @@ const LP=(function(){
     win.querySelector('.lp-eb').textContent='Kapitel '+numOf(d,i)+' / '+String(its.length).padStart(2,'0');
     applyFz();
     win.querySelector('.lp-wt b').textContent=document.querySelector('#'+cur.v.id+' .page-title')?.textContent.trim()||'';
-    win.querySelector('.lp-prev').classList.toggle('dis',i===0);
-    win.querySelector('.lp-next').classList.toggle('dis',i===its.length-1);
+    // Vorheriges/Nächstes Kapitel ist immer möglich, solange es davor/danach noch eine Seite mit Kapiteln gibt
+    win.querySelector('.lp-prev').classList.toggle('dis',i===0&&!neighbor(cur.v.id,-1));
+    win.querySelector('.lp-next').classList.toggle('dis',i===its.length-1&&!neighbor(cur.v.id,1));
     wb.scrollTop=0; CHECKS.set(cur.v._lp.id,ckOf(d),true); sync(); bar();
     if(typeof HL!=='undefined') HL.apply(cur.v.id);   // Markierungen im Kapitel-Fenster zeigen
   }
@@ -2804,7 +2810,95 @@ const LP=(function(){
     load(i); win.classList.add('on');
     if(!pushed){ try{ history.pushState(Object.assign({},history.state||{},{lp:1}),''); pushed=true; }catch(e){} }
   }
-  function go(i){ if(!cur||i<0||i>=items(cur.v).length) return; give(); load(i); }
+  // Reihenfolge der Seiten („Tabs“) wie in der Übersicht, von der man kam; sonst die Reihenfolge der Gruppe des Lehrgangs
+  function pagesOf(vid){
+    const par=typeof NAV!=='undefined'&&NAV.parent&&NAV.parent();
+    const hub=par&&document.getElementById(par);
+    if(hub){
+      const out=[]; hub.querySelectorAll('[onclick*="NAV.go(\'v-"]').forEach(x=>{
+        if(x.closest('.related-topics,.m-tourhome,.lp-win')) return;
+        const m=/NAV\.go\('(v-[\w-]+)'/.exec(x.getAttribute('onclick')||''); if(m&&!out.includes(m[1])) out.push(m[1]);
+      });
+      if(out.includes(vid)) return out;
+    }
+    return (typeof PROGRESS!=='undefined'&&PROGRESS.groupOf&&PROGRESS.groupOf(vid))||[vid];
+  }
+  const hasChapters=id=>{ const e=document.getElementById(id); return !!e&&e.classList.contains('view')&&!e.hasAttribute('data-nolp')&&!!e.querySelector('.pc .acc-list:not(.acc-cards)')&&items(e).length>0; };
+  // nächste (dir=1) oder vorherige (dir=-1) Seite mit Kapiteln
+  function neighbor(vid,dir){
+    const list=pagesOf(vid); let k=list.indexOf(vid); if(k<0) return null;
+    for(k+=dir;k>=0&&k<list.length;k+=dir) if(hasChapters(list[k])) return list[k];
+    return null;
+  }
+  // Über die Seitengrenze blättern: Fenster bleibt offen, die Seite dahinter wird ersetzt
+  function cross(dir){
+    const t=neighbor(cur.v.id,dir); if(!t) return;
+    const focus=cur.focus, old=cur.v;
+    give(); old.classList.remove('lp-open','lp-focus'); cur=null;
+    if(typeof HL!=='undefined') HL.apply(old.id);
+    if(old.classList.contains('lp-ueber')) render(old);
+    const label=document.querySelector('#'+t+' .page-title')?.textContent.trim()||t;
+    NAV.replace(t,label);
+    const v=document.getElementById(t); if(!v._lp) init(t);
+    open(v,dir>0?0:items(v).length-1,{focus});
+  }
+  const canGo=dir=>{ if(!cur) return false; const n=items(cur.v).length, j=cur.i+dir; return (j>=0&&j<n)||!!neighbor(cur.v.id,dir); };
+  // Wischen zum nächsten/vorherigen Kapitel (nur Touch/Stift), gleiche Logik wie bei den Lernkarten: der Inhalt folgt dem Finger,
+  // ab 80 px oder schnellem Wisch wird gewechselt, sonst federt er zurück. Senkrechtes Wischen scrollt weiter ganz normal.
+  // Konflikte: Wischen in waagerecht scrollbaren Tabellen/Schaubildern, am Bildschirmrand (Zurück-Geste), mit Markierung, beim Zoomen
+  // und in Eingabefeldern löst keinen Kapitelwechsel aus; ein Wisch löst kein Antippen (Bild vergrößern) aus.
+  function swipe(el){
+    const THR=80, EDGE=44, reduce=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let x0=0, y0=0, live=false, moved=false, dx=0, pid=-1, lt=0, lx=0, vx=0, mute=0;
+    const hscroll=t=>{ for(let n=t;n&&n!==el;n=n.parentElement){ if(n.scrollWidth>n.clientWidth+1){ const o=getComputedStyle(n).overflowX; if(o==='auto'||o==='scroll') return true; } } return false; };
+    const rest=()=>{ el.style.transform=''; el.style.opacity=''; };
+    el.addEventListener('pointerdown',e=>{
+      if(!cur||e.pointerType==='mouse'||!e.isPrimary||live) return;
+      if(e.clientX<EDGE||e.clientX>window.innerWidth-EDGE) return;
+      if(window.visualViewport&&window.visualViewport.scale>1.02) return;
+      if(e.target.closest&&(e.target.closest('input,textarea,select,[contenteditable],iframe,.lp-nosw')||hscroll(e.target))) return;
+      if(String(window.getSelection&&window.getSelection()||'').length) return;
+      x0=e.clientX; y0=e.clientY; dx=0; live=true; moved=false; pid=e.pointerId; lt=performance.now(); lx=x0; vx=0;
+    });
+    el.addEventListener('pointermove',e=>{
+      if(!live||e.pointerId!==pid) return;
+      dx=e.clientX-x0; const dy=e.clientY-y0;
+      if(!moved){
+        if(Math.abs(dy)>Math.abs(dx)+5&&Math.abs(dy)>8){ live=false; return; }   // senkrecht: normales Scrollen
+        if(Math.abs(dx)<10) return;
+        moved=true; try{ el.setPointerCapture(pid); }catch(_){}
+      }
+      const now=performance.now(); if(now>lt){ vx=(e.clientX-lx)/(now-lt); lt=now; lx=e.clientX; }
+      const can=canGo(dx<0?1:-1), shown=can?dx:dx*0.25;   // ohne Ziel gibt es nur einen kleinen Widerstand
+      el.style.transition='none'; el.style.transform='translateX('+shown+'px)'; el.style.opacity=String(1-Math.min(.5,Math.abs(shown)/(el.clientWidth||400)));
+    });
+    const end=e=>{
+      if(e.pointerId!==pid||!live) return;
+      live=false;
+      if(!moved) return;
+      mute=Date.now()+350;   // das folgende „click“ (z. B. Bild vergrößern) ignorieren
+      const dir=(Math.abs(vx)>0.6&&Math.abs(dx)>20?vx:dx)<0?1:-1, can=canGo(dir), W=el.clientWidth||window.innerWidth;
+      if(e.type==='pointercancel'||!can||!(Math.abs(dx)>=THR||(Math.abs(vx)>0.6&&Math.abs(dx)>20))){
+        el.style.transition=reduce()?'none':'transform .35s cubic-bezier(.34,1.56,.64,1),opacity .2s'; rest(); return;
+      }
+      const ms=reduce()?0:170;
+      el.style.transition=ms?'transform '+ms+'ms ease-in,opacity '+ms+'ms':'none'; el.style.transform='translateX('+(-dir*W)+'px)'; el.style.opacity='0';
+      setTimeout(()=>{
+        if(!cur) return;
+        go(cur.i+dir);   // über die Seitengrenze, wenn es auf dieser Seite kein weiteres Kapitel gibt
+        el.style.transition='none'; el.style.transform='translateX('+(dir*W*.4)+'px)'; el.style.opacity='0';
+        void el.offsetWidth;
+        el.style.transition=reduce()?'none':'transform .25s cubic-bezier(.2,.8,.3,1),opacity .2s'; rest();
+      },ms);
+    };
+    el.addEventListener('pointerup',end); el.addEventListener('pointercancel',end);
+    el.addEventListener('click',e=>{ if(Date.now()<mute){ e.stopPropagation(); e.preventDefault(); } },true);
+  }
+  function go(i){
+    if(!cur) return;
+    if(i>=0&&i<items(cur.v).length){ give(); load(i); return; }
+    cross(i<0?-1:1);
+  }
   function close(silent){
     if(!cur) return;
     give(); const v=cur.v; win.classList.remove('on','focus'); v.classList.remove('lp-open','lp-focus'); document.documentElement.classList.remove('lp-lock'); cur=null;
@@ -6691,12 +6785,15 @@ const VIEWS=(function(){
 
   }
   function enhance(v){ if(!v||v._enh) return; v._enh=1; heavy(v); }
-  function hydrate(id){
+  function progress(){ try{ if(typeof PROGRESS!=='undefined'){ PROGRESS.invalidate(); PROGRESS.updateUI(); } }catch(e){} }
+  // quiet: mehrere Ansichten nacheinander einsetzen; der Fortschritt (Haken an Kacheln) wird dann einmal am Ende nachgeführt
+  function hydrate(id,quiet){
     const t=T.get(id); if(!t) return null;
     T.delete(id);
     const el=t.content.firstElementChild;
     t.replaceWith(t.content);
     light(el);
+    if(!quiet) progress();
     return el;
   }
   // document.getElementById und document.querySelector('#…') finden auch Elemente in noch nicht eingesetzten Ansichten
@@ -6711,10 +6808,10 @@ const VIEWS=(function(){
     return _qs.call(this,sel);
   };
   let idleOn=false;
-  function ensureAll(){ [...T.keys()].forEach(hydrate); }
+  function ensureAll(){ if(!T.size) return; [...T.keys()].forEach(k=>hydrate(k,true)); progress(); }
   function afterAll(){
     // Dinge, die beim Start über das ganze Dokument laufen, für die nachgeladenen Ansichten nachholen
-    try{ if(typeof PROGRESS!=='undefined') PROGRESS.updateUI(); }catch(e){}
+    progress();
     window.dispatchEvent(new Event('views:ready'));
   }
   // Im Leerlauf nach dem Start nach und nach alle übrigen Ansichten einsetzen (je Schritt eine)
@@ -6723,7 +6820,7 @@ const VIEWS=(function(){
     const ric=window.requestIdleCallback||(f=>setTimeout(()=>f({timeRemaining:()=>20}),60));
     const step=dl=>{
       const t0=performance.now();
-      while(T.size&&(dl.timeRemaining()>6||performance.now()-t0<2)){ hydrate(T.keys().next().value); if(performance.now()-t0>12) break; }
+      while(T.size&&(dl.timeRemaining()>6||performance.now()-t0<2)){ hydrate(T.keys().next().value,true); if(performance.now()-t0>12) break; }
       if(T.size) ric(step,{timeout:2000}); else afterAll();
     };
     ric(step,{timeout:2000});

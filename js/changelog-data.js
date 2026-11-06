@@ -1,6 +1,11 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.0',ts:'2026-11-06T10:00',items:[
+      'Lernseiten: „Nächstes Kapitel“ und „Vorheriges Kapitel“ gehen jetzt über das Seitenende hinaus. Nach dem letzten Kapitel öffnet sich die nächste Seite der Übersicht, zurück genauso.',
+      'Lernseiten (Touch): Mit einem Wisch nach links oder rechts wechselst du das Kapitel, wie bei den Lernkarten. In scrollbaren Tabellen und Schaubildern scrollt der Wisch weiter wie gewohnt; senkrechtes Wischen, Zoomen und Antippen von Bildern bleiben unverändert.',
+      'Lernseiten: Im Kapitelfenster verdeckt der Zurück-Knopf der Kopfleiste (mit dem Seitentitel) die Überschrift nicht mehr.',
+      'Schneller: Die App startet auf Tablets etwa dreimal so schnell. Bilder sind kleiner (WebP) und laden erst beim Lesen, Lernseiten werden erst beim Öffnen aufgebaut, Update-Verlauf, Szenarien und Fallbearbeitung laden erst bei Bedarf, und Spiele, Simulationen und Bilder für den Offline-Betrieb kommen nach dem Start im Hintergrund.',
+      'Service Worker: Bei langsamer Verbindung erscheint die gespeicherte Seite nach 1,5 Sekunden statt nach 3; ein fehlendes Bild oder Spiel bricht die Installation nicht mehr ab.',
       'App-Tour: Neuer Schritt zur Einstellung „Navigationsleiste“ (Reihenfolge der Plätze, geteilte Plätze, Mittelknopf).',
       'Ladebildschirm: Das Skeleton der Startseite passt auf Tablet und PC zum neuen Aufbau (2. Ausbildungsjahr groß in zwei Spalten, 1. Jahr kompakt darunter).',
       'Einstellungen: Der Knopf „Freiwillige Spende“ ist wieder lesbar (dunkle Schrift auf der Akzentfläche, vorher im dunklen Design unsichtbar).',

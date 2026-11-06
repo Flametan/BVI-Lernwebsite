@@ -173,6 +173,46 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Lernseite: Zurück schließt das Fenster und gibt den Inhalt zurück', lp.closed && lp.bodyBack === 9);
   ok('Lernseite: geöffnete Kapitel gelten als gelesen', Object.keys(lp.read).length >= 2);
 
+  // ── Kapitel-Blättern über Seitengrenzen: nach dem letzten Kapitel geht es auf der nächsten Seite weiter, zurück genauso ──
+  const lpx = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), res = {};
+    NAV.home(); await w(100);
+    NAV.go('v-idf-vb', 'VB'); await w(200);
+    NAV.go('v-idf-vb-45', 'S45'); await w(300);
+    const n = document.querySelectorAll('#v-idf-vb-45 .lp-card').length;
+    document.querySelector('#v-idf-vb-45 .lp-card[data-i="' + (n - 1) + '"]').click(); await w(300);
+    res.nextEnabled = !document.querySelector('.lp-next').classList.contains('dis');
+    document.querySelector('.lp-next').click(); await w(400);
+    res.view = document.querySelector('.view.active').id; res.eb = document.querySelector('.lp-eb').textContent.slice(0, 10); res.open = LP.isOpen();
+    document.querySelector('.lp-prev').click(); await w(400);
+    res.back = document.querySelector('.view.active').id; res.backEb = document.querySelector('.lp-eb').textContent.slice(0, 10);
+    res.backLbl = getComputedStyle(document.getElementById('m-back')).visibility;
+    NAV.back(); await w(200); res.closed = !LP.isOpen();
+    NAV.home(); return res;
+  });
+  eq('Lernseite: Nächstes Kapitel geht auf der nächsten Seite weiter', [lpx.nextEnabled, lpx.view, lpx.eb, lpx.open], [true, 'v-idf-vb-46', 'Kapitel 01', true]);
+  eq('Lernseite: Vorheriges Kapitel geht auf die letzte Stelle der vorigen Seite zurück', [lpx.back, lpx.backEb, lpx.closed], ['v-idf-vb-45', 'Kapitel 03', true]);
+  eq('Lernseite: Zurück-Knopf der Kopfleiste ist im Kapitelfenster ausgeblendet (keine überlappende Schrift)', lpx.backLbl, 'hidden');
+
+  // ── Wischen im Kapitelfenster: Touch wechselt das Kapitel, Maus nicht, am Rand und in scrollbaren Tabellen nicht ──
+  const sw = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), res = {};
+    NAV.home(); await w(100);
+    NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(300);
+    document.querySelector('#v-vak-verwaltungsrecht .lp-card[data-i="2"]').click(); await w(300);
+    const wb = document.querySelector('.lp-wbody'), eb = () => document.querySelector('.lp-eb').textContent.slice(0, 10);
+    const ev = (t, x, y, type) => wb.dispatchEvent(new PointerEvent(t, { bubbles: true, cancelable: true, pointerId: 7, isPrimary: true, pointerType: type || 'touch', clientX: x, clientY: y }));
+    const swipe = async (x1, x2, type) => { ev('pointerdown', x1, 300, type); for (let i = 1; i <= 6; i++) { ev('pointermove', x1 + (x2 - x1) * i / 6, 302, type); await w(10); } ev('pointerup', x2, 302, type); await w(450); };
+    res.start = eb();
+    await swipe(300, 100); res.links = eb();
+    await swipe(100, 300); res.rechts = eb();
+    await swipe(300, 100, 'mouse'); res.maus = eb();
+    await swipe(10, 200); res.rand = eb();
+    await swipe(200, 170); res.kurz = eb();
+    NAV.back(); await w(200); NAV.home(); return res;
+  });
+  eq('Lernseite: Wisch nach links/rechts wechselt das Kapitel (Touch), Maus, Rand und kurze Wische nicht', [sw.start, sw.links, sw.rechts, sw.maus, sw.rand, sw.kurz], ['Kapitel 03', 'Kapitel 04', 'Kapitel 03', 'Kapitel 03', 'Kapitel 03', 'Kapitel 03']);
+
   // ── Suche springt ins Kapitel, Vorlesefunktion ist entfernt ──
   const sj = await page.evaluate(async () => {
     NAV.home();
