@@ -60,7 +60,7 @@ const MINESWEEPER=(function(){
   var lget=function(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } };
   var lset=function(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} };
   var say=function(m){ if(typeof A11Y!=='undefined') A11Y.say(m); };
-  var RM=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches);
+  var RM=!!(window.matchMedia&&false);
   var I='viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
   var ICO={
     flame:'<svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="mi-fg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff5a1f"/><stop offset="1" stop-color="#ffd166"/></linearGradient></defs><path fill="url(#mi-fg)" d="M12 2s5.4 4.6 5.4 10.2A5.4 5.4 0 0 1 6.6 12.2c0-2.3 1.1-4 2.2-5.3.1 2.1 1 3.1 2.1 3.1C10.9 6.9 12 4.7 12 2z"/></svg>',

@@ -1397,13 +1397,11 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
   .changelog-footer,.search-footer{display:none;}
 }
 @keyframes m-sheet-up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
-@media(prefers-reduced-motion:reduce){.pomo-box,.stats-box,.notes-box,.changelog-box{animation:none!important;}}
 
 /* Hervorgehobene Einträge in „Prüfung“: Glow in der Akzentfarbe */
 .m-glow{position:relative;box-shadow:0 0 0 1px color-mix(in srgb,var(--m-accent) 60%,transparent),0 0 18px color-mix(in srgb,var(--m-accent) 38%,transparent),0 0 42px color-mix(in srgb,var(--m-accent) 16%,transparent);animation:m-glow-pulse 3.2s ease-in-out infinite;}
 .m-glow .m-ic{background:var(--m-accent-dim);}
 @keyframes m-glow-pulse{0%,100%{box-shadow:0 0 0 1px color-mix(in srgb,var(--m-accent) 55%,transparent),0 0 14px color-mix(in srgb,var(--m-accent) 30%,transparent),0 0 34px color-mix(in srgb,var(--m-accent) 12%,transparent);}50%{box-shadow:0 0 0 1px color-mix(in srgb,var(--m-accent) 75%,transparent),0 0 22px color-mix(in srgb,var(--m-accent) 48%,transparent),0 0 52px color-mix(in srgb,var(--m-accent) 22%,transparent);}}
-@media(prefers-reduced-motion:reduce){.m-glow{animation:none;}}
 @media(max-width:359px){.m-swatches{padding-left:0;gap:8px;}.m-sw{width:28px;height:28px;}}
 
 /* Fehlende Variablen (wurden von Quiz, Übungsklausur u. a. benutzt, aber nie definiert) */
@@ -1833,7 +1831,6 @@ html.no-timers .uk-timer-box,html.no-timers .uk-timer-inline,html.no-timers .qui
 @keyframes flame-inner{0%,100%{opacity:.9;transform:translate(12px,17px) scale(.52) translate(-12px,-17px)}50%{opacity:.45;transform:translate(12px,17px) scale(.4) translate(-12px,-17px)}}
 .m-emb .fl{transform-box:fill-box;transform-origin:50% 100%;animation:flame-flick 1.3s ease-in-out infinite;}
 .m-emb .in{animation:flame-inner .9s ease-in-out infinite;}
-@media(prefers-reduced-motion:reduce){.m-emb .fl,.m-emb .in{animation:none;}}
 
 /* Kein blaues Tipp-Viereck (Android-WebView/Chrome); eigener Druck-Zustand statt dessen */
 html,body,*{-webkit-tap-highlight-color:transparent;}
@@ -2091,7 +2088,6 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .idf-day{scroll-margin-top:12px;}
 /* Laufende bzw. nächste Einheit: pulsierender Glow */
 .idf-item.idf-now{background:none;position:relative;box-shadow:0 0 0 1px color-mix(in srgb,var(--m-accent) 60%,transparent),0 0 18px color-mix(in srgb,var(--m-accent) 38%,transparent),0 0 42px color-mix(in srgb,var(--m-accent) 16%,transparent);animation:m-glow-pulse 3.2s ease-in-out infinite;}
-@media(prefers-reduced-motion:reduce){.idf-item.idf-now{animation:none;}}
 
 /* Startseite: nächste Einheit oben rechts */
 .m-hello>div:first-child{flex:1;min-width:0;}
@@ -2103,7 +2099,6 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .m-nx>.m-nx-h:first-child{margin-top:0;}
 .m-nx-h::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--m-accent);flex:none;margin-right:4px;animation:m-nx-pulse 1.8s ease-out infinite;}
 @keyframes m-nx-pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--m-accent) 70%,transparent);}70%{box-shadow:0 0 0 10px color-mix(in srgb,var(--m-accent) 0%,transparent);}100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--m-accent) 0%,transparent);}}
-@media(prefers-reduced-motion:reduce){.m-nx-h::before{animation:none;box-shadow:0 0 0 4px color-mix(in srgb,var(--m-accent) 30%,transparent);}}
 @media(min-width:1100px){.m-nx{max-width:34%;}}
 .m-nx>.m-nx-h{overflow:visible;-webkit-line-clamp:unset;line-clamp:unset;}
 
@@ -2319,7 +2314,6 @@ table.tb-cards,table.tb-cards tbody,table.tb-cards tr,table.tb-cards td,table.tb
 .m-ringbtn:nth-child(2) .m-rw::after{animation-delay:.3s;}.m-ringbtn:nth-child(3) .m-rw::after{animation-delay:.6s;}.m-ringbtn:nth-child(4) .m-rw::after{animation-delay:.9s;}
 @keyframes m-pulse{0%{opacity:.8;transform:scale(.92)}60%,100%{opacity:0;transform:scale(1.25)}}
 .m-ringbtn:active .m-rw{transform:scale(.94);}
-@media(prefers-reduced-motion:reduce){.m-rw::after{animation:none;}}
 @media(min-width:701px) and (max-width:1099px){.m-rw{width:min(74px,100%);}}
 @media(min-width:1100px){.m-rw{width:84px;}}
 
@@ -2411,7 +2405,6 @@ mark.key-hl{background:var(--m-accent);color:var(--m-on-accent,#111);font-weight
 .pz-drv{display:flex;align-items:center;gap:10px;color:var(--m-muted);font-size:.88rem;}
 .pz-drv i{width:10px;height:10px;border-radius:50%;background:#3a8cff;box-shadow:0 0 12px #3a8cff;animation:pzdv .5s steps(1) infinite;}
 @keyframes pzdv{50%{background:#fff;box-shadow:0 0 12px #fff;}}
-@media(prefers-reduced-motion:reduce){.pz-drv i{animation:none;}}
 @media(min-width:1100px){.pz-fahrt{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:start;}}
 /* Startseite: Karte Kleine Pause */
 .m-pause .m-t2{white-space:normal;}
@@ -2474,10 +2467,6 @@ mark.key-hl{background:var(--m-accent);color:var(--m-on-accent,#111);font-weight
 :where(.m-ri,.m-tab,.m-brand,.m-go,.m-row):focus-visible{outline-offset:-3px!important;border-radius:12px;}
 
 /* Barrierefreiheit (C): bei „Bewegung reduzieren“ stehen Seitenwechsel, Meldungen, Fenster, Ladeanzeigen und weiches Scrollen still */
-@media(prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto!important;}
-  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.01ms!important;transition-delay:0s!important;}
-}
 
 /* Barrierefreiheit (D): Klickflächen auf Touch-Geräten mindestens 44 px (Apple 44 pt, WCAG 2.5.8 mindestens 24 px) */
 @media(pointer:coarse){
@@ -2500,7 +2489,6 @@ mark.key-hl{background:var(--m-accent);color:var(--m-on-accent,#111);font-weight
 .m-acc-h[aria-expanded=true] .m-acc-chv{transform:rotate(90deg);}
 .m-acc-b{border-top:1px solid var(--m-line,rgba(128,128,128,.18));}
 .m-acc-b .m-list{border-radius:0;background:transparent;}
-@media(prefers-reduced-motion:reduce){.m-acc-chv{transition:none;}}
 
 /* Spende: die ganze Karte ist der Link */
 a.m-donate{display:block;color:inherit;text-decoration:none;cursor:pointer;}
@@ -2666,7 +2654,6 @@ html.fs-lg .sc-card,html.fs-xl .sc-card{min-width:0;max-width:100%;overflow-wrap
 .jg-ul{margin:.6rem 0 0;padding-left:1.15rem;display:flex;flex-direction:column;gap:.65rem;line-height:1.5;color:var(--m-muted);}
 .jg-ul strong{color:var(--m-fg);}
 .jg-hb .jg-ul{margin-top:0;}
-@media(prefers-reduced-motion:reduce){.jg-hd>summary svg{transition:none;}}
 #jg-settings .m-glow{margin:12px 12px 4px;border-radius:14px;background:var(--m-raised);animation:none;box-shadow:0 0 0 1.5px color-mix(in srgb,var(--m-accent) 60%,transparent),0 0 12px color-mix(in srgb,var(--m-accent) 40%,transparent);}
 #read-prog{z-index:var(--z-float);}   /* über der oberen Leiste, sonst verdeckt sie den Fortschrittsbalken */
 @media(min-width:1100px){.idf-name{hyphens:auto;}}   /* lange Wörter in den schmalen Wochenspalten sauber trennen */
@@ -2732,7 +2719,6 @@ button.idf-map{background:none;border:0;padding:0;font:inherit;font-weight:600;c
 .sn-c.air{background:color-mix(in srgb,#8fd3ff 30%,var(--m-card));animation:sn-fl .5s infinite alternate;}
 .sn-c.fire{background:color-mix(in srgb,#e2491a 24%,var(--m-card));animation:sn-fl .5s infinite alternate;}
 @keyframes sn-fl{from{filter:brightness(1)}to{filter:brightness(1.35) saturate(1.3)}}
-@media(prefers-reduced-motion:reduce){.sn-c.fire,.sn-c.air,.sn-air.low b{animation:none;}}
 .sn-ov{position:absolute;inset:0;border-radius:14px;background:color-mix(in srgb,var(--m-bg) 82%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px;gap:10px;}
 .sn-ov[hidden]{display:none;}.sn-ov h3{margin:0;font-size:1.3rem;}.sn-ov p{margin:0;color:var(--m-muted);font-size:.88rem;max-width:34ch;line-height:1.45;}.sn-ov .pz-pri{padding:12px 24px;min-height:44px;}
 .sn-log{background:var(--m-raised);border-radius:12px;padding:8px 12px;min-height:128px;}
@@ -2751,7 +2737,6 @@ button.idf-map{background:none;border:0;padding:0;font:inherit;font-weight:600;c
 .so-bar{display:flex;flex-direction:column;gap:7px;}
 @keyframes so-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px) rotate(-6deg)}40%{transform:translateX(5px) rotate(6deg)}60%{transform:translateX(-4px) rotate(-4deg)}80%{transform:translateX(3px) rotate(3deg)}}
 .so-ib.so-shake{animation:so-shake .4s ease;}
-@media(prefers-reduced-motion:reduce){.so-ib.so-shake{animation:none;}}
 @media(min-width:701px){.so-bar{flex-direction:row;align-items:center;gap:6px;}.so-bar .so-tools{display:contents;}.so-bar .so-hs{order:9;}}
 .so-ib{width:40px;height:40px;border:0;border-radius:12px;background:var(--m-raised);color:var(--m-fg);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex:none;}.so-ib svg{width:18px;height:18px;}.so-ib:disabled{opacity:.35;cursor:default;}
 .so-hs{display:inline-flex;align-items:center;gap:4px;margin-left:auto;background:var(--m-raised);border-radius:12px;padding:0 4px 0 10px;height:40px;font-size:.8rem;cursor:pointer;}
@@ -2786,7 +2771,6 @@ button.idf-map{background:none;border:0;padding:0;font:inherit;font-weight:600;c
 .so-stats b{display:block;font-size:1.15rem;font-variant-numeric:tabular-nums;}.so-stats span{font-size:.6rem;color:var(--m-muted);text-transform:uppercase;letter-spacing:.08em;}
 .so-act{display:flex;flex-direction:column;gap:8px;width:100%;margin-top:6px;}.so-act .pz-pri{min-height:48px;}.so-act .pz-sec2{min-height:44px;border-radius:13px;}
 .so-msg{min-height:1.3em;}
-@media(prefers-reduced-motion:reduce){.so-slot.hint,.so-c.hint{animation:none;box-shadow:0 0 0 3px var(--m-accent);}}
 
 /* FAQ zu den Standorten (Stundenplan) */
 .faq{padding:0;margin:1rem 0 12px;}
@@ -2835,7 +2819,6 @@ button.idf-map{background:none;border:0;padding:0;font:inherit;font-weight:600;c
 .mi-c.hit::after{animation-delay:.18s;border-color:#ffd166;}
 @keyframes mi-ring{0%{opacity:1;transform:translate(-50%,-50%) scale(.3)}100%{opacity:0;transform:translate(-50%,-50%) scale(3.6)}}
 .mi .so-ov{border-radius:var(--m-radius,18px);}
-@media(prefers-reduced-motion:reduce){.mi-c.wv,.mi-c.wv.bm,.mi-c.hint,.mi-board.quake,.mi-c.hit::before,.mi-c.hit::after{animation:none;}.mi-c.hit::before,.mi-c.hit::after{display:none;}}
 
 /* Raumplan (3D) */
 body.rp-lock{overflow:hidden;}
@@ -3084,7 +3067,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 /* Einstellungen: Zahnrad dreht sich */
 :is(.m-tab,.m-ri).tap[data-ic="settings"] .m-tic{animation:ic-spin .8s cubic-bezier(.3,1.1,.4,1);}
 @keyframes ic-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-@media(prefers-reduced-motion:reduce){:is(.m-tab,.m-ri).tap *{animation:none!important;}:is(.m-tab,.m-ri) .m-tic>svg.f}
 
 /* Seitenleiste (Desktop): gleiche Logik wie die Tab-Leiste am Handy */
 .m-ri .m-tic{width:22px;height:22px;}
@@ -3095,7 +3077,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .m-ri.tap[data-ic="exam"] .m-tic{animation:ic-pop .55s cubic-bezier(.34,1.56,.64,1);}
 .m-ri-search.tap>svg{animation:ic-search .7s ease-in-out;transform-origin:30% 70%;}
 @keyframes ic-search{0%{transform:rotate(0)}25%{transform:rotate(-22deg)}55%{transform:rotate(18deg)}80%{transform:rotate(-6deg)}100%{transform:rotate(0)}}
-@media(prefers-reduced-motion:reduce){.m-ri.tap *{animation:none!important;}}
 /* ── Desktop: Side Drawer (Hamburger) oder angeheftete Seitenleiste ───────── */
 .m-ham,.m-pin,#m-dim{display:none;}
 @media(min-width:1100px){
@@ -3122,7 +3103,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
   body:not(.rail-pin) #et-pill{left:50%;}
 }
 @media(min-width:1100px) and (max-width:1260px){body:not(.rail-pin) #m-topbar{padding-left:70px;}}
-@media(prefers-reduced-motion:reduce){body:not(.rail-pin) #m-rail,body.rail-open:not(.rail-pin) #m-rail,.m-ham span,#m-dim,body.rail-open:not(.rail-pin) #m-rail>.m-brand,body.rail-open:not(.rail-pin) #m-rail .m-ri{transition-duration:.01ms!important;transition-delay:0s!important;}}
 @media(min-width:1100px){#m-rail>.m-brand{padding-right:54px;}}
 
 /* Pin im Drawer auf Höhe des X; Desktop-Startseite: Prüfung-Knopf und Zahnrad */
@@ -3207,7 +3187,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .view.active.lp-ueber .lp-card:nth-child(5){animation-delay:280ms}.view.active.lp-ueber .lp-card:nth-child(6){animation-delay:350ms}
 .view.active.lp-ueber .lp-card:nth-child(7){animation-delay:420ms}.view.active.lp-ueber .lp-card:nth-child(8){animation-delay:490ms}
 .view.active.lp-ueber .lp-card:nth-child(n+9){animation-delay:560ms}
-@media(prefers-reduced-motion:reduce){.fc-inner,.fc-inner.fc-lift,.fc-inner.fc-lift .fc-face,.view.active.lp-ueber .lp-card{animation:none!important;transition-duration:.01ms!important;}}
 
 /* Themenübersichten (Unterseiten mit Kartenraster): Karten bauen sich ebenfalls gestaffelt auf */
 .view.active.detail-view .cg>.topic-card{animation:lpCascade .45s cubic-bezier(.2,.8,.2,1) both;}
@@ -3220,7 +3199,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .view.active.detail-view .cg>.topic-card:nth-child(7){animation-delay:420ms}
 .view.active.detail-view .cg>.topic-card:nth-child(8){animation-delay:490ms}
 .view.active.detail-view .cg>.topic-card:nth-child(n+9){animation-delay:560ms}
-@media(prefers-reduced-motion:reduce){.view.active.detail-view .cg>.topic-card{animation:none!important;}}
 
 /* ── Suche: Icon Expand · Live-Vorschläge · Clear Field · Search Loading ── */
 .search-field{position:relative;flex:1;min-width:0;display:flex;align-items:center;}
@@ -3247,7 +3225,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 @keyframes srShim{from{background-position:100% 0;}to{background-position:0 0;}}
 .search-results.sr-fade{animation:srFadeIn .35s ease both;}
 @keyframes srFadeIn{from{opacity:0;}to{opacity:1;}}
-@media(prefers-reduced-motion:reduce){.sr-drop,.search-box.sr-expand,.search-ic.sr-spin,.search-results.sr-fade,.search-clear{animation:none!important;}}
 .search-input-wrap:has(.search-clear:not([hidden])) .search-close-btn{display:none;}   /* mit Text zeigt nur das Löschen-✕, sonst das Schließen-✕ */
 
 /* ── Laufbahn: Passwortsperre mit Password-Reveal, Musterlösungen, VB-Übungsklausur ── */
@@ -3282,7 +3259,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .lb-relock{grid-column:1/-1;justify-self:center;}
 #lb-hub.lb-in>.topic-card{animation:lpCascade .45s cubic-bezier(.2,.8,.2,1) both;}
 #lb-hub.lb-in>.topic-card:nth-child(2){animation-delay:70ms}#lb-hub.lb-in>.topic-card:nth-child(3){animation-delay:140ms}
-@media(prefers-reduced-motion:reduce){.lb-pwrap.shake,.lb-mask b,#lb-hub.lb-in>.topic-card{animation:none!important;transition-duration:.01ms!important;}}
 
 /* Musterlösung zum Aufklappen */
 .lb-sol{margin:.9rem 0;border-radius:14px;background:var(--m-card);border:1px solid var(--m-line,rgba(128,128,128,.25));overflow:hidden;}
@@ -3346,7 +3322,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
   body:not(.rail-pin) #m-rail [data-tip]:hover::after,body:not(.rail-pin) #m-rail [data-tip]:focus-visible::after{opacity:1;transform:translate(0,-50%);}
   body:not(.rail-pin) #m-rail [data-tip]:hover::before,body:not(.rail-pin) #m-rail [data-tip]:focus-visible::before{opacity:1;transform:translateX(0) rotate(45deg);}
 }
-@media(min-width:1100px) and (prefers-reduced-motion:reduce){body:not(.rail-pin) #m-rail [data-tip]::after,body:not(.rail-pin) #m-rail [data-tip]::before{transition:none;}}
 
 /* Prüfungsliste: Passwortfeld klappt über der gesperrten Laufbahn-Zeile auf */
 .lb-inl{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s cubic-bezier(.3,1.1,.5,1);}
@@ -3355,7 +3330,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .lb-inform{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px;}
 .lb-inform .lb-lab{margin:0;}
 .lb-row-lock{color:var(--m-muted,inherit);flex:none;}
-@media(prefers-reduced-motion:reduce){.lb-inl{transition:none;}}
 
 /* Passwortfenster eine Ebene über der Seite */
 .lb-modal{position:fixed;inset:0;z-index:calc(var(--z-overlay,300) + 20);display:none;align-items:center;justify-content:center;padding:16px;}
@@ -3366,7 +3340,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .lb-modal-box .lb-lock{align-self:center;}
 .lb-modal-x{position:absolute;right:12px;top:12px;width:34px;height:34px;border:0;border-radius:50%;background:var(--m-raised,rgba(128,128,128,.15));color:inherit;display:grid;place-items:center;cursor:pointer;padding:0;}
 @keyframes lbModal{from{opacity:0;transform:translateY(24px) scale(.96);}to{opacity:1;transform:none;}}
-@media(prefers-reduced-motion:reduce){.lb-modal-box,.lb-modal-bg{animation:none;}}
 
 /* ── Einstellungen (Handy): aufgeräumt – Werkzeuge oben rechts, kompakte Karten, Untergruppen, einzeilige Spende ── */
 #v-settings .page-hero .phi{position:relative;}
@@ -3393,7 +3366,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 /* Prüfungsliste: Untertitel höchstens zwei Zeilen */
 #v-pruefung .m-row .m-t2{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;white-space:normal;}
 /* „Bewegung reduzieren“ schaltet alle Animationen und Übergänge ab */
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}}
 .m-donate[open]>summary::after{transform:rotate(90deg);}
 
 /* Startseite: Standort-Liste mit Umschalter (Option 1) */
@@ -3465,7 +3437,6 @@ button.nb-p.nb-sel{border-color:var(--m-accent);background:color-mix(in srgb,var
 .sk-home{padding:14px 0;}
 @media(min-width:701px){.sk-grid{grid-template-columns:repeat(3,1fr);}.sk-home{max-width:900px;}}
 iframe.emb-frame:not(.ld){background:linear-gradient(100deg,rgba(128,128,128,.10) 30%,rgba(128,128,128,.22) 50%,rgba(128,128,128,.10) 70%);background-size:300% 100%;animation:srShim 1.2s linear infinite;}
-@media(prefers-reduced-motion:reduce){.sk-b,iframe.emb-frame:not(.ld){animation:none!important;}}
 
 /* Prüfungsliste: kein Farbverlauf, stattdessen ein kleiner Stern in der Zeile */
 .jg-rw.hot{background:none;}
@@ -3515,7 +3486,6 @@ html.tour-lock{overflow:hidden;}
 .m-tourcard .m-ic{background:none;width:24px;height:24px;padding:0;color:var(--m-accent-fg,var(--m-accent));}
 .m-tourcard .m-ic svg{width:22px;height:22px;}
 .m-tourcard .m-t1{font-size:1rem;}.m-tourcard .m-t2{font-size:.8rem;}
-@media(prefers-reduced-motion:reduce){.tour-hole,.tour-tip{transition:none;}}
 
 /* Jahr-Umschalter: kleiner Pill-Schalter rechts neben „Lernstoff“ */
 .m-seg2{display:flex;justify-content:space-between;align-items:center;gap:8px;background:none;padding:0 2px 8px;margin:0;border-radius:0;}
@@ -3536,7 +3506,6 @@ html.tour-lock{overflow:hidden;}
 .m-tourhome-x{position:absolute;right:8px;top:8px;width:30px;height:30px;border:0;border-radius:50%;background:none;color:var(--m-muted);display:grid;place-items:center;cursor:pointer;padding:0;}
 .m-tourhome-x:hover{background:var(--m-raised);}
 @media(max-width:420px){.m-tourhome-btn{display:none;}}
-@media(prefers-reduced-motion:reduce){.m-tourhome-go{animation:none;}}
 
 /* Seitenwechsel in der Tour: Rahmen und Karte springen ohne Gleiten zum Ziel, der Rahmen blendet danach ein */
 #tour.jump .tour-hole{transition:opacity .25s;}
@@ -3563,7 +3532,6 @@ html.tour-lock{overflow:hidden;}
 .m-hsearch:hover{background:var(--m-raised);}
 .m-hsearch:active{transform:scale(.92);background:var(--m-raised);}
 .m-hsearch:focus-visible{outline:2px solid var(--m-accent);outline-offset:3px;}
-@media(prefers-reduced-motion:reduce){.m-hsearch{transition:none;}}
 
 /* Suche: Bereichsfeld „Suche in …“ im Suchfeld */
 .search-scope{flex:none;display:inline-flex;align-items:center;gap:6px;max-width:42%;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);border:0;border-radius:99px;padding:5px 9px 5px 12px;font:700 .76rem inherit;font-family:inherit;cursor:pointer;}
@@ -3578,7 +3546,6 @@ html.tour-lock{overflow:hidden;}
 .m-tb-search:focus-visible{outline:2px solid var(--m-accent);outline-offset:2px;}
 @media(max-width:1099px){.m-tb-search{width:44px;height:44px;}}
 body:has(.lp-win.on:not(.focus)) #m-topbar .m-tb-search{pointer-events:auto;}
-@media(prefers-reduced-motion:reduce){.m-tb-search{transition:none;}}
 .pz-rl{margin-top:4px;font-size:.86rem;color:var(--m-muted);}
 
 /* ── Belohnungen (Serie, Dienstgrade, Abzeichen) ── */
@@ -3662,7 +3629,6 @@ button.g-row{cursor:pointer;min-height:44px;}
 .g-conf i{position:absolute;top:0;width:8px;height:12px;border-radius:2px;}
 #g-combo{position:fixed;left:50%;bottom:calc(var(--m-tabbar-h,62px) + 22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,12px);opacity:0;z-index:9000;pointer-events:none;display:flex;align-items:center;gap:6px;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);border-radius:99px;padding:8px 14px;font-size:.86rem;transition:opacity .2s,transform .2s;}
 #g-combo.on{opacity:1;transform:translate(-50%,0);}
-@media(prefers-reduced-motion:reduce){#g-combo{transition:none;}}
 
 /* Schriftgröße: Marke folgt dem Regler ohne Nachlaufen */
 .fs-tag{transition:none;}
@@ -3674,7 +3640,6 @@ button.g-row{cursor:pointer;min-height:44px;}
 @keyframes gPulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--gp) 55%,transparent);}70%,100%{box-shadow:0 0 0 10px color-mix(in srgb,var(--gp) 0%,transparent);}}
 .g-chip.on .g-fl svg{animation:gFlick 2.2s ease-in-out infinite;transform-origin:50% 90%;}
 @keyframes gFlick{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
-@media(prefers-reduced-motion:reduce){.g-chip::after,.g-chip.on .g-fl svg{animation:none;}}
 .g-drop{pointer-events:auto;cursor:pointer;}
 .g-drop:focus-visible{outline:2px solid var(--m-fg);outline-offset:3px;}
 button.g-rank-go{width:100%;background:none;border:0;padding:4px 0;color:var(--m-fg);font-family:inherit;text-align:left;cursor:pointer;min-height:56px;border-radius:12px;}
@@ -3726,7 +3691,6 @@ button.g-rank-go:active{background:var(--m-raised);}
   body.rail-open:not(.rail-pin) .m-ri-search kbd{display:inline-block;}
   body.rail-open:not(.rail-pin) #m-rail [data-tip]::after,body.rail-open:not(.rail-pin) #m-rail [data-tip]::before{display:none;}
 }
-@media(min-width:1100px) and (prefers-reduced-motion:reduce){body:not(.rail-pin) #m-rail{transition:none;}}
 
 /* Tablet und Desktop: das 2. Ausbildungsjahr dominiert (große Karten in zwei Spalten), das 1. Jahr folgt kompakt darunter */
 @media(min-width:701px){
@@ -3768,7 +3732,6 @@ html.lp-lock #m-topbar #m-back{visibility:hidden;pointer-events:none;}
 .lbf-box.lbf-bad .lbf-input{color:#e5484d;}
 .lbf-input{letter-spacing:.08em;}
 .lbf-input::placeholder{letter-spacing:0;}
-@media(prefers-reduced-motion:reduce){.search-box.lbf-box.lbf-bad{animation:none;}.lbf-box.lbf-ok .lbf-ic .ck path{animation:none;stroke-dashoffset:0;}.lbf-ic svg{transition:none;}}
 .lbf-input:focus,.lbf-input:focus-visible{outline:none;box-shadow:none;}
 /* Passwortfeld über der angetippten Zeile statt oben an der Seite */
 .search-overlay.lbf-at{display:block;padding:0;}
@@ -3992,3 +3955,24 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 @media(max-width:700px){
   #m-home .m-hello+.m-hgrid{margin-top:-5px;}
 }
+
+/* Startseite: Dienstgrad statt „Lernstoff“, Jahr-Schalter mit gleitender Pille */
+.m-seg2-w{min-width:0;flex:1 1 auto;}
+.g-rklab{display:inline-flex;align-items:center;gap:8px;min-width:0;max-width:100%;border:0;background:none;padding:2px 4px 2px 0;font-family:inherit;font-size:.8rem;font-weight:700;color:var(--m-fg);cursor:pointer;border-radius:10px;}
+.g-rklab>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
+.g-rklab .g-sh{flex:none;}
+.m-seg2-w .g-chip{flex:none;}
+.m-seg2 .m-mini{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;flex:none;isolation:isolate;}
+.m-mini-ind{position:absolute;z-index:-1;top:2px;bottom:2px;left:2px;width:calc((100% - 4px)/2);border-radius:99px;background:var(--m-card);box-shadow:0 1px 3px rgba(0,0,0,.18);transform:translateX(0);transition:transform .38s cubic-bezier(.34,1.45,.5,1);will-change:transform;}
+.m-mods[data-y="1"] .m-mini-ind{transform:translateX(100%);}
+.m-seg2 .m-mini button,.m-seg2 .m-mini button.on{background:none;box-shadow:none;text-align:center;transition:color .25s ease;}
+.m-seg2 .m-mini button.on{color:var(--m-fg);}
+.m-mods .m-yl{animation:yrIn .3s ease-out;}
+@keyframes yrIn{from{opacity:0;transform:translateX(var(--yr-dx,10px));}to{opacity:1;transform:none;}}
+.m-mods[data-y="1"] .m-yl{--yr-dx:-10px;}
+.m-seg2 .g-rklab{flex:0 1 auto;min-width:0;padding:2px 4px 2px 0;border-radius:10px;font-size:.8rem;background:none;box-shadow:none;}
+.m-seg2 .g-chip{flex:none;}
+/* Dienstgrad: am schmalen Handy nur das Schulterstück, der Name erscheint, sobald die Zeile breit genug ist */
+.m-seg2{container-type:inline-size;container-name:seg;}
+.g-rklab>span:last-child{display:none;}
+@container seg (min-width:380px){.g-rklab>span:last-child{display:inline;}}
