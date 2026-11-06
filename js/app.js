@@ -1819,7 +1819,7 @@ const FC = (function(){
       } else if(df){
         const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df));
         const knownCnt=cats.filter(c=>known[c.id]).length;
-        b.classList.toggle('active',!allSel&&!isStarred&&activeFilters.has(df));
+        b.classList.toggle('active',!isStarred&&activeFilters.has(df));
         b.innerHTML=`<b>${base}</b><small>${knownCnt}/${cats.length}</small>`;
       }
     });
@@ -2061,8 +2061,7 @@ const FC = (function(){
         updateFilterButtons(); this.start(); return;
       } else {
         activeFilters.delete('starred'); activeFilters.delete('weak'); activeFilters.delete('own');
-        if(activeFilters.size===CATS.length) activeFilters=new Set([f]);
-        else if(activeFilters.has(f)){ activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(['laufbahn']); }
+        if(activeFilters.has(f)){ activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(['laufbahn']); }
         else activeFilters.add(f);
       }
       updateFilterButtons();
