@@ -3493,3 +3493,26 @@ button.jg-starbtn.on:hover{opacity:1;}
 /* Suche: ohne Eingabe nur das Suchfeld */
 .search-box.sr-empty .search-results,.search-box.sr-empty .search-footer{display:none;}
 .search-box.sr-empty .search-input-wrap{border-bottom:0;}
+
+/* ── App-Tour (Spotlight) ── */
+#tour{position:fixed;inset:0;z-index:2147482000;display:none;}
+#tour.on{display:block;}
+.tour-hole{position:fixed;border-radius:18px;box-shadow:0 0 0 4000px rgba(15,12,8,.66);border:2px solid var(--m-accent,#ffa50f);transition:left .45s cubic-bezier(.3,1,.4,1),top .45s cubic-bezier(.3,1,.4,1),width .45s cubic-bezier(.3,1,.4,1),height .45s cubic-bezier(.3,1,.4,1),opacity .25s;pointer-events:none;}
+.tour-tip{position:fixed;background:var(--m-card,#fff);color:var(--m-fg,#1c1c1c);border-radius:20px;padding:16px 16px 14px;box-shadow:0 14px 40px rgba(0,0,0,.4);transition:left .45s cubic-bezier(.3,1,.4,1),top .45s cubic-bezier(.3,1,.4,1);}
+.tour-st{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--m-accent-fg,#8a5200);}
+.tour-tip h3{margin:2px 0 6px;font-size:1.1rem;}
+.tour-tip p{margin:0;font-size:.92rem;line-height:1.5;}
+.tour-nav{display:flex;align-items:center;gap:8px;margin-top:12px;}
+.tour-dots{display:flex;gap:4px;flex:1;flex-wrap:wrap;}
+.tour-dots i{width:7px;height:7px;border-radius:50%;background:rgba(128,128,128,.35);}
+.tour-dots i.on{background:var(--m-accent);width:18px;border-radius:9px;}
+.tour-tip button{border:0;border-radius:11px;padding:10px 14px;font:700 .86rem inherit;font-family:inherit;cursor:pointer;min-height:40px;}
+.tour-b1{background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);}
+.tour-b2{background:var(--m-raised);color:var(--m-fg);}
+.tour-b3{background:none;color:var(--m-muted);padding:10px 6px!important;}
+html.tour-lock{overflow:hidden;}
+.m-tourcard .m-row{padding:13px 16px;gap:12px;}
+.m-tourcard .m-ic{background:none;width:24px;height:24px;padding:0;color:var(--m-accent-fg,var(--m-accent));}
+.m-tourcard .m-ic svg{width:22px;height:22px;}
+.m-tourcard .m-t1{font-size:1rem;}.m-tourcard .m-t2{font-size:.8rem;}
+@media(prefers-reduced-motion:reduce){.tour-hole,.tour-tip{transition:none;}}

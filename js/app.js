@@ -4424,6 +4424,8 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Neu: „App vorstellen“ in den Einstellungen – eine Tour mit Spotlight durch die Startseite, alle Tabs, die Lernkarten (Karte, Antwort, Filter) und die Einstellungen. Mit Weiter, Zurück, Überspringen oder Esc.',
+      'Einsatzfahrt: Am Anfang wählst du jetzt 5, 10 oder 15 Fragen (wie beim Duell) statt zwischen Hauptstraße und Ring. Fahrzeit und Hilfsfrist wachsen mit der Anzahl: 5 Fragen 6:00 / 6:30, 10 Fragen 11:00 / 11:30, 15 Fragen 16:00 / 16:30; falsch +30 s, richtig −5 s.',
       'Suche: Ohne Eingabe steht nur das Suchfeld da; die Fläche darunter erscheint erst beim Tippen.',
       'Einstellungen: Die Lupe hat etwas Abstand zum Rand, und das Suchfeld wächst aus dem Symbol heraus. Die Zeile „Navigationsleiste“ hat nur noch einen Pfeil.',
       'Prüfung: Nur die „Laufbahnprüfung“ hat noch einen Farbverlauf. Bei allen anderen steht stattdessen ein kleiner Stern in der Zeile (gefüllt = wichtig für Einsatzfahrt und Lernkarten). In anderen Lehrgängen tippst du den Stern direkt an, um Prüfungen als wichtig zu markieren oder abzuwählen.',
