@@ -243,7 +243,7 @@ const GAME=(function(){
       <div class="g-h">Einsatz-Alarm der Woche</div>
       <div class="g-row"><span class="g-ri">${svg('bell',18)}</span><span class="g-rt"><b>${alDone?'Alarm bestanden':ALARM_GOAL+' Aufgaben bis Sonntag'}</b><span>${al}/${ALARM_GOAL} Karten und Quizfragen · +${ALARM_XP} Punkte</span><span class="g-bar sm"><i style="width:${Math.round(al/ALARM_GOAL*100)}%"></i></span></span></div>
       ${pathRow}
-      <div class="g-links"><button type="button" onclick="NAV.go('v-game','Rang &amp; Abzeichen')">Rang &amp; Abzeichen</button><button type="button" onclick="NAV.go('v-week','Wochen-Rückblick')">Wochen-Rückblick</button></div>`;
+      <div class="g-links"><button type="button" onclick="NAV.go('v-week','Wochen-Rückblick')">Wochen-Rückblick</button></div>`;
   }
   /* Bereich auf der Startseite (Symbol + aufklappbares Feld); bei ausgeschalteten Belohnungen leer */
   function homeHtml(){ return load().off?{chip:'',panel:''}:{chip:chip(),panel:`<div class="g-panel" id="g-panel" hidden>${panel()}</div>`}; }
