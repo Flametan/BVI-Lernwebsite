@@ -3675,3 +3675,5 @@ button.g-row{cursor:pointer;min-height:44px;}
 .g-chip.on .g-fl svg{animation:gFlick 2.2s ease-in-out infinite;transform-origin:50% 90%;}
 @keyframes gFlick{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
 @media(prefers-reduced-motion:reduce){.g-chip::after,.g-chip.on .g-fl svg{animation:none;}}
+.g-drop{pointer-events:auto;cursor:pointer;}
+.g-drop:focus-visible{outline:2px solid var(--m-fg);outline-offset:3px;}

@@ -4457,6 +4457,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Der Tropfen bei neuen Abzeichen und Beförderungen lässt sich antippen: Er öffnet „Rang & Abzeichen“ und zeigt deinen aktuellen Dienstgrad.',
       'Die Flamme der Serie pulsiert: grau, solange du heute noch nicht gelernt hast, orange bei aktiver Serie. Die App-Tour zeigt die Serie jetzt in einem eigenen Schritt.',
       'Schriftgröße: Der Regler arbeitet jetzt stufenlos (statt in vier Sprüngen); die Anzeige nennt die Größe in Prozent.',
       'Neu: Belohnungen. Neben „Lernstoff“ auf der Startseite zeigt ein Flammen-Symbol deine Lern-Serie. Antippen klappt Dienstgrad, Tagesaufgaben, Einsatz-Alarm der Woche und Lernpfad auf. In den Einstellungen kannst du die Belohnungen ausschalten.',

@@ -123,8 +123,14 @@ const GAME=(function(){
     const m=queue.shift(), h=ensureHost(), drop=h.querySelector('.g-drop'), goo=h.querySelector('.g-goo');
     drop.innerHTML=`<span class="g-di">${svg(m.ic,20)}</span><span class="g-dt"><b>${esc(m.t)}</b><span>${esc(m.s||'')}</span></span>`;
     h.classList.add('on');
-    const end=()=>{ h.classList.remove('on'); showing=false; setTimeout(pump,250); };
-    if(reduced()||!drop.animate){ goo.style.filter='none'; drop.style.opacity='1'; setTimeout(()=>{ drop.style.opacity='0'; end(); },3200); return; }
+    let over=false;
+    const end=()=>{ if(over) return; over=true; h.classList.remove('on'); drop.onclick=null; showing=false; setTimeout(pump,250); };
+    // Antippen öffnet Rang & Abzeichen und springt zum aktuellen Dienstgrad
+    drop.setAttribute('role','button'); drop.setAttribute('tabindex','0'); drop.setAttribute('aria-label',m.t+'. Öffnet Rang und Abzeichen');
+    const openRank=()=>{ if(over) return; drop.getAnimations().forEach(x=>x.cancel()); drop.style.opacity='0'; end(); if(typeof NAV!=='undefined') NAV.go('v-game','Rang & Abzeichen'); setTimeout(()=>{ const c=document.querySelector('#game-body .g-lr.cur'); if(c) c.scrollIntoView({block:'center',behavior:reduced()?'auto':'smooth'}); },350); };
+    drop.onclick=openRank; drop.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openRank(); } };
+    drop.style.opacity='';
+    if(reduced()||!drop.animate){ goo.style.filter='none'; drop.style.opacity='1'; setTimeout(()=>{ if(over) return; drop.style.opacity='0'; end(); },3200); return; }
     goo.style.filter='url(#g-goo)';
     const a=drop.animate([
       {transform:'translate(-50%,-34px) scale(.18,.18)',opacity:1},
@@ -135,6 +141,7 @@ const GAME=(function(){
     a.onfinish=()=>{
       goo.style.filter='none';
       setTimeout(()=>{
+        if(over) return;
         goo.style.filter='url(#g-goo)';
         const b=drop.animate([{transform:'translate(-50%,14px) scale(1,1)',opacity:1},{transform:'translate(-50%,-30px) scale(.16,.16)',opacity:1}],{duration:420,easing:'cubic-bezier(.5,0,.8,.4)',fill:'forwards'});
         b.onfinish=()=>{ drop.style.opacity='0'; drop.getAnimations().forEach(x=>x.cancel()); end(); };
