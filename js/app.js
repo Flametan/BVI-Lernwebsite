@@ -4424,6 +4424,11 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Tour (andere Lehrgänge): Neuer Schritt zu Export und Import der Lehrgangsdaten.',
+      'Tour: Kein Neuladen und kein verzögertes Verschieben des Spotlights mehr bei „Weiter“. Die Seite wird nur noch gewechselt, wenn der nächste Schritt auf einer anderen Seite liegt; dann blendet der Rahmen erst am Ziel ein.',
+      'Startseite: Die Lücke zwischen „Lernstoff“ und den Standort-Karten ist halbiert.',
+      'Startseite: Über dem Lernstoff steht eine leuchtende Karte „App kennenlernen“ mit der Tour. Nach der Tour (oder mit dem ✕) verschwindet sie; die Tour bleibt in den Einstellungen unter „App vorstellen“.',
+      'Tour (Master-Lehrgang): Neuer Schritt zur Laufbahnprüfung – die Eingrenzungen mit Lösungen, die gerne verbessert werden dürfen.',
       'Neu: „App vorstellen“ in den Einstellungen – eine Tour mit Spotlight durch die Startseite, alle Tabs, die Lernkarten (Karte, Antwort, Filter) und die Einstellungen (Lehrgang, Aussehen, Lernen & Erinnerung, Daten & Werkzeuge). Mit Weiter, Zurück, Überspringen oder Esc.',
       'Einsatzfahrt: Am Anfang wählst du jetzt 5, 10 oder 15 Fragen (wie beim Duell) statt zwischen Hauptstraße und Ring. Fahrzeit und Hilfsfrist wachsen mit der Anzahl: 5 Fragen 6:00 / 6:30, 10 Fragen 11:00 / 11:30, 15 Fragen 16:00 / 16:30; falsch +30 s, richtig −5 s.',
       'Suche: Ohne Eingabe steht nur das Suchfeld da; die Fläche darunter erscheint erst beim Tippen.',
@@ -7780,6 +7785,7 @@ const SHELL=(function(){
     const donate=`<a class="m-list m-donate m-donate-home" href="${SPENDE_URL}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><div class="m-row m-go">${ic('heart')}<span class="m-tx"><span class="m-t1">Gefällt dir die Seite?</span><span class="m-t2">Kostenlos &amp; werbefrei – freiwillig unterstützen</span></span></div></a>`;
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
+      ${(typeof TOUR!=='undefined'&&!TOUR.done())?`<div class="m-tourhome" id="tour-home"><button type="button" class="m-tourhome-go" onclick="TOUR.start('home')"><span class="m-tourhome-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21"/></svg></span><span class="m-tx"><span class="m-t1">Neu hier? App kennenlernen</span><span class="m-t2">Kurze Tour mit Spotlight – zeigt dir alles Wichtige</span></span><span class="m-tourhome-btn">Tour starten</span></button><button type="button" class="m-tourhome-x" aria-label="Hinweis ausblenden" onclick="TOUR.dismiss()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>`:''}
       <div class="m-hgrid"><div class="m-hl">${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}</div></div>`;
   }
 

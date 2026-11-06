@@ -3523,3 +3523,23 @@ html.tour-lock{overflow:hidden;}
 .m-mini{display:inline-flex;background:var(--m-raised);border-radius:99px;padding:2px;}
 .m-seg2 .m-mini button{flex:none;border:0;background:none;padding:5px 12px;border-radius:99px;font-family:inherit;font-size:.8rem;font-weight:700;color:var(--m-muted);cursor:pointer;min-height:30px;}
 .m-seg2 .m-mini button.on{background:var(--m-card);color:var(--m-fg);box-shadow:0 1px 3px rgba(0,0,0,.18);}
+
+/* Startseite: leuchtende Tour-Karte über dem Lernstoff */
+.m-tourhome{position:relative;margin:4px 0 14px;}
+.m-tourhome-go{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;border-radius:18px;padding:14px 46px 14px 14px;font-family:inherit;color:var(--m-fg);cursor:pointer;background:linear-gradient(135deg,color-mix(in srgb,var(--m-accent) 30%,var(--m-card)),var(--m-card) 80%);box-shadow:0 0 0 1.5px color-mix(in srgb,var(--m-accent) 70%,transparent),0 0 18px color-mix(in srgb,var(--m-accent) 45%,transparent);animation:tourGlow 2.4s ease-in-out infinite;}
+@keyframes tourGlow{0%,100%{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--m-accent) 55%,transparent),0 0 10px color-mix(in srgb,var(--m-accent) 25%,transparent);}50%{box-shadow:0 0 0 2px var(--m-accent),0 0 28px color-mix(in srgb,var(--m-accent) 65%,transparent);}}
+.m-tourhome-ic{width:44px;height:44px;border-radius:14px;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);display:grid;place-items:center;flex:none;}
+.m-tourhome-ic svg{width:24px;height:24px;}
+.m-tourhome .m-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.m-tourhome .m-t1{font-weight:700;}.m-tourhome .m-t2{font-size:.8rem;color:var(--m-muted);}
+.m-tourhome-btn{flex:none;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);border-radius:99px;padding:8px 14px;font-weight:700;font-size:.82rem;white-space:nowrap;}
+.m-tourhome-x{position:absolute;right:8px;top:8px;width:30px;height:30px;border:0;border-radius:50%;background:none;color:var(--m-muted);display:grid;place-items:center;cursor:pointer;padding:0;}
+.m-tourhome-x:hover{background:var(--m-raised);}
+@media(max-width:420px){.m-tourhome-btn{display:none;}}
+@media(prefers-reduced-motion:reduce){.m-tourhome-go{animation:none;}}
+
+/* Seitenwechsel in der Tour: Rahmen und Karte springen ohne Gleiten zum Ziel, der Rahmen blendet danach ein */
+#tour.jump .tour-hole{transition:opacity .25s;}
+#tour.jump .tour-tip{transition:none;}
+/* Lücke zwischen „Lernstoff“ und den Standort-Karten halbiert (18 → 9 px) */
+.m-seg2{padding-bottom:0;margin-bottom:-1px;}
