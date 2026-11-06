@@ -25,7 +25,7 @@
     #sk i{display:block;background:var(--m-raised,#262626);border-radius:12px;animation:sk-p 1.4s ease-in-out infinite;}
     /* neues Aussehen: Karten mit 16 px Rundung, Standort-Karten mit Ring, schwebende Seitenleiste am PC */
     #sk .sk-card.sk-st{flex-direction:row;align-items:center;gap:14px;padding:12px 14px;}#sk .sk-ringi{width:48px;height:48px;border-radius:50%;flex:none;}
-    #sk .sk-seg{align-items:center;}#sk .sk-lbl{display:flex;align-items:center;gap:10px;}#sk .sk-lbl i:first-child{width:84px;height:12px;}#sk .sk-lbl i+i{width:48px;height:32px;border-radius:99px;}#sk .sk-yr{flex:none;width:150px;height:34px;border-radius:99px;}
+    #sk .sk-seg{align-items:center;}#sk .sk-lbl{display:flex;align-items:center;gap:10px;}#sk .sk-lbl i:first-child{width:45px;height:32px;border-radius:6px;}#sk .sk-lbl i+i{width:56px;height:32px;border-radius:99px;}#sk .sk-yr{flex:none;width:132px;height:38px;border-radius:99px;}#sk .sk-nx{flex:none;width:44px;height:44px;border-radius:50%;}
     #sk .sk-bars{display:flex;align-items:flex-end;gap:8px;height:96px;}#sk .sk-bars i{flex:1;height:100%;border-radius:8px;}#sk .sk-y1,#sk .sk-yh{display:none;}
     #sk .sk-card.sk-set{flex-direction:row;align-items:center;gap:14px;padding:16px;}
     #sk .sk-lr{align-items:center;}#sk .sk-lg{gap:14px;}
@@ -57,9 +57,10 @@
     @keyframes sk-p{50%{opacity:.5}}
     /* Tablet: breitere Ränder, zwei Spalten */
     @media(min-width:701px){
+      #sk .sk-nx{width:96px;height:56px;border-radius:14px;}
       #sk .sk-main{padding-left:32px;padding-right:32px;}#sk .sk-bar{padding-left:32px;padding-right:32px;}
       #sk[data-t=home] section[data-p=home]{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
-      /* Startseite wie in der App: Cloud und Spende links, Wochenübersicht rechts, darunter „Lernstoff“ mit beiden Ausbildungsjahren */
+      /* Startseite wie in der App: Cloud und Spende links, Wochenübersicht rechts, darunter Dienstgrad, Serie und beide Ausbildungsjahre */
       #sk[data-t=home] .sk-hd{grid-column:1 / -1;grid-row:1;}
       #sk[data-t=home] .sk-l1{grid-column:1;grid-row:2;align-self:start;}#sk[data-t=home] .sk-l2{grid-column:1;grid-row:3;align-self:start;}
       #sk[data-t=home] .sk-g{grid-column:2;grid-row:2 / span 2;}
@@ -108,7 +109,7 @@
     <div class="sk-bar"><i></i><i></i></div>
     <div class="sk-main">
     <section data-p="home">
-      <div class="sk-row sk-hd"><div class="sk-col" style="flex:1;gap:10px"><i style="width:56%;height:30px;"></i><i style="width:78%;height:14px;"></i><i style="width:36%;height:12px;"></i></div><i style="width:96px;height:56px;"></i></div>
+      <div class="sk-row sk-hd"><div class="sk-col" style="flex:1;gap:10px"><i style="width:56%;height:30px;"></i><i style="width:78%;height:14px;"></i><i style="width:36%;height:12px;"></i></div><i class="sk-nx"></i></div>
       <div class="sk-row sk-seg"><div class="sk-lbl"><i></i><i></i></div><i class="sk-yr"></i></div>
       <div class="sk-col sk-r"><i class="sk-yh" style="width:150px"></i><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:18%;height:15px;"></i><i style="width:55%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:14%;height:15px;"></i><i style="width:60%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:22%;height:15px;"></i><i style="width:48%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:12%;height:15px;"></i><i style="width:52%;height:11px;"></i><i style="height:5px;"></i></div></div><i class="sk-yh" style="width:130px"></i><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:16%;height:15px;"></i><i style="width:50%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:12%;height:15px;"></i><i style="width:58%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:14%;height:15px;"></i><i style="width:46%;height:11px;"></i><i style="height:5px;"></i></div></div></div>
       <div class="sk-card sk-g"><div class="sk-row" style="align-items:center"><i style="width:30%;height:26px;"></i><i style="width:22%;height:16px;"></i></div><div class="sk-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
