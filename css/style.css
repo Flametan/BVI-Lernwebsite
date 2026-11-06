@@ -3976,3 +3976,5 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .m-seg2{container-type:inline-size;container-name:seg;}
 .g-rklab>span:last-child{display:none;}
 @container seg (min-width:380px){.g-rklab>span:last-child{display:inline;}}
+.g-sh4{gap:8%;}
+.g-sh4 i{width:14%;}
