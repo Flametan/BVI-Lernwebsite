@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.0',ts:'2026-11-06T10:00',items:[
+      'App-Tour: Neuer Schritt zur Einstellung „Navigationsleiste“ (Reihenfolge der Plätze, geteilte Plätze, Mittelknopf).',
       'Ladebildschirm: Das Skeleton der Startseite passt auf Tablet und PC zum neuen Aufbau (2. Ausbildungsjahr groß in zwei Spalten, 1. Jahr kompakt darunter).',
       'Einstellungen: Der Knopf „Freiwillige Spende“ ist wieder lesbar (dunkle Schrift auf der Akzentfläche, vorher im dunklen Design unsichtbar).',
       'Startseite (Tablet und PC): Das 2. Ausbildungsjahr steht groß in zwei Spalten, das 1. Jahr folgt kompakt darunter. Bei Münster steht jetzt „VB & Stabsarbeit“ statt „Brandschutz“.',
