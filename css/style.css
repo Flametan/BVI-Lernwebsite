@@ -1727,12 +1727,12 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 :root{--b-1a1a1a:#1a1a1a;--b-1a1d2e:#1a1d2e;--b-1f1f1f:#1f1f1f;--b-222222:#222222;--b-2a2a2a:#2a2a2a;--b-2e2e2e:#2e2e2e;--b-303030:#303030;--b-353535:#353535;--b-3a3a3a:#3a3a3a;--b-4a4a4a:#4a4a4a;--b-8a97a2:#8a97a2;--b-bdbdbd:#bdbdbd;--b-cccccc:#cccccc;--b-d0d0d0:#d0d0d0;--b-eeeeee:#eeeeee;}
 :root[data-theme="light"]{--b-1a1a1a:#ffffff;--b-1a1d2e:#d5d7e1;--b-1f1f1f:#e0e0e0;--b-222222:#dddddd;--b-2a2a2a:#d5d5d5;--b-2e2e2e:#d1d1d1;--b-303030:#cfcfcf;--b-353535:#cacaca;--b-3a3a3a:#c5c5c5;--b-4a4a4a:#b5b5b5;--b-8a97a2:#5d6a75;--b-bdbdbd:#424242;--b-cccccc:#333333;--b-d0d0d0:#2f2f2f;--b-eeeeee:#111111;}
 /* Dunkle Inseln im hellen Design: Diagramme sind für dunklen Grund gezeichnet */
-:root[data-theme="light"] .diagram-wrap{background:#1b1b1b;border-color:#2b2b2b;}
+/* Schaubilder im hellen/beigen Design: siehe Block „Schaubilder passen sich dem Design an“ am Ende */
 /* Schaubilder und Vergrößerung haben immer dunklen Grund: feste helle Farben, auch im hellen/beigen Design */
 .diagram-wrap,.lb-content{--c-gold:#FFA412;--c-gold-l:#ffc46b;--c-text:#e8eaed;--c-text-b:#ffffff;--c-slate-l:#c9ced6;--c-red-l:#ff7b7b;--c-ok:#52c28f;--c-blue:#6fb0ff;color:#e8eaed;}
 
 :root[data-theme="light"] .diagram-caption{color:#a3a3a3;}
-:root[data-theme="light"] svg.lb-img{background:#1b1b1b;}
+/* Bildansicht im hellen/beigen Design: siehe Ende der Datei */
 
 /* ── Kartenziel auf der Lernkarten-Seite ─────────────────────────────────── */
 
@@ -3777,3 +3777,181 @@ html.lp-lock #m-topbar #m-back{visibility:hidden;pointer-events:none;}
 .lbf-enter{background:var(--m-accent,var(--c-gold))!important;color:var(--m-on-accent,#1c1c1c)!important;}
 .lbf-box.lbf-ok .lbf-enter{background:#2fbf71!important;color:#fff!important;}
 .lbf-box.lbf-bad .lbf-enter{background:#e5484d!important;color:#fff!important;}
+
+/* ── Schaubilder passen sich dem Design an ─────────────────────────────────
+   Dunkles Design: dunkle Tafel mit hellen Farben (wie bisher). Helles und beiges Design: helle Tafel in der Kartenfarbe, dunkle Schrift,
+   kräftigere Akzentfarben. Feste Farben in den Zeichnungen werden hier der Reihe nach umgesetzt; die Vergrößerung (Lightbox) bleibt dunkel. */
+:root[data-theme="light"] .diagram-wrap{background:var(--m-card,#fff);border-color:var(--m-line,#dcdcdc);color:#1b2430;
+  --c-gold:#8a6410;--c-gold-l:#7a5710;--c-text:#1b2430;--c-text-b:#0f1620;--c-slate-l:#46526a;--c-red-l:#b3261e;--c-ok:#1a7a4a;--c-blue:#1f5f9e;}
+:root[data-theme="light"] .diagram-wrap svg text{fill:currentColor;}
+:root[data-theme="light"] .lb-content svg text{fill:currentColor;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#d8e4f0" i]{fill:#1b2430;}
+:root[data-theme="light"] .lb-content svg [fill="#d8e4f0" i]{fill:#1b2430;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#d8e4f0" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #d8e4f0" i]{fill:#1b2430!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#d8e4f0" i],:root[data-theme="light"] .lb-content svg [style*="fill: #d8e4f0" i]{fill:#1b2430!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#eef4fb" i]{fill:#1b2430;}
+:root[data-theme="light"] .lb-content svg [fill="#eef4fb" i]{fill:#1b2430;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#eef4fb" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #eef4fb" i]{fill:#1b2430!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#eef4fb" i],:root[data-theme="light"] .lb-content svg [style*="fill: #eef4fb" i]{fill:#1b2430!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#e6eef7" i]{fill:#1b2430;}
+:root[data-theme="light"] .lb-content svg [fill="#e6eef7" i]{fill:#1b2430;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#e6eef7" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #e6eef7" i]{fill:#1b2430!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#e6eef7" i],:root[data-theme="light"] .lb-content svg [style*="fill: #e6eef7" i]{fill:#1b2430!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#c3cfdb" i]{fill:#46526a;}
+:root[data-theme="light"] .lb-content svg [fill="#c3cfdb" i]{fill:#46526a;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#c3cfdb" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #c3cfdb" i]{fill:#46526a!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#c3cfdb" i],:root[data-theme="light"] .lb-content svg [style*="fill: #c3cfdb" i]{fill:#46526a!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#9db2c8" i]{fill:#46526a;}
+:root[data-theme="light"] .lb-content svg [fill="#9db2c8" i]{fill:#46526a;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#9db2c8" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #9db2c8" i]{fill:#46526a!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#9db2c8" i],:root[data-theme="light"] .lb-content svg [style*="fill: #9db2c8" i]{fill:#46526a!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#bccad5" i]{fill:#46526a;}
+:root[data-theme="light"] .lb-content svg [fill="#bccad5" i]{fill:#46526a;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#bccad5" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #bccad5" i]{fill:#46526a!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#bccad5" i],:root[data-theme="light"] .lb-content svg [style*="fill: #bccad5" i]{fill:#46526a!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#a9b8c6" i]{fill:#46526a;}
+:root[data-theme="light"] .lb-content svg [fill="#a9b8c6" i]{fill:#46526a;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#a9b8c6" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #a9b8c6" i]{fill:#46526a!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#a9b8c6" i],:root[data-theme="light"] .lb-content svg [style*="fill: #a9b8c6" i]{fill:#46526a!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#7f90a0" i]{fill:#5a677a;}
+:root[data-theme="light"] .lb-content svg [fill="#7f90a0" i]{fill:#5a677a;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#7f90a0" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #7f90a0" i]{fill:#5a677a!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#7f90a0" i],:root[data-theme="light"] .lb-content svg [style*="fill: #7f90a0" i]{fill:#5a677a!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#c9a84c" i]{fill:#8a6410;}
+:root[data-theme="light"] .lb-content svg [fill="#c9a84c" i]{fill:#8a6410;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#c9a84c" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #c9a84c" i]{fill:#8a6410!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#c9a84c" i],:root[data-theme="light"] .lb-content svg [style*="fill: #c9a84c" i]{fill:#8a6410!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#e8c97a" i]{fill:#8a6410;}
+:root[data-theme="light"] .lb-content svg [fill="#e8c97a" i]{fill:#8a6410;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#e8c97a" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #e8c97a" i]{fill:#8a6410!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#e8c97a" i],:root[data-theme="light"] .lb-content svg [style*="fill: #e8c97a" i]{fill:#8a6410!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#d4903a" i]{fill:#a35d12;}
+:root[data-theme="light"] .lb-content svg [fill="#d4903a" i]{fill:#a35d12;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#d4903a" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #d4903a" i]{fill:#a35d12!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#d4903a" i],:root[data-theme="light"] .lb-content svg [style*="fill: #d4903a" i]{fill:#a35d12!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#e07070" i]{fill:#b3261e;}
+:root[data-theme="light"] .lb-content svg [fill="#e07070" i]{fill:#b3261e;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#e07070" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #e07070" i]{fill:#b3261e!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#e07070" i],:root[data-theme="light"] .lb-content svg [style*="fill: #e07070" i]{fill:#b3261e!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#e86969" i]{fill:#b3261e;}
+:root[data-theme="light"] .lb-content svg [fill="#e86969" i]{fill:#b3261e;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#e86969" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #e86969" i]{fill:#b3261e!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#e86969" i],:root[data-theme="light"] .lb-content svg [style*="fill: #e86969" i]{fill:#b3261e!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#f08a8a" i]{fill:#b3261e;}
+:root[data-theme="light"] .lb-content svg [fill="#f08a8a" i]{fill:#b3261e;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#f08a8a" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #f08a8a" i]{fill:#b3261e!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#f08a8a" i],:root[data-theme="light"] .lb-content svg [style*="fill: #f08a8a" i]{fill:#b3261e!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#ff9c9c" i]{fill:#b3261e;}
+:root[data-theme="light"] .lb-content svg [fill="#ff9c9c" i]{fill:#b3261e;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#ff9c9c" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #ff9c9c" i]{fill:#b3261e!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#ff9c9c" i],:root[data-theme="light"] .lb-content svg [style*="fill: #ff9c9c" i]{fill:#b3261e!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#4acd90" i]{fill:#1a7a4a;}
+:root[data-theme="light"] .lb-content svg [fill="#4acd90" i]{fill:#1a7a4a;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#4acd90" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #4acd90" i]{fill:#1a7a4a!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#4acd90" i],:root[data-theme="light"] .lb-content svg [style*="fill: #4acd90" i]{fill:#1a7a4a!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#3fae7a" i]{fill:#1a7a4a;}
+:root[data-theme="light"] .lb-content svg [fill="#3fae7a" i]{fill:#1a7a4a;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#3fae7a" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #3fae7a" i]{fill:#1a7a4a!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#3fae7a" i],:root[data-theme="light"] .lb-content svg [style*="fill: #3fae7a" i]{fill:#1a7a4a!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#6fd9a3" i]{fill:#1a7a4a;}
+:root[data-theme="light"] .lb-content svg [fill="#6fd9a3" i]{fill:#1a7a4a;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#6fd9a3" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #6fd9a3" i]{fill:#1a7a4a!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#6fd9a3" i],:root[data-theme="light"] .lb-content svg [style*="fill: #6fd9a3" i]{fill:#1a7a4a!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#6fd6a0" i]{fill:#1a7a4a;}
+:root[data-theme="light"] .lb-content svg [fill="#6fd6a0" i]{fill:#1a7a4a;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#6fd6a0" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #6fd6a0" i]{fill:#1a7a4a!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#6fd6a0" i],:root[data-theme="light"] .lb-content svg [style*="fill: #6fd6a0" i]{fill:#1a7a4a!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#6bd9a4" i]{fill:#1a7a4a;}
+:root[data-theme="light"] .lb-content svg [fill="#6bd9a4" i]{fill:#1a7a4a;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#6bd9a4" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #6bd9a4" i]{fill:#1a7a4a!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#6bd9a4" i],:root[data-theme="light"] .lb-content svg [style*="fill: #6bd9a4" i]{fill:#1a7a4a!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#6baad4" i]{fill:#1f5f9e;}
+:root[data-theme="light"] .lb-content svg [fill="#6baad4" i]{fill:#1f5f9e;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#6baad4" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #6baad4" i]{fill:#1f5f9e!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#6baad4" i],:root[data-theme="light"] .lb-content svg [style*="fill: #6baad4" i]{fill:#1f5f9e!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#8dbdf0" i]{fill:#1f5f9e;}
+:root[data-theme="light"] .lb-content svg [fill="#8dbdf0" i]{fill:#1f5f9e;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#8dbdf0" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #8dbdf0" i]{fill:#1f5f9e!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#8dbdf0" i],:root[data-theme="light"] .lb-content svg [style*="fill: #8dbdf0" i]{fill:#1f5f9e!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#8ec1f2" i]{fill:#1f5f9e;}
+:root[data-theme="light"] .lb-content svg [fill="#8ec1f2" i]{fill:#1f5f9e;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#8ec1f2" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #8ec1f2" i]{fill:#1f5f9e!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#8ec1f2" i],:root[data-theme="light"] .lb-content svg [style*="fill: #8ec1f2" i]{fill:#1f5f9e!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#16202e" i]{fill:#eaf0f8;}
+:root[data-theme="light"] .lb-content svg [fill="#16202e" i]{fill:#eaf0f8;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#16202e" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #16202e" i]{fill:#eaf0f8!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#16202e" i],:root[data-theme="light"] .lb-content svg [style*="fill: #16202e" i]{fill:#eaf0f8!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#14532d" i]{fill:#d6f0e0;}
+:root[data-theme="light"] .lb-content svg [fill="#14532d" i]{fill:#d6f0e0;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#14532d" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #14532d" i]{fill:#d6f0e0!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#14532d" i],:root[data-theme="light"] .lb-content svg [style*="fill: #14532d" i]{fill:#d6f0e0!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#bbf7d0" i]{fill:#14532d;}
+:root[data-theme="light"] .lb-content svg [fill="#bbf7d0" i]{fill:#14532d;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#bbf7d0" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #bbf7d0" i]{fill:#14532d!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#bbf7d0" i],:root[data-theme="light"] .lb-content svg [style*="fill: #bbf7d0" i]{fill:#14532d!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#0d2a5a" i]{fill:#dbe7fb;}
+:root[data-theme="light"] .lb-content svg [fill="#0d2a5a" i]{fill:#dbe7fb;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#0d2a5a" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #0d2a5a" i]{fill:#dbe7fb!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#0d2a5a" i],:root[data-theme="light"] .lb-content svg [style*="fill: #0d2a5a" i]{fill:#dbe7fb!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#dce8f5" i]{fill:#0d2a5a;}
+:root[data-theme="light"] .lb-content svg [fill="#dce8f5" i]{fill:#0d2a5a;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#dce8f5" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #dce8f5" i]{fill:#0d2a5a!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#dce8f5" i],:root[data-theme="light"] .lb-content svg [style*="fill: #dce8f5" i]{fill:#0d2a5a!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="#2a1800" i]{fill:#f6e7d0;}
+:root[data-theme="light"] .lb-content svg [fill="#2a1800" i]{fill:#f6e7d0;}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:#2a1800" i],:root[data-theme="light"] .diagram-wrap svg [style*="fill: #2a1800" i]{fill:#f6e7d0!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:#2a1800" i],:root[data-theme="light"] .lb-content svg [style*="fill: #2a1800" i]{fill:#f6e7d0!important;}
+:root[data-theme="light"] .diagram-wrap svg [stroke="#bccad5" i]{stroke:#8a96a8;}
+:root[data-theme="light"] .lb-content svg [stroke="#bccad5" i]{stroke:#8a96a8;}
+:root[data-theme="light"] .diagram-wrap svg [style*="stroke:#bccad5" i],:root[data-theme="light"] .diagram-wrap svg [style*="stroke: #bccad5" i]{stroke:#8a96a8!important;}
+:root[data-theme="light"] .lb-content svg [style*="stroke:#bccad5" i],:root[data-theme="light"] .lb-content svg [style*="stroke: #bccad5" i]{stroke:#8a96a8!important;}
+:root[data-theme="light"] .diagram-wrap svg [stroke="#4a5568" i]{stroke:#8a96a8;}
+:root[data-theme="light"] .lb-content svg [stroke="#4a5568" i]{stroke:#8a96a8;}
+:root[data-theme="light"] .diagram-wrap svg [style*="stroke:#4a5568" i],:root[data-theme="light"] .diagram-wrap svg [style*="stroke: #4a5568" i]{stroke:#8a96a8!important;}
+:root[data-theme="light"] .lb-content svg [style*="stroke:#4a5568" i],:root[data-theme="light"] .lb-content svg [style*="stroke: #4a5568" i]{stroke:#8a96a8!important;}
+:root[data-theme="light"] .diagram-wrap svg [stroke="#5c6f82" i]{stroke:#8a96a8;}
+:root[data-theme="light"] .lb-content svg [stroke="#5c6f82" i]{stroke:#8a96a8;}
+:root[data-theme="light"] .diagram-wrap svg [style*="stroke:#5c6f82" i],:root[data-theme="light"] .diagram-wrap svg [style*="stroke: #5c6f82" i]{stroke:#8a96a8!important;}
+:root[data-theme="light"] .lb-content svg [style*="stroke:#5c6f82" i],:root[data-theme="light"] .lb-content svg [style*="stroke: #5c6f82" i]{stroke:#8a96a8!important;}
+:root[data-theme="light"] .diagram-wrap svg [stroke="#607080" i]{stroke:#8a96a8;}
+:root[data-theme="light"] .lb-content svg [stroke="#607080" i]{stroke:#8a96a8;}
+:root[data-theme="light"] .diagram-wrap svg [style*="stroke:#607080" i],:root[data-theme="light"] .diagram-wrap svg [style*="stroke: #607080" i]{stroke:#8a96a8!important;}
+:root[data-theme="light"] .lb-content svg [style*="stroke:#607080" i],:root[data-theme="light"] .lb-content svg [style*="stroke: #607080" i]{stroke:#8a96a8!important;}
+:root[data-theme="light"] .diagram-wrap svg [stroke="#7f90a0" i]{stroke:#8a96a8;}
+:root[data-theme="light"] .lb-content svg [stroke="#7f90a0" i]{stroke:#8a96a8;}
+:root[data-theme="light"] .diagram-wrap svg [style*="stroke:#7f90a0" i],:root[data-theme="light"] .diagram-wrap svg [style*="stroke: #7f90a0" i]{stroke:#8a96a8!important;}
+:root[data-theme="light"] .lb-content svg [style*="stroke:#7f90a0" i],:root[data-theme="light"] .lb-content svg [style*="stroke: #7f90a0" i]{stroke:#8a96a8!important;}
+:root[data-theme="light"] .diagram-wrap svg [stroke="#c9a84c" i]{stroke:#8a6410;}
+:root[data-theme="light"] .lb-content svg [stroke="#c9a84c" i]{stroke:#8a6410;}
+:root[data-theme="light"] .diagram-wrap svg [style*="stroke:#c9a84c" i],:root[data-theme="light"] .diagram-wrap svg [style*="stroke: #c9a84c" i]{stroke:#8a6410!important;}
+:root[data-theme="light"] .lb-content svg [style*="stroke:#c9a84c" i],:root[data-theme="light"] .lb-content svg [style*="stroke: #c9a84c" i]{stroke:#8a6410!important;}
+:root[data-theme="light"] .diagram-wrap svg [stroke="#3fae7a" i]{stroke:#1a7a4a;}
+:root[data-theme="light"] .lb-content svg [stroke="#3fae7a" i]{stroke:#1a7a4a;}
+:root[data-theme="light"] .diagram-wrap svg [style*="stroke:#3fae7a" i],:root[data-theme="light"] .diagram-wrap svg [style*="stroke: #3fae7a" i]{stroke:#1a7a4a!important;}
+:root[data-theme="light"] .lb-content svg [style*="stroke:#3fae7a" i],:root[data-theme="light"] .lb-content svg [style*="stroke: #3fae7a" i]{stroke:#1a7a4a!important;}
+:root[data-theme="light"] .diagram-wrap svg [stroke="#e86969" i]{stroke:#b3261e;}
+:root[data-theme="light"] .lb-content svg [stroke="#e86969" i]{stroke:#b3261e;}
+:root[data-theme="light"] .diagram-wrap svg [style*="stroke:#e86969" i],:root[data-theme="light"] .diagram-wrap svg [style*="stroke: #e86969" i]{stroke:#b3261e!important;}
+:root[data-theme="light"] .lb-content svg [style*="stroke:#e86969" i],:root[data-theme="light"] .lb-content svg [style*="stroke: #e86969" i]{stroke:#b3261e!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="rgba(255,255,255,0.05)"]{fill:rgba(20,30,50,.045);}
+:root[data-theme="light"] .lb-content svg [fill="rgba(255,255,255,0.05)"]{fill:rgba(20,30,50,.045);}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:rgba(255,255,255,0.05)"]{fill:rgba(20,30,50,.045)!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:rgba(255,255,255,0.05)"]{fill:rgba(20,30,50,.045)!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="rgba(188,202,213,0.08)"]{fill:rgba(20,30,50,.045);}
+:root[data-theme="light"] .lb-content svg [fill="rgba(188,202,213,0.08)"]{fill:rgba(20,30,50,.045);}
+:root[data-theme="light"] .diagram-wrap svg [style*="fill:rgba(188,202,213,0.08)"]{fill:rgba(20,30,50,.045)!important;}
+:root[data-theme="light"] .lb-content svg [style*="fill:rgba(188,202,213,0.08)"]{fill:rgba(20,30,50,.045)!important;}
+:root[data-theme="light"] .diagram-wrap svg [fill="rgba(10,25,47,0.6)"]{fill:rgba(31,95,158,.10);}
+:root[data-theme="light"] .lb-content svg [fill="rgba(10,25,47,0.6)"]{fill:rgba(31,95,158,.10);}
+:root[data-theme="light"] .diagram-wrap svg [fill="rgba(13,33,64,0.7)"]{fill:rgba(31,95,158,.12);}
+:root[data-theme="light"] .lb-content svg [fill="rgba(13,33,64,0.7)"]{fill:rgba(31,95,158,.12);}
+
+/* Bildansicht (Lightbox) im hellen und beigen Design: heller Grund statt Schwarz, Schaubilder wie auf der Seite */
+:root[data-theme="light"] #lb{background:var(--m-bg,#f4f1ea);}
+:root[data-theme="light"] .lb-content{color:#1b2430;--c-gold:#8a6410;--c-gold-l:#7a5710;--c-text:#1b2430;--c-text-b:#0f1620;--c-slate-l:#46526a;--c-red-l:#b3261e;--c-ok:#1a7a4a;--c-blue:#1f5f9e;}
+:root[data-theme="light"] svg.lb-img{background:var(--m-card,#fff);border:1px solid var(--m-line,#dcdcdc);border-radius:14px;}
+:root[data-theme="light"] .lb-content svg text{fill:currentColor;}
+:root[data-theme="light"] img.lb-img{box-shadow:0 2px 16px rgba(0,0,0,.18);}
+:root[data-theme="light"] .lb-x{background:rgba(0,0,0,.08);color:#1b2430;}
+:root[data-theme="light"] .lb-cap{color:#46526a;}
+:root[data-theme="light"] .lb-hint{color:rgba(0,0,0,.5);}
