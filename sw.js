@@ -1,6 +1,7 @@
 const APP_VERSION = '3.2.0'; // keep in sync with js/version.js
 const CACHE = 'bvi-v' + APP_VERSION;
-const PRECACHE = [
+// Kern: wird beim Installieren zwingend geladen (ohne ihn startet die App nicht)
+const CORE = [
   './',
   './index.html',
   './css/style.css',
@@ -16,10 +17,26 @@ const PRECACHE = [
   './js/jg-ui.js',
   './js/app.js',
   './js/idf-data.js',
-  './js/laufbahn-data.js',
   './js/laufbahn.js',
   './js/tour.js',
   './js/game.js',
+  './js/version.js',
+  './manifest.json',
+  './data/plan-overrides.json',
+  './data/speiseplan.json',
+  './icons/icon-192.svg',
+  './icons/icon-512.svg',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/apple-touch-icon.png',
+  './icons/icon-maskable-512.png',
+];
+// Rest: Spiele, Simulationen, Bibliotheken und Bilder – wird nach dem Start im Hintergrund abgelegt (Nachricht WARM) oder beim ersten Aufruf
+const REST = [
+  './js/laufbahn-data.js',
+  './js/scenarios.js',
+  './js/fallbearbeitung.js',
+  './js/changelog-data.js',
   './js/pause.js',
   './js/pause-data.js',
   './js/duell.js',
@@ -48,50 +65,50 @@ const PRECACHE = [
   './embed/lib/react-dom.min.js',
   './js/three.min.js',
   './js/jsqr.min.js',
-  './js/version.js',
   './js/qrcode.min.js',
-  './manifest.json',
-  './data/plan-overrides.json',
-  './data/speiseplan.json',
-  './icons/icon-192.svg',
-  './icons/icon-512.svg',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/apple-touch-icon.png',
-  './icons/icon-maskable-512.png',
-  './img/armaturen/seite01_bild1.png',
-  './img/armaturen/seite01_bild2.png',
-  './img/armaturen/seite02_bild1.png',
-  './img/armaturen/seite04_bild1.png',
-  './img/armaturen/seite04_bild2.png',
-  './img/armaturen/seite04_bild3.png',
-  './img/armaturen/seite05_bild1.png',
-  './img/armaturen/seite05_bild2.png',
-  './img/armaturen/seite05_bild3.png',
-  './img/atemschutz/seite01_bild1.png',
-  './img/atemschutz/seite01_bild2.png',
-  './img/atemschutz/seite01_bild3.png',
-  './img/atemschutz/seite03_bild1.png',
-  './img/atemschutz/seite04_bild1.png',
-  './img/atemschutz/seite04_bild2.png',
-  './img/atemschutz/seite04_bild3.png',
-  './img/atemschutz/seite05_bild1.png',
-  './img/atemschutz/seite06_bild1.png',
-  './img/atemschutz/seite06_bild2.png',
-  './img/atemschutz/seite11_bild1.png',
-  './img/atemschutz/seite11_bild2.png',
-  './img/atemschutz/seite12_bild1.png',
+  './img/armaturen/seite01_bild1.webp',
+  './img/armaturen/seite01_bild2.webp',
+  './img/armaturen/seite02_bild1.webp',
+  './img/armaturen/seite04_bild1.webp',
+  './img/armaturen/seite04_bild2.webp',
+  './img/armaturen/seite04_bild3.webp',
+  './img/armaturen/seite05_bild1.webp',
+  './img/armaturen/seite05_bild2.webp',
+  './img/armaturen/seite05_bild3.webp',
+  './img/atemschutz/seite01_bild1.webp',
+  './img/atemschutz/seite01_bild2.webp',
+  './img/atemschutz/seite01_bild3.webp',
+  './img/atemschutz/seite03_bild1.webp',
+  './img/atemschutz/seite04_bild1.webp',
+  './img/atemschutz/seite04_bild2.webp',
+  './img/atemschutz/seite04_bild3.webp',
+  './img/atemschutz/seite05_bild1.webp',
+  './img/atemschutz/seite06_bild1.webp',
+  './img/atemschutz/seite06_bild2.webp',
+  './img/atemschutz/seite11_bild1.webp',
+  './img/atemschutz/seite11_bild2.webp',
+  './img/atemschutz/seite12_bild1.webp',
 ];
 
 self.addEventListener('install', e => {
-  // Einzeln mit cache:'reload' laden (kein veralteter Browser-Cache) und ablegen;
-  // ein fehlschlagendes Bild verhindert die Installation nicht.
-  e.waitUntil(caches.open(CACHE).then(cache => Promise.all(PRECACHE.map(u =>
+  // Nur der Kern, einzeln mit cache:'reload' (kein veralteter Browser-Cache); fehlt eine Kern-Datei, wird nicht installiert
+  e.waitUntil(caches.open(CACHE).then(cache => Promise.all(CORE.map(u =>
     fetch(new Request(u, { cache: 'reload' }))
       .then(res => { if(!res.ok) throw new Error(u + ' ' + res.status); return cache.put(u, res); })
-      .catch(err => { if(!u.startsWith('./img/')) throw err; })
   ))));
 });
+
+// Den Rest im Hintergrund ablegen; einzelne Fehler (Netz weg, Datei fehlt) sind egal, beim nächsten Start wird nachgeholt
+async function warm(){
+  const cache = await caches.open(CACHE);
+  const todo = [];
+  for(const u of REST) if(!(await cache.match(u))) todo.push(u);
+  while(todo.length){
+    await Promise.all(todo.splice(0, 4).map(u =>
+      fetch(u).then(res => { if(res.ok) return cache.put(u, res); }).catch(() => {})
+    ));
+  }
+}
 
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(keys =>
@@ -119,12 +136,12 @@ self.addEventListener('fetch', e => {
 
   if(isCore){
     // Network-first: immer frisch vom Server, Cache nur als Offline-Fallback
-    // Bei langsamer Verbindung (länger als 3 s) erscheint die gespeicherte Seite sofort; die frische Version wird trotzdem geladen und abgelegt
+    // Bei langsamer Verbindung (länger als 1,5 s) erscheint die gespeicherte Seite sofort; die frische Version wird trotzdem geladen und abgelegt
     const fromCache = () => caches.match(e.request, { ignoreSearch: true })
       .then(r => r || (e.request.mode === 'navigate' ? caches.match('./index.html') : undefined));
     e.respondWith(new Promise(resolve => {
       let done = false;
-      const t = setTimeout(() => { fromCache().then(r => { if(r && !done){ done = true; resolve(r); } }); }, 3000);
+      const t = setTimeout(() => { fromCache().then(r => { if(r && !done){ done = true; resolve(r); } }); }, 1500);
       fetch(e.request, { cache: 'no-cache' }) // immer beim Server nachfragen, nicht aus dem Browser-Zwischenspeicher
         .then(store)
         .then(res => { clearTimeout(t); if(!done){ done = true; resolve(res); } })
@@ -139,4 +156,7 @@ self.addEventListener('fetch', e => {
 });
 
 // Die Seite fragt beim Nutzer nach und löst das Aktualisieren aus (statt automatischem Neuladen)
-self.addEventListener('message', e => { if(e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting(); });
+self.addEventListener('message', e => {
+  if(e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
+  if(e.data && e.data.type === 'WARM') e.waitUntil(warm());
+});

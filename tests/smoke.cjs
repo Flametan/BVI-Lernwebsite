@@ -27,7 +27,8 @@ const EXEC = process.env.PW_EXEC || undefined;
     await page.goto(BASE, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(800);
 
-    const ids = await page.evaluate(() => [...document.querySelectorAll('.view')].map(v => v.id));
+    // auch noch nicht eingesetzte Ansichten (template) öffnen, damit das Einsetzen beim Öffnen mitgetestet wird
+    const ids = await page.evaluate(() => [...document.querySelectorAll('.view, template[data-lazy-view]')].map(v => v.id || v.dataset.lazyView));
     for (const id of ids) {
       await page.evaluate(i => NAV.go(i, i), id);
       await page.waitForTimeout(60);
