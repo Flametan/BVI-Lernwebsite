@@ -4457,6 +4457,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.2.0',ts:'2026-11-06T10:00',items:[
+      'Ladebildschirm: Das Skeleton der Startseite passt auf Tablet und PC zum neuen Aufbau (2. Ausbildungsjahr groß in zwei Spalten, 1. Jahr kompakt darunter).',
       'Einstellungen: Der Knopf „Freiwillige Spende“ ist wieder lesbar (dunkle Schrift auf der Akzentfläche, vorher im dunklen Design unsichtbar).',
       'Startseite (Tablet und PC): Das 2. Ausbildungsjahr steht groß in zwei Spalten, das 1. Jahr folgt kompakt darunter. Bei Münster steht jetzt „VB & Stabsarbeit“ statt „Brandschutz“.',
       'Desktop: Die schmale Seitenleiste klappt beim Darüberfahren über den Inhalt auf (mit Namen der Bereiche). Der Pin zum Anheften ist in der schmalen Leiste nicht mehr zu sehen und erscheint erst beim Aufklappen.',
