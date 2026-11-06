@@ -244,7 +244,7 @@ const GAME=(function(){
   function flameIc(sz){ return svg('flame',sz); }
 
   /* wie bei Duolingo: Flamme leuchtet, sobald heute gelernt wurde; abends ohne Lernen wird die Zahl rot */
-  const chipCls=st=>(st.cur>0&&st.todayDone?' on':'')+(st.risk?' risk':'');
+  const chipCls=st=>(st.cur>0?' on':'')+(st.risk?' risk':'');
   function freezeRow(st){
     const pips=Array.from({length:FZ_MAX},(_,i)=>`<span class="g-fzp${i<st.have?' has':''}">${svg('shield',16)}</span>`).join('');
     return `<div class="g-row"><span class="g-ri">${pips}</span><span class="g-rt"><b>Serien-Schutz: ${st.have} von ${FZ_MAX}</b><span>Fängt einen verpassten Tag ab · alle ${FZ_EVERY} Tage ein neuer</span></span></div>`;
@@ -296,7 +296,7 @@ const GAME=(function(){
   function refresh(){
     const p=document.getElementById('g-panel'), c=document.getElementById('g-chip');
     if(p&&!p.hidden) p.innerHTML=panel();
-    if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.cur>0&&st.todayDone); c.classList.toggle('on',st.cur>0&&st.todayDone); c.classList.toggle('risk',!!st.risk); }
+    if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.cur>0&&st.todayDone); c.classList.toggle('on',st.cur>0); c.classList.toggle('risk',!!st.risk); }
   }
   function setPath(on){ load().path=on?1:0; save(); refresh(); }
   function setOff(off){ load().off=off?1:0; save(); if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome(); }
