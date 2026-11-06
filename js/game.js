@@ -252,9 +252,12 @@ const GAME=(function(){
   ];
   const lastPick={};
   function pick(pool,key){ let i=Math.floor(Math.random()*pool.length); if(pool.length>1&&i===lastPick[key]) i=(i+1+Math.floor(Math.random()*(pool.length-1)))%pool.length; lastPick[key]=i; return pool[i]; }
-  function cheer(kind,label){
+  const REC=['Neuer Rekord!','Bestmarke geknackt!','Persönliche Bestleistung!','Neuer Bestwert!'];
+  /* nach einem Spiel: Glückwunsch; ist es ein neuer Rekord (record = Bestwert als Text), ersetzt „Neuer Rekord“ den Glückwunsch */
+  function cheer(kind,label,record){
     if(load().off) return;
     const now=Date.now(); if(now-(cheer._t||0)<30000) return; cheer._t=now;   // nicht mehrfach kurz hintereinander
+    if(record){ toast(pick(REC,'rec'),(label?label+' · ':'')+record,'star'); confetti(); return; }
     const sub=(kind==='pruefung'?'Prüfung abgeschlossen':'Spiel geschafft')+(label?' · '+label:'');
     toast(pick(CHEER,'cheer'),sub,kind==='pruefung'?'check':'star'); confetti();
   }
@@ -278,7 +281,6 @@ const GAME=(function(){
   const P_DAY=['Die Serie lebt.','Dranbleiben zahlt sich aus.','Jeder Tag zählt, heute auch.','Du bleibst in der Spur.','Gewohnheit schlägt Motivation.'];
   const P_BACK=['Schön, dass du wieder da bist. Zehn Karten sind ein guter Einstieg.','Willkommen zurück. Fang einfach klein an.','Pause vorbei, jetzt geht es weiter.','Gut, dass du wieder dabei bist.'];
   const P_CD={100:'Genug Zeit, wenn du jetzt anfängst.',50:'Halbzeit. Plane feste Lernslots ein.',30:'Noch ein Monat. Jetzt wird wiederholt.',14:'Zwei Wochen. Übe gezielt die schwachen Karten.',7:'Letzte Woche. Ruhig bleiben, Stoff festigen.'};
-  const P_PCT={25:'Das erste Viertel ist geschafft.',50:'Halbzeit, du bist voll im Stoff.',75:'Drei Viertel, bald ist es geschafft.'};
   function checkGoal(){
     if(typeof USAGE==='undefined'||typeof SHELL==='undefined'||!SHELL.goalMin) return;
     const gm=SHELL.goalMin(); if(USAGE.today()>=gm*60) soft('goal:'+today(),'Tagesziel geschafft',pick(P_GOAL(gm),'goal'),'sun',true);
@@ -286,23 +288,6 @@ const GAME=(function(){
   function checkStreakDay(){
     const st=streak(); if(!st.todayDone||st.cur<2||MILES.includes(st.cur)||st.cur%FZ_EVERY===0) return;
     soft('day:'+today(),'Tag '+st.cur+' in Folge',pick(P_DAY,'day'),'flame');
-  }
-  let pinit=false;
-  function progress(){
-    try{
-      if(typeof PROGRESS==='undefined'||typeof SHELL==='undefined'||!SHELL.mods) return;
-      const s=load(), cnt=PROGRESS.counts(), first=!s.seen.pinit;
-      SHELL.mods().forEach(m=>{
-        const c=cnt[m[0]]; if(!c||!c.total) return; const pct=Math.floor(c.done/c.total*100);
-        [25,50,75,100].forEach(th=>{
-          const k='p:'+m[0]+':'+th; if(pct<th||s.seen[k]) return;
-          if(first){ s.seen[k]=today(); return; }
-          if(th===100){ if(soft(k,m[1]+' abgeschlossen','Alle Themen durch. Starke Arbeit!','star',true)) confetti(); }
-          else soft(k,m[1]+': '+th+' % geschafft',P_PCT[th],'check');
-        });
-      });
-      if(first){ s.seen.pinit=today(); save(); }
-    }catch(e){}
   }
   function checkCountdown(){
     if(typeof SHELL==='undefined'||!SHELL.daysToExam) return;
@@ -326,7 +311,7 @@ const GAME=(function(){
     if(st.cur>0&&!st.todayDone&&new Date().getHours()>=RISK_HOUR&&soft('risk:'+today(),'Serie in Gefahr','Deine '+st.cur+'-Tage-Serie läuft heute ab. Eine Karte reicht.','flame')) return;
     checkCountdown();
   }
-  setTimeout(()=>{ progress(); checkStart(); },3600);
+  setTimeout(checkStart,3600);
   document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') setTimeout(checkStart,1200); });
   setInterval(()=>{ if(!document.hidden) checkGoal(); },60000);
   function setSmall(on){ load().small=on?1:0; save(); }
@@ -347,7 +332,7 @@ const GAME=(function(){
       const post=rankOf(s.xp);
       if(post.i>pre.i) toast('Beförderung: '+post.n,GROUPS[post.g].n+' · '+s.xp+' Punkte','star'), confetti();
       save(); refresh();
-      if(type!=='fahrt'){ checkGoal(); checkStreakDay(); progress(); }
+      if(type!=='fahrt'){ checkGoal(); checkStreakDay(); }
     }catch(e){}
   }
 
@@ -532,5 +517,5 @@ const GAME=(function(){
   }
 
   function onShow(id){ if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek(); }
-  return {event,cheer,progress,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
+  return {event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
