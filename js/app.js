@@ -8,6 +8,14 @@ const LAZY=(function(){
   return { script(src){ return P[src]||(P[src]=new Promise((ok,no)=>{ const x=document.createElement('script'); x.src=src; x.onload=ok; x.onerror=()=>{ delete P[src]; x.remove(); no(new Error(src)); }; document.body.appendChild(x); })); } };
 })();
 
+/* ── Eigene history.back()-Aufrufe (z. B. beim Schließen der Bildansicht): das dadurch ausgelöste popstate soll kein anderes Fenster und keine Seitennavigation auslösen.
+   Dieser Wächter ist als erster registriert und schluckt das Ereignis, bevor LP, NAV & Co. es sehen. ── */
+const POPGUARD=(function(){
+  let until=0;
+  window.addEventListener('popstate',e=>{ if(until>Date.now()){ until=0; e.stopImmediatePropagation(); } },true);
+  return { back(){ until=Date.now()+700; try{ history.back(); }catch(e){ until=0; } } };
+})();
+
 const _NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app','v-klausurfragen','v-klausur-0826','v-laufbahn-2023','v-laufbahn-2026']);
 const _GOLD_VIEWS = new Set(['v-vak-klausurvorbereitung','v-feuak-bp-hub','v-feuak-analyse','v-idf-vb','v-idf-stabhub']);
 
@@ -107,7 +115,7 @@ const NAV = (function(){
 
 history.replaceState({home:true},'');
 window.addEventListener('popstate',function(e){
-  if(typeof LIGHTBOX!=='undefined'&&LIGHTBOX.isOpen()){ LIGHTBOX.close(true); return; }
+  if(typeof LIGHTBOX!=='undefined'&&LIGHTBOX.isOpen()){ LIGHTBOX.close(true); e.stopImmediatePropagation(); return; }   // schließt nur die Bildansicht, danach darf kein anderes Fenster mehr auf dieses Ereignis reagieren
   if(typeof OVL!=='undefined'&&OVL.onPop(e,NAV.depth())) return;
   if(e.state&&e.state.stack){
     // Restore stack from state and show the top view
@@ -2913,11 +2921,13 @@ const LP=(function(){
   function back(){ close(false); }
   window.addEventListener('popstate',e=>{
     if(ignorePop){ ignorePop=false; e.stopImmediatePropagation(); return; }
+    // Zurück bei geöffneter Bildansicht schließt nur diese, nicht auch noch das Kapitelfenster
+    if(typeof LIGHTBOX!=='undefined'&&LIGHTBOX.isOpen()){ LIGHTBOX.close(true); e.stopImmediatePropagation(); return; }
     if(cur){ close(true); e.stopImmediatePropagation(); }
   },true);
   document.addEventListener('keydown',e=>{
     if(!cur) return;
-    if(e.key==='Escape'&&!e.defaultPrevented&&!OVL.any()) back();
+    if(e.key==='Escape'&&!e.defaultPrevented&&!OVL.any()){ if(!(typeof LIGHTBOX!=='undefined'&&LIGHTBOX.isOpen())) back(); }   // Esc schließt zuerst die Bildansicht
     else if(cur.focus&&!/INPUT|TEXTAREA|SELECT/.test((e.target&&e.target.tagName)||'')){
       if(e.key==='ArrowRight') go(cur.i+1); else if(e.key==='ArrowLeft') go(cur.i-1);
     }
@@ -5425,7 +5435,7 @@ const LIGHTBOX=(function(){
     if(!open) return;
     open=false; box.hidden=true; content.replaceChildren(); pts.clear();
     document.documentElement.classList.remove('lb-open');
-    if(!fromPop){ try{ history.back(); }catch(e){} }
+    if(!fromPop) POPGUARD.back();   // den eigenen Verlaufseintrag entfernen, ohne dass ein offenes Kapitelfenster oder die Seite dahinter mitgeschlossen wird
   }
   document.addEventListener('click',e=>{
     if(open) return;

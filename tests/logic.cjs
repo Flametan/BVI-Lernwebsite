@@ -233,6 +233,23 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   eq('Laufbahn: Passwortfeld öffnet; falsch = rot; richtig = grüner Haken, danach die Laufbahn-Seite', [lbf.open, lbf.bad, lbf.cleared, lbf.okState, lbf.stillHere, lbf.view, lbf.closed], [true, true, true, true, 'v-pruefung', 'v-lb-start', true]);
 
+  // ── Bildansicht schließen: bleibt im Kapitel (Tippen/✕/Esc und Zurück-Taste) ──
+  const lbx = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), res = {};
+    NAV.home(); await w(150);
+    NAV.go('v-feuak-vwl', 'VWL'); await w(300);
+    const v = document.getElementById('v-feuak-vwl'), its = [...v.querySelectorAll('.pc .acc-item')], i = its.findIndex(d => d.querySelector('.diagram-wrap svg'));
+    const state = () => ({ lp: LP.isOpen(), lb: !!document.getElementById('lb') && !document.getElementById('lb').hidden, view: document.querySelector('.view.active').id });
+    const openBox = async () => { document.querySelector('.lp-wbody .diagram-wrap svg').dispatchEvent(new MouseEvent('click', { bubbles: true })); await w(250); };
+    v.querySelector('.lp-card[data-i="' + i + '"]').click(); await w(400);
+    await openBox(); res.opened = state().lb;
+    document.querySelector('#lb .lb-x').click(); await w(700); res.afterX = state();
+    await openBox(); document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(700); res.afterEsc = state();
+    await openBox(); history.back(); await w(700); res.afterBack = state();
+    LP.back(); await w(500); NAV.home(); return res;
+  });
+  eq('Bildansicht: Schließen mit ✕, Esc und Zurück-Taste lässt das Kapitelfenster offen', [lbx.opened, lbx.afterX, lbx.afterEsc, lbx.afterBack], [true, { lp: true, lb: false, view: 'v-feuak-vwl' }, { lp: true, lb: false, view: 'v-feuak-vwl' }, { lp: true, lb: false, view: 'v-feuak-vwl' }]);
+
   // ── Suche springt ins Kapitel, Vorlesefunktion ist entfernt ──
   const sj = await page.evaluate(async () => {
     NAV.home();
