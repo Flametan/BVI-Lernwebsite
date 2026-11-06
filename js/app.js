@@ -4456,7 +4456,7 @@ const CHANGELOG=(function(){
     return`${d.getDate()}. ${_MON[d.getMonth()]} ${d.getFullYear()}`;
   }
   const ENTRIES=[
-    {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+    {v:'3.2.0',ts:'2026-11-06T10:00',items:[
       'Einstellungen: Der Knopf „Freiwillige Spende“ ist wieder lesbar (dunkle Schrift auf der Akzentfläche, vorher im dunklen Design unsichtbar).',
       'Startseite (Tablet und PC): Das 2. Ausbildungsjahr steht groß in zwei Spalten, das 1. Jahr folgt kompakt darunter. Bei Münster steht jetzt „VB & Stabsarbeit“ statt „Brandschutz“.',
       'Desktop: Die schmale Seitenleiste klappt beim Darüberfahren über den Inhalt auf (mit Namen der Bereiche). Der Pin zum Anheften ist in der schmalen Leiste nicht mehr zu sehen und erscheint erst beim Aufklappen.',
