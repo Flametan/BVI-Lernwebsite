@@ -3774,3 +3774,6 @@ html.lp-lock #m-topbar #m-back{visibility:hidden;pointer-events:none;}
 .search-overlay.lbf-at{display:block;padding:0;}
 .search-overlay.lbf-at .search-box{position:absolute;margin:0;max-width:none;}
 .lbf-box .lbf-input,.lbf-box .lbf-input:focus,.lbf-box .lbf-input:focus-visible{border:0!important;outline:none!important;box-shadow:none!important;background:transparent!important;}
+.lbf-enter{background:var(--m-accent,var(--c-gold))!important;color:var(--m-on-accent,#1c1c1c)!important;}
+.lbf-box.lbf-ok .lbf-enter{background:#2fbf71!important;color:#fff!important;}
+.lbf-box.lbf-bad .lbf-enter{background:#e5484d!important;color:#fff!important;}
