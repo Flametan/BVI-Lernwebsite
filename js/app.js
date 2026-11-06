@@ -2803,7 +2803,11 @@ const LP=(function(){
   const FZ=[15,16,18,20,22,24];
   function fzIdx(){ try{ const i=parseInt(localStorage.getItem('bvi_lp_fz'),10); return i>=0&&i<FZ.length?i:2; }catch(e){ return 2; } }
   function fz(d){ const i=Math.max(0,Math.min(FZ.length-1,fzIdx()+d)); try{ localStorage.setItem('bvi_lp_fz',String(i)); }catch(e){} applyFz(); }
-  function applyFz(){ win&&win.style.setProperty('--lp-fz',FZ[fzIdx()]+'px'); }
+  function applyFz(){ win&&win.style.setProperty('--lp-fz',FZ[fzIdx()]+'px'); requestAnimationFrame(fitTables); }
+  // Tabellen, die in die Breite passen, scrollen nicht seitlich: sie geben das waagerechte Wischen an den Kapitelwechsel ab
+  // (sonst übernimmt der Browser die Geste und die Wisch-Ereignisse brechen ab). Breite Tabellen scrollen weiter selbst.
+  function fitTables(){ if(!win) return; win.querySelectorAll('.lp-wbody .tbl-wrap').forEach(w=>w.classList.toggle('tw-fit',w.clientWidth>0&&w.scrollWidth<=w.clientWidth+1)); }
+  window.addEventListener('resize',()=>{ if(cur) requestAnimationFrame(fitTables); });
   // Lage des Kapitel-Fensters: links/Breite wie die Seite, unten bis zur Tab-Leiste (nur wenn sie sichtbar ist; sonst Wert entfernen, z. B. nach Drehen aufs Querformat)
   function place(){
     if(!win||!cur) return;

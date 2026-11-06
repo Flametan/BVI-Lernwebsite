@@ -50,7 +50,7 @@ const EXEC = process.env.PW_EXEC || undefined;
     await page.evaluate(() => {
       NAV.go('v-gal-atemschutz', 'x');
       document.querySelector('#v-gal-atemschutz details').open = true;
-      document.querySelector('#v-gal-atemschutz img.pdf-img').click();
+      document.querySelector('#v-gal-atemschutz .pdf-dg svg').dispatchEvent(new MouseEvent('click', { bubbles: true }));
     });
     if (!(await page.evaluate(() => LIGHTBOX.isOpen()))) errors.push('Bild-Vergrößerung öffnet nicht');
     await page.evaluate(() => LIGHTBOX.close(true));

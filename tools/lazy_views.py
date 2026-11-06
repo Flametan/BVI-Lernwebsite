@@ -50,9 +50,12 @@ def main():
     h = open(PATH, encoding='utf-8').read()
     # Nur Ansichten auf oberster Ebene des <body>-Inhalts; Vorkommen in Kommentaren oder Skripten zählen nicht
     out, pos, n, moved = [], 0, 0, []
+    # schon verpackte Ansichten (template) nicht noch einmal verpacken
+    done = [(m.start(), m.end()) for m in re.finditer(r'<template data-lazy-view="[\w-]+">.*?</template>', h, re.S)]
+    inside = lambda i: any(a <= i < b for a, b in done)
     pat = re.compile(r'<div id="(v-[\w-]+)" class="(view[^"]*)"[^>]*>')
     for m in pat.finditer(h):
-        if m.start() < pos:
+        if m.start() < pos or inside(m.start()):
             continue
         vid = m.group(1)
         if vid in EAGER:
