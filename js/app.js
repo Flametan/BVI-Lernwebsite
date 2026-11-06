@@ -1308,14 +1308,14 @@ const SEARCH = (function(){
       inp.value = ''; inp.focus(); render(''); syncClear();
       // Icon Expand: der runde Knopf zieht sich zur Suchleiste auf, der Platzhalter wird getippt
       const box=document.querySelector('#search-overlay .search-box');
-      if(box&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+      if(box&&!false){
         this.expand(box,trigger);
         typePlaceholder(inp);
       }
     },
     // Icon Expand: das Feld wächst aus dem angetippten Symbol/Knopf heraus (auch für das Passwortfeld der Laufbahn)
     expand(box,trigger){
-      if(!box||matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+      if(!box||false) return;
       box.classList.remove('sr-expand');
       if(trigger&&trigger.getBoundingClientRect&&box.animate){
         const t=trigger.getBoundingClientRect(), r=box.getBoundingClientRect();
@@ -1329,7 +1329,7 @@ const SEARCH = (function(){
     clearField(){
       const inp=document.getElementById('search-input'), fall=document.getElementById('search-fall'); if(!inp) return;
       const txt=inp.value; clearTimeout(_debounceTimer);
-      if(txt&&fall&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+      if(txt&&fall&&!false){
         fall.innerHTML=[...txt].map((c,i)=>`<i style="--dx:${(Math.random()*30-15).toFixed(0)}px;--r:${(Math.random()*80-40).toFixed(0)}deg;animation-delay:${i*18}ms">${c===' '?'&nbsp;':xss(c)}</i>`).join('');
         setTimeout(()=>{ fall.innerHTML=''; }, 650+txt.length*18);
       }
@@ -1338,7 +1338,7 @@ const SEARCH = (function(){
     // Search Loading: beim Absenden dreht sich das Symbol, Platzhalter-Zeilen schimmern, dann blenden die Treffer ein
     load(q){
       const el=document.getElementById('search-results'), ic=document.querySelector('#search-overlay .search-ic'); if(!el) return;
-      if(matchMedia('(prefers-reduced-motion:reduce)').matches){ render(q); return; }
+      if(false){ render(q); return; }
       if(ic) ic.classList.add('sr-spin');
       el.innerHTML='<div class="sr-skel" aria-hidden="true">'+'<div class="sr-sk-row"><i></i><b></b><u></u></div>'.repeat(4)+'</div>';
       setTimeout(()=>{ render(q); el.classList.remove('sr-fade'); void el.offsetWidth; el.classList.add('sr-fade'); if(ic) ic.classList.remove('sr-spin'); },520);
@@ -2857,7 +2857,7 @@ const LP=(function(){
   // Konflikte: Wischen in waagerecht scrollbaren Tabellen/Schaubildern, am Bildschirmrand (Zurück-Geste), mit Markierung, beim Zoomen
   // und in Eingabefeldern löst keinen Kapitelwechsel aus; ein Wisch löst kein Antippen (Bild vergrößern) aus.
   function swipe(el){
-    const THR=80, EDGE=44, reduce=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const THR=80, EDGE=44, reduce=()=>window.matchMedia&&false;
     let x0=0, y0=0, live=false, moved=false, dx=0, pid=-1, lt=0, lx=0, vx=0, mute=0;
     const hscroll=t=>{ for(let n=t;n&&n!==el;n=n.parentElement){ if(n.scrollWidth>n.clientWidth+1){ const o=getComputedStyle(n).overflowX; if(o==='auto'||o==='scroll') return true; } } return false; };
     const rest=()=>{ el.style.transform=''; el.style.opacity=''; };

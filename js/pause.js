@@ -5,7 +5,7 @@
 const PAUSE=(function(){
   const D=typeof PAUSE_DATA!=='undefined'?PAUSE_DATA:{allg:{},fw:{},exam:[]};
   const MKEY='bvi_pause_mode',BKEY='bvi_pause_best';
-  const RM=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches); // Bewegung reduzieren: Szene ohne Wackeln, weniger Partikel
+  const RM=!!(window.matchMedia&&false); // Bewegung reduzieren: Szene ohne Wackeln, weniger Partikel
   const say=m=>{ if(typeof A11Y!=='undefined') A11Y.say(m); };
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};

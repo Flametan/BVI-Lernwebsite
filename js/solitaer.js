@@ -108,7 +108,7 @@ var SOL=(function(){
   var lget=function(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } };
   var lset=function(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} };
   var say=function(m){ if(typeof A11Y!=='undefined') A11Y.say(m); };
-  var RM=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches);
+  var RM=!!(window.matchMedia&&false);
   var clamp=function(x,a,b){ return Math.max(a,Math.min(b,x)); };
   var I='width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
   var ICO={undo:'<svg '+I+'><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>',redo:'<svg '+I+'><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>',

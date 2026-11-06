@@ -57,7 +57,7 @@ const LB=(function(){
   // Prüfungsliste: Antippen der gesperrten Zeile öffnet nur ein Passwortfeld, das wie die Suche aus dem Knopf herauswächst.
   // Falsch: rotes Wackeln. Richtig: grüner Haken, dann geht es auf die Laufbahn-Seite.
   let lastFocus=null, okTimer=0;
-  const reduce=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const reduce=()=>window.matchMedia&&false;
   function closeModal(){
     const o=$('lb-field'); if(!o||o.classList.contains('hidden')) return;
     clearTimeout(okTimer); o.classList.add('hidden');

@@ -24,7 +24,7 @@ var ORANGE=new THREE.Color(0xf47c06);
 var CX=G.w/2, CZ=G.h/2;
 var FOV=38, TANH=Math.tan(FOV*Math.PI/360);
 var EL_TILT=0.92, EL_TOP=1.53, AZ0=-0.32;
-var reduced=false; try{reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+var reduced=false; try{reduced=false;}catch(e){}
 
 function wp(p){return [p[0]-CX,p[1]-CZ];}
 function shapeOf(pts){var s=new THREE.Shape();pts.forEach(function(p,i){var q=wp(p);if(i)s.lineTo(q[0],-q[1]);else s.moveTo(q[0],-q[1]);});return s;}

@@ -390,8 +390,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   eq('Meldungen werden angesagt', ax.live, 'Test-Meldung');
   ok('Sprunglink vorhanden', ax.skip);
   ok('Abkürzungs-Suche hat einen Namen', ax.abk === 'Abkürzungen durchsuchen');
-  const css = await page.evaluate(async () => { const t = await (await fetch('css/style.css')).text(); return { rm: /prefers-reduced-motion:reduce\)\{\s*html\{scroll-behavior:auto!important/.test(t), fv: /:focus-visible\{outline:2px solid/.test(t), coarse: /Klickflächen auf Touch-Geräten mindestens 44 px/.test(t) }; });
-  ok('CSS: Bewegung reduzieren, Fokusrahmen und 44-px-Klickflächen vorhanden', css.rm && css.fv && css.coarse);
+  const css = await page.evaluate(async () => { const t = await (await fetch('css/style.css')).text(); return { rm: !/prefers-reduced-motion/.test(t), fv: /:focus-visible\{outline:2px solid/.test(t), coarse: /Klickflächen auf Touch-Geräten mindestens 44 px/.test(t) }; });
+  ok('CSS: keine Bewegung-reduzieren-Regeln mehr, Fokusrahmen und 44-px-Klickflächen vorhanden', css.rm && css.fv && css.coarse);
 
   // ── Einstellungen: Gruppen klappen auf, nur eine ist offen, Spende bleibt sichtbar ──
   const acc = await page.evaluate(async () => {
