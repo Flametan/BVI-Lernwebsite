@@ -234,13 +234,41 @@ const GAME=(function(){
     const ctx=context();
     BADGES.forEach(b=>{ if(!s.badges[b.id]&&b.ok(ctx)){ s.badges[b.id]=Date.now(); toast('Neues Abzeichen: '+b.n,'Titel „'+b.t+'“ freigeschaltet',b.ic); if(!s.title) s.title=b.t; } });
   }
+
+  /* ── Glückwünsche und Motivation (Gooey Drop) ── */
+  const CHEER=['Glückwunsch!','Stark gemacht!','Sehr gut!','Das war stark!','Gut gemacht!','Hervorragend!','Top Leistung!','Starke Leistung!','Bravo!','Geschafft!',
+    'Das sitzt!','Genau so!','Klasse gemacht!','Respekt!','Sauber durchgezogen!','Großartig!','Weiter so!','Ein Schritt weiter!','Das hast du dir verdient!','Auf dich ist Verlass!',
+    'Ordentlich geleistet!','Voll im Soll!','Einsatz erfolgreich!','Aufgabe erfüllt!','Wie ein Profi!','Das war souverän!','Richtig stark!','Mit Bravour!','Alle Achtung!','Du bist dabei!',
+    'Genau richtig!','Beeindruckend!','Das lief rund!','Fleiß zahlt sich aus!','Starker Auftritt!','Mission erfüllt!','Ein Erfolg mehr!','Das macht Eindruck!','Du bleibst dran!','Ausgezeichnet!'];
+  /* Lernkarten: alle 10 Karten am Tag ein Text; je mehr Karten, desto kräftiger die Motivation */
+  const MOTI=[
+    ['Guter Start – bleib dran.','Die ersten zehn sind im Kasten.','Kleine Schritte, große Wirkung.','So fängt jede Prüfungsvorbereitung an.','Zehn Karten, zehn Mal klüger.','Schön, dass du heute lernst.'],
+    ['Zwanzig! Du kommst in den Fluss.','Das wird zur Routine – stark.','Dein Wissen wächst mit jeder Karte.','Jetzt läuft es, weiter so.','Wiederholung ist der Schlüssel, du lebst es.','Genau so prägt sich der Stoff ein.'],
+    ['Dreißig Karten – das ist echte Ausdauer.','Du bist im Flow, nicht bremsen!','Das merkt sich dein Kopf bis zur Prüfung.','Dein zukünftiges Ich sagt Danke.','Du ziehst heute richtig durch.','Das Wissen sitzt immer fester.'],
+    ['Vierzig! Das ist Prüfungsniveau.','Disziplin schlägt Talent, und du hast Disziplin.','Du setzt dich gerade von der Masse ab.','So bestehen Leute, die dranbleiben.','Kaum zu stoppen heute.','Jede Karte bringt dich näher ans Ziel.'],
+    ['Fünfzig Karten! Das ist ein Statement.','Du lernst heute wie ein Profi.','Solche Tage entscheiden Prüfungen.','Respekt vor deinem Durchhaltevermögen.','Das ist Leistungssport für den Kopf.','Heute bist du nicht aufzuhalten.'],
+    ['Unaufhaltsam! Du spielst in einer eigenen Liga.','Das ist Höherer-Dienst-Niveau.','Legendärer Lerntag, gönn dir gleich eine Pause.','Mehr als der Plan verlangt, das ist Einsatz.','Wahnsinn, was du heute schaffst.','Du hast dir heute allen Respekt verdient.']
+  ];
+  const lastPick={};
+  function pick(pool,key){ let i=Math.floor(Math.random()*pool.length); if(pool.length>1&&i===lastPick[key]) i=(i+1+Math.floor(Math.random()*(pool.length-1)))%pool.length; lastPick[key]=i; return pool[i]; }
+  function cheer(kind,label){
+    if(load().off) return;
+    const now=Date.now(); if(now-(cheer._t||0)<30000) return; cheer._t=now;   // nicht mehrfach kurz hintereinander
+    const sub=(kind==='pruefung'?'Prüfung abgeschlossen':'Spiel geschafft')+(label?' · '+label:'');
+    toast(pick(CHEER,'cheer'),sub,kind==='pruefung'?'check':'star'); confetti();
+  }
+  function cardCheer(n){
+    const tier=Math.min(MOTI.length,Math.floor(n/10))-1;
+    toast(n+' Lernkarten heute',pick(MOTI[tier],'m'+tier),['check','bolt','flame','star','star','flame'][tier]);
+    if(tier>=2) confetti();
+  }
   function event(type,ok){
     try{
       const s=load(), pre=rankOf(s.xp), rec=dayRec(today());
       let gain=0;
-      if(type==='card'){ if(ok){ gain=2; rec.cards++; s.tot.cards++; } }
+      if(type==='card'){ if(ok){ gain=2; rec.cards++; s.tot.cards++; } rec.cd=(rec.cd|0)+1; if(rec.cd%10===0) cardCheer(rec.cd); }
       else if(type==='quiz'){ rec.quiz++; if(ok){ gain=3; rec.quizOk++; s.tot.quizOk++; } else gain=1; }
-      else if(type==='fahrt'){ gain=20; if(ok) s.tot.fahrt++; }
+      else if(type==='fahrt'){ gain=20; if(ok){ s.tot.fahrt++; cheer('spiel','Einsatzfahrt'); } }
       if(type==='card'||type==='quiz'){
         if(ok){ combo++; s.tot.combo=Math.max(s.tot.combo,combo); if(combo>=5&&combo%5===0){ comboPill(combo); if(combo%10===0) confetti(); } }
         else combo=0;
@@ -434,5 +462,5 @@ const GAME=(function(){
   }
 
   function onShow(id){ if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek(); }
-  return {event,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
+  return {event,cheer,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
