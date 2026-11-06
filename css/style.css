@@ -3687,3 +3687,22 @@ button.g-rank-go:active{background:var(--m-raised);}
 .g-shcard .g-empty{margin-top:8px;}
 .g-btn{flex:1 1 140px;min-height:46px;border:0;border-radius:14px;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);font-family:inherit;font-weight:700;font-size:.92rem;cursor:pointer;}
 .g-btn.alt{background:var(--m-raised);color:var(--m-fg);}
+/* Tablet: beide Ausbildungsjahre nebeneinander, ohne seitlich aus dem Bild zu laufen */
+@media(min-width:701px){
+  .m-mods .m-modgrid2{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px;}
+  .m-yl{min-width:0;}
+  .m-modrow{min-width:0;}
+  .m-modrow .m-tx{min-width:0;}
+  .m-modrow .m-t1,.m-modrow .m-t2{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .m-seg2{padding:0 2px 12px;}
+}
+/* Tablet (701–1099 px): Cloud und Spende links, Wochenübersicht rechts, darunter die Standorte über die volle Breite */
+@media(min-width:701px) and (max-width:1099px){
+  #m-home .m-hgrid{grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto;gap:16px;align-items:start;}
+  #m-home .m-hl,#m-home .m-hr2{display:contents;}
+  .m-cloud{grid-column:1;grid-row:1;align-self:start;}
+  .m-donate-home{grid-column:1;grid-row:2;align-self:start;}
+  .m-chart2{grid-column:2;grid-row:1 / span 2;}
+  .m-mods{grid-column:1 / -1;grid-row:3;}
+  .m-modrow .m-t1,.m-modrow .m-t2{white-space:normal;}
+}
