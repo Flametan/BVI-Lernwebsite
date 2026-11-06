@@ -3663,7 +3663,7 @@ button.g-row{cursor:pointer;min-height:44px;}
 #g-combo{position:fixed;left:50%;bottom:calc(var(--m-tabbar-h,62px) + 22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,12px);opacity:0;z-index:9000;pointer-events:none;display:flex;align-items:center;gap:6px;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);border-radius:99px;padding:8px 14px;font-size:.86rem;transition:opacity .2s,transform .2s;}
 #g-combo.on{opacity:1;transform:translate(-50%,0);}
 @media(prefers-reduced-motion:reduce){#g-combo{transition:none;}}
-@media(min-width:701px){.g-panel{max-width:620px;}}
+
 /* Schriftgröße: Marke folgt dem Regler ohne Nachlaufen */
 .fs-tag{transition:none;}
 /* Serie: Puls-Ring um das Flammen-Symbol (grau ohne Serie für heute, orange bei aktiver Serie) */

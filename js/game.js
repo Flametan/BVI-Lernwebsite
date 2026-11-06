@@ -336,21 +336,45 @@ const GAME=(function(){
     _blob=null;
     weekImage().then(b=>{ _blob=b; if(!b) return; if(_url) URL.revokeObjectURL(_url); _url=URL.createObjectURL(b); const im=document.getElementById('g-wimg'); if(im) im.src=_url; });
   }
-  function note(btn,m){ const msg=btn.closest('.g-shcard').querySelector('.g-sh-msg'); if(msg){ msg.textContent=m; setTimeout(()=>{ msg.textContent=''; },3000); } }
+  function note(btn,m,ok){
+    const msg=btn&&btn.closest&&btn.closest('.g-shcard')&&btn.closest('.g-shcard').querySelector('.g-sh-msg');
+    if(msg){ msg.textContent=m; clearTimeout(note._t); note._t=setTimeout(()=>{ msg.textContent=''; },5000); }
+    if(m&&typeof TOAST!=='undefined') TOAST.show(m,ok?{type:'ok'}:undefined);
+  }
+  const b64=blob=>new Promise(res=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(',')[1]||''); r.onerror=()=>res(''); r.readAsDataURL(blob); });
+  const nat=fn=>typeof window.BVIAndroid!=='undefined'&&window.BVIAndroid&&typeof window.BVIAndroid[fn]!=='undefined';
   async function share(btn){
-    const blob=_blob||await weekImage(), txt=weekText();
-    const file=new File([blob],'lernwoche.png',{type:'image/png'});
+    note(btn,'Bild wird vorbereitet …');
     try{
-      if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:'Meine Lernwoche',text:'Meine Lernwoche in der B-VI-App'}); return; }
-      if(navigator.share){ await navigator.share({title:'Meine Lernwoche',text:txt}); return; }
-    }catch(e){ if(e&&e.name==='AbortError') return; }
-    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(()=>note(btn,'Text kopiert. Das Bild kannst du speichern und selbst teilen.'),()=>note(btn,'Bitte speichere das Bild.')); }
-    else note(btn,'Bitte speichere das Bild und teile es selbst.');
+      const blob=_blob||await weekImage(), txt=weekText();
+      // Android-App: eigenes Teilen-Menü über die App
+      if(nat('shareImage')){
+        const ok=BVIAndroid.shareImage('lernwoche.png',await b64(blob),'Meine Lernwoche in der B-VI-App');
+        note(btn,ok?'Teilen-Menü wird geöffnet …':'Teilen fehlgeschlagen. Bitte Speicherzugriff erlauben und erneut tippen.',ok); return;
+      }
+      const file=new File([blob],'lernwoche.png',{type:'image/png'});
+      try{
+        if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:'Meine Lernwoche',text:'Meine Lernwoche in der B-VI-App'}); note(btn,'Geteilt',true); return; }
+        if(navigator.share){ await navigator.share({title:'Meine Lernwoche',text:txt}); note(btn,'Geteilt',true); return; }
+      }catch(e){ if(e&&e.name==='AbortError'){ note(btn,''); return; } }
+      // Ältere App-Version oder Browser ohne Teilen: Text kopieren und Hinweis geben
+      let copied=false;
+      try{ await navigator.clipboard.writeText(txt); copied=true; }catch(e){}
+      note(btn,(copied?'Text kopiert. ':'')+(window.BVIAndroid?'Zum Teilen des Bildes bitte die App aktualisieren.':'Dein Gerät kann Bilder hier nicht teilen. Nutze „Bild speichern“.'),copied);
+    }catch(e){ note(btn,'Teilen fehlgeschlagen'); }
   }
   async function saveImg(btn){
-    const blob=_blob||await weekImage(), u=URL.createObjectURL(blob), a=document.createElement('a');
-    a.href=u; a.download='lernwoche.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000);
-    note(btn,'Bild gespeichert. Falls nichts passiert: Vorschau gedrückt halten.');
+    try{
+      const blob=_blob||await weekImage();
+      if(nat('saveImage')){
+        const ok=BVIAndroid.saveImage('lernwoche.png',await b64(blob));
+        note(btn,ok?'Bild in der Galerie gespeichert (Ordner Bilder/B VI)':'Speichern fehlgeschlagen. Bitte Speicherzugriff erlauben und erneut tippen.',ok); return;
+      }
+      if(window.BVIAndroid){ note(btn,'Zum Speichern des Bildes bitte die App aktualisieren.'); return; }
+      const u=URL.createObjectURL(blob), a=document.createElement('a');
+      a.href=u; a.download='lernwoche.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000);
+      note(btn,'Bild gespeichert',true);
+    }catch(e){ note(btn,'Speichern fehlgeschlagen'); }
   }
 
   function onShow(id){ if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek(); }

@@ -4457,6 +4457,8 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Wochen-Rückblick: „Teilen“ und „Bild speichern“ funktionieren jetzt in der Android-App (Teilen-Menü mit WhatsApp und Instagram, Bild landet in Bilder/B VI) und zeigen immer eine Rückmeldung. Dafür ist die neue App-Version nötig.',
+      'Das aufgeklappte Belohnungsfeld auf der Startseite reicht auf Tablet und PC immer bis zum Rand.',
       'Serie: Flamme und Puls-Ring sind orange, sobald eine Serie läuft (auch wenn du heute noch nicht gelernt hast), und nur ohne Serie grau.',
       'Ladebildschirm: Auf Tablet und PC entspricht das Skeleton der Startseite jetzt dem neuen Aufbau (Cloud und Spende, Wochenübersicht, Lernstoff mit beiden Ausbildungsjahren). Auch auf dem Handy sitzen „Lernstoff“ und die Serie wie in der App.',
       'Tablet: Die Startseite ist neu angeordnet. Die Standorte beider Ausbildungsjahre stehen nebeneinander über die volle Breite und laufen nicht mehr seitlich aus dem Bild; „Lernstoff“ und die Serie sitzen darüber.',
