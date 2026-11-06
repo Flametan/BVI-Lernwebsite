@@ -232,7 +232,7 @@ const GAME=(function(){
       settleFreeze(); evaluate(); milestones();
       const post=rankOf(s.xp);
       if(post.i>pre.i) toast('Beförderung: '+post.n,GROUPS[post.g].n+' · '+s.xp+' Punkte','star'), confetti();
-      save(); refresh(); pushIcon();
+      save(); refresh();
     }catch(e){}
   }
 
@@ -298,23 +298,8 @@ const GAME=(function(){
     if(p&&!p.hidden) p.innerHTML=panel();
     if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.cur>0&&st.todayDone); c.classList.toggle('on',st.cur>0&&st.todayDone); c.classList.toggle('risk',!!st.risk); }
   }
-  // Android-App: Startsymbol mit kleiner Flamme (brennt / wird schwach); Serie und Tag des letzten Lernens an die App melden
-  let iconT=0;
-  function pushIcon(){
-    clearTimeout(iconT);
-    iconT=setTimeout(()=>{
-      if(!window.BVIAndroid||!BVIAndroid.setStreak) return;
-      try{
-        const st=streak(), y=new Date(); y.setDate(y.getDate()-1);
-        BVIAndroid.setStreak(load().off?0:st.cur, st.cur>0?(st.todayDone?today():dkey(y)):'');
-      }catch(e){}
-    },800);
-  }
-  try{ if(settleFreeze()) save(); }catch(e){}
-  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') pushIcon(); });
-  setTimeout(pushIcon,3000);
   function setPath(on){ load().path=on?1:0; save(); refresh(); }
-  function setOff(off){ load().off=off?1:0; save(); pushIcon(); if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome(); }
+  function setOff(off){ load().off=off?1:0; save(); if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome(); }
   function isOn(){ return !load().off; }
 
   function renderGame(){
@@ -429,5 +414,5 @@ const GAME=(function(){
   }
 
   function onShow(id){ if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek(); }
-  return {event,pushIcon,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
+  return {event,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
