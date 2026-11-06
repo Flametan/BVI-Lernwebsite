@@ -32,6 +32,7 @@ const TOUR=(function(){
     {t:'Tab: Pausenraum',x:'Im Pausenraum warten Spiele wie die Einsatzfahrt – mit Fragen aus den Prüfungen, die du mit ★ als wichtig markiert hast.',go:tab('v-pause','Pausenraum'),target:()=>tabEl('pause')},
     {t:'Tab: Einstellungen',x:'Hier stellst du Aussehen, Lernziele und Erinnerungen ein und sicherst deine Daten. Diese Tour findest du hier unter „App vorstellen“.',go:tab('v-settings','Einstellungen'),target:()=>tabEl('settings')},
     {t:'Lehrgang',x:'Hier wählst du deinen Lehrgang. Für andere Lehrgänge kannst du eigene Inhalte ergänzen und selbst festlegen, welche Prüfungen mit ★ wichtig sind.',go:tab('v-settings','Einstellungen'),target:accOf('acc-lg-h')},
+    {t:'Export und Import',x:'Deine Ergänzungen – eigene Kapitel, Prüfungen, Stundenpläne und Lernkarten – exportierst du als Datei und schickst sie an deinen Jahrgang. Mit „Jahrgang importieren“ spielst du die Datei von anderen oder vom Jahrgang davor ein.',go:tab('v-settings','Einstellungen'),open:'acc-lg-h',when:()=>typeof JG!=='undefined'&&!JG.isMaster(),target:accOf('acc-lg-h')},
     {t:'Aussehen',x:'Farbschema (Dunkel, Hell, Beige), Akzentfarbe, Schriftgröße und die Navigationsleiste unten richtest du hier ein.',go:tab('v-settings','Einstellungen'),target:accOf('acc-dar-h')},
     {t:'Lernen &amp; Erinnerung',x:'Dein Tagesziel, der Timer bei Klausuren, der Termin der nächsten Klausur und eine tägliche Erinnerung zur Uhrzeit deiner Wahl.',go:tab('v-settings','Einstellungen'),target:accOf('acc-ler-h')},
     {t:'Daten &amp; Werkzeuge',x:'Hier sicherst du deine Daten und spielst sie wieder ein. Außerdem findest du Notizen, Lesezeichen, Pomodoro-Timer und die Abkürzungen.',go:tab('v-settings','Einstellungen'),target:accOf('acc-dat-h')},
@@ -39,6 +40,7 @@ const TOUR=(function(){
     {t:'Fertig – viel Erfolg!',x:'Das war alles Wichtige. Los geht’s mit deinem Lehrgang.',go:home,target:null,end:true}
   ];
   let STEPS=ALL;
+  let opened=null;   // von der Tour aufgeklappte Einstellungs-Gruppe
   let i=-1, root=null, hole=null, tip=null, busy=0, from=null;
 
   function build(){
@@ -91,6 +93,10 @@ const TOUR=(function(){
     if(i===STEPS.length-1){ try{ localStorage.setItem('bvi_tour_done','1'); }catch(e){} }   // Tour bis zum Ende gesehen: Karte auf der Startseite entfällt
     const before=cur();
     try{ s.go&&s.go(); }catch(e){}
+    try{
+      if(opened&&s.open!==opened.id){ if(opened.getAttribute('aria-expanded')==='true') opened.click(); opened=null; }
+      if(s.open){ const h=document.getElementById(s.open); if(h&&h.getAttribute('aria-expanded')!=='true'){ h.click(); opened=h; } }
+    }catch(e){}
     const changed=before!==cur();   // Seitenwechsel: Spotlight kurz ausblenden und erst am fertigen Ziel wieder einblenden
     document.documentElement.classList.add('tour-lock');
     if(changed){ root.classList.add('jump'); hole.style.opacity='0'; }
@@ -105,6 +111,7 @@ const TOUR=(function(){
   function close(){
     if(!root) return;
     root.classList.remove('on'); hole.style.opacity='0'; document.documentElement.classList.remove('tour-lock');
+    try{ if(opened&&opened.getAttribute('aria-expanded')==='true') opened.click(); }catch(e){} opened=null;
     const wasEnd=i===STEPS.length-1; i=-1; busy=0;
     if(!wasEnd){ if(from==='home') NAV.home(); else NAV.tab('v-settings','Einstellungen'); }   // abgebrochen: zurück dorthin, wo die Tour gestartet wurde
   }
