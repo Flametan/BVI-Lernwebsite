@@ -1646,10 +1646,27 @@ const SEARCH = (function(){
     return out;
   }
 
+  // Suchbereich: auf Lehrgangs- und Themenseiten nur Inhalte dieser Seite und ihrer Unterseiten (aus den Karten der Seite abgeleitet)
+  let scope=null;
+  const ROOT_VIEWS=new Set(['v-home','v-pruefung','v-settings','v-plan','v-flashcards','v-pause','v-notizen','v-bookmarks','v-app','v-impressum','v-datenschutz','v-set-nav','v-klausur']);
+  function computeScope(){
+    const v=document.querySelector('.view.active'); if(!v||!v.id||ROOT_VIEWS.has(v.id)||/^v-lb-/.test(v.id)) return null;
+    const seen=new Set([v.id]), q=[v.id];
+    while(q.length){ const el=document.getElementById(q.shift()); if(!el) continue;
+      el.querySelectorAll('[onclick*="NAV.go(\'v-"]').forEach(x=>{ if(x.closest('.related-topics,.m-tourhome')) return; const m=/NAV\.go\('(v-[\w-]+)'/.exec(x.getAttribute('onclick')||''); if(m&&!seen.has(m[1])&&!ROOT_VIEWS.has(m[1])){ seen.add(m[1]); q.push(m[1]); } }); }
+    const t=v.querySelector('.page-title'), label=(t?t.textContent:'').replace(/\s+/g,' ').trim()||VIEW_LABELS[v.id]||'dieser Seite';
+    return {ids:seen,label};
+  }
+  function syncScope(){
+    const chip=document.getElementById('search-scope'), inp=document.getElementById('search-input'); if(!chip||!inp) return;
+    chip.hidden=!scope;
+    if(scope){ chip.querySelector('.ss-t').textContent=scope.label; chip.title='Nur in „'+scope.label+'“ suchen – antippen, um überall zu suchen'; }
+    inp.setAttribute('aria-label',scope?'Suche in '+scope.label:'Suche');
+  }
   function doSearch(q){
     if(!q || q.length < 2) return [];
     const terms = norm(q).split(/\s+/).filter(Boolean);
-    const all = idx.concat(noteEntries(), jgEntries());
+    const all = (scope?idx.filter(e=>scope.ids.has(e.vid)):idx.concat(noteEntries(), jgEntries()));   // Ebene: nur Inhalte der aktuellen Seite und ihrer Unterseiten
     const hayOf=e=>e.h||(e.isNote?norm(e.title+' '+e.snippet+' '+e.lbl):(e.h=norm(e.title+' '+e.snippet+' '+e.lbl)));
     let scored = all.map(e => {
       const hay = hayOf(e);
@@ -1738,7 +1755,7 @@ const SEARCH = (function(){
   function syncClear(){ const i=document.getElementById('search-input'), c=document.getElementById('search-clear'); if(c&&i) c.hidden=!i.value; }
   let _typeT=0;
   function typePlaceholder(inp){
-    clearTimeout(_typeT); const full='Suchen …'; let n=0; inp.placeholder='';
+    clearTimeout(_typeT); const full=scope?'Hier suchen …':'Suchen …'; let n=0; inp.placeholder='';
     (function step(){ if(n<=full.length){ inp.placeholder=full.slice(0,n++); _typeT=setTimeout(step,45); } })();
   }
 
@@ -1751,7 +1768,7 @@ const SEARCH = (function(){
 
   return {
     open(trigger){
-      buildIndex();
+      buildIndex(); scope=computeScope(); syncScope();
       document.getElementById('search-overlay').classList.remove('hidden');
       const inp = document.getElementById('search-input');
       inp.value = ''; inp.focus(); render(''); syncClear();
@@ -1768,6 +1785,8 @@ const SEARCH = (function(){
         typePlaceholder(inp);
       }
     },
+    // Suchbereich aufheben: überall suchen
+    widen(){ scope=null; syncScope(); const inp=document.getElementById('search-input'); if(inp){ inp.placeholder='Suchen …'; inp.focus(); render(inp.value.trim()); } },
     // Clear Field: die Buchstaben fallen weg, der Platzhalter blendet wieder ein
     clearField(){
       const inp=document.getElementById('search-input'), fall=document.getElementById('search-fall'); if(!inp) return;
@@ -4424,6 +4443,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Suche: Auf jeder Ebene wird nur der Inhalt dieser Seite durchsucht (im IdF-Tab nur IdF, in Stabsarbeit nur Stabsarbeit). Ein Feld „Suche in …“ im Suchfeld zeigt den Bereich; mit ✕ suchst du überall.',
       'Startseite: Oben rechts steht jetzt eine Lupe statt des Kastens „nächste Einheit“. Antippen: Das Suchfeld wächst aus dem Symbol, die Tastatur öffnet sich sofort, mit ✕ löschst du, Esc oder Zurück schließen. Die nächste Einheit findest du im Stundenplan.',
       'Einstellungen: Der Titel „Einstellungen“ bricht nicht mehr vor dem letzten Buchstaben um. Das Tagesziel stellst du weiter unter „Lernen & Erinnerung“ ein; der Lernzeit-Graph übernimmt es sofort.',
       'Lernzeit-Graph: Das Tagesziel steht als Rahmen hinter jedem Tag (Woche); wer das Ziel schafft, bekommt ein ✓ über dem Balken. Darunter steht die durchschnittliche Lernzeit pro Tag (Woche: bis heute, Monate: laufender Monat).',
