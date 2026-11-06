@@ -4424,6 +4424,8 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Einstellungen: Der Titel „Einstellungen“ bricht nicht mehr vor dem letzten Buchstaben um. Das Tagesziel stellst du weiter unter „Lernen & Erinnerung“ ein; der Lernzeit-Graph übernimmt es sofort.',
+      'Lernzeit-Graph: Das Tagesziel steht als Rahmen hinter jedem Tag (Woche); wer das Ziel schafft, bekommt ein ✓ über dem Balken. Darunter steht die durchschnittliche Lernzeit pro Tag (Woche: bis heute, Monate: laufender Monat).',
       'Tour: Der Spotlight bei „Dein Lernstoff“ und „Deine Lernzeit“ sitzt wieder genau auf dem Bereich (die Seite scrollte weich und wurde währenddessen vermessen). „Überspringen“ entfällt; oben rechts auf der Karte beendet ein ✕ die Tour.',
       'Tour (andere Lehrgänge): Neuer Schritt zu Export und Import der Lehrgangsdaten.',
       'Tour: Kein Neuladen und kein verzögertes Verschieben des Spotlights mehr bei „Weiter“. Die Seite wird nur noch gewechselt, wenn der nächste Schritt auf einer anderen Seite liegt; dann blendet der Rahmen erst am Ziel ein.',
@@ -7651,22 +7653,30 @@ const SHELL=(function(){
     return { known:ks.length, due:ks.filter(k=>fc[k]&&fc[k].nextReview<=now).length, total:FLASHCARD_DATA.length };
   }
   // Balken-Diagramm: beginnt bei 0, kein Strich bis zur Oberkante; Beschriftung nur an Balken mit Wert
-  function plot(vals,labels,cur,top,secs){
+  function plot(vals,labels,cur,top,secs,goal){
     return `<div class="m-plot${vals.length>8?' many':''}" role="group" aria-label="Lernzeit je ${vals.length>8?'Monat':'Tag'}, antippen für die Zeit">${vals.map((v,i)=>{
       const h=v>0?Math.max(4,v/top*100):0, pos=i===0?' first':i===vals.length-1?' last':'';
-      return `<button type="button" class="m-pc" onclick="SHELL.pick(this)" aria-label="${labels[i]}: ${dur(secs[i])}"><span class="m-tip${pos}" style="bottom:calc(${h}% + 22px)">${dur(secs[i])}</span><i class="m-pb${i===cur?' cur':v>0?' dim':' zero'}" style="height:${h}%"></i><span class="m-pl${i===cur?' cur':''}">${labels[i]}</span></button>`;}).join('')}</div>`;
+      const cls=i===cur?' cur':v>0?' dim':' zero';
+      let bar;
+      if(goal){   // Tagesziel als Rahmen: Balken wächst im Rahmen, darüber hinaus ragt er heraus; ✓ bei erreichtem Ziel
+        const g=goal/top*100, ok=v>=goal;
+        bar=`<span class="m-pg${ok?' ok':''}" style="height:${g}%"><i class="m-pb${cls}" style="height:${v>0?Math.max(3,v/goal*100):0}%">${ok?'<u class="m-pk" aria-hidden="true">✓</u>':''}</i></span>`;
+      } else bar=`<i class="m-pb${cls}" style="height:${h}%"></i>`;
+      return `<button type="button" class="m-pc" onclick="SHELL.pick(this)" aria-label="${labels[i]}: ${dur(secs[i])}"><span class="m-tip${pos}" style="bottom:calc(${h}% + 22px)">${dur(secs[i])}</span>${bar}<span class="m-pl${i===cur?' cur':''}">${labels[i]}</span></button>`;}).join('')}</div>`;
   }
   function weekPlot(){
     const w=USAGE.week(), today=(new Date().getDay()+6)%7;
-    const hours=Math.max(...w)>=7200;
-    const v=w.map(x=>hours?x/3600:x/60), top=hours?Math.max(2,Math.ceil(Math.max(...v))):Math.max(30,Math.ceil(Math.max(...v)/10)*10);
-    return {html:plot(v,['Mo','Di','Mi','Do','Fr','Sa','So'],today,top,w),unit:hours?'Stunden pro Tag':'Minuten pro Tag',sum:w.reduce((a,b)=>a+b,0)};
+    const hours=Math.max(...w)>=7200, gm=goalMin(), g=hours?gm/60:gm;
+    const v=w.map(x=>hours?x/3600:x/60), top=Math.max(g,hours?Math.max(2,Math.ceil(Math.max(...v))):Math.max(30,Math.ceil(Math.max(...v)/10)*10));
+    const avg=w.slice(0,today+1).reduce((s,x)=>s+x,0)/(today+1);   // Durchschnitt je Tag bis heute
+    return {html:plot(v,['Mo','Di','Mi','Do','Fr','Sa','So'],today,top,w,g),unit:hours?'Stunden pro Tag':'Minuten pro Tag',sum:w.reduce((a,b)=>a+b,0),avg,note:'Rahmen = Tagesziel '+gm+' min'};
   }
   function monthPlot(){
     const ms=USAGE.months(12), names=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
     const hours=Math.max(...ms.map(m=>m.sec))>=7200;
     const v=ms.map(m=>hours?m.sec/3600:m.sec/60), top=hours?Math.max(2,Math.ceil(Math.max(...v)/2)*2):Math.max(30,Math.ceil(Math.max(...v)/10)*10);
-    return {html:plot(v,ms.map(m=>names[m.m]),ms.length-1,top,ms.map(m=>m.sec)),unit:hours?'Stunden pro Monat':'Minuten pro Monat',sum:ms.reduce((a,m)=>a+m.sec,0)};
+    const cm=ms[ms.length-1], avg=cm.sec/new Date().getDate();   // Durchschnitt je Tag im laufenden Monat
+    return {html:plot(v,ms.map(m=>names[m.m]),ms.length-1,top,ms.map(m=>m.sec)),unit:hours?'Stunden pro Monat':'Minuten pro Monat',sum:ms.reduce((a,m)=>a+m.sec,0),avg,note:'laufender Monat'};
   }
   function homeRing(p,label,aria){
     const r=44,c=2*Math.PI*r;
@@ -7729,7 +7739,7 @@ const SHELL=(function(){
   function chartHtml(){
     const pl=chartRange==='month'?monthPlot():weekPlot(), isM=chartRange==='month';
     return `<div class="m-card m-chart2"><div class="m-chart-h"><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${isM?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${isM?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span><span class="m-st"><b>${dur(pl.sum)}</b> / ${isM?'12 Monate':'Woche'}</span></div>
-      ${pl.html}</div>`;
+      ${pl.html}<div class="m-glg"><span>${pl.note}</span><span class="m-gavg">Ø ${dur(pl.avg)} / Tag</span></div></div>`;
   }
   function renderHome(){
     const el=document.getElementById('m-home');

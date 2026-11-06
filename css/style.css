@@ -3546,3 +3546,14 @@ html.tour-lock{overflow:hidden;}
 
 .tour-x{position:absolute;right:10px;top:10px;width:32px;height:32px;display:grid;place-items:center;padding:0!important;border-radius:50%!important;background:var(--m-raised)!important;color:var(--m-fg);min-height:32px!important;}
 .tour-tip .tour-st{padding-right:38px;}
+
+/* Lernzeit-Graph: Tagesziel als Rahmen, ✓ bei erreichtem Ziel, Durchschnitt je Tag */
+.m-pg{position:relative;display:block;width:100%;max-width:26px;box-sizing:border-box;border-radius:7px;border:1.5px solid color-mix(in srgb,var(--m-accent-fg,var(--m-accent)) 32%,transparent);background:color-mix(in srgb,var(--m-accent-fg,var(--m-accent)) 9%,transparent);}
+.m-pg .m-pb{position:absolute;left:-1.5px;right:-1.5px;bottom:-1.5px;width:auto;max-width:none;border-radius:6px 6px 3px 3px;}
+.m-pg .m-pb.zero{height:0!important;}
+.m-pk{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:.78rem;font-weight:800;color:var(--c-ok,#2f9e6b);line-height:1;margin-bottom:2px;text-decoration:none;}
+.m-glg{display:flex;justify-content:space-between;gap:10px;margin-top:8px;font-size:.76rem;color:var(--m-muted);}
+.m-gavg{font-weight:700;color:var(--m-accent-fg,var(--m-accent));}
+.m-pg .m-pb.dim{opacity:1;background:color-mix(in srgb,var(--m-accent) 58%,var(--m-card));}
+/* Einstellungen: Titel bricht nicht mehr um (Platz nur für die Lupe rechts) */
+#v-settings .page-title{padding-right:56px;white-space:nowrap;word-break:keep-all;overflow-wrap:normal;}
