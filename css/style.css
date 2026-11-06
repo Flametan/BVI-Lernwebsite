@@ -3742,3 +3742,6 @@ button.g-rank-go:active{background:var(--m-raised);}
   .m-yl[data-yr="1"] .m-modrow .m-t1{font-size:.9rem;}
   .m-yl[data-yr="1"]>.m-sec{opacity:.75;}
 }
+/* Spenden-Knopf in den Einstellungen: dunkle Schrift auf Akzentfläche in jedem Farbschema */
+.m-list.m-donate a.m-donate-btn,.m-list.m-donate a.m-donate-btn:visited{background:var(--m-accent);color:var(--m-on-accent,#1c1c1c)!important;font-weight:700;}
+.m-list.m-donate a.m-donate-btn:active{filter:brightness(.92);}
