@@ -3727,3 +3727,18 @@ button.g-rank-go:active{background:var(--m-raised);}
   body.rail-open:not(.rail-pin) #m-rail [data-tip]::after,body.rail-open:not(.rail-pin) #m-rail [data-tip]::before{display:none;}
 }
 @media(min-width:1100px) and (prefers-reduced-motion:reduce){body:not(.rail-pin) #m-rail{transition:none;}}
+
+/* Tablet und Desktop: das 2. Ausbildungsjahr dominiert (große Karten in zwei Spalten), das 1. Jahr folgt kompakt darunter */
+@media(min-width:701px){
+  .m-mods .m-modgrid2{grid-template-columns:1fr;row-gap:22px;}
+  .m-yl[data-yr="2"] .m-modlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+  .m-yl[data-yr="2"] .m-modrow{padding:18px 20px;}
+  .m-yl[data-yr="2"] .m-mring,.m-yl[data-yr="2"] .m-modrow .m-hring{width:66px;height:66px;}
+  .m-yl[data-yr="2"] .m-modrow .m-t1{font-size:1.15rem;}
+  .m-yl[data-yr="1"] .m-modlist{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+  .m-yl[data-yr="1"] .m-modrow{padding:8px 12px;border-radius:12px;}
+  .m-yl[data-yr="1"] .m-mring,.m-yl[data-yr="1"] .m-modrow .m-hring{width:32px;height:32px;}
+  .m-yl[data-yr="1"] .m-mbar,.m-yl[data-yr="1"] .m-modrow .m-t2{display:none;}
+  .m-yl[data-yr="1"] .m-modrow .m-t1{font-size:.9rem;}
+  .m-yl[data-yr="1"]>.m-sec{opacity:.75;}
+}
