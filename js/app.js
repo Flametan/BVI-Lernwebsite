@@ -4424,7 +4424,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
-      'Neu: „App vorstellen“ in den Einstellungen – eine Tour mit Spotlight durch die Startseite, alle Tabs, die Lernkarten (Karte, Antwort, Filter) und die Einstellungen. Mit Weiter, Zurück, Überspringen oder Esc.',
+      'Neu: „App vorstellen“ in den Einstellungen – eine Tour mit Spotlight durch die Startseite, alle Tabs, die Lernkarten (Karte, Antwort, Filter) und die Einstellungen (Lehrgang, Aussehen, Lernen & Erinnerung, Daten & Werkzeuge). Mit Weiter, Zurück, Überspringen oder Esc.',
       'Einsatzfahrt: Am Anfang wählst du jetzt 5, 10 oder 15 Fragen (wie beim Duell) statt zwischen Hauptstraße und Ring. Fahrzeit und Hilfsfrist wachsen mit der Anzahl: 5 Fragen 6:00 / 6:30, 10 Fragen 11:00 / 11:30, 15 Fragen 16:00 / 16:30; falsch +30 s, richtig −5 s.',
       'Suche: Ohne Eingabe steht nur das Suchfeld da; die Fläche darunter erscheint erst beim Tippen.',
       'Einstellungen: Die Lupe hat etwas Abstand zum Rand, und das Suchfeld wächst aus dem Symbol heraus. Die Zeile „Navigationsleiste“ hat nur noch einen Pfeil.',

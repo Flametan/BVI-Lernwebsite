@@ -13,6 +13,7 @@ const TOUR=(function(){
   };
   // Ziel kann ein Element oder eine Liste sein (dann gilt der gemeinsame Rahmen aller sichtbaren Elemente)
   const rectOf=t=>{ const els=(Array.isArray(t)?t:[t]).filter(vis); if(!els.length) return null; let l=1e9,tp=1e9,r=-1e9,b=-1e9; els.forEach(e=>{ const q=e.getBoundingClientRect(); l=Math.min(l,q.left); tp=Math.min(tp,q.top); r=Math.max(r,q.right); b=Math.max(b,q.bottom); }); return {left:l,top:tp,right:r,bottom:b,width:r-l,height:b-tp}; };
+  const accOf=id=>()=>{ const h=document.getElementById(id); return h&&h.closest('.m-acc'); };
   const home=()=>NAV.home(), tab=(v,l)=>()=>NAV.tab(v,l);
   const STEPS=[
     {t:'Willkommen in der App',x:'Hier lernst du für B VI: Lernseiten, Prüfungen, Lernkarten und Stundenplan an einem Ort. Die Tour zeigt dir in 2 Minuten alles Wichtige.',go:home,target:null},
@@ -27,6 +28,10 @@ const TOUR=(function(){
     {t:'Karten filtern',x:'Hier wählst du, welche Karten du üben willst, zum Beispiel nur ein Fach oder nur fällige Karten.',go:tab('v-flashcards','Lernkarten'),target:()=>$('#v-flashcards .fc-filter-row')||$('#v-flashcards .pc')},
     {t:'Tab: Pausenraum',x:'Im Pausenraum warten Spiele wie die Einsatzfahrt – mit Fragen aus den Prüfungen, die du mit ★ als wichtig markiert hast.',go:tab('v-pause','Pausenraum'),target:()=>tabEl('pause')},
     {t:'Tab: Einstellungen',x:'Hier stellst du Aussehen, Lernziele und Erinnerungen ein und sicherst deine Daten. Diese Tour findest du hier unter „App vorstellen“.',go:tab('v-settings','Einstellungen'),target:()=>tabEl('settings')},
+    {t:'Lehrgang',x:'Hier wählst du deinen Lehrgang. Für andere Lehrgänge kannst du eigene Inhalte ergänzen und selbst festlegen, welche Prüfungen mit ★ wichtig sind.',go:tab('v-settings','Einstellungen'),target:accOf('acc-lg-h')},
+    {t:'Aussehen',x:'Farbschema (Dunkel, Hell, Beige), Akzentfarbe, Schriftgröße und die Navigationsleiste unten richtest du hier ein.',go:tab('v-settings','Einstellungen'),target:accOf('acc-dar-h')},
+    {t:'Lernen &amp; Erinnerung',x:'Dein Tagesziel, der Timer bei Klausuren, der Termin der nächsten Klausur und eine tägliche Erinnerung zur Uhrzeit deiner Wahl.',go:tab('v-settings','Einstellungen'),target:accOf('acc-ler-h')},
+    {t:'Daten &amp; Werkzeuge',x:'Hier sicherst du deine Daten und spielst sie wieder ein. Außerdem findest du Notizen, Lesezeichen, Pomodoro-Timer und die Abkürzungen.',go:tab('v-settings','Einstellungen'),target:accOf('acc-dat-h')},
     {t:'Tour jederzeit wiederholen',x:'Du kannst die Tour in den Einstellungen so oft starten, wie du willst.',go:tab('v-settings','Einstellungen'),target:()=>$('#set-tour')},
     {t:'Fertig – viel Erfolg!',x:'Das war alles Wichtige. Los geht’s mit deinem Lehrgang.',go:home,target:null,end:true}
   ];
