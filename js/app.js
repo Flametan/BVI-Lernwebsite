@@ -2055,7 +2055,7 @@ const FC = (function(){
         updateFilterButtons(); this.start(); return;
       } else {
         activeFilters.delete('starred'); activeFilters.delete('weak'); activeFilters.delete('own');
-        if(activeFilters.has(f)){ activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(['laufbahn']); }
+        if(activeFilters.has(f)){ if(CATS.every(c=>activeFilters.has(c))) return; activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(['laufbahn']); }
         else activeFilters.add(f);
       }
       updateFilterButtons();
@@ -6498,7 +6498,7 @@ const SHELL=(function(){
       old.replaceWith(t.content.firstElementChild);
       document.querySelector('#v-home .m-chart2 .m-seg-s button.active')?.focus({preventScroll:true});
     },
-    setYear(y){ try{ localStorage.setItem('bvi_home_year',y); }catch(e){} const m=document.querySelector('#v-home .m-mods'); if(!m) return; m.dataset.y=y; m.querySelectorAll('.m-seg2 button').forEach((b,i)=>{ const on=(i===0)===(y==='2'); b.classList.toggle('on',on); b.setAttribute('aria-selected',on); }); },
+    setYear(y){ try{ localStorage.setItem('bvi_home_year',y); }catch(e){} const m=document.querySelector('#v-home .m-mods'); if(!m) return; m.dataset.y=y; m.querySelectorAll('.m-seg2 .m-mini button').forEach((b,i)=>{ const on=(i===0)===(y==='2'); b.classList.toggle('on',on); b.setAttribute('aria-selected',on); }); },
     y1(open){ if(!document.querySelector('.m-y1.static')) y1Open=!!open; },
     pick(btn){
       const on=!btn.classList.contains('sel');
