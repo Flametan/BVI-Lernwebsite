@@ -3543,3 +3543,6 @@ html.tour-lock{overflow:hidden;}
 #tour.jump .tour-tip{transition:none;}
 /* Lücke zwischen „Lernstoff“ und den Standort-Karten halbiert (18 → 9 px) */
 .m-seg2{padding-bottom:0;margin-bottom:-1px;}
+
+.tour-x{position:absolute;right:10px;top:10px;width:32px;height:32px;display:grid;place-items:center;padding:0!important;border-radius:50%!important;background:var(--m-raised)!important;color:var(--m-fg);min-height:32px!important;}
+.tour-tip .tour-st{padding-right:38px;}

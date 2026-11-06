@@ -4424,6 +4424,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Tour: Der Spotlight bei „Dein Lernstoff“ und „Deine Lernzeit“ sitzt wieder genau auf dem Bereich (die Seite scrollte weich und wurde währenddessen vermessen). „Überspringen“ entfällt; oben rechts auf der Karte beendet ein ✕ die Tour.',
       'Tour (andere Lehrgänge): Neuer Schritt zu Export und Import der Lehrgangsdaten.',
       'Tour: Kein Neuladen und kein verzögertes Verschieben des Spotlights mehr bei „Weiter“. Die Seite wird nur noch gewechselt, wenn der nächste Schritt auf einer anderen Seite liegt; dann blendet der Rahmen erst am Ziel ein.',
       'Startseite: Die Lücke zwischen „Lernstoff“ und den Standort-Karten ist halbiert.',
