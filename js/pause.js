@@ -211,7 +211,7 @@ const PAUSE=(function(){
       else if(a==='leave'&&s.duel){PAUSE.back();}}
     function drive(){const s=st,to=s.qi<s.qs.length?s.stops[s.qi]:1;if(s.duel)SESS.send({t:'p',to,tt:s.t});s.phase='drive';s.dr={from:s.p,to,t0:performance.now(),dur:1900,tt:s.t};panel();}
     function duelRes(s){const right=s.res.filter(r=>r.ok).length,score=right*100+(s.win?300:0),op=s.opp.done;let result=null;if(op){result=s.forfeit?'w':score>op.score?'w':score<op.score?'l':s.t<op.t?'w':s.t>op.t?'l':'d';}return{right,score,result};}
-    function duelFinish(){const s=st;s.sentFin=true;const r=duelRes(s);SESS.send({t:'fin',tm:s.t,score:r.score,right:r.right});duelCheck();}
+    function duelFinish(){const s=st;s.sentFin=true;const r=duelRes(s);SESS.send({t:'fin',tm:s.t,score:r.score,right:r.right});if(typeof GAME!=='undefined')GAME.cheer('spiel','Duell');duelCheck();}
     function duelCheck(){const s=st;if(!s||!s.duel||s.bilDone||s.phase!=='end'||!s.opp.done)return;s.bilDone=true;const r=duelRes(s);s.bil=SESS.record(s.opp.name,r.result);panel();}
     function tick(n){const s=st;const dtp=n-(s._ln||n);s._ln=n;
       if(s.paused){if(s.dr)s.dr.t0+=dtp;if(s.askT0)s.askT0+=dtp;if(s.fbT0)s.fbT0+=dtp;const e=document.querySelector('.pz-pc');if(e)e.textContent=Math.max(0,30-Math.floor((performance.now()-s.pausedAt)/1000));return;}

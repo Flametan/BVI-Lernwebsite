@@ -138,7 +138,7 @@ const MINESWEEPER=(function(){
   function finish(){
     if(!ov||!S) return; var t=secs(S), b=lget(BKEY,{}), old=best(lvl), isNew=false;
     if(S.won&&t>=0&&(old==null||t<old)){ var m=Object.assign({},b.minesweeper||{}); m[lvl]=t; b.minesweeper=m; lset(BKEY,b); old=t; isNew=true; setH('best',fmt(t)); }
-    var ok=S.won, L=LEVELS[lvl];
+    var ok=S.won, L=LEVELS[lvl]; if(ok&&typeof GAME!=='undefined') GAME.cheer('spiel','Minesweeper');
     ov.hidden=false; ov.innerHTML='<div class="so-win" role="dialog" aria-modal="true" aria-label="'+(ok?'Alle Brandherde gesichert':'Brand außer Kontrolle')+'"><div class="so-wi">'+(ok?ICO.flag:ICO.flame).replace('mi-ic','mi-ic mi-big')+'</div><h3>'+(ok?'Alle Brandherde gesichert':'Brand außer Kontrolle')+'</h3><p>'+(ok?'Das Gebiet ist abgesucht.':'Ein Brandherd wurde übersehen.')+'</p>'
       +'<div class="so-stats"><div><b>'+fmt(t)+'</b><span>Zeit</span></div><div><b>'+(old==null?'–':fmt(old))+'</b><span>Rekord</span></div><div><b>'+L.mines+'</b><span>Brandherde</span></div></div>'+(isNew?'<p><b>Neuer Rekord!</b></p>':'')
       +'<div class="so-act"><button type="button" class="pz-pri" data-a="new">Neues Spiel</button><button type="button" class="pz-sec2" data-a="close">Spielfeld ansehen</button></div></div>';

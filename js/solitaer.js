@@ -174,6 +174,7 @@ var SOL=(function(){
   }
   function auto(){ autoT=null; if(!S||S.won||!root||!root.isConnected) return; var n=SOL.autoStep(S); if(n===S) return; S=n; render(); autoT=setTimeout(auto,90); }
   function finish(){
+    if(typeof GAME!=='undefined') GAME.cheer('spiel','Solitär');
     clearInterval(timer); if(S.score>best){ var b=lget(BKEY,{}); b.solitaer=S.score; lset(BKEY,b); best=S.score; rec=true; }
     ov.hidden=false; ov.innerHTML='<div class="so-win" role="dialog" aria-modal="true" aria-label="Einsatz erfolgreich"><div class="so-wi"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path fill="currentColor" d="'+SOL.SUITS[0].path+'"/></svg></div><h3>Einsatz erfolgreich</h3><p>Alle vier Stapel sind komplett.'+(rec?' Neuer Rekord!':'')+'</p>'
       +'<div class="so-stats"><div><b>'+S.score+'</b><span>Punkte</span></div><div><b>'+S.moves+'</b><span>Züge</span></div><div><b>'+fmt(secs)+'</b><span>Zeit</span></div></div>'

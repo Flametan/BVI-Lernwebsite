@@ -3670,7 +3670,7 @@ function makeQuiz(cfg){
       });
       const pct=Math.round((correct/total)*100);
       const grade=pct>=90?'Sehr gut':pct>=75?'Gut':pct>=60?'Befriedigend':pct>=50?'Ausreichend':'Nicht bestanden';
-      recordExam(correct,total,pct,grade);
+      recordExam(correct,total,pct,grade); if(typeof GAME!=='undefined') GAME.cheer('pruefung','Quiz');
       const catBreakdown=[...new Set(_examQs.filter(q=>q.type!=='essay').map(q=>q.cat))].map(cat=>{
         const cq=_examQs.filter(q=>q.cat===cat&&q.type!=='essay');
         const cok=cq.filter(examOk).length;
@@ -4000,7 +4000,7 @@ const KF_QUIZ = (function(){
       document.getElementById('kf-answer')?.classList.remove('hidden');
       document.getElementById('kf-score-row')?.classList.remove('hidden');
     },
-    showResult:function(){renderResult();},
+    showResult:function(){renderResult(); if(typeof GAME!=='undefined') GAME.cheer('pruefung','Klausurfragen');},
     // Stand für die Übersichtskachel: nur Fragen, die es wirklich gibt
     info:function(){
       var sc={};try{sc=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){}
@@ -4385,7 +4385,7 @@ const UEBUNGSKLAUSUR = (function(){
       document.getElementById('uk-answer')?.classList.remove('hidden');
       document.getElementById('uk-score-row')?.classList.remove('hidden');
     },
-    showResult:function(){renderResult();},
+    showResult:function(){renderResult(); if(typeof GAME!=='undefined') GAME.cheer('pruefung','Klausurfragen');},
     toggleTimer:function(){
       if(_timerOn) stopTimer(); else startTimer();
       updateTimerDisplay();
