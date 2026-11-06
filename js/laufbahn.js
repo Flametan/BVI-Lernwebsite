@@ -99,10 +99,16 @@ const LB=(function(){
   const done=(k,p)=>{ const a=((st.a[k]||{})[p])||{}; return (a.p||'').trim().length>=8&&(a.b||'').trim().length>=8; };
   const count=k=>D().punkte.filter(p=>done(k,p.id)).length;
 
+  let vbTried=false;
   function vbInit(){
     const root=$('lb-vb-root'); if(!root) return;
     load();
-    if(!D()){ root.innerHTML='<div class="m-card">Die Inhalte konnten nicht geladen werden.</div>'; return; }
+    if(!D()){
+      // Die Konzepte (js/laufbahn-data.js) werden erst hier geladen, nicht schon beim App-Start
+      const fail=()=>{ vbTried=false; root.innerHTML='<div class="m-card">Die Inhalte konnten nicht geladen werden.</div>'; };
+      if(!vbTried&&typeof LAZY!=='undefined'){ vbTried=true; root.innerHTML='<div class="m-card">Lade Inhalte …</div>'; LAZY.script('js/laufbahn-data.js').then(()=>{ vbTried=false; if(D()) vbInit(); else fail(); },fail); return; }
+      fail(); return;
+    }
     vbRender();
   }
   function vbRender(){
