@@ -15,7 +15,7 @@ const TOUR=(function(){
   const rectOf=t=>{ const els=(Array.isArray(t)?t:[t]).filter(vis); if(!els.length) return null; let l=1e9,tp=1e9,r=-1e9,b=-1e9; els.forEach(e=>{ const q=e.getBoundingClientRect(); l=Math.min(l,q.left); tp=Math.min(tp,q.top); r=Math.max(r,q.right); b=Math.max(b,q.bottom); }); return {left:l,top:tp,right:r,bottom:b,width:r-l,height:b-tp}; };
   const accOf=id=>()=>{ const h=document.getElementById(id); return h&&h.closest('.m-acc'); };
   const home=()=>NAV.home(), tab=(v,l)=>()=>NAV.tab(v,l);
-  const STEPS=[
+  const ALL=[
     {t:'Willkommen in der App',x:'Hier lernst du für B VI: Lernseiten, Prüfungen, Lernkarten und Stundenplan an einem Ort. Die Tour zeigt dir in 2 Minuten alles Wichtige.',go:home,target:null},
     {t:'Deine Startseite',x:'Oben begrüßt dich die App und zeigt Datum und die nächste Unterrichtseinheit. Von hier aus kommst du überall hin.',go:home,target:()=>$('#v-home .m-hello')},
     {t:'Dein Lernstoff',x:'Jeder Lehrgangsort hat einen Ring mit deinem Fortschritt in Prozent. Oben rechts wechselst du zwischen dem 2. und 1. Jahr. Antippen öffnet die Lernseiten.',go:home,target:()=>[$('#v-home .m-seg2'),...document.querySelectorAll('#v-home .m-yl')]},
@@ -23,6 +23,7 @@ const TOUR=(function(){
     {t:'Tab: Start',x:'Mit „Start“ kommst du jederzeit zurück auf diese Seite.',go:home,target:()=>tabEl('start')},
     {t:'Tab: Stundenplan',x:'Der Stundenplan zeigt jede Woche mit Räumen, Pausen und dem Speiseplan. Änderungen kannst du selbst eintragen.',go:tab('v-plan','Stundenplan'),target:()=>tabEl('plan')},
     {t:'Tab: Prüfung',x:'Der große Knopf in der Mitte führt zu den Klausuren, Altklausuren und dem Simulator. Der Stern ★ markiert, welche Prüfungen für Einsatzfahrt und Lernkarten wichtig sind.',go:tab('v-pruefung','Prüfung'),target:()=>tabEl('exam')},
+    {t:'Laufbahnprüfung',x:'Hier stehen die Eingrenzungen mit Lösungen von mir. Sie dürfen gerne verbessert werden.',go:tab('v-pruefung','Prüfung'),when:()=>typeof JG!=='undefined'&&JG.isMaster(),target:()=>$('#m-exam-list .jg-rw.lbg')||$('#m-exam-list .jg-rw')},
     {t:'Tab: Lernkarten',x:'Lernkarten üben mit Wiederholung: Du siehst die Frage, deckst die Antwort auf und sagst, ob du sie wusstest.',go:tab('v-flashcards','Lernkarten'),target:()=>tabEl('cards')},
     {t:'Karte und Antwort',x:'Tippe auf die Karte, um die Antwort zu sehen. Danach „Gewusst“ oder „Nicht gewusst“ – oder wische die Karte zur Seite. Gewusste Karten kommen später wieder.',go:()=>{ NAV.tab('v-flashcards','Lernkarten'); try{ if(!$('#v-flashcards .fc-outer')&&typeof FC!=='undefined') FC.start(); }catch(e){} },target:()=>$('#v-flashcards .fc-outer')||$('#fc-container')},
     {t:'Karten filtern',x:'Hier wählst du, welche Karten du üben willst, zum Beispiel nur ein Fach oder nur fällige Karten.',go:tab('v-flashcards','Lernkarten'),target:()=>$('#v-flashcards .fc-filter-row')||$('#v-flashcards .pc')},
@@ -35,6 +36,7 @@ const TOUR=(function(){
     {t:'Tour jederzeit wiederholen',x:'Du kannst die Tour in den Einstellungen so oft starten, wie du willst.',go:tab('v-settings','Einstellungen'),target:()=>$('#set-tour')},
     {t:'Fertig – viel Erfolg!',x:'Das war alles Wichtige. Los geht’s mit deinem Lehrgang.',go:home,target:null,end:true}
   ];
+  let STEPS=ALL;
   let i=-1, root=null, hole=null, tip=null, busy=0, from=null;
 
   function build(){
@@ -84,6 +86,7 @@ const TOUR=(function(){
     if(n<0) n=0;
     if(n>=STEPS.length){ close(); return; }
     busy=1; i=n; const s=STEPS[i];
+    if(i===STEPS.length-1){ try{ localStorage.setItem('bvi_tour_done','1'); }catch(e){} }   // Tour bis zum Ende gesehen: Karte auf der Startseite entfällt
     try{ s.go&&s.go(); }catch(e){}
     document.documentElement.classList.add('tour-lock');
     setTimeout(()=>{
@@ -98,11 +101,13 @@ const TOUR=(function(){
     if(!root) return;
     root.classList.remove('on'); hole.style.opacity='0'; document.documentElement.classList.remove('tour-lock');
     const wasEnd=i===STEPS.length-1; i=-1; busy=0;
-    if(!wasEnd){ NAV.tab('v-settings','Einstellungen'); }   // abgebrochen: zurück dorthin, wo die Tour gestartet wurde
+    if(!wasEnd){ if(from==='home') NAV.home(); else NAV.tab('v-settings','Einstellungen'); }   // abgebrochen: zurück dorthin, wo die Tour gestartet wurde
   }
 
   return {
-    start(){ if(!root) build(); from='settings'; setTimeout(()=>go(0),80); },
+    start(origin){ if(!root) build(); from=origin==='home'?'home':'settings'; STEPS=ALL.filter(s=>!s.when||s.when()); setTimeout(()=>go(0),80); },
+    done(){ try{ return localStorage.getItem('bvi_tour_done')==='1'; }catch(e){ return false; } },
+    dismiss(){ try{ localStorage.setItem('bvi_tour_done','1'); }catch(e){} const c=document.getElementById('tour-home'); if(c) c.remove(); },
     close, go, steps:()=>STEPS.length
   };
 })();
