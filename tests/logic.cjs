@@ -244,9 +244,9 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     }
     PAUSE.open('fahrt'); await w(100);
     document.querySelector('#pause-root [data-a="route"]').click(); await w(30);
-    document.querySelector('#pause-root [data-a="go"][data-v="B"]').click();
+    document.querySelector('#pause-root [data-a="go"][data-v="5"]').click();
     let n = 0;
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 5; i++) {
       for (let k = 0; k < 60 && !document.querySelector('#pause-root [data-a="ans"]:not([disabled])'); k++) await w(100);
       const st = PAUSE._fahrt()._state(), q = st.qs[st.qi];
       document.querySelector(`#pause-root [data-a="ans"][data-v="${(q.c + 1) % q.o.length}"]`).click(); n++; await w(30);
@@ -269,7 +269,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Spiele haben Inhalte in allen drei Modi', pz.modes.every(m => m.quiz && m.tf && m.word && m.num && m.mem));
   ok('Zurück im Spiel führt zur Spieleauswahl (Browser-Zurück)', pz.modes.every(m => m.quizBack && m.tfBack && m.wordBack && m.numBack && m.memBack));
   ok('Quizleiter, Wörter-Raten, Memory reagieren', pz.modes.every(m => m.quizFb && m.wordRow === 5 && m.memCards === 12));
-  ok('Einsatzfahrt Ring: 6 Fragen, 4 Optionen, verloren bei 6 Fehlern', pz.fahrt.n === 6 && pz.fahrt.phase === 'end' && pz.fahrt.win === false && pz.fahrt.t > 480 && pz.fahrt.opts);
+  ok('Einsatzfahrt: 5 Fragen, 4 Optionen, verloren bei 5 Fehlern', pz.fahrt.n === 5 && pz.fahrt.phase === 'end' && pz.fahrt.win === false && pz.fahrt.t > 390 && pz.fahrt.opts);
   ok('Zurück im Spiel führt zur Spieleliste, Verlassen stoppt', pz.backToHub && pz.left);
 
   // ── Farbsystem: Kontrast der Text- und Hintergrundnamen (WCAG AA) in beiden Designs ──
