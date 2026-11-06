@@ -3564,3 +3564,9 @@ html.tour-lock{overflow:hidden;}
 .m-hsearch:active{transform:scale(.92);background:var(--m-raised);}
 .m-hsearch:focus-visible{outline:2px solid var(--m-accent);outline-offset:3px;}
 @media(prefers-reduced-motion:reduce){.m-hsearch{transition:none;}}
+
+/* Suche: Bereichsfeld „Suche in …“ im Suchfeld */
+.search-scope{flex:none;display:inline-flex;align-items:center;gap:6px;max-width:42%;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);border:0;border-radius:99px;padding:5px 9px 5px 12px;font:700 .76rem inherit;font-family:inherit;cursor:pointer;}
+.search-scope[hidden]{display:none;}
+.search-scope .ss-t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.search-scope:focus-visible{outline:2px solid var(--m-fg);outline-offset:2px;}
