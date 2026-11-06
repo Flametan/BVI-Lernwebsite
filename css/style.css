@@ -3675,3 +3675,15 @@ button.g-row{cursor:pointer;min-height:44px;}
 .g-chip.on .g-fl svg{animation:gFlick 2.2s ease-in-out infinite;transform-origin:50% 90%;}
 @keyframes gFlick{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
 @media(prefers-reduced-motion:reduce){.g-chip::after,.g-chip.on .g-fl svg{animation:none;}}
+.g-drop{pointer-events:auto;cursor:pointer;}
+.g-drop:focus-visible{outline:2px solid var(--m-fg);outline-offset:3px;}
+button.g-rank-go{width:100%;background:none;border:0;padding:4px 0;color:var(--m-fg);font-family:inherit;text-align:left;cursor:pointer;min-height:56px;border-radius:12px;}
+button.g-rank-go:active{background:var(--m-raised);}
+.g-chv{flex:none;color:var(--m-muted);}
+.g-wimg{display:block;width:min(100%,270px);height:auto;aspect-ratio:9/16;border-radius:16px;background:var(--m-raised);margin:0 auto 14px;}
+.g-shcard .g-share{margin-top:0;flex-wrap:wrap;}
+
+.g-shcard .g-sh-msg{display:block;margin-top:8px;}
+.g-shcard .g-empty{margin-top:8px;}
+.g-btn{flex:1 1 140px;min-height:46px;border:0;border-radius:14px;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);font-family:inherit;font-weight:700;font-size:.92rem;cursor:pointer;}
+.g-btn.alt{background:var(--m-raised);color:var(--m-fg);}
