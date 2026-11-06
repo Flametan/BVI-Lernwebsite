@@ -3955,3 +3955,36 @@ html.lp-lock #m-topbar #m-back{visibility:hidden;pointer-events:none;}
 :root[data-theme="light"] .lb-x{background:rgba(0,0,0,.08);color:#1b2430;}
 :root[data-theme="light"] .lb-cap{color:#46526a;}
 :root[data-theme="light"] .lb-hint{color:rgba(0,0,0,.5);}
+
+/* ── Eigene Zeichnungen (SVG, Klasse „d2“): Farben über Klassen, damit sie sich dem Design anpassen ──
+   Alle Farben kommen aus den Variablen des Schaubild-Rahmens (dunkel/hell/beige) bzw. der Bildansicht. */
+html:root .diagram-wrap svg.d2,html:root .lb-content svg.d2{font-family:'DM Sans',system-ui,sans-serif;}
+html:root svg.d2 .t{fill:var(--c-text);}
+html:root svg.d2 .t2{fill:var(--c-slate-l);}
+html:root svg.d2 .tb{fill:var(--c-text-b,var(--c-text));font-weight:700;}
+html:root svg.d2 .tg{fill:var(--c-gold);}
+html:root svg.d2 .tr{fill:var(--c-red-l);}
+html:root svg.d2 .tk{fill:var(--c-ok);}
+html:root svg.d2 .tbl{fill:var(--c-blue);}
+html:root svg.d2 .ln{stroke:var(--c-slate-l);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;}
+html:root svg.d2 .ln2{stroke:var(--c-slate-l);fill:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;opacity:.65;}
+html:root svg.d2 .ah{fill:var(--c-slate-l);stroke:none;}
+html:root svg.d2 .bx{fill:color-mix(in srgb,var(--c-text) 7%,transparent);stroke:var(--c-slate-l);stroke-width:1.2;}
+html:root svg.d2 .bxh{fill:color-mix(in srgb,var(--c-blue) 20%,transparent);stroke:var(--c-blue);stroke-width:1.2;}
+html:root svg.d2 .bxg{fill:color-mix(in srgb,var(--c-gold) 16%,transparent);stroke:var(--c-gold);stroke-width:1.2;}
+html:root svg.d2 .bxr{fill:color-mix(in srgb,var(--c-red-l) 18%,transparent);stroke:var(--c-red-l);stroke-width:1.2;}
+html:root svg.d2 .bxk{fill:color-mix(in srgb,var(--c-ok) 18%,transparent);stroke:var(--c-ok);stroke-width:1.2;}
+html:root svg.d2 .sh{fill:color-mix(in srgb,var(--c-slate-l) 22%,transparent);stroke:var(--c-slate-l);stroke-width:1.2;stroke-linejoin:round;}
+html:root svg.d2 .sh2{fill:color-mix(in srgb,var(--c-slate-l) 10%,transparent);stroke:var(--c-slate-l);stroke-width:1;stroke-linejoin:round;}
+html:root svg.d2 .nu{fill:var(--c-gold);stroke:none;}
+html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
+/* Kapitelfenster: Tabellen ohne seitliches Scrollen lassen das Wischen zum Kapitelwechsel durch */
+.lp-wbody .tbl-wrap.tw-fit{overflow-x:hidden;touch-action:pan-y pinch-zoom;}
+
+/* Serie nach Duolingo-Vorbild: Flamme leuchtet erst nach dem Lernen, abends ohne Lernen rote Zahl */
+.g-chip.risk b{color:#ff4b4b;}
+.g-chip.risk{--gp:#ff4b4b;}
+.g-fzp{display:inline-grid;place-items:center;color:var(--m-muted);opacity:.55;}
+.g-fzp.has{color:#5aa9ff;opacity:1;}
+.g-ri .g-fzp+.g-fzp{margin-left:2px;}
+.g-ri:has(.g-fzp){display:flex;width:auto;padding:0 8px;gap:3px;}

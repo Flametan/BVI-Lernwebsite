@@ -25,6 +25,7 @@ const GAME=(function(){
     {id:'quiz',t:'5 Quizfragen richtig',max:5,get:(d)=>d.quizOk||0},
     {id:'time',t:'10 Minuten lernen',max:10,get:()=>Math.floor((typeof USAGE!=='undefined'?USAGE.today():0)/60)}
   ];
+  const FZ_MAX=2, FZ_EVERY=7, MILES=[7,30,100,365], RISK_HOUR=18;
   const TASK_XP=25, ALARM_GOAL=40, ALARM_XP=60;
 
   const IC={
@@ -34,6 +35,7 @@ const GAME=(function(){
     bolt:'<path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/>',
     truck:'<path d="M2.5 16V7h10v9M12.5 10h4.5l3 3v3h-7.5"/><circle cx="7" cy="17" r="1.8"/><circle cx="16.5" cy="17" r="1.8"/>',
     star:'<path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9 6.8 19.7l1-5.9-4.3-4.1 5.9-.8z"/>',
+    shield:'<path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"/>',
     bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5h4"/>',
     sun:'<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/>'
   };
@@ -57,13 +59,16 @@ const GAME=(function(){
 
   let queue=[], showing=false, combo=0, ST=null;
 
-  function blank(){ return {xp:0,days:{},badges:{},title:'',done:{},tot:{cards:0,quizOk:0,fahrt:0,combo:0,allTasks:0,alarm:0},alarm:{},path:0,off:0}; }
+  function blank(){ return {xp:0,days:{},badges:{},title:'',done:{},tot:{cards:0,quizOk:0,fahrt:0,combo:0,allTasks:0,alarm:0},alarm:{},path:0,off:0,fz:{have:0,used:{},last:''}}; }
   function load(){
     if(ST) return ST;
     let j=null; try{ j=JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){}
     ST=Object.assign(blank(),j&&typeof j==='object'&&!Array.isArray(j)?j:{});
     ST.tot=Object.assign(blank().tot,ST.tot||{});
     ['days','badges','done','alarm'].forEach(k=>{ if(!ST[k]||typeof ST[k]!=='object') ST[k]={}; });
+    if(!ST.fz||typeof ST.fz!=='object') ST.fz={have:0,used:{},last:''};
+    if(!ST.fz.used||typeof ST.fz.used!=='object') ST.fz.used={};
+    ST.fz.have=Math.max(0,Math.min(FZ_MAX,ST.fz.have|0));
     return ST;
   }
   function save(){
@@ -79,20 +84,44 @@ const GAME=(function(){
 
   function dayRec(k){ const s=load(); return s.days[k]||(s.days[k]={xp:0,cards:0,quiz:0,quizOk:0}); }
 
+  /* Serie nach dem Vorbild von Duolingo: ein Tag zählt, wenn gelernt wurde; ein Serien-Schutz überbrückt
+     einen verpassten Tag, ohne die Serie zu erhöhen */
   function streak(){
-    const s=load(), use=(typeof USAGE!=='undefined'&&USAGE.days)?USAGE.days():{};
+    const s=load(), use=(typeof USAGE!=='undefined'&&USAGE.days)?USAGE.days():{}, fz=s.fz.used;
     const act=k=>((s.days[k]&&s.days[k].xp>0)||(use[k]||0)>=60);
     const d=new Date(); let cur=0;
-    if(!act(dkey(d))) d.setDate(d.getDate()-1);
-    while(act(dkey(d))&&cur<2000){ cur++; d.setDate(d.getDate()-1); }
+    if(!act(dkey(d))&&!fz[dkey(d)]) d.setDate(d.getDate()-1);
+    for(let n=0;n<2000;n++){ const k=dkey(d); if(act(k)) cur++; else if(!fz[k]) break; d.setDate(d.getDate()-1); }
     const ks=new Set([...Object.keys(s.days),...Object.keys(use)].filter(act)), arr=[...ks].sort();
     let best=0,run=0,prev=null;
     for(const k of arr){
       const [y,m,dd]=k.split('-').map(Number), t=new Date(y,m-1,dd);
-      if(prev&&Math.round((t-prev)/864e5)===1) run++; else run=1;
+      if(prev){ let gap=Math.round((t-prev)/864e5), ok=gap>=1; for(let i=1;i<gap&&ok;i++){ const x=new Date(prev); x.setDate(x.getDate()+i); if(!fz[dkey(x)]) ok=false; } if(ok) run++; else run=1; } else run=1;
       best=Math.max(best,run); prev=t;
     }
-    return {cur,best:Math.max(best,cur),todayDone:act(today())};
+    const h=new Date().getHours();
+    return {cur,best:Math.max(best,cur),todayDone:act(today()),risk:cur>0&&!act(today())&&h>=RISK_HOUR,have:s.fz.have};
+  }
+  /* Verpasster Tag: ist ein Schutz vorhanden, wird er automatisch eingesetzt (bis zu 2 Tage am Stück) */
+  function settleFreeze(){
+    const s=load(), use=(typeof USAGE!=='undefined'&&USAGE.days)?USAGE.days():{}, fz=s.fz;
+    const act=k=>((s.days[k]&&s.days[k].xp>0)||(use[k]||0)>=60||fz.used[k]);
+    if(fz.have<=0) return false;
+    const miss=[]; const d=new Date(); d.setDate(d.getDate()-1);
+    while(!act(dkey(d))&&miss.length<=fz.have){ miss.push(dkey(d)); d.setDate(d.getDate()-1); }
+    if(!miss.length||miss.length>fz.have||!act(dkey(d))) return false;
+    miss.forEach(k=>{ fz.used[k]=1; fz.have--; });
+    Object.keys(fz.used).sort().slice(0,-30).forEach(k=>delete fz.used[k]);
+    toast('Serien-Schutz eingesetzt',miss.length>1?'Deine Serie bleibt bestehen ('+miss.length+' Tage überbrückt)':'Deine Serie bleibt bestehen','shield');
+    return true;
+  }
+  /* Meilensteine (7, 30, 100, 365 Tage): Feier; alle 7 Tage gibt es einen neuen Serien-Schutz */
+  function milestones(){
+    const s=load(), st=streak(), fz=s.fz;
+    if(!st.todayDone||st.cur<1||fz.last===today()) return;
+    fz.last=today();
+    if(st.cur%FZ_EVERY===0&&fz.have<FZ_MAX){ fz.have++; toast('Serien-Schutz erhalten','Fängt einen verpassten Tag ab · '+fz.have+' von '+FZ_MAX,'shield'); }
+    if(MILES.includes(st.cur)||(st.cur>365&&st.cur%100===0)){ toast(st.cur+' Tage Serie','Starke Leistung – weiter so!','flame'); confetti(); }
   }
 
   function weekKeys(offset=0){
@@ -200,10 +229,10 @@ const GAME=(function(){
         else combo=0;
       }
       s.xp+=gain; rec.xp+=gain;
-      evaluate();
+      settleFreeze(); evaluate(); milestones();
       const post=rankOf(s.xp);
       if(post.i>pre.i) toast('Beförderung: '+post.n,GROUPS[post.g].n+' · '+s.xp+' Punkte','star'), confetti();
-      save(); refresh();
+      save(); refresh(); pushIcon();
     }catch(e){}
   }
 
@@ -214,9 +243,15 @@ const GAME=(function(){
   }
   function flameIc(sz){ return svg('flame',sz); }
 
+  /* wie bei Duolingo: Flamme leuchtet, sobald heute gelernt wurde; abends ohne Lernen wird die Zahl rot */
+  const chipCls=st=>(st.cur>0&&st.todayDone?' on':'')+(st.risk?' risk':'');
+  function freezeRow(st){
+    const pips=Array.from({length:FZ_MAX},(_,i)=>`<span class="g-fzp${i<st.have?' has':''}">${svg('shield',16)}</span>`).join('');
+    return `<div class="g-row"><span class="g-ri">${pips}</span><span class="g-rt"><b>Serien-Schutz: ${st.have} von ${FZ_MAX}</b><span>Fängt einen verpassten Tag ab · alle ${FZ_EVERY} Tage ein neuer</span></span></div>`;
+  }
   function chip(){
     const s=load(), st=streak(), r=rankOf(s.xp);
-    return `<button type="button" class="g-chip${st.cur>0?' on':''}" id="g-chip" aria-expanded="false" aria-controls="g-panel" aria-label="Belohnungen: ${st.cur} Tage Serie, ${esc(r.n)}" onclick="GAME.toggle(this)"><span class="g-fl${st.cur>0?' on':''}">${flameIc(15)}</span><b>${st.cur}</b></button>`;
+    return `<button type="button" class="g-chip${chipCls(st)}" id="g-chip" aria-expanded="false" aria-controls="g-panel" aria-label="Belohnungen: ${st.cur} Tage Serie${st.risk?' in Gefahr':''}, ${esc(r.n)}" onclick="GAME.toggle(this)"><span class="g-fl${st.cur>0&&st.todayDone?' on':''}">${flameIc(15)}</span><b>${st.cur}</b></button>`;
   }
   function pathNext(){
     if(typeof MODS==='undefined'||typeof PROGRESS==='undefined') return null;
@@ -237,7 +272,8 @@ const GAME=(function(){
       <div class="g-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Fortschritt zum nächsten Rang"><i style="width:${pct}%;background:${g.c}"></i></div>
       <div class="g-sub">${nx?`Noch ${nx.xp-s.xp} Punkte bis ${esc(nx.n)}`:'Höchster Rang erreicht'}</div>
       <div class="g-h">Serie</div>
-      <div class="g-row"><span class="g-ri g-fl on">${flameIc(18)}</span><span class="g-rt"><b>${st.cur} ${st.cur===1?'Tag':'Tage'} in Folge</b><span>${st.todayDone?'Heute schon gelernt':'Lerne heute, damit die Serie nicht reißt'} · Rekord ${st.best}</span></span></div>
+      <div class="g-row"><span class="g-ri g-fl${st.cur>0&&st.todayDone?' on':''}">${flameIc(18)}</span><span class="g-rt"><b>${st.cur} ${st.cur===1?'Tag':'Tage'} in Folge</b><span>${st.todayDone?'Heute schon gelernt':st.cur>0?(st.risk?'Deine Serie ist in Gefahr – lerne noch heute':'Lerne heute, damit die Serie nicht reißt'):'Lerne heute, um eine Serie zu starten'} · Rekord ${st.best}</span></span></div>
+      ${freezeRow(st)}
       <div class="g-h">Tagesaufgaben</div>
       <ul class="g-tasks">${tasks}</ul>
       <div class="g-h">Einsatz-Alarm der Woche</div>
@@ -260,10 +296,25 @@ const GAME=(function(){
   function refresh(){
     const p=document.getElementById('g-panel'), c=document.getElementById('g-chip');
     if(p&&!p.hidden) p.innerHTML=panel();
-    if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.cur>0); c.classList.toggle('on',st.cur>0); }
+    if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.cur>0&&st.todayDone); c.classList.toggle('on',st.cur>0&&st.todayDone); c.classList.toggle('risk',!!st.risk); }
   }
+  // Android-App: Startsymbol mit kleiner Flamme (brennt / wird schwach); Serie und Tag des letzten Lernens an die App melden
+  let iconT=0;
+  function pushIcon(){
+    clearTimeout(iconT);
+    iconT=setTimeout(()=>{
+      if(!window.BVIAndroid||!BVIAndroid.setStreak) return;
+      try{
+        const st=streak(), y=new Date(); y.setDate(y.getDate()-1);
+        BVIAndroid.setStreak(load().off?0:st.cur, st.cur>0?(st.todayDone?today():dkey(y)):'');
+      }catch(e){}
+    },800);
+  }
+  try{ if(settleFreeze()) save(); }catch(e){}
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') pushIcon(); });
+  setTimeout(pushIcon,3000);
   function setPath(on){ load().path=on?1:0; save(); refresh(); }
-  function setOff(off){ load().off=off?1:0; save(); if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome(); }
+  function setOff(off){ load().off=off?1:0; save(); pushIcon(); if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome(); }
   function isOn(){ return !load().off; }
 
   function renderGame(){
@@ -378,5 +429,5 @@ const GAME=(function(){
   }
 
   function onShow(id){ if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek(); }
-  return {event,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
+  return {event,pushIcon,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
