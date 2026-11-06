@@ -1070,6 +1070,7 @@ const SEARCH = (function(){
   function buildIndex(){
     if(_indexBuilt) return;
     _indexBuilt = true;
+    if(typeof VIEWS!=='undefined') VIEWS.ensureAll();   // die Suche braucht den Inhalt aller Ansichten
     idx = [];
     Object.keys(VIEW_LABELS).forEach(vid => {
       if(/^v-lb-/.test(vid)) return;   // gesperrter Bereich nicht in der Suche
@@ -6520,6 +6521,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     }).catch(()=>{});
   }
   ABK.render(); ABK.filter('');
+  // Übrige Ansichten im Leerlauf nach dem Start einsetzen
+  if(document.readyState==='complete') setTimeout(VIEWS.idle,1200); else window.addEventListener('load',()=>setTimeout(VIEWS.idle,1200));
   console.log('%c B VI %c Lernwebsite '+APP_VERSION+' · flametan/BVI-Lernwebsite ',
     'background:#A50000;color:#fff;padding:3px 8px;border-radius:4px 0 0 4px;font-family:"DM Mono",monospace;font-weight:700',
     'background:#0A192F;color:#C9A84C;padding:3px 8px;border-radius:0 4px 4px 0;font-family:"DM Mono",monospace');
@@ -6644,6 +6647,12 @@ const RAIL=(function(){
    Tabellen einrahmen) laufen erst, wenn eine Ansicht zum ersten Mal geöffnet wird, nicht für alle beim Start.
 ====================================================================== */
 const VIEWS=(function(){
+  // Lernseiten liegen in index.html als <template data-lazy-view="v-…"> (siehe tools/lazy_views.py) und werden
+  // erst beim Öffnen, bei der Suche oder im Leerlauf nach dem Start in das Dokument eingesetzt.
+  const T=new Map(), IDS=window.__LAZY_IDS||{};
+  document.querySelectorAll('template[data-lazy-view]').forEach(t=>T.set(t.dataset.lazyView,t));
+  const _gid=Document.prototype.getElementById, _qs=Document.prototype.querySelector;
+
   function heavy(root){
   // Schaubilder: kleinste Schrift soll am Handy lesbar bleiben (~9,5 px); sonst seitlich wischbar, Tippen vergrößert
   root.querySelectorAll('.diagram-wrap svg').forEach(svg=>{
@@ -6682,10 +6691,48 @@ const VIEWS=(function(){
 
   }
   function enhance(v){ if(!v||v._enh) return; v._enh=1; heavy(v); }
+  function hydrate(id){
+    const t=T.get(id); if(!t) return null;
+    T.delete(id);
+    const el=t.content.firstElementChild;
+    t.replaceWith(t.content);
+    light(el);
+    return el;
+  }
+  // document.getElementById und document.querySelector('#…') finden auch Elemente in noch nicht eingesetzten Ansichten
+  const owner=id=>T.has(id)?id:(IDS[id]&&T.has(IDS[id])?IDS[id]:null);
+  Document.prototype.getElementById=function(id){
+    let e=_gid.call(this,id);
+    if(!e&&this===document){ const o=owner(id); if(o){ hydrate(o); e=_gid.call(this,id); } }
+    return e;
+  };
+  Document.prototype.querySelector=function(sel){
+    if(this===document&&typeof sel==='string'&&sel.charCodeAt(0)===35){ const m=/^#([\w-]+)/.exec(sel), o=m&&owner(m[1]); if(o) hydrate(o); }
+    return _qs.call(this,sel);
+  };
+  let idleOn=false;
+  function ensureAll(){ [...T.keys()].forEach(hydrate); }
+  function afterAll(){
+    // Dinge, die beim Start über das ganze Dokument laufen, für die nachgeladenen Ansichten nachholen
+    try{ if(typeof PROGRESS!=='undefined') PROGRESS.updateUI(); }catch(e){}
+    window.dispatchEvent(new Event('views:ready'));
+  }
+  // Im Leerlauf nach dem Start nach und nach alle übrigen Ansichten einsetzen (je Schritt eine)
+  function idle(){
+    if(idleOn||!T.size) return; idleOn=true;
+    const ric=window.requestIdleCallback||(f=>setTimeout(()=>f({timeRemaining:()=>20}),60));
+    const step=dl=>{
+      const t0=performance.now();
+      while(T.size&&(dl.timeRemaining()>6||performance.now()-t0<2)){ hydrate(T.keys().next().value); if(performance.now()-t0>12) break; }
+      if(T.size) ric(step,{timeout:2000}); else afterAll();
+    };
+    ric(step,{timeout:2000});
+  }
   return {
-    light, enhance,
-    // alle Ansichten fertig nachbearbeiten (Tests, Suche)
-    hydrateAll(){ document.querySelectorAll('.view').forEach(enhance); }
+    light, enhance, hydrate, ensureAll, idle,
+    pending(){ return T.size; },
+    // alle Ansichten einsetzen und fertig nachbearbeiten (Tests)
+    hydrateAll(){ ensureAll(); document.querySelectorAll('.view').forEach(enhance); afterAll(); }
   };
 })();
 
