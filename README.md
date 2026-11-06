@@ -156,7 +156,7 @@ Wichtige CSS-Klassen: `.info-card`, `.def-box`, `.hint`, `.step-stack`, `.acc-li
 Aktuelle Version: **3.2.0**  
 `js/version.js` und `sw.js` müssen immer synchron gehalten werden.
 
-**Eine Version pro Tag:** Die erste Änderung eines Tages hebt die letzte Stelle um 1 an (3.2.0, am nächsten Tag mit Änderungen 3.2.1, …) und legt in `CHANGELOG.ENTRIES` (`js/app.js`) einen neuen Eintrag mit dem Datum an; weitere Änderungen desselben Tages kommen in denselben Eintrag und ändern die Versionsnummer nicht. Dazu gehören `js/version.js`, `sw.js` und die Angaben in dieser Datei. Die Android-App wird bei Änderung von `js/version.js` neu gebaut.
+**Eine Version pro Tag:** Die erste Änderung eines Tages hebt die letzte Stelle um 1 an (3.2.0, am nächsten Tag mit Änderungen 3.2.1, …) und legt in `CHANGELOG_ENTRIES` (`js/changelog-data.js`) einen neuen Eintrag mit dem Datum an; weitere Änderungen desselben Tages kommen in denselben Eintrag und ändern die Versionsnummer nicht. Dazu gehören `js/version.js`, `sw.js` und die Angaben in dieser Datei. Die Android-App wird bei Änderung von `js/version.js` neu gebaut.
 
 ```javascript
 // js/version.js

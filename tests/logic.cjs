@@ -645,8 +645,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
 
   // ── Versionsnummer: version.js, sw.js und oberster Eintrag der Neuigkeiten stimmen überein ──
   const ver = await page.evaluate(async () => {
-    const sw = await (await fetch('sw.js')).text(), app = await (await fetch('js/app.js')).text(), rd = await (await fetch('README.md')).text();
-    const top = /const ENTRIES=\[\s*\{v:'([\d.]+)'/.exec(app);
+    const sw = await (await fetch('sw.js')).text(), app = await (await fetch('js/changelog-data.js')).text(), rd = await (await fetch('README.md')).text();
+    const top = /const CHANGELOG_ENTRIES=\[\s*\{v:'([\d.]+)'/.exec(app);
     return { fmt: /^\d+\.\d+\.\d+$/.test(APP_VERSION), sw: sw.includes("APP_VERSION = '" + APP_VERSION + "'"), top: !!top && top[1] === APP_VERSION, readme: rd.includes('Aktuelle Version: **' + APP_VERSION + '**') };
   });
   eq('Version: version.js, sw.js, README und oberster Neuigkeiten-Eintrag stimmen überein', ver, { fmt: true, sw: true, top: true, readme: true });
