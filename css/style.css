@@ -3980,3 +3980,11 @@ html:root svg.d2 .nu{fill:var(--c-gold);stroke:none;}
 html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 /* Kapitelfenster: Tabellen ohne seitliches Scrollen lassen das Wischen zum Kapitelwechsel durch */
 .lp-wbody .tbl-wrap.tw-fit{overflow-x:hidden;touch-action:pan-y pinch-zoom;}
+
+/* Serie nach Duolingo-Vorbild: Flamme leuchtet erst nach dem Lernen, abends ohne Lernen rote Zahl */
+.g-chip.risk b{color:#ff4b4b;}
+.g-chip.risk{--gp:#ff4b4b;}
+.g-fzp{display:inline-grid;place-items:center;color:var(--m-muted);opacity:.55;}
+.g-fzp.has{color:#5aa9ff;opacity:1;}
+.g-ri .g-fzp+.g-fzp{margin-left:2px;}
+.g-ri:has(.g-fzp){display:flex;width:auto;padding:0 8px;gap:3px;}
