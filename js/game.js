@@ -127,7 +127,7 @@ const GAME=(function(){
     const end=()=>{ if(over) return; over=true; h.classList.remove('on'); drop.onclick=null; showing=false; setTimeout(pump,250); };
     // Antippen öffnet Rang & Abzeichen und springt zum aktuellen Dienstgrad
     drop.setAttribute('role','button'); drop.setAttribute('tabindex','0'); drop.setAttribute('aria-label',m.t+'. Öffnet Rang und Abzeichen');
-    const openRank=()=>{ if(over) return; drop.getAnimations().forEach(x=>x.cancel()); drop.style.opacity='0'; end(); if(typeof NAV!=='undefined') NAV.go('v-game','Rang & Abzeichen'); setTimeout(()=>{ const c=document.querySelector('#game-body .g-lr.cur'); if(c) c.scrollIntoView({block:'center',behavior:reduced()?'auto':'smooth'}); },350); };
+    const openRank=()=>{ if(over) return; drop.getAnimations().forEach(x=>x.cancel()); drop.style.opacity='0'; end(); openRank(); };
     drop.onclick=openRank; drop.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openRank(); } };
     drop.style.opacity='';
     if(reduced()||!drop.animate){ goo.style.filter='none'; drop.style.opacity='1'; setTimeout(()=>{ if(over) return; drop.style.opacity='0'; end(); },3200); return; }
@@ -233,7 +233,7 @@ const GAME=(function(){
     const pathRow=s.path
       ?`<div class="g-row g-path"><span class="g-ri">${svg('bolt',18)}</span><span class="g-rt"><b>Lernpfad</b><span>${pn?`Als Nächstes: ${esc(pn.m[1])} · ${pn.c.done}/${pn.c.total} Themen`:'Alles geschafft'}</span></span>${pn?`<button type="button" class="g-go" onclick="NAV.go(${esc(JSON.stringify(pn.m[3]))},${esc(JSON.stringify(pn.m[4]))})">Weiter</button>`:''}<button type="button" class="g-off" aria-label="Lernpfad ausblenden" onclick="GAME.setPath(0)">×</button></div>`
       :`<button type="button" class="g-row g-pathon" onclick="GAME.setPath(1)"><span class="g-ri">${svg('bolt',18)}</span><span class="g-rt"><b>Lernpfad einschalten</b><span>Zeigt dir das Thema mit dem größten Nachholbedarf</span></span></button>`;
-    return `<div class="g-rank"><span class="g-rk-ic">${shoulder(r,46)}</span><span class="g-rk-t"><b>${esc(r.n)}</b><span style="color:${g.c}">${g.n}${s.title?' · '+esc(s.title):''}</span></span><span class="g-xp">${s.xp}<small> Punkte</small></span></div>
+    return `<button type="button" class="g-rank g-rank-go" aria-label="Rang und Abzeichen öffnen" onclick="GAME.openRank()"><span class="g-rk-ic">${shoulder(r,46)}</span><span class="g-rk-t"><b>${esc(r.n)}</b><span style="color:${g.c}">${g.n}${s.title?' · '+esc(s.title):''}</span></span><span class="g-xp">${s.xp}<small> Punkte</small></span><svg class="g-chv" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
       <div class="g-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Fortschritt zum nächsten Rang"><i style="width:${pct}%;background:${g.c}"></i></div>
       <div class="g-sub">${nx?`Noch ${nx.xp-s.xp} Punkte bis ${esc(nx.n)}`:'Höchster Rang erreicht'}</div>
       <div class="g-h">Serie</div>
@@ -254,6 +254,7 @@ const GAME=(function(){
     (btn||document.getElementById('g-chip')).setAttribute('aria-expanded',String(_open));
     if(_open){ p.innerHTML=panel(); if(p.animate&&!reduced()) p.animate([{opacity:0,transform:'translateY(-6px)'},{opacity:1,transform:'none'}],{duration:200,easing:'ease-out'}); }
   }
+  function openRank(){ if(typeof NAV!=='undefined') NAV.go('v-game','Rang & Abzeichen'); setTimeout(()=>{ const c=document.querySelector('#game-body .g-lr.cur'); if(c) c.scrollIntoView({block:'center',behavior:reduced()?'auto':'smooth'}); },350); }
   function open(){ const p=document.getElementById('g-panel'); if(p&&p.hidden) toggle(); }
   function close(){ const p=document.getElementById('g-panel'); if(p&&!p.hidden) toggle(); }
   function refresh(){
@@ -284,26 +285,74 @@ const GAME=(function(){
     const min=Math.round(secs/60), lt=min>=60?Math.floor(min/60)+' Std. '+(min%60)+' Min.':min+' Min.';
     return `Meine Lernwoche (B VI – Höherer Dienst)\nLernzeit: ${lt}\nLernkarten: ${w.cards} · Quizfragen richtig: ${w.quizOk}\nSerie: ${st.cur} ${st.cur===1?'Tag':'Tage'}\nRang: ${r.n}${s.title?' · '+s.title:''} (${s.xp} Punkte)\nhttps://flametan.github.io/BVI-Lernwebsite/`;
   }
+  /* Wochen-Rückblick als Bild im Story-Format (1080 × 1920) – passend für WhatsApp-Status, Instagram und andere Apps */
+  function weekData(){
+    const s=load(), w=weekSum(), st=streak(), r=rankOf(s.xp);
+    const use=(typeof USAGE!=='undefined')?USAGE.week():[0,0,0,0,0,0,0], secs=use.reduce((a,b)=>a+b,0), min=Math.round(secs/60);
+    const lt=min>=60?Math.floor(min/60)+' Std. '+(min%60)+' Min.':min+' Min.';
+    const k=weekKeys(), f=x=>{ const [y,m,d]=x.split('-'); return d+'.'+m+'.'; };
+    return {s,w,st,r,use,lt,range:f(k[0])+' – '+f(k[6])+k[6].slice(0,4)};
+  }
+  function rr(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+  function weekImage(){
+    const d=weekData(), W=1080, H=1920, cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+    const c=cv.getContext('2d'), cs=getComputedStyle(document.documentElement);
+    const acc=(cs.getPropertyValue('--m-accent')||'#FFA412').trim()||'#FFA412', g=GROUPS[d.r.g];
+    const FONT='system-ui,-apple-system,"Segoe UI",Roboto,sans-serif';
+    const bg=c.createLinearGradient(0,0,0,H); bg.addColorStop(0,'#1d1d1d'); bg.addColorStop(1,'#0b0b0b'); c.fillStyle=bg; c.fillRect(0,0,W,H);
+    const gl=c.createRadialGradient(W/2,0,0,W/2,0,900); gl.addColorStop(0,acc+'55'); gl.addColorStop(1,'transparent'); c.fillStyle=gl; c.fillRect(0,0,W,H);
+    c.textBaseline='alphabetic'; c.fillStyle='#fff';
+    c.font='700 40px '+FONT; c.fillStyle=acc; c.fillText('B VI – HÖHERER DIENST',80,150);
+    c.fillStyle='#fff'; c.font='800 104px '+FONT; c.fillText('Meine Lernwoche',80,280);
+    c.fillStyle='#9a9a9a'; c.font='500 40px '+FONT; c.fillText(d.range,80,345);
+    // Rang
+    rr(c,80,420,920,260,36); c.fillStyle='#262626'; c.fill();
+    const sx=120, sy=490, sw=200, sh=120; rr(c,sx,sy,sw,sh,16); c.fillStyle=g.c+'3d'; c.fill(); c.lineWidth=7; c.strokeStyle=g.c; c.stroke();
+    for(let i=0;i<d.r.pip;i++){ c.beginPath(); c.arc(sx+sw/2+(i-(d.r.pip-1)/2)*46,sy+sh/2,15,0,7); c.fillStyle=g.c; c.fill(); }
+    c.fillStyle='#fff'; c.font='800 58px '+FONT; c.fillText(d.r.n,360,535);
+    c.fillStyle=g.c; c.font='600 38px '+FONT; c.fillText(g.n+(d.s.title?' · '+d.s.title:''),360,590);
+    c.fillStyle='#9a9a9a'; c.font='500 34px '+FONT; c.fillText(d.s.xp+' Punkte',360,640);
+    // Balken
+    const mx=Math.max(60,...d.use), bx=80, bw=920, by=1060, bh=170, gap=22, wd=(bw-gap*6)/7;
+    c.fillStyle='#9a9a9a'; c.font='600 34px '+FONT; c.fillText('Lernzeit pro Tag',80,745); c.fillStyle='#fff'; c.font='800 84px '+FONT; c.fillText(d.lt,80,835);
+    d.use.forEach((v,i)=>{ const h=Math.max(8,Math.round(v/mx*bh)), x=bx+i*(wd+gap); rr(c,x,by-h,wd,h,14); c.fillStyle=v>0?acc:'#333'; c.fill(); c.fillStyle='#9a9a9a'; c.font='600 30px '+FONT; c.textAlign='center'; c.fillText(DAYN[i],x+wd/2,by+46); c.textAlign='left'; });
+    // Kacheln
+    const T=[[d.w.cards,'Lernkarten'],[d.w.quizOk,'Quizfragen richtig'],[d.st.cur,d.st.cur===1?'Tag Serie':'Tage Serie'],[Object.keys(d.s.badges).length,'Abzeichen']];
+    T.forEach((t,i)=>{ const x=80+(i%2)*470, y=1170+Math.floor(i/2)*260; rr(c,x,y,450,230,32); c.fillStyle='#262626'; c.fill(); c.fillStyle='#fff'; c.font='800 96px '+FONT; c.fillText(String(t[0]),x+36,y+120); c.fillStyle='#9a9a9a'; c.font='500 36px '+FONT; c.fillText(t[1],x+36,y+182); });
+    c.fillStyle='#9a9a9a'; c.font='500 36px '+FONT; c.textAlign='center'; c.fillText('flametan.github.io/BVI-Lernwebsite',W/2,1800); c.textAlign='left';
+    return new Promise(res=>cv.toBlob(b=>res(b),'image/png'));
+  }
+  let _blob=null, _url='';
   function renderWeek(){
     const el=document.getElementById('week-body'); if(!el) return;
-    const s=load(), w=weekSum(), pw=weekSum(-1), st=streak(), r=rankOf(s.xp), keys=weekKeys();
-    const use=(typeof USAGE!=='undefined')?USAGE.week():[0,0,0,0,0,0,0], secs=use.reduce((a,b)=>a+b,0), min=Math.round(secs/60), mx=Math.max(60,...use);
-    const bars=use.map((v,i)=>`<span class="g-wb"><i style="height:${Math.round(v/mx*100)}%"></i><em>${DAYN[i]}</em></span>`).join('');
+    const d=weekData(), s=d.s, w=d.w, pw=weekSum(-1), st=d.st, r=d.r;
+    const bars=d.use.map((v,i)=>`<span class="g-wb"><i style="height:${Math.round(v/Math.max(60,...d.use)*100)}%"></i><em>${DAYN[i]}</em></span>`).join('');
     const delta=(a,b)=>b?(a>=b?'▲ ':'▼ ')+Math.abs(a-b):'';
-    const lt=min>=60?Math.floor(min/60)+' Std. '+(min%60)+' Min.':min+' Min.';
     el.innerHTML=`<div class="g-card g-wk"><div class="g-rank"><span class="g-rk-ic">${shoulder(r,46)}</span><span class="g-rk-t"><b>${esc(r.n)}</b><span style="color:${GROUPS[r.g].c}">${GROUPS[r.g].n}${s.title?' · '+esc(s.title):''}</span></span></div>
       <div class="g-wbars" role="img" aria-label="Lernzeit pro Wochentag">${bars}</div>
-      <div class="g-stats"><div><b>${lt}</b><span>Lernzeit</span></div><div><b>${w.cards}</b><span>Lernkarten <small>${delta(w.cards,pw.cards)}</small></span></div><div><b>${w.quizOk}</b><span>Quiz richtig <small>${delta(w.quizOk,pw.quizOk)}</small></span></div><div><b>${st.cur}</b><span>Tage Serie</span></div></div>
-      <div class="g-share"><button type="button" class="btn btn-primary" onclick="GAME.share(this)">Teilen</button><span class="g-sh-msg" aria-live="polite"></span></div></div>`;
+      <div class="g-stats"><div><b>${d.lt}</b><span>Lernzeit</span></div><div><b>${w.cards}</b><span>Lernkarten <small>${delta(w.cards,pw.cards)}</small></span></div><div><b>${w.quizOk}</b><span>Quiz richtig <small>${delta(w.quizOk,pw.quizOk)}</small></span></div><div><b>${st.cur}</b><span>Tage Serie</span></div></div></div>
+      <h2 class="g-h2">Bild zum Teilen</h2>
+      <div class="g-card g-shcard"><img class="g-wimg" id="g-wimg" alt="Vorschau des Wochen-Rückblicks als Bild" width="270" height="480"><div class="g-share"><button type="button" class="g-btn" onclick="GAME.share(this)">Teilen</button><button type="button" class="g-btn alt" onclick="GAME.saveImg(this)">Bild speichern</button></div><span class="g-sh-msg" aria-live="polite"></span><p class="g-empty">Das Bild passt als Status oder Story. Bei „Teilen“ wählst du WhatsApp, Instagram oder eine andere App.</p></div>`;
+    _blob=null;
+    weekImage().then(b=>{ _blob=b; if(!b) return; if(_url) URL.revokeObjectURL(_url); _url=URL.createObjectURL(b); const im=document.getElementById('g-wimg'); if(im) im.src=_url; });
   }
-  function share(btn){
-    const txt=weekText(), msg=btn.parentNode.querySelector('.g-sh-msg');
-    const ok=m=>{ if(msg){ msg.textContent=m; setTimeout(()=>{ msg.textContent=''; },2500); } };
-    if(navigator.share){ navigator.share({title:'Meine Lernwoche',text:txt}).catch(()=>{}); return; }
-    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(()=>ok('Text kopiert'),()=>ok('Kopieren nicht möglich'));
-    else ok('Teilen wird nicht unterstützt');
+  function note(btn,m){ const msg=btn.closest('.g-shcard').querySelector('.g-sh-msg'); if(msg){ msg.textContent=m; setTimeout(()=>{ msg.textContent=''; },3000); } }
+  async function share(btn){
+    const blob=_blob||await weekImage(), txt=weekText();
+    const file=new File([blob],'lernwoche.png',{type:'image/png'});
+    try{
+      if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:'Meine Lernwoche',text:'Meine Lernwoche in der B-VI-App'}); return; }
+      if(navigator.share){ await navigator.share({title:'Meine Lernwoche',text:txt}); return; }
+    }catch(e){ if(e&&e.name==='AbortError') return; }
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(()=>note(btn,'Text kopiert. Das Bild kannst du speichern und selbst teilen.'),()=>note(btn,'Bitte speichere das Bild.')); }
+    else note(btn,'Bitte speichere das Bild und teile es selbst.');
+  }
+  async function saveImg(btn){
+    const blob=_blob||await weekImage(), u=URL.createObjectURL(blob), a=document.createElement('a');
+    a.href=u; a.download='lernwoche.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000);
+    note(btn,'Bild gespeichert. Falls nichts passiert: Vorschau gedrückt halten.');
   }
 
   function onShow(id){ if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek(); }
-  return {event,homeHtml,toggle,open,close,refresh,setPath,setOff,isOn,setTitle,share,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
+  return {event,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();

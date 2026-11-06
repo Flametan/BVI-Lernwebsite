@@ -4457,6 +4457,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Wochen-Rückblick: Wird jetzt als Bild im Story-Format geteilt (WhatsApp, Instagram und andere Apps) oder gespeichert. Ein Tipp auf den Rang im Belohnungsfeld öffnet „Rang & Abzeichen“.',
       'Der Tropfen bei neuen Abzeichen und Beförderungen lässt sich antippen: Er öffnet „Rang & Abzeichen“ und zeigt deinen aktuellen Dienstgrad.',
       'Die Flamme der Serie pulsiert: grau, solange du heute noch nicht gelernt hast, orange bei aktiver Serie. Die App-Tour zeigt die Serie jetzt in einem eigenen Schritt.',
       'Schriftgröße: Der Regler arbeitet jetzt stufenlos (statt in vier Sprüngen); die Anzeige nennt die Größe in Prozent.',
