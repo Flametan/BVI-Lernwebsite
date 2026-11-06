@@ -4457,6 +4457,7 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Einstellungen: Das Suchsymbol sieht jetzt aus wie auf der Startseite (gleiche Größe, Farbe und Lupe) und sitzt bei jeder Breite an derselben Stelle.',
       'Wochen-Rückblick: „Teilen“ und „Bild speichern“ funktionieren jetzt in der Android-App (Teilen-Menü mit WhatsApp und Instagram, Bild landet in Bilder/B VI) und zeigen immer eine Rückmeldung. Dafür ist die neue App-Version nötig.',
       'Das aufgeklappte Belohnungsfeld auf der Startseite reicht auf Tablet und PC immer bis zum Rand.',
       'Serie: Flamme und Puls-Ring sind orange, sobald eine Serie läuft (auch wenn du heute noch nicht gelernt hast), und nur ohne Serie grau.',

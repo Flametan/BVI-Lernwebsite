@@ -3706,3 +3706,8 @@ button.g-rank-go:active{background:var(--m-raised);}
   .m-mods{grid-column:1 / -1;grid-row:3;}
   .m-modrow .m-t1,.m-modrow .m-t2{white-space:normal;}
 }
+/* Einstellungen: Suchsymbol sitzt an derselben Stelle wie auf der Startseite */
+@media(max-width:700px){.set-tools{right:16px;top:-8px;}}
+@media(min-width:701px) and (max-width:1099px){.set-tools{right:32px;top:32px;}}
+@media(min-width:1100px){.set-tools{right:48px;top:0;}}
+@media(min-width:701px) and (max-width:1099px){#v-settings .page-hero{position:relative;}#v-settings .page-hero .phi{position:static;}}
