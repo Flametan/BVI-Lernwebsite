@@ -14,7 +14,9 @@ const TOUR=(function(){
   // Ziel kann ein Element oder eine Liste sein (dann gilt der gemeinsame Rahmen aller sichtbaren Elemente)
   const rectOf=t=>{ const els=(Array.isArray(t)?t:[t]).filter(vis); if(!els.length) return null; let l=1e9,tp=1e9,r=-1e9,b=-1e9; els.forEach(e=>{ const q=e.getBoundingClientRect(); l=Math.min(l,q.left); tp=Math.min(tp,q.top); r=Math.max(r,q.right); b=Math.max(b,q.bottom); }); return {left:l,top:tp,right:r,bottom:b,width:r-l,height:b-tp}; };
   const accOf=id=>()=>{ const h=document.getElementById(id); return h&&h.closest('.m-acc'); };
-  const home=()=>NAV.home(), tab=(v,l)=>()=>NAV.tab(v,l);
+  // Seite nur wechseln, wenn sie nicht schon offen ist – sonst würde sie bei jedem Schritt neu aufgebaut und der Spotlight flackern
+  const cur=()=>{ const a=document.querySelector('.view.active'); return a?a.id:''; };
+  const home=()=>{ if(cur()!=='v-home') NAV.home(); }, tab=(v,l)=>()=>{ if(cur()!==v) NAV.tab(v,l); };
   const ALL=[
     {t:'Willkommen in der App',x:'Hier lernst du für B VI: Lernseiten, Prüfungen, Lernkarten und Stundenplan an einem Ort. Die Tour zeigt dir in 2 Minuten alles Wichtige.',go:home,target:null},
     {t:'Deine Startseite',x:'Oben begrüßt dich die App und zeigt Datum und die nächste Unterrichtseinheit. Von hier aus kommst du überall hin.',go:home,target:()=>$('#v-home .m-hello')},
@@ -25,7 +27,7 @@ const TOUR=(function(){
     {t:'Tab: Prüfung',x:'Der große Knopf in der Mitte führt zu den Klausuren, Altklausuren und dem Simulator. Der Stern ★ markiert, welche Prüfungen für Einsatzfahrt und Lernkarten wichtig sind.',go:tab('v-pruefung','Prüfung'),target:()=>tabEl('exam')},
     {t:'Laufbahnprüfung',x:'Hier stehen die Eingrenzungen mit Lösungen von mir. Sie dürfen gerne verbessert werden.',go:tab('v-pruefung','Prüfung'),when:()=>typeof JG!=='undefined'&&JG.isMaster(),target:()=>$('#m-exam-list .jg-rw.lbg')||$('#m-exam-list .jg-rw')},
     {t:'Tab: Lernkarten',x:'Lernkarten üben mit Wiederholung: Du siehst die Frage, deckst die Antwort auf und sagst, ob du sie wusstest.',go:tab('v-flashcards','Lernkarten'),target:()=>tabEl('cards')},
-    {t:'Karte und Antwort',x:'Tippe auf die Karte, um die Antwort zu sehen. Danach „Gewusst“ oder „Nicht gewusst“ – oder wische die Karte zur Seite. Gewusste Karten kommen später wieder.',go:()=>{ NAV.tab('v-flashcards','Lernkarten'); try{ if(!$('#v-flashcards .fc-outer')&&typeof FC!=='undefined') FC.start(); }catch(e){} },target:()=>$('#v-flashcards .fc-outer')||$('#fc-container')},
+    {t:'Karte und Antwort',x:'Tippe auf die Karte, um die Antwort zu sehen. Danach „Gewusst“ oder „Nicht gewusst“ – oder wische die Karte zur Seite. Gewusste Karten kommen später wieder.',go:()=>{ if(cur()!=='v-flashcards') NAV.tab('v-flashcards','Lernkarten'); try{ if(!$('#v-flashcards .fc-outer')&&typeof FC!=='undefined') FC.start(); }catch(e){} },target:()=>$('#v-flashcards .fc-outer')||$('#fc-container')},
     {t:'Karten filtern',x:'Hier wählst du, welche Karten du üben willst, zum Beispiel nur ein Fach oder nur fällige Karten.',go:tab('v-flashcards','Lernkarten'),target:()=>$('#v-flashcards .fc-filter-row')||$('#v-flashcards .pc')},
     {t:'Tab: Pausenraum',x:'Im Pausenraum warten Spiele wie die Einsatzfahrt – mit Fragen aus den Prüfungen, die du mit ★ als wichtig markiert hast.',go:tab('v-pause','Pausenraum'),target:()=>tabEl('pause')},
     {t:'Tab: Einstellungen',x:'Hier stellst du Aussehen, Lernziele und Erinnerungen ein und sicherst deine Daten. Diese Tour findest du hier unter „App vorstellen“.',go:tab('v-settings','Einstellungen'),target:()=>tabEl('settings')},
@@ -87,14 +89,17 @@ const TOUR=(function(){
     if(n>=STEPS.length){ close(); return; }
     busy=1; i=n; const s=STEPS[i];
     if(i===STEPS.length-1){ try{ localStorage.setItem('bvi_tour_done','1'); }catch(e){} }   // Tour bis zum Ende gesehen: Karte auf der Startseite entfällt
+    const before=cur();
     try{ s.go&&s.go(); }catch(e){}
+    const changed=before!==cur();   // Seitenwechsel: Spotlight kurz ausblenden und erst am fertigen Ziel wieder einblenden
     document.documentElement.classList.add('tour-lock');
+    if(changed){ root.classList.add('jump'); hole.style.opacity='0'; }
     setTimeout(()=>{
       const t=s.target&&s.target(), el=Array.isArray(t)?t.find(vis):t;
       if(el&&el.scrollIntoView&&vis(el)){ const r=el.getBoundingClientRect(); if(r.top<70||r.bottom>innerHeight-80) el.scrollIntoView({block:'center'}); }
       root.classList.add('on'); render();
-      requestAnimationFrame(()=>{ place(); busy=0; const nb=$('.tour-b1',root); if(nb) nb.focus({preventScroll:true}); });
-    },i===n&&s.go?380:120);
+      requestAnimationFrame(()=>{ place(); busy=0; const nb=$('.tour-b1',root); if(nb) nb.focus({preventScroll:true}); setTimeout(()=>root.classList.remove('jump'),60); });
+    },changed?420:30);
   }
 
   function close(){

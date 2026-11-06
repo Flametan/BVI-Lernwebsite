@@ -4424,6 +4424,8 @@ const CHANGELOG=(function(){
   }
   const ENTRIES=[
     {v:'3.1.6',ts:'2026-11-06T00:30',items:[
+      'Tour: Kein Neuladen und kein verzögertes Verschieben des Spotlights mehr bei „Weiter“. Die Seite wird nur noch gewechselt, wenn der nächste Schritt auf einer anderen Seite liegt; dann blendet der Rahmen erst am Ziel ein.',
+      'Startseite: Die Lücke zwischen „Lernstoff“ und den Standort-Karten ist halbiert.',
       'Startseite: Über dem Lernstoff steht eine leuchtende Karte „App kennenlernen“ mit der Tour. Nach der Tour (oder mit dem ✕) verschwindet sie; die Tour bleibt in den Einstellungen unter „App vorstellen“.',
       'Tour (Master-Lehrgang): Neuer Schritt zur Laufbahnprüfung – die Eingrenzungen mit Lösungen, die gerne verbessert werden dürfen.',
       'Neu: „App vorstellen“ in den Einstellungen – eine Tour mit Spotlight durch die Startseite, alle Tabs, die Lernkarten (Karte, Antwort, Filter) und die Einstellungen (Lehrgang, Aussehen, Lernen & Erinnerung, Daten & Werkzeuge). Mit Weiter, Zurück, Überspringen oder Esc.',

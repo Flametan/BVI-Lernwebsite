@@ -3537,3 +3537,9 @@ html.tour-lock{overflow:hidden;}
 .m-tourhome-x:hover{background:var(--m-raised);}
 @media(max-width:420px){.m-tourhome-btn{display:none;}}
 @media(prefers-reduced-motion:reduce){.m-tourhome-go{animation:none;}}
+
+/* Seitenwechsel in der Tour: Rahmen und Karte springen ohne Gleiten zum Ziel, der Rahmen blendet danach ein */
+#tour.jump .tour-hole{transition:opacity .25s;}
+#tour.jump .tour-tip{transition:none;}
+/* Lücke zwischen „Lernstoff“ und den Standort-Karten halbiert (18 → 9 px) */
+.m-seg2{padding-bottom:0;margin-bottom:-1px;}
