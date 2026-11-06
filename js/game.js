@@ -239,7 +239,7 @@ const GAME=(function(){
   /* ── Darstellung ── */
   function shoulder(r,sz=34){
     const g=GROUPS[r.g], pips=Array.from({length:r.pip},(_,i)=>`<i style="background:${g.c}"></i>`).join('');
-    return `<span class="g-sh" style="--gc:${g.c};width:${sz}px;height:${Math.round(sz*.7)}px" aria-hidden="true">${pips}</span>`;
+    return `<span class="g-sh${r.pip>=4?' g-sh4':''}" style="--gc:${g.c};width:${sz}px;height:${Math.round(sz*.7)}px" aria-hidden="true">${pips}</span>`;
   }
   function flameIc(sz){ return svg('flame',sz); }
 
