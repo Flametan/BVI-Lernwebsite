@@ -2,7 +2,7 @@
 const CHANGELOG_ENTRIES=[
     {v:'3.2.0',ts:'2026-11-06T10:00',items:[
       'Bildansicht: Wenn du ein Bild oder Schaubild vergrößerst und wieder schließt (Tippen, ✕, Esc oder Zurück-Taste), bleibst du jetzt auf der Seite und im Kapitel, statt eine Ebene zu weit zurückzuspringen.',
-      'Schaubilder passen sich dem Design an: Im hellen und beigen Design sind sie jetzt hell, in der Farbe der Karten, mit dunkler Schrift und kräftigeren Farben. Im dunklen Design bleibt alles wie bisher; die vergrößerte Ansicht bleibt dunkel.',
+      'Schaubilder passen sich dem Design an: Im hellen und beigen Design sind sie jetzt hell, in der Farbe der Karten, mit dunkler Schrift und kräftigeren Farben. Im dunklen Design bleibt alles wie bisher. Auch die vergrößerte Bildansicht hat im hellen und beigen Design einen hellen Hintergrund statt Schwarz.',
       'Laufbahnprüfung: Statt eines Fensters erscheint nur ein Passwortfeld genau über der angetippten Zeile, das wie die Suche aus dem Knopf herauswächst und rechts einen Enter-Knopf hat. Ein falsches Passwort lässt das Feld rot wackeln, das richtige zeigt einen grünen Haken und öffnet die Seite.',
       'Lernseiten: „Nächstes Kapitel“ und „Vorheriges Kapitel“ gehen jetzt über das Seitenende hinaus. Nach dem letzten Kapitel öffnet sich die nächste Seite der Übersicht, zurück genauso.',
       'Lernseiten (Touch): Mit einem Wisch nach links oder rechts wechselst du das Kapitel, wie bei den Lernkarten. In scrollbaren Tabellen und Schaubildern scrollt der Wisch weiter wie gewohnt; senkrechtes Wischen, Zoomen und Antippen von Bildern bleiben unverändert.',
