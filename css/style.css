@@ -3664,3 +3664,14 @@ button.g-row{cursor:pointer;min-height:44px;}
 #g-combo.on{opacity:1;transform:translate(-50%,0);}
 @media(prefers-reduced-motion:reduce){#g-combo{transition:none;}}
 @media(min-width:701px){.g-panel{max-width:620px;}}
+/* Schriftgröße: Marke folgt dem Regler ohne Nachlaufen */
+.fs-tag{transition:none;}
+/* Serie: Puls-Ring um das Flammen-Symbol (grau ohne Serie für heute, orange bei aktiver Serie) */
+.g-chip{position:relative;--gp:var(--m-muted);}
+.g-chip.on{--gp:var(--m-accent);}
+.g-chip::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:0 0 0 0 color-mix(in srgb,var(--gp) 55%,transparent);animation:gPulse 2.2s ease-out infinite;}
+.g-chip[aria-expanded="true"]::after{animation:none;}
+@keyframes gPulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--gp) 55%,transparent);}70%,100%{box-shadow:0 0 0 10px color-mix(in srgb,var(--gp) 0%,transparent);}}
+.g-chip.on .g-fl svg{animation:gFlick 2.2s ease-in-out infinite;transform-origin:50% 90%;}
+@keyframes gFlick{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+@media(prefers-reduced-motion:reduce){.g-chip::after,.g-chip.on .g-fl svg{animation:none;}}

@@ -209,7 +209,7 @@ const GAME=(function(){
 
   function chip(){
     const s=load(), st=streak(), r=rankOf(s.xp);
-    return `<button type="button" class="g-chip" id="g-chip" aria-expanded="false" aria-controls="g-panel" aria-label="Belohnungen: ${st.cur} Tage Serie, ${esc(r.n)}" onclick="GAME.toggle(this)"><span class="g-fl${st.todayDone?' on':''}">${flameIc(15)}</span><b>${st.cur}</b></button>`;
+    return `<button type="button" class="g-chip${st.todayDone?' on':''}" id="g-chip" aria-expanded="false" aria-controls="g-panel" aria-label="Belohnungen: ${st.cur} Tage Serie, ${esc(r.n)}" onclick="GAME.toggle(this)"><span class="g-fl${st.todayDone?' on':''}">${flameIc(15)}</span><b>${st.cur}</b></button>`;
   }
   function pathNext(){
     if(typeof MODS==='undefined'||typeof PROGRESS==='undefined') return null;
@@ -247,10 +247,12 @@ const GAME=(function(){
     (btn||document.getElementById('g-chip')).setAttribute('aria-expanded',String(_open));
     if(_open){ p.innerHTML=panel(); if(p.animate&&!reduced()) p.animate([{opacity:0,transform:'translateY(-6px)'},{opacity:1,transform:'none'}],{duration:200,easing:'ease-out'}); }
   }
+  function open(){ const p=document.getElementById('g-panel'); if(p&&p.hidden) toggle(); }
+  function close(){ const p=document.getElementById('g-panel'); if(p&&!p.hidden) toggle(); }
   function refresh(){
     const p=document.getElementById('g-panel'), c=document.getElementById('g-chip');
     if(p&&!p.hidden) p.innerHTML=panel();
-    if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.todayDone); }
+    if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.todayDone); c.classList.toggle('on',st.todayDone); }
   }
   function setPath(on){ load().path=on?1:0; save(); refresh(); }
   function setOff(off){ load().off=off?1:0; save(); if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome(); }
@@ -296,5 +298,5 @@ const GAME=(function(){
   }
 
   function onShow(id){ if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek(); }
-  return {event,homeHtml,toggle,refresh,setPath,setOff,isOn,setTitle,share,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
+  return {event,homeHtml,toggle,open,close,refresh,setPath,setOff,isOn,setTitle,share,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
