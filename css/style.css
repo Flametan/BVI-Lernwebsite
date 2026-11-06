@@ -4010,10 +4010,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 @media(prefers-reduced-motion:reduce){.m-mini-ind{transition:none;}.m-mods .m-yl{animation:none;}}
 .m-seg2 .g-rklab{flex:0 1 auto;min-width:0;padding:2px 4px 2px 0;border-radius:10px;font-size:.8rem;background:none;box-shadow:none;}
 .m-seg2 .g-chip{flex:none;}
-@media(max-width:400px){
-  .m-seg2 .m-mini button{padding:5px 9px;font-size:.76rem;}
-  .m-seg2 .g-rklab{font-size:.76rem;gap:6px;}
-  .m-seg2 .g-rklab .g-sh{transform:scale(.88);transform-origin:left center;margin-right:-3px;}
-  .m-seg2-w{gap:6px;}
-  .m-seg2 .g-chip{padding:0 8px 0 6px;min-width:0;}
-}
+/* Dienstgrad: am schmalen Handy nur das Schulterstück, der Name erscheint, sobald die Zeile breit genug ist */
+.m-seg2{container-type:inline-size;container-name:seg;}
+.g-rklab>span:last-child{display:none;}
+@container seg (min-width:380px){.g-rklab>span:last-child{display:inline;}}
