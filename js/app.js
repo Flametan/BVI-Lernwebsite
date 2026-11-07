@@ -1954,12 +1954,12 @@ const FC = (function(){
         <div class="fc-stamp fc-st-hard" aria-hidden="true">Schwer</div>
       </div>
       ${_jgBar(card)}
-      <div class="fc-controls" id="fc-controls" style="visibility:hidden">
-        <button class="fc-rb fc-no" onclick="FC.answer(false)" aria-label="Nicht gewusst, gleich wieder"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span class="fc-rl">Nicht gewusst</span></button>
-        <button class="fc-rb fc-hard" onclick="FC.answer('hard')" aria-label="Schwer, in ${iHard} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="fc-rl">Schwer</span></button>
-        <button class="fc-rb fc-yes" onclick="FC.answer(true)" aria-label="Gewusst, in ${iGood} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="fc-rl">Gewusst</span></button>
+      <div class="fc-controls" id="fc-controls">
+        <button class="fc-rb fc-no" onclick="FC.answer(false,true)" aria-label="Nicht gewusst, gleich wieder"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span class="fc-rl">Nicht gewusst</span></button>
+        <button class="fc-rb fc-hard" onclick="FC.answer('hard',true)" aria-label="Schwer, in ${iHard} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="fc-rl">Schwer</span></button>
+        <button class="fc-rb fc-yes" onclick="FC.answer(true,true)" aria-label="Gewusst, in ${iGood} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="fc-rl">Gewusst</span></button>
       </div>
-      <p class="fc-swhint" id="fc-swhint" style="visibility:hidden">Wischen: links nicht gewusst · oben schwer · rechts gewusst</p>
+      <p class="fc-swhint" id="fc-swhint">Wischen: links nicht gewusst · oben schwer · rechts gewusst</p>
       </div>`;
     flipped = false;
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
@@ -2032,8 +2032,6 @@ const FC = (function(){
         inner.classList.add('fc-lift'); inner.classList.toggle('flipped',flipped);
         inner.addEventListener('animationend',()=>inner.classList.remove('fc-lift'),{once:true});
       }
-      if(ctrl) ctrl.style.visibility=flipped?'visible':'hidden';
-      const sw=document.getElementById('fc-swhint'); if(sw) sw.style.visibility=flipped?'visible':'hidden';
       const ou=document.querySelector('.fc-outer'); if(ou) ou.classList.toggle('fl',flipped);
     },
     // Karte außerhalb des Kartenstapels bewerten (z. B. im Übungs-Fenster neben der Lernseite)
