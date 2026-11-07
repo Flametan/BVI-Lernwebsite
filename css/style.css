@@ -4200,3 +4200,10 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 @media (min-width:701px){.sk-pzt{min-height:128px;}}
 .sk .pz-src{min-height:76px;}
 .sk .pz-mode .sk-b{width:100%!important;}
+
+/* Fehler melden direkt in der Kopfzeile der Lernkarte (die Zeile am Seitenende liegt hinter den Antwort-Knöpfen) */
+.fc-rep-btn{flex:none;width:36px;height:36px;border-radius:50%;border:0;background:var(--m-card);color:var(--m-muted);display:grid;place-items:center;padding:0;cursor:pointer;position:relative;}
+.fc-rep-btn::after{content:'';position:absolute;inset:-6px;}
+.fc-rep-btn:hover{color:var(--m-fg);}
+.fc-rep-btn:focus-visible{outline:2px solid var(--m-accent);outline-offset:2px;}
+.fc-score{margin-left:auto;}

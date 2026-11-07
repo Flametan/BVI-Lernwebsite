@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.1',ts:'2026-11-07T10:00',items:[
+      'Lernkarten: Der Knopf „Fehler oder Unklarheit melden“ (Flaggen-Symbol) sitzt jetzt oben in der Kartenzeile und schickt Frage und Antwort der aktuellen Karte mit; die Zeile am Seitenende lag hinter den Antwort-Knöpfen.',
       'Lernkarten: Der Stern zum Markieren sitzt auf beiden Seiten der Karte oben rechts und dreht sich beim Umdrehen mit.',
       'Pausenraum: Der Platzhalter beim Laden zeigt jetzt das Kachel-Raster der echten Ansicht (breite Einsatzfahrt, vier Kacheln, Fragenquelle, zweite Gruppe) statt eines allgemeinen Rasters; er passt auf Handy, Tablet und Desktop.',
       'Lernkarten: Der Einleitungstext oben ist weg. Die drei Kacheln „Eigene Karte“, „Nochmal üben“ und „Markierte“ sind einheitlich aufgebaut (Symbol, Name, Zahl) und nichts ragt mehr über den Rand.',
