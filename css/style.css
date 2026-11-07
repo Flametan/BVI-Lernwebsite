@@ -4041,3 +4041,9 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
   #m-countdown .m-count-link{padding:8px 12px;font-size:.78rem;border-radius:9px;}
   .ex-seg{margin-top:0;}
 }
+
+/* Stundenplan und Prüfung: Beschreibung unter der Überschrift entfällt, ebenso der Leerraum darunter (Element bleibt für das Skript im DOM) */
+#v-plan .page-lead,#v-pruefung .page-lead{display:none;}
+#v-plan .page-hero,#v-pruefung .page-hero{padding-bottom:0;}
+#v-plan .page-title,#v-pruefung .page-title{margin-bottom:0;}
+@media(max-width:700px){#v-plan .pc{padding-top:.72rem;}}
