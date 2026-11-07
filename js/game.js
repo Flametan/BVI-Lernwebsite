@@ -401,7 +401,7 @@ const GAME=(function(){
     const rl=document.querySelector('.g-rklab'); if(rl) rl.outerHTML=rankLabel();
     if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.cur>0&&st.todayDone); c.classList.toggle('on',st.cur>0); c.classList.toggle('risk',!!st.risk); }
   }
-  // Android-App: Startsymbol mit kleinerer, blasserer Flamme, wenn die Serie ab 18 Uhr zu reißen droht; Serie und Tag des letzten Lernens melden
+  // Android-App: Startsymbol je Serienzustand (ab 18/21 Uhr schwächere Flamme, mit Serien-Schutz zusätzlich ein Schild, bei langer Serie Glut/Funken/Ring); Serie, letzten Lerntag und Schutz melden
   let iconT=0;
   function pushIcon(){
     clearTimeout(iconT);
@@ -409,7 +409,7 @@ const GAME=(function(){
       if(!window.BVIAndroid||!BVIAndroid.setStreak) return;
       try{
         const st=streak(), y=new Date(); y.setDate(y.getDate()-1);
-        BVIAndroid.setStreak(load().off?0:st.cur, st.cur>0?(st.todayDone?today():dkey(y)):'');
+        BVIAndroid.setStreak(load().off?0:st.cur, st.cur>0?(st.todayDone?today():dkey(y)):'', st.have>0?1:0);
       }catch(e){}
     },800);
   }

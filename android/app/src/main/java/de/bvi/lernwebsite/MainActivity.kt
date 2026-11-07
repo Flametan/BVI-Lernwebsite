@@ -61,8 +61,8 @@ open class MainActivity : AppCompatActivity() {
 
         // Serie für die kleine Flamme am Startsymbol: Anzahl Tage und Tag des letzten Lernens (JJJJ-MM-TT)
         @JavascriptInterface
-        fun setStreak(days: Int, lastDay: String) {
-            StreakIcon.setStreak(this@MainActivity, days, lastDay)
+        fun setStreak(days: Int, lastDay: String, protect: Int) {
+            StreakIcon.setStreak(this@MainActivity, days, lastDay, protect != 0)
         }
 
         // Stundenplan für die Startbildschirm-Widgets (JSON-Liste mit s, e, t, r)
