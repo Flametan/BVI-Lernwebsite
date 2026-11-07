@@ -4167,3 +4167,12 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
   #fc-container:has(.fc-nav){min-height:calc(100dvh - var(--m-tabbar-h,0px) - 24px);}
   .fc-controls{bottom:calc(var(--m-tabbar-h,0px) + env(safe-area-inset-bottom,0px) + 18px);}
 }
+/* Antwort-Knöpfe 48 px; Schwer sitzt über dem mittleren Tab-Knopf, die äußeren tiefer */
+.fc-rc{width:48px;height:48px;}
+.fc-rc svg{width:22px;height:22px;}
+.fc-hard{margin-bottom:36px;}
+.fc-controls{gap:30px;}
+@media (max-width:1023px){
+  #fc-container:has(.fc-controls){padding-bottom:calc(112px + var(--m-tabbar-h,0px));}
+  .fc-controls{bottom:calc(var(--m-tabbar-h,0px) + env(safe-area-inset-bottom,0px) + 4px);}
+}
