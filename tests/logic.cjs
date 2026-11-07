@@ -1342,7 +1342,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     document.getElementById('m-exam-target').value = 'v-simulator'; SHELL.setExam(); await w(200);
     NAV.tab('v-pruefung', 'Prüfung'); await w(400);
     const cd = document.querySelector('#m-countdown .m-count-go');
-    r.shown = !!cd && /Meine Klausur/.test(cd.innerText) && /v-simulator/.test(cd.getAttribute('onclick'));
+    r.shown = !!cd && /Meine Klausur/.test(cd.textContent) && /v-simulator/.test(cd.getAttribute('onclick'));
     NAV.go('v-settings', 'E'); await w(200); SHELL.clearExam(); await w(300);
     NAV.tab('v-pruefung', 'Prüfung'); await w(300);
     r.gone = !document.querySelector('#m-countdown .m-count-go') && /^\{"off":1/.test(localStorage.getItem('bvi_exam'));
