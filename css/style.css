@@ -4007,14 +4007,22 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .ex-acc.open .ex-ah svg{transform:rotate(180deg);}
 .ex-ab{display:none;padding-bottom:12px;}
 .ex-acc.open .ex-ab{display:block;}
+.ex-ph{display:none;}
+.ex-wrap.ex-edit .ex-ph{display:none;}
 @media(min-width:701px){
+  /* Tablet und PC: links „Wichtig“, rechts die Module zum Aufklappen (mehrere gleichzeitig) */
   .ex-seg{display:none;}
-  .ex-wrap[data-v="imp"] .ex-mod,.ex-wrap[data-v="mod"] .ex-mod{display:grid;}
-  .ex-imp,.ex-wrap[data-v="imp"] .ex-imp{display:none!important;}
-  .ex-mod.m-areas{gap:1.1rem;}
-  .ex-acc+.ex-acc{border-top:0;}
-  .ex-ah{pointer-events:none;padding:0 2px 8px;min-height:0;cursor:default;}
-  .ex-an{font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--m-muted);}
-  .ex-ac,.ex-ah svg{display:none;}
-  .ex-ab{display:block;padding-bottom:0;}
+  .ex-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start;}
+  .ex-wrap[data-v] .ex-imp,.ex-wrap[data-v] .ex-mod{display:block;}
+  .ex-imp{position:sticky;top:16px;}
+  .ex-ph{display:flex;align-items:center;justify-content:space-between;font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--m-muted);padding:0 2px 10px;}
+  .ex-star{display:inline-flex;align-items:center;gap:4px;color:var(--m-accent);letter-spacing:0;}
+  .ex-wrap.ex-edit{display:block;}
+  .ex-wrap.ex-edit .ex-imp{display:none;}
+  .ex-wrap.ex-edit .ex-ph{display:flex;}
+  .ex-wrap.ex-edit .ex-mod .ex-ph{display:none;}
+  .ex-mod>.ex-acc:nth-of-type(1){border-top:1px solid var(--m-line);}
+}
+@media(min-width:1100px){
+  .ex-wrap{grid-template-columns:minmax(0,5fr) minmax(0,7fr);}
 }
