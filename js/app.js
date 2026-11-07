@@ -1939,16 +1939,17 @@ const FC = (function(){
       <div class="fc-outer">
         <div class="fc-inner" id="fc-inner">
           <div class="fc-face fc-front">
+            <button type="button" class="fc-card-star fc-star-btn${isStarred?' starred':''}" onclick="event.stopPropagation();FC.toggleStar('${card.id}')" onpointerdown="event.stopPropagation()" aria-label="${isStarred?'Markierung entfernen':'Karte markieren'}" aria-pressed="${isStarred}"><svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
             <div class="fc-cat">${card.cat}</div>
             <div class="fc-q">${card.q}</div>
             <div class="fc-tap">Tippen zum Aufdecken</div>
           </div>
           <div class="fc-face fc-back">
+            <button type="button" class="fc-card-star fc-star-btn${isStarred?' starred':''}" onclick="event.stopPropagation();FC.toggleStar('${card.id}')" onpointerdown="event.stopPropagation()" aria-label="${isStarred?'Markierung entfernen':'Karte markieren'}" aria-pressed="${isStarred}"><svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
             <div class="fc-cat">${card.cat}</div>
             <div class="fc-a">${card.a}</div>
           </div>
         </div>
-        <button type="button" class="fc-card-star fc-star-btn${isStarred?' starred':''}" onclick="event.stopPropagation();FC.toggleStar('${card.id}')" onpointerdown="event.stopPropagation()" aria-label="${isStarred?'Markierung entfernen':'Karte markieren'}" aria-pressed="${isStarred}"><svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
         <div class="fc-stamp fc-st-ok" aria-hidden="true">Gewusst</div>
         <div class="fc-stamp fc-st-no" aria-hidden="true">Nicht gewusst</div>
         <div class="fc-stamp fc-st-hard" aria-hidden="true">Schwer</div>
