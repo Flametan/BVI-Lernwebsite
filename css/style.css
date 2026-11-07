@@ -4176,3 +4176,8 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
   #fc-container:has(.fc-controls){padding-bottom:calc(112px + var(--m-tabbar-h,0px));}
   .fc-controls{bottom:calc(var(--m-tabbar-h,0px) + env(safe-area-inset-bottom,0px) + 4px);}
 }
+/* Lernkarten: Modul-Chips oben, Karte direkt darunter ohne Lücke */
+#v-flashcards .fc-filter-row{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 8px);padding-bottom:.25rem;}
+#v-flashcards .pc{padding-top:0;}
+#fc-container:has(.fc-nav){min-height:calc(100dvh - 96px);}
+@media (max-width:1023px){#fc-container:has(.fc-nav){min-height:calc(100dvh - var(--m-tabbar-h,0px) - 96px);}}
