@@ -1,7 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.1',ts:'2026-11-07T10:00',items:[
-      'Android-App: Mit einem Serien-Schutz bleibt es am Abend (ab 18 und ab 21 Uhr) bei der schwächeren Flamme, dazu kommt ein Schild: Die Serie ist abgesichert. Bei langer Serie wächst das Startsymbol: ab 7 Tagen mit Glut hinter der Flamme, ab 30 Tagen mit hellerer Flamme und Funken, ab 100 Tagen zusätzlich mit einem Ring.',
+      'Android-App: Mit einem Serien-Schutz bleibt es am Abend (ab 18 und ab 21 Uhr) bei der schwächeren Flamme, dazu kommt ein Schild in dunklem Flammenton mit hellem Rand und Haken: Die Serie ist abgesichert. Bei langer Serie wächst das Startsymbol: ab 7 Tagen mit Glut hinter der Flamme, ab 30 Tagen mit hellerer Flamme und Funken, ab 100 Tagen zusätzlich mit einem Ring.',
       'Android-App: Droht die Serie ab 18 Uhr zu reißen (du hast heute noch nicht gelernt), wird die Flamme am Startsymbol kleiner und blasser, ab 21 Uhr nur noch halb so groß und grau. Sobald du wieder lernst, ist sie wieder groß und kräftig; ist die Serie gerissen, erscheint das normale Symbol. Dafür ist die neue App-Version nötig.'
     ]},
     {v:'3.2.0',ts:'2026-11-06T10:00',items:[
