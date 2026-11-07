@@ -4033,12 +4033,13 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
   #v-pruefung .page-hero{padding-bottom:0;}
   #v-pruefung .pc{padding-top:.72rem;}
   #v-pruefung #jg-exam-bar:empty{display:none;}   /* leere Leiste erzeugte eine zusätzliche Lücke */
-  #m-countdown .m-count-go{padding:4px 14px 10px;gap:6px 12px;}   /* oben 60 % weniger Innenabstand */
-  #m-countdown .m-count-big{font-size:2rem;}
-  #m-countdown .m-tx{flex:1 1 0;}
-  #m-countdown .m-tx .m-t2{font-size:.76rem;line-height:1.25;}
-  #m-countdown .m-tx .m-t1{font-size:.95rem;line-height:1.25;}
-  #m-countdown .m-count-link{padding:8px 12px;font-size:.78rem;border-radius:9px;}
+  /* Countdown-Karte: gleichmäßiger Innenabstand (14/16 px), Zahl und Text mittig zueinander, Knopf mit 44 px Höhe */
+  #m-countdown .m-count-go{padding:14px 16px;gap:12px 14px;align-items:center;}
+  #m-countdown .m-count-big{font-size:2.15rem;min-width:2.2ch;line-height:1;}
+  #m-countdown .m-tx{flex:1 1 0;display:flex;flex-direction:column;gap:2px;}
+  #m-countdown .m-tx .m-t2{font-size:.76rem;line-height:1.3;margin:0;}
+  #m-countdown .m-tx .m-t1{font-size:.98rem;line-height:1.25;}
+  #m-countdown .m-count-link{min-height:44px;padding:0 14px;font-size:.84rem;border-radius:12px;align-items:center;}
   .ex-seg{margin-top:0;}
 }
 
