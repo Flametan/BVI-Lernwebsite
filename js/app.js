@@ -1792,6 +1792,11 @@ const FC = (function(){
     const isOwn=activeFilters.has('own');
     const ownN=FLASHCARD_DATA.filter(c=>c.own).length;
     const weakN=fcLoadWeak().size;
+    const tw=document.getElementById('fc-t-weak'), ts=document.getElementById('fc-t-star'), tb=document.getElementById('fc-t-star-btn');
+    const cardsTxt=n=>n+(n===1?' Karte':' Karten');
+    if(tw) tw.textContent=cardsTxt(weakN);
+    if(ts){ const old=ts.dataset.n; ts.textContent=cardsTxt(stars.size); if(old!==undefined&&+old!==stars.size&&tb&&tb.animate) tb.animate([{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:300,easing:'ease-out'}); ts.dataset.n=stars.size; }
+    if(tb) tb.classList.toggle('active',activeFilters.has('starred'));
     document.querySelectorAll('.fc-f-btn').forEach(b=>{
       const df=b.dataset.filter;
       const base=b.dataset.label||'';
@@ -1800,7 +1805,7 @@ const FC = (function(){
       } else if(df==='starred'){
         b.classList.toggle('active',activeFilters.has('starred'));
         b.classList.toggle('hidden',stars.size===0&&!activeFilters.has('starred'));
-        b.innerHTML=`<b>★ ${base}</b><small>${stars.size}</small>`;
+        b.innerHTML=`<b>${base}</b><small><svg class="fc-chip-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg> ${stars.size}</small>`;
       } else if(df==='own'){
         b.classList.toggle('active',isOwn);
         b.classList.toggle('hidden',ownN===0&&!isOwn);
@@ -1831,48 +1836,60 @@ const FC = (function(){
 
   function setupSwipe(outer){
     if(!outer) return;
-    let x0=0, y0=0, live=false, dx=0, pid=-1, lt=0, lx=0, vx=0;
+    let x0=0, y0=0, live=false, dx=0, dy=0, pid=-1, lt=0, lx=0, ly=0, vx=0, vy=0, mode='';
     const THR=80, TILT=12;
-    const hOk=outer.querySelector('.fc-swipe-ok');
-    const hNo=outer.querySelector('.fc-swipe-no');
+    const st={ok:outer.querySelector('.fc-st-ok'), no:outer.querySelector('.fc-st-no'), hard:outer.querySelector('.fc-st-hard')};
     const tilt=d=>Math.max(-TILT,Math.min(TILT,d*0.08));
-    const reset=()=>{ outer.style.transform=''; hOk.style.opacity='0'; hNo.style.opacity='0'; };
+    const stamps=(o,n,h)=>{ st.ok.style.opacity=o; st.no.style.opacity=n; st.hard.style.opacity=h; };
+    const reset=()=>{ outer.style.transform=''; stamps(0,0,0); };
+    const fly=(kind,ms)=>{
+      stamps(kind==='ok'?1:0,kind==='no'?1:0,kind==='hard'?1:0);
+      outer.style.transition=`transform ${ms}ms cubic-bezier(.4,0,.9,.6),opacity ${ms}ms ease`;
+      outer.style.transform=kind==='hard'
+        ? `translateY(${-window.innerHeight*0.9}px)`
+        : `translateX(${(kind==='ok'?1:-1)*window.innerWidth*1.1}px) translateY(-30px) rotate(${(kind==='ok'?1:-1)*TILT}deg)`;
+      outer.style.opacity='0';
+      setTimeout(()=>FC.answer(kind==='ok'?true:kind==='no'?false:'hard'),ms-20);
+    };
 
     outer.addEventListener('pointerdown',e=>{
-      x0=e.clientX; y0=e.clientY; live=true; dx=0; pid=e.pointerId; lt=performance.now(); lx=e.clientX; vx=0;
+      x0=e.clientX; y0=e.clientY; live=true; dx=0; dy=0; pid=e.pointerId; mode=''; lt=performance.now(); lx=e.clientX; ly=e.clientY; vx=0; vy=0;
       outer.setPointerCapture(e.pointerId);
     });
 
     outer.addEventListener('pointermove',e=>{
       if(!live||e.pointerId!==pid) return;
-      dx=e.clientX-x0;
-      const dy=e.clientY-y0;
-      if(Math.abs(dy)>Math.abs(dx)+5){live=false;outer.style.transform='';return;}
-      if(Math.abs(dx)<5) return;
+      dx=e.clientX-x0; dy=e.clientY-y0;
+      if(!mode){
+        if(Math.max(Math.abs(dx),Math.abs(dy))<6) return;
+        mode = Math.abs(dy)>Math.abs(dx)+5 ? (flipped&&dy<0?'up':'v') : 'x';
+      }
+      if(mode==='v'){ live=false; outer.style.transform=''; return; }
       e.preventDefault();
-      const now=performance.now(); if(now>lt){ vx=(e.clientX-lx)/(now-lt); lt=now; lx=e.clientX; }
+      const now=performance.now(); if(now>lt){ vx=(e.clientX-lx)/(now-lt); vy=(e.clientY-ly)/(now-lt); lt=now; lx=e.clientX; ly=e.clientY; }
       outer.style.transition='none';
-      // Die Karte folgt dem Finger und neigt sich dabei bis 12°
-      outer.style.transform=`translateX(${dx}px) rotate(${tilt(dx)}deg)`;
-      if(flipped){
-        const p=Math.min(Math.abs(dx)/THR,1);
-        hOk.style.opacity=dx>0?p:0; hNo.style.opacity=dx<0?p:0;
+      if(mode==='up'){
+        const y=Math.min(0,dy);
+        outer.style.transform=`translate(${dx*0.25}px,${y}px)`;
+        stamps(0,0,Math.min(-y/THR,1));
+      } else {
+        // Die Karte folgt dem Finger und neigt sich dabei bis 12°
+        outer.style.transform=`translateX(${dx}px) rotate(${tilt(dx)}deg)`;
+        if(flipped){ const p=Math.min(Math.abs(dx)/THR,1); stamps(dx>0?p:0,dx<0?p:0,0); }
       }
     },{passive:false});
 
     outer.addEventListener('pointerup',e=>{
       if(e.pointerId!==pid||!live) return;
       live=false;
-      if(Math.abs(dx)<8){
+      if(Math.abs(dx)<8&&Math.abs(dy)<8){
         outer.style.transition=''; outer.style.transform=''; FC.flip();
-      } else if(flipped&&(Math.abs(dx)>=THR||Math.abs(vx)>0.6)){
+      } else if(mode==='up'&&(-dy>=THR||vy<-0.6)){
+        fly('hard',Math.max(180,Math.min(300,300+vy*100)));
+      } else if(mode==='x'&&flipped&&(Math.abs(dx)>=THR||Math.abs(vx)>0.6)){
         // Wegschnippen: Schwung des Fingers bestimmt die Richtung und das Tempo
         const dir=(Math.abs(vx)>0.6?vx:dx)>0?1:-1;
-        const ms=Math.max(180,Math.min(320,320-Math.abs(vx)*120));
-        outer.style.transition=`transform ${ms}ms cubic-bezier(.4,0,.9,.6),opacity ${ms}ms ease`;
-        outer.style.transform=`translateX(${dir*window.innerWidth*1.1}px) translateY(-30px) rotate(${dir*TILT}deg)`;
-        outer.style.opacity='0';
-        setTimeout(()=>FC.answer(dir>0),ms-20);
+        fly(dir>0?'ok':'no',Math.max(180,Math.min(320,320-Math.abs(vx)*120)));
       } else {
         outer.style.transition='transform .45s cubic-bezier(.34,1.56,.64,1)'; reset();
       }
@@ -1916,8 +1933,7 @@ const FC = (function(){
       <div class="fc-nav">
         <button class="fc-back-btn" onclick="FC.back()" ${_seen.length===0?'disabled':''} aria-label="Vorherige Karte"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
         <span class="fc-pos">Karte ${curIdx+1} von ${deck.length}</span>
-        <span class="fc-score">${sess.known} gewusst · ${sess.unknown} nochmal</span>
-        <button class="fc-star-btn${isStarred?' starred':''}" onclick="FC.toggleStar('${card.id}')" aria-label="${isStarred?'Markierung entfernen':'Karte markieren'}"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
+        <span class="fc-score">${sess.known} gewusst · ${sess.unknown} nicht gewusst</span>
       </div>
       <div class="fc-progress"><i style="width:${deck.length?Math.round(curIdx/deck.length*100):0}%"></i></div>
       <div class="fc-outer">
@@ -1932,14 +1948,18 @@ const FC = (function(){
             <div class="fc-a">${card.a}</div>
           </div>
         </div>
-        <div class="fc-swipe-ok">✓ Gewusst</div>
-        <div class="fc-swipe-no">✗ Nicht gewusst</div>
+        <button type="button" class="fc-card-star fc-star-btn${isStarred?' starred':''}" onclick="event.stopPropagation();FC.toggleStar('${card.id}')" onpointerdown="event.stopPropagation()" aria-label="${isStarred?'Markierung entfernen':'Karte markieren'}" aria-pressed="${isStarred}"><svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
+        <div class="fc-stamp fc-st-ok" aria-hidden="true">Gewusst</div>
+        <div class="fc-stamp fc-st-no" aria-hidden="true">Nicht gewusst</div>
+        <div class="fc-stamp fc-st-hard" aria-hidden="true">Schwer</div>
       </div>
       ${_jgBar(card)}
       <div class="fc-controls" id="fc-controls" style="display:none">
-        <button class="fc-btn fc-no" onclick="FC.answer(false)">Nochmal<span class="fc-hint">gleich wieder</span></button>
-        <button class="fc-btn fc-hard" onclick="FC.answer('hard')">Schwer<span class="fc-hint">in ${iHard} Tagen</span></button>
-        <button class="fc-btn fc-yes" onclick="FC.answer(true)">Gewusst<span class="fc-hint">in ${iGood} Tagen</span></button>
+        <button class="fc-rb fc-no" onclick="FC.answer(false)" aria-label="Nicht gewusst, gleich wieder"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span class="fc-rl">Nicht gewusst</span></button>
+        <button class="fc-rb fc-hard" onclick="FC.answer('hard')" aria-label="Schwer, in ${iHard} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="fc-rl">Schwer</span></button>
+        <button class="fc-rb fc-yes" onclick="FC.answer(true)" aria-label="Gewusst, in ${iGood} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="fc-rl">Gewusst</span></button>
+      </div>
+      <p class="fc-swhint" id="fc-swhint" style="display:none">Wischen: links nicht gewusst · oben schwer · rechts gewusst</p>
       </div>`;
     flipped = false;
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
@@ -2013,6 +2033,8 @@ const FC = (function(){
         inner.addEventListener('animationend',()=>inner.classList.remove('fc-lift'),{once:true});
       }
       if(ctrl) ctrl.style.display=flipped?'flex':'none';
+      const sw=document.getElementById('fc-swhint'); if(sw) sw.style.display=flipped?'block':'none';
+      const ou=document.querySelector('.fc-outer'); if(ou) ou.classList.toggle('fl',flipped);
     },
     // Karte außerhalb des Kartenstapels bewerten (z. B. im Übungs-Fenster neben der Lernseite)
     rateExternal(id,ok){
@@ -2082,8 +2104,8 @@ const FC = (function(){
     },
     toggleStar(id){
       const starred=fcToggleStar(id);
-      const btn=document.querySelector('.fc-star-btn');
-      if(btn) btn.classList.toggle('starred',starred);
+      document.querySelectorAll('.fc-star-btn').forEach(b=>{ b.classList.toggle('starred',starred); b.setAttribute('aria-pressed',starred); });
+      const rc=document.querySelector('.fc-card-star svg'); if(rc&&rc.animate) rc.animate([{transform:'scale(1)'},{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:260,easing:'ease-out'});
       updateFilterButtons();
     },
     showWeak(){ activeFilters=new Set(['weak']); updateFilterButtons(); this.start(); },
