@@ -4087,7 +4087,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .pz-more{display:none;}
 
 /* Lernkarten: runde Antwort-Knöpfe, Wischen nach oben (Schwer), Stempel auf der Karte */
-.fc-outer.fl{touch-action:pan-down;}
+.fc-outer,.fc-outer *{touch-action:none;}
 .fc-stamp{top:auto;white-space:nowrap;transform:none;padding:.4rem .9rem;border-radius:12px;border:3px solid;font-size:1.15rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:color-mix(in srgb,var(--m-card) 82%,transparent);}
 .fc-st-ok{top:1rem;left:1rem;color:var(--c-ok);border-color:var(--c-ok);transform:rotate(-9deg);}
 .fc-st-no{top:1rem;right:1rem;color:var(--k-e07070);border-color:var(--k-e07070);transform:rotate(9deg);}
@@ -4133,3 +4133,19 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .fc-yes,.fc-yes:hover{color:var(--m-fg)!important;background:none!important;}
 .fc-no,.fc-no:hover{color:var(--m-fg);}
 .fc-no .fc-rc{color:var(--k-e07070);}
+
+/* Antwort-Knöpfe: immer sichtbar. Am Handy und Tablet fest über der Tab-Leiste, am Desktop direkt unter der Karte */
+.fc-outer{margin-bottom:.5rem;}
+.fc-rc{width:56px;height:56px;}
+.fc-hard{margin-bottom:26px;}
+.fc-controls{margin-top:0;padding:.4rem 0 .25rem;}
+.fc-swhint{margin:.25rem 0 0;font-size:.74rem;}
+@media (max-width:1023px){
+  #fc-container:has(.fc-controls){padding-bottom:calc(112px + var(--m-tabbar-h,0px));}
+  .fc-controls{position:fixed;left:0;right:0;bottom:calc(var(--m-tabbar-h,0px) + env(safe-area-inset-bottom,0px) + 4px);z-index:40;max-width:none;margin:0;padding:.7rem 0 .3rem;background:linear-gradient(to top,var(--m-bg) 75%,transparent);pointer-events:none;}
+  .fc-controls .fc-rb{pointer-events:auto;}
+  .fc-swhint{display:none;}
+}
+#v-flashcards.view.nav-forward,#v-flashcards.view.nav-back{animation-fill-mode:backwards;}
+.fc-controls{gap:14px;}
+.fc-rb{width:92px;}
