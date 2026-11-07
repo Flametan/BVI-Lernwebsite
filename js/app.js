@@ -1963,7 +1963,7 @@ const FC = (function(){
       </div>`;
     flipped = false;
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
-    if(_toCard){ _toCard=false; requestAnimationFrame(()=>{ const n=document.querySelector('#fc-container .fc-nav'); if(n) n.scrollIntoView({block:'start',behavior:'smooth'}); }); }
+    if(_toCard){ _toCard=false; requestAnimationFrame(()=>{ const n=document.querySelector('#v-flashcards .fc-filter-row'); if(n) n.scrollIntoView({block:'start',behavior:'smooth'}); }); }
   }
 
   function renderEnd(){
