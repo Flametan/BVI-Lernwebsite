@@ -4033,13 +4033,13 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
   #v-pruefung .page-hero{padding-bottom:0;}
   #v-pruefung .pc{padding-top:.72rem;}
   #v-pruefung #jg-exam-bar:empty{display:none;}   /* leere Leiste erzeugte eine zusätzliche Lücke */
-  /* Countdown-Karte: gleichmäßiger Innenabstand (14/16 px), Zahl und Text mittig zueinander, Knopf mit 44 px Höhe */
-  #m-countdown .m-count-go{padding:14px 16px;gap:12px 14px;align-items:center;}
-  #m-countdown .m-count-big{font-size:2.15rem;min-width:2.2ch;line-height:1;}
-  #m-countdown .m-tx{flex:1 1 0;display:flex;flex-direction:column;gap:2px;}
-  #m-countdown .m-tx .m-t2{font-size:.76rem;line-height:1.3;margin:0;}
-  #m-countdown .m-tx .m-t1{font-size:.98rem;line-height:1.25;}
-  #m-countdown .m-count-link{min-height:44px;padding:0 14px;font-size:.84rem;border-radius:12px;align-items:center;}
+  /* Countdown-Karte flach: eine Zeile (Zahl, Text mit Datum, Knopf), Prüfungsname entfällt */
+  #m-countdown .m-count-go{flex-wrap:nowrap;padding:10px 12px 10px 14px;gap:10px;align-items:center;}
+  #m-countdown .m-count-big{font-size:1.9rem;min-width:2ch;line-height:1;}
+  #m-countdown .m-tx{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:1px;}
+  #m-countdown .m-tx .m-t1{display:none;}
+  #m-countdown .m-tx .m-t2{font-size:.76rem;line-height:1.25;margin:0;}
+  #m-countdown .m-count-link{flex:0 0 auto;max-width:44%;min-height:30px;margin:0;padding:0 10px;font-size:.76rem;line-height:1.15;border-radius:10px;text-align:center;justify-content:center;align-items:center;white-space:normal;}
   .ex-seg{margin-top:0;}
 }
 
