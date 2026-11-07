@@ -1792,6 +1792,11 @@ const FC = (function(){
     const isOwn=activeFilters.has('own');
     const ownN=FLASHCARD_DATA.filter(c=>c.own).length;
     const weakN=fcLoadWeak().size;
+    const tw=document.getElementById('fc-t-weak'), ts=document.getElementById('fc-t-star'), tb=document.getElementById('fc-t-star-btn');
+    const cardsTxt=n=>n+(n===1?' Karte':' Karten');
+    if(tw) tw.textContent=cardsTxt(weakN);
+    if(ts){ const old=ts.dataset.n; ts.textContent=cardsTxt(stars.size); if(old!==undefined&&+old!==stars.size&&tb&&tb.animate) tb.animate([{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:300,easing:'ease-out'}); ts.dataset.n=stars.size; }
+    if(tb) tb.classList.toggle('active',activeFilters.has('starred'));
     document.querySelectorAll('.fc-f-btn').forEach(b=>{
       const df=b.dataset.filter;
       const base=b.dataset.label||'';
@@ -1928,7 +1933,7 @@ const FC = (function(){
       <div class="fc-nav">
         <button class="fc-back-btn" onclick="FC.back()" ${_seen.length===0?'disabled':''} aria-label="Vorherige Karte"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
         <span class="fc-pos">Karte ${curIdx+1} von ${deck.length}</span>
-        <span class="fc-score">${sess.known} gewusst · ${sess.unknown} nochmal</span>
+        <span class="fc-score">${sess.known} gewusst · ${sess.unknown} nicht gewusst</span>
         <button class="fc-star-btn${isStarred?' starred':''}" onclick="FC.toggleStar('${card.id}')" aria-label="${isStarred?'Markierung entfernen':'Karte markieren'}"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
       </div>
       <div class="fc-progress"><i style="width:${deck.length?Math.round(curIdx/deck.length*100):0}%"></i></div>
@@ -1945,16 +1950,17 @@ const FC = (function(){
           </div>
         </div>
         <div class="fc-stamp fc-st-ok" aria-hidden="true">Gewusst</div>
-        <div class="fc-stamp fc-st-no" aria-hidden="true">Nochmal</div>
+        <div class="fc-stamp fc-st-no" aria-hidden="true">Nicht gewusst</div>
         <div class="fc-stamp fc-st-hard" aria-hidden="true">Schwer</div>
       </div>
       ${_jgBar(card)}
       <div class="fc-controls" id="fc-controls" style="display:none">
-        <button class="fc-rb fc-no" onclick="FC.answer(false)" aria-label="Nochmal, gleich wieder"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span class="fc-rl">Nochmal</span></button>
-        <button class="fc-rb fc-rs${isStarred?' starred':''}" onclick="FC.toggleStar('${card.id}')" aria-label="${isStarred?'Markierung entfernen':'Karte markieren'}"><span class="fc-rc"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></span><span class="fc-rl">Merken</span></button>
+        <button class="fc-rb fc-no" onclick="FC.answer(false)" aria-label="Nicht gewusst, gleich wieder"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span class="fc-rl">Nicht gewusst</span></button>
+        <button class="fc-rb fc-hard" onclick="FC.answer('hard')" aria-label="Schwer, in ${iHard} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="fc-rl">Schwer</span></button>
+        <button class="fc-rb fc-rs${isStarred?' starred':''}" onclick="FC.toggleStar('${card.id}')" aria-label="${isStarred?'Markierung entfernen':'Karte markieren'}"><span class="fc-rc"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></span><span class="fc-rl">${isStarred?'Markiert':'Merken'}</span></button>
         <button class="fc-rb fc-yes" onclick="FC.answer(true)" aria-label="Gewusst, in ${iGood} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="fc-rl">Gewusst</span></button>
       </div>
-      <p class="fc-swhint" id="fc-swhint" style="display:none">Links Nochmal · oben Schwer (in ${iHard} Tagen) · rechts Gewusst</p>
+      <p class="fc-swhint" id="fc-swhint" style="display:none">Links nicht gewusst · oben schwer (in ${iHard} Tagen) · rechts gewusst (in ${iGood} Tagen)</p>
       </div>`;
     flipped = false;
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
@@ -2100,6 +2106,7 @@ const FC = (function(){
     toggleStar(id){
       const starred=fcToggleStar(id);
       document.querySelectorAll('.fc-star-btn,.fc-rs').forEach(b=>b.classList.toggle('starred',starred));
+      document.querySelectorAll('.fc-rs .fc-rl').forEach(l=>l.textContent=starred?'Markiert':'Merken');
       const rc=document.querySelector('.fc-rs .fc-rc'); if(rc&&rc.animate) rc.animate([{transform:'scale(1)'},{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:260,easing:'ease-out'});
       updateFilterButtons();
     },
