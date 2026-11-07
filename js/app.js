@@ -6299,12 +6299,14 @@ const SHELL=(function(){
     // kleiner Stern statt Farbverlauf: gefüllt = wichtig für Einsatzfahrt und Lernkarten; in anderen Lehrgängen direkt antippbar
     const starB=id=>{ if(edit) return ''; const on=!!rel(id); return master?(on?'<span class="jg-starbtn on" role="img" aria-label="Klausurrelevant">★</span>':''):`<button type="button" class="jg-starbtn${on?' on':''}" aria-pressed="${on}" aria-label="${on?'Als wichtig markiert – antippen zum Entfernen':'Als wichtig markieren'}" onclick="JGUI.starExam('${id}')">★</button>`; };
     const rw=(id,inner)=>`<div class="jg-rw${rel(id)?' hot':''}${id==='v-lb-start'?' lbg':''}">${inner}${starB(id)}${del(id)}</div>`;
-    const sec=([name,items],si)=>{
-      const key=JG.TABS[si][0];
+    // je Modul: sichtbare Einträge (eigene hinzugefügte Prüfungen inbegriffen) mit fertigen Zeilen
+    const mods=EXAMS.map(([name,items],si)=>{
+      const key=JG.TABS[si][0], short=JG.TABS[si][2];
       const vis=items.filter(x=>!weg.has(x[0])&&!(x[0]==='v-lb-start'&&!JG.isMaster())), adds=jd.pr.hinzu.filter(p=>p.tab===key&&!p.seite);
-      const lists=[...vis.map(x=>rw(x[0],card(x))),...adds.map(p=>rw(p.id,own(p)))];
-      return `<div class="m-col"><div class="m-sec jg-sh">${esc(name)}</div><div class="m-list">${lists.join('')||'<div class="jg-none">Keine Prüfungen</div>'}</div></div>`;
-    };
+      const ent=[...vis.map(x=>({id:x[0],row:rw(x[0],card(x)),imp:()=>card([x[0],x[1],short+' · '+x[2],x[3]])})),...adds.map(p=>({id:p.id,row:rw(p.id,own(p)),imp:null,own:p}))];
+      return {key,name,short,ent};
+    });
+    const sec=m=>`<div class="m-col"><div class="m-sec jg-sh">${esc(m.name)}</div><div class="m-list">${m.ent.map(e=>e.row).join('')||'<div class="jg-none">Keine Prüfungen</div>'}</div></div>`;
     const hidden=EXAMS.reduce((n,[,it])=>n+it.filter(x=>weg.has(x[0])).length,0);
     // Bearbeiten-Knopf oben auf der Seite; „Prüfung hinzufügen“ erst im Bearbeiten-Modus
     const tools=typeof JGUI==='undefined'||JG.isMaster()?'':`<button type="button" class="btn btn-ghost" onclick="JGUI.toggleEdit()">${edit?'Fertig':'Prüfungen bearbeiten'}</button>${JGUI.histHtml()}${edit?`<button type="button" class="jg-plus" onclick="JGUI.examEditor()"><span>+</span> Prüfung hinzufügen</button>`:''}${edit&&hidden?`<button type="button" class="btn btn-ghost" onclick="JGUI.restoreExams()">${hidden} ausgeblendete wiederherstellen</button>`:''}`;
@@ -6313,7 +6315,33 @@ const SHELL=(function(){
     eb.className=tools?'jg-bar':''; eb.innerHTML=tools;
     const hint=edit&&tools?'<div class="m-note" style="padding:6px 2px">Tippe eine Prüfung an, um sie klausurrelevant (★) zu machen oder abzuwählen. Nur relevante Prüfungen liefern Fragen für Einsatzfahrt und Duell.</div>':'';
     const legend=edit?'':`<div class="m-note jg-legend"><span class="jg-st on" aria-hidden="true">★</span> wichtig für Einsatzfahrt und Lernkarten${master?'':' · zum Ändern den Stern antippen'}</div>`;
-    list.innerHTML=`${hint}${legend}<div class="m-areas">${EXAMS.map(sec).join('')}</div>`;
+    // Handy: Umschalter „Wichtig | Module“. Wichtig = markierte Prüfungen (Laufbahnprüfung zuerst), Module = aufklappbar.
+    // Tablet und PC zeigen weiter alle Module nebeneinander (per CSS).
+    const impList=[];
+    mods.forEach(m=>m.ent.forEach(e=>{ if(e.id==='v-lb-start'||rel(e.id)) impList.push({m,e}); }));
+    impList.sort((x,y)=>(y.e.id==='v-lb-start')-(x.e.id==='v-lb-start'));
+    const impRows=impList.map(({m,e})=>e.own?rw(e.id,row({ic:ic('doc'),t1:esc(e.own.titel),t2:m.short+' · '+e.own.fragen.length+' Fragen · eigene Prüfung',on:`JGUI.openExam('${e.own.id}')`,right:''})):rw(e.id,e.imp()));
+    const nMods=mods.filter(m=>m.ent.length).length;
+    let view='imp', openSet=null; try{ view=localStorage.getItem('bvi_exam_view')==='mod'?'mod':'imp'; openSet=JSON.parse(localStorage.getItem('bvi_exam_open')||'null'); }catch(e){}
+    if(edit) view='mod';
+    if(!Array.isArray(openSet)){ const tid=tgt&&tgt[0], hit=mods.find(m=>m.ent.some(e=>e.id===tid))||mods.find(m=>m.ent.length); openSet=hit?[hit.key]:[]; }
+    const acc=m=>{ const o=openSet.includes(m.key)||edit; const n=m.ent.length;
+      return `<div class="ex-acc${o?' open':''}" data-k="${m.key}"><button type="button" class="ex-ah" aria-expanded="${o}" onclick="SHELL.examAcc('${m.key}')"><span class="ex-an">${esc(m.name)}</span><span class="ex-ac">${n}</span><svg class="m-acc-chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="ex-ab"><div class="m-list">${m.ent.map(e=>e.row).join('')||'<div class="jg-none">Keine Prüfungen</div>'}</div></div></div>`; };
+    const seg=edit?'':`<div class="ex-seg" role="tablist" aria-label="Ansicht"><button type="button" role="tab" class="${view==='imp'?'on':''}" aria-selected="${view==='imp'}" onclick="SHELL.examView('imp')">Wichtig <b>${impList.length}</b></button><button type="button" role="tab" class="${view==='mod'?'on':''}" aria-selected="${view==='mod'}" onclick="SHELL.examView('mod')">Module <b>${nMods}</b></button><i class="ex-pill" aria-hidden="true"></i></div>`;
+    const impPane=`<div class="ex-pane ex-imp"><div class="m-list">${impRows.join('')||'<div class="jg-none">Noch nichts als wichtig markiert. Im Reiter „Module“ lässt sich der Stern bei einer Prüfung antippen.</div>'}</div></div>`;
+    list.innerHTML=`${hint}${legend}<div class="ex-wrap" data-v="${view}">${seg}${impPane}<div class="ex-pane ex-mod m-areas">${mods.map(acc).join('')}</div></div>`;
+  }
+  function examView(v){
+    try{ localStorage.setItem('bvi_exam_view',v==='mod'?'mod':'imp'); }catch(e){}
+    const w=document.querySelector('#m-exam-list .ex-wrap'); if(!w) return;
+    w.dataset.v=v==='mod'?'mod':'imp';
+    w.querySelectorAll('.ex-seg button').forEach(b=>{ const on=(b.textContent.startsWith('Wichtig'))===(v!=='mod'); b.classList.toggle('on',on); b.setAttribute('aria-selected',on); });
+  }
+  function examAcc(key){
+    const el=document.querySelector(`#m-exam-list .ex-acc[data-k="${key}"]`); if(!el) return;
+    const o=!el.classList.contains('open'); el.classList.toggle('open',o); el.querySelector('.ex-ah').setAttribute('aria-expanded',o);
+    const set=[...document.querySelectorAll('#m-exam-list .ex-acc.open')].map(x=>x.dataset.k);
+    try{ localStorage.setItem('bvi_exam_open',JSON.stringify(set)); }catch(e){}
   }
 
   function renderFcSide(){
@@ -6461,7 +6489,7 @@ const SHELL=(function(){
   }
 
   return {
-    onShow, renderHome, newQuip, renderExam, renderNotes, renderFcSide, syncSettings, goalMin, daysToExam, mods:()=>MODS,
+    onShow, renderHome, newQuip, renderExam, examView, examAcc, renderNotes, renderFcSide, syncSettings, goalMin, daysToExam, mods:()=>MODS,
     report(extra){
       const v=document.querySelector('.view.active'); if(!v) return;
       const title=v.querySelector('.page-title')?.textContent?.trim()||v.id;
