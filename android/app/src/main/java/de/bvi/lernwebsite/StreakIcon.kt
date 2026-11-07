@@ -12,40 +12,45 @@ import java.util.Calendar
 /**
  * Startsymbol bei drohendem Serienverlust.
  * Normal gilt das Symbol der gewählten Farbe und des Designs (z. B. "orange_light").
- * Ab 18 Uhr, wenn eine Serie läuft und heute noch nicht gelernt wurde, gilt die Variante "<name>_dim":
- * Die Flamme ist kleiner und weniger gesättigt. Sobald wieder gelernt wurde (oder die Serie gerissen ist), erscheint das normale Symbol.
- * Ein täglicher Alarm um 18:00 und 00:30 schaltet das Symbol auch dann um, wenn die App nicht läuft.
+ * Ab 18 Uhr, wenn eine Serie läuft und heute noch nicht gelernt wurde, gilt die Variante "<name>_dim": Die Flamme ist kleiner und weniger gesättigt.
+ * Ab 21 Uhr gilt "<name>_late": Die Flamme ist nur noch halb so groß und grau.
+ * Sobald wieder gelernt wurde (oder die Serie gerissen ist), erscheint das normale Symbol.
+ * Ein täglicher Alarm um 18:00, 21:00 und 00:30 schaltet das Symbol auch dann um, wenn die App nicht läuft.
  */
 object StreakIcon {
     private val BASES = listOf("orange", "gold", "red", "blue", "green")
     private val TONES = listOf("", "_light", "_beige")
     private const val RISK_HOUR = 18
+    private const val LATE_HOUR = 21
     private const val REQ_EVENING = 9218
+    private const val REQ_LATE = 9221
     private const val REQ_NIGHT = 9230
 
     private fun aliasOf(n: String) = "Icon" + n.split("_").joinToString("") { p -> p.replaceFirstChar { c -> c.uppercase() } }
 
     /** Alle gültigen Namen, z. B. "orange_light" -> "IconOrangeLight", "orange_light_dim" -> "IconOrangeLightDim" */
     val aliases: Map<String, String> = HashMap<String, String>().apply {
-        for (b in BASES) for (t in TONES) { put(b + t, aliasOf(b + t)); put(b + t + "_dim", aliasOf(b + t + "_dim")) }
+        for (b in BASES) for (t in TONES) { put(b + t, aliasOf(b + t)); put(b + t + "_dim", aliasOf(b + t + "_dim")); put(b + t + "_late", aliasOf(b + t + "_late")) }
     }
 
     private fun prefs(ctx: Context) = ctx.getSharedPreferences("bvi", Context.MODE_PRIVATE)
 
     private fun key(c: Calendar) = String.format("%04d-%02d-%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH))
 
-    /** Serie in Gefahr: läuft, gestern zuletzt gelernt, heute noch nicht und es ist nach 18 Uhr */
-    fun atRisk(days: Int, last: String, now: Calendar = Calendar.getInstance()): Boolean {
-        if (days <= 0 || now.get(Calendar.HOUR_OF_DAY) < RISK_HOUR) return false
+    /** Stufe bei drohendem Serienverlust: 0 = normal, 1 = ab 18 Uhr (kleiner, blasser), 2 = ab 21 Uhr (halb so groß, grau) */
+    fun riskLevel(days: Int, last: String, now: Calendar = Calendar.getInstance()): Int {
+        val h = now.get(Calendar.HOUR_OF_DAY)
+        if (days <= 0 || h < RISK_HOUR) return 0
         val y = (now.clone() as Calendar).apply { add(Calendar.DAY_OF_YEAR, -1) }
-        return last == key(y)
+        if (last != key(y)) return 0
+        return if (h >= LATE_HOUR) 2 else 1
     }
 
     /** Gewünschter Name aus gespeicherter Grundfarbe und Serienzustand */
     fun wanted(ctx: Context): String {
         val p = prefs(ctx)
         val base = p.getString("base_icon", "orange") ?: "orange"
-        return if (atRisk(p.getInt("streak_days", 0), p.getString("streak_last", "") ?: "")) base + "_dim" else base
+        return when (riskLevel(p.getInt("streak_days", 0), p.getString("streak_last", "") ?: "")) { 1 -> base + "_dim"; 2 -> base + "_late"; else -> base }
     }
 
     /** Aus der Seite: Grundfarbe/-design des Symbols (z. B. "orange_light") */
@@ -100,10 +105,11 @@ object StreakIcon {
         return cal.timeInMillis
     }
 
-    /** Täglich 18:00 (Flamme wird kleiner und blasser) und 00:30 (gerissene Serie: wieder das normale Symbol) */
+    /** Täglich 18:00 (Flamme kleiner und blasser), 21:00 (halb so groß und grau) und 00:30 (gerissene Serie: wieder das normale Symbol) */
     fun schedule(ctx: Context) {
         val am = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         am.setInexactRepeating(AlarmManager.RTC, at(RISK_HOUR, 0), AlarmManager.INTERVAL_DAY, pending(ctx, REQ_EVENING))
+        am.setInexactRepeating(AlarmManager.RTC, at(LATE_HOUR, 0), AlarmManager.INTERVAL_DAY, pending(ctx, REQ_LATE))
         am.setInexactRepeating(AlarmManager.RTC, at(0, 30), AlarmManager.INTERVAL_DAY, pending(ctx, REQ_NIGHT))
     }
 }
