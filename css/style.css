@@ -4185,3 +4185,10 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 /* Höhe des Lernkarten-Bereichs bleibt auch während des Ladens stehen: kein Springen beim Filterwechsel */
 #v-flashcards #fc-container{min-height:calc(100dvh - 96px);}
 @media (max-width:1023px){#v-flashcards #fc-container{min-height:calc(100dvh - var(--m-tabbar-h,0px) - 96px);}}
+/* Aktionskacheln: alle drei gleich aufgebaut (Symbol, Name, Zahl), nichts ragt heraus */
+.fc-tiles{gap:8px;margin-top:.5rem;}
+.fc-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:0;overflow:hidden;padding:7px 4px 6px;border-radius:14px;}
+.fc-tile .fc-ti{width:auto;height:auto;background:none;border-radius:0;color:var(--m-accent-fg);display:block;line-height:0;margin:0 0 2px;}
+.fc-tile .fc-ti svg{width:20px;height:20px;}
+.fc-tile b{display:block;max-width:100%;font-size:.76rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fc-tile small{display:block;max-width:100%;font-size:.7rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
