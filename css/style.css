@@ -4031,7 +4031,8 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 #m-exam-list .jg-legend{margin-top:18px;}
 @media(max-width:700px){
   #v-pruefung .page-hero{padding-bottom:0;}
-  #v-pruefung .pc{padding-top:.8rem;}
+  #v-pruefung .pc{padding-top:.72rem;}
+  #v-pruefung #jg-exam-bar:empty{display:none;}   /* leere Leiste erzeugte eine zusätzliche Lücke */
   #m-countdown .m-count-go{padding:10px 14px;gap:6px 12px;}
   #m-countdown .m-count-big{font-size:2rem;}
   #m-countdown .m-tx{flex:1 1 0;}
