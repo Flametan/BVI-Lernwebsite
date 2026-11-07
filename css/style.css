@@ -4170,7 +4170,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 /* Antwort-Knöpfe 48 px; Schwer sitzt über dem mittleren Tab-Knopf, die äußeren tiefer */
 .fc-rc{width:48px;height:48px;}
 .fc-rc svg{width:22px;height:22px;}
-.fc-hard{margin-bottom:36px;}
+.fc-hard{margin-bottom:26px;}
 .fc-controls{gap:30px;}
 @media (max-width:1023px){
   #fc-container:has(.fc-controls){padding-bottom:calc(112px + var(--m-tabbar-h,0px));}
