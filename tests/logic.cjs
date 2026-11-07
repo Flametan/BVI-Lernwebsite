@@ -566,8 +566,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const w = ms => new Promise(r => setTimeout(r, ms));
     const r = {}; localStorage.removeItem('bvi_snake_opts');
     NAV.go('v-pause', 'Pausenraum'); await w(600);
-    const names = [...document.querySelectorAll('#v-pause .pz-game b')].map(b => b.textContent);
-    r.order = names.indexOf('Einsatzleitung-Snake') === names.indexOf('Einsatzfahrt-Duell') + 1;
+    const names = [...document.querySelectorAll('#v-pause .pz-tile b')].map(b => b.textContent);
+    r.order = names.indexOf('Einsatzleitung-Snake') === names.indexOf('Einsatzfahrt') + 1;
     document.querySelector('#v-pause [data-g="snake"]').click();
     for (let i = 0; i < 30 && !document.querySelector('.sn-board'); i++) await w(100);
     r.board = document.querySelectorAll('.sn-c').length === 324;
@@ -593,7 +593,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   const mine = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {}; localStorage.removeItem('bvi_minesweeper_opts');
     NAV.go('v-pause', 'Pausenraum'); await PAUSE_LOADER.load(); await w(300);
-    r.order = [...document.querySelectorAll('#v-pause [data-g]')].slice(3, 5).map(x => x.dataset.g).join();
+    r.order = [...document.querySelectorAll('#v-pause [data-g]')].slice(2, 4).map(x => x.dataset.g).join();
     document.querySelector('#v-pause [data-g="minesweeper"]').click(); await w(800);
     const S = () => MINESWEEPER._state(), cells = () => document.querySelectorAll('.mi-c');
     r.stufen = [...document.querySelectorAll('.mi-seg [data-l]')].map(b => b.textContent).join();
@@ -768,7 +768,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const w = ms => new Promise(r => setTimeout(r, ms));
     const r = {}; localStorage.removeItem('bvi_solitaer_opts');
     NAV.go('v-pause', 'Pausenraum'); await w(600);
-    const names = [...document.querySelectorAll('#v-pause .pz-game b')].map(b => b.textContent);
+    const names = [...document.querySelectorAll('#v-pause .pz-tile b')].map(b => b.textContent);
     r.order = names.indexOf('Solitär') === names.indexOf('Einsatzleitung-Snake') + 1;
     document.querySelector('#v-pause [data-g="solitaer"]').click();
     for (let i = 0; i < 30 && !document.querySelector('.so-board'); i++) await w(100);

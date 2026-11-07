@@ -43,13 +43,18 @@ const PAUSE=(function(){
     ['mem','pairs','Memory','Finde die Paare mit möglichst wenigen Zügen',()=>MEM]
   ];
   function bestTxt(k){const b=best()[k];if(b==null)return'';if(k==='minesweeper'){const L=[['sehr','Sehr schwer'],['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']].find(x=>b[x[0]]!=null);return L?`Rekord ${L[1]}: ${Math.floor(b[L[0]]/60)}:${('0'+b[L[0]]%60).slice(-2)}`:'';}return k==='mem'?`Bestwert: ${b} Züge`:k==='quiz'?`Bestwert: Stufe ${b}`:k==='num'?`Beste Serie: ${b}`:k==='word'?`Gelöst: ${b}`:`Bestwert: ${b} Punkte`;}
+  // kurze Untertitel und Rekord-Etiketten für die Kacheln
+  const SHORT={fahrt:'5, 10 oder 15 Fragen, Hilfsfrist',duell:'Zu zweit live, per QR-Code',snake:'Löschzug durchs Feuer steuern',solitaer:'Klondike mit Flammen und Leitern',minesweeper:'Brandherde im Dunkeln aufspüren',quiz:'8 Stufen, ein 50:50-Joker',tf:'60 Sekunden',word:'Begriff mit 5 Buchstaben',num:'Was ist größer?',mem:'Paare finden'};
+  function bestChip(k){const b=best()[k];if(b==null)return'';if(k==='minesweeper'){const L=[['sehr','Sehr schwer'],['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']].find(x=>b[x[0]]!=null);return L?`${L[1]} ${Math.floor(b[L[0]]/60)}:${('0'+b[L[0]]%60).slice(-2)}`:'';}return k==='mem'?`${b} Züge`:k==='quiz'?`Stufe ${b}`:k==='num'?`Serie ${b}`:k==='word'?`${b} gelöst`:`Rekord ${b}`;}
   function hub(){stop();
-    const card=([k,ic,t,d],big)=>`<button class="pz-game${big?' pz-big':''}" data-g="${k}"><span class="pz-gi">${svg(ic)}</span><span><b>${t}</b><small>${d}</small>${bestTxt(k)?`<em>${bestTxt(k)}</em>`:''}</span></button>`;
-    // Einsatzfahrt immer mit Prüfungsfragen; der Umschalter gilt nur für die Spiele darunter
-    root.innerHTML=`<div class="pz-wrap"><div class="pz-grid">${card(GAMES[0],true)}${card(GAMES[1],true)}${card(GAMES[2],true)}${card(GAMES[3],true)}${card(GAMES[4],true)}</div>
-    <div class="m-sec" style="margin:.4rem 0 -.2rem">Weitere Spiele · Fragen aus</div>
-    <div class="pz-mode" role="tablist" aria-label="Fragen für die weiteren Spiele">${[['allg','Allgemeinwissen'],['fw','Feuerwehr'],['beides','Beides']].map(([k,t])=>`<button data-m="${k}" class="${mode===k?'on':''}">${t}</button>`).join('')}</div>
-    <div class="pz-grid">${GAMES.slice(5).map(g=>card(g,false)).join('')}</div></div>`;
+    const tile=(k,wide)=>{const g=GAMES.find(x=>x[0]===k),chip=bestChip(k);
+      return `<button class="pz-tile${wide?' wide':''}${k==='fahrt'?' hero':''}" data-g="${k}" title="${g[3]}" aria-label="${g[2]}. ${g[3]}${chip?'. '+chip:''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${chip?`<span class="pz-bst">${chip}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${SHORT[k]}</small>${k==='fahrt'?`<small class="pz-more">${g[3].split(' · ')[0]}</small>`:''}</span></button>`;};
+    // Einsatzfahrt und Duell immer mit Prüfungsfragen; der Umschalter gilt nur für „Wissen und Rätsel“
+    root.innerHTML=`<div class="pz-wrap pz-hub"><div class="m-sec pz-sec">Feuerwehr</div>
+    <div class="pz-tiles pz-fw">${tile('fahrt',true)}${tile('snake')}${tile('solitaer')}${tile('minesweeper')}${tile('duell')}</div>
+    <div class="m-sec pz-sec">Wissen und Rätsel</div>
+    <div class="pz-src"><span>Fragen aus</span><div class="pz-mode" role="tablist" aria-label="Fragen für die weiteren Spiele">${[['allg','Allgemeinwissen'],['fw','Feuerwehr'],['beides','Beides']].map(([k,t])=>`<button data-m="${k}" class="${mode===k?'on':''}">${t}</button>`).join('')}</div></div>
+    <div class="pz-tiles pz-wi">${['quiz','tf','word','num'].map(k=>tile(k)).join('')}${tile('mem',true)}</div></div>`;
     root.querySelectorAll('[data-m]').forEach(x=>x.onclick=()=>{mode=x.dataset.m;set(MKEY,mode);hub();});
     root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
   }
