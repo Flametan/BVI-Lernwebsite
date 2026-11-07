@@ -4033,7 +4033,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
   #v-pruefung .page-hero{padding-bottom:0;}
   #v-pruefung .pc{padding-top:.72rem;}
   #v-pruefung #jg-exam-bar:empty{display:none;}   /* leere Leiste erzeugte eine zusätzliche Lücke */
-  #m-countdown .m-count-go{padding:10px 14px;gap:6px 12px;}
+  #m-countdown .m-count-go{padding:4px 14px 10px;gap:6px 12px;}   /* oben 60 % weniger Innenabstand */
   #m-countdown .m-count-big{font-size:2rem;}
   #m-countdown .m-tx{flex:1 1 0;}
   #m-countdown .m-tx .m-t2{font-size:.76rem;line-height:1.25;}
