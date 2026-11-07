@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.1',ts:'2026-11-07T10:00',items:[
+      'Lernkarten: Der Stern zum Markieren sitzt auf beiden Seiten der Karte oben rechts und dreht sich beim Umdrehen mit.',
       'Pausenraum: Der Platzhalter beim Laden zeigt jetzt das Kachel-Raster der echten Ansicht (breite Einsatzfahrt, vier Kacheln, Fragenquelle, zweite Gruppe) statt eines allgemeinen Rasters; er passt auf Handy, Tablet und Desktop.',
       'Lernkarten: Der Einleitungstext oben ist weg. Die drei Kacheln „Eigene Karte“, „Nochmal üben“ und „Markierte“ sind einheitlich aufgebaut (Symbol, Name, Zahl) und nichts ragt mehr über den Rand.',
       'Lernkarten: Wischen nach oben zählt jetzt zuverlässig als „Schwer“ (auch auf dem Handy; bisher brach der Browser die Geste ab). Wischen geht auch, bevor die Karte aufgedeckt ist. Die Antwort-Knöpfe sind immer sichtbar und sitzen am Handy und Tablet fest über der Tab-Leiste, direkt unter der Karte; sie funktionieren auch ohne vorheriges Aufdecken.  Die Seite springt nicht mehr beim Zudecken. Die Antwort-Knöpfe sind 48 px groß; „Schwer“ sitzt über dem mittleren Tab-Knopf, „Nicht gewusst“ und „Gewusst“ tiefer daneben, nichts wird vom Tab-Knopf überdeckt. Beim Start der Karten (nicht beim Wechsel eines Filters) scrollt die Seite so, dass die Modul-Chips oben stehen und die Karte direkt darunter folgt (ohne Lücke).',
