@@ -4103,10 +4103,6 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .fc-rl{font-size:.78rem;color:var(--m-muted);}
 .fc-no,.fc-no:hover{color:var(--k-e07070);}
 .fc-yes,.fc-yes:hover{color:var(--c-ok)!important;background:none!important;}
-.fc-rs{color:var(--m-accent);}
-.fc-rs .fc-rc{width:46px;height:46px;margin-top:6px;}
-.fc-rs .fc-rc svg{width:21px;height:21px;}
-.fc-rs.starred .fc-rc svg{fill:currentColor;}
 .fc-rb:focus-visible{outline:2px solid var(--m-accent);outline-offset:3px;border-radius:12px;}
 .fc-swhint{text-align:center;font-size:.78rem;color:var(--m-muted);margin:.8rem 0 0;}
 /* Aktionskacheln unter dem Titel (kompakt) */
@@ -4121,12 +4117,22 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .fc-tile:focus-visible{outline:2px solid var(--m-accent);outline-offset:2px;}
 .fc-f-btn.fc-star-filter-btn,.fc-f-btn.fc-weak-filter-btn{display:none!important;}
 .fc-f-btn.fc-sp:not(.active){background:var(--m-card);color:var(--m-fg);}
-/* Antwort-Kreise mit Tönung */
-.fc-controls{max-width:400px;}
-.fc-rc{width:60px;height:60px;box-shadow:none;}
-.fc-no .fc-rc{background:color-mix(in srgb,var(--k-e07070) 20%,var(--m-card));}
-.fc-hard .fc-rc{background:color-mix(in srgb,var(--m-accent) 22%,var(--m-card));}
-.fc-yes .fc-rc{background:color-mix(in srgb,var(--c-ok) 22%,var(--m-card));}
-.fc-hard,.fc-hard:hover{color:var(--m-accent-fg)!important;background:none!important;}
-.fc-rs .fc-rc{background:var(--m-accent-dim);}
-.fc-rl{font-size:.74rem;}
+/* Stern direkt auf der Karte */
+.fc-card-star{position:absolute;top:10px;right:10px;z-index:6;width:44px;height:44px;border-radius:50%;border:0;background:var(--m-raised);color:var(--m-fg);display:grid;place-items:center;padding:0;cursor:pointer;opacity:1;transition:background .2s,color .2s;}
+.fc-card-star svg{fill:none;}
+.fc-card-star.starred{background:var(--m-accent-dim);color:var(--m-accent-fg);}
+.fc-card-star.starred svg{fill:currentColor;}
+.fc-outer .fc-face{padding-right:3.4rem;}
+/* Antwort-Kreise: gleich groß, Kontur, Schwer versetzt (Bogen), Gewusst gefüllt */
+.fc-controls{justify-content:center;align-items:flex-end;gap:30px;max-width:420px;padding:0;}
+.fc-rb{width:96px;}
+.fc-rc{width:62px;height:62px;box-shadow:none;background:var(--m-card);}
+.fc-rl{font-size:.8rem;font-weight:600;color:var(--m-fg);text-align:center;line-height:1.15;}
+.fc-no .fc-rc{color:var(--k-e07070);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--k-e07070) 55%,transparent);}
+.fc-hard{margin-bottom:34px;}
+.fc-hard .fc-rc{background:var(--m-card);color:var(--m-accent-fg);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--m-accent) 70%,transparent);}
+.fc-hard,.fc-hard:hover{color:var(--m-fg)!important;background:none!important;}
+.fc-yes .fc-rc{background:var(--c-ok);color:#fff;}
+.fc-yes,.fc-yes:hover{color:var(--m-fg)!important;background:none!important;}
+.fc-no,.fc-no:hover{color:var(--m-fg);}
+.fc-no .fc-rc{color:var(--k-e07070);}
