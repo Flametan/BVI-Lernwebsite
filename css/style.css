@@ -4149,3 +4149,30 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 #v-flashcards.view.nav-forward,#v-flashcards.view.nav-back{animation-fill-mode:backwards;}
 .fc-controls{gap:14px;}
 .fc-rb{width:92px;}
+
+/* Antwort-Knöpfe halb so hoch; Karte beim Start nach oben scrollen */
+#fc-container .fc-nav{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 12px);}
+.fc-rc{width:38px;height:38px;}
+.fc-rc svg{width:19px;height:19px;}
+.fc-rl{font-size:.68rem;}
+.fc-rb{gap:3px;}
+.fc-hard{margin-bottom:12px;}
+.fc-controls{padding:.3rem 0 .15rem;gap:22px;}
+@media (max-width:1023px){
+  #fc-container:has(.fc-controls){padding-bottom:calc(74px + var(--m-tabbar-h,0px));}
+  .fc-controls{padding:.45rem 0 .15rem;}
+}
+#fc-container:has(.fc-nav){min-height:calc(100dvh - 24px);}
+@media (max-width:1023px){
+  #fc-container:has(.fc-nav){min-height:calc(100dvh - var(--m-tabbar-h,0px) - 24px);}
+  .fc-controls{bottom:calc(var(--m-tabbar-h,0px) + env(safe-area-inset-bottom,0px) + 18px);}
+}
+/* Antwort-Knöpfe 48 px; Schwer sitzt über dem mittleren Tab-Knopf, die äußeren tiefer */
+.fc-rc{width:48px;height:48px;}
+.fc-rc svg{width:22px;height:22px;}
+.fc-hard{margin-bottom:26px;}
+.fc-controls{gap:30px;}
+@media (max-width:1023px){
+  #fc-container:has(.fc-controls){padding-bottom:calc(112px + var(--m-tabbar-h,0px));}
+  .fc-controls{bottom:calc(var(--m-tabbar-h,0px) + env(safe-area-inset-bottom,0px) + 4px);}
+}
