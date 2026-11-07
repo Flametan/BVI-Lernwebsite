@@ -4087,7 +4087,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .pz-more{display:none;}
 
 /* Lernkarten: runde Antwort-Knöpfe, Wischen nach oben (Schwer), Stempel auf der Karte */
-.fc-outer.fl{touch-action:pan-down;}
+.fc-outer,.fc-outer *{touch-action:none;}
 .fc-stamp{top:auto;white-space:nowrap;transform:none;padding:.4rem .9rem;border-radius:12px;border:3px solid;font-size:1.15rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:color-mix(in srgb,var(--m-card) 82%,transparent);}
 .fc-st-ok{top:1rem;left:1rem;color:var(--c-ok);border-color:var(--c-ok);transform:rotate(-9deg);}
 .fc-st-no{top:1rem;right:1rem;color:var(--k-e07070);border-color:var(--k-e07070);transform:rotate(9deg);}

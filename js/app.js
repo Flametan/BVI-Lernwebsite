@@ -1849,7 +1849,7 @@ const FC = (function(){
         ? `translateY(${-window.innerHeight*0.9}px)`
         : `translateX(${(kind==='ok'?1:-1)*window.innerWidth*1.1}px) translateY(-30px) rotate(${(kind==='ok'?1:-1)*TILT}deg)`;
       outer.style.opacity='0';
-      setTimeout(()=>FC.answer(kind==='ok'?true:kind==='no'?false:'hard'),ms-20);
+      setTimeout(()=>FC.answer(kind==='ok'?true:kind==='no'?false:'hard',true),ms-20);
     };
 
     outer.addEventListener('pointerdown',e=>{
@@ -1862,7 +1862,7 @@ const FC = (function(){
       dx=e.clientX-x0; dy=e.clientY-y0;
       if(!mode){
         if(Math.max(Math.abs(dx),Math.abs(dy))<6) return;
-        mode = Math.abs(dy)>Math.abs(dx)+5 ? (flipped&&dy<0?'up':'v') : 'x';
+        mode = Math.abs(dy)>Math.abs(dx)+5 ? (dy<0?'up':'v') : 'x';
       }
       if(mode==='v'){ live=false; outer.style.transform=''; return; }
       e.preventDefault();
@@ -1875,7 +1875,7 @@ const FC = (function(){
       } else {
         // Die Karte folgt dem Finger und neigt sich dabei bis 12°
         outer.style.transform=`translateX(${dx}px) rotate(${tilt(dx)}deg)`;
-        if(flipped){ const p=Math.min(Math.abs(dx)/THR,1); stamps(dx>0?p:0,dx<0?p:0,0); }
+        { const p=Math.min(Math.abs(dx)/THR,1); stamps(dx>0?p:0,dx<0?p:0,0); }
       }
     },{passive:false});
 
@@ -1886,7 +1886,7 @@ const FC = (function(){
         outer.style.transition=''; outer.style.transform=''; FC.flip();
       } else if(mode==='up'&&(-dy>=THR||vy<-0.6)){
         fly('hard',Math.max(180,Math.min(300,300+vy*100)));
-      } else if(mode==='x'&&flipped&&(Math.abs(dx)>=THR||Math.abs(vx)>0.6)){
+      } else if(mode==='x'&&(Math.abs(dx)>=THR||Math.abs(vx)>0.6)){
         // Wegschnippen: Schwung des Fingers bestimmt die Richtung und das Tempo
         const dir=(Math.abs(vx)>0.6?vx:dx)>0?1:-1;
         fly(dir>0?'ok':'no',Math.max(180,Math.min(320,320-Math.abs(vx)*120)));
@@ -1954,12 +1954,12 @@ const FC = (function(){
         <div class="fc-stamp fc-st-hard" aria-hidden="true">Schwer</div>
       </div>
       ${_jgBar(card)}
-      <div class="fc-controls" id="fc-controls" style="display:none">
+      <div class="fc-controls" id="fc-controls" style="visibility:hidden">
         <button class="fc-rb fc-no" onclick="FC.answer(false)" aria-label="Nicht gewusst, gleich wieder"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span class="fc-rl">Nicht gewusst</span></button>
         <button class="fc-rb fc-hard" onclick="FC.answer('hard')" aria-label="Schwer, in ${iHard} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="fc-rl">Schwer</span></button>
         <button class="fc-rb fc-yes" onclick="FC.answer(true)" aria-label="Gewusst, in ${iGood} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="fc-rl">Gewusst</span></button>
       </div>
-      <p class="fc-swhint" id="fc-swhint" style="display:none">Wischen: links nicht gewusst · oben schwer · rechts gewusst</p>
+      <p class="fc-swhint" id="fc-swhint" style="visibility:hidden">Wischen: links nicht gewusst · oben schwer · rechts gewusst</p>
       </div>`;
     flipped = false;
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
@@ -2032,8 +2032,8 @@ const FC = (function(){
         inner.classList.add('fc-lift'); inner.classList.toggle('flipped',flipped);
         inner.addEventListener('animationend',()=>inner.classList.remove('fc-lift'),{once:true});
       }
-      if(ctrl) ctrl.style.display=flipped?'flex':'none';
-      const sw=document.getElementById('fc-swhint'); if(sw) sw.style.display=flipped?'block':'none';
+      if(ctrl) ctrl.style.visibility=flipped?'visible':'hidden';
+      const sw=document.getElementById('fc-swhint'); if(sw) sw.style.visibility=flipped?'visible':'hidden';
       const ou=document.querySelector('.fc-outer'); if(ou) ou.classList.toggle('fl',flipped);
     },
     // Karte außerhalb des Kartenstapels bewerten (z. B. im Übungs-Fenster neben der Lernseite)
@@ -2044,8 +2044,8 @@ const FC = (function(){
       const weak=fcLoadWeak(); if(ok) weak.delete(id); else weak.add(id); fcSaveWeak(weak);
       fcSave(d); SHELL.renderFcSide(); updateFilterButtons();
     },
-    answer(quality){
-      if(!flipped||_reviewPos>=0) return;   // im Rückblick nicht die unsichtbare aktuelle Karte bewerten
+    answer(quality,viaSwipe){
+      if((!flipped&&!viaSwipe)||_reviewPos>=0) return;   // im Rückblick nicht die unsichtbare aktuelle Karte bewerten
       const q=quality===true?2:quality===false?0:1; // true=gut, false=wieder, 'hard'=schwer
       if(navigator.vibrate) navigator.vibrate(q>0?[30]:[20,50,20]);
       const card=deck[curIdx];
