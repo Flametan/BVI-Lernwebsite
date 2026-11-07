@@ -1511,7 +1511,7 @@ const SETTINGS = (function(){
       const snap=localStorage.getItem('bvi_fc');
       if(!confirm('Lernkarten-Lernstand wirklich zurücksetzen?')) return;
       localStorage.removeItem('bvi_fc');
-      const redraw=()=>{ if(document.getElementById('v-flashcards').classList.contains('active')) FC.start(); }, put=v=>{ if(v===null) localStorage.removeItem('bvi_fc'); else localStorage.setItem('bvi_fc',v); redraw(); };
+      const redraw=()=>{ if(document.getElementById('v-flashcards').classList.contains('active')) FC.start(true); }, put=v=>{ if(v===null) localStorage.removeItem('bvi_fc'); else localStorage.setItem('bvi_fc',v); redraw(); };
       redraw();
       UNDO.push('Lernkarten zurücksetzen',()=>put(snap),()=>put(null));
       TOAST.show('Lernkarten zurückgesetzt',{type:'ok'});
@@ -2017,9 +2017,9 @@ const FC = (function(){
   }
 
   return {
-    start(){
+    start(keepScroll){
       deck = getDeck(); curIdx=0; flipped=false; sess={known:0,unknown:0};
-      _seen=[]; _reviewPos=-1; _toCard=true;
+      _seen=[]; _reviewPos=-1; _toCard=!keepScroll;
       showSkeleton();
       setTimeout(renderCard, 320);
     },
@@ -2073,14 +2073,14 @@ const FC = (function(){
         activeFilters=new Set(['laufbahn']);
       } else if(f==='pruefung'){
         activeFilters=new Set(['ibk','vak','feuak','idf']);
-        updateFilterButtons(); this.start(); return;
+        updateFilterButtons(); this.start(true); return;
       } else {
         activeFilters.delete('starred'); activeFilters.delete('weak'); activeFilters.delete('own');
         if(activeFilters.has(f)){ if(CATS.every(c=>activeFilters.has(c))) return; activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(['laufbahn']); }
         else activeFilters.add(f);
       }
       updateFilterButtons();
-      this.start();
+      this.start(true);
     },
     back(){
       if(_seen.length===0) return;
@@ -2123,8 +2123,8 @@ const FC = (function(){
     resetKnown(){
       const snap=localStorage.getItem('bvi_fc');
       if(!confirm('Lernkarten-Lernstand wirklich zurücksetzen?')) return;
-      localStorage.removeItem('bvi_fc'); this.start();
-      const put=v=>{ if(v===null) localStorage.removeItem('bvi_fc'); else localStorage.setItem('bvi_fc',v); FC.start(); };
+      localStorage.removeItem('bvi_fc'); this.start(true);
+      const put=v=>{ if(v===null) localStorage.removeItem('bvi_fc'); else localStorage.setItem('bvi_fc',v); FC.start(true); };
       UNDO.push('Lernstand zurücksetzen',()=>put(snap),()=>put(null));
       TOAST.show('Lernstand zurückgesetzt',{type:'ok'});
     },
@@ -3043,7 +3043,7 @@ const CUSTOM=(function(){
       ['bvi_fc_stars','bvi_fc_weak'].forEach(k=>{ const a=JSON.parse(localStorage.getItem(k)||'[]'); if(Array.isArray(a)&&a.includes(id)) localStorage.setItem(k,JSON.stringify(a.filter(x=>x!==id))); });
     }catch(e){}
     list(); refresh();
-    if(typeof FC!=='undefined'&&document.getElementById('v-flashcards').classList.contains('active')) FC.start();
+    if(typeof FC!=='undefined'&&document.getElementById('v-flashcards').classList.contains('active')) FC.start(true);
   }
   function add(){
     const q=box.querySelector('#cu-q').value, a=box.querySelector('#cu-a').value, m=box.querySelector('#cu-m').value;
