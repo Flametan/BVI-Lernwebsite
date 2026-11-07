@@ -48,13 +48,13 @@ const PAUSE=(function(){
   function bestChip(k){const b=best()[k];if(b==null)return'';if(k==='minesweeper'){const L=[['sehr','Sehr schwer'],['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']].find(x=>b[x[0]]!=null);return L?`${L[1]} ${Math.floor(b[L[0]]/60)}:${('0'+b[L[0]]%60).slice(-2)}`:'';}return k==='mem'?`${b} Züge`:k==='quiz'?`Stufe ${b}`:k==='num'?`Serie ${b}`:k==='word'?`${b} gelöst`:`Rekord ${b}`;}
   function hub(){stop();
     const tile=(k,wide)=>{const g=GAMES.find(x=>x[0]===k),chip=bestChip(k);
-      return `<button class="pz-tile${wide?' wide':''}${k==='fahrt'?' hero':''}" data-g="${k}" title="${g[3]}" aria-label="${g[2]}. ${g[3]}${chip?'. '+chip:''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${chip?`<span class="pz-bst">${chip}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${SHORT[k]}</small></span></button>`;};
+      return `<button class="pz-tile${wide?' wide':''}${k==='fahrt'?' hero':''}" data-g="${k}" title="${g[3]}" aria-label="${g[2]}. ${g[3]}${chip?'. '+chip:''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${chip?`<span class="pz-bst">${chip}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${SHORT[k]}</small>${k==='fahrt'?`<small class="pz-more">${g[3].split(' · ')[0]}</small>`:''}</span></button>`;};
     // Einsatzfahrt und Duell immer mit Prüfungsfragen; der Umschalter gilt nur für „Wissen und Rätsel“
-    root.innerHTML=`<div class="pz-wrap"><div class="m-sec pz-sec">Feuerwehr</div>
-    <div class="pz-tiles">${tile('fahrt',true)}${tile('snake')}${tile('solitaer')}${tile('minesweeper')}${tile('duell')}</div>
+    root.innerHTML=`<div class="pz-wrap pz-hub"><div class="m-sec pz-sec">Feuerwehr</div>
+    <div class="pz-tiles pz-fw">${tile('fahrt',true)}${tile('snake')}${tile('solitaer')}${tile('minesweeper')}${tile('duell')}</div>
     <div class="m-sec pz-sec">Wissen und Rätsel</div>
     <div class="pz-src"><span>Fragen aus</span><div class="pz-mode" role="tablist" aria-label="Fragen für die weiteren Spiele">${[['allg','Allgemeinwissen'],['fw','Feuerwehr'],['beides','Beides']].map(([k,t])=>`<button data-m="${k}" class="${mode===k?'on':''}">${t}</button>`).join('')}</div></div>
-    <div class="pz-tiles">${['quiz','tf','word','num'].map(k=>tile(k)).join('')}${tile('mem',true)}</div></div>`;
+    <div class="pz-tiles pz-wi">${['quiz','tf','word','num'].map(k=>tile(k)).join('')}${tile('mem',true)}</div></div>`;
     root.querySelectorAll('[data-m]').forEach(x=>x.onclick=()=>{mode=x.dataset.m;set(MKEY,mode);hub();});
     root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
   }

@@ -4067,5 +4067,26 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .pz-tile.hero .pz-gi,.pz-tile.hero .pz-bst{background:rgba(255,255,255,.55);color:#1c1c1c;}
 .pz-src{display:flex;flex-direction:column;gap:6px;}
 .pz-src>span{font-size:.8rem;color:var(--m-muted);}
-@media(min-width:701px){.pz-tiles{grid-template-columns:repeat(3,minmax(0,1fr));}.pz-tile.wide{grid-column:span 2;}}
-@media(min-width:1100px){.pz-tiles{grid-template-columns:repeat(4,minmax(0,1fr));}}
+.pz-hub{max-width:none;}
+/* Tablet: Feuerwehr 3 Spalten (Einsatzfahrt zwei breit), Wissen als 3 + 2 */
+@media(min-width:701px){
+  .pz-fw{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .pz-fw .pz-tile.wide{grid-column:span 2;}
+  .pz-wi{grid-template-columns:repeat(6,minmax(0,1fr));}
+  .pz-wi .pz-tile,.pz-wi .pz-tile.wide{grid-column:span 2;}
+  .pz-wi .pz-tile:nth-child(n+4){grid-column:span 3;}
+  .pz-tile{min-height:128px;}
+}
+/* Desktop: Feuerwehr 4 Spalten (Einsatzfahrt zwei breit und zwei hoch), Wissen in einer Reihe mit 5 */
+@media(min-width:1100px){
+  .pz-fw{grid-template-columns:repeat(4,minmax(0,1fr));}
+  .pz-fw .pz-tile.hero{grid-row:span 2;min-height:0;}
+  .pz-fw .pz-tile.hero b{font-size:1.25rem;}
+  .pz-fw .pz-tile.hero small{font-size:.86rem;}
+  .pz-fw .pz-tile.hero .pz-more{display:block;margin-top:8px;}
+  .pz-fw .pz-tile.hero .pz-gi{width:56px;height:56px;border-radius:16px;}
+  .pz-fw .pz-tile.hero .pz-gi svg{width:28px;height:28px;}
+  .pz-wi{grid-template-columns:repeat(5,minmax(0,1fr));}
+  .pz-wi .pz-tile,.pz-wi .pz-tile.wide,.pz-wi .pz-tile:nth-child(n+4){grid-column:span 1;}
+}
+.pz-more{display:none;}
