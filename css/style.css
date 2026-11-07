@@ -4048,3 +4048,24 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 #v-plan .page-hero,#v-pruefung .page-hero{padding-bottom:0;}
 #v-plan .page-title,#v-pruefung .page-title{margin-bottom:0;}
 @media(max-width:700px){#v-plan .pc{padding-top:.72rem;}}
+
+/* Pausenraum (Entwurf 1): Kachel-Raster, Einsatzfahrt breit und hervorgehoben */
+.pz-sec{margin:.2rem 0 -.3rem;}
+.pz-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.pz-tile{display:flex;flex-direction:column;justify-content:space-between;gap:10px;min-height:116px;text-align:left;background:var(--m-card);border:0;border-radius:20px;padding:14px;color:var(--m-fg);font-family:inherit;cursor:pointer;transition:transform .15s ease;}
+.pz-tile:active{transform:scale(.98);}
+.pz-tile:focus-visible{outline:2px solid var(--m-accent);outline-offset:2px;}
+.pz-tile.wide{grid-column:1 / -1;}
+.pz-ti{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.pz-tile .pz-gi{width:40px;height:40px;border-radius:12px;background:var(--m-accent-dim);color:var(--m-accent-fg);display:grid;place-items:center;flex:none;}
+.pz-tile .pz-gi svg{width:22px;height:22px;}
+.pz-bst{font-size:.7rem;font-weight:700;color:var(--m-accent-fg);background:var(--m-accent-dim);border-radius:7px;padding:3px 7px;white-space:nowrap;}
+.pz-tile b{display:block;font-size:.98rem;line-height:1.2;}
+.pz-tile small{display:block;color:var(--m-muted);font-size:.78rem;line-height:1.3;margin-top:2px;}
+.pz-tile.hero{background:linear-gradient(150deg,var(--m-accent),color-mix(in srgb,var(--m-accent) 55%,#fff));color:var(--m-on-accent,#1c1c1c);}
+.pz-tile.hero small{color:inherit;opacity:.78;}
+.pz-tile.hero .pz-gi,.pz-tile.hero .pz-bst{background:rgba(255,255,255,.55);color:#1c1c1c;}
+.pz-src{display:flex;flex-direction:column;gap:6px;}
+.pz-src>span{font-size:.8rem;color:var(--m-muted);}
+@media(min-width:701px){.pz-tiles{grid-template-columns:repeat(3,minmax(0,1fr));}.pz-tile.wide{grid-column:span 2;}}
+@media(min-width:1100px){.pz-tiles{grid-template-columns:repeat(4,minmax(0,1fr));}}
