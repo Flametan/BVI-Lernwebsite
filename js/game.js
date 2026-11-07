@@ -14,8 +14,8 @@ const GAME=(function(){
   /* Dienstgrade nach der Wikipedia-Übersicht (Berufsfeuerwehr NRW), nach Laufbahngruppe geordnet */
   const GROUPS={md:{n:'Mittlerer Dienst',s:'mD',c:'#e5484d'},gd:{n:'Gehobener Dienst',s:'gD',c:'#b9c2cf'},hd:{n:'Höherer Dienst',s:'hD',c:'#f0b83a'}};
   const RANKS=[
-    {n:'Brandmeister',g:'md',xp:0},{n:'Oberbrandmeister',g:'md',xp:120},{n:'Hauptbrandmeister',g:'md',xp:350},
-    {n:'Brandinspektor',g:'gd',xp:750},{n:'Brandoberinspektor',g:'gd',xp:1400},{n:'Brandamtmann',g:'gd',xp:2400},
+    {n:'Brandmeister',g:'md',xp:0},{n:'Oberbrandmeister',g:'md',xp:120},{n:'Hauptbrandmeister',g:'md',xp:350},{n:'Hauptbrandmeister mit Amtszulage',g:'md',xp:550},
+    {n:'Brandinspektor',g:'gd',xp:750},{n:'Brandoberinspektor',g:'gd',xp:1400},{n:'Brandamtmann',g:'gd',xp:2400},{n:'Brandamtsrat',g:'gd',xp:3000},
     {n:'Brandrat',g:'hd',xp:3800},{n:'Oberbrandrat',g:'hd',xp:5800},{n:'Branddirektor',g:'hd',xp:8800},{n:'Leitender Branddirektor',g:'hd',xp:13000}
   ];
   RANKS.forEach((r,i)=>{ r.i=i; r.pip=RANKS.filter(x=>x.g===r.g&&x.i<=i).length; });
@@ -53,8 +53,8 @@ const GAME=(function(){
     {id:'f1',n:'Hilfsfrist geschafft',d:'Eine Einsatzfahrt rechtzeitig beenden',ic:'truck',t:'Blaulicht',ok:s=>s.tot.fahrt>=1},
     {id:'t3',n:'Tagessieger',d:'Alle drei Tagesaufgaben an einem Tag erledigen',ic:'sun',t:'Tagessieger',ok:s=>s.tot.allTasks>=1},
     {id:'a1',n:'Alarm bestanden',d:'Einen Einsatz-Alarm der Woche schaffen',ic:'bell',t:'Alarmbereit',ok:s=>s.tot.alarm>=1},
-    {id:'r4',n:'Gehobener Dienst',d:'Den Rang Brandinspektor erreichen',ic:'star',t:'Aufsteiger',ok:s=>rankOf(s.xp).i>=3},
-    {id:'r7',n:'Höherer Dienst',d:'Den Rang Brandrat erreichen',ic:'star',t:'Führungskraft',ok:s=>rankOf(s.xp).i>=6}
+    {id:'r4',n:'Gehobener Dienst',d:'Den Rang Brandinspektor erreichen',ic:'star',t:'Aufsteiger',ok:s=>rankOf(s.xp).i>=RANKS.findIndex(x=>x.g==='gd')},
+    {id:'r7',n:'Höherer Dienst',d:'Den Rang Brandrat erreichen',ic:'star',t:'Führungskraft',ok:s=>rankOf(s.xp).i>=RANKS.findIndex(x=>x.g==='hd')}
   ];
 
   let queue=[], showing=false, combo=0, ST=null;
