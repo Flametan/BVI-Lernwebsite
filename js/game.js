@@ -337,10 +337,30 @@ const GAME=(function(){
   }
 
   /* ── Darstellung ── */
-  function shoulder(r,sz=34){
-    const g=GROUPS[r.g], pips=Array.from({length:r.pip},(_,i)=>`<i style="background:${g.c}"></i>`).join('');
-    return `<span class="g-sh${r.pip>=4?' g-sh4':''}" style="--gc:${g.c};width:${sz}px;height:${Math.round(sz*.7)}px" aria-hidden="true">${pips}</span>`;
+  /* Schulterklappe: Kordel mit Metallverlauf, Tuch mit Gewebe, Naht, Sterne und Flammenknopf.
+     Gehobener Dienst: zweite Innenkordel, Höherer Dienst: Eichenlaub an Ober- und Unterkante.
+     Jede Klappe bringt ihre Verläufe mit eigenen Kennungen mit (auch in ausgeblendeten Ansichten sicher). */
+  const SH_COL={md:['#ffd9da','#e5484d','#9e1f24'],gd:['#f3f5f8','#c9d1dc','#6f7a89'],hd:['#fff0c2','#f0b83a','#a56a00']};
+  const SH_PATH='M8 9 H86 L114 40 L86 71 H8 Z', FLAME_P='M0 -30C4 -16 22 -8 22 10A22 22 0 0 1 -22 10C-22 1 -17 -5 -12 -9C-11 -2 -8 1 -4 1C-7 -9 -4 -21 0 -30Z';
+  let shN=0;
+  function shoulderSvg(r,w,h){
+    const [l,m,d]=SH_COL[r.g], u='sh'+(++shN), n=r.pip;
+    const leaf=(x,y,rot)=>`<g transform="translate(${x} ${y}) rotate(${rot}) scale(.9)"><path d="M0 0Q4 -5 10 0Q4 5 0 0Z" fill="${m}" stroke="${d}" stroke-width=".6"/></g>`;
+    let o=`<svg xmlns="http://www.w3.org/2000/svg" class="g-sh" width="${w}" height="${h}" viewBox="0 0 120 82" aria-hidden="true" focusable="false"><defs>`+
+      `<linearGradient id="${u}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${l}"/><stop offset=".45" stop-color="${m}"/><stop offset="1" stop-color="${d}"/></linearGradient>`+
+      `<linearGradient id="${u}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3856"/><stop offset="1" stop-color="#18213a"/></linearGradient>`+
+      `<pattern id="${u}p" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="1.4" height="4" fill="#fff" opacity=".045"/></pattern></defs>`+
+      `<path d="${SH_PATH}" transform="translate(0 2.5)" fill="#000" opacity=".18"/><path d="${SH_PATH}" fill="url(#${u}f)"/><path d="${SH_PATH}" fill="url(#${u}p)"/>`+
+      `<path d="${SH_PATH}" fill="none" stroke="url(#${u}c)" stroke-width="7" stroke-linejoin="round"/><path d="${SH_PATH}" fill="none" stroke="${d}" stroke-width="7" stroke-linejoin="round" stroke-dasharray="1.2 3.4" opacity=".22"/>`;
+    if(r.g==='gd') o+=`<path d="M14 15 H84 L106 40 L84 65 H14 Z" fill="none" stroke="${m}" stroke-width="1.6" stroke-linejoin="round"/>`;
+    o+=`<path d="M15.5 16.5 H83.5 L103.5 40 L83.5 63.5 H15.5 Z" fill="none" stroke="${m}" stroke-width=".9" stroke-dasharray="2.2 1.8" opacity=".7" stroke-linejoin="round"/>`;
+    if(r.g==='hd') for(let k=0;k<6;k++){ const x=20+k*11.5; o+=leaf(x,13.2,-12)+leaf(x+5.5,13.2,192)+leaf(x,66.8,12)+leaf(x+5.5,66.8,168); }
+    const rad=n<4?7.4:6.4, gap=n<4?17:14.5, cx=n<4?52:50, x0=cx-(n-1)*gap/2;
+    for(let k=0;k<n;k++){ const p=[]; for(let j=0;j<10;j++){ const a=-Math.PI/2+j*Math.PI/5, rr=j%2?rad*.42:rad; p.push((x0+k*gap+rr*Math.cos(a)).toFixed(1)+','+(41+rr*Math.sin(a)).toFixed(1)); } o+=`<polygon points="${p.join(' ')}" fill="url(#${u}c)" stroke="${d}" stroke-width=".9" stroke-linejoin="round"/>`; }
+    o+=`<circle cx="97" cy="40" r="6.2" fill="url(#${u}c)" stroke="${d}" stroke-width="1"/><circle cx="97" cy="40" r="4.2" fill="none" stroke="${d}" stroke-width=".6" opacity=".7"/><path transform="translate(97 41) scale(.13)" d="${FLAME_P}" fill="${d}"/></svg>`;
+    return o;
   }
+  function shoulder(r,sz=34){ return shoulderSvg(r,sz,Math.round(sz*.68)); }
   function flameIc(sz){ return svg('flame',sz); }
 
   /* wie bei Duolingo: Flamme leuchtet, sobald heute gelernt wurde; abends ohne Lernen wird die Zahl rot */
@@ -422,10 +442,10 @@ const GAME=(function(){
   function renderGame(){
     const el=document.getElementById('game-body'); if(!el) return;
     const s=load(), r=rankOf(s.xp), unlocked=BADGES.filter(b=>s.badges[b.id]);
-    const ladder=['md','gd','hd'].map(k=>{ const g=GROUPS[k]; return `<div class="g-lg"><div class="g-lgh" style="color:${g.c}">${g.n} (${g.s})</div>${RANKS.filter(x=>x.g===k).map(x=>`<div class="g-lr${x.i===r.i?' cur':''}${x.xp>s.xp?' lock':''}">${shoulder(x,34)}<span class="g-lrn">${esc(x.n)}</span><span class="g-lrx">${x.xp} P.</span></div>`).join('')}</div>`; }).join('');
+    const ladder=['md','gd','hd'].map(k=>{ const g=GROUPS[k]; return `<div class="g-lg"><div class="g-lgh" style="color:${g.c}">${g.n} (${g.s})</div>${RANKS.filter(x=>x.g===k).map(x=>`<div class="g-lr${x.i===r.i?' cur':''}${x.xp>s.xp?' lock':''}">${shoulder(x,46)}<span class="g-lrn">${esc(x.n)}</span><span class="g-lrx">${x.xp} P.</span></div>`).join('')}</div>`; }).join('');
     const titles=unlocked.length?unlocked.map(b=>`<button type="button" class="g-tt-b${s.title===b.t?' on':''}" onclick="GAME.setTitle('${b.t}')">${esc(b.t)}</button>`).join(''):'<p class="g-empty">Noch kein Titel. Jedes Abzeichen schaltet einen Titel frei.</p>';
     const grid=BADGES.map(b=>{ const got=s.badges[b.id]; return `<div class="g-bd${got?' got':''}"><span class="g-bdi">${svg(b.ic,24)}</span><b>${esc(b.n)}</b><span>${esc(b.d)}</span>${got?`<em>Titel: ${esc(b.t)}</em>`:''}</div>`; }).join('');
-    el.innerHTML=`<div class="g-card"><div class="g-rank"><span class="g-rk-ic">${shoulder(r,56)}</span><span class="g-rk-t"><b>${esc(r.n)}</b><span style="color:${GROUPS[r.g].c}">${GROUPS[r.g].n}${s.title?' · '+esc(s.title):''}</span></span><span class="g-xp">${s.xp}<small> Punkte</small></span></div></div>
+    el.innerHTML=`<div class="g-card"><div class="g-rank"><span class="g-rk-ic">${shoulder(r,76)}</span><span class="g-rk-t"><b>${esc(r.n)}</b><span style="color:${GROUPS[r.g].c}">${GROUPS[r.g].n}${s.title?' · '+esc(s.title):''}</span></span><span class="g-xp">${s.xp}<small> Punkte</small></span></div></div>
       <h2 class="g-h2">Dienstgrade</h2><div class="g-card g-ladder">${ladder}</div>
       <h2 class="g-h2">Titel</h2><div class="g-card"><div class="g-titles">${titles}</div></div>
       <h2 class="g-h2">Abzeichen · ${unlocked.length}/${BADGES.length}</h2><div class="g-badges">${grid}</div>`;
@@ -447,7 +467,7 @@ const GAME=(function(){
     return {s,w,st,r,use,lt,range:f(k[0])+' – '+f(k[6])+k[6].slice(0,4)};
   }
   function rr(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
-  function weekImage(){
+  async function weekImage(){
     const d=weekData(), W=1080, H=1920, cv=document.createElement('canvas'); cv.width=W; cv.height=H;
     const c=cv.getContext('2d'), cs=getComputedStyle(document.documentElement);
     const acc=(cs.getPropertyValue('--m-accent')||'#FFA412').trim()||'#FFA412', g=GROUPS[d.r.g];
@@ -460,8 +480,10 @@ const GAME=(function(){
     c.fillStyle='#9a9a9a'; c.font='500 40px '+FONT; c.fillText(d.range,80,345);
     // Rang
     rr(c,80,420,920,260,36); c.fillStyle='#262626'; c.fill();
-    const sx=120, sy=490, sw=200, sh=120; rr(c,sx,sy,sw,sh,16); c.fillStyle=g.c+'3d'; c.fill(); c.lineWidth=7; c.strokeStyle=g.c; c.stroke();
-    for(let i=0;i<d.r.pip;i++){ c.beginPath(); c.arc(sx+sw/2+(i-(d.r.pip-1)/2)*46,sy+sh/2,15,0,7); c.fillStyle=g.c; c.fill(); }
+    try{
+      const im=new Image(); im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(shoulderSvg(d.r,360,246));
+      await im.decode(); c.drawImage(im,100,477,220,150);
+    }catch(e){ const sx=120, sy=490, sw=200, sh=120; rr(c,sx,sy,sw,sh,16); c.fillStyle=g.c+'3d'; c.fill(); c.lineWidth=7; c.strokeStyle=g.c; c.stroke(); }
     c.fillStyle='#fff'; c.font='800 58px '+FONT; c.fillText(d.r.n,360,535);
     c.fillStyle=g.c; c.font='600 38px '+FONT; c.fillText(g.n+(d.s.title?' · '+d.s.title:''),360,590);
     c.fillStyle='#9a9a9a'; c.font='500 34px '+FONT; c.fillText(d.s.xp+' Punkte',360,640);

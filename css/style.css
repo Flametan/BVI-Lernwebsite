@@ -3562,8 +3562,7 @@ body:has(.lp-win.on:not(.focus)) #m-topbar .m-tb-search{pointer-events:auto;}
 .g-rk-t span{font-size:.8rem;font-weight:600;}
 .g-xp{font-weight:800;font-size:1.15rem;white-space:nowrap;}
 .g-xp small{font-size:.7rem;font-weight:600;color:var(--m-muted);}
-.g-sh{display:inline-flex;align-items:center;justify-content:center;gap:12%;background:color-mix(in srgb,var(--gc) 24%,#1a1a1a);border:2px solid var(--gc);border-radius:6px;flex:none;}
-.g-sh i{width:18%;aspect-ratio:1;border-radius:50%;display:block;}
+.g-sh{display:block;flex:none;overflow:visible;}
 .g-bar{height:7px;border-radius:99px;background:var(--m-raised);overflow:hidden;margin-top:6px;}
 .g-bar i{display:block;height:100%;border-radius:99px;background:var(--m-accent);}
 .g-bar.sm{height:5px;margin-top:6px;}
@@ -3974,8 +3973,6 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .m-seg2{container-type:inline-size;container-name:seg;}
 .g-rklab>span:last-child{display:none;}
 @container seg (min-width:380px){.g-rklab>span:last-child{display:inline;}}
-.g-sh4{gap:8%;}
-.g-sh4 i{width:14%;}
 
 /* Meldung „Gooey Drop“ (Variante 3): feste Höhe, Breite wird per Skript animiert */
 .g-drop{height:52px;padding:0 18px 0 11px;box-sizing:border-box;overflow:hidden;white-space:nowrap;}
