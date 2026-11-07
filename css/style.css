@@ -365,9 +365,7 @@
 
   /* ── FLASHCARDS ──────────────────────────────────────── */
   .fc-outer{perspective:1000px;width:100%;max-width:580px;margin:0 auto 1.25rem;height:250px;cursor:pointer;user-select:none;transition:height .25s ease;position:relative;touch-action:pan-y;}
-  .fc-swipe-ok,.fc-swipe-no{position:absolute;top:50%;transform:translateY(-50%);font-size:.9rem;font-weight:700;opacity:0;pointer-events:none;z-index:var(--z-sticky);padding:.3rem .7rem;border-radius:var(--r-md);border:2px solid;transition:opacity .08s;white-space:nowrap;}
-  .fc-swipe-ok{left:.75rem;color:var(--c-ok);border-color:var(--c-ok);}
-  .fc-swipe-no{right:.75rem;color:var(--k-e07070);border-color:rgba(139,26,26,.6);}
+  .fc-stamp{position:absolute;top:50%;transform:translateY(-50%);font-size:.9rem;font-weight:700;opacity:0;pointer-events:none;z-index:var(--z-sticky);padding:.3rem .7rem;border-radius:var(--r-md);border:2px solid;transition:opacity .08s;white-space:nowrap;}
   .fc-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s cubic-bezier(0.34,1.45,0.64,1);}
   .fc-inner.flipped{transform:rotateY(180deg);}
   .fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r-xl);padding:1.75rem;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;}
@@ -577,7 +575,7 @@
     #read-prog,#m-topbar,#m-tabbar,#m-rail,#m-toc,#m-pomo,
     .search-overlay,.notes-overlay,#settings-overlay,#shortcuts-overlay,
     #stats-overlay,.toast-wrap,.fab-btn,
-    .fc-filter-row,.fc-swipe-ok,.fc-swipe-no,.fc-controls,.fc-nav,.page-notes-btn{display:none!important;}
+    .fc-filter-row,.fc-stamp,.fc-controls,.fc-swhint,.fc-nav,.page-notes-btn{display:none!important;}
     body,html{background:#fff!important;color:#000!important;}
     .view{display:block!important;padding-top:0!important;}
     .view.active{display:block!important;}
@@ -4090,3 +4088,33 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
   .pz-wi .pz-tile,.pz-wi .pz-tile.wide,.pz-wi .pz-tile:nth-child(n+4){grid-column:span 1;}
 }
 .pz-more{display:none;}
+
+/* Lernkarten: runde Antwort-Knöpfe, Wischen nach oben (Schwer), Stempel auf der Karte */
+.fc-outer.fl{touch-action:pan-down;}
+.fc-stamp{top:auto;transform:none;padding:.4rem .9rem;border-radius:12px;border:3px solid;font-size:1.15rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:color-mix(in srgb,var(--m-card) 82%,transparent);}
+.fc-st-ok{top:1rem;left:1rem;color:var(--c-ok);border-color:var(--c-ok);transform:rotate(-9deg);}
+.fc-st-no{top:1rem;right:1rem;color:var(--k-e07070);border-color:var(--k-e07070);transform:rotate(9deg);}
+.fc-st-hard{bottom:1.1rem;left:50%;margin-left:-3.2rem;color:var(--m-accent-fg);border-color:var(--m-accent-fg);}
+.fc-controls{justify-content:space-between;align-items:flex-start;max-width:340px;margin:.9rem auto 0;padding:0 .5rem;}
+.fc-rb{display:flex;flex-direction:column;align-items:center;gap:6px;border:0!important;background:none!important;padding:0!important;color:var(--m-fg);font-family:inherit;cursor:pointer;flex:none;}
+.fc-rc{width:58px;height:58px;border-radius:50%;background:var(--m-card);box-shadow:0 2px 10px rgba(0,0,0,.22);display:grid;place-items:center;transition:transform .15s ease;}
+.fc-rb:active .fc-rc{transform:scale(.9);}
+.fc-rc svg{width:26px;height:26px;fill:none;}
+.fc-rl{font-size:.78rem;color:var(--m-muted);}
+.fc-no,.fc-no:hover{color:var(--k-e07070);}
+.fc-yes,.fc-yes:hover{color:var(--c-ok)!important;background:none!important;}
+.fc-rs{color:var(--m-accent);}
+.fc-rs .fc-rc{width:46px;height:46px;margin-top:6px;}
+.fc-rs .fc-rc svg{width:21px;height:21px;}
+.fc-rs.starred .fc-rc svg{fill:currentColor;}
+.fc-rb:focus-visible{outline:2px solid var(--m-accent);outline-offset:3px;border-radius:12px;}
+.fc-swhint{text-align:center;font-size:.78rem;color:var(--m-muted);margin:.8rem 0 0;}
+/* Eigene Karte / Nochmal üben / Markiert / Schwach / Eigene im Stil der Chips */
+.fc-hero-btns{gap:8px;}
+.fc-own-add{display:inline-flex;align-items:center;gap:8px;margin-top:0;padding:0 16px 0 12px;min-height:44px;border:0;border-radius:14px;background:var(--m-card);color:var(--m-fg);font-weight:600;font-size:.9rem;}
+.fc-own-add::before{content:'';width:20px;height:20px;flex:none;background:var(--m-accent-fg);-webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat;}
+.fc-own-add.fc-add{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'><path d='M12 5v14M5 12h14'/></svg>");}
+.fc-own-add.fc-redo{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 12a8 8 0 0 1 14-5.3L20 9M20 4v5h-5'/></svg>");}
+.fc-f-btn.fc-sp:not(.active){background:var(--m-card);color:var(--m-fg);}
+.fc-chip-ic{width:11px;height:11px;vertical-align:-1px;fill:currentColor;stroke:currentColor;stroke-width:2;stroke-linejoin:round;color:var(--m-accent-fg);}
+.fc-f-btn.fc-sp.active .fc-chip-ic{color:inherit;}
