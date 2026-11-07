@@ -275,5 +275,202 @@
             </intent-filter>
         </activity-alias>
 
+        <activity-alias
+            android:name=".IconOrangeDim"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher_orange_dim"
+            android:roundIcon="@mipmap/ic_launcher_orange_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconOrangeLightDim"
+            android:targetActivity=".MainActivityLight"
+            android:icon="@mipmap/ic_launcher_orange_light_dim"
+            android:roundIcon="@mipmap/ic_launcher_orange_light_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconOrangeBeigeDim"
+            android:targetActivity=".MainActivityBeige"
+            android:icon="@mipmap/ic_launcher_orange_beige_dim"
+            android:roundIcon="@mipmap/ic_launcher_orange_beige_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconGoldDim"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher_gold_dim"
+            android:roundIcon="@mipmap/ic_launcher_gold_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconGoldLightDim"
+            android:targetActivity=".MainActivityLight"
+            android:icon="@mipmap/ic_launcher_gold_light_dim"
+            android:roundIcon="@mipmap/ic_launcher_gold_light_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconGoldBeigeDim"
+            android:targetActivity=".MainActivityBeige"
+            android:icon="@mipmap/ic_launcher_gold_beige_dim"
+            android:roundIcon="@mipmap/ic_launcher_gold_beige_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconRedDim"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher_red_dim"
+            android:roundIcon="@mipmap/ic_launcher_red_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconRedLightDim"
+            android:targetActivity=".MainActivityLight"
+            android:icon="@mipmap/ic_launcher_red_light_dim"
+            android:roundIcon="@mipmap/ic_launcher_red_light_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconRedBeigeDim"
+            android:targetActivity=".MainActivityBeige"
+            android:icon="@mipmap/ic_launcher_red_beige_dim"
+            android:roundIcon="@mipmap/ic_launcher_red_beige_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconBlueDim"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher_blue_dim"
+            android:roundIcon="@mipmap/ic_launcher_blue_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconBlueLightDim"
+            android:targetActivity=".MainActivityLight"
+            android:icon="@mipmap/ic_launcher_blue_light_dim"
+            android:roundIcon="@mipmap/ic_launcher_blue_light_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconBlueBeigeDim"
+            android:targetActivity=".MainActivityBeige"
+            android:icon="@mipmap/ic_launcher_blue_beige_dim"
+            android:roundIcon="@mipmap/ic_launcher_blue_beige_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconGreenDim"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher_green_dim"
+            android:roundIcon="@mipmap/ic_launcher_green_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconGreenLightDim"
+            android:targetActivity=".MainActivityLight"
+            android:icon="@mipmap/ic_launcher_green_light_dim"
+            android:roundIcon="@mipmap/ic_launcher_green_light_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconGreenBeigeDim"
+            android:targetActivity=".MainActivityBeige"
+            android:icon="@mipmap/ic_launcher_green_beige_dim"
+            android:roundIcon="@mipmap/ic_launcher_green_beige_dim"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
+        <receiver android:name=".StreakReceiver" android:exported="false"/>
+
     </application>
 </manifest>

@@ -331,7 +331,7 @@ const GAME=(function(){
       settleFreeze(); evaluate(); milestones();
       const post=rankOf(s.xp);
       if(post.i>pre.i) toast('Beförderung: '+post.n,GROUPS[post.g].n+' · '+s.xp+' Punkte','star'), confetti();
-      save(); refresh();
+      save(); refresh(); pushIcon();
       if(type!=='fahrt'){ checkGoal(); checkStreakDay(); }
     }catch(e){}
   }
@@ -401,8 +401,22 @@ const GAME=(function(){
     const rl=document.querySelector('.g-rklab'); if(rl) rl.outerHTML=rankLabel();
     if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.cur>0&&st.todayDone); c.classList.toggle('on',st.cur>0); c.classList.toggle('risk',!!st.risk); }
   }
+  // Android-App: Startsymbol mit kleinerer, blasserer Flamme, wenn die Serie ab 18 Uhr zu reißen droht; Serie und Tag des letzten Lernens melden
+  let iconT=0;
+  function pushIcon(){
+    clearTimeout(iconT);
+    iconT=setTimeout(()=>{
+      if(!window.BVIAndroid||!BVIAndroid.setStreak) return;
+      try{
+        const st=streak(), y=new Date(); y.setDate(y.getDate()-1);
+        BVIAndroid.setStreak(load().off?0:st.cur, st.cur>0?(st.todayDone?today():dkey(y)):'');
+      }catch(e){}
+    },800);
+  }
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') pushIcon(); });
+  setTimeout(pushIcon,3000);
   function setPath(on){ load().path=on?1:0; save(); refresh(); }
-  function setOff(off){ load().off=off?1:0; save(); if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome(); }
+  function setOff(off){ load().off=off?1:0; save(); pushIcon(); if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome(); }
   function isOn(){ return !load().off; }
 
   function renderGame(){

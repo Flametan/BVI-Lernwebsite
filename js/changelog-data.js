@@ -1,5 +1,8 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
+    {v:'3.2.1',ts:'2026-11-07T10:00',items:[
+      'Android-App: Droht die Serie ab 18 Uhr zu reißen (du hast heute noch nicht gelernt), wird die Flamme am Startsymbol kleiner und blasser. Sobald du wieder lernst, ist sie wieder groß und kräftig; ist die Serie gerissen, erscheint das normale Symbol. Dafür ist die neue App-Version nötig.'
+    ]},
     {v:'3.2.0',ts:'2026-11-06T10:00',items:[
       'Alle Bilder in den Lernseiten (Armaturen und Atemschutz) sind jetzt eigene Zeichnungen (SVG) mit allen Texten und Zahlen. Sie passen sich dem Design an (dunkel, hell, beige), lassen sich vergrößern und sind viel kleiner als die bisherigen Fotos.',
       'Lernseiten: Tabellen, die in die Breite passen, lassen das Wischen zum nächsten oder vorherigen Kapitel durch (breite Tabellen scrollen weiter selbst).',
