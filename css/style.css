@@ -4192,3 +4192,11 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .fc-tile .fc-ti svg{width:20px;height:20px;}
 .fc-tile b{display:block;max-width:100%;font-size:.76rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .fc-tile small{display:block;max-width:100%;font-size:.7rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* Platzhalter des Pausenraums: gleiche Kacheln und Raster wie die echte Ansicht */
+.sk-pzt{pointer-events:none;background:var(--m-card)!important;color:inherit;}
+.sk-pzt .sk-ic{margin-bottom:0;}
+.sk-pzt{min-height:132px;}
+@media (min-width:701px){.sk-pzt{min-height:128px;}}
+.sk .pz-src{min-height:76px;}
+.sk .pz-mode .sk-b{width:100%!important;}
