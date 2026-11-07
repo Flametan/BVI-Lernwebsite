@@ -3986,3 +3986,43 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .g-shine{position:absolute;top:0;bottom:0;width:40px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);opacity:0;pointer-events:none;}
 .g-fx{position:absolute;left:0;right:0;top:0;height:0;pointer-events:none;}
 .g-ring{position:absolute;left:50%;border-radius:50%;border:3px solid var(--m-accent);opacity:0;}
+
+/* Prüfung (Handy): Umschalter „Wichtig | Module“ und aufklappbare Module; ab Tablet bleiben alle Module nebeneinander sichtbar */
+.ex-seg{position:relative;display:grid;grid-template-columns:1fr 1fr;background:var(--m-raised);border-radius:14px;padding:4px;margin:2px 0 12px;isolation:isolate;}
+.ex-seg button{position:relative;border:0;background:none;color:var(--m-muted);font-family:inherit;font-weight:700;font-size:.9rem;min-height:44px;border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:color .25s ease;}
+.ex-seg button.on{color:var(--m-fg);}
+.ex-seg button b{font-size:.74rem;font-weight:700;background:color-mix(in srgb,var(--m-muted) 22%,transparent);border-radius:99px;padding:1px 8px;min-width:22px;text-align:center;}
+.ex-seg button.on b{background:var(--m-accent-dim,color-mix(in srgb,var(--m-accent) 25%,transparent));}
+.ex-pill{position:absolute;z-index:-1;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/2);border-radius:11px;background:var(--m-card);box-shadow:0 1px 3px rgba(0,0,0,.18);transition:transform .38s cubic-bezier(.34,1.45,.5,1);}
+.ex-wrap[data-v="mod"] .ex-pill{transform:translateX(100%);}
+.ex-wrap[data-v="imp"] .ex-mod,.ex-wrap[data-v="mod"] .ex-imp{display:none;}
+.ex-pane{animation:exIn .28s ease-out;}
+@keyframes exIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.ex-mod.m-areas{gap:0;}
+.ex-acc+.ex-acc{border-top:1px solid var(--m-line);}
+.ex-ah{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--m-fg);font-family:inherit;text-align:left;padding:15px 2px;min-height:52px;cursor:pointer;}
+.ex-an{flex:1;font-size:1.02rem;font-weight:700;}
+.ex-ac{font-size:.82rem;color:var(--m-muted);}
+.ex-ah svg{width:18px;height:18px;color:var(--m-muted);transition:transform .28s cubic-bezier(.34,1.45,.5,1);flex:none;}
+.ex-acc.open .ex-ah svg{transform:rotate(180deg);}
+.ex-ab{display:none;padding-bottom:12px;}
+.ex-acc.open .ex-ab{display:block;}
+.ex-ph{display:none;}
+.ex-wrap.ex-edit .ex-ph{display:none;}
+@media(min-width:701px){
+  /* Tablet und PC: links „Wichtig“, rechts die Module zum Aufklappen (mehrere gleichzeitig) */
+  .ex-seg{display:none;}
+  .ex-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start;}
+  .ex-wrap[data-v] .ex-imp,.ex-wrap[data-v] .ex-mod{display:block;}
+  .ex-imp{position:sticky;top:16px;}
+  .ex-ph{display:flex;align-items:center;justify-content:space-between;font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--m-muted);padding:0 2px 10px;}
+  .ex-star{display:inline-flex;align-items:center;gap:4px;color:var(--m-accent);letter-spacing:0;}
+  .ex-wrap.ex-edit{display:block;}
+  .ex-wrap.ex-edit .ex-imp{display:none;}
+  .ex-wrap.ex-edit .ex-ph{display:flex;}
+  .ex-wrap.ex-edit .ex-mod .ex-ph{display:none;}
+  .ex-mod>.ex-acc:nth-of-type(1){border-top:1px solid var(--m-line);}
+}
+@media(min-width:1100px){
+  .ex-wrap{grid-template-columns:minmax(0,5fr) minmax(0,7fr);}
+}

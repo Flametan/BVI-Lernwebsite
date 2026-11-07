@@ -1097,7 +1097,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.ergDel = JG.local().erg.length === 0 && !document.querySelector('#v-vak-verwaltungsrecht .jg-e');
     // Prüfung hinzufügen, üben, entfernen, Glow
     NAV.tab('v-pruefung', 'Prüfung'); await w(400);
-    r.tabs = document.querySelectorAll('#m-exam-list .m-col').length;
+    r.tabs = document.querySelectorAll('#m-exam-list .ex-mod .ex-acc').length;
     JGUI.examEditor(null, 'vak'); await w(200);
     document.getElementById('jg-pt').value = 'Testprüfung';
     document.getElementById('jg-qa').click(); await w(50);
@@ -1118,10 +1118,10 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.back = /Dez 2023/.test(document.getElementById('m-exam-list').innerText);
     // Glow: nur Reiter mit Glow liefern Module für Einsatzfahrt/Duell
     // einzelne Prüfung antippen (Bearbeiten-Modus): ★ wechselt, nicht der ganze Block
-    const row0 = document.querySelector('.jg-rw'); const was = row0.classList.contains('hot');
+    const row0 = document.querySelector('#m-exam-list .ex-mod .jg-rw'); const was = row0.classList.contains('hot');
     row0.querySelector('.m-row').click(); await w(300);
-    r.tap = document.querySelector('.jg-rw').classList.contains('hot') === !was;
-    document.querySelector('.jg-rw .m-row').click(); await w(300);
+    r.tap = document.querySelector('#m-exam-list .ex-mod .jg-rw').classList.contains('hot') === !was;
+    document.querySelector('#m-exam-list .ex-mod .jg-rw .m-row').click(); await w(300);
     ['v-klausur-0826', 'v-klausurfragen', 'v-eingrenzung-klausur', 'v-feuak-altklausur', 'v-simulator'].forEach(id => { if (JG.rel(id)) JGUI.setRel(id); }); await w(200);
     await PAUSE_LOADER.load();
     const F = PAUSE._fahrt();
@@ -1174,8 +1174,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.lesson = !document.querySelector('#v-vak-verwaltungsrecht .jg-be, #v-vak-verwaltungsrecht .jg-plus, #v-vak-verwaltungsrecht .jg-erg');
     NAV.tab('v-pruefung', 'Prüfung'); await w(400);
     r.exam = !document.querySelector('#jg-exam-bar .btn, #jg-exam-bar .jg-plus') && !document.querySelector('#m-exam-list .jg-plus');
-    r.hot = document.querySelectorAll('#m-exam-list .jg-rw.hot').length;
-    r.rows = document.querySelectorAll('#m-exam-list .jg-rw').length;
+    r.hot = document.querySelectorAll('#m-exam-list .ex-mod .jg-rw.hot').length;
+    r.rows = document.querySelectorAll('#m-exam-list .ex-mod .jg-rw').length;
     NAV.go('v-settings', 'E'); await w(300);
     r.set = !document.getElementById('jg-exp') && !document.getElementById('jg-imp') && !document.getElementById('jg-help');
     NAV.go('v-plan', 'P'); await w(400);
