@@ -1934,6 +1934,7 @@ const FC = (function(){
         <button class="fc-back-btn" onclick="FC.back()" ${_seen.length===0?'disabled':''} aria-label="Vorherige Karte"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
         <span class="fc-pos">Karte ${curIdx+1} von ${deck.length}</span>
         <span class="fc-score">${sess.known} gewusst · ${sess.unknown} nicht gewusst</span>
+        <button type="button" class="fc-rep-btn" onclick="FC.report()" aria-label="Fehler oder Unklarheit bei dieser Karte melden"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22V4M4 4h13l-2 4 2 4H4"/></svg></button>
       </div>
       <div class="fc-progress"><i style="width:${deck.length?Math.round(curIdx/deck.length*100):0}%"></i></div>
       <div class="fc-outer">
@@ -2101,6 +2102,11 @@ const FC = (function(){
       deck=deck.filter(x=>x.id!==id); _seen=_seen.filter(x=>(x&&x.id!==undefined?x.id:x)!==id);
       TOAST.show('Karte gelöscht – nur in deinem Jahrgang',{type:'ok'});
       renderCard();
+    },
+    report(){
+      const c=_reviewPos>=0?_seen[_reviewPos]:deck[curIdx]; if(!c) return;
+      const t=x=>String(x).replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();
+      SHELL.report('Lernkarte ('+t(c.cat)+')\nFrage: '+t(c.q)+'\nAntwort: '+t(c.a));
     },
     toggleStar(id){
       const starred=fcToggleStar(id);
