@@ -4181,3 +4181,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 #v-flashcards .pc{padding-top:0;}
 #fc-container:has(.fc-nav){min-height:calc(100dvh - 96px);}
 @media (max-width:1023px){#fc-container:has(.fc-nav){min-height:calc(100dvh - var(--m-tabbar-h,0px) - 96px);}}
+
+/* Höhe des Lernkarten-Bereichs bleibt auch während des Ladens stehen: kein Springen beim Filterwechsel */
+#v-flashcards #fc-container{min-height:calc(100dvh - 96px);}
+@media (max-width:1023px){#v-flashcards #fc-container{min-height:calc(100dvh - var(--m-tabbar-h,0px) - 96px);}}
