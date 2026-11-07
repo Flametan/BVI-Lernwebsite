@@ -51,20 +51,18 @@ open class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Startsymbole je Akzentfarbe (activity-alias im Manifest); Orange ist per Manifest aktiv
-    private val iconAliases = mapOf(
-        "orange" to "IconOrange", "gold" to "IconGold", "red" to "IconRed",
-        "blue" to "IconBlue", "green" to "IconGreen",
-        "orange_light" to "IconOrangeLight", "gold_light" to "IconGoldLight", "red_light" to "IconRedLight",
-        "blue_light" to "IconBlueLight", "green_light" to "IconGreenLight",
-        "orange_beige" to "IconOrangeBeige", "gold_beige" to "IconGoldBeige", "red_beige" to "IconRedBeige",
-        "blue_beige" to "IconBlueBeige", "green_beige" to "IconGreenBeige"
-    )
+    // Startsymbole je Akzentfarbe/Design und Streak-Zustand: siehe StreakIcon (activity-alias im Manifest); Orange ist per Manifest aktiv
 
     inner class IconBridge {
         @JavascriptInterface
         fun setIcon(name: String) {
-            if (name in iconAliases) prefs.edit().putString("pending_icon", name).apply()
+            StreakIcon.setBase(this@MainActivity, name)
+        }
+
+        // Serie für die kleine Flamme am Startsymbol: Anzahl Tage und Tag des letzten Lernens (JJJJ-MM-TT)
+        @JavascriptInterface
+        fun setStreak(days: Int, lastDay: String, protect: Int) {
+            StreakIcon.setStreak(this@MainActivity, days, lastDay, protect != 0)
         }
 
         // Stundenplan für die Startbildschirm-Widgets (JSON-Liste mit s, e, t, r)
@@ -292,25 +290,7 @@ open class MainActivity : AppCompatActivity() {
     private fun applyPendingIcon() {
         val name = prefs.getString("pending_icon", null) ?: return
         prefs.edit().remove("pending_icon").apply()
-        val pm = packageManager
-        fun component(alias: String) = ComponentName(packageName, "$packageName.$alias")
-        fun isOn(alias: String) = when (pm.getComponentEnabledSetting(component(alias))) {
-            PackageManager.COMPONENT_ENABLED_STATE_ENABLED -> true
-            PackageManager.COMPONENT_ENABLED_STATE_DEFAULT -> alias == "IconOrange"
-            else -> false
-        }
-        val target = iconAliases[name] ?: return
-        if (isOn(target)) return
-        try {
-            pm.setComponentEnabledSetting(component(target),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP)
-            iconAliases.values.filter { it != target }.forEach {
-                pm.setComponentEnabledSetting(component(it),
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP)
-            }
-        } catch (e: Exception) {
-            // Manche Launcher blockieren den Wechsel; dann bleibt das bisherige Symbol
-        }
+        StreakIcon.apply(this, name)
     }
 
     override fun onNewIntent(intent: Intent) {

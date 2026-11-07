@@ -1,4 +1,4 @@
-const APP_VERSION = '3.2.0'; // keep in sync with js/version.js
+const APP_VERSION = '3.2.1'; // keep in sync with js/version.js
 const CACHE = 'bvi-v' + APP_VERSION;
 // Kern: wird beim Installieren zwingend geladen (ohne ihn startet die App nicht)
 const CORE = [
