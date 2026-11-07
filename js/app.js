@@ -1734,7 +1734,7 @@ const FC = (function(){
   const CATS = ['laufbahn','ibk','vak','feuak','idf'];
   let deck=[], curIdx=0, flipped=false, sess={known:0,unknown:0};
   let activeFilters = new Set(['laufbahn']);
-  let _seen = [], _reviewPos = -1;
+  let _seen = [], _reviewPos = -1, _toCard = false;
 
   const SR_DAYS = [0,1,3,7,14,30];
 
@@ -1963,6 +1963,7 @@ const FC = (function(){
       </div>`;
     flipped = false;
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
+    if(_toCard){ _toCard=false; requestAnimationFrame(()=>{ const n=document.querySelector('#fc-container .fc-nav'); if(n) n.scrollIntoView({block:'start',behavior:'smooth'}); }); }
   }
 
   function renderEnd(){
@@ -2018,7 +2019,7 @@ const FC = (function(){
   return {
     start(){
       deck = getDeck(); curIdx=0; flipped=false; sess={known:0,unknown:0};
-      _seen=[]; _reviewPos=-1;
+      _seen=[]; _reviewPos=-1; _toCard=true;
       showSkeleton();
       setTimeout(renderCard, 320);
     },
