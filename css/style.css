@@ -3989,9 +3989,9 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 
 /* Prüfung (Handy): Umschalter „Wichtig | Module“ und aufklappbare Module; ab Tablet bleiben alle Module nebeneinander sichtbar */
 .ex-seg{position:relative;display:grid;grid-template-columns:1fr 1fr;background:var(--m-raised);border-radius:14px;padding:4px;margin:2px 0 12px;isolation:isolate;}
-.ex-seg button{position:relative;border:0;background:none;color:var(--m-muted);font-family:inherit;font-weight:700;font-size:.9rem;min-height:44px;border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:color .25s ease;}
+.ex-seg button{position:relative;border:0;background:none;color:var(--m-muted);font-family:inherit;font-weight:700;font-size:1rem;min-height:36px;border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:color .25s ease;}
 .ex-seg button.on{color:var(--m-fg);}
-.ex-seg button b{font-size:.74rem;font-weight:700;background:color-mix(in srgb,var(--m-muted) 22%,transparent);border-radius:99px;padding:1px 8px;min-width:22px;text-align:center;}
+.ex-seg button b{font-size:.8rem;font-weight:700;background:color-mix(in srgb,var(--m-muted) 22%,transparent);border-radius:99px;padding:1px 8px;min-width:22px;text-align:center;}
 .ex-seg button.on b{background:var(--m-accent-dim,color-mix(in srgb,var(--m-accent) 25%,transparent));}
 .ex-pill{position:absolute;z-index:-1;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/2);border-radius:11px;background:var(--m-card);box-shadow:0 1px 3px rgba(0,0,0,.18);transition:transform .38s cubic-bezier(.34,1.45,.5,1);}
 .ex-wrap[data-v="mod"] .ex-pill{transform:translateX(100%);}
