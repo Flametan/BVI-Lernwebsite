@@ -15,13 +15,17 @@ import java.util.Calendar
  * Ab 18 Uhr, wenn eine Serie läuft und heute noch nicht gelernt wurde, gilt die Variante "<name>_dim": Die Flamme ist kleiner und weniger gesättigt.
  * Ab 21 Uhr gilt "<name>_late": Die Flamme ist nur noch halb so groß und grau.
  * Hast du einen Serien-Schutz, gilt in beiden Fällen "<name>_safe": schwächere Flamme mit Schild (die Serie ist abgesichert).
- * Ohne Gefahr wächst das Symbol mit der Serie: ab 7 Tagen "_t7" (Glut), ab 30 Tagen "_t30" (hellere Flamme, Funken), ab 100 Tagen "_t100" (zusätzlich ein Ring).
+ * Ohne Gefahr wächst das Symbol mit der Serie: ab 4 Tagen "_t7" (Glut), ab 14 Tagen "_t30" (hellere Flamme, Funken), ab 25 Tagen "_t100" (zusätzlich ein Ring); die Namen _t7/_t30/_t100 sind nur Kennungen der drei Stufen.
  * Sobald wieder gelernt wurde (oder die Serie gerissen ist), erscheint das normale bzw. das Serien-Symbol.
  * Ein täglicher Alarm um 18:00, 21:00 und 00:30 schaltet das Symbol auch dann um, wenn die App nicht läuft.
  */
 object StreakIcon {
     private val BASES = listOf("orange", "gold", "red", "blue", "green")
     private val TONES = listOf("", "_light", "_beige")
+    /** Ab so vielen Tagen Serie wächst das Symbol: Glut, Funken, Ring */
+    private const val T1_DAYS = 4
+    private const val T2_DAYS = 14
+    private const val T3_DAYS = 25
     private const val RISK_HOUR = 18
     private const val LATE_HOUR = 21
     private const val REQ_EVENING = 9218
@@ -68,7 +72,7 @@ object StreakIcon {
             return if (risk == 2) base + "_late" else base + "_dim"
         }
         if (!alive(days, last)) return base
-        return when { days >= 100 -> base + "_t100"; days >= 30 -> base + "_t30"; days >= 7 -> base + "_t7"; else -> base }
+        return when { days >= T3_DAYS -> base + "_t100"; days >= T2_DAYS -> base + "_t30"; days >= T1_DAYS -> base + "_t7"; else -> base }
     }
 
     /** Aus der Seite: Grundfarbe/-design des Symbols (z. B. "orange_light") */
