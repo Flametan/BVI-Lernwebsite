@@ -3,6 +3,7 @@ exclude:
   - android
   - tests
   - tools
+  - sync-server
   - docs
   - .github
   - README.md
