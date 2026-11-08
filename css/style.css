@@ -4322,7 +4322,6 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 #acc-ov[hidden]{display:none;}
 .acc-card{position:absolute;right:16px;width:min(330px,calc(100vw - 32px));max-height:calc(100dvh - 90px);overflow:auto;background:var(--m-card);color:var(--m-fg);border-radius:22px;padding:0 10px 10px;box-shadow:0 12px 36px rgba(0,0,0,.35);animation:accin .18s ease-out;transform-origin:top right;}
 @keyframes accin{from{opacity:0;transform:scale(.94) translateY(-6px);}}
-@media(prefers-reduced-motion:reduce){.acc-card{animation:none;}.acc-dot[data-state="busy"]{animation:none;}}
 .acc-ban{height:78px;border-radius:0 0 0 0;margin:0 -10px;background:linear-gradient(135deg,var(--m-accent),color-mix(in srgb,var(--m-accent) 55%,#7a3a00));border-radius:22px 22px 0 0;position:relative;}
 .acc-stat{position:absolute;right:12px;top:12px;display:flex;gap:6px;}
 .acc-stat span{background:rgba(0,0,0,.3);color:#fff;font-size:.74rem;font-weight:700;padding:3px 10px;border-radius:999px;}
