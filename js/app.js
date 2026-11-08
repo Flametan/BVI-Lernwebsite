@@ -2953,6 +2953,11 @@ const LP=(function(){
     applyFz();
     win.querySelector('.lp-wt b').textContent=document.querySelector('#'+cur.v.id+' .page-title')?.textContent.trim()||'';
     // Vorheriges/Nächstes Kapitel ist immer möglich, solange es davor/danach noch eine Seite mit Kapiteln gibt
+    const nbP=i===0?neighbor(cur.v.id,-1):null, nbN=i===its.length-1?neighbor(cur.v.id,1):null;
+    const ptl=id=>(document.querySelector('#'+id+' .page-title')?.textContent||'').replace(/\s+/g,' ').trim();
+    const tP=i>0?titleOf(its[i-1]):(nbP?ptl(nbP):''), tN=i<its.length-1?titleOf(its[i+1]):(nbN?ptl(nbN):'');
+    const lab=(el,pre,t,key)=>{ el.innerHTML='<span class="lp-pl">'+pre+'</span><b class="lp-pt">'+esc(t)+'</b><kbd class="lp-key" aria-hidden="true">'+key+'</kbd>'; el.setAttribute('aria-label',pre.replace(/[‹›]/g,'').trim()+(t?': '+t:'')); };
+    lab(win.querySelector('.lp-prev'),'‹ Vorheriges Kapitel',tP,'←'); lab(win.querySelector('.lp-next'),'Nächstes Kapitel ›',tN,'→');
     win.querySelector('.lp-prev').classList.toggle('dis',i===0&&!neighbor(cur.v.id,-1));
     win.querySelector('.lp-next').classList.toggle('dis',i===its.length-1&&!neighbor(cur.v.id,1));
     wb.scrollTop=0; CHECKS.set(cur.v._lp.id,ckOf(d),true); sync(); bar();
