@@ -4374,3 +4374,21 @@ html[data-theme="dark"] :is(.m-tab,.m-ri).tap .m-tic{filter:drop-shadow(0 0 7px 
 html[data-theme="dark"] :is(.m-tab,.m-ri).on .m-tic>svg.o{opacity:.55;stroke:var(--m-accent);}
 html[data-theme="dark"] :is(.m-tab,.m-ri) .m-tic>svg.f .st1,html[data-theme="dark"] :is(.m-tab,.m-ri) .m-tic>svg.f .st2{stroke:var(--m-accent);stroke-width:2.4;}
 html[data-theme="dark"] :is(.m-tab,.m-ri)[data-ic="pause"].on .m-tic>svg.f{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--m-accent) 75%,transparent));}
+
+/* Rang und Serie in der Kopfleiste; Lernkarten ohne Notiz/Lesezeichen */
+.tb-game{display:flex;align-items:center;gap:6px;flex:none;}
+.tb-rk{border:0;background:none;padding:0 2px;cursor:pointer;display:grid;place-items:center;min-height:42px;}
+.tb-st{display:inline-flex;align-items:center;gap:5px;border:0;background:var(--m-card);color:var(--m-fg);border-radius:99px;padding:0 12px 0 9px;min-height:42px;font-family:inherit;font-size:.86rem;font-weight:700;cursor:pointer;}
+@media(max-width:1099px){.tb-rk,.tb-st{min-height:44px;}}
+body:has(.lp-win.on:not(.focus)) #m-topbar :is(.tb-rk,.tb-st){pointer-events:auto;}
+html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{display:none;}
+#m-topbar[data-view="v-flashcards"] :is(#m-bm,#m-note){display:none;}
+.m-gameslot{align-self:start;display:flex;flex-direction:column;gap:12px;padding:16px;}
+.m-gameslot[hidden]{display:none;}
+@media(min-width:1100px){#m-home .m-hgrid{grid-template-rows:auto 1fr auto auto;}.m-gameslot{grid-column:1;grid-row:2;align-self:start;}}
+@media(max-width:1099px){.m-gameslot{display:none;}}
+@media(max-width:480px){
+  #m-topbar:has(#m-tb-actions:not(.hidden)) #m-back-lbl{display:none;}   /* auf schmalen Handys nur der Pfeil, damit Rang, Serie, Suche und Account Platz haben */
+  #m-topbar:has(#m-tb-actions:not(.hidden)) #m-back{min-width:44px;justify-content:center;}
+  .m-tb-right{gap:4px;}.m-tb-actions{gap:4px;}.tb-game{gap:2px;}
+}

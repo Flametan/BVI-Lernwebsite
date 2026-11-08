@@ -119,9 +119,19 @@ const ACCOUNT=(function(){
   function mount(){
     const r=document.querySelector('#m-topbar .m-tb-right');
     if(!r||r.querySelector('.m-hacc')) return;
-    r.insertAdjacentHTML('beforeend',btnHtml('m-tb-search')); dot();
+    r.insertAdjacentHTML('beforeend',btnHtml('m-tb-search')); dot(); refreshGame();
+  }
+  // Rang und Serie links neben der Suche in der Kopfleiste
+  function refreshGame(){
+    const r=document.querySelector('#m-topbar .m-tb-right'); if(!r) return;
+    let w=r.querySelector('.tb-game');
+    if(typeof GAME==='undefined'){ if(w) w.remove(); return; }
+    const h=GAME.barHtml();
+    if(!h){ if(w) w.remove(); return; }
+    if(!w){ w=document.createElement('div'); w.className='tb-game'; r.insertBefore(w,r.querySelector('#m-tb-search')); }
+    w.innerHTML=h;
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount); else mount();
   addEventListener('resize',()=>{ if(box&&!box.hidden) place(); });
-  return {btnHtml,toggle,open,close,go,theme,rename,pick,removeAvatar,dot,refresh,NAME,AV};
+  return {refreshGame,btnHtml,toggle,open,close,go,theme,rename,pick,removeAvatar,dot,refresh,NAME,AV};
 })();

@@ -404,6 +404,12 @@ const GAME=(function(){
   /* Bereich auf der Startseite (Symbol + aufklappbares Feld); bei ausgeschalteten Belohnungen leer */
   /* aktueller Dienstgrad mit Schulterstück (ersetzt die Überschrift „Lernstoff“ auf der Startseite) */
   function rankLabel(){ const r=rankOf(load().xp); return `<button type="button" class="g-rklab" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen" onclick="GAME.openRank()">${shoulder(r,45)}<span>${esc(r.n)}</span></button>`; }
+  // Kopfleiste (alle Seiten außer Startseite): Dienstgrad-Abzeichen und Serie, Tipp öffnet Rang & Abzeichen
+  function barHtml(){
+    if(load().off) return '';
+    const s=load(), st=streak(), r=rankOf(s.xp);
+    return `<button type="button" class="tb-rk" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen" title="${esc(r.n)}" onclick="GAME.openRank()">${shoulder(r,38)}</button><button type="button" class="tb-st${chipCls(st)}" aria-label="${st.cur} Tage Serie${st.risk?' in Gefahr':''}. Rang und Abzeichen öffnen" title="${st.cur} Tage Serie" onclick="GAME.openRank()"><span class="g-fl${st.cur>0&&st.todayDone?' on':''}">${flameIc(15)}</span><b>${st.cur}</b></button>`;
+  }
   function homeHtml(){ return load().off?{chip:'',panel:'',rank:''}:{rank:rankLabel(),chip:chip(),panel:`<div class="g-panel" id="g-panel" hidden>${panel()}</div>`}; }
   let _open=false;
   function toggle(btn){
@@ -419,6 +425,7 @@ const GAME=(function(){
     const p=document.getElementById('g-panel'), c=document.getElementById('g-chip');
     if(p&&!p.hidden) p.innerHTML=panel();
     const rl=document.querySelector('.g-rklab'); if(rl) rl.outerHTML=rankLabel();
+    try{ ACCOUNT.refreshGame(); }catch(e){}
     if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.cur>0&&st.todayDone); c.classList.toggle('on',st.cur>0); c.classList.toggle('risk',!!st.risk); }
   }
   // Android-App: Startsymbol je Serienzustand (ab 18/21 Uhr schwächere Flamme, mit Serien-Schutz zusätzlich ein Schild, bei langer Serie Glut/Funken/Ring); Serie, letzten Lerntag und Schutz melden
@@ -553,5 +560,5 @@ const GAME=(function(){
   }
 
   function onShow(id){ if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek(); }
-  return {event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
+  return {shoulder,rankOf,barHtml,event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();

@@ -6434,6 +6434,16 @@ const SHELL=(function(){
     return `<div class="m-card m-chart2"><div class="m-chart-h"><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${isM?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${isM?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span><span class="m-st"><b>${dur(pl.sum)}</b> / ${isM?'12 Monate':'Woche'}</span></div>
       ${pl.html}<div class="m-glg"><span>${pl.note}</span><span class="m-gavg">Ø ${dur(pl.avg)} / Tag</span></div></div>`;
   }
+  // PC: Rang und Serie liegen im freien Bereich unter der Lehrgangs-Cloud, Handy/Tablet: wie bisher in der Modulkarte
+  const gameMq=window.matchMedia?matchMedia('(min-width:1100px)'):null;
+  function placeGame(){
+    const slot=document.getElementById('m-gameslot'), w=document.querySelector('#m-home .m-seg2-w'), p=document.getElementById('g-panel'), seg=document.querySelector('#m-home .m-seg2');
+    if(!slot) return;
+    if(gameMq&&gameMq.matches&&w){ slot.appendChild(w); if(p) slot.appendChild(p); slot.hidden=false; }
+    else if(w&&seg&&w.parentNode===slot){ seg.insertBefore(w,seg.firstChild); if(p&&seg.parentNode) seg.after(p); slot.hidden=true; }
+    else slot.hidden=!slot.contains(w);
+  }
+  if(gameMq) (gameMq.addEventListener?gameMq.addEventListener.bind(gameMq,'change'):gameMq.addListener.bind(gameMq))(()=>placeGame());
   function renderHome(){
     const el=document.getElementById('m-home');
     if(!el) return;
@@ -6484,7 +6494,8 @@ const SHELL=(function(){
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
       ${(typeof TOUR!=='undefined'&&!TOUR.done())?`<div class="m-tourhome" id="tour-home"><button type="button" class="m-tourhome-go" onclick="TOUR.start('home')"><span class="m-tourhome-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21"/></svg></span><span class="m-tx"><span class="m-t1">Neu hier? App kennenlernen</span><span class="m-t2">Kurze Tour mit Spotlight – zeigt dir alles Wichtige</span></span><span class="m-tourhome-btn">Tour starten</span></button><button type="button" class="m-tourhome-x" aria-label="Hinweis ausblenden" onclick="TOUR.dismiss()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>`:''}
-      <div class="m-hgrid"><div class="m-hl">${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}</div></div>`;
+      <div class="m-hgrid"><div class="m-hl">${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}<div class="m-card m-gameslot" id="m-gameslot" hidden></div></div></div>`;
+    placeGame();
   }
 
   function renderExam(){
@@ -6678,6 +6689,8 @@ const SHELL=(function(){
     const isRoot=!stack.length||(stack.length===1&&!!ROOTS[id]);
     const tbar=document.getElementById('m-topbar');
     tbar?.classList.toggle('hidden',isRoot&&id==='v-home');   // Startseite hat ihre eigene Kopfzeile mit Suche und Account
+    if(tbar) tbar.dataset.view=id;
+    try{ ACCOUNT.refreshGame(); }catch(e){}
     tbar?.classList.toggle('m-tb-root',isRoot&&id!=='v-home');   // Hauptseiten: Kopfleiste nur mit Suche und Account
     if(!isRoot){
       const lbl=document.getElementById('m-back-lbl');
