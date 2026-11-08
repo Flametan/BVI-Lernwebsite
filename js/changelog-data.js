@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
-    {v:'3.2.1',ts:'2026-11-07T10:00',items:[
+    {v:'3.2.2',ts:'2026-11-08T10:00',items:[
+      'Android-Startsymbol: Es wächst jetzt schneller mit der Serie. Ab 4 Tagen erscheint die Glut hinter der Flamme, ab 14 Tagen eine hellere Flamme mit Funken, ab 25 Tagen zusätzlich ein Ring (bisher 7, 30 und 100 Tage).',
       'Kapitel (Handy): Beim Blättern von einem Bereich in den nächsten verdeckte die Kopfleiste der Seite manchmal die Kopfzeile des Kapitelfensters, sodass Zurück-Knopf und „Kapitel 01 / 10“ mit Titel fehlten. Solange ein Kapitelfenster offen ist, bleibt die Kopfleiste jetzt ausgeblendet.',
       'Lernkarten: Eine Karte, die du mit „Schwer“ bewertest, zählt erst nach einer richtigen Antwort als gewusst. Das gilt für die Modul-Zahlen (z. B. 10/286), die Zahl „Gewusste“, „Dein Stand“ und den Zähler oben; schwere Karten stehen weiter unter „Nochmal“ und werden in der Zeile zusätzlich als „schwer“ gezählt.',
       'Lernkarten: Unter den Modul-Chips steht eine Auswahlzeile („Offen · 277 Karten“). Ein Tipp öffnet ein Blatt von unten mit fünf Auswahlen für das gewählte Modul: Offen (schwache, fällige und neue Karten), Neu, Nochmal (schwache Karten), Gewusste und Alle, jeweils mit Zahl. Das Blatt lässt sich nach unten wegziehen, oben gibt es wie bei einem Gummiband nach und federt zurück; am Handy sind die Zeilen flacher, damit alle Auswahlen in der unteren Bildschirmhälfte stehen, am Tablet und Desktop erscheint es als Fenster in der Mitte. Oben bleiben nur „Eigene Karte“ und „Markierte“. Die Auswahl wird gemerkt.',
@@ -8,6 +9,8 @@ const CHANGELOG_ENTRIES=[
       'Lernkarten: Die drei runden Knöpfe haben jetzt dieselbe Rückmeldung wie das Wischen. Die Karte fliegt nach links (Nicht gewusst), nach oben (Schwer) oder nach rechts (Gewusst) und zeigt dabei den Stempel.',
       'Quiz (Lernmodus): Bei Multiple-Choice-Fragen mit nur einer richtigen Antwort löst ein Tipp auf eine Antwort nicht mehr sofort auf. Die Antwort wird nur markiert (und lässt sich ändern), aufgelöst wird erst mit „Antwort prüfen“. Mit der Tastatur wählen die Tasten 1 bis 4 aus, die Leertaste prüft.',
       'Lernkarten (Tablet): Die Antwort-Knöpfe sitzen direkt unter der Karte statt fest am unteren Bildschirmrand; nur am Handy bleiben sie über der Tab-Leiste angeheftet.',
+    ]},
+    {v:'3.2.1',ts:'2026-11-07T10:00',items:[
       'Lernkarten: Der Knopf „Fehler oder Unklarheit melden“ (Flaggen-Symbol) sitzt jetzt oben in der Kartenzeile und schickt Frage und Antwort der aktuellen Karte mit; die Zeile am Seitenende lag hinter den Antwort-Knöpfen.',
       'Lernkarten: Der Stern zum Markieren sitzt auf beiden Seiten der Karte oben rechts und dreht sich beim Umdrehen mit.',
       'Pausenraum: Der Platzhalter beim Laden zeigt jetzt das Kachel-Raster der echten Ansicht (breite Einsatzfahrt, vier Kacheln, Fragenquelle, zweite Gruppe) statt eines allgemeinen Rasters; er passt auf Handy, Tablet und Desktop.',

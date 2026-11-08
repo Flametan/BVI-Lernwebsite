@@ -4,7 +4,7 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Serie ab 100 Tagen: zusätzlich ein Ring -->
+    <!-- Serie ab 25 Tagen: zusätzlich ein Ring -->
     <path android:fillColor="#00000000" android:strokeColor="#FFB846" android:strokeWidth="3" android:pathData="M23,54 a31,31 0 1,0 62,0 a31,31 0 1,0 -62,0 z"/>
     <path android:fillColor="#FFB846" android:fillAlpha="0.25" android:pathData="M28,58 a26,26 0 1,0 52,0 a26,26 0 1,0 -52,0 z"/>
     <group android:translateX="4.08" android:translateY="14.48" android:scaleX="4.16" android:scaleY="4.16">
