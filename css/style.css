@@ -4260,3 +4260,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 @media (max-width:699px){.fcs-panel::after{content:'';position:absolute;left:0;right:0;top:calc(100% - 3px);height:143px;background:var(--m-card);}}
 /* Kapitelfenster am Handy: die Kopfleiste der Seite liegt sonst deckend über der eigenen Kopfzeile des Fensters (Zurück, Kapitel, Knöpfe), besonders nach dem Blättern über die Seitengrenze. Solange das Fenster offen ist, bleibt sie unsichtbar */
 @media(max-width:700px){html.lp-lock #m-topbar{visibility:hidden;pointer-events:none;}}
+
+/* Fokus-Lesemodus am Desktop: Pfeiltasten wechseln das Kapitel, die Tasten stehen auf den Knöpfen */
+.lp-key{display:none;}
+@media(min-width:1100px){.lp-win.focus .lp-key{display:inline-grid;place-items:center;min-width:24px;height:22px;margin:0 0 0 10px;padding:0 6px;border-radius:6px;background:rgba(128,128,128,.22);color:inherit;font:inherit;font-size:.78rem;font-weight:700;line-height:1;vertical-align:middle;}.lp-win.focus .lp-prev .lp-key{margin:0 0 0 10px;}}
