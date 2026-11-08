@@ -4337,7 +4337,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .acc-chip{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--m-raised);}
 .acc-chip i{width:8px;height:8px;border-radius:50%;background:#9aa0a6;flex:none;}
 .acc-chip[data-state="ok"] i{background:#22a45d;}.acc-chip[data-state="busy"] i{background:#FFA412;}.acc-chip[data-state="err"] i{background:#e5484d;}
-.acc-rm{border:0;background:none;color:var(--m-fg);opacity:.65;font-size:.76rem;text-decoration:underline;cursor:pointer;padding:0 6px 6px;}
+.acc-rm{border:0;background:none;color:var(--m-fg);opacity:.65;font-size:.76rem;text-decoration:underline;cursor:pointer;padding:6px 2px;margin:30px 0 0 auto;align-self:flex-start;white-space:nowrap;}
 .acc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:6px 0 8px;}
 .acc-g{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.72rem;font-weight:600;font-family:inherit;color:var(--m-fg);background:none;border:0;cursor:pointer;padding:2px 0;}
 .acc-g i{width:50px;height:50px;border-radius:16px;background:var(--m-raised);display:grid;place-items:center;transition:transform .12s;}

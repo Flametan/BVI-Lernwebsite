@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.2',ts:'2026-11-08T10:00',items:[
+      'Tour: Neue Schritte zum Account-Menü und zum Synchronisieren von Geräten (Code erzeugen, zweites Gerät per Code oder QR-Code verbinden). „Bild entfernen“ steht im Account-Menü jetzt neben dem Namen.',
       'Notizen: Gehört eine Notiz zu einer Seite, die es nicht mehr gibt (zum Beispiel nach dem Umbau der IdF-Lernseiten), sagt die Liste das jetzt, kopiert beim Antippen den Text und bietet × zum Löschen. Notizen auf der Startseite öffnen wieder die Startseite.',
       'Das Rang-Abzeichen steht jetzt auf allen Seiten in der Kopfleiste (Tipp öffnet Rang & Abzeichen). Am PC liegen sie auf der Startseite unter der Lehrgangs-Cloud. Bei den Lernkarten fehlen Notiz und Lesezeichen in der Kopfleiste.',
       'Dunkles Design: Die Symbol-Animationen in der Navigationsleiste sind besser zu sehen (hellere hintere Karte bei den Lernkarten, Schein um das aktive Symbol, oranger Dampf beim Pausenraum).',

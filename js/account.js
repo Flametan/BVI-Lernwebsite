@@ -55,8 +55,8 @@ const ACCOUNT=(function(){
     card.innerHTML='<div class="acc-ban"><div class="acc-stat">'+stats()+'</div></div>'
       +'<div class="acc-who"><button type="button" class="acc-avb" onclick="ACCOUNT.pick()" aria-label="Profilbild ändern">'+avatarHtml(true)+'<span class="acc-cam">'+svg(IC.cam,13)+'</span></button>'
       +'<div class="acc-nm"><button type="button" class="acc-name" onclick="ACCOUNT.rename()" title="Namen ändern">'+esc(nm||'Dein Name')+'</button>'
-      +'<span class="acc-chip" data-state="'+st.state+'"><i></i>'+esc(st.text)+'</span></div></div>'
-      +(g(AV)?'<button type="button" class="acc-rm" onclick="ACCOUNT.removeAvatar()">Bild entfernen</button>':'')
+      +'<span class="acc-chip" data-state="'+st.state+'"><i></i>'+esc(st.text)+'</span></div>'
+      +(g(AV)?'<button type="button" class="acc-rm" onclick="ACCOUNT.removeAvatar()">Bild entfernen</button>':'')+'</div>'
       +'<div class="acc-grid">'
       +'<button type="button" class="acc-g pri" onclick="ACCOUNT.go(\'sync\')"><i>'+svg(IC.login)+'</i>Sync</button>'
       +'<button type="button" class="acc-g" onclick="ACCOUNT.go(\'set\')"><i>'+svg(IC.set)+'</i>Einstell.</button>'
