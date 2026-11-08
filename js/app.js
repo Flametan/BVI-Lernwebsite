@@ -1730,9 +1730,18 @@ function launchConfetti(){
 /* ======================================================================
    FC – Flashcard-Engine
 ====================================================================== */
+/* Gezählt als „gewusst“ werden nur Karten, die nicht (mehr) als schwach vorgemerkt sind (Schwer zählt erst nach einer richtigen Antwort) */
+function fcCounted(){
+  let fc={}, w=[];
+  try{ fc=JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch(e){}
+  try{ w=JSON.parse(localStorage.getItem('bvi_fc_weak')||'[]'); }catch(e){}
+  if(!fc||typeof fc!=='object'||Array.isArray(fc)) fc={};
+  if(Array.isArray(w)) w.forEach(id=>{ delete fc[id]; });
+  return fc;
+}
 const FC = (function(){
   const CATS = ['laufbahn','ibk','vak','feuak','idf'];
-  let deck=[], curIdx=0, flipped=false, sess={known:0,unknown:0};
+  let deck=[], curIdx=0, flipped=false, sess={known:0,unknown:0,hard:0};
   let activeFilters = new Set(['laufbahn']);
   let _seen = [], _reviewPos = -1, _toCard = false, _flyFn = null, _flying = false;
 
@@ -1764,6 +1773,7 @@ const FC = (function(){
       return out;
     }catch{ return {}; }
   }
+  function fcKnown(){ const k=fcLoad(); fcLoadWeak().forEach(id=>{ delete k[id]; }); return k; }
   function fcSave(d){ try{ localStorage.setItem('bvi_fc',JSON.stringify(d)); }catch{} }
   function fcLoadStars(){ try{ return new Set(JSON.parse(localStorage.getItem('bvi_fc_stars')||'[]')); }catch{ return new Set(); } }
   function fcSaveStars(s){ try{ localStorage.setItem('bvi_fc_stars',JSON.stringify([...s])); }catch{} }
@@ -1782,7 +1792,7 @@ const FC = (function(){
       return shuffle(FLASHCARD_DATA.filter(c=>weak.has(c.id)));
     }
     if(activeFilters.has('known')){
-      const kn=fcLoad();
+      const kn=fcKnown();
       return shuffle(FLASHCARD_DATA.filter(c=>kn[c.id]));
     }
     // Auswahl: Offen (schwach, fällig, neu) · Neu · Nochmal (schwach) · Gewusste · Alle, jeweils für die gewählten Module
@@ -1814,7 +1824,7 @@ const FC = (function(){
   function modeFilter(pool,m){
     const kn=fcLoad(), weak=fcLoadWeak(), now=Date.now();
     if(m==='weak') return pool.filter(c=>weak.has(c.id));
-    if(m==='known') return pool.filter(c=>kn[c.id]);
+    if(m==='known'){ const ck=fcKnown(); return pool.filter(c=>ck[c.id]); }
     if(m==='new') return pool.filter(c=>!kn[c.id]&&!weak.has(c.id));
     if(m==='all') return pool;
     return pool.filter(c=>weak.has(c.id)||!kn[c.id]||(kn[c.id].nextReview||0)<=now);
@@ -1868,7 +1878,7 @@ const FC = (function(){
 
   function updateFilterButtons(){
     renderModeBar();
-    const known=fcLoad();
+    const known=fcKnown();
     const stars=fcLoadStars();
     const isStarred=activeFilters.has('starred')||activeFilters.has('weak')||activeFilters.has('own')||activeFilters.has('known');
     const isWeak=activeFilters.has('weak');
@@ -2022,7 +2032,7 @@ const FC = (function(){
       <div class="fc-nav">
         <button class="fc-back-btn" onclick="FC.back()" ${_seen.length===0?'disabled':''} aria-label="Vorherige Karte"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
         <span class="fc-pos">Karte ${curIdx+1} von ${deck.length}</span>
-        <span class="fc-score">${sess.known} gewusst · ${sess.unknown} nicht gewusst</span>
+        <span class="fc-score">${sess.known} gewusst · ${sess.unknown} nicht gewusst${sess.hard?' · '+sess.hard+' schwer':''}</span>
         <button type="button" class="fc-rep-btn" onclick="FC.report()" aria-label="Fehler oder Unklarheit bei dieser Karte melden"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22V4M4 4h13l-2 4 2 4H4"/></svg></button>
       </div>
       <div class="fc-progress"><i style="width:${deck.length?Math.round(curIdx/deck.length*100):0}%"></i></div>
@@ -2047,7 +2057,7 @@ const FC = (function(){
       ${_jgBar(card)}
       <div class="fc-controls" id="fc-controls">
         <button class="fc-rb fc-no" onclick="FC.swipe('no')" aria-label="Nicht gewusst, gleich wieder"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span class="fc-rl">Nicht gewusst</span></button>
-        <button class="fc-rb fc-hard" onclick="FC.swipe('hard')" aria-label="Schwer, in ${iHard} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="fc-rl">Schwer</span></button>
+        <button class="fc-rb fc-hard" onclick="FC.swipe('hard')" aria-label="Schwer: kommt bald wieder und zählt erst nach einer richtigen Antwort"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="fc-rl">Schwer</span></button>
         <button class="fc-rb fc-yes" onclick="FC.swipe('ok')" aria-label="Gewusst, in ${iGood} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="fc-rl">Gewusst</span></button>
       </div>
       <p class="fc-swhint" id="fc-swhint">Wischen: links nicht gewusst · oben schwer · rechts gewusst</p>
@@ -2059,7 +2069,7 @@ const FC = (function(){
 
   function renderEnd(){
     const box = document.getElementById('fc-container'); if(!box) return;
-    const known = fcLoad();
+    const known = fcKnown();
     const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
     if(deck.length===0){
       const plain=!activeFilters.has('starred')&&!activeFilters.has('weak')&&!activeFilters.has('own')&&!activeFilters.has('known');
@@ -2120,7 +2130,7 @@ const FC = (function(){
 
   return {
     start(keepScroll){
-      deck = getDeck(); curIdx=0; flipped=false; sess={known:0,unknown:0};
+      deck = getDeck(); curIdx=0; flipped=false; sess={known:0,unknown:0,hard:0};
       _seen=[]; _reviewPos=-1; _toCard=!keepScroll;
       showSkeleton();
       setTimeout(renderCard, 320);
@@ -2188,7 +2198,7 @@ const FC = (function(){
         const reps=card._reps||0;
         if(reps<2) deck.push(Object.assign({},card,{_reps:reps+1}));
       } else {
-        d[card.id]=sm2(d[card.id]||{},q); sess.known++;
+        d[card.id]=sm2(d[card.id]||{},q); if(q===2) sess.known++; else sess.hard++;
         if(typeof STREAK!=='undefined') STREAK.record();
       }
       const weak=fcLoadWeak(); if(q===2) weak.delete(card.id); else weak.add(card.id); fcSaveWeak(weak);
@@ -6308,7 +6318,7 @@ const SHELL=(function(){
   function newQuip(){ if(_quip) _quip.slot=null; }
 
   function cardStats(){
-    let fc={}; try{ fc=JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch(e){}
+    let fc=fcCounted();
     const now=Date.now();
     const ids=new Set(FLASHCARD_DATA.map(c=>c.id)); if(!fc||typeof fc!=='object') fc={};
     const ks=Object.keys(fc).filter(k=>ids.has(k));
@@ -6521,7 +6531,7 @@ const SHELL=(function(){
 
   function renderFcSide(){
     const el=document.getElementById('m-fc-side'); if(!el) return;
-    let fc={}; try{ fc=JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch(e){}
+    let fc=fcCounted();
     const cats=[['laufbahn','Laufbahn'],['ibk','IBK'],['vak','VAk'],['feuak','FeuAK'],['idf','IdF']];
     const rows=cats.map(([k,l])=>{
       const cs=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(k));
