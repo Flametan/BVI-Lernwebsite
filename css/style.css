@@ -4264,3 +4264,17 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 /* Fokus-Lesemodus am Desktop: Pfeiltasten wechseln das Kapitel, die Tasten stehen auf den Knöpfen */
 .lp-key{display:none;}
 @media(min-width:1100px){.lp-win.focus .lp-key{display:inline-grid;place-items:center;min-width:24px;height:22px;margin:0 0 0 10px;padding:0 6px;border-radius:6px;background:rgba(128,128,128,.22);color:inherit;font:inherit;font-size:.78rem;font-weight:700;line-height:1;vertical-align:middle;}.lp-win.focus .lp-prev .lp-key{margin:0 0 0 10px;}}
+
+/* Kapitelfenster (Desktop): Text nutzt die Breite, der Zurück-Knopf steht bündig mit dem linken Textrand; Kapitel-Knöpfe unten zurückhaltend */
+@media(min-width:1100px){
+  .lp-win:not(.focus) .lp-wbody{padding-left:max(24px,calc((100% - 1280px)/2));padding-right:max(24px,calc((100% - 1280px)/2));}
+  .lp-win:not(.focus) .lp-wh{padding-left:max(24px,calc((100% - 1280px)/2));}
+  .lp-win.focus .lp-wh{padding-left:max(24px,calc((100% - 1060px)/2));}
+}
+@media(min-width:701px){
+  .lp-pg{justify-content:center;gap:12px;padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px));}
+  .lp-pg button,.lp-win.focus .lp-pg button{flex:0 0 auto;min-width:0;width:auto;max-width:none;padding:8px 18px;border-radius:99px;font-size:.84rem;font-weight:600;background:transparent;color:var(--m-muted);box-shadow:inset 0 0 0 1px var(--m-line);}
+  .lp-pg .lp-next{background:transparent;color:var(--m-fg);font-weight:600;}
+  .lp-pg button:hover{background:var(--m-raised);color:var(--m-fg);}
+  .lp-pg .lp-key{margin-left:8px;}
+}
