@@ -4374,3 +4374,52 @@ html[data-theme="dark"] :is(.m-tab,.m-ri).tap .m-tic{filter:drop-shadow(0 0 7px 
 html[data-theme="dark"] :is(.m-tab,.m-ri).on .m-tic>svg.o{opacity:.55;stroke:var(--m-accent);}
 html[data-theme="dark"] :is(.m-tab,.m-ri) .m-tic>svg.f .st1,html[data-theme="dark"] :is(.m-tab,.m-ri) .m-tic>svg.f .st2{stroke:var(--m-accent);stroke-width:2.4;}
 html[data-theme="dark"] :is(.m-tab,.m-ri)[data-ic="pause"].on .m-tic>svg.f{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--m-accent) 75%,transparent));}
+
+/* Rang und Serie in der Kopfleiste; Lernkarten ohne Notiz/Lesezeichen */
+.tb-game{display:flex;align-items:center;gap:6px;flex:none;}
+.tb-rk{border:0;background:none;padding:0 2px;cursor:pointer;display:grid;place-items:center;min-height:42px;}
+.tb-st{display:inline-flex;align-items:center;gap:5px;border:0;background:var(--m-card);color:var(--m-fg);border-radius:99px;padding:0 12px 0 9px;min-height:42px;font-family:inherit;font-size:.86rem;font-weight:700;cursor:pointer;}
+@media(max-width:1099px){.tb-rk,.tb-st{min-height:44px;}}
+body:has(.lp-win.on:not(.focus)) #m-topbar :is(.tb-rk,.tb-st){pointer-events:auto;}
+html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{display:none;}
+#m-topbar[data-view="v-flashcards"] :is(#m-bm,#m-note){display:none;}
+.m-gameslot{align-self:start;display:flex;flex-direction:column;gap:12px;padding:16px;}
+.m-gameslot[hidden]{display:none;}
+.m-gameslot .m-seg2-w{display:none;}
+.m-gameslot{padding:0;overflow:hidden;}
+.m-gameslot .g-panel{margin:0 16px 16px;}
+.g-hero-top{background:linear-gradient(135deg,var(--m-accent),color-mix(in srgb,var(--m-accent) 55%,#7a3a00));color:#fff;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.g-hero-st{border:0;background:none;color:inherit;font-family:inherit;text-align:left;padding:0;cursor:pointer;display:flex;flex-direction:column;}
+.g-hero-k{margin-bottom:6px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;opacity:.9;font-weight:700;}
+.g-hero-n{font-size:3.4rem;font-weight:800;line-height:1.15;}
+.g-hero-fl{display:inline-block;filter:grayscale(.55) opacity(.8);}.g-hero-fl.on{filter:none;}
+.g-hero-l{font-weight:700;opacity:.92;}
+.g-hero-rk{border:0;background:none;padding:0;cursor:pointer;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));display:grid;place-items:center;}
+.g-hero-bot{padding:14px 20px 16px;}
+.g-hero-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.g-hero-row b{font-size:1.1rem;color:var(--m-fg);}.g-hero-row span{font-size:.78rem;color:var(--m-muted);}
+.g-hero-bar{height:10px;border-radius:99px;background:var(--m-raised);overflow:hidden;margin-top:8px;}
+.g-hero-bar i{display:block;height:100%;background:var(--m-accent);border-radius:99px;}
+.g-hero-st:focus-visible,.g-hero-rk:focus-visible{outline:2px solid #fff;outline-offset:3px;border-radius:8px;}
+@media(min-width:701px) and (max-width:1099px){
+  #m-home .m-hgrid{grid-template-rows:auto 1fr auto auto;}
+  .m-cloud{grid-column:1;grid-row:1;}
+  .m-chart2{grid-column:2;grid-row:1 / span 2;}
+  .m-gameslot{grid-column:1;grid-row:2;}
+  .m-mods{grid-column:1 / -1;grid-row:3;}
+}
+@media(min-width:1100px){#m-home .m-hgrid{grid-template-rows:auto 1fr auto auto;}.m-gameslot{grid-column:1;grid-row:2;align-self:start;}}
+@media(max-width:700px){.m-gameslot{display:none;}}
+@media(max-width:480px){
+  #m-topbar:has(#m-tb-actions:not(.hidden)) #m-back-lbl{display:none;}   /* auf schmalen Handys nur der Pfeil, damit Rang, Serie, Suche und Account Platz haben */
+  #m-topbar:has(#m-tb-actions:not(.hidden)) #m-back{min-width:44px;justify-content:center;}
+  .m-tb-right{gap:4px;}.m-tb-actions{gap:4px;}.tb-game{gap:2px;}
+}
+/* Startseite ab Tablet: Rang-/Serien-Karte links oben, rechts Diagramm und darunter die Lehrgangs-Cloud */
+@media(min-width:701px){
+  #m-home .m-hgrid{grid-template-rows:auto auto auto;}
+  .m-gameslot{grid-column:1;grid-row:1 / span 2;align-self:start;}
+  .m-chart2{grid-column:2;grid-row:1;}
+  .m-cloud{grid-column:2;grid-row:2;align-self:start;}
+  .m-mods{grid-column:1 / -1;grid-row:3;}
+}

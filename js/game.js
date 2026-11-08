@@ -404,6 +404,20 @@ const GAME=(function(){
   /* Bereich auf der Startseite (Symbol + aufklappbares Feld); bei ausgeschalteten Belohnungen leer */
   /* aktueller Dienstgrad mit Schulterstück (ersetzt die Überschrift „Lernstoff“ auf der Startseite) */
   function rankLabel(){ const r=rankOf(load().xp); return `<button type="button" class="g-rklab" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen" onclick="GAME.openRank()">${shoulder(r,45)}<span>${esc(r.n)}</span></button>`; }
+  // Kopfleiste (alle Seiten außer Startseite): Dienstgrad-Abzeichen und Serie, Tipp öffnet Rang & Abzeichen
+  function barHtml(){
+    if(load().off) return '';
+    const s=load(), st=streak(), r=rankOf(s.xp);
+    return `<button type="button" class="tb-rk" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen" title="${esc(r.n)}" onclick="GAME.openRank()">${shoulder(r,38)}</button><button type="button" class="tb-st${chipCls(st)}" aria-label="${st.cur} Tage Serie${st.risk?' in Gefahr':''}. Rang und Abzeichen öffnen" title="${st.cur} Tage Serie" onclick="GAME.openRank()"><span class="g-fl${st.cur>0&&st.todayDone?' on':''}">${flameIc(15)}</span><b>${st.cur}</b></button>`;
+  }
+  // PC/Tablet-Startseite: große Karte mit Serie (Tipp = Belohnungen) und Dienstgrad (Tipp = Rang & Abzeichen)
+  function heroHtml(){
+    if(load().off) return '';
+    const s=load(), st=streak(), r=rankOf(s.xp), nx=RANKS[r.i+1];
+    const pct=nx?Math.min(100,Math.max(0,Math.round((s.xp-r.xp)/(nx.xp-r.xp)*100))):100;
+    const sub=nx?`noch ${nx.xp-s.xp} XP bis ${esc(nx.n)}`:'Höchster Dienstgrad erreicht';
+    return `<div class="g-hero"><div class="g-hero-top"><button type="button" class="g-hero-st" onclick="GAME.toggle()" aria-label="${st.cur} Tage Serie${st.risk?' in Gefahr':''}. Belohnungen anzeigen"><span class="g-hero-k">Serie${st.risk?' · in Gefahr':''}</span><span class="g-hero-n"><span class="g-hero-fl${st.cur>0&&st.todayDone?' on':''}">🔥</span> ${st.cur}</span><span class="g-hero-l">Tage in Folge</span></button><button type="button" class="g-hero-rk" onclick="GAME.openRank()" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen">${shoulder(r,118)}</button></div><div class="g-hero-bot"><div class="g-hero-row"><b>${esc(r.n)}</b><span>${sub}</span></div><div class="g-hero-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Fortschritt zum nächsten Dienstgrad"><i style="width:${pct}%"></i></div></div></div>`;
+  }
   function homeHtml(){ return load().off?{chip:'',panel:'',rank:''}:{rank:rankLabel(),chip:chip(),panel:`<div class="g-panel" id="g-panel" hidden>${panel()}</div>`}; }
   let _open=false;
   function toggle(btn){
@@ -419,6 +433,8 @@ const GAME=(function(){
     const p=document.getElementById('g-panel'), c=document.getElementById('g-chip');
     if(p&&!p.hidden) p.innerHTML=panel();
     const rl=document.querySelector('.g-rklab'); if(rl) rl.outerHTML=rankLabel();
+    try{ ACCOUNT.refreshGame(); }catch(e){}
+    const hs=document.querySelector('#m-gameslot .g-hero'); if(hs) hs.outerHTML=heroHtml();
     if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.cur>0&&st.todayDone); c.classList.toggle('on',st.cur>0); c.classList.toggle('risk',!!st.risk); }
   }
   // Android-App: Startsymbol je Serienzustand (ab 18/21 Uhr schwächere Flamme, mit Serien-Schutz zusätzlich ein Schild, bei langer Serie Glut/Funken/Ring); Serie, letzten Lerntag und Schutz melden
@@ -553,5 +569,5 @@ const GAME=(function(){
   }
 
   function onShow(id){ if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek(); }
-  return {event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
+  return {heroHtml,shoulder,rankOf,barHtml,event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
