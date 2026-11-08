@@ -6435,12 +6435,15 @@ const SHELL=(function(){
       ${pl.html}<div class="m-glg"><span>${pl.note}</span><span class="m-gavg">Ø ${dur(pl.avg)} / Tag</span></div></div>`;
   }
   // PC: Rang und Serie liegen im freien Bereich unter der Lehrgangs-Cloud, Handy/Tablet: wie bisher in der Modulkarte
-  const gameMq=window.matchMedia?matchMedia('(min-width:1100px)'):null;
+  const gameMq=window.matchMedia?matchMedia('(min-width:701px)'):null;
   function placeGame(){
     const slot=document.getElementById('m-gameslot'), w=document.querySelector('#m-home .m-seg2-w'), p=document.getElementById('g-panel'), seg=document.querySelector('#m-home .m-seg2');
     if(!slot) return;
-    if(gameMq&&gameMq.matches&&w){ slot.appendChild(w); if(p) slot.appendChild(p); slot.hidden=false; }
-    else if(w&&seg&&w.parentNode===slot){ seg.insertBefore(w,seg.firstChild); if(p&&seg.parentNode) seg.after(p); slot.hidden=true; }
+    const wide=!!(gameMq&&gameMq.matches)&&!!w;
+    if(wide){
+      if(!slot.querySelector('.g-hero')) slot.insertAdjacentHTML('afterbegin',GAME.heroHtml());
+      slot.appendChild(w); if(p) slot.appendChild(p); slot.hidden=false;     // Chip bleibt (unsichtbar) im Slot, der Schalter der Belohnungen läuft über die große Karte
+    }else if(w&&seg&&w.parentNode===slot){ seg.insertBefore(w,seg.firstChild); if(p&&seg.parentNode) seg.after(p); slot.querySelector('.g-hero')?.remove(); slot.hidden=true; }
     else slot.hidden=!slot.contains(w);
   }
   if(gameMq) (gameMq.addEventListener?gameMq.addEventListener.bind(gameMq,'change'):gameMq.addListener.bind(gameMq))(()=>placeGame());
