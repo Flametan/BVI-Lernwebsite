@@ -1785,14 +1785,89 @@ const FC = (function(){
       const kn=fcLoad();
       return shuffle(FLASHCARD_DATA.filter(c=>kn[c.id]));
     }
-    // Standardrunde: schwache und fällige Karten zuerst, dann neue; gewusste Karten warten auf ihren Termin
+    // Auswahl: Offen (schwach, fällig, neu) · Neu · Nochmal (schwach) · Gewusste · Alle, jeweils für die gewählten Module
+    const pool=modePool(), m=getMode();
+    if(m==='all') return shuffle(pool.slice());
+    if(m==='weak'||m==='known'||m==='new') return shuffle(modeFilter(pool,m));
     const kn=fcLoad(), weak=fcLoadWeak(), now=Date.now();
-    const pool=FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f)));
     const prio=c=>{ const k=kn[c.id]; if(weak.has(c.id)) return 0; if(k&&(k.nextReview||0)<=now) return 1; if(!k) return 2; return 9; };
     return shuffle(pool.filter(c=>prio(c)<9)).sort((a,b)=>prio(a)-prio(b));
   }
+  const MODES=[
+    ['open','Offen','Schwache, fällige und neue Karten','sun'],
+    ['new','Neu','Noch nie geübt','spark'],
+    ['weak','Nochmal','Schwach: nicht gewusst oder schwer','redo'],
+    ['known','Gewusste','Schon gewusst, gezielt wiederholen','ok'],
+    ['all','Alle','Alle Karten der gewählten Module','all']
+  ];
+  const MODE_IC={
+    sun:'<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/>',
+    spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>',
+    redo:'<path d="M4 12a8 8 0 0 1 14-5.3L20 9M20 4v5h-5"/>',
+    ok:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+    all:'<rect x="4" y="6" width="13" height="12" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v11"/>',
+    chev:'<path d="m6 9 6 6 6-6"/>'
+  };
+  const mic=(k,sz)=>'<svg viewBox="0 0 24 24" width="'+sz+'" height="'+sz+'" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+MODE_IC[k]+'</svg>';
+  function getMode(){ try{ const m=localStorage.getItem('bvi_fc_mode'); return MODES.some(x=>x[0]===m)?m:'open'; }catch{ return 'open'; } }
+  function modePool(){ return FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f))); }
+  function modeFilter(pool,m){
+    const kn=fcLoad(), weak=fcLoadWeak(), now=Date.now();
+    if(m==='weak') return pool.filter(c=>weak.has(c.id));
+    if(m==='known') return pool.filter(c=>kn[c.id]);
+    if(m==='new') return pool.filter(c=>!kn[c.id]&&!weak.has(c.id));
+    if(m==='all') return pool;
+    return pool.filter(c=>weak.has(c.id)||!kn[c.id]||(kn[c.id].nextReview||0)<=now);
+  }
+  function modeCounts(){ const pool=modePool(), o={}; MODES.forEach(x=>o[x[0]]=modeFilter(pool,x[0]).length); return o; }
+  function renderModeBar(){
+    const bar=document.getElementById('fc-modebar'), btn=document.getElementById('fc-mode-btn'); if(!bar||!btn) return;
+    const special=activeFilters.has('starred')||activeFilters.has('own')||activeFilters.has('weak')||activeFilters.has('known');
+    bar.classList.toggle('hidden',special);
+    const m=getMode(), def=MODES.find(x=>x[0]===m), n=modeCounts()[m];
+    btn.innerHTML='<span class="fc-mb-ic">'+mic(def[3],22)+'</span><span class="fc-mb-tx"><b>'+def[1]+' · '+n+(n===1?' Karte':' Karten')+'</b><small>'+def[2]+'</small></span><span class="fc-mb-cv">'+mic('chev',20)+'</span>';
+    const sh=document.getElementById('fc-sheet');
+    if(sh&&!sh.hidden) sh.querySelectorAll('.fcs-row').forEach(r=>{ const k=r.dataset.mode,on=k===m; r.classList.toggle('on',on); r.setAttribute('aria-checked',on?'true':'false'); r.querySelector('i').textContent=modeCounts()[k]; });
+  }
+  /* Auswahl-Blatt: von unten, Wegziehen schließt, oben federt es wie ein Gummiband zurück */
+  const rubber=(d,lim)=>(1-1/((d*0.55/lim)+1))*lim;
+  function sheetEl(){
+    let sh=document.getElementById('fc-sheet'); if(sh) return sh;
+    sh=document.createElement('div'); sh.id='fc-sheet'; sh.className='fcs'; sh.hidden=true;
+    sh.innerHTML='<div class="fcs-bd"></div><div class="fcs-panel" role="dialog" aria-modal="true" aria-label="Welche Karten lernen?"><div class="fcs-grab" aria-hidden="true"></div><div class="fcs-title">Welche Karten?</div><div class="fcs-list" role="radiogroup" aria-label="Kartenauswahl">'+
+      MODES.map(x=>'<button type="button" class="fcs-row" role="radio" aria-checked="false" data-mode="'+x[0]+'"><span class="fcs-ic">'+mic(x[3],18)+'</span><span class="fcs-tx"><b>'+x[1]+'</b><small>'+x[2]+'</small></span><i></i></button>').join('')+'</div></div>';
+    document.body.appendChild(sh);
+    const panel=sh.querySelector('.fcs-panel'), bd=sh.querySelector('.fcs-bd');
+    let y0=0,dy=0,live=false,drag=false,t0=0,vy=0,ly=0,lt=0,pid=-1;
+    const setY=y=>{ panel.style.transform='translateY('+y+'px)'; bd.style.opacity=String(Math.max(0,1-Math.max(0,y)/Math.max(220,panel.offsetHeight))); };
+    panel.addEventListener('pointerdown',e=>{ if(e.button>0) return; live=true; drag=false; y0=e.clientY; dy=0; ly=e.clientY; lt=performance.now(); vy=0; pid=e.pointerId; });
+    panel.addEventListener('pointermove',e=>{
+      if(!live||e.pointerId!==pid) return;
+      dy=e.clientY-y0;
+      if(!drag){ if(Math.abs(dy)<6) return; drag=true; panel.classList.add('drag'); try{ panel.setPointerCapture(pid); }catch{} }
+      const now=performance.now(); if(now>lt){ vy=(e.clientY-ly)/(now-lt); ly=e.clientY; lt=now; }
+      setY(dy>=0?dy:-rubber(-dy,70));
+    });
+    const end=e=>{
+      if(!live||(e&&e.pointerId!==pid)) return; live=false;
+      if(!drag) return;
+      panel.classList.remove('drag');
+      if(dy>110||vy>0.6){ FC.closeModes(); }
+      else{ panel.style.transition='transform .5s cubic-bezier(.34,1.56,.64,1)'; setY(0); bd.style.opacity=''; setTimeout(()=>{ panel.style.transition=''; },520); }
+      setTimeout(()=>{ drag=false; },0);
+    };
+    panel.addEventListener('pointerup',end); panel.addEventListener('pointercancel',end);
+    panel.addEventListener('click',e=>{ if(drag){ e.stopPropagation(); e.preventDefault(); return; } const r=e.target.closest('.fcs-row'); if(r) FC.setMode(r.dataset.mode); },true);
+    bd.addEventListener('click',()=>FC.closeModes());
+    sh.addEventListener('keydown',e=>{
+      if(e.key==='Escape'){ e.preventDefault(); FC.closeModes(); return; }
+      if(e.key==='ArrowDown'||e.key==='ArrowUp'){ const rows=[...sh.querySelectorAll('.fcs-row')], i=rows.indexOf(document.activeElement); const n=e.key==='ArrowDown'?(i+1)%rows.length:(i-1+rows.length)%rows.length; rows[n].focus(); e.preventDefault(); }
+    });
+    return sh;
+  }
 
   function updateFilterButtons(){
+    renderModeBar();
     const known=fcLoad();
     const stars=fcLoadStars();
     const isStarred=activeFilters.has('starred')||activeFilters.has('weak')||activeFilters.has('own')||activeFilters.has('known');
@@ -1988,8 +2063,16 @@ const FC = (function(){
     const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
     if(deck.length===0){
       const plain=!activeFilters.has('starred')&&!activeFilters.has('weak')&&!activeFilters.has('own')&&!activeFilters.has('known');
+      const M=getMode();
+      const T={
+        open:['✅','Alles Fällige geschafft','In diesem Modul ist gerade nichts fällig. Deine gewussten Karten kommen zu ihrem Termin zurück. Du kannst sie auch jetzt schon wiederholen.','Gewusste wiederholen','known'],
+        new:['✅','Alles schon einmal geübt','In diesem Modul gibt es keine neuen Karten mehr.','Zu „Offen“','open'],
+        weak:['👍','Keine schwachen Karten','Im Moment ist hier nichts als „nicht gewusst“ oder „schwer“ vorgemerkt.','Zu „Offen“','open'],
+        known:['📘','Noch nichts gewusst','Hier gibt es noch keine gewussten Karten. Sie erscheinen, sobald du Karten mit „Gewusst“ beantwortest.','Zu „Offen“','open'],
+        all:['📘','Keine Karten','In dieser Auswahl gibt es keine Karten.','Zu „Offen“','open']
+      }[M];
       box.innerHTML=plain
-        ?`<div class="fc-end"><div class="fc-end-ico">✅</div><div class="fc-end-title">Alles Fällige geschafft</div><div class="fc-end-sub">In diesem Modul ist gerade nichts fällig. Deine gewussten Karten kommen zu ihrem Termin zurück. Du kannst sie auch jetzt schon wiederholen.</div><div style="display:flex;gap:.6rem;justify-content:center"><button class="btn btn-gold" onclick="FC.setFilter('known')">Gewusste wiederholen</button></div></div>`
+        ?`<div class="fc-end"><div class="fc-end-ico">${T[0]}</div><div class="fc-end-title">${T[1]}</div><div class="fc-end-sub">${T[2]}</div><div style="display:flex;gap:.6rem;justify-content:center"><button class="btn btn-gold" onclick="FC.setMode('${T[4]}')">${T[3]}</button></div></div>`
         :`<div class="fc-end"><div class="fc-end-ico">⭐</div><div class="fc-end-title">Keine Karten in dieser Auswahl</div><div class="fc-end-sub">Wähle eine andere Kategorie oder markiere zuerst Karten.</div><div style="display:flex;gap:.6rem;justify-content:center"><button class="btn btn-gold" onclick="FC.setFilter('all')">Zurück zu den Modulen</button></div></div>`;
       return;
     }
@@ -2063,6 +2146,30 @@ const FC = (function(){
       fcSave(d); SHELL.renderFcSide(); updateFilterButtons();
     },
     // Knopf wie Wischen: die Karte fliegt zur passenden Seite und zeigt den Stempel
+    openModes(){
+      const sh=sheetEl(); renderModeBar(); const counts=modeCounts(), cur=getMode();
+      sh.querySelectorAll('.fcs-row').forEach(r=>{ const k=r.dataset.mode; r.querySelector('i').textContent=counts[k]; r.classList.toggle('on',k===cur); r.setAttribute('aria-checked',k===cur?'true':'false'); });
+      const panel=sh.querySelector('.fcs-panel'), bd=sh.querySelector('.fcs-bd');
+      sh.hidden=false; sh.classList.remove('closing'); panel.style.transition='none'; panel.style.transform='translateY(100%)'; bd.style.opacity='0'; void panel.offsetHeight;
+      panel.style.transition=''; panel.style.transform=''; bd.style.opacity='';
+      sh.classList.add('open');
+      const b=document.getElementById('fc-mode-btn'); if(b) b.setAttribute('aria-expanded','true');
+      setTimeout(()=>{ const on=sh.querySelector('.fcs-row.on')||sh.querySelector('.fcs-row'); if(on) on.focus({preventScroll:true}); },60);
+    },
+    closeModes(){
+      const sh=document.getElementById('fc-sheet'); if(!sh||sh.hidden) return;
+      const panel=sh.querySelector('.fcs-panel'), bd=sh.querySelector('.fcs-bd');
+      panel.style.transition='transform .28s cubic-bezier(.4,0,1,1)'; panel.style.transform='translateY(110%)'; bd.style.transition='opacity .28s'; bd.style.opacity='0';
+      sh.classList.remove('open');
+      const b=document.getElementById('fc-mode-btn'); if(b){ b.setAttribute('aria-expanded','false'); b.focus({preventScroll:true}); }
+      setTimeout(()=>{ sh.hidden=true; panel.style.transition=''; panel.style.transform=''; bd.style.transition=''; bd.style.opacity=''; },300);
+    },
+    setMode(m){
+      if(!MODES.some(x=>x[0]===m)) return;
+      try{ localStorage.setItem('bvi_fc_mode',m); }catch{}
+      if(activeFilters.has('starred')||activeFilters.has('own')||activeFilters.has('weak')||activeFilters.has('known')) activeFilters=new Set(['laufbahn']);
+      this.closeModes(); updateFilterButtons(); this.start(true);
+    },
     swipe(kind){
       if(_reviewPos>=0||curIdx>=deck.length||_flying) return;
       const ok=document.querySelector('.fc-outer');
