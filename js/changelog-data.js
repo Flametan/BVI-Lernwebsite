@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.2',ts:'2026-11-08T10:00',items:[
+      'Desktop: Die schmale Seitenleiste klappt beim Darüberfahren nicht mehr auf. Sie wird breit, wenn du auf eine freie Stelle der Leiste klickst (nicht auf ein Symbol); verlässt die Maus die Leiste, wird sie wieder schmal. Mit der Tastatur (Tab) klappt sie weiter auf.',
       'Android-Startsymbol: Es wächst jetzt schneller mit der Serie. Ab 4 Tagen erscheint die Glut hinter der Flamme, ab 14 Tagen eine hellere Flamme mit Funken, ab 25 Tagen zusätzlich ein Ring (bisher 7, 30 und 100 Tage).',
       'Kapitel (Handy): Beim Blättern von einem Bereich in den nächsten verdeckte die Kopfleiste der Seite manchmal die Kopfzeile des Kapitelfensters, sodass Zurück-Knopf und „Kapitel 01 / 10“ mit Titel fehlten. Solange ein Kapitelfenster offen ist, bleibt die Kopfleiste jetzt ausgeblendet.',
       'Lernkarten: Eine Karte, die du mit „Schwer“ bewertest, zählt erst nach einer richtigen Antwort als gewusst. Das gilt für die Modul-Zahlen (z. B. 10/286), die Zahl „Gewusste“, „Dein Stand“ und den Zähler oben; schwere Karten stehen weiter unter „Nochmal“ und werden in der Zeile zusätzlich als „schwer“ gezählt.',
