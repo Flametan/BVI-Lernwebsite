@@ -4214,3 +4214,9 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
   .fc-controls{position:static;left:auto;right:auto;bottom:auto;z-index:auto;max-width:420px;margin:.6rem auto 0;padding:.3rem 0 .15rem;background:none;pointer-events:auto;}
   .fc-swhint{display:block;}
 }
+
+/* Aktionsreihe mit vier Kacheln */
+.fc-tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-width:560px;}
+.fc-tile{padding:6px 2px 5px;}
+.fc-tile b{font-size:.7rem;}
+.fc-tile small{font-size:.66rem;}
