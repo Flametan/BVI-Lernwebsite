@@ -5652,10 +5652,15 @@ const APPSHARE=(function(){
   function build(){
     box=document.createElement('div'); box.id='share-ov'; box.hidden=true;
     box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','App teilen');
-    box.innerHTML='<div class="sh-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t">B VI auf dem Handy öffnen</div>'
+    box.innerHTML='<div class="sh-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t">App teilen</div>'
       +'<div class="sh-qr" id="sh-qr" role="img" aria-label="QR-Code zum Link der App"></div>'
       +'<div class="sh-u">'+URL_APP.replace('https://','')+'</div>'
-      +'<div class="sh-b"><button class="btn btn-gold" id="sh-copy">Link kopieren</button><button class="btn btn-ghost" id="sh-share" hidden>Teilen …</button></div></div>';
+      +'<div class="sh-apps" role="group" aria-label="Senden über">'
+      +'<a class="sh-app" id="sh-wa" target="_blank" rel="noopener noreferrer"><i style="background:#25D366"><svg viewBox="0 0 24 24" width="22" height="22" fill="#fff" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 .9-2.3.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l1.900.9c.3.1.5.2.6.3.1.2.1.7-.1 1.3z"/></svg></i>WhatsApp</a>'
+      +'<a class="sh-app" id="sh-tg" target="_blank" rel="noopener noreferrer"><i style="background:#229ED9"><svg viewBox="0 0 24 24" width="22" height="22" fill="#fff" aria-hidden="true"><path d="M21.5 3.6 2.9 10.8c-.8.3-.8 1.3 0 1.600l4.600 1.500 1.800 5.500c.2.600.9.800 1.400.4l2.600-2.200 4.700 3.500c.6.400 1.300.1 1.500-.6L22.900 4.900c.2-.8-.6-1.600-1.400-1.300zM9.800 14.300l8.100-6.500-6.600 7.500-.3 3-1.200-4z"/></svg></i>Telegram</a>'
+      +'<a class="sh-app" id="sh-sms"><i style="background:#34B27B"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></i>SMS</a>'
+      +'<a class="sh-app" id="sh-mail"><i style="background:#6B7280"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></i>E-Mail</a></div>'
+      +'<div class="sh-b"><button class="btn btn-gold" id="sh-copy">Link kopieren</button><button class="btn btn-ghost" id="sh-share" hidden>Mehr …</button></div></div>';
     document.body.appendChild(box);
     box.addEventListener('click',e=>{ if(e.target===box||e.target.closest('.sh-x')) close(); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!box.hidden) close(); });
@@ -5663,6 +5668,11 @@ const APPSHARE=(function(){
       try{ await navigator.clipboard.writeText(URL_APP); TOAST.show('Link kopiert',{type:'ok'}); }
       catch(e){ TOAST.show(URL_APP,{type:'info'}); }
     };
+    const enc=encodeURIComponent, MSG='B VI – Höherer Dienst: die Lern-App für die Ausbildung. Hier öffnen und installieren:';
+    box.querySelector('#sh-wa').href='https://wa.me/?text='+enc(MSG+' '+URL_APP);
+    box.querySelector('#sh-tg').href='https://t.me/share/url?url='+enc(URL_APP)+'&text='+enc(MSG);
+    box.querySelector('#sh-sms').href='sms:?&body='+enc(MSG+' '+URL_APP);
+    box.querySelector('#sh-mail').href='mailto:?subject='+enc('B VI – Höherer Dienst')+'&body='+enc(MSG+'\n\n'+URL_APP);
     const sb=box.querySelector('#sh-share');
     if(navigator.share){ sb.hidden=false; sb.onclick=()=>navigator.share({title:'B VI – Höherer Dienst',url:URL_APP}).catch(()=>{}); }
   }

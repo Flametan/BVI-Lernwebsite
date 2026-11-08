@@ -1753,6 +1753,10 @@ html.lb-open,html.lb-open body{overflow:hidden;}
 .sh-qr{background:#fff;border-radius:14px;padding:10px;width:min(260px,100%);margin:0 auto;}
 .sh-qr svg{display:block;width:100%;height:auto;}
 .sh-u{font-size:.82rem;color:var(--m-muted);word-break:break-all;}
+.sh-apps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.sh-app{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.74rem;font-weight:600;color:var(--m-fg);text-decoration:none;padding:4px 0;cursor:pointer;}
+.sh-app i{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;}
+.sh-app:active i{transform:scale(.92);}
 .sh-b{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
 .app-device{margin-bottom:1rem;}
 .ap-steps{margin:0 0 12px;padding-left:1.2rem;font-size:.9rem;line-height:1.7;color:var(--m-muted);}
