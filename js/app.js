@@ -1734,7 +1734,7 @@ const FC = (function(){
   const CATS = ['laufbahn','ibk','vak','feuak','idf'];
   let deck=[], curIdx=0, flipped=false, sess={known:0,unknown:0};
   let activeFilters = new Set(['laufbahn']);
-  let _seen = [], _reviewPos = -1, _toCard = false;
+  let _seen = [], _reviewPos = -1, _toCard = false, _flyFn = null, _flying = false;
 
   const SR_DAYS = [0,1,3,7,14,30];
 
@@ -1843,6 +1843,7 @@ const FC = (function(){
     const stamps=(o,n,h)=>{ st.ok.style.opacity=o; st.no.style.opacity=n; st.hard.style.opacity=h; };
     const reset=()=>{ outer.style.transform=''; stamps(0,0,0); };
     const fly=(kind,ms)=>{
+      if(_flying) return; _flying=true;
       stamps(kind==='ok'?1:0,kind==='no'?1:0,kind==='hard'?1:0);
       outer.style.transition=`transform ${ms}ms cubic-bezier(.4,0,.9,.6),opacity ${ms}ms ease`;
       outer.style.transform=kind==='hard'
@@ -1852,7 +1853,9 @@ const FC = (function(){
       setTimeout(()=>FC.answer(kind==='ok'?true:kind==='no'?false:'hard',true),ms-20);
     };
 
+    _flyFn=fly;
     outer.addEventListener('pointerdown',e=>{
+      if(_flying) return;
       x0=e.clientX; y0=e.clientY; live=true; dx=0; dy=0; pid=e.pointerId; mode=''; lt=performance.now(); lx=e.clientX; ly=e.clientY; vx=0; vy=0;
       outer.setPointerCapture(e.pointerId);
     });
@@ -1957,13 +1960,13 @@ const FC = (function(){
       </div>
       ${_jgBar(card)}
       <div class="fc-controls" id="fc-controls">
-        <button class="fc-rb fc-no" onclick="FC.answer(false,true)" aria-label="Nicht gewusst, gleich wieder"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span class="fc-rl">Nicht gewusst</span></button>
-        <button class="fc-rb fc-hard" onclick="FC.answer('hard',true)" aria-label="Schwer, in ${iHard} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="fc-rl">Schwer</span></button>
-        <button class="fc-rb fc-yes" onclick="FC.answer(true,true)" aria-label="Gewusst, in ${iGood} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="fc-rl">Gewusst</span></button>
+        <button class="fc-rb fc-no" onclick="FC.swipe('no')" aria-label="Nicht gewusst, gleich wieder"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span class="fc-rl">Nicht gewusst</span></button>
+        <button class="fc-rb fc-hard" onclick="FC.swipe('hard')" aria-label="Schwer, in ${iHard} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="fc-rl">Schwer</span></button>
+        <button class="fc-rb fc-yes" onclick="FC.swipe('ok')" aria-label="Gewusst, in ${iGood} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="fc-rl">Gewusst</span></button>
       </div>
       <p class="fc-swhint" id="fc-swhint">Wischen: links nicht gewusst · oben schwer · rechts gewusst</p>
       </div>`;
-    flipped = false;
+    flipped = false; _flying = false;
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
     if(_toCard){ _toCard=false; requestAnimationFrame(()=>{ const n=document.querySelector('#v-flashcards .fc-filter-row'); if(n) n.scrollIntoView({block:'start',behavior:'smooth'}); }); }
   }
@@ -2044,6 +2047,13 @@ const FC = (function(){
       if(typeof GAME!=='undefined') GAME.event('card',!!ok);
       const weak=fcLoadWeak(); if(ok) weak.delete(id); else weak.add(id); fcSaveWeak(weak);
       fcSave(d); SHELL.renderFcSide(); updateFilterButtons();
+    },
+    // Knopf wie Wischen: die Karte fliegt zur passenden Seite und zeigt den Stempel
+    swipe(kind){
+      if(_reviewPos>=0||curIdx>=deck.length||_flying) return;
+      const ok=document.querySelector('.fc-outer');
+      if(_flyFn&&ok){ _flyFn(kind,260); return; }
+      this.answer(kind==='ok'?true:kind==='no'?false:'hard',true);
     },
     answer(quality,viaSwipe){
       if((!flipped&&!viaSwipe)||_reviewPos>=0) return;   // im Rückblick nicht die unsichtbare aktuelle Karte bewerten
