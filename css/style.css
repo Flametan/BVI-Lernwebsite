@@ -4366,3 +4366,11 @@ body:has(.lp-win.on:not(.focus)) #m-topbar .m-hacc{pointer-events:auto;}
 #m-topbar:not(.hidden){position:sticky;top:0;z-index:var(--z-bars);padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:6px;background:var(--m-bg);}
 @media(min-width:701px){#m-topbar:not(.hidden){padding-top:14px;}}
 .set-tools{display:none;}
+
+/* Dunkelmodus: Symbol-Animationen der Leiste besser sichtbar (hellere hintere Karte, Schein, Umriss, oranger Dampf) */
+html[data-theme="dark"] :is(.m-tab,.m-ri) .m-tic>svg.f .cb,html[data-theme="dark"] :is(.m-tab,.m-ri) .m-tic>svg.f .cb2{fill:color-mix(in srgb,var(--m-accent) 55%,#fff);}
+html[data-theme="dark"] :is(.m-tab,.m-ri).on .m-tic>svg.f{filter:drop-shadow(0 0 5px color-mix(in srgb,var(--m-accent) 65%,transparent));}
+html[data-theme="dark"] :is(.m-tab,.m-ri).tap .m-tic{filter:drop-shadow(0 0 7px color-mix(in srgb,var(--m-accent) 80%,transparent));}
+html[data-theme="dark"] :is(.m-tab,.m-ri).on .m-tic>svg.o{opacity:.55;stroke:var(--m-accent);}
+html[data-theme="dark"] :is(.m-tab,.m-ri) .m-tic>svg.f .st1,html[data-theme="dark"] :is(.m-tab,.m-ri) .m-tic>svg.f .st2{stroke:var(--m-accent);stroke-width:2.4;}
+html[data-theme="dark"] :is(.m-tab,.m-ri)[data-ic="pause"].on .m-tic>svg.f{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--m-accent) 75%,transparent));}
