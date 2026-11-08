@@ -5340,7 +5340,7 @@ const FILES=(function(){
 
 /* ── Sicherung: Lernstand, Notizen, Lesezeichen und Einstellungen als Datei ── */
 const BACKUP=(function(){
-  const keep=k=>(k.startsWith('bvi_')&&k!=='bvi_seen_version'&&k!=='bvi_last_backup'&&k!=='bvi_et_end'&&k!=='bvi_heimadresse'&&!k.startsWith('bvi_jgp_'))||k==='idf_plan_grp';   // bvi_jgp_ = Zwischenspeicher veröffentlichter Jahrgangs-Dateien
+  const keep=k=>(k.startsWith('bvi_')&&k!=='bvi_seen_version'&&k!=='bvi_last_backup'&&!k.startsWith('bvi_sync_')&&k!=='bvi_et_end'&&k!=='bvi_heimadresse'&&!k.startsWith('bvi_jgp_'))||k==='idf_plan_grp';   // bvi_jgp_ = Zwischenspeicher veröffentlichter Jahrgangs-Dateien
   // Form der Werte beim Einspielen prüfen: falsch geformte Daten würden die App dauerhaft stören
   const ARR=new Set(['bvi_bookmarks','bvi_recent','bvi_search_hist','bvi_fc_custom','bvi_fc_stars','bvi_fc_weak']);
   const NOJSON=new Set(['bvi_plan_src','bvi_theme','bvi_bg','bvi_accent','bvi_font_size','bvi_goal','bvi_timers','bvi_onboarded','bvi_exam','bvi_lp_fz','bvi_lp_prac','bvi_pause_mode','bvi_pause_mods','bvi_duell_name','bvi_duell_col','bvi_duell_stun','bvi_duell_cfg','idf_plan_grp']);
@@ -5370,6 +5370,7 @@ const BACKUP=(function(){
   }
   const stamp=()=>{ const d=new Date(),p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); };
   return {
+    check:clean,
     export(){
       const data=collect(), n=Object.keys(data).length;
       const body=JSON.stringify({app:'bvi-lernwebsite',version:APP_VERSION,exported:new Date().toISOString(),data},null,1);
@@ -6467,6 +6468,7 @@ const SHELL=(function(){
     const donate=`<a class="m-list m-donate m-donate-home" href="${SPENDE_URL}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><div class="m-row m-go">${ic('heart')}<span class="m-tx"><span class="m-t1">Gefällt dir die Seite?</span><span class="m-t2">Kostenlos &amp; werbefrei – freiwillig unterstützen</span></span></div></a>`;
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
+      ${typeof SYNC!=='undefined'?SYNC.promoHtml():''}
       ${(typeof TOUR!=='undefined'&&!TOUR.done())?`<div class="m-tourhome" id="tour-home"><button type="button" class="m-tourhome-go" onclick="TOUR.start('home')"><span class="m-tourhome-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21"/></svg></span><span class="m-tx"><span class="m-t1">Neu hier? App kennenlernen</span><span class="m-t2">Kurze Tour mit Spotlight – zeigt dir alles Wichtige</span></span><span class="m-tourhome-btn">Tour starten</span></button><button type="button" class="m-tourhome-x" aria-label="Hinweis ausblenden" onclick="TOUR.dismiss()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>`:''}
       <div class="m-hgrid"><div class="m-hl">${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}</div></div>`;
   }

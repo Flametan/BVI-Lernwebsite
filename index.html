@@ -7,7 +7,8 @@
   <link rel="preload" href="fonts/roboto-400-latin.woff2" as="font" type="font/woff2" crossorigin/>
   <link rel="stylesheet" href="css/fonts.css"/>
   <link rel="stylesheet" href="css/style.css"/>
-  <script src="js/version.js"></script>
+  <script>try{var m=/[#&]sync=([A-Za-z0-9-]+)/.exec(location.hash);if(m)window.__syncBoot=m[1];}catch(e){}</script>
+<script src="js/version.js"></script>
   <link rel="manifest" href="manifest.json"/>
   <meta name="theme-color" content="#121212"/>
   <script>(function(){var m='system';try{m=localStorage.getItem('bvi_theme')||'system';}catch(e){}
@@ -454,6 +455,12 @@
         <li>Farbschema, Hintergrundhelligkeit, Akzentfarbe, Timer-Einstellung, Klausurtermin und Zeitpunkt der Erinnerung</li>
       </ul>
       <p style="margin-top:.75rem">Diese Daten können jederzeit über die Browser-Einstellungen (Websitedaten löschen) entfernt werden.</p>
+    </div>
+
+    <h2 class="sec-h" style="margin-top:2rem">Sync zwischen Geräten (optional)</h2>
+    <div class="glass-card" style="padding:1.25rem;font-size:.88rem;color:var(--c-slate);line-height:1.7">
+      <p>Nur wenn Sie in den Einstellungen den <strong style="color:var(--c-slate-l)">Sync</strong> einschalten, werden Lernstand, Notizen, Textmarkierungen und Lesezeichen mit einem Sync-Server abgeglichen. Es gibt dabei <strong style="color:var(--c-slate-l)">kein Konto</strong>: Ein zufälliger Sync-Code, der nur auf Ihren Geräten steht, ersetzt Name und Passwort. Aus dem Code wird auf Ihrem Gerät der Schlüssel abgeleitet; die Daten werden <strong style="color:var(--c-slate-l)">verschlüsselt</strong> (AES-256) übertragen und gespeichert. Der Server kann den Inhalt nicht lesen und kennt weder Namen noch E-Mail-Adresse.</p>
+      <p style="margin-top:.75rem">Der Server wird vom Verantwortlichen privat betrieben (Verbindung über Tailscale Funnel). Beim Abgleich fallen technisch die IP-Adresse und der Zeitpunkt der Anfrage an; sie dienen nur der Missbrauchsabwehr (Anfragen-Begrenzung) und werden nicht dauerhaft gespeichert. Unbenutzte Datensätze werden nach 400 Tagen gelöscht. Sie können Ihre Daten jederzeit in den Einstellungen unter „Mehr → Serverdaten löschen“ vom Server entfernen. Rechtsgrundlage ist Ihre Einwilligung durch das Einschalten (Art. 6 Abs. 1 lit. a DSGVO), die Sie durch Trennen widerrufen.</p>
     </div>
 
     <h2 class="sec-h" style="margin-top:2rem">Schriften</h2>
@@ -17686,6 +17693,8 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
   </div></div>
   <div class="pc m-stack">
 
+    <div class="m-card sync-card-s" id="sync-card" aria-live="polite"></div>
+
     <div class="m-g2">
     <div class="m-col">
     <div class="m-acc">
@@ -24385,5 +24394,6 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
 <script src="js/game.js"></script>
 <script src="js/app.js"></script>
 <script src="js/jg-ui.js"></script>
+<script src="js/sync.js"></script>
 </body>
 </html>

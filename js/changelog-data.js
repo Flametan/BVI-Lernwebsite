@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.2',ts:'2026-11-08T10:00',items:[
+      'Neu: Sync ohne Konto. In den Einstellungen erzeugst du einen Code (mit QR-Code zum Scannen oder zum Abtippen) und verbindest damit beliebig viele Geräte. Lernstand, Notizen, Textmarkierungen und Lesezeichen werden verschlüsselt abgeglichen; der Server sieht nur unlesbare Daten. Auf der Startseite weist eine Karte einmalig darauf hin.',
       'Kapitelfenster (Tablet/Desktop): Die Knöpfe „Vorheriges Kapitel“ und „Nächstes Kapitel“ stehen mittig nebeneinander, sind größer (grau und hell orange) und zeigen den Namen des Kapitels, das kommt (über die Seitengrenze hinweg den Namen der Seite). Am Desktop steht die Pfeiltaste ← bzw. → im Knopf. Am Handy zeigen die beiden Knöpfe den Namen als kleine zweite Zeile (bei langen Namen gekürzt).',
       'Kapitelfenster (Desktop): Der Text nutzt jetzt die Breite (bis 1280 px statt 780 px), der Zurück-Knopf steht bündig mit dem linken Textrand, und die Knöpfe „Vorheriges/Nächstes Kapitel“ unten sind kleiner und zurückhaltend (am Tablet auch). Die Pfeiltasten ← und → wechseln das Kapitel jetzt auch ohne Fokus-Lesemodus.',
       'Fokus-Lesemodus (Desktop): Mit den Pfeiltasten ← und → wechselst du zwischen den Kapiteln, auch über die Seitengrenze hinweg. Die Tasten stehen jetzt als Hinweis auf den Knöpfen „Vorheriges Kapitel“ und „Nächstes Kapitel“.',
