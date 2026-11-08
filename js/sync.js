@@ -6,7 +6,7 @@ const SYNC=(function(){
   const ALPHA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';   // 32 eindeutige Zeichen (ohne I, O, 0, 1)
   const DEFAULT_URL='https://umbrel.taile733cb.ts.net';
   const APP_URL='https://flametan.github.io/BVI-Lernwebsite/';
-  const K={code:'bvi_sync_code',base:'bvi_sync_base',ver:'bvi_sync_ver',last:'bvi_sync_last',url:'bvi_sync_url',promo:'bvi_sync_promo'};
+  const K={code:'bvi_sync_code',base:'bvi_sync_base',ver:'bvi_sync_ver',last:'bvi_sync_last',url:'bvi_sync_url'};
   // Was synchronisiert wird: Lernstand, Notizen, Textmarkierungen, Lesezeichen – keine Geräte-Einstellungen
   const TRACK=/^bvi_(fc|fc_weak|fc_stars|fc_custom|game|progress|streak|usage|cards_day|cardgoal|hl|bookmarks|fb_answers|uk_scores|kf_scores|fq_scores|eq_scores|lb_ok|lb_vb|checks_[\w-]+|note_[\w-]+|quiz_(mastery|srs|stats|bm)|idfq_(mastery|srs|stats|bm|cat))$/;
   const enc=new TextEncoder(), dec=new TextDecoder();
@@ -155,7 +155,6 @@ const SYNC=(function(){
   function setStatus(state,msg){
     status={state,msg:msg||''};
     document.querySelectorAll('[data-sync-status]').forEach(e=>{ e.textContent=label(); e.dataset.state=state; });
-    if(typeof SHELL!=='undefined'&&SHELL.syncSettings&&document.getElementById('v-settings')?.classList.contains('active')) renderSettings();
   }
   function label(){
     if(!connected()) return 'Nicht verbunden';
@@ -242,10 +241,9 @@ const SYNC=(function(){
   async function connect(code,mustExist){
     if(!valid(code)) throw new Error('Der Code ist nicht gültig. Er besteht aus 20 Zeichen (Buchstaben und Ziffern).');
     ls.set(K.code,norm(code)); ls.del(K.base); ls.del(K.ver); ls.del(K.last); creds=null;
-    markPromoSeen(); firstDone=true;
+    firstDone=true;
     const r=await sync({force:true,mustExist:!!mustExist});
     if(!r.ok){ ls.del(K.code); creds=null; setStatus('off'); throw new Error(r.error||'Verbindung fehlgeschlagen'); }
-    renderSettings(); renderPromoGone();
     return r;
   }
   async function create(){
@@ -254,7 +252,7 @@ const SYNC=(function(){
     return code;
   }
   function disconnect(){
-    [K.code,K.base,K.ver,K.last].forEach(ls.del); creds=null; setStatus('off'); renderSettings();
+    [K.code,K.base,K.ver,K.last].forEach(ls.del); creds=null; setStatus('off');
   }
   async function wipeServer(){
     const c=await getCreds(); if(!c) return false;
@@ -263,34 +261,19 @@ const SYNC=(function(){
     throw new Error('Löschen fehlgeschlagen ('+res.status+')');
   }
 
-  /* ── Hinweis auf der Startseite: nach dem ersten Klick nie wieder ── */
-  const promoSeen=()=>ls.get(K.promo)==='1';
-  function markPromoSeen(){ ls.set(K.promo,'1'); }
-  function promoHtml(){
-    if(promoSeen()||connected()) return '';
-    return '<div class="m-sync-promo" id="sync-promo"><button type="button" class="m-sync-go" onclick="SYNC.promoClick()">'
-      +'<span class="m-sync-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-15.5-6.2L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.5 6.2L21 16"/><path d="M21 21v-5h-5"/></svg></span>'
-      +'<span class="m-sync-tx"><b>Lernstand auf allen Geräten</b><span>Notizen, Markierungen und Lesezeichen ohne Konto abgleichen</span></span>'
-      +'<span class="m-sync-cta">Einrichten</span></button></div>';
-  }
-  function renderPromoGone(){ document.getElementById('sync-promo')?.remove(); }
-  function promoClick(){ markPromoSeen(); renderPromoGone(); NAV.go('v-settings','Einstellungen'); setTimeout(()=>{ SYNC.focusCard(); },350); }
-  function focusCard(){ const e=document.getElementById('sync-card'); if(e){ e.scrollIntoView({behavior:'smooth',block:'center'}); } }
-
-  /* ── Oberfläche: Karte in den Einstellungen und Dialog ── */
-  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  function renderSettings(){
-    const el=document.getElementById('sync-card'); if(!el) return;
+  function menu(){
     if(!connected()){
-      el.innerHTML='<div class="sync-h"><span class="sync-ic">'+ICON+'</span><div><div class="m-t1">Auf mehreren Geräten lernen</div><div class="m-t2">Ohne Konto: Lernstand, Notizen, Markierungen und Lesezeichen gleichen sich über einen Code ab. Beliebig viele Geräte sind möglich.</div></div></div>'
-        +'<div class="sync-b"><button class="btn btn-gold" onclick="SYNC.startNew()">Neuen Code erzeugen</button><button class="btn btn-ghost" onclick="SYNC.startJoin()">Ich habe schon einen Code</button></div>';
+      const c=dlg('<div class="sync-t">Auf mehreren Geräten lernen</div><p class="sync-p">Ohne Konto: Lernstand, Notizen, Markierungen und Lesezeichen gleichen sich über einen Code ab. Beliebig viele Geräte sind möglich.</p><div class="sync-b"><button class="btn btn-gold" id="sync-n">Neuen Code erzeugen</button><button class="btn btn-ghost" id="sync-j">Ich habe schon einen Code</button></div>');
+      c.querySelector('#sync-n').onclick=startNew; c.querySelector('#sync-j').onclick=()=>startJoin();
     }else{
-      el.innerHTML='<div class="sync-h"><span class="sync-ic on">'+ICON+'</span><div><div class="m-t1">Sync ist aktiv</div><div class="m-t2" data-sync-status data-state="'+status.state+'">'+esc(label())+'</div></div></div>'
-        +'<div class="sync-b"><button class="btn btn-gold" onclick="SYNC.now(this)">Jetzt abgleichen</button><button class="btn btn-ghost" onclick="SYNC.showCode()">Code &amp; QR anzeigen</button></div>'
-        +'<details class="sync-more"><summary>Mehr</summary><div class="sync-b"><button class="btn btn-ghost" onclick="SYNC.editUrl()">Serveradresse ändern</button><button class="btn btn-ghost" onclick="SYNC.disconnect();TOAST.show(\'Sync auf diesem Gerät beendet\')">Auf diesem Gerät trennen</button><button class="btn btn-ghost sync-danger" onclick="SYNC.confirmWipe()">Serverdaten löschen</button></div></details>';
+      const c=dlg('<div class="sync-t">Sync ist aktiv</div><p class="sync-p" data-sync-status data-state="'+status.state+'">'+esc(label())+'</p><div class="sync-b"><button class="btn btn-gold" id="sync-a">Jetzt abgleichen</button><button class="btn btn-ghost" id="sync-c">Code &amp; QR anzeigen</button></div><div class="sync-b"><button class="btn btn-ghost" id="sync-u">Serveradresse</button><button class="btn btn-ghost" id="sync-d">Trennen</button><button class="btn btn-ghost sync-danger" id="sync-w">Serverdaten löschen</button></div>');
+      c.querySelector('#sync-a').onclick=e=>now(e.target); c.querySelector('#sync-c').onclick=showCode; c.querySelector('#sync-u').onclick=editUrl;
+      c.querySelector('#sync-d').onclick=()=>{ disconnect(); close(); TOAST.show('Sync auf diesem Gerät beendet'); };
+      c.querySelector('#sync-w').onclick=confirmWipe;
     }
   }
-  const ICON='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-15.5-6.2L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.5 6.2L21 16"/><path d="M21 21v-5h-5"/></svg>';
+  /* ── Oberfläche: Karte in den Einstellungen und Dialog ── */
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   let ov=null;
   function dlg(html,onClose){
     if(!ov){
@@ -385,11 +368,10 @@ const SYNC=(function(){
     }catch(e){}
     document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') schedule(800); else if(connected()) sync(); });
     window.addEventListener('online',()=>schedule(500));
-    renderSettings();
     if(connected()) sync();
     fromHash();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0)); else setTimeout(init,0);
 
-  return {newCode,valid,norm,pretty,derive,merge,mergeVal,mergeArr,mergeText,collect,sync,connect,create,disconnect,connected,startNew,startJoin,showCode,now,editUrl,confirmWipe,promoHtml,promoClick,focusCard,renderSettings,TRACK};
+  return {newCode,valid,norm,pretty,derive,merge,mergeVal,mergeArr,mergeText,collect,sync,connect,create,disconnect,connected,startNew,startJoin,showCode,now,editUrl,confirmWipe,open:menu,TRACK};
 })();

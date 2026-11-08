@@ -71,21 +71,18 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'ok   ' : 'FAIL ') + m); 
   ok((await ls(C, 'bvi_note_v-faq')).includes('von B'), 'drittes Gerät C verbunden');
   const bad = await C.evaluate(async () => { try { await SYNC.connect('AAAAAAAAAAAAAAAAAAAA', true); return 'verbunden'; } catch (e) { return e.message; } });
   ok(bad !== 'verbunden' && !(await C.evaluate(() => SYNC.connected() && SYNC.norm(localStorage.getItem('bvi_sync_code')) === 'AAAAAAAAAAAAAAAAAAAA')), 'unbekannter Code wird beim Beitreten abgelehnt');
-  console.log(fs.readdirSync(data));
   const raw = fs.readdirSync(data).map(f => fs.readFileSync(path.join(data, f), 'utf8')).join('');
   ok(raw.length > 0 && !raw.includes('Notiz') && !raw.includes('v-faq'), 'Server speichert nur Chiffre');
   // QR/Link
   const D = await mk(); await D.goto(ORIGIN + '/index.html?x=1#sync=' + code); await D.waitForSelector('#sync-ov:not([hidden]) #sync-go');
   await D.click('#sync-go'); await D.waitForFunction(() => SYNC.connected());
   ok((await ls(D, 'bvi_note_v-faq')) !== null || true, 'Link mit #sync= verbindet');
-  // Karte und Startseiten-Hinweis
+  // Knopf neben der Suche
   const E = await mk();
-  ok(await E.evaluate(() => !!document.getElementById('sync-promo')), 'Hinweis auf der Startseite sichtbar');
-  await E.click('#sync-promo .m-sync-go'); await E.waitForTimeout(500);
-  ok(await E.evaluate(() => !document.getElementById('sync-promo')) && await ls(E, 'bvi_sync_promo') === '1', 'Hinweis verschwindet nach dem Klick');
-  await E.reload(); await E.waitForFunction(() => typeof SYNC !== 'undefined');
-  ok(await E.evaluate(() => !document.getElementById('sync-promo')), 'Hinweis kommt nicht wieder');
-  ok(await E.evaluate(() => document.getElementById('sync-card').textContent.includes('Neuen Code erzeugen')), 'Karte in den Einstellungen vorhanden');
+  ok(await E.evaluate(() => { const b = document.querySelector('.m-hbtns .m-hsync'); return !!b && b.previousElementSibling.classList.contains('m-hsearch'); }), 'Sync-Knopf sitzt rechts neben der Suche');
+  ok(await E.evaluate(() => !document.getElementById('sync-card') && !document.getElementById('sync-promo')), 'keine Karte mehr in Einstellungen/Startseite');
+  await E.click('.m-hsync'); await E.waitForSelector('#sync-n');
+  ok(await E.evaluate(() => document.getElementById('sync-ov').textContent.includes('Neuen Code erzeugen')), 'Knopf öffnet die Auswahl');
   const all = [A, B, C, D, E].flatMap(p => p.errs); ok(all.length === 0, 'keine JavaScript-Fehler ' + all.join('|'));
   await browser.close(); srv.kill(); web.close(); fs.rmSync(data, { recursive: true, force: true });
   console.log(fails ? fails + ' Fehler' : 'alles ok'); process.exit(fails ? 1 : 0);

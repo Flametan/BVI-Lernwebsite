@@ -3527,6 +3527,7 @@ html.tour-lock{overflow:hidden;}
 
 /* Startseite: Lupe oben rechts (44 px Touch-Fläche, sichtbarer Fokus, Druck-Feedback) */
 .m-hsearch{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--m-card);color:var(--m-fg);display:grid;place-items:center;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.12);transition:transform .15s,background .15s;}
+.m-hbtns{display:flex;gap:8px;flex:none;}
 .m-hsearch:hover{background:var(--m-raised);}
 .m-hsearch:active{transform:scale(.92);background:var(--m-raised);}
 .m-hsearch:focus-visible{outline:2px solid var(--m-accent);outline-offset:3px;}
@@ -4290,21 +4291,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 }
 
 /* ── Sync ohne Konto ── */
-.m-sync-promo{margin:0 0 14px;}
-.m-sync-go{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,var(--m-accent-dim),var(--m-card));border:1.5px solid var(--m-accent);color:var(--m-fg);cursor:pointer;min-height:64px;}
-.m-sync-ic{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--m-accent);color:var(--m-on-accent);}
-.m-sync-tx{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;}
-.m-sync-tx b{font-size:1rem;}
-.m-sync-tx span{font-size:.82rem;opacity:.75;line-height:1.35;}
-.m-sync-cta{flex:none;padding:8px 14px;border-radius:999px;background:var(--m-accent);color:var(--m-on-accent);font-weight:700;font-size:.85rem;}
-@media(max-width:420px){.m-sync-cta{display:none;}}
-.sync-card-s{border:1.5px solid var(--m-accent);background:linear-gradient(135deg,var(--m-accent-dim),var(--m-card));display:flex;flex-direction:column;gap:12px;}
-.sync-h{display:flex;gap:12px;align-items:flex-start;}
-.sync-ic{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--m-raised);color:var(--m-accent-fg);}
-.sync-ic.on{background:var(--m-accent);color:var(--m-on-accent);}
 .sync-b{display:flex;flex-wrap:wrap;gap:8px;}
-.sync-more summary{cursor:pointer;font-size:.85rem;opacity:.75;padding:4px 0;}
-.sync-more .sync-b{margin-top:8px;}
 .sync-danger{color:#e5484d !important;}
 .sync-ov{position:fixed;inset:0;z-index:9500;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.6);}
 .sync-ov[hidden]{display:none;}
