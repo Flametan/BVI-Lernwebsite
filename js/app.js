@@ -1781,22 +1781,33 @@ const FC = (function(){
       const weak=fcLoadWeak();
       return shuffle(FLASHCARD_DATA.filter(c=>weak.has(c.id)));
     }
-    return shuffle(FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f))));
+    if(activeFilters.has('known')){
+      const kn=fcLoad();
+      return shuffle(FLASHCARD_DATA.filter(c=>kn[c.id]));
+    }
+    // Standardrunde: schwache und fällige Karten zuerst, dann neue; gewusste Karten warten auf ihren Termin
+    const kn=fcLoad(), weak=fcLoadWeak(), now=Date.now();
+    const pool=FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f)));
+    const prio=c=>{ const k=kn[c.id]; if(weak.has(c.id)) return 0; if(k&&(k.nextReview||0)<=now) return 1; if(!k) return 2; return 9; };
+    return shuffle(pool.filter(c=>prio(c)<9)).sort((a,b)=>prio(a)-prio(b));
   }
 
   function updateFilterButtons(){
     const known=fcLoad();
     const stars=fcLoadStars();
-    const isStarred=activeFilters.has('starred')||activeFilters.has('weak')||activeFilters.has('own');
+    const isStarred=activeFilters.has('starred')||activeFilters.has('weak')||activeFilters.has('own')||activeFilters.has('known');
     const isWeak=activeFilters.has('weak');
     const isOwn=activeFilters.has('own');
     const ownN=FLASHCARD_DATA.filter(c=>c.own).length;
     const weakN=fcLoadWeak().size;
     const tw=document.getElementById('fc-t-weak'), ts=document.getElementById('fc-t-star'), tb=document.getElementById('fc-t-star-btn');
-    const cardsTxt=n=>n+(n===1?' Karte':' Karten');
+    const cardsTxt=n=>String(n);
     if(tw) tw.textContent=cardsTxt(weakN);
     if(ts){ const old=ts.dataset.n; ts.textContent=cardsTxt(stars.size); if(old!==undefined&&+old!==stars.size&&tb&&tb.animate) tb.animate([{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:300,easing:'ease-out'}); ts.dataset.n=stars.size; }
     if(tb) tb.classList.toggle('active',activeFilters.has('starred'));
+    const tk=document.getElementById('fc-t-known'), tkb=document.getElementById('fc-t-known-btn');
+    if(tk) tk.textContent=Object.keys(known).length+'';
+    if(tkb) tkb.classList.toggle('active',activeFilters.has('known'));
     document.querySelectorAll('.fc-f-btn').forEach(b=>{
       const df=b.dataset.filter;
       const base=b.dataset.label||'';
@@ -1976,7 +1987,10 @@ const FC = (function(){
     const known = fcLoad();
     const knownCnt = FLASHCARD_DATA.filter(c=>known[c.id]).length;
     if(deck.length===0){
-      box.innerHTML=`<div class="fc-end"><div class="fc-end-ico">⭐</div><div class="fc-end-title">Keine Karten in dieser Auswahl</div><div class="fc-end-sub">Wähle eine andere Kategorie oder markiere zuerst Karten.</div><div style="display:flex;gap:.6rem;justify-content:center"><button class="btn btn-gold" onclick="FC.setFilter('all')">Alle Karten</button></div></div>`;
+      const plain=!activeFilters.has('starred')&&!activeFilters.has('weak')&&!activeFilters.has('own')&&!activeFilters.has('known');
+      box.innerHTML=plain
+        ?`<div class="fc-end"><div class="fc-end-ico">✅</div><div class="fc-end-title">Alles Fällige geschafft</div><div class="fc-end-sub">In diesem Modul ist gerade nichts fällig. Deine gewussten Karten kommen zu ihrem Termin zurück. Du kannst sie auch jetzt schon wiederholen.</div><div style="display:flex;gap:.6rem;justify-content:center"><button class="btn btn-gold" onclick="FC.setFilter('known')">Gewusste wiederholen</button></div></div>`
+        :`<div class="fc-end"><div class="fc-end-ico">⭐</div><div class="fc-end-title">Keine Karten in dieser Auswahl</div><div class="fc-end-sub">Wähle eine andere Kategorie oder markiere zuerst Karten.</div><div style="display:flex;gap:.6rem;justify-content:center"><button class="btn btn-gold" onclick="FC.setFilter('all')">Zurück zu den Modulen</button></div></div>`;
       return;
     }
     const pct = deck.length ? Math.round(sess.known/deck.length*100) : 0;
@@ -2081,13 +2095,15 @@ const FC = (function(){
         activeFilters=activeFilters.has('own')?new Set(['laufbahn']):new Set(['own']);
       } else if(f==='weak'){
         activeFilters=activeFilters.has('weak')?new Set(['laufbahn']):new Set(['weak']);
+      } else if(f==='known'){
+        activeFilters=activeFilters.has('known')?new Set(['laufbahn']):new Set(['known']);
       } else if(f==='all'){
         activeFilters=new Set(['laufbahn']);
       } else if(f==='pruefung'){
         activeFilters=new Set(['ibk','vak','feuak','idf']);
         updateFilterButtons(); this.start(true); return;
       } else {
-        activeFilters.delete('starred'); activeFilters.delete('weak'); activeFilters.delete('own');
+        activeFilters.delete('starred'); activeFilters.delete('weak'); activeFilters.delete('own'); activeFilters.delete('known');
         if(activeFilters.has(f)){ if(CATS.every(c=>activeFilters.has(c))) return; activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(['laufbahn']); }
         else activeFilters.add(f);
       }

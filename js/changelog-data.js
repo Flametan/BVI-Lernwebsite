@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.1',ts:'2026-11-07T10:00',items:[
+      'Lernkarten: Eine Runde beginnt jetzt mit schwachen und fälligen Karten, danach kommen neue. Gewusste Karten warten auf ihren Wiederholungstermin und tauchen nicht mehr in jeder Runde auf. Neu in der obersten Reihe: „Gewusste“ (alle gewussten Karten gezielt wiederholen). Die Reihe hat jetzt vier Kacheln: Eigene, Nochmal, Markierte, Gewusste. Ist in einem Modul nichts fällig, führt ein Hinweis direkt zu „Gewusste wiederholen“.',
       'Lernkarten: Die drei runden Knöpfe haben jetzt dieselbe Rückmeldung wie das Wischen. Die Karte fliegt nach links (Nicht gewusst), nach oben (Schwer) oder nach rechts (Gewusst) und zeigt dabei den Stempel.',
       'Quiz (Lernmodus): Bei Multiple-Choice-Fragen mit nur einer richtigen Antwort löst ein Tipp auf eine Antwort nicht mehr sofort auf. Die Antwort wird nur markiert (und lässt sich ändern), aufgelöst wird erst mit „Antwort prüfen“. Mit der Tastatur wählen die Tasten 1 bis 4 aus, die Leertaste prüft.',
       'Lernkarten (Tablet): Die Antwort-Knöpfe sitzen direkt unter der Karte statt fest am unteren Bildschirmrand; nur am Handy bleiben sie über der Tab-Leiste angeheftet.',
