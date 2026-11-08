@@ -4423,3 +4423,11 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   .m-cloud{grid-column:2;grid-row:2;align-self:start;}
   .m-mods{grid-column:1 / -1;grid-row:3;}
 }
+/* Startseite ab Tablet: Lehrgangs-Cloud ganz unten */
+@media(min-width:701px){
+  #m-home .m-hgrid{grid-template-rows:auto auto auto;}
+  .m-gameslot{grid-row:1;}
+  .m-chart2{grid-row:1;}
+  .m-mods{grid-column:1 / -1;grid-row:2;}
+  .m-cloud{grid-column:1 / -1;grid-row:3;}
+}
