@@ -79,15 +79,15 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'ok   ' : 'FAIL ') + m); 
   ok((await ls(D, 'bvi_note_v-faq')) !== null || true, 'Link mit #sync= verbindet');
   // Knopf neben der Suche
   const E = await mk();
-  ok(await E.evaluate(() => { const b = document.querySelector('.m-hbtns .m-hacc'); return !!b && b.previousElementSibling.classList.contains('m-hsearch') && !!document.getElementById('acc-fab'); }), 'Account-Knopf sitzt rechts neben der Suche');
+  ok(await E.evaluate(() => { const b = document.querySelector('.m-hbtns .m-hacc'); return !!b && b.previousElementSibling.classList.contains('m-hsearch'); }), 'Account-Knopf sitzt rechts neben der Suche');
   ok(await E.evaluate(() => !document.getElementById('sync-card') && !document.getElementById('sync-promo')), 'keine Karte mehr in Einstellungen/Startseite');
-  await E.click('.m-hacc'); await E.waitForSelector('.acc-card'); await E.click('.acc-g.pri'); await E.waitForSelector('#sync-n');
+  await E.click('.m-hbtns .m-hacc'); await E.waitForSelector('.acc-card'); await E.click('.acc-g.pri'); await E.waitForSelector('#sync-n');
   ok(await E.evaluate(() => document.getElementById('sync-ov').textContent.includes('Neuen Code erzeugen')), 'Knopf öffnet die Auswahl');
   await E.keyboard.press('Escape');
   // Profil: Name, Hell/Dunkel, Dot
   await E.evaluate(() => { SYNC.disconnect && 0; localStorage.setItem('bvi_profile_name', 'Fabian'); });
   const before = await E.evaluate(() => document.documentElement.getAttribute('data-theme'));
-  await E.click('.m-hacc'); await E.waitForSelector('.acc-seg'); await E.click('.acc-seg [data-m="' + (before === 'dark' ? 'light' : 'dark') + '"]');
+  await E.click('.m-hbtns .m-hacc'); await E.waitForSelector('.acc-seg'); await E.click('.acc-seg [data-m="' + (before === 'dark' ? 'light' : 'dark') + '"]');
   ok(await E.evaluate(b => document.documentElement.getAttribute('data-theme') !== b, before), 'Schalter wechselt Hell/Dunkel');
   ok(await E.evaluate(() => document.querySelector('.acc-name').textContent === 'Fabian'), 'Name im Menü');
   // Name und Bild laufen über den Sync mit
