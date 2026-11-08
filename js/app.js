@@ -3096,7 +3096,7 @@ const LP=(function(){
   document.addEventListener('keydown',e=>{
     if(!cur) return;
     if(e.key==='Escape'&&!e.defaultPrevented&&!OVL.any()){ if(!(typeof LIGHTBOX!=='undefined'&&LIGHTBOX.isOpen())) back(); }   // Esc schließt zuerst die Bildansicht
-    else if(cur.focus&&!/INPUT|TEXTAREA|SELECT/.test((e.target&&e.target.tagName)||'')){
+    else if((cur.focus||(window.matchMedia&&window.matchMedia('(min-width:1100px)').matches))&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!/INPUT|TEXTAREA|SELECT/.test((e.target&&e.target.tagName)||'')&&!(e.target&&e.target.isContentEditable)&&!OVL.any()){
       if(e.key==='ArrowRight') go(cur.i+1); else if(e.key==='ArrowLeft') go(cur.i-1);
     }
   });

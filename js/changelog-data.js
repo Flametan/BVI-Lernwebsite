@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.2',ts:'2026-11-08T10:00',items:[
+      'Kapitelfenster (Desktop): Der Text nutzt jetzt die Breite (bis 1280 px statt 780 px), der Zurück-Knopf steht bündig mit dem linken Textrand, und die Knöpfe „Vorheriges/Nächstes Kapitel“ unten sind kleiner und zurückhaltend (am Tablet auch). Die Pfeiltasten ← und → wechseln das Kapitel jetzt auch ohne Fokus-Lesemodus.',
       'Fokus-Lesemodus (Desktop): Mit den Pfeiltasten ← und → wechselst du zwischen den Kapiteln, auch über die Seitengrenze hinweg. Die Tasten stehen jetzt als Hinweis auf den Knöpfen „Vorheriges Kapitel“ und „Nächstes Kapitel“.',
       'Lernkarten (Tastatur): Pfeil hoch ist jetzt „schwer“ und Pfeil runter deckt die Karte auf (vertauscht). Die Pfeiltasten lassen die Karte außerdem wie die Knöpfe zur passenden Seite fliegen. Die Hilfe „Tastatur“ am Desktop zeigt die neue Belegung.',
       'Quiz: Der Buchstabe einer markierten Antwort (A, B, C …) bleibt lesbar. Er stand bisher in Orange auf orangem Grund und war unsichtbar; jetzt ist er dunkel auf orange, auf Handy, Tablet und Desktop.',
