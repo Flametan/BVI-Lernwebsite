@@ -6676,7 +6676,9 @@ const SHELL=(function(){
       if(on) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
     });
     const isRoot=!stack.length||(stack.length===1&&!!ROOTS[id]);
-    document.getElementById('m-topbar')?.classList.toggle('hidden',isRoot);
+    const tbar=document.getElementById('m-topbar');
+    tbar?.classList.toggle('hidden',isRoot&&id==='v-home');   // Startseite hat ihre eigene Kopfzeile mit Suche und Account
+    tbar?.classList.toggle('m-tb-root',isRoot&&id!=='v-home');   // Hauptseiten: Kopfleiste nur mit Suche und Account
     if(!isRoot){
       const lbl=document.getElementById('m-back-lbl');
       if(lbl) lbl.textContent=stack.length>=2?stack[stack.length-2].label:'Start';

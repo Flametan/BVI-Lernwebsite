@@ -25,8 +25,8 @@ const ACCOUNT=(function(){
     const a=g(AV), cls='acc-av'+(big?' acc-av-big':'');
     return a&&/^data:image\/jpeg;base64,/.test(a)?'<span class="'+cls+'" style="background-image:url('+a+')"></span>':'<span class="'+cls+'">'+(initials()||svg(IC.user,big?30:22))+'</span>';
   }
-  function btnHtml(){
-    return '<button type="button" class="m-hsearch m-hacc" aria-label="Account-Menü" title="Account" aria-haspopup="dialog" onclick="ACCOUNT.toggle(this)">'
+  function btnHtml(cls){
+    return '<button type="button" class="'+(cls||'m-hsearch')+' m-hacc" aria-label="Account-Menü" title="Account" aria-haspopup="dialog" onclick="ACCOUNT.toggle(this)">'
       +(g(AV)?avatarHtml(false):svg(IC.user))+'<i class="acc-dot" data-sync-dot hidden></i></button>';
   }
   function dot(){
@@ -63,7 +63,7 @@ const ACCOUNT=(function(){
       +'<button type="button" class="acc-g" onclick="ACCOUNT.go(\'save\')"><i>'+svg(IC.save)+'</i>Sicherung</button>'
       +'<button type="button" class="acc-g" onclick="ACCOUNT.go(\'share\')"><i>'+svg(IC.share)+'</i>Teilen</button></div>'
       +'<div class="acc-r acc-dr"><span class="acc-ri">'+svg(IC.moon,20)+'</span><span class="acc-rt">Design</span></div>'
-      +'<div class="acc-seg" role="group" aria-label="Design">'+[['dark','Dunkel'],['light','Hell'],['beige','Beige'],['system','Auto']].map(m=>'<button type="button" data-m="'+m[0]+'" aria-pressed="'+(THEME.get()===m[0])+'" onclick="ACCOUNT.theme(\''+m[0]+'\')">'+m[1]+'</button>').join('')+'</div>'
+      +'<div class="acc-seg" role="group" aria-label="Design">'+[['dark','Dunkel'],['light','Hell'],['beige','Beige']].map(m=>'<button type="button" data-m="'+m[0]+'" aria-pressed="'+(THEME.get()===m[0])+'" onclick="ACCOUNT.theme(\''+m[0]+'\')">'+m[1]+'</button>').join('')+'</div>'
       +'<button type="button" class="acc-r" onclick="ACCOUNT.go(\'tour\')"><span class="acc-ri">'+svg(IC.tour,20)+'</span><span class="acc-rt">App vorstellen</span></button>'
       +'<a class="acc-r" href="'+SPENDE_URL+'" target="_blank" rel="noopener noreferrer"><span class="acc-ri">'+svg(IC.heart,20)+'</span><span class="acc-rt">Spenden</span></a>';
   }
@@ -115,10 +115,11 @@ const ACCOUNT=(function(){
     document.querySelectorAll('.m-hacc').forEach(b=>{ const d=b.querySelector('.acc-dot'); b.innerHTML=(g(AV)?avatarHtml(false):svg(IC.user)); b.appendChild(d); });
     dot();
   }
+  // Kopfleiste (#m-topbar): Account-Knopf rechts neben der Suche
   function mount(){
-    if(document.getElementById('acc-fab')) return;
-    const f=document.createElement('div'); f.id='acc-fab'; f.innerHTML=btnHtml(); document.body.appendChild(f);
-    dot();
+    const r=document.querySelector('#m-topbar .m-tb-right');
+    if(!r||r.querySelector('.m-hacc')) return;
+    r.insertAdjacentHTML('beforeend',btnHtml('m-tb-search')); dot();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount); else mount();
   addEventListener('resize',()=>{ if(box&&!box.hidden) place(); });
