@@ -1,6 +1,9 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.1',ts:'2026-11-07T10:00',items:[
+      'Lernkarten: Die drei runden Knöpfe haben jetzt dieselbe Rückmeldung wie das Wischen. Die Karte fliegt nach links (Nicht gewusst), nach oben (Schwer) oder nach rechts (Gewusst) und zeigt dabei den Stempel.',
+      'Quiz (Lernmodus): Bei Multiple-Choice-Fragen mit nur einer richtigen Antwort löst ein Tipp auf eine Antwort nicht mehr sofort auf. Die Antwort wird nur markiert (und lässt sich ändern), aufgelöst wird erst mit „Antwort prüfen“. Mit der Tastatur wählen die Tasten 1 bis 4 aus, die Leertaste prüft.',
+      'Lernkarten (Tablet): Die Antwort-Knöpfe sitzen direkt unter der Karte statt fest am unteren Bildschirmrand; nur am Handy bleiben sie über der Tab-Leiste angeheftet.',
       'Lernkarten: Der Knopf „Fehler oder Unklarheit melden“ (Flaggen-Symbol) sitzt jetzt oben in der Kartenzeile und schickt Frage und Antwort der aktuellen Karte mit; die Zeile am Seitenende lag hinter den Antwort-Knöpfen.',
       'Lernkarten: Der Stern zum Markieren sitzt auf beiden Seiten der Karte oben rechts und dreht sich beim Umdrehen mit.',
       'Pausenraum: Der Platzhalter beim Laden zeigt jetzt das Kachel-Raster der echten Ansicht (breite Einsatzfahrt, vier Kacheln, Fragenquelle, zweite Gruppe) statt eines allgemeinen Rasters; er passt auf Handy, Tablet und Desktop.',

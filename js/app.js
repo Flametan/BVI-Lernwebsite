@@ -1734,7 +1734,7 @@ const FC = (function(){
   const CATS = ['laufbahn','ibk','vak','feuak','idf'];
   let deck=[], curIdx=0, flipped=false, sess={known:0,unknown:0};
   let activeFilters = new Set(['laufbahn']);
-  let _seen = [], _reviewPos = -1, _toCard = false;
+  let _seen = [], _reviewPos = -1, _toCard = false, _flyFn = null, _flying = false;
 
   const SR_DAYS = [0,1,3,7,14,30];
 
@@ -1843,6 +1843,7 @@ const FC = (function(){
     const stamps=(o,n,h)=>{ st.ok.style.opacity=o; st.no.style.opacity=n; st.hard.style.opacity=h; };
     const reset=()=>{ outer.style.transform=''; stamps(0,0,0); };
     const fly=(kind,ms)=>{
+      if(_flying) return; _flying=true;
       stamps(kind==='ok'?1:0,kind==='no'?1:0,kind==='hard'?1:0);
       outer.style.transition=`transform ${ms}ms cubic-bezier(.4,0,.9,.6),opacity ${ms}ms ease`;
       outer.style.transform=kind==='hard'
@@ -1852,7 +1853,9 @@ const FC = (function(){
       setTimeout(()=>FC.answer(kind==='ok'?true:kind==='no'?false:'hard',true),ms-20);
     };
 
+    _flyFn=fly;
     outer.addEventListener('pointerdown',e=>{
+      if(_flying) return;
       x0=e.clientX; y0=e.clientY; live=true; dx=0; dy=0; pid=e.pointerId; mode=''; lt=performance.now(); lx=e.clientX; ly=e.clientY; vx=0; vy=0;
       outer.setPointerCapture(e.pointerId);
     });
@@ -1957,13 +1960,13 @@ const FC = (function(){
       </div>
       ${_jgBar(card)}
       <div class="fc-controls" id="fc-controls">
-        <button class="fc-rb fc-no" onclick="FC.answer(false,true)" aria-label="Nicht gewusst, gleich wieder"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span class="fc-rl">Nicht gewusst</span></button>
-        <button class="fc-rb fc-hard" onclick="FC.answer('hard',true)" aria-label="Schwer, in ${iHard} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="fc-rl">Schwer</span></button>
-        <button class="fc-rb fc-yes" onclick="FC.answer(true,true)" aria-label="Gewusst, in ${iGood} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="fc-rl">Gewusst</span></button>
+        <button class="fc-rb fc-no" onclick="FC.swipe('no')" aria-label="Nicht gewusst, gleich wieder"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span class="fc-rl">Nicht gewusst</span></button>
+        <button class="fc-rb fc-hard" onclick="FC.swipe('hard')" aria-label="Schwer, in ${iHard} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="fc-rl">Schwer</span></button>
+        <button class="fc-rb fc-yes" onclick="FC.swipe('ok')" aria-label="Gewusst, in ${iGood} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="fc-rl">Gewusst</span></button>
       </div>
       <p class="fc-swhint" id="fc-swhint">Wischen: links nicht gewusst · oben schwer · rechts gewusst</p>
       </div>`;
-    flipped = false;
+    flipped = false; _flying = false;
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
     if(_toCard){ _toCard=false; requestAnimationFrame(()=>{ const n=document.querySelector('#v-flashcards .fc-filter-row'); if(n) n.scrollIntoView({block:'start',behavior:'smooth'}); }); }
   }
@@ -2044,6 +2047,13 @@ const FC = (function(){
       if(typeof GAME!=='undefined') GAME.event('card',!!ok);
       const weak=fcLoadWeak(); if(ok) weak.delete(id); else weak.add(id); fcSaveWeak(weak);
       fcSave(d); SHELL.renderFcSide(); updateFilterButtons();
+    },
+    // Knopf wie Wischen: die Karte fliegt zur passenden Seite und zeigt den Stempel
+    swipe(kind){
+      if(_reviewPos>=0||curIdx>=deck.length||_flying) return;
+      const ok=document.querySelector('.fc-outer');
+      if(_flyFn&&ok){ _flyFn(kind,260); return; }
+      this.answer(kind==='ok'?true:kind==='no'?false:'hard',true);
     },
     answer(quality,viaSwipe){
       if((!flipped&&!viaSwipe)||_reviewPos>=0) return;   // im Rückblick nicht die unsichtbare aktuelle Karte bewerten
@@ -3432,12 +3442,13 @@ function makeQuiz(cfg){
       if(e.key===' '&&!inText&&!(e.target.closest&&e.target.closest('button,a,summary'))){   // Leertaste auf einem fokussierten Knopf klickt den Knopf
         e.preventDefault();
         const q=curQ();if(!q)return;
-        if(_answered)self.next();else if(q.type==='essay')self._revealEssay();else if(q.type==='multi')self._check();
+        if(_answered)self.next();else if(q.type==='essay')self._revealEssay();else if(q.type==='multi')self._check();else if(q.type==='mc')self._checkOne();
       }else if(e.key==='Backspace'&&!inText){
         if(_cur>0){e.preventDefault();self.back();}
       }else if(!inText&&['1','2','3','4','5','6'].includes(e.key)){
         const q=curQ();
-        if(!_answered&&q&&(q.type==='mc'||q.type==='tf')){const idx=+e.key-1;if(idx<q.opts.length)self._answer(idx);}
+        if(!_answered&&q&&q.type==='tf'){const idx=+e.key-1;if(idx<q.opts.length)self._answer(idx);}
+        else if(!_answered&&q&&q.type==='mc'){const idx=+e.key-1;if(idx<q.opts.length)self._select(idx);}
         else if(!_answered&&q&&q.type==='multi'){const idx=+e.key-1;if(idx<q.opts.length)self._toggle(idx);}
       }
     });
@@ -3501,7 +3512,8 @@ function makeQuiz(cfg){
     tb.className='quiz-type-badge quiz-type-'+q.type;
     const opts=$('quiz-opts');
     if(q.type==='mc'){
-      opts.innerHTML='<div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt" onclick="'+G+'._answer('+i+')"><span class="quiz-opt-label">'+String.fromCharCode(97+i)+'</span><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div>';
+      // Eine Antwort richtig: antippen markiert nur, aufgelöst wird erst mit „Antwort prüfen“
+      opts.innerHTML='<div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt" aria-pressed="false" onclick="'+G+'._select('+i+')"><span class="quiz-opt-label">'+String.fromCharCode(97+i)+'</span><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div><button class="quiz-reveal-btn quiz-check-btn" disabled onclick="'+G+'._checkOne()">Antwort prüfen</button>';
     }else if(q.type==='tf'){
       opts.innerHTML='<div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt quiz-tf-opt" onclick="'+G+'._answer('+i+')"><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div>';
     }else if(q.type==='multi'){
@@ -3599,6 +3611,18 @@ function makeQuiz(cfg){
       saveMastery();srsUpdate(q.id,true);updateDueBtn();_posHistory[_cur]={userIdx:null,correct:true};
       if(typeof GAME!=='undefined') GAME.event('quiz',true);
       renderMastery();renderMasteryCats();
+    },
+    _select(i){
+      if(_answered)return;
+      _msel=new Set([i]);
+      $v().querySelectorAll('.quiz-opt').forEach((b,k)=>{b.classList.toggle('sel',k===i);b.setAttribute('aria-pressed',k===i?'true':'false');});
+      const cb=$v().querySelector('.quiz-check-btn');if(cb)cb.disabled=false;
+    },
+    _checkOne(){
+      if(_answered||!_msel.size)return;
+      const q=curQ();if(!q||q.type!=='mc')return;
+      this._answer([..._msel][0]);
+      const cb=$v().querySelector('.quiz-check-btn');if(cb)cb.disabled=true;
     },
     _toggle(i){
       if(_answered)return;
