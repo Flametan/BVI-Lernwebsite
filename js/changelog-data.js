@@ -1,7 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.2',ts:'2026-11-08T10:00',items:[
-      'Rang und Serie stehen jetzt auf allen Seiten in der Kopfleiste (Tipp öffnet Rang & Abzeichen). Am PC liegen sie auf der Startseite unter der Lehrgangs-Cloud. Bei den Lernkarten fehlen Notiz und Lesezeichen in der Kopfleiste.',
+      'Das Rang-Abzeichen steht jetzt auf allen Seiten in der Kopfleiste (Tipp öffnet Rang & Abzeichen). Am PC liegen sie auf der Startseite unter der Lehrgangs-Cloud. Bei den Lernkarten fehlen Notiz und Lesezeichen in der Kopfleiste.',
       'Dunkles Design: Die Symbol-Animationen in der Navigationsleiste sind besser zu sehen (hellere hintere Karte bei den Lernkarten, Schein um das aktive Symbol, oranger Dampf beim Pausenraum).',
       'Neu: Account-Knopf auf der Startseite (neben der Suche) mit Profilbild, Namen, Sync-Status, Schnellzugriffen auf Sync, Einstellungen, Sicherung und Teilen sowie Schalter für das dunkle Design. Am Handy und Tablet sitzt in der Navigationsleiste jetzt der Pausenraum statt der Einstellungen; die Leiste bleibt anpassbar.',
       'App teilen: Neben dem QR-Code gibt es jetzt Knöpfe für WhatsApp, Telegram, SMS und E-Mail, dazu „Mehr …“ für das Teilen-Menü des Geräts.',

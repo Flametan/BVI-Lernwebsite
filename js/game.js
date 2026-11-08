@@ -407,8 +407,8 @@ const GAME=(function(){
   // Kopfleiste (alle Seiten außer Startseite): Dienstgrad-Abzeichen und Serie, Tipp öffnet Rang & Abzeichen
   function barHtml(){
     if(load().off) return '';
-    const s=load(), st=streak(), r=rankOf(s.xp);
-    return `<button type="button" class="tb-rk" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen" title="${esc(r.n)}" onclick="GAME.openRank()">${shoulder(r,38)}</button><button type="button" class="tb-st${chipCls(st)}" aria-label="${st.cur} Tage Serie${st.risk?' in Gefahr':''}. Rang und Abzeichen öffnen" title="${st.cur} Tage Serie" onclick="GAME.openRank()"><span class="g-fl${st.cur>0&&st.todayDone?' on':''}">${flameIc(15)}</span><b>${st.cur}</b></button>`;
+    const r=rankOf(load().xp);
+    return `<button type="button" class="tb-rk" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen" title="${esc(r.n)}" onclick="GAME.openRank()">${shoulder(r,38)}</button>`;
   }
   // PC/Tablet-Startseite: große Karte mit Serie (Tipp = Belohnungen) und Dienstgrad (Tipp = Rang & Abzeichen)
   function heroHtml(){
