@@ -7,7 +7,8 @@
   <link rel="preload" href="fonts/roboto-400-latin.woff2" as="font" type="font/woff2" crossorigin/>
   <link rel="stylesheet" href="css/fonts.css"/>
   <link rel="stylesheet" href="css/style.css"/>
-  <script src="js/version.js"></script>
+  <script>try{var m=/[#&]sync=([A-Za-z0-9-]+)/.exec(location.hash);if(m)window.__syncBoot=m[1];}catch(e){}</script>
+<script src="js/version.js"></script>
   <link rel="manifest" href="manifest.json"/>
   <meta name="theme-color" content="#121212"/>
   <script>(function(){var m='system';try{m=localStorage.getItem('bvi_theme')||'system';}catch(e){}
@@ -175,13 +176,13 @@
     <span class="m-fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>
     <span>Prüfung</span>
   </button>
-  <button class="m-tab" data-tab="pause" onclick="PMENU.toggle(event)" aria-haspopup="menu" aria-expanded="false" aria-controls="m-pmenu">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(-1.6 5) scale(.68)" stroke-width="2.7"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17M8 2.5c-.6 1 .6 1.8 0 3M12 2.5c-.6 1 .6 1.8 0 3"/></g><g transform="translate(10.2 5.4) scale(.6)" stroke-width="3"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></g><path d="M14.6 2.5 9.4 21.5" stroke-width="1.7"/></svg>
-    <span>Pause/Karten</span>
+  <button class="m-tab" data-tab="cards" onclick="NAV.tab('v-flashcards','Lernkarten')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></svg>
+    <span>Lernkarten</span>
   </button>
-  <button class="m-tab" data-tab="settings" onclick="NAV.tab('v-settings','Einstellungen')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-    <span>Einstellungen</span>
+  <button class="m-tab" data-tab="pause" onclick="NAV.tab('v-pause','Pausenraum')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 2.5c-.6 1 .6 1.8 0 3"/><path d="M12 2.5c-.6 1 .6 1.8 0 3"/></svg>
+    <span>Pausenraum</span>
   </button>
 </nav>
 <div id="m-pmenu" role="menu" aria-label="Pausenraum oder Lernkarten" hidden>
@@ -451,9 +452,16 @@
         <li>Gewählter Jahrgang mit Ihren Änderungen dazu (Ergänzungen, Kapitel, Prüfungen, Pläne, Lernkarten, Link); zugehörige Bilder liegen im Speicher des Browsers (IndexedDB)</li>
         <li>Nutzungszeit in der App (Minuten pro Tag)</li>
         <li>Eigene Lernkarten</li>
+        <li>Profilname und Profilbild (Account-Menü; das Bild wird vor dem Speichern auf dem Gerät auf 128 Pixel verkleinert)</li>
         <li>Farbschema, Hintergrundhelligkeit, Akzentfarbe, Timer-Einstellung, Klausurtermin und Zeitpunkt der Erinnerung</li>
       </ul>
       <p style="margin-top:.75rem">Diese Daten können jederzeit über die Browser-Einstellungen (Websitedaten löschen) entfernt werden.</p>
+    </div>
+
+    <h2 class="sec-h" style="margin-top:2rem">Sync zwischen Geräten (optional)</h2>
+    <div class="glass-card" style="padding:1.25rem;font-size:.88rem;color:var(--c-slate);line-height:1.7">
+      <p>Nur wenn Sie in den Einstellungen den <strong style="color:var(--c-slate-l)">Sync</strong> einschalten, werden Lernstand, Notizen, Textmarkierungen und Lesezeichen mit einem Sync-Server abgeglichen. Es gibt dabei <strong style="color:var(--c-slate-l)">kein Konto</strong>: Ein zufälliger Sync-Code, der nur auf Ihren Geräten steht, ersetzt Name und Passwort. Aus dem Code wird auf Ihrem Gerät der Schlüssel abgeleitet; die Daten werden <strong style="color:var(--c-slate-l)">verschlüsselt</strong> (AES-256) übertragen und gespeichert. Der Server kann den Inhalt nicht lesen und kennt weder Namen noch E-Mail-Adresse.</p>
+      <p style="margin-top:.75rem">Der Server wird vom Verantwortlichen privat betrieben (Verbindung über Tailscale Funnel). Beim Abgleich fallen technisch die IP-Adresse und der Zeitpunkt der Anfrage an; sie dienen nur der Missbrauchsabwehr (Anfragen-Begrenzung) und werden nicht dauerhaft gespeichert. Unbenutzte Datensätze werden nach 400 Tagen gelöscht. Sie können Ihre Daten jederzeit in den Einstellungen unter „Mehr → Serverdaten löschen“ vom Server entfernen. Rechtsgrundlage ist Ihre Einwilligung durch das Einschalten (Art. 6 Abs. 1 lit. a DSGVO), die Sie durch Trennen widerrufen.</p>
     </div>
 
     <h2 class="sec-h" style="margin-top:2rem">Schriften</h2>
@@ -467,6 +475,7 @@
       <ul style="margin:.75rem 0 0 1.2rem;line-height:2">
         <li><strong style="color:var(--c-slate-l)">PayPal</strong> („Freiwillige Spende“ in den Einstellungen, paypal.me)</li>
         <li><strong style="color:var(--c-slate-l)">GitHub</strong> (Fehler melden per GitHub, Download der Android-App)</li>
+        <li><strong style="color:var(--c-slate-l)">Teilen (WhatsApp, Telegram, SMS, E-Mail)</strong> („App teilen“): Erst nach Ihrem Tipp öffnet sich der gewählte Dienst bzw. das Programm mit einem vorbereiteten Text und dem Link zur App. Es werden keine Daten aus der App übertragen; Sie entscheiden, an wen Sie senden.</li>
         <li><strong style="color:var(--c-slate-l)">Google Maps</strong> („Anreise“ und „Abreise“ im Stundenplan): Erst nach Ihrem Tipp öffnet sich die Karten-App. Bei „Abreise“ wird dabei Ihre selbst eingegebene <strong style="color:var(--c-slate-l)">Heimadresse</strong> als Ziel übergeben. Sie bleibt nur auf Ihrem Gerät gespeichert und steckt in keiner Sicherung und keinem Export; Sie können sie jederzeit löschen.</li>
         <li><strong style="color:var(--c-slate-l)">Lehrgangs-Link</strong> (Link auf der Startseite: im Master der Dateiserver des Lehrgangs, in anderen Jahrgängen ein von Ihrem Jahrgang festgelegter Link; er öffnet sich erst nach Ihrem Tipp)</li>
         <li><strong style="color:var(--c-slate-l)">E-Mail-Programm</strong> (Fehler melden per E-Mail): Die Nachricht senden Sie selbst, die App überträgt nichts.</li>
@@ -24385,5 +24394,7 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
 <script src="js/game.js"></script>
 <script src="js/app.js"></script>
 <script src="js/jg-ui.js"></script>
+<script src="js/sync.js"></script>
+<script src="js/account.js"></script>
 </body>
 </html>

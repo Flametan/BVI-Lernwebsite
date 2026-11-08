@@ -340,7 +340,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   });
   ok('Pausenraum: Satz unter der Überschrift', pz.card.length > 10);
   ok('Startseite: ohne Lernkarten- und Pausenraum-Zeilen', !pz.home.includes('Pausenraum') && !/m-pause/.test(pz.home));
-  ok('Tab-Leiste: Pause/Karten als gemeinsamer Tab', pz.tabs.some(x => x.includes('Pause/Karten')) && !pz.tabs.some(x => x.includes('Lernkarten')));
+  ok('Tab-Leiste: Lernkarten und Pausenraum als eigene Tabs, Einstellungen im Account-Menü', pz.tabs.some(x => x.includes('Pausenraum')) && pz.tabs.some(x => x.includes('Lernkarten')) && !pz.tabs.some(x => x.includes('Einstellungen')));
   eq('Pausenraum: 50 Sätze ohne Emojis', [pz.quips, pz.emoji], [50, false]);
   eq('Pausenraum: 10 Einträge (Einsatzfahrt, Duell, Snake, Solitär, Minesweeper und fünf weitere Spiele)', pz.games, 10);
   ok('Spiele haben Inhalte in allen drei Modi', pz.modes.every(m => m.quiz && m.tf && m.word && m.num && m.mem));
