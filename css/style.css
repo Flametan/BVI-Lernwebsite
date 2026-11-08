@@ -2023,7 +2023,7 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .quiz-multi-hint{font-size:.8rem;color:var(--m-muted);margin:0 0 .6rem;}
 .quiz-opt-box{border-radius:7px!important;}
 .quiz-opt.sel{background:color-mix(in srgb,var(--m-accent) 16%,var(--m-raised));box-shadow:inset 0 0 0 1.5px var(--m-accent);}
-.quiz-opt.sel .quiz-opt-label{background:var(--m-accent);color:var(--m-accent-fg);}
+.quiz-opt.sel .quiz-opt-label{background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);}
 .quiz-opt.missed{border-style:dashed;}
 .quiz-opt.missed::after{content:"nicht gewählt";margin-left:auto;font-size:.75rem;color:var(--m-muted);white-space:nowrap;}
 .quiz-check-btn{margin-top:.8rem;}
