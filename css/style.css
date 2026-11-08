@@ -4258,3 +4258,5 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 @media (min-width:1024px){.fc-modebar{max-width:1140px;margin:0 auto;padding-left:48px;padding-right:48px;}}
 /* Beim Hochziehen (Gummiband) bleibt der Untergrund des Blatts gefüllt, die Leiste darunter scheint nicht durch */
 @media (max-width:699px){.fcs-panel::after{content:'';position:absolute;left:0;right:0;top:calc(100% - 3px);height:143px;background:var(--m-card);}}
+/* Kapitelfenster am Handy: die Kopfleiste der Seite liegt sonst deckend über der eigenen Kopfzeile des Fensters (Zurück, Kapitel, Knöpfe), besonders nach dem Blättern über die Seitengrenze. Solange das Fenster offen ist, bleibt sie unsichtbar */
+@media(max-width:700px){html.lp-lock #m-topbar{visibility:hidden;pointer-events:none;}}
