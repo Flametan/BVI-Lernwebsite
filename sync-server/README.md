@@ -31,3 +31,12 @@ curl http://127.0.0.1:8787/health      # → ok
 ```
 Aktualisieren: `git pull`, neu bauen, `sudo docker rm -f bvi-sync` und den `docker run`-Befehl wiederholen (die Daten bleiben im Ordner `/home/umbrel/bvi-sync-data`).
 Sicherung: den Ordner `/home/umbrel/bvi-sync-data` regelmäßig kopieren.
+
+## Schreibrechte
+
+Der Container läuft als Benutzer `node` (UID 1000). Gehört der Datenordner auf dem Host `root`, scheitert das Speichern (Tailscale zeigt dann 502). Abhilfe:
+
+```
+sudo chown -R 1000:1000 /home/umbrel/bvi-sync-data
+sudo docker restart bvi-sync
+```

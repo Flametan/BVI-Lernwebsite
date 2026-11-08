@@ -38,6 +38,7 @@ const eqHex = (a, b) => { try { return crypto.timingSafeEqual(Buffer.from(a, 'he
 
 function createServer(cfg) {
   fs.mkdirSync(cfg.dataDir, { recursive: true });
+  try { const t = path.join(cfg.dataDir, '.write-test'); fs.writeFileSync(t, 'x'); fs.unlinkSync(t); } catch (e) { console.error('ACHTUNG: Datenordner nicht beschreibbar (' + e.message + ') – z. B. sudo chown -R 1000:1000 <Ordner>'); }
   const file = id => path.join(cfg.dataDir, id + '.json');
   const hits = new Map();       // ip -> { start, n, fails }
 
@@ -118,7 +119,7 @@ function createServer(cfg) {
         if (ifm !== curV) return send(res, 409, { error: 'Version veraltet', version: curV, updatedAt: cur && cur.updatedAt, data: cur && cur.data });
         if (!cur && count() >= cfg.maxBlobs) return send(res, 507, { error: 'Speicher voll' });
         const out = { tokenHash: th, version: curV + 1, updatedAt: new Date().toISOString(), data };
-        save(id, out);
+        try { save(id, out); } catch (e) { console.error('Speichern fehlgeschlagen:', e.message); return send(res, 500, { error: 'Speichern auf dem Server nicht möglich (Schreibrechte im Datenordner prüfen)' }); }
         return send(res, 200, { version: out.version, updatedAt: out.updatedAt });
       });
     }
