@@ -200,6 +200,7 @@ const SYNC=(function(){
         if(p.s===409) continue;
         if(p.s===507) throw new Error('Server-Speicher ist voll');
         if(p.s===413) throw new Error('Datenmenge zu groß');
+        if(p.s===500||p.s===502) throw new Error('Server kann nicht speichern ('+p.s+') – siehe Hinweis in der Server-Anleitung');
         if(p.s!==200) throw new Error('Speichern fehlgeschlagen ('+p.s+')');
         newVer=p.j.version;
       }
