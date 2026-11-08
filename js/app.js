@@ -5876,6 +5876,7 @@ const THEME=(function(){
   if(mq) (mq.addEventListener?mq.addEventListener.bind(mq,'change'):mq.addListener.bind(mq))(()=>{ if(get()==='system') apply('system'); });
   return {
     init(){ apply(get()); },
+    get,
     set(m){ if(!MODES.includes(m)) return; try{ localStorage.setItem(KEY,m); localStorage.removeItem('bvi_bg'); }catch(e){} BG.clear(); apply(m); BG.sync(); },
     render(){ apply(get()); }
   };
@@ -5969,6 +5970,8 @@ const SHELL=(function(){
       const all=[].concat(...c.slots); if(new Set(all).size!==all.length) return false;   // jeder Tab höchstens einmal
       return c.slots[STI][0]==='start';   // Start ganz links
     }
+    // Einmalig: Leiste mit Einstellungen (alter Standard) auf den neuen Standard setzen (Pausenraum statt Einstellungen)
+    try{ if(!localStorage.getItem('bvi_nav3')){ localStorage.setItem('bvi_nav3','1'); const o=JSON.parse(localStorage.getItem(KEY)||'null'); if(o&&Array.isArray(o.slots)&&[].concat(...o.slots).includes('settings')) localStorage.removeItem(KEY); } }catch(e){}
     function load(){ try{ const c=JSON.parse(localStorage.getItem(KEY)||'null'); if(valid(c)) return c; }catch(e){} return clone(DEF); }
     let cfg=load(), sel=FABI;
     function save(){ try{ localStorage.setItem(KEY,JSON.stringify(cfg)); }catch(e){} }
@@ -6477,7 +6480,7 @@ const SHELL=(function(){
     const pause='';
     const lk=JG.isMaster()?{url:'https://cloud.hd-fw.de/index.php/s/xoHDwfCM9DtLo9t/authenticate/showshare',titel:'Lehrgangs-Cloud',hinweis:'Unterlagen aus dem Lehrgang · Passwort steht in der WhatsApp-Gruppe'}:JG.data().links.cloud;
     const cloud=lk?`<div class="m-list m-cloud"><a class="m-row m-go" href="${esc(lk.url)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none">${ic('cloud')}<span class="m-tx"><span class="m-t1">${esc(lk.titel||'Lehrgangs-Link')}</span>${lk.hinweis?`<span class="m-t2 m-cloud-x">${esc(lk.hinweis)}</span>`:''}</span></a></div>`:'';
-    const donate=`<a class="m-list m-donate m-donate-home" href="${SPENDE_URL}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><div class="m-row m-go">${ic('heart')}<span class="m-tx"><span class="m-t1">Gefällt dir die Seite?</span><span class="m-t2">Kostenlos &amp; werbefrei – freiwillig unterstützen</span></span></div></a>`;
+    const donate='';
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
       ${(typeof TOUR!=='undefined'&&!TOUR.done())?`<div class="m-tourhome" id="tour-home"><button type="button" class="m-tourhome-go" onclick="TOUR.start('home')"><span class="m-tourhome-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21"/></svg></span><span class="m-tx"><span class="m-t1">Neu hier? App kennenlernen</span><span class="m-t2">Kurze Tour mit Spotlight – zeigt dir alles Wichtige</span></span><span class="m-tourhome-btn">Tour starten</span></button><button type="button" class="m-tourhome-x" aria-label="Hinweis ausblenden" onclick="TOUR.dismiss()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>`:''}

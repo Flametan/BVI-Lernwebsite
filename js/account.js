@@ -62,13 +62,16 @@ const ACCOUNT=(function(){
       +'<button type="button" class="acc-g" onclick="ACCOUNT.go(\'set\')"><i>'+svg(IC.set)+'</i>Einstell.</button>'
       +'<button type="button" class="acc-g" onclick="ACCOUNT.go(\'save\')"><i>'+svg(IC.save)+'</i>Sicherung</button>'
       +'<button type="button" class="acc-g" onclick="ACCOUNT.go(\'share\')"><i>'+svg(IC.share)+'</i>Teilen</button></div>'
-      +'<div class="acc-r"><span class="acc-ri">'+svg(IC.moon,20)+'</span><span class="acc-rt">Dunkles Design</span><button type="button" role="switch" aria-checked="'+dark()+'" aria-label="Dunkles Design" class="acc-sw'+(dark()?' on':'')+'" onclick="ACCOUNT.theme()"></button></div>'
+      +'<div class="acc-r acc-dr"><span class="acc-ri">'+svg(IC.moon,20)+'</span><span class="acc-rt">Design</span></div>'
+      +'<div class="acc-seg" role="group" aria-label="Design">'+[['dark','Dunkel'],['light','Hell'],['beige','Beige'],['system','Auto']].map(m=>'<button type="button" data-m="'+m[0]+'" aria-pressed="'+(THEME.get()===m[0])+'" onclick="ACCOUNT.theme(\''+m[0]+'\')">'+m[1]+'</button>').join('')+'</div>'
       +'<button type="button" class="acc-r" onclick="ACCOUNT.go(\'tour\')"><span class="acc-ri">'+svg(IC.tour,20)+'</span><span class="acc-rt">App vorstellen</span></button>'
       +'<a class="acc-r" href="'+SPENDE_URL+'" target="_blank" rel="noopener noreferrer"><span class="acc-ri">'+svg(IC.heart,20)+'</span><span class="acc-rt">Spenden</span></a>';
   }
   function place(btn){
-    const r=(btn||document.querySelector('.m-hacc'))?.getBoundingClientRect(); const card=box.querySelector('.acc-card');
+    const vis=[...document.querySelectorAll('.m-hacc')].find(b=>b.getClientRects().length);
+    const r=(btn&&btn.getClientRects().length?btn:vis)?.getBoundingClientRect(); const card=box.querySelector('.acc-card');
     const top=r?Math.round(r.bottom+10):70; card.style.top=top+'px';
+    card.style.right=Math.max(8,Math.round(innerWidth-(r?r.right:innerWidth-16)))+'px';   // rechte Kante bündig mit dem Account-Knopf
   }
   function open(btn){ if(!box) build(); render(); box.hidden=false; place(btn); box.querySelector('.acc-g')?.focus({preventScroll:true}); }
   function close(){ if(box) box.hidden=true; }
@@ -81,7 +84,7 @@ const ACCOUNT=(function(){
     else if(a==='share') APPSHARE.open();
     else if(a==='tour'&&typeof TOUR!=='undefined') TOUR.start('home');
   }
-  function theme(){ THEME.set(dark()?'light':'dark'); const sw=box.querySelector('.acc-sw'); if(sw){ sw.classList.toggle('on',dark()); sw.setAttribute('aria-checked',dark()); } }
+  function theme(m){ THEME.set(m); box.querySelectorAll('.acc-seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m)); }
   function rename(){
     const b=box.querySelector('.acc-name'); if(!b) return;
     const inp=document.createElement('input'); inp.className='acc-in'; inp.maxLength=30; inp.value=name(); inp.placeholder='Dein Name'; inp.setAttribute('aria-label','Name');
@@ -112,6 +115,12 @@ const ACCOUNT=(function(){
     document.querySelectorAll('.m-hacc').forEach(b=>{ const d=b.querySelector('.acc-dot'); b.innerHTML=(g(AV)?avatarHtml(false):svg(IC.user)); b.appendChild(d); });
     dot();
   }
+  function mount(){
+    if(document.getElementById('acc-fab')) return;
+    const f=document.createElement('div'); f.id='acc-fab'; f.innerHTML=btnHtml(); document.body.appendChild(f);
+    dot();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount); else mount();
   addEventListener('resize',()=>{ if(box&&!box.hidden) place(); });
   return {btnHtml,toggle,open,close,go,theme,rename,pick,removeAvatar,dot,refresh,NAME,AV};
 })();
