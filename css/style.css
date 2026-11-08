@@ -4378,9 +4378,8 @@ html[data-theme="dark"] :is(.m-tab,.m-ri)[data-ic="pause"].on .m-tic>svg.f{filte
 /* Rang und Serie in der Kopfleiste; Lernkarten ohne Notiz/Lesezeichen */
 .tb-game{display:flex;align-items:center;gap:6px;flex:none;}
 .tb-rk{border:0;background:none;padding:0 2px;cursor:pointer;display:grid;place-items:center;min-height:42px;}
-.tb-st{display:inline-flex;align-items:center;gap:5px;border:0;background:var(--m-card);color:var(--m-fg);border-radius:99px;padding:0 12px 0 9px;min-height:42px;font-family:inherit;font-size:.86rem;font-weight:700;cursor:pointer;}
-@media(max-width:1099px){.tb-rk,.tb-st{min-height:44px;}}
-body:has(.lp-win.on:not(.focus)) #m-topbar :is(.tb-rk,.tb-st){pointer-events:auto;}
+@media(max-width:1099px){.tb-rk{min-height:44px;}}
+body:has(.lp-win.on:not(.focus)) #m-topbar .tb-rk{pointer-events:auto;}
 html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{display:none;}
 #m-topbar[data-view="v-flashcards"] :is(#m-bm,#m-note){display:none;}
 .m-gameslot{align-self:start;display:flex;flex-direction:column;gap:12px;padding:16px;}
