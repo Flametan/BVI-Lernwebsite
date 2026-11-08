@@ -4430,3 +4430,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   .m-mods{grid-column:1 / -1;grid-row:2;}
   .m-cloud{grid-column:1 / -1;grid-row:3;}
 }
+
+.bm-x{flex:none;width:44px;min-height:44px;border:0;background:none;color:var(--m-muted);font-size:1.4rem;line-height:1;cursor:pointer;border-radius:12px;}
+.bm-x:hover,.bm-x:focus-visible{background:var(--m-raised);color:var(--m-fg);}
+.m-go[data-orphan]::after{display:none;}
