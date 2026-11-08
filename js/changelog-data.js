@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.2',ts:'2026-11-08T10:00',items:[
+      'Dunkles Design: Die Symbol-Animationen in der Navigationsleiste sind besser zu sehen (hellere hintere Karte bei den Lernkarten, Schein um das aktive Symbol, oranger Dampf beim Pausenraum).',
       'Neu: Account-Knopf auf der Startseite (neben der Suche) mit Profilbild, Namen, Sync-Status, Schnellzugriffen auf Sync, Einstellungen, Sicherung und Teilen sowie Schalter für das dunkle Design. Am Handy und Tablet sitzt in der Navigationsleiste jetzt der Pausenraum statt der Einstellungen; die Leiste bleibt anpassbar.',
       'App teilen: Neben dem QR-Code gibt es jetzt Knöpfe für WhatsApp, Telegram, SMS und E-Mail, dazu „Mehr …“ für das Teilen-Menü des Geräts.',
       'Neu: Sync ohne Konto. Über den Knopf neben der Suche erzeugst du einen Code (mit QR-Code zum Scannen oder zum Abtippen) und verbindest damit beliebig viele Geräte. Lernstand, Notizen, Textmarkierungen und Lesezeichen werden verschlüsselt abgeglichen; der Server sieht nur unlesbare Daten. Du erreichst es über den Anmelde-Knopf neben der Suche auf der Startseite.',
