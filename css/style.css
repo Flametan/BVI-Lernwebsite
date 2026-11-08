@@ -4415,3 +4415,11 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #m-topbar:has(#m-tb-actions:not(.hidden)) #m-back{min-width:44px;justify-content:center;}
   .m-tb-right{gap:4px;}.m-tb-actions{gap:4px;}.tb-game{gap:2px;}
 }
+/* Startseite ab Tablet: Rang-/Serien-Karte links oben, rechts Diagramm und darunter die Lehrgangs-Cloud */
+@media(min-width:701px){
+  #m-home .m-hgrid{grid-template-rows:auto auto auto;}
+  .m-gameslot{grid-column:1;grid-row:1 / span 2;align-self:start;}
+  .m-chart2{grid-column:2;grid-row:1;}
+  .m-cloud{grid-column:2;grid-row:2;align-self:start;}
+  .m-mods{grid-column:1 / -1;grid-row:3;}
+}
