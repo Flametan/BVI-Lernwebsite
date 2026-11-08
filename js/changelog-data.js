@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.2',ts:'2026-11-08T10:00',items:[
+      'Lernkarten (Tastatur): Pfeil hoch ist jetzt „schwer“ und Pfeil runter deckt die Karte auf (vertauscht). Die Pfeiltasten lassen die Karte außerdem wie die Knöpfe zur passenden Seite fliegen. Die Hilfe „Tastatur“ am Desktop zeigt die neue Belegung.',
       'Quiz: Der Buchstabe einer markierten Antwort (A, B, C …) bleibt lesbar. Er stand bisher in Orange auf orangem Grund und war unsichtbar; jetzt ist er dunkel auf orange, auf Handy, Tablet und Desktop.',
       'Desktop: Die schmale Seitenleiste klappt beim Darüberfahren nicht mehr auf. Sie wird breit, wenn du auf eine freie Stelle der Leiste klickst (nicht auf ein Symbol); verlässt die Maus die Leiste, wird sie wieder schmal. Mit der Tastatur (Tab) klappt sie weiter auf.',
       'Android-Startsymbol: Es wächst jetzt schneller mit der Serie. Ab 4 Tagen erscheint die Glut hinter der Flamme, ab 14 Tagen eine hellere Flamme mit Funken, ab 25 Tagen zusätzlich ein Ring (bisher 7, 30 und 100 Tage).',
