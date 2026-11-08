@@ -3432,12 +3432,13 @@ function makeQuiz(cfg){
       if(e.key===' '&&!inText&&!(e.target.closest&&e.target.closest('button,a,summary'))){   // Leertaste auf einem fokussierten Knopf klickt den Knopf
         e.preventDefault();
         const q=curQ();if(!q)return;
-        if(_answered)self.next();else if(q.type==='essay')self._revealEssay();else if(q.type==='multi')self._check();
+        if(_answered)self.next();else if(q.type==='essay')self._revealEssay();else if(q.type==='multi')self._check();else if(q.type==='mc')self._checkOne();
       }else if(e.key==='Backspace'&&!inText){
         if(_cur>0){e.preventDefault();self.back();}
       }else if(!inText&&['1','2','3','4','5','6'].includes(e.key)){
         const q=curQ();
-        if(!_answered&&q&&(q.type==='mc'||q.type==='tf')){const idx=+e.key-1;if(idx<q.opts.length)self._answer(idx);}
+        if(!_answered&&q&&q.type==='tf'){const idx=+e.key-1;if(idx<q.opts.length)self._answer(idx);}
+        else if(!_answered&&q&&q.type==='mc'){const idx=+e.key-1;if(idx<q.opts.length)self._select(idx);}
         else if(!_answered&&q&&q.type==='multi'){const idx=+e.key-1;if(idx<q.opts.length)self._toggle(idx);}
       }
     });
@@ -3501,7 +3502,8 @@ function makeQuiz(cfg){
     tb.className='quiz-type-badge quiz-type-'+q.type;
     const opts=$('quiz-opts');
     if(q.type==='mc'){
-      opts.innerHTML='<div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt" onclick="'+G+'._answer('+i+')"><span class="quiz-opt-label">'+String.fromCharCode(97+i)+'</span><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div>';
+      // Eine Antwort richtig: antippen markiert nur, aufgelöst wird erst mit „Antwort prüfen“
+      opts.innerHTML='<div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt" aria-pressed="false" onclick="'+G+'._select('+i+')"><span class="quiz-opt-label">'+String.fromCharCode(97+i)+'</span><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div><button class="quiz-reveal-btn quiz-check-btn" disabled onclick="'+G+'._checkOne()">Antwort prüfen</button>';
     }else if(q.type==='tf'){
       opts.innerHTML='<div class="quiz-opts">'+q.opts.map((o,i)=>'<button class="quiz-opt quiz-tf-opt" onclick="'+G+'._answer('+i+')"><span class="quiz-opt-text">'+esc(o)+'</span></button>').join('')+'</div>';
     }else if(q.type==='multi'){
@@ -3599,6 +3601,18 @@ function makeQuiz(cfg){
       saveMastery();srsUpdate(q.id,true);updateDueBtn();_posHistory[_cur]={userIdx:null,correct:true};
       if(typeof GAME!=='undefined') GAME.event('quiz',true);
       renderMastery();renderMasteryCats();
+    },
+    _select(i){
+      if(_answered)return;
+      _msel=new Set([i]);
+      $v().querySelectorAll('.quiz-opt').forEach((b,k)=>{b.classList.toggle('sel',k===i);b.setAttribute('aria-pressed',k===i?'true':'false');});
+      const cb=$v().querySelector('.quiz-check-btn');if(cb)cb.disabled=false;
+    },
+    _checkOne(){
+      if(_answered||!_msel.size)return;
+      const q=curQ();if(!q||q.type!=='mc')return;
+      this._answer([..._msel][0]);
+      const cb=$v().querySelector('.quiz-check-btn');if(cb)cb.disabled=true;
     },
     _toggle(i){
       if(_answered)return;
