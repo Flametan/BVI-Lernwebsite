@@ -79,10 +79,21 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'ok   ' : 'FAIL ') + m); 
   ok((await ls(D, 'bvi_note_v-faq')) !== null || true, 'Link mit #sync= verbindet');
   // Knopf neben der Suche
   const E = await mk();
-  ok(await E.evaluate(() => { const b = document.querySelector('.m-hbtns .m-hsync'); return !!b && b.previousElementSibling.classList.contains('m-hsearch'); }), 'Sync-Knopf sitzt rechts neben der Suche');
+  ok(await E.evaluate(() => { const b = document.querySelector('.m-hbtns .m-hacc'); return !!b && b.previousElementSibling.classList.contains('m-hsearch'); }), 'Account-Knopf sitzt rechts neben der Suche');
   ok(await E.evaluate(() => !document.getElementById('sync-card') && !document.getElementById('sync-promo')), 'keine Karte mehr in Einstellungen/Startseite');
-  await E.click('.m-hsync'); await E.waitForSelector('#sync-n');
+  await E.click('.m-hacc'); await E.waitForSelector('.acc-card'); await E.click('.acc-g.pri'); await E.waitForSelector('#sync-n');
   ok(await E.evaluate(() => document.getElementById('sync-ov').textContent.includes('Neuen Code erzeugen')), 'Knopf öffnet die Auswahl');
+  await E.keyboard.press('Escape');
+  // Profil: Name, Hell/Dunkel, Dot
+  await E.evaluate(() => { SYNC.disconnect && 0; localStorage.setItem('bvi_profile_name', 'Fabian'); });
+  const before = await E.evaluate(() => document.documentElement.getAttribute('data-theme'));
+  await E.click('.m-hacc'); await E.waitForSelector('.acc-sw'); await E.click('.acc-sw');
+  ok(await E.evaluate(b => document.documentElement.getAttribute('data-theme') !== b, before), 'Schalter wechselt Hell/Dunkel');
+  ok(await E.evaluate(() => document.querySelector('.acc-name').textContent === 'Fabian'), 'Name im Menü');
+  // Name und Bild laufen über den Sync mit
+  await A.evaluate(() => { localStorage.setItem('bvi_profile_name', 'Anna'); localStorage.setItem('bvi_avatar', 'data:image/jpeg;base64,AAAA'); });
+  await A.evaluate(() => SYNC.sync({ force: true })); await B.evaluate(() => SYNC.sync({ force: true }));
+  ok(await ls(B, 'bvi_profile_name') === 'Anna' && (await ls(B, 'bvi_avatar')).startsWith('data:image/jpeg'), 'Profilname und -bild werden abgeglichen');
   const all = [A, B, C, D, E].flatMap(p => p.errs); ok(all.length === 0, 'keine JavaScript-Fehler ' + all.join('|'));
   await browser.close(); srv.kill(); web.close(); fs.rmSync(data, { recursive: true, force: true });
   console.log(fails ? fails + ' Fehler' : 'alles ok'); process.exit(fails ? 1 : 0);

@@ -5348,6 +5348,8 @@ const BACKUP=(function(){
   function clean(k,v){
     if(typeof v!=='string'||v.length>2e6||k==='bvi_heimadresse') return null;
     if(/^bvi_note_v-[a-z0-9-]+$|^bvi_note_home$/.test(k)) return v;
+    if(k==='bvi_avatar') return /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]{1,80000}$/.test(v)?v:null;
+    if(k==='bvi_profile_name') return v.length<=30&&!/[<>]/.test(v)?v:null;
     if(NOJSON.has(k)) return v;
     // Jahrgänge: gewählter Jahrgang, eigene Änderungen je Jahrgang, Plan-Ansicht
     if(k==='bvi_jg') return /^BRef-\d\d-\d{4}_AB-\d\d-\d{4}$/.test(v)?v:null;
@@ -5935,10 +5937,10 @@ ETIMER.init();
 
 /* ── Mobil-Ansicht: Tab-Leiste, Startseite, Prüfung, Einstellungen ──────── */
 const SHELL=(function(){
-  /* Navigationsleiste: fünf feste Plätze; der mittlere ist der Mittelknopf, der rechte gehört den Einstellungen.
+  /* Navigationsleiste: fünf feste Plätze; der mittlere ist der Mittelknopf, Start steht links. Die Einstellungen liegen im Account-Menü (Startseite).
      Jeder Platz zeigt einen Tab oder zwei (Auswahl beim Antippen). Einstellbar über Dropdowns in den Einstellungen. */
   const NAVBAR=(function(){
-    const KEY='bvi_nav2', FABI=2, SETI=4, STI=0;
+    const KEY='bvi_nav2', FABI=2, STI=0;
     const IC={
       start:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
       plan:'<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
@@ -5957,7 +5959,7 @@ const SHELL=(function(){
       cards:{n:'Lernkarten',s:'Karten',go:()=>NAV.tab('v-flashcards','Lernkarten')},
       settings:{n:'Einstellungen',s:'Einst.',go:()=>NAV.tab('v-settings','Einstellungen')}};
     const IDS=Object.keys(T);
-    const DEF={slots:[['start'],['plan'],['exam'],['pause','cards'],['settings']]};
+    const DEF={slots:[['start'],['plan'],['exam'],['cards'],['pause']]};
     const clone=o=>JSON.parse(JSON.stringify(o));
     const svg=(inner,cls)=>'<svg'+(cls?' class="'+cls+'"':'')+' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+inner+'</svg>';
     const pairSvg=(a,b,cls)=>{ const f=cls==='f', g=x=>(f&&ICF[x])||IC[x]; return svg('<g class="pa pa1"><g transform="translate(-.5 6.5) scale(.5)" stroke-width="3.4">'+g(a)+'</g></g><g class="pa pa2"><g transform="translate(12.5 6.5) scale(.5)" stroke-width="3.4">'+g(b)+'</g></g><path d="M14.2 3.5 9.8 20.5" stroke-width="1.6"/>',cls); };
@@ -5965,7 +5967,7 @@ const SHELL=(function(){
       if(!c||!Array.isArray(c.slots)||c.slots.length!==5) return false;
       if(!c.slots.every(x=>Array.isArray(x)&&x.length>=1&&x.length<=2&&x.every(t=>IDS.includes(t)))) return false;
       const all=[].concat(...c.slots); if(new Set(all).size!==all.length) return false;   // jeder Tab höchstens einmal
-      return c.slots[SETI][0]==='settings'&&c.slots[STI][0]==='start';   // Start ganz links, Einstellungen ganz rechts
+      return c.slots[STI][0]==='start';   // Start ganz links
     }
     function load(){ try{ const c=JSON.parse(localStorage.getItem(KEY)||'null'); if(valid(c)) return c; }catch(e){} return clone(DEF); }
     let cfg=load(), sel=FABI;
@@ -5996,12 +5998,12 @@ const SHELL=(function(){
       const el=document.getElementById('nav-edit'); if(!el) return;
       const sl=cfg.slots, i=sel, cur=sl[i], up=unplaced();
       const prev='<div class="nb-prev" role="group" aria-label="Plätze der Navigationsleiste">'+sl.map((s,k)=>'<button type="button" class="nb-p'+(k===FABI?' nb-fab':'')+(k===i?' nb-sel':'')+'" aria-pressed="'+(k===i)+'" aria-label="Platz '+(k+1)+': '+esc(label(s))+'" onclick="NAVBAR.select('+k+')">'+(s.length===1?svg(IC[s[0]]):pairSvg(s[0],s[1]))+'<span>'+esc(label(s))+'</span></button>').join('')+'</div>';
-      const tabOpts=IDS.filter(t=>(t!=='settings'||i===SETI)&&(t!=='start'||i===STI)).map(t=>'<option value="'+t+'"'+(t===cur[0]?' selected':'')+'>'+esc(T[t].n)+(up.includes(t)?' (zurzeit nicht in der Leiste)':'')+'</option>').join('');
-      const partnerOpts='<option value=""'+(cur.length===1?' selected':'')+'>Einzeln (ohne zweiten Tab)</option>'+IDS.filter(t=>t!==cur[0]&&t!=='settings'&&t!=='start').map(t=>'<option value="'+t+'"'+(cur[1]===t?' selected':'')+'>mit „'+esc(T[t].n)+'“ zusammenlegen'+(up.includes(t)?' (zurzeit nicht in der Leiste)':'')+'</option>').join('');
-      el.innerHTML='<p class="nb-t">Tippe oben auf den Platz, den du ändern willst, und wähle darunter den Tab. Start steht immer ganz links, der mittlere Platz bleibt der Mittelknopf, die Einstellungen stehen immer ganz rechts. Ein Platz kann einzeln bleiben oder sich mit einem zweiten Tab teilen (beim Antippen erscheint dann eine Auswahl). Es müssen nicht alle sechs Tabs in der Leiste stehen.</p>'
+      const tabOpts=IDS.filter(t=>t!=='start'||i===STI).map(t=>'<option value="'+t+'"'+(t===cur[0]?' selected':'')+'>'+esc(T[t].n)+(up.includes(t)?' (zurzeit nicht in der Leiste)':'')+'</option>').join('');
+      const partnerOpts='<option value=""'+(cur.length===1?' selected':'')+'>Einzeln (ohne zweiten Tab)</option>'+IDS.filter(t=>t!==cur[0]&&t!=='start').map(t=>'<option value="'+t+'"'+(cur[1]===t?' selected':'')+'>mit „'+esc(T[t].n)+'“ zusammenlegen'+(up.includes(t)?' (zurzeit nicht in der Leiste)':'')+'</option>').join('');
+      el.innerHTML='<p class="nb-t">Tippe oben auf den Platz, den du ändern willst, und wähle darunter den Tab. Start steht immer ganz links, der mittlere Platz bleibt der Mittelknopf. Die Einstellungen erreichst du über den Account-Knopf auf der Startseite. Ein Platz kann einzeln bleiben oder sich mit einem zweiten Tab teilen (beim Antippen erscheint dann eine Auswahl). Es müssen nicht alle sechs Tabs in der Leiste stehen.</p>'
         +'<div class="nb-h">Leiste (antippen zum Ändern)</div>'+prev
-        +'<div class="nb-panel"><div class="nb-h">Platz '+(i+1)+(i===FABI?' · Mittelknopf':i===SETI?' · Einstellungen':i===STI?' · Start':'')+'</div>'
-        +'<label class="nb-f">Tab<select onchange="NAVBAR.setTab(this.value)"'+(i===SETI||i===STI?' disabled':'')+'>'+tabOpts+'</select></label>'
+        +'<div class="nb-panel"><div class="nb-h">Platz '+(i+1)+(i===FABI?' · Mittelknopf':i===STI?' · Start':'')+'</div>'
+        +'<label class="nb-f">Tab<select onchange="NAVBAR.setTab(this.value)"'+(i===STI?' disabled':'')+'>'+tabOpts+'</select></label>'
         +'<label class="nb-f">Platz teilen<select onchange="NAVBAR.setPartner(this.value)">'+partnerOpts+'</select></label>'
         +(up.length?'<p class="nb-t nb-sm">Nicht in der Leiste: '+up.map(t=>esc(T[t].n)).join(', ')+'. Du erreichst sie weiterhin über die Startseite und die Seitenleiste am PC.</p>':'<p class="nb-t nb-sm">Alle sechs Tabs stehen in der Leiste.</p>')
         +'</div><div class="nb-act"><button type="button" class="btn btn-ghost" onclick="NAVBAR.reset()">Zurücksetzen</button></div>';
@@ -6013,7 +6015,7 @@ const SHELL=(function(){
       render, renderSettings, go, mark(){ apply(); },
       select(i){ sel=i; renderSettings(); },
       setTab(id){
-        if(sel===SETI||sel===STI||id==='settings'||id==='start'||!IDS.includes(id)) return;
+        if(sel===STI||id==='start'||!IDS.includes(id)) return;
         const p=[sel,0], q=pos(id);
         if(!q) cfg.slots[sel][0]=id;                 // war nicht in der Leiste: ersetzt den bisherigen Tab
         else if(q[0]===p[0]&&q[1]===p[1]) return;
@@ -6023,7 +6025,7 @@ const SHELL=(function(){
       setPartner(id){
         const i=sel, cur=cfg.slots[i];
         if(!id){ if(cur.length===2){ cur.splice(1,1); commit(); } else renderSettings(); return; }
-        if(!IDS.includes(id)||id==='settings'||id==='start'||id===cur[0]||cur[1]===id) return;
+        if(!IDS.includes(id)||id==='start'||id===cur[0]||cur[1]===id) return;
         const freed=cur.length===2?cur[1]:null;      // bisheriger Partner wird frei
         const q=pos(id);
         if(q){
@@ -6457,7 +6459,7 @@ const SHELL=(function(){
       cSub=document.querySelector('#'+recent.id+' .page-eyebrow')?.textContent?.trim()||'';
     }
     // Oben rechts: Lupe wie in Top-Apps (Tipp: Suchfeld wächst aus dem Symbol, Tastatur öffnet sich); die nächste Einheit steht im Stundenplan
-    const nextBox=`<span class="m-hbtns"><button type="button" class="m-hsearch" aria-label="Suchen" title="Suchen" onclick="SEARCH.open(this)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.5"/><path d="m20 20-3.5-3.5"/></svg></button><button type="button" class="m-hsearch m-hsync" aria-label="Sync: Geräte verbinden" title="Sync: Geräte verbinden" onclick="SYNC.open()"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg></button></span>`;
+    const nextBox=`<span class="m-hbtns"><button type="button" class="m-hsearch" aria-label="Suchen" title="Suchen" onclick="SEARCH.open(this)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7.5"/><path d="m20 20-3.5-3.5"/></svg></button>${ACCOUNT.btnHtml()}</span>`;
     const chartCard=chartHtml();
     // Standort-Liste: Umschalter 2./1. Jahr (Handy), je Standort eine Zeile mit Ring, Ort, Fortschrittsbalken und Prozent
     const MODSUB={ibk:'Heyrothsberge · Führung',vak:'Berlin · Verwaltungsrecht',feuak:'Hamburg · Haushalt',idf:'Münster · VB & Stabsarbeit',gal:'Grundlehrgang',sfs:'Regensburg',hlfs:'Kassel'};

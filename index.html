@@ -176,13 +176,13 @@
     <span class="m-fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>
     <span>Prüfung</span>
   </button>
-  <button class="m-tab" data-tab="pause" onclick="PMENU.toggle(event)" aria-haspopup="menu" aria-expanded="false" aria-controls="m-pmenu">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(-1.6 5) scale(.68)" stroke-width="2.7"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17M8 2.5c-.6 1 .6 1.8 0 3M12 2.5c-.6 1 .6 1.8 0 3"/></g><g transform="translate(10.2 5.4) scale(.6)" stroke-width="3"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></g><path d="M14.6 2.5 9.4 21.5" stroke-width="1.7"/></svg>
-    <span>Pause/Karten</span>
+  <button class="m-tab" data-tab="cards" onclick="NAV.tab('v-flashcards','Lernkarten')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="15" height="14" rx="2.5"/><path d="M6.5 3.5h12a2.5 2.5 0 0 1 2.5 2.5v11"/></svg>
+    <span>Lernkarten</span>
   </button>
-  <button class="m-tab" data-tab="settings" onclick="NAV.tab('v-settings','Einstellungen')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-    <span>Einstellungen</span>
+  <button class="m-tab" data-tab="pause" onclick="NAV.tab('v-pause','Pausenraum')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 2.5c-.6 1 .6 1.8 0 3"/><path d="M12 2.5c-.6 1 .6 1.8 0 3"/></svg>
+    <span>Pausenraum</span>
   </button>
 </nav>
 <div id="m-pmenu" role="menu" aria-label="Pausenraum oder Lernkarten" hidden>
@@ -452,6 +452,7 @@
         <li>Gewählter Jahrgang mit Ihren Änderungen dazu (Ergänzungen, Kapitel, Prüfungen, Pläne, Lernkarten, Link); zugehörige Bilder liegen im Speicher des Browsers (IndexedDB)</li>
         <li>Nutzungszeit in der App (Minuten pro Tag)</li>
         <li>Eigene Lernkarten</li>
+        <li>Profilname und Profilbild (Account-Menü; das Bild wird vor dem Speichern auf dem Gerät auf 128 Pixel verkleinert)</li>
         <li>Farbschema, Hintergrundhelligkeit, Akzentfarbe, Timer-Einstellung, Klausurtermin und Zeitpunkt der Erinnerung</li>
       </ul>
       <p style="margin-top:.75rem">Diese Daten können jederzeit über die Browser-Einstellungen (Websitedaten löschen) entfernt werden.</p>
@@ -24394,5 +24395,6 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
 <script src="js/app.js"></script>
 <script src="js/jg-ui.js"></script>
 <script src="js/sync.js"></script>
+<script src="js/account.js"></script>
 </body>
 </html>
