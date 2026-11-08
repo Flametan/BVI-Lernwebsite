@@ -4256,3 +4256,5 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
   .fcs-row{min-height:62px;padding:10px;}
 }
 @media (min-width:1024px){.fc-modebar{max-width:1140px;margin:0 auto;padding-left:48px;padding-right:48px;}}
+/* Beim Hochziehen (Gummiband) bleibt der Untergrund des Blatts gefüllt, die Leiste darunter scheint nicht durch */
+@media (max-width:699px){.fcs-panel::after{content:'';position:absolute;left:0;right:0;top:calc(100% - 3px);height:143px;background:var(--m-card);}}
