@@ -5349,6 +5349,7 @@ const BACKUP=(function(){
     if(typeof v!=='string'||v.length>2e6||k==='bvi_heimadresse') return null;
     if(/^bvi_note_v-[a-z0-9-]+$|^bvi_note_home$/.test(k)) return v;
     if(k==='bvi_avatar') return /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]{1,80000}$/.test(v)?v:null;
+    if(k==='bvi_cover') return /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]{1,150000}$/.test(v)?v:null;
     if(k==='bvi_profile_name') return v.length<=30&&!/[<>]/.test(v)?v:null;
     if(NOJSON.has(k)) return v;
     // Jahrgänge: gewählter Jahrgang, eigene Änderungen je Jahrgang, Plan-Ansicht

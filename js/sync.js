@@ -8,7 +8,7 @@ const SYNC=(function(){
   const APP_URL='https://flametan.github.io/BVI-Lernwebsite/';
   const K={code:'bvi_sync_code',base:'bvi_sync_base',ver:'bvi_sync_ver',last:'bvi_sync_last',url:'bvi_sync_url'};
   // Was synchronisiert wird: Lernstand, Notizen, Textmarkierungen, Lesezeichen – keine Geräte-Einstellungen
-  const TRACK=/^bvi_(avatar|profile_name|fc|fc_weak|fc_stars|fc_custom|game|progress|streak|usage|cards_day|cardgoal|hl|bookmarks|fb_answers|uk_scores|kf_scores|fq_scores|eq_scores|lb_ok|lb_vb|checks_[\w-]+|note_[\w-]+|quiz_(mastery|srs|stats|bm)|idfq_(mastery|srs|stats|bm|cat))$/;
+  const TRACK=/^bvi_(avatar|cover|profile_name|fc|fc_weak|fc_stars|fc_custom|game|progress|streak|usage|cards_day|cardgoal|hl|bookmarks|fb_answers|uk_scores|kf_scores|fq_scores|eq_scores|lb_ok|lb_vb|checks_[\w-]+|note_[\w-]+|quiz_(mastery|srs|stats|bm)|idfq_(mastery|srs|stats|bm|cat))$/;
   const enc=new TextEncoder(), dec=new TextDecoder();
   const ls={
     get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
@@ -106,7 +106,7 @@ const SYNC=(function(){
     return l.replace(/\s+$/,'')+'\n\n'+r.replace(/^\s+/,'');
   }
   function mergeKey(k,l,b,r){
-    if(/^bvi_(avatar|profile_name)$/.test(k)) return l===b?r:(l===undefined?r:l);
+    if(/^bvi_(avatar|cover|profile_name)$/.test(k)) return l===b?r:(l===undefined?r:l);
     if(/^bvi_note_/.test(k)) return mergeText(l,b,r);
     const P=s=>{ if(s===undefined||s===null) return undefined; try{ return JSON.parse(s); }catch(e){ return {__raw:s}; } };
     const v=mergeVal(P(l),P(b),P(r));

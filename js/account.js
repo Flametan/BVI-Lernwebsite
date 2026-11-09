@@ -1,6 +1,6 @@
 /* ── Account-Menü auf der Startseite: Profil, Sync-Status, Schnellzugriffe, Hell/Dunkel ── */
 const ACCOUNT=(function(){
-  const NAME='bvi_profile_name', AV='bvi_avatar';
+  const NAME='bvi_profile_name', AV='bvi_avatar', COVER='bvi_cover';
   const g=k=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } };
   const s=(k,v)=>{ try{ v==null?localStorage.removeItem(k):localStorage.setItem(k,v); }catch(e){} };
   const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -52,7 +52,8 @@ const ACCOUNT=(function(){
   }
   function render(){
     const card=box.querySelector('.acc-card'), st=syncState(), nm=name();
-    card.innerHTML='<div class="acc-ban"><div class="acc-stat">'+stats()+'</div></div>'
+    const cv=g(COVER), cvOk=cv&&/^data:image\/jpeg;base64,/.test(cv);
+    card.innerHTML='<div class="acc-ban"'+(cvOk?' style="background-image:url('+cv+')"':'')+'><div class="acc-bt"><button type="button" class="acc-bb" onclick="ACCOUNT.pickCover()" aria-label="Titelbild ändern" title="Titelbild ändern">'+svg(IC.cam,15)+'</button>'+(cvOk?'<button type="button" class="acc-bb" onclick="ACCOUNT.removeCover()" aria-label="Titelbild entfernen" title="Titelbild entfernen">×</button>':'')+'</div><div class="acc-stat">'+stats()+'</div></div>'
       +'<div class="acc-who"><button type="button" class="acc-avb" onclick="ACCOUNT.pick()" aria-label="Profilbild ändern">'+avatarHtml(true)+'<span class="acc-cam">'+svg(IC.cam,13)+'</span></button>'
       +'<div class="acc-nm"><button type="button" class="acc-name" onclick="ACCOUNT.rename()" title="Namen ändern">'+esc(nm||'Dein Name')+'</button>'
       +'<span class="acc-chip" data-state="'+st.state+'"><i></i>'+esc(st.text)+'</span></div>'
@@ -93,23 +94,27 @@ const ACCOUNT=(function(){
     inp.addEventListener('keydown',e=>{ if(e.key==='Enter') done(); if(e.key==='Escape'){ render(); } });
     inp.addEventListener('blur',done);
   }
-  function pick(){
+  // Bild wählen, auf die Zielgröße zuschneiden und verkleinert als JPEG speichern
+  function choose(key,w,h,q){
     const f=document.createElement('input'); f.type='file'; f.accept='image/*';
     f.onchange=()=>{
       const file=f.files&&f.files[0]; if(!file) return;
       const img=new Image(), url=URL.createObjectURL(file);
       img.onload=()=>{
-        const n=128, c=document.createElement('canvas'); c.width=c.height=n;
-        const m=Math.min(img.width,img.height), x=(img.width-m)/2, y=(img.height-m)/2;
-        const ctx=c.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,n,n); ctx.drawImage(img,x,y,m,m,0,0,n,n);
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        const sc=Math.max(w/img.width,h/img.height), sw=w/sc, sh=h/sc, x=(img.width-sw)/2, y=(img.height-sh)/2;
+        const ctx=c.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,w,h); ctx.drawImage(img,x,y,sw,sh,0,0,w,h);
         URL.revokeObjectURL(url);
-        s(AV,c.toDataURL('image/jpeg',.82)); render(); refresh();
+        s(key,c.toDataURL('image/jpeg',q)); render(); refresh();
       };
       img.onerror=()=>{ URL.revokeObjectURL(url); TOAST.show('Das Bild konnte nicht gelesen werden'); };
       img.src=url;
     };
     f.click();
   }
+  const pick=()=>choose(AV,128,128,.82);
+  const pickCover=()=>choose(COVER,640,200,.78);
+  function removeCover(){ s(COVER,null); render(); }
   function removeAvatar(){ s(AV,null); render(); refresh(); }
   function refresh(){
     document.querySelectorAll('.m-hacc').forEach(b=>{ const d=b.querySelector('.acc-dot'); b.innerHTML=(g(AV)?avatarHtml(false):svg(IC.user)); b.appendChild(d); });
@@ -133,5 +138,5 @@ const ACCOUNT=(function(){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount); else mount();
   addEventListener('resize',()=>{ if(box&&!box.hidden) place(); });
-  return {refreshGame,btnHtml,toggle,open,close,go,theme,rename,pick,removeAvatar,dot,refresh,NAME,AV};
+  return {refreshGame,btnHtml,toggle,open,close,go,theme,rename,pick,pickCover,removeCover,removeAvatar,dot,refresh,NAME,AV,COVER};
 })();
