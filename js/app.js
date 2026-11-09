@@ -5349,6 +5349,7 @@ const BACKUP=(function(){
     if(typeof v!=='string'||v.length>2e6||k==='bvi_heimadresse') return null;
     if(/^bvi_note_v-[a-z0-9-]+$|^bvi_note_home$/.test(k)) return v;
     if(k==='bvi_avatar') return /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]{1,80000}$/.test(v)?v:null;
+    if(k==='bvi_cover') return /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]{1,150000}$/.test(v)?v:null;
     if(k==='bvi_profile_name') return v.length<=30&&!/[<>]/.test(v)?v:null;
     if(NOJSON.has(k)) return v;
     // Jahrgänge: gewählter Jahrgang, eigene Änderungen je Jahrgang, Plan-Ansicht
@@ -6619,20 +6620,34 @@ const SHELL=(function(){
     if(n.length){
       h+='<div class="m-list">'+n.map(({id,txt})=>{
         const v=document.getElementById(id);
-        const label=v?.querySelector('.page-title')?.textContent?.trim()||(id==='home'?'Startseite':id);
+        const label=v?.querySelector('.page-title')?.textContent?.trim()||(id==='home'?'Startseite':'Seite nicht mehr vorhanden');
         const eb=v?.querySelector('.page-eyebrow')?.textContent?.trim()||'';
-        return `<button class="m-row m-go" onclick="${v?goJs(id,label):''}" style="align-items:flex-start"><span class="m-tx"><span class="m-t2" style="margin:0;color:var(--m-accent-fg)">${esc(eb?eb+' · '+label:label)}</span><span class="m-note-txt">${esc(txt)}</span></span></button>`;
+        const go=v?goJs(id,label):(id==='home'?esc('NAV.home()'):esc('SHELL.orphanNote('+JSON.stringify(id)+')'));
+        const del=v||id==='home'?'':`<button type="button" class="bm-x" aria-label="Notiz löschen" onclick="SHELL.deleteNote(${esc(JSON.stringify(id))})">×</button>`;
+        return `<div class="m-row bm-row" style="align-items:flex-start;padding:0"><button class="m-row m-go"${v||id==='home'?'':' data-orphan="1"'} onclick="${go}" style="align-items:flex-start;flex:1;min-width:0"><span class="m-tx"><span class="m-t2" style="margin:0;color:var(--m-accent-fg)">${esc(eb?eb+' · '+label:label)}</span><span class="m-note-txt">${esc(txt)}</span></span></button>${del}</div>`;
       }).join('')+'</div>';
     }
     if(marks.length){
       h+='<div class="m-sec" style="margin-top:1.4rem">Markierungen</div>'+marks.map(({view,items})=>{
         const v=document.getElementById(view);
-        const label=v?.querySelector('.page-title')?.textContent?.trim()||view;
+        const label=v?.querySelector('.page-title')?.textContent?.trim()||'Seite nicht mehr vorhanden';
         return `<div class="m-hl-group"><div class="m-t2" style="color:var(--m-accent-fg);margin:0 0 6px 4px">${esc(label)}</div><div class="m-list">${items.map((it,i)=>`<div class="m-row bm-row"><button class="bm-open" onclick="${goJs(view,label)}"><span class="m-note-txt">${esc(it.q)}</span></button><button class="bm-remove" aria-label="Markierung löschen" onclick="HL.removeAt(${esc(JSON.stringify(view))},${i});SHELL.renderNotes()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>`).join('')}</div></div>`;
       }).join('');
     }
     if(!h) h='<div class="m-empty">Noch keine Notizen oder Markierungen.<br>Öffne eine Lernseite: Mit dem Stift schreibst du eine Notiz, und wenn du Text auswählst, kannst du ihn markieren.</div>';
     el.innerHTML=h;
+  }
+
+  // Notiz einer Seite, die es nicht mehr gibt (z. B. nach dem Umbau der Lernseiten): Text kopieren oder löschen
+  function orphanNote(id){
+    let t=''; try{ t=localStorage.getItem('bvi_note_'+id)||''; }catch(e){}
+    const done=()=>TOAST.show('Diese Seite gibt es nicht mehr. Der Notiztext ist kopiert; mit × kannst du die Notiz löschen.',{type:'info',duration:6000});
+    if(navigator.clipboard&&t) navigator.clipboard.writeText(t).then(done,()=>TOAST.show('Diese Seite gibt es nicht mehr. Mit × kannst du die Notiz löschen.',{type:'info'})); else done();
+  }
+  function deleteNote(id){
+    let t=null; try{ t=localStorage.getItem('bvi_note_'+id); localStorage.removeItem('bvi_note_'+id); }catch(e){}
+    renderNotes(); syncSettings();
+    TOAST.show('Notiz gelöscht',{undo:()=>{ try{ if(t!==null) localStorage.setItem('bvi_note_'+id,t); }catch(e){} renderNotes(); syncSettings(); }});
   }
 
   function syncSettings(){
@@ -6713,7 +6728,7 @@ const SHELL=(function(){
   }
 
   return {
-    onShow, renderHome, newQuip, renderExam, examView, examAcc, renderNotes, renderFcSide, syncSettings, goalMin, daysToExam, mods:()=>MODS,
+    onShow, renderHome, newQuip, renderExam, examView, examAcc, renderNotes, orphanNote, deleteNote, renderFcSide, syncSettings, goalMin, daysToExam, mods:()=>MODS,
     report(extra){
       const v=document.querySelector('.view.active'); if(!v) return;
       const title=v.querySelector('.page-title')?.textContent?.trim()||v.id;

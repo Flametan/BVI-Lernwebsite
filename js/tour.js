@@ -1,6 +1,6 @@
 /* ======================================================================
    TOUR – „App vorstellen“: Spotlight-Rundgang durch Startseite, Tabs, Lernkarten und Einstellungen
-   Start: Einstellungen → „App vorstellen“. Esc beendet, Pfeiltasten blättern.
+   Start: Account-Menü → „App vorstellen“. Esc beendet, Pfeiltasten blättern.
 ====================================================================== */
 const TOUR=(function(){
   const $=(s,r)=>(r||document).querySelector(s);
@@ -31,14 +31,17 @@ const TOUR=(function(){
     {t:'Karte und Antwort',x:'Tippe auf die Karte, um die Antwort zu sehen. Danach „Gewusst“ oder „Nicht gewusst“ – oder wische die Karte zur Seite. Gewusste Karten kommen später wieder.',go:()=>{ if(cur()!=='v-flashcards') NAV.tab('v-flashcards','Lernkarten'); try{ if(!$('#v-flashcards .fc-outer')&&typeof FC!=='undefined') FC.start(); }catch(e){} },target:()=>$('#v-flashcards .fc-outer')||$('#fc-container')},
     {t:'Karten filtern',x:'Hier wählst du, welche Karten du üben willst, zum Beispiel nur ein Fach oder nur fällige Karten.',go:tab('v-flashcards','Lernkarten'),target:()=>$('#v-flashcards .fc-filter-row')||$('#v-flashcards .pc')},
     {t:'Tab: Pausenraum',x:'Im Pausenraum warten Spiele wie die Einsatzfahrt – mit Fragen aus den Prüfungen, die du mit ★ als wichtig markiert hast.',go:tab('v-pause','Pausenraum'),target:()=>tabEl('pause')},
-    {t:'Tab: Einstellungen',x:'Hier stellst du Aussehen, Lernziele und Erinnerungen ein und sicherst deine Daten. Diese Tour findest du hier unter „App vorstellen“.',go:tab('v-settings','Einstellungen'),target:()=>tabEl('settings')},
+    {t:'Dein Account',x:'Der runde Knopf rechts neben der Lupe (auf allen anderen Seiten oben rechts in der Leiste) öffnet dein Menü. Das ist kein Konto mit Anmeldung: Es gibt keine Registrierung und kein Passwort. Ein kleiner Punkt am Knopf zeigt den Sync-Status.',go:home,target:()=>$('#v-home .m-hacc')},
+    {t:'Profil, Einstellungen und Design',x:'Tippe aufs Profilbild, um ein Foto zu wählen, und auf den Namen, um ihn zu ändern. Darunter findest du Sync, Einstellungen, Sicherung und Teilen. Das Design wechselst du zwischen Dunkel, Hell und Beige. „App vorstellen“ startet diese Tour, „Spenden“ unterstützt die App.',go:home,menu:true,target:()=>$('#acc-ov .acc-card')},
+    {t:'Geräte synchronisieren',x:'Mit „Sync“ verbindest du Handy, Tablet und PC ohne Konto. Tippe auf „Neuen Code erzeugen“: Du bekommst einen QR-Code und einen Code zum Abtippen. Notiere ihn dir und gib ihn nicht weiter.',go:home,menu:true,target:()=>$('#acc-ov .acc-g.pri')},
+    {t:'Zweites Gerät verbinden',x:'Auf dem anderen Gerät öffnest du dasselbe Menü, tippst auf „Sync“ und dann auf „Ich habe schon einen Code“. Gib den Code ein oder scanne den QR-Code mit der Kamera-App. Danach gleichen sich Lernstand, Notizen, Markierungen und Lesezeichen automatisch ab. Es sind beliebig viele Geräte möglich.',go:home,menu:true,target:()=>$('#acc-ov .acc-g.pri')},
     {t:'Lehrgang',x:'Hier wählst du deinen Lehrgang. Für andere Lehrgänge kannst du eigene Inhalte ergänzen und selbst festlegen, welche Prüfungen mit ★ wichtig sind.',go:tab('v-settings','Einstellungen'),target:accOf('acc-lg-h')},
     {t:'Export und Import',x:'Deine Ergänzungen – eigene Kapitel, Prüfungen, Stundenpläne und Lernkarten – exportierst du als Datei und schickst sie an deinen Jahrgang. Mit „Jahrgang importieren“ spielst du die Datei von anderen oder vom Jahrgang davor ein.',go:tab('v-settings','Einstellungen'),open:'acc-lg-h',when:()=>typeof JG!=='undefined'&&!JG.isMaster(),target:accOf('acc-lg-h')},
     {t:'Aussehen',x:'Farbschema (Dunkel, Hell, Beige), Akzentfarbe, Schriftgröße und die Navigationsleiste unten richtest du hier ein.',go:tab('v-settings','Einstellungen'),target:accOf('acc-dar-h')},
     {t:'Navigationsleiste',x:'Unter „Aussehen“ gibt es den Eintrag „Navigationsleiste“. Dort legst du die Reihenfolge der Plätze fest, teilst Plätze auf und wählst den Mittelknopf der unteren Leiste.',go:tab('v-settings','Einstellungen'),open:'acc-dar-h',target:()=>[...document.querySelectorAll('#acc-dar-b .m-row')].find(b=>/v-set-nav/.test(b.getAttribute('onclick')||''))},
     {t:'Lernen &amp; Erinnerung',x:'Dein Tagesziel, der Timer bei Klausuren, der Termin der nächsten Klausur und eine tägliche Erinnerung zur Uhrzeit deiner Wahl.',go:tab('v-settings','Einstellungen'),target:accOf('acc-ler-h')},
     {t:'Daten &amp; Werkzeuge',x:'Hier sicherst du deine Daten und spielst sie wieder ein. Außerdem findest du Notizen, Lesezeichen, Pomodoro-Timer und die Abkürzungen.',go:tab('v-settings','Einstellungen'),target:accOf('acc-dat-h')},
-    {t:'Tour jederzeit wiederholen',x:'Du kannst die Tour in den Einstellungen so oft starten, wie du willst.',go:tab('v-settings','Einstellungen'),target:()=>$('#set-tour')},
+    {t:'Tour jederzeit wiederholen',x:'Du kannst die Tour im Account-Menü unter „App vorstellen“ so oft starten, wie du willst.',go:home,menu:true,target:()=>$('#acc-ov .acc-r[onclick*="tour"]')},
     {t:'Fertig – viel Erfolg!',x:'Das war alles Wichtige. Los geht’s mit deinem Lehrgang.',go:home,target:null,end:true}
   ];
   let STEPS=ALL;
@@ -106,6 +109,7 @@ const TOUR=(function(){
     const mine=n;
     setTimeout(()=>{
       if(i!==mine){ busy=0; return; }   // Tour wurde inzwischen beendet
+      try{ if(typeof ACCOUNT!=='undefined'){ if(s.menu) ACCOUNT.open(); else ACCOUNT.close(); } }catch(e){}
       const t=s.target&&s.target(), el=Array.isArray(t)?t.find(vis):t;
       if(el&&el.scrollIntoView&&vis(el)){ const r=el.getBoundingClientRect(); if(r.top<70||r.bottom>innerHeight-80) el.scrollIntoView({block:'center',behavior:'instant'}); }
       root.classList.add('on'); render();
@@ -116,6 +120,7 @@ const TOUR=(function(){
   function close(){
     if(!root) return;
     root.classList.remove('on'); hole.style.opacity='0'; document.documentElement.classList.remove('tour-lock');
+    try{ ACCOUNT.close(); }catch(e){}
     try{ if(opened&&opened.getAttribute('aria-expanded')==='true') opened.click(); }catch(e){} opened=null;
     const wasEnd=i===STEPS.length-1; i=-1; busy=0;
     if(!wasEnd){ if(from==='home') NAV.home(); else NAV.tab('v-settings','Einstellungen'); }   // abgebrochen: zurück dorthin, wo die Tour gestartet wurde
