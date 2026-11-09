@@ -4441,3 +4441,8 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .acc-ban{background-size:cover;background-position:center;}
 .acc-chip{white-space:nowrap;flex-wrap:nowrap;}
 .acc-nm{min-width:0;}
+/* Handy-Startseite: Jahr-Schalter links, Rang und Serie rechts */
+@media(max-width:700px){
+  .m-seg2 .m-mini{order:-1;}
+  .m-seg2-w{justify-content:flex-end;}
+}
