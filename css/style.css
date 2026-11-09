@@ -4439,3 +4439,5 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .acc-bb{width:32px;height:32px;border-radius:50%;border:0;background:rgba(0,0,0,.38);color:#fff;display:grid;place-items:center;font-size:1.15rem;line-height:1;cursor:pointer;backdrop-filter:blur(2px);}
 .acc-bb:hover,.acc-bb:focus-visible{background:rgba(0,0,0,.6);}
 .acc-ban{background-size:cover;background-position:center;}
+.acc-chip{white-space:nowrap;flex-wrap:nowrap;}
+.acc-nm{min-width:0;}
