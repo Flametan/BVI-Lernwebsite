@@ -2,6 +2,7 @@
 const CHANGELOG_ENTRIES=[
     {v:'3.2.4',ts:'2026-11-12T10:00',items:[
       'Schneller: Lernseiten werden erst beim Öffnen eingesetzt (Seitenwechsel am Tablet deutlich flotter), die Suche baut ihren Index in kleinen Schritten auf, der Sync gleicht seltener und mit weniger Daten ab (die Nutzungszeit löst keinen Abgleich mehr aus), und Updates laden nur noch geänderte Dateien.',
+      'Altklausur-Quiz IdF: neuer Tab „Baurechtlicher Brandschutz“ mit 38 Übungsfragen (Multiple Choice, Vorbeugender Brandschutz). Bei allen Multiple-Choice- und Mehrfachauswahl-Fragen des Quiz wechselt die Reihenfolge der Antworten bei jeder Runde, damit man sich nicht die Stelle der richtigen Antwort merkt.',
       'Speiseplan IdF Münster für 09.–13.11.2026 ergänzt.',
     ]},
     {v:'3.2.3',ts:'2026-11-09T10:00',items:[

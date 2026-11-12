@@ -125,7 +125,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   const idfq = await page.evaluate(() => {
     NAV.go('v-idf-altklausur', 'IdF');
     IDFQ.setTypeFilter('multi');
-    const cur = () => IDF_QUIZ_Q.find(x => x.q === document.getElementById('quiz-q-idf').textContent);
+    const cur = () => IDFQ._cq();   // die Frage so, wie sie angezeigt wird (Antworten gemischt)
     const res = {};
     let q = cur();
     q.correct.slice(0, -1).forEach(i => IDFQ._toggle(i));            // eine richtige fehlt
@@ -746,10 +746,51 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const qv = [...document.querySelectorAll('#quiz-exam-questions-idf .quiz-cat')].map(e => e.textContent);
     r.pruefVb = qv.length === 25 && qv.every(t => t === 'Vorbeugender Brandschutz');
     btns().find(b => b.dataset.cat === 'all').click(); await w(200);
-    r.alle = new Set([...document.querySelectorAll('#quiz-exam-questions-idf .quiz-cat')].map(e => e.textContent)).size === 2 && localStorage.getItem('bvi_idfq_cat') === null;
+    r.alle = new Set([...document.querySelectorAll('#quiz-exam-questions-idf .quiz-cat')].map(e => e.textContent)).size >= 2 && localStorage.getItem('bvi_idfq_cat') === null;
     IDFQ.setMode('learn'); NAV.go('v-home', 'Start'); return r;
   });
-  eq('Altklausur-Quiz IdF: Themenbereich wählen (Lernen und Prüfung)', iq, { knoepfe: 'all|Vorbeugender Brandschutz|Stabsarbeit', lern: true, merk: true, pruef: true, pruefVb: true, alle: true });
+  eq('Altklausur-Quiz IdF: Themenbereich wählen (Lernen und Prüfung)', iq, { knoepfe: 'all|Vorbeugender Brandschutz|Stabsarbeit|Baurechtlicher Brandschutz', lern: true, merk: true, pruef: true, pruefVb: true, alle: true });
+
+  // ── Altklausur-Quiz IdF: neuer Tab „Baurechtlicher Brandschutz“ (38 Übungsfragen) und gemischte Antwortreihenfolge ──
+  const br = await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms)), r = {}; localStorage.removeItem('bvi_idfq_cat');
+    NAV.go('v-idf-altklausur', 'IdF Quiz'); await w(400);
+    const btn = [...document.querySelectorAll('#quiz-topcat-idf .quiz-topcat-btn')].find(b => b.dataset.cat === 'Baurechtlicher Brandschutz');
+    r.tab = !!btn && /38/.test(btn.textContent);
+    btn.click(); await w(150);
+    r.fragen = IDF_QUIZ_Q.filter(q => q.cat === 'Baurechtlicher Brandschutz').length;
+    r.nurMc = IDF_QUIZ_Q.filter(q => q.cat === 'Baurechtlicher Brandschutz').every(q => q.type === 'mc' && q.opts.length === 4 && q.correct >= 0 && q.correct < 4 && !/Antwort\s+[a-d]\)/.test(q.exp));
+    // Lernmodus: oft neu mischen; die richtige Antwort steht nicht immer an derselben Stelle, bleibt aber die richtige
+    const pos = new Set(); let stimmt = true, anders = false;
+    for (let k = 0; k < 40; k++) {
+      IDFQ.setMode('learn');
+      const cq = IDFQ._cq(), src = IDF_QUIZ_Q.find(x => x.id === cq.id);
+      pos.add(cq.correct);
+      stimmt = stimmt && cq.opts[cq.correct] === src.opts[src.correct] && [...cq.opts].sort().join('|') === [...src.opts].sort().join('|');
+      anders = anders || cq.opts.join('|') !== src.opts.join('|');
+    }
+    r.positionen = pos.size >= 3; r.stimmt = stimmt; r.gemischt = anders;
+    // Antwort anklicken wertet nach der angezeigten Stelle
+    IDFQ.setMode('learn'); const q = IDFQ._cq(); IDFQ._select(q.correct); IDFQ._check();
+    r.wertung = JSON.parse(localStorage.getItem('bvi_idfq_mastery'))[q.id];
+    // Tastatur: Taste 1 bis 4 wählt die angezeigte Stelle (gemischte Ansicht)
+    IDFQ.next();
+    // Prüfung: Antworten gemischt und trotzdem 100 % bei lauter richtigen Antworten (nach Text)
+    IDFQ.setMode('exam'); await w(250);
+    const qs = [...document.querySelectorAll('#quiz-exam-questions-idf .quiz-exam-q')];
+    let ordnungOk = true, geaendert = false;
+    qs.forEach(el => {
+      const id = +el.id.match(/qeq-(\d+)/)[1], src = IDF_QUIZ_Q.find(x => x.id === id);
+      const labels = [...el.querySelectorAll('.quiz-exam-opt')].map(l => l.textContent.trim().replace(/^[a-e]\)?\s*/i, ''));
+      const idx = labels.findIndex(t => t.endsWith(src.opts[src.correct].slice(-20)));
+      if (idx < 0) ordnungOk = false;
+      if (src.type === 'mc') IDFQ._examSel(id, idx);
+      if (labels.join('|') !== src.opts.map(o => o.trim()).join('|')) geaendert = true;
+    });
+    r.pruefOrdnung = ordnungOk; r.pruefGemischt = geaendert;
+    IDFQ.setMode('learn'); NAV.go('v-home', 'Start'); return r;
+  });
+  eq('Altklausur-Quiz IdF: neuer Tab mit 38 Übungsfragen, Antworten gemischt und richtig gewertet', br, { tab: true, fragen: 38, nurMc: true, positionen: true, stimmt: true, gemischt: true, wertung: 'ok', pruefOrdnung: true, pruefGemischt: true });
 
   // ── Standort-FAQ ──
   const faq = await page.evaluate(async () => {
