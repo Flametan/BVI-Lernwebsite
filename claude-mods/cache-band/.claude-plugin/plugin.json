@@ -1,0 +1,7 @@
+{
+  "name": "cache-band",
+  "version": "0.1.0",
+  "description": "Schmale Leiste über dem Eingabefeld: Cache-Restzeit mit Balken, Cache-Trefferquote, Kontext-Wetter, Füllung und Compact-Knopf; schreibt nach einem Compact die Zusammenfassung in den Chat.",
+  "types": "./types/index.d.ts",
+  "license": "MIT"
+}

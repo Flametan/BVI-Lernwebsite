@@ -4,6 +4,7 @@ exclude:
   - tests
   - tools
   - sync-server
+  - claude-mods
   - docs
   - .github
   - README.md

@@ -1,0 +1,7 @@
+{
+  "name": "prompt-polish",
+  "version": "0.1.0",
+  "description": "Ein Knopf unter dem Eingabefeld im Live-Look: verbessert den eingegebenen Prompt nach Best Practices und den Prompting-Richtlinien von Anthropic.",
+  "license": "MIT",
+  "types": "./types/index.d.ts"
+}
