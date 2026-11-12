@@ -4,6 +4,8 @@ const CHANGELOG_ENTRIES=[
       'Schneller: Lernseiten werden erst beim Öffnen eingesetzt (Seitenwechsel am Tablet deutlich flotter), die Suche baut ihren Index in kleinen Schritten auf, der Sync gleicht seltener und mit weniger Daten ab (die Nutzungszeit löst keinen Abgleich mehr aus), und Updates laden nur noch geänderte Dateien.',
       'Altklausur-Quiz IdF: neuer Tab „Vorbeugender Brandschutz 12/2026“ mit 38 Übungsfragen (Multiple Choice, Vorbeugender Brandschutz). Bei allen Multiple-Choice- und Mehrfachauswahl-Fragen des Quiz wechselt die Reihenfolge der Antworten bei jeder Runde, damit man sich nicht die Stelle der richtigen Antwort merkt.',
       'Speiseplan IdF Münster für 09.–13.11.2026 ergänzt.',
+      'Laufbahnprüfung (Passwortbereich): neu geordnet nach IBK, VB, VAk und FeuAK. Neu sind die Klausurhinweise Recht Berlin (11.11.2026) und Modul 3.3 Hamburg mit Lösungsskizzen aus den Lernseiten sowie je eine Altklausur des Vorjahrgangs (Recht und Management).',
+      'Quiz und Lernseite Vorbeugender Brandschutz: Rettungsweglänge in Verkaufsstätten mit Sprinkler und erstem Rettungsweg über die Ladenstraße korrigiert auf 140 m.',
     ]},
     {v:'3.2.3',ts:'2026-11-09T10:00',items:[
       'Account-Menü: Das Titelbild oben lässt sich jetzt ebenfalls ändern (Kamera-Symbol links oben im Banner) oder wieder entfernen; es wird wie das Profilbild über den Sync abgeglichen.',

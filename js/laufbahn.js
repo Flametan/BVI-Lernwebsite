@@ -205,7 +205,7 @@ const LB=(function(){
       if(id==='v-lb-vb') vbInit();
     },
     // Laufbahn gibt es nur im Master-Jahrgang; ohne Passwort geht es zur Sperrseite
-    guard(id){ if(!/^v-lb-/.test(id)) return id; if(typeof JG!=='undefined'&&!JG.isMaster()) return 'v-pruefung'; return /^v-lb-(ibk|vb)/.test(id)&&!ok()?'v-lb-start':id; },
+    guard(id){ if(!/^v-lb-/.test(id)) return id; if(typeof JG!=='undefined'&&!JG.isMaster()) return 'v-pruefung'; return /^v-lb-(ibk|vb|vak|feuak)/.test(id)&&!ok()?'v-lb-start':id; },
     pick(id){ st.k=id; save(); vbRender(); window.scrollTo({top:0}); },
     type,
     eval(){ const k=K(); st.ev[k.id]=1; save(); vbRender(); window.scrollTo({top:0,behavior:'smooth'}); },

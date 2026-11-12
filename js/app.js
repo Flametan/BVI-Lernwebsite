@@ -1033,7 +1033,7 @@ const SEARCH = (function(){
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
     'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
-    'v-lb-start':'Laufbahnprüfung · Dezember','v-lb-ibk1':'Laufbahn · IBK Klausur 1','v-lb-ibk2':'Laufbahn · IBK Klausur 2','v-lb-vb':'Laufbahn · VB Klausur IdF NRW',
+    'v-lb-start':'Laufbahnprüfung · Dezember','v-lb-ibk1':'Laufbahn · IBK Klausur 1','v-lb-ibk2':'Laufbahn · IBK Klausur 2','v-lb-vb':'Laufbahn · VB Klausur IdF NRW','v-lb-vak':'Laufbahn · VAk Hinweise Recht','v-lb-vak-alt':'Laufbahn · VAk Altklausur','v-lb-feuak':'Laufbahn · FeuAK Hinweise Modul 3.3','v-lb-feuak-alt':'Laufbahn · FeuAK Altklausur',
     'v-idf-presse':'IdF · Presse- & Öffentlichkeitsarbeit',
     'v-ibk-fuehren-gruppen':'IBK · Führen von Gruppen',
     'v-ibk-fuehrung':'IBK · Führung und Führungsaufgaben',
@@ -6116,7 +6116,7 @@ const SHELL=(function(){
   ];
   const EXAMS=[
     ['Laufbahnprüfung',[
-      ['v-lb-start','Laufbahnprüfung','IBK-Klausuren und VB-Übungsklausur mit Musterlösungen · Passwort nötig','doc',true],
+      ['v-lb-start','Laufbahnprüfung','IBK, VB, VAk und FeuAK: Klausuren, Hinweise und Altklausuren mit Musterlösungen · Passwort nötig','doc',true],
       ['v-laufbahn-2026','Laufbahnklausuren Juni 2026','Recht, Management, Stabsarbeit, Vorbeugender Brandschutz · Musterlösungen','doc'],
       ['v-laufbahn-2023','Laufbahnklausuren Dez 2023','Führungsvorgang, Recht, Management, Heyrothsberge · Musterlösungen','doc']]],
     ['IdF Münster',[
