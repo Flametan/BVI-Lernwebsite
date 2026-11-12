@@ -749,17 +749,17 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.alle = new Set([...document.querySelectorAll('#quiz-exam-questions-idf .quiz-cat')].map(e => e.textContent)).size >= 2 && localStorage.getItem('bvi_idfq_cat') === null;
     IDFQ.setMode('learn'); NAV.go('v-home', 'Start'); return r;
   });
-  eq('Altklausur-Quiz IdF: Themenbereich wählen (Lernen und Prüfung)', iq, { knoepfe: 'all|Vorbeugender Brandschutz|Stabsarbeit|Baurechtlicher Brandschutz', lern: true, merk: true, pruef: true, pruefVb: true, alle: true });
+  eq('Altklausur-Quiz IdF: Themenbereich wählen (Lernen und Prüfung)', iq, { knoepfe: 'all|Vorbeugender Brandschutz|Stabsarbeit|Vorbeugender Brandschutz 12/2026', lern: true, merk: true, pruef: true, pruefVb: true, alle: true });
 
-  // ── Altklausur-Quiz IdF: neuer Tab „Baurechtlicher Brandschutz“ (38 Übungsfragen) und gemischte Antwortreihenfolge ──
+  // ── Altklausur-Quiz IdF: neuer Tab „Vorbeugender Brandschutz 12/2026“ (38 Übungsfragen) und gemischte Antwortreihenfolge ──
   const br = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {}; localStorage.removeItem('bvi_idfq_cat');
     NAV.go('v-idf-altklausur', 'IdF Quiz'); await w(400);
-    const btn = [...document.querySelectorAll('#quiz-topcat-idf .quiz-topcat-btn')].find(b => b.dataset.cat === 'Baurechtlicher Brandschutz');
+    const btn = [...document.querySelectorAll('#quiz-topcat-idf .quiz-topcat-btn')].find(b => b.dataset.cat === 'Vorbeugender Brandschutz 12/2026');
     r.tab = !!btn && /38/.test(btn.textContent);
     btn.click(); await w(150); IDFQ.setTypeFilter('all');   // der Typfilter der Tests davor soll nicht stören
-    r.fragen = IDF_QUIZ_Q.filter(q => q.cat === 'Baurechtlicher Brandschutz').length;
-    r.nurMc = IDF_QUIZ_Q.filter(q => q.cat === 'Baurechtlicher Brandschutz').every(q => q.type === 'mc' && q.opts.length === 4 && q.correct >= 0 && q.correct < 4 && !/Antwort\s+[a-d]\)/.test(q.exp));
+    r.fragen = IDF_QUIZ_Q.filter(q => q.cat === 'Vorbeugender Brandschutz 12/2026').length;
+    r.nurMc = IDF_QUIZ_Q.filter(q => q.cat === 'Vorbeugender Brandschutz 12/2026').every(q => q.type === 'mc' && q.opts.length === 4 && q.correct >= 0 && q.correct < 4 && !/Antwort\s+[a-d]\)/.test(q.exp));
     // Lernmodus: oft neu mischen; die richtige Antwort steht nicht immer an derselben Stelle, bleibt aber die richtige
     const pos = new Set(); let stimmt = true, anders = false;
     for (let k = 0; k < 40; k++) {
