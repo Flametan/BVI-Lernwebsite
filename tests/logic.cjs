@@ -757,7 +757,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     NAV.go('v-idf-altklausur', 'IdF Quiz'); await w(400);
     const btn = [...document.querySelectorAll('#quiz-topcat-idf .quiz-topcat-btn')].find(b => b.dataset.cat === 'Baurechtlicher Brandschutz');
     r.tab = !!btn && /38/.test(btn.textContent);
-    btn.click(); await w(150);
+    btn.click(); await w(150); IDFQ.setTypeFilter('all');   // der Typfilter der Tests davor soll nicht stören
     r.fragen = IDF_QUIZ_Q.filter(q => q.cat === 'Baurechtlicher Brandschutz').length;
     r.nurMc = IDF_QUIZ_Q.filter(q => q.cat === 'Baurechtlicher Brandschutz').every(q => q.type === 'mc' && q.opts.length === 4 && q.correct >= 0 && q.correct < 4 && !/Antwort\s+[a-d]\)/.test(q.exp));
     // Lernmodus: oft neu mischen; die richtige Antwort steht nicht immer an derselben Stelle, bleibt aber die richtige
