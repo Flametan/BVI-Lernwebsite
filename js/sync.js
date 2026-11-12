@@ -15,7 +15,7 @@ const SYNC=(function(){
     set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} },
     del(k){ try{ localStorage.removeItem(k); }catch(e){} }
   };
-  let firstDone=false, own=false, busy=null, again=false, timer=null, status={state:'off',msg:''}, creds=null, credsFor=null;
+  let firstDone=false, dirty=false, lastRun=0, own=false, busy=null, again=false, timer=null, status={state:'off',msg:''}, creds=null, credsFor=null;
 
   /* ── Code & Schlüssel ── */
   function newCode(){
@@ -123,6 +123,7 @@ const SYNC=(function(){
 
   function collect(){
     const d={};
+    own=true; try{ USAGE.flush(); }catch(e){} own=false;   // Nutzungszeit liegt im Speicher und wird selten geschrieben
     try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&TRACK.test(k)){ const v=localStorage.getItem(k); if(v!=null&&v.length<2e6) d[k]=v; } } }catch(e){}
     return d;
   }
@@ -135,7 +136,7 @@ const SYNC=(function(){
     let n=0; own=true;
     try{
       const cur=collect();
-      Object.keys(next).forEach(k=>{ if(cur[k]!==next[k]&&accept(k,next[k])){ ls.set(k,next[k]); n++; } });
+      Object.keys(next).forEach(k=>{ if(cur[k]!==next[k]&&accept(k,next[k])){ ls.set(k,next[k]); n++; if(k==='bvi_usage'){ try{ USAGE.reload(); }catch(e){} } } });
       Object.keys(cur).forEach(k=>{ if(!(k in next)){ ls.del(k); n++; } });
     }finally{ own=false; }
     return n;
@@ -143,12 +144,12 @@ const SYNC=(function(){
 
   /* ── Netzwerk ── */
   const url=()=>(ls.get(K.url)||DEFAULT_URL).replace(/\/+$/,'');
-  async function call(c,method,body,ver){
+  async function call(c,method,body,ver,have){
     const h={'X-Sync-Token':c.token};
     if(body!==undefined){ h['Content-Type']='application/json'; h['If-Match']=String(ver); }
     const ctl=new AbortController(), t=setTimeout(()=>ctl.abort(),20000);
     try{
-      const res=await fetch(url()+'/v1/blob/'+c.id,{method,headers:h,body:body===undefined?undefined:JSON.stringify({data:body}),signal:ctl.signal,cache:'no-store'});
+      const res=await fetch(url()+'/v1/blob/'+c.id+(have?'?have='+have:''),{method,headers:h,body:body===undefined?undefined:JSON.stringify({data:body}),signal:ctl.signal,cache:'no-store'});
       let j=null; try{ j=await res.json(); }catch(e){}
       return {s:res.status,j};
     }finally{ clearTimeout(t); }
@@ -174,14 +175,36 @@ const SYNC=(function(){
     const l=ls.get(K.last); return {state:'ok',text:l?'Sync aktiv · '+new Date(l).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}):'Sync aktiv'};
   }
 
+  // Der letzte gemeinsame Stand (Basis) liegt komprimiert im Speicher (gzip, falls der Browser es kann) und wird nur bei Änderung neu geschrieben
+  async function packBase(obj){
+    const s=JSON.stringify(obj);
+    if(typeof CompressionStream==='undefined') return s;
+    try{
+      const cs=new CompressionStream('gzip'), w=cs.writable.getWriter(); w.write(enc.encode(s)); w.close();
+      return 'z:'+b64(new Uint8Array(await new Response(cs.readable).arrayBuffer()));
+    }catch(e){ return s; }
+  }
+  async function unpackBase(str){
+    if(!str) return null;
+    try{
+      if(str.startsWith('z:')){
+        const ds=new DecompressionStream('gzip'), w=ds.writable.getWriter(); w.write(unb64(str.slice(2))); w.close();
+        return JSON.parse(dec.decode(await new Response(ds.readable).arrayBuffer()));
+      }
+      return JSON.parse(str);
+    }catch(e){ return null; }
+  }
+
   async function run(mustExist){
     const c=await getCreds(); if(!c) return {ok:false};
-    let baseSnap; try{ baseSnap=JSON.parse(ls.get(K.base)||'null'); }catch(e){ baseSnap=null; }
+    let baseSnap=await unpackBase(ls.get(K.base));
     let ver=parseInt(ls.get(K.ver),10)||0;
     for(let i=0;i<4;i++){
-      const g=await call(c,'GET');
-      let remote=null, rver=0;
+      // Hat sich auf dem Server nichts getan, antwortet er ohne Daten (neue Server); ältere Server liefern wie bisher alles
+      const g=await call(c,'GET',undefined,undefined,(baseSnap!==null&&ver>0)?ver:0);
+      let remote=null, rver=0, unchanged=false;
       if(g.s===404){ if(mustExist) throw new Error('Diesen Code kennt der Server nicht. Bitte prüfe ihn oder erzeuge auf dem anderen Gerät einen neuen.'); remote=null; rver=0; }
+      else if(g.s===200&&g.j&&g.j.unchanged&&baseSnap!==null){ remote=baseSnap; rver=g.j.version; unchanged=true; }
       else if(g.s===200){
         try{ const o=await open(c,g.j.data); remote=o&&o.keys||{}; rver=g.j.version; }
         catch(e){ throw new Error('Daten lassen sich mit diesem Code nicht entschlüsseln'); }
@@ -190,6 +213,8 @@ const SYNC=(function(){
       else if(g.s===429) throw new Error('Zu viele Anfragen – bitte später erneut');
       else throw new Error('Server antwortet nicht richtig ('+g.s+')');
       const local=collect();
+      // Weder lokal noch auf dem Server hat sich etwas getan: nichts zu tun
+      if(unchanged&&baseSnap!==null&&same(local,baseSnap)){ ls.set(K.last,new Date().toISOString()); return {ok:true,changed:0}; }
       // Erster Abgleich auf diesem Gerät: kein gemeinsamer letzter Stand → alles gilt als neu, nichts wird gelöscht
       const base=remote===null&&baseSnap===null?{}:(baseSnap||{});
       const merged=remote===null?local:merge(local,base,remote);
@@ -205,7 +230,8 @@ const SYNC=(function(){
         newVer=p.j.version;
       }
       const changed=apply(merged);
-      ls.set(K.base,JSON.stringify(merged)); ls.set(K.ver,String(newVer)); ls.set(K.last,new Date().toISOString());
+      if(baseSnap===null||!same(merged,baseSnap)) ls.set(K.base,await packBase(merged));
+      ls.set(K.ver,String(newVer)); ls.set(K.last,new Date().toISOString());
       return {ok:true,changed};
     }
     throw new Error('Gleichzeitige Änderungen – bitte erneut versuchen');
@@ -216,6 +242,7 @@ const SYNC=(function(){
     if(!connected()||!navigator.onLine&&!opts.force) return {ok:false};
     if(busy){ again=true; return busy; }
     setStatus('busy');
+    dirty=false;
     busy=(async()=>{
       try{
         const r=await run(opts.mustExist);
@@ -232,7 +259,7 @@ const SYNC=(function(){
         setStatus('err',msg); firstDone=true;
         return {ok:false,error:msg};
       }finally{
-        busy=null;
+        busy=null; lastRun=Date.now();
         if(again){ again=false; schedule(1500); }
       }
     })();
@@ -240,7 +267,7 @@ const SYNC=(function(){
   }
   function schedule(ms){
     if(!connected()) return;
-    clearTimeout(timer); timer=setTimeout(()=>sync(),ms==null?4000:ms);
+    clearTimeout(timer); timer=setTimeout(()=>sync(),ms==null?8000:ms);
   }
   function refreshUi(){
     try{ if(typeof SHELL!=='undefined'){ SHELL.renderHome&&document.getElementById('v-home')?.classList.contains('active')&&SHELL.renderHome(); } }catch(e){}
@@ -372,10 +399,13 @@ const SYNC=(function(){
     // Schreibzugriffe auf synchronisierte Schlüssel lösen einen verzögerten Abgleich aus
     try{
       const set=Storage.prototype.setItem, del=Storage.prototype.removeItem;
-      Storage.prototype.setItem=function(k,v){ set.call(this,k,v); if(!own&&this===localStorage&&TRACK.test(k)) schedule(); };
-      Storage.prototype.removeItem=function(k){ del.call(this,k); if(!own&&this===localStorage&&TRACK.test(k)) schedule(); };
+      // Die Nutzungszeit (alle 15 s) löst keinen Abgleich aus; sie wird beim Verlassen der App mitgeschickt
+      const touch=k=>{ if(own||!TRACK.test(k)) return; dirty=true; if(k!=='bvi_usage') schedule(); };
+      Storage.prototype.setItem=function(k,v){ set.call(this,k,v); if(this===localStorage) touch(k); };
+      Storage.prototype.removeItem=function(k){ del.call(this,k); if(this===localStorage) touch(k); };
     }catch(e){}
-    document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') schedule(800); else if(connected()) sync(); });
+    // Beim Zurückkehren nur abfragen, wenn die letzte Abfrage länger als eine Minute her ist; beim Verlassen nur, wenn sich etwas geändert hat
+    document.addEventListener('visibilitychange',()=>{ if(!connected()) return; if(document.visibilityState==='visible'){ if(Date.now()-lastRun>60000) schedule(800); } else if(dirty) sync(); });
     window.addEventListener('online',()=>schedule(500));
     if(connected()) sync();
     try{ ACCOUNT.dot(); }catch(e){}

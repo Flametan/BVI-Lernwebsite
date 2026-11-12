@@ -71,9 +71,10 @@ const REST = [
 ];
 
 self.addEventListener('install', e => {
-  // Nur der Kern, einzeln mit cache:'reload' (kein veralteter Browser-Cache); fehlt eine Kern-Datei, wird nicht installiert
+  // Nur der Kern, einzeln mit cache:'no-cache': der Browser fragt beim Server nach (If-None-Match) und lädt nur Dateien neu, die sich geändert haben;
+  // fehlt eine Kern-Datei, wird nicht installiert
   e.waitUntil(caches.open(CACHE).then(cache => Promise.all(CORE.map(u =>
-    fetch(new Request(u, { cache: 'reload' }))
+    fetch(new Request(u, { cache: 'no-cache' }))
       .then(res => { if(!res.ok) throw new Error(u + ' ' + res.status); return cache.put(u, res); })
   ))));
 });

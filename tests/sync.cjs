@@ -77,6 +77,18 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'ok   ' : 'FAIL ') + m); 
   const D = await mk(); await D.goto(ORIGIN + '/index.html?x=1#sync=' + code); await D.waitForSelector('#sync-ov:not([hidden]) #sync-go');
   await D.click('#sync-go'); await D.waitForFunction(() => SYNC.connected());
   ok((await ls(D, 'bvi_note_v-faq')) !== null || true, 'Link mit #sync= verbindet');
+  // Effizienz: ohne Änderung kein Hochladen, bedingte Abfrage, Nutzungszeit löst keinen Abgleich aus
+  const reqs = []; B.on('request', r => { if (r.url().includes('/v1/blob/')) reqs.push(r.method() + ' ' + r.url().replace(/^.*\/v1\/blob\/[a-f0-9]+/, '')); });
+  await B.evaluate(() => SYNC.sync({ force: true })); await B.evaluate(() => SYNC.sync({ force: true }));
+  ok(reqs.length >= 2 && reqs.every(x => x.startsWith('GET')) && reqs.some(x => x.includes('have=')), 'ohne Änderung nur bedingte Abfragen, kein Hochladen (' + reqs.join(' | ') + ')');
+  reqs.length = 0;
+  await B.evaluate(() => localStorage.setItem('bvi_usage', JSON.stringify({ '2026-01-01': 15 })));
+  await B.waitForTimeout(9500);
+  ok(reqs.length === 0, 'Schreiben der Nutzungszeit löst keinen Abgleich aus');
+  await B.evaluate(() => localStorage.setItem('bvi_note_v-faq', 'Neu von B'));
+  await B.waitForTimeout(9500);
+  ok(reqs.some(x => x.startsWith('PUT')), 'eine Notiz löst nach kurzer Ruhe einen Abgleich aus');
+  ok(await B.evaluate(() => (localStorage.getItem('bvi_sync_base') || '').startsWith('z:')), 'Basis liegt komprimiert im Speicher');
   // Knopf neben der Suche
   const E = await mk();
   ok(await E.evaluate(() => { const b = document.querySelector('.m-hbtns .m-hacc'); return !!b && b.previousElementSibling.classList.contains('m-hsearch'); }), 'Account-Knopf sitzt rechts neben der Suche');

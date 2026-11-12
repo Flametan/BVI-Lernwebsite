@@ -97,3 +97,34 @@ test('Aufbewahrung: alter Block wird beim Start gelöscht', async () => {
   const srv = createServer(config({ DATA_DIR: dir, EXPIRE_DAYS: '400' }));
   assert.equal(fs.existsSync(f), false); srv.close();
 });
+
+test('Abfrage mit ?have= liefert ohne Daten „unchanged“, solange die Version stimmt', async () => {
+  const s = await boot();
+  await put(s.base, ID, TOKEN, 0, 'Daten1');
+  let j = await (await fetch(s.base + '/v1/blob/' + ID + '?have=1', { headers: { 'X-Sync-Token': TOKEN } })).json();
+  assert.equal(j.unchanged, true); assert.equal(j.version, 1); assert.equal(j.data, undefined);
+  await put(s.base, ID, TOKEN, 1, 'Daten2');
+  j = await (await fetch(s.base + '/v1/blob/' + ID + '?have=1', { headers: { 'X-Sync-Token': TOKEN } })).json();
+  assert.equal(j.unchanged, undefined); assert.equal(j.data, 'Daten2');
+  assert.equal((await fetch(s.base + '/v1/blob/' + ID + '?have=2', { headers: { 'X-Sync-Token': OTHER } })).status, 403);
+  await s.close();
+});
+test('Gleichzeitige Schreibzugriffe mit derselben Version: genau einer gewinnt', async () => {
+  const s = await boot();
+  await put(s.base, ID, TOKEN, 0, 'start');
+  const rs = await Promise.all(Array.from({ length: 8 }, (_, i) => put(s.base, ID, TOKEN, 1, 'v' + i)));
+  const codes = rs.map(r => r.status).sort();
+  assert.equal(codes.filter(c => c === 200).length, 1); assert.equal(codes.filter(c => c === 409).length, 7);
+  assert.equal((await (await get(s.base, ID, TOKEN)).json()).version, 2);
+  await s.close();
+});
+test('Der Zähler der Blöcke stimmt auch nach Löschen (Speicher voll bei MAX_BLOBS)', async () => {
+  const s = await boot({ MAX_BLOBS: '2' });
+  const id2 = 'b'.repeat(32), id3 = 'c'.repeat(32);
+  assert.equal((await put(s.base, ID, TOKEN, 0, 'a')).status, 200);
+  assert.equal((await put(s.base, id2, TOKEN, 0, 'b')).status, 200);
+  assert.equal((await put(s.base, id3, TOKEN, 0, 'c')).status, 507);
+  await fetch(s.base + '/v1/blob/' + ID, { method: 'DELETE', headers: { 'X-Sync-Token': TOKEN } });
+  assert.equal((await put(s.base, id3, TOKEN, 0, 'c')).status, 200);
+  await s.close();
+});

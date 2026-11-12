@@ -8,6 +8,7 @@ die App verschlüsselt auf dem Gerät, der Server sieht nur unlesbare Daten. Lä
 |---|---|
 | `GET /health` | Lebenszeichen (`ok`) |
 | `GET /v1/blob/<id>` | Datenblock lesen (Kopfzeile `X-Sync-Token`) |
+| `GET /v1/blob/<id>?have=<Version>` | wie oben, antwortet aber nur mit `{version, updatedAt, unchanged:true}` (ohne Daten), solange die Version noch stimmt; ältere Server ignorieren den Zusatz |
 | `PUT /v1/blob/<id>` | Datenblock schreiben (`X-Sync-Token`, `If-Match: <Version>`, `0` = neu); bei veralteter Version `409` mit dem aktuellen Stand |
 | `DELETE /v1/blob/<id>` | Datenblock löschen (`X-Sync-Token`) |
 
@@ -40,3 +41,7 @@ Der Container läuft als Benutzer `node` (UID 1000). Gehört der Datenordner auf
 sudo chown -R 1000:1000 /home/umbrel/bvi-sync-data
 sudo docker restart bvi-sync
 ```
+
+## Leistung
+
+Der Server arbeitet ohne blockierende Dateizugriffe: Kopfdaten der zuletzt benutzten Blöcke liegen im Speicher, die Anzahl der Blöcke wird mitgezählt (kein Verzeichnis-Lesen je Anfrage), und je Block laufen Lesen, Prüfen und Schreiben nacheinander. Nach einem Update des Servers (`git pull`, neu bauen, Container ersetzen) wirkt auch die bedingte Abfrage `?have=`; die App funktioniert mit älteren Servern unverändert weiter.

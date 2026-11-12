@@ -1079,34 +1079,49 @@ const SEARCH = (function(){
     const d=el.closest('.acc-item'), v=el.closest('.view'); if(!d||!v) return -1;
     return [...v.querySelectorAll('.pc .acc-item')].indexOf(d);
   }
+  // Index einer Ansicht (setzt sie bei Bedarf ein)
+  function indexView(vid){
+    if(/^v-lb-/.test(vid)) return;   // gesperrter Bereich nicht in der Suche
+    const el = document.getElementById(vid); if(!el) return;
+    const lbl = VIEW_LABELS[vid];
+    // Ausgeblendete Kapitel, Blöcke und Reiter des Jahrgangs gehören nicht in die Suche
+    const gone = (typeof JGUI!=='undefined'&&JGUI.goneEls) ? JGUI.goneEls(vid) : [], hid = n => gone.some(g => g.contains(n));
+    el.querySelectorAll('.sec-h,.tc-name,.page-title,.def-box-label').forEach(h => {
+      const t = h.textContent.trim(); if(t.length < 3 || hid(h)) return;
+      idx.push({vid, lbl, title:t, snippet:'', boost:3, ch:chOf(h)});
+    });
+    el.querySelectorAll('.def-box p,.info-card p,.bl li,.step-desc,.hint p,.tc-sub,.ant-desc,.pillar ul li').forEach(p => {
+      const t = p.textContent.trim(); if(t.length < 8 || hid(p)) return;
+      const hdr = p.closest('.info-card,.def-box,.step-item');
+      const ttl = hdr ? (hdr.querySelector('.info-card-title,.def-box-label,.step-title')||{}).textContent||lbl : lbl;
+      idx.push({vid, lbl, title:ttl.trim(), snippet:t.slice(0,400), boost:1, ch:chOf(p)});
+    });
+  }
+  // Der Index entsteht in kleinen Schritten (je Schritt ca. 10 ms), damit die Oberfläche beim ersten Öffnen der Suche nicht einfriert;
+  // am Ende wird die aktuelle Eingabe neu durchsucht
+  let _indexRun = 0;
   function buildIndex(){
     if(_indexBuilt) return;
     _indexBuilt = true;
-    if(typeof VIEWS!=='undefined') VIEWS.ensureAll();   // die Suche braucht den Inhalt aller Ansichten
     idx = [];
-    Object.keys(VIEW_LABELS).forEach(vid => {
-      if(/^v-lb-/.test(vid)) return;   // gesperrter Bereich nicht in der Suche
-      const el = document.getElementById(vid); if(!el) return;
-      const lbl = VIEW_LABELS[vid];
-      // Ausgeblendete Kapitel, Blöcke und Reiter des Jahrgangs gehören nicht in die Suche
-      const gone = (typeof JGUI!=='undefined'&&JGUI.goneEls) ? JGUI.goneEls(vid) : [], hid = n => gone.some(g => g.contains(n));
-      el.querySelectorAll('.sec-h,.tc-name,.page-title,.def-box-label').forEach(h => {
-        const t = h.textContent.trim(); if(t.length < 3 || hid(h)) return;
-        idx.push({vid, lbl, title:t, snippet:'', boost:3, ch:chOf(h)});
+    const run = ++_indexRun, ids = Object.keys(VIEW_LABELS);
+    const later = window.requestIdleCallback ? f=>requestIdleCallback(f,{timeout:300}) : f=>setTimeout(f,16);
+    let i = 0;
+    const step = () => {
+      if(run!==_indexRun) return;   // inzwischen neu begonnen (reset)
+      const t0 = performance.now();
+      while(i<ids.length && performance.now()-t0<10) indexView(ids[i++]);
+      if(i<ids.length){ later(step); return; }
+      // Lernkarten in den Index aufnehmen
+      FLASHCARD_DATA.forEach(c=>{
+        const lbl='Lernkarten · '+c.cat;
+        const aText=stripHtml(c.a);
+        idx.push({vid:'v-flashcards',lbl,title:c.q,snippet:aText.slice(0,400),boost:2,isCard:true});
       });
-      el.querySelectorAll('.def-box p,.info-card p,.bl li,.step-desc,.hint p,.tc-sub,.ant-desc,.pillar ul li').forEach(p => {
-        const t = p.textContent.trim(); if(t.length < 8 || hid(p)) return;
-        const hdr = p.closest('.info-card,.def-box,.step-item');
-        const ttl = hdr ? (hdr.querySelector('.info-card-title,.def-box-label,.step-title')||{}).textContent||lbl : lbl;
-        idx.push({vid, lbl, title:ttl.trim(), snippet:t.slice(0,400), boost:1, ch:chOf(p)});
-      });
-    });
-    // Lernkarten in den Index aufnehmen
-    FLASHCARD_DATA.forEach(c=>{
-      const lbl='Lernkarten · '+c.cat;
-      const aText=stripHtml(c.a);
-      idx.push({vid:'v-flashcards',lbl,title:c.q,snippet:aText.slice(0,400),boost:2,isCard:true});
-    });
+      const inp=document.getElementById('search-input'), ov=document.getElementById('search-overlay');
+      if(inp&&ov&&!ov.classList.contains('hidden')&&inp.value.trim().length>=2) render(inp.value.trim());
+    };
+    step();
   }
 
   // Attributwert für onclick="…" absichern (JSON enthält Anführungszeichen)
@@ -1344,7 +1359,7 @@ const SEARCH = (function(){
       setTimeout(()=>{ render(q); el.classList.remove('sr-fade'); void el.offsetWidth; el.classList.add('sr-fade'); if(ic) ic.classList.remove('sr-spin'); },520);
     },
     close(){ document.getElementById('search-overlay').classList.add('hidden'); results=[]; focusIdx=-1; },
-    reset(){ _indexBuilt=false; },
+    reset(){ _indexBuilt=false; _indexRun++; },
     toggle(){ document.getElementById('search-overlay').classList.contains('hidden') ? this.open() : this.close(); },
     query(q){ clearTimeout(_debounceTimer); syncClear(); _debounceTimer = setTimeout(()=>render(q.trim()), 120); },
     goBk(id,label){ this.close(); NAV.go(id,label||id); },
@@ -5368,6 +5383,7 @@ const BACKUP=(function(){
   }
   function collect(){
     const d={};
+    try{ USAGE.flush(); }catch(e){}
     for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&keep(k)) d[k]=localStorage.getItem(k); }
     return d;
   }
@@ -5399,6 +5415,7 @@ const BACKUP=(function(){
         if(!confirm('Sicherung vom '+when+' einspielen?\n\nDie '+keys.length+' Einträge der Sicherung überschreiben deine aktuellen Daten. Was in der Sicherung fehlt, bleibt unverändert.')) return;
         let failed=0;
         keys.forEach(k=>{ localStorage.setItem(k,ok[k]); if(localStorage.getItem(k)!==ok[k]) failed++; });
+        try{ USAGE.reload(); }catch(e){}   // Nutzungszeit nicht mit dem alten Zwischenspeicher überschreiben
         if(failed||skipped.length){ TOAST.show((failed?failed+' Einträge passten nicht in den Speicher. ':'')+(skipped.length?skipped.length+' ungültige Einträge wurden übersprungen. ':'')+'Rest eingespielt – App wird neu geladen'); }
         else TOAST.show('Sicherung eingespielt – App wird neu geladen',{type:'ok'});
         setTimeout(()=>location.reload(),failed||skipped.length?2600:900);
@@ -5525,17 +5542,22 @@ const HL=(function(){
 
 /* ── Nutzungszeit: zählt nur, solange die App sichtbar ist und bedient wird ── */
 const USAGE=(function(){
-  const KEY='bvi_usage', TICK=15, IDLE=5*60*1000;
-  let last=Date.now();
+  const KEY='bvi_usage', TICK=15, IDLE=5*60*1000, FLUSH=60*1000;
+  let last=Date.now(), cache=null, dirty=false, lastFlush=0;
   const pad=n=>String(n).padStart(2,'0');
   const key=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ return {}; } }
+  // Die Nutzungszeit liegt im Speicher und wird höchstens einmal pro Minute (und beim Verlassen der App) geschrieben
+  function load(){ if(cache) return cache; try{ cache=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ cache={}; } return cache; }
+  function flush(){ if(!dirty) return; dirty=false; lastFlush=Date.now(); try{ localStorage.setItem(KEY,JSON.stringify(cache)); }catch(e){} }
+  window.addEventListener('storage',e=>{ if(e.key===KEY) cache=null; });   // anderer Tab hat geschrieben
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') flush(); });
+  window.addEventListener('pagehide',flush);
   ['pointerdown','keydown','wheel','touchstart','scroll'].forEach(ev=>window.addEventListener(ev,()=>{ last=Date.now(); },{passive:true,capture:true}));
   setInterval(()=>{
     if(document.visibilityState!=='visible'||Date.now()-last>IDLE) return;
     const d=load(), k=key(new Date());
-    d[k]=(d[k]||0)+TICK;
-    try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch(e){}
+    d[k]=(d[k]||0)+TICK; dirty=true;
+    if(Date.now()-lastFlush>=FLUSH) flush();
   },TICK*1000);
   return {
     today(){ return load()[key(new Date())]||0; },
@@ -5545,6 +5567,7 @@ const USAGE=(function(){
     },
     total(){ return Object.values(load()).reduce((a,b)=>a+b,0); },
     days(){ return load(); },
+    flush, reload(){ cache=null; dirty=false; },
     // letzte n Monate (ältester zuerst) mit Sekunden je Monat
     months(n){
       const d=load(), now=new Date();
@@ -6895,7 +6918,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
   ABK.render(); ABK.filter('');
   // Übrige Ansichten im Leerlauf nach dem Start einsetzen
-  if(document.readyState==='complete') setTimeout(VIEWS.idle,1200); else window.addEventListener('load',()=>setTimeout(VIEWS.idle,1200));
+  // Ansichten werden erst beim Öffnen (oder beim Aufbau des Suchindex, in Häppchen) eingesetzt: das hält das Dokument klein (3.000 statt 43.000 Knoten) und Seitenwechsel schnell
+
   console.log('%c B VI %c Lernwebsite '+APP_VERSION+' · flametan/BVI-Lernwebsite ',
     'background:#A50000;color:#fff;padding:3px 8px;border-radius:4px 0 0 4px;font-family:"DM Mono",monospace;font-weight:700',
     'background:#0A192F;color:#C9A84C;padding:3px 8px;border-radius:0 4px 4px 0;font-family:"DM Mono",monospace');
