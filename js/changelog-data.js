@@ -1,5 +1,8 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
+    {v:'3.2.4',ts:'2026-11-12T10:00',items:[
+      'Speiseplan IdF Münster für 09.–13.11.2026 ergänzt.',
+    ]},
     {v:'3.2.3',ts:'2026-11-09T10:00',items:[
       'Account-Menü: Das Titelbild oben lässt sich jetzt ebenfalls ändern (Kamera-Symbol links oben im Banner) oder wieder entfernen; es wird wie das Profilbild über den Sync abgeglichen.',
       'Tour: Neue Schritte zum Account-Menü und zum Synchronisieren von Geräten (Code erzeugen, zweites Gerät per Code oder QR-Code verbinden). „Bild entfernen“ steht im Account-Menü jetzt neben dem Namen.',

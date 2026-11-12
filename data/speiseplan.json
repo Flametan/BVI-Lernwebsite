@@ -1,6 +1,6 @@
 {
   "hinweis": "Speiseplan des IdF Münster. Jede Woche neue Tage unter „tage“ ergänzen (Schlüssel = Datum JJJJ-MM-TT); alte Tage dürfen stehen bleiben. Die Kürzel in „a“ sind die Zusatzstoffe/Allergene wie auf dem Aushang.",
-  "stand": "23.10.2026, 05:19 Uhr",
+  "stand": "09.11.2026",
   "ausgabe": "12:00 bis 13:30 Uhr",
   "tage": {
     "2026-10-26": {
@@ -55,6 +55,34 @@
     "2026-11-06": {
       "stamm":   {"t": "Flank Steak Baguette", "a": "C, L, G/W"},
       "veg":     {"t": "Kartoffelpizza", "a": "L, V"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-09": {
+      "stamm":   {"t": "Pfefferpotthast", "a": "S"},
+      "beilage": {"t": "Kartoffeln und Rote Bete"},
+      "veg":     {"t": "Rucola Süßkartoffelschnitte mit Ofengemüse", "a": "S, W, G/W"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-10": {
+      "stamm":   {"t": "Cannelloni mit Ricotta, Tomatensoße und Käse überbacken", "a": "C, L, V, G/W"},
+      "veg":     {"t": "Gemüsefrikadelle mit Kartoffelpüree und Quarkdipp", "a": "C, L, S, A, V, G/W"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-11": {
+      "stamm":   {"t": "Kasseler-Kotelett", "a": "3"},
+      "beilage": {"t": "Sauerkraut und Kartoffelpüree", "a": "L"},
+      "veg":     {"t": "Gnocchipfanne mit Gemüse", "a": "C, S, V, G/W"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-12": {
+      "stamm":   {"t": "Erbseneintopf mit Speck und Wursteinlage", "a": "S"},
+      "beilage": {"t": "Brötchen", "a": "G/W"},
+      "veg":     {"t": "Gemüse-Ravioli mit Kräutersoße", "a": "C, S, V, G/W"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-13": {
+      "stamm":   {"t": "IdF Burger", "a": "C, L, O, G/W"},
+      "veg":     {"t": "Pinsa mit Mozzarella und Basilikum"},
       "dessert": {"t": "Vario"}
     }
   }
