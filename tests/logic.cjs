@@ -673,7 +673,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.woche = document.querySelectorAll('.sp-day').length === 5 && /Schweineschnitzel/.test(document.querySelector('.sp-body').textContent);
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(100);
     r.esc = !document.querySelector('.sp-card');
-    IDF_PLAN._go(2); await w(300); await open([...document.querySelectorAll('#plan-inner .idf-day')][0]);   // Woche ohne Daten (die übernächste; die nächste hat jetzt Daten)
+    IDF_PLAN._go(3); await w(300); await open([...document.querySelectorAll('#plan-inner .idf-day')][0]);   // Woche ohne Daten (die vierte; die ersten drei haben jetzt Daten)
     r.leer = /noch kein Speiseplan/.test((document.querySelector('.sp-day.on') || {}).textContent || '') && document.querySelectorAll('.sp-day').length === 1;
     document.querySelector('.sp-card .rp-close').click(); await w(100); r.zu = !document.querySelector('.sp-card');
     IDF_PLAN._go(0); NAV.go('v-home', 'Start'); return r;

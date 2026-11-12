@@ -34,6 +34,22 @@ jobs:
         with:
           source: ./
           destination: ./_site
+      # Nur die veröffentlichte Kopie wird verkleinert (JavaScript und CSS); der Quelltext im Repository bleibt lesbar.
+      # Schlägt die Verkleinerung bei einer Datei fehl, bleibt diese Datei unverändert.
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Minify JavaScript and CSS
+        run: |
+          npm install --no-save --prefix "$RUNNER_TEMP/esb" esbuild@0.25.0
+          ESB="$RUNNER_TEMP/esb/node_modules/.bin/esbuild"
+          for f in _site/js/*.js _site/embed/*.js; do
+            case "$f" in *.min.js) continue;; esac
+            "$ESB" "$f" --minify --charset=utf8 --target=es2019 --allow-overwrite --outfile="$f" --log-level=error || echo "Verkleinern übersprungen: $f"
+          done
+          "$ESB" _site/css/style.css --minify --charset=utf8 --allow-overwrite --outfile=_site/css/style.css --log-level=error || echo "Verkleinern übersprungen: style.css"
+          ls -l _site/js/app.js _site/css/style.css
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 

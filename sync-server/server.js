@@ -5,6 +5,7 @@
  *
  *   GET    /health            → "ok"
  *   GET    /v1/blob/<id>      → { version, updatedAt, data }      Kopfzeile X-Sync-Token nötig
+ *   GET    /v1/blob/<id>?have=<Version> → { version, updatedAt, unchanged:true } ohne Daten, wenn die Version noch stimmt
  *   PUT    /v1/blob/<id>      → { version, updatedAt }            Kopfzeilen X-Sync-Token, If-Match (Version, 0 = neu)
  *   DELETE /v1/blob/<id>      → 204                               Kopfzeile X-Sync-Token
  *
@@ -13,6 +14,7 @@
  */
 const http = require('http');
 const fs = require('fs');
+const fsp = fs.promises;
 const path = require('path');
 const crypto = require('crypto');
 
@@ -42,7 +44,21 @@ function createServer(cfg) {
   const file = id => path.join(cfg.dataDir, id + '.json');
   const hits = new Map();       // ip -> { start, n, fails }
 
-  const count = () => fs.readdirSync(cfg.dataDir).filter(f => f.endsWith('.json')).length;
+  // Namen der vorhandenen Blöcke und Kopfdaten der zuletzt benutzten im Speicher: so braucht es kein Verzeichnis-Lesen und selten ein Lesen der Datei
+  const names = new Set(fs.readdirSync(cfg.dataDir).filter(f => f.endsWith('.json')).map(f => f.slice(0, -5)));
+  const count = () => names.size;
+  const meta = new Map();       // id -> { tokenHash, version, updatedAt }
+  const META_MAX = 2000;
+  const remember = (id, rec) => { meta.delete(id); meta.set(id, { tokenHash: rec.tokenHash, version: rec.version, updatedAt: rec.updatedAt }); if (meta.size > META_MAX) meta.delete(meta.keys().next().value); };
+  // je Datenblock nacheinander: Lesen, Prüfen und Schreiben dürfen sich bei gleichzeitigen Anfragen nicht überholen
+  const locks = new Map();
+  function withLock(id, fn) {
+    const prev = locks.get(id) || Promise.resolve();
+    const next = prev.then(fn, fn);
+    const tail = next.catch(() => {}).then(() => { if (locks.get(id) === tail) locks.delete(id); });
+    locks.set(id, tail);
+    return next;
+  }
   function ipOf(req) {
     if (cfg.trustProxy) { const x = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim(); if (x) return x; }
     return req.socket.remoteAddress || 'unknown';
@@ -69,16 +85,31 @@ function createServer(cfg) {
     res.writeHead(code, { 'Content-Type': typeof obj === 'string' ? 'text/plain; charset=utf-8' : 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
     res.end(body);
   }
-  function readBody(req, res, cb) {
-    const chunks = []; let n = 0, dead = false;
-    req.on('data', c => { if (dead) return; n += c.length; if (n > cfg.maxBody) { dead = true; send(res, 413, { error: 'zu groß' }); req.destroy(); return; } chunks.push(c); });
-    req.on('end', () => { if (!dead) cb(Buffer.concat(chunks).toString('utf8')); });
-    req.on('error', () => {});
+  function readBody(req, res) {
+    return new Promise(resolve => {
+      const chunks = []; let n = 0, dead = false;
+      req.on('data', c => { if (dead) return; n += c.length; if (n > cfg.maxBody) { dead = true; send(res, 413, { error: 'zu groß' }); req.destroy(); resolve(null); return; } chunks.push(c); });
+      req.on('end', () => { if (!dead) resolve(Buffer.concat(chunks).toString('utf8')); });
+      req.on('error', () => resolve(null));
+    });
   }
-  const load = id => { try { return JSON.parse(fs.readFileSync(file(id), 'utf8')); } catch (e) { return null; } };
-  function save(id, rec) { const tmp = file(id) + '.' + process.pid + '.tmp'; fs.writeFileSync(tmp, JSON.stringify(rec)); fs.renameSync(tmp, file(id)); }
+  // Kopfdaten (aus dem Speicher, sonst aus der Datei) und der ganze Block
+  async function head(id) {
+    if (!names.has(id)) return null;
+    if (meta.has(id)) { const m = meta.get(id); remember(id, m); return m; }
+    const rec = await full(id); return rec ? meta.get(id) : null;
+  }
+  async function full(id) {
+    if (!names.has(id)) return null;
+    try { const rec = JSON.parse(await fsp.readFile(file(id), 'utf8')); remember(id, rec); return rec; } catch (e) { return null; }
+  }
+  async function save(id, rec) {
+    const tmp = file(id) + '.' + process.pid + '.' + Date.now() + '.tmp';
+    await fsp.writeFile(tmp, JSON.stringify(rec)); await fsp.rename(tmp, file(id));
+    names.add(id); remember(id, rec);
+  }
 
-  const server = http.createServer((req, res) => {
+  async function handle(req, res) {
     cors(req, res);
     if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
     const url = new URL(req.url, 'http://x');
@@ -93,48 +124,66 @@ function createServer(cfg) {
     const id = m[1], token = String(req.headers['x-sync-token'] || '');
     if (!ID_RE.test(id) || !TOKEN_RE.test(token)) return send(res, 400, { error: 'ungültige Angaben' });
     const th = sha(token);
-    const rec = load(id);
     const bad = () => { h.fails++; return send(res, 403, { error: 'kein Zugriff' }); };
 
     if (req.method === 'GET') {
+      const hd = await head(id);
+      if (!hd) return send(res, 404, { error: 'unbekannt' });
+      if (!eqHex(hd.tokenHash, th)) return bad();
+      const have = Number(url.searchParams.get('have'));
+      if (Number.isInteger(have) && have > 0 && have === hd.version) return send(res, 200, { version: hd.version, updatedAt: hd.updatedAt, unchanged: true });
+      const rec = await full(id);
       if (!rec) return send(res, 404, { error: 'unbekannt' });
-      if (!eqHex(rec.tokenHash, th)) return bad();
       return send(res, 200, { version: rec.version, updatedAt: rec.updatedAt, data: rec.data });
     }
     if (req.method === 'DELETE') {
-      if (!rec) return send(res, 204);
-      if (!eqHex(rec.tokenHash, th)) return bad();
-      try { fs.unlinkSync(file(id)); } catch (e) {}
-      return send(res, 204);
+      return withLock(id, async () => {
+        const hd = await head(id);
+        if (!hd) return send(res, 204);
+        if (!eqHex(hd.tokenHash, th)) return bad();
+        try { await fsp.unlink(file(id)); } catch (e) {}
+        names.delete(id); meta.delete(id);
+        return send(res, 204);
+      });
     }
     if (req.method === 'PUT') {
       const ifm = Number(req.headers['if-match']);
       if (!Number.isInteger(ifm) || ifm < 0) return send(res, 428, { error: 'If-Match fehlt' });
-      return readBody(req, res, raw => {
-        let data; try { const j = JSON.parse(raw); data = j && j.data; } catch (e) { return send(res, 400, { error: 'kein JSON' }); }
-        if (typeof data !== 'string' || !data.length) return send(res, 400, { error: 'data fehlt' });
-        const cur = load(id);
+      const raw = await readBody(req, res); if (raw === null) return;
+      let data; try { const j = JSON.parse(raw); data = j && j.data; } catch (e) { return send(res, 400, { error: 'kein JSON' }); }
+      if (typeof data !== 'string' || !data.length) return send(res, 400, { error: 'data fehlt' });
+      return withLock(id, async () => {
+        const cur = await head(id);
         if (cur && !eqHex(cur.tokenHash, th)) return bad();
         const curV = cur ? cur.version : 0;
-        if (ifm !== curV) return send(res, 409, { error: 'Version veraltet', version: curV, updatedAt: cur && cur.updatedAt, data: cur && cur.data });
+        if (ifm !== curV) { const f = cur && await full(id); return send(res, 409, { error: 'Version veraltet', version: curV, updatedAt: cur && cur.updatedAt, data: f ? f.data : undefined }); }
         if (!cur && count() >= cfg.maxBlobs) return send(res, 507, { error: 'Speicher voll' });
         const out = { tokenHash: th, version: curV + 1, updatedAt: new Date().toISOString(), data };
-        try { save(id, out); } catch (e) { console.error('Speichern fehlgeschlagen:', e.message); return send(res, 500, { error: 'Speichern auf dem Server nicht möglich (Schreibrechte im Datenordner prüfen)' }); }
+        try { await save(id, out); } catch (e) { console.error('Speichern fehlgeschlagen:', e.message); return send(res, 500, { error: 'Speichern auf dem Server nicht möglich (Schreibrechte im Datenordner prüfen)' }); }
         return send(res, 200, { version: out.version, updatedAt: out.updatedAt });
       });
     }
     return send(res, 405, { error: 'Methode nicht erlaubt' });
+  }
+  const server = http.createServer((req, res) => {
+    handle(req, res).catch(e => { console.error('Fehler:', e && e.message); if (!res.headersSent) send(res, 500, { error: 'Serverfehler' }); else res.end(); });
   });
 
-  // ungenutzte Blöcke aufräumen (beim Start und danach täglich)
-  function sweep() {
+  // ungenutzte Blöcke aufräumen (beim Start einmal sofort, danach täglich ohne den Server zu blockieren)
+  async function sweep() {
     const limit = Date.now() - cfg.expireDays * 86400000;
-    for (const f of fs.readdirSync(cfg.dataDir)) {
-      if (!f.endsWith('.json')) continue;
-      try { if (fs.statSync(path.join(cfg.dataDir, f)).mtimeMs < limit) fs.unlinkSync(path.join(cfg.dataDir, f)); } catch (e) {}
+    for (const id of [...names]) {
+      try {
+        const st = await fsp.stat(file(id));
+        if (st.mtimeMs < limit) { await fsp.unlink(file(id)); names.delete(id); meta.delete(id); }
+      } catch (e) {}
     }
   }
-  sweep(); setInterval(sweep, 86400000).unref();
+  for (const f of fs.readdirSync(cfg.dataDir)) {
+    if (!f.endsWith('.json')) continue;
+    try { if (fs.statSync(path.join(cfg.dataDir, f)).mtimeMs < Date.now() - cfg.expireDays * 86400000) { fs.unlinkSync(path.join(cfg.dataDir, f)); names.delete(f.slice(0, -5)); } } catch (e) {}
+  }
+  setInterval(() => { sweep().catch(() => {}); }, 86400000).unref();
   return server;
 }
 
