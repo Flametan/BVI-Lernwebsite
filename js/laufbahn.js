@@ -198,11 +198,124 @@ const LB=(function(){
       <p class="m-t2">Gesprächstipp: ${esc(k.gespraechstipp||'')}</p></div>`;
   }
 
+
+  /* ── IBK-Prüfungssimulation: 240 Minuten, 100 Punkte; Inhalt kommt aus den Seiten v-lb-ibk1/-ibk2 ── */
+  const SIMKEY='bvi_lb_sim', TOTAL=240*60000;
+  const KL={ibk1:['v-lb-ibk1','Klausur 1: Ausbildung – Wertschätzung'],ibk2:['v-lb-ibk2','Klausur 2: Schichtwechsel – Pünktlichkeit']};
+  let S=null, simTick=0, simData={};
+  function sLoad(){ try{ S=JSON.parse(localStorage.getItem(SIMKEY)||'null'); }catch(e){ S=null; } if(!S||typeof S!=='object') S={}; S.phase=S.phase||'start'; S.acc=S.acc||0; S.a=S.a||{}; S.r=S.r||{}; S.tal=S.tal||{p:0,k:0,v:0}; }
+  function sSave(){ try{ localStorage.setItem(SIMKEY,JSON.stringify(S)); }catch(e){} }
+  const root=()=>{ const v=document.getElementById('v-lb-ibk-sim'); return v&&v.querySelector('.lbsim'); };
+  const elapsed=()=>S.acc+(S.run?Date.now()-S.t0:0);
+  const mmss=ms=>{ const s=Math.floor(Math.abs(ms)/1000); return (ms<0?'+':'')+String(Math.floor(s/3600)).padStart(1,'0')+':'+String(Math.floor(s%3600/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); };
+  const words=t=>(String(t||'').trim().match(/\S+/g)||[]).length;
+
+  function parse(k){
+    if(simData[k]) return simData[k];
+    const src=document.getElementById(KL[k][0]); if(!src) return null;
+    const items=[...src.querySelectorAll('details.acc-item')], D={scene:'',hint:'',tasks:[]};
+    items.forEach(it=>{
+      const title=(it.querySelector('.acc-title')||{}).textContent||'', body=it.querySelector('.acc-body'); if(!body) return;
+      if(/^Beispielszene/.test(title)) D.scene=body.innerHTML;
+      else if(/^Aufbau/.test(title)) D.hint=body.innerHTML;
+      else if(/^Aufgabe:/.test(title)){
+        const m=title.match(/^Aufgabe:\s*(.*?)\s*·\s*(\d+)\s*Punkt/), t={name:m?m[1]:title.replace(/^Aufgabe:\s*/,''),pts:m?+m[2]:0,intro:'',blocks:[]};
+        let cur=null; const push=()=>{ if(cur) t.blocks.push(cur); cur=null; };
+        [...body.childNodes].forEach(n=>{
+          if(n.nodeName==='H4'){ push(); const pm=n.textContent.match(/\((\d+)\s*Punkte?\)/); cur={h:n.textContent.replace(/\s*\(\d+\s*Punkte?\)\s*$/,''),pts:pm?+pm[1]:0,q:'',sol:'',inSol:false}; return; }
+          if(!cur){ t.intro+=n.outerHTML||''; return; }
+          if(n.nodeName==='DETAILS'&&n.classList.contains('lb-sol')){ cur.inSol=true; const c=n.cloneNode(true); const sm=c.querySelector('summary'); if(sm) sm.remove(); cur.sol+=c.innerHTML; return; }
+          if(cur.inSol) cur.sol+=n.outerHTML||n.textContent; else cur.q+=n.outerHTML||'';
+        }); push();
+        if(!t.blocks.length) t.blocks.push({h:t.name,pts:t.pts,q:t.intro,sol:''});
+        const sum=t.blocks.reduce((a,b)=>a+b.pts,0); if(sum!==t.pts){ t.blocks.forEach(b=>{ if(!b.pts) b.pts=Math.max(1,Math.round(t.pts/t.blocks.length)); }); t.pts=t.blocks.reduce((a,b)=>a+b.pts,0); }
+        t.blocks.forEach((b,i)=>{ b.key=k+':'+D.tasks.length+':'+i; });
+        D.tasks.push(t);
+      }
+    });
+    return (simData[k]=D);
+  }
+  const allBlocks=D=>D.tasks.flatMap(t=>t.blocks);
+  const earned=D=>allBlocks(D).reduce((a,b)=>a+b.pts*(S.r[b.key]||0),0);
+  const totalPts=D=>D.tasks.reduce((a,t)=>a+t.pts,0);
+
+  function head(D,label){
+    const left=TOTAL-elapsed(), over=left<0;
+    return `<div class="lbsim-bar${over?' over':''}"><div><div class="lbsim-k">${esc(label)}</div><div class="lbsim-time" data-t>${mmss(left)}</div></div>`
+      +`<div class="lbsim-act">${S.phase!=='eval'?`<button type="button" class="btn btn-ghost" onclick="LB.sim.pause()">${S.run?'Pause':'Weiter'}</button>`:''}</div></div>`;
+  }
+  const tools=()=>`<div class="m-card lbsim-tal"><div class="m-eyebrow">Strichliste Transaktionen</div><div class="lbsim-tr">`
+    +[['p','parallel'],['k','gekreuzt'],['v','verdeckt']].map(([x,n])=>`<div class="lbsim-t"><span>${n}</span><div><button type="button" aria-label="${n} minus" onclick="LB.sim.tal('${x}',-1)">−</button><b>${S.tal[x]}</b><button type="button" aria-label="${n} plus" onclick="LB.sim.tal('${x}',1)">+</button></div></div>`).join('')+`</div></div>`;
+
+  function vStart(){
+    const run=S.phase!=='start'&&S.k&&KL[S.k];
+    return `<div class="m-card"><div class="m-eyebrow">Prüfungssimulation</div><h2 class="lbsim-h">IBK-Klausur wie im Dezember</h2>
+      <p>240 Minuten, 100 Punkte. Zuerst die Szene lesen (empfohlen etwa 30 Minuten, mit Markieren und Checkliste), dann die Aufgaben der Reihe nach schreiben, zuletzt gegen die Musterlösung selbst bewerten. Welche Klausur gezogen wird, ist offen.</p>
+      <div class="lbsim-pick"><button type="button" class="m-go2" onclick="LB.sim.start('ibk1')">${esc(KL.ibk1[1])}</button><button type="button" class="m-go2" onclick="LB.sim.start('ibk2')">${esc(KL.ibk2[1])}</button><button type="button" class="btn btn-ghost" onclick="LB.sim.start()">Zufällig ziehen</button></div></div>`
+      +(run?`<div class="m-card lbsim-res"><div class="m-eyebrow">Laufende Simulation</div><p>${esc(KL[S.k][1])} · ${S.phase==='eval'?'Auswertung':S.phase==='read'?'Lesephase':'Bearbeitung'} · verbleibend ${mmss(TOTAL-elapsed())}</p><div class="lbsim-pick"><button type="button" class="m-go2" onclick="LB.sim.resume()">Fortsetzen</button><button type="button" class="btn btn-ghost" onclick="LB.sim.drop()">Verwerfen</button></div></div>`:'');
+  }
+  function vRead(D){
+    return head(D,KL[S.k][1])+`<div class="m-card"><div class="m-eyebrow">Phase 1 · Lesen</div><p>Szene mehrfach lesen, Redebeiträge markieren, Checkliste anlegen. Empfohlen: etwa 30 Minuten. Die Aufgaben sehen Sie erst in der nächsten Phase.</p></div>`
+      +`<div class="m-card lbsim-scene">${D.scene}</div>`+tools()+`<details class="lb-sol"><summary>Hinweise zum Vorgehen</summary><div class="lbsim-pad">${D.hint}</div></details>`
+      +`<button type="button" class="m-go2 lbsim-go" onclick="LB.sim.work()">Lesen beenden, Aufgaben bearbeiten →</button>`;
+  }
+  function vWork(D){
+    const bl=allBlocks(D), dn=bl.filter(b=>words(S.a[b.key])>=15).length;
+    let h=head(D,KL[S.k][1])+`<div class="lbsim-prog"><div class="bar"><i style="width:${Math.round(dn/bl.length*100)}%"></i></div><small data-p>${dn} von ${bl.length} Teilaufgaben bearbeitet</small></div>`
+      +`<details class="lb-sol"><summary>Szene und Strichliste</summary><div class="lbsim-pad"><div class="lbsim-scene">${D.scene}</div>${tools()}</div></details>`;
+    D.tasks.forEach((t,ti)=>{
+      h+=`<div class="m-card lbsim-task"><div class="lbsim-th"><b>${ti+1}. ${esc(t.name)}</b><span class="chip">${t.pts} Pkt. · ca. ${Math.round(t.pts*2.4)} Min.</span></div>${t.intro}`;
+      t.blocks.forEach(b=>{ h+=`<div class="lbsim-blk"><h4>${esc(b.h)} <span>${b.pts} Pkt.</span></h4>${b.q}<textarea class="lbsim-ta" rows="5" placeholder="Ihre Antwort in Fließtext …" ${S.run?'':'disabled'} oninput="LB.sim.type('${b.key}',this)">${esc(S.a[b.key]||'')}</textarea><small class="lbsim-wc">${words(S.a[b.key])} Wörter</small></div>`; });
+      h+=`</div>`;
+    });
+    return h+`<button type="button" class="m-go2 lbsim-go" onclick="LB.sim.finish()">Abgeben und auswerten →</button>`;
+  }
+  function vEval(D){
+    const e=earned(D), T=totalPts(D), pct=Math.round(e/T*100), rated=allBlocks(D).filter(b=>S.r[b.key]!=null).length;
+    const weak=D.tasks.map(t=>({n:t.name,p:t.blocks.reduce((a,b)=>a+b.pts*(S.r[b.key]||0),0),t:t.pts})).filter(x=>x.p/x.t<.6).sort((a,b)=>a.p/a.t-b.p/b.t).slice(0,3);
+    let h=head(D,KL[S.k][1])+`<div class="m-card lbsim-sum"><div class="m-eyebrow">Auswertung</div><div class="lbsim-score"><b data-e>${(+e.toFixed(1))}</b> von ${T} Punkten <span class="chip">${pct} %</span></div><div class="bar"><i style="width:${pct}%"></i></div>`
+      +`<p data-m>${rated<allBlocks(D).length?`Noch ${allBlocks(D).length-rated} Teilaufgaben ohne Bewertung. Vergleichen Sie Ihre Antwort mit der Musterlösung und bewerten Sie sich ehrlich.`:pct>=80?'Sehr stark. Prüfen Sie nur noch, ob die Brücke von der Theorie in die Praxis überall steht.':pct>=60?'Solide. Die schwächsten Themen unten gezielt nacharbeiten.':'Es gibt Lücken. Die Themen unten zuerst wiederholen, dann die Simulation noch einmal mit der anderen Klausur laufen lassen.'}</p>`
+      +(weak.length?`<p><strong>Zuerst wiederholen:</strong> ${weak.map(x=>esc(x.n)+' ('+(+x.p.toFixed(1))+'/'+x.t+')').join(', ')}</p>`:'')+`</div>`;
+    D.tasks.forEach((t,ti)=>{
+      h+=`<div class="m-card lbsim-task"><div class="lbsim-th"><b>${ti+1}. ${esc(t.name)}</b><span class="chip" data-tp="${ti}">${(+t.blocks.reduce((a,b)=>a+b.pts*(S.r[b.key]||0),0).toFixed(1))} / ${t.pts}</span></div>`;
+      t.blocks.forEach(b=>{ const r=S.r[b.key];
+        h+=`<div class="lbsim-blk"><h4>${esc(b.h)} <span>${b.pts} Pkt.</span></h4><div class="lbsim-mine"><small>Ihre Antwort</small>${S.a[b.key]&&S.a[b.key].trim()?`<p>${esc(S.a[b.key])}</p>`:'<p class="lbsim-none">nicht bearbeitet</p>'}</div>`
+          +`<details class="lb-sol"><summary>Musterlösung anzeigen</summary><div class="lbsim-pad">${b.sol||'<p>Siehe Seite der Klausur.</p>'}</div></details>`
+          +`<div class="lbsim-rate" role="group" aria-label="Selbstbewertung">`+[[0,'nicht erfüllt'],[.5,'teilweise'],[1,'erfüllt']].map(([v,n])=>`<button type="button" class="${r===v?'on':''}" onclick="LB.sim.rate('${b.key}',${v})">${n}</button>`).join('')+`</div></div>`; });
+      h+=`</div>`;
+    });
+    return h+`<div class="lbsim-pick"><button type="button" class="m-go2" onclick="LB.sim.drop()">Neue Simulation</button></div>`;
+  }
+  function simRender(){
+    const r=root(); if(!r) return; if(!S) sLoad();
+    let D=S.k&&parse(S.k); let h;
+    if(S.phase==='start'||!D) h=vStart(); else h=S.phase==='read'?vRead(D):S.phase==='work'?vWork(D):vEval(D);
+    r.innerHTML=h; clearInterval(simTick);
+    if(S.run&&S.phase!=='start'&&S.phase!=='eval') simTick=setInterval(simTime,1000);
+  }
+  function simTime(){
+    const r=root(); if(!r||!r.offsetParent){ clearInterval(simTick); return; }
+    const t=r.querySelector('[data-t]'); if(t){ t.textContent=mmss(TOTAL-elapsed()); t.parentNode.parentNode.classList.toggle('over',TOTAL-elapsed()<0); }
+  }
+  const sim={
+    init(){ sLoad(); if(S.run&&S.phase!=='eval'){ /* nach Neuladen: Pause, Zeit der Abwesenheit zählt nicht */ S.acc+=0; S.run=false; sSave(); } simRender(); },
+    start(k){ const key=k||(Math.random()<.5?'ibk1':'ibk2'); S={k:key,phase:'read',acc:0,run:true,t0:Date.now(),a:{},r:{},tal:{p:0,k:0,v:0}}; sSave(); simRender(); window.scrollTo({top:0}); },
+    resume(){ if(!S.run&&S.phase!=='eval'){ S.run=true; S.t0=Date.now(); sSave(); } simRender(); },
+    drop(){ clearInterval(simTick); S={phase:'start',acc:0,a:{},r:{},tal:{p:0,k:0,v:0}}; sSave(); simRender(); window.scrollTo({top:0}); },
+    pause(){ if(S.run){ S.acc+=Date.now()-S.t0; S.run=false; } else { S.run=true; S.t0=Date.now(); } sSave(); simRender(); },
+    work(){ S.phase='work'; sSave(); simRender(); window.scrollTo({top:0}); },
+    finish(){ if(S.run){ S.acc+=Date.now()-S.t0; S.run=false; } S.phase='eval'; sSave(); simRender(); window.scrollTo({top:0}); },
+    type(key,ta){ S.a[key]=ta.value; sSave(); const w=ta.nextElementSibling; if(w) w.textContent=words(ta.value)+' Wörter'; const D=parse(S.k), bl=allBlocks(D), dn=bl.filter(b=>words(S.a[b.key])>=15).length, r=root(), p=r&&r.querySelector('[data-p]'); if(p){ p.textContent=dn+' von '+bl.length+' Teilaufgaben bearbeitet'; r.querySelector('.lbsim-prog .bar i').style.width=Math.round(dn/bl.length*100)+'%'; } },
+    tal(x,d){ S.tal[x]=Math.max(0,(S.tal[x]||0)+d); sSave(); const y=window.scrollY; simRender(); window.scrollTo(0,y); },
+    rate(key,v){ S.r[key]=v; sSave(); const y=window.scrollY; simRender(); window.scrollTo(0,y); }
+  };
+
   return {
-    ok, submit, toggle, typed:mask, lock, render, ask, closeModal, fieldSubmit, fieldTyped,
+    sim, ok, submit, toggle, typed:mask, lock, render, ask, closeModal, fieldSubmit, fieldTyped,
     onShow(id){
       if(id==='v-lb-start'){ if(!shown){ shown=true; } render(); }
       if(id==='v-lb-vb') vbInit();
+      if(id==='v-lb-ibk-sim') sim.init();
     },
     // Laufbahn gibt es nur im Master-Jahrgang; ohne Passwort geht es zur Sperrseite
     guard(id){ if(!/^v-lb-/.test(id)) return id; if(typeof JG!=='undefined'&&!JG.isMaster()) return 'v-pruefung'; return /^v-lb-(ibk|vb|vak|feuak)/.test(id)&&!ok()?'v-lb-start':id; },

@@ -5,6 +5,7 @@ const CHANGELOG_ENTRIES=[
       'Altklausur-Quiz IdF: neuer Tab „Vorbeugender Brandschutz 12/2026“ mit 38 Übungsfragen (Multiple Choice, Vorbeugender Brandschutz). Bei allen Multiple-Choice- und Mehrfachauswahl-Fragen des Quiz wechselt die Reihenfolge der Antworten bei jeder Runde, damit man sich nicht die Stelle der richtigen Antwort merkt.',
       'Speiseplan IdF Münster für 09.–13.11.2026 ergänzt.',
       'Laufbahnprüfung (Passwortbereich): neu geordnet nach IBK, VB, VAk und FeuAK. Neu sind die Klausurhinweise Recht Berlin (11.11.2026) und Modul 3.3 Hamburg mit Lösungsskizzen aus den Lernseiten sowie je eine Altklausur des Vorjahrgangs (Recht und Management).',
+      'Laufbahnprüfung: neue IBK-Prüfungssimulation (240 Minuten, 100 Punkte) für beide Klausuren. Ablauf: Szene lesen, Aufgaben der Reihe nach in Fließtext beantworten (Timer, Pause, Strichliste für Transaktionen, Speicherung auf dem Gerät), danach mit der Musterlösung selbst bewerten und die schwächsten Themen angezeigt bekommen.',
       'Quiz und Lernseite Vorbeugender Brandschutz: Rettungsweglänge in Verkaufsstätten mit Sprinkler und erstem Rettungsweg über die Ladenstraße korrigiert auf 140 m.',
     ]},
     {v:'3.2.3',ts:'2026-11-09T10:00',items:[
