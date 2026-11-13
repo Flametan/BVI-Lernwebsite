@@ -117,7 +117,7 @@ const LB=(function(){
 
   /* ── VB-Übungsklausur: Brandschutzkonzept lesen, zu mindestens 5 Punkten Stellung nehmen ── */
   let st=null;
-  function load(){ try{ st=JSON.parse(localStorage.getItem(VKEY)||'null'); }catch(e){ st=null; } if(!st||typeof st!=='object') st={}; st.k=st.k||'k1'; st.a=st.a||{}; st.ev=st.ev||{}; st.m=st.m||{}; }
+  function load(){ try{ st=JSON.parse(localStorage.getItem(VKEY)||'null'); }catch(e){ st=null; } if(!st||typeof st!=='object') st={}; st.k=st.k||'k1'; st.a=st.a||{}; st.ev=st.ev||{}; st.m=st.m||{}; st.mk=st.mk||{}; st.pl=st.pl||{}; st.mode=st.mode||'text'; }
   function save(){ try{ localStorage.setItem(VKEY,JSON.stringify(st)); }catch(e){} }
   const D=()=>(typeof LB_VB!=='undefined'?LB_VB:null);
   const K=()=>{ const d=D(); return d&&d.konzepte.find(k=>k.id===st.k)||d&&d.konzepte[0]; };
@@ -137,6 +137,100 @@ const LB=(function(){
     }
     vbRender();
   }
+
+  /* ── VB: Markieren im Konzepttext und Lageplan zum Anklicken ── */
+  const vbModeBar=()=>`<div class="lbsim-sw lb-sw3" role="group" aria-label="Arbeitsweise"><button type="button" class="${st.mode==='text'?'on':''}" onclick="LB.vbmode('text')">Schreiben</button><button type="button" class="${st.mode==='mark'?'on':''}" onclick="LB.vbmode('mark')">Markieren</button><button type="button" class="${st.mode==='plan'?'on':''}" onclick="LB.vbmode('plan')">Lageplan</button></div>`;
+  function chunks(text){
+    const cuts=[0], re=/[.!?]\s+(?=[A-ZÄÖÜ„"(])/g; let m; while((m=re.exec(text))) cuts.push(m.index+m[0].length);
+    cuts.push(text.length); const out=[]; for(let i=0;i<cuts.length-1;i++){ if(cuts[i+1]>cuts[i]) out.push({s:cuts[i],e:cuts[i+1],t:text.slice(cuts[i],cuts[i+1]).trim()}); } return out;
+  }
+  function errRange(k,e){
+    const ab=(k.abschnitte.find(x=>x.punkt===e.punkt)||{}).text||'', i=ab.indexOf(e.fundstelle);
+    return i>=0?[i,i+e.fundstelle.length]:null;
+  }
+  const mkKey=(k,pid,i)=>k.id+':'+pid+':'+i;
+  function mkHit(k,e){
+    const ab=(k.abschnitte.find(x=>x.punkt===e.punkt)||{}).text||'', ch=chunks(ab), rg=errRange(k,e);
+    return ch.some((c,i)=>st.mk[mkKey(k,e.punkt,i)]&&(!rg||(c.s<rg[1]&&c.e>rg[0])));
+  }
+  function vbMark(d,k,ev){
+    let marked=0, found=k.fehler.filter(e=>mkHit(k,e)), fp=0;
+    let h=`<p class="lbsim-md">Tippen Sie Sätze an, in denen aus Feuerwehrsicht ein Mangel steckt. Wer zu viel markiert, bekommt es in der Auswertung gezeigt.</p>`;
+    d.punkte.forEach((pt,pi)=>{
+      const ab=(k.abschnitte.find(x=>x.punkt===pt.id)||{}).text||'', ch=chunks(ab), errs=k.fehler.filter(e=>e.punkt===pt.id), okp=k.ok_punkte.includes(pt.id);
+      h+=`<section class="lb-pt"><header><span class="lb-n">${String(pi+1).padStart(2,'0')}</span><h3>${esc(pt.name)}</h3></header><div class="lbm-txt">`;
+      ch.forEach((c,i)=>{
+        const on=!!st.mk[mkKey(k,pt.id,i)]; if(on) marked++;
+        const rg=errs.map(e=>errRange(k,e)), isErr=errs.some((e,j)=>!rg[j]||(c.s<rg[j][1]&&c.e>rg[j][0]));
+        let cls='lbm-s'+(on?' on':''); if(ev){ if(on&&isErr) cls+=' hit'; else if(on) {cls+=' fp'; fp++;} else if(isErr) cls+=' miss'; }
+        h+=`<button type="button" class="${cls}" aria-pressed="${on}" ${ev?'disabled':''} onclick="LB.vbtog('${pt.id}',${i})">${esc(c.t)}</button> `;
+      });
+      h+='</div>';
+      if(ev){ h+=okp?'<div class="lb-res good"><strong>Kein Mangel in diesem Punkt.</strong></div>':''; errs.forEach(e=>{ const f=mkHit(k,e); h+=`<div class="lb-err ${f?'hit':'no'}"><div class="lb-errh"><span>${f?'Erkannt':'Übersehen'}</span></div><p class="lb-q">„${esc(e.fundstelle)}“</p><p><strong>Problem:</strong> ${esc(e.problem)}</p><p><strong>Begründung:</strong> ${esc(e.begruendung)}</p><p><strong>Lösung:</strong> ${esc(e.loesung)}</p></div>`; }); }
+      h+='</section>';
+    });
+    const pts=new Set(found.map(e=>e.punkt)).size, good=pts>=5;
+    const sum=ev?`<div class="m-card lb-sum ${good?'good':'warn'}"><div class="m-eyebrow">Ergebnis</div><p><strong>${found.length} von ${k.fehler.length}</strong> Mängeln erkannt, <strong>${pts}</strong> Punkte mit Mangel getroffen, ${fp} Sätze zu Unrecht markiert.</p><p>${good?'Ziel erreicht: mindestens 5 Punkte.':'Noch nicht erreicht: gefordert sind mindestens 5 Punkte.'}</p><p class="m-t2">Gesprächstipp: ${esc(k.gespraechstipp||'')}</p></div>`:`<div class="lb-bar"><span>${marked} Sätze markiert · gefordert: Mängel in mindestens 5 Punkten</span></div>`;
+    return sum+h+`<div class="lb-act">${ev?'<button type="button" class="btn btn-ghost" onclick="LB.again()">Konzept neu bearbeiten</button>':'<button type="button" class="m-go2" onclick="LB.eval()">Auswerten</button>'}</div>`;
+  }
+  /* Lagepläne (selbst gezeichnet) – Hotspots verweisen auf die Mängel der Konzepte */
+  const PLAN={
+    k1:{svg:`<rect width="360" height="320" class="lbp-g"/><rect x="0" y="276" width="360" height="44" class="lbp-road"/><text x="180" y="303" class="lbp-l">Lindenstraße</text>
+      <path d="M70 276 L70 214 Q70 196 100 190 L134 186" class="lbp-way" style="stroke-width:14"/><text x="80" y="244" class="lbp-l lbp-s">2,80 m · R 6 m</text>
+      <circle cx="26" cy="262" r="7" class="lbp-hyd"/><path d="M26 262 L196 192" class="lbp-dash"/><text x="104" y="222" class="lbp-l lbp-s">Hydrant</text>
+      <rect x="130" y="40" width="190" height="140" class="lbp-bld"/><text x="205" y="76" class="lbp-l">Pflegeheim · 4 Geschosse</text>
+      <rect x="14" y="40" width="96" height="140" class="lbp-park"/><rect x="26" y="52" width="44" height="116" class="lbp-fw"/><text x="48" y="112" class="lbp-l lbp-s" transform="rotate(-90 48 112)">Drehleiter 3,5 × 11 m</text>
+      <circle cx="94" cy="68" r="11" class="lbp-tree"/><circle cx="94" cy="110" r="11" class="lbp-tree"/><circle cx="94" cy="152" r="11" class="lbp-tree"/>
+      <rect x="196" y="176" width="26" height="8" class="lbp-door"/><text x="209" y="198" class="lbp-l lbp-s">Haupteingang</text>
+      <rect x="286" y="48" width="26" height="44" class="lbp-stair"/><text x="299" y="74" class="lbp-l lbp-s">TR</text>
+      <rect x="140" y="126" width="54" height="36" class="lbp-ug"/><text x="167" y="148" class="lbp-l lbp-s">Technik UG</text>
+      <rect x="304" y="216" width="50" height="30" class="lbp-misc"/><text x="329" y="234" class="lbp-l lbp-s">Fernwärme</text>`,
+     hs:[
+      {id:'h1',l:'Stichzufahrt',r:[56,180,84,96],e:['k1f1'],f:'Stichzufahrt 2,80 m breit, nach etwa 40 m Innenradius 6 m, für Fahrzeuge bis 12 t ausgelegt.'},
+      {id:'h2',l:'Drehleiter-Aufstellfläche',r:[14,40,96,134],e:['k1f2'],f:'Aufstellfläche 3,5 m × 11 m auf dem Besucherparkplatz, nicht freigehalten, drei Linden mit ausgewachsener Krone dazwischen.'},
+      {id:'h3',l:'Hydrant',c:[26,262,22],e:['k1f3','k1f4'],f:'Unterflurhydrant DN 100 in 140 m Lauflinie zum Haupteingang, 400 l/min über zwei Stunden, keine weitere Entnahmestelle auf dem Grundstück.'},
+      {id:'h4',l:'Fenster Westfassade',r:[116,40,16,134],e:['k1f5','k1f6'],f:'Brüstungsoberkante im 3. OG bis 10,4 m über Gelände, Fenster mit Öffnungsbegrenzer, zweiter Rettungsweg über die Drehleiter.'},
+      {id:'h5',l:'Treppenraum',r:[280,44,40,52],e:['k1f7'],f:'Notwendige Treppenräume: Eine Rauchableitungsöffnung an oberster Stelle ist nicht vorgesehen.'},
+      {id:'h6',l:'Haupteingang',r:[184,164,50,36],e:['k1f8','k1f9'],f:'Brandmelderzentrale im Untergeschoss, bei Alarm Notruf durch das Pflegepersonal, kein Anzeigetableau, kein Schlüsseldepot am Haupteingang.'},
+      {id:'h7',l:'Technik',r:[138,122,60,40],e:['k1f11'],f:'Die Sicherheitsstromversorgung speist ausschließlich die Sicherheitsbeleuchtung.'},
+      {id:'h8',l:'Fernwärmestation',r:[300,212,58,38],e:[],f:'Fernwärmeübergabestation, wassergefährdende Stoffe nur in Kleinmengen, Löschwasser über Mischwasserkanal, keine Rückhaltung erforderlich.'}]},
+    k3:{svg:`<rect width="360" height="320" class="lbp-g"/><rect x="0" y="276" width="360" height="44" class="lbp-road"/><text x="180" y="303" class="lbp-l">Hagenstraße</text>
+      <rect x="130" y="170" width="120" height="104" class="lbp-park"/><rect x="146" y="188" width="86" height="64" class="lbp-fw"/><text x="189" y="224" class="lbp-l lbp-s">Aufstellfläche · Pkw-Pflaster</text>
+      <circle cx="140" cy="200" r="9" class="lbp-tree"/><circle cx="244" cy="204" r="9" class="lbp-tree"/><circle cx="244" cy="238" r="9" class="lbp-tree"/>
+      <circle cx="158" cy="268" r="5" class="lbp-pol"/><circle cx="172" cy="268" r="5" class="lbp-pol"/><circle cx="188" cy="268" r="5" class="lbp-pol"/><circle cx="204" cy="268" r="5" class="lbp-pol"/><text x="181" y="262" class="lbp-l lbp-s">Tor 3,50 m</text>
+      <rect x="10" y="60" width="110" height="110" class="lbp-bld lbp-old"/><text x="65" y="150" class="lbp-l lbp-s">Bestand</text><rect x="14" y="104" width="50" height="40" class="lbp-misc"/><text x="39" y="128" class="lbp-l lbp-s">Sekretariat</text><circle cx="90" cy="80" r="7" class="lbp-door"/><text x="90" y="100" class="lbp-l lbp-s">Gong</text>
+      <rect x="130" y="40" width="130" height="124" class="lbp-bld"/><rect x="140" y="50" width="66" height="60" class="lbp-aula"/><text x="173" y="84" class="lbp-l">Aula 310</text><rect x="210" y="50" width="44" height="60" class="lbp-ug"/><text x="232" y="84" class="lbp-l lbp-s">Foyer</text>
+      <path d="M206 68 L214 68 M206 94 L214 94" class="lbp-dash"/><text x="196" y="140" class="lbp-l lbp-s">Lernbereiche OG</text>
+      <circle cx="306" cy="252" r="7" class="lbp-hyd"/><text x="316" y="272" class="lbp-l lbp-s" text-anchor="end">Hydranten</text>`,
+     hs:[
+      {id:'s1',l:'Toreinfahrt',r:[146,256,70,24],e:['k3f1'],f:'3,50 m breite Toreinfahrt mit fest einbetonierten Pollern.'},
+      {id:'s2',l:'Aufstellfläche',r:[132,172,116,82],e:['k3f2'],f:'Aufstellfläche vor der Aula auf dem Pausenhof, Pflasterbelag für Pkw-Lasten, zwei Platanen im Abstand von 4 m zur Fassade.'},
+      {id:'s3',l:'Fassade Lernbereiche',r:[140,116,116,40],e:['k3f3','k3f4'],f:'Brüstungsoberkante 8,9 m über Gelände, Fenster der Lernbereiche als Festverglasung.'},
+      {id:'s4',l:'Aula',r:[140,50,66,60],e:['k3f5','k3f9'],f:'Aula mit 310 Plätzen wird als Mehrzweckraum behandelt, Rauchableitung ausschließlich über öffenbare Fenster im Erdgeschoss.'},
+      {id:'s5',l:'Aula-Ausgänge',r:[208,50,48,62],e:['k3f10'],f:'Beide Ausgänge der Aula führen ausschließlich in das Foyer, das als Pausenhalle genutzt wird.'},
+      {id:'s6',l:'Pausengong',c:[90,82,18],e:['k3f6'],f:'Als Alarmsignal wird der vorhandene Pausengong verwendet.'},
+      {id:'s7',l:'Sekretariat',r:[12,102,54,44],e:['k3f7'],f:'Handauslösung der Alarmierung ausschließlich im Sekretariat, besetzt von 7:30 bis 13:30 Uhr.'},
+      {id:'s8',l:'Hydranten',c:[306,252,22],e:[],f:'Zwei Überflurhydranten DN 100 in 40 m und 65 m Lauflinie, 1.600 l/min über zwei Stunden, beschildert und regelmäßig geprüft.'}]}
+  };
+  function hsShape(h,cls,extra){ return h.r?`<rect x="${h.r[0]}" y="${h.r[1]}" width="${h.r[2]}" height="${h.r[3]}" rx="6" class="${cls}" ${extra}/>`:`<circle cx="${h.c[0]}" cy="${h.c[1]}" r="${h.c[2]}" class="${cls}" ${extra}/>`; }
+  function vbPlan(d,k,ev){
+    const P=PLAN[k.id]; if(!P) return '<div class="m-card"><p>Für dieses Konzept gibt es keinen Lageplan.</p></div>';
+    const key=h=>k.id+':'+h.id;
+    let svg=`<svg viewBox="0 0 360 320" role="img" aria-label="Lageplan zum Anklicken">${P.svg}`;
+    P.hs.forEach(h=>{
+      const v=st.pl[key(h)], bad=h.e.length>0; let cls='lbp-hs';
+      if(v==='m') cls+=' m'; else if(v==='ok') cls+=' k';
+      if(ev){ if(bad&&v==='m') cls+=' hit'; else if(bad) cls+=' miss'; else if(v==='m') cls+=' fp'; }
+      if(st.psel===h.id) cls+=' sel';
+      svg+=`<g class="lbp-g2" tabindex="0" role="button" aria-label="${esc(h.l)}" onclick="LB.vbspot('${h.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();LB.vbspot('${h.id}')}">${hsShape(h,cls,'')}</g>`;
+    });
+    svg+='</svg>';
+    const sel=P.hs.find(h=>h.id===st.psel);
+    const panel=sel?`<div class="m-card lx-fade"><div class="m-eyebrow">${esc(sel.l)}</div><p><strong>Angabe im Konzept:</strong> ${esc(sel.f)}</p>${ev?'':`<p>Reicht das aus Sicht der Feuerwehr?</p><div class="lbsim-pick"><button type="button" class="m-go2" onclick="LB.vbset('${sel.id}','m')">Mangel</button><button type="button" class="btn btn-ghost" onclick="LB.vbset('${sel.id}','ok')">In Ordnung</button></div>`}${ev?(sel.e.length?sel.e.map(id=>{ const e=k.fehler.find(x=>x.id===id); return e?`<div class="lb-err hit"><p><strong>Problem:</strong> ${esc(e.problem)}</p><p><strong>Begründung:</strong> ${esc(e.begruendung)}</p><p><strong>Lösung:</strong> ${esc(e.loesung)}</p></div>`:''; }).join(''):'<div class="lb-res good"><strong>Kein Mangel.</strong> Das Konzept regelt diesen Punkt ausreichend.</div>'):''}</div>`:`<p class="lbsim-md">Tippen Sie auf Stellen im Plan. Sie sehen die Angabe aus dem Konzept und entscheiden, ob dort ein Mangel steckt.</p>`;
+    const bad=P.hs.filter(h=>h.e.length), got=bad.filter(h=>st.pl[key(h)]==='m').length, fa=P.hs.filter(h=>!h.e.length&&st.pl[key(h)]==='m').length, nset=P.hs.filter(h=>st.pl[key(h)]).length;
+    const sum=ev?`<div class="m-card lb-sum ${got===bad.length&&!fa?'good':'warn'}"><div class="m-eyebrow">Ergebnis</div><p><strong>${got} von ${bad.length}</strong> Mängelstellen im Plan erkannt, ${fa} zu Unrecht als Mangel markiert.</p><p>Mängel ohne Bezug zum Plan (zum Beispiel Räumungsübungen, Löschwasserrückhaltung) finden Sie in den Modi Schreiben und Markieren. Tippen Sie auf eine Stelle für die Lösung.</p></div>`:`<div class="lb-bar"><span>${nset} von ${P.hs.length} Stellen beurteilt</span></div>`;
+    return sum+`<div class="m-card lbp">${svg}</div>${panel}<div class="lb-act">${ev?'<button type="button" class="btn btn-ghost" onclick="LB.again()">Plan neu bearbeiten</button>':'<button type="button" class="m-go2" onclick="LB.eval()">Auswerten</button>'}</div>`;
+  }
   function vbRender(){
     const root=$('lb-vb-root'), d=D(), k=K(); if(!root||!d||!k) return;
     const ev=!!st.ev[k.id];
@@ -155,7 +249,8 @@ const LB=(function(){
         ${ev?result(k,p,a,bearb):''}
       </section>`;
     }).join('');
-    root.innerHTML=`<div class="lb-ktabs" role="tablist">${tabs}</div>
+    if(st.mode==='mark'||st.mode==='plan'){ root.innerHTML=`${vbModeBar()}<div class="lb-ktabs" role="tablist">${tabs}</div><div class="m-card lb-obj"><div class="m-eyebrow">Objekt</div><p>${esc(k.objekt)}</p></div>`+(st.mode==='mark'?vbMark(d,k,ev):vbPlan(d,k,ev)); return; }
+    root.innerHTML=`${vbModeBar()}<div class="lb-ktabs" role="tablist">${tabs}</div>
       <div class="m-card lb-obj"><div class="m-eyebrow">Objekt</div><p>${esc(k.objekt)}</p></div>
       ${ev?summary(k):`<div class="lb-bar"><div class="lb-barfill" id="lb-barfill" style="width:${Math.min(100,count(k.id)/5*100)}%"></div><span id="lb-cnt">${count(k.id)} von 9 Punkten bearbeitet · gefordert: mindestens 5</span></div>`}
       <div class="lb-pts">${cards}</div>
@@ -370,14 +465,20 @@ const LB=(function(){
       if(id==='v-lb-start'){ if(!shown){ shown=true; } render(); }
       if(id==='v-lb-vb') vbInit();
       if(id==='v-lb-ibk-sim') sim.init();
+      if(id==='v-lb-feuak-sim'&&typeof EX!=='undefined') EX.init();
+      if(id==='v-lb-vak-schema'&&typeof SCH!=='undefined') SCH.init();
       if(id==='v-lb-ibk-labor'&&typeof LAB!=='undefined') LAB.init();
     },
     // Laufbahn gibt es nur im Master-Jahrgang; ohne Passwort geht es zur Sperrseite
     guard(id){ if(!/^v-lb-/.test(id)) return id; if(typeof JG!=='undefined'&&!JG.isMaster()) return 'v-pruefung'; return /^v-lb-(ibk|vb|vak|feuak)/.test(id)&&!ok()?'v-lb-start':id; },
-    pick(id){ st.k=id; save(); vbRender(); window.scrollTo({top:0}); },
+    vbmode(m){ st.mode=m; st.psel=null; save(); vbRender(); },
+    vbtog(pid,i){ const k=K(), key=k.id+':'+pid+':'+i; if(st.mk[key]) delete st.mk[key]; else st.mk[key]=1; save(); const y=window.scrollY; vbRender(); window.scrollTo(0,y); },
+    vbspot(id){ st.psel=st.psel===id?null:id; save(); const y=window.scrollY; vbRender(); window.scrollTo(0,y); },
+    vbset(id,v){ const k=K(); st.pl[k.id+':'+id]=v; save(); const y=window.scrollY; vbRender(); window.scrollTo(0,y); },
+    pick(id){ st.psel=null; st.k=id; save(); vbRender(); window.scrollTo({top:0}); },
     type,
     eval(){ const k=K(); st.ev[k.id]=1; save(); vbRender(); window.scrollTo({top:0,behavior:'smooth'}); },
-    again(){ const k=K(); delete st.ev[k.id]; delete st.a[k.id]; Object.keys(st.m).forEach(x=>{ if(x.startsWith(k.id+':')) delete st.m[x]; }); save(); vbRender(); window.scrollTo({top:0}); },
+    again(){ const k=K(); delete st.ev[k.id]; delete st.a[k.id]; Object.keys(st.mk).forEach(x=>{ if(x.startsWith(k.id+':')) delete st.mk[x]; }); Object.keys(st.pl).forEach(x=>{ if(x.startsWith(k.id+':')) delete st.pl[x]; }); st.psel=null; Object.keys(st.m).forEach(x=>{ if(x.startsWith(k.id+':')) delete st.m[x]; }); save(); vbRender(); window.scrollTo({top:0}); },
     mark(key,v){ st.m[key]=v?1:0; save(); const y=window.scrollY; vbRender(); window.scrollTo(0,y); }
   };
 })();
@@ -592,5 +693,147 @@ const LAB=(function(){
     vs(){ vRender(); const s=q('.lx-sq'); if(s){ s.classList.remove('split'); void s.offsetWidth; s.classList.add('split'); setTimeout(()=>s.classList.remove('split'),1200); } },
     vh(k){ V.hold=V.hold===k?null:k; vRender(); },
     vc(side){ if(!V.hold||V.placed[side]) return; if(V.hold===side){ V.placed[side]=1; V.hold=null; V.bad=null; } else { V.bad=side; setTimeout(()=>{ V.bad=null; if(root()) vRender(); },650); } vRender(); }
+  };
+})();
+
+/* ======================================================================
+   FeuAK-Simulation (Dezernenten-Gespräch) und VAk-Prüfschema (Ampel)
+   Inhalt kommt aus den Seiten v-lb-feuak / v-lb-feuak-alt bzw. aus den Szenarien unten.
+====================================================================== */
+const EX=(function(){
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const KEY='bvi_lb_ex';
+  const SRC={
+    hint:{id:'v-lb-feuak',name:'Klausurhinweise Modul 3.3',total:50,pts:[5,5,10,5,5,5,5,5,5],sz:'Sie sind Leiter der Feuerwehr Musterstadt und erklären dem Dezernenten für öffentliche Sicherheit die folgenden Themen. Gefordert ist ausführlicher, schlüssiger Fließtext, keine Stichpunkte.'},
+    alt:{id:'v-lb-feuak-alt',name:'Altklausur Management (Vorjahrgang)',total:25}
+  };
+  let S=null, tick=0, cache={};
+  const load=()=>{ try{ S=JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){ S=null; } if(!S||typeof S!=='object') S={}; S.phase=S.phase||'start'; S.acc=S.acc||0; S.a=S.a||{}; S.r=S.r||{}; };
+  const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} };
+  const root=()=>{ const v=document.getElementById('v-lb-feuak-sim'); return v&&v.querySelector('.lbex'); };
+  const mins=k=>Math.round(SRC[k].total*1.8);
+  const elapsed=()=>S.acc+(S.run?Date.now()-S.t0:0);
+  const clock=ms=>{ const s=Math.floor(Math.abs(ms)/1000); return (ms<0?'+':'')+Math.floor(s/3600)+':'+String(Math.floor(s%3600/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); };
+  const words=t=>(String(t||'').trim().match(/\S+/g)||[]).length;
+
+  function parse(k){
+    if(cache[k]) return cache[k];
+    const src=document.getElementById(SRC[k].id); if(!src) return null;
+    const D={scene:'',tasks:[]}; let n=0;
+    [...src.querySelectorAll('details.acc-item')].forEach(it=>{
+      const title=(it.querySelector('.acc-title')||{}).textContent||'', q=(it.querySelector('.acc-q')||{}).textContent||'', body=it.querySelector('.acc-body'); if(!body) return;
+      if(/^Sachverhalt/.test(title)&&k==='alt') D.scene=body.innerHTML;
+      if(!q) return;
+      let pts=0; const pe=it.querySelector('.acc-pts'); const m=pe&&pe.textContent.match(/(\d+)/); if(m) pts=+m[1]; else if(k==='hint') pts=SRC.hint.pts[n]||5;
+      D.tasks.push({key:k+':'+n,name:title.replace(/^Aufgabe\s+/,''),q,pts,sol:body.innerHTML}); n++;
+    });
+    if(k==='hint') D.scene='<p>'+esc(SRC.hint.sz)+'</p>';
+    return (cache[k]=D);
+  }
+  const earned=D=>D.tasks.reduce((a,t)=>a+t.pts*(S.r[t.key]||0),0);
+  const total=D=>D.tasks.reduce((a,t)=>a+t.pts,0);
+
+  function bar(label){ const left=SRC[S.k].total*1.8*60000-elapsed(); return `<div class="lbsim-bar${left<0?' over':''}"><div><div class="lbsim-k">${esc(label)}</div><div class="lbsim-time" data-t>${clock(left)}</div></div><div class="lbsim-act">${S.phase==='eval'?'':`<button type="button" class="btn btn-ghost" onclick="EX.pause()">${S.run?'Pause':'Weiter'}</button>`}</div></div>`; }
+  function vStart(){
+    const run=S.phase!=='start'&&S.k&&SRC[S.k];
+    return `<div class="m-card"><div class="m-eyebrow">FeuAK-Simulation</div><h2 class="lbsim-h">Gespräch mit dem Dezernenten</h2><p>Sie erklären dem Dezernenten für öffentliche Sicherheit die Themen der Reihe nach. Antworten Sie in ausführlichem Fließtext, vergleichen Sie danach mit der Lösungsskizze und bewerten Sie sich selbst. Zeitrahmen: knapp 1,8 Minuten je Punkt.</p>
+      <div class="lbsim-pick"><button type="button" class="m-go2" onclick="EX.start('hint')">${esc(SRC.hint.name)} · 50 Pkt. · ${mins('hint')} Min.</button><button type="button" class="m-go2" onclick="EX.start('alt')">${esc(SRC.alt.name)} · 25 Pkt. · ${mins('alt')} Min.</button></div></div>`
+      +(run?`<div class="m-card lbsim-res"><div class="m-eyebrow">Laufende Simulation</div><p>${esc(SRC[S.k].name)} · ${S.phase==='eval'?'Auswertung':'Bearbeitung'} · verbleibend ${clock(SRC[S.k].total*1.8*60000-elapsed())}</p><div class="lbsim-pick"><button type="button" class="m-go2" onclick="EX.resume()">Fortsetzen</button><button type="button" class="btn btn-ghost" onclick="EX.drop()">Verwerfen</button></div></div>`:'');
+  }
+  function vWork(D){
+    const dn=D.tasks.filter(t=>words(S.a[t.key])>=25).length;
+    let h=bar(SRC[S.k].name)+`<div class="lbsim-prog"><div class="bar"><i style="width:${Math.round(dn/D.tasks.length*100)}%"></i></div><small data-p>${dn} von ${D.tasks.length} Fragen beantwortet</small></div><details class="lb-sol" open><summary>Ausgangslage</summary><div class="lbsim-pad">${D.scene}</div></details>`;
+    D.tasks.forEach((t,i)=>{ h+=`<div class="m-card lbsim-task"><div class="lbsim-th"><b>${i+1}. ${esc(t.name)}</b><span class="chip">${t.pts} Pkt.</span></div><div class="lx-say"><small>Dezernent</small><br>${esc(t.q)}</div><textarea class="lbsim-ta" rows="6" placeholder="Ihre Antwort in Fließtext …" ${S.run?'':'disabled'} oninput="EX.type('${t.key}',this)">${esc(S.a[t.key]||'')}</textarea><small class="lbsim-wc">${words(S.a[t.key])} Wörter</small></div>`; });
+    return h+`<button type="button" class="m-go2 lbsim-go" onclick="EX.finish()">Abgeben und auswerten →</button>`;
+  }
+  function vEval(D){
+    const e=earned(D), T=total(D), pct=Math.round(e/T*100), rated=D.tasks.filter(t=>S.r[t.key]!=null).length;
+    let h=bar(SRC[S.k].name)+`<div class="m-card lbsim-sum"><div class="m-eyebrow">Auswertung</div><div class="lbsim-score"><b>${+e.toFixed(1)}</b> von ${T} Punkten <span class="chip">${pct} %</span></div><div class="bar"><i style="width:${pct}%"></i></div><p>${rated<D.tasks.length?`Noch ${D.tasks.length-rated} Fragen ohne Bewertung. Vergleichen Sie Ihren Text mit der Lösungsskizze.`:pct>=80?'Sehr stark. Für die Bestnote: sprachfähig bleiben und die Begriffe aus dem Unterricht sicher verwenden.':pct>=60?'Solide. Die schwächsten Themen gezielt nacharbeiten.':'Es gibt Lücken. Die Themen mit den wenigsten Punkten zuerst wiederholen.'}</p></div>`;
+    D.tasks.forEach((t,i)=>{ const r=S.r[t.key];
+      h+=`<div class="m-card lbsim-task"><div class="lbsim-th"><b>${i+1}. ${esc(t.name)}</b><span class="chip">${+(t.pts*(r||0)).toFixed(1)} / ${t.pts}</span></div><div class="lbsim-mine"><small>Ihre Antwort</small>${S.a[t.key]&&S.a[t.key].trim()?`<p>${esc(S.a[t.key])}</p>`:'<p class="lbsim-none">nicht bearbeitet</p>'}</div><details class="lb-sol"><summary>Lösungsskizze anzeigen</summary><div class="lbsim-pad">${t.sol}</div></details><div class="lbsim-rate" role="group" aria-label="Selbstbewertung">${[[0,'nicht erfüllt'],[.5,'teilweise'],[1,'erfüllt']].map(([v,n])=>`<button type="button" class="${r===v?'on':''}" onclick="EX.rate('${t.key}',${v})">${n}</button>`).join('')}</div></div>`; });
+    return h+`<div class="lbsim-pick"><button type="button" class="m-go2" onclick="EX.drop()">Neue Simulation</button></div>`;
+  }
+  function render(){
+    const r=root(); if(!r) return; if(!S) load();
+    const D=S.k&&parse(S.k); r.innerHTML=(S.phase==='start'||!D)?vStart():S.phase==='work'?vWork(D):vEval(D);
+    clearInterval(tick); if(S.run&&S.phase==='work') tick=setInterval(()=>{ const rr=root(); if(!rr||!rr.offsetParent){ clearInterval(tick); return; } const t=rr.querySelector('[data-t]'); if(t){ const left=SRC[S.k].total*1.8*60000-elapsed(); t.textContent=clock(left); t.parentNode.parentNode.classList.toggle('over',left<0); } },1000);
+  }
+  const keep=()=>{ const y=window.scrollY; render(); window.scrollTo(0,y); };
+  return {
+    init(){ load(); if(S.run&&S.phase!=='eval'){ S.run=false; save(); } render(); },
+    start(k){ S={k,phase:'work',acc:0,run:true,t0:Date.now(),a:{},r:{}}; save(); render(); window.scrollTo({top:0}); },
+    resume(){ if(!S.run&&S.phase!=='eval'){ S.run=true; S.t0=Date.now(); save(); } render(); },
+    drop(){ clearInterval(tick); S={phase:'start',acc:0,a:{},r:{}}; save(); render(); window.scrollTo({top:0}); },
+    pause(){ if(S.run){ S.acc+=Date.now()-S.t0; S.run=false; } else { S.run=true; S.t0=Date.now(); } save(); keep(); },
+    finish(){ if(S.run){ S.acc+=Date.now()-S.t0; S.run=false; } S.phase='eval'; save(); render(); window.scrollTo({top:0}); },
+    type(key,ta){ S.a[key]=ta.value; save(); const w=ta.nextElementSibling; if(w) w.textContent=words(ta.value)+' Wörter'; const D=parse(S.k), dn=D.tasks.filter(t=>words(S.a[t.key])>=25).length, r=root(), p=r&&r.querySelector('[data-p]'); if(p){ p.textContent=dn+' von '+D.tasks.length+' Fragen beantwortet'; r.querySelector('.lbsim-prog .bar i').style.width=Math.round(dn/D.tasks.length*100)+'%'; } },
+    rate(key,v){ S.r[key]=v; save(); keep(); }
+  };
+})();
+
+const SCH=(function(){
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const NS='http://www.w3.org/2000/svg';
+  const ST=['Aufgabe der Feuerwehr','Konkrete Gefahr','Befugnisnorm','Adressat','Verhältnismäßigkeit'];
+  const FR=['Fällt die Lage in den Aufgabenbereich der Feuerwehr (§ 1 BHKG)?','Liegt eine konkrete Gefahr vor (ex ante, vertretbar)?','Gibt es eine Befugnisnorm für genau diese Maßnahme?','Richtet sich die Maßnahme gegen den richtigen Adressaten (§§ 17 bis 19 OBG)?','Ist die Maßnahme geeignet, erforderlich und angemessen (§ 15 OBG)?'];
+  const SC=[
+    {id:'a1',tag:'Altklausur A 2',t:'Brand im 2. OG, erste Nutzungseinheit',s:'Neben dem Brandraum soll die angrenzende Einheit kontrolliert werden. Auf das Klopfen reagiert niemand, Rauch ist im Flur wahrnehmbar.',
+     a:[1,1,1,1,1],e:['Brandschutz und Hilfeleistung sind Pflichtaufgabe der Gemeinde (§ 1 BHKG), die Feuerwehr ist örtlich zuständig.','Rauch im selben Geschoss, möglicherweise hilflose Personen: Je höher das bedrohte Gut (Leben), desto geringer die Anforderung an die Wahrscheinlichkeit.','Betreten und notfalls gewaltsames Öffnen: Duldungspflichten und Betretungsrechte nach § 44 BHKG, Art. 13 Abs. 7 GG, ausdrücklich in § 48 BHKG genannt.','Der Inhaber der Einheit ist Nichtstörer (§ 19 OBG). Er muss die Maßnahme dulden, weil die Gefahr anders nicht abzuwehren ist.','Geeignet (Erkundung, Menschenrettung), erforderlich (Klingeln und Rufen blieben erfolglos), angemessen (Leben vor Wohnungsschutz). Danach dokumentieren und die Einheit sichern.'],
+     r:'Betreten und Öffnen ist zulässig.'},
+    {id:'a2',tag:'Altklausur A 2',t:'Brand im 2. OG, zweite Nutzungseinheit',s:'Der Parteivorsitzende öffnet, erkennt Sie, verweigert den Zutritt als „reine Schikane“ und meint, man rieche im Flur ja nicht einmal Rauch.',
+     a:[1,1,1,1,1],e:['Gleiche Lage, gleiche Aufgabe nach § 1 BHKG.','Dass es im Flur nicht nach Rauch riecht, schließt die Gefahr nicht aus. Maßgeblich ist die Prognose eines verständigen Einsatzleiters zum Zeitpunkt des Handelns.','§ 44 BHKG in Verbindung mit Art. 13 Abs. 7 GG gilt auch gegen den Willen des Inhabers.','Er ist Nichtstörer und zur Duldung verpflichtet. Seine politische Rolle und der Vorwurf der Schikane sind rechtlich ohne Bedeutung, solange die Maßnahme sachlich begründet ist (Willkürverbot).','Ein milderes Mittel (zum Beispiel Nachfrage, Sichtkontrolle) wäre zu unsicher. Sind die Räume rauchfrei, ist die Maßnahme sofort zu beenden (Anscheinsgefahr).'],
+     r:'Betreten ist zulässig, auch gegen den Willen.'},
+    {id:'b1',tag:'Hinweise Berlin',t:'Notstromaggregat eines Privaten',s:'Beim Einsatz wird ein privates Notstromaggregat für die Einsatzstelle benötigt. Der Eigentümer ist nicht an der Gefahr beteiligt.',
+     a:[1,1,1,1,1],e:['Hilfeleistung und Eilkompetenz gehören zur Aufgabe nach § 1 BHKG.','Die Gefahr für Personen oder erhebliche Sachwerte besteht und ist konkret.','Inanspruchnahme von Personen und Hilfsmitteln nach den Pflichten der Bevölkerung im BHKG (bitte prüfen: §§ 43, 44).','Der Eigentümer ist Nichtstörer (§ 19 OBG). Die Inanspruchnahme ist nur zulässig, wenn die Gefahr nicht anders abzuwehren ist und kein eigenes Aggregat zur Verfügung steht.','Zeitlich und sachlich auf das Notwendige beschränken. Folge: Der Betroffene hat einen Ausgleichsanspruch, der im Prüfungshinweis ausdrücklich zu erwähnen ist (bitte prüfen: § 39 OBG).'],
+     r:'Zulässig mit Ausgleichsanspruch.'},
+    {id:'b2',tag:'Hinweise Berlin',t:'Rauchmelder defekt: Anscheinsgefahr',s:'Ein Nachbar meldet Brandgeruch, ein Rauchmelder piept. Die Einsatzkräfte öffnen die Wohnung, es brennt nicht, der Melder war defekt.',
+     a:[1,1,1,1,1],e:['Brandschutz, Hilfeleistung und Eilkompetenz sind Aufgabe der Feuerwehr.','Ex ante war bei verständiger Würdigung von einem drohenden Schaden auszugehen: Anscheinsgefahr. Sie ist wie eine Gefahr zu behandeln. Stellt sich der Irrtum heraus, sind die Maßnahmen sofort zu beenden.','Betretensrecht nach § 44 BHKG.','Der Wohnungsinhaber ist Nichtstörer.','Das Öffnen war erforderlich und angemessen, solange die Einschätzung vertretbar war. Danach Wohnung verschließen und dokumentieren.'],
+     r:'Rechtmäßig, wenn die Einschätzung ex ante vertretbar war.'},
+    {id:'b3',tag:'Hinweise Berlin',t:'Scheingefahr: ohne Anlass in die Wohnung',s:'Ein Einsatzleiter lässt eine Wohnung gewaltsam öffnen, weil der Briefkasten voll ist. Es gibt weder Geruch noch Geräusche noch einen Notruf.',
+     a:[1,0],e:['Die Feuerwehr ist für Brandgefahren und Hilfeleistung zuständig, hier ist aber noch kein Anlass erkennbar.','Ein gewissenhafter, besonnener und sachkundiger Beamter hätte bei der Lage keine Gefahr angenommen: Scheingefahr (Putativgefahr). Es liegt keine Gefahr vor.'],
+     r:'Unzulässig: Ohne Gefahr gibt es keine Befugnis zum Betreten.'},
+    {id:'a3',tag:'Altklausur A 3',t:'Untersagung der Pollerinstallation',s:'Sie wollen der Firma Poller und Schranken GmbH weitere Bauarbeiten im Gemeindegebiet aus Gründen des Brandschutzes untersagen.',
+     a:[1,0],e:['Vorbeugender Brandschutz gehört zur Aufgabe der Feuerwehr (§ 1 BHKG), das Anliegen ist also nicht fachfremd.','Es besteht allenfalls eine abstrakte Gefahr (Zufahrten könnten für Einsätze zu eng sein), keine konkrete. Zudem hat die Firma die Gefahr nicht verursacht (Nichtstörer). Eine Rechtsgrundlage für die Untersagung kommunaler Straßenbauvorhaben fehlt, die Anordnung wäre auch nicht hinreichend bestimmt und nicht verhältnismäßig.'],
+     r:'Rechtswidrig: Der Konflikt gehört in die Verwaltung (Dienstweg, Beteiligung der Feuerwehr an der Straßenplanung).'}
+  ];
+  let C={i:0,step:0,sc:0,tries:{},done:false,msg:null,res:null,pass:[]};
+  const root=()=>{ const v=document.getElementById('v-lb-vak-schema'); return v&&v.querySelector('.lbs'); };
+  const el=(n,a,p)=>{ const e=document.createElementNS(NS,n); for(const k in (a||{})) e.setAttribute(k,a[k]); if(p) p.appendChild(e); return e; };
+  const Y=[34,98,162,226,290], N=5;
+
+  function track(sc){
+    const svg=['<svg viewBox="0 0 360 330" role="img" aria-label="Prüfschema in fünf Stationen">'];
+    svg.push('<line x1="70" y1="34" x2="70" y2="290" class="lbs-rail"/>');
+    sc.a.forEach((a,i)=>{ if(i<C.step||C.done&&i<sc.a.length) svg.push(`<line x1="70" y1="${Y[i]}" x2="70" y2="${Y[Math.min(i+1,4)]}" class="lbs-on"/>`); });
+    for(let i=0;i<N;i++){
+      const st=i<C.step?'ok':(i===C.step&&C.res==='stop'&&!C.done?'cur':(C.res==='stop'&&i===sc.a.length-1&&C.done?'no':i===C.step&&!C.done?'cur':''));
+      const lamp=C.pass[i]===true?'ok':C.pass[i]===false?'no':st==='cur'?'cur':'';
+      const skip=i>=sc.a.length;
+      svg.push(`<g class="lbs-st${skip?' skip':''}"><circle cx="70" cy="${Y[i]}" r="22" class="lbs-lamp ${lamp}${C.flash===i?' flash':''}"/><text x="70" y="${Y[i]+5}" class="lbs-n">${i+1}</text><text x="108" y="${Y[i]+5}" class="lbs-t">${esc(ST[i])}</text></g>`);
+    }
+    const ty=Y[Math.min(C.step,4)];
+    svg.push(`<g class="lbs-tok" style="transform:translateY(${ty-34}px)"><circle cx="70" cy="34" r="11"/><text x="70" y="38">FW</text></g></svg>`);
+    return svg.join('');
+  }
+  function render(){
+    const r=root(); if(!r) return; const sc=SC[C.i];
+    const verdict=C.done?`<div class="lx-say lx-fade lx-${C.res==='go'?'ok':'no'}"><b>${esc(sc.r)}</b></div>${C.i<SC.length-1?'<button type="button" class="m-go2" onclick="SCH.next()">Nächster Fall →</button>':`<p class="lx-big">${C.sc} von ${SC.reduce((a,s)=>a+s.a.length,0)}</p><p class="lx-mu">Punkte (richtig beim ersten Versuch).</p><button type="button" class="m-go2" onclick="SCH.reset()">Noch einmal</button>`}`:'';
+    const q=!C.done?`<div class="m-card"><div class="m-eyebrow">Station ${C.step+1} von ${sc.a.length}: ${esc(ST[C.step])}</div><p><b>${esc(FR[C.step])}</b></p><div class="lbs-ans"><button type="button" class="btn btn-ghost" onclick="SCH.ans(1)">Ja</button><button type="button" class="btn btn-ghost" onclick="SCH.ans(0)">Nein</button></div>${C.msg?`<div class="lx-say lx-fade lx-no"><b>Nicht ganz.</b> ${esc(C.msg)}</div>`:''}</div>`:'';
+    r.innerHTML=`<div class="m-card"><div class="lx-row">${SC.map((s,i)=>`<button type="button" class="lx-chip${i===C.i?' on':''}" onclick="SCH.pick(${i})">${i+1}</button>`).join('')}</div><div class="lx-row"><span class="lx-chip">${esc(sc.tag)}</span><b>${esc(sc.t)}</b></div><div class="lx-say">${esc(sc.s)}</div>${track(sc)}</div>${q}${C.done||C.expl?`<div class="m-card"><div class="m-eyebrow">Begründung</div>${sc.e.slice(0,C.done?sc.e.length:C.step).map((x,i)=>`<p><b>${i+1}. ${esc(ST[i])}:</b> ${esc(x)}</p>`).join('')}</div>`:''}${verdict}`;
+  }
+  return {
+    init(){ if(!root()) return; render(); },
+    pick(i){ C={i,step:0,sc:C.sc,tries:{},done:false,msg:null,res:null,pass:[],expl:false}; render(); },
+    ans(v){
+      const sc=SC[C.i], want=sc.a[C.step]; C.flash=null;
+      if(v===want){ if(!C.tries[C.step]) C.sc++; C.pass[C.step]=!!want; C.msg=null; C.expl=true;
+        if(!want){ C.done=true; C.res='stop'; }
+        else if(C.step===sc.a.length-1){ C.done=true; C.res='go'; C.step=Math.min(C.step+1,4); C.step=sc.a.length-1; }
+        else C.step++;
+      } else { C.tries[C.step]=1; C.flash=C.step; C.msg=sc.e[C.step]; }
+      render();
+    },
+    next(){ C.i++; C.step=0; C.done=false; C.msg=null; C.res=null; C.pass=[]; C.tries={}; C.expl=false; render(); window.scrollTo({top:0}); },
+    reset(){ C={i:0,step:0,sc:0,tries:{},done:false,msg:null,res:null,pass:[],expl:false}; render(); window.scrollTo({top:0}); }
   };
 })();
