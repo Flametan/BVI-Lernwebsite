@@ -1033,7 +1033,7 @@ const SEARCH = (function(){
     'v-idf-altklausur':'IdF · Altklausur-Quiz',
     'v-laufbahn-2023':'Laufbahnprüfung · Klausuren Dez 2023',
     'v-laufbahn-2026':'Laufbahnprüfung · Klausuren Juni 2026',
-    'v-lb-start':'Laufbahnprüfung · Dezember','v-lb-ibk1':'Laufbahn · IBK Klausur 1','v-lb-ibk2':'Laufbahn · IBK Klausur 2','v-lb-vb':'Laufbahn · VB Klausur IdF NRW','v-lb-ibk-sim':'Laufbahn · IBK Prüfungssimulation','v-lb-vak':'Laufbahn · VAk Hinweise Recht','v-lb-vak-alt':'Laufbahn · VAk Altklausur','v-lb-feuak':'Laufbahn · FeuAK Hinweise Modul 3.3','v-lb-feuak-alt':'Laufbahn · FeuAK Altklausur',
+    'v-lb-start':'Laufbahnprüfung · Dezember','v-lb-ibk1':'Laufbahn · IBK Klausur 1','v-lb-ibk2':'Laufbahn · IBK Klausur 2','v-lb-vb':'Laufbahn · VB Klausur IdF NRW','v-lb-ibk-sim':'Laufbahn · IBK Prüfungssimulation','v-lb-ibk-labor':'Laufbahn · IBK-Labor','v-lb-vak':'Laufbahn · VAk Hinweise Recht','v-lb-vak-alt':'Laufbahn · VAk Altklausur','v-lb-feuak':'Laufbahn · FeuAK Hinweise Modul 3.3','v-lb-feuak-alt':'Laufbahn · FeuAK Altklausur',
     'v-idf-presse':'IdF · Presse- & Öffentlichkeitsarbeit',
     'v-ibk-fuehren-gruppen':'IBK · Führen von Gruppen',
     'v-ibk-fuehrung':'IBK · Führung und Führungsaufgaben',
