@@ -4601,3 +4601,21 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 #lb-hub.lb-in>.lb-fach{animation:lpCascade .45s cubic-bezier(.2,.8,.2,1) both;}
 #lb-hub.lb-in>.lb-fach:nth-child(2){animation-delay:70ms}#lb-hub.lb-in>.lb-fach:nth-child(3){animation-delay:140ms}#lb-hub.lb-in>.lb-fach:nth-child(4){animation-delay:210ms}
 .lb-relock{align-self:center;}
+
+/* Laufbahn-Hub: drei Arten von Einträgen */
+.lb-leg{display:flex;flex-wrap:wrap;gap:.3rem 1rem;font-size:.82rem;color:var(--m-muted);margin:0 0 .2rem;}
+.lb-leg span{display:flex;align-items:center;gap:.4rem;}
+.lb-dot{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--m-muted);}
+.lb-dot.o,.lb-t-o .tc-icon{--lk:#2f8f4e;}.lb-dot.s{background:#9a968b;}.lb-dot.sim{background:#2a6fb8;}.lb-dot.o{background:#2f8f4e;}
+:root[data-theme="dark"] .lb-dot.sim{background:#7db4ee;}:root[data-theme="dark"] .lb-dot.o{background:#5fc47f;}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lb-dot.sim{background:#7db4ee;}:root:not([data-theme="light"]) .lb-dot.o{background:#5fc47f;}}
+.lb-fb .topic-card.lb-t-o .tc-icon{color:#2f8f4e;}
+.lb-fb .topic-card.lb-t-s .tc-icon{color:var(--m-muted);}
+.lb-fb .topic-card.lb-t-sim{border:2px dashed #2a6fb8;border-radius:14px;background:color-mix(in srgb,#2a6fb8 7%,transparent);margin:.35rem 0;padding:.7rem .6rem;}
+.lb-fb .topic-card.lb-t-sim .tc-icon{color:#2a6fb8;}
+:root[data-theme="dark"] .lb-fb .topic-card.lb-t-sim{border-color:#7db4ee;}:root[data-theme="dark"] .lb-fb .topic-card.lb-t-sim .tc-icon{color:#7db4ee;}:root[data-theme="dark"] .lb-fb .topic-card.lb-t-o .tc-icon{color:#5fc47f;}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lb-fb .topic-card.lb-t-sim{border-color:#7db4ee;}:root:not([data-theme="light"]) .lb-fb .topic-card.lb-t-sim .tc-icon{color:#7db4ee;}:root:not([data-theme="light"]) .lb-fb .topic-card.lb-t-o .tc-icon{color:#5fc47f;}}
+.lb-kd{font-weight:800;}
+.lb-t-o .lb-kd{color:#2f8f4e;}.lb-t-sim .lb-kd{color:#2a6fb8;}
+:root[data-theme="dark"] .lb-t-sim .lb-kd{color:#7db4ee;}:root[data-theme="dark"] .lb-t-o .lb-kd{color:#5fc47f;}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lb-t-sim .lb-kd{color:#7db4ee;}:root:not([data-theme="light"]) .lb-t-o .lb-kd{color:#5fc47f;}}
