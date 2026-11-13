@@ -1819,6 +1819,11 @@ const FC = (function(){
   const CATS = ['laufbahn','ibk','vak','feuak','idf'];
   let deck=[], curIdx=0, flipped=false, sess={known:0,unknown:0,hard:0};
   let activeFilters = new Set(['laufbahn']);
+  // Unterteilung der Laufbahnklausuren: IBK, VAk, FeuAK, VB, Stabsarbeit (Mehrfachauswahl, Standard alle)
+  const LBSUB=[['ibk','IBK',['heyrothsberge']],['vak','VAk',['recht']],['feuak','FeuAK',['management']],['vb','VB',['vorbeugender brandschutz']],['stab','Stabsarbeit',['stabsarbeit','führungsvorgang']]];
+  const lbKey=c=>{ const p=c.cat.toLowerCase().split(' · ')[1]||''; const x=LBSUB.find(s=>s[2].includes(p)); return x?x[0]:null; };
+  let lbSel=(()=>{ try{ const v=JSON.parse(localStorage.getItem('bvi_fc_lbsub')||'null'); if(Array.isArray(v)){ const s=new Set(v.filter(k=>LBSUB.some(x=>x[0]===k))); if(s.size) return s; } }catch{} return new Set(LBSUB.map(x=>x[0])); })();
+  const lbIn=c=>{ const k=lbKey(c); return !k||lbSel.has(k); };
   let _seen = [], _reviewPos = -1, _toCard = false, _flyFn = null, _flying = false;
 
   const SR_DAYS = [0,1,3,7,14,30];
@@ -1896,7 +1901,7 @@ const FC = (function(){
   };
   const mic=(k,sz)=>'<svg viewBox="0 0 24 24" width="'+sz+'" height="'+sz+'" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+MODE_IC[k]+'</svg>';
   function getMode(){ try{ const m=localStorage.getItem('bvi_fc_mode'); return MODES.some(x=>x[0]===m)?m:'open'; }catch{ return 'open'; } }
-  function modePool(){ return FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f))); }
+  function modePool(){ return FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f)&&(f!=='laufbahn'||lbIn(c)))); }
   function modeFilter(pool,m){
     const kn=fcLoad(), weak=fcLoadWeak(), now=Date.now();
     if(m==='weak') return pool.filter(c=>weak.has(c.id));
@@ -1952,7 +1957,7 @@ const FC = (function(){
     return sh;
   }
 
-  function updateFilterButtons(){
+  function updateFilterButtons(){ renderSub();
     renderModeBar();
     const known=fcKnown();
     const stars=fcLoadStars();
@@ -1988,12 +1993,23 @@ const FC = (function(){
         b.innerHTML=`<b>${base}</b><small>${weakN}</small>`;
       } else if(df==='pruefung'){ /* kein eigener Zustand */
       } else if(df){
-        const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df));
+        const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df)&&(df!=='laufbahn'||lbIn(c)));
         const knownCnt=cats.filter(c=>known[c.id]).length;
         b.classList.toggle('active',!isStarred&&activeFilters.has(df));
         b.innerHTML=`<b>${base}</b><small>${knownCnt}/${cats.length}</small>`;
       }
     });
+  }
+  function renderSub(){
+    const row=document.getElementById('fc-sub-row'); if(!row) return;
+    const special=activeFilters.has('starred')||activeFilters.has('own')||activeFilters.has('weak')||activeFilters.has('known');
+    const show=activeFilters.has('laufbahn')&&!special; row.hidden=!show; if(!show) return;
+    const lb=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith('laufbahn'));
+    const cnt=k=>lb.filter(c=>lbKey(c)===k).length, all=lbSel.size===LBSUB.length;
+    const n=lb.filter(lbIn).length;
+    row.innerHTML='<div class="fc-sub-chips" role="group" aria-label="Laufbahnklausuren nach Fach"><button type="button" class="fc-sub-b'+(all?' on':'')+'" aria-pressed="'+all+'" onclick="FC.setSub(\'all\')">Alle</button>'
+      +LBSUB.map(x=>{ const on=lbSel.has(x[0]); return '<button type="button" class="fc-sub-b'+(on?' on':'')+'" aria-pressed="'+on+'" onclick="FC.setSub(\''+x[0]+'\')">'+x[1]+'<small>'+cnt(x[0])+'</small></button>'; }).join('')
+      +'</div><div class="fc-sub-sum">'+(all?'Alle Fächer':lbSel.size+(lbSel.size===1?' Fach':' Fächer')+' gewählt')+' · '+n+' Karten</div>';
   }
   function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
 
@@ -2280,6 +2296,13 @@ const FC = (function(){
       const weak=fcLoadWeak(); if(q===2) weak.delete(card.id); else weak.add(card.id); fcSaveWeak(weak);
       fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide(); updateFilterButtons();
       if(typeof GAME!=='undefined') GAME.event('card',q>0);
+    },
+    setSub(k){
+      if(k==='all'||!LBSUB.some(x=>x[0]===k)) lbSel=new Set(LBSUB.map(x=>x[0]));
+      else if(lbSel.size===LBSUB.length) lbSel=new Set([k]);   // aus „Alle“ heraus: erst nur dieses Fach
+      else { if(lbSel.has(k)) lbSel.delete(k); else lbSel.add(k); if(lbSel.size===0) lbSel=new Set(LBSUB.map(x=>x[0])); }
+      try{ localStorage.setItem('bvi_fc_lbsub',JSON.stringify([...lbSel])); }catch{}
+      updateFilterButtons(); this.start(true);
     },
     setFilter(f){
       if(f==='starred'){
