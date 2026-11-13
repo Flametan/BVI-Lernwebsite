@@ -108,10 +108,17 @@ const LB=(function(){
   const EYE='<svg class="lb-eye-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="lb-slash" d="M3 3l18 18"/></svg>';
   function lock(){ try{ sessionStorage.removeItem(SKEY); }catch(e){} render(); }
 
+  const FK='bvi_lb_fach';
+  function fach(btn){
+    const open=btn.getAttribute('aria-expanded')==='true';
+    document.querySelectorAll('#lb-hub .lb-fh').forEach(b=>{ b.setAttribute('aria-expanded','false'); if(b.nextElementSibling) b.nextElementSibling.hidden=true; });
+    try{ if(open) sessionStorage.removeItem(FK); else sessionStorage.setItem(FK,btn.dataset.f); }catch(e){}
+    if(!open){ btn.setAttribute('aria-expanded','true'); if(btn.nextElementSibling) btn.nextElementSibling.hidden=false; }
+  }
   function render(){
     const g=$('lb-gate'), h=$('lb-hub'); if(!g||!h) return;
     const open=ok(); g.hidden=open; h.hidden=!open;
-    if(open) h.classList.remove('lb-in'), void h.offsetWidth, h.classList.add('lb-in');
+    if(open){ h.classList.remove('lb-in'); void h.offsetWidth; h.classList.add('lb-in'); let sv=null; try{ sv=sessionStorage.getItem(FK); }catch(e){} const b=sv&&h.querySelector('.lb-fh[data-f="'+sv+'"]'); if(b&&b.getAttribute('aria-expanded')!=='true') fach(b); }
     else setTimeout(()=>{ const i=$('lb-pw'); if(i&&document.getElementById('v-lb-start').classList.contains('active')) i.focus({preventScroll:true}); },60);
   }
 
@@ -460,7 +467,7 @@ const LB=(function(){
   };
 
   return {
-    sim, ok, submit, toggle, typed:mask, lock, render, ask, closeModal, fieldSubmit, fieldTyped,
+    fach, sim, ok, submit, toggle, typed:mask, lock, render, ask, closeModal, fieldSubmit, fieldTyped,
     onShow(id){
       if(id==='v-lb-start'){ if(!shown){ shown=true; } render(); }
       if(id==='v-lb-vb') vbInit();
@@ -704,7 +711,7 @@ const EX=(function(){
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const KEY='bvi_lb_ex';
   const SRC={
-    hint:{id:'v-lb-feuak',name:'Klausurhinweise Modul 3.3',total:50,pts:[5,5,10,5,5,5,5,5,5],sz:'Sie sind Leiter der Feuerwehr Musterstadt und erklären dem Dezernenten für öffentliche Sicherheit die folgenden Themen. Gefordert ist ausführlicher, schlüssiger Fließtext, keine Stichpunkte.'},
+    hint:{id:'v-lb-feuak',name:'Eingrenzung Modul 3.3',total:50,pts:[5,5,10,5,5,5,5,5,5],sz:'Sie sind Leiter der Feuerwehr Musterstadt und erklären dem Dezernenten für öffentliche Sicherheit die folgenden Themen. Gefordert ist ausführlicher, schlüssiger Fließtext, keine Stichpunkte.'},
     alt:{id:'v-lb-feuak-alt',name:'Altklausur Management (Vorjahrgang)',total:25}
   };
   let S=null, tick=0, cache={};
@@ -783,13 +790,13 @@ const SCH=(function(){
     {id:'a2',tag:'Altklausur A 2',t:'Brand im 2. OG, zweite Nutzungseinheit',s:'Der Parteivorsitzende öffnet, erkennt Sie, verweigert den Zutritt als „reine Schikane“ und meint, man rieche im Flur ja nicht einmal Rauch.',
      a:[1,1,1,1,1],e:['Gleiche Lage, gleiche Aufgabe nach § 1 BHKG.','Dass es im Flur nicht nach Rauch riecht, schließt die Gefahr nicht aus. Maßgeblich ist die Prognose eines verständigen Einsatzleiters zum Zeitpunkt des Handelns.','§ 44 BHKG in Verbindung mit Art. 13 Abs. 7 GG gilt auch gegen den Willen des Inhabers.','Er ist Nichtstörer und zur Duldung verpflichtet. Seine politische Rolle und der Vorwurf der Schikane sind rechtlich ohne Bedeutung, solange die Maßnahme sachlich begründet ist (Willkürverbot).','Ein milderes Mittel (zum Beispiel Nachfrage, Sichtkontrolle) wäre zu unsicher. Sind die Räume rauchfrei, ist die Maßnahme sofort zu beenden (Anscheinsgefahr).'],
      r:'Betreten ist zulässig, auch gegen den Willen.'},
-    {id:'b1',tag:'Hinweise Berlin',t:'Notstromaggregat eines Privaten',s:'Beim Einsatz wird ein privates Notstromaggregat für die Einsatzstelle benötigt. Der Eigentümer ist nicht an der Gefahr beteiligt.',
+    {id:'b1',tag:'Eingrenzung Berlin',t:'Notstromaggregat eines Privaten',s:'Beim Einsatz wird ein privates Notstromaggregat für die Einsatzstelle benötigt. Der Eigentümer ist nicht an der Gefahr beteiligt.',
      a:[1,1,1,1,1],e:['Hilfeleistung und Eilkompetenz gehören zur Aufgabe nach § 1 BHKG.','Die Gefahr für Personen oder erhebliche Sachwerte besteht und ist konkret.','Inanspruchnahme von Personen und Hilfsmitteln nach den Pflichten der Bevölkerung im BHKG (bitte prüfen: §§ 43, 44).','Der Eigentümer ist Nichtstörer (§ 19 OBG). Die Inanspruchnahme ist nur zulässig, wenn die Gefahr nicht anders abzuwehren ist und kein eigenes Aggregat zur Verfügung steht.','Zeitlich und sachlich auf das Notwendige beschränken. Folge: Der Betroffene hat einen Ausgleichsanspruch, der im Prüfungshinweis ausdrücklich zu erwähnen ist (bitte prüfen: § 39 OBG).'],
      r:'Zulässig mit Ausgleichsanspruch.'},
-    {id:'b2',tag:'Hinweise Berlin',t:'Rauchmelder defekt: Anscheinsgefahr',s:'Ein Nachbar meldet Brandgeruch, ein Rauchmelder piept. Die Einsatzkräfte öffnen die Wohnung, es brennt nicht, der Melder war defekt.',
+    {id:'b2',tag:'Eingrenzung Berlin',t:'Rauchmelder defekt: Anscheinsgefahr',s:'Ein Nachbar meldet Brandgeruch, ein Rauchmelder piept. Die Einsatzkräfte öffnen die Wohnung, es brennt nicht, der Melder war defekt.',
      a:[1,1,1,1,1],e:['Brandschutz, Hilfeleistung und Eilkompetenz sind Aufgabe der Feuerwehr.','Ex ante war bei verständiger Würdigung von einem drohenden Schaden auszugehen: Anscheinsgefahr. Sie ist wie eine Gefahr zu behandeln. Stellt sich der Irrtum heraus, sind die Maßnahmen sofort zu beenden.','Betretensrecht nach § 44 BHKG.','Der Wohnungsinhaber ist Nichtstörer.','Das Öffnen war erforderlich und angemessen, solange die Einschätzung vertretbar war. Danach Wohnung verschließen und dokumentieren.'],
      r:'Rechtmäßig, wenn die Einschätzung ex ante vertretbar war.'},
-    {id:'b3',tag:'Hinweise Berlin',t:'Scheingefahr: ohne Anlass in die Wohnung',s:'Ein Einsatzleiter lässt eine Wohnung gewaltsam öffnen, weil der Briefkasten voll ist. Es gibt weder Geruch noch Geräusche noch einen Notruf.',
+    {id:'b3',tag:'Eingrenzung Berlin',t:'Scheingefahr: ohne Anlass in die Wohnung',s:'Ein Einsatzleiter lässt eine Wohnung gewaltsam öffnen, weil der Briefkasten voll ist. Es gibt weder Geruch noch Geräusche noch einen Notruf.',
      a:[1,0],e:['Die Feuerwehr ist für Brandgefahren und Hilfeleistung zuständig, hier ist aber noch kein Anlass erkennbar.','Ein gewissenhafter, besonnener und sachkundiger Beamter hätte bei der Lage keine Gefahr angenommen: Scheingefahr (Putativgefahr). Es liegt keine Gefahr vor.'],
      r:'Unzulässig: Ohne Gefahr gibt es keine Befugnis zum Betreten.'},
     {id:'a3',tag:'Altklausur A 3',t:'Untersagung der Pollerinstallation',s:'Sie wollen der Firma Poller und Schranken GmbH weitere Bauarbeiten im Gemeindegebiet aus Gründen des Brandschutzes untersagen.',
