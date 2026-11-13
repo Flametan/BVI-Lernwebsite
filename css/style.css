@@ -4575,3 +4575,9 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .lbs-t{font:700 13px system-ui;fill:currentColor;}.lbs-st.skip{opacity:.35;}
 .lbs-tok{transition:transform .9s cubic-bezier(.3,.8,.3,1);}.lbs-tok circle{fill:var(--m-accent);stroke:var(--m-card);stroke-width:3;}.lbs-tok text{font:900 9px system-ui;text-anchor:middle;fill:#111;}
 .lbs-ans{display:flex;gap:.6rem;margin:.6rem 0;}.lbs-ans .btn{flex:1;min-height:48px;font-weight:800;}
+/* Weiter- und Zurück-Tasten stehen rechts am Rand */
+.quiz-actions{justify-content:flex-end;}
+.quiz-skip-btn,.quiz-next-btn{flex:0 1 auto;min-width:7.5rem;}
+.fb-step-actions{justify-content:flex-end;}
+.fb-next-btn{flex:0 1 220px;}
+.fc-review-nav{justify-content:flex-end;}
