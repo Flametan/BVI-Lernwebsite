@@ -4376,6 +4376,7 @@ html[data-theme="dark"] :is(.m-tab,.m-ri) .m-tic>svg.f .cb,html[data-theme="dark
 html[data-theme="dark"] :is(.m-tab,.m-ri).on .m-tic>svg.f{filter:drop-shadow(0 0 5px color-mix(in srgb,var(--m-accent) 65%,transparent));}
 html[data-theme="dark"] :is(.m-tab,.m-ri).tap .m-tic{filter:drop-shadow(0 0 7px color-mix(in srgb,var(--m-accent) 80%,transparent));}
 html[data-theme="dark"] :is(.m-tab,.m-ri).on .m-tic>svg.o{opacity:.55;stroke:var(--m-accent);}
+html[data-theme="dark"] .m-ri-cta.on .m-tic>svg.o{opacity:1;stroke:var(--m-on-accent);}   /* Prüfung-Knopf: Symbol dunkel auf Orange (sonst orange auf orange) */
 html[data-theme="dark"] :is(.m-tab,.m-ri) .m-tic>svg.f .st1,html[data-theme="dark"] :is(.m-tab,.m-ri) .m-tic>svg.f .st2{stroke:var(--m-accent);stroke-width:2.4;}
 html[data-theme="dark"] :is(.m-tab,.m-ri)[data-ic="pause"].on .m-tic>svg.f{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--m-accent) 75%,transparent));}
 
@@ -4518,7 +4519,6 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 @keyframes lxsh{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 .lx-sq.split .lx-cell{animation:lxfly .6s cubic-bezier(.2,.8,.3,1) both;animation-delay:var(--d);}@keyframes lxfly{from{opacity:0;transform:translateY(-40px) scale(.7)}to{opacity:1;transform:none}}
 .lx-opts{display:flex;flex-direction:column;gap:.4rem;}.lx-opts .lx-chip{border-radius:12px;font-weight:600;}
-@media (prefers-reduced-motion:reduce){.lx-draw,.lx-draw.lx-dash,.lx-pop,.lx-fade,.lx-sq.split .lx-cell,.lx-pyr.built .lx-lvl{animation-duration:.01s;animation-delay:0s}}
 
 /* IBK-Simulation: Markieren-Modus */
 .lbsim-sw{display:flex;gap:4px;padding:4px;border-radius:14px;background:var(--m-raised);margin:.3rem 0 .8rem;}
