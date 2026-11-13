@@ -12,6 +12,7 @@ const CHANGELOG_ENTRIES=[
       'Laufbahnprüfung: Der Hub besteht aus vier zuklappbaren Fächern. „Klausurhinweise“ heißen jetzt „Eingrenzung“, die Checkliste der VAk-Eingrenzung ist ausgeführt. Einträge sind gekennzeichnet: Original (grün), selbst erarbeitet (grau) und Simulation (blau, gestrichelter Rahmen mit dem Hinweis, dass es keine Original-Klausur ist).',
       'Lernkarten: Der Filter „Laufbahn“ lässt sich jetzt nach Fach unterteilen (IBK, VAk, FeuAK, VB, Stabsarbeit), einzeln, mehrere zusammen in beliebiger Reihenfolge oder alle. Dazu 38 neue Laufbahn-Karten zu den Eingrenzungen, den Altklausuren des Vorjahrgangs und typischen VB-Mängeln.',
       'Laufbahnprüfung: Die Altklausuren Juni 2026 und Dez 2023 sind jetzt in den passenden Fächern des Laufbahn-Hubs verlinkt (IBK, VB, VAk, FeuAK und neu Stabsarbeit). Ein Antippen zeigt nur den passenden Abschnitt, ein brauner Streifen kennzeichnet sie als Altklausur (Gedächtnisprotokoll), „Alle Abschnitte“ zeigt die ganze Seite.',
+      'Lernkarten: Die Fach-Auswahl der Laufbahn steht jetzt in einer Zeile genau in der Breite der Filter-Chips (Kartenzahl rechts). Fehler behoben: Waren alle Filter oder alle Fächer gewählt, ließ sich keiner mehr abwählen.',
       'Quiz und Lernseite Vorbeugender Brandschutz: Rettungsweglänge in Verkaufsstätten mit Sprinkler und erstem Rettungsweg über die Ladenstraße korrigiert auf 140 m.',
     ]},
     {v:'3.2.3',ts:'2026-11-09T10:00',items:[
