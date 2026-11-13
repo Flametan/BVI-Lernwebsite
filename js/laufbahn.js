@@ -108,6 +108,26 @@ const LB=(function(){
   const EYE='<svg class="lb-eye-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="lb-slash" d="M3 3l18 18"/></svg>';
   function lock(){ try{ sessionStorage.removeItem(SKEY); }catch(e){} render(); }
 
+
+  /* Altklausuren 2026 und 2023: aus dem Fach-Hub nur der passende Abschnitt */
+  let ALT=null;
+  const ALTP=['v-laufbahn-2026','v-laufbahn-2023'];
+  function altApply(id){
+    const v=document.getElementById(id), pc=v&&v.querySelector('.pc'); if(!pc) return;
+    pc.querySelectorAll('.lb-altbar').forEach(x=>x.remove());
+    let sec=null;
+    [...pc.children].forEach(ch=>{
+      if(ch.classList.contains('lj-part')) sec=(ch.firstChild&&ch.firstChild.textContent||'').trim();
+      ch.hidden=!!(ALT&&ALT.id===id&&sec!==null&&!sec.startsWith(ALT.sec));
+    });
+    if(ALT&&ALT.id===id){
+      const jahr=id==='v-laufbahn-2026'?'Juni 2026':'Dez 2023', b=document.createElement('div'); b.className='lb-altbar';
+      b.innerHTML='<div><b>Altklausur '+esc(jahr)+' · '+esc(ALT.name)+'</b><small>Aus Gedächtnisprotokollen, keine Original-Klausur dieses Jahrgangs. Es wird nur dieser Abschnitt gezeigt.</small></div><button type="button" class="btn btn-ghost" onclick="LB.altAll()">Alle Abschnitte</button>';
+      pc.insertBefore(b,pc.firstChild);
+    }
+  }
+  function alt(id,sec,name){ ALT={id,sec,name:name||sec}; NAV.go(id,'Altklausur '+(id==='v-laufbahn-2026'?'Juni 2026':'Dez 2023')); }
+  function altAll(){ const id=ALT&&ALT.id; ALT=null; if(id) altApply(id); window.scrollTo({top:0}); }
   const FK='bvi_lb_fach';
   function fach(btn){
     const open=btn.getAttribute('aria-expanded')==='true';
@@ -467,9 +487,10 @@ const LB=(function(){
   };
 
   return {
-    fach, sim, ok, submit, toggle, typed:mask, lock, render, ask, closeModal, fieldSubmit, fieldTyped,
+    fach, alt, altAll, sim, ok, submit, toggle, typed:mask, lock, render, ask, closeModal, fieldSubmit, fieldTyped,
     onShow(id){
       if(id==='v-lb-start'){ if(!shown){ shown=true; } render(); }
+      if(ALTP.includes(id)) altApply(id); else if(ALT) ALT=null;
       if(id==='v-lb-vb') vbInit();
       if(id==='v-lb-ibk-sim') sim.init();
       if(id==='v-lb-feuak-sim'&&typeof EX!=='undefined') EX.init();

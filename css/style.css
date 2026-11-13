@@ -4630,3 +4630,13 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .fc-sub-b:focus-visible{outline:2px solid var(--m-accent);outline-offset:1px;}
 .fc-sub-sum{margin-top:.4rem;font-size:.8rem;color:var(--m-muted);}
 @media print{.fc-sub-row{display:none!important;}}
+
+/* Altklausuren im Laufbahn-Hub */
+.lb-dot.alt{background:#c27a00;}
+.lb-fb .topic-card.lb-t-alt{border-left:4px solid #c27a00;border-radius:4px 12px 12px 4px;background:color-mix(in srgb,#c27a00 8%,transparent);margin:.35rem 0;padding-left:.6rem;}
+.lb-fb .topic-card.lb-t-alt .tc-icon{color:#c27a00;}.lb-t-alt .lb-kd{color:#b36d00;}
+:root[data-theme="dark"] .lb-dot.alt{background:#f0b44c;}:root[data-theme="dark"] .lb-fb .topic-card.lb-t-alt{border-left-color:#f0b44c;}:root[data-theme="dark"] .lb-fb .topic-card.lb-t-alt .tc-icon,:root[data-theme="dark"] .lb-t-alt .lb-kd{color:#f0b44c;}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lb-dot.alt{background:#f0b44c;}:root:not([data-theme="light"]) .lb-fb .topic-card.lb-t-alt{border-left-color:#f0b44c;}:root:not([data-theme="light"]) .lb-fb .topic-card.lb-t-alt .tc-icon,:root:not([data-theme="light"]) .lb-t-alt .lb-kd{color:#f0b44c;}}
+.lb-altbar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:space-between;padding:.7rem .9rem;margin:0 0 1rem;border-left:4px solid #c27a00;border-radius:4px 14px 14px 4px;background:color-mix(in srgb,#c27a00 10%,var(--m-card));}
+.lb-altbar small{display:block;color:var(--m-muted);}
+.pc>[hidden]{display:none!important;}
