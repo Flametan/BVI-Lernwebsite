@@ -6859,6 +6859,10 @@ const SHELL=(function(){
       const v=document.querySelector('.view.active'); if(!v) return;
       const title=v.querySelector('.page-title')?.textContent?.trim()||v.id;
       const eb=v.querySelector('.page-eyebrow')?.textContent?.trim()||'';
+      // Kontext für die Mail: geöffnete Aufgaben (Akkordeons) und gewähltes Konzept, damit klar ist, worum es geht
+      const ctxT=[...v.querySelectorAll('details.acc-item[open] > summary .acc-title')].slice(0,3).map(x=>x.textContent.trim()).filter(Boolean);
+      const kon=v.querySelector('.lb-ktab.on'); if(kon) ctxT.unshift('Konzept: '+kon.textContent.trim());
+      if(ctxT.length) extra=(extra?extra+'\n':'')+'Geöffnet: '+ctxT.join(' | ');
       const body='Seite: '+title+(eb?' ('+eb+')':'')+'\nLink: '+location.origin+location.pathname+'?id='+v.id+'\nApp-Version: '+APP_VERSION+'\n'+(extra?'\n'+extra+'\n':'')+'\nWas ist falsch oder unklar?\n';
       const mail='mailto:fabian.flemig@gmx.de?subject='+encodeURIComponent('B VI – Fehler: '+title)+'&body='+encodeURIComponent(body);
       const gh='https://github.com/Flametan/BVI-Lernwebsite/issues/new?labels=fehler&title='+encodeURIComponent('Fehler: '+title)+'&body='+encodeURIComponent(body);
