@@ -4620,15 +4620,16 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 :root[data-theme="dark"] .lb-t-sim .lb-kd{color:#7db4ee;}:root[data-theme="dark"] .lb-t-o .lb-kd{color:#5fc47f;}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lb-t-sim .lb-kd{color:#7db4ee;}:root:not([data-theme="light"]) .lb-t-o .lb-kd{color:#5fc47f;}}
 
-/* Lernkarten: Unterteilung der Laufbahnklausuren */
-.fc-sub-row{margin:.35rem 12px .1rem;max-width:760px;padding:.55rem .7rem;border-radius:14px;background:var(--m-raised);}
+/* Lernkarten: Unterteilung der Laufbahnklausuren – eine Zeile in der Breite der Filter-Chips */
+.fc-sub-row{margin:0 auto;padding:0 12px .5rem;max-width:1140px;}
 .fc-sub-row[hidden]{display:none;}
-.fc-sub-chips{display:flex;flex-wrap:wrap;gap:.4rem;}
-.fc-sub-b{min-height:40px;padding:.3rem .85rem;border-radius:99px;border:1px solid var(--m-line,rgba(128,128,128,.35));background:var(--m-card);color:inherit;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;}
+.fc-sub-bar{display:flex;flex-wrap:nowrap;align-items:center;gap:.4rem;padding:.4rem .5rem;border-radius:14px;background:var(--m-raised);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.fc-sub-bar::-webkit-scrollbar{display:none;}
+.fc-sub-b{flex:none;min-height:40px;padding:.3rem .85rem;border-radius:99px;border:1px solid var(--m-line,rgba(128,128,128,.35));background:var(--m-card);color:inherit;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;white-space:nowrap;}
 .fc-sub-b small{opacity:.65;font-weight:600;margin-left:.3rem;}
 .fc-sub-b.on{background:var(--m-accent-dim,color-mix(in srgb,var(--m-accent) 20%,transparent));border-color:var(--m-accent);color:var(--m-accent-fg,var(--m-accent));}
 .fc-sub-b:focus-visible{outline:2px solid var(--m-accent);outline-offset:1px;}
-.fc-sub-sum{margin-top:.4rem;font-size:.8rem;color:var(--m-muted);}
+.fc-sub-sum{flex:none;margin-left:auto;padding-left:.6rem;font-size:.8rem;color:var(--m-muted);white-space:nowrap;}
 @media print{.fc-sub-row{display:none!important;}}
 
 /* Altklausuren im Laufbahn-Hub */

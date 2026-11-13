@@ -1823,6 +1823,7 @@ const FC = (function(){
   const LBSUB=[['ibk','IBK',['heyrothsberge']],['vak','VAk',['recht']],['feuak','FeuAK',['management']],['vb','VB',['vorbeugender brandschutz']],['stab','Stabsarbeit',['stabsarbeit','führungsvorgang']]];
   const lbKey=c=>{ const p=c.cat.toLowerCase().split(' · ')[1]||''; const x=LBSUB.find(s=>s[2].includes(p)); return x?x[0]:null; };
   let lbSel=(()=>{ try{ const v=JSON.parse(localStorage.getItem('bvi_fc_lbsub')||'null'); if(Array.isArray(v)){ const s=new Set(v.filter(k=>LBSUB.some(x=>x[0]===k))); if(s.size) return s; } }catch{} return new Set(LBSUB.map(x=>x[0])); })();
+  let lbManual=false;   // alle Fächer einzeln angetippt: dann lässt sich jedes wieder abwählen
   const lbIn=c=>{ const k=lbKey(c); return !k||lbSel.has(k); };
   let _seen = [], _reviewPos = -1, _toCard = false, _flyFn = null, _flying = false;
 
@@ -2007,9 +2008,9 @@ const FC = (function(){
     const lb=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith('laufbahn'));
     const cnt=k=>lb.filter(c=>lbKey(c)===k).length, all=lbSel.size===LBSUB.length;
     const n=lb.filter(lbIn).length;
-    row.innerHTML='<div class="fc-sub-chips" role="group" aria-label="Laufbahnklausuren nach Fach"><button type="button" class="fc-sub-b'+(all?' on':'')+'" aria-pressed="'+all+'" onclick="FC.setSub(\'all\')">Alle</button>'
+    row.innerHTML='<div class="fc-sub-bar" role="group" aria-label="Laufbahnklausuren nach Fach"><button type="button" class="fc-sub-b'+(all?' on':'')+'" aria-pressed="'+all+'" onclick="FC.setSub(\'all\')">Alle</button>'
       +LBSUB.map(x=>{ const on=lbSel.has(x[0]); return '<button type="button" class="fc-sub-b'+(on?' on':'')+'" aria-pressed="'+on+'" onclick="FC.setSub(\''+x[0]+'\')">'+x[1]+'<small>'+cnt(x[0])+'</small></button>'; }).join('')
-      +'</div><div class="fc-sub-sum">'+(all?'Alle Fächer':lbSel.size+(lbSel.size===1?' Fach':' Fächer')+' gewählt')+' · '+n+' Karten</div>';
+      +'<span class="fc-sub-sum" aria-live="polite">'+n+' Karten</span></div>';
   }
   function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
 
@@ -2298,9 +2299,9 @@ const FC = (function(){
       if(typeof GAME!=='undefined') GAME.event('card',q>0);
     },
     setSub(k){
-      if(k==='all'||!LBSUB.some(x=>x[0]===k)) lbSel=new Set(LBSUB.map(x=>x[0]));
-      else if(lbSel.size===LBSUB.length) lbSel=new Set([k]);   // aus „Alle“ heraus: erst nur dieses Fach
-      else { if(lbSel.has(k)) lbSel.delete(k); else lbSel.add(k); if(lbSel.size===0) lbSel=new Set(LBSUB.map(x=>x[0])); }
+      if(k==='all'||!LBSUB.some(x=>x[0]===k)){ lbSel=new Set(LBSUB.map(x=>x[0])); lbManual=false; }
+      else if(lbSel.size===LBSUB.length&&!lbManual) lbSel=new Set([k]);   // aus „Alle“ heraus: erst nur dieses Fach
+      else { if(lbSel.has(k)) lbSel.delete(k); else lbSel.add(k); if(lbSel.size===0){ lbSel=new Set(LBSUB.map(x=>x[0])); lbManual=false; } else if(lbSel.size===LBSUB.length) lbManual=true; }
       try{ localStorage.setItem('bvi_fc_lbsub',JSON.stringify([...lbSel])); }catch{}
       updateFilterButtons(); this.start(true);
     },
@@ -2320,7 +2321,7 @@ const FC = (function(){
         updateFilterButtons(); this.start(true); return;
       } else {
         activeFilters.delete('starred'); activeFilters.delete('weak'); activeFilters.delete('own'); activeFilters.delete('known');
-        if(activeFilters.has(f)){ if(CATS.every(c=>activeFilters.has(c))) return; activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(['laufbahn']); }
+        if(activeFilters.has(f)){ activeFilters.delete(f); if(activeFilters.size===0) activeFilters=new Set(['laufbahn']); }
         else activeFilters.add(f);
       }
       updateFilterButtons();
