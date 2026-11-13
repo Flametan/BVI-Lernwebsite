@@ -6843,7 +6843,9 @@ const SHELL=(function(){
     HL.apply(id);
     if(isContent){
       const pc=document.getElementById(id)?.querySelector('.pc');
-      if(pc&&!pc.querySelector(':scope > .m-report')){
+      // Lernkarten: nur die Flagge an der Karte (die Mail enthält Frage und Antwort), keine zweite am Seitenende
+      if(pc&&id==='v-flashcards') pc.querySelectorAll(':scope > .m-report').forEach(x=>x.remove());
+      else if(pc&&!pc.querySelector(':scope > .m-report')){
         const d=document.createElement('div'); d.className='m-report';
         d.innerHTML='<button onclick="SHELL.report()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22V4M4 4h13l-2 4 2 4H4"/></svg>Fehler oder Unklarheit melden</button>';
         pc.appendChild(d);
