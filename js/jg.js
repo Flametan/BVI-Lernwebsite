@@ -6,9 +6,9 @@
      · eigene Ebene          im Browser gespeichert (Ergänzungen, Prüfungen, Klausurrelevanz, eigener Plan)
    Datei-Format (Version 1), alles optional:
      { format:'bvi-jahrgang', v:1, jahrgang:'BRef 10/2026 - AB 10/2027', stand:'2027-01-12',
-       plane:{ ibk|vak|feuak|idf|idf2 (IdF Gruppe 1/2) : { name, ev:[{s,e,t,r,n,ad}] } },  aktiv:'idf',
+       plane:{ ibk|vak|feuak|idf|idf2 (IdF Gruppe 1/2)|bruchsal (LFS Bruchsal) : { name, ev:[{s,e,t,r,n,ad}] } },  aktiv:'idf',
        erg:[{ id, seite, kap, typ:'text'|'sc'|'mc'|'kapitel', titel, text, o:[…], c:[…], erk, bild, ts }],   (sc/mc: text = Frage, o = Antworten, c = richtige Nummern)
-       links:{ cloud:{ url, titel, hinweis } },  karten:[{ id, modul, q, a }],  kweg:[IDs gelöschter Lernkarten],  orte:{ ibk, vak, feuak, idf },  faq:{ ibk|vak|feuak|idf : [{ id (Standardfrage ändern) | c, q (eigene Frage), a }] },  kuerzel:{ ibk, vak, feuak, idf } (eigene Kürzel statt IBK/VAk/FeuAK/IdF),  reiter:[{ id, seite, titel, beschr }] (eigene Reiter auf einer Übersichtsseite),
+       links:{ cloud:{ url, titel, hinweis } },  karten:[{ id, modul, q, a }],  kweg:[IDs gelöschter Lernkarten],  orte:{ ibk, vak, feuak, idf, bruchsal },  faq:{ ibk|vak|feuak|idf|bruchsal : [{ id (Standardfrage ändern) | c, q (eigene Frage), a }] },  kuerzel:{ ibk, vak, feuak, idf, bruchsal } (eigene Kürzel statt IBK/VAk/FeuAK/IdF/LFS),  reiter:[{ id, seite, titel, beschr }] (eigene Reiter auf einer Übersichtsseite),
        pr:{ hinzu:[{ id, tab, seite (optional: gehört zu dieser Prüfungsseite), titel, fragen:[{ q, o:[…], c:0, e:'' }], ts }], weg:['v-…', …] },
        rel:{ '<pruefung-id>':true|false },  ausg:['v-seite|a|<kennung>', …]  (ausgeblendete Kapitel/Blöcke)
        bilder:{ '<bild-id>':'data:image/jpeg;base64,…' } }
@@ -16,7 +16,7 @@
 const JG=(function(){
   const MASTER='BRef-04-2025_AB-04-2026', K='bvi_jg', PRE='bvi_jgd_', PUB='bvi_jgp_';
   const TABS=[['laufbahn','Laufbahnprüfung','Laufbahn'],['idf','IdF Münster','IdF'],['feuak','FeuAK Hamburg','FeuAK'],['vak','VAk Berlin','VAk'],['ibk','IBK Heyrothsberge','IBK']];
-  const ALLTABS=TABS.map(t=>t[0]), PLANKEYS=['ibk','vak','feuak','idf','idf2'];   // Stundenpläne je Abschnitt; IdF hat je einen für Gruppe 1 (idf) und Gruppe 2 (idf2)
+  const ALLTABS=TABS.map(t=>t[0]), PLANKEYS=['ibk','vak','feuak','idf','idf2','bruchsal'];   // Stundenpläne je Abschnitt; IdF hat je einen für Gruppe 1 (idf) und Gruppe 2 (idf2)
   const pad=n=>String(n).padStart(2,'0');
   let pub=null, pubImg={}, ver=0; const subs=[];
   const lsGet=k=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } };
@@ -103,9 +103,9 @@ const JG=(function(){
     const cl=o.links&&o.links.cloud; if(cl&&/^https:\/\/[^\s"'<>]{3,500}$/.test(String(cl.url))) out.links.cloud={url:String(cl.url),titel:str(cl.titel,60).trim(),hinweis:str(cl.hinweis,140).trim()};
     (Array.isArray(o.karten)?o.karten:[]).slice(0,300).forEach(k=>{ const id=k&&idOk(k.id), q=str(k&&k.q,600).trim(), a=str(k&&k.a,1500).trim(); if(id&&q&&a&&KMOD.includes(k.modul)) out.karten.push({id,modul:k.modul,q,a}); });
     if(Array.isArray(o.kweg)) out.kweg=[...new Set(o.kweg.slice(0,600).map(idOk).filter(Boolean))];   // gelöschte Lernkarten (Master-Karten und Karten des Jahrgangs, jeweils die ID der Karte)
-    ['ibk','vak','feuak','idf'].forEach(k=>{ const v=str(o.kuerzel&&o.kuerzel[k],12).trim(); if(/^[A-Za-z0-9ÄÖÜäöüß.-]{1,12}$/.test(v)) out.kuerzel[k]=v; });
-    ['ibk','vak','feuak','idf'].forEach(k=>{ const v=str(o.orte&&o.orte[k],40).replace(/[<>]/g,'').trim(); if(v) out.orte[k]=v; });
-    ['ibk','vak','feuak','idf'].forEach(k=>{                                         // FAQ je Standort: Antworten ändern (id) oder eigene Fragen ergänzen (c, q)
+    ['ibk','vak','feuak','idf','bruchsal'].forEach(k=>{ const v=str(o.kuerzel&&o.kuerzel[k],12).trim(); if(/^[A-Za-z0-9ÄÖÜäöüß.-]{1,12}$/.test(v)) out.kuerzel[k]=v; });
+    ['ibk','vak','feuak','idf','bruchsal'].forEach(k=>{ const v=str(o.orte&&o.orte[k],40).replace(/[<>]/g,'').trim(); if(v) out.orte[k]=v; });
+    ['ibk','vak','feuak','idf','bruchsal'].forEach(k=>{                              // FAQ je Standort: Antworten ändern (id) oder eigene Fragen ergänzen (c, q)
       const l=(o.faq&&Array.isArray(o.faq[k])?o.faq[k]:[]).slice(0,60).map(e=>({id:/^[a-z]{2,12}$/.test(String(e&&e.id))?e.id:'',c:str(e&&e.c,30).trim(),q:str(e&&e.q,200).replace(/[<>]/g,'').trim(),a:str(e&&e.a,800).replace(/[<>]/g,'').trim()})).filter(e=>e.a&&(e.id||e.q));
       if(l.length) out.faq[k]=l;
     });

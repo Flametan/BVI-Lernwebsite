@@ -582,12 +582,12 @@ const JGUI=(function(){
   }
 
   // ── Jahrgang einrichten: Lehrgangs-Link, Standorte, Lernkarten und die Checkliste dazu ──
-  const ORT0={ibk:['IBK','Heyrothsberge'],vak:['VAk','Berlin'],feuak:['FeuAK','Hamburg'],idf:['IdF','Münster']};
+  const ORT0={ibk:['IBK','Heyrothsberge'],vak:['VAk','Berlin'],feuak:['FeuAK','Hamburg'],idf:['IdF','Münster'],bruchsal:['LFS','Bruchsal']};
   // Eigene Kürzel und Standorte überall auf der Seite anzeigen (nur der sichtbare Text; die Originaltexte bleiben erhalten und kommen zurück,
   // sobald die Änderung entfällt). Geprüft werden die aktive Seite und alles außerhalb der Seiten (Navigation, Fenster).
   const NM=new WeakMap(); let namesOn=false, nmObs=null, nmTimer=null;
   const WORD='A-Za-z0-9ÄÖÜäöüß';
-  const NAMERX=new RegExp('(^|[^'+WORD+'])(IBK Heyrothsberge|VAk Berlin|FeuAK Hamburg|IdF Münster|IBK|VAk|FeuAK|IdF)(?![' + WORD + '])','g');
+  const NAMERX=new RegExp('(^|[^'+WORD+'])(IBK Heyrothsberge|VAk Berlin|FeuAK Hamburg|IdF Münster|LFS Bruchsal|IBK|VAk|FeuAK|IdF)(?![' + WORD + '])','g');
   function names(){
     const d=JG.data(), o=d.orte, kz=d.kuerzel, on=!JG.isMaster()&&(Object.keys(o).length>0||Object.keys(kz).length>0);
     if(!on&&!namesOn) return;
@@ -654,7 +654,7 @@ const JGUI=(function(){
     };
   }
   function orteEditor(){
-    const o=JG.data().orte, kz=JG.data().kuerzel, L=['ibk','vak','feuak','idf'];
+    const o=JG.data().orte, kz=JG.data().kuerzel, L=['ibk','vak','feuak','idf','bruchsal'];
     const m=modal('Kürzel und Standorte','<p class="jg-p">Kürzel und Ort jedes Abschnitts lassen sich ändern. Sie ersetzen die Standardnamen überall auf der Seite: in Überschriften, Kacheln, Reitern, Stundenplänen und Lernkarten. Leer lassen = Standard.</p>'+L.map(k=>'<div class="jg-l" style="margin-top:10px"><b>'+ORT0[k][0]+' '+ORT0[k][1]+'</b> (Standard)<div style="display:flex;gap:8px;margin-top:4px"><input type="text" class="m-input jg-kz" data-k="'+k+'" maxlength="12" placeholder="'+ORT0[k][0]+'" aria-label="Kürzel für '+ORT0[k][0]+'" value="'+E(kz[k]||'')+'" style="flex:1;min-width:0"><input type="text" class="m-input jg-ort" data-k="'+k+'" maxlength="40" placeholder="'+ORT0[k][1]+'" aria-label="Ort für '+ORT0[k][0]+'" value="'+E(o[k]||'')+'" style="flex:2;min-width:0"></div></div>').join('')+'<button class="btn btn-gold" id="jg-os" type="button" style="margin-top:14px">Speichern</button>');
     m.ov.setAttribute('data-nonames','');
     $(m.body,'#jg-os').onclick=()=>{
@@ -686,12 +686,12 @@ const JGUI=(function(){
   let chk=null;
   function checklist(){
     const draw=()=>{
-      const d=JG.data(), pl=['ibk','vak','feuak','idf','idf2'].filter(k=>d.plane[k]).length, rn=d.pr.hinzu.length;
+      const d=JG.data(), pl=['ibk','vak','feuak','idf','idf2','bruchsal'].filter(k=>d.plane[k]).length, rn=d.pr.hinzu.length;
       const item=(ok,t,s,b,act)=>'<div class="jg-ck-i"><span class="m-tx"><span class="m-t1">'+t+'</span><span class="m-t2">'+s+'</span></span><button type="button" class="btn btn-ghost" data-a="'+act+'">'+b+'</button></div>';
       chk.m.body.innerHTML='<p class="jg-p">Mach aus der Kopie des Masters deinen Jahrgang. Alles ist freiwillig – am Ende exportierst du die Datei und schickst sie weiter.</p>'
-        +item(pl>0,'Stundenpläne',pl+' von 5 Plänen (IBK, VAk, FeuAK, IdF Gruppe 1 und 2)','Öffnen','plan')
+        +item(pl>0,'Stundenpläne',pl+' von 6 Plänen (IBK, VAk, FeuAK, IdF Gruppe 1 und 2, LFS Bruchsal)','Öffnen','plan')
         +item(!!d.links.cloud,'Lehrgangs-Link',d.links.cloud?E(d.links.cloud.titel):'Noch keiner – z. B. Cloud mit den Unterlagen','Bearbeiten','link')
-        +item(Object.keys(d.orte).length+Object.keys(d.kuerzel).length>0,'Kürzel und Standorte',Object.keys(d.orte).length+Object.keys(d.kuerzel).length?['ibk','vak','feuak','idf'].filter(k=>d.orte[k]||d.kuerzel[k]).map(k=>E((d.kuerzel[k]||ORT0[k][0])+' '+(d.orte[k]||ORT0[k][1]))).join(', '):'Standard: IBK Heyrothsberge, VAk Berlin, FeuAK Hamburg, IdF Münster','Bearbeiten','orte')
+        +item(Object.keys(d.orte).length+Object.keys(d.kuerzel).length>0,'Kürzel und Standorte',Object.keys(d.orte).length+Object.keys(d.kuerzel).length?['ibk','vak','feuak','idf','bruchsal'].filter(k=>d.orte[k]||d.kuerzel[k]).map(k=>E((d.kuerzel[k]||ORT0[k][0])+' '+(d.orte[k]||ORT0[k][1]))).join(', '):'Standard: IBK Heyrothsberge, VAk Berlin, FeuAK Hamburg, IdF Münster, LFS Bruchsal','Bearbeiten','orte')
         +item(d.karten.length>0,'Lernkarten',d.karten.length+' Karten des Jahrgangs','Bearbeiten','karten')
         +item(rn>0||d.pr.weg.length>0||Object.keys(d.rel).length>0,'Prüfungen',rn+' eigene, '+d.pr.weg.length+' ausgeblendet','Öffnen','pruef')
         +item(d.erg.length>0||d.ausg.length>0,'Lernseiten',d.erg.length+' Ergänzungen und Kapitel, '+d.ausg.length+' ausgeblendet','Öffnen','lern')
