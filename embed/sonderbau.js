@@ -1,91 +1,79 @@
 /* ===== Sonderbauten-Quartier: kleines 3D-Quartier mit den Sonderbau-Typen der Lernseite ===== */
-/* ===== Fachdaten (nur Werte aus der Lernseite „Vorbeugender Brandschutz“) ===== */
-const KP=[['rw','Rettungswege'],['bau','Baulich'],['ant','Technik'],['bes','Besonderheit'],['mer','Merksatz']];
+/* ===== Fachdaten (nur Werte aus der Lernseite „Vorbeugender Brandschutz“, Kapitel 6.5, Merkschema T-R-O-S-T) ===== */
+const KP=[['bau','T Tragwerk'],['rau','R Rauch'],['bes','O Objekt'],['rw','S Rettungswege'],['ant','T Technik'],['mer','Merksatz']];
 const XC=['#ff4d2e','#16b8ff','#ffd21f']; /* Farben der Röntgen-Bauteile */
 const D=[
  {id:'hh',n:'Hochhaus',lab:'Hochhaus',rg:'MHHR',col:'#5aa9ff',
-  ab:'OKFF der obersten Nutzungseinheit > 22 m',
-  q:['OKFF der obersten Nutzungseinheit liegt höher als 22 m.','Sicherheitstreppenraum und Feuerwehraufzug sind vorgeschrieben.'],
-  rw:['2 voneinander unabhängige bauliche Rettungswege je Nutzungseinheit und Geschoss','Rettungsweglänge max. 35 m bis Treppenraum oder Ausgang','Stichflure max. 15 m','Lichte Breite jedes Rettungsweges mind. 1,20 m'],
-  bau:['Tragende Bauteile und Außenwände nichtbrennbar','Bis 60 m F90, über 60 m F120','Wände notwendiger Flure: F30','Tür von der Nutzungseinheit zum Flur: T30-RS'],
-  ant:['BMA mit automatischen Meldern, Brandfallsteuerung der Aufzüge','Nasse Steigleitung mit Wandhydranten Typ F (3 × 200 l/min bei 4,5 bar)','Druckbelüftung: Sicherheitstreppenraum-Vorraum 2,0 m/s, Feuerwehraufzug-Vorraum 0,75 m/s','ELA Pflicht, automatische Feuerlöschanlage'],
-  bes:['Bis 60 m: 1 Sicherheitstreppenraum statt 2 notwendiger Treppenräume','Über 60 m: alle notwendigen Treppenräume als Sicherheitstreppenräume','Feuerwehraufzug: Haltestelle in jedem Geschoss, Vorraum mind. 6 m²','Brandschutzbeauftragter benennen'],
-  mer:'Bis 60 m genügt ein Sicherheitstreppenraum, darüber sind alle notwendigen Treppenräume Sicherheitstreppenräume.',
-  xr:[['Sicherheitstreppenraum','bis 60 m: 1 statt 2 notwendige Treppenräume'],['Feuerwehraufzug','Vorraum mind. 6 m², Druckbelüftung'],['Nasse Steigleitung','Wandhydranten Typ F']]},
+  ab:'Gebäude mit OKFF > 22 m',
+  q:['Gebäude mit OKFF über 22 m.','Feuerwehraufzüge und nasse Steigleitungen in allen Hochhäusern, über 60 m zusätzlich automatische Feuerlöschanlage.'],
+  bau:['Bis 60 m OKFF: tragende Wände, Stützen, Decken feuerbeständig, nichtbrennbare Baustoffe (§ 3.1.1 MHHR)','Über 60 m OKFF: 120 Minuten Feuerwiderstand, nichtbrennbare Baustoffe (§ 3.1.2 MHHR)','Anforderungen gelten auch im Kellergeschoss','Trennwände mindestens feuerhemmend','Wände notwendiger Treppenräume mit Feuerwiderstand der tragenden Bauteile (über 60 m: 120 Minuten)'],
+  rau:['Jedes Geschoss muss entraucht werden können (§ 6.7)','Installationsschächte nach § 7.2.2','Öffnungen zur Rauchableitung im Treppenraum abhängig von der Art des Treppenraumes'],
+  bes:['Erleichterungen bis 60 m nur bei vollständiger Erfüllung der Bedingungen des § 8 (Zellenbauweise)','Kein genereller Anlagenverzicht','Bis 60 m bei Verzicht auf Brandmelde- und/oder Löschanlage: Trennwände feuerbeständig und Maßnahmen gegen den vertikalen Brandüberschlag über die Außenwände'],
+  rw:['Bis 60 m: 1. Rettungsweg baulich; 2. Rettungsweg baulich oder ein Sicherheitstreppenraum','Über 60 m: beide Rettungswege über Sicherheitstreppenräume','Außenliegender Sicherheitstreppenraum ohne Rauchschutzdruckanlage (RDA) möglich','Rettungsweglänge von jeder Stelle eines Aufenthaltsraums bis zum Ausgang höchstens 35 m (§ 4.1 MHHR)'],
+  ant:['Feuerwehraufzüge (§ 6.1), Druckbelüftung (§ 6.2), nasse Steigleitungen (§ 6.3.2), Sicherheitsbeleuchtung (§ 6.5), Feuerwehrpläne (§ 9.2)','Auf nasse Steigleitungen mit Wandhydranten kann im Einvernehmen mit der Brandschutzdienststelle nicht verzichtet werden','Zusätzlich über 60 m: automatische Feuerlöschanlage (§ 6.3), Brandmelde- und Alarmierungsanlage (§ 6.4)'],
+  mer:'Bis 60 m: 2. Rettungsweg baulich oder ein Sicherheitstreppenraum. Über 60 m: beide Rettungswege über Sicherheitstreppenräume, 120 Minuten Feuerwiderstand.',
+  xr:[['Sicherheitstreppenraum','2. Rettungsweg bis 60 m, über 60 m beide'],['Feuerwehraufzug','in allen Hochhäusern, mit Druckbelüftung'],['Nasse Steigleitung','Wandhydranten, nicht verzichtbar']]},
  {id:'vk',n:'Verkaufsstätte',lab:'Verkaufsstätte',rg:'MVKVO',col:'#ff9f43',
-  ab:'Verkaufsräume und Ladenstraßen > 2.000 m² (Sonderbau ab > 800 m²)',
-  q:['Verkaufsräume und Ladenstraßen mit mehr als 2.000 m².','Ladenstraßen mind. 5,00 m breit, Sprinkleranlage Pflicht.'],
-  rw:['Mind. 2 unabhängige Rettungswege je Verkaufsraum, Aufenthaltsraum und Ladenstraße','Verkaufsraum: max. 25 m Luftlinie, Lauflinie max. 35 m bis Ausgang oder Treppenraum','Ausgänge und Hauptgänge mind. 2,00 m, Ladenstraßen mind. 5,00 m','Rettungswege bis zur öffentlichen Verkehrsfläche'],
-  bau:['Tragwerk: erdgeschossig ohne Sprinkler F30, mit Sprinkler keine Anforderung; mehrgeschossig F90','Notwendiger Treppenraum: Wände in Bauart einer Brandwand (REI 90-M (F 90-A))','Brandabschnitt erdgeschossig bis 3.000 m², mit Sprinkler bis 10.000 m²','Trennwände F90 zu fremden Räumen, keine Türen'],
-  ant:['Sprinkleranlage Pflicht (Ausnahmen bei erdgeschossig bis 3.000 m²)','BMA mit automatischen Meldern, zur Feuerwehr aufgeschaltet','Rauch- und Wärmeabzug: Verkaufsräume > 50 m², Lagerräume > 200 m², Ladenstraßen','Sicherheitsbeleuchtung und Sicherheitsstromversorgung'],
-  bes:['Ladenstraße als Abschnittsbildung statt Brandwand: 10 m breit, keine Einbauten außer Fahrtreppen, Aufzügen, Technik','Rechenbeispiel gesprinklert: Rettungsweg bis max. 140 m','Brandschutzbeauftragter Pflicht','A > 5.000 m²: gesondertes Räumungskonzept'],
-  mer:'1. und 2. Rettungsweg baulich, und beide bis zur öffentlichen Verkehrsfläche.',
-  xr:[['Ladenstraße','mind. 5,00 m breit, Rauch- und Wärmeabzug'],['Sprinkleranlage','Pflicht, Ausnahmen begrenzt'],['Treppenraum','Wände in Bauart einer Brandwand']]},
+  ab:'Verkaufsräume und Ladenstraßen insgesamt > 2.000 m²',
+  q:['Verkaufsräume und Ladenstraßen insgesamt über 2.000 m².','Brandabschnitt erdgeschossig bis 10.000 m² mit Sprinkleranlage.'],
+  bau:['Ebenerdig: erdgeschossig mit Sprinkleranlage ohne Feuerwiderstand möglich (§ 3); ohne Löschanlage tragende Grundstruktur feuerhemmend','Mehrgeschossig: feuerbeständig','Im Kellergeschoss feuerbeständig','Trennwände nach § 5 MVKVO; feuerbeständig bei Abtrennung zu fremden Nutzungen','Ohne Löschanlage: Trennwände zu Lagern, Werkstätten usw. feuerbeständig','Treppenraum mehrgeschossig: Bauart Brandwand'],
+  rau:['Räume > 200 m² bis 1000 m²: Öffnungen (§ 16), meist Fenster im oberen Raumdrittel','Räume > 1000 m²: Rauch- und Wärmeabzugsgeräte (RWA) oder maschinelle Rauchabzugsanlagen','Zuluft im unteren Raumdrittel; Auslösung durch die Feuerwehr muss sichergestellt sein'],
+  bes:['Brandabschnitte erdgeschossig (§ 6): mit Sprinkleranlage höchstens 10.000 m², ohne höchstens 3.000 m²','Sonstige Verkaufsstätten: mit Sprinkleranlage höchstens 5.000 m², ohne höchstens 1.500 m² je Geschoss und höchstens drei Geschosse','Grundsätzlich kein Feuerwiderstand bei Trennwänden zwischen den Verkaufsräumen'],
+  rw:['1. Rettungsweg baulich; 2. Rettungsweg baulich','Rettungsweglänge nach § 10 MVKVO: 105 m ebenerdig, 140 m mehrgeschossig (Treppenraumerweiterung)'],
+  ant:['Feuerwehrpläne (§ 27), Brandmelde- und Alarmierungseinrichtungen (§ 20), Sicherheitsstromversorgung (§ 21); Feuerlöscheinrichtungen nach § 20','Auf Wandhydranten oder trockene Löschleitungen kann im Einvernehmen mit der Brandschutzdienststelle verzichtet werden (örtliche Einsatzplanung)'],
+  mer:'Brandabschnitt erdgeschossig 10.000 m² mit und 3.000 m² ohne Sprinkler; Rettungsweglänge 105 m, mehrgeschossig 140 m.',
+  xr:[['Sprinkleranlage','erdgeschossig bis 10.000 m² je Brandabschnitt'],['Rauchableitung','über 1000 m²: RWA oder maschinell'],['Treppenraum','mehrgeschossig: Bauart Brandwand']]},
  {id:'be',n:'Beherbergungsstätte',lab:'Beherbergung',rg:'MBeVO',col:'#ee73b4',
   ab:'Mehr als 12 Gastbetten',
-  q:['Mehr als 12 Gastbetten.','Rettungswegplan in jedem Zimmer, BMA ab mehr als 60 Gastbetten.'],
-  rw:['Je Beherbergungsraum 2 unabhängige Rettungswege','1. Rettungsweg: notwendige Treppe (baulich)','2. Rettungsweg: zweite Treppe oder Außentreppe; bei ≤ 60 Gastbetten (≤ 30 je Geschoss) auch Anleiterung','Stichflure max. 15 m'],
-  bau:['Tragende Wände, Stützen, Decken F90 (F30 bei max. 2 oberirdischen Geschossen)','Trennwände F90 zu fremden Räumen (Türen T30-RS)','Trennwände F90 zu Gasträumen und Küchen, keine Türen','Trennwände F30 zwischen Beherbergungsräumen'],
-  ant:['Alarmierungseinrichtung für Mitarbeiter und Gäste','BMA ab > 60 Gastbetten, zur Feuerwehr aufgeschaltet','Sicherheitsbeleuchtung in Fluren und Treppenräumen','Aufzüge ab > 60 Gastbetten: Brandfallsteuerung über die BMA'],
-  bes:['Rettungswegplan und Hinweise in jedem Zimmer (mehrsprachig)','Türen in notwendigen Fluren: RS, nicht versperrt, innen leicht zu öffnen','Ab > 60 Gastbetten: Brandschutzordnung und Feuerwehrpläne','Barrierefreie Gasträume: 10 %'],
-  mer:'Mehr als 12 Gastbetten sind Sonderbau, ab mehr als 60 kommen BMA und Brandschutzordnung dazu.',
-  xr:[['1. Rettungsweg','notwendiger Treppenraum'],['2. Rettungsweg','zweite Treppe oder Außentreppe'],['Notwendiger Flur','Türen RS, Stichflur max. 15 m']]},
+  q:['Mehr als 12 Gastbetten.','Rauchwarnmelder in jedem Beherbergungsraum, über 60 Gastbetten aufgeschaltete BMA.'],
+  bau:['Bis 60 Gastbetten: Mindestanforderung feuerhemmend (§ 4); über 60: entsprechend Gebäudeklasse, im Keller ebenso','Trennwände mindestens feuerhemmend (§ 5)','Notwendige Treppenräume nach MBO; Türen nach § 7 MBeVO','Greifen die Erleichterungen der SBauVO NRW Teil 2 nicht, ist die tragende Grundstruktur grundsätzlich feuerbeständig und der Treppenraum in Bauart Brandwand'],
+  rau:['Öffnungen zur Rauchableitung im notwendigen Treppenraum','Räume und notwendige Flure können gegebenenfalls über öffenbare Fenster entraucht werden'],
+  bes:['Rauchschutzabschlüsse zwischen notwendigen Fluren und Beherbergungsräumen (§ 7 Abs. 2)','Bis 60 Gastbetten: Einbau einer BMA nicht verpflichtend geregelt; ohne BMA sind die Türen zu den Beherbergungsräumen rauchdicht und selbstschließend'],
+  rw:['1. Rettungsweg baulich; 2. Rettungsweg baulich; Rettungsweglänge 35 m','Bis 60 Gastbetten und höchstens 30 je Geschoss: als 2. Rettungsweg eine mit Rettungsgeräten erreichbare Stelle zulässig (§ 3 Abs. 1)','Dann muss jeder Beherbergungsraum anleiterbar sein (notwendiges Fenster); Brüstungshöhe > 8,00 m: Feuerwehrzufahrt und Aufstellfläche erforderlich'],
+  ant:['Bis 60 Gastbetten: Rauchwarnmelder in jedem Beherbergungsraum (über MBO); nichtselbsttätige Alarmierungseinrichtung (§ 9)','Über 60 Gastbetten: aufgeschaltete BMA in den Fluren, automatische Alarmierungsanlage, Brandfallsteuerung der Aufzüge (§ 9 MBeVO)'],
+  mer:'Über 12 Gastbetten ist es ein Sonderbau; die Grenze im Merkschema liegt bei 60 Gastbetten: darüber aufgeschaltete BMA und selbsttätige Alarmierung.',
+  xr:[['1. Rettungsweg','notwendiger Treppenraum, baulich'],['2. Rettungsweg','baulich, bis 60 Betten auch Anleiterung'],['Notwendiger Flur','Rauchschutzabschlüsse, Rauchwarnmelder']]},
  {id:'in',n:'Industriebau',lab:'Industriebau',rg:'MIndBauRL',col:'#aab4c4',
-  ab:'Produktion oder Lagerung (Regallager: Lagergut > 7,50 m)',
+  ab:'Produktion oder Lagerung von Produkten und Gütern (Industrie und Gewerbe)',
   q:['Produktion oder Lagerung, Sicherheitskategorien K 1 bis K 4.','Umfahrung für die Feuerwehr ab Grundfläche > 5.000 m².'],
-  rw:['Ab Grundfläche > 1.600 m² (Ebenen > 200 m²): 2 entgegengesetzte bauliche Rettungswege','Rettungsweglänge ohne Alarmierung: 35 m (5 m Raumhöhe), 50 m (10 m)','Mit Alarmierungsanlage: 50 m bzw. 70 m','Bis Hauptgang max. 15 m, Hauptgang mind. 2,00 m breit'],
-  bau:['Brandabschnitt und Brandbekämpfungsabschnitt: Größe nach Sicherheitskategorie K 1 bis K 4','Brandwand (REI 90-M (F 90-A)) trennt Brandabschnitte über alle Geschosse, 0,50 m über Dach','Türen und Tore in Brandwänden: T90-DS','Außenwand bei Grenzabstand < 5 m: nichtbrennbar'],
-  ant:['Nur automatische BMA, flächendeckend, zur Feuerwehr aufgeschaltet','Rauch- und Wärmeabzug: Produktions- und Lagerräume sowie Ebenen > 200 m²','Selbsttätige Feuerlöschanlage in K 4','Wandhydranten Typ F in Räumen > 1.600 m²'],
-  bes:['K 1 ohne Maßnahmen, K 2 BMA, K 3 BMA + Werkfeuerwehr, K 4 Feuerlöschanlage','Umfahrung für Feuerwehrfahrzeuge ab Grundfläche > 5.000 m²','Verfahren: Abschnitt 6 (bis max. 10.000 m²), Rechenverfahren DIN 18230-1 (bis max. 120.000 m²)','Brandschutzbeauftragter ab Summe A > 5.000 m²'],
+  bau:['Tragwerk und Brandabschnitte: Abschnitt 6 Tabelle 2 bis max. 10.000 m²; Rechenverfahren nach Abschnitt 7 bis max. 120.000 m²','Geschosse mehr als 1 m unter Geländeoberfläche: feuerbeständig (F90)','Brandwände über alle Geschosse, 0,50 m über Dach (mehr als MBO)','Türen und Tore in Brandwänden: T90-DS','Außenwand bei Grenzabstand < 5 m: nichtbrennbar; Wände notwendiger Treppenräume wie GK 5'],
+  rau:['Produktions- und Lagerräume sowie Ebenen > 200 m² müssen entraucht werden können (natürlich oder maschinell)','Öffnung zur Rauchableitung bei Räumen ab 200 m²'],
+  bes:['Sicherheitskategorien: K 1 ohne Maßnahmen, K 2 BMA, K 3 Werkfeuerwehr (3.1 Staffel, 3.2 Gruppe, 3.3 zwei Staffeln, 3.4 drei Staffeln), K 4 selbsttätige Feuerlöschanlage','Umfahrung für Feuerwehrfahrzeuge ab Grundfläche > 5.000 m²','Verfahren: Abschnitt 6, Abschnitt 7 (DIN 18230-1), sonst Brandschutzingenieurwesen (Anhang 1)','Brandschutzbeauftragter bei Industriebauten mit in Summe A > 5.000 m²'],
+  rw:['Ab Grundfläche > 1.600 m² (Ebenen und Einbauten > 200 m²): 2 bauliche Rettungswege je Geschoss','Rettungsweglänge ohne Alarmierung: über 35 m (5 m Raumhöhe), über 50 m (10 m); mit Alarmierung über 50 m bzw. 70 m','Jeder Raum > 200 m²: zwei Ausgänge; Hauptgang nach höchstens 15 m Lauflänge, mindestens 2,00 m breit'],
+  ant:['Nur automatische BMA, flächendeckend, Aufschaltung zur Feuerwehr','Selbsttätige Feuerlöschanlage (K 4), für das Brandgut geeignet; halbstationär nur mit Werkfeuerwehr in K 3.1 bis K 3.3','Wandhydranten Typ F in Räumen > 1.600 m²','Gebäudefunkanlage bei Brandbekämpfungsabschnittsflächen > 30.000 m²'],
   mer:'Die Sicherheitskategorie K 1 bis K 4 bestimmt, wie groß ein Brandabschnitt werden darf.',
-  xr:[['Brandwand','REI 90-M (F 90-A), 0,50 m über Dach'],['Rauch- und Wärmeabzug','Produktions- und Lagerräume'],['Umfahrung','ab Grundfläche > 5.000 m²']]},
+  xr:[['Brandwand','über alle Geschosse, 0,50 m über Dach'],['Rauch- und Wärmeabzug','Produktions- und Lagerräume'],['Umfahrung','ab Grundfläche > 5.000 m²']]},
  {id:'ga',n:'Garage',lab:'Garage',rg:'M-GarVO',col:'#4fd6b4',
-  ab:'Nutzfläche > 100 m² (Großgarage > 1.000 m²)',
-  q:['Stellplätze mit mehr als 100 m² Nutzfläche.','Rettungsweglänge: offen 50 m, geschlossen 35 m.'],
-  rw:['Mittel- und Großgaragen: 2 unabhängige bauliche Rettungswege je Geschoss','Rettungsweglänge: offene Garage 50 m, geschlossene 35 m','Ausnahme: oberirdisch, Ausgang ≤ 10 m: 1 Rettungsweg genügt','Ein Rettungsweg darf über eine Rampe führen'],
-  bau:['Tragende Bauteile grundsätzlich feuerbeständig','Brandabschnitt oberirdisch geschlossen max. 5.000 m², sonst max. 2.500 m² (mit Sprinkler doppelt)','Treppenraum nur über Sicherheitsschleuse: Garagenseite T30-RS, Treppenraumseite RS','Gebäudeabschlusswände von Mittel- und Großgaragen: Brandwände'],
-  ant:['Geschlossene Mittel- und Großgaragen: maschinelle Abluftanlage','Großgaragen: Entrauchung natürlich oder maschinell (mind. 10-facher Luftwechsel/h)','BMA: geschlossene Großgarage > 2.500 m²','Trockene Löschwasserleitung bei Stellplätzen > 4 m unter oder > 13 m über Gelände'],
-  bes:['Offene Garage: unverschließbare Öffnungen mind. 1/3 der Umfassungswandflächen','Natürliche Rauchableitung: mind. 1.000 cm² je Stellplatz, oberes Wanddrittel, max. 20 m Abstand','In geschlossenen Mittel- und Großgaragen ist Rauchen verboten','Großgarage entspricht etwa 40 Stellplätzen'],
+  ab:'Mittelgarage über 100 m² bis 1000 m², Großgarage über 1000 m²',
+  q:['Stellplätze mit mehr als 100 m² Nutzfläche (Mittel- und Großgaragen).','Rettungsweglänge: offen 50 m, geschlossen 35 m.'],
+  bau:['Unterirdische geschlossene Mittelgarage: tragende Bauteile grundsätzlich feuerbeständig (§ 7 Abs. 1–2)','Nur nicht brennbar bei den Voraussetzungen des § 7 Abs. 3 Nr. 2 (u. a. Gebäude allein für die Garage, Höhe ≤ 22 m)','Oberirdische Mittel- und Großgaragen: feuerhemmend und nicht brennbar','Trennwände mindestens feuerhemmend und nichtbrennbar (§ 9 Abs. 1)','Treppenraum: feuerbeständige Wände und Decken (Bauart Brandwand)'],
+  rau:['Mittelgarage: keine generelle Rauchableitungspflicht nach § 17 Abs. 4; Lüftung nach § 16 prüfen','Geschlossene Großgarage: Rauchableitung nach § 17 Abs. 4, z. B. mindestens 1.000 cm² Öffnung je Stellplatz oder maschinelle RWA','Offene Großgarage: ständige Querlüftung (§ 2 Abs. 1)'],
+  bes:['Offene Garage: 1/3 der Umfassungswände aus unverschließbaren Öffnungen, mindestens zwei Außenwände mit Öffnungen höchstens 70 m gegenüberliegend (Querlüftung)','Sicherheitsschleuse: 1. Tür zur Garage T30-DSS, 2. Tür zum notwendigen Treppenraum RS','Schleuse nur erforderlich, wenn das Gebäude nicht allein den Nutzern der Garage dient (z. B. Garage unter einem Wohngebäude)','Brandabschnitte höchstens 2.500 m², mit selbsttätiger Löschanlage 5.000 m² (§ 12)'],
+  rw:['Zwei unabhängige bauliche Rettungswege je Geschoss; einer darf über eine Rampe führen (§ 14 Abs. 1)','Rettungsweglänge geschlossen höchstens 35 m, offen höchstens 50 m (§ 14 Abs. 2)'],
+  ant:['Trockene Löschwasserleitungen nur bei Geschosslage weniger 4 m und mehr als 13 m Distanz zur Geländeoberfläche (Wortlaut der Zusammenfassung)','BMA bei geschlossener Großgarage > 2.500 m²: Pflicht (§ 18 Abs. 1)'],
   mer:'Offen oder geschlossen entscheidet: offene Garagen 50 m Rettungsweglänge, geschlossene 35 m.',
-  xr:[['Rauchableitung','Öffnungen oben, maschinell 10-facher Luftwechsel'],['Sicherheitsschleuse','Garage T30-RS, Treppenraum RS'],['Trockene Löschwasserleitung','am notwendigen Treppenraum']]},
+  xr:[['Rauchableitung','Großgarage geschlossen nach § 17 Abs. 4'],['Sicherheitsschleuse','Garage T30-DSS, Treppenraum RS'],['Querlüftung','offene Garage: Öffnungen höchstens 70 m auseinander']]},
  {id:'vs',n:'Versammlungsstätte',lab:'Versammlung',rg:'MVStättVO',col:'#c08bff',
-  ab:'Versammlungsräume für mehr als 200 Besucher',
-  q:['Versammlungsräume für mehr als 200 Besucher.','Schutzvorhang vor der Bühnenöffnung einer Großbühne.'],
-  rw:['Mind. 2 unabhängige bauliche Rettungswege je Geschoss (ab > 100 Personen oder > 100 m²)','Vom Besucherplatz bis zum Ausgang max. 30 m (bis 5 m lichte Höhe)','Insgesamt max. 90 m, das Foyer kann Teil des Rettungsweges sein','Breite: 1,20 m je 200 Personen'],
-  bau:['Tragwerk erdgeschossig F30 (mit Sprinkler keine Anforderung), mehrgeschossig F90','Notwendige Treppen F90, nichtbrennbar, max. 2,40 m breit','Trennwand Bühnenhaus / Zuschauerhaus: feuerbeständig, Bauart einer Brandwand (REI 90-M (F 90-A))','Türen in feuerbeständigen Wänden: T30-RS'],
-  ant:['Rauchableitung: Räume > 50 m², Bühnen, notwendige Treppenräume','Wandhydranten Typ F ab 1.000 m² Grundfläche','Automatische Feuerlöschanlage bei Grundfläche > 3.600 m²','BMA und Lautsprecheranlage bei Grundfläche > 1.000 m²'],
-  bes:['Schutzvorhang schließt die Bühnenöffnung von Großbühnen dicht, durch Eigengewicht','Großbühne: Sprühwasserlöschanlage, die auch den Schutzvorhang beaufschlagt','Stehplätze 2 Personen/m², Sitzplätze an Tischen 1 Person/m²','Nicht: Gottesdienste, Museen, Fliegende Bauten'],
-  mer:'Max. 30 m vom Platz zum Ausgang, insgesamt höchstens 90 m Rettungsweg.',
-  xr:[['Schutzvorhang','schließt die Bühnenöffnung'],['Trennwand Bühnenhaus','Bauart einer Brandwand (REI 90-M (F 90-A))'],['Ausgänge','2 unabhängige bauliche Rettungswege']]},
+  ab:'Versammlungsräume für mehr als 200 Besucher (§ 1 MVStättVO)',
+  q:['Versammlungsräume für mehr als 200 Besucher.','Trennwand zwischen Bühnen- und Zuschauerhaus, automatische Feuerlöschanlage ab 3.600 m² Grundfläche.'],
+  bau:['Ebenerdig: feuerhemmend; ohne Feuerwiderstand bei selbsttätiger Feuerlöschanlage (§ 3 Abs. 1)','Mehrgeschossig: feuerbeständig (§ 3 Abs. 1); im Kellergeschoss feuerbeständig','Trennwände ebenerdig mindestens feuerhemmend, mehrgeschossig feuerbeständig (§ 3 Abs. 3) und Bauart Brandwand','Notwendige Treppen(räume) feuerbeständig, mehrgeschossig Treppenraum mindestens nicht brennbar','Trennwand zwischen Bühnen- und Zuschauerhaus erforderlich'],
+  rau:['Räume > 50 m² bis 200 m²: Öffnungen nach MBO','Räume > 200 m² bis 1000 m²: Öffnungen mit besonderen Anforderungen, meist Fenster im oberen Raumdrittel','Räume > 1000 m²: Rauch- und Wärmeabzugsgeräte (RWA) oder maschinelle Rauchabzugsanlagen','Zuluft im unteren Raumdrittel; Auslösung durch die Feuerwehr muss sichergestellt sein'],
+  bes:['Foyers oder Hallen können Teil des Rettungsweges sein, wenn Brandmeldeanlage und Alarmierungsanlage vorhanden sind','Ab > 1000 m² Wandhydranten Typ F, auf trockene Löschwasserleitung reduzierbar','Keine Anforderung an den Feuerwiderstand von Trennwänden zwischen den Versammlungsräumen'],
+  rw:['Zwei voneinander unabhängige bauliche Rettungswege (§ 6)','Rettungsweglänge nach § 7: 30 m, bis 60 m möglich, Lauflinienberechnung','§§ 6–9: Längen, Breiten und Führung abhängig von Raumhöhe, Personenzahl und Nutzungsart'],
+  ant:['Feuerwehrpläne; Brandmelde- und Alarmierungsanlagen ab > 1000 m² Grundfläche','Feuerlöscheinrichtungen gemäß § 19: bei Großbühnen Sprühwasserlöschanlage mit Handbetrieb','Automatische Feuerlöschanlage bei > 3600 m² Grundfläche; Sonderfälle existieren'],
+  mer:'Rettungsweglänge 30 m (bis 60 m möglich); BMA ab 1.000 m², automatische Feuerlöschanlage ab 3.600 m² Grundfläche.',
+  xr:[['Trennwand Bühnenhaus','zwischen Bühnen- und Zuschauerhaus'],['Foyer als Rettungsweg','nur mit BMA und Alarmierungsanlage'],['Ausgänge','2 unabhängige bauliche Rettungswege']]},
  {id:'sc',n:'Schule',lab:'Schule',rg:'MSchulbauR',col:'#ffd24a',
-  ab:'Allgemein- und berufsbildende Schulen (kein Schwellenwert)',
+  ab:'Allgemein- und berufsbildende Schulen (keine Hochhäuser, keine reinen Erwachsenenschulen)',
   q:['Allgemein- und berufsbildende Schulen mit Lernbereichen.','Interne BMA ab Lernbereichen > 600 m².'],
-  rw:['2 unabhängige bauliche Rettungswege','Unterrichtsräume: 35 m bis zu einem der baulichen Rettungswege','Lernbereiche: 1. Rettungsweg 35 m zu Ausgang oder Treppenraum; 2. Rettungsweg weiterer Ausgang oder 25 m Lauflinie','Stichflur max. 15 m, Flure mind. 1,50 m, Treppen mind. 1,20 m'],
-  bau:['Brandabschnitt max. 1.600 m²','Tragwerk feuerhemmend oder hochfeuerhemmend: Brandwand hochfeuerhemmend-M','Tragwerk feuerbeständig: Brandwand REI 90-M (F 90-A)','Türen in notwendigen Fluren T30-RS bei 2,5 m öffnungsloser Flurwand'],
-  ant:['Alarmierungsanlage mit Räumungssignal, anders als das Pausensignal','Interne BMA ab Lernbereichen > 600 m² (ohne Aufschaltung auf die Feuerwehr)','Sicherheitsbeleuchtung in Rettungswegen und fensterlosen Aufenthaltsräumen','Sicherheitsstromversorgung für Beleuchtung, Alarmierung und interne BMA'],
-  bes:['Lernbereiche: mehrere Räume in einer multifunktionalen Zone, Sichtbeziehung zu den Lernpositionen','Hallen: Rauchableitung 1 % der Grundfläche oben oder 2 % in der oberen Außenwand','Aufenthaltsräume > 50 m²: öffenbare Fenster','Rettungsbalkone mind. 1,20 m breit'],
+  bau:['Lernbereich eingeschossig bis 400 m², mehrgeschossig bis 200 m² (max. 2 Geschosse): Bauteile GK 1 bzw. 2','Lernbereich > 200 bis 600 m²: h ≤ 7 m GK 3; h ≤ 13 m hochfeuerhemmend; h > 13 m GK 5','Lernbereich > 600 bis 900 m², h > 7 m: GK 5','Brandwände: max. 60 m Brandabschnittslänge, max. 1.600 m²; bei feuerhemmendem oder hochfeuerhemmendem Tragwerk Wände anstelle Brandwand möglich (hfh-M)','Notwendiger Treppenraum nach Gebäudeklasse (GK 1 und 2 mindestens feuerhemmend), Türen mindestens rauchdicht und selbstschließend'],
+  rau:['Aufenthaltsräume über 50 m² müssen öffenbare Fenster haben (7.1)','Innenliegende Aufenthaltsräume und Erschließungsbereiche über 200 m²: geeignete Maßnahmen zur Rauchableitung (7.1)','Hallen: oben Öffnung von 1 % der Grundfläche oder 2 % Öffnungen in der oberen Außenwand (7.2)'],
+  bes:['Lernbereiche: mehrere Räume in einer multifunktional genutzten Zone, beliebig verbunden oder getrennt, über Erschließungsbereiche zugänglich','Hallen: Räume über mehrere Geschosse, auch Mehrzweckräume','Türen können feuerhemmend-RS sein, wenn 2,5 m öffnungslose Flurwand in beide Richtungen'],
+  rw:['Zwei unabhängige bauliche Rettungswege (4.1)','Unterrichtsräume: 35 m zu einem der baulichen Rettungswege','Lernbereiche: 1. Rettungsweg 35 m zwingend zu Ausgang in Treppenraum oder ins Freie; 2. Rettungsweg weiterer Ausgang oder Lauflinie 25 m bis angrenzender Lernbereich, Außentreppe, begehbare Dächer, Rettungsbalkon','Stichflur max. 15 m; Sichtbeziehung innerhalb von Lernbereichen','Breiten: 1,2 m je 200 Personen; Flure mind. 1,50 m, Treppen 1,20 m'],
+  ant:['Sicherheitsbeleuchtung, Sicherheitsstromversorgung, Alarmierung, BMA, Feuerwehrpläne','Alarmierungsanlage als Räumungssignal, verschieden vom Pausensignal','Interne BMA ab Lernbereichen > 600 m² ohne Aufschaltung auf die Feuerwehr (Kenngröße Rauch)','Sicherheitsstromversorgung für Sicherheitsbeleuchtung, Alarmierungsanlage und interne BMA'],
   mer:'Lernbereiche: Der 1. Rettungsweg (35 m) führt zwingend zum Treppenraum oder ins Freie.',
   xr:[['Brandwand','Brandabschnitt max. 1.600 m²'],['Halle: Rauchableitung','1 % der Grundfläche'],['Notwendiger Flur','mind. 1,50 m breit']]}];
 const DB={};D.forEach(d=>{DB[d.id]=d;});
-/* Übrige Sonderbautatbestände (§ 2 Abs. 4 MBO), ohne 3D */
-const MORE=[
- ['Bauliche Anlagen > 30 m','Höhe h > 30 m',''],
- ['Große Geschossfläche','Geschoss mit größter Ausdehnung > 1.600 m² (Ausnahme: Wohngebäude und Garagen)',''],
- ['Büro und Verwaltung','Raum einzeln > 400 m²',''],
- ['Räume für viele Personen','Raum einzeln für > 100 Personen; ab > 200 Personen gilt MVStättVO, dazwischen Handlungsspielraum','MVStättVO'],
- ['Gaststätten','> 40 Gastplätze im Gebäude oder > 1.000 Gastplätze im Freien',''],
- ['Spielhallen','Grundfläche > 150 m²',''],
- ['Pflege und Betreuung','Eingeschränkte Selbstrettungsfähigkeit: Nutzungseinheit für > 6 Personen, Intensivpflegebedarf oder insgesamt > 12 Personen mit gemeinsamem Rettungsweg','MWR'],
- ['Krankenhäuser','Nutzung','MKhVO'],
- ['Wohnheime und Unterbringung','Sonstige Einrichtungen zur Unterbringung von Personen sowie Wohnheime',''],
- ['Tageseinrichtungen','> 10 Kinder, Menschen mit Behinderung, alte Menschen',''],
- ['Justizvollzug','Justizvollzugsanstalten und bauliche Anlagen des Maßregelvollzugs',''],
- ['Camping und Wochenendplätze','Nutzung',''],
- ['Freizeit- und Vergnügungsparks','Nutzung',''],
- ['Fliegende Bauten','Soweit Ausführungsgenehmigung nötig','M-FlBauR'],
- ['Regallager','Oberkante Lagergut > 7,50 m','vgl. VDI 3564'],
- ['Explosions- oder Brandgefahr','Umgang oder Lagerung von Stoffen mit Explosions- oder erhöhter Brandgefahr',''],
- ['Vergleichbare Gefahren','Anlagen und Räume mit vergleichbaren Gefahren wie die übrigen Tatbestände','']];
 
 /* ===== three.js-Szene ===== */
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
@@ -404,11 +392,7 @@ function Quartier({sel,setSel,kp,setKp,more,setMore,mo,setMo}){
   if(!sel){
     return h('div',null,
       h('p',{className:'lead'},'Tippe ein Gebäude im Quartier oder hier an.'),
-      h('div',{className:'chips'},D.map(d=>h('button',{key:d.id,className:'chip',onClick:()=>setSel(d.id)},h('i',{style:{background:d.col}}),d.n))),
-      h('button',{className:'more'+(more?' open':''),'aria-expanded':more,onClick:()=>setMore(!more)},h('span',null,'Weitere Sonderbautatbestände ('+MORE.length+')'),ICON.chev),
-      more&&h('div',{style:{marginTop:10}},
-        mo!=null&&h('div',{className:'note',style:{margin:'0 0 10px'}},h('b',null,MORE[mo][0]),MORE[mo][1]+(MORE[mo][2]?' · '+MORE[mo][2]:'')),
-        h('div',{className:'chips'},MORE.map((m,i)=>h('button',{key:i,className:'chip sm'+(mo===i?' on':''),onClick:()=>setMo(mo===i?null:i)},m[0])))));
+      h('div',{className:'chips'},D.map(d=>h('button',{key:d.id,className:'chip',onClick:()=>setSel(d.id)},h('i',{style:{background:d.col}}),d.n))));
   }
   const d=DB[sel],pts=d[kp];
   return h('div',null,
@@ -439,14 +423,14 @@ function Quiz({quiz,setQuiz}){
 function App(){
   const [tab,setTab]=useState('q');
   const [sel,setSel0]=useState(null);
-  const [kp,setKp]=useState('rw');
+  const [kp,setKp]=useState('bau');
   const [xray,setXray]=useState(false);
   const [more,setMore]=useState(false);
   const [mo,setMo]=useState(null);
   const [quiz,setQuiz]=useState(makeQuiz);
   const api=useRef(null),pickRef=useRef(null),tabRef=useRef(tab),pbRef=useRef(null);
   tabRef.current=tab;
-  const setSel=useCallback(id=>{setSel0(id);setKp('rw');},[]);
+  const setSel=useCallback(id=>{setSel0(id);setKp('bau');},[]);
   pickRef.current=id=>{if(tabRef.current==='q')setSel(id);};
   const qCur=quiz.qs[quiz.i];
   useEffect(()=>{const a=api.current;if(!a)return;

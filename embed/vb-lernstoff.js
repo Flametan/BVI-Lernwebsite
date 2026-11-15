@@ -6,9 +6,9 @@
    **fett** im Text wird fett dargestellt. */
 const VBL = { themen: [
 
-{ id: 'ziele', kurz: 'Ziele', titel: 'Ziele des Vorbeugenden Brandschutzes', quelle: '§ 14 MBO (Aushang IdF, Dezernat B2)', extra: 'ziele',
-  farben: ['#3f9a54','#e58a00','#2f78d1','#a8201a'],
-  merke: 'E – A – R – L: Entstehung, Ausbreitung, Rettung, Löschen.',
+{ id: 'ziele', kurz: 'Ziele', titel: 'Ziele des Vorbeugenden Brandschutzes', quelle: '§ 14 MBO (Zusammenfassung 6.3)', extra: 'ziele',
+  farben: ['#c0392b','#7f8c8d','#3f9a54','#2f78d1'],
+  merke: 'E – A – R – L: Entstehung (rot), Ausbreitung (grau), Rettung (grün), Löschen (blau) – die Farben der Matrix in Kapitel 6.4.',
   kacheln: [['Entstehung verhindern', 'Der Entstehung eines Brandes wird vorgebeugt.'], ['Ausbreitung verhindern', 'Der Ausbreitung von Feuer und Rauch wird vorgebeugt.'], ['Rettung ermöglichen', 'Bei einem Brand ist die Rettung von Menschen und Tieren möglich.'], ['Löschen ermöglichen', 'Bei einem Brand sind wirksame Löscharbeiten möglich.']],
   sort: { kats: ['Entstehung', 'Ausbreitung', 'Rettung', 'Löschen'], items: [
     ['Zündquellen vermeiden', 0], ['Entstehung eines Brandes verhindern', 0],
@@ -18,7 +18,7 @@ const VBL = { themen: [
   ] }
 },
 
-{ id: 'aufenthaltsraum', kurz: 'Aufenthaltsraum', titel: 'Aufenthaltsraum', quelle: '§ 2 Abs. 7 MBO (Aushang IdF)', extra: 'raeume',
+{ id: 'aufenthaltsraum', kurz: 'Aufenthaltsraum', titel: 'Aufenthaltsraum', quelle: '§ 2 Abs. 5 MBO (Zusammenfassung 6.1)', extra: 'raeume',
   farben: ['#2e8a4a','#e58a00','#b5352b'],
   def: ['Definition', 'Aufenthaltsräume sind Räume, die zum **nicht nur vorübergehenden Aufenthalt** von Menschen **bestimmt oder geeignet** sind.'],
   merke: 'Nicht nur vorübergehend: Wohnen, Schlafen, Arbeiten. Nebenfunktion, Flur und Treppe: nein.',
@@ -39,7 +39,7 @@ const VBL = { themen: [
   ] }
 },
 
-{ id: 'baustoffe', kurz: 'Baustoffe', titel: 'Baustoffe: nichtbrennbar bis normalentflammbar', quelle: 'MVV TB, Anforderungen an Baustoffe (DIN 4102-1)', extra: 'baustoffe',
+{ id: 'baustoffe', kurz: 'Baustoffe', titel: 'Baustoffe: nichtbrennbar bis normalentflammbar', quelle: '§ 26 MBO (Zusammenfassung 6.3): A1/A2 nichtbrennbar, B1 schwerentflammbar, B2 normalentflammbar, B3 leichtentflammbar', extra: 'baustoffe',
   farben: ['#5a6b7d','#e8892b','#d9482b'],
   merke: 'Je höher die Anforderung, desto größer die Brandeinwirkung: nichtbrennbar (Vollbrand), schwerentflammbar (sich entwickelnder Brand), normalentflammbar (Entstehungsbrand).',
   sort: { kats: ['nichtbrennbar', 'schwerentflammbar', 'normalentflammbar'], items: [

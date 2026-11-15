@@ -190,7 +190,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     NAV.back(); await w(200); res.closed = !LP.isOpen();
     NAV.home(); return res;
   });
-  eq('Lernseite: Nächstes Kapitel geht auf der nächsten Seite weiter', [lpx.nextEnabled, lpx.view, lpx.eb, lpx.open], [true, 'v-idf-vb-46', 'Kapitel 01', true]);
+  eq('Lernseite: Nächstes Kapitel geht auf der nächsten Seite weiter', [lpx.nextEnabled, lpx.view, lpx.eb, lpx.open], [true, 'v-idf-vb-43', 'Kapitel 01', true]);
   eq('Lernseite: Vorheriges Kapitel geht auf die letzte Stelle der vorigen Seite zurück', [lpx.back, lpx.backEb, lpx.closed], ['v-idf-vb-45', 'Kapitel 03', true]);
   eq('Lernseite: Zurück-Knopf der Kopfleiste ist im Kapitelfenster ausgeblendet (keine überlappende Schrift)', lpx.backLbl, 'hidden');
 

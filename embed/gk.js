@@ -75,13 +75,13 @@ function reqFor(gk,part,zone){
 const RL=r=>r.s+(r.n?' ('+r.n+')':'');
 /* Sonderbau-Check (Abschnitt 03) */
 const SONDER=[
- {n:'Hochhäuser',t:'OKFF > 22 m',v:'MHHR'},
- {n:'Verkaufsstätten',t:'A > 800 m² (ab 2000 m²: MVKVO)',v:'MVKVO'},
- {n:'Versammlungsstätten',t:'n > 100 Personen (ab 200: MVStättVO)',v:'MVStättVO'},
- {n:'Beherbergungsstätten',t:'n > 12 Gastbetten',v:'MBeVO'},
- {n:'Krankenhäuser',t:'Nutzung',v:'MKhVO'},
+ {n:'Hochhaus',t:'OKFF > 22 m',v:'MHHR'},
+ {n:'Verkaufsstätten',t:'Verkaufsräume und Ladenstraßen > 2.000 m²',v:'MVKVO'},
+ {n:'Beherbergungsstätten',t:'> 12 Gastbetten',v:'MBeVO'},
+ {n:'Garagen',t:'Nutzfläche > 100 m² (Mittelgarage)',v:'M-GarVO'},
+ {n:'Versammlungsstätten',t:'Versammlungsräume für > 200 Besucher',v:'MVStättVO'},
  {n:'Industriebauten',t:'Produktion/Lagerung',v:'MIndBauRL'},
- {n:'Garagen',t:'Stellplätze > 100 m²',v:'M-GarVO'}];
+ {n:'Schulen',t:'allgemein- und berufsbildende Schulen',v:'MSchulbauR'}];
 /* Quiz-Fälle */
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 const pick=a=>a[Math.floor(Math.random()*a.length)];
