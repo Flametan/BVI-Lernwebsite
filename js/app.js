@@ -1829,7 +1829,7 @@ function launchConfetti(){
 /* ======================================================================
    FC – Flashcard-Engine
 ====================================================================== */
-/* Gezählt als „gewusst“ werden nur Karten, die nicht (mehr) als schwach vorgemerkt sind (Schwer zählt erst nach einer richtigen Antwort) */
+/* Gezählt als „gewusst“ werden nur Karten, die nicht (mehr) als „nicht gewusst“ vorgemerkt sind */
 function fcCounted(){
   let fc={}, w=[];
   try{ fc=JSON.parse(localStorage.getItem('bvi_fc')||'{}'); }catch(e){}
@@ -1840,7 +1840,7 @@ function fcCounted(){
 }
 const FC = (function(){
   const CATS = ['laufbahn','ibk','vak','feuak','idf'];
-  let deck=[], curIdx=0, flipped=false, sess={known:0,unknown:0,hard:0};
+  let deck=[], curIdx=0, flipped=false, sess={known:0,unknown:0};
   let activeFilters = new Set(['laufbahn']);
   // Unterteilung der Laufbahnklausuren: IBK, VAk, FeuAK, VB, Stabsarbeit (Mehrfachauswahl, Standard alle)
   const LBSUB=[['ibk','IBK',['heyrothsberge']],['vak','VAk',['recht']],['feuak','FeuAK',['management']],['vb','VB',['vorbeugender brandschutz']],['stab','Stabsarbeit',['stabsarbeit','führungsvorgang']]];
@@ -1853,14 +1853,13 @@ const FC = (function(){
   const SR_DAYS = [0,1,3,7,14,30];
 
   function sm2(prev, quality){
-    // quality: 0=nicht gewusst, 1=schwer, 2=gewusst
+    // quality: 0=nicht gewusst, 2=gewusst
     let interval=prev.interval||1, ease=prev.ease||2.5, reps=prev.reps||0;
     if(quality===0) return {interval:1,ease,reps:0,nextReview:Date.now()+86400000};
-    if(reps<=1) interval = quality===1 ? 3 : 7;
+    if(reps<=1) interval = 7;
     else interval=Math.round(interval*ease);
     reps++;
-    if(quality===1){ interval=Math.max(3,Math.round(interval*0.85)); ease=Math.max(1.3,ease-0.15); }
-    else { ease=Math.min(2.5,ease+0.1); }
+    ease=Math.min(2.5,ease+0.1);
     interval=Math.max(1,Math.min(interval,365));
     return {interval,ease,reps,nextReview:Date.now()+interval*86400000};
   }
@@ -1911,7 +1910,7 @@ const FC = (function(){
   const MODES=[
     ['open','Offen','Schwache, fällige und neue Karten','sun'],
     ['new','Neu','Noch nie geübt','spark'],
-    ['weak','Nochmal','Schwach: nicht gewusst oder schwer','redo'],
+    ['weak','Nochmal','Karten, die du nicht gewusst hast','redo'],
     ['known','Gewusste','Schon gewusst, gezielt wiederholen','ok'],
     ['all','Alle','Alle Karten der gewählten Module','all']
   ];
@@ -2050,19 +2049,17 @@ const FC = (function(){
     if(!outer) return;
     let x0=0, y0=0, live=false, dx=0, dy=0, pid=-1, lt=0, lx=0, ly=0, vx=0, vy=0, mode='';
     const THR=80, TILT=12;
-    const st={ok:outer.querySelector('.fc-st-ok'), no:outer.querySelector('.fc-st-no'), hard:outer.querySelector('.fc-st-hard')};
+    const st={ok:outer.querySelector('.fc-st-ok'), no:outer.querySelector('.fc-st-no')};
     const tilt=d=>Math.max(-TILT,Math.min(TILT,d*0.08));
-    const stamps=(o,n,h)=>{ st.ok.style.opacity=o; st.no.style.opacity=n; st.hard.style.opacity=h; };
-    const reset=()=>{ outer.style.transform=''; stamps(0,0,0); };
+    const stamps=(o,n)=>{ st.ok.style.opacity=o; st.no.style.opacity=n; };
+    const reset=()=>{ outer.style.transform=''; stamps(0,0); };
     const fly=(kind,ms)=>{
       if(_flying) return; _flying=true;
-      stamps(kind==='ok'?1:0,kind==='no'?1:0,kind==='hard'?1:0);
+      stamps(kind==='ok'?1:0,kind==='no'?1:0);
       outer.style.transition=`transform ${ms}ms cubic-bezier(.4,0,.9,.6),opacity ${ms}ms ease`;
-      outer.style.transform=kind==='hard'
-        ? `translateY(${-window.innerHeight*0.9}px)`
-        : `translateX(${(kind==='ok'?1:-1)*window.innerWidth*1.1}px) translateY(-30px) rotate(${(kind==='ok'?1:-1)*TILT}deg)`;
+      outer.style.transform=`translateX(${(kind==='ok'?1:-1)*window.innerWidth*1.1}px) translateY(-30px) rotate(${(kind==='ok'?1:-1)*TILT}deg)`;
       outer.style.opacity='0';
-      setTimeout(()=>FC.answer(kind==='ok'?true:kind==='no'?false:'hard',true),ms-20);
+      setTimeout(()=>FC.answer(kind==='ok',true),ms-20);
     };
 
     _flyFn=fly;
@@ -2077,21 +2074,15 @@ const FC = (function(){
       dx=e.clientX-x0; dy=e.clientY-y0;
       if(!mode){
         if(Math.max(Math.abs(dx),Math.abs(dy))<6) return;
-        mode = Math.abs(dy)>Math.abs(dx)+5 ? (dy<0?'up':'v') : 'x';
+        mode = Math.abs(dy)>Math.abs(dx)+5 ? 'v' : 'x';
       }
       if(mode==='v'){ live=false; outer.style.transform=''; return; }
       e.preventDefault();
       const now=performance.now(); if(now>lt){ vx=(e.clientX-lx)/(now-lt); vy=(e.clientY-ly)/(now-lt); lt=now; lx=e.clientX; ly=e.clientY; }
       outer.style.transition='none';
-      if(mode==='up'){
-        const y=Math.min(0,dy);
-        outer.style.transform=`translate(${dx*0.25}px,${y}px)`;
-        stamps(0,0,Math.min(-y/THR,1));
-      } else {
-        // Die Karte folgt dem Finger und neigt sich dabei bis 12°
-        outer.style.transform=`translateX(${dx}px) rotate(${tilt(dx)}deg)`;
-        { const p=Math.min(Math.abs(dx)/THR,1); stamps(dx>0?p:0,dx<0?p:0,0); }
-      }
+      // Die Karte folgt dem Finger und neigt sich dabei bis 12°
+      outer.style.transform=`translateX(${dx}px) rotate(${tilt(dx)}deg)`;
+      { const p=Math.min(Math.abs(dx)/THR,1); stamps(dx>0?p:0,dx<0?p:0); }
     },{passive:false});
 
     outer.addEventListener('pointerup',e=>{
@@ -2099,8 +2090,6 @@ const FC = (function(){
       live=false;
       if(Math.abs(dx)<8&&Math.abs(dy)<8){
         outer.style.transition=''; outer.style.transform=''; FC.flip();
-      } else if(mode==='up'&&(-dy>=THR||vy<-0.6)){
-        fly('hard',Math.max(180,Math.min(300,300+vy*100)));
       } else if(mode==='x'&&(Math.abs(dx)>=THR||Math.abs(vx)>0.6)){
         // Wegschnippen: Schwung des Fingers bestimmt die Richtung und das Tempo
         const dir=(Math.abs(vx)>0.6?vx:dx)>0?1:-1;
@@ -2141,14 +2130,13 @@ const FC = (function(){
     const ease_v=card_e?(card_e.ease||2.5):2.5;
     const reps_v=card_e?(card_e.reps||0):0;
     const iGood=reps_v>=2?Math.round(iVal*ease_v):7;
-    const iHard=reps_v>=2?Math.max(3,Math.round(iVal*ease_v*0.85)):3;
     const stars=fcLoadStars();
     const isStarred=stars.has(card.id);
     box.innerHTML = `
       <div class="fc-nav">
         <button class="fc-back-btn" onclick="FC.back()" ${_seen.length===0?'disabled':''} aria-label="Vorherige Karte"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
         <span class="fc-pos">Karte ${curIdx+1} von ${deck.length}</span>
-        <span class="fc-score">${sess.known} gewusst · ${sess.unknown} nicht gewusst${sess.hard?' · '+sess.hard+' schwer':''}</span>
+        <span class="fc-score">${sess.known} gewusst · ${sess.unknown} nicht gewusst</span>
         <button type="button" class="fc-rep-btn" onclick="FC.report()" aria-label="Fehler oder Unklarheit bei dieser Karte melden"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22V4M4 4h13l-2 4 2 4H4"/></svg></button>
       </div>
       <div class="fc-progress"><i style="width:${deck.length?Math.round(curIdx/deck.length*100):0}%"></i></div>
@@ -2168,15 +2156,13 @@ const FC = (function(){
         </div>
         <div class="fc-stamp fc-st-ok" aria-hidden="true">Gewusst</div>
         <div class="fc-stamp fc-st-no" aria-hidden="true">Nicht gewusst</div>
-        <div class="fc-stamp fc-st-hard" aria-hidden="true">Schwer</div>
       </div>
       ${_jgBar(card)}
       <div class="fc-controls" id="fc-controls">
         <button class="fc-rb fc-no" onclick="FC.swipe('no')" aria-label="Nicht gewusst, gleich wieder"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span class="fc-rl">Nicht gewusst</span></button>
-        <button class="fc-rb fc-hard" onclick="FC.swipe('hard')" aria-label="Schwer: kommt bald wieder und zählt erst nach einer richtigen Antwort"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="fc-rl">Schwer</span></button>
         <button class="fc-rb fc-yes" onclick="FC.swipe('ok')" aria-label="Gewusst, in ${iGood} Tagen"><span class="fc-rc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span class="fc-rl">Gewusst</span></button>
       </div>
-      <p class="fc-swhint" id="fc-swhint">Wischen: links nicht gewusst · oben schwer · rechts gewusst</p>
+      <p class="fc-swhint" id="fc-swhint">Wischen: links nicht gewusst · rechts gewusst</p>
       </div>`;
     flipped = false; _flying = false;
     requestAnimationFrame(()=>{ sizeCard(); setupSwipe(document.querySelector('.fc-outer')); });
@@ -2193,7 +2179,7 @@ const FC = (function(){
       const T={
         open:['✅','Alles Fällige geschafft','In diesem Modul ist gerade nichts fällig. Deine gewussten Karten kommen zu ihrem Termin zurück. Du kannst sie auch jetzt schon wiederholen.','Gewusste wiederholen','known'],
         new:['✅','Alles schon einmal geübt','In diesem Modul gibt es keine neuen Karten mehr.','Zu „Offen“','open'],
-        weak:['👍','Keine schwachen Karten','Im Moment ist hier nichts als „nicht gewusst“ oder „schwer“ vorgemerkt.','Zu „Offen“','open'],
+        weak:['👍','Keine schwachen Karten','Im Moment ist hier nichts als „nicht gewusst“ vorgemerkt.','Zu „Offen“','open'],
         known:['📘','Noch nichts gewusst','Hier gibt es noch keine gewussten Karten. Sie erscheinen, sobald du Karten mit „Gewusst“ beantwortest.','Zu „Offen“','open'],
         all:['📘','Keine Karten','In dieser Auswahl gibt es keine Karten.','Zu „Offen“','open']
       }[M];
@@ -2246,7 +2232,7 @@ const FC = (function(){
 
   return {
     start(keepScroll){
-      deck = getDeck(); curIdx=0; flipped=false; sess={known:0,unknown:0,hard:0};
+      deck = getDeck(); curIdx=0; flipped=false; sess={known:0,unknown:0};
       _seen=[]; _reviewPos=-1; _toCard=!keepScroll;
       showSkeleton();
       setTimeout(renderCard, 320);
@@ -2300,11 +2286,11 @@ const FC = (function(){
       if(_reviewPos>=0||curIdx>=deck.length||_flying) return;
       const ok=document.querySelector('.fc-outer');
       if(_flyFn&&ok){ _flyFn(kind,260); return; }
-      this.answer(kind==='ok'?true:kind==='no'?false:'hard',true);
+      this.answer(kind==='ok',true);
     },
     answer(quality,viaSwipe){
       if((!flipped&&!viaSwipe)||_reviewPos>=0) return;   // im Rückblick nicht die unsichtbare aktuelle Karte bewerten
-      const q=quality===true?2:quality===false?0:1; // true=gut, false=wieder, 'hard'=schwer
+      const q=quality===true?2:0; // true=gewusst, false=nicht gewusst
       if(navigator.vibrate) navigator.vibrate(q>0?[30]:[20,50,20]);
       const card=deck[curIdx];
       _seen.push(card); _reviewPos=-1;
@@ -2314,7 +2300,7 @@ const FC = (function(){
         const reps=card._reps||0;
         if(reps<2) deck.push(Object.assign({},card,{_reps:reps+1}));
       } else {
-        d[card.id]=sm2(d[card.id]||{},q); if(q===2) sess.known++; else sess.hard++;
+        d[card.id]=sm2(d[card.id]||{},q); sess.known++;
         if(typeof STREAK!=='undefined') STREAK.record();
       }
       const weak=fcLoadWeak(); if(q===2) weak.delete(card.id); else weak.add(card.id); fcSaveWeak(weak);
@@ -3315,7 +3301,7 @@ const CUSTOM=(function(){
   function remove(id){
     save(load().filter(c=>c.id!==id));
     const i=FLASHCARD_DATA.findIndex(c=>c.id===id); if(i>=0) FLASHCARD_DATA.splice(i,1);
-    // Lernstand, Stern und "schwer" der gelöschten Karte entfernen (sonst zählt sie weiter)
+    // Lernstand, Stern und „nicht gewusst“ der gelöschten Karte entfernen (sonst zählt sie weiter)
     try{
       const fc=JSON.parse(localStorage.getItem('bvi_fc')||'{}'); if(fc&&typeof fc==='object'&&id in fc){ delete fc[id]; localStorage.setItem('bvi_fc',JSON.stringify(fc)); }
       ['bvi_fc_stars','bvi_fc_weak'].forEach(k=>{ const a=JSON.parse(localStorage.getItem(k)||'[]'); if(Array.isArray(a)&&a.includes(id)) localStorage.setItem(k,JSON.stringify(a.filter(x=>x!==id))); });
@@ -3452,7 +3438,7 @@ const CUSTOM=(function(){
 })();
 
 /* ======================================================================
-   WEAK – schwere Karten im Überblick
+   WEAK – „Nochmal üben“ im Überblick
 ====================================================================== */
 const WEAK=(function(){
   let box=null;
@@ -3468,7 +3454,7 @@ const WEAK=(function(){
     const n=FC.weakCount(), by=FC.weakByModule();
     const chips=Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<span class="wk-chip">${esc(k)} <b>${v}</b></span>`).join('');
     box.innerHTML=`<div class="cu-card"><button class="sh-x" aria-label="Schließen">×</button><div class="sh-t" style="text-align:left;padding-right:36px">Nochmal üben</div>
-      <div class="wk-sec"><div class="wk-h">Lernkarten</div>${n?`<div class="wk-n"><b>${n}</b> ${n===1?'Karte':'Karten'} mit „schwer“ oder „nicht gewusst“</div><div class="wk-chips">${chips}</div><button class="btn btn-gold" onclick="WEAK.cards()">Diese Karten üben</button>`:'<div class="wk-n m">Keine schweren Karten. Gut so!</div>'}</div>
+      <div class="wk-sec"><div class="wk-h">Lernkarten</div>${n?`<div class="wk-n"><b>${n}</b> ${n===1?'Karte':'Karten'} mit „nicht gewusst“</div><div class="wk-chips">${chips}</div><button class="btn btn-gold" onclick="WEAK.cards()">Diese Karten üben</button>`:'<div class="wk-n m">Keine Karten zum Nochmal-Üben. Gut so!</div>'}</div>
       <div class="m-t2">Eine Karte verschwindet aus der Liste, sobald du sie als „gewusst“ beantwortest.</div></div>`;
   }
   function open(){ if(!box) build(); render(); box.hidden=false; box.querySelector('.sh-x').focus({preventScroll:true}); }
@@ -6723,7 +6709,7 @@ const SHELL=(function(){
     }).join('');
     const known=FLASHCARD_DATA.filter(c=>fc[c.id]).length;
     el.innerHTML=`<div class="m-card"><div class="m-t1">Dein Stand</div>${rows}<div class="m-t2" style="margin-top:12px">${known} von ${FLASHCARD_DATA.length} Karten gewusst</div></div>
-      <div class="m-card m-kbd"><div class="m-t1">Tastatur</div><div class="m-t2" style="line-height:2.1"><span class="kb-r"><kbd>↓</kbd> aufdecken</span><span class="kb-r"><kbd>Leertaste</kbd> markieren</span><span class="kb-r"><kbd>→</kbd> gewusst</span><span class="kb-r"><kbd>↑</kbd> schwer</span><span class="kb-r"><kbd>←</kbd> nicht gewusst</span></div></div>`;
+      <div class="m-card m-kbd"><div class="m-t1">Tastatur</div><div class="m-t2" style="line-height:2.1"><span class="kb-r"><kbd>↓</kbd> aufdecken</span><span class="kb-r"><kbd>Leertaste</kbd> markieren</span><span class="kb-r"><kbd>→</kbd> gewusst</span><span class="kb-r"><kbd>←</kbd> nicht gewusst</span></div></div>`;
   }
 
   let _tocIO=null;
@@ -6998,7 +6984,6 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(e.key===' '&&!e.target.matches('input,textarea,button,select')){ e.preventDefault(); FC.starCurrent(); }
       if((e.key==='ArrowRight'||e.key==='j')&&!e.ctrlKey&&!e.metaKey){ e.preventDefault(); FC.swipe('ok'); }
       if((e.key==='ArrowLeft'||e.key==='f')&&!e.ctrlKey&&!e.metaKey){ e.preventDefault(); FC.swipe('no'); }
-      if(e.key==='ArrowUp'&&!e.ctrlKey&&!e.metaKey){ e.preventDefault(); FC.swipe('hard'); }
     }
   });
   let _perfRafPending=false;

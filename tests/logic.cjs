@@ -81,22 +81,22 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Suche: Tippfehler „Atemschuz“ findet Atemschutz', search.typo.some(t => /atemschutz/i.test(t)));
   ok('Suche: „Ubung“ findet etwas', search.umlaut.length > 0);
 
-  // ── Lernkarten: schwer, schwach, eigene Karten ──
+  // ── Lernkarten: nicht gewusst, Nochmal, eigene Karten ──
   const fc = await page.evaluate(() => {
     SEARCH.close();
     NAV.tab('v-flashcards', 'x');
     FC.start();
     return new Promise(res => setTimeout(() => {
       FC.flip(); FC.answer(false);
-      FC.flip(); FC.answer('hard');
       FC.flip(); FC.answer(true);
+      FC.flip(); FC.answer(false);
       const weak = FC.weakCount();
       FC.showWeak();
       setTimeout(() => res({ weak, pos: document.querySelector('.fc-pos')?.textContent }), 700);
     }, 700));
   });
-  eq('Lernkarten: zwei schwache Karten', fc.weak, 2);
-  ok('Lernkarten: Filter „Schwach“ zeigt 2 Karten', /von 2$/.test(fc.pos || ''), fc.pos);
+  eq('Lernkarten: zwei „nicht gewusst“-Karten', fc.weak, 2);
+  ok('Lernkarten: Nochmal zeigt 2 Karten', /von 2$/.test(fc.pos || ''), fc.pos);
 
   const own = await page.evaluate(() => {
     const before = FLASHCARD_DATA.length;
