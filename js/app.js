@@ -1166,7 +1166,7 @@ const SEARCH = (function(){
     'v-feuak-pruefung':'FeuAK · Prüfungsleistung Hamburg',
     'v-feuak-lernblatt-hh':'FeuAK · Lernarbeitsblatt Hamburg',
     'v-feuak-lernblatt-2026':'FeuAK · Lernarbeitsblatt Hamburg BVI April 2026',
-    'v-idf-vb-41':'IdF · Überblick und Brandschutzdienststelle',
+    'v-idf-vb-41':'IdF · Brandschutzdienststelle',
     'v-idf-vb-42':'IdF · Begriffe des VB',
     'v-idf-vb-43':'IdF · Gebäudeklassen',
     'v-idf-vb-44':'IdF · Baurecht',
