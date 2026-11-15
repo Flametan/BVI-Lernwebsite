@@ -3130,7 +3130,8 @@ const LP=(function(){
   function open(v,i,opt){
     if(!win) build();
     const focus=!!(opt&&opt.focus);
-    cur={v,i,body:null,focus};
+    cur={v,i,body:null,focus,sy:window.scrollY};
+    if(cur.sy) window.scrollTo({top:0,behavior:'instant'});   // sonst rutscht die Kopfleiste beim Sperren des Scrollens aus dem Bild
     win.classList.toggle('focus',focus); v.classList.toggle('lp-focus',focus);
     v.appendChild(win); v.classList.add('lp-open'); document.documentElement.classList.add('lp-lock');
     place();
@@ -3228,7 +3229,8 @@ const LP=(function(){
   }
   function close(silent){
     if(!cur) return;
-    give(); const v=cur.v; win.classList.remove('on','focus'); v.classList.remove('lp-open','lp-focus'); document.documentElement.classList.remove('lp-lock'); cur=null;
+    give(); const v=cur.v; win.classList.remove('on','focus'); v.classList.remove('lp-open','lp-focus'); document.documentElement.classList.remove('lp-lock'); const _sy=cur.sy; cur=null;
+    if(_sy) window.scrollTo({top:_sy,behavior:'instant'});
     if(typeof HL!=='undefined') HL.apply(v.id);
     if(v.classList.contains('lp-ueber')) render(v);
     if(pushed){ pushed=false; if(!silent){ ignorePop=true; try{ history.back(); }catch(e){ ignorePop=false; } } }
