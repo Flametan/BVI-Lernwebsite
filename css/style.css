@@ -590,9 +590,7 @@
   /* mini centered overlay panels (font-size, notif) */
   
 
-  /* ── FC HARD BUTTON + INTERVAL HINT ── */
-  .fc-hard{background:rgba(176,115,32,0.12);border-color:var(--c-warn)!important;color:var(--k-d4a84a);}
-  .fc-hard:hover{background:rgba(176,115,32,0.22)!important;}
+  /* ── FC INTERVAL HINT ── */
   .fc-hint{display:block;font-size:.75rem;color:var(--c-slate);margin-top:.1rem;font-weight:400;}
 
   /* ── SETTINGS EXTRA SECTIONS ── */
@@ -1310,7 +1308,6 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 .fc-controls{max-width:640px;margin:0 auto;gap:10px;}
 .fc-btn{max-width:none;border:0!important;border-radius:14px;padding:13px 6px;font-family:var(--f-b);font-size:.95rem;font-weight:700;}
 .fc-no,.fc-no:hover{background:var(--m-card);color:var(--m-fg);}
-.fc-hard,.fc-hard:hover{background:var(--m-raised)!important;color:var(--m-fg);}
 .fc-yes,.fc-yes:hover{background:var(--m-accent);color:var(--m-on-accent);}
 .fc-hint{color:inherit;opacity:.65;font-weight:400;font-size:.75rem;}
 .fc-end{background:var(--m-card);border-radius:20px;max-width:640px;margin:0 auto;padding:2rem 1.25rem;}
@@ -4095,12 +4092,11 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 }
 .pz-more{display:none;}
 
-/* Lernkarten: runde Antwort-Knöpfe, Wischen nach oben (Schwer), Stempel auf der Karte */
+/* Lernkarten: runde Antwort-Knöpfe, Stempel auf der Karte */
 .fc-outer,.fc-outer *{touch-action:none;}
 .fc-stamp{top:auto;white-space:nowrap;transform:none;padding:.4rem .9rem;border-radius:12px;border:3px solid;font-size:1.15rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:color-mix(in srgb,var(--m-card) 82%,transparent);}
 .fc-st-ok{top:1rem;left:1rem;color:var(--c-ok);border-color:var(--c-ok);transform:rotate(-9deg);}
 .fc-st-no{top:1rem;right:1rem;color:var(--k-e07070);border-color:var(--k-e07070);transform:rotate(9deg);}
-.fc-st-hard{bottom:1.1rem;left:50%;margin-left:-3.2rem;color:var(--m-accent-fg);border-color:var(--m-accent-fg);}
 .fc-controls{justify-content:space-between;align-items:flex-start;max-width:340px;margin:.9rem auto 0;padding:0 .5rem;}
 .fc-rb{display:flex;flex-direction:column;align-items:center;gap:6px;border:0!important;background:none!important;padding:0!important;color:var(--m-fg);font-family:inherit;cursor:pointer;flex:none;}
 .fc-rc{width:58px;height:58px;border-radius:50%;background:var(--m-card);box-shadow:0 2px 10px rgba(0,0,0,.22);display:grid;place-items:center;transition:transform .15s ease;}
@@ -4129,15 +4125,12 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .fc-card-star.starred{background:var(--m-accent-dim);color:var(--m-accent-fg);}
 .fc-card-star.starred svg{fill:currentColor;}
 .fc-outer .fc-face{padding-right:3.4rem;}
-/* Antwort-Kreise: gleich groß, Kontur, Schwer versetzt (Bogen), Gewusst gefüllt */
+/* Antwort-Kreise: gleich groß, Kontur, Gewusst gefüllt */
 .fc-controls{justify-content:center;align-items:flex-end;gap:30px;max-width:420px;padding:0;}
 .fc-rb{width:96px;}
 .fc-rc{width:62px;height:62px;box-shadow:none;background:var(--m-card);}
 .fc-rl{font-size:.8rem;font-weight:600;color:var(--m-fg);text-align:center;line-height:1.15;}
 .fc-no .fc-rc{color:var(--k-e07070);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--k-e07070) 55%,transparent);}
-.fc-hard{margin-bottom:34px;}
-.fc-hard .fc-rc{background:var(--m-card);color:var(--m-accent-fg);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--m-accent) 70%,transparent);}
-.fc-hard,.fc-hard:hover{color:var(--m-fg)!important;background:none!important;}
 .fc-yes .fc-rc{background:var(--c-ok);color:#fff;}
 .fc-yes,.fc-yes:hover{color:var(--m-fg)!important;background:none!important;}
 .fc-no,.fc-no:hover{color:var(--m-fg);}
@@ -4146,7 +4139,6 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 /* Antwort-Knöpfe: immer sichtbar. Am Handy und Tablet fest über der Tab-Leiste, am Desktop direkt unter der Karte */
 .fc-outer{margin-bottom:.5rem;}
 .fc-rc{width:56px;height:56px;}
-.fc-hard{margin-bottom:26px;}
 .fc-controls{margin-top:0;padding:.4rem 0 .25rem;}
 .fc-swhint{margin:.25rem 0 0;font-size:.74rem;}
 @media (max-width:1023px){
@@ -4165,7 +4157,6 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .fc-rc svg{width:19px;height:19px;}
 .fc-rl{font-size:.68rem;}
 .fc-rb{gap:3px;}
-.fc-hard{margin-bottom:12px;}
 .fc-controls{padding:.3rem 0 .15rem;gap:22px;}
 @media (max-width:1023px){
   #fc-container:has(.fc-controls){padding-bottom:calc(74px + var(--m-tabbar-h,0px));}
@@ -4176,10 +4167,9 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
   #fc-container:has(.fc-nav){min-height:calc(100dvh - var(--m-tabbar-h,0px) - 24px);}
   .fc-controls{bottom:calc(var(--m-tabbar-h,0px) + env(safe-area-inset-bottom,0px) + 18px);}
 }
-/* Antwort-Knöpfe 48 px; Schwer sitzt über dem mittleren Tab-Knopf, die äußeren tiefer */
+/* Antwort-Knöpfe 48 px */
 .fc-rc{width:48px;height:48px;}
 .fc-rc svg{width:22px;height:22px;}
-.fc-hard{margin-bottom:26px;}
 .fc-controls{gap:30px;}
 @media (max-width:1023px){
   #fc-container:has(.fc-controls){padding-bottom:calc(112px + var(--m-tabbar-h,0px));}

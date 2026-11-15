@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.4',ts:'2026-11-12T10:00',items:[
+      'Lernkarten: Die Bewertung „Schwer“ ist entfernt (Knopf, Wischen nach oben, Stempel, Pfeiltaste und Zähler). Es bleiben „Nicht gewusst“ und „Gewusst“. Karten, die du nicht gewusst hast, erscheinen weiter unter „Nochmal“.',
       'Schneller: Lernseiten werden erst beim Öffnen eingesetzt (Seitenwechsel am Tablet deutlich flotter), die Suche baut ihren Index in kleinen Schritten auf, der Sync gleicht seltener und mit weniger Daten ab (die Nutzungszeit löst keinen Abgleich mehr aus), und Updates laden nur noch geänderte Dateien.',
       'Altklausur-Quiz IdF: neuer Tab „Vorbeugender Brandschutz 12/2026“ mit 38 Übungsfragen (Multiple Choice, Vorbeugender Brandschutz). Bei allen Multiple-Choice- und Mehrfachauswahl-Fragen des Quiz wechselt die Reihenfolge der Antworten bei jeder Runde, damit man sich nicht die Stelle der richtigen Antwort merkt.',
       'Speiseplan IdF Münster für 09.–13.11.2026 ergänzt.',
