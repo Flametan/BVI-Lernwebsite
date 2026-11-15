@@ -57,7 +57,7 @@ lesen sie in der App unter **Jahrgang importieren** ein, ohne dass du etwas ver�
 
 Alles ist optional (siehe `_beispiel.json`):
 
-* `plane` – Stundenpläne je Abschnitt (`ibk`, `vak`, `feuak`, `idf`), jeweils mit Termine (Beginn, Ende, Titel, Raum); `aktiv` nennt den Abschnitt, dessen Plan Startseite und Widgets benutzen.
+* `plane` – Stundenpläne je Abschnitt (`ibk`, `vak`, `feuak`, `idf`, `idf2` für IdF Gruppe 2, `bruchsal` für die LFS Bruchsal), jeweils mit Termine (Beginn, Ende, Titel, Raum); `aktiv` nennt den Abschnitt, dessen Plan Startseite und Widgets benutzen.
 * `erg` – Ergänzungen zu Lernseiten (`seite` ist die Seiten-ID, z. B. `v-vak-verwaltungsrecht`; `bild` verweist auf `bilder`).
 * `pr` – Prüfungen: `hinzu` (eigene Prüfungen mit Fragen und Antworten), `weg` (ausgeblendete mitgelieferte Prüfungen).
 * `rel` – Klausurrelevanz einzelner Prüfungen als `{ "<Prüfungs-ID>": true|false }`. Ohne Angabe gelten die im Master hervorgehobenen Prüfungen (und eigene Prüfungen) als relevant; relevante Prüfungen liefern die Fragen für Einsatzfahrt und Duell.
@@ -65,9 +65,9 @@ Alles ist optional (siehe `_beispiel.json`):
 * `links` – `{ "cloud": { "url": "https://…", "titel": "…", "hinweis": "…" } }`, nur `https`. Erscheint als Karte auf der Startseite. Keine Passwörter eintragen.
 * `kweg` – gelöschte Lernkarten: IDs der Karten, die in diesem Jahrgang nicht mehr erscheinen sollen (Master-Karten wie `g01` oder Karten des Jahrgangs wie `jgk1`). Die Karten bleiben im Master erhalten.
 * `karten` – Lernkarten des Jahrgangs: `[{ "id": "k1", "modul": "VAk", "q": "Frage", "a": "Antwort" }]` (Module: Laufbahn, IBK, VAk, FeuAK, IdF (ältere Module GAL, SFS, HLFS bleiben zulässig)).
-* `faq` – Antworten zum Standort (Unterkunft, Essen, Sport, Anreise …) je `ibk`, `vak`, `feuak`, `idf`: Eine Liste mit Einträgen. Mit `id` (z. B. `kuehl`, `sport`, `parken`; alle Kennungen stehen in `js/faq.js`) wird die Antwort der Standardfrage ersetzt, ohne `id` entsteht eine eigene Frage: `{ "c": "Sonstiges", "q": "Frage?", "a": "Antwort" }`. Fragen ohne Antwort werden in der App nicht angezeigt.
-* `orte` – Standorte statt der Standardnamen: `{ "ibk": "…", "vak": "…", "feuak": "…", "idf": "…" }`.
-* `kuerzel` – eigene Kürzel statt IBK, VAk, FeuAK und IdF (Buchstaben, Ziffern, Punkt und Bindestrich, höchstens 12 Zeichen): `{ "idf": "…" }`.
+* `faq` – Antworten zum Standort (Unterkunft, Essen, Sport, Anreise …) je `ibk`, `vak`, `feuak`, `idf`, `bruchsal`: Eine Liste mit Einträgen. Mit `id` (z. B. `kuehl`, `sport`, `parken`; alle Kennungen stehen in `js/faq.js`) wird die Antwort der Standardfrage ersetzt, ohne `id` entsteht eine eigene Frage: `{ "c": "Sonstiges", "q": "Frage?", "a": "Antwort" }`. Fragen ohne Antwort werden in der App nicht angezeigt.
+* `orte` – Standorte statt der Standardnamen: `{ "ibk": "…", "vak": "…", "feuak": "…", "idf": "…", "bruchsal": "…" }`.
+* `kuerzel` – eigene Kürzel statt IBK, VAk, FeuAK, IdF und LFS (Buchstaben, Ziffern, Punkt und Bindestrich, höchstens 12 Zeichen): `{ "idf": "…" }`.
 * `reiter` – eigene Reiter auf einer Übersichtsseite: `[{ "id": "r1", "seite": "v-vak", "titel": "…", "beschr": "…" }]`. Ihre Kapitel stehen in `erg` mit `seite: "v-r-<id>"` und `typ: "kapitel"`.
 * Eigene Prüfungsfragen haben `typ`: `sc` (Single-Choice, `c` = Nummer), `mc` (Multiple-Choice, `c` = Liste) oder `text` (Freitext, `a` = Musterlösung).
 * `bilder` – die Bilder als `data:image/jpeg;base64,…` (die App verkleinert sie vor dem Speichern).

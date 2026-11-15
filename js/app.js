@@ -4991,7 +4991,7 @@ const IDF_PLAN = (function(){
   let _cust=null, _act=null, _cw=null, _cwa=null, _mode='view';   // _cust: angezeigter Plan, _act: aktiver Plan (Startseite, Widgets)
   // Master-Jahrgang: eigener Plan optional (alter Speicherort); andere Jahrgänge: immer eigener Plan, ggf. noch leer
   const _nonMaster=()=>typeof JG!=='undefined'&&!JG.isMaster();
-  const PTAB={ibk:'IBK',vak:'VAk',feuak:'FeuAK',idf:'IdF Gruppe 1',idf2:'IdF Gruppe 2'};
+  const PTAB={ibk:'IBK',vak:'VAk',feuak:'FeuAK',idf:'IdF Gruppe 1',idf2:'IdF Gruppe 2',bruchsal:'LFS Bruchsal'};
   const _idfG=()=>{ try{ return localStorage.getItem('bvi_plan_idfg')==='idf2'?'idf2':'idf'; }catch(e){ return 'idf'; } };
   const _actKey=()=>{ const d=JG.data(); return d.aktiv&&d.plane[d.aktiv]?d.aktiv:(JG.PLANKEYS.find(k=>d.plane[k])||null); };
   function _vkey(){ try{ const k=localStorage.getItem('bvi_plan_view'); if(JG.PLANKEYS.includes(k)) return k; }catch(e){} return _actKey()||'idf'; }
@@ -5136,7 +5136,7 @@ const IDF_PLAN = (function(){
     if(!_nonMaster()) return '';
     const d=JG.data(), vk=_vkey(), ak=_actKey();
     const inIdf=vk==='idf'||vk==='idf2', idfAct=ak==='idf'||ak==='idf2', idfHas=!!(d.plane.idf||d.plane.idf2);
-    const seg=[['ibk','IBK'],['vak','VAk'],['feuak','FeuAK'],['idf','IdF']].map(([k,l])=>{
+    const seg=[['ibk','IBK'],['vak','VAk'],['feuak','FeuAK'],['idf','IdF'],['bruchsal','LFS']].map(([k,l])=>{
       const on=k==='idf'?inIdf:k===vk, star=k==='idf'?idfAct:ak===k, has=k==='idf'?idfHas:!!d.plane[k];
       return `<button class="${on?'active':''}" onclick="IDF_PLAN.viewTab('${k}')" aria-pressed="${on}">${l}${star?' ★':has?'':' ·'}</button>`;
     }).join('');
@@ -5323,7 +5323,7 @@ const IDF_PLAN = (function(){
   // Erster Plantag und Standort des aktiven Plans (für den FAQ-Hinweis auf der Startseite)
   function arrival(){ _mode='active'; try{ const w=_buildWeeks(_savedGrp()), k=_nonMaster()?(_actKey()||'idf'):'idf'; return w.length?{key:k==='idf2'?'idf':k,start:w[0][3]}:null; }catch(e){ return null; }finally{ _mode='view'; } }
   // Andere Jahrgänge (nicht der Master): Knopf zum Raumplan des IdF Münster, auch für Pläne ohne Raumangaben
-  const _raumBtn=()=>_nonMaster()?`<button type="button" class="m-card idf-raumbtn" onclick="RAUM.open({title:'Raumplan IdF Münster',time:'Gelände des Instituts',rooms:[],overview:true},this)"><span class="idf-rb-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg></span><span class="m-tx"><span class="m-t1">Raumplan IdF Münster</span><span class="m-t2">Gelände in 3D, Gebäude und Parkplätze</span></span></button>`:'';
+  const _raumBtn=()=>_nonMaster()&&_vkey()!=='bruchsal'?`<button type="button" class="m-card idf-raumbtn" onclick="RAUM.open({title:'Raumplan IdF Münster',time:'Gelände des Instituts',rooms:[],overview:true},this)"><span class="idf-rb-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg></span><span class="m-tx"><span class="m-t1">Raumplan IdF Münster</span><span class="m-t2">Gelände in 3D, Gebäude und Parkplätze</span></span></button>`:'';
   let _toFaq=false;   // true: der nächste Aufbau springt nicht zur aktuellen Einheit, sondern bleibt oben bei der FAQ
   function openFaq(){ const a=arrival(); if(a&&_nonMaster()) viewTab(a.key,true); FAQ.want(); _toFaq=true; NAV.tab('v-plan','Stundenplan'); }
   function units(){ _mode='active'; try{ return _units(); }finally{ _mode='view'; } }
