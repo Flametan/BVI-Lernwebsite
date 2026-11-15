@@ -4668,3 +4668,18 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .acc-body table.vbt .cH0{background:#fff!important;color:#111!important;font-weight:700;}
 .acc-body table.vbt .cHg{background:#c6e0b4!important;color:#111!important;font-weight:700;}
 .acc-body table.vbt td{min-width:4.2rem;}
+
+/* ── Kapitel 7: Vierfach-Nachrichtenvordruck (farbcodierte Tabellen) ── */
+.acc-body .nvt-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.5rem 0 .9rem;border-radius:8px;}
+.acc-body table.nvt{border-collapse:collapse;width:100%;font-size:.82rem;line-height:1.35;}
+.acc-body table.nvt th{background:#2b3a4f!important;color:#fff!important;font-weight:700;padding:.45rem .5rem;border:1px solid #6b7a8c!important;text-align:left;text-transform:none!important;letter-spacing:0!important;}
+.acc-body table.nvt td{padding:.45rem .55rem;border:1px solid #6b7a8c!important;vertical-align:middle;color:#111!important;background:#fff!important;}
+.acc-body table.nvt td strong{color:inherit!important;}
+.acc-body table.nvt td.nv{font-weight:700;white-space:nowrap;width:6.2rem;}
+.acc-body table.nvt td.nv small{display:block;font-weight:500;font-size:.75em;}
+.acc-body table.nvt td.nv0,.acc-body table.nvt td.nvw{background:#fff!important;}
+.acc-body table.nvt td.nvy{background:#ffef00!important;}
+.acc-body table.nvt td.nvr{background:#f4b6b6!important;}
+.acc-body table.nvt td.nvg{background:#c6e0b4!important;}
+.acc-body table.nvt.mb td{height:2.2rem;}
+.dg-svg.dg-svg-w{max-width:460px;}

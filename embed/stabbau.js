@@ -18,9 +18,9 @@ const bestTxt=(k,old,p)=>old===undefined?'Erstes Ergebnis gespeichert.':(p>old?'
 /* ---------- Fachdaten Stab ---------- */
 const SG=[
  {n:'S 1',t:'Personal / Innerer Dienst',s:'Bereitstellen der Einsatzkräfte und innerer Stabsdienst'},
- {n:'S 2',t:'Lage',s:'Lagefeststellung, Lagedarstellung, Information und Einsatzdokumentation'},
+ {n:'S 2',t:'Lage',s:'Lagefeststellung, Lagedarstellung, Prognose, Information und Einsatzdokumentation'},
  {n:'S 3',t:'Einsatz',s:'Lagebesprechung, Entschluss, Ordnen des Schadengebietes, Befehle und Kontrolle der Einsatzdurchführung'},
- {n:'S 4',t:'Versorgung',s:'Verpflegung, Unterkünfte, Rettungsmittel zum Eigenschutz, weitere Einsatzmittel und Verbrauchsgüter'},
+ {n:'S 4',t:'Versorgung',s:'Verpflegung, Finanzierung, Unterkünfte, Eigenschutz der Einsatzkräfte, weitere Einsatzmittel und Verbrauchsgüter'},
  {n:'S 5',t:'Presse und Medienarbeit',s:'Presse- und Medienarbeit und Betreuung von Medienvertretern'},
  {n:'S 6',t:'Informations- und Kommunikationswesen',s:'Fernmeldeorganisation, Kommunikationskonzept und IuK-Technik'}
 ];
@@ -28,10 +28,10 @@ const CARDS=[
  {g:0,t:'Einsatzkräfte nach dem Zwiebelschalenmodell alarmieren',w:'Zum Bereitstellen der Einsatzkräfte gehört das Alarmieren unter Berücksichtigung des Zwiebelschalenmodells.'},
  {g:0,t:'Lotsenstellen für ortsunkundige Kräfte einrichten',w:'Auch das Einrichten von Lotsenstellen gehört zum Bereitstellen der Einsatzkräfte.'},
  {g:0,t:'Schichtplanung für den Stab',w:'Die Schichtplanung gehört zum inneren Stabsdienst.'},
- {g:0,t:'Zugangskontrolle zu den Führungsräumen',w:'Führungsräume einzurichten und zu sichern, einschließlich Zugangskontrolle, ist Sache des S 1.'},
+ {g:0,t:'Ablösung des Stabspersonals',w:'Die Ablösung des Stabspersonals gehört zum inneren Stabsdienst des S 1.'},
  {g:1,t:'Lagekarte führen',w:'Zur Lagedarstellung gehört das Führen der Lagekarte (inklusive Einsatzübersichten).'},
  {g:1,t:'Einsatztagebuch führen',w:'Das Einsatztagebuch gehört zur Einsatzdokumentation.'},
- {g:1,t:'Meldungen an vorgesetzte Stellen absetzen',w:'Das Melden an vorgesetzte Stellen gehört zur Information.'},
+ {g:1,t:'Meldungen an vorgesetzte Stellen absetzen',w:'Das Meldewesen entsprechend Erlass an vorgesetzte Stellen gehört zur Information.'},
  {g:1,t:'Abschlussbericht erstellen',w:'Das Erstellen des Abschlussberichts gehört zur Einsatzdokumentation.'},
  {g:2,t:'Entschluss über die Einsatzdurchführung fassen',w:'Der S 3 beurteilt die Lage und fasst den Entschluss über die Einsatzdurchführung.'},
  {g:2,t:'Absperrmaßnahmen anordnen und An- und Abmarschwege festlegen',w:'Das gehört zum Ordnen des Schadengebietes.'},
@@ -77,29 +77,33 @@ const ZQ=[
 
 /* ---------- Fachdaten Vordruck ---------- */
 const FARBEN=[{id:'W',n:'Weiß'},{id:'R',n:'Rot'},{id:'G',n:'Gelb'},{id:'N',n:'Grün'}];
+const GROWS=[{id:'I',n:'I.'},{id:'II',n:'II.'},{id:'III',n:'III.'}];
+const rows=w=>w==='Gesprächsnotiz'?GROWS:FARBEN;
 const OPT={
  A:'Verbleibt beim Verfasser',
- B:'Verbleibt bei der Nachweisung',
+ B:'Verbleibt bei der Nachweisung (IuK)',
  C:'Nachweisung, dann S 2',
  D:'Nachweisung, dann zurück an den Verfasser',
  E:'Direkt an S 2',
- F:'Inhaltsbezogene Vergabe (ggf. Kopien)'
+ F:'Inhaltsbezogene Vergabe (ggf. Kopien)',
+ H:'Zurück zur IuK (Nachweisung)',
+ J:'Sichter, dann weiter wie beim Eingang'
 };
 const WEGE=['Eingang','Ausgang','Gesprächsnotiz'];
 const TAB={
  Eingang:{W:'F',R:'E',G:'B',N:'F'},
  Ausgang:{W:'A',R:'C',G:'B',N:'D'},
- 'Gesprächsnotiz':{W:'A',R:'C',G:'B',N:'F'}
+ 'Gesprächsnotiz':{I:'A',II:'H',III:'J'}
 };
 const EXPL={
- Eingang:{W:'Eingang, Weiß: inhaltsbezogene Vergabe, bei Bedarf werden Kopien erstellt.',R:'Eingang, Rot: geht immer an S 2.',G:'Eingang, Gelb: geht an die Nachweisung.',N:'Eingang, Grün: inhaltsbezogene Vergabe, bei Bedarf werden Kopien erstellt.'},
+ Eingang:{W:'Eingang, Weiß: inhaltsbezogene Vergabe, bei Bedarf werden Kopien erstellt.',R:'Eingang, Rot: geht an Sachgebiet 2.',G:'Eingang, Gelb: geht zurück zur IuK (Nachweisung).',N:'Eingang, Grün: inhaltsbezogene Vergabe, bei Bedarf werden Kopien erstellt.'},
  Ausgang:{W:'Ausgang, Weiß: verbleibt beim Verfasser.',R:'Ausgang, Rot: wird von der Nachweisung bearbeitet, danach immer an S 2.',G:'Ausgang, Gelb: verbleibt bei der Nachweisung.',N:'Ausgang, Grün: wird von der Nachweisung bearbeitet, danach immer zurück an den Verfasser.'},
- 'Gesprächsnotiz':{W:'Gesprächsnotiz, Weiß: verbleibt beim Verfasser.',R:'Gesprächsnotiz, Rot: wird von der Nachweisung bearbeitet, danach immer an S 2.',G:'Gesprächsnotiz, Gelb: verbleibt bei der Nachweisung.',N:'Gesprächsnotiz, Grün: inhaltsbezogene Vergabe, bei Bedarf werden Kopien erstellt.'}
+ 'Gesprächsnotiz':{I:'Gesprächsnotiz, I.: verbleibt beim Verfasser.',II:'Gesprächsnotiz, II.: geht zurück zur IuK (Nachweisung).',III:'Gesprächsnotiz, III.: geht an den Sichter, dann weiter wie beim Eingang.'}
 };
 const WEGINFO={
- Eingang:'Eingang: Annahme durch die IuK, Weitergabe aller Vordrucke an den Sichter. Der Sichter erstellt den Verteilungsplan.',
+ Eingang:'Eingang: Der Vordruck kommt von der IuK zum Sichter, der ihn quittiert und kennzeichnet.',
  Ausgang:'Ausgang: Das Schreiben ist verfasst und geht ab.',
- 'Gesprächsnotiz':'Gesprächsnotiz: Ein Gespräch wird auf dem Vordruck festgehalten.'
+ 'Gesprächsnotiz':'Gesprächsnotiz: Ein Gespräch wird auf dem Vordruck festgehalten (Blätter I. bis III.).'
 };
 /* Beispielmeldungen sind frei formuliert (nicht aus den Lernseiten); es zählt nur der Weg des Vordrucks. */
 const MSGS=[
@@ -270,8 +274,8 @@ function renderV(){
  let h='';
  if(V.done){
   const r=V.res;
-  h+='<div class="res"><div class="big2">'+r.pts+' von '+r.max+' Punkten</div><h2>'+r.p+' % richtig</h2><p>'+esc(r.msg)+' Pro Meldung gibt es 1 Punkt für den Weg und je 1 Punkt für jeden der vier Durchschläge.</p>';
-  h+='<div class="stat"><span>Weg richtig<b>'+r.weg+' von '+r.n+'</b></span>'+FARBEN.map(f=>'<span>'+f.n+'<b>'+r.col[f.id]+' von '+r.n+'</b></span>').join('')+'</div>';
+  h+='<div class="res"><div class="big2">'+r.pts+' von '+r.max+' Punkten</div><h2>'+r.p+' % richtig</h2><p>'+esc(r.msg)+' Pro Meldung gibt es 1 Punkt für den Weg und je 1 Punkt für jeden Durchschlag (Eingang und Ausgang: vier, Gesprächsnotiz: drei).</p>';
+  h+='<div class="stat"><span>Weg richtig<b>'+r.weg+' von '+r.n+'</b></span>'+FARBEN.map(f=>'<span>'+f.n+'<b>'+r.col[f.id]+'</b></span>').join('')+'<span>Gesprächsnotiz<b>'+r.gn+'</b></span></div>';
   if(r.errs.length)h+='<p><b>Zum Wiederholen:</b></p><ul>'+r.errs.map(e=>'<li>„'+esc(e.t)+'“<br>'+e.items.map(esc).join('<br>')+'</li>').join('')+'</ul>';else h+='<p>Alles richtig verteilt.</p>';
   h+='<button type="button" class="btn" data-a="vagain" data-v="'+V.len+'">Nochmal (neue Meldungen)</button></div>';
   return h+table();
@@ -284,23 +288,24 @@ function renderV(){
  const wok=V.wegPick===m.w;
  h+='<div class="fb '+(wok?'ok':'bad')+'" role="status"><b>'+(wok?'Richtig: ':'Nicht ganz: ')+'</b>'+(wok?'':'Das ist ein '+(m.w==='Gesprächsnotiz'?'e ':'')+esc(m.w)+'. ')+esc(WEGINFO[m.w])+'</div>';
  h+='<div class="hint">2. Was passiert mit jedem Durchschlag? (Durchschlag antippen, dann Ziel wählen)</div>';
- const tb=TAB[m.w];const allDone=FARBEN.every(f=>V.ans[f.id]);
- FARBEN.forEach(f=>{
+ const tb=TAB[m.w];const RW=rows(m.w);const allDone=RW.every(f=>V.ans[f.id]);
+ RW.forEach(f=>{
   const a=V.ans[f.id];let c='d';if(a)c+=a.ok?' ok':' bad';else if(V.row===f.id)c+=' sel2';
   h+='<button type="button" class="'+c+'" data-a="row" data-v="'+f.id+'"><span class="l"><u class="'+f.id+'"></u>'+f.n+'<em>'+(a?(a.ok?'Richtig':'Falsch'):'Ziel wählen ›')+'</em></span>'+(a?'<span class="x">'+(a.ok?'':'Richtig wäre: <b>'+esc(OPT[tb[f.id]])+'</b>. ')+esc(EXPL[m.w][f.id])+'</span>':'')+'</button>';
  });
  if(!allDone){
-  const fn=FARBEN.find(f=>f.id===V.row);
+  const fn=RW.find(f=>f.id===V.row);
   h+='<div class="hint">Ziel für '+fn.n+'</div><div class="opts">'+Object.keys(OPT).map(k=>'<button type="button" class="opt" data-a="opt" data-v="'+k+'">'+esc(OPT[k])+'</button>').join('')+'</div>';
  }else{
-  const pts=1*(wok?1:0)+FARBEN.filter(f=>V.ans[f.id].ok).length;
-  h+='<div class="fb info" style="margin-top:8px">Diese Meldung: '+pts+' von 5 Punkten.</div><button type="button" class="btn" data-a="vnext">'+(V.i+1<V.ids.length?'Nächste Meldung':'Auswertung')+'</button>';
+  const pts=1*(wok?1:0)+RW.filter(f=>V.ans[f.id].ok).length;
+  h+='<div class="fb info" style="margin-top:8px">Diese Meldung: '+pts+' von '+(1+RW.length)+' Punkten.</div><button type="button" class="btn" data-a="vnext">'+(V.i+1<V.ids.length?'Nächste Meldung':'Auswertung')+'</button>';
  }
  return h+table();
 }
 function table(){
- const rows=FARBEN.map(f=>'<tr><td>'+f.n+'</td>'+WEGE.map(w=>'<td>'+esc(OPT[TAB[w][f.id]])+'</td>').join('')+'</tr>').join('');
- return '<details><summary>Tabelle: Verbleib der Durchschläge</summary><div><table class="tbl"><tr><th>Farbe</th>'+WEGE.map(w=>'<th>'+w+'</th>').join('')+'</tr>'+rows+'</table></div></details>';
+ const trs=FARBEN.map(f=>'<tr><td>'+f.n+'</td>'+['Eingang','Ausgang'].map(w=>'<td>'+esc(OPT[TAB[w][f.id]])+'</td>').join('')+'</tr>').join('');
+ const gtr=GROWS.map(f=>'<tr><td>'+f.n+'</td><td>'+esc(OPT[TAB['Gesprächsnotiz'][f.id]])+'</td></tr>').join('');
+ return '<details><summary>Tabelle: Verbleib der Durchschläge</summary><div><table class="tbl"><tr><th>Farbe</th><th>Eingang</th><th>Ausgang</th></tr>'+trs+'</table><table class="tbl" style="margin-top:8px"><tr><th>Gesprächsnotiz</th><th>Verbleib</th></tr>'+gtr+'</table></div></details>';
 }
 
 /* ---------- Gesamt ---------- */
@@ -322,17 +327,18 @@ function render(){
 function toTop(){const m=$('#main');if(window.innerWidth<900)m.scrollTop=0;}
 
 /* ---------- Vordruck-Logik ---------- */
-function nextRow(){const f=FARBEN.find(f=>!V.ans[f.id]);V.row=f?f.id:V.row;}
+function nextRow(){const f=rows(curMsg().w).find(f=>!V.ans[f.id]);V.row=f?f.id:V.row;}
 function finishV(){
- const n=V.log.length;let pts=0,wegOk=0;const col={W:0,R:0,G:0,N:0};const errs=[];
+ const n=V.log.length;let pts=0,wegOk=0,gn=0,tot=0;const col={W:0,R:0,G:0,N:0};const errs=[];
  V.log.forEach(l=>{
   const m=MSGS[l.id];const it=[];
   if(l.wegOk){pts++;wegOk++;}else it.push('Weg: Das ist '+(m.w==='Gesprächsnotiz'?'eine ':'ein ')+m.w+'.');
-  FARBEN.forEach(f=>{if(l.ans[f.id].ok){pts++;col[f.id]++;}else it.push(f.n+': '+OPT[TAB[m.w][f.id]]+'.');});
+  rows(m.w).forEach(f=>{if(l.ans[f.id].ok){pts++;if(m.w!=='Gesprächsnotiz')col[f.id]++;else gn++;}else it.push((m.w==='Gesprächsnotiz'?'Blatt ':'')+f.n+': '+OPT[TAB[m.w][f.id]]+'.');});
+  tot+=1+rows(m.w).length;
   if(it.length)errs.push({t:m.t,items:it});
  });
- const max=n*5,p=pct(pts,max);const bk='vor'+V.len;const old=setBest(bk,p);
- V.done=true;V.res={pts,max,p,n,weg:wegOk,col,errs,msg:bestTxt(bk,old,p)};
+ const max=tot,p=pct(pts,max);const bk='vor'+V.len;const old=setBest(bk,p);
+ V.done=true;V.res={pts,max,p,n,weg:wegOk,col,gn,errs,msg:bestTxt(bk,old,p)};
 }
 
 /* ---------- Ereignisse ---------- */
@@ -354,7 +360,7 @@ document.addEventListener('click',e=>{
   case 'weg':{if(V.wegPick!==null)break;V.wegPick=v;break;}
   case 'row':{if(!V.ans[v])V.row=v;break;}
   case 'opt':{const m=curMsg();const f=V.row;if(V.ans[f]||V.wegPick===null)break;V.ans[f]={pick:v,ok:v===TAB[m.w][f]};nextRow();break;}
-  case 'vnext':{V.log.push({id:V.ids[V.i],wegOk:V.wegPick===curMsg().w,ans:V.ans});if(V.i+1<V.ids.length){V.i++;V.wegPick=null;V.ans={};V.row='W';}else finishV();$('#main').scrollTop=0;break;}
+  case 'vnext':{V.log.push({id:V.ids[V.i],wegOk:V.wegPick===curMsg().w,ans:V.ans});if(V.i+1<V.ids.length){V.i++;V.wegPick=null;V.ans={};V.row=rows(MSGS[V.ids[V.i]].w)[0].id;}else finishV();$('#main').scrollTop=0;break;}
   case 'vagain':newV(+v);$('#main').scrollTop=0;break;
   case 'vlen':newV(+v);break;
   default:return;
