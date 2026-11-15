@@ -81,8 +81,8 @@ var LAGEN=[
 
 /* Zuständigkeitsfragen (Schritt „Lage übermitteln“) */
 var ZUST=[
- {q:"Wer stellt den Kommunen die Warninfrastruktur zur Warnung zur Verfügung?",o:["Der Bund","Das Land","Die örtliche Feuerwehr"],a:0,
-  e:"§ 12 ZSKG: Der Bund stellt die Warninfrastruktur den Kommunen zur Warnung zur Verfügung."},
+ {q:"Wem stehen Einrichtungen und Vorhaltungen des Bundes für den Zivilschutz auch für den Katastrophenschutz zur Verfügung?",o:["Den Ländern","Nur dem Bund selbst","Den Hilfsorganisationen"],a:0,
+  e:"§ 12 ZSKG: Einrichtungen und Vorhaltungen des Bundes für den Zivilschutz stehen den Ländern auch für den Katastrophenschutz zur Verfügung. Die Warnung regelt § 6 ZSKG."},
  {q:"Über welches System wird die Warnmeldung an die Warnkanäle übermittelt?",o:["Modulares Warnsystem (MoWaS)","NINA","Sirenenansteuerung über TETRA"],a:0,
   e:"Das Modulare Warnsystem (MoWaS) übermittelt die Warnmeldung an die Warnmultiplikatoren. NINA ist nur einer der Kanäle, die Sirenenansteuerung ist ein zukünftiges Modul."},
  {q:"Welche Aufgabe des Zivilschutzes nennt § 1 Abs. 2 ZSKG, um die es hier geht?",o:["Die Warnung der Bevölkerung","Die Brandverhütungsschau","Der Bau von Wohnhäusern"],a:0,
@@ -261,7 +261,7 @@ function storeBest(){
 
 /* Referenz: Kanäle, Stufen, Info */
 function refKan(){
- var h='<div class="card"><h3>Warnkanäle (Warnmultiplikatoren)</h3><p class="mut">Der Bund stellt die Warninfrastruktur den Kommunen zur Warnung zur Verfügung (§ 12 ZSKG).</p><table><tr><th>Kanal</th><th>Beispiele / Hinweis</th></tr>';
+ var h='<div class="card"><h3>Warnkanäle (Warnmultiplikatoren)</h3><p class="mut">Einrichtungen und Vorhaltungen des Bundes für den Zivilschutz stehen den Ländern auch für den Katastrophenschutz zur Verfügung (§ 12 ZSKG). Warnung: § 6 ZSKG.</p><table><tr><th>Kanal</th><th>Beispiele / Hinweis</th></tr>';
  KAN.forEach(function(c){h+='<tr><td><b>'+esc(c.n.replace(" / DAB+",""))+'</b></td><td>'+esc(c.fut?"Zukünftiges Modul"+(c.id==="sir"?": Sirenenansteuerung TETRA":c.id==="dig"?": Digitalradio, DAB+ Automatic Safety Alert":": Navigationssysteme"):c.info)+'</td></tr>'});
  return h+'</table></div>';
 }
@@ -272,7 +272,7 @@ function refStufen(){
 }
 function refInfo(){
  return '<div class="card"><h3>Kette des Modularen Warnsystems</h3><ul class="tl"><li><b>Ereignis / Lage</b>Gefahr erkennen und bewerten, Entscheidung zu warnen, Lage übermitteln</li><li><b>Modulares Warnsystem</b>Warnmeldung erstellen, übermitteln, verbreiten</li><li><b>Bevölkerung</b>empfangen, interpretieren, reagieren</li></ul></div>'
- +'<div class="card"><h3>Zuständigkeiten</h3><p>Zivilschutz = Schutz der Bevölkerung vor Kriegseinwirkungen. Die Warnung der Bevölkerung gehört nach § 1 Abs. 2 ZSKG dazu.</p><p>Behörden der Länder warnen im Auftrag des Bundes. Ergänzende Warnmittel stellt der Katastrophenschutz der Länder für den Zivilschutz.</p><p>Das BBK wirkt bei der Warnung mit und erfasst besondere Gefahren.</p><p>§ 12 ZSKG: Der Bund stellt die Warninfrastruktur den Kommunen zur Warnung zur Verfügung.</p></div>'
+ +'<div class="card"><h3>Zuständigkeiten</h3><p>Zivilschutz = Schutz der Bevölkerung vor Kriegseinwirkungen. Die Warnung der Bevölkerung gehört nach § 1 Abs. 2 ZSKG dazu.</p><p>Behörden der Länder warnen im Auftrag des Bundes. Ergänzende Warnmittel stellt der Katastrophenschutz der Länder für den Zivilschutz.</p><p>Das BBK wirkt bei der Warnung mit und erfasst besondere Gefahren.</p><p>§ 12 ZSKG: Einrichtungen und Vorhaltungen des Bundes für den Zivilschutz stehen den Ländern auch für den Katastrophenschutz zur Verfügung. Warnung: § 6 ZSKG.</p></div>'
  +'<div class="card"><h3>Hinweis zur Simulation</h3><p class="mut">Die Lagen, die Bevölkerungsgruppen und ihre Anteile sind frei erfundene Modellannahmen. Fachlich aus der Lernseite stammen die Kette, die Warnstufen, die Warnkanäle und die Zuständigkeiten.</p></div>';
 }
 function lockMsg(){return '<div class="card"><p class="lock">Im Prüfungsmodus ist das Nachschlagen gesperrt. Es steht nach der Prüfung wieder zur Verfügung.</p></div>'}

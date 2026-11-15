@@ -1029,7 +1029,16 @@ const FLASHCARD_DATA = [
   {"id":"k-idf-86","cat":"IdF · Stabsarbeit","q":"Wer übernimmt bei Trinkwasseraufbereitung durch das THW die Technische Einsatzleitung?","a":"Sie bleibt bei der <strong>örtlich zuständigen Kommune</strong>. Das THW wird im Wege der <strong>Amtshilfe</strong> tätig."},
   {"id":"k-idf-87","cat":"IdF · Stabsarbeit","q":"Was gilt für die Bundeswehr im Einsatz?","a":"Anforderung über das <strong>Kreisverbindungskommando (KVK)</strong>; Tätigkeit als Amtshilfe/Katastrophenhilfe nach <strong>Art. 35 GG</strong>. Die Einsatzleitung bleibt bei der zivilen Behörde; Selbstverpflegung ist nicht immer gegeben."},
   {"id":"k-idf-99","cat":"IdF · Presse","q":"Wer richtet bei eingesetztem Krisenstab das Bürgertelefon ein?","a":"Die für die <strong>BuMA</strong> (Bevölkerungs- und Medienarbeit) zuständige Person des Krisenstabs. Der S5 der Einsatzleitung untersteht dann der BuMA."},
-  {"id":"k-idf-100","cat":"IdF · Presse","q":"Wie erfolgt die Pressearbeit, wenn Krisenstab und S5 besetzt sind?","a":"<strong>Abgestimmt mit der BuMA.</strong> Mit Arbeitsaufnahme des Krisenstabes geht das Melde- und Berichtswesen auf die BuMA über; der S5 gibt nicht eigenständig Informationen weiter."}
+  {"id":"k-idf-100","cat":"IdF · Presse","q":"Wie erfolgt die Pressearbeit, wenn Krisenstab und S5 besetzt sind?","a":"<strong>Abgestimmt mit der BuMA.</strong> Mit Arbeitsaufnahme des Krisenstabes geht das Melde- und Berichtswesen auf die BuMA über; der S5 gibt nicht eigenständig Informationen weiter."},
+  {"id":"k-idf-128","cat":"IdF · Zivile Verteidigung","q":"Welche Warnstufen gibt es und welche Sendeverpflichtung gilt jeweils?","a":"<strong>Hoch</strong> (extreme Gefahr): sofort. <strong>Mittel</strong> (Gefahr): innerhalb von 10 min. <strong>Niedrig</strong> (Gefahreninformation): keine Sendeverpflichtung."},
+  {"id":"k-idf-129","cat":"IdF · Zivile Verteidigung","q":"Was regelt § 12 ZSKG und wo ist die Warnung geregelt?","a":"Einrichtungen und Vorhaltungen des Bundes für den Zivilschutz stehen den Ländern auch für den Katastrophenschutz zur Verfügung. Die Warnung regelt § 6 ZSKG."},
+  {"id":"k-idf-130","cat":"IdF · Zivile Verteidigung","q":"Wie ist das Gesamtszenario der Zivilen Verteidigung gegliedert?","a":"Vier Phasen: I Hybride Bedrohungen (mehrere Jahre), II Krise und Aufmarsch an den NATO-Außengrenzen (mehrere Monate), III Bündnisverteidigung und Übergang zur Landesverteidigung (mindestens ein Jahr), IV Landesverteidigung (mindestens mehrere Monate)."},
+  {"id":"k-idf-131","cat":"IdF · Zivile Verteidigung","q":"Wie lautet die Definition von Host Nation Support (HNS)?","a":"Zivile und militärische Unterstützung, die Deutschland als Host Nation im Frieden sowie im Spannungs- und Verteidigungsfall für ausländische Streitkräfte und Organisationen erbringt, die sich auf deutschem Hoheitsgebiet oder im Transit befinden. Ziviler HNS ist nicht gleich militärischer HNS."},
+  {"id":"k-idf-132","cat":"IdF · Zivile Verteidigung","q":"Welche Teilszenarien nennt die Zusammenfassung zum Gesamtszenario?","a":"Einsatz von chemischen Kampfstoffen, Bedrohung durch einen nuklearen elektromagnetischen Impuls (NEMP), Einsatz eines B-Agens und Einsatz einer taktischen Kernwaffe."},
+  {"id":"k-idf-133","cat":"IdF · Zivile Verteidigung","q":"Wie ist die Bundeswehr im Inneren im Grundgesetz umgesetzt?","a":"Fall 1: Einsatz im Verteidigungs- oder Spannungsfall, zusätzlich Schutz ziviler Objekte. Fall 2: Verwendung unterhalb der Einsatzschwelle als Amtshilfe; oberhalb der Einsatzschwelle militärische Bekämpfung nichtstaatlicher Gegner der freiheitlichen Ordnung und Unterstützung der Polizeikräfte bei Naturkatastrophe oder besonders schwerem Unglücksfall (Terror)."},
+  {"id":"k-idf-134","cat":"IdF · UCPM","q":"Wie wird der ECPP finanziert?","a":"Die EU fördert Zertifizierung und Anpassung und trägt einen Großteil der Einsatz- und Transportkosten; die Einheiten selbst werden national finanziert."},
+  {"id":"k-idf-135","cat":"IdF · UCPM","q":"Wie sieht die Kapazitätenpyramide des Unionsverfahrens aus?","a":"Von oben: rescEU (Art. 12), European Civil Protection Pool ECPP (Art. 11, zertifiziert), zum internationalen Einsatz befähigte Kapazitäten (Art. 9), nationale Kapazitäten im Katastrophenschutz. Seitlich: Einsatzvorbehalt und Kofinanzierungsraten."},
+  {"id":"k-idf-136","cat":"IdF · UCPM","q":"Welche Stellen sind im Weg des Hilfeersuchens nach Deutschland beteiligt?","a":"Betroffener Staat (NCA/NCP, LEMA, OSOCC) stellt die RfA an ERCC/CECIS, das ERCC leitet sie an das GMLZ (NCP) im BBK weiter. Austausch und Entscheidung mit BMI (NCA) und Bundesministerien, Steuerung mit den Anbietern (BPOL, HiOrgs, THW, Bundeswehr, Länder, sonstige), Angebot DEU an das ERCC, Akzeptanz oder Ablehnung, Entsendung."}
 ];
 // Eigene Karten aus dem Speicher dazunehmen
 try{ JSON.parse(localStorage.getItem('bvi_fc_custom')||'[]').forEach(c=>{ if(c&&c.id&&c.q&&c.a) FLASHCARD_DATA.push({id:c.id,cat:c.cat,q:c.q,a:c.a,own:true}); }); }catch(e){}
@@ -1046,7 +1055,7 @@ const PROGRESS = (function(){
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-ibk-fuehren-gruppen','v-ibk-fuehrung','v-ibk-autoritaeten','v-ibk-fuehrungsstile','v-ibk-onboarding'],
     vak:  ['v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-lernarbeitsblatt'],
     feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse','v-feuak-bwl','v-feuak-rechnungswesen','v-feuak-pruefung','v-feuak-lernblatt-hh','v-feuak-lernblatt-2026'],
-    idf:  ['v-idf-vblernen','v-idf-gk','v-idf-sonderbau','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte','v-idf-sim-pressesim','v-idf-sim-warnsim','v-idf-vb-41','v-idf-vb-42','v-idf-vb-43','v-idf-vb-44','v-idf-vb-45','v-idf-vb-46','v-idf-vb-47','v-idf-p61','v-idf-p62','v-idf-z70','v-idf-z71','v-idf-z72','v-idf-z73','v-idf-z74','v-idf-z75','v-idf-z76','v-idf-z77','v-idf-z78','v-idf-z79','v-idf-z710','v-idf-z711','v-idf-u81','v-idf-u82','v-idf-u83'],
+    idf:  ['v-idf-vblernen','v-idf-gk','v-idf-sonderbau','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte','v-idf-sim-pressesim','v-idf-sim-warnsim','v-idf-vb-41','v-idf-vb-42','v-idf-vb-43','v-idf-vb-44','v-idf-vb-45','v-idf-vb-46','v-idf-vb-47','v-idf-p61','v-idf-p62','v-idf-z90','v-idf-z91','v-idf-z92','v-idf-z93','v-idf-z94','v-idf-z95','v-idf-z96','v-idf-z97','v-idf-z98','v-idf-z99','v-idf-u101','v-idf-u102'],
   };
   // Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator): kein Haken, nicht im Fortschritt
   const EXAM_VIEWS = new Set(['v-vak-klausurvorbereitung','v-vak-altklausur','v-vak-klausurhinweise','v-vak-fallbearbeitung','v-feuak-altklausur','v-idf-altklausur','v-klausur','v-klausur-0826','v-klausurfragen','v-eingrenzung-klausur','v-simulator','v-laufbahn-2023','v-laufbahn-2026']);
@@ -1071,8 +1080,8 @@ const PROGRESS = (function(){
     'v-idf-vb':['v-idf-vb-42','v-idf-vb-41','v-idf-vb-45','v-idf-vb-43','v-idf-vb-46','v-idf-vb-47','v-idf-vb-44','v-idf-vblernen','v-idf-gk','v-idf-sonderbau'],
     'v-idf-stabhub':['v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte'],
     'v-idf-presse':['v-idf-p61','v-idf-p62'],
-    'v-idf-zv':['v-idf-z70','v-idf-z71','v-idf-z72','v-idf-z73','v-idf-z74','v-idf-z75','v-idf-z76','v-idf-z77','v-idf-z78','v-idf-z79','v-idf-z710','v-idf-z711'],
-    'v-idf-ucpm':['v-idf-u81','v-idf-u82','v-idf-u83']
+    'v-idf-zv':['v-idf-z90','v-idf-z91','v-idf-z92','v-idf-z93','v-idf-z94','v-idf-z95','v-idf-z96','v-idf-z97','v-idf-z98','v-idf-z99'],
+    'v-idf-ucpm':['v-idf-u101','v-idf-u102']
   };
 
   function updateUI(){
@@ -1166,21 +1175,18 @@ const SEARCH = (function(){
     'v-idf-vb-47':'IdF · Sonderbau',
     'v-idf-p61':'IdF · Rechtsgrundlagen & Grundsätze der Pressearbeit',
     'v-idf-p62':'IdF · Presse- und Medienarbeit bei der Feuerwehr',
-    'v-idf-z70':'IdF · Genfer Konventionen',
-    'v-idf-z71':'IdF · Konzeption Zivile Verteidigung',
-    'v-idf-z72':'IdF · Regelkreis im Bevölkerungsschutz',
-    'v-idf-z73':'IdF · Risikoanalyse im Bevölkerungsschutz',
-    'v-idf-z74':'IdF · Gesamtszenario',
-    'v-idf-z75':'IdF · KRITIS – Kritische Infrastrukturen',
-    'v-idf-z76':'IdF · Länderübergreifende Hilfe & Fähigkeitsmanagement',
-    'v-idf-z77':'IdF · Weißer Katastrophenschutz',
-    'v-idf-z78':'IdF · Einsatz der Bundeswehr im Inneren',
-    'v-idf-z79':'IdF · Warnung durch den Bund',
-    'v-idf-z710':'IdF · Zivile Alarmplanung',
-    'v-idf-z711':'IdF · Feuerwehren in der Zivilen Verteidigung',
-    'v-idf-u81':'IdF · Weg des Hilfeersuchens',
-    'v-idf-u82':'IdF · Rechtsgrundlagen und Akteure',
-    'v-idf-u83':'IdF · ECPP Kapazitätenpyramide',
+    'v-idf-z90':'IdF · Einstieg: Genfer Konventionen',
+    'v-idf-z91':'IdF · 9.1 Konzeption Zivile Verteidigung',
+    'v-idf-z92':'IdF · 9.2 Risikoanalyse im Bevölkerungsschutz',
+    'v-idf-z93':'IdF · 9.3 Gesamtszenario',
+    'v-idf-z94':'IdF · 9.4 Länderübergreifende Hilfe & Fähigkeitsmanagement',
+    'v-idf-z95':'IdF · 9.5 Weißer Katastrophenschutz',
+    'v-idf-z96':'IdF · 9.6 Einsatz der Bundeswehr im Inneren',
+    'v-idf-z97':'IdF · 9.7 Warnung durch den Bund',
+    'v-idf-z98':'IdF · 9.8 Zivile Alarmplanung',
+    'v-idf-z99':'IdF · 9.9 Feuerwehren in der Zivilen Verteidigung',
+    'v-idf-u101':'IdF · 10.1 Weg des Hilfeersuchens',
+    'v-idf-u102':'IdF · 10.2 Rechtsgrundlagen und Akteure',
   };
 
   function stripHtml(s){ const d=document.createElement('div');d.innerHTML=s;return d.textContent||''; }
@@ -3124,7 +3130,8 @@ const LP=(function(){
   function open(v,i,opt){
     if(!win) build();
     const focus=!!(opt&&opt.focus);
-    cur={v,i,body:null,focus};
+    cur={v,i,body:null,focus,sy:window.scrollY};
+    if(cur.sy) window.scrollTo({top:0,behavior:'instant'});   // sonst rutscht die Kopfleiste beim Sperren des Scrollens aus dem Bild
     win.classList.toggle('focus',focus); v.classList.toggle('lp-focus',focus);
     v.appendChild(win); v.classList.add('lp-open'); document.documentElement.classList.add('lp-lock');
     place();
@@ -3222,7 +3229,8 @@ const LP=(function(){
   }
   function close(silent){
     if(!cur) return;
-    give(); const v=cur.v; win.classList.remove('on','focus'); v.classList.remove('lp-open','lp-focus'); document.documentElement.classList.remove('lp-lock'); cur=null;
+    give(); const v=cur.v; win.classList.remove('on','focus'); v.classList.remove('lp-open','lp-focus'); document.documentElement.classList.remove('lp-lock'); const _sy=cur.sy; cur=null;
+    if(_sy) window.scrollTo({top:_sy,behavior:'instant'});
     if(typeof HL!=='undefined') HL.apply(v.id);
     if(v.classList.contains('lp-ueber')) render(v);
     if(pushed){ pushed=false; if(!silent){ ignorePop=true; try{ history.back(); }catch(e){ ignorePop=false; } } }
