@@ -37,7 +37,7 @@ const KATALOG = {
      "h": "Geschosse im Dachraum: nur wenn darüber noch Aufenthaltsräume möglich sind (§ 27 Abs. 1 S. 3 Nr. 1). Balkone ausgenommen, außer offene Gänge als notwendige Flure."
     }
    },
-   "hh": "Sonderbau, MHHR: feuerbeständig und nichtbrennbar, über 60 m Höhe 120 Minuten (laut Lernseite, MHHR 3.1).",
+   "hh": "Sonderbau, MHHR: bis 60 m OKFF feuerbeständig und nichtbrennbar (§ 3.1.1), über 60 m 120 Minuten (§ 3.1.2); gilt auch im Kellergeschoss (Zusammenfassung 6.5.3).",
    "rg": "§ 27 Abs. 1 und 2, § 26 Abs. 2 und 3",
    "pos": "wand-tragend",
    "auftritt": "geschoss",
@@ -82,7 +82,7 @@ const KATALOG = {
      "h": "Wie tragende Wände; Geschosse im Dachraum nur, wenn darüber Aufenthaltsräume möglich sind."
     }
    },
-   "hh": "Sonderbau, MHHR: feuerbeständig und nichtbrennbar, über 60 m 120 Minuten (laut Lernseite).",
+   "hh": "Sonderbau, MHHR: bis 60 m OKFF feuerbeständig und nichtbrennbar, über 60 m 120 Minuten (Zusammenfassung 6.5.3).",
    "rg": "§ 27 Abs. 1 und 2",
    "pos": "stuetze",
    "auftritt": "geschoss",
@@ -115,7 +115,7 @@ const KATALOG = {
      "t": "Balkone: keine Feuerwiderstandsanforderung; offene Gänge als notwendige Flure: wie Obergeschoss-Tragwerk/Decke der Gebäudeklasse"
     }
    },
-   "hh": "MHHR: Wände und Brüstungen offener Gänge feuerhemmend (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 27 Abs. 1 S. 3 Nr. 2, § 31 Abs. 1 S. 3 Nr. 2, § 36 Abs. 5",
    "pos": "wand-aussen",
    "auftritt": "mehrfach",
@@ -160,7 +160,7 @@ const KATALOG = {
      "h": "Im Kellergeschoss: Decke mit den Anforderungen des Kellers (§ 31 Abs. 2). Geschosse im Dachraum nur, wenn darüber Aufenthaltsräume möglich sind."
     }
    },
-   "hh": "Sonderbau, MHHR: Decken raumabschließend mit der Feuerwiderstandsfähigkeit der tragenden Bauteile (feuerbeständig, über 60 m 120 Minuten; laut Lernseite).",
+   "hh": "Sonderbau, MHHR: tragende Bauteile bis 60 m OKFF feuerbeständig, über 60 m 120 Minuten (Zusammenfassung 6.5.3).",
    "rg": "§ 31 Abs. 1 und 2",
    "pos": "decke",
    "auftritt": "geschoss",
@@ -199,7 +199,7 @@ const KATALOG = {
      "h": "Gilt für Decken im Kellergeschoss. Zusätzlich feuerbeständig unter und über Räumen mit Explosions- oder erhöhter Brandgefahr (außer Wohngebäude GK 1/2)."
     }
    },
-   "hh": "Sonderbau, MHHR: feuerbeständig (laut Lernseite).",
+   "hh": "Sonderbau, MHHR: tragende Bauteile gelten auch im Kellergeschoss: bis 60 m feuerbeständig, über 60 m 120 Minuten (Zusammenfassung 6.5.3).",
    "rg": "§ 31 Abs. 2 S. 1",
    "pos": "keller-decke",
    "auftritt": "gebaeude",
@@ -238,7 +238,7 @@ const KATALOG = {
      "h": "Landwirtschaftlicher Teil/Wohnteil: in allen Gebäudeklassen feuerbeständig (§ 31 Abs. 2 S. 2 Nr. 2)."
     }
    },
-   "hh": "MHHR: feuerbeständig (laut Lernseite, Räume mit erhöhter Brandgefahr).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 31 Abs. 2 S. 2 Nr. 1 und 2",
    "pos": "decke",
    "auftritt": "mehrfach",
@@ -277,7 +277,7 @@ const KATALOG = {
      "h": "Nur wirksam, soweit für die Decke eine F-Klasse gilt (GK 2 bis 5)."
     }
    },
-   "hh": "MHHR: raumabschließende Bauteile bis an Außenwand/Dachhaut führen (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 31 Abs. 3",
    "pos": "decke",
    "auftritt": "geschoss",
@@ -316,7 +316,7 @@ const KATALOG = {
      "h": "Wird die Decke nach § 29 Abs. 4 F30, gilt das auch für die sie tragenden und aussteifenden Bauteile."
     }
    },
-   "hh": "Sonderbau, MHHR: wie Decken des Gebäudes (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 31 Abs. 1 S. 3 Nr. 1, § 27 Abs. 1 S. 3 Nr. 1, § 29 Abs. 4 und 6",
    "pos": "dach-decke",
    "auftritt": "gebaeude",
@@ -355,7 +355,7 @@ const KATALOG = {
      "h": "Nicht erforderlich zwischen Nutzungseinheit und notwendigem Flur (dort gelten die Flurwände). Bis zur Rohdecke führen."
     }
    },
-   "hh": "MHHR 3.2.5: Trennwände zwischen Nutzungseinheiten feuerhemmend (laut Lernseite).",
+   "hh": "MHHR: Trennwände mindestens feuerhemmend (Zusammenfassung 6.5.3).",
    "rg": "§ 29 Abs. 1, 2 Nr. 1, 3 S. 1, 4 und 6",
    "pos": "trennwand",
    "auftritt": "geschoss",
@@ -394,7 +394,7 @@ const KATALOG = {
      "h": "Keller: Feuerwiderstand der tragenden Bauteile des Kellers (ab GK 3 feuerbeständig)."
     }
    },
-   "hh": "MHHR 3.2.4: feuerbeständig (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 29 Abs. 2 Nr. 3, Abs. 3 S. 1, Abs. 6",
    "pos": "trennwand",
    "auftritt": "geschoss",
@@ -433,7 +433,7 @@ const KATALOG = {
      "h": "Gilt unabhängig vom Tragwerk der Gebäudeklasse; Wohngebäude GK 1/2 ausgenommen."
     }
    },
-   "hh": "MHHR 3.2.4: feuerbeständig (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 29 Abs. 2 Nr. 2, Abs. 3 S. 2, Abs. 6",
    "pos": "trennwand",
    "auftritt": "mehrfach",
@@ -466,7 +466,7 @@ const KATALOG = {
      "t": "Wohngebäude: keine; sonst: bis unter die Dachhaut"
     }
    },
-   "hh": "MHHR: raumabschließende Bauteile bis an Dachhaut/Außenwand führen (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 29 Abs. 4, Abs. 6",
    "pos": "dach-decke",
    "auftritt": "gebaeude",
@@ -481,35 +481,35 @@ const KATALOG = {
    "kurz": "Öffnungen in Trennwänden sind auf die für die Nutzung erforderliche Zahl und Größe zu beschränken und mit besonderen Abschlüssen zu versehen.",
    "anf": {
     "2": {
-     "t": "Wohngebäude: keine; sonst: feuerhemmend, dicht- und selbstschließend (T30-DS)",
-     "h": "Der MBO-Text nennt \"feuerhemmende, dicht- und selbstschließende Abschlüsse\"; T30-DS ist die übliche Kurzform."
+     "t": "Wohngebäude: keine; sonst: feuerhemmend, dicht- und selbstschließend (T30-DSS)",
+     "h": "Der MBO-Text nennt \"feuerhemmende, dicht- und selbstschließende Abschlüsse\"; T30-DSS ist die übliche Kurzform."
     },
     "3": {
-     "t": "feuerhemmend, dicht- und selbstschließend (T30-DS)",
-     "h": "Der MBO-Text nennt \"feuerhemmende, dicht- und selbstschließende Abschlüsse\"; T30-DS ist die übliche Kurzform."
+     "t": "feuerhemmend, dicht- und selbstschließend (T30-DSS)",
+     "h": "Der MBO-Text nennt \"feuerhemmende, dicht- und selbstschließende Abschlüsse\"; T30-DSS ist die übliche Kurzform."
     },
     "4": {
-     "t": "feuerhemmend, dicht- und selbstschließend (T30-DS)",
-     "h": "Der MBO-Text nennt \"feuerhemmende, dicht- und selbstschließende Abschlüsse\"; T30-DS ist die übliche Kurzform."
+     "t": "feuerhemmend, dicht- und selbstschließend (T30-DSS)",
+     "h": "Der MBO-Text nennt \"feuerhemmende, dicht- und selbstschließende Abschlüsse\"; T30-DSS ist die übliche Kurzform."
     },
     "5": {
-     "t": "feuerhemmend, dicht- und selbstschließend (T30-DS)",
-     "h": "Der MBO-Text nennt \"feuerhemmende, dicht- und selbstschließende Abschlüsse\"; T30-DS ist die übliche Kurzform."
+     "t": "feuerhemmend, dicht- und selbstschließend (T30-DSS)",
+     "h": "Der MBO-Text nennt \"feuerhemmende, dicht- und selbstschließende Abschlüsse\"; T30-DSS ist die übliche Kurzform."
     },
     "1a": {
-     "t": "Wohngebäude: keine; sonst: feuerhemmend, dicht- und selbstschließend (T30-DS)",
-     "h": "Der MBO-Text nennt \"feuerhemmende, dicht- und selbstschließende Abschlüsse\"; T30-DS ist die übliche Kurzform."
+     "t": "Wohngebäude: keine; sonst: feuerhemmend, dicht- und selbstschließend (T30-DSS)",
+     "h": "Der MBO-Text nennt \"feuerhemmende, dicht- und selbstschließende Abschlüsse\"; T30-DSS ist die übliche Kurzform."
     },
     "1b": {
-     "t": "Wohngebäude: keine; sonst: feuerhemmend, dicht- und selbstschließend (T30-DS)",
-     "h": "Der MBO-Text nennt \"feuerhemmende, dicht- und selbstschließende Abschlüsse\"; T30-DS ist die übliche Kurzform."
+     "t": "Wohngebäude: keine; sonst: feuerhemmend, dicht- und selbstschließend (T30-DSS)",
+     "h": "Der MBO-Text nennt \"feuerhemmende, dicht- und selbstschließende Abschlüsse\"; T30-DSS ist die übliche Kurzform."
     }
    },
-   "hh": "MHHR: Tür der Nutzungseinheit zum Flur T30-RS (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 29 Abs. 5, Abs. 6",
    "pos": "tuer",
    "auftritt": "mehrfach",
-   "merksatz": "Türen in Trennwänden: feuerhemmend, dicht- und selbstschließend (T30-DS), Zahl und Größe auf das Nötige begrenzen.",
+   "merksatz": "Türen in Trennwänden: feuerhemmend, dicht- und selbstschließend (T30-DSS), Zahl und Größe auf das Nötige begrenzen.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -544,7 +544,7 @@ const KATALOG = {
      "h": "Ausgenommen: Gebäude ohne Aufenthaltsräume und Feuerstätten bis 50 m³ BRI. Bei 5 m Abstand zu Gebäuden (rechtlich gesichert) entfällt die Wand."
     }
    },
-   "hh": "Sonderbau, Brandwand wie GK 5; MHHR ergänzt 0,50 m über Dach (laut Lernseite).",
+   "hh": "Sonderbau, Brandwand wie GK 5; Bauart Brandwand, feuerbeständig auch bei mechanischer Beanspruchung.",
    "rg": "§ 30 Abs. 1, 2 Nr. 1, Abs. 3",
    "pos": "brandwand",
    "auftritt": "gebaeude",
@@ -583,7 +583,7 @@ const KATALOG = {
      "h": "Die Lernseite ergänzt \"40 m × 40 m = 1.600 m²\"; im MBO-Text steht nur der Abstand von nicht mehr als 40 m."
     }
    },
-   "hh": "Sonderbau, Brandabschnitte nach MHHR/Sonderbauverordnungen (hier nicht geprüft).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 30 Abs. 2 Nr. 2, Abs. 3",
    "pos": "brandwand",
    "auftritt": "mehrfach",
@@ -739,7 +739,7 @@ const KATALOG = {
      "h": "Dachausbau zu GK 4: Hohlräume vollständig mit nichtbrennbaren Baustoffen ausfüllen (§ 30 Abs. 5 S. 3 und 4)."
     }
    },
-   "hh": "MHHR: 0,50 m über Dach (laut Lernseite, mehr als MBO).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 30 Abs. 5; § 32 Abs. 5 S. 2 Nr. 1",
    "pos": "brandwand",
    "auftritt": "gebaeude",
@@ -817,7 +817,7 @@ const KATALOG = {
      "h": "Hinterlüftete Fassaden/Doppelfassaden: besondere Vorkehrungen gegen seitliche Brandausbreitung im Bereich der Brandwand. Konkrete Ausführung nicht im MBO-Text (technische Baubestimmungen)."
     }
    },
-   "hh": "MHHR: Brandwand im Außenwandbereich 0,50 m über Außenwand, 1,0 m nichtbrennbarer Abschnitt (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 30 Abs. 7, Abs. 10",
    "pos": "brandwand",
    "auftritt": "gebaeude",
@@ -832,31 +832,31 @@ const KATALOG = {
    "kurz": "In Gebäudeabschlusswänden sind Öffnungen unzulässig. In inneren Brandwänden sind sie nur beschränkt zulässig und müssen besondere Abschlüsse haben.",
    "anf": {
     "2": {
-     "t": "Gebäudeabschlusswand: Öffnungen unzulässig. Innere Brandwand: auf erforderliche Zahl/Größe beschränkt, Abschluss feuerbeständig, dicht- und selbstschließend (Kurzform T90-DS)",
-     "h": "Feuerbeständige Verglasungen nur in inneren Brandwänden, auf erforderliche Zahl/Größe beschränkt. Die Bezeichnung \"T90-DS\" steht nicht im MBO-Text; der Text verlangt feuerbeständig, dicht- und selbstschließend."
+     "t": "Gebäudeabschlusswand: Öffnungen unzulässig. Innere Brandwand: auf erforderliche Zahl/Größe beschränkt, Abschluss feuerbeständig, dicht- und selbstschließend (Kurzform T90-DSS)",
+     "h": "Feuerbeständige Verglasungen nur in inneren Brandwänden, auf erforderliche Zahl/Größe beschränkt. Die Bezeichnung \"T90-DSS\" steht nicht im MBO-Text; der Text verlangt feuerbeständig, dicht- und selbstschließend."
     },
     "3": {
-     "t": "Gebäudeabschlusswand: Öffnungen unzulässig. Innere Brandwand: auf erforderliche Zahl/Größe beschränkt, Abschluss feuerbeständig, dicht- und selbstschließend (Kurzform T90-DS)",
-     "h": "Feuerbeständige Verglasungen nur in inneren Brandwänden, auf erforderliche Zahl/Größe beschränkt. Die Bezeichnung \"T90-DS\" steht nicht im MBO-Text; der Text verlangt feuerbeständig, dicht- und selbstschließend."
+     "t": "Gebäudeabschlusswand: Öffnungen unzulässig. Innere Brandwand: auf erforderliche Zahl/Größe beschränkt, Abschluss feuerbeständig, dicht- und selbstschließend (Kurzform T90-DSS)",
+     "h": "Feuerbeständige Verglasungen nur in inneren Brandwänden, auf erforderliche Zahl/Größe beschränkt. Die Bezeichnung \"T90-DSS\" steht nicht im MBO-Text; der Text verlangt feuerbeständig, dicht- und selbstschließend."
     },
     "4": {
-     "t": "Gebäudeabschlusswand: Öffnungen unzulässig. Innere Brandwand: auf erforderliche Zahl/Größe beschränkt, Abschluss feuerbeständig, dicht- und selbstschließend (Kurzform T90-DS)",
-     "h": "Feuerbeständige Verglasungen nur in inneren Brandwänden, auf erforderliche Zahl/Größe beschränkt. Die Bezeichnung \"T90-DS\" steht nicht im MBO-Text; der Text verlangt feuerbeständig, dicht- und selbstschließend."
+     "t": "Gebäudeabschlusswand: Öffnungen unzulässig. Innere Brandwand: auf erforderliche Zahl/Größe beschränkt, Abschluss feuerbeständig, dicht- und selbstschließend (Kurzform T90-DSS)",
+     "h": "Feuerbeständige Verglasungen nur in inneren Brandwänden, auf erforderliche Zahl/Größe beschränkt. Die Bezeichnung \"T90-DSS\" steht nicht im MBO-Text; der Text verlangt feuerbeständig, dicht- und selbstschließend."
     },
     "5": {
-     "t": "Gebäudeabschlusswand: Öffnungen unzulässig. Innere Brandwand: auf erforderliche Zahl/Größe beschränkt, Abschluss feuerbeständig, dicht- und selbstschließend (Kurzform T90-DS)",
-     "h": "Feuerbeständige Verglasungen nur in inneren Brandwänden, auf erforderliche Zahl/Größe beschränkt. Die Bezeichnung \"T90-DS\" steht nicht im MBO-Text; der Text verlangt feuerbeständig, dicht- und selbstschließend."
+     "t": "Gebäudeabschlusswand: Öffnungen unzulässig. Innere Brandwand: auf erforderliche Zahl/Größe beschränkt, Abschluss feuerbeständig, dicht- und selbstschließend (Kurzform T90-DSS)",
+     "h": "Feuerbeständige Verglasungen nur in inneren Brandwänden, auf erforderliche Zahl/Größe beschränkt. Die Bezeichnung \"T90-DSS\" steht nicht im MBO-Text; der Text verlangt feuerbeständig, dicht- und selbstschließend."
     },
     "1a": {
-     "t": "Gebäudeabschlusswand: Öffnungen unzulässig. Innere Brandwand: auf erforderliche Zahl/Größe beschränkt, Abschluss feuerbeständig, dicht- und selbstschließend (Kurzform T90-DS)",
-     "h": "Feuerbeständige Verglasungen nur in inneren Brandwänden, auf erforderliche Zahl/Größe beschränkt. Die Bezeichnung \"T90-DS\" steht nicht im MBO-Text; der Text verlangt feuerbeständig, dicht- und selbstschließend."
+     "t": "Gebäudeabschlusswand: Öffnungen unzulässig. Innere Brandwand: auf erforderliche Zahl/Größe beschränkt, Abschluss feuerbeständig, dicht- und selbstschließend (Kurzform T90-DSS)",
+     "h": "Feuerbeständige Verglasungen nur in inneren Brandwänden, auf erforderliche Zahl/Größe beschränkt. Die Bezeichnung \"T90-DSS\" steht nicht im MBO-Text; der Text verlangt feuerbeständig, dicht- und selbstschließend."
     },
     "1b": {
-     "t": "Gebäudeabschlusswand: Öffnungen unzulässig. Innere Brandwand: auf erforderliche Zahl/Größe beschränkt, Abschluss feuerbeständig, dicht- und selbstschließend (Kurzform T90-DS)",
-     "h": "Feuerbeständige Verglasungen nur in inneren Brandwänden, auf erforderliche Zahl/Größe beschränkt. Die Bezeichnung \"T90-DS\" steht nicht im MBO-Text; der Text verlangt feuerbeständig, dicht- und selbstschließend."
+     "t": "Gebäudeabschlusswand: Öffnungen unzulässig. Innere Brandwand: auf erforderliche Zahl/Größe beschränkt, Abschluss feuerbeständig, dicht- und selbstschließend (Kurzform T90-DSS)",
+     "h": "Feuerbeständige Verglasungen nur in inneren Brandwänden, auf erforderliche Zahl/Größe beschränkt. Die Bezeichnung \"T90-DSS\" steht nicht im MBO-Text; der Text verlangt feuerbeständig, dicht- und selbstschließend."
     }
    },
-   "hh": "MHHR: Türen in Brandwänden feuerbeständig (laut Lernseite: Sonderbauten T30-RS bzw. feuerbeständig).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 30 Abs. 8 und 9, Abs. 10",
    "pos": "tuer",
    "auftritt": "mehrfach",
@@ -889,7 +889,7 @@ const KATALOG = {
      "t": "Brandausbreitung auf und in der Außenwand ausreichend lang begrenzen"
     }
    },
-   "hh": "MHHR: vertikale Brandausbreitung: Ausladungen und Wandabschnitte mindestens 1,5 m (laut Lernseite, Hochhaus/Sonderbau).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 28 Abs. 1",
    "pos": "wand-aussen",
    "auftritt": "gebaeude",
@@ -928,7 +928,7 @@ const KATALOG = {
      "h": "Ausgenommen: Türen, Fenster, Fugendichtungen, brennbare Dämmstoffe in nichtbrennbaren geschlossenen Profilen, Kleinteile. Abs. 2 gilt nicht für GK 1 bis 3 (§ 28 Abs. 5)."
     }
    },
-   "hh": "wie GK 5; ohne Sprinkler laut Lernseite nichtbrennbare Baustoffe (Sonderbau).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 28 Abs. 2, Abs. 5",
    "pos": "wand-aussen",
    "auftritt": "gebaeude",
@@ -967,7 +967,7 @@ const KATALOG = {
      "h": "Unterkonstruktion aus normalentflammbaren Baustoffen zulässig, wenn § 28 Abs. 1 erfüllt ist. Hinterlüftete Bekleidungen nach Technischen Baubestimmungen: mit Ausnahme der Dämmstoffe normalentflammbar zulässig (Abs. 5 S. 2). Abs. 3 gilt nicht für GK 1 bis 3."
     }
    },
-   "hh": "MHHR/Sonderbau: nichtbrennbar im Hochhausbereich (Lernseite nennt hierfür keine eigenen Werte; unklar).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 28 Abs. 3 und 5",
    "pos": "wand-aussen",
    "auftritt": "gebaeude",
@@ -1084,7 +1084,7 @@ const KATALOG = {
      "h": "Konkrete Höhen/Auskragungen: Lernseite nennt nur Hochhaus/Sonderbau (1,5 m); für Standardgebäude unklar."
     }
    },
-   "hh": "MHHR (laut Lernseite): auskragende Bauteile bzw. Wandabschnitte zwischen Öffnungen mindestens 1,5 m.",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 28 Abs. 1",
    "pos": "wand-aussen",
    "auftritt": "geschoss",
@@ -1123,7 +1123,7 @@ const KATALOG = {
      "h": "Ausnahmen: lichtdurchlässige Teilflächen aus brennbaren Baustoffen und begrünte Bedachungen, wenn keine Brandentstehung zu befürchten ist (§ 32 Abs. 4); weitere Ausnahmen in Abs. 3."
     }
    },
-   "hh": "harte Bedachung (Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 32 Abs. 1, 3 und 4",
    "pos": "dach",
    "auftritt": "gebaeude",
@@ -1306,7 +1306,7 @@ const KATALOG = {
      "h": "Kein 2. RW bei eingeschossigen Nutzungseinheiten zu ebener Erde mit direktem Ausgang ins Freie oder bei Sicherheitstreppenraum. Beide RW dürfen im Geschoss über denselben notwendigen Flur führen."
     }
    },
-   "hh": "Zwei bauliche Rettungswege je Nutzungseinheit; Sicherheitstreppenräume (MHHR, laut Lernseite).",
+   "hh": "Bis 60 m: 1. Rettungsweg baulich, 2. Rettungsweg baulich oder ein Sicherheitstreppenraum; über 60 m beide über Sicherheitstreppenräume (Zusammenfassung 6.5.3).",
    "rg": "§ 33 Abs. 1 und 2",
    "pos": "rettungsweg",
    "auftritt": "geschoss",
@@ -1345,7 +1345,7 @@ const KATALOG = {
      "h": "Bei Sonderbauten nur, wenn keine Bedenken wegen der Personenrettung bestehen."
     }
    },
-   "hh": "Hochhaus: bauliche Rettungswege (Sicherheitstreppenraum), kein Anleitern (laut Lernseite).",
+   "hh": "Hochhaus: bauliche Rettungswege bzw. Sicherheitstreppenraum, kein Anleitern (Zusammenfassung 6.5.3).",
    "rg": "§ 33 Abs. 3; § 5 Abs. 1 S. 2",
    "pos": "rettungsweg",
    "auftritt": "gebaeude",
@@ -1384,7 +1384,7 @@ const KATALOG = {
      "h": "Mehrere notwendige Treppenräume möglichst entgegengesetzt anordnen, Rettungswege möglichst kurz."
     }
    },
-   "hh": "max. 35 m (MHHR, laut Lernseite).",
+   "hh": "Höchstens 35 m von jeder Stelle eines Aufenthaltsraums bis zum Ausgang (§ 4.1 MHHR, Zusammenfassung 6.5.3).",
    "rg": "§ 35 Abs. 2 S. 1 und 3",
    "pos": "rettungsweg",
    "auftritt": "geschoss",
@@ -1417,7 +1417,7 @@ const KATALOG = {
      "t": "je Kellergeschoss mindestens 2 Ausgänge ins Freie oder in notwendige Treppenräume (bei übereinanderliegenden Kellergeschossen)"
     }
    },
-   "hh": "Treppenräume von Kellergeschossen nicht mit oberirdischen verbunden (MHHR, laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 35 Abs. 2 S. 2",
    "pos": "rettungsweg",
    "auftritt": "geschoss",
@@ -1456,7 +1456,7 @@ const KATALOG = {
      "h": "Technische Ausführung (Vorraum, Druckbelüftung, offener Gang) regelt das MBO nicht; sie stammt aus der MHHR (siehe Lernseite)."
     }
    },
-   "hh": "MHHR: ab 60 m Höhe alle Treppenräume als Sicherheitstreppenräume; Wände F90 (bis 60 m) bzw. F120 (laut Lernseite).",
+   "hh": "MHHR: bis 60 m 2. Rettungsweg baulich oder ein Sicherheitstreppenraum; über 60 m beide Rettungswege über Sicherheitstreppenräume; außenliegender ohne Rauchschutzdruckanlage möglich (Zusammenfassung 6.5.3).",
    "rg": "§ 33 Abs. 2 S. 3; § 36 Abs. 3 S. 4",
    "pos": "treppenraum",
    "auftritt": "gebaeude",
@@ -1495,7 +1495,7 @@ const KATALOG = {
      "h": "Außentreppen nach § 35 Abs. 1 S. 3 Nr. 3 in GK 3 bis 5: tragende Teile nichtbrennbar. Einschiebbare Treppen, Rolltreppen als notwendige Treppen unzulässig (in GK 1/2 als Dachraumzugang zulässig). In einem Zuge führen, außer GK 1 bis 3."
     }
    },
-   "hh": "MHHR (laut Lernseite): notwendige Treppen in Sicherheitstreppenräumen.",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 34 Abs. 1 bis 4",
    "pos": "treppenraum",
    "auftritt": "geschoss",
@@ -1573,7 +1573,7 @@ const KATALOG = {
      "h": "Ausnahme: Außenwände aus nichtbrennbaren Baustoffen, die durch angrenzende Gebäudeteile nicht gefährdet werden können."
     }
    },
-   "hh": "MHHR: Wände der Treppenräume F90, über 60 m Höhe F120 (laut Lernseite).",
+   "hh": "MHHR: Wände notwendiger Treppenräume mit dem Feuerwiderstand der tragenden Bauteile (über 60 m 120 Minuten; § 3.2.3, Zusammenfassung 6.5.3).",
    "rg": "§ 35 Abs. 4 S. 1 und 2; § 26 Abs. 2 S. 5",
    "pos": "treppenraum",
    "auftritt": "gebaeude",
@@ -1651,7 +1651,7 @@ const KATALOG = {
      "h": "Gilt, soweit ein notwendiger Treppenraum erforderlich ist (ab GK 3)."
     }
    },
-   "hh": "MHHR: Treppenraumerweiterung mit Wandqualität des Treppenraums (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 35 Abs. 3",
    "pos": "treppenraum",
    "auftritt": "gebaeude",
@@ -1729,7 +1729,7 @@ const KATALOG = {
      "h": "Die MBO knüpft an die Höhe nach § 2 Abs. 3 S. 2 (> 13 m) an, nicht an die Gebäudeklasse; praktisch entspricht das GK 5."
     }
    },
-   "hh": "Sicherheitsbeleuchtung, Sicherheitsstromversorgung (laut Lernseite).",
+   "hh": "Sicherheitsbeleuchtung (§ 6.5 MHHR, Zusammenfassung 6.5.3).",
    "rg": "§ 35 Abs. 7",
    "pos": "treppenraum",
    "auftritt": "gebaeude",
@@ -1768,7 +1768,7 @@ const KATALOG = {
      "h": "Bedienung vom Erdgeschoss und vom obersten Treppenabsatz aus."
     }
    },
-   "hh": "Druckbelüftung bei Sicherheitstreppenräumen (MHHR, laut Lernseite).",
+   "hh": "Druckbelüftung (§ 6.2 MHHR, Zusammenfassung 6.5.3).",
    "rg": "§ 35 Abs. 8",
    "pos": "treppenraum",
    "auftritt": "gebaeude",
@@ -1852,7 +1852,7 @@ const KATALOG = {
      "h": "Wände bis zur Rohdecke führen; bis an die Unterdecke nur, wenn diese feuerhemmend ist und vergleichbarer Raumabschluss besteht."
     }
    },
-   "hh": "MHHR: Wände notwendiger Flure feuerhemmend (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 36 Abs. 4 S. 1 bis 3",
    "pos": "flur",
    "auftritt": "geschoss",
@@ -1891,7 +1891,7 @@ const KATALOG = {
      "h": "Abschlüsse bis Rohdecke; bis Unterdecke nur, wenn diese feuerhemmend ist. Gilt nicht für offene Gänge."
     }
    },
-   "hh": "MHHR: Rauchabschnitte, Stichflure durch RS-Türen abtrennen (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 36 Abs. 3 S. 1 bis 3 und 5",
    "pos": "flur",
    "auftritt": "geschoss",
@@ -1930,7 +1930,7 @@ const KATALOG = {
      "h": "Die 35-m-Rettungsweglänge bleibt unabhängig davon maßgeblich."
     }
    },
-   "hh": "MHHR: Stichflure max. 15 m, zu Vorraum, Flur mit zwei Fluchtrichtungen oder offenem Gang (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 36 Abs. 3 S. 4",
    "pos": "flur",
    "auftritt": "geschoss",
@@ -2008,7 +2008,7 @@ const KATALOG = {
      "h": "Zahlenwerte (z. B. 1,20 m, 0,90 m) nennt das MBO nicht; die Lernseite führt sie im Hochhaus-Teil (MHHR/Sonderbauverordnungen)."
     }
    },
-   "hh": "MHHR (laut Lernseite): lichte Breite mind. 1,20 m, Türen aus Nutzungseinheiten mind. 0,90 m.",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 36 Abs. 2; § 34 Abs. 5",
    "pos": "flur",
    "auftritt": "geschoss",
@@ -2047,7 +2047,7 @@ const KATALOG = {
      "h": "Fenster in diesen Außenwänden erst ab 0,90 m Brüstungshöhe; keine Rauchabschnitte nötig; Baustoffe nichtbrennbar."
     }
    },
-   "hh": "RS-Tür zum offenen Gang (MHHR, laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 36 Abs. 5, Abs. 3 S. 5, Abs. 6",
    "pos": "flur",
    "auftritt": "geschoss",
@@ -2086,7 +2086,7 @@ const KATALOG = {
      "h": "Gebäude über 50 m von der öffentlichen Verkehrsfläche: Zufahrten zu den vor und hinter dem Gebäude gelegenen Grundstücksteilen und Bewegungsflächen, wenn für den Feuerwehreinsatz erforderlich."
     }
    },
-   "hh": "Zufahrten, Eingänge, Bewegungsflächen kennzeichnen, freihalten (MHHR, laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 5 Abs. 1 S. 1, 2 und 4, Abs. 2",
    "pos": "aufstellflaeche",
    "auftritt": "gebaeude",
@@ -2125,7 +2125,7 @@ const KATALOG = {
      "h": "Maße (Länge, Breite, Abstand zur Fassade) nennt das MBO nicht; sie stehen in der Muster-Richtlinie über Flächen für die Feuerwehr (hier nicht geprüft)."
     }
    },
-   "hh": "Bewegungsflächen, Feuerwehrzugänge unmittelbar erreichbar (MHHR, laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 5 Abs. 1 S. 3, Abs. 2",
    "pos": "aufstellflaeche",
    "auftritt": "gebaeude",
@@ -2164,7 +2164,7 @@ const KATALOG = {
      "h": "Wohnungen ausgenommen. Feuerschutz-/Rauchschutzabschlüsse dürfen lichtdurchlässige Seitenteile/Oberlichte haben, wenn der Abschluss insgesamt höchstens 2,50 m breit ist."
     }
    },
-   "hh": "MHHR: Treppenraum zum Flur/Vorraum T30-RS (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 35 Abs. 6 S. 1 Nr. 1 und S. 2",
    "pos": "tuer",
    "auftritt": "mehrfach",
@@ -2197,7 +2197,7 @@ const KATALOG = {
      "t": "kein Treppenraum nötig"
     }
    },
-   "hh": "MHHR: T30-RS (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 35 Abs. 6 S. 1 Nr. 2",
    "pos": "tuer",
    "auftritt": "mehrfach",
@@ -2215,13 +2215,13 @@ const KATALOG = {
      "t": "kein Treppenraum nötig"
     },
     "3": {
-     "t": "dicht- und selbstschließend (DS)"
+     "t": "dicht- und selbstschließend (DSS)"
     },
     "4": {
-     "t": "dicht- und selbstschließend (DS)"
+     "t": "dicht- und selbstschließend (DSS)"
     },
     "5": {
-     "t": "dicht- und selbstschließend (DS)"
+     "t": "dicht- und selbstschließend (DSS)"
     },
     "1a": {
      "t": "kein Treppenraum nötig"
@@ -2230,11 +2230,11 @@ const KATALOG = {
      "t": "kein Treppenraum nötig"
     }
    },
-   "hh": "MHHR: T30-RS für Nutzungseinheiten (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 35 Abs. 6 S. 1 Nr. 3",
    "pos": "tuer",
    "auftritt": "mehrfach",
-   "merksatz": "Treppenraum zu Wohnung oder anderer kleiner Nutzungseinheit: mindestens dicht- und selbstschließend (DS).",
+   "merksatz": "Treppenraum zu Wohnung oder anderer kleiner Nutzungseinheit: mindestens dicht- und selbstschließend (DSS).",
    "quelle": "MBO",
    "unklar": false
   },
@@ -2249,15 +2249,15 @@ const KATALOG = {
      "h": "Rauchabschnittstüren im Flur: rauchdicht und selbstschließend (RS), nicht abschließbar."
     },
     "3": {
-     "t": "Tür dichtschließend; zu Kellerlagern T30-DS",
+     "t": "Tür dichtschließend; zu Kellerlagern T30-DSS",
      "h": "Rauchabschnittstüren im Flur: rauchdicht und selbstschließend (RS), nicht abschließbar."
     },
     "4": {
-     "t": "Tür dichtschließend; zu Kellerlagern T30-DS",
+     "t": "Tür dichtschließend; zu Kellerlagern T30-DSS",
      "h": "Rauchabschnittstüren im Flur: rauchdicht und selbstschließend (RS), nicht abschließbar."
     },
     "5": {
-     "t": "Tür dichtschließend; zu Kellerlagern T30-DS",
+     "t": "Tür dichtschließend; zu Kellerlagern T30-DSS",
      "h": "Rauchabschnittstüren im Flur: rauchdicht und selbstschließend (RS), nicht abschließbar."
     },
     "1a": {
@@ -2269,11 +2269,11 @@ const KATALOG = {
      "h": "Rauchabschnittstüren im Flur: rauchdicht und selbstschließend (RS), nicht abschließbar."
     }
    },
-   "hh": "MHHR: Tür der Nutzungseinheit zum Flur T30-RS (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 36 Abs. 4 S. 4; § 36 Abs. 3 S. 1",
    "pos": "tuer",
    "auftritt": "mehrfach",
-   "merksatz": "Flurwand-Türen dichtschließend. Zu Kellerlagern T30-DS, Rauchabschnittstüren im Flur RS.",
+   "merksatz": "Flurwand-Türen dichtschließend. Zu Kellerlagern T30-DSS, Rauchabschnittstüren im Flur RS.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -2419,7 +2419,7 @@ const KATALOG = {
      "h": "Fahrschachtwände aus brennbaren Baustoffen brauchen schachtseitig nichtbrennbare Bekleidung in ausreichender Dicke. Fahrschachttüren und Öffnungen dürfen den Schutz nicht beeinträchtigen."
     }
    },
-   "hh": "MHHR: Fahrschächte feuerbeständig (F90), über 60 m F120; Feuerwehraufzug mit eigenem Schacht (laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 39 Abs. 1 und 2",
    "pos": "aufzug",
    "auftritt": "gebaeude",
@@ -2497,7 +2497,7 @@ const KATALOG = {
      "h": "Gilt für Aufzüge mit Fahrschacht; Abschluss darf im Brandfall selbsttätig öffnen. Lage windunabhängig wählen."
     }
    },
-   "hh": "Druckbelüftung der Feuerwehraufzugsschächte (MHHR, laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 39 Abs. 3",
    "pos": "aufzug",
    "auftritt": "gebaeude",
@@ -2536,7 +2536,7 @@ const KATALOG = {
      "h": "Krankentragen-Fahrkorb mind. 1,10 m × 2,10 m, Tür lichte Breite mind. 0,90 m, davor Bewegungsfläche."
     }
    },
-   "hh": "Feuerwehraufzüge (MHHR, laut Lernseite).",
+   "hh": "Feuerwehraufzüge in allen Hochhäusern (§ 6.1 MHHR, Zusammenfassung 6.5.3).",
    "rg": "§ 39 Abs. 4 und 5",
    "pos": "aufzug",
    "auftritt": "gebaeude",
@@ -2653,7 +2653,7 @@ const KATALOG = {
      "h": "Die Feuerwiderstandsdauer der Schachtwand selbst legt die MBO nicht fest; sie ergibt sich aus dem durchdrungenen Bauteil und der Leitungsanlagen-Richtlinie (hier nicht geprüft)."
     }
    },
-   "hh": "MHHR: Wände von Installationsschächten feuerbeständig (laut Lernseite, MHHR 3.2.4).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 40 Abs. 3; § 41 Abs. 2 S. 1 und Abs. 3",
    "pos": "schacht",
    "auftritt": "gebaeude",
@@ -2788,7 +2788,7 @@ const KATALOG = {
      "t": "keine besondere Anforderung"
     },
     "3": {
-     "t": "Trennwände und Decken wie tragende Wände; Öffnungen feuerhemmend, dicht- und selbstschließend (T30-DS); vom Freien entleerbar; ständige Lüftung"
+     "t": "Trennwände und Decken wie tragende Wände; Öffnungen feuerhemmend, dicht- und selbstschließend (T30-DSS); vom Freien entleerbar; ständige Lüftung"
     },
     "4": {
      "t": "wie GK 3"
@@ -2803,11 +2803,11 @@ const KATALOG = {
      "t": "keine besondere Anforderung"
     }
    },
-   "hh": "Lernseite: T30-DS, wie GK 3 bis 5 (Aufbewahrung fester Abfallstoffe).",
+   "hh": "Lernseite: T30-DSS, wie GK 3 bis 5 (Aufbewahrung fester Abfallstoffe).",
    "rg": "§ 45",
    "pos": "trennwand",
    "auftritt": "gebaeude",
-   "merksatz": "Abfallraum ab GK 3: Wände und Decken wie das Tragwerk, Tür T30-DS, vom Freien entleerbar, ständig belüftet.",
+   "merksatz": "Abfallraum ab GK 3: Wände und Decken wie das Tragwerk, Tür T30-DSS, vom Freien entleerbar, ständig belüftet.",
    "quelle": "MBO",
    "unklar": false
   },
@@ -2875,7 +2875,7 @@ const KATALOG = {
      "t": "mind. 1 Rauchwarnmelder je Schlafraum, Kinderzimmer und Flur zu Aufenthaltsräumen"
     }
    },
-   "hh": "Rauchwarnmelder mit Netzstromversorgung in den Nutzungseinheiten (MHHR, laut Lernseite).",
+   "hh": "Im Kapitel 6.5.3 der Zusammenfassung nicht gesondert aufgeführt; es gelten MBO und MHHR im Einzelfall.",
    "rg": "§ 48 Abs. 4",
    "pos": "flur",
    "auftritt": "geschoss",
@@ -3070,7 +3070,7 @@ const KATALOG = {
      "h": "Aufzug ohne eigenen Schacht im Treppenraum bei Hochhäusern unzulässig (§ 39 Abs. 1 S. 3 Nr. 1). Werte der MHHR (F90, F120 über 60 m, Sicherheitstreppenräume, Feuerwehraufzug, Löschanlage) stammen aus der Lernseite, nicht aus der MBO."
     }
    },
-   "hh": "Tragende Bauteile F90 und nichtbrennbar (über 60 m F120); Treppenraumwände F90/F120; Trennwände NE und Flure F30; Rettungsweg 35 m, Stichflur 15 m (alle laut Lernseite/MHHR).",
+   "hh": "Tragende Bauteile bis 60 m feuerbeständig und nichtbrennbar, über 60 m 120 Minuten; Treppenraumwände wie tragende Bauteile; Trennwände mindestens feuerhemmend; Rettungsweglänge 35 m (alle laut Zusammenfassung 6.5.3).",
    "rg": "§ 2 Abs. 4 Nr. 1; § 39 Abs. 1 S. 3 Nr. 1",
    "pos": "wand-tragend",
    "auftritt": "gebaeude",
