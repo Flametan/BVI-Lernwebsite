@@ -1553,7 +1553,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
       // Kapitel ausblenden: Titel des ersten Kapitels, danach nicht mehr auffindbar
       SEARCH.close(); NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
       const key = JGUI.chapterKey('v-vak-verwaltungsrecht', document.querySelector('#v-vak-verwaltungsrecht .acc-item:not(.jg-kap)'));
-      const cnt = async () => { SEARCH.reset(); SEARCH.open(); await w(150); SEARCH.query('Planmäßige dauerhafte Tätigkeit Behörden Gesetzen'); await w(500); const n = (document.getElementById('search-results').innerText.match(/ALLGEMEINES VERWALTUNGSRECHT/gi) || []).length; SEARCH.close(); return n; };
+      const cnt = async () => { SEARCH.reset(); SEARCH.open(); await w(150); SEARCH.query('Bedarfsverwaltung Legislative Judikative'); await w(500); const n = (document.getElementById('search-results').innerText.match(/ALLGEMEINES VERWALTUNGSRECHT/gi) || []).length; SEARCH.close(); return n; };
       const before = await cnt(); r.before = before > 0;
       const l = JG.local(); l.ausg.push(key); JG.saveLocal(l); await w(300);
       r.hidden = (await cnt()) < before;
