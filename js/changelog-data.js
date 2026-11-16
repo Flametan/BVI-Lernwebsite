@@ -1,7 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.4',ts:'2026-11-12T10:00',items:[
-      'Neu: das IdF-Spiel in 3D. Neun Missionen zu allen Themen (Begehung, Stellungnahme, Im Stab, Pressestatement, Lage Bevölkerungsschutz, Hilfeersuchen, IBK, VAk, FeuAK), dazu Wiederholung der eigenen Fehler, eine Prüfung mit Note, Wochenaufgabe und Bestenliste auf dem Gerät. Zu finden im Pausenraum unter dem Reiter „IdF-Spiel (3D)“; aus dem Spiel führt „Im Kapitel nachlesen“ zurück.',
+      'Neu: Simulationen in 3D. Neun Missionen zu allen Themen (Begehung, Stellungnahme, Im Stab, Pressestatement, Lage Bevölkerungsschutz, Hilfeersuchen, IBK, VAk, FeuAK), dazu Wiederholung der eigenen Fehler, eine Prüfung mit Note, Wochenaufgabe und Bestenliste auf dem Gerät. Zu finden im Pausenraum unter dem Reiter „Simulationen“; aus der Simulation führt „Im Kapitel nachlesen“ zurück.',
       'IBK, VAk Berlin und FeuAK Hamburg: Lerninhalte neu aus der Zusammenfassung V3.11 aufgebaut (ohne Kapitelnummern in den Überschriften), neue Grafiken, nicht mehr enthaltene Seiten entfernt (IBK PSNV, VAk Rettungsdienstrecht, FeuAK Analyse/Stakeholder/Risikoanalyse). Lernkarten und Quizfragen bleiben erhalten, einige wurden korrigiert.',
       'Stabsarbeit, Schaubilder der Einsatzleitung: Die Leitstelle heißt jetzt LtS, der Stab trägt drei Punkte, und die IuK-Einheit steht mit dem richtigen taktischen Zeichen direkt am Stab.',
       'Kapitelfenster: Die Kopfzeile mit Zurück-Knopf, Üben/Fokus/Notiz/Lesezeichen und Profil endet jetzt auf allen Geräten bündig mit dem Text darunter (links und rechts).',

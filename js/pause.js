@@ -46,17 +46,17 @@ const PAUSE=(function(){
   // kurze Untertitel und Rekord-Etiketten für die Kacheln
   const SHORT={fahrt:'5, 10 oder 15 Fragen, Hilfsfrist',duell:'Zu zweit live, per QR-Code',snake:'Löschzug durchs Feuer steuern',solitaer:'Klondike mit Flammen und Leitern',minesweeper:'Brandherde im Dunkeln aufspüren',quiz:'8 Stufen, ein 50:50-Joker',tf:'60 Sekunden',word:'Begriff mit 5 Buchstaben',num:'Was ist größer?',mem:'Paare finden'};
   function bestChip(k){const b=best()[k];if(b==null)return'';if(k==='minesweeper'){const L=[['sehr','Sehr schwer'],['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']].find(x=>b[x[0]]!=null);return L?`${L[1]} ${Math.floor(b[L[0]]/60)}:${('0'+b[L[0]]%60).slice(-2)}`:'';}return k==='mem'?`${b} Züge`:k==='quiz'?`Stufe ${b}`:k==='num'?`Serie ${b}`:k==='word'?`${b} gelöst`:`Rekord ${b}`;}
-  // Reiter „IdF-Spiel (3D)“: führt in das eigene 3D-Spiel unter game/ (eigene Seite, Fortschritt in bvi_game_v1)
+  // Reiter „Simulationen“: führt in das eigene 3D-Spiel unter game/ (eigene Seite, Fortschritt in bvi_game_v1)
   const TKEY='bvi_pause_tab';let ptab=get(TKEY,'spiele');
   const IDF3D=[['begehung','grid','Begehung','Bauteile im Gebäude bestimmen'],['stellungnahme','cards','Stellungnahme','Aus Textbausteinen schreiben'],['stab','duel','Stab','Meldungen zum Sachgebiet bringen'],['presse','bolt','Presse','Statement vor laufender Kamera'],['lage','scale','Lage','Zivile Verteidigung im Lagezentrum'],['ucpm','truck','Hilfeersuchen','Hilfe über die EU anfordern'],['ibk','ladder','IBK','Gespräche und Fragen auf der Wache'],['vak','pairs','VAk','Fragen im Hörsaal'],['feuak','flame','FeuAK','Bedarfsplanung mit Budget']];
-  const tabs=()=>`<div class="pz-mode pz-tabs" role="tablist" aria-label="Bereich im Pausenraum">${[['spiele','Pausenspiele'],['idf3d','IdF-Spiel (3D)']].map(([k,t])=>`<button role="tab" aria-selected="${ptab===k}" data-pt="${k}" class="${ptab===k?'on':''}">${t}</button>`).join('')}</div>`;
+  const tabs=()=>`<div class="pz-mode pz-tabs" role="tablist" aria-label="Bereich im Pausenraum">${[['spiele','Pausenspiele'],['idf3d','Simulationen']].map(([k,t])=>`<button role="tab" aria-selected="${ptab===k}" data-pt="${k}" class="${ptab===k?'on':''}">${t}</button>`).join('')}</div>`;
   const tabsOn=()=>root.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{ptab=x.dataset.pt;set(TKEY,ptab);hub();});
   function hub3d(){
     const st=get('bvi_game_v1',{}),m=(st&&st.m)||{};
     const fertig=k=>Object.keys(m[k]||{}).filter(i=>m[k][i]&&m[k][i].ok).length;
     const url=k=>'game/index.html?'+(k?'m='+k+'&amp;':'')+'von=v-pause';
     root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}
-    <div class="pz-tiles pz-3d"><a class="pz-tile wide hero" href="${url('')}"><span class="pz-ti"><span class="pz-gi">${svg('truck')}</span></span><span class="pz-tt"><b>IdF-Spiel starten</b><small>Neun Missionen in begehbaren 3D-Welten, dazu Wiederholung, Prüfung, Wochenaufgabe und Bestenliste</small></span></a>
+    <div class="pz-tiles pz-3d"><a class="pz-tile wide hero" href="${url('')}"><span class="pz-ti"><span class="pz-gi">${svg('truck')}</span></span><span class="pz-tt"><b>Simulationen starten</b><small>Neun Missionen in begehbaren 3D-Welten, dazu Wiederholung, Prüfung, Wochenaufgabe und Bestenliste</small></span></a>
     ${IDF3D.map(g=>{const n=fertig(g[0]);return `<a class="pz-tile" href="${url(g[0])}" aria-label="Mission ${g[2]}. ${g[3]}${n?'. '+n+' von 5 Leveln geschafft':''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${n?`<span class="pz-bst">${n} von 5</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${g[3]}</small></span></a>`;}).join('')}</div></div>`;
     tabsOn();
   }

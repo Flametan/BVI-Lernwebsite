@@ -14,7 +14,7 @@
     ['home', 'levels', 'play', 'rang'].forEach(s => { $(s).hidden = s !== name; });
     $('btn-back').hidden = name === 'home'; $('btn-menu').hidden = name !== 'play';
     $('top-kick').textContent = name === 'home' ? 'IdF Münster' : name === 'rang' ? 'Training' : mis.thema;
-    $('top-title').textContent = name === 'home' ? 'IdF-Spiel' : name === 'rang' ? 'Bestenliste' : name === 'levels' ? mis.titel : modus === 'mission' ? 'Level ' + (lvl + 1) + ' · ' + data.level[lvl].titel : mis.titel;
+    $('top-title').textContent = name === 'home' ? 'Simulationen' : name === 'rang' ? 'Bestenliste' : name === 'levels' ? mis.titel : modus === 'mission' ? 'Level ' + (lvl + 1) + ' · ' + data.level[lvl].titel : mis.titel;
     $('st-total').textContent = fmt(CORE.total()); $('st-serie').textContent = CORE.serie();
   }
 
