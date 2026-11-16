@@ -1,6 +1,14 @@
-# IdF-Spiel – Plan (Schritt 1)
+# IdF-Spiel – Plan
 
-Stand: Entwurf zur Freigabe. Es ist noch kein Spielcode geschrieben.
+Stand: Schritt 2 (Startbildschirm und Mission „Begehung" spielbar). Die übrigen Missionen folgen einzeln.
+
+## Entscheidungen
+
+- **Spielart:** richtiges 3D-Spiel in der dritten Person. Man steuert eine Einsatzkraft mit Stick (Touch) oder WASD,
+  die Kamera folgt und lässt sich drehen und zoomen. Umsetzung mit Three.js und eigenen Shadern (Himmel, Leuchtsäulen, Böden).
+- **Themen:** die IdF-Themen und zusätzlich IBK, VAk und FeuAK (siehe Tabelle unten, Missionen 7 bis 9).
+- **Three.js:** eigene Kopie unter `game/vendor/three.min.js` (Version r128, dieselbe wie in der App).
+- **Presse:** Wo der Stoff im Repo nicht reicht, kommt eigener Stoff dazu. Solche Aufgaben tragen im Feld `quelle` den Vermerk „eigener Stoff".
 
 ## Was das Spiel ist
 
@@ -20,6 +28,9 @@ Der Vorbeugende Brandschutz bekommt wie gewünscht zwei Missionen, zusammen also
 | 4 | Presse- und Öffentlichkeitsarbeit | **Pressestatement** | `v-idf-p61`, `v-idf-p62`, vorhandene Simulation Pressegespräch |
 | 5 | Zivile Verteidigung / Katastrophenschutz | **Lage Bevölkerungsschutz** | `v-idf-z90` bis `v-idf-z99` |
 | 6 | Katastrophenschutzverfahren der EU (UCPM) | **Hilfeersuchen** | `v-idf-u101`, `v-idf-u102` |
+| 7 | IBK | **Mitarbeitergespräch** | `v-ibk-*` (Transaktionsanalyse, Konflikt, Führung), `js/scenarios.js` |
+| 8 | VAk | **Einsatzrecht vor Ort** | `v-vak-*`, `js/fallbearbeitung.js` (8-Punkte-Schema) |
+| 9 | FeuAK | **Feuerwehr planen** | `v-feuak-*` (Bedarfsplanung, Haushalt, Beschaffung) |
 
 ### 1 Begehung (erste spielbare Mission)
 Man steht in einem 3D-Gebäude, das als Schnitt und von innen begehbar ist: Treppenraum, Flure, Nutzungseinheiten,

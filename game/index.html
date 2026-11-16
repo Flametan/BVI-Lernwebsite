@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>IdF-Spiel</title>
+<meta name="theme-color" content="#121212"/>
+<link rel="icon" href="../icons/icon-192.png"/>
+<script>(function(){var m='system';try{m=localStorage.getItem('bvi_theme')||'system';}catch(e){}
+if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if(m!=='system')document.documentElement.setAttribute('data-theme','light');})();</script>
+<link rel="stylesheet" href="../css/fonts.css"/>
+<link rel="stylesheet" href="css/game.css"/>
+</head>
+<body>
+<header class="top">
+  <button id="btn-back" class="ic" aria-label="Zurück" hidden>
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+  </button>
+  <div class="top-t"><p class="kick" id="top-kick">IdF Münster</p><h1 id="top-title">IdF-Spiel</h1></div>
+  <div class="stats">
+    <div class="stat"><span class="stat-v" id="st-total">0</span><span class="stat-l">Punkte</span></div>
+    <div class="stat"><span class="stat-v" id="st-serie">0</span><span class="stat-l">Tage in Folge</span></div>
+  </div>
+</header>
+
+<main id="home" class="screen">
+  <p class="daily" id="daily"></p>
+  <h2 class="sec">Thema wählen</h2>
+  <div class="grid" id="missions"></div>
+  <h2 class="sec">Abzeichen</h2>
+  <div class="badges" id="badges"></div>
+  <p class="foot"><a href="../index.html">Zur Lern-App</a></p>
+</main>
+
+<main id="levels" class="screen" hidden>
+  <p class="lead" id="lv-text"></p>
+  <div class="lvlist" id="lv-list"></div>
+</main>
+
+<main id="play" class="screen play" hidden>
+  <div class="hud">
+    <p class="hud-s" id="hud-s"></p>
+    <div class="hud-r"><span id="hud-prog">0 / 0</span><span class="hud-p"><b id="hud-pts">0</b> Punkte</span><span class="hud-c" id="hud-combo" hidden></span></div>
+  </div>
+  <div class="stagewrap">
+    <canvas id="stage" aria-label="3D-Ansicht: Einsatzkraft im Gebäude"></canvas>
+    <p class="info" id="info"></p>
+    <div class="joy" id="joy" aria-hidden="true"><i></i></div>
+    <div class="acts">
+      <button class="btn" id="up" hidden></button>
+      <button class="btn" id="down" hidden></button>
+      <button class="btn pri" id="act" hidden></button>
+    </div>
+    <p class="tip" id="tip">Lauf mit dem Stick oder mit WASD zu einer Leuchtsäule und prüfe das Bauteil (Knopf oder Taste E). Ziehen dreht die Kamera. An der Treppe wechselst du das Geschoss (R hoch, F runter).</p>
+  </div>
+  <section class="sheet" id="sheet" hidden aria-live="polite">
+    <div class="sheet-h"><h2 id="q-title"></h2><button class="ic" id="q-close" aria-label="Frage schließen">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="opts" id="q-opts"></div>
+    <div class="fb" id="q-fb" hidden><p id="q-fbt"></p><p class="src" id="q-src"></p><button class="btn pri" id="q-next">Weiter</button></div>
+  </section>
+  <section class="result" id="result" hidden>
+    <div class="result-b">
+      <p class="kick" id="r-kick"></p>
+      <h2 id="r-title"></h2>
+      <p class="r-pts"><b id="r-pts">0</b> von <span id="r-max">0</span> Punkten</p>
+      <p id="r-note"></p>
+      <div class="r-badges" id="r-badges"></div>
+      <div class="r-btns"><button class="btn" id="r-again">Nochmal</button><button class="btn" id="r-list">Zur Übersicht</button><button class="btn pri" id="r-next">Nächstes Level</button></div>
+    </div>
+  </section>
+</main>
+
+<script src="vendor/three.min.js"></script>
+<script src="js/core.js"></script>
+<script src="js/scene.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

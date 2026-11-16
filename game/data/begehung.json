@@ -1,0 +1,122 @@
+{
+  "mission": "begehung",
+  "hinweis": "Alle Lösungen stammen aus den Kapiteln des Vorbeugenden Brandschutzes der Lern-App (Feld quelle = Ansicht und Abschnitt).",
+  "optionen": {
+    "tuer": ["DS", "DSS", "RS", "T30 (feuerhemmend, DSS)", "T30-RS"],
+    "fw": ["keine Anforderung", "feuerhemmend (F30)", "hochfeuerhemmend (F60)", "feuerbeständig (F90)"],
+    "trw": ["feuerhemmend (F30)", "hochfeuerhemmend unter mechanischer Beanspruchung (F60-M)", "Bauart einer Brandwand", "keine Anforderung"],
+    "treppe": ["feuerhemmend oder nicht brennbare Baustoffe", "nicht brennbare Baustoffe", "feuerhemmend und nicht brennbare Baustoffe", "keine Anforderung"]
+  },
+  "level": [
+    {
+      "titel": "Türen am Treppenraum",
+      "steckbrief": "Gemischt genutztes Gebäude. Bestimme die Türen vom notwendigen Treppenraum in die Nutzungen.",
+      "geschosse": [
+        {"name": "Keller"},
+        {"name": "Ladenlokal"},
+        {"name": "Wohnungen (mehr als 4)", "flur": true},
+        {"name": "Büro über 200 m²"},
+        {"name": "Büro unter 200 m²"},
+        {"name": "Wohnung"},
+        {"name": "Dachraum, nicht ausgebaut"}
+      ],
+      "aufgaben": [
+        {"g": 0, "teil": "tuer_tr", "frage": "Tür vom Treppenraum in den Keller", "opt": "tuer", "richtig": "T30-RS", "erkl": "Türen zu Kellergeschossen: feuerhemmend, rauchdicht und selbstschließend.", "quelle": "v-idf-vb-42 · Notwendiger Treppenraum (§ 35 MBO)"},
+        {"g": 1, "teil": "tuer_tr", "frage": "Tür vom Treppenraum in das Ladenlokal", "opt": "tuer", "richtig": "T30-RS", "erkl": "Türen zu Läden: feuerhemmend, rauchdicht und selbstschließend.", "quelle": "v-idf-vb-42 · Notwendiger Treppenraum (§ 35 MBO)"},
+        {"g": 2, "teil": "tuer_tr", "frage": "Tür vom Treppenraum in den notwendigen Flur", "opt": "tuer", "richtig": "RS", "erkl": "Türen zu notwendigen Fluren sind RS-Türen (§ 35 Abs. 6 Nr. 2 MBO).", "quelle": "v-idf-vb-42 · Notwendiger Flur (§ 36 MBO)"},
+        {"g": 2, "teil": "tuer_ne", "frage": "Wohnungstür am notwendigen Flur", "opt": "tuer", "richtig": "DS", "erkl": "Ab mehr als 4 Wohnungen liegt ein notwendiger Flur dazwischen; die Wohnungstür ist dichtschließend (DS).", "quelle": "v-idf-vb-42 · Arten von Türen im Gebäude"},
+        {"g": 3, "teil": "tuer_tr", "frage": "Tür vom Treppenraum in das Büro über 200 m²", "opt": "tuer", "richtig": "T30-RS", "erkl": "Nutzungseinheiten über 200 m² (außer Wohnungen): feuerhemmend, rauchdicht und selbstschließend.", "quelle": "v-idf-vb-42 · Notwendiger Treppenraum (§ 35 MBO)"},
+        {"g": 4, "teil": "tuer_tr", "frage": "Tür vom Treppenraum in das Büro unter 200 m²", "opt": "tuer", "richtig": "DSS", "erkl": "Sonstige Räume und Nutzungseinheiten: dicht- und selbstschließend (DSS).", "quelle": "v-idf-vb-42 · Notwendiger Treppenraum (§ 35 MBO)"},
+        {"g": 5, "teil": "tuer_tr", "frage": "Tür vom Treppenraum in die Wohnung", "opt": "tuer", "richtig": "DSS", "erkl": "Sonstige Räume und Nutzungseinheiten: dicht- und selbstschließend (DSS).", "quelle": "v-idf-vb-42 · Gebäudeschnitt Türen"},
+        {"g": 6, "teil": "tuer_tr", "frage": "Tür vom Treppenraum in den nicht ausgebauten Dachraum", "opt": "tuer", "richtig": "T30-RS", "erkl": "Türen zu nicht ausgebauten Dachräumen: feuerhemmend, rauchdicht und selbstschließend.", "quelle": "v-idf-vb-42 · Notwendiger Treppenraum (§ 35 MBO)"}
+      ]
+    },
+    {
+      "titel": "Gebäudeklasse 3",
+      "steckbrief": "Wohngebäude der Gebäudeklasse 3. Bestimme die Anforderungen an Wände, Decken, Treppe und Türen.",
+      "geschosse": [
+        {"name": "Keller"},
+        {"name": "Erdgeschoss", "trenn": true},
+        {"name": "1. Obergeschoss"},
+        {"name": "2. Obergeschoss"}
+      ],
+      "aufgaben": [
+        {"g": 2, "teil": "wand_tragend", "frage": "Tragende Wand im Obergeschoss (GK 3)", "opt": "fw", "richtig": "feuerhemmend (F30)", "erkl": "GK 3 oberirdisch: feuerhemmend (F30).", "quelle": "v-idf-vb-46 · Tragende Wände, Stützen und Decken (§ 27 MBO)"},
+        {"g": 0, "teil": "wand_tragend", "frage": "Tragende Wand im Kellergeschoss (GK 3)", "opt": "fw", "richtig": "feuerbeständig (F90)", "erkl": "GK 3 im Kellergeschoss: feuerbeständig (F90).", "quelle": "v-idf-vb-46 · Tragende Wände, Stützen und Decken (§ 27 MBO)"},
+        {"g": 2, "teil": "decke", "frage": "Decke im Obergeschoss (GK 3)", "opt": "fw", "richtig": "feuerhemmend (F30)", "erkl": "Decken in GK 2 und 3: feuerhemmend.", "quelle": "v-idf-vb-42 · Decken in Gebäuden (§ 31 MBO)"},
+        {"g": 0, "teil": "decke", "frage": "Decke über dem Kellergeschoss (GK 3)", "opt": "fw", "richtig": "feuerbeständig (F90)", "erkl": "Im Kellergeschoss feuerbeständig (GK 3 bis 5).", "quelle": "v-idf-vb-42 · Decken in Gebäuden (§ 31 MBO)"},
+        {"g": 3, "teil": "wand_tr", "frage": "Wand des notwendigen Treppenraums (GK 3)", "opt": "trw", "richtig": "feuerhemmend (F30)", "erkl": "Treppenraumwände in GK 3: feuerhemmend.", "quelle": "v-idf-vb-46 · Notwendige Treppenräume (§ 35 MBO)"},
+        {"g": 1, "teil": "wand_trenn", "frage": "Trennwand zwischen zwei Nutzungseinheiten (GK 3)", "opt": "fw", "richtig": "feuerhemmend (F30)", "erkl": "Trennwände: wie tragende und aussteifende Wände des Geschosses, mindestens feuerhemmend.", "quelle": "v-idf-vb-42 · Trennwand (§ 29 MBO)"},
+        {"g": 1, "teil": "tuer_trenn", "frage": "Tür in der Trennwand", "opt": "tuer", "richtig": "T30 (feuerhemmend, DSS)", "erkl": "Öffnungen in Trennwänden wie Türen: mindestens T30, dicht- und selbstschließend.", "quelle": "v-idf-vb-42 · Trennwand (§ 29 MBO)"},
+        {"g": 1, "teil": "treppe", "frage": "Tragende Teile der notwendigen Treppe (GK 3)", "opt": "treppe", "richtig": "feuerhemmend oder nicht brennbare Baustoffe", "erkl": "GK 3: feuerhemmend oder nicht brennbare Baustoffe.", "quelle": "v-idf-vb-42 · Notwendige Treppe (§ 34 MBO)"}
+      ]
+    },
+    {
+      "titel": "Gebäudeklasse 4",
+      "steckbrief": "Büro- und Wohngebäude der Gebäudeklasse 4 mit notwendigen Fluren.",
+      "geschosse": [
+        {"name": "Keller", "flur": true},
+        {"name": "Erdgeschoss"},
+        {"name": "1. Obergeschoss"},
+        {"name": "2. Obergeschoss", "flur": true},
+        {"name": "3. Obergeschoss"}
+      ],
+      "aufgaben": [
+        {"g": 2, "teil": "wand_tragend", "frage": "Tragende Wand im Obergeschoss (GK 4)", "opt": "fw", "richtig": "hochfeuerhemmend (F60)", "erkl": "GK 4 oberirdisch: hochfeuerhemmend (F60).", "quelle": "v-idf-vb-46 · Tragende Wände, Stützen und Decken (§ 27 MBO)"},
+        {"g": 0, "teil": "wand_tragend", "frage": "Tragende Wand im Kellergeschoss (GK 4)", "opt": "fw", "richtig": "feuerbeständig (F90)", "erkl": "GK 4 im Kellergeschoss: feuerbeständig (F90).", "quelle": "v-idf-vb-46 · Tragende Wände, Stützen und Decken (§ 27 MBO)"},
+        {"g": 1, "teil": "decke", "frage": "Decke im Erdgeschoss (GK 4)", "opt": "fw", "richtig": "hochfeuerhemmend (F60)", "erkl": "Decken in GK 4: hochfeuerhemmend.", "quelle": "v-idf-vb-42 · Decken in Gebäuden (§ 31 MBO)"},
+        {"g": 4, "teil": "wand_tr", "frage": "Wand des notwendigen Treppenraums (GK 4)", "opt": "trw", "richtig": "hochfeuerhemmend unter mechanischer Beanspruchung (F60-M)", "erkl": "Treppenraumwände in GK 4: hochfeuerhemmend mit zusätzlicher mechanischer Beanspruchung.", "quelle": "v-idf-vb-46 · Notwendige Treppenräume (§ 35 MBO)"},
+        {"g": 3, "teil": "wand_flur", "frage": "Wand des notwendigen Flurs im Obergeschoss", "opt": "fw", "richtig": "feuerhemmend (F30)", "erkl": "Wände notwendiger Flure: in der Regel feuerhemmend.", "quelle": "v-idf-vb-46 · Notwendige Flure (§ 36 MBO)"},
+        {"g": 0, "teil": "wand_flur", "frage": "Wand des notwendigen Flurs im Kellergeschoss (GK 4)", "opt": "fw", "richtig": "feuerbeständig (F90)", "erkl": "In Kellergeschossen der GK 4 und GK 5: feuerbeständig.", "quelle": "v-idf-vb-42 · Notwendiger Flur (§ 36 MBO)"},
+        {"g": 3, "teil": "tuer_tr", "frage": "Tür vom notwendigen Flur zum Treppenraum", "opt": "tuer", "richtig": "RS", "erkl": "Türen zu notwendigen Treppenräumen: RS-Tür (§ 35 Abs. 6 Nr. 2 MBO).", "quelle": "v-idf-vb-42 · Notwendiger Flur (§ 36 MBO)"},
+        {"g": 3, "teil": "tuer_ne", "frage": "Tür vom notwendigen Flur in die Nutzungseinheit", "opt": "tuer", "richtig": "DS", "erkl": "Türen zur Nutzungseinheit: DS.", "quelle": "v-idf-vb-46 · Notwendige Flure (§ 36 MBO)"},
+        {"g": 1, "teil": "treppe", "frage": "Tragende Teile der notwendigen Treppe (GK 4)", "opt": "treppe", "richtig": "nicht brennbare Baustoffe", "erkl": "GK 4: nicht brennbare Baustoffe.", "quelle": "v-idf-vb-42 · Notwendige Treppe (§ 34 MBO)"}
+      ]
+    },
+    {
+      "titel": "Gebäudeklasse 5",
+      "steckbrief": "Gebäude der Gebäudeklasse 5 mit innerer Brandwand.",
+      "brand": true,
+      "geschosse": [
+        {"name": "Keller"},
+        {"name": "Erdgeschoss"},
+        {"name": "1. Obergeschoss"},
+        {"name": "2. Obergeschoss"},
+        {"name": "3. Obergeschoss"},
+        {"name": "4. Obergeschoss"}
+      ],
+      "aufgaben": [
+        {"g": 3, "teil": "wand_tragend", "frage": "Tragende Wand im Obergeschoss (GK 5)", "opt": "fw", "richtig": "feuerbeständig (F90)", "erkl": "GK 5 oberirdisch: feuerbeständig (F90).", "quelle": "v-idf-vb-46 · Tragende Wände, Stützen und Decken (§ 27 MBO)"},
+        {"g": 2, "teil": "decke", "frage": "Decke im Obergeschoss (GK 5)", "opt": "fw", "richtig": "feuerbeständig (F90)", "erkl": "Decken in GK 5: feuerbeständig.", "quelle": "v-idf-vb-42 · Decken in Gebäuden (§ 31 MBO)"},
+        {"g": 4, "teil": "wand_tr", "frage": "Wand des notwendigen Treppenraums (GK 5)", "opt": "trw", "richtig": "Bauart einer Brandwand", "erkl": "Treppenraumwände in GK 5: Bauart von Brandwänden.", "quelle": "v-idf-vb-46 · Notwendige Treppenräume (§ 35 MBO)"},
+        {"g": 0, "teil": "tuer_tr", "frage": "Tür vom Treppenraum in den Keller", "opt": "tuer", "richtig": "T30-RS", "erkl": "Türen zu Kellergeschossen: feuerhemmend, rauchdicht und selbstschließend.", "quelle": "v-idf-vb-46 · Notwendige Treppenräume (§ 35 MBO)"},
+        {"g": 3, "teil": "wand_brand", "frage": "Innere Brandwand", "optionen": ["feuerhemmend, aus brennbaren Baustoffen zulässig", "hochfeuerhemmend, nicht brennbar", "feuerbeständig, auch unter mechanischer Beanspruchung, aus nicht brennbaren Baustoffen", "feuerbeständig, Baustoffe beliebig"], "richtig": "feuerbeständig, auch unter mechanischer Beanspruchung, aus nicht brennbaren Baustoffen", "erkl": "Brandwand: feuerbeständig, auch unter mechanischer Beanspruchung, aus nicht brennbaren Baustoffen (F90-A-M).", "quelle": "v-idf-vb-42 · Brandwand (§ 30 MBO)"},
+        {"g": 2, "teil": "tuer_trenn", "frage": "Tür in der inneren Brandwand", "optionen": ["nicht zulässig", "T30, DSS", "RS", "F90-Abschluss, dicht- und selbstschließend"], "richtig": "F90-Abschluss, dicht- und selbstschließend", "erkl": "In inneren Brandwänden Öffnungen nur mit F90-Abschlüssen, dicht- und selbstschließend. In der Gebäudeabschlusswand sind keine Öffnungen zulässig.", "quelle": "v-idf-vb-42 · Brandwand (§ 30 MBO)"},
+        {"g": 1, "teil": "treppe", "frage": "Tragende Teile der notwendigen Treppe (GK 5)", "opt": "treppe", "richtig": "feuerhemmend und nicht brennbare Baustoffe", "erkl": "GK 5: feuerhemmend und nicht brennbare Baustoffe.", "quelle": "v-idf-vb-42 · Notwendige Treppe (§ 34 MBO)"},
+        {"g": 5, "teil": "rauchabzug", "frage": "Rauchableitung des Treppenraums in GK 5", "optionen": ["Fenster je Geschoss genügen immer", "mindestens eine Öffnung an oberster Stelle", "keine Anforderung", "nur eine Sicherheitsbeleuchtung"], "richtig": "mindestens eine Öffnung an oberster Stelle", "erkl": "GK 5 muss mindestens eine Öffnung an oberster Stelle haben.", "quelle": "v-idf-vb-42 · Notwendiger Treppenraum (§ 35 MBO)"}
+      ]
+    },
+    {
+      "titel": "Maße und Abstände",
+      "steckbrief": "Gebäude mit notwendigem Flur und innerer Brandwand. Hier zählen die Zahlen.",
+      "brand": true,
+      "geschosse": [
+        {"name": "Keller"},
+        {"name": "Erdgeschoss"},
+        {"name": "1. Obergeschoss", "flur": true},
+        {"name": "2. Obergeschoss"},
+        {"name": "3. Obergeschoss"}
+      ],
+      "aufgaben": [
+        {"g": 2, "teil": "flur", "frage": "Notwendiger Flur: Wie lang darf ein Rauchabschnitt höchstens sein?", "optionen": ["15 m", "30 m", "35 m", "40 m"], "richtig": "30 m", "erkl": "Rauchabschnitte alle 30 m mit RS-Tür, nicht abschließbar.", "quelle": "v-idf-vb-42 · Notwendiger Flur (§ 36 MBO)"},
+        {"g": 3, "teil": "wand_brand", "frage": "In welchem Abstand sind innere Brandwände mindestens anzuordnen?", "optionen": ["alle 30 m", "alle 35 m", "alle 40 m", "alle 50 m"], "richtig": "alle 40 m", "erkl": "Innere Brandwand: mindestens alle 40 m zur Bildung von Brandabschnitten.", "quelle": "v-idf-vb-42 · Brandwand (§ 30 MBO)"},
+        {"g": 4, "teil": "brand_dach", "frage": "Wie weit wird die Brandwand über die Dachhaut geführt?", "optionen": ["10 cm", "30 cm", "50 cm", "1 m"], "richtig": "30 cm", "erkl": "30 cm über die Dachhaut geführt oder beidseitig je 50 cm auskragend.", "quelle": "v-idf-vb-42 · Brandwand (§ 30 MBO)"},
+        {"g": 1, "teil": "treppe", "frage": "In welcher Entfernung muss ein notwendiger Treppenraum höchstens erreichbar sein?", "optionen": ["15 m", "30 m", "35 m", "50 m"], "richtig": "35 m", "erkl": "Von jeder Stelle eines Aufenthaltsraumes oder Kellergeschosses in höchstens 35 m.", "quelle": "v-idf-vb-42 · Notwendiger Treppenraum (§ 35 MBO)"},
+        {"g": 3, "teil": "fenster", "frage": "Fenster als zweiter Rettungsweg: lichtes Maß mindestens?", "optionen": ["0,60 m × 0,90 m", "0,90 m × 1,20 m", "1,00 m × 1,00 m", "1,20 m × 1,50 m"], "richtig": "0,90 m × 1,20 m", "erkl": "Lichtes Maß mindestens 0,90 m × 1,20 m.", "quelle": "v-idf-vb-42 · Fenster (§ 37 Abs. 5 MBO)"},
+        {"g": 1, "teil": "fenster", "frage": "Fenster als zweiter Rettungsweg: Brüstungshöhe höchstens?", "optionen": ["0,90 m", "1,00 m", "1,20 m", "1,50 m"], "richtig": "1,20 m", "erkl": "Brüstungshöhe maximal 1,20 m.", "quelle": "v-idf-vb-42 · Fenster (§ 37 Abs. 5 MBO)"},
+        {"g": 3, "teil": "tr_fenster", "frage": "Treppenraum: freier Querschnitt des Fensters je oberirdischem Geschoss mindestens?", "optionen": ["0,25 m²", "0,50 m²", "1 m²", "2 m²"], "richtig": "0,50 m²", "erkl": "In jedem oberirdischen Geschoss ein Fenster mit freiem Querschnitt von mindestens 0,50 m².", "quelle": "v-idf-vb-42 · Notwendiger Treppenraum (§ 35 MBO)"},
+        {"g": 4, "teil": "rauchabzug", "frage": "Öffnung zur Rauchableitung an oberster Stelle: freier Querschnitt mindestens?", "optionen": ["0,50 m²", "1 m²", "1,5 m²", "2,5 m²"], "richtig": "1 m²", "erkl": "An der obersten Stelle eine Öffnung mit freiem Querschnitt von mindestens 1 m².", "quelle": "v-idf-vb-42 · Notwendiger Treppenraum (§ 35 MBO)"}
+      ]
+    }
+  ]
+}
