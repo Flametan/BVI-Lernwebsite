@@ -2204,7 +2204,8 @@ table.tb td:first-child{font-weight:600;}
   table.tb-cards td{padding:0!important;border:0!important;}
   table.tb-cards td:first-child{font-size:1rem;color:var(--m-fg);padding-bottom:5px!important;}
   table.tb-cards td:not(:first-child){display:flex;gap:8px;padding:5px 0!important;border-top:1px solid var(--m-line)!important;}
-  table.tb-cards td:not(:first-child)::before{content:attr(data-label);flex:0 0 36%;color:var(--m-muted);}
+  table.tb-cards td:not(:first-child)::before{content:attr(data-label);flex:0 0 4.6rem;max-width:24%;color:var(--m-muted);font-size:.82rem;hyphens:auto;overflow-wrap:break-word;}
+  table.tb-cards td .tb-v{flex:1 1 0;min-width:0;}
   table.tb-dl{display:block;background:var(--m-raised);border-radius:14px;overflow:hidden;}
   table.tb-dl tbody{display:block;}
   table.tb-dl tr{display:flex;gap:12px;}

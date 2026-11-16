@@ -2985,7 +2985,7 @@ const TB=(function(){
       const n=Math.max(...rows.map(r=>r.cells.length));
       head.classList.add('tb-head');
       const labels=[...head.cells].map(c=>c.textContent.replace(/\s+/g,' ').trim());
-      rows.forEach((r,ri)=>{ if(ri===hi) return; [...r.cells].forEach((c,i)=>{ if(labels[i]) c.setAttribute('data-label',labels[i]); }); });
+      rows.forEach((r,ri)=>{ if(ri===hi) return; [...r.cells].forEach((c,i)=>{ if(labels[i]) c.setAttribute('data-label',labels[i]); if(i>0&&labels[i]&&!spans){ const w=document.createElement('span'); w.className='tb-v'; while(c.firstChild) w.appendChild(c.firstChild); c.appendChild(w); } }); });
       const kind=spans?'wide':n===2?'dl':n<=4?'cards':'wide';
       t.classList.add('tb-'+kind);
       if(kind==='wide'){
