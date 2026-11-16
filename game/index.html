@@ -54,7 +54,7 @@ if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if
       <button class="btn" id="down" hidden></button>
       <button class="btn pri" id="act" hidden></button>
     </div>
-    <p class="tip" id="tip">Lauf mit dem Stick oder mit WASD zu einer Leuchtsäule und prüfe das Bauteil (Knopf oder Taste E). Ziehen dreht die Kamera. An der Treppe wechselst du das Geschoss (R hoch, F runter).</p>
+    <p class="tip" id="tip">Lauf mit dem Stick oder mit WASD zu einer Leuchtsäule und prüfe das Bauteil (Knopf oder Taste E). Ziehen dreht die Kamera. Über die Treppe kommst du in die anderen Geschosse.</p>
   </div>
   <section class="sheet" id="sheet" hidden aria-live="polite">
     <div class="sheet-h"><h2 id="q-title"></h2><button class="ic" id="q-close" aria-label="Frage schließen">
@@ -71,7 +71,7 @@ if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if
       <label class="row"><span>Vibration</span><input type="checkbox" id="o-vib"/></label>
       <label class="row"><span>Grafik</span><select id="o-qual"><option value="auto">Automatisch</option><option value="niedrig">Niedrig (flüssiger)</option><option value="hoch">Hoch (schärfer)</option></select></label>
       <label class="row"><span>Kamera-Empfindlichkeit</span><input type="range" id="o-sens" min="0.5" max="2" step="0.1"/></label>
-      <p class="src">Steuerung: Stick oder WASD laufen · Ziehen dreht die Kamera · E prüfen · R/F Geschoss · Esc Pause. Gamepad: linker Stick laufen, rechter Stick Kamera, A prüfen, Steuerkreuz Geschoss.</p>
+      <p class="src">Steuerung: Stick oder WASD laufen · Ziehen dreht die Kamera · E prüfen · Esc Pause. Gamepad: linker Stick laufen, rechter Stick Kamera, A prüfen, Start Pause.</p>
       <div class="r-btns"><button class="btn" id="m-full">Vollbild</button><button class="btn" id="m-restart">Level neu starten</button><button class="btn" id="m-exit">Zur Übersicht</button><button class="btn pri" id="m-resume">Weiter</button></div>
     </div>
   </section>
