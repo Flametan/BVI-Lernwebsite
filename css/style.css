@@ -4355,7 +4355,11 @@ button.acc-r:hover,a.acc-r:hover{background:var(--m-raised);}
 .m-tb-search.m-hacc{position:relative;}
 .m-tb-search.m-hacc .acc-av{width:100%;height:100%;}
 .m-tb-search .acc-dot{right:0;top:0;}
-html.lp-lock #m-topbar .m-hacc,body:has(.lp-win.focus) #m-topbar .m-hacc{display:none;}
+body:has(.lp-win.focus) #m-topbar .m-hacc{display:none;}
+/* Kapitelfenster: Account-Knopf in der eigenen Kopfzeile (Handy und Fokus-Modus); Tablet/PC zeigt den Knopf der Kopfleiste */
+.lp-wh .lp-acc{display:none;}
+@media(max-width:700px){.lp-wh .lp-acc{display:grid;}}
+.lp-win.focus .lp-wh .lp-acc{display:grid;}
 body:has(.lp-win.on:not(.focus)) #m-topbar .m-hacc{pointer-events:auto;}
 #m-topbar.m-tb-root #m-back{display:none;}
 #m-topbar:not(.hidden){position:sticky;top:0;z-index:var(--z-bars);padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:6px;background:var(--m-bg);}
