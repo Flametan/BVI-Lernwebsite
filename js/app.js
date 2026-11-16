@@ -1053,7 +1053,7 @@ const PROGRESS = (function(){
     sfs:  ['v-sfs-fwdv3','v-sfs-methodik','v-sfs-rechtsgrundlagen','v-sfs-abc'],
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-ibk-fuehren-gruppen','v-ibk-fuehrung','v-ibk-autoritaeten','v-ibk-fuehrungsstile','v-ibk-onboarding'],
-    vak:  ['v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-lernarbeitsblatt'],
+    vak:  ['v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-lernarbeitsblatt'],
     feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse','v-feuak-bwl','v-feuak-rechnungswesen','v-feuak-pruefung','v-feuak-lernblatt-hh','v-feuak-lernblatt-2026'],
     idf:  ['v-idf-vblernen','v-idf-gk','v-idf-sonderbau','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte','v-idf-sim-pressesim','v-idf-sim-warnsim','v-idf-vb-41','v-idf-vb-42','v-idf-vb-43','v-idf-vb-44','v-idf-vb-45','v-idf-vb-46','v-idf-vb-47','v-idf-p61','v-idf-p62','v-idf-z90','v-idf-z91','v-idf-z92','v-idf-z93','v-idf-z94','v-idf-z95','v-idf-z96','v-idf-z97','v-idf-z98','v-idf-z99','v-idf-u101','v-idf-u102'],
   };
@@ -1129,7 +1129,7 @@ const SEARCH = (function(){
     'v-vak-klausurvorbereitung':'VAk · Klausurvorbereitung','v-vak-jur-denken':'VAk · Juristisches Denken',
     'v-vak-verwaltungsrecht':'VAk · Allgemeines Verwaltungsrecht','v-vak-staatsrecht':'VAk · Staatsrecht',
     'v-vak-einsatzrecht':'VAk · Einsatzrecht','v-vak-dienstrecht':'VAk · Öffentliches Dienstrecht',
-    'v-vak-klausurhinweise':'VAk · Klausurhinweise','v-vak-rettungsdienstrecht':'VAk · Rettungsdienstrecht','v-vak-fallbearbeitung':'VAk · Fallbearbeitung',
+    'v-vak-klausurhinweise':'VAk · Klausurhinweise','v-vak-fallbearbeitung':'VAk · Fallbearbeitung',
     'v-feuak-vwl':'FeuAK · VWL','v-feuak-haushalt':'FeuAK · Haushalt',
     'v-feuak-pm':'FeuAK · Strategisches Management',
     'v-feuak-bedarfsplanung':'FeuAK · Brandschutzbedarfsplanung',

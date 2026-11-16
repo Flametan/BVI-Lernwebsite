@@ -254,7 +254,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   const sj = await page.evaluate(async () => {
     NAV.home();
     SEARCH.open();
-    const inp = document.getElementById('search-input'); inp.value = 'Untätigkeitsklage'; SEARCH.query(inp.value);
+    const inp = document.getElementById('search-input'); inp.value = 'Nebenbestimmungen'; SEARCH.query(inp.value);
     await new Promise(r => setTimeout(r, 600));
     const hit = document.querySelector('#search-results [onclick*="SEARCH.go"]'); hit && hit.click();
     await new Promise(r => setTimeout(r, 700));
