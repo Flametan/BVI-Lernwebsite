@@ -4272,6 +4272,21 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
   .lp-win:not(.focus) .lp-wh{padding-left:max(24px,calc((100% - 1280px)/2));}
   .lp-win.focus .lp-wh{padding-left:max(24px,calc((100% - 1060px)/2));}
 }
+/* Kopfzeile (Zurück links, Knöpfe und Profil rechts) endet bündig mit dem Text darunter – auf allen Geräten */
+@media(max-width:700px){
+  .lp-win:not(.focus) .lp-wh{padding-left:16px;padding-right:16px;}
+  .lp-win.focus .lp-wh{padding-left:24px;padding-right:24px;}
+}
+@media(min-width:701px){
+  .lp-win.focus .lp-wh{padding-left:max(24px,calc((100% - 720px)/2));padding-right:max(24px,calc((100% - 720px)/2));}
+  .lp-win:not(.focus) .lp-wh{padding-left:max(16px,calc((100% - 780px)/2));padding-right:max(16px,calc((100% - 780px)/2));}
+  body:has(.lp-win.on:not(.focus)) #m-topbar{max-width:none;margin-left:0;margin-right:0;padding-left:max(16px,calc((100% - 780px)/2));padding-right:max(16px,calc((100% - 780px)/2));}
+}
+@media(min-width:1100px){
+  .lp-win:not(.focus) .lp-wh{padding-left:max(24px,calc((100% - 1280px)/2));padding-right:max(24px,calc((100% - 1280px)/2));}
+  .lp-win.focus .lp-wh{padding-left:max(24px,calc((100% - 1060px)/2));padding-right:max(24px,calc((100% - 1060px)/2));}
+  body:has(.lp-win.on:not(.focus)) #m-topbar{padding-left:max(24px,calc((100% - 1280px)/2));padding-right:max(24px,calc((100% - 1280px)/2));}
+}
 @media(min-width:701px){
   .lp-pg{justify-content:center;gap:14px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));}
   .lp-pg button,.lp-win.focus .lp-pg button{position:relative;flex:0 1 360px;width:auto;min-width:0;max-width:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:11px 44px;border-radius:14px;font-size:.78rem;font-weight:600;background:var(--m-raised);color:var(--m-muted);box-shadow:none;}
