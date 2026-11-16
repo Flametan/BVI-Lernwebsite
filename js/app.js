@@ -17,7 +17,7 @@ const POPGUARD=(function(){
 })();
 
 const _NAVY_VIEWS = new Set(['v-simulator','v-flashcards','v-abkuerzungen','v-app','v-klausurfragen','v-klausur-0826','v-laufbahn-2023','v-laufbahn-2026']);
-const _GOLD_VIEWS = new Set(['v-vak-klausurvorbereitung','v-feuak-bp-hub','v-feuak-analyse','v-idf-vb','v-idf-stabhub']);
+const _GOLD_VIEWS = new Set(['v-vak-klausurvorbereitung','v-feuak-bp-hub','v-idf-vb','v-idf-stabhub']);
 
 /* ── Speicher absichern: voller oder gesperrter localStorage darf die App nicht lahmlegen ── */
 (function(){
@@ -873,16 +873,16 @@ const FLASHCARD_DATA = [
   {"id":"k-feuak-02","cat":"FeuAK · Haushalt","q":"Welcher Konflikt besteht zwischen Feuerwehr und Haushaltswesen?","a":"<strong>Schnelles Handeln</strong> (Sicherstellungsauftrag, Flexibilität) gegen <strong>Verwaltungsdenken</strong>."},
   {"id":"k-feuak-03","cat":"FeuAK · Haushalt","q":"Welche Konsequenz hat das Vergaberecht für die Haushaltsplanung der Feuerwehr?","a":"<strong>Keine Vergabe ohne Haushaltsmittel.</strong> Konsequenz: Rahmenverträge, technische Reserve, Vorausplanung."},
   {"id":"k-feuak-04","cat":"FeuAK · Haushalt","q":"Was bedeutet der Steuerungsauftrag der Feuerwehr im Haushalt?","a":"Die Feuerwehr gibt der Politik Strukturen vor: <strong>strategisch</strong> über den Haushalt, <strong>operativ</strong> über die KLR."},
-  {"id":"k-feuak-10","cat":"FeuAK · Haushalt","q":"Wie lauten die vier Schritte des Wegs eines Haushalts?","a":"1. <strong>Bedarfsanmeldung</strong> 2. <strong>Priorisierung</strong> 3. <strong>Ansatzermittlung</strong> 4. <strong>Beschluss</strong> des Gemeinderats als Satzung."},
+  {"id":"k-feuak-10","cat":"FeuAK · Haushalt","q":"Wie lauten die vier Schritte des Wegs eines Haushalts?","a":"1. <strong>Bedarfsanmeldung und Ansatzermittlung</strong> durch die Feuerwehr in Abstimmung mit Verwaltungsebenen 2. <strong>Beratung durch die Politik</strong> (ggf. Anpassung/Priorisierung) und Gremienbeschluss 3. <strong>Genehmigung</strong> durch die Aufsichtsbehörden 4. <strong>Veröffentlichung</strong> des Haushaltsplans (Rechtskraft)."},
   {"id":"k-feuak-11","cat":"FeuAK · Haushalt","q":"Was geschieht bei der Bedarfsanmeldung?","a":"Die Feuerwehr meldet Ausrüstung und Technik für das kommende Jahr an, getrennt nach <strong>fixen Kosten</strong> (Mieten, Verträge) und <strong>variablen Kosten</strong> (Projekte, Sonderbeschaffungen), mit fachlicher Begründung."},
-  {"id":"k-feuak-12","cat":"FeuAK · Haushalt","q":"Wer priorisiert die Anträge im Haushaltsverfahren und wonach?","a":"Gemeinde (Kämmerei/Verwaltungsführung) und <strong>Wehrleitung</strong> nach Dringlichkeit und Relevanz; politische und finanzielle Abwägungen fließen ein."},
+  {"id":"k-feuak-12","cat":"FeuAK · Haushalt","q":"Wer priorisiert die Anträge im Haushaltsverfahren und wonach?","a":"Die <strong>Politik</strong> berät die angemeldeten Bedarfe und passt sie ggf. an bzw. priorisiert sie; die Entscheidungshoheit liegt bei der Politik, die Feuerwehr meldet begründet an."},
   {"id":"k-feuak-13","cat":"FeuAK · Haushalt","q":"Was ist die Ansatzermittlung?","a":"Die <strong>Kämmerei</strong> legt konkrete Geldbeträge im Haushaltsplanentwurf fest; der Entwurf geht in die politische Beratung."},
-  {"id":"k-feuak-14","cat":"FeuAK · Haushalt","q":"Wann stehen Haushaltsmittel verbindlich zur Verfügung?","a":"Nach dem Beschluss des Gemeinderats als <strong>Satzung</strong>. Erst dann ist eine Vergabe möglich."},
+  {"id":"k-feuak-14","cat":"FeuAK · Haushalt","q":"Wann stehen Haushaltsmittel verbindlich zur Verfügung?","a":"Nach Beschluss durch die Gremien, Genehmigung durch die Aufsichtsbehörde und <strong>Veröffentlichung</strong> (Rechtskraft). Erst dann ist eine Vergabe möglich; bis dahin gilt die vorläufige Haushaltsführung."},
   {"id":"k-feuak-15","cat":"FeuAK · Haushalt","q":"Wodurch ist die Kameralistik gekennzeichnet?","a":"Zahlungsorientiertes Buchungssystem: <strong>Kassensteuerung</strong> (Ein-/Auszahlungen), Fokus auf Geldverbrauch ohne Vermögensausweis und <strong>ohne Abschreibungen</strong>, strikte <strong>Mittelkontrolle</strong>. Sie misst nicht den inhaltlichen Einsatzerfolg."},
   {"id":"k-feuak-16","cat":"FeuAK · Haushalt","q":"Wodurch ist die Doppik gekennzeichnet?","a":"Kaufmännisches Rechnungswesen aus <strong>Bilanz, Ergebnisrechnung und Finanzrechnung</strong>. Sie zeigt <strong>Ressourcenverbrauch</strong> (Abschreibungen), <strong>Transparenz</strong> (Vermögen, Schulden, Pensionsrückstellungen) und fördert <strong>Generationengerechtigkeit</strong>."},
   {"id":"k-feuak-17","cat":"FeuAK · Haushalt","q":"Worin liegt der Kernunterschied zwischen Kameralistik und Doppik?","a":"Kameralistik: Geldverbrauch und Liquidität, kein Werteverzehr. Doppik: <strong>periodengerechter Ressourcenverbrauch</strong>, macht Substanzverlust sichtbar."},
-  {"id":"k-feuak-18","cat":"FeuAK · Haushalt","q":"Wofür steht die Abkürzung NKF/NKHR im Zusammenhang mit der Doppik?","a":"Sie stehen für die Doppik (doppelte Buchführung) in der Kommunalverwaltung."},
-  {"id":"k-feuak-19","cat":"FeuAK · Haushalt","q":"Welche drei Säulen hat das 3-Säulen-Modell des doppischen Haushalts?","a":"<strong>Finanzhaushalt</strong> (Liquidität, Ein-/Auszahlungen), <strong>Ergebnishaushalt</strong> (Aufwand/Ertrag, Ausgleich am Jahresende), <strong>Vermögenshaushalt/Bilanz</strong> (Aktiva/Passiva)."},
+  {"id":"k-feuak-18","cat":"FeuAK · Haushalt","q":"Wofür steht die Abkürzung NKF/NKHR im Zusammenhang mit der Doppik?","a":"Das <strong>Neue Steuerungsmodell (NSM)</strong> ist das Reformleitbild; das doppische Haushaltsrecht heißt in NRW <strong>Neues Kommunales Finanzmanagement (NKF)</strong> (in einigen Ländern wird NKF auch für das NSM verwendet)."},
+  {"id":"k-feuak-19","cat":"FeuAK · Haushalt","q":"Welche drei Säulen hat das 3-Säulen-Modell des doppischen Haushalts?","a":"<strong>Liquiditätsrechnung</strong> (Einnahmen und Ausgaben; im Haushaltsplan Finanzrechnung/Finanzhaushalt), <strong>Ergebnisrechnung</strong> (Ressourcenverbrauch), <strong>Bilanz</strong> (Vermögensverhältnisse, Aktiva/Passiva)."},
   {"id":"k-feuak-20","cat":"FeuAK · VWL","q":"Was bedeutet indirekte Wertschöpfung der Feuerwehr?","a":"Die Feuerwehr produziert keine Güter, <strong>verhindert aber deren Zerstörung</strong>. Der Schutz von Sachwerten und Infrastruktur ist eine real erbrachte, nicht direkt sichtbare Wirtschaftsleistung."},
   {"id":"k-feuak-21","cat":"FeuAK · VWL","q":"Welche Rolle spielt der Faktor Zeit bei der indirekten Wertschöpfung?","a":"Schnelle Eingreifzeiten begrenzen den Schaden; jede Minute früherer Intervention reduziert direkte Sach- und Folgeschäden."},
   {"id":"k-feuak-22","cat":"FeuAK · VWL","q":"Was bedeutet Betriebserhalt als Kategorie der indirekten Wertschöpfung?","a":"Ein gelöschtes Firmengebäude verhindert Produktionsausfälle, Lieferkettenausfälle und ggf. dauerhafte Betriebsschließungen."},
@@ -906,7 +906,7 @@ const FLASHCARD_DATA = [
   {"id":"k-feuak-40","cat":"FeuAK · PM","q":"Welche drei Kernkennzahlen nutzt die strategische Personalplanung?","a":"<strong>Ist-Personalfaktor</strong>, <strong>Ist-Stellenfaktor</strong>, <strong>Soll-Stellenfaktor</strong>."},
   {"id":"k-feuak-41","cat":"FeuAK · PM","q":"Wie berechnet sich der Ist-Personalfaktor?","a":"<strong>8.760 h ÷ Netto-JAZ</strong> (Netto-JAZ = JAZ minus alle Ausfälle) = tatsächlich benötigte Mitarbeiter je Funktion."},
   {"id":"k-feuak-42","cat":"FeuAK · PM","q":"Wie berechnet sich der Ist-Stellenfaktor?","a":"<strong>Planstellen ÷ zu besetzende Funktionen</strong>."},
-  {"id":"k-feuak-43","cat":"FeuAK · PM","q":"Was ist der Soll-Stellenfaktor?","a":"Der politisch beschlossene Faktor mit festem <strong>Besetzungsgrad (ca. 95 %)</strong>."},
+  {"id":"k-feuak-43","cat":"FeuAK · PM","q":"Was ist der Soll-Stellenfaktor?","a":"Der politisch beschlossene Faktor; der Stellenbesetzungsgrad liegt in der Regel zwischen <strong>95 % und unter 100 %</strong>."},
   {"id":"k-feuak-44","cat":"FeuAK · PM","q":"Welche Ausfallgründe gehen in die Netto-JAZ ein?","a":"Krankheit, Urlaub, Aus-/Fortbildung, außerhalb Einsatzdienst, Mutterschutz/Elternzeit, Sonstiges."},
   {"id":"k-feuak-45","cat":"FeuAK · PM","q":"Wie wirken Mehrarbeit, Transferleistungen und Funktionsunterschreitung auf den Personalfaktor?","a":"Mehrarbeit-Aufbau erhöht den Faktor, -Abbau verringert ihn; Transferleistungen verringern ihn; Funktionsunterschreitungsstunden erhöhen ihn (keine Verrechnung mit Überschreitungen)."},
   {"id":"k-feuak-46","cat":"FeuAK · PM","q":"Wie nutzt man die Personalkennzahlen strategisch?","a":"Zeitreihenvergleiche, Risikoerkennung, Argumente im <strong>Stellenplanverfahren</strong>; Erhebung mindestens <strong>1× jährlich</strong>."},
@@ -931,6 +931,19 @@ const FLASHCARD_DATA = [
   {"id":"k-feuak-69","cat":"FeuAK · Bedarfsplanung","q":"Wie deutet man gute Erreichung ab zuständiger Wache bei schlechter Gesamterreichung?","a":"Als <strong>Ressourcenverfügbarkeitsproblem</strong>."},
   {"id":"k-feuak-70","cat":"FeuAK · Bedarfsplanung","q":"Wie deutet man schlechte Erreichung auch ab zuständiger Wache?","a":"Als <strong>Standort-/Erreichbarkeitsproblem</strong>. Ergebnis der Analyse: räumliche Versorgungslücken und Eingrenzung der Ursachenart."},
   {"id":"k-feuak-71","cat":"FeuAK · Bedarfsplanung","q":"Was leistet die Problemfeldanalyse?","a":"Sie quantifiziert die Verursachungsbeiträge der Nicht-Erreichung: <strong>Standortstruktur und Verkehr</strong>, <strong>Ausrückzeit</strong>, <strong>Ressourcenverfügbarkeit</strong>. Ergebnis: priorisierte, zielgerichtete Maßnahmen für das Soll-Konzept."},
+  {"id":"k-feuak-72","cat":"FeuAK · Vergabe","q":"Wie lauten die EU-Schwellenwerte (netto) für die Oberschwellenvergabe?","a":"Liefer- und Dienstleistungen <strong>216.000 €</strong>, Bauleistungen <strong>5.404.000 €</strong>, Sicherheit und Verteidigung <strong>432.000 €</strong>. Die Feuerwehr fällt nicht unter Sicherheit und Verteidigung, für sie gilt <strong>216.000 €</strong>."},
+  {"id":"k-feuak-73","cat":"FeuAK · Vergabe","q":"Welche Rechtsgrundlage gilt für Ober- und Unterschwellenvergabe?","a":"Oberschwelle: <strong>VgV</strong> (offenes, nicht offenes Verfahren, Verhandlungsverfahren). Unterschwelle: <strong>UVgO</strong> (Direktauftrag bis 1.000 € netto, öffentliche/beschränkte Ausschreibung, Verhandlungsvergabe)."},
+  {"id":"k-feuak-74","cat":"FeuAK · Vergabe","q":"Wie lässt sich die Vergabe ganzheitlich dritteln?","a":"<strong>Vor der Vergabe</strong> (Markterkundung, Vergabekonzept), <strong>Vergabeverfahren</strong> (Vergabeunterlagen, Durchführung, Vertragsabschluss), <strong>nach der Vergabe</strong> (Vertrags- und Lieferantenmanagement)."},
+  {"id":"k-feuak-75","cat":"FeuAK · Vergabe","q":"Welche Grundsätze sind im Vergaberecht zu beachten?","a":"Wettbewerbsgrundsatz, Transparenzgebot, Verhältnismäßigkeit und Gleichbehandlung, Berücksichtigung strategischer Ziele, Mittelstandsfreundlichkeit und Einsatz elektronischer Mittel, Einhaltung der Vergaberegeln."},
+  {"id":"k-feuak-76","cat":"FeuAK · Haushalt","q":"Was ist in der vorläufigen Haushaltsführung zulässig und was nicht?","a":"Zulässig: Ausgaben aus rechtlicher Verpflichtung, zur Aufrechterhaltung des Dienstbetriebs und zur Vermeidung von Folgeschäden, begonnene Investitionen fortführen, Einnahmen erzielen. Unzulässig: <strong>neue, erhebliche Investitionen</strong>, Besetzung neuer Stellen eines noch nicht rechtskräftigen Stellenplans, Vergabe ohne Haushaltsmittel, freiwillige Leistungen."},
+  {"id":"k-feuak-77","cat":"FeuAK · Haushalt","q":"Woraus besteht ein Haushaltsplan und welche Struktur hat er?","a":"Haushaltssatzung, Vorbericht, Ergebnishaushalt, Gesamtübersicht und Finanzhaushalt, Investitionsprogramm, Stellenplan, mittelfristige Finanzplanung, Übersichten zu Krediten, Rücklagen, Rückstellungen und Verbindlichkeiten. Struktur: <strong>horizontal</strong> (Produktgruppen/Produkte) und <strong>vertikal</strong> (Erlös-/Kostenart)."},
+  {"id":"k-feuak-78","cat":"FeuAK · Haushalt","q":"Wie lange müssen Unterlagen aufbewahrt werden?","a":"Buchungsbelege <strong>8 Jahre</strong>; Konten, Bücher, Inventare, Eröffnungsbilanzen und Jahresabschlüsse <strong>10 Jahre</strong>."},
+  {"id":"k-feuak-79","cat":"FeuAK · Bedarfsplanung","q":"Welche Planungsziele nennen die AGBF-Empfehlungen und was änderte sich von 1998 zu 2015?","a":"<strong>10 Funktionen in 8 Minuten</strong>, weitere <strong>6 Funktionen nach 5 Minuten</strong> (13 Minuten). Erreichungsgrad 95 % (1998) → <strong>90 %</strong> (2015); wissenschaftlicher Anspruch weggefallen; Szenario kritischer Wohnungsbrand mit einer → <strong>mehreren</strong> vermissten Personen; mindestens 50 bemessungsrelevante Einsätze als Datenbasis."},
+  {"id":"k-feuak-80","cat":"FeuAK · Bedarfsplanung","q":"Was ergänzt das AGBF-Beiblatt von 2023?","a":"Erkundungs- und Entwicklungszeiten in Abhängigkeit von der Gebäudekomplexität; unterschiedliche Wertigkeit der Zeiten städtisch und ländlich („8 Minuten städtisch sind genauso gut wie 13 Minuten ländlich“)."},
+  {"id":"k-feuak-81","cat":"FeuAK · Bedarfsplanung","q":"Wie ist das Sicherheitsniveau der RTW-Bedarfsplanung und die KTW-Auslastung festgelegt?","a":"RTW risikoabhängig: Eintrittswahrscheinlichkeit <strong>einmal in 9 Schichten</strong>. KTW frequenzabhängig, stundenweise berechnet, Auslastung etwa <strong>75 %</strong>."},
+  {"id":"k-feuak-82","cat":"FeuAK · Bedarfsplanung","q":"Welche fünf Phasen hat der KatS-Bedarfsplanungs-Workshop?","a":"1. Brainstorming von Szenarien 2. Szenarienauswahl (Risikomatrix) 3. Szenarienfolgenbetrachtung (Fähigkeitsbedarfe) 4. Ableitung der Planungsziele 5. Maßnahmenableitung (Soll-Ist-Abgleich)."},
+  {"id":"k-feuak-83","cat":"FeuAK · Vergabe","q":"Wie läuft die Nutzwertanalyse im Vergabevorschlag (Beispiel)?","a":"Gewichtung × Note je Kriterium: Preis 40, Wartung 30, Garantie 30. Anbieter A 1,6 + 0,6 + 0,9 = <strong>3,1</strong>, Anbieter B 1,2 + 1,2 + 0,6 = <strong>3,0</strong>. Wertungsstufen: formelle Prüfung, Eignung, angemessener Preis, Wirtschaftlichkeit; Dokumentation im Vergabevermerk."},
+  {"id":"k-feuak-84","cat":"FeuAK · PM","q":"Wie sah die Prüfungsleistung 2025 aus?","a":"<strong>Zwei Ausarbeitungen (Gruppenarbeiten)</strong> zum strategischen Management und <strong>eine Klausur</strong> zu allen anderen Themen."},
   {"id":"k-idf-01","cat":"IdF · Brandschutz","q":"Welche Gebäudeklasse hat ein freistehendes Gebäude mit OKFF 6,5 m und zwei Nutzungseinheiten von 130 m² und 280 m²?","a":"<strong>GK 3.</strong> Die Summe der Nutzungseinheiten beträgt 410 m² und überschreitet damit die 400-m²-Grenze von GK 1 und GK 2. Es ist ein sonstiges Gebäude mit Höhe ≤ 7 m."},
   {"id":"k-idf-02","cat":"IdF · Brandschutz","q":"Was kennzeichnet die <strong>Gebäudeklasse 2</strong>?","a":"Höhe (OKFF) bis 7 m, <strong>höchstens 2 Nutzungseinheiten</strong> mit zusammen <strong>höchstens 400 m²</strong>. Anders als GK 1 nicht freistehend."},
   {"id":"k-idf-03","cat":"IdF · Brandschutz","q":"Welche Gebäudeklasse hat ein Gebäude mit OKFF 8,5 m und einer Nutzungseinheit von 700 m²?","a":"<strong>GK 5.</strong> Die Höhe würde GK 4 (bis 13 m) erlauben, aber nur bei Nutzungseinheiten von jeweils höchstens 400 m². Die 700-m²-Einheit überschreitet das."},
@@ -1054,7 +1067,7 @@ const PROGRESS = (function(){
     hlfs: ['v-hlfs-fuehrungsvorgang','v-hlfs-gabc','v-hlfs-tunnel','v-hlfs-vb','v-hlfs-manv','v-hlfs-zugfuehrer','v-hlfs-stab'],
     ibk:  ['v-ibk-ta','v-ibk-konflikt','v-ibk-stress','v-ibk-psnv','v-ibk-bgm','v-ibk-pm','v-ibk-zeit','v-ibk-fuehren-gruppen','v-ibk-fuehrung','v-ibk-autoritaeten','v-ibk-fuehrungsstile','v-ibk-onboarding'],
     vak:  ['v-vak-jur-denken','v-vak-verwaltungsrecht','v-vak-staatsrecht','v-vak-einsatzrecht','v-vak-dienstrecht','v-vak-rettungsdienstrecht','v-vak-lernarbeitsblatt'],
-    feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-stakeholder','v-feuak-risikoanalyse','v-feuak-bwl','v-feuak-rechnungswesen','v-feuak-pruefung','v-feuak-lernblatt-hh','v-feuak-lernblatt-2026'],
+    feuak:['v-feuak-vwl','v-feuak-haushalt','v-feuak-pm','v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp','v-feuak-planspiel','v-feuak-qm','v-feuak-beschaffung','v-feuak-bwl','v-feuak-rechnungswesen','v-feuak-pruefung','v-feuak-lernblatt-hh','v-feuak-lernblatt-2026'],
     idf:  ['v-idf-vblernen','v-idf-gk','v-idf-sonderbau','v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte','v-idf-sim-pressesim','v-idf-sim-warnsim','v-idf-vb-41','v-idf-vb-42','v-idf-vb-43','v-idf-vb-44','v-idf-vb-45','v-idf-vb-46','v-idf-vb-47','v-idf-p61','v-idf-p62','v-idf-z90','v-idf-z91','v-idf-z92','v-idf-z93','v-idf-z94','v-idf-z95','v-idf-z96','v-idf-z97','v-idf-z98','v-idf-z99','v-idf-u101','v-idf-u102'],
   };
   // Prüfungs-Karten (Quiz, Klausuren, Fallbearbeitung, Simulator): kein Haken, nicht im Fortschritt
@@ -1076,7 +1089,6 @@ const PROGRESS = (function(){
   // Sammelkacheln: Haken, sobald alle enthaltenen Themen besucht wurden
   const HUBS = {
     'v-feuak-bp-hub':['v-feuak-bedarfsplanung','v-feuak-rdbp','v-feuak-katsbp'],
-    'v-feuak-analyse':['v-feuak-stakeholder','v-feuak-risikoanalyse'],
     'v-idf-vb':['v-idf-vb-42','v-idf-vb-41','v-idf-vb-45','v-idf-vb-43','v-idf-vb-46','v-idf-vb-47','v-idf-vb-44','v-idf-vblernen','v-idf-gk','v-idf-sonderbau'],
     'v-idf-stabhub':['v-idf-s51','v-idf-s52','v-idf-s53','v-idf-s54','v-idf-s55','v-idf-sim-stabbau','v-idf-stabskarte'],
     'v-idf-presse':['v-idf-p61','v-idf-p62'],
@@ -1133,14 +1145,12 @@ const SEARCH = (function(){
     'v-feuak-vwl':'FeuAK · VWL','v-feuak-haushalt':'FeuAK · Haushalt',
     'v-feuak-pm':'FeuAK · Strategisches Management',
     'v-feuak-bedarfsplanung':'FeuAK · Brandschutzbedarfsplanung',
-    'v-feuak-rdbp':'FeuAK · RD-Bedarfsplanung',
-    'v-feuak-katsbp':'FeuAK · KatS-Bedarfsplanung',
+    'v-feuak-rdbp':'FeuAK · Rettungsdienstbedarfsplanung',
+    'v-feuak-katsbp':'FeuAK · Katastrophenschutzbedarfsplanung',
     'v-feuak-altklausur':'FeuAK · Altklausur-Training',
     'v-feuak-planspiel':'FeuAK · Planspiel MANV',
     'v-feuak-qm':'FeuAK · Qualitätsmanagement',
-    'v-feuak-beschaffung':'FeuAK · Beschaffungspraxis',
-    'v-feuak-stakeholder':'FeuAK · Stakeholder-Analyse',
-    'v-feuak-risikoanalyse':'FeuAK · Prospektive Risikoanalyse',
+    'v-feuak-beschaffung':'FeuAK · Vergabe',
     'v-idf-vb':'IdF · Vorbeugender Brandschutz',
     'v-idf-stabhub':'IdF · Stabsarbeit',
     'v-idf-stabskarte':'IdF · Taschenkarte Stabsarbeit',
@@ -3263,7 +3273,7 @@ const LP=(function(){
     'v-vak-einsatzrecht':['VAk · Einsatzrecht Berlin','VAk · Gefahrenabwehr','VAk · Fallbearbeitung'],'v-vak-dienstrecht':['VAk · Dienstrecht','VAk · Dienstrecht Fallklausur Berlin'],
     'v-ibk-ta':['IBK · Transaktionsanalyse'],'v-ibk-konflikt':['IBK · Konflikte'],
     'v-feuak-vwl':['FeuAK · VWL'],'v-feuak-haushalt':['FeuAK · Haushalt'],'v-feuak-pm':['FeuAK · PM'],'v-feuak-bedarfsplanung':['FeuAK · Bedarfsplanung'],
-    'v-feuak-qm':['FeuAK · QM'],'v-feuak-beschaffung':['FeuAK · Vergabe'],
+    'v-feuak-qm':['FeuAK · QM','FeuAK · PM'],'v-feuak-beschaffung':['FeuAK · Vergabe'],
     'v-idf-vb-41':['IdF · Brandschutz'],'v-idf-vb-42':['IdF · Brandschutz'],'v-idf-vb-43':['IdF · Brandschutz'],'v-idf-vb-44':['IdF · Brandschutz'],'v-idf-vb-45':['IdF · Brandschutz'],'v-idf-vb-46':['IdF · Brandschutz'],'v-idf-vb-47':['IdF · Brandschutz'],'v-idf-s51':['IdF · Stabsarbeit'],'v-idf-s52':['IdF · Stabsarbeit'],'v-idf-s53':['IdF · Stabsarbeit'],'v-idf-s54':['IdF · Stabsarbeit'],'v-idf-s55':['IdF · Stabsarbeit']
   };
 
