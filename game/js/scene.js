@@ -1,24 +1,15 @@
 /* IdF-Spiel – gemeinsame 3D-Grundlage für alle Missionen (Three.js r128):
    Bühne mit Spielschleife, Licht und Schatten, Steuerung (Stick, Tastatur, Maus, Gamepad), modellierte Spielfigur,
-   Oberflächen (im Browser erzeugte Texturen), Himmel- und Leuchtsäulen-Shader, Ton und Kollision.
-   Leistung: Pixel-Ratio passt sich an (0,75 bis 1,5), Schatten schalten sich bei zu niedriger Bildrate ab. */
+   Oberflächen (im Browser erzeugte Texturen), Leuchtsäulen-Shader, Ton und Kollision, Kameraführung (Anflug, Schwenk zur Aufgabe).
+   Effekte (Himmel, Licht, Nachbearbeitung, Partikel, Spiegelungen) kommen aus fx.js.
+   Leistung: Pixel-Ratio passt sich an (0,75 bis 1,5); bei zu niedriger Bildrate fallen erst die Effekte, dann die Schatten weg. */
 const STAGE = (function(){
   function css(name, fb){ const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim(); return v || fb; }
   const C = hex => new THREE.Color(hex).convertSRGBToLinear();      // Farben sind sRGB gemeint, gerechnet wird linear
 
-  /* ---------- Shader: Himmel mit Sonne und ziehenden Wolken, Leuchtsäule ---------- */
-  const SKY = {
-    vs: 'varying vec3 vD; void main(){ vD = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
-    fs: 'uniform vec3 uSun; uniform float uTime; varying vec3 vD;'
-      + 'float h(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }'
-      + 'float n(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f); return mix(mix(h(i),h(i+vec2(1,0)),f.x), mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x), f.y); }'
-      + 'float fbm(vec2 p){ float a = 0.5, s = 0.0; for(int i=0;i<4;i++){ s += a*n(p); p *= 2.03; a *= 0.5; } return s; }'
-      + 'void main(){ vec3 d = normalize(vD); float y = max(d.y, 0.0);'
-      + ' vec3 col = mix(vec3(0.74,0.84,0.93), vec3(0.20,0.45,0.82), pow(y, 0.55));'
-      + ' float s = max(dot(d, normalize(uSun)), 0.0); col += vec3(1.0,0.85,0.6) * (pow(s, 350.0)*1.6 + pow(s, 9.0)*0.22);'
-      + ' if(d.y > 0.02){ vec2 uv = d.xz / (d.y + 0.12) * 1.4 + vec2(uTime*0.012, 0.0); float c = smoothstep(0.50, 0.78, fbm(uv)); col = mix(col, vec3(1.0), c * smoothstep(0.02, 0.22, d.y) * 0.9); }'
-      + ' col = mix(vec3(0.80,0.86,0.90), col, smoothstep(-0.05, 0.12, d.y)); gl_FragColor = vec4(col, 1.0); }'
-  };
+  /* ---------- Shader: Leuchtsäule ---------- */
+  let NASS = false;                                       // Regen: Asphalt und Pflaster glänzen
+  const ebene1 = o => { o.traverse(x => x.layers.set(1)); return o; };   // Schilder, Säulen, Pfeile: nicht im Tiefenbild und nicht in Spiegelungen
   const BEAM = {
     vs: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
     fs: 'uniform float uTime; uniform vec3 uColor; uniform float uPulse; varying vec2 vUv;'
@@ -35,7 +26,7 @@ const STAGE = (function(){
     ring.rotation.x = -Math.PI / 2; ring.position.y = 0.04; g.add(ring);
     g.userData = { mat, ring };
     g.setColor = (c, pulse) => { mat.uniforms.uColor.value.set(c); mat.uniforms.uPulse.value = pulse ? 1 : 0; ring.material.color.set(c); };
-    return g;
+    return ebene1(g);
   }
 
   /* ---------- Oberflächen: kleine Texturen, im Browser gezeichnet (keine Bilddateien) ---------- */
@@ -60,11 +51,16 @@ const STAGE = (function(){
   // Material mit Textur; rx, ry = Wiederholungen
   function surf(kind, rx, ry, opt){
     const t = tex(kind).clone(); t.needsUpdate = true; t.repeat.set(rx || 1, ry || rx || 1);
-    return new THREE.MeshStandardMaterial(Object.assign({ map:t, roughness:0.92, metalness:0 }, opt || {}));
+    // Glatte Böden spiegeln leicht; bei Regen glänzen auch Asphalt und Pflaster
+    const glatt = kind === 'fliese' ? [0.4, 0.16] : kind === 'holz' ? [0.55, 0.12] : NASS && (kind === 'asphalt' || kind === 'pflaster') ? [0.3, 0.5] : null;
+    const m = new THREE.MeshStandardMaterial(Object.assign({ map:t, roughness:glatt ? glatt[0] : 0.92, metalness:0 }, opt || {}));
+    if(glatt) m.userData.spiegel = glatt[1];
+    return m;
   }
   const mat = (hex, opt) => new THREE.MeshStandardMaterial(Object.assign({ color:C(hex), roughness:0.85, metalness:0 }, opt || {}));
 
-  // Text als Schild, das immer zur Kamera zeigt
+  // Text als Schild, das immer zur Kamera zeigt; direkt vor der Kamera blendet es sich aus (sonst füllt es das Bild)
+  let SCHILDER = [];
   function label(text, opt){
     opt = opt || {};
     const c = document.createElement('canvas'), F = '600 44px Roboto, system-ui, sans-serif'; let x = c.getContext('2d'); x.font = F;
@@ -73,7 +69,7 @@ const STAGE = (function(){
     x.font = F; x.fillStyle = opt.color || '#222'; x.textBaseline = 'middle'; x.fillText(text, 20, 36);
     const t = new THREE.CanvasTexture(c); t.minFilter = THREE.LinearFilter;
     const s = new THREE.Sprite(new THREE.SpriteMaterial({ map:t, depthTest:false, transparent:true, toneMapped:false, fog:false }));
-    const h = opt.h || 0.5; s.scale.set(h * w / 68, h, 1); s.renderOrder = 5;
+    const h = opt.h || 0.5; s.scale.set(h * w / 68, h, 1); s.renderOrder = 5; s.layers.set(1); SCHILDER.push(s);
     return s;
   }
 
@@ -81,7 +77,7 @@ const STAGE = (function(){
   function arrow(color){
     const sh = new THREE.Shape(); sh.moveTo(0, 0.55); sh.lineTo(0.3, 0); sh.lineTo(0.1, 0); sh.lineTo(0.1, -0.35); sh.lineTo(-0.1, -0.35); sh.lineTo(-0.1, 0); sh.lineTo(-0.3, 0); sh.closePath();
     const m = new THREE.Mesh(new THREE.ShapeGeometry(sh), new THREE.MeshBasicMaterial({ color, transparent:true, opacity:0.9, side:THREE.DoubleSide, depthTest:false, toneMapped:false }));
-    m.rotation.x = Math.PI / 2; m.renderOrder = 4; const g = new THREE.Group(); g.add(m); return g;   // Spitze zeigt nach +z, gedreht wird um die Hochachse
+    m.rotation.x = Math.PI / 2; m.renderOrder = 4; const g = new THREE.Group(); g.add(m); return ebene1(g);   // Spitze zeigt nach +z, gedreht wird um die Hochachse
   }
 
   /* ---------- Ton: kurze Klänge aus dem Browser (WebAudio), keine Dateien ---------- */
@@ -168,44 +164,65 @@ const STAGE = (function(){
   }
 
   /* ---------- Bühne ---------- */
-  function create(canvas, ui){
+  // opt.licht = Name einer Lichtstimmung aus FX.LICHT; opt.fx = 'aus' | 'mittel' | 'hoch'; opt.anflug = false schaltet die Kamerafahrt ab
+  function create(canvas, ui, opt){
+    opt = opt || {}; const L = FX.LICHT[opt.licht] || FX.LICHT.tag; NASS = !!L.nass; SCHILDER = [];
+    const schilder = SCHILDER, wp = new THREE.Vector3();
+    const ruhig = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
     const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, powerPreference:'high-performance' });   // wirft, wenn das Gerät kein WebGL kann
-    renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.9;
+    renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = L.exp;
     renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(55, 1, 0.1, 600);
-    scene.fog = new THREE.Fog(C('#cfdbe6'), 70, 260);
-    const sunDir = new THREE.Vector3(0.55, 0.78, 0.42).normalize();
-    const skyMat = new THREE.ShaderMaterial({ vertexShader:SKY.vs, fragmentShader:SKY.fs, side:THREE.BackSide, depthWrite:false, fog:false, uniforms:{ uSun:{ value:sunDir }, uTime:{ value:0 } } });
+    const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(55, 1, 0.1, 600); camera.layers.enable(1);
+    scene.fog = new THREE.Fog(C(L.fog), L.fogN, L.fogF);
+    const sunDir = new THREE.Vector3().fromArray(L.sun).normalize();
+    const skyMat = FX.himmel(L);
     const sky = new THREE.Mesh(new THREE.SphereGeometry(400, 32, 16), skyMat); sky.frustumCulled = false; scene.add(sky);
-    scene.add(new THREE.HemisphereLight(C('#cfe2ff'), C('#7a6f5f'), 0.62));
-    const sun = new THREE.DirectionalLight(C('#fff1d8'), 1.9); sun.castShadow = true; scene.add(sun); scene.add(sun.target);
-    const sc = sun.shadow.camera; sc.left = -24; sc.right = 24; sc.top = 24; sc.bottom = -24; sc.near = 1; sc.far = 120; sun.shadow.bias = -0.0005; sun.shadow.normalBias = 0.04;
+    scene.add(new THREE.HemisphereLight(C(L.hemiS), C(L.hemiG), L.hemiI));
+    const sun = new THREE.DirectionalLight(C(L.sunCol), L.sunI); sun.castShadow = true; scene.add(sun); scene.add(sun.target);
+    const sc = sun.shadow.camera; sc.left = -24; sc.right = 24; sc.top = 24; sc.bottom = -24; sc.near = 1; sc.far = 120; sun.shadow.bias = -0.0005; sun.shadow.normalBias = 0.04; sun.shadow.radius = 2.2;
     // Sonne und Himmel folgen dem Blickziel, damit der Schatten dort scharf bleibt
     function follow(t){ sun.target.position.copy(t); sun.position.copy(t).addScaledVector(sunDir, 55); sky.position.copy(camera.position); }
+    // Partikel und Wetter
+    const quellen = FX.quellen(scene), regen = L.regen ? FX.regen(scene) : null;
+    // Lampen für die Dämmerung (höchstens drei, ohne Schatten) und blinkende Lichter (Blaulicht)
+    let lampen = 0; const blinker = [];
+    function lampe(x, y, z, farbe, kraft){ if(!L.lampen || lampen >= 3) return null; lampen++; const p = new THREE.PointLight(C(farbe || '#ffd9a0'), kraft || 1.1, 16, 2); p.position.set(x, y, z); scene.add(p); return p; }
+    const blink = (m, versatz) => blinker.push({ m, v:versatz || 0 });
 
-    /* Qualität: „auto“ senkt bei schwacher Bildrate erst die Auflösung, dann die Schatten; „niedrig“ und „hoch“ sind fest */
-    const DPR = window.devicePixelRatio || 1; let qual = 'auto', pr = Math.min(DPR, 1.5), acc = 0, cnt = 0, gut = 0;
+    /* Qualität: „auto“ senkt bei schwacher Bildrate erst die Auflösung, dann die Effekte, dann die Schatten; „niedrig“ und „hoch“ sind fest.
+       Effekte: aus = direkt zeichnen; mittel = Bloom und Vignette; hoch = zusätzlich Tiefenunschärfe im Hintergrund */
+    const DPR = window.devicePixelRatio || 1; let qual = 'auto', pr = Math.min(DPR, 1.5), acc = 0, cnt = 0, gut = 0, fx = opt.fx || 'mittel', fxAuto = true, post = null, cube = null, focus = 8;
     function shadows(on, size){ renderer.shadowMap.enabled = on; sun.castShadow = on; if(size && sun.shadow.mapSize.x !== size){ sun.shadow.mapSize.set(size, size); if(sun.shadow.map){ sun.shadow.map.dispose(); sun.shadow.map = null; } } scene.traverse(o => { if(o.material) o.material.needsUpdate = true; }); }
-    function resize(){ const w = canvas.clientWidth, h = canvas.clientHeight; if(!w || !h) return; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+    function resize(){ const w = canvas.clientWidth, h = canvas.clientHeight; if(!w || !h) return; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); FX.scale.value = h * pr / (2 * Math.tan(camera.fov * Math.PI / 360)); }
     function setQuality(q){
       qual = q; pr = q === 'niedrig' ? Math.min(DPR, 0.75) : q === 'hoch' ? Math.min(DPR, 2) : Math.min(DPR, 1.5);
       renderer.setPixelRatio(pr); shadows(q !== 'niedrig', q === 'hoch' ? 2048 : 1024); resize();
     }
+    function setFx(v){ fx = v; fxAuto = true; if(v === 'aus' && post){ post.dispose(); post = null; } }
     function adapt(dt){
       if(qual !== 'auto') return; acc += dt; if(++cnt < 60) return;
       const fps = cnt / acc; acc = cnt = 0;
-      if(fps < 27){ gut = 0; if(pr > 0.75){ pr = Math.max(0.75, pr - 0.25); renderer.setPixelRatio(pr); resize(); } else if(renderer.shadowMap.enabled) shadows(false); }
+      if(fps < 27){ gut = 0; if(pr > 0.75){ pr = Math.max(0.75, pr - 0.25); renderer.setPixelRatio(pr); resize(); } else if(fxAuto && fx !== 'aus'){ fxAuto = false; } else if(renderer.shadowMap.enabled) shadows(false); }
       else if(fps > 55 && pr < Math.min(DPR, 1.5) && ++gut >= 4){ pr = Math.min(DPR, 1.5, pr + 0.25); gut = 0; renderer.setPixelRatio(pr); resize(); }
     }
+    function draw(){
+      if(fx === 'aus' || !fxAuto){ renderer.setRenderTarget(null); renderer.render(scene, camera); return; }
+      if(!post) post = FX.post(renderer);
+      post.render(scene, camera, { dof:fx === 'hoch', focus });
+    }
+    // Umgebung einmal aufnehmen, damit Glas, Metall, Lack und glatte Böden spiegeln (nicht in der niedrigen Stufe)
+    function spiegeln(x, y, z){ if(qual === 'niedrig' || fx === 'aus') return; try{ if(cube) cube.dispose(); cube = FX.spiegel(renderer, scene, x, y, z); renderer.setRenderTarget(null); }catch(e){ console.warn('Spiegelung nicht möglich', e); } }
     renderer.setPixelRatio(pr); sun.shadow.mapSize.set(1024, 1024);
     const ro = new ResizeObserver(resize); ro.observe(canvas); resize();
 
     /* Steuerung: Bewegung (Stick, WASD/Pfeile, Gamepad), Kamera (Ziehen, Zoom), Aktion (E, Enter, Knopf) */
-    const input = { mx:0, my:0, yaw:0.5, pitch:0.62, dist:8.5, sens:1, action:null, key:null };
+    const input = { mx:0, my:0, yaw:0.5, pitch:0.62, dist:8.5, sens:1, action:null, key:null, frei:true };
+    const regie = { intro:0, dur:3.6, fAn:false, fx:0, fz:0, f:0, shake:0, nick:0 }, look = new THREE.Vector3();
+    const kurz = () => { if(regie.intro > 0.45) regie.intro = 0.45; };          // Kamerafahrt mit einer Eingabe abkürzen
     const keys = new Set();
     function kd(e){
       if(e.target && /INPUT|TEXTAREA|SELECT|BUTTON/.test(e.target.tagName) && (e.key === ' ' || e.key === 'Enter')) return;
-      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key; keys.add(k);
+      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key; keys.add(k); kurz();
       if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) e.preventDefault();
       if(!e.repeat){ if((k === 'e' || k === 'Enter' || k === ' ') && input.action) input.action(); else if(input.key) input.key(k); }
     }
@@ -215,7 +232,7 @@ const STAGE = (function(){
 
     const pts = new Map(); let pinch = 0;
     const clampP = v => Math.max(0.22, Math.min(1.35, v)), clampD = v => Math.max(4.5, Math.min(18, v));
-    function pd(e){ canvas.setPointerCapture(e.pointerId); pts.set(e.pointerId, { x:e.clientX, y:e.clientY }); pinch = 0; }
+    function pd(e){ kurz(); canvas.setPointerCapture(e.pointerId); pts.set(e.pointerId, { x:e.clientX, y:e.clientY }); pinch = 0; }
     function pm(e){
       const p = pts.get(e.pointerId); if(!p) return;
       const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
@@ -234,7 +251,7 @@ const STAGE = (function(){
       const l = Math.hypot(dx, dy), m = 44; if(l > m){ dx *= m / l; dy *= m / l; }
       jx = dx / m; jy = -dy / m; knob.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
     }
-    function jd(e){ jid = e.pointerId; joy.setPointerCapture(jid); jset(e); e.preventDefault(); }
+    function jd(e){ kurz(); jid = e.pointerId; joy.setPointerCapture(jid); jset(e); e.preventDefault(); }
     function jm(e){ if(e.pointerId === jid) jset(e); }
     function ju(e){ if(e.pointerId !== jid) return; jid = null; jx = jy = 0; knob.style.transform = ''; }
     if(joy){ joy.addEventListener('pointerdown', jd); joy.addEventListener('pointermove', jm); joy.addEventListener('pointerup', ju); joy.addEventListener('pointercancel', ju); }
@@ -254,6 +271,7 @@ const STAGE = (function(){
       if(keys.has('a') || keys.has('ArrowLeft')) x -= 1; if(keys.has('d') || keys.has('ArrowRight')) x += 1;
       if(keys.has('w') || keys.has('ArrowUp')) y += 1; if(keys.has('s') || keys.has('ArrowDown')) y -= 1;
       const l = Math.hypot(x, y); if(l > 1){ x /= l; y /= l; }
+      if(!input.frei || regie.intro > 0.45){ x = 0; y = 0; }             // während Kamerafahrt, Auftrag oder Frage bleibt die Figur stehen
       input.mx = x; input.my = y;
     }
 
@@ -265,11 +283,37 @@ const STAGE = (function(){
     function frame(t){
       raf = 0; if(dead) return;
       const dt = Math.min(0.05, (t - last) / 1000 || 0.016); last = t;
-      if(!paused && !lost && !document.hidden){ time += dt; frames++; readMove(dt); skyMat.uniforms.uTime.value = time; if(update) update(dt, time); renderer.render(scene, camera); adapt(dt); }
+      if(!paused && !lost && !document.hidden){
+        time += dt; frames++; readMove(dt); skyMat.uniforms.uTime.value = time; if(update) update(dt, time);
+        quellen.step(dt); if(regen) regen.step(dt, look.x, look.z);
+        for(let i = 0; i < schilder.length; i++){ const s = schilder[i]; if(s.visible) s.material.opacity = Math.max(0, Math.min(1, (s.getWorldPosition(wp).distanceTo(camera.position) - 2.4) / 1.8)); }
+        for(let i = 0; i < blinker.length; i++){ const b = blinker[i]; b.m.emissiveIntensity = ((time * 2.4 + b.v) % 1) < 0.45 ? 2.6 : 0.25; }
+        draw(); adapt(dt);
+      }
       else if(!lost && !document.hidden) gamepad(0);          // im Menü weiter auf Start hören
       raf = requestAnimationFrame(frame);
     }
-    function start(fn){ update = fn; last = performance.now(); if(!raf) raf = requestAnimationFrame(frame); }
+    function start(fn){ update = fn; last = performance.now(); regie.intro = opt.anflug === false || ruhig ? 0 : regie.dur; if(!raf) raf = requestAnimationFrame(frame); }
+    /* Kamera: folgt dem Ziel tgt hinter und über der Figur. Zu Beginn fliegt sie aus der Höhe heran, bei einer Aufgabe schwenkt sie
+       sanft zur Station (fokus), bei richtiger Antwort nickt sie kurz, bei falscher wackelt sie. */
+    function cam(tgt, dt){
+      dt = dt || 0.016; let yaw = input.yaw, pitch = input.pitch, d = input.dist, lx = tgt.x, ly = tgt.y, lz = tgt.z;
+      if(regie.intro > 0){ regie.intro = Math.max(0, regie.intro - dt); const u = regie.intro / regie.dur, e = u * u * (3 - 2 * u); yaw += e * 1.9; d *= 1 + e * 2.6; pitch += (0.98 - pitch) * e; ly += e * 1.4; }
+      regie.f += ((regie.fAn ? 1 : 0) - regie.f) * Math.min(1, dt * 3.4);
+      if(regie.f > 0.002){ lx += (regie.fx - lx) * 0.5 * regie.f; lz += (regie.fz - lz) * 0.5 * regie.f; d *= 1 - 0.3 * regie.f; pitch += (0.42 - pitch) * 0.4 * regie.f; }
+      if(regie.nick > 0){ regie.nick = Math.max(0, regie.nick - dt); pitch += Math.sin((0.5 - regie.nick) * Math.PI * 4) * 0.03 * (regie.nick / 0.5); }
+      const cp = Math.cos(pitch);
+      camera.position.set(lx + Math.sin(yaw) * cp * d, ly + Math.sin(pitch) * d, lz + Math.cos(yaw) * cp * d);
+      if(regie.shake > 0){ regie.shake = Math.max(0, regie.shake - dt); const a = regie.shake * 0.45; camera.position.x += (Math.random() - 0.5) * a; camera.position.y += (Math.random() - 0.5) * a; }
+      look.set(lx, ly, lz); camera.lookAt(look); follow(look); focus = d;
+    }
+    const fokus = (x, z) => { regie.fAn = x !== null && x !== undefined; if(regie.fAn){ regie.fx = x; regie.fz = z; } };
+    // Rückmeldung in der Welt: 1 = richtig (Konfetti, Nicken), 2 = zweiter Versuch (Funken), 3 = falsch (Wackeln)
+    function feier(x, y, z, tries){
+      if(tries === 1){ quellen.konfetti(x, y, z); regie.nick = ruhig ? 0 : 0.5; }
+      else if(tries === 2) quellen.funken(x, y, z, 22, 1, 0.8, 0.25);
+      else { quellen.funken(x, y, z, 18, 1, 0.25, 0.2); regie.shake = ruhig ? 0 : 0.4; }
+    }
     function pause(v){ paused = v; if(v){ keys.clear(); jx = jy = 0; if(knob) knob.style.transform = ''; } }
 
     function dispose(){
@@ -279,9 +323,10 @@ const STAGE = (function(){
       canvas.removeEventListener('wheel', wh); canvas.removeEventListener('webglcontextlost', cl); canvas.removeEventListener('webglcontextrestored', cr);
       if(joy){ joy.removeEventListener('pointerdown', jd); joy.removeEventListener('pointermove', jm); joy.removeEventListener('pointerup', ju); joy.removeEventListener('pointercancel', ju); }
       scene.traverse(x => { if(x.geometry) x.geometry.dispose(); if(x.material){ if(x.material.map) x.material.map.dispose(); x.material.dispose(); } });
-      if(sun.shadow.map) sun.shadow.map.dispose(); renderer.dispose();
+      if(sun.shadow.map) sun.shadow.map.dispose(); if(post) post.dispose(); if(cube) cube.dispose(); renderer.dispose();
     }
-    return { scene, camera, renderer, input, start, pause, dispose, setQuality, follow, frames: () => frames, pixelRatio: () => pr };
+    return { scene, camera, renderer, input, start, pause, dispose, setQuality, setFx, follow, cam, fokus, feier, spiegeln, lampe, blink, quellen, licht:L,
+      halt: v => { input.frei = !v; }, imAnflug: () => regie.intro > 0.45, frames: () => frames, pixelRatio: () => pr, effekte: () => (fx === 'aus' || !fxAuto ? 'aus' : fx) };
   }
 
   /* Kollision: Figur als Kreis (Radius r) gegen Quader { x1, x2, z1, z2 } */
@@ -290,5 +335,5 @@ const STAGE = (function(){
     return false;
   }
 
-  return { create, label, css, beam, figure, blocked, arrow, sfx, audio:AUDIO, surf, mat, C };
+  return { create, label, css, beam, figure, blocked, arrow, sfx, audio:AUDIO, surf, mat, C, schatten:FX.bodenschatten };
 })();

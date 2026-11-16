@@ -20,6 +20,42 @@
      "quelle": "IdF-Quiz · Frage 89"
     },
     {
+     "typ": "bausteine",
+     "frage": "Stellungnahme: Setze für jedes Feld den richtigen Baustein ein.",
+     "fall": "Vorhaben: freistehendes Wohnhaus, Fußboden des obersten Geschosses 6,5 m über dem Gelände, zwei Nutzungseinheiten mit 130 m² und 280 m².",
+     "felder": [
+      {
+       "name": "Gebäudeklasse",
+       "optionen": [
+        "GK 2, weil es zwei Nutzungseinheiten hat",
+        "GK 1, weil das Gebäude freistehend und nicht höher als 7 m ist",
+        "GK 3, weil die Nutzungseinheiten zusammen mehr als 400 m² haben"
+       ],
+       "richtig": "GK 3, weil die Nutzungseinheiten zusammen mehr als 400 m² haben"
+      },
+      {
+       "name": "Maßgebliche Höhe",
+       "optionen": [
+        "Oberkante der Attika über dem tiefsten Punkt des Geländes",
+        "Höhe des Dachfirsts über der Straße",
+        "Fußbodenoberkante des höchstgelegenen Geschosses mit möglichem Aufenthaltsraum über der mittleren Geländeoberfläche"
+       ],
+       "richtig": "Fußbodenoberkante des höchstgelegenen Geschosses mit möglichem Aufenthaltsraum über der mittleren Geländeoberfläche"
+      },
+      {
+       "name": "Erster Rettungsweg",
+       "optionen": [
+        "Über Rettungsgeräte der Feuerwehr",
+        "Baulich, höchstens 50 m bis ins Freie",
+        "Baulich, höchstens 35 m bis zum notwendigen Treppenraum oder ins Freie"
+       ],
+       "richtig": "Baulich, höchstens 35 m bis zum notwendigen Treppenraum oder ins Freie"
+      }
+     ],
+     "erkl": "130 + 280 = 410 m² überschreiten die Grenze von 400 m² der GK 1 und 2. Die Höhe misst man an der Fußbodenoberkante des höchsten Geschosses mit möglichem Aufenthaltsraum. Der erste Rettungsweg ist stets baulich.",
+     "quelle": "IdF-Quiz der App (Vorbeugender Brandschutz), Erklärungen · Gebäudeklassen, Rettungswege"
+    },
+    {
      "typ": "mc",
      "frage": "Welche Gebäude gehören in die GK 5?",
      "optionen": [
@@ -91,7 +127,16 @@
      "erkl": "§ 1 MVStättVO: Versammlungsräume mit mehr als 200 Besuchern; mehrere Räume mit gemeinsamen Rettungswegen zählen zusammen; Sportstadien/Freisportanlagen mit Tribünen erst ab mehr als 5000 Besuchern. Disco 150 m²: sonstige Stehplätze mit mindestens 2 Besuchern je m² → mindestens 300 Besucher > 200. 270 Sitzplätze > 200. Die zwei Räume im Krankenhaus ergeben zusammen 165 ≤ 200, 1700 Tribünenplätze liegen unter 5000 – jeweils keine Versammlungsstätte.",
      "quelle": "IdF-Quiz · Frage 12"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Amtsleiterin",
+    "text": "Willkommen in der Brandschutzdienststelle. Im Posteingang liegen die ersten Bauvorhaben. Kläre die Grundlagen und schreib die erste Stellungnahme."
+   },
+   "ende": {
+    "gut": "Die Stellungnahmen gehen heute noch an die Bauaufsicht.",
+    "schlecht": "Die Bauaufsicht schickt deine Stellungnahmen mit Rückfragen zurück."
+   },
+   "licht": "morgen"
   },
   {
    "titel": "Gebäudeklasse und Einordnung",
@@ -109,6 +154,42 @@
      "richtig": "0,90 × 1,20 m, Brüstung max. 1,20 m",
      "erkl": "Anleiterbare Fenster haben mindestens 0,90 × 1,20 m und eine Brüstungshöhe von höchstens 1,20 m. Bei Dachflächenfenstern gilt zusätzlich ein horizontaler Abstand zur Traufkante von höchstens 1 m.",
      "quelle": "IdF-Quiz · Frage 73"
+    },
+    {
+     "typ": "bausteine",
+     "frage": "Stellungnahme: Setze für jedes Feld den richtigen Baustein ein.",
+     "fall": "Vorhaben: Wohngebäude, die Brüstung des obersten Fensters liegt 7,2 m über dem Gelände. Der zweite Rettungsweg soll über dieses Fenster führen.",
+     "felder": [
+      {
+       "name": "Zweiter Rettungsweg",
+       "optionen": [
+        "Nur mit einem Hubrettungsfahrzeug möglich",
+        "Nicht nötig, ein Rettungsweg genügt",
+        "Über tragbare Leitern der Feuerwehr möglich, weil die Brüstung nicht höher als 8 m liegt"
+       ],
+       "richtig": "Über tragbare Leitern der Feuerwehr möglich, weil die Brüstung nicht höher als 8 m liegt"
+      },
+      {
+       "name": "Fenster",
+       "optionen": [
+        "Mindestens 0,60 × 0,90 m, Brüstung höchstens 1,50 m hoch",
+        "Mindestens 0,90 × 1,20 m, Brüstung höchstens 1,20 m hoch",
+        "Jede Größe, wenn sich das Fenster öffnen lässt"
+       ],
+       "richtig": "Mindestens 0,90 × 1,20 m, Brüstung höchstens 1,20 m hoch"
+      },
+      {
+       "name": "Laufweg mit der Leiter",
+       "optionen": [
+        "Höchstens 100 m",
+        "Höchstens 50 m",
+        "Ohne Begrenzung"
+       ],
+       "richtig": "Höchstens 50 m"
+      }
+     ],
+     "erkl": "Tragbare Leitern reichen bis 8 m Brüstungshöhe, darüber braucht es ein Hubrettungsfahrzeug. Anleiterbare Fenster: mindestens 0,90 × 1,20 m, Brüstung höchstens 1,20 m. Laufweg mit tragbarer Leiter höchstens 50 m.",
+     "quelle": "IdF-Quiz der App (Vorbeugender Brandschutz), Erklärungen · Rettungswege"
     },
     {
      "typ": "mc",
@@ -184,7 +265,16 @@
      "erkl": "C5 = Dauerfunktion der Selbstschließung (hohe Zyklenzahl), S200 = Rauchdichtheit (auch bei 200 °C). C5S200 allein sagt also: selbstschließend und rauchdicht. Brandschutzeigenschaften (feuerhemmend = EI2 30, raumabschließend = E) stecken nicht darin; T30-RS wäre die alte Kurzbezeichnung einer feuerhemmenden, rauchdichten, selbstschließenden Tür.",
      "quelle": "IdF-Quiz · Frage 8"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Kollege aus der Bauaufsicht",
+    "text": "Ich brauche deine Einordnung: Gebäudeklassen und Rettungswege. Der Architekt ruft um zwölf an."
+   },
+   "ende": {
+    "gut": "Der Architekt hat seine Antwort pünktlich bekommen.",
+    "schlecht": "Der Architekt muss vertröstet werden. Die Einordnung stimmt noch nicht."
+   },
+   "licht": "tag"
   },
   {
    "titel": "Rettungswege und Bauteile",
@@ -202,6 +292,42 @@
      "richtig": "Fußbodenoberkante des höchstgelegenen Geschosses mit möglichem Aufenthaltsraum über der mittleren Geländeoberfläche",
      "erkl": "Maßgeblich ist die Fußbodenoberkante des höchstgelegenen Geschosses, in dem ein Aufenthaltsraum möglich ist, über der Geländeoberfläche im Mittel (§ 2 Abs. 3 Satz 2 MBO).",
      "quelle": "IdF-Quiz · Frage 66"
+    },
+    {
+     "typ": "bausteine",
+     "frage": "Stellungnahme: Setze für jedes Feld den richtigen Baustein ein.",
+     "fall": "Vorhaben: Gebäude in zweiter Reihe, nur über einen Zugang zu erreichen. Im Gebäude liegt eine Maisonettewohnung mit innerer Treppe; im notwendigen Flur ist eine Rauchschutztür geplant.",
+     "felder": [
+      {
+       "name": "Zugang",
+       "optionen": [
+        "0,80 m Breite genügen",
+        "3,0 m Breite wie bei einer Zufahrt",
+        "Geradlinig und 1,25 m breit, kurze Einengungen bis 1,0 m"
+       ],
+       "richtig": "Geradlinig und 1,25 m breit, kurze Einengungen bis 1,0 m"
+      },
+      {
+       "name": "Treppe in der Wohnung",
+       "optionen": [
+        "Ein eigener notwendiger Treppenraum ist zwingend",
+        "Notwendige Treppe ohne eigenen Treppenraum zulässig, weil sie innerhalb einer Nutzungseinheit liegt",
+        "Die Treppe braucht einen Sicherheitstreppenraum"
+       ],
+       "richtig": "Notwendige Treppe ohne eigenen Treppenraum zulässig, weil sie innerhalb einer Nutzungseinheit liegt"
+      },
+      {
+       "name": "Rauchschutztür",
+       "optionen": [
+        "Feuerbeständig und abschließbar",
+        "Selbstschließend ohne Dichtung",
+        "Dicht- und selbstschließend, umlaufend abgedichtet, im notwendigen Flur nicht abschließbar"
+       ],
+       "richtig": "Dicht- und selbstschließend, umlaufend abgedichtet, im notwendigen Flur nicht abschließbar"
+      }
+     ],
+     "erkl": "Zugang zu rückwärtigen Gebäuden: geradlinig, 1,25 m, kurz 1,0 m. Eine notwendige Treppe ohne Treppenraum ist in GK 1 und 2 sowie innerhalb einer Nutzungseinheit zulässig. Rauchschutztüren sind dicht- und selbstschließend.",
+     "quelle": "IdF-Quiz der App (Vorbeugender Brandschutz), Erklärungen · Rettungswege und Bauteile"
     },
     {
      "typ": "mc",
@@ -278,7 +404,16 @@
      "erkl": "Protokoll-Wertung übernommen. Beherbergungsstätten sind Sonderbauten schon bei mehr als 12 Gastbetten, nicht erst ab 30.",
      "quelle": "IdF-Quiz · Frage 19"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Amtsleiterin",
+    "text": "Draußen regnet es, drinnen stapeln sich die Akten: Rettungswege, Wände, Decken und Türen. Nimm dir die Pläne am Plantisch vor."
+   },
+   "ende": {
+    "gut": "Der Stapel ist abgearbeitet, die Pläne sind geprüft.",
+    "schlecht": "Einige Pläne müssen noch einmal auf den Tisch."
+   },
+   "licht": "regen"
   },
   {
    "titel": "Sonderbau",
@@ -296,6 +431,51 @@
      "richtig": "Zugänglichkeit/Zufahrten, Löschwasserversorgung, Löschwasserrückhaltung, Lage der Anleiterstellen, Anlagen und Geräte zur Brandbekämpfung, Brandmeldeanlagen, betriebliche Maßnahmen",
      "erkl": "Die sieben Punkte der Folie (VV 54.33 zu § 54 Abs. 3 BauO NRW 2000) sind Zugänglichkeit/Zufahrten, Löschwasserversorgung, Löschwasserrückhaltung, Lage der zum Anleitern bestimmten Stellen, Anlagen und Geräte für die Brandbekämpfung, Anlagen für die Brandmeldung sowie betriebliche Maßnahmen. Dazu kommen als \"+2\" die weiteren Anforderungen an Sonderbauten (§ 50) und Abweichungen (§ 69).",
      "quelle": "IdF-Quiz · Frage 87"
+    },
+    {
+     "typ": "bausteine",
+     "frage": "Stellungnahme: Setze für jedes Feld den richtigen Baustein ein.",
+     "fall": "Vorhaben: Verkaufsstätte mit Verkaufsräumen und Ladenstraße von zusammen 1.200 m², dazu ein Saal für 270 Besucher.",
+     "felder": [
+      {
+       "name": "Verkaufsstätte",
+       "optionen": [
+        "Sonderbau, weil Verkaufsräume und Ladenstraßen zusammen mehr als 800 m² haben",
+        "Kein Sonderbau, die Grenze liegt bei 2.000 m²",
+        "Sonderbau erst ab 10.000 m²"
+       ],
+       "richtig": "Sonderbau, weil Verkaufsräume und Ladenstraßen zusammen mehr als 800 m² haben"
+      },
+      {
+       "name": "Saal",
+       "optionen": [
+        "Versammlungsstätte, weil der Raum mehr als 200 Besucher fasst",
+        "Keine Versammlungsstätte, die Grenze liegt bei 500 Besuchern",
+        "Versammlungsstätte nur, wenn es eine Bühne gibt"
+       ],
+       "richtig": "Versammlungsstätte, weil der Raum mehr als 200 Besucher fasst"
+      },
+      {
+       "name": "Verhältnis der Vorschriften",
+       "optionen": [
+        "Die Bauordnung geht der Sonderbauverordnung vor",
+        "Für Sonderbauten gilt die Bauordnung gar nicht",
+        "Die Sonderbauverordnung regelt das Spezielle und geht vor; im Übrigen gilt die Bauordnung"
+       ],
+       "richtig": "Die Sonderbauverordnung regelt das Spezielle und geht vor; im Übrigen gilt die Bauordnung"
+      },
+      {
+       "name": "Inhalt der Stellungnahme",
+       "optionen": [
+        "Standsicherheit, Schallschutz und Wärmeschutz",
+        "Stellplätze, Abstandsflächen und Barrierefreiheit",
+        "Zugänglichkeit, Löschwasserversorgung, Löschwasserrückhaltung, Anleiterstellen, Anlagen zur Brandbekämpfung, Brandmeldeanlagen, betriebliche Maßnahmen"
+       ],
+       "richtig": "Zugänglichkeit, Löschwasserversorgung, Löschwasserrückhaltung, Anleiterstellen, Anlagen zur Brandbekämpfung, Brandmeldeanlagen, betriebliche Maßnahmen"
+      }
+     ],
+     "erkl": "Sonderbautatbestände: Verkaufsstätten über 800 m², Versammlungsräume für mehr als 200 Besucher. Sondervorschriften gehen als speziellere Regel vor. Die Brandschutzdienststelle nimmt zu sieben Punkten Stellung.",
+     "quelle": "IdF-Quiz der App (Vorbeugender Brandschutz), Erklärungen · Sonderbau, Brandschutzdienststelle"
     },
     {
      "typ": "mc",
@@ -380,7 +560,16 @@
      "erkl": "Höhe 6,5 m (≤ 7 m), freistehend, zwei Nutzungseinheiten – aber die Summe der Nutzungseinheiten beträgt 130 + 280 = 410 m² und überschreitet damit die Grenze von 400 m² für GK 1 (freistehend) und GK 2. Es handelt sich also um ein sonstiges Gebäude mit Höhe ≤ 7 m: Gebäudeklasse 3. Alle für die Einordnung nötigen Angaben (Höhe, Anzahl und Fläche der NE, freistehend) sind vorhanden.",
      "quelle": "IdF-Quiz · Frage 1"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Bauherr am Telefon",
+    "text": "Wir planen ein Einkaufszentrum mit Saal. Mir wurde gesagt, das sei ein Sonderbau. Was heißt das für uns?"
+   },
+   "ende": {
+    "gut": "Der Bauherr weiß jetzt, welche Vorschriften für sein Vorhaben gelten.",
+    "schlecht": "Der Bauherr ist verunsichert. Die Auskunft war nicht eindeutig."
+   },
+   "licht": "tag"
   },
   {
    "titel": "Abweichungen",
@@ -398,6 +587,42 @@
      "richtig": "Zum Eindämmen des Brandes, je nach Auslegung auch zum Löschen",
      "erkl": "Eine Sprinkleranlage dämmt den Brand ein und kann je nach Auslegung auch löschen. In Garagen ist Löschen nicht möglich, weil Fahrzeugdächer das Wasser abschirmen.",
      "quelle": "IdF-Quiz · Frage 99"
+    },
+    {
+     "typ": "bausteine",
+     "frage": "Stellungnahme: Setze für jedes Feld den richtigen Baustein ein.",
+     "fall": "Vorhaben: zwei aneinandergebaute Gebäude der Gebäudeklasse 5. Der Bauherr möchte eine Tür in der Wand zwischen den Gebäuden; in einem Gebäude gibt es außerdem eine innere Brandwand mit Öffnung.",
+     "felder": [
+      {
+       "name": "Wand zwischen den Gebäuden",
+       "optionen": [
+        "Gebäudeabschlusswand in der Bauart einer Brandwand, ohne Öffnungen",
+        "Brandwand, Türen in beliebiger Zahl zulässig",
+        "Trennwand, Öffnungen frei wählbar"
+       ],
+       "richtig": "Gebäudeabschlusswand in der Bauart einer Brandwand, ohne Öffnungen"
+      },
+      {
+       "name": "Öffnung in der inneren Brandwand",
+       "optionen": [
+        "Feuerhemmend genügt",
+        "Rauchdicht genügt",
+        "Feuerbeständig, dicht- und selbstschließend"
+       ],
+       "richtig": "Feuerbeständig, dicht- und selbstschließend"
+      },
+      {
+       "name": "Brandwand am Dach",
+       "optionen": [
+        "Mindestens 30 cm über die Bedachung führen oder beidseitig 50 cm auskragen",
+        "Mindestens 1 m über das Dach führen",
+        "Bündig unter der Dachhaut enden lassen"
+       ],
+       "richtig": "Mindestens 30 cm über die Bedachung führen oder beidseitig 50 cm auskragen"
+      }
+     ],
+     "erkl": "Aneinandergebaute Gebäude trennt eine Gebäudeabschlusswand in Bauart Brandwand ohne Öffnungen. Öffnungen in inneren Brandwänden: feuerbeständig, dicht- und selbstschließend. Brandwände 30 cm über Dach oder beidseitig 50 cm auskragend.",
+     "quelle": "IdF-Quiz der App (Vorbeugender Brandschutz), Erklärungen · Brandwände"
     },
     {
      "typ": "mc",
@@ -467,7 +692,16 @@
      "erkl": "Nach dem Grundsatz „lex specialis derogat legi generali“ gehen besondere Vorschriften (z. B. Sonderbauverordnungen nach § 51 MBO) den allgemeinen Regelungen vor. Eine Wahlfreiheit nach Günstigkeit für den Bauherrn gibt es nicht. Zudem ist die MBO selbst kein geltendes Gesetz, sondern Muster für die Landesbauordnungen.",
      "quelle": "IdF-Quiz · Frage 10"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Amtsleiterin",
+    "text": "Feierabend ist erst, wenn die Abweichungsanträge bewertet sind. Der Bauherr will Öffnungen in der Brandwand."
+   },
+   "ende": {
+    "gut": "Die Abweichungen sind sauber bewertet. Schönen Feierabend.",
+    "schlecht": "Die Bewertung der Abweichungen trägt noch nicht. Morgen geht es weiter."
+   },
+   "licht": "abend"
   }
  ]
 }

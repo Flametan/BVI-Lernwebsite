@@ -20,6 +20,64 @@
      "quelle": "Lernkarte k-feuak-02"
     },
     {
+     "typ": "reihe",
+     "frage": "Bring den Weg eines Haushalts in die richtige Reihenfolge.",
+     "optionen": [
+      "Veröffentlichung des Haushaltsplans (Rechtskraft)",
+      "Bedarfsanmeldung und Ansatzermittlung",
+      "Genehmigung durch die Aufsichtsbehörde",
+      "Beratung durch die Politik und Gremienbeschluss"
+     ],
+     "richtig": [
+      "Bedarfsanmeldung und Ansatzermittlung",
+      "Beratung durch die Politik und Gremienbeschluss",
+      "Genehmigung durch die Aufsichtsbehörde",
+      "Veröffentlichung des Haushaltsplans (Rechtskraft)"
+     ],
+     "erkl": "Erst danach stehen die Mittel verbindlich zur Verfügung; bis dahin gilt die vorläufige Haushaltsführung.",
+     "quelle": "Lernkarte k-feuak-10"
+    },
+    {
+     "typ": "budget",
+     "frage": "Bedarfsanmeldung: Wähle aus, was du mit dem freigegebenen Betrag anmeldest.",
+     "fall": "Die Kämmerei gibt 460 Tausend Euro frei. Alle fixen Kosten müssen gedeckt sein. Vom Rest wählst du das Projekt, das die Politik an die erste Stelle gesetzt hat.",
+     "budget": 460,
+     "posten": [
+      {
+       "t": "Miete der Feuerwache (fix)",
+       "kosten": 120
+      },
+      {
+       "t": "Projekt Priorität 1: neue Schutzkleidung",
+       "kosten": 150
+      },
+      {
+       "t": "Wartungsverträge (fix)",
+       "kosten": 80
+      },
+      {
+       "t": "Projekt Priorität 2: Drohne für die Erkundung",
+       "kosten": 90
+      },
+      {
+       "t": "Leasing der Leitstellentechnik (fix)",
+       "kosten": 100
+      },
+      {
+       "t": "Projekt Priorität 3: Anstrich der Fahrzeughalle",
+       "kosten": 40
+      }
+     ],
+     "richtig": [
+      "Miete der Feuerwache (fix)",
+      "Wartungsverträge (fix)",
+      "Leasing der Leitstellentechnik (fix)",
+      "Projekt Priorität 1: neue Schutzkleidung"
+     ],
+     "erkl": "Die Feuerwehr meldet getrennt nach fixen Kosten (Mieten, Verträge) und variablen Kosten (Projekte, Sonderbeschaffungen) an. Die Politik priorisiert; die Entscheidungshoheit liegt bei ihr.",
+     "quelle": "Eigener Übungsfall mit frei gewählten Zahlen, abgeleitet aus den Lernkarten k-feuak-11 und k-feuak-12"
+    },
+    {
      "typ": "mc",
      "frage": "Welche Konsequenz hat das Vergaberecht für die Haushaltsplanung der Feuerwehr?",
      "optionen": [
@@ -84,7 +142,16 @@
      "erkl": "FeuAK · Haushalt",
      "quelle": "Lernkarte k-feuak-17"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Kämmerin",
+    "text": "Der Haushalt für das nächste Jahr steht an. Ich brauche Ihre Bedarfsanmeldung, sauber begründet."
+   },
+   "ende": {
+    "gut": "Die Anmeldung geht unverändert in den Haushaltsplanentwurf.",
+    "schlecht": "Die Kämmerei schickt die Anmeldung zur Überarbeitung zurück."
+   },
+   "licht": "tag"
   },
   {
    "titel": "Projektmanagement",
@@ -168,7 +235,16 @@
      "erkl": "FeuAK · PM",
      "quelle": "Lernkarte k-feuak-45"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Dezernent",
+    "text": "Wir bauen eine neue Wache. Sie leiten das Projekt. Wie setzen Sie es auf?"
+   },
+   "ende": {
+    "gut": "Der Projektplan überzeugt den Dezernenten.",
+    "schlecht": "Der Projektplan hat Lücken."
+   },
+   "licht": "tag"
   },
   {
    "titel": "Qualitätsmanagement",
@@ -252,7 +328,16 @@
      "erkl": "FeuAK · QM",
      "quelle": "Lernkarte k-feuak-35"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Amtsleiter",
+    "text": "Guten Morgen. Die Politik will wissen, wie gut wir arbeiten. Zeigen Sie mir Ihr Qualitätsmanagement."
+   },
+   "ende": {
+    "gut": "Die Kennzahlen überzeugen den Ausschuss.",
+    "schlecht": "Der Ausschuss hat Nachfragen zu den Kennzahlen."
+   },
+   "licht": "morgen"
   },
   {
    "titel": "Volkswirtschaft",
@@ -336,7 +421,16 @@
      "erkl": "FeuAK · VWL",
      "quelle": "Lernkarte k-feuak-26"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Kämmerin",
+    "text": "Bevor wir heute Abend über Geld reden: Wie steht es um die wirtschaftlichen Grundlagen?"
+   },
+   "ende": {
+    "gut": "Die Kämmerin spricht jetzt auf Augenhöhe mit Ihnen.",
+    "schlecht": "Bei den wirtschaftlichen Grundlagen fehlt noch etwas."
+   },
+   "licht": "abend"
   },
   {
    "titel": "Vergabe und Bedarfsplanung",
@@ -354,6 +448,34 @@
      "richtig": "Erst, wenn Haushaltsmittel bereitstehen. Vorher werden Vergabeunterlagen und Leistungsverzeichnis vorbereitet.",
      "erkl": "FeuAK · Vergabe",
      "quelle": "Lernkarte k-feuak-52"
+    },
+    {
+     "typ": "mc",
+     "frage": "Stadtmodell: Der Erreichungsgrad ab der zuständigen Wache ist gut, der Gesamtwert aller Fahrzeuge ist schlecht. Was schlägst du vor?",
+     "bild": "<svg viewBox=\"0 0 320 210\" role=\"img\" aria-label=\"Stadtkarte: eine Wache in der Mitte, ihr Hilfsfrist-Bereich deckt das Stadtgebiet ab\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Roboto,system-ui,sans-serif\"><rect x=\"1\" y=\"1\" width=\"318\" height=\"150\" rx=\"8\" fill=\"currentColor\" opacity=\".06\"/><path d=\"M0 118 C60 96 110 132 170 108 S270 92 320 112\" fill=\"none\" stroke=\"#5b9bd5\" stroke-width=\"7\" opacity=\".55\"/><path d=\"M20 40 H300 M20 84 H300 M70 10 V146 M160 10 V146 M250 10 V146\" stroke=\"currentColor\" stroke-width=\"1\" opacity=\".22\"/><circle cx=\"160\" cy=\"70\" r=\"118\" fill=\"#1f9d55\" opacity=\".22\" stroke=\"#1f9d55\" stroke-width=\"1.5\"/><rect x=\"152\" y=\"62\" width=\"16\" height=\"16\" rx=\"3\" fill=\"#c4261c\"/><text x=\"160\" y=\"74\" font-size=\"11\" font-weight=\"700\" fill=\"#fff\" text-anchor=\"middle\">W</text><circle cx=\"262\" cy=\"34\" r=\"10\" fill=\"#2f7de1\"/><text x=\"262\" y=\"38\" font-size=\"12\" font-weight=\"700\" fill=\"#fff\" text-anchor=\"middle\">A</text><circle cx=\"52\" cy=\"128\" r=\"10\" fill=\"#2f7de1\"/><text x=\"52\" y=\"132\" font-size=\"12\" font-weight=\"700\" fill=\"#fff\" text-anchor=\"middle\">B</text><text x=\"2\" y=\"176\" font-size=\"11\" fill=\"currentColor\">Ab zuständiger Wache</text><rect x=\"150\" y=\"166\" width=\"130\" height=\"12\" rx=\"3\" fill=\"currentColor\" opacity=\".12\"/><rect x=\"150\" y=\"166\" width=\"121\" height=\"12\" rx=\"3\" fill=\"#1f9d55\"/><text x=\"286\" y=\"176\" font-size=\"11\" font-weight=\"700\" fill=\"currentColor\">93 %</text><text x=\"2\" y=\"198\" font-size=\"11\" fill=\"currentColor\">Alle Fahrzeuge gesamt</text><rect x=\"150\" y=\"188\" width=\"130\" height=\"12\" rx=\"3\" fill=\"currentColor\" opacity=\".12\"/><rect x=\"150\" y=\"188\" width=\"92\" height=\"12\" rx=\"3\" fill=\"#c53030\"/><text x=\"286\" y=\"198\" font-size=\"11\" font-weight=\"700\" fill=\"currentColor\">71 %</text></svg>",
+     "optionen": [
+      "Die bestehende Wache nach A verlegen",
+      "Keinen neuen Standort bauen: Fahrzeuge und Personal an der bestehenden Wache verstärken",
+      "Neue Wache am Standort A bauen",
+      "Neue Wache am Standort B bauen"
+     ],
+     "richtig": "Keinen neuen Standort bauen: Fahrzeuge und Personal an der bestehenden Wache verstärken",
+     "erkl": "Gute Erreichung ab der zuständigen Wache bei schlechter Gesamterreichung deutet man als Problem der Ressourcenverfügbarkeit: Die Wache liegt richtig, aber ihre Fahrzeuge sind zu oft gebunden.",
+     "quelle": "Eigener Übungsfall mit frei gewählten Zahlen, abgeleitet aus den Lernkarten k-feuak-68 bis k-feuak-71"
+    },
+    {
+     "typ": "mc",
+     "frage": "Stadtmodell: Auch ab der zuständigen Wache wird das Schutzziel im Nordosten verfehlt. Wo setzt du an?",
+     "bild": "<svg viewBox=\"0 0 320 210\" role=\"img\" aria-label=\"Stadtkarte: eine Wache im Westen, ihr Hilfsfrist-Bereich erreicht den Nordosten nicht; Kandidaten A im Nordosten, B neben der Wache, C im Süden außerhalb\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"Roboto,system-ui,sans-serif\"><rect x=\"1\" y=\"1\" width=\"318\" height=\"150\" rx=\"8\" fill=\"currentColor\" opacity=\".06\"/><path d=\"M0 118 C60 96 110 132 170 108 S270 92 320 112\" fill=\"none\" stroke=\"#5b9bd5\" stroke-width=\"7\" opacity=\".55\"/><path d=\"M20 40 H300 M20 84 H300 M70 10 V146 M160 10 V146 M250 10 V146\" stroke=\"currentColor\" stroke-width=\"1\" opacity=\".22\"/><circle cx=\"78\" cy=\"74\" r=\"82\" fill=\"#1f9d55\" opacity=\".22\" stroke=\"#1f9d55\" stroke-width=\"1.5\"/><rect x=\"70\" y=\"66\" width=\"16\" height=\"16\" rx=\"3\" fill=\"#c4261c\"/><text x=\"78\" y=\"78\" font-size=\"11\" font-weight=\"700\" fill=\"#fff\" text-anchor=\"middle\">W</text><circle cx=\"246\" cy=\"44\" r=\"10\" fill=\"#2f7de1\"/><text x=\"246\" y=\"48\" font-size=\"12\" font-weight=\"700\" fill=\"#fff\" text-anchor=\"middle\">A</text><circle cx=\"112\" cy=\"92\" r=\"10\" fill=\"#2f7de1\"/><text x=\"112\" y=\"96\" font-size=\"12\" font-weight=\"700\" fill=\"#fff\" text-anchor=\"middle\">B</text><circle cx=\"150\" cy=\"138\" r=\"10\" fill=\"#2f7de1\"/><text x=\"150\" y=\"142\" font-size=\"12\" font-weight=\"700\" fill=\"#fff\" text-anchor=\"middle\">C</text><text x=\"2\" y=\"176\" font-size=\"11\" fill=\"currentColor\">Ab zuständiger Wache</text><rect x=\"150\" y=\"166\" width=\"130\" height=\"12\" rx=\"3\" fill=\"currentColor\" opacity=\".12\"/><rect x=\"150\" y=\"166\" width=\"88\" height=\"12\" rx=\"3\" fill=\"#c53030\"/><text x=\"286\" y=\"176\" font-size=\"11\" font-weight=\"700\" fill=\"currentColor\">68 %</text><text x=\"2\" y=\"198\" font-size=\"11\" fill=\"currentColor\">Alle Fahrzeuge gesamt</text><rect x=\"150\" y=\"188\" width=\"130\" height=\"12\" rx=\"3\" fill=\"currentColor\" opacity=\".12\"/><rect x=\"150\" y=\"188\" width=\"83\" height=\"12\" rx=\"3\" fill=\"#c53030\"/><text x=\"286\" y=\"198\" font-size=\"11\" font-weight=\"700\" fill=\"currentColor\">64 %</text></svg>",
+     "optionen": [
+      "Neue Wache am Standort A bauen",
+      "Neue Wache am Standort B bauen",
+      "Keinen neuen Standort bauen: nur mehr Fahrzeuge an der bestehenden Wache",
+      "Neue Wache am Standort C bauen"
+     ],
+     "richtig": "Neue Wache am Standort A bauen",
+     "erkl": "Schlechte Erreichung auch ab der zuständigen Wache deutet man als Standort- und Erreichbarkeitsproblem. Die Analyse zeigt die räumliche Versorgungslücke; Standort A schließt sie.",
+     "quelle": "Eigener Übungsfall mit frei gewählten Zahlen, abgeleitet aus den Lernkarten k-feuak-68 bis k-feuak-71"
     },
     {
      "typ": "mc",
@@ -420,7 +542,16 @@
      "erkl": "FeuAK · Vergabe",
      "quelle": "Lernkarte k-feuak-61"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Dezernent",
+    "text": "Es regnet, die Sitzung ist lang: neue Fahrzeuge beschaffen und den Bedarfsplan fortschreiben. Am Stadtmodell entscheiden Sie über Standorte."
+   },
+   "ende": {
+    "gut": "Der Rat beschließt Vergabe und Bedarfsplan wie vorgeschlagen.",
+    "schlecht": "Der Rat vertagt die Entscheidung."
+   },
+   "licht": "regen"
   }
  ]
 }

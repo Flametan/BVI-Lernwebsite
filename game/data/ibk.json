@@ -20,6 +20,76 @@
      "quelle": "Lernkarte k-ibk-01"
     },
     {
+     "typ": "gespraech",
+     "frage": "Führe das Gespräch. Wähle jeweils die Antwort, die das Gespräch voranbringt.",
+     "rolle": "Jonas, Brandmeister",
+     "lage": "Jonas kommt zum dritten Mal in diesem Monat zu spät zum Dienst. Du bist sein Wachabteilungsführer.",
+     "zuege": [
+      {
+       "sagt": "Tut mir leid, die Bahn ist ausgefallen. Ich weiß, ich bin spät dran.",
+       "optionen": [
+        {
+         "t": "Immer dasselbe mit dir! So geht das nicht!",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Nicht so schlimm, ich habe deine Aufgaben schon für dich erledigt.",
+         "gut": false,
+         "ich": "Fürsorgliches Eltern-Ich, übertrieben: nimmt dem anderen die Verantwortung ab"
+        },
+        {
+         "t": "Danke, dass du es gleich sagst. Das ist jetzt das dritte Mal. Woran liegt es?",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: sachlich, fragt nach"
+        }
+       ]
+      },
+      {
+       "sagt": "Die Verbindung am Morgen ist einfach unzuverlässig.",
+       "optionen": [
+        {
+         "t": "Wenn du meinst. Mir ist das egal.",
+         "gut": false,
+         "ich": "Angepasstes Kind-Ich: gibt nach, zieht sich zurück"
+        },
+        {
+         "t": "Dann musst du eben früher aufstehen, wie jeder anständige Mensch.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Dann lass uns klären, welche Möglichkeiten du siehst.",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: sachlich, fragt nach"
+        }
+       ]
+      },
+      {
+       "sagt": "Ich könnte den früheren Zug nehmen oder mit einem Kollegen fahren.",
+       "optionen": [
+        {
+         "t": "Das glaube ich erst, wenn ich es sehe.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Gut. Du nimmst den früheren Zug, und in zwei Wochen schauen wir, ob es klappt.",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: sachlich, fragt nach"
+        },
+        {
+         "t": "Super, das feiern wir mit einem Kaffee, die Übung kann warten!",
+         "gut": false,
+         "ich": "Natürliches Kind-Ich: spontan, aber an der Sache vorbei"
+        }
+       ]
+      }
+     ],
+     "erkl": "Aus dem Erwachsenen-Ich lädst du dein Gegenüber ein, ebenfalls sachlich zu antworten. Bestimmen kannst du seinen Ich-Zustand nicht.",
+     "quelle": "Eigener Übungsfall, abgeleitet aus den Lernkarten k-ibk-05 bis k-ibk-13 und k-ibk-16"
+    },
+    {
      "typ": "mc",
      "frage": "Aus welchen sieben Bestandteilen besteht die TA?",
      "optionen": [
@@ -84,7 +154,16 @@
      "erkl": "IBK · Transaktionsanalyse",
      "quelle": "Lernkarte k-ibk-06"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Wachleiter",
+    "text": "Auf der Wache knirscht es im Miteinander. Ich möchte, dass du die Ich-Zustände erkennst und das erste Gespräch führst."
+   },
+   "ende": {
+    "gut": "Das Gespräch verlief sachlich. Der Kollege weiß, woran er ist.",
+    "schlecht": "Das Gespräch ist entgleist. Der Kollege hat dichtgemacht."
+   },
+   "licht": "tag"
   },
   {
    "titel": "Transaktionen",
@@ -102,6 +181,76 @@
      "richtig": "Es stellt grafisch dar, wie stark und wie oft eine Person die einzelnen funktionellen Ich-Zustände nutzt. Werkzeug zur Selbstreflexion und Verhaltensänderung.",
      "erkl": "IBK · Transaktionsanalyse",
      "quelle": "Lernkarte k-ibk-07"
+    },
+    {
+     "typ": "gespraech",
+     "frage": "Führe das Gespräch. Wähle jeweils die Antwort, die das Gespräch voranbringt.",
+     "rolle": "Petra, Wachabteilungsführerin",
+     "lage": "Petra kommt gereizt in dein Büro. Der Einsatzbericht von gestern ist noch nicht fertig.",
+     "zuege": [
+      {
+       "sagt": "Na, ist der Einsatzbericht vielleicht heute noch fertig?",
+       "optionen": [
+        {
+         "t": "Entschuldigung, ich bin einfach zu langsam.",
+         "gut": false,
+         "ich": "Angepasstes Kind-Ich: gibt nach, zieht sich zurück"
+        },
+        {
+         "t": "Der Bericht ist um 14 Uhr fertig. Was möchtest du mir damit sagen?",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: nimmt beim Wort und fordert die direkte Botschaft ein"
+        },
+        {
+         "t": "Mach ihn doch selbst, wenn es dir nicht schnell genug geht!",
+         "gut": false,
+         "ich": "Über-Kreuz-Transaktion aus dem Kind-Ich: Grundlage für einen Konflikt"
+        }
+       ]
+      },
+      {
+       "sagt": "Ich ärgere mich, weil ich den Bericht für die Besprechung brauche.",
+       "optionen": [
+        {
+         "t": "Das hättest du früher sagen müssen. So arbeitet man nicht.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Verstanden. Wann genau brauchst du ihn, und welchen Teil zuerst?",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: Paralleltransaktion, das Gespräch läuft glatt weiter"
+        },
+        {
+         "t": "Dann lass die Besprechung doch ausfallen.",
+         "gut": false,
+         "ich": "Natürliches Kind-Ich: spontan, aber an der Sache vorbei"
+        }
+       ]
+      },
+      {
+       "sagt": "Um 13 Uhr, vor allem die Kräfteübersicht.",
+       "optionen": [
+        {
+         "t": "Ich versuche es, aber versprechen kann ich nichts. Ich schaffe ja nie etwas.",
+         "gut": false,
+         "ich": "Angepasstes Kind-Ich: gibt nach, zieht sich zurück"
+        },
+        {
+         "t": "Typisch. Bei dir kommt immer alles auf den letzten Drücker.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Die Kräfteübersicht bekommst du bis 12:30 Uhr, den Rest bis 14 Uhr.",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: sachlich, fragt nach"
+        }
+       ]
+      }
+     ],
+     "erkl": "Bei einer verdeckten Transaktion entscheidet die Beziehungsebene. Nimm die offene Botschaft beim Wort und fordere die direkte Botschaft ein.",
+     "quelle": "Eigener Übungsfall, abgeleitet aus den Lernkarten k-ibk-14 bis k-ibk-21"
     },
     {
      "typ": "mc",
@@ -168,7 +317,16 @@
      "erkl": "IBK · Transaktionsanalyse",
      "quelle": "Lernkarte k-ibk-13"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Wachleiter",
+    "text": "Heute Abend geht es um Transaktionen. Achte darauf, was zwischen den Zeilen gesagt wird."
+   },
+   "ende": {
+    "gut": "Die verdeckte Botschaft ist auf dem Tisch. Das Gespräch läuft wieder glatt.",
+    "schlecht": "Die verdeckte Botschaft blieb unausgesprochen und der Ärger ist geblieben."
+   },
+   "licht": "abend"
   },
   {
    "titel": "Grundbedürfnisse und Antreiber",
@@ -186,6 +344,76 @@
      "richtig": "Bei einer Paralleltransaktion (komplementär) kommt die erwartbare Reaktion. Das Gespräch läuft glatt weiter und könnte theoretisch unbegrenzt andauern, auch aus „Langeweile“ endet es.",
      "erkl": "IBK · Transaktionsanalyse",
      "quelle": "Lernkarte k-ibk-14"
+    },
+    {
+     "typ": "gespraech",
+     "frage": "Führe das Gespräch. Wähle jeweils die Antwort, die das Gespräch voranbringt.",
+     "rolle": "Aylin, Gerätewartin",
+     "lage": "Aylin hat den Pflegeplan für alle Fahrzeuge neu aufgestellt. Du bist ihre Vorgesetzte oder ihr Vorgesetzter.",
+     "zuege": [
+      {
+       "sagt": "Ich habe den Pflegeplan neu aufgestellt. Hat das eigentlich jemand bemerkt?",
+       "optionen": [
+        {
+         "t": "Ja. Der Plan ist übersichtlich, und die Fahrzeuge sind seitdem schneller wieder einsatzbereit. Danke dafür.",
+         "gut": true,
+         "ich": "Bedingte positive Beachtung: konkret und ehrlich"
+        },
+        {
+         "t": "Das ist doch Ihre Aufgabe.",
+         "gut": false,
+         "ich": "Bedingte negative Beachtung: wertet die Leistung ab"
+        },
+        {
+         "t": "Hm. Ich habe gerade keine Zeit.",
+         "gut": false,
+         "ich": "Keine Beachtung: die schlimmste Form"
+        }
+       ]
+      },
+      {
+       "sagt": "Manchmal habe ich das Gefühl, es fällt nur auf, wenn etwas schiefgeht.",
+       "optionen": [
+        {
+         "t": "Jetzt übertreiben Sie aber.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Wer Lob braucht, ist hier falsch.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Das nehme ich ernst. Ich gebe künftig auch Rückmeldung, wenn etwas gut läuft.",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: sachlich, fragt nach"
+        }
+       ]
+      },
+      {
+       "sagt": "Darf ich Sie dann auch direkt um Rückmeldung bitten?",
+       "optionen": [
+        {
+         "t": "Das wirkt aber ziemlich bedürftig.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Ja, jederzeit. Um Beachtung zu bitten ist erlaubt.",
+         "gut": true,
+         "ich": "Stroke-Erlaubnis: Du darfst um Strokes bitten"
+        },
+        {
+         "t": "Lob muss man sich verdienen, nicht einfordern.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        }
+       ]
+      }
+     ],
+     "erkl": "Zuwendung und Beachtung sind für Führungskräfte das wichtigste Grundbedürfnis nach Berne. Keine Beachtung ist die schlimmste Form.",
+     "quelle": "Eigener Übungsfall, abgeleitet aus den Lernkarten k-ibk-22 bis k-ibk-26"
     },
     {
      "typ": "mc",
@@ -252,7 +480,16 @@
      "erkl": "IBK · Transaktionsanalyse",
      "quelle": "Lernkarte k-ibk-23"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Personalrat",
+    "text": "Guten Morgen. Eine Kollegin fühlt sich übersehen. Was Menschen antreibt und was Beachtung bewirkt, ist heute dein Thema."
+   },
+   "ende": {
+    "gut": "Die Kollegin fühlt sich gesehen und bleibt motiviert.",
+    "schlecht": "Die Kollegin fühlt sich weiter übersehen."
+   },
+   "licht": "morgen"
   },
   {
    "titel": "Spiele und Skript",
@@ -270,6 +507,76 @@
      "richtig": "1. Bedingungslose positive, 2. bedingte positive, 3. bedingte negative, 4. bedingungslose negative Beachtung, 5. keine Beachtung (am schlimmsten).",
      "erkl": "IBK · Transaktionsanalyse",
      "quelle": "Lernkarte k-ibk-25"
+    },
+    {
+     "typ": "gespraech",
+     "frage": "Führe das Gespräch. Wähle jeweils die Antwort, die das Gespräch voranbringt.",
+     "rolle": "Marc, Brandmeisteranwärter",
+     "lage": "Marc ist durch die Atemschutzübung gefallen und sucht dich in der Pause auf.",
+     "zuege": [
+      {
+       "sagt": "Ich schaffe die Übung nie, alle sind gegen mich. Kannst du nicht für mich mit dem Ausbilder reden?",
+       "optionen": [
+        {
+         "t": "Klar, ich regle das für dich. Lass mich nur machen.",
+         "gut": false,
+         "ich": "Retter im Drama-Dreieck"
+        },
+        {
+         "t": "Ich sehe, dass dich das belastet. Was genau fällt dir schwer, und was kannst du selbst als Nächstes tun?",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: bleibt außerhalb des Drama-Dreiecks"
+        },
+        {
+         "t": "Du bist selbst schuld. Stell dich nicht so an.",
+         "gut": false,
+         "ich": "Verfolger im Drama-Dreieck"
+        }
+       ]
+      },
+      {
+       "sagt": "Na toll, du hilfst mir also auch nicht.",
+       "optionen": [
+        {
+         "t": "Dann eben nicht. Undankbar wie immer!",
+         "gut": false,
+         "ich": "Verfolger im Drama-Dreieck"
+        },
+        {
+         "t": "Ich übe gern mit dir. Mit dem Ausbilder sprichst du selbst; wenn du möchtest, komme ich mit.",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: bietet Hilfe an, lässt die Verantwortung bei Marc"
+        },
+        {
+         "t": "Doch, doch, entschuldige, ich rufe ihn sofort an.",
+         "gut": false,
+         "ich": "Retter im Drama-Dreieck"
+        }
+       ]
+      },
+      {
+       "sagt": "Okay. Vielleicht frage ich ihn nach einem Übungstermin.",
+       "optionen": [
+        {
+         "t": "Wird ja auch Zeit.",
+         "gut": false,
+         "ich": "Verfolger im Drama-Dreieck"
+        },
+        {
+         "t": "Gute Idee. Wann fragst du ihn?",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: sachlich, fragt nach"
+        },
+        {
+         "t": "Soll ich die Mail für dich schreiben?",
+         "gut": false,
+         "ich": "Retter im Drama-Dreieck"
+        }
+       ]
+      }
+     ],
+     "erkl": "Psychologische Spiele entstehen, wenn Konflikte nicht offen angesprochen werden. Im Drama-Dreieck gibt es Verfolger, Opfer und Retter; aus dem Erwachsenen-Ich steigst du aus.",
+     "quelle": "Eigener Übungsfall, abgeleitet aus den Lernkarten k-ibk-33 bis k-ibk-35"
     },
     {
      "typ": "mc",
@@ -336,7 +643,16 @@
      "erkl": "IBK · Transaktionsanalyse",
      "quelle": "Lernkarte k-ibk-30"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Ausbilder",
+    "text": "Es regnet, die Übung fällt aus, die Stimmung ist gereizt. Ein Anwärter sucht einen Retter. Erkenne das Spiel."
+   },
+   "ende": {
+    "gut": "Du bist nicht ins Drama-Dreieck eingestiegen. Der Anwärter übernimmt selbst Verantwortung.",
+    "schlecht": "Du steckst mitten im Drama-Dreieck."
+   },
+   "licht": "regen"
   },
   {
    "titel": "Konflikte",
@@ -354,6 +670,76 @@
      "richtig": "Ein Auseinandersetzungsprozess aus unterschiedlichen Interessen, Werten oder Zielen zwischen Personen, Gruppen oder innerhalb einer Person. Unvermeidlich, aber auch konstruktiv möglich.",
      "erkl": "IBK · Konflikte",
      "quelle": "Lernkarte k-ibk-50"
+    },
+    {
+     "typ": "gespraech",
+     "frage": "Führe das Gespräch. Wähle jeweils die Antwort, die das Gespräch voranbringt.",
+     "rolle": "Sven, Oberbrandmeister",
+     "lage": "Zwei Kollegen streiten laut über den Dienstplan. Sven steht aufgebracht vor dir, du bist der Vorgesetzte.",
+     "zuege": [
+      {
+       "sagt": "Mit dem arbeite ich nicht mehr zusammen! Der hat mir schon wieder die Wochenendschicht aufgedrückt!",
+       "optionen": [
+        {
+         "t": "Lasst uns erst einmal den Dienstplan neu organisieren.",
+         "gut": false,
+         "ich": "Organisation kommt bei einem heißen Konflikt erst später"
+        },
+        {
+         "t": "Ich höre, dass du verärgert bist. Wir setzen uns zu dritt hin und klären zuerst, was zwischen euch vorgefallen ist.",
+         "gut": true,
+         "ich": "Heißer Konflikt: zuerst die persönlichen Beziehungen klären"
+        },
+        {
+         "t": "Schluss jetzt. Ihr teilt euch die Schicht, und damit ist das Thema erledigt.",
+         "gut": false,
+         "ich": "Fauler Kompromiss: deckelt den Konflikt, er wird kalt"
+        }
+       ]
+      },
+      {
+       "sagt": "Er redet hinter meinem Rücken über mich. Das verletzt mich.",
+       "optionen": [
+        {
+         "t": "Sei nicht so empfindlich.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Dann geht es nicht um den Plan, sondern um euren Umgang miteinander. Das sprechen wir offen an.",
+         "gut": true,
+         "ich": "Beziehungskonflikt: Ursache ist die Verletzung des Selbstwertgefühls"
+        },
+        {
+         "t": "Dann tauschen wir eben die Schicht, dann ist es gut.",
+         "gut": false,
+         "ich": "Sachebene: lässt die Ursache auf der Beziehungsebene unberührt"
+        }
+       ]
+      },
+      {
+       "sagt": "Und wenn wir uns nicht einigen?",
+       "optionen": [
+        {
+         "t": "Dann warten wir ab. Das legt sich von selbst.",
+         "gut": false,
+         "ich": "Deckelt den Konflikt: Er brodelt als kalter Konflikt weiter"
+        },
+        {
+         "t": "Noch können wir das selbst lösen. Wenn es weiter eskaliert, holen wir jemanden von außen dazu.",
+         "gut": true,
+         "ich": "Glasl: Stufen 1 bis 3 selbst handlungsfähig, ab Stufe 4 externer Eingriff"
+        },
+        {
+         "t": "Dann entscheide ich, wer von euch geht.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        }
+       ]
+      }
+     ],
+     "erkl": "Ein heißer Konflikt wird offen ausgetragen: zuerst die Beziehungen klären. Ein fauler Kompromiss macht daraus einen kalten Konflikt.",
+     "quelle": "Eigener Übungsfall, abgeleitet aus den Lernkarten k-ibk-51 bis k-ibk-63"
     },
     {
      "typ": "mc",
@@ -420,7 +806,16 @@
      "erkl": "IBK · Konflikte",
      "quelle": "Lernkarte k-ibk-55"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Wachleiter",
+    "text": "Zwei Kollegen streiten offen über den Dienstplan. Bevor das eskaliert, übernimmst du die Klärung."
+   },
+   "ende": {
+    "gut": "Der Konflikt ist auf dem Weg zur Lösung. Niemand hat das Gesicht verloren.",
+    "schlecht": "Der Konflikt ist gedeckelt und brodelt weiter."
+   },
+   "licht": "daemmerung"
   }
  ]
 }

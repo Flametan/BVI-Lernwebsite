@@ -1,5 +1,5 @@
 const { chromium, devices } = require('playwright');
-/* IdF-Spiel – automatischer Durchlauf (Playwright): Start, Laufen, Kollision, Treppe, Menü, alle Aufgaben von Level 1, Speichern.
+/* IdF-Spiel – automatischer Durchlauf (Playwright): Start, Auftrag, Laufen, Kollision, Treppe, Menü, alle Aufgaben von Level 1, Speichern, Wiederholung vorgemerkt.
    Aufruf: python3 -m http.server 8765 (im Repo-Ordner), dann node game/tests/smoke.cjs [Ordner für Screenshots] */
 const S = process.argv[2] || require('os').tmpdir();
 let bad = 0;
@@ -12,12 +12,15 @@ async function hold(p, key, cond, max){ await p.keyboard.down(key); try{ await p
     const p = await ctx.newPage(); const errs = [];
     p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); }); p.on('pageerror', e => errs.push('PAGE ' + e.message));
     await p.goto('http://localhost:8765/game/index.html'); await p.waitForTimeout(500);
-    const cards = await p.locator('.card').count();
+    const cards = await p.locator('#missions .card').count(), train = await p.locator('#training .card').count();
     await p.screenshot({ path: S + '/g-home-' + nm + '.png' });
     await p.click('.card[data-m="begehung"]'); await p.waitForSelector('.lv');
     const locked = await p.locator('.lv[disabled]').count();
-    await p.click('.lv >> nth=0'); await p.waitForTimeout(1200);
+    await p.click('.lv >> nth=0'); await p.waitForFunction(() => window.GAME_RUN && window.GAME_RUN._stage.frames() > 2, null, { timeout: 40000 }); await p.waitForTimeout(800);
+    const brief = await p.isVisible('#brief') && (await p.textContent('#brief-text')).length > 20;
     await p.screenshot({ path: S + '/g-play-' + nm + '.png' });
+    await p.click('#brief-ok'); await p.keyboard.press('Shift');       // Auftrag bestätigen, Kamerafahrt abkürzen
+    await p.waitForFunction(() => !window.GAME_RUN._stage.imAnflug(), null, { timeout: 40000 });
     // Laufen: Taste W halten, die Figur muss sich bewegen; gegen die Wand darf sie nicht hindurch
     const p0 = await p.evaluate(() => ({ ...window.GAME_RUN._pos }));
     await p.evaluate(() => { window.GAME_RUN._stage.input.yaw = 0; });
@@ -55,16 +58,17 @@ async function hold(p, key, cond, max){ await p.keyboard.down(key); try{ await p
       await p.click('.opt:text-is("' + a.richtig + '")'); if (i === 0) fb = await p.textContent('#q-fbt');
       await p.click('#q-next'); await p.waitForTimeout(100);
     }
-    await p.waitForTimeout(700);
-    const res = await p.isVisible('#result'), title = res ? await p.textContent('#r-title') : '', rp = res ? await p.textContent('#r-pts') : '';
+    await p.waitForSelector('#result:not([hidden])', { timeout: 15000 }).catch(() => {});
+    const res = await p.isVisible('#result'), title = res ? await p.textContent('#r-title') : '', rp = res ? await p.textContent('#r-pts') : '', story = res ? await p.textContent('#r-story') : '';
     await p.screenshot({ path: S + '/g-result-' + nm + '.png' });
     await p.reload(); await p.waitForTimeout(400);
     const total = await p.textContent('#st-total'), badges = await p.locator('.badge.on').count();
+    const wdh = await p.textContent('#training .card[data-t="wdh"] p');      // die erste Aufgabe war im ersten Versuch falsch: Sie ist jetzt zur Wiederholung fällig
     await p.click('.card[data-m="begehung"]'); await p.waitForSelector('.lv');
     const locked2 = await p.locator('.lv[disabled]').count();
-    const ok = cards === 9 && locked === 4 && p1.z < p0.z - 1 && p2.x > 0.5 && p2.x < 0.85 && menuOk && upVis && fl1 === fl0 + 1 && res && title === 'Bestanden' && total === '850' && badges === 1 && locked2 === 3 && !errs.length;
+    const ok = cards === 9 && train === 4 && brief && story.length > 10 && /^Eine Aufgabe ist fällig/.test(wdh) && locked === 4 && p1.z < p0.z - 1 && p2.x > 0.5 && p2.x < 0.85 && menuOk && upVis && fl1 === fl0 + 1 && res && title === 'Bestanden' && total === '850' && badges === 1 && locked2 === 3 && !errs.length;
     if(!ok) bad++;
-    console.log((ok ? 'OK   ' : 'FEHLER ') + nm, JSON.stringify({ cards, locked, p0, p1, p2, fps, menuOk, upVis, yMid, fl0, fl1, fl2, q, fb, res, title, rp, total, badges, locked2, errs }));
+    console.log((ok ? 'OK   ' : 'FEHLER ') + nm, JSON.stringify({ cards, train, brief, story, wdh, locked, p0, p1, p2, fps, menuOk, upVis, yMid, fl0, fl1, fl2, q, fb, res, title, rp, total, badges, locked2, errs }));
     await ctx.close();
   }
   await b.close();

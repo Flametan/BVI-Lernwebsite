@@ -96,7 +96,16 @@
      "erkl": "Innerer Notstand: Gefahren aus der eigenen staatlich-gesellschaftlichen Sphäre. Äußerer Notstand: auswärtige militärische Aggression.",
      "quelle": "v-idf-z91 · Notstandsrecht"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Lagedienstführer",
+    "text": "Willkommen im Lagezentrum. Bevor es losgeht, klären wir die Grundlagen der zivilen Verteidigung."
+   },
+   "ende": {
+    "gut": "Die Grundlagen sitzen. Du bist bereit für die Lage.",
+    "schlecht": "Bei den Grundlagen gibt es noch Lücken."
+   },
+   "licht": "tag"
   },
   {
    "titel": "Gesamtszenario",
@@ -195,7 +204,16 @@
      "erkl": "Schutzgüter: Mensch, Umwelt, Volkswirtschaft, Immateriell.",
      "quelle": "v-idf-z93 · KRITIS"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Warnzentrale",
+    "text": "Es wird Abend, und wir müssen die Bevölkerung warnen. Welche Warnmittel setzen wir ein, und wer löst aus?"
+   },
+   "ende": {
+    "gut": "Die Warnung ist ausgelöst und kommt an.",
+    "schlecht": "Die Warnung hat nicht alle erreicht."
+   },
+   "licht": "abend"
   },
   {
    "titel": "Warnung der Bevölkerung",
@@ -292,7 +310,16 @@
      "erkl": "Außerdem: Katastrophenschutz nach § 11, Schutz der Gesundheit, Schutz von Kulturgut.",
      "quelle": "v-idf-z97 · § 1 ZSKG"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Lagedienstführer",
+    "text": "Starkregen im ganzen Land. Kritische Infrastrukturen melden Ausfälle. Verschaff dir am Lagetisch einen Überblick."
+   },
+   "ende": {
+    "gut": "Das Lagebild steht. Die Prioritäten sind gesetzt.",
+    "schlecht": "Das Lagebild ist unvollständig."
+   },
+   "licht": "regen"
   },
   {
    "titel": "Hilfe und Fähigkeiten",
@@ -396,7 +423,16 @@
      "erkl": "„Der Bund erstellt im Zusammenwirken mit den Ländern eine bundesweite Risikoanalyse für den Zivilschutz.“",
      "quelle": "v-idf-z92 · ZSKG"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Verbindungsoffizier",
+    "text": "Die Länder bitten um Unterstützung, auch die Bundeswehr ist angefragt. Was geht rechtlich, was nicht?"
+   },
+   "ende": {
+    "gut": "Die Hilfe ist rechtssicher auf dem Weg.",
+    "schlecht": "Die Anforderung hängt, weil die Rechtsgrundlage nicht geklärt ist."
+   },
+   "licht": "daemmerung"
   },
   {
    "titel": "Alarmplanung und Bundeswehr",
@@ -508,7 +544,16 @@
      "erkl": "Amtshilfe, innerer Notstand, Terror (Unterstützung der Polizei).",
      "quelle": "v-idf-z96 · Heimatschutzregimenter"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Lagedienstführer",
+    "text": "Die Nacht war lang. Vor der Übergabe gehen wir das Gesamtszenario noch einmal durch."
+   },
+   "ende": {
+    "gut": "Übergabe mit vollständigem Lagebild. Gute Arbeit.",
+    "schlecht": "Zur Übergabe sind noch Punkte offen."
+   },
+   "licht": "morgen"
   }
  ]
 }

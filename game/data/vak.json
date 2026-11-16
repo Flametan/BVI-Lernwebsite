@@ -89,7 +89,16 @@
      "erkl": "Verkündet wurde es am 23.05.1949. In Kraft getreten ist es erst am folgenden Tag, dem 24.05.1949.",
      "quelle": "VAk-Quiz · Frage 12"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Dozentin",
+    "text": "Willkommen im Hörsaal. Wir beginnen mit dem Staatsorganisationsrecht. Jede Reihe hat eine Frage für Sie."
+   },
+   "ende": {
+    "gut": "Die Dozentin nickt zufrieden. Das Fundament steht.",
+    "schlecht": "Die Dozentin empfiehlt, das Kapitel noch einmal zu lesen."
+   },
+   "licht": "tag"
   },
   {
    "titel": "Allgemeines Verwaltungsrecht",
@@ -186,7 +195,16 @@
      "erkl": "Außenwirkung bedeutet Rechtswirkung gegenüber einer außerhalb der Verwaltung stehenden Person.",
      "quelle": "VAk-Quiz · Frage 24"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Dozentin",
+    "text": "Heute früh: allgemeines Verwaltungsrecht. Verwaltungsakt, Ermessen, Verfahren. Bitte nach vorn."
+   },
+   "ende": {
+    "gut": "Verwaltungsakt und Ermessen sitzen.",
+    "schlecht": "Beim Verwaltungsakt gibt es noch Unsicherheiten."
+   },
+   "licht": "morgen"
   },
   {
    "titel": "Beamten- und Disziplinarrecht",
@@ -279,7 +297,16 @@
      "erkl": "§ 33 Abs. 2 BeamtStG verpflichtet Beamte zur Mäßigung und Zurückhaltung – das Tragen der Dienstuniform bei politischen Veranstaltungen verletzt diese Pflicht. § 47 Abs. 1 BeamtStG definiert die schuldhafte Verletzung von Dienstpflichten als Dienstvergehen.",
      "quelle": "VAk-Quiz · Frage 79"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Dozent",
+    "text": "Beamten- und Disziplinarrecht. Das betrifft Sie alle persönlich. Los geht es."
+   },
+   "ende": {
+    "gut": "Rechte und Pflichten im Dienst sind klar.",
+    "schlecht": "Bei Rechten und Pflichten ist noch nicht alles klar."
+   },
+   "licht": "tag"
   },
   {
    "titel": "Vollstreckung und Rechtsschutz",
@@ -376,7 +403,16 @@
      "erkl": "§ 9 Abs. 1 VwVG nennt abschließend drei Zwangsmittel: Zwangsgeld, Ersatzvornahme und unmittelbarer Zwang.",
      "quelle": "VAk-Quiz · Frage 75"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Dozentin",
+    "text": "Draußen regnet es, drinnen geht es um Zwang: Vollstreckung und Rechtsschutz."
+   },
+   "ende": {
+    "gut": "Zwangsmittel und Rechtsbehelfe sind sauber auseinandergehalten.",
+    "schlecht": "Zwangsmittel und Rechtsbehelfe gehen noch durcheinander."
+   },
+   "licht": "regen"
   },
   {
    "titel": "Gemischte Klausur",
@@ -480,7 +516,16 @@
      "erkl": "Trotz parlamentsähnlicher Struktur gehört die kommunale Selbstverwaltung nach Art. 28 II GG organisatorisch zur Exekutive, da es auf kommunaler Ebene keine eigene Gewaltenteilung gibt.",
      "quelle": "VAk-Quiz · Frage 4"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Prüfungsvorsitzender",
+    "text": "Guten Abend. Dies ist die gemischte Klausur. Alles kann drankommen."
+   },
+   "ende": {
+    "gut": "Die Klausur ist bestanden.",
+    "schlecht": "Die Klausur ist noch nicht bestanden. Sie dürfen wiederholen."
+   },
+   "licht": "abend"
   }
  ]
 }

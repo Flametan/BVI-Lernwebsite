@@ -71,6 +71,7 @@ const REST = [
   './game/index.html',
   './game/css/game.css',
   './game/js/core.js',
+  './game/js/fx.js',
   './game/js/scene.js',
   './game/js/app.js',
   './game/js/m-begehung.js',

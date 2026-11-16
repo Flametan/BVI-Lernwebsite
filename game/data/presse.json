@@ -58,7 +58,16 @@
      "erkl": "Bei Arbeitsaufnahme des Krisenstabes gehen Melde- und Berichtswesen auf die BuMA über, S5 untersteht dann der BuMA.",
      "quelle": "v-idf-s52 · S5 Presse und Medienarbeit"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Einsatzleiter",
+    "text": "Wohnungsbrand, die ersten Reporter stehen an der Absperrung. Du übernimmst die Presse. Was dürfen sie, was müssen wir?"
+   },
+   "ende": {
+    "gut": "Die Presse hat ihre Auskünfte, der Einsatz läuft ungestört weiter.",
+    "schlecht": "An der Absperrung gibt es Ärger mit der Presse."
+   },
+   "licht": "abend"
   },
   {
    "titel": "Die Kameras laufen",
@@ -116,7 +125,16 @@
      "erkl": "Statements erst, wenn der Einsatz es zulässt.",
      "quelle": "v-idf-p61 · Grundsätze der Pressearbeit"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Einsatzleiter",
+    "text": "Es wird dunkel, die Kameras laufen. Die Reporter fragen nach Schuld und Namen. Bleib bei den Grundsätzen."
+   },
+   "ende": {
+    "gut": "In den Abendnachrichten läuft ein sachlicher Bericht.",
+    "schlecht": "In den Abendnachrichten werden Vermutungen als Tatsachen gesendet."
+   },
+   "licht": "daemmerung"
   },
   {
    "titel": "Schranken und Grenzen",
@@ -182,7 +200,16 @@
      "erkl": "Dazu Vorbereitung und Durchführung von Presse- und Medienkonferenzen.",
      "quelle": "v-idf-s52 · S5 Presse und Medienarbeit"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Pressesprecherin der Stadt",
+    "text": "Es regnet, und die Presse drängt auf Messwerte und Bilder. Kläre, was du herausgeben musst und was nicht."
+   },
+   "ende": {
+    "gut": "Die Presse akzeptiert die Grenzen. Niemand wurde gefährdet.",
+    "schlecht": "Es sind Auskünfte hinausgegangen, die nicht hätten hinausgehen dürfen."
+   },
+   "licht": "regen"
   },
   {
    "titel": "Das Statement",
@@ -248,8 +275,38 @@
      ],
      "erkl": "Eigener Stoff: ein möglicher Aufbau. Die Kapitel der App verlangen einfache Sprache und die Beschränkung auf das Wichtigste.",
      "quelle": "eigener Stoff"
+    },
+    {
+     "typ": "statement",
+     "frage": "Die Kamera läuft. Tippe vier Sätze in sinnvoller Reihenfolge an. Zwei Sätze gehören nicht in ein Statement.",
+     "optionen": [
+      "Die Feuerwehr ist mit 40 Kräften im Einsatz und hat das Feuer unter Kontrolle.",
+      "Der Verletzte heißt Peter M. und wohnt im Erdgeschoss.",
+      "Sobald wir Neues wissen, informieren wir Sie hier wieder.",
+      "Heute um 14:10 Uhr ist in einem Mehrfamilienhaus ein Feuer ausgebrochen.",
+      "Anwohner halten bitte Fenster und Türen geschlossen.",
+      "Schuld ist vermutlich der Mieter im zweiten Stock."
+     ],
+     "richtig": [
+      "Heute um 14:10 Uhr ist in einem Mehrfamilienhaus ein Feuer ausgebrochen.",
+      "Die Feuerwehr ist mit 40 Kräften im Einsatz und hat das Feuer unter Kontrolle.",
+      "Anwohner halten bitte Fenster und Türen geschlossen.",
+      "Sobald wir Neues wissen, informieren wir Sie hier wieder."
+     ],
+     "zeit": 75,
+     "erkl": "Aufbau: Was ist passiert? Was tut die Feuerwehr? Was sollen die Menschen tun? Wie geht es weiter? Keine Aussagen zu Schuldfragen, keine Personalien.",
+     "quelle": "Eigener Stoff, abgeleitet aus den Grundsätzen der Pressearbeit (v-idf-p61) und den Hinweisen zum Pressestatement (v-idf-p62)"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Einsatzleiter",
+    "text": "Das Feuer ist unter Kontrolle. Jetzt gibst du den O-Ton für die Abendsendung. Kurz, klar, nur das Wichtigste."
+   },
+   "ende": {
+    "gut": "Dein Statement wird ungekürzt gesendet. Es war klar und verlässlich.",
+    "schlecht": "Das Statement muss geschnitten werden. Es war zu unklar."
+   },
+   "licht": "abend"
   },
   {
    "titel": "Live-Schalte",
@@ -312,8 +369,38 @@
      "richtig": "Ruhig bleiben und nur gesicherte Fakten nennen",
      "erkl": "Eigener Stoff, abgeleitet aus den Grundsätzen: wahrheitsgetreu, keine Schuldfragen, klare und verlässliche Aussagen.",
      "quelle": "eigener Stoff"
+    },
+    {
+     "typ": "statement",
+     "frage": "Die Kamera läuft. Tippe vier Sätze in sinnvoller Reihenfolge an. Zwei Sätze gehören nicht in ein Statement.",
+     "optionen": [
+      "Ich schätze, da sind bestimmt zwanzig Menschen schwer vergiftet.",
+      "Die Betriebsleitung hat hier offensichtlich geschlampt.",
+      "Unsere Messtrupps sind im Einsatz; gesicherte Messwerte liegen noch nicht vor.",
+      "Gegen 9 Uhr ist in einem Chemiebetrieb ein Stoff ausgetreten.",
+      "Bitte meiden Sie das Gebiet und achten Sie auf die Warn-Apps.",
+      "Um 11 Uhr geben wir hier die nächsten gesicherten Informationen."
+     ],
+     "richtig": [
+      "Gegen 9 Uhr ist in einem Chemiebetrieb ein Stoff ausgetreten.",
+      "Unsere Messtrupps sind im Einsatz; gesicherte Messwerte liegen noch nicht vor.",
+      "Bitte meiden Sie das Gebiet und achten Sie auf die Warn-Apps.",
+      "Um 11 Uhr geben wir hier die nächsten gesicherten Informationen."
+     ],
+     "zeit": 60,
+     "erkl": "Nur gesicherte Fakten nennen, Vermutungen kennzeichnen oder weglassen, keine wertenden Aussagen und keine Schuldfragen.",
+     "quelle": "Eigener Stoff, abgeleitet aus den Grundsätzen der Pressearbeit (v-idf-p61) und den Hinweisen zum Pressestatement (v-idf-p62)"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Redaktion im Ohr",
+    "text": "Wir schalten gleich live zu Ihnen. Die Moderatorin wird unbequem fragen. Noch dreißig Sekunden."
+   },
+   "ende": {
+    "gut": "Die Live-Schalte lief ruhig. Die Bevölkerung weiß, was zu tun ist.",
+    "schlecht": "In der Live-Schalte sind Sätze gefallen, die jetzt Fragen aufwerfen."
+   },
+   "licht": "daemmerung"
   }
  ]
 }

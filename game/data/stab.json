@@ -48,7 +48,16 @@
      "erkl": "Zuständig: S6.",
      "quelle": "v-idf-s52 · S6 Informations- und Kommunikationswesen"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Leiter des Stabes",
+    "text": "Der Stab ist einberufen. Die ersten Meldungen liegen beim Sichter. Bring jede zum zuständigen Sachgebiet."
+   },
+   "ende": {
+    "gut": "Alle Meldungen sind angekommen. Der Stab arbeitet geordnet.",
+    "schlecht": "Meldungen sind beim falschen Sachgebiet gelandet. Der Stab verliert Zeit."
+   },
+   "licht": "tag"
   },
   {
    "titel": "Lagebesprechung",
@@ -155,7 +164,16 @@
      "erkl": "Wertung laut Protokoll: Das THW unterstützt im Wege der Amtshilfe; die Einsatzleitung und Zuständigkeit bleiben bei der örtlich zuständigen Behörde bzw. Kommune.",
      "quelle": "IdF-Quiz · Frage 50"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Leiter des Stabes",
+    "text": "Lagebesprechung in zehn Minuten. Die Sachgebiete haben vorher noch Fragen an dich. Draußen zieht Regen auf."
+   },
+   "ende": {
+    "gut": "Die Lagebesprechung beginnt pünktlich, alle Fragen sind geklärt.",
+    "schlecht": "Zur Lagebesprechung sind noch Fragen offen."
+   },
+   "licht": "regen"
   },
   {
    "titel": "Die Lage zieht an",
@@ -204,7 +222,16 @@
      "erkl": "Zuständig: S6.",
      "quelle": "v-idf-s52 · S6 Informations- und Kommunikationswesen"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Leitstelle",
+    "text": "Es dämmert, und die Lage zieht an. Die Meldungen kommen jetzt im Minutentakt. Die Zeit läuft."
+   },
+   "ende": {
+    "gut": "Trotz Zeitdruck kam jede Meldung an. Die Lage ist unter Kontrolle.",
+    "schlecht": "Im Meldungsstau ist Wichtiges liegen geblieben."
+   },
+   "licht": "daemmerung"
   },
   {
    "titel": "Großeinsatzlage",
@@ -317,7 +344,16 @@
      "erkl": "Es gibt das Ein-Stabsmodell und das Zwei-Stabsmodell (operativ-taktischer Stab plus administrativ-organisatorischer Stab unter dem HVB). Die beiden anderen Aussagen sind keine Stabsmodelle und laut Protokoll falsch.",
      "quelle": "IdF-Quiz · Frage 45"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Leiter des Stabes",
+    "text": "Großeinsatzlage. Wir müssen die Führungsorganisation erweitern und den Krisenstab einbinden. Ich verlasse mich auf dich."
+   },
+   "ende": {
+    "gut": "Die Führungsorganisation steht. Der Krisenstab ist eingebunden.",
+    "schlecht": "Die Führungsorganisation ist noch nicht stimmig."
+   },
+   "licht": "abend"
   },
   {
    "titel": "Schichtende",
@@ -412,7 +448,16 @@
      "erkl": "Auftragstaktik: Ziel und Zweck vorgeben, das Wie entscheidet der Geführte im Rahmen seiner Befugnisse (Befehle so wenig wie möglich, so viel wie nötig). Je weiter in die Zukunft ein Befehl reicht, desto freier ist er zu formulieren; bei Gefahr oder besserer Ortskenntnis darf abgewichen werden. Kommunikation ist keine Einbahnstraße.",
      "quelle": "IdF-Quiz · Frage 34"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Ablösung",
+    "text": "Schichtende in wenigen Minuten. Arbeite die letzten Meldungen und Fragen ab, dann übernehme ich."
+   },
+   "ende": {
+    "gut": "Saubere Übergabe. Die Ablösung übernimmt eine geordnete Lage.",
+    "schlecht": "Die Übergabe verzögert sich. Es ist noch zu viel offen."
+   },
+   "licht": "daemmerung"
   }
  ]
 }

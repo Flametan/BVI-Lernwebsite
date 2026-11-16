@@ -18,7 +18,7 @@
   const steigt = (k, z) => (k % 2 === 0 ? (z - ZN) / LEN : (ZS - z) / LEN);      // Anteil der Höhe auf dem Lauf des Geschosses k
 
   function start(ctx){
-    const L = ctx.level, ui = ctx.ui, st = STAGE.create(ctx.canvas, ui), sc = st.scene, n = L.geschosse.length;
+    const L = ctx.level, ui = ctx.ui, st = STAGE.create(ctx.canvas, ui, { licht:ctx.licht, fx:ctx.fx }), sc = st.scene, n = L.geschosse.length;
     const S = STAGE.surf, Mt = STAGE.mat;
     const braucht = (g, teil) => L.aufgaben.some(a => a.g === g && a.teil === teil);
     function mesh(geo, m, x, y, z, parent, cast){ const o = new THREE.Mesh(geo, m); o.position.set(x, y, z); o.castShadow = cast !== false; o.receiveShadow = true; parent.add(o); return o; }
@@ -45,7 +45,7 @@
       function wand(x1, z1, x2, z2, m, hoch){
         const h = hoch || WH, o = quader(grp, x1, z1, x2, z2, 0, h, (m || mWand).clone()); o.material.transparent = true;
         quader(o, -(x2 - x1) / 2, -(z2 - z1) / 2, (x2 - x1) / 2, (z2 - z1) / 2, h / 2, 0.035, mKante, false);        // dunkle Schnittkante oben
-        boxes.push({ x1, x2, z1, z2 }); faders.push(o); return o;
+        boxes.push({ x1, x2, z1, z2 }); faders.push(o); STAGE.schatten(grp, x1, z1, x2, z2, 0.34, 0.3); return o;
       }
       const wallZ = (x, z1, z2, m, th) => wand(x - (th || TH) / 2, z1, x + (th || TH) / 2, z2, m);
       const wallX = (z, x1, x2, m) => wand(x1, z - TH / 2, x2, z + TH / 2, m);
@@ -91,7 +91,7 @@
 
     /* Möbel: eine Sperrfläche je Möbelgruppe, Einzelteile nur fürs Auge */
     function einrichten(grp, boxes, name, geteilt, flur, keller){
-      const q = (x1, z1, x2, z2, y0, h, m) => quader(grp, x1, z1, x2, z2, y0, h, m), sperre = (x1, z1, x2, z2) => boxes.push({ x1, x2, z1, z2 });
+      const q = (x1, z1, x2, z2, y0, h, m) => quader(grp, x1, z1, x2, z2, y0, h, m), sperre = (x1, z1, x2, z2) => { boxes.push({ x1, x2, z1, z2 }); STAGE.schatten(grp, x1, z1, x2, z2, 0.4, 0.22); };
       const holz = S('holz', 1, 1), dunkel = Mt('#22262c'), metall = Mt('#8b949f', { metalness:0.6, roughness:0.4 }), stoff = Mt('#4f6f95'), weiss = Mt('#f1f1ee'), gruen = Mt('#3f8a45'), ton = Mt('#a5673f');
       const pflanze = (x, z) => { mesh(new THREE.CylinderGeometry(0.2, 0.15, 0.4, 10), ton, x, 0.2, z, grp); mesh(new THREE.IcosahedronGeometry(0.42, 1), gruen, x, 0.85, z, grp); sperre(x - 0.2, z - 0.2, x + 0.2, z + 0.2); };
       const kiste = (x, z, s, h) => { q(x - s / 2, z - s / 2, x + s / 2, z + s / 2, 0, h, holz); sperre(x - s / 2, z - s / 2, x + s / 2, z + s / 2); };
@@ -128,7 +128,7 @@
     }
 
     /* ---------- Außenwelt (Geländehöhe = Fußboden des Erdgeschosses) ---------- */
-    const out = new THREE.Group(); sc.add(out);
+    const out = new THREE.Group(), geher = []; let auto = null; sc.add(out);
     (function welt(){
       const flaeche = (x1, z1, x2, z2, y, m) => { const o = mesh(new THREE.PlaneGeometry(x2 - x1, z2 - z1), m, (x1 + x2) / 2, y, (z1 + z2) / 2, out, false); o.rotation.x = -Math.PI / 2; return o; };
       const gras = (x1, z1, x2, z2) => flaeche(x1, z1, x2, z2, -0.02, S('gras', (x2 - x1) / 5, (z2 - z1) / 5));
@@ -173,6 +173,9 @@
       })(9, 22.6);
       // Autos
       [[-16, 27.2, '#2f5d8a'], [38, 22.5, '#8a8f96'], [-44, 22.5, '#7a2f2f']].forEach(([x, z, c]) => { const lack = Mt(c, { roughness:0.3, metalness:0.4 }); quader(out, x, z, x + 4.3, z + 1.8, 0.35, 0.65, lack); quader(out, x + 1, z + 0.08, x + 3.4, z + 1.72, 1.0, 0.55, Mt('#1d2b3a', { roughness:0.1, metalness:0.6 })); [[0.9, 0], [3.4, 0], [0.9, 1.8], [3.4, 1.8]].forEach(([a, b]) => { mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.24, 14), Mt('#151515'), x + a, 0.34, z + b, out).rotation.x = Math.PI / 2; }); });
+      // Leben auf der Straße: zwei Passanten auf dem Gehweg, ein Auto fährt vorbei
+      [[[-30, 20.7], [60, 20.7]], [[70, 30.6], [-40, 30.6]]].forEach((w, i) => { const f = STAGE.figure({ zivil:true, jacke:['#7a3b3b', '#3b6a7a'][i], hose:'#2b2f3a', haar:['#2a1d14', '#c9a45c'][i] }); f.position.set(w[0][0], 0, w[0][1]); out.add(f); geher.push({ f, p:w, i:1, v:1.2 + i * 0.15 }); });
+      (function(){ const g = new THREE.Group(), lack = Mt('#d9dde2', { roughness:0.3, metalness:0.5 }); quader(g, -2.1, -0.9, 2.1, 0.9, 0.35, 0.65, lack); quader(g, -1.1, -0.82, 1.3, 0.82, 1.0, 0.55, Mt('#1d2b3a', { roughness:0.1, metalness:0.6 })); [[-1.3, -0.9], [1.3, -0.9], [-1.3, 0.9], [1.3, 0.9]].forEach(([a, b]) => { mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.24, 14), Mt('#151515'), a, 0.34, b, g).rotation.x = Math.PI / 2; }); g.position.set(-100, 0, 24); out.add(g); auto = g; })();
       // Hügel am Horizont
       [[-150, -170, 90], [20, -210, 120], [170, -150, 100], [-200, 60, 110], [210, 80, 120], [40, 220, 130]].forEach(h => { const o = mesh(new THREE.SphereGeometry(h[2], 20, 10), Mt('#5f8a5a'), h[0], -h[2] * 0.72, h[1], out, false); o.receiveShadow = false; });
     })();
@@ -189,9 +192,9 @@
     let left = tasks.length;
 
     /* ---------- Figur, Treppe, Kamera, Ablauf ---------- */
-    const fig = STAGE.figure(); sc.add(fig);
+    const fig = STAGE.figure(); sc.add(fig); st.quellen.staub(1, 1, W - 1, DP - 1, 2.4, 40);
     const pfeil = STAGE.arrow(FARBE.offen); sc.add(pfeil); let stepT = 0;
-    const pos = { x:2.5, z:4.6, y:0 }; let cur = Math.min(1, n - 1), shown = -1, face = Math.PI, near = null, busy = false, uiKey = '';
+    const pos = { x:2.5, z:4.6, y:0 }; let cur = Math.min(1, n - 1), shown = -1, face = Math.PI, near = null, busy = false, uiKey = '', gespiegelt = false;
     const tgt = new THREE.Vector3(pos.x, 1.2, pos.z), ray = new THREE.Raycaster(), tmp = new THREE.Vector3(); let faded = [], tick = 0;
 
     // In welchem Lauf steht die Stelle (x, z) im Geschoss g? up = eigener Lauf nach oben, down = Lauf des unteren Geschosses
@@ -229,12 +232,12 @@
       ui.act.hidden = !near; if(near) ui.act.textContent = 'Prüfen: ' + ORT[near.a.teil][2];
     }
     async function pruefen(){
-      if(busy || !near) return;
-      const t = near; busy = true; st.pause(true);
-      const res = await ctx.ask(t.a);                    // { tries } oder null, wenn die Frage geschlossen wurde
-      busy = false; st.pause(false); if(!res) return;
+      if(busy || !near || st.imAnflug() || !st.input.frei) return;
+      const t = near; busy = true; st.halt(true); st.fokus(t.x, t.z); face = Math.atan2(t.x - pos.x, t.z - pos.z) || face;
+      const res = await ctx.ask(t.a, ORT[t.a.teil][2]);  // { tries } oder null, wenn die Frage geschlossen wurde
+      busy = false; st.halt(false); st.fokus(null); if(!res) return;
       t.state = res.tries; t.beam.setColor(FARBE[res.tries === 1 ? 'ok' : res.tries === 2 ? 'halb' : 'falsch'], false);
-      near = null; uiKey = ''; ctx.count(res.tries);
+      near = null; uiKey = ''; st.feier(pos.x, pos.y + 1.6, pos.z, res.tries); ctx.count(res.tries, t.a);
       if(--left === 0) ctx.finish();
     }
     st.input.action = pruefen; st.input.key = k => { if(k === 'Escape' || k === 'p') ctx.menu(); };
@@ -259,7 +262,10 @@
       const off = (shown - cur) * FH, F = floors[shown];
       F.grp.position.y = off; out.position.y = (1 - cur) * FH;
       const rh = Math.max(0, (shown - 1) * FH); rumpf.visible = rh > 0; if(rumpf.visible){ rumpf.scale.y = rh; rumpf.position.y = off - 0.2 - rh / 2; mRumpf.map.repeat.y = Math.max(1, Math.round(rh / 3)); }
-      fig.position.set(pos.x, pos.y, pos.z); fig.rotation.y = face; fig.animate(dt, sp, fig.userData.steig || 0);
+      let fr = face - fig.rotation.y; fr = Math.atan2(Math.sin(fr), Math.cos(fr)); fig.rotation.y += fr * Math.min(1, dt * 14);
+      fig.position.set(pos.x, pos.y, pos.z); fig.animate(dt, sp, fig.userData.steig || 0);
+      for(let i = 0; i < geher.length; i++){ const l = geher[i], f = l.f, t = l.p[l.i], dx = t[0] - f.position.x, dz = t[1] - f.position.z, d = Math.hypot(dx, dz); if(d < 0.1){ l.i = (l.i + 1) % l.p.length; } else { const k = Math.min(d, l.v * dt) / d; f.position.x += dx * k; f.position.z += dz * k; f.rotation.y = Math.atan2(dx, dz); } f.animate(dt, l.v, 0); }
+      if(auto){ auto.position.x += dt * 11; if(auto.position.x > 150) auto.position.x = -120; }
       F.doors.forEach(d => { const open = Math.hypot(pos.x - d.x, pos.z - d.z) < 2.3 ? 1.5 : 0; if(open && !d.o) STAGE.sfx('door'); d.o = open; d.a += (open - d.a) * Math.min(1, dt * 7); d.piv.rotation.y = d.a; });
       // Nächste offene Aufgabe (zum Prüfen) und Ziel des Richtungspfeils
       near = null; let best = 2.1, zx = null, zz = 0, bd = 1e9, oben = false, unten = false;
@@ -269,13 +275,14 @@
         else { const d = Math.hypot(pos.x - t.x, pos.z - t.z); if(d < best && !zn){ best = d; near = t; } if(d < bd){ bd = d; zx = t.x; zz = t.z; } }
       });
       if(zx === null && (oben || unten)){ const b = BAND[oben ? upBand(cur) : upBand(cur - 1)]; zx = (b[0] + b[1]) / 2; zz = cur % 2 === 0 ? ZN - 0.4 : ZS + 0.4; bd = Math.hypot(pos.x - zx, pos.z - zz); }
-      pfeil.visible = zx !== null && bd > 1.6 && !zn;
+      pfeil.visible = zx !== null && bd > 1.6 && !zn && !busy;
       if(pfeil.visible){ const a = Math.atan2(zx - pos.x, zz - pos.z); pfeil.position.set(pos.x + Math.sin(a) * 1.1, pos.y + 0.07, pos.z + Math.cos(a) * 1.1); pfeil.rotation.y = a; }
       refreshUi();
       // Kamera folgt weich hinter und über der Figur; Sonne und Himmel wandern mit
       const kf = Math.min(1, dt * 8); tgt.x += (pos.x - tgt.x) * kf; tgt.z += (pos.z - tgt.z) * kf; tgt.y += (pos.y + 1.2 - tgt.y) * kf;
-      const cp = Math.cos(inp.pitch), d = inp.dist;
-      st.camera.position.set(tgt.x + sy * cp * d, tgt.y + Math.sin(inp.pitch) * d, tgt.z + cy * cp * d); st.camera.lookAt(tgt); st.follow(tgt);
+      if(!gespiegelt && time > 0.05){ gespiegelt = true; fig.visible = false; st.spiegeln(W / 2, pos.y + 1.5, DP / 2); fig.visible = true; }
+      st.cam(tgt, dt);
+      if(tick % 6 === 0 && ctx.karte) ctx.karte({ x1:-0.5, z1:-0.5, x2:W + 0.5, z2:DP + 0.5 }, floors[cur].boxes, tasks.filter(t => t.g === cur && t.state === null).map(t => ({ x:t.x, z:t.z, c:FARBE.offen })), { x:pos.x, z:pos.z, rot:face });
       // Wände zwischen Kamera und Figur werden durchsichtig (jeden dritten Durchlauf geprüft)
       if(++tick % 3 === 0){
         tmp.set(pos.x, pos.y + 1.3, pos.z); const len = tmp.distanceTo(st.camera.position);
@@ -287,7 +294,7 @@
 
     return {
       dispose(){ ui.act.hidden = true; ui.act.onclick = null; st.dispose(); },
-      pause: v => st.pause(v), stage:st,
+      pause: v => st.pause(v), halt: v => st.halt(v), stage:st,
       // für die automatische Prüfung
       _stage:st, _pos:pos, _tasks:tasks, _floor:() => cur, _shown:() => shown,
       _goto(i){ const t = tasks[i]; cur = t.g; pos.x = t.x; pos.z = t.z; pos.y = 0; tgt.set(pos.x, 1.2, pos.z); uiKey = ''; }

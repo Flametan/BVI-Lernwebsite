@@ -6,10 +6,14 @@ Quellen (nichts wird erfunden, außer wo "eigener Stoff" dabeisteht):
 - Lernkarten der App (k-ibk-*, k-feuak-*) in js/app.js: Frage der Karte, richtige Antwort = Antwort der Karte,
   falsche Antworten = Antworten anderer Karten desselben Fachs
 - von Hand aus den Kapiteln abgeleitete Aufgaben (Presse, Zivile Verteidigung, UCPM, Zuordnung der Sachgebiete)
+- Aufgaben mit eigener Spielmechanik und die Rahmengeschichte je Level: game/tools/extra_data.py
 
 Aufruf im Repo-Ordner: python3 game/tools/build_data.py
 """
-import html, json, os, random, re
+import html, json, os, random, re, sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import extra_data as X
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 OUT = os.path.join(ROOT, 'game', 'data')
@@ -98,15 +102,45 @@ def write(mission, welt, level):
     for L in level:
         for a in L['aufgaben']:
             a.pop('_cat', None)
-            assert a['typ'] in ('mc', 'multi', 'reihe', 'bringen'), a
+            assert a['typ'] in ('mc', 'multi', 'reihe', 'bringen', 'bausteine', 'gespraech', 'budget', 'statement'), a
+            assert a.get('quelle') and a.get('frage'), a
+            if a['typ'] == 'bausteine':
+                assert all(f['richtig'] in f['optionen'] and len(f['optionen']) == 3 for f in a['felder']), a['frage']
+            if a['typ'] == 'gespraech':
+                assert all(sum(1 for o in z['optionen'] if o['gut']) == 1 for z in a['zuege']), a['frage']
+            if a['typ'] in ('budget',):
+                assert all(r in [x['t'] for x in a['posten']] for r in a['richtig']), a['frage']
+            if a['typ'] in ('statement', 'reihe'):
+                assert all(r in a['optionen'] for r in a['richtig']), a['frage']
             if a['typ'] == 'mc':
                 assert a['richtig'] in a['optionen'] and len(set(a['optionen'])) == len(a['optionen']), a['frage']
             if a['typ'] == 'multi':
                 assert a['richtig'] and all(r in a['optionen'] for r in a['richtig']), a['frage']
     assert len(level) == 5, (mission, len(level))
+    geschichte(mission, level)
     with open(os.path.join(OUT, mission + '.json'), 'w', encoding='utf-8') as f:
         json.dump({'mission': mission, 'welt': welt, 'level': level}, f, ensure_ascii=False, indent=1)
     print(mission, [len(L['aufgaben']) for L in level])
+
+
+def geschichte(mission, level):
+    """Rahmengeschichte und Lichtstimmung je Level eintragen."""
+    for i, L in enumerate(level):
+        wer, text, gut, schlecht = X.STORY[mission][i]
+        L['auftrag'] = {'wer': wer, 'text': text}
+        L['ende'] = {'gut': gut, 'schlecht': schlecht}
+        L['licht'] = X.LICHT[mission][i]
+
+
+def begehung():
+    """Die Aufgaben der Begehung sind von Hand gepflegt; hier kommen nur Rahmengeschichte und Licht dazu."""
+    p = os.path.join(OUT, 'begehung.json')
+    with open(p, encoding='utf-8') as f:
+        d = json.load(f)
+    geschichte('begehung', d['level'])
+    with open(p, 'w', encoding='utf-8') as f:
+        json.dump(d, f, ensure_ascii=False, indent=1)
+    print('begehung', [len(L['aufgaben']) for L in d['level']])
 
 
 def chunks(pool, n, size):
@@ -116,6 +150,7 @@ def chunks(pool, n, size):
 # ---------------------------------------------------------------- Stellungnahme (VB-Quiz der App)
 def stellungnahme():
     rnd = random.Random(11)
+    extra = X.stellungnahme_extra()
     pool = [from_quiz(q, 'IdF-Quiz') for q in IDF_Q if q['cat'].startswith('Vorbeugender') and q['type'] in ('mc', 'multi') and not q.get('unsicher') and not q.get('img')]
     neu = [p for p, q in zip(pool, [q for q in IDF_Q if q['cat'].startswith('Vorbeugender') and q['type'] in ('mc', 'multi') and not q.get('unsicher') and not q.get('img')]) if '12/2026' in q['cat']]
     alt = [p for p in pool if p not in neu]
@@ -126,6 +161,7 @@ def stellungnahme():
     level = []
     for i in range(5):
         a = neu[i * 4:(i + 1) * 4] + alt[i * 2:(i + 1) * 2]
+        a[1:1] = extra.get(i, [])
         level.append({'titel': titel[i], 'steckbrief': text[i], 'aufgaben': a})
     write('stellungnahme', 'amt', level)
 
@@ -201,7 +237,8 @@ def presse():
     titel = ['Rechtsgrundlagen', 'Die Kameras laufen', 'Schranken und Grenzen', 'Das Statement', 'Live-Schalte']
     text = ['Die ersten Reporter treffen ein. Was gilt rechtlich?', 'Die Presse stellt Fragen zur Einsatzstelle.', 'Was die Presse darf und was du verweigern kannst.', 'Jetzt gibst du selbst den O-Ton.', 'Die Fragen werden unbequem.']
     order = [[0, 1, 2, 12], [4, 5, 6, 15], [7, 8, 9, 13], [10, 11, 16, 18], [3, 14, 17, 19]]
-    write('presse', 'einsatz', [{'titel': titel[i], 'steckbrief': text[i], 'aufgaben': [t[k] for k in order[i]]} for i in range(5)])
+    extra = X.presse_extra()
+    write('presse', 'einsatz', [{'titel': titel[i], 'steckbrief': text[i], 'aufgaben': [t[k] for k in order[i]] + extra.get(i, [])} for i in range(5)])
 
 
 # ---------------------------------------------------------------- Lage Bevölkerungsschutz (Kapitel Zivile Verteidigung)
@@ -298,7 +335,7 @@ def ucpm():
 
 
 # ---------------------------------------------------------------- IBK und FeuAK (Lernkarten), VAk (Quiz)
-def karten(mission, welt, prefix, gruppen, titel, text, seed):
+def karten(mission, welt, prefix, gruppen, titel, text, seed, extra=None):
     rnd = random.Random(seed)
     pool = from_cards(cards(prefix), rnd)
     level = []
@@ -311,7 +348,7 @@ def karten(mission, welt, prefix, gruppen, titel, text, seed):
         key = '|'.join(g); start = used.get(key, 0)
         take = level[i][start:start + 6]; used[key] = start + 6
         assert len(take) >= 4, (mission, i, len(take))
-        out.append({'titel': titel[i], 'steckbrief': text[i], 'aufgaben': take})
+        out.append({'titel': titel[i], 'steckbrief': text[i], 'aufgaben': take[:1] + (extra or {}).get(i, []) + take[1:]})
     write(mission, welt, out)
 
 
@@ -336,6 +373,7 @@ def vak():
 
 
 if __name__ == '__main__':
+    begehung()
     stellungnahme()
     stab()
     presse()
@@ -344,8 +382,8 @@ if __name__ == '__main__':
     ta = ['Transaktionsanalyse']
     karten('ibk', 'wache', 'ibk', [ta, ta, ta, ta, ['Konflikte']],
            ['Ich-Zustände', 'Transaktionen', 'Grundbedürfnisse und Antreiber', 'Spiele und Skript', 'Konflikte'],
-           ['Auf der Wache: Die Kolleginnen und Kollegen haben Fragen zur Transaktionsanalyse.', 'Was geht zwischen uns vor?', 'Was treibt Menschen an?', 'Muster erkennen.', 'Ein Konflikt auf der Wache.'], 16)
+           ['Auf der Wache: Die Kolleginnen und Kollegen haben Fragen zur Transaktionsanalyse.', 'Was geht zwischen uns vor?', 'Was treibt Menschen an?', 'Muster erkennen.', 'Ein Konflikt auf der Wache.'], 16, X.ibk_extra())
     karten('feuak', 'planung', 'feuak', [['Haushalt'], ['PM'], ['QM'], ['VWL'], ['Vergabe', 'Bedarfsplanung']],
            ['Haushalt', 'Projektmanagement', 'Qualitätsmanagement', 'Volkswirtschaft', 'Vergabe und Bedarfsplanung'],
-           ['Im Planungsbüro: Der Haushalt steht an.', 'Ein Projekt für die neue Wache.', 'Wie misst man gute Arbeit?', 'Wirtschaftliche Grundlagen.', 'Beschaffen und Bedarf planen.'], 17)
+           ['Im Planungsbüro: Der Haushalt steht an.', 'Ein Projekt für die neue Wache.', 'Wie misst man gute Arbeit?', 'Wirtschaftliche Grundlagen.', 'Beschaffen und Bedarf planen.'], 17, X.feuak_extra())
     vak()

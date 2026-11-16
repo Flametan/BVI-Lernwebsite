@@ -71,7 +71,16 @@
      "erkl": "EUCPT = EU Civil Protection Team.",
      "quelle": "v-idf-u101 · Abkürzungen"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Teamleiter",
+    "text": "Guten Morgen auf dem Flugfeld. Bevor wir verladen, müssen alle die Abkürzungen kennen. Ohne die versteht man in Brüssel nichts."
+   },
+   "ende": {
+    "gut": "Das Team spricht jetzt dieselbe Sprache.",
+    "schlecht": "Im Team gehen die Abkürzungen noch durcheinander."
+   },
+   "licht": "morgen"
   },
   {
    "titel": "Der Weg des Ersuchens",
@@ -141,7 +150,16 @@
      "erkl": "Emergency Response Coordination Centre: koordiniert die EU-Katastrophenbewältigung.",
      "quelle": "v-idf-u102 · ERCC"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Lagezentrum Brüssel",
+    "text": "Ein Mitgliedstaat bittet um Hilfe. Auf welchem Weg läuft das Ersuchen, und wer koordiniert?"
+   },
+   "ende": {
+    "gut": "Das Hilfeersuchen ist auf dem richtigen Weg.",
+    "schlecht": "Das Ersuchen ist an der falschen Stelle gelandet."
+   },
+   "licht": "tag"
   },
   {
    "titel": "Rechtsgrundlagen",
@@ -203,7 +221,16 @@
      "erkl": "Für Vorsorge, Vorbereitung und Bewältigung.",
      "quelle": "v-idf-u102 · Rechtsgrundlagen und Akteure"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Teamleiter",
+    "text": "Es regnet, die Maschine wartet. Welche Kapazitäten können wir anbieten, und was gehört in welches Modul?"
+   },
+   "ende": {
+    "gut": "Die Module sind richtig gemeldet und verladen.",
+    "schlecht": "Beim Verladen fehlt die Übersicht über die Kapazitäten."
+   },
+   "licht": "regen"
   },
   {
    "titel": "Kapazitäten",
@@ -266,7 +293,16 @@
      "erkl": "In-Kind Assistance = Hilfsgüter.",
      "quelle": "v-idf-u102 · ECPP Kapazitätenpyramide"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Verbindungsbeamtin",
+    "text": "Vor dem Abflug am Abend noch die Fragen zu Kosten und Rechtsgrundlagen. Der Start ist in einer Stunde."
+   },
+   "ende": {
+    "gut": "Start pünktlich, alle Formalitäten sind geklärt.",
+    "schlecht": "Der Abflug verzögert sich wegen offener Formalitäten."
+   },
+   "licht": "abend"
   },
   {
    "titel": "Ankunft im Einsatzland",
@@ -347,7 +383,16 @@
      "erkl": "EFAS = European Flood Awareness System.",
      "quelle": "v-idf-u102 · Copernicus"
     }
-   ]
+   ],
+   "auftrag": {
+    "wer": "Teamleiter",
+    "text": "Einsatzbesprechung vor dem Abflug: Akteure, Ablauf, Zuständigkeiten. Danach geht es los."
+   },
+   "ende": {
+    "gut": "Abflug. Das Team ist vorbereitet.",
+    "schlecht": "Die Einsatzbesprechung muss wiederholt werden."
+   },
+   "licht": "tag"
   }
  ]
 }

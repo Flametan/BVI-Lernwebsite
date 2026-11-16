@@ -119,3 +119,55 @@ button{font:inherit;color:inherit;cursor:pointer;}
 .hud-t{font-weight:700;color:var(--accent);}
 .hud-t.knapp{color:var(--bad);}
 .note{position:absolute;left:16px;right:16px;top:56px;margin:0 auto;max-width:560px;padding:10px 14px;border-radius:12px;background:var(--accent-bg);border:1px solid var(--accent);font-size:.9rem;text-align:center;pointer-events:none;}
+
+/* Training, Bestenliste, Links zum Kapitel */
+.card .wbar{height:6px;border-radius:99px;background:var(--raised);overflow:hidden;margin-top:auto;}
+.card .wbar i{display:block;height:100%;background:var(--ok);border-radius:99px;}
+.card.info-c{cursor:default;}
+.lv-links{margin:-6px 0 14px;font-size:.9rem;}
+.lv-links a,.fb a.src{color:var(--accent);}
+.row.name{border-top:0;max-width:440px;}
+.row.name input{font:inherit;color:inherit;background:var(--raised);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:0;flex:0 1 220px;}
+.rangl{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;max-width:640px;counter-reset:r;}
+.rangl li{counter-increment:r;display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-variant-numeric:tabular-nums;}
+.rangl li::before{content:counter(r);display:grid;place-items:center;width:28px;height:28px;flex:none;border-radius:50%;background:var(--raised);font-weight:700;font-size:.85rem;}
+.rangl li b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rangl li span{font-size:.82rem;color:var(--muted);}
+.rangl .leer{color:var(--muted);}.rangl .leer::before{display:none;}
+
+/* Im Spiel: Minikarte, Auftrag, Aufnahme-Anzeige, Aufblitzen bei falscher Antwort */
+.karte{position:absolute;right:12px;top:10px;border-radius:12px;background:color-mix(in srgb,var(--card) 82%,transparent);border:1px solid var(--line);pointer-events:none;}
+.brief{position:absolute;left:16px;right:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));margin:0 auto;max-width:560px;z-index:3;display:flex;flex-direction:column;gap:8px;padding:14px 16px;border-radius:16px;background:var(--card);border:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.28);}
+.brief .btn{align-self:flex-end;}
+.rec{position:absolute;left:12px;top:52px;display:flex;align-items:center;gap:8px;margin:0;padding:5px 12px;border-radius:99px;background:rgba(0,0,0,.6);color:#fff;font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;pointer-events:none;}
+.rec i{width:10px;height:10px;border-radius:50%;background:#ff3b30;}
+.blitz{position:absolute;inset:0;pointer-events:none;opacity:0;box-shadow:inset 0 0 90px 30px rgba(200,40,40,.75);transition:opacity .5s ease-out;}
+.blitz.on{opacity:1;transition:none;}
+.blitz.gut{box-shadow:inset 0 0 90px 20px rgba(40,170,90,.6);}
+@media (prefers-reduced-motion:no-preference){ .rec i{animation:rec 1s steps(2) infinite;} @keyframes rec{50%{opacity:.25;}} .brief{animation:up .3s cubic-bezier(.2,.8,.2,1);} }
+
+/* Neue Aufgabenarten */
+.q-bild{margin-bottom:10px;color:var(--fg);}
+.q-bild svg{display:block;width:100%;max-width:420px;height:auto;margin:0 auto;}
+.fall{padding:10px 12px;border-radius:12px;background:var(--raised);font-size:.92rem;margin-bottom:10px;}
+.grp{grid-column:1/-1;display:flex;flex-direction:column;gap:6px;padding-top:4px;}
+.grp-t{font-size:.74rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);}
+.grp.falsch .grp-t{color:var(--bad);}
+.blase{grid-column:1/-1;padding:10px 14px;border-radius:14px 14px 14px 4px;background:var(--accent-bg);border:1px solid var(--accent);font-size:.98rem;}
+.blase b{display:block;font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);}
+.stimmung{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:.8rem;color:var(--muted);}
+.stimmung div{flex:1;height:8px;border-radius:99px;background:var(--raised);overflow:hidden;}
+.stimmung i{display:block;height:100%;border-radius:99px;background:var(--ok);transition:width .35s ease,background-color .35s ease;}
+.stimmung i.mittel{background:var(--accent);}.stimmung i.schlecht{background:var(--bad);}
+.urteil{grid-column:1/-1;font-size:.86rem;color:var(--muted);}
+.urteil.gut{color:var(--ok);}.urteil.schlecht{color:var(--bad);}
+.opt .kosten{float:right;margin-left:10px;font-variant-numeric:tabular-nums;color:var(--muted);font-weight:700;}
+.summe{grid-column:1/-1;display:flex;justify-content:space-between;gap:10px;padding:8px 12px;border-radius:12px;background:var(--raised);font-weight:700;font-variant-numeric:tabular-nums;}
+.summe.ueber{background:var(--bad-bg);color:var(--bad);}
+.zeitb{height:6px;border-radius:99px;background:var(--raised);overflow:hidden;margin-bottom:10px;}
+.zeitb i{display:block;height:100%;background:var(--accent);border-radius:99px;width:100%;}
+.zeitb i.knapp{background:var(--bad);}
+.r-liste{margin:0;padding-left:18px;font-size:.84rem;color:var(--muted);max-height:32vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px;}
+.r-liste b{color:var(--fg);font-weight:600;}
+.result-b{max-height:100%;overflow-y:auto;}
+@media(max-width:760px){ .tip,.note{top:auto;bottom:calc(160px + env(safe-area-inset-bottom,0px));} .karte{transform:scale(.8);transform-origin:top right;} }

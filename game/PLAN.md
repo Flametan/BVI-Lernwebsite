@@ -1,15 +1,28 @@
 # IdF-Spiel – Plan
 
-Stand: Alle neun Missionen sind spielbar, je fünf Level.
+Stand: Alle neun Missionen sind spielbar, je fünf Level. Dazu kommen Training (Wiederholung, Prüfung), Wochenaufgabe und Bestenliste.
 
 - **Begehung** hat eine eigene Welt (`js/m-begehung.js`, mehrgeschossig mit Treppenhaus).
 - **Alle anderen** teilen sich `js/m-welt.js`: eine begehbare Kulisse je Mission (Stabsraum, Brandschutzdienststelle, Einsatzstelle,
-  Lagezentrum, Flugfeld, Wache, Hörsaal, Planungsbüro) mit Stationen. Aufgabenarten: eine Antwort, mehrere Antworten,
-  Reihenfolge und im Stab „Meldung holen und zum zuständigen Sachgebiet bringen"; zwei Stab-Level laufen gegen die Zeit.
+  Lagezentrum, Flugfeld, Wache, Hörsaal, Planungsbüro) mit Stationen.
+- **Aufgabenarten** (`js/app.js`, Funktion `ask`): eine Antwort (`mc`, auf Wunsch mit Bild), mehrere Antworten (`multi`), Reihenfolge (`reihe`),
+  Meldung zum Sachgebiet bringen (`bringen`), Stellungnahme aus Textbausteinen (`bausteine`), Gespräch mit Stimmungsanzeige (`gespraech`),
+  Posten im Budget wählen (`budget`), Statement gegen die Zeit vor laufender Kamera (`statement`).
 - **Daten:** `python3 game/tools/build_data.py` erzeugt `game/data/*.json` aus den Quizfragen und Lernkarten der App und aus
-  von Hand abgeleiteten Aufgaben; jede Aufgabe nennt ihre Quelle. Vier Presse-Aufgaben sind „eigener Stoff".
-- **Abweichung vom ersten Plan:** Stellungnahme, IBK, VAk und FeuAK sind Fragen an Stationen in ihrer Kulisse, kein eigenes
-  Spielprinzip (Textbausteine, Gesprächsverlauf, Stadtplanung). Die Abschnitte unten beschreiben noch die ursprüngliche Idee.
+  von Hand abgeleiteten Aufgaben; jede Aufgabe nennt ihre Quelle. Aufgaben mit eigener Mechanik, Rahmengeschichte (`auftrag`, `ende`)
+  und Lichtstimmung (`licht`) je Level stehen in `game/tools/extra_data.py`. Eigene Übungsfälle sind im Feld `quelle` so gekennzeichnet.
+- **Effekte** (`js/fx.js`): Lichtstimmungen (Tag, Morgen, Abend, Dämmerung, Regen), Nachbearbeitung (Bloom, Vignette, in der Stufe „Hoch“
+  Tiefenunschärfe), Partikel (Staub, Rauch, Feuer, Konfetti, Regen, Rotorwind), Spiegelungen (einmal aufgenommene Umgebung),
+  weiche Bodenschatten, Minikarte, Sprachausgabe. Einstellung „Effekte“: Aus, Mittel, Hoch; bei schwacher Bildrate schaltet
+  die Grafikstufe „Automatisch“ erst die Auflösung herunter, dann die Effekte und zuletzt die Schatten ab.
+- **Kamera** (`js/scene.js`, `cam`): Anflug zu Beginn, Schwenk zur Station bei einer Frage, Nicken bei richtig, Wackeln bei falsch.
+- **Training:** Was nicht im ersten Versuch gelöst wird, ist sofort zur Wiederholung fällig; nach jeder richtigen Wiederholung wächst
+  der Abstand (1, 3, 7, 16 Tage). Prüfung: 20 gemischte Fragen, 15 Minuten, ein Versuch je Frage, Note nach dem Schlüssel des Spiels.
+- **Verknüpfung mit der App:** Die App verlinkt das Spiel unter „IdF Münster“ und in den Themenübersichten (`game/index.html?m=<Mission>&von=<Ansicht>`).
+  Im Spiel führt „Im Kapitel nachlesen“ zur passenden Ansicht (`../index.html#<Ansicht>`).
+- **Tests:** `game/tests/smoke.cjs` (Begehung), `game/tests/welten.cjs` (alle Welt-Missionen, Level wählbar), `game/tests/training.cjs` (Wiederholung, Prüfung, Bestenliste).
+- **Nicht gebaut:** Rangliste über mehrere Geräte (bräuchte einen Server). In VAk bleiben es Fragen an Stationen.
+  Die Abschnitte unten beschreiben die ursprüngliche Idee.
 
 ## Entscheidungen
 
