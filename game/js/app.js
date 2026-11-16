@@ -56,7 +56,7 @@
     }).join('');
     const have = CORE.badges();
     $('badges').innerHTML = Object.keys(CORE.BADGES).map(k => badge(k, have.includes(k))).join('');
-    if(VON){ $('app-link').href = '../index.html#' + VON; $('app-link').textContent = 'Zurück zum Kapitel in der Lern-App'; }
+    if(VON){ $('app-link').href = '../index.html#' + VON; $('app-link').textContent = VON === 'v-pause' ? 'Zurück zum Pausenraum' : 'Zurück zum Kapitel in der Lern-App'; }
     modus = 'mission'; show('home');
   }
   function badge(k, on){ const b = CORE.BADGES[k]; return '<div class="badge' + (on ? ' on' : '') + '"><b>' + esc(b.titel) + '</b>' + esc(b.text) + '</div>'; }

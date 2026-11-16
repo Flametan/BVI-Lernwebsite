@@ -18,7 +18,7 @@ Stand: Alle neun Missionen sind spielbar, je fünf Level. Dazu kommen Training (
 - **Kamera** (`js/scene.js`, `cam`): Anflug zu Beginn, Schwenk zur Station bei einer Frage, Nicken bei richtig, Wackeln bei falsch.
 - **Training:** Was nicht im ersten Versuch gelöst wird, ist sofort zur Wiederholung fällig; nach jeder richtigen Wiederholung wächst
   der Abstand (1, 3, 7, 16 Tage). Prüfung: 20 gemischte Fragen, 15 Minuten, ein Versuch je Frage, Note nach dem Schlüssel des Spiels.
-- **Verknüpfung mit der App:** Die App verlinkt das Spiel unter „IdF Münster“ und in den Themenübersichten (`game/index.html?m=<Mission>&von=<Ansicht>`).
+- **Verknüpfung mit der App:** Die App verlinkt das Spiel im Pausenraum unter dem Reiter „IdF-Spiel (3D)“ (`js/pause.js`, `game/index.html?m=<Mission>&von=v-pause`), nicht in den Themenübersichten.
   Im Spiel führt „Im Kapitel nachlesen“ zur passenden Ansicht (`../index.html#<Ansicht>`).
 - **Tests:** `game/tests/smoke.cjs` (Begehung), `game/tests/welten.cjs` (alle Welt-Missionen, Level wählbar), `game/tests/training.cjs` (Wiederholung, Prüfung, Bestenliste).
 - **Nicht gebaut:** Rangliste über mehrere Geräte (bräuchte einen Server). In VAk bleiben es Fragen an Stationen.

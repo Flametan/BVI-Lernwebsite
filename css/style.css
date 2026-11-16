@@ -4070,6 +4070,13 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .pz-src{display:flex;flex-direction:column;gap:6px;}
 .pz-src>span{font-size:.8rem;color:var(--m-muted);}
 .pz-hub{max-width:none;}
+/* Reiter Pausenspiele / IdF-Spiel (3D) und die Kacheln der Missionen (Links) */
+.pz-tabs{max-width:460px;}
+.pz-tabs button{min-height:44px;font-size:.92rem;}
+.pz-hub a.pz-tile{text-decoration:none;color:var(--m-fg);}
+.pz-hub a.pz-tile.hero{color:var(--m-on-accent,#1c1c1c);}
+@media(min-width:701px){.pz-3d{grid-template-columns:repeat(3,minmax(0,1fr));}.pz-3d .pz-tile.wide{grid-column:1 / -1;}}
+@media(min-width:1100px){.pz-3d{grid-template-columns:repeat(5,minmax(0,1fr));}.pz-3d .pz-tile.wide{grid-column:span 2;grid-row:span 2;}.pz-3d .pz-tile.hero b{font-size:1.25rem;}.pz-3d .pz-tile.hero small{font-size:.86rem;}}
 /* Tablet: Feuerwehr 3 Spalten (Einsatzfahrt zwei breit), Wissen als 3 + 2 */
 @media(min-width:701px){
   .pz-fw{grid-template-columns:repeat(3,minmax(0,1fr));}
