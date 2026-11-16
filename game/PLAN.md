@@ -121,3 +121,14 @@ game/data/<mission>.json Spielinhalte, jede Aufgabe mit Feld "quelle" (Ansicht u
 
 Startbildschirm mit allen Missionen und die Mission „Begehung" spielbar, mit Punkten, Speichern und einem Abzeichen.
 Prüfung mit Playwright bei 412×800 und 1280×800, je ein Screenshot, dann wieder Halt.
+
+## Technische Grundlagen (eingebaut)
+
+- Ton aus dem Browser (WebAudio, keine Dateien): Schritte, Tür, Treppe, richtig/falsch, Level geschafft; abschaltbar.
+- Pausenmenü (Knopf, Esc, Start-Taste) mit Einstellungen: Ton, Vibration, Grafik (automatisch, niedrig, hoch), Kamera-Empfindlichkeit, Vollbild, Neustart.
+- Auflösung passt sich im Modus „automatisch" der Bildrate an (Pixel-Ratio 0,75 bis 1,5).
+- Eingabe: Stick (Touch), Tastatur, Maus, Gamepad.
+- Richtungspfeil zur nächsten offenen Aufgabe oder zur Treppe, Schatten unter der Figur, Überblendung beim Geschosswechsel.
+- Meldung, wenn WebGL fehlt; Anhalten und Weiterlaufen nach Abbruch des Grafik-Kontexts; Pause, wenn das Fenster verdeckt ist; Bildschirm bleibt an.
+- Offline über den Service Worker der Lern-App (`sw.js`, Liste REST).
+- Automatischer Durchlauf: `node game/tests/smoke.cjs` (Server auf Port 8765).

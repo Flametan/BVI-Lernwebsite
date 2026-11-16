@@ -56,6 +56,35 @@ const STAGE = (function(){
     return s;
   }
 
+  /* ---------- Ton: kurze Klänge aus dem Browser (WebAudio), keine Dateien ---------- */
+  const AUDIO = { on:true, ctx:null };
+  function tone(f1, f2, dur, type, vol, at){
+    const c = AUDIO.ctx, t = c.currentTime + (at || 0), o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f1, t); if(f2 !== f1) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.02);
+  }
+  const SFX = {
+    step:() => tone(95, 70, 0.06, 'triangle', 0.07), door:() => tone(210, 130, 0.2, 'sawtooth', 0.035), stairs:() => { tone(300, 300, 0.09, 'triangle', 0.08); tone(400, 400, 0.09, 'triangle', 0.08, 0.1); },
+    ok:() => { tone(660, 660, 0.1, 'sine', 0.12); tone(990, 990, 0.16, 'sine', 0.12, 0.1); }, halb:() => tone(560, 560, 0.16, 'sine', 0.11),
+    bad:() => tone(190, 120, 0.28, 'square', 0.06), win:() => [523, 659, 784, 1047].forEach((f, i) => tone(f, f, 0.18, 'sine', 0.12, i * 0.12))
+  };
+  function sfx(name){
+    if(!AUDIO.on) return;
+    try{
+      if(!AUDIO.ctx){ const A = window.AudioContext || window.webkitAudioContext; if(!A) return; AUDIO.ctx = new A(); }
+      if(AUDIO.ctx.state === 'suspended') AUDIO.ctx.resume();
+      SFX[name] && SFX[name]();
+    }catch(e){}
+  }
+
+  // Richtungspfeil am Boden (zeigt zur nächsten Aufgabe oder zur Treppe)
+  function arrow(color){
+    const sh = new THREE.Shape(); sh.moveTo(0, 0.55); sh.lineTo(0.3, 0); sh.lineTo(0.1, 0); sh.lineTo(0.1, -0.35); sh.lineTo(-0.1, -0.35); sh.lineTo(-0.1, 0); sh.lineTo(-0.3, 0); sh.closePath();
+    const m = new THREE.Mesh(new THREE.ShapeGeometry(sh), new THREE.MeshBasicMaterial({ color, transparent:true, opacity:0.9, side:THREE.DoubleSide, depthTest:false }));
+    m.rotation.x = Math.PI / 2; m.renderOrder = 4; const g = new THREE.Group(); g.add(m); return g;   // Spitze zeigt nach +z, gedreht wird um die Hochachse
+  }
+
   /* ---------- Spielfigur: Einsatzkraft aus einfachen Formen, mit Laufbewegung ---------- */
   function figure(){
     const g = new THREE.Group(), L = c => new THREE.MeshLambertMaterial({ color:c });
@@ -69,6 +98,10 @@ const STAGE = (function(){
     part(new THREE.BoxGeometry(0.34, 0.06, 0.2), hell, 0, 1.74, -0.24);                    // Nackenschutz
     const limb = (x, y, h, mat) => { const p = new THREE.Group(); p.position.set(x, y, 0); g.add(p); part(new THREE.BoxGeometry(0.2, h, 0.22), mat, 0, -h / 2, 0, p); return p; };
     const aL = limb(-0.43, 1.52, 0.66, blau), aR = limb(0.43, 1.52, 0.66, blau), bL = limb(-0.17, 0.82, 0.82, blau), bR = limb(0.17, 0.82, 0.82, blau);
+    const sc = document.createElement('canvas'); sc.width = sc.height = 64; const sx = sc.getContext('2d'), gr = sx.createRadialGradient(32, 32, 4, 32, 32, 30);
+    gr.addColorStop(0, 'rgba(0,0,0,.45)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); sx.fillStyle = gr; sx.fillRect(0, 0, 64, 64);
+    const sh = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.5), new THREE.MeshBasicMaterial({ map:new THREE.CanvasTexture(sc), transparent:true, depthWrite:false }));
+    sh.rotation.x = -Math.PI / 2; sh.position.y = 0.03; g.add(sh);
     let ph = 0;
     g.animate = (dt, speed) => {
       ph += dt * (4 + speed * 2.2);
@@ -80,8 +113,17 @@ const STAGE = (function(){
 
   /* ---------- Bühne ---------- */
   function create(canvas, ui){
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, powerPreference:'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, powerPreference:'high-performance' });   // wirft, wenn das Gerät kein WebGL kann
+    // Auflösung: „auto“ passt die Pixel-Ratio an die Bildrate an (0,75 bis 1,5), „niedrig“ und „hoch“ sind fest
+    const DPR = window.devicePixelRatio || 1; let qual = 'auto', pr = Math.min(DPR, 1.5), acc = 0, cnt = 0, gut = 0;
+    renderer.setPixelRatio(pr);
+    function setQuality(q){ qual = q; pr = q === 'niedrig' ? Math.min(DPR, 0.75) : q === 'hoch' ? Math.min(DPR, 2) : Math.min(DPR, 1.5); renderer.setPixelRatio(pr); resize(); }
+    function adapt(dt){
+      if(qual !== 'auto') return; acc += dt; if(++cnt < 60) return;
+      const fps = cnt / acc; acc = cnt = 0;
+      if(fps < 27 && pr > 0.75){ pr = Math.max(0.75, pr - 0.25); gut = 0; renderer.setPixelRatio(pr); resize(); }
+      else if(fps > 55 && pr < Math.min(DPR, 1.5) && ++gut >= 4){ pr = Math.min(DPR, 1.5, pr + 0.25); gut = 0; renderer.setPixelRatio(pr); resize(); }
+    }
     const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(55, 1, 0.1, 400);
     scene.add(sky());
     scene.add(new THREE.HemisphereLight(0xffffff, 0x8d8f96, 0.95));
@@ -91,7 +133,7 @@ const STAGE = (function(){
     const ro = new ResizeObserver(resize); ro.observe(canvas); resize();
 
     /* Steuerung: Bewegung (Stick oder WASD/Pfeile), Kamera (Ziehen, Zoom), Aktion (E, Enter, Knopf) */
-    const input = { mx:0, my:0, yaw:0.5, pitch:0.66, dist:8.5, action:null, key:null };
+    const input = { mx:0, my:0, yaw:0.5, pitch:0.66, dist:8.5, sens:1, action:null, key:null };
     const keys = new Set();
     function kd(e){
       if(e.target && /INPUT|TEXTAREA|SELECT|BUTTON/.test(e.target.tagName) && e.key !== 'Escape') { if(e.key === ' ' || e.key === 'Enter') return; }
@@ -108,7 +150,7 @@ const STAGE = (function(){
     function pm(e){
       const p = pts.get(e.pointerId); if(!p) return;
       const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
-      if(pts.size === 1){ input.yaw -= dx * 0.008; input.pitch = Math.max(0.3, Math.min(1.35, input.pitch + dy * 0.005)); }
+      if(pts.size === 1){ input.yaw -= dx * 0.008 * input.sens; input.pitch = Math.max(0.3, Math.min(1.35, input.pitch + dy * 0.005 * input.sens)); }
       else if(pts.size === 2){ const a = [...pts.values()], d = Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); if(pinch) input.dist = Math.max(5, Math.min(18, input.dist * pinch / d)); pinch = d; }
     }
     function pu(e){ pts.delete(e.pointerId); pinch = 0; }
@@ -128,8 +170,18 @@ const STAGE = (function(){
     function ju(e){ if(e.pointerId !== jid) return; jid = null; jx = jy = 0; knob.style.transform = ''; }
     if(joy){ joy.addEventListener('pointerdown', jd); joy.addEventListener('pointermove', jm); joy.addEventListener('pointerup', ju); joy.addEventListener('pointercancel', ju); }
 
-    function readMove(){
-      let x = jx, y = jy;
+    // Gamepad: linker Stick läuft, rechter dreht die Kamera, A prüft, Steuerkreuz hoch/runter wechselt das Geschoss, Start öffnet das Menü
+    const gpWas = {};
+    function gamepad(dt){
+      const gp = navigator.getGamepads ? [...navigator.getGamepads()].find(Boolean) : null; if(!gp) return [0, 0];
+      const dz = v => Math.abs(v) > 0.2 ? v : 0, ax = gp.axes;
+      input.yaw -= dz(ax[2] || 0) * 2.4 * dt * input.sens; input.pitch = Math.max(0.3, Math.min(1.35, input.pitch + dz(ax[3] || 0) * 1.4 * dt * input.sens));
+      const edge = (i, fn) => { const d = !!(gp.buttons[i] && gp.buttons[i].pressed); if(d && !gpWas[i]) fn(); gpWas[i] = d; };
+      edge(0, () => input.action && input.action()); edge(12, () => input.key && input.key('r')); edge(13, () => input.key && input.key('f')); edge(9, () => input.key && input.key('Escape'));
+      return [dz(ax[0] || 0), -dz(ax[1] || 0)];
+    }
+    function readMove(dt){
+      const g = gamepad(dt); let x = jx + g[0], y = jy + g[1];
       if(keys.has('a') || keys.has('ArrowLeft')) x -= 1; if(keys.has('d') || keys.has('ArrowRight')) x += 1;
       if(keys.has('w') || keys.has('ArrowUp')) y += 1; if(keys.has('s') || keys.has('ArrowDown')) y -= 1;
       const l = Math.hypot(x, y); if(l > 1){ x /= l; y /= l; }
@@ -137,11 +189,15 @@ const STAGE = (function(){
     }
 
     /* Spielschleife: läuft nur, solange gespielt wird (nicht bei offener Frage oder verdecktem Fenster) */
-    let raf = 0, last = 0, update = null, paused = false, dead = false, time = 0, frames = 0;
+    let raf = 0, last = 0, update = null, paused = false, dead = false, time = 0, frames = 0, lost = false;
+    // Bricht der Grafik-Kontext ab (Speicherdruck, App im Hintergrund), wird angehalten und danach weitergemacht
+    const cl = e => { e.preventDefault(); lost = true; }, cr = () => { lost = false; };
+    canvas.addEventListener('webglcontextlost', cl); canvas.addEventListener('webglcontextrestored', cr);
     function frame(t){
       raf = 0; if(dead) return;
       const dt = Math.min(0.05, (t - last) / 1000 || 0.016); last = t;
-      if(!paused && !document.hidden){ time += dt; frames++; readMove(); if(update) update(dt, time); renderer.render(scene, camera); }
+      if(!paused && !lost && !document.hidden){ time += dt; frames++; readMove(dt); if(update) update(dt, time); renderer.render(scene, camera); adapt(dt); }
+      else if(!lost && !document.hidden) gamepad(0);          // im Menü weiter auf Start hören
       raf = requestAnimationFrame(frame);
     }
     function start(fn){ update = fn; last = performance.now(); if(!raf) raf = requestAnimationFrame(frame); }
@@ -151,12 +207,12 @@ const STAGE = (function(){
       dead = true; cancelAnimationFrame(raf); ro.disconnect();
       window.removeEventListener('keydown', kd); window.removeEventListener('keyup', ku); window.removeEventListener('blur', blur);
       canvas.removeEventListener('pointerdown', pd); canvas.removeEventListener('pointermove', pm); canvas.removeEventListener('pointerup', pu); canvas.removeEventListener('pointercancel', pu);
-      canvas.removeEventListener('wheel', wh);
+      canvas.removeEventListener('wheel', wh); canvas.removeEventListener('webglcontextlost', cl); canvas.removeEventListener('webglcontextrestored', cr);
       if(joy){ joy.removeEventListener('pointerdown', jd); joy.removeEventListener('pointermove', jm); joy.removeEventListener('pointerup', ju); joy.removeEventListener('pointercancel', ju); }
       scene.traverse(x => { if(x.geometry) x.geometry.dispose(); if(x.material){ if(x.material.map) x.material.map.dispose(); x.material.dispose(); } });
       renderer.dispose();
     }
-    return { scene, camera, renderer, input, start, pause, dispose, frames: () => frames };
+    return { scene, camera, renderer, input, start, pause, dispose, setQuality, frames: () => frames, pixelRatio: () => pr };
   }
 
   /* Bewegung mit Kollision: Figur als Kreis (Radius r) gegen Quader { x1, x2, z1, z2 }; x und z getrennt, damit man an Wänden entlanggleitet */
@@ -169,5 +225,5 @@ const STAGE = (function(){
     if(dz && !blocked(pos.x, pos.z + dz, r, boxes)) pos.z += dz;
   }
 
-  return { create, label, css, tile, beam, figure, moveCircle };
+  return { create, label, css, tile, beam, figure, moveCircle, arrow, sfx, audio:AUDIO };
 })();

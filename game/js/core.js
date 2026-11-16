@@ -28,11 +28,12 @@ const CORE = (function(){
   const dkey = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 
   let S = load();
-  function blank(){ return { v:1, m:{}, badges:[], tag:{ last:'', serie:0 } }; }
+  const OPT = { ton:true, vib:true, qual:'auto', sens:1 };
+  function blank(){ return { v:1, m:{}, badges:[], tag:{ last:'', serie:0 }, opt:{} }; }
   function load(){
     try{
       const o = JSON.parse(localStorage.getItem(KEY) || 'null');
-      if(o && o.v === 1 && o.m && Array.isArray(o.badges) && o.tag) return o;
+      if(o && o.v === 1 && o.m && Array.isArray(o.badges) && o.tag){ o.opt = o.opt || {}; return o; }
     }catch(e){}
     return blank();
   }
@@ -74,6 +75,9 @@ const CORE = (function(){
     return { ok, rekord, neu };
   }
 
-  return { MISSIONS, BADGES, PASS, lv, unlocked, best, passed, total, finish, dailyDone,
+  const opt = k => (k in S.opt ? S.opt[k] : OPT[k]);
+  function setOpt(k, v){ S.opt[k] = v; save(); }
+
+  return { MISSIONS, BADGES, PASS, opt, setOpt, lv, unlocked, best, passed, total, finish, dailyDone,
            serie: () => S.tag.serie, badges: () => S.badges.slice() };
 })();

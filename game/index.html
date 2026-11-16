@@ -17,6 +17,9 @@ if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if
     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
   </button>
   <div class="top-t"><p class="kick" id="top-kick">IdF Münster</p><h1 id="top-title">IdF-Spiel</h1></div>
+  <button id="btn-menu" class="ic" aria-label="Pause und Einstellungen" hidden>
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 5v14M15 5v14"/></svg>
+  </button>
   <div class="stats">
     <div class="stat"><span class="stat-v" id="st-total">0</span><span class="stat-l">Punkte</span></div>
     <div class="stat"><span class="stat-v" id="st-serie">0</span><span class="stat-l">Tage in Folge</span></div>
@@ -58,6 +61,23 @@ if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <div class="opts" id="q-opts"></div>
     <div class="fb" id="q-fb" hidden><p id="q-fbt"></p><p class="src" id="q-src"></p><button class="btn pri" id="q-next">Weiter</button></div>
+  </section>
+  <div class="fade" id="fade"></div>
+  <section class="result" id="menu" hidden>
+    <div class="result-b">
+      <p class="kick">Pause</p>
+      <h2>Einstellungen</h2>
+      <label class="row"><span>Ton</span><input type="checkbox" id="o-ton"/></label>
+      <label class="row"><span>Vibration</span><input type="checkbox" id="o-vib"/></label>
+      <label class="row"><span>Grafik</span><select id="o-qual"><option value="auto">Automatisch</option><option value="niedrig">Niedrig (flüssiger)</option><option value="hoch">Hoch (schärfer)</option></select></label>
+      <label class="row"><span>Kamera-Empfindlichkeit</span><input type="range" id="o-sens" min="0.5" max="2" step="0.1"/></label>
+      <p class="src">Steuerung: Stick oder WASD laufen · Ziehen dreht die Kamera · E prüfen · R/F Geschoss · Esc Pause. Gamepad: linker Stick laufen, rechter Stick Kamera, A prüfen, Steuerkreuz Geschoss.</p>
+      <div class="r-btns"><button class="btn" id="m-full">Vollbild</button><button class="btn" id="m-restart">Level neu starten</button><button class="btn" id="m-exit">Zur Übersicht</button><button class="btn pri" id="m-resume">Weiter</button></div>
+    </div>
+  </section>
+  <section class="result" id="nogl" hidden>
+    <div class="result-b"><h2>3D wird nicht unterstützt</h2><p>Dieses Gerät oder dieser Browser kann die 3D-Ansicht (WebGL) nicht starten. Bitte aktualisiere den Browser oder versuche es auf einem anderen Gerät.</p>
+      <div class="r-btns"><button class="btn pri" id="nogl-ok">Zur Übersicht</button></div></div>
   </section>
   <section class="result" id="result" hidden>
     <div class="result-b">

@@ -77,6 +77,7 @@
 
     /* ---------- Figur, Kamera, Ablauf ---------- */
     const fig = STAGE.figure(); sc.add(fig);
+    const pfeil = STAGE.arrow(FARBE.offen); sc.add(pfeil); let stepT = 0;
     const pos = { x:2.5, z:5.2 }; let cur = Math.min(1, floors.length - 1), face = 0, near = null, onStairs = false, busy = false, uiKey = '';
     const tgt = new THREE.Vector3(pos.x, 1.2, pos.z), ray = new THREE.Raycaster(), tmp = new THREE.Vector3(); let faded = [], tick = 0;
     function setFloor(n){ if(n < 0 || n >= floors.length) return; floors.forEach((f, i) => { f.grp.visible = i === n; }); cur = n; faded.forEach(m => { m.material.opacity = 1; }); faded = []; uiKey = ''; }
@@ -101,8 +102,9 @@
       near = null; uiKey = ''; ctx.count(res.tries);
       if(--left === 0) ctx.finish();
     }
-    const hoch = () => { if(onStairs && !busy) setFloor(cur + 1); }, runter = () => { if(onStairs && !busy) setFloor(cur - 1); };
-    st.input.action = pruefen; st.input.key = k => { if(k === 'r') hoch(); else if(k === 'f') runter(); };
+    function wechsel(n){ if(!onStairs || busy || n < 0 || n >= floors.length) return; STAGE.sfx('stairs'); ctx.fade(() => setFloor(n)); }
+    const hoch = () => wechsel(cur + 1), runter = () => wechsel(cur - 1);
+    st.input.action = pruefen; st.input.key = k => { if(k === 'r') hoch(); else if(k === 'f') runter(); else if(k === 'Escape' || k === 'p') ctx.menu(); };
     ui.act.onclick = pruefen; ui.up.onclick = hoch; ui.down.onclick = runter;
 
     st.start((dt, time) => {
@@ -112,12 +114,19 @@
       if(sp > 0.05){
         STAGE.moveCircle(pos, vx * dt, vz * dt, R, F.boxes);
         let d = Math.atan2(vx, vz) - face; d = Math.atan2(Math.sin(d), Math.cos(d)); face += d * Math.min(1, dt * 12);
+        if((stepT -= dt) <= 0){ stepT = 0.36; STAGE.sfx('step'); }
       }
       fig.position.set(pos.x, 0, pos.z); fig.rotation.y = face; fig.animate(dt, sp);
-      F.doors.forEach(d => { const open = Math.hypot(pos.x - d.x, pos.z - d.z) < 2.3 ? 1.45 : 0; d.a += (open - d.a) * Math.min(1, dt * 7); d.piv.rotation.y = d.a; });
+      F.doors.forEach(d => { const open = Math.hypot(pos.x - d.x, pos.z - d.z) < 2.3 ? 1.45 : 0; if(open && !d.o) STAGE.sfx('door'); d.o = open; d.a += (open - d.a) * Math.min(1, dt * 7); d.piv.rotation.y = d.a; });
       near = null; let best = 2.1;
       tasks.forEach(t => { t.beam.userData.mat.uniforms.uTime.value = time; if(t.g === cur && t.state === null){ const d = Math.hypot(pos.x - t.x, pos.z - t.z); if(d < best){ best = d; near = t; } } });
       onStairs = pos.x < 4.7 && pos.z > 8.9;
+      // Pfeil vor der Figur: zur nächsten offenen Aufgabe im Geschoss, sonst zur Treppe
+      let zx = null, zz = 0, bd = 1e9;
+      tasks.forEach(t => { if(t.g === cur && t.state === null){ const d = Math.hypot(pos.x - t.x, pos.z - t.z); if(d < bd){ bd = d; zx = t.x; zz = t.z; } } });
+      if(zx === null && left > 0 && !onStairs){ zx = 2.5; zz = 10.2; bd = Math.hypot(pos.x - zx, pos.z - zz); }
+      pfeil.visible = zx !== null && bd > 2.4;
+      if(pfeil.visible){ const a = Math.atan2(zx - pos.x, zz - pos.z); pfeil.position.set(pos.x + Math.sin(a) * 1.1, 0.07, pos.z + Math.cos(a) * 1.1); pfeil.rotation.y = a; }
       refreshUi();
       // Kamera folgt weich hinter und über der Figur
       tgt.x += (pos.x - tgt.x) * Math.min(1, dt * 8); tgt.z += (pos.z - tgt.z) * Math.min(1, dt * 8);
@@ -135,6 +144,7 @@
     return {
       dispose(){ ui.act.hidden = ui.up.hidden = ui.down.hidden = true; ui.act.onclick = ui.up.onclick = ui.down.onclick = null; st.dispose(); },
       // für die automatische Prüfung
+      pause: v => st.pause(v), stage:st,
       _stage:st, _pos:pos, _tasks:tasks, _floor:() => cur, _goto(i){ const t = tasks[i]; setFloor(t.g); pos.x = t.x + (t.x < 1 ? 0.6 : 0); pos.z = t.z; }
     };
   }

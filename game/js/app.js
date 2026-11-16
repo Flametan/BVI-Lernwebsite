@@ -8,7 +8,7 @@
   function show(name){
     screen = name;
     ['home', 'levels', 'play'].forEach(s => { $(s).hidden = s !== name; });
-    $('btn-back').hidden = name === 'home';
+    $('btn-back').hidden = name === 'home'; $('btn-menu').hidden = name !== 'play';
     $('top-kick').textContent = name === 'home' ? 'IdF Münster' : mis.thema;
     $('top-title').textContent = name === 'home' ? 'IdF-Spiel' : name === 'levels' ? mis.titel : 'Level ' + (lvl + 1) + ' · ' + data.level[lvl].titel;
     $('st-total').textContent = fmt(CORE.total()); $('st-serie').textContent = CORE.serie();
@@ -75,20 +75,54 @@
       $('hud-combo').hidden = st.combo < 3; $('hud-combo').textContent = 'Serie ×' + st.combo;
     };
     hud();
-    run = window.MISSIONS[mis.id].start({
+    STAGE.audio.on = CORE.opt('ton');
+    try{ run = window.MISSIONS[mis.id].start({
       canvas: $('stage'), level: L, ui: { joy:$('joy'), act:$('act'), up:$('up'), down:$('down'), info:$('info') },
       ask: a => ask(a, a.optionen || data.optionen[a.opt]),
       count(tries){
         st.done++;
         if(tries === 1){ st.combo++; st.pts += 100 + (st.combo >= 3 ? 20 : 0); }
         else { st.combo = 0; st.fehler++; if(tries === 2) st.pts += 50; }
+        STAGE.sfx(tries === 1 ? 'ok' : tries === 2 ? 'halb' : 'bad');
+        if(tries > 1 && CORE.opt('vib') && navigator.vibrate) navigator.vibrate(tries === 2 ? 40 : [60, 50, 60]);
         hud();
       },
-      finish(){ setTimeout(() => result(st), 350); }
-    });
-    window.GAME_RUN = run;                               // für die automatische Prüfung (tests)
+      finish(){ setTimeout(() => result(st), 350); },
+      menu, fade
+    }); }catch(e){ console.warn('3D-Start fehlgeschlagen', e); run = null; $('nogl').hidden = false; return; }
+    run.stage.setQuality(CORE.opt('qual')); run.stage.input.sens = CORE.opt('sens');
+    wake(true);
+    window.GAME_RUN = run;                               // für die automatische Prüfung (game/tests)
   }
-  function stop(){ if(run){ run.dispose(); run = null; } if(qDone){ const f = qDone; qDone = null; f(null); } }
+  // Geschosswechsel: kurz abblenden, umschalten, aufblenden
+  function fade(fn){ const f = $('fade'); f.classList.add('on'); setTimeout(() => { fn(); f.classList.remove('on'); }, 170); }
+  // Bildschirm bleibt beim Spielen an (wenn der Browser es erlaubt)
+  let lock = null;
+  function wake(on){ try{ if(on && navigator.wakeLock) navigator.wakeLock.request('screen').then(l => { lock = l; }).catch(() => {}); else if(lock){ lock.release().catch(() => {}); lock = null; } }catch(e){} }
+
+  /* ---------- Pausenmenü und Einstellungen ---------- */
+  function menu(){
+    if(!run || !$('sheet').hidden || !$('result').hidden) return;
+    if(!$('menu').hidden) return resume();
+    run.pause(true);
+    $('o-ton').checked = CORE.opt('ton'); $('o-vib').checked = CORE.opt('vib'); $('o-qual').value = CORE.opt('qual'); $('o-sens').value = CORE.opt('sens');
+    $('m-full').hidden = !document.documentElement.requestFullscreen;
+    $('menu').hidden = false; $('m-resume').focus();
+  }
+  function resume(){ $('menu').hidden = true; if(run) run.pause(false); }
+  $('btn-menu').onclick = menu; $('m-resume').onclick = resume;
+  $('m-restart').onclick = () => { $('menu').hidden = true; play(lvl); };
+  $('m-exit').onclick = () => { $('menu').hidden = true; stop(); levels(); };
+  $('m-full').onclick = () => { try{ if(document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); }catch(e){} };
+  $('o-ton').onchange = e => { CORE.setOpt('ton', e.target.checked); STAGE.audio.on = e.target.checked; if(e.target.checked) STAGE.sfx('ok'); };
+  $('o-vib').onchange = e => CORE.setOpt('vib', e.target.checked);
+  $('o-qual').onchange = e => { CORE.setOpt('qual', e.target.value); if(run) run.stage.setQuality(e.target.value); };
+  $('o-sens').oninput = e => { const v = +e.target.value; CORE.setOpt('sens', v); if(run) run.stage.input.sens = v; };
+  window.addEventListener('keydown', e => { if(e.key === 'Escape' && !$('menu').hidden){ e.stopImmediatePropagation(); resume(); } }, true);
+  document.addEventListener('visibilitychange', () => { if(document.hidden && run && $('menu').hidden && $('sheet').hidden && $('result').hidden) menu(); else if(!document.hidden && run) wake(true); });
+  $('nogl-ok').onclick = () => { $('nogl').hidden = true; levels(); };
+
+  function stop(){ wake(false); $('menu').hidden = true; if(run){ run.dispose(); run = null; } if(qDone){ const f = qDone; qDone = null; f(null); } }
 
   /* Frage: erster Versuch 100 Punkte, zweiter 50, danach wird die Lösung gezeigt */
   let qDone = null;
@@ -120,6 +154,7 @@
 
   function result(st){
     const r = CORE.finish(mis.id, lvl, st.pts, st.max, st.fehler);
+    if(run) run.pause(true); if(r.ok) STAGE.sfx('win');
     const last = lvl + 1 >= data.level.length;
     $('r-kick').textContent = 'Level ' + (lvl + 1) + ' · ' + data.level[lvl].titel;
     $('r-title').textContent = r.ok ? (st.fehler === 0 ? 'Fehlerfrei bestanden' : 'Bestanden') : 'Noch nicht bestanden';
@@ -138,4 +173,6 @@
 
   $('btn-back').onclick = () => { if(screen === 'play'){ stop(); levels(); } else home(); };
   home();
+  // Offline: denselben Service Worker wie die Lern-App nutzen
+  if('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('../sw.js').catch(() => {});
 })();

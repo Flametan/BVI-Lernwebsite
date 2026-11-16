@@ -103,3 +103,11 @@ button{font:inherit;color:inherit;cursor:pointer;}
 .r-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
 .r-btns .btn{flex:1 1 120px;}
 @media (prefers-reduced-motion:no-preference){ .sheet{animation:up .22s cubic-bezier(.2,.8,.2,1);} @keyframes up{from{transform:translateY(16px);opacity:0;}} }
+
+/* Pausenmenü, Überblendung beim Geschosswechsel */
+.row{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:46px;border-top:1px solid var(--line);}
+.row input[type=checkbox]{width:22px;height:22px;accent-color:var(--accent);}
+.row select{font:inherit;color:inherit;background:var(--raised);border:1px solid var(--line);border-radius:10px;padding:8px 10px;max-width:60%;}
+.row input[type=range]{flex:0 1 180px;accent-color:var(--accent);}
+.fade{position:absolute;inset:0;z-index:4;background:#000;opacity:0;pointer-events:none;transition:opacity .16s linear;}
+.fade.on{opacity:1;}
