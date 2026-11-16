@@ -1,0 +1,486 @@
+{
+ "mission": "vak",
+ "welt": "hoersaal",
+ "level": [
+  {
+   "titel": "Staatsorganisationsrecht",
+   "steckbrief": "Im Hörsaal: Grundgesetz, Staatsorgane, Gesetzgebung.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Wer hat nach Art. 76 Abs. 1 GG das Recht der Gesetzesinitiative?",
+     "optionen": [
+      "Bundestag, Bundesrat und Bundesregierung",
+      "Nur Bundestag und Bundesrat",
+      "Bundestag, Bundesrat, Bundesregierung und Bundespräsident",
+      "Bundestag und Bundesverfassungsgericht"
+     ],
+     "richtig": "Bundestag, Bundesrat und Bundesregierung",
+     "erkl": "Das Initiativrecht steht nach Art. 76 I GG dem Bundestag (aus seiner Mitte), dem Bundesrat und der Bundesregierung zu. Der Bundespräsident und das BVerfG haben kein Initiativrecht.",
+     "quelle": "VAk-Quiz · Frage 80"
+    },
+    {
+     "typ": "mc",
+     "frage": "Das Schulrecht fällt in die konkurrierende Gesetzgebungskompetenz des Bundes und der Länder.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Falsch",
+     "erkl": "Schulrecht ist Ländersache (Kulturhoheit der Länder); eine Bundeskompetenz nach Art. 70 ff. GG besteht dafür nicht.",
+     "quelle": "VAk-Quiz · Frage 5"
+    },
+    {
+     "typ": "mc",
+     "frage": "Grundrechte sind Abwehrrechte der Bürgerinnen und Bürger gegen den Staat.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Richtig",
+     "erkl": "Das ist ihre klassische Funktion gegenüber dem Staat.",
+     "quelle": "VAk-Quiz · Frage 3"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Aussage zum Wahlgrundsatz der Gleichheit ist zutreffend?",
+     "optionen": [
+      "Jede Stimme hat den gleichen Zähl- und Erfolgswert",
+      "Der Erfolgswert darf unterschiedlich sein, solange alle wählen dürfen",
+      "Wahlgleichheit gilt nur für Bundestagswahlen",
+      "Wahlgleichheit verlangt zwingend Mehrheitswahl"
+     ],
+     "richtig": "Jede Stimme hat den gleichen Zähl- und Erfolgswert",
+     "erkl": "Das folgt aus Art. 38 I 1 GG: Jede Stimme hat denselben Zählwert und denselben Erfolgswert.",
+     "quelle": "VAk-Quiz · Frage 21"
+    },
+    {
+     "typ": "mc",
+     "frage": "Die Wahlrechtsgrundsätze lauten Allgemein, Unmittelbar, Frei und Geheim.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Falsch",
+     "erkl": "Art. 38 I 1 GG nennt fünf Grundsätze; es fehlen die Gleichheit der Wahl und die Öffentlichkeit (durch BVerfG aus Art. 38 i.V.m. Art. 20 GG entwickelt).",
+     "quelle": "VAk-Quiz · Frage 11"
+    },
+    {
+     "typ": "mc",
+     "frage": "Woran erkennt man in einer Norm typischerweise Ermessensspielräume?",
+     "optionen": [
+      "An der Verwendung von „muss\"",
+      "An der Verwendung von „kann\" oder „darf\"",
+      "An der Reihenfolge der Normabsätze",
+      "An der Länge des Gesetzestextes"
+     ],
+     "richtig": "An der Verwendung von „kann\" oder „darf\"",
+     "erkl": "„Kann\" oder „darf\" signalisieren Ermessen; „muss\" oder „ist\" weisen auf eine gebundene Entscheidung hin.",
+     "quelle": "VAk-Quiz · Frage 15"
+    },
+    {
+     "typ": "mc",
+     "frage": "Das Grundgesetz wurde am 23.05.1949 verkündet.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Richtig",
+     "erkl": "Verkündet wurde es am 23.05.1949. In Kraft getreten ist es erst am folgenden Tag, dem 24.05.1949.",
+     "quelle": "VAk-Quiz · Frage 12"
+    }
+   ]
+  },
+  {
+   "titel": "Allgemeines Verwaltungsrecht",
+   "steckbrief": "Verwaltungsakt, Ermessen, Verfahren.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Welche Anforderung stellt § 37 VwVfG an den Tenor (Verfügungssatz) eines Verwaltungsaktes?",
+     "optionen": [
+      "Er muss schriftlich und handschriftlich unterschrieben sein",
+      "Er muss hinreichend bestimmt sein",
+      "Er muss stets eine Rechtsmittelbelehrung enthalten",
+      "Er darf keine Bedingungen oder Auflagen enthalten"
+     ],
+     "richtig": "Er muss hinreichend bestimmt sein",
+     "erkl": "§ 37 VwVfG verlangt, dass der Tenor eines VA hinreichend bestimmt ist – er muss klar und vollziehbar beschreiben, was die Behörde vom Bürger verlangt.",
+     "quelle": "VAk-Quiz · Frage 73"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wann wird ein Verwaltungsakt wirksam?",
+     "optionen": [
+      "Bei Unterschrift durch den Behördenleiter",
+      "Bei Veröffentlichung im Gesetzblatt",
+      "Mit seiner Bekanntgabe",
+      "Nach Zustimmung der betroffenen Person"
+     ],
+     "richtig": "Mit seiner Bekanntgabe",
+     "erkl": "So §§ 41, 43 VwVfG.",
+     "quelle": "VAk-Quiz · Frage 30"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was versteht man unter einer Ermessensreduzierung auf Null?",
+     "optionen": [
+      "Die Behörde hat kein Ermessen und muss untätig bleiben",
+      "Aufgrund besonderer Umstände ist nur noch eine einzige rechtmäßige Entscheidung möglich",
+      "Die Behörde kann frei zwischen allen Maßnahmen wählen",
+      "Das Ermessen wird auf eine übergeordnete Behörde übertragen"
+     ],
+     "richtig": "Aufgrund besonderer Umstände ist nur noch eine einzige rechtmäßige Entscheidung möglich",
+     "erkl": "Bei der Ermessensreduzierung auf Null schrumpft der gesetzliche Spielraum der Behörde so stark, dass nur noch eine rechtmäßige Entscheidung verbleibt. Jede andere Handlung wäre rechtswidrig (gebundene Entscheidung).",
+     "quelle": "VAk-Quiz · Frage 70"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wann kann auf eine Anhörung vor Erlass eines Verwaltungsaktes verzichtet werden?",
+     "optionen": [
+      "Nie",
+      "Nur bei Gefahr im Verzug",
+      "Wenn dies durch Verwaltungsvorschriften vorgesehen ist",
+      "Wenn § 28 Abs. 2 VwVfG dies zulässt"
+     ],
+     "richtig": "Wenn § 28 Abs. 2 VwVfG dies zulässt",
+     "erkl": "§ 28 II VwVfG zählt mehrere Fallgruppen auf, etwa Gefahr im Verzug, Allgemeinverfügungen oder Massenverfahren – „nur bei Gefahr im Verzug\" wäre zu eng.",
+     "quelle": "VAk-Quiz · Frage 27"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welches der folgenden Merkmale muss ein Verwaltungsakt nach § 35 VwVfG erfüllen?",
+     "optionen": [
+      "Er muss schriftlich erlassen sein",
+      "Er muss von einem Gericht stammen",
+      "Er muss eine Regelung enthalten",
+      "Er muss sich auf Zivilrecht beziehen"
+     ],
+     "richtig": "Er muss eine Regelung enthalten",
+     "erkl": "Der Regelungscharakter ist das zentrale Tatbestandsmerkmal des § 35 VwVfG.",
+     "quelle": "VAk-Quiz · Frage 23"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was regelt das Entschließungsermessen einer Behörde?",
+     "optionen": [
+      "Das „Ob\" des behördlichen Handelns – ob die Behörde tätig wird",
+      "Das „Wie\" – die Art und Weise der Maßnahme",
+      "Die Auswahl zwischen mehreren Adressaten",
+      "Den Zeitpunkt des behördlichen Eingreifens"
+     ],
+     "richtig": "Das „Ob\" des behördlichen Handelns – ob die Behörde tätig wird",
+     "erkl": "Das Entschließungsermessen (§ 40 VwVfG) betrifft das „Ob\" – ob die Behörde bei Vorliegen aller Voraussetzungen tätig wird oder untätig bleibt. Das „Wie\" regelt das Auswahlermessen.",
+     "quelle": "VAk-Quiz · Frage 68"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Aussage trifft im Sinne des § 35 VwVfG am ehesten auf die „Außenwirkung\" eines Verwaltungsaktes zu?",
+     "optionen": [
+      "Der Verwaltungsakt muss für die allgemeine Öffentlichkeit bestimmt sein",
+      "Der Verwaltungsakt betrifft ausschließlich interne Verwaltungsabläufe",
+      "Der Verwaltungsakt muss gegenüber einer außerhalb der Verwaltung stehenden Person rechtliche Wirkung entfalten",
+      "Die Außenwirkung meint, dass der Verwaltungsakt öffentlich bekannt gemacht werden muss"
+     ],
+     "richtig": "Der Verwaltungsakt muss gegenüber einer außerhalb der Verwaltung stehenden Person rechtliche Wirkung entfalten",
+     "erkl": "Außenwirkung bedeutet Rechtswirkung gegenüber einer außerhalb der Verwaltung stehenden Person.",
+     "quelle": "VAk-Quiz · Frage 24"
+    }
+   ]
+  },
+  {
+   "titel": "Beamten- und Disziplinarrecht",
+   "steckbrief": "Rechte und Pflichten im Dienst.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Welches Beamtenverhältnis gibt es nicht?",
+     "optionen": [
+      "Beamter auf Probe",
+      "Beamter auf Widerruf",
+      "Beamter auf Lebenszeit",
+      "Beamter auf Abruf"
+     ],
+     "richtig": "Beamter auf Abruf",
+     "erkl": "Nach § 4 BeamtStG gibt es Beamte auf Lebenszeit, auf Probe, auf Widerruf und auf Zeit. Einen „Beamten auf Abruf\" kennt das Beamtenrecht nicht.",
+     "quelle": "VAk-Quiz · Frage 43"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wann muss ein Disziplinarverfahren eingeleitet werden?",
+     "optionen": [
+      "Sobald der Personalrat zustimmt",
+      "Wenn eine anonyme Beschwerde eingeht",
+      "Bei zureichenden tatsächlichen Anhaltspunkten für ein Dienstvergehen",
+      "Wenn ein Strafbefehl rechtskräftig ist"
+     ],
+     "richtig": "Bei zureichenden tatsächlichen Anhaltspunkten für ein Dienstvergehen",
+     "erkl": "Es gilt das Legalitätsprinzip – dem Dienstvorgesetzten steht kein Ermessen zu, ob er tätig wird, nur wie er das Verfahren führt.",
+     "quelle": "VAk-Quiz · Frage 47"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was gehört nicht zu den Dienstpflichten?",
+     "optionen": [
+      "Pflicht zur wöchentlichen Fortbildung",
+      "Neutralitätsgebot",
+      "Folgepflicht",
+      "Verschwiegenheitspflicht"
+     ],
+     "richtig": "Pflicht zur wöchentlichen Fortbildung",
+     "erkl": "Neutralitätsgebot, Folgepflicht und Verschwiegenheitspflicht sind ausdrücklich normiert (§§ 33, 35, 37 BeamtStG). Eine eigenständige, gesetzlich fixierte Pflicht zur wöchentlichen Fortbildung gibt es dagegen nicht.",
+     "quelle": "VAk-Quiz · Frage 49"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was regelt § 34 BeamtStG?",
+     "optionen": [
+      "Dienstunfall",
+      "Pflicht zum vollen persönlichen Einsatz",
+      "Wahlrecht",
+      "Nebentätigkeiten"
+     ],
+     "richtig": "Pflicht zum vollen persönlichen Einsatz",
+     "erkl": "Beamtinnen und Beamte haben sich mit vollem persönlichem Einsatz ihrem Beruf zu widmen und ihr Verhalten muss der Achtung und dem Vertrauen gerecht werden, die ihr Beruf erfordert.",
+     "quelle": "VAk-Quiz · Frage 42"
+    },
+    {
+     "typ": "mc",
+     "frage": "Eine Trunkenheitsfahrt in der Freizeit führt zu einem Disziplinarverfahren.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Falsch",
+     "erkl": "Rein außerdienstliches Verhalten ist nur dann relevant, wenn es in besonderem Maß geeignet ist, Achtung und Vertrauen in einer für das Amt bedeutsamen Weise zu beeinträchtigen (§ 34 S. 3 BeamtStG).",
+     "quelle": "VAk-Quiz · Frage 50"
+    },
+    {
+     "typ": "mc",
+     "frage": "Die Entfernung aus dem Beamtenverhältnis aufgrund von Verfehlungen muss im Rahmen einer Disziplinarklage vor dem Verwaltungsgericht erwirkt werden.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Richtig",
+     "erkl": "Diese schwerste Disziplinarmaßnahme kann die Behörde nicht selbst verfügen, sondern nur gerichtlich durchsetzen.",
+     "quelle": "VAk-Quiz · Frage 59"
+    },
+    {
+     "typ": "mc",
+     "frage": "Ein Beamter trägt bei einer privaten politischen Veranstaltung seine Dienstuniform ohne vorherige Abstimmung. Welche Rechtsgrundlagen sind für die Prüfung eines Dienstvergehens einschlägig?",
+     "optionen": [
+      "§ 33 Abs. 2 BeamtStG (Mäßigungsgebot) i.V.m. § 47 Abs. 1 BeamtStG (Dienstvergehen)",
+      "§ 12 BeamtStG (Eidesleistung)",
+      "§ 60 BeamtStG (Streikverbot)",
+      "§ 42 BeamtStG (Nebentätigkeit)"
+     ],
+     "richtig": "§ 33 Abs. 2 BeamtStG (Mäßigungsgebot) i.V.m. § 47 Abs. 1 BeamtStG (Dienstvergehen)",
+     "erkl": "§ 33 Abs. 2 BeamtStG verpflichtet Beamte zur Mäßigung und Zurückhaltung – das Tragen der Dienstuniform bei politischen Veranstaltungen verletzt diese Pflicht. § 47 Abs. 1 BeamtStG definiert die schuldhafte Verletzung von Dienstpflichten als Dienstvergehen.",
+     "quelle": "VAk-Quiz · Frage 79"
+    }
+   ]
+  },
+  {
+   "titel": "Vollstreckung und Rechtsschutz",
+   "steckbrief": "Zwangsmittel, Widerspruch, Klage.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Was ist der wesentliche Unterschied zwischen Verwaltungsvollstreckung und Sofortvollzug?",
+     "optionen": [
+      "Es gibt keinen Unterschied",
+      "Der Sofortvollzug kann ohne vorherigen Verwaltungsakt erfolgen",
+      "Die Verwaltungsvollstreckung ist nur für Steuerschulden möglich",
+      "Der Sofortvollzug darf nur bei Notstand angewendet werden"
+     ],
+     "richtig": "Der Sofortvollzug kann ohne vorherigen Verwaltungsakt erfolgen",
+     "erkl": "§ 6 II VwVG: Der Sofortvollzug ist zulässig, wenn die vorherige Bekanntgabe eines Verwaltungsakts den Zweck der Maßnahme vereiteln würde.",
+     "quelle": "VAk-Quiz · Frage 37"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Zwangsmittel kennt das Verwaltungsvollstreckungsrecht typischerweise?",
+     "optionen": [
+      "Bußgeld, Freiheitsentzug, Enteignung",
+      "Zwangsgeld, Ersatzvornahme, unmittelbarer Zwang",
+      "Ordnungsstrafe, Hausverbot, Verwarnung",
+      "Verwarnungsgeld, Bußgeld, Verhaftung"
+     ],
+     "richtig": "Zwangsgeld, Ersatzvornahme, unmittelbarer Zwang",
+     "erkl": "Nach dem Bundes-VwVG: Ersatzvornahme (§ 10), Zwangsgeld (§ 11), unmittelbarer Zwang (§ 12), zusammengefasst in § 9 VwVG.",
+     "quelle": "VAk-Quiz · Frage 36"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Wirkung hat ein Widerspruch gegen einen belastenden Verwaltungsakt?",
+     "optionen": [
+      "Keine",
+      "Er verzögert die Zustellung",
+      "Er hat aufschiebende Wirkung",
+      "Er macht den Verwaltungsakt nichtig"
+     ],
+     "richtig": "Er hat aufschiebende Wirkung",
+     "erkl": "So § 80 I VwGO.",
+     "quelle": "VAk-Quiz · Frage 39"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie kann sich der Adressat gegen die Anordnung der sofortigen Vollziehung wehren?",
+     "optionen": [
+      "Mit Dienstaufsichtsbeschwerde",
+      "Mit Gegenvorstellung bei der Behörde",
+      "Mit Eilantrag beim Verwaltungsgericht",
+      "Mit Antrag beim Bundesverfassungsgericht"
+     ],
+     "richtig": "Mit Eilantrag beim Verwaltungsgericht",
+     "erkl": "So § 80 V VwGO.",
+     "quelle": "VAk-Quiz · Frage 41"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie kann ein VA trotz eingelegten Widerspruchs vollzogen werden?",
+     "optionen": [
+      "Gar nicht – der Widerspruch hat immer unüberwindliche aufschiebende Wirkung",
+      "Durch Anordnung des sofortigen Vollzugs mit schriftlicher Begründung nach § 80 Abs. 2 Nr. 4 VwGO",
+      "Durch eine einfache mündliche Anweisung des Vorgesetzten",
+      "Durch Verwirkung des Widerspruchsrechts nach drei Tagen"
+     ],
+     "richtig": "Durch Anordnung des sofortigen Vollzugs mit schriftlicher Begründung nach § 80 Abs. 2 Nr. 4 VwGO",
+     "erkl": "§ 80 Abs. 2 Nr. 4 VwGO ermöglicht die Anordnung des sofortigen Vollzugs. Sie muss schriftlich erfolgen und besonders begründet werden, damit die aufschiebende Wirkung des Widerspruchs entfällt.",
+     "quelle": "VAk-Quiz · Frage 76"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was muss vor dem Einsatz von Zwangsmitteln vorliegen?",
+     "optionen": [
+      "Eine richterliche Genehmigung",
+      "Ein Gesetz zur Anordnung",
+      "Ein wirksamer Verwaltungsakt, der nicht befolgt wird",
+      "Eine Anzeige durch Dritte"
+     ],
+     "richtig": "Ein wirksamer Verwaltungsakt, der nicht befolgt wird",
+     "erkl": "So § 6 I VwVG des Bundes beziehungsweise § 55 I VwVG NRW.",
+     "quelle": "VAk-Quiz · Frage 38"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Zwangsmittel nennt § 9 Abs. 1 VwVG zur Durchsetzung eines Verwaltungsaktes?",
+     "optionen": [
+      "Bußgeld, Strafanzeige, Zwangshaft",
+      "Zwangsgeld, Ersatzvornahme, unmittelbarer Zwang",
+      "Ordnungsgeld, Einspruch, Vollziehung",
+      "Bußgeld, Ersatzvornahme, Freiheitsstrafe"
+     ],
+     "richtig": "Zwangsgeld, Ersatzvornahme, unmittelbarer Zwang",
+     "erkl": "§ 9 Abs. 1 VwVG nennt abschließend drei Zwangsmittel: Zwangsgeld, Ersatzvornahme und unmittelbarer Zwang.",
+     "quelle": "VAk-Quiz · Frage 75"
+    }
+   ]
+  },
+  {
+   "titel": "Gemischte Klausur",
+   "steckbrief": "Alles durcheinander, wie in der Prüfung.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Welches Kriterium gehört nicht zur Verhältnismäßigkeitsprüfung?",
+     "optionen": [
+      "Legitimer Zweck",
+      "Geeignetheit",
+      "Rechtmäßigkeit",
+      "Angemessenheit"
+     ],
+     "richtig": "Rechtmäßigkeit",
+     "erkl": "Die Prüfung umfasst legitimen Zweck, Geeignetheit, Erforderlichkeit und Angemessenheit. Die Rechtmäßigkeit ist keine eigene Stufe, sondern das Ergebnis der Prüfung.",
+     "quelle": "VAk-Quiz · Frage 14"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche der folgenden Institutionen gehört nicht zu den (ständigen) Verfassungsorganen der Bundesrepublik Deutschland?",
+     "optionen": [
+      "Der Bundesrat",
+      "Der Bundespräsident",
+      "Das Bundesverfassungsgericht",
+      "Die Bundesversammlung"
+     ],
+     "richtig": "Die Bundesversammlung",
+     "erkl": "Zu den fünf ständigen Verfassungsorganen zählen Bundestag, Bundesrat, Bundesregierung, Bundespräsident und Bundesverfassungsgericht. Die Bundesversammlung tritt nur bei Bedarf zur Präsidentenwahl zusammen.",
+     "quelle": "VAk-Quiz · Frage 19"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Aussage zur Konkurrenzgesetzgebung ist korrekt?",
+     "optionen": [
+      "Der Bund darf nur tätig werden, wenn die Länder zustimmen",
+      "Die Länder sind zuständig, bis der Bund tätig wird",
+      "Der Bund ist immer zuständig",
+      "Konkurrenzgesetzgebung betrifft nur das Steuerrecht"
+     ],
+     "richtig": "Die Länder sind zuständig, bis der Bund tätig wird",
+     "erkl": "Das folgt aus Art. 72 I GG: Die Länder haben die Gesetzgebungsbefugnis, solange und soweit der Bund von seiner Zuständigkeit nicht durch Gesetz Gebrauch gemacht hat.",
+     "quelle": "VAk-Quiz · Frage 16"
+    },
+    {
+     "typ": "mc",
+     "frage": "Bei einer Anscheinsgefahr muss die Feuerwehr ihre Maßnahmen sofort einstellen, sobald sich herausstellt, dass keine konkrete Gefahr vorliegt.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Richtig",
+     "erkl": "Richtig. Ergibt die Erkundung, dass keine konkrete Gefahr besteht, handelt es sich um eine Anscheinsgefahr – alle Maßnahmen sind unverzüglich einzustellen.",
+     "quelle": "VAk-Quiz · Frage 71"
+    },
+    {
+     "typ": "mc",
+     "frage": "Der Bundeskanzler beziehungsweise die Bundeskanzlerin vertritt im Falle der Verhinderung den Bundespräsidenten.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Falsch",
+     "erkl": "Das übernimmt nach Art. 57 GG der Präsident des Bundesrates.",
+     "quelle": "VAk-Quiz · Frage 7"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was ist vor dem Erlass eines belastenden Verwaltungsaktes grundsätzlich erforderlich?",
+     "optionen": [
+      "Die Veröffentlichung im Amtsblatt",
+      "Die Genehmigung durch das Bundesministerium",
+      "Die Anhörung des Betroffenen",
+      "Die Zustimmung des Landtages"
+     ],
+     "richtig": "Die Anhörung des Betroffenen",
+     "erkl": "So § 28 I VwVfG.",
+     "quelle": "VAk-Quiz · Frage 26"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Möglichkeiten hat der Bundesrat im zweiten Durchgang (Art. 77 Abs. 2 ff. GG)?",
+     "optionen": [
+      "Er kann das Gesetz endgültig und unüberwindlich ablehnen",
+      "Er kann zustimmen, Einspruch einlegen oder den Vermittlungsausschuss anrufen",
+      "Er hat in dieser Phase keine Mitwirkungsrechte",
+      "Er leitet das Gesetz zur Prüfung an das BVerfG weiter"
+     ],
+     "richtig": "Er kann zustimmen, Einspruch einlegen oder den Vermittlungsausschuss anrufen",
+     "erkl": "Im 2. Durchgang kann der Bundesrat zustimmen, Einspruch einlegen oder den Vermittlungsausschuss anrufen (Art. 77 II ff. GG). Ein absolutes Veto hat er nur bei Zustimmungsgesetzen; bei Einspruchsgesetzen kann der Bundestag den Einspruch überstimmen.",
+     "quelle": "VAk-Quiz · Frage 83"
+    },
+    {
+     "typ": "mc",
+     "frage": "Gemeinderäte sind Bestandteile der vollziehenden Gewalt.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Richtig",
+     "erkl": "Trotz parlamentsähnlicher Struktur gehört die kommunale Selbstverwaltung nach Art. 28 II GG organisatorisch zur Exekutive, da es auf kommunaler Ebene keine eigene Gewaltenteilung gibt.",
+     "quelle": "VAk-Quiz · Frage 4"
+    }
+   ]
+  }
+ ]
+}

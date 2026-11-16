@@ -75,6 +75,15 @@ const REST = [
   './game/js/app.js',
   './game/js/m-begehung.js',
   './game/data/begehung.json',
+  './game/js/m-welt.js',
+  './game/data/stellungnahme.json',
+  './game/data/stab.json',
+  './game/data/presse.json',
+  './game/data/lage.json',
+  './game/data/ucpm.json',
+  './game/data/ibk.json',
+  './game/data/vak.json',
+  './game/data/feuak.json',
   './game/vendor/three.min.js',
 ];
 

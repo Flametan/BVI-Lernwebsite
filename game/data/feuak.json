@@ -1,0 +1,426 @@
+{
+ "mission": "feuak",
+ "welt": "planung",
+ "level": [
+  {
+   "titel": "Haushalt",
+   "steckbrief": "Im Planungsbüro: Der Haushalt steht an.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Welcher Konflikt besteht zwischen Feuerwehr und Haushaltswesen?",
+     "optionen": [
+      "Die Kämmerei legt konkrete Geldbeträge im Haushaltsplanentwurf fest; der Entwurf geht in die politische Beratung.",
+      "Schnelles Handeln (Sicherstellungsauftrag, Flexibilität) gegen Verwaltungsdenken.",
+      "Vorteil: Risiko gestreut. Nachteile: höhere Einzelkosten, getrennte Ausschreibungen.",
+      "Bereich → Produkte → Beteiligte (Kunden) → Kennzahl; mindestens zwei Bereiche nennen."
+     ],
+     "richtig": "Schnelles Handeln (Sicherstellungsauftrag, Flexibilität) gegen Verwaltungsdenken.",
+     "erkl": "FeuAK · Haushalt",
+     "quelle": "Lernkarte k-feuak-02"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Konsequenz hat das Vergaberecht für die Haushaltsplanung der Feuerwehr?",
+     "optionen": [
+      "Keine Vergabe ohne Haushaltsmittel. Konsequenz: Rahmenverträge, technische Reserve, Vorausplanung.",
+      "Die Feuerwehr gibt der Politik Strukturen vor: strategisch über den Haushalt, operativ über die KLR.",
+      "Krankheit, Urlaub, Aus-/Fortbildung, außerhalb Einsatzdienst, Mutterschutz/Elternzeit, Sonstiges.",
+      "Die Politik berät die angemeldeten Bedarfe und passt sie ggf. an bzw. priorisiert sie; die Entscheidungshoheit liegt bei der Politik, die Feuerwehr meldet begründet an."
+     ],
+     "richtig": "Keine Vergabe ohne Haushaltsmittel. Konsequenz: Rahmenverträge, technische Reserve, Vorausplanung.",
+     "erkl": "FeuAK · Haushalt",
+     "quelle": "Lernkarte k-feuak-03"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was bedeutet der Steuerungsauftrag der Feuerwehr im Haushalt?",
+     "optionen": [
+      "Die Feuerwehr gibt der Politik Strukturen vor: strategisch über den Haushalt, operativ über die KLR.",
+      "Die Politik berät die angemeldeten Bedarfe und passt sie ggf. an bzw. priorisiert sie; die Entscheidungshoheit liegt bei der Politik, die Feuerwehr meldet begründet an.",
+      "Krankheit, Urlaub, Aus-/Fortbildung, außerhalb Einsatzdienst, Mutterschutz/Elternzeit, Sonstiges.",
+      "1. Vergaberecht und Neutralität 2. Diskriminierungsverbot 3. Wettbewerbssicherung 4. Rechtssicherheit."
+     ],
+     "richtig": "Die Feuerwehr gibt der Politik Strukturen vor: strategisch über den Haushalt, operativ über die KLR.",
+     "erkl": "FeuAK · Haushalt",
+     "quelle": "Lernkarte k-feuak-04"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wer priorisiert die Anträge im Haushaltsverfahren und wonach?",
+     "optionen": [
+      "Liquiditätsrechnung (Einnahmen und Ausgaben; im Haushaltsplan Finanzrechnung/Finanzhaushalt), Ergebnisrechnung (Ressourcenverbrauch), Bilanz (Vermögensverhältnisse, Aktiva/Passiva).",
+      "Keine Vergabe ohne Haushaltsmittel. Konsequenz: Rahmenverträge, technische Reserve, Vorausplanung.",
+      "Die Politik berät die angemeldeten Bedarfe und passt sie ggf. an bzw. priorisiert sie; die Entscheidungshoheit liegt bei der Politik, die Feuerwehr meldet begründet an.",
+      "Die Kämmerei legt konkrete Geldbeträge im Haushaltsplanentwurf fest; der Entwurf geht in die politische Beratung."
+     ],
+     "richtig": "Die Politik berät die angemeldeten Bedarfe und passt sie ggf. an bzw. priorisiert sie; die Entscheidungshoheit liegt bei der Politik, die Feuerwehr meldet begründet an.",
+     "erkl": "FeuAK · Haushalt",
+     "quelle": "Lernkarte k-feuak-12"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was ist die Ansatzermittlung?",
+     "optionen": [
+      "Schnelles Handeln (Sicherstellungsauftrag, Flexibilität) gegen Verwaltungsdenken.",
+      "Die Politik berät die angemeldeten Bedarfe und passt sie ggf. an bzw. priorisiert sie; die Entscheidungshoheit liegt bei der Politik, die Feuerwehr meldet begründet an.",
+      "Kameralistik: Geldverbrauch und Liquidität, kein Werteverzehr. Doppik: periodengerechter Ressourcenverbrauch, macht Substanzverlust sichtbar.",
+      "Die Kämmerei legt konkrete Geldbeträge im Haushaltsplanentwurf fest; der Entwurf geht in die politische Beratung."
+     ],
+     "richtig": "Die Kämmerei legt konkrete Geldbeträge im Haushaltsplanentwurf fest; der Entwurf geht in die politische Beratung.",
+     "erkl": "FeuAK · Haushalt",
+     "quelle": "Lernkarte k-feuak-13"
+    },
+    {
+     "typ": "mc",
+     "frage": "Worin liegt der Kernunterschied zwischen Kameralistik und Doppik?",
+     "optionen": [
+      "Keine Vergabe ohne Haushaltsmittel. Konsequenz: Rahmenverträge, technische Reserve, Vorausplanung.",
+      "Kameralistik: Geldverbrauch und Liquidität, kein Werteverzehr. Doppik: periodengerechter Ressourcenverbrauch, macht Substanzverlust sichtbar.",
+      "Die Feuerwehr gibt der Politik Strukturen vor: strategisch über den Haushalt, operativ über die KLR.",
+      "Die Politik berät die angemeldeten Bedarfe und passt sie ggf. an bzw. priorisiert sie; die Entscheidungshoheit liegt bei der Politik, die Feuerwehr meldet begründet an."
+     ],
+     "richtig": "Kameralistik: Geldverbrauch und Liquidität, kein Werteverzehr. Doppik: periodengerechter Ressourcenverbrauch, macht Substanzverlust sichtbar.",
+     "erkl": "FeuAK · Haushalt",
+     "quelle": "Lernkarte k-feuak-17"
+    }
+   ]
+  },
+  {
+   "titel": "Projektmanagement",
+   "steckbrief": "Ein Projekt für die neue Wache.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Welche drei Kernkennzahlen nutzt die strategische Personalplanung?",
+     "optionen": [
+      "8.760 h ÷ Netto-JAZ (Netto-JAZ = JAZ minus alle Ausfälle) = tatsächlich benötigte Mitarbeiter je Funktion.",
+      "Ist-Personalfaktor, Ist-Stellenfaktor, Soll-Stellenfaktor.",
+      "Planstellen ÷ zu besetzende Funktionen.",
+      "Passend zum Vorhaltezeitraum wählen, Personalfaktor berechnen (Ausfallzeiten erhöhen ihn), Wechsel behutsam einführen und den Personalrat beteiligen."
+     ],
+     "richtig": "Ist-Personalfaktor, Ist-Stellenfaktor, Soll-Stellenfaktor.",
+     "erkl": "FeuAK · PM",
+     "quelle": "Lernkarte k-feuak-40"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie berechnet sich der Ist-Personalfaktor?",
+     "optionen": [
+      "8.760 h ÷ Netto-JAZ (Netto-JAZ = JAZ minus alle Ausfälle) = tatsächlich benötigte Mitarbeiter je Funktion.",
+      "Krankheit, Urlaub, Aus-/Fortbildung, außerhalb Einsatzdienst, Mutterschutz/Elternzeit, Sonstiges.",
+      "Der politisch beschlossene Faktor; der Stellenbesetzungsgrad liegt in der Regel zwischen 95 % und unter 100 %.",
+      "Ist-Personalfaktor, Ist-Stellenfaktor, Soll-Stellenfaktor."
+     ],
+     "richtig": "8.760 h ÷ Netto-JAZ (Netto-JAZ = JAZ minus alle Ausfälle) = tatsächlich benötigte Mitarbeiter je Funktion.",
+     "erkl": "FeuAK · PM",
+     "quelle": "Lernkarte k-feuak-41"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie berechnet sich der Ist-Stellenfaktor?",
+     "optionen": [
+      "Max. 48 h/Woche im Durchschnitt von 12 Monaten, tägliche Ruhezeit mind. 11 h, wöchentlich mind. 24 h, Ruhepause nach 6 h.",
+      "Der politisch beschlossene Faktor; der Stellenbesetzungsgrad liegt in der Regel zwischen 95 % und unter 100 %.",
+      "Zeitreihenvergleiche, Risikoerkennung, Argumente im Stellenplanverfahren; Erhebung mindestens 1× jährlich.",
+      "Planstellen ÷ zu besetzende Funktionen."
+     ],
+     "richtig": "Planstellen ÷ zu besetzende Funktionen.",
+     "erkl": "FeuAK · PM",
+     "quelle": "Lernkarte k-feuak-42"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was ist der Soll-Stellenfaktor?",
+     "optionen": [
+      "Der politisch beschlossene Faktor; der Stellenbesetzungsgrad liegt in der Regel zwischen 95 % und unter 100 %.",
+      "Zeitreihenvergleiche, Risikoerkennung, Argumente im Stellenplanverfahren; Erhebung mindestens 1× jährlich.",
+      "Passend zum Vorhaltezeitraum wählen, Personalfaktor berechnen (Ausfallzeiten erhöhen ihn), Wechsel behutsam einführen und den Personalrat beteiligen.",
+      "8.760 h ÷ Netto-JAZ (Netto-JAZ = JAZ minus alle Ausfälle) = tatsächlich benötigte Mitarbeiter je Funktion."
+     ],
+     "richtig": "Der politisch beschlossene Faktor; der Stellenbesetzungsgrad liegt in der Regel zwischen 95 % und unter 100 %.",
+     "erkl": "FeuAK · PM",
+     "quelle": "Lernkarte k-feuak-43"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Ausfallgründe gehen in die Netto-JAZ ein?",
+     "optionen": [
+      "Krankheit, Urlaub, Aus-/Fortbildung, außerhalb Einsatzdienst, Mutterschutz/Elternzeit, Sonstiges.",
+      "Ist-Personalfaktor, Ist-Stellenfaktor, Soll-Stellenfaktor.",
+      "Planstellen ÷ zu besetzende Funktionen.",
+      "WA (z. B. Bremer Modell): planbar, viele freie Tage, aber starr. Flexibel (Springerpool, Arbeitszeitkonten): fangen Spitzen ab, aber hoher Planungsaufwand."
+     ],
+     "richtig": "Krankheit, Urlaub, Aus-/Fortbildung, außerhalb Einsatzdienst, Mutterschutz/Elternzeit, Sonstiges.",
+     "erkl": "FeuAK · PM",
+     "quelle": "Lernkarte k-feuak-44"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie wirken Mehrarbeit, Transferleistungen und Funktionsunterschreitung auf den Personalfaktor?",
+     "optionen": [
+      "Zeitreihenvergleiche, Risikoerkennung, Argumente im Stellenplanverfahren; Erhebung mindestens 1× jährlich.",
+      "WA (z. B. Bremer Modell): planbar, viele freie Tage, aber starr. Flexibel (Springerpool, Arbeitszeitkonten): fangen Spitzen ab, aber hoher Planungsaufwand.",
+      "Mehrarbeit-Aufbau erhöht den Faktor, -Abbau verringert ihn; Transferleistungen verringern ihn; Funktionsunterschreitungsstunden erhöhen ihn (keine Verrechnung mit Überschreitungen).",
+      "12 h: RD-tauglich, Ruhezeit gesichert; aber häufigere Wechsel. Tagesdienst: familienfreundlich, passt zur Einsatzspitze; aber nachts keine Vorhaltung, höherer Personalbedarf."
+     ],
+     "richtig": "Mehrarbeit-Aufbau erhöht den Faktor, -Abbau verringert ihn; Transferleistungen verringern ihn; Funktionsunterschreitungsstunden erhöhen ihn (keine Verrechnung mit Überschreitungen).",
+     "erkl": "FeuAK · PM",
+     "quelle": "Lernkarte k-feuak-45"
+    }
+   ]
+  },
+  {
+   "titel": "Qualitätsmanagement",
+   "steckbrief": "Wie misst man gute Arbeit?",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Mit welcher Struktur beschreibt man Qualität in einem Feuerwehrbereich?",
+     "optionen": [
+      "Finanzen: Budgettreue, Kosten je Einsatz, Investitionsquote. Kunden: Hilfsfristerfüllungsquote, Sicherheitsgefühl der Bevölkerung.",
+      "Produkte: Notrufannahme und Disposition. Beteiligte: Bürger (Quote angenommener Notrufe), Kostenträger (RD-Gebühr).",
+      "Bereich → Produkte → Beteiligte (Kunden) → Kennzahl; mindestens zwei Bereiche nennen.",
+      "Produkte: Notfallrettung, KTW. Beteiligte: Patient (Hilfsfristerreichungsgrad RD), Kostenträger (Kosten je Einsatz)."
+     ],
+     "richtig": "Bereich → Produkte → Beteiligte (Kunden) → Kennzahl; mindestens zwei Bereiche nennen.",
+     "erkl": "FeuAK · QM",
+     "quelle": "Lernkarte k-feuak-30"
+    },
+    {
+     "typ": "mc",
+     "frage": "Produkte, Beteiligte und Kennzahlen im abwehrenden Brandschutz?",
+     "optionen": [
+      "Prozesse: Ausrückzeit, Fahrzeugverfügbarkeit, Ausbildungsstand. Lernen/Entwicklung: Fortbildungsquote, Personalentwicklung, Digitalisierung.",
+      "Produkte: Grund- und Spezialausbildung. Beteiligte: Mitarbeiter (Ausbildungsquote), BGU (qualifizierter EK-Anteil).",
+      "Bereich → Produkte → Beteiligte (Kunden) → Kennzahl; mindestens zwei Bereiche nennen.",
+      "Produkte: Brandbekämpfung, TH. Beteiligte: Bürger (Hilfsfristerreichungsgrad), Politik (Kosten je Risikokategorie)."
+     ],
+     "richtig": "Produkte: Brandbekämpfung, TH. Beteiligte: Bürger (Hilfsfristerreichungsgrad), Politik (Kosten je Risikokategorie).",
+     "erkl": "FeuAK · QM",
+     "quelle": "Lernkarte k-feuak-31"
+    },
+    {
+     "typ": "mc",
+     "frage": "Produkte, Beteiligte und Kennzahlen bei der Leitstelle?",
+     "optionen": [
+      "Prozesse: Ausrückzeit, Fahrzeugverfügbarkeit, Ausbildungsstand. Lernen/Entwicklung: Fortbildungsquote, Personalentwicklung, Digitalisierung.",
+      "Produkte: Notfallrettung, KTW. Beteiligte: Patient (Hilfsfristerreichungsgrad RD), Kostenträger (Kosten je Einsatz).",
+      "Produkte: Notrufannahme und Disposition. Beteiligte: Bürger (Quote angenommener Notrufe), Kostenträger (RD-Gebühr).",
+      "Kunden/Bevölkerung, Geschäftsführung/Politik, eigene Organisation."
+     ],
+     "richtig": "Produkte: Notrufannahme und Disposition. Beteiligte: Bürger (Quote angenommener Notrufe), Kostenträger (RD-Gebühr).",
+     "erkl": "FeuAK · QM",
+     "quelle": "Lernkarte k-feuak-32"
+    },
+    {
+     "typ": "mc",
+     "frage": "Produkte, Beteiligte und Kennzahlen bei der Ausbildung?",
+     "optionen": [
+      "Produkte: Grund- und Spezialausbildung. Beteiligte: Mitarbeiter (Ausbildungsquote), BGU (qualifizierter EK-Anteil).",
+      "Bereich → Produkte → Beteiligte (Kunden) → Kennzahl; mindestens zwei Bereiche nennen.",
+      "Kunden/Bevölkerung, Geschäftsführung/Politik, eigene Organisation.",
+      "Produkte: Brandbekämpfung, TH. Beteiligte: Bürger (Hilfsfristerreichungsgrad), Politik (Kosten je Risikokategorie)."
+     ],
+     "richtig": "Produkte: Grund- und Spezialausbildung. Beteiligte: Mitarbeiter (Ausbildungsquote), BGU (qualifizierter EK-Anteil).",
+     "erkl": "FeuAK · QM",
+     "quelle": "Lernkarte k-feuak-33"
+    },
+    {
+     "typ": "mc",
+     "frage": "Produkte, Beteiligte und Kennzahlen im Rettungsdienst?",
+     "optionen": [
+      "Finanzen, Kunden, Interne Prozesse, Lernen und Entwicklung.",
+      "Prozesse: Ausrückzeit, Fahrzeugverfügbarkeit, Ausbildungsstand. Lernen/Entwicklung: Fortbildungsquote, Personalentwicklung, Digitalisierung.",
+      "Produkte: Brandbekämpfung, TH. Beteiligte: Bürger (Hilfsfristerreichungsgrad), Politik (Kosten je Risikokategorie).",
+      "Produkte: Notfallrettung, KTW. Beteiligte: Patient (Hilfsfristerreichungsgrad RD), Kostenträger (Kosten je Einsatz)."
+     ],
+     "richtig": "Produkte: Notfallrettung, KTW. Beteiligte: Patient (Hilfsfristerreichungsgrad RD), Kostenträger (Kosten je Einsatz).",
+     "erkl": "FeuAK · QM",
+     "quelle": "Lernkarte k-feuak-34"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche vier Perspektiven hat die Balanced Scorecard?",
+     "optionen": [
+      "Produkte: Grund- und Spezialausbildung. Beteiligte: Mitarbeiter (Ausbildungsquote), BGU (qualifizierter EK-Anteil).",
+      "Finanzen, Kunden, Interne Prozesse, Lernen und Entwicklung.",
+      "Produkte: Brandbekämpfung, TH. Beteiligte: Bürger (Hilfsfristerreichungsgrad), Politik (Kosten je Risikokategorie).",
+      "Produkte: Notrufannahme und Disposition. Beteiligte: Bürger (Quote angenommener Notrufe), Kostenträger (RD-Gebühr)."
+     ],
+     "richtig": "Finanzen, Kunden, Interne Prozesse, Lernen und Entwicklung.",
+     "erkl": "FeuAK · QM",
+     "quelle": "Lernkarte k-feuak-35"
+    }
+   ]
+  },
+  {
+   "titel": "Volkswirtschaft",
+   "steckbrief": "Wirtschaftliche Grundlagen.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Was bedeutet indirekte Wertschöpfung der Feuerwehr?",
+     "optionen": [
+      "Es zeigt den wirtschaftlichen Nutzen der Feuerwehr: Ausgaben verhindern höhere Schäden. Vier Kategorien: indirekte Wertschöpfung, Faktor Zeit, Betriebserhalt, Existenzsicherung.",
+      "Ein gelöschtes Firmengebäude verhindert Produktionsausfälle, Lieferkettenausfälle und ggf. dauerhafte Betriebsschließungen.",
+      "Die Feuerwehr produziert keine Güter, verhindert aber deren Zerstörung. Der Schutz von Sachwerten und Infrastruktur ist eine real erbrachte, nicht direkt sichtbare Wirtschaftsleistung.",
+      "Sie verhindert Fehlinvestitionen durch Nachweis des langfristigen Mehrwerts und ermöglicht eine fundierte Priorisierung konkurrierender Ausgaben."
+     ],
+     "richtig": "Die Feuerwehr produziert keine Güter, verhindert aber deren Zerstörung. Der Schutz von Sachwerten und Infrastruktur ist eine real erbrachte, nicht direkt sichtbare Wirtschaftsleistung.",
+     "erkl": "FeuAK · VWL",
+     "quelle": "Lernkarte k-feuak-20"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Rolle spielt der Faktor Zeit bei der indirekten Wertschöpfung?",
+     "optionen": [
+      "Sie objektiviert die Auswahl zwischen Investitionsalternativen (z. B. Fahrzeugtypen, Standorte) und macht Entscheidungen rational begründbar und für Dritte nachvollziehbar.",
+      "Schutz von Betriebsstätten sichert lokale Arbeitsplätze und Steuereinnahmen. Feuerwehrausgaben stabilisieren so indirekt die kommunale Haushaltsbasis.",
+      "Schnelle Eingreifzeiten begrenzen den Schaden; jede Minute früherer Intervention reduziert direkte Sach- und Folgeschäden.",
+      "Sie ist bei finanzwirksamen Maßnahmen gesetzlich vorgeschrieben (HGrG); ohne Nachweis sind Ausgaben formal nicht zulässig."
+     ],
+     "richtig": "Schnelle Eingreifzeiten begrenzen den Schaden; jede Minute früherer Intervention reduziert direkte Sach- und Folgeschäden.",
+     "erkl": "FeuAK · VWL",
+     "quelle": "Lernkarte k-feuak-21"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was bedeutet Betriebserhalt als Kategorie der indirekten Wertschöpfung?",
+     "optionen": [
+      "Schutz von Betriebsstätten sichert lokale Arbeitsplätze und Steuereinnahmen. Feuerwehrausgaben stabilisieren so indirekt die kommunale Haushaltsbasis.",
+      "Er erfasst auch gesellschaftliche Wohlfahrtseffekte (verhinderte Umweltschäden, öffentliche Sicherheit, Lebensqualität) über direkte Ausgaben hinaus.",
+      "Ein gelöschtes Firmengebäude verhindert Produktionsausfälle, Lieferkettenausfälle und ggf. dauerhafte Betriebsschließungen.",
+      "Sie ist bei finanzwirksamen Maßnahmen gesetzlich vorgeschrieben (HGrG); ohne Nachweis sind Ausgaben formal nicht zulässig."
+     ],
+     "richtig": "Ein gelöschtes Firmengebäude verhindert Produktionsausfälle, Lieferkettenausfälle und ggf. dauerhafte Betriebsschließungen.",
+     "erkl": "FeuAK · VWL",
+     "quelle": "Lernkarte k-feuak-22"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was bedeutet Existenzsicherung als Kategorie der indirekten Wertschöpfung?",
+     "optionen": [
+      "Sie objektiviert die Auswahl zwischen Investitionsalternativen (z. B. Fahrzeugtypen, Standorte) und macht Entscheidungen rational begründbar und für Dritte nachvollziehbar.",
+      "Schutz von Betriebsstätten sichert lokale Arbeitsplätze und Steuereinnahmen. Feuerwehrausgaben stabilisieren so indirekt die kommunale Haushaltsbasis.",
+      "Sie ist bei finanzwirksamen Maßnahmen gesetzlich vorgeschrieben (HGrG); ohne Nachweis sind Ausgaben formal nicht zulässig.",
+      "Sie verhindert Fehlinvestitionen durch Nachweis des langfristigen Mehrwerts und ermöglicht eine fundierte Priorisierung konkurrierender Ausgaben."
+     ],
+     "richtig": "Schutz von Betriebsstätten sichert lokale Arbeitsplätze und Steuereinnahmen. Feuerwehrausgaben stabilisieren so indirekt die kommunale Haushaltsbasis.",
+     "erkl": "FeuAK · VWL",
+     "quelle": "Lernkarte k-feuak-23"
+    },
+    {
+     "typ": "mc",
+     "frage": "Warum ist das Argument der indirekten Wertschöpfung bei knappen Kassen wichtig?",
+     "optionen": [
+      "Schutz von Betriebsstätten sichert lokale Arbeitsplätze und Steuereinnahmen. Feuerwehrausgaben stabilisieren so indirekt die kommunale Haushaltsbasis.",
+      "Es zeigt den wirtschaftlichen Nutzen der Feuerwehr: Ausgaben verhindern höhere Schäden. Vier Kategorien: indirekte Wertschöpfung, Faktor Zeit, Betriebserhalt, Existenzsicherung.",
+      "Sie verhindert Fehlinvestitionen durch Nachweis des langfristigen Mehrwerts und ermöglicht eine fundierte Priorisierung konkurrierender Ausgaben.",
+      "Ein gelöschtes Firmengebäude verhindert Produktionsausfälle, Lieferkettenausfälle und ggf. dauerhafte Betriebsschließungen."
+     ],
+     "richtig": "Es zeigt den wirtschaftlichen Nutzen der Feuerwehr: Ausgaben verhindern höhere Schäden. Vier Kategorien: indirekte Wertschöpfung, Faktor Zeit, Betriebserhalt, Existenzsicherung.",
+     "erkl": "FeuAK · VWL",
+     "quelle": "Lernkarte k-feuak-24"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wozu dient die KNA als Entscheidungshilfe?",
+     "optionen": [
+      "Sie verhindert Fehlinvestitionen durch Nachweis des langfristigen Mehrwerts und ermöglicht eine fundierte Priorisierung konkurrierender Ausgaben.",
+      "Sie objektiviert die Auswahl zwischen Investitionsalternativen (z. B. Fahrzeugtypen, Standorte) und macht Entscheidungen rational begründbar und für Dritte nachvollziehbar.",
+      "Ein gelöschtes Firmengebäude verhindert Produktionsausfälle, Lieferkettenausfälle und ggf. dauerhafte Betriebsschließungen.",
+      "Es zeigt den wirtschaftlichen Nutzen der Feuerwehr: Ausgaben verhindern höhere Schäden. Vier Kategorien: indirekte Wertschöpfung, Faktor Zeit, Betriebserhalt, Existenzsicherung."
+     ],
+     "richtig": "Sie objektiviert die Auswahl zwischen Investitionsalternativen (z. B. Fahrzeugtypen, Standorte) und macht Entscheidungen rational begründbar und für Dritte nachvollziehbar.",
+     "erkl": "FeuAK · VWL",
+     "quelle": "Lernkarte k-feuak-26"
+    }
+   ]
+  },
+  {
+   "titel": "Vergabe und Bedarfsplanung",
+   "steckbrief": "Beschaffen und Bedarf planen.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Wann darf die Vergabe einer neuen HLF-Generation angestoßen werden?",
+     "optionen": [
+      "Vor Vergaberügen und teuren Beschaffungsstopps.",
+      "Exakte, herstellerneutrale Bedarfsbeschreibung (§ 31 VgV, § 7 VOB/A). Bevorzugung bestimmter Hersteller oder Modelle ist rechtswidrig, auch versteckte Spezifikationen.",
+      "EU-Schwellenwerte prüfen, Rahmenverträge nutzen, feste Jahresraten ansparen, Restmittel-Übertragbarkeit sichern.",
+      "Erst, wenn Haushaltsmittel bereitstehen. Vorher werden Vergabeunterlagen und Leistungsverzeichnis vorbereitet."
+     ],
+     "richtig": "Erst, wenn Haushaltsmittel bereitstehen. Vorher werden Vergabeunterlagen und Leistungsverzeichnis vorbereitet.",
+     "erkl": "FeuAK · Vergabe",
+     "quelle": "Lernkarte k-feuak-52"
+    },
+    {
+     "typ": "mc",
+     "frage": "Worauf ist bei der HLF-Beschaffung besonders zu achten?",
+     "optionen": [
+      "Exakte, herstellerneutrale Bedarfsbeschreibung (§ 31 VgV, § 7 VOB/A). Bevorzugung bestimmter Hersteller oder Modelle ist rechtswidrig, auch versteckte Spezifikationen.",
+      "Erst, wenn Haushaltsmittel bereitstehen. Vorher werden Vergabeunterlagen und Leistungsverzeichnis vorbereitet.",
+      "EU-Schwellenwerte prüfen, Rahmenverträge nutzen, feste Jahresraten ansparen, Restmittel-Übertragbarkeit sichern.",
+      "Transparente Kriterien ermöglichen fairen Marktvergleich und maximalen Bieterwettbewerb; Wettbewerb senkt Preise und steigert Qualität."
+     ],
+     "richtig": "EU-Schwellenwerte prüfen, Rahmenverträge nutzen, feste Jahresraten ansparen, Restmittel-Übertragbarkeit sichern.",
+     "erkl": "FeuAK · Vergabe",
+     "quelle": "Lernkarte k-feuak-54"
+    },
+    {
+     "typ": "mc",
+     "frage": "Vorteile und Nachteile einer einzigen Tranche?",
+     "optionen": [
+      "Vorteil: Risiko gestreut. Nachteile: höhere Einzelkosten, getrennte Ausschreibungen.",
+      "Vor Vergaberügen und teuren Beschaffungsstopps.",
+      "Vorteile: einheitliche Ausbildung, gleiche Ersatzteile, Skaleneffekte, eine Ausschreibung. Nachteil: Ein Systemfehler trifft alle Fahrzeuge.",
+      "EU-Schwellenwerte prüfen, Rahmenverträge nutzen, feste Jahresraten ansparen, Restmittel-Übertragbarkeit sichern."
+     ],
+     "richtig": "Vorteile: einheitliche Ausbildung, gleiche Ersatzteile, Skaleneffekte, eine Ausschreibung. Nachteil: Ein Systemfehler trifft alle Fahrzeuge.",
+     "erkl": "FeuAK · Vergabe",
+     "quelle": "Lernkarte k-feuak-55"
+    },
+    {
+     "typ": "mc",
+     "frage": "Vorteile und Nachteile mehrerer Tranchen?",
+     "optionen": [
+      "1. Vergaberecht und Neutralität 2. Diskriminierungsverbot 3. Wettbewerbssicherung 4. Rechtssicherheit.",
+      "Vorteil: Risiko gestreut. Nachteile: höhere Einzelkosten, getrennte Ausschreibungen.",
+      "Vor Vergaberügen und teuren Beschaffungsstopps.",
+      "Vorteile: einheitliche Ausbildung, gleiche Ersatzteile, Skaleneffekte, eine Ausschreibung. Nachteil: Ein Systemfehler trifft alle Fahrzeuge."
+     ],
+     "richtig": "Vorteil: Risiko gestreut. Nachteile: höhere Einzelkosten, getrennte Ausschreibungen.",
+     "erkl": "FeuAK · Vergabe",
+     "quelle": "Lernkarte k-feuak-56"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie bemisst man Nutzungsdauer und technische Reserve eines Fahrzeugs?",
+     "optionen": [
+      "Vorteile: einheitliche Ausbildung, gleiche Ersatzteile, Skaleneffekte, eine Ausschreibung. Nachteil: Ein Systemfehler trifft alle Fahrzeuge.",
+      "Nutzungsdauer nach AfA-Tabelle (Anlageverzeichnis: Anschaffungswert, Restwert, Nutzungsdauer). Technische Reserve ausreichend bemessen; Indikator: Fahrzeugverfügbarkeit.",
+      "Transparente Kriterien ermöglichen fairen Marktvergleich und maximalen Bieterwettbewerb; Wettbewerb senkt Preise und steigert Qualität.",
+      "Vor Vergaberügen und teuren Beschaffungsstopps."
+     ],
+     "richtig": "Nutzungsdauer nach AfA-Tabelle (Anlageverzeichnis: Anschaffungswert, Restwert, Nutzungsdauer). Technische Reserve ausreichend bemessen; Indikator: Fahrzeugverfügbarkeit.",
+     "erkl": "FeuAK · Vergabe",
+     "quelle": "Lernkarte k-feuak-57"
+    },
+    {
+     "typ": "mc",
+     "frage": "Nenne die vier Aspekte, warum ein neutrales Leistungsverzeichnis zentral ist.",
+     "optionen": [
+      "1. Vergaberecht und Neutralität 2. Diskriminierungsverbot 3. Wettbewerbssicherung 4. Rechtssicherheit.",
+      "Vorteile: einheitliche Ausbildung, gleiche Ersatzteile, Skaleneffekte, eine Ausschreibung. Nachteil: Ein Systemfehler trifft alle Fahrzeuge.",
+      "Erst, wenn Haushaltsmittel bereitstehen. Vorher werden Vergabeunterlagen und Leistungsverzeichnis vorbereitet.",
+      "Transparente Kriterien ermöglichen fairen Marktvergleich und maximalen Bieterwettbewerb; Wettbewerb senkt Preise und steigert Qualität."
+     ],
+     "richtig": "1. Vergaberecht und Neutralität 2. Diskriminierungsverbot 3. Wettbewerbssicherung 4. Rechtssicherheit.",
+     "erkl": "FeuAK · Vergabe",
+     "quelle": "Lernkarte k-feuak-61"
+    }
+   ]
+  }
+ ]
+}

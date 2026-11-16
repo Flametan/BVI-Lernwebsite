@@ -1,0 +1,353 @@
+{
+ "mission": "ucpm",
+ "welt": "flugfeld",
+ "level": [
+  {
+   "titel": "Abkürzungen",
+   "steckbrief": "Auf dem Flugfeld wimmelt es von Abkürzungen.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Wofür steht NCP?",
+     "optionen": [
+      "National Civil Protection",
+      "NATO Command Post",
+      "National Contact Point",
+      "National Crisis Plan"
+     ],
+     "richtig": "National Contact Point",
+     "erkl": "NCP = National Contact Point; in Deutschland das GMLZ.",
+     "quelle": "v-idf-u101 · Abkürzungen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wofür steht LEMA?",
+     "optionen": [
+      "Lead Emergency Module Administration",
+      "Logistics and Equipment Management Agency",
+      "Local Emergency Management Agency (örtliche Einsatzleitung)",
+      "Local Emergency Medical Assistance"
+     ],
+     "richtig": "Local Emergency Management Agency (örtliche Einsatzleitung)",
+     "erkl": "LEMA = örtliche Einsatzleitung.",
+     "quelle": "v-idf-u101 · Abkürzungen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wofür steht OSOCC?",
+     "optionen": [
+      "Operational Support Office for Civil Crises",
+      "On-site Observation and Control Cell",
+      "Overseas Operations Command Centre",
+      "On-site Operations Coordination Centre"
+     ],
+     "richtig": "On-site Operations Coordination Centre",
+     "erkl": "OSOCC = örtliche Leitstelle / Koordinierungsstelle.",
+     "quelle": "v-idf-u101 · Abkürzungen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wofür steht RfA?",
+     "optionen": [
+      "Report for Authorities",
+      "Ready for Action",
+      "Request for Assistance",
+      "Rescue and Fire Alliance"
+     ],
+     "richtig": "Request for Assistance",
+     "erkl": "RfA = Request for Assistance (Hilfeersuchen).",
+     "quelle": "v-idf-u101 · Abkürzungen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wofür steht EUCPT?",
+     "optionen": [
+      "EU Civil Protection Team",
+      "EU Coordination Point for Transport",
+      "EU Crisis Planning Tool",
+      "European Union Central Protection Treaty"
+     ],
+     "richtig": "EU Civil Protection Team",
+     "erkl": "EUCPT = EU Civil Protection Team.",
+     "quelle": "v-idf-u101 · Abkürzungen"
+    }
+   ]
+  },
+  {
+   "titel": "Der Weg des Ersuchens",
+   "steckbrief": "Ein Staat bittet um Hilfe. Wie läuft das Ersuchen?",
+   "aufgaben": [
+    {
+     "typ": "reihe",
+     "frage": "Hilfeersuchen nach Deutschland: Bring die Schritte 1 bis 5 in die richtige Reihenfolge.",
+     "optionen": [
+      "Request for Assistance vom betroffenen Staat an ERCC / CECIS",
+      "Hilfsangebote (in kind, Module, Experten)",
+      "RfA an das GMLZ des BBK",
+      "Steuerung der RfA und Informationsaustausch mit den Anbietern",
+      "Austausch und Entscheidung mit BMI und Bundesministerien"
+     ],
+     "richtig": [
+      "Request for Assistance vom betroffenen Staat an ERCC / CECIS",
+      "RfA an das GMLZ des BBK",
+      "Austausch und Entscheidung mit BMI und Bundesministerien",
+      "Steuerung der RfA und Informationsaustausch mit den Anbietern",
+      "Hilfsangebote (in kind, Module, Experten)"
+     ],
+     "erkl": "Es folgen: Angebot Deutschlands an das ERCC, Akzeptanz oder Ablehnung, Entsendung, Ko-Finanzierung.",
+     "quelle": "v-idf-u101 · Weg des Hilfeersuchens"
+    },
+    {
+     "typ": "reihe",
+     "frage": "Hilfeersuchen nach Deutschland: Bring die Schritte 6 bis 9 in die richtige Reihenfolge.",
+     "optionen": [
+      "Entsendung und Hilfeleistung",
+      "Ko-Finanzierung",
+      "Angebot Deutschlands an das ERCC",
+      "Akzeptanz oder Ablehnung durch den betroffenen Staat"
+     ],
+     "richtig": [
+      "Angebot Deutschlands an das ERCC",
+      "Akzeptanz oder Ablehnung durch den betroffenen Staat",
+      "Entsendung und Hilfeleistung",
+      "Ko-Finanzierung"
+     ],
+     "erkl": "Schritte 6 bis 9 des Schaubilds.",
+     "quelle": "v-idf-u101 · Weg des Hilfeersuchens"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Stelle ist in Deutschland die nationale Kontaktstelle (NCP)?",
+     "optionen": [
+      "Das Auswärtige Amt",
+      "Das THW",
+      "Das GMLZ",
+      "Die Bundespolizei"
+     ],
+     "richtig": "Das GMLZ",
+     "erkl": "Kommunikationsknotenpunkt mit den nationalen Kontaktstellen (NCP), in Deutschland GMLZ.",
+     "quelle": "v-idf-u102 · ERCC"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was ist das ERCC?",
+     "optionen": [
+      "Die Rechtsgrundlage des Unionsverfahrens",
+      "Ein Einsatzmodul für Waldbrände",
+      "Der operative Kern des UCPM mit 24/7-Überwachung der globalen Lage",
+      "Ein Förderprogramm für Fahrzeuge"
+     ],
+     "richtig": "Der operative Kern des UCPM mit 24/7-Überwachung der globalen Lage",
+     "erkl": "Emergency Response Coordination Centre: koordiniert die EU-Katastrophenbewältigung.",
+     "quelle": "v-idf-u102 · ERCC"
+    }
+   ]
+  },
+  {
+   "titel": "Rechtsgrundlagen",
+   "steckbrief": "Worauf stützt sich das Verfahren?",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Auf welcher Rechtsgrundlage beruht das Unionsverfahren?",
+     "optionen": [
+      "Art. 5 NATO-Vertrag",
+      "Art. 196 AEUV",
+      "Art. 35 GG",
+      "Art. 42 EUV"
+     ],
+     "richtig": "Art. 196 AEUV",
+     "erkl": "Rechtsgrundlage: Art. 196 Vertrag über die Arbeitsweise der EU.",
+     "quelle": "v-idf-u102 · Rechtsgrundlagen und Akteure"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welcher Beschluss regelt das Katastrophenschutzverfahren der Union?",
+     "optionen": [
+      "Beschluss 1313/2013/EU",
+      "Beschluss 2020/1/EU",
+      "Verordnung 305/2011",
+      "Richtlinie 2012/18/EU"
+     ],
+     "richtig": "Beschluss 1313/2013/EU",
+     "erkl": "Gesetzgebung: Beschluss 1313/2013/EU.",
+     "quelle": "v-idf-u102 · Rechtsgrundlagen und Akteure"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wer trägt das Unionsverfahren?",
+     "optionen": [
+      "Die EU-Kommission und 37 teilnehmende Staaten",
+      "Nur die 27 Mitgliedstaaten",
+      "Die NATO",
+      "Die Vereinten Nationen"
+     ],
+     "richtig": "Die EU-Kommission und 37 teilnehmende Staaten",
+     "erkl": "Getragen von EU-Kommission und 37 teilnehmenden Staaten.",
+     "quelle": "v-idf-u102 · Rechtsgrundlagen und Akteure"
+    },
+    {
+     "typ": "multi",
+     "frage": "Was trifft auf das Unionsverfahren zu?",
+     "optionen": [
+      "Für natürliche und menschengemachte Katastrophen",
+      "Zwischenstaatliches Kooperationsinstrument",
+      "Von jedem Land weltweit aktivierbar",
+      "Nur von EU-Mitgliedstaaten aktivierbar"
+     ],
+     "richtig": [
+      "Zwischenstaatliches Kooperationsinstrument",
+      "Von jedem Land weltweit aktivierbar",
+      "Für natürliche und menschengemachte Katastrophen"
+     ],
+     "erkl": "Für Vorsorge, Vorbereitung und Bewältigung.",
+     "quelle": "v-idf-u102 · Rechtsgrundlagen und Akteure"
+    }
+   ]
+  },
+  {
+   "titel": "Kapazitäten",
+   "steckbrief": "Welche Einheiten stehen bereit?",
+   "aufgaben": [
+    {
+     "typ": "reihe",
+     "frage": "Kapazitätenpyramide: Bring die Stufen von oben nach unten in die richtige Reihenfolge.",
+     "optionen": [
+      "European Civil Protection Pool (ECPP)",
+      "Zum internationalen Einsatz befähigte Kapazitäten",
+      "rescEU",
+      "Nationale Kapazitäten im Katastrophenschutz"
+     ],
+     "richtig": [
+      "rescEU",
+      "European Civil Protection Pool (ECPP)",
+      "Zum internationalen Einsatz befähigte Kapazitäten",
+      "Nationale Kapazitäten im Katastrophenschutz"
+     ],
+     "erkl": "rescEU (Art. 12), ECPP (Art. 11, zertifiziert), befähigte Kapazitäten (Art. 9), nationale Kapazitäten.",
+     "quelle": "v-idf-u102 · ECPP Kapazitätenpyramide"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie lange muss jedes Modul autark arbeiten können?",
+     "optionen": [
+      "Mindestens 72 Stunden",
+      "Mindestens 96 Stunden",
+      "Mindestens 36 Stunden",
+      "Mindestens 24 Stunden"
+     ],
+     "richtig": "Mindestens 96 Stunden",
+     "erkl": "Autarkie min. 96 h, dazu eigene Führungsstrukturen und definierte Komponenten.",
+     "quelle": "v-idf-u102 · ECPP Kapazitätenpyramide"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was zeichnet Einheiten im ECPP aus?",
+     "optionen": [
+      "Sie brauchen keine eigene Führungsstruktur",
+      "Sie dienen nur dem Einsatz im eigenen Land",
+      "Sie werden vollständig von der EU finanziert",
+      "Sie sind zertifiziert und erfüllen besondere Qualitätsstandards"
+     ],
+     "richtig": "Sie sind zertifiziert und erfüllen besondere Qualitätsstandards",
+     "erkl": "Die EU fördert Zertifizierung und trägt einen Großteil der Einsatz- und Transportkosten; die Einheiten werden national finanziert.",
+     "quelle": "v-idf-u102 · ECPP Kapazitätenpyramide"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was ist „In-Kind Assistance“?",
+     "optionen": [
+      "Aufnahme von Evakuierten",
+      "Finanzielle Soforthilfe",
+      "Hilfsgüter, die koordiniert in Schadensgebiete transportiert werden",
+      "Entsendung von Experten"
+     ],
+     "richtig": "Hilfsgüter, die koordiniert in Schadensgebiete transportiert werden",
+     "erkl": "In-Kind Assistance = Hilfsgüter.",
+     "quelle": "v-idf-u102 · ECPP Kapazitätenpyramide"
+    }
+   ]
+  },
+  {
+   "titel": "Ankunft im Einsatzland",
+   "steckbrief": "Die Module landen. Was jetzt?",
+   "aufgaben": [
+    {
+     "typ": "multi",
+     "frage": "Was bedeutet Host Nation Support praktisch?",
+     "optionen": [
+      "Lageeinweisung",
+      "Registrierung",
+      "Übernahme der Führung der fremden Module",
+      "Einreiseabwicklung",
+      "Zuweisung eines Einsatzraums"
+     ],
+     "richtig": [
+      "Einreiseabwicklung",
+      "Registrierung",
+      "Lageeinweisung",
+      "Zuweisung eines Einsatzraums"
+     ],
+     "erkl": "Dazu: Ansprechpartner, Unterstützung bei Transport, Unterbringung und Versorgung.",
+     "quelle": "v-idf-u102 · Host Nation Support"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Aufgaben hat das EUCPT?",
+     "optionen": [
+      "Übernahme der örtlichen Einsatzleitung",
+      "Unterstützung bei der Koordinierung der EU-Hilfe",
+      "Informationsmanagement und Lagebericht für das ERCC",
+      "Unterstützung und Beratung der nationalen Behörden"
+     ],
+     "richtig": [
+      "Unterstützung bei der Koordinierung der EU-Hilfe",
+      "Informationsmanagement und Lagebericht für das ERCC",
+      "Unterstützung und Beratung der nationalen Behörden"
+     ],
+     "erkl": "Außerdem Zusammenarbeit mit internationalen Akteuren und Gewährleistung der EU-Sichtbarkeit.",
+     "quelle": "v-idf-u101 · Aufgaben des EUCPT"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was ist CECIS?",
+     "optionen": [
+      "Eine web-basierte Kommunikations- und Koordinierungsplattform",
+      "Die Leitstelle des THW",
+      "Ein Modul für Hochwasserpumpen",
+      "Ein Satellitensystem zur Brandüberwachung"
+     ],
+     "richtig": "Eine web-basierte Kommunikations- und Koordinierungsplattform",
+     "erkl": "Common Emergency Communication and Information System.",
+     "quelle": "v-idf-u102 · CECIS"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welcher Copernicus-Dienst informiert über Waldbrände?",
+     "optionen": [
+      "EDO",
+      "EFAS",
+      "CECIS",
+      "EFFIS"
+     ],
+     "richtig": "EFFIS",
+     "erkl": "EFFIS = European Forest Fire Information System; EFAS = Hochwasser, EDO = Dürre.",
+     "quelle": "v-idf-u102 · Copernicus"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welcher Copernicus-Dienst warnt vor Hochwasser?",
+     "optionen": [
+      "ERCC",
+      "EFFIS",
+      "EFAS",
+      "EDO"
+     ],
+     "richtig": "EFAS",
+     "erkl": "EFAS = European Flood Awareness System.",
+     "quelle": "v-idf-u102 · Copernicus"
+    }
+   ]
+  }
+ ]
+}

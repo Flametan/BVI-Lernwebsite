@@ -1,6 +1,15 @@
 # IdF-Spiel – Plan
 
-Stand: Schritt 2 (Startbildschirm und Mission „Begehung" spielbar). Die übrigen Missionen folgen einzeln.
+Stand: Alle neun Missionen sind spielbar, je fünf Level.
+
+- **Begehung** hat eine eigene Welt (`js/m-begehung.js`, mehrgeschossig mit Treppenhaus).
+- **Alle anderen** teilen sich `js/m-welt.js`: eine begehbare Kulisse je Mission (Stabsraum, Brandschutzdienststelle, Einsatzstelle,
+  Lagezentrum, Flugfeld, Wache, Hörsaal, Planungsbüro) mit Stationen. Aufgabenarten: eine Antwort, mehrere Antworten,
+  Reihenfolge und im Stab „Meldung holen und zum zuständigen Sachgebiet bringen"; zwei Stab-Level laufen gegen die Zeit.
+- **Daten:** `python3 game/tools/build_data.py` erzeugt `game/data/*.json` aus den Quizfragen und Lernkarten der App und aus
+  von Hand abgeleiteten Aufgaben; jede Aufgabe nennt ihre Quelle. Vier Presse-Aufgaben sind „eigener Stoff".
+- **Abweichung vom ersten Plan:** Stellungnahme, IBK, VAk und FeuAK sind Fragen an Stationen in ihrer Kulisse, kein eigenes
+  Spielprinzip (Textbausteine, Gesprächsverlauf, Stadtplanung). Die Abschnitte unten beschreiben noch die ursprüngliche Idee.
 
 ## Entscheidungen
 

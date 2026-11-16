@@ -1,0 +1,473 @@
+{
+ "mission": "stellungnahme",
+ "welt": "amt",
+ "level": [
+  {
+   "titel": "Posteingang",
+   "steckbrief": "Auf deinem Schreibtisch liegen Bauvorhaben. Kläre die Grundlagen.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Was unterscheidet GK 2 von GK 1?",
+     "optionen": [
+      "GK 2 hat keine Begrenzung der Nutzungseinheiten",
+      "GK 2 darf bis 13 m hoch sein",
+      "GK 2 umfasst nur land- und forstwirtschaftliche Gebäude",
+      "GK 2 ist wie GK 1, aber nicht freistehend"
+     ],
+     "richtig": "GK 2 ist wie GK 1, aber nicht freistehend",
+     "erkl": "GK 1: freistehend, bis 7 m, höchstens 2 Nutzungseinheiten mit zusammen höchstens 400 m² (dazu freistehende land- und forstwirtschaftliche Gebäude). GK 2 ist wie GK 1, jedoch nicht freistehend.",
+     "quelle": "IdF-Quiz · Frage 89"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Gebäude gehören in die GK 5?",
+     "optionen": [
+      "Sonstige Gebäude, einschließlich unterirdischer Gebäude",
+      "Alle Gebäude über 7 m Höhe",
+      "Nur Hochhäuser über 22 m",
+      "Gebäude bis 13 m mit Nutzungseinheiten über 400 m²"
+     ],
+     "richtig": "Sonstige Gebäude, einschließlich unterirdischer Gebäude",
+     "erkl": "GK 5 sind sonstige Gebäude einschließlich unterirdischer Gebäude, also was nicht in GK 1 bis 4 fällt.",
+     "quelle": "IdF-Quiz · Frage 90"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie lang darf der längste Rettungsweg in einer Verkaufsstätte mit Ladenstraße insgesamt sein?",
+     "optionen": [
+      "105 m",
+      "175 m",
+      "70 m",
+      "140 m"
+     ],
+     "richtig": "140 m",
+     "erkl": "Im Verkaufsraum gelten 25 m Luftlinie bzw. 35 m Lauflinie, dazu je 35 m in der Ladenstraße, im notwendigen Flur und bis ins Freie (Treppenraumverlängerung), insgesamt bis 140 m. Die Ladenstraße ist gesprinklert und hat Rauchabzug.",
+     "quelle": "IdF-Quiz · Frage 79"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was gilt für Dachflächenfenster als zweiter Rettungsweg?",
+     "optionen": [
+      "Sie müssen zur öffentlichen Verkehrsfläche liegen, und der horizontale Abstand zur Traufkante darf höchstens 1 m betragen",
+      "Sie müssen zum Hof zeigen, der Abstand zur Traufkante ist beliebig",
+      "Sie sind als zweiter Rettungsweg grundsätzlich unzulässig",
+      "Sie dürfen bis 3 m von der Traufkante entfernt liegen"
+     ],
+     "richtig": "Sie müssen zur öffentlichen Verkehrsfläche liegen, und der horizontale Abstand zur Traufkante darf höchstens 1 m betragen",
+     "erkl": "Dachflächenfenster sollten zur öffentlichen Verkehrsfläche hin liegen, weil nur dort ausreichend Abstand zum Gebäude für die Leiter besteht. Der horizontale Abstand zur Traufkante beträgt höchstens 1 m.",
+     "quelle": "IdF-Quiz · Frage 93"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Aussagen zu Verkaufsstätten sind richtig?",
+     "optionen": [
+      "Die maximale Rettungsweglänge beträgt 100 m.",
+      "Ebenerdige Verkaufsstätten mit Feuerlöschanlage sind bis 10.000 m² Brandabschnittsgröße zulässig.",
+      "Während der Betriebszeit muss immer ein Betreiber oder Verantwortlicher anwesend sein.",
+      "Der erste Rettungsweg darf über die Ladenstraße geführt werden, wenn der zweite Rettungsweg davon unabhängig ist."
+     ],
+     "richtig": [
+      "Ebenerdige Verkaufsstätten mit Feuerlöschanlage sind bis 10.000 m² Brandabschnittsgröße zulässig.",
+      "Während der Betriebszeit muss immer ein Betreiber oder Verantwortlicher anwesend sein.",
+      "Der erste Rettungsweg darf über die Ladenstraße geführt werden, wenn der zweite Rettungsweg davon unabhängig ist."
+     ],
+     "erkl": "Protokoll-Wertung übernommen. Rettungsweglänge im Verkaufsraum höchstens 25 m, sonst 35 m, mit Sprinkler und Führung über Ladenstraße bis 140 m – nicht pauschal 100 m (MVKVO).",
+     "quelle": "IdF-Quiz · Frage 24"
+    },
+    {
+     "typ": "multi",
+     "frage": "Bei welchen der folgenden Situationen handelt es sich um „Versammlungsstätten“ im Sinne der Muster-Versammlungsstättenverordnung (MVStättVO)?",
+     "optionen": [
+      "Versammlungsraum mit 270 Sitzplätzen",
+      "Fußballplatz mit 1700 Personen auf einer Tribüne",
+      "Zwei Versammlungsräume im Krankenhaus (45 und 120 Personen), deren Rettungsweg über den gleichen notwendigen Flur führt",
+      "Disco mit 150 m²"
+     ],
+     "richtig": [
+      "Versammlungsraum mit 270 Sitzplätzen",
+      "Disco mit 150 m²"
+     ],
+     "erkl": "§ 1 MVStättVO: Versammlungsräume mit mehr als 200 Besuchern; mehrere Räume mit gemeinsamen Rettungswegen zählen zusammen; Sportstadien/Freisportanlagen mit Tribünen erst ab mehr als 5000 Besuchern. Disco 150 m²: sonstige Stehplätze mit mindestens 2 Besuchern je m² → mindestens 300 Besucher > 200. 270 Sitzplätze > 200. Die zwei Räume im Krankenhaus ergeben zusammen 165 ≤ 200, 1700 Tribünenplätze liegen unter 5000 – jeweils keine Versammlungsstätte.",
+     "quelle": "IdF-Quiz · Frage 12"
+    }
+   ]
+  },
+  {
+   "titel": "Gebäudeklasse und Einordnung",
+   "steckbrief": "Ordne die Vorhaben richtig ein.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Welche Mindestmaße hat ein anleiterbares Fenster als zweiter Rettungsweg, und wie hoch darf die Brüstung sein?",
+     "optionen": [
+      "0,90 × 1,20 m, Brüstung max. 0,90 m",
+      "0,60 × 1,00 m, Brüstung max. 1,60 m",
+      "1,00 × 1,50 m, Brüstung max. 1,00 m",
+      "0,90 × 1,20 m, Brüstung max. 1,20 m"
+     ],
+     "richtig": "0,90 × 1,20 m, Brüstung max. 1,20 m",
+     "erkl": "Anleiterbare Fenster haben mindestens 0,90 × 1,20 m und eine Brüstungshöhe von höchstens 1,20 m. Bei Dachflächenfenstern gilt zusätzlich ein horizontaler Abstand zur Traufkante von höchstens 1 m.",
+     "quelle": "IdF-Quiz · Frage 73"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Aussage zu den Rettungswegen stimmt?",
+     "optionen": [
+      "Der erste Rettungsweg ist baulich und höchstens 35 m lang, der zweite kann baulich oder über Rettungsgeräte der Feuerwehr geführt werden",
+      "Der erste Rettungsweg ist baulich und bis zu 70 m lang, der zweite stets über die Feuerwehr",
+      "Der erste Rettungsweg kann über Rettungsgeräte der Feuerwehr geführt werden, der zweite ist baulich",
+      "Beide Rettungswege müssen immer baulich sein, höchstens 50 m lang"
+     ],
+     "richtig": "Der erste Rettungsweg ist baulich und höchstens 35 m lang, der zweite kann baulich oder über Rettungsgeräte der Feuerwehr geführt werden",
+     "erkl": "Der erste Rettungsweg ist stets baulich (max. 35 m bis zum notwendigen Treppenraum oder ins Freie). Der zweite kann baulich oder über Rettungsgeräte der Feuerwehr sichergestellt werden.",
+     "quelle": "IdF-Quiz · Frage 72"
+    },
+    {
+     "typ": "mc",
+     "frage": "Bis zu welcher Brüstungshöhe dürfen tragbare Leitern der Feuerwehr eingesetzt werden, und wie lang darf der Laufweg dafür höchstens sein?",
+     "optionen": [
+      "Bis 12 m, Laufweg max. 50 m",
+      "Bis 8 m, Laufweg max. 35 m",
+      "Bis 8 m, Laufweg max. 50 m",
+      "Bis 22 m, Laufweg max. 100 m"
+     ],
+     "richtig": "Bis 8 m, Laufweg max. 50 m",
+     "erkl": "Tragbare Leitern reichen bis 8 m Brüstungshöhe, darüber ist ein Hubrettungsfahrzeug erforderlich. Der Laufweg mit tragbarer Leiter beträgt höchstens 50 m.",
+     "quelle": "IdF-Quiz · Frage 74"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wann ist eine Mittel- oder Großgarage eine offene Garage?",
+     "optionen": [
+      "Wenn die Garage keine Tore hat",
+      "Wenn die unverschließbaren Öffnungen mindestens zwei Drittel der Fassade ausmachen",
+      "Wenn mindestens eine Wand komplett offen ist",
+      "Wenn die Öffnungen mindestens ein Drittel der Umfassungswände ausmachen, zwei gegenüberliegende Wände mit Öffnungen höchstens 70 m voneinander entfernt sind und eine ständige Querlüftung besteht"
+     ],
+     "richtig": "Wenn die Öffnungen mindestens ein Drittel der Umfassungswände ausmachen, zwei gegenüberliegende Wände mit Öffnungen höchstens 70 m voneinander entfernt sind und eine ständige Querlüftung besteht",
+     "erkl": "Nach § 1 Abs. 2 M-GarVO sind mindestens ein Drittel der Gesamtfläche der Umfassungswände als unverschließbare Öffnungen erforderlich, gegenüberliegende Wände mit Öffnungen höchstens 70 m voneinander entfernt, dazu ständige Querlüftung.",
+     "quelle": "IdF-Quiz · Frage 84"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Anforderungen kann ich aus der Feuerwiderstandsklasse REI 90-M ableiten?",
+     "optionen": [
+      "selbstschließend",
+      "isolierend",
+      "tragend",
+      "gegen Stoßbeanspruchung geprüft",
+      "Feuerwiderstand mindestens 90 Minuten",
+      "raumabschließend"
+     ],
+     "richtig": [
+      "isolierend",
+      "tragend",
+      "gegen Stoßbeanspruchung geprüft",
+      "Feuerwiderstand mindestens 90 Minuten",
+      "raumabschließend"
+     ],
+     "erkl": "R = tragende Funktion (Tragfähigkeit), E = Raumabschluss, I = Wärmedämmung (isolierend), M = mechanische Einwirkung (Stoßbeanspruchung), 90 = Feuerwiderstandsdauer in Minuten (REI 90-M, Brandwand). Selbstschließend wird mit dem Kennzeichen C (z. B. C5) ausgedrückt und ist nicht Teil von REI 90-M.",
+     "quelle": "IdF-Quiz · Frage 6"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Anforderungen können Sie genau (!) aus der Formulierung C5S200 ableiten?",
+     "optionen": [
+      "T30-RS",
+      "rauchdicht und selbstschließend",
+      "raumabschließend",
+      "dichtschließend",
+      "dicht- und selbstschließend"
+     ],
+     "richtig": "rauchdicht und selbstschließend",
+     "erkl": "C5 = Dauerfunktion der Selbstschließung (hohe Zyklenzahl), S200 = Rauchdichtheit (auch bei 200 °C). C5S200 allein sagt also: selbstschließend und rauchdicht. Brandschutzeigenschaften (feuerhemmend = EI2 30, raumabschließend = E) stecken nicht darin; T30-RS wäre die alte Kurzbezeichnung einer feuerhemmenden, rauchdichten, selbstschließenden Tür.",
+     "quelle": "IdF-Quiz · Frage 8"
+    }
+   ]
+  },
+  {
+   "titel": "Rettungswege und Bauteile",
+   "steckbrief": "Prüfe Rettungswege, Wände, Decken und Türen.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Wie wird die Höhe für die Einstufung in die Gebäudeklassen bestimmt?",
+     "optionen": [
+      "Fußbodenoberkante des obersten Geschosses über dem Erdgeschossfußboden",
+      "Fußbodenoberkante des höchstgelegenen Geschosses mit möglichem Aufenthaltsraum über der mittleren Geländeoberfläche",
+      "Oberkante Dach über dem tiefsten Geländepunkt",
+      "Traufhöhe über dem Straßenniveau"
+     ],
+     "richtig": "Fußbodenoberkante des höchstgelegenen Geschosses mit möglichem Aufenthaltsraum über der mittleren Geländeoberfläche",
+     "erkl": "Maßgeblich ist die Fußbodenoberkante des höchstgelegenen Geschosses, in dem ein Aufenthaltsraum möglich ist, über der Geländeoberfläche im Mittel (§ 2 Abs. 3 Satz 2 MBO).",
+     "quelle": "IdF-Quiz · Frage 66"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie hängen MBO, Sonderbauverordnungen und MVV TB zusammen?",
+     "optionen": [
+      "Sonderbauverordnungen regeln nur das Spezielle, im Übrigen gilt die MBO bzw. das Landesrecht. Über die MVV TB wird festgelegt, wie Richtlinien eingeführt sind",
+      "Die MVV TB gilt nur für Wohngebäude, Richtlinien gelten unmittelbar",
+      "Sonderbauverordnungen ersetzen die Bauordnung vollständig",
+      "Die MBO gilt nur, wenn keine MVV TB existiert"
+     ],
+     "richtig": "Sonderbauverordnungen regeln nur das Spezielle, im Übrigen gilt die MBO bzw. das Landesrecht. Über die MVV TB wird festgelegt, wie Richtlinien eingeführt sind",
+     "erkl": "Sonderbauverordnungen regeln nur das Spezielle, ansonsten gilt die Bauordnung. Die MVV TB bestimmt, welche Richtlinien (z. B. Hochhausrichtlinie) technische Baubestimmungen sind.",
+     "quelle": "IdF-Quiz · Frage 102"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wo ist eine notwendige Treppe ohne eigenen Treppenraum zulässig?",
+     "optionen": [
+      "In GK 1 und 2 sowie innerhalb einer Nutzungseinheit, z. B. einer Maisonettewohnung",
+      "In GK 3 bis 5",
+      "Nirgends, jede notwendige Treppe braucht einen Treppenraum",
+      "Nur in Hochhäusern"
+     ],
+     "richtig": "In GK 1 und 2 sowie innerhalb einer Nutzungseinheit, z. B. einer Maisonettewohnung",
+     "erkl": "Ein notwendiger Treppenraum mit Ausgang ins Freie, geschützt gegen Rauch und Feuer, ist der Regelfall. Eine notwendige Treppe ohne Treppenraum ist in GK 1 und 2 und innerhalb einer Nutzungseinheit zulässig.",
+     "quelle": "IdF-Quiz · Frage 92"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie werden Garagen nach ihrer Größe eingeteilt?",
+     "optionen": [
+      "Klein bis 50 m², Mittel bis 500 m², Groß über 500 m²",
+      "Klein bis 100 m², Mittel bis 2.000 m², Groß über 2.000 m²",
+      "Klein bis 100 m², Mittel über 100 bis 1.000 m², Groß über 1.000 m² Nutzfläche",
+      "Klein bis 200 m², Mittel bis 1.000 m², Groß über 1.000 m²"
+     ],
+     "richtig": "Klein bis 100 m², Mittel über 100 bis 1.000 m², Groß über 1.000 m² Nutzfläche",
+     "erkl": "Nach § 1 Abs. 8 M-GarVO ist eine Kleingarage bis 100 m², eine Mittelgarage über 100 bis 1.000 m² und eine Großgarage über 1.000 m² Nutzfläche groß.",
+     "quelle": "IdF-Quiz · Frage 100"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Aussagen entsprechen den Schutzzielen nach MBO (im Wortlaut)?",
+     "optionen": [
+      "Um jeden Preis ist ein Gebäudeschaden zu verhindern.",
+      "Rettung von Menschen und Tieren",
+      "Löschwasser",
+      "Wirksame Löscharbeiten sind möglich.",
+      "Verhinderung der Ausbreitung von Feuer und Rauch",
+      "Gleiches Schutzniveau für alle Bundesländer",
+      "Der Entstehung eines Brandes wird vorgebeugt."
+     ],
+     "richtig": [
+      "Rettung von Menschen und Tieren",
+      "Wirksame Löscharbeiten sind möglich.",
+      "Verhinderung der Ausbreitung von Feuer und Rauch",
+      "Der Entstehung eines Brandes wird vorgebeugt."
+     ],
+     "erkl": "§ 14 MBO: Bauliche Anlagen sind so zu errichten, dass der Entstehung eines Brandes und der Ausbreitung von Feuer und Rauch vorgebeugt wird und bei einem Brand die Rettung von Menschen und Tieren sowie wirksame Löscharbeiten möglich sind. Vollständigkeit ergänzt (Brandentstehung, Löscharbeiten als richtige Optionen ergänzt). Sachschutz, Löschwasser als Schutzziel und Vereinheitlichung der Länder sind kein Schutzziel.",
+     "quelle": "IdF-Quiz · Frage 26"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Aussagen zu den Sonderbautatbeständen nach § 2 Abs. 4 MBO sind richtig?",
+     "optionen": [
+      "Beherbergungsstätten ab 30 Gastbetten",
+      "Versammlungsstätten mit Versammlungsräumen für mehr als 200 Besucher",
+      "Verkaufsstätten mit Verkaufsräumen und Ladenstraßen von zusammen mehr als 800 m²"
+     ],
+     "richtig": [
+      "Versammlungsstätten mit Versammlungsräumen für mehr als 200 Besucher",
+      "Verkaufsstätten mit Verkaufsräumen und Ladenstraßen von zusammen mehr als 800 m²"
+     ],
+     "erkl": "Protokoll-Wertung übernommen. Beherbergungsstätten sind Sonderbauten schon bei mehr als 12 Gastbetten, nicht erst ab 30.",
+     "quelle": "IdF-Quiz · Frage 19"
+    }
+   ]
+  },
+  {
+   "titel": "Sonderbau",
+   "steckbrief": "Die Vorhaben werden größer: Sonderbauten.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Welche Aufzählung enthält die sieben Punkte, zu denen die Brandschutzdienststelle Stellung nimmt?",
+     "optionen": [
+      "Zufahrten, Löschwasserversorgung, Schallschutz, Wärmeschutz, Brandmeldeanlagen, Rettungswege, Standsicherheit",
+      "Zugänglichkeit/Zufahrten, Löschwasserversorgung, Löschwasserrückhaltung, Lage der Anleiterstellen, Anlagen und Geräte zur Brandbekämpfung, Brandmeldeanlagen, betriebliche Maßnahmen",
+      "Zufahrten, Rettungswege, Brandwände, Löschwasserrückhaltung, Sprinkler, Rauchabzug, Prüfungen",
+      "Löschwasserversorgung, Gebäudeklasse, Brandwände, Anleiterstellen, Brandmeldeanlagen, Blitzschutz, Abweichungen"
+     ],
+     "richtig": "Zugänglichkeit/Zufahrten, Löschwasserversorgung, Löschwasserrückhaltung, Lage der Anleiterstellen, Anlagen und Geräte zur Brandbekämpfung, Brandmeldeanlagen, betriebliche Maßnahmen",
+     "erkl": "Die sieben Punkte der Folie (VV 54.33 zu § 54 Abs. 3 BauO NRW 2000) sind Zugänglichkeit/Zufahrten, Löschwasserversorgung, Löschwasserrückhaltung, Lage der zum Anleitern bestimmten Stellen, Anlagen und Geräte für die Brandbekämpfung, Anlagen für die Brandmeldung sowie betriebliche Maßnahmen. Dazu kommen als \"+2\" die weiteren Anforderungen an Sonderbauten (§ 50) und Abweichungen (§ 69).",
+     "quelle": "IdF-Quiz · Frage 87"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Eigenschaften hat eine Rauchschutztür?",
+     "optionen": [
+      "Vierseitig abgedichtet (dichtschließend) und selbstschließend",
+      "Feuerbeständig und rauchdurchlässig",
+      "Nur an der Unterkante abgedichtet, abschließbar",
+      "Dichtschließend, aber nur von Hand zu schließen"
+     ],
+     "richtig": "Vierseitig abgedichtet (dichtschließend) und selbstschließend",
+     "erkl": "Rauchschutztüren sind dicht- und selbstschließend, die Abdichtung läuft umlaufend (vierseitig). In notwendigen Fluren dürfen sie nicht abschließbar sein.",
+     "quelle": "IdF-Quiz · Frage 97"
+    },
+    {
+     "typ": "mc",
+     "frage": "Ein Gebäude steht in zweiter Reihe und ist nur über einen Zugang zu erreichen. Welche Breite muss dieser haben?",
+     "optionen": [
+      "3,00 m ohne zulässige Einengung",
+      "1,25 m, bei kurzen Einengungen mindestens 1,0 m",
+      "2,00 m, bei Einengungen mindestens 1,5 m",
+      "1,00 m, bei Einengungen mindestens 0,80 m"
+     ],
+     "richtig": "1,25 m, bei kurzen Einengungen mindestens 1,0 m",
+     "erkl": "Der Zugang zu rückwärtigen Gebäuden muss geradlinig sein und 1,25 m breit, darf sich aber kurz auf 1,0 m verengen.",
+     "quelle": "IdF-Quiz · Frage 76"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Vorschrift der BauO NRW 2018 ist die Grundlage für die weiteren Anforderungen an Sonderbauten?",
+     "optionen": [
+      "§ 54",
+      "§ 50",
+      "§ 69",
+      "§ 2"
+     ],
+     "richtig": "§ 50",
+     "erkl": "§ 50 BauO NRW 2018 regelt die Anforderungen an Sonderbauten, § 69 die Abweichungen. Die Folie nennt § 54 Abs. 3 BauO NRW (2000) nur als Quelle der alten Verwaltungsvorschrift.",
+     "quelle": "IdF-Quiz · Frage 88"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Zuordnungen von brandschutztechnischer Maßnahme und Schutzziel sind richtig?",
+     "optionen": [
+      "Anleiterbare Stelle – Verhinderung der Brandausbreitung",
+      "Notwendige Flure – Rettung von Menschen",
+      "Rauchableitung aus Treppenräumen – Ermöglichung wirksamer Löscharbeiten",
+      "Brandwand/Gebäudeabschlusswand – Ermöglichung wirksamer Löscharbeiten",
+      "Errichtung von Brandwänden – Verhinderung der Brandausbreitung",
+      "Explosionsunterdrückungsanlage – Vorbeugung der Brandentstehung",
+      "Anleiterbare Stelle – Rettung von Menschen",
+      "Trennwände – Vorbeugung der Brandausbreitung",
+      "Dauerhafte Sauerstoffreduktion – Verhinderung der Brandentstehung",
+      "Rauchabzug im Treppenraum – Vorbeugung der Brandentstehung",
+      "Errichten einer Alarmierungsanlage – Rettung von Menschen ermöglichen"
+     ],
+     "richtig": [
+      "Notwendige Flure – Rettung von Menschen",
+      "Rauchableitung aus Treppenräumen – Ermöglichung wirksamer Löscharbeiten",
+      "Brandwand/Gebäudeabschlusswand – Ermöglichung wirksamer Löscharbeiten",
+      "Errichtung von Brandwänden – Verhinderung der Brandausbreitung",
+      "Explosionsunterdrückungsanlage – Vorbeugung der Brandentstehung",
+      "Anleiterbare Stelle – Rettung von Menschen",
+      "Trennwände – Vorbeugung der Brandausbreitung",
+      "Dauerhafte Sauerstoffreduktion – Verhinderung der Brandentstehung",
+      "Errichten einer Alarmierungsanlage – Rettung von Menschen ermöglichen"
+     ],
+     "erkl": "Schutzziele des § 14 MBO: Brandentstehung vorbeugen, Brandausbreitung vorbeugen, Rettung von Menschen und Tieren, wirksame Löscharbeiten. Wertung der richtigen Zuordnungen laut Protokollen (alle ✓). Distraktor ergänzt: „Anleiterbare Stelle – Verhinderung der Brandausbreitung“ und „Rauchabzug im Treppenraum – Vorbeugung der Brandentstehung“ sind falsch (Anleiterstelle dient der Rettung, Rauchabzug der Rauchfreihaltung für Rettung/Löscharbeiten).",
+     "quelle": "IdF-Quiz · Frage 11"
+    },
+    {
+     "typ": "mc",
+     "frage": "Ein Gebäude hat eine Oberkante Fertigfußboden (OKFF) der obersten Nutzungseinheit von 6,5 m, zwei Nutzungseinheiten und ist freistehend. Eine Nutzungseinheit hat 130 m², die andere 280 m². Welche Gebäudeklasse hat das Gebäude?",
+     "optionen": [
+      "GK 4",
+      "Es fehlt eine wesentliche Angabe zur Einordnung",
+      "GK 1",
+      "GK 3",
+      "GK 2"
+     ],
+     "richtig": "GK 3",
+     "erkl": "Höhe 6,5 m (≤ 7 m), freistehend, zwei Nutzungseinheiten – aber die Summe der Nutzungseinheiten beträgt 130 + 280 = 410 m² und überschreitet damit die Grenze von 400 m² für GK 1 (freistehend) und GK 2. Es handelt sich also um ein sonstiges Gebäude mit Höhe ≤ 7 m: Gebäudeklasse 3. Alle für die Einordnung nötigen Angaben (Höhe, Anzahl und Fläche der NE, freistehend) sind vorhanden.",
+     "quelle": "IdF-Quiz · Frage 1"
+    }
+   ]
+  },
+  {
+   "titel": "Abweichungen",
+   "steckbrief": "Der Bauherr beantragt Abweichungen. Bewerte sie.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Wozu dient die Sprinkleranlage im Hochhaus primär?",
+     "optionen": [
+      "Ausschließlich zum vollständigen Löschen",
+      "Zur Rauchableitung",
+      "Zum Eindämmen des Brandes, je nach Auslegung auch zum Löschen",
+      "Nur zur Kühlung der Fassade"
+     ],
+     "richtig": "Zum Eindämmen des Brandes, je nach Auslegung auch zum Löschen",
+     "erkl": "Eine Sprinkleranlage dämmt den Brand ein und kann je nach Auslegung auch löschen. In Garagen ist Löschen nicht möglich, weil Fahrzeugdächer das Wasser abschirmen.",
+     "quelle": "IdF-Quiz · Frage 99"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Gebäudeklasse gilt für ein Gebäude bis 13 m Höhe, dessen Nutzungseinheiten jeweils höchstens 400 m² groß sind?",
+     "optionen": [
+      "GK 3",
+      "GK 4",
+      "GK 5",
+      "GK 2"
+     ],
+     "richtig": "GK 4",
+     "erkl": "GK 4: bis 13 m, jede Nutzungseinheit höchstens 400 m². GK 3 sind sonstige Gebäude bis 7 m, GK 5 sind alle übrigen Gebäude einschließlich unterirdischer Gebäude.",
+     "quelle": "IdF-Quiz · Frage 67"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was gilt für das Abschalten einer Sprinkleranlage im Einsatz?",
+     "optionen": [
+      "Sie wird automatisch nach 30 Minuten abgeschaltet",
+      "Die Feuerwehr kann sie jederzeit abschalten und ohne Weiteres wieder in Betrieb nehmen",
+      "Sie darf nur aus einsatztaktischen Gründen und über die Sprinklerzentrale abgeschaltet werden, weil die Wiederinbetriebnahme mit ausreichendem Druck nicht sichergestellt ist",
+      "Sie darf nicht abgeschaltet werden, auch nicht auf Anordnung der Einsatzleitung"
+     ],
+     "richtig": "Sie darf nur aus einsatztaktischen Gründen und über die Sprinklerzentrale abgeschaltet werden, weil die Wiederinbetriebnahme mit ausreichendem Druck nicht sichergestellt ist",
+     "erkl": "Abgeschaltet wird nur aus einsatztaktischen Gründen, weil eine Wiederinbetriebnahme mit ausreichendem Druck nicht sicher ist. Das Abschalten sollte endgültig sein.",
+     "quelle": "IdF-Quiz · Frage 83"
+    },
+    {
+     "typ": "mc",
+     "frage": "Womit werden aneinandergebaute Gebäude getrennt, und was gilt für diese Wand?",
+     "optionen": [
+      "Trennwand F 30 mit T-30-Türen",
+      "Gebäudeabschlusswand, sie darf keine Öffnungen haben",
+      "Trennwand F 90 ohne Anforderung an das Brandverhalten der Baustoffe",
+      "Gebäudeabschlusswand, Öffnungen sind mit T 90 zulässig"
+     ],
+     "richtig": "Gebäudeabschlusswand, sie darf keine Öffnungen haben",
+     "erkl": "Aneinandergebaute Gebäude werden durch Gebäudeabschlusswände getrennt. Diese sind in Bauart Brandwand auszuführen und dürfen keine Öffnungen aufweisen.",
+     "quelle": "IdF-Quiz · Frage 68"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Aussagen zu Brandwänden sind richtig?",
+     "optionen": [
+      "Brandwände müssen 50 cm über Dach geführt werden.",
+      "Die Öffnung in einer inneren Brandwand muss feuerbeständig, dicht- und selbstschließend sein.",
+      "In Gebäudeklasse 5 müssen Brandwände aus nichtbrennbaren Baustoffen bestehen und auch unter zusätzlicher mechanischer Beanspruchung feuerbeständig sein.",
+      "Eine Gebäudeabschlusswand ist als Brandwand erforderlich, wenn der Abstand zur Grundstücksgrenze weniger als 2,5 m beträgt."
+     ],
+     "richtig": [
+      "Die Öffnung in einer inneren Brandwand muss feuerbeständig, dicht- und selbstschließend sein.",
+      "In Gebäudeklasse 5 müssen Brandwände aus nichtbrennbaren Baustoffen bestehen und auch unter zusätzlicher mechanischer Beanspruchung feuerbeständig sein.",
+      "Eine Gebäudeabschlusswand ist als Brandwand erforderlich, wenn der Abstand zur Grundstücksgrenze weniger als 2,5 m beträgt."
+     ],
+     "erkl": "Protokoll-Wertung übernommen. Brandwände sind mindestens 30 cm über die Bedachung zu führen (oder beidseitig 50 cm auskragend) – nicht generell 50 cm über Dach. Öffnungen in inneren Brandwänden: feuerbeständig, dicht- und selbstschließend (§ 30 MBO).",
+     "quelle": "IdF-Quiz · Frage 14"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Rechtsvorschrift hat Vorrang?",
+     "optionen": [
+      "Die für den Bauherrn angenehmere Rechtsverordnung ist anzuwenden.",
+      "Sondervorschriften haben als „lex specialis“ Vorrang vor der MBO.",
+      "Die MBO als „Hauptgesetz“ hat immer Vorrang vor nachrangigen Spezialgesetzen."
+     ],
+     "richtig": "Sondervorschriften haben als „lex specialis“ Vorrang vor der MBO.",
+     "erkl": "Nach dem Grundsatz „lex specialis derogat legi generali“ gehen besondere Vorschriften (z. B. Sonderbauverordnungen nach § 51 MBO) den allgemeinen Regelungen vor. Eine Wahlfreiheit nach Günstigkeit für den Bauherrn gibt es nicht. Zudem ist die MBO selbst kein geltendes Gesetz, sondern Muster für die Landesbauordnungen.",
+     "quelle": "IdF-Quiz · Frage 10"
+    }
+   ]
+  }
+ ]
+}

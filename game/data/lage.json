@@ -1,0 +1,514 @@
+{
+ "mission": "lage",
+ "welt": "lagezentrum",
+ "level": [
+  {
+   "titel": "Grundlagen",
+   "steckbrief": "Im Lagezentrum: Erst die Begriffe klären.",
+   "aufgaben": [
+    {
+     "typ": "multi",
+     "frage": "Wen oder was schützen die Genfer Konventionen von 1949?",
+     "optionen": [
+      "Kombattanten im laufenden Gefecht",
+      "Zivilbevölkerung",
+      "Medizinisches Personal und Einrichtungen",
+      "Kriegsgefangene",
+      "Verwundete und Kranke"
+     ],
+     "richtig": [
+      "Verwundete und Kranke",
+      "Kriegsgefangene",
+      "Zivilbevölkerung",
+      "Medizinisches Personal und Einrichtungen"
+     ],
+     "erkl": "Schutz von Verwundeten und Kranken, Kriegsgefangenen, Zivilbevölkerung, medizinischem Personal und Einrichtungen.",
+     "quelle": "v-idf-z90 · Genfer Konventionen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche zwei zentralen Grundsätze nennen die Genfer Konventionen?",
+     "optionen": [
+      "Neutralität und Bündnistreue",
+      "Unterscheidung zwischen Kombattanten und Zivilpersonen sowie Verhältnismäßigkeit der Mittel",
+      "Abschreckung und Vergeltung",
+      "Ressortprinzip und Subsidiarität"
+     ],
+     "richtig": "Unterscheidung zwischen Kombattanten und Zivilpersonen sowie Verhältnismäßigkeit der Mittel",
+     "erkl": "Unterscheidung und Verhältnismäßigkeit.",
+     "quelle": "v-idf-z90 · Genfer Konventionen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Woraus besteht die Gesamtverteidigung?",
+     "optionen": [
+      "Aus ziviler und militärischer Verteidigung",
+      "Aus Bundeswehr und Polizei",
+      "Aus Zivilschutz und Katastrophenschutz",
+      "Aus Bund und Ländern"
+     ],
+     "richtig": "Aus ziviler und militärischer Verteidigung",
+     "erkl": "Gesamtverteidigung = Zivile Verteidigung + Militärische Verteidigung.",
+     "quelle": "v-idf-z90 · Gesamtverteidigung"
+    },
+    {
+     "typ": "multi",
+     "frage": "Was gehört zur Zivilen Verteidigung?",
+     "optionen": [
+      "Versorgung",
+      "Zivilschutz",
+      "Aufrechterhaltung der Staats- und Regierungsfunktion",
+      "Bündnisverteidigung Ausland",
+      "Unterstützung der Streitkräfte"
+     ],
+     "richtig": [
+      "Aufrechterhaltung der Staats- und Regierungsfunktion",
+      "Zivilschutz",
+      "Versorgung",
+      "Unterstützung der Streitkräfte"
+     ],
+     "erkl": "Die vier Säulen der Zivilen Verteidigung.",
+     "quelle": "v-idf-z90 · Gesamtverteidigung"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was ist Zivilschutz?",
+     "optionen": [
+      "Schutz der Bevölkerung vor Kriegseinwirkungen",
+      "Schutz militärischer Anlagen",
+      "Schutz der Staatsgrenzen",
+      "Schutz der Bevölkerung vor Naturkatastrophen"
+     ],
+     "richtig": "Schutz der Bevölkerung vor Kriegseinwirkungen",
+     "erkl": "Zivilschutz = Schutz der Bevölkerung vor Kriegseinwirkungen.",
+     "quelle": "v-idf-z97 · Warnung durch den Bund"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was kennzeichnet den äußeren Notstand?",
+     "optionen": [
+      "Ausfall kritischer Infrastruktur",
+      "Gefahren, bedingt durch auswärtige militärische Aggression",
+      "Gefahren aus der eigenen staatlich-gesellschaftlichen Sphäre",
+      "Naturkatastrophen und schwere Unglücksfälle"
+     ],
+     "richtig": "Gefahren, bedingt durch auswärtige militärische Aggression",
+     "erkl": "Innerer Notstand: Gefahren aus der eigenen staatlich-gesellschaftlichen Sphäre. Äußerer Notstand: auswärtige militärische Aggression.",
+     "quelle": "v-idf-z91 · Notstandsrecht"
+    }
+   ]
+  },
+  {
+   "titel": "Gesamtszenario",
+   "steckbrief": "Die Lage eskaliert in Phasen.",
+   "aufgaben": [
+    {
+     "typ": "reihe",
+     "frage": "Bring die vier Phasen des Gesamtszenarios in die richtige Reihenfolge.",
+     "optionen": [
+      "Hybride Bedrohungen",
+      "Landesverteidigung",
+      "Bündnisverteidigung, Übergang zur Landesverteidigung",
+      "Krise, Aufmarsch an den NATO-Außengrenzen"
+     ],
+     "richtig": [
+      "Hybride Bedrohungen",
+      "Krise, Aufmarsch an den NATO-Außengrenzen",
+      "Bündnisverteidigung, Übergang zur Landesverteidigung",
+      "Landesverteidigung"
+     ],
+     "erkl": "Phase I bis IV sind Eskalationsstufen.",
+     "quelle": "v-idf-z93 · Phasen der Eskalation"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie lange dauert Phase I (Hybride Bedrohungen) im Gesamtszenario?",
+     "optionen": [
+      "Wenige Wochen",
+      "Mindestens ein Jahr",
+      "Mehrere Jahre in schwankender Intensität",
+      "Mehrere Monate"
+     ],
+     "richtig": "Mehrere Jahre in schwankender Intensität",
+     "erkl": "Phase I: mehrere Jahre in schwankender Intensität.",
+     "quelle": "v-idf-z93 · Phase I"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was kennzeichnet Phase III?",
+     "optionen": [
+      "Aufmarsch zur Abschreckung, erste Fluchtbewegungen",
+      "Aktionen überwiegend im Verborgenen",
+      "Durchbruch bis auf das Gebiet der Bundesrepublik",
+      "Angriff auf die Grenzen des NATO-Bündnisgebietes; die Schwelle zum klassischen Krieg ist überschritten"
+     ],
+     "richtig": "Angriff auf die Grenzen des NATO-Bündnisgebietes; die Schwelle zum klassischen Krieg ist überschritten",
+     "erkl": "Phase III: Bündnisverteidigung und Übergang zur Landesverteidigung.",
+     "quelle": "v-idf-z93 · Phase III"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was geschieht in Phase IV (Landesverteidigung)?",
+     "optionen": [
+      "Militärischer Aufmarsch an den NATO-Außengrenzen",
+      "Desinformationskampagnen und Cyberattacken",
+      "Punktuelle Angriffe, noch keine Kampfhandlungen im Land",
+      "Durchbruch der Verteidigungslinien der NATO bis auf das Gebiet der Bundesrepublik"
+     ],
+     "richtig": "Durchbruch der Verteidigungslinien der NATO bis auf das Gebiet der Bundesrepublik",
+     "erkl": "Phase IV: Kampfhandlungen auf deutschem Territorium.",
+     "quelle": "v-idf-z93 · Phase IV"
+    },
+    {
+     "typ": "multi",
+     "frage": "Was kennzeichnet hybride Bedrohungen?",
+     "optionen": [
+      "Aggressor operiert im Verborgenen",
+      "Ziel ist die Destabilisierung von Gesellschaften",
+      "Offene Kriegserklärung",
+      "Schwelle zum Krieg wird nicht überschritten"
+     ],
+     "richtig": [
+      "Aggressor operiert im Verborgenen",
+      "Schwelle zum Krieg wird nicht überschritten",
+      "Ziel ist die Destabilisierung von Gesellschaften"
+     ],
+     "erkl": "Mehrdimensionales Vorgehen, Beeinflussung der öffentlichen Meinung.",
+     "quelle": "v-idf-z91 · Hybride Bedrohungen"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Schutzgüter nennt das Kapitel bei den Kritischen Infrastrukturen?",
+     "optionen": [
+      "Umwelt",
+      "Mensch",
+      "Volkswirtschaft",
+      "Immateriell",
+      "Militär"
+     ],
+     "richtig": [
+      "Mensch",
+      "Umwelt",
+      "Volkswirtschaft",
+      "Immateriell"
+     ],
+     "erkl": "Schutzgüter: Mensch, Umwelt, Volkswirtschaft, Immateriell.",
+     "quelle": "v-idf-z93 · KRITIS"
+    }
+   ]
+  },
+  {
+   "titel": "Warnung der Bevölkerung",
+   "steckbrief": "Eine Warnung muss raus.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Warnstufe „Hoch“ (extreme Gefahr): Wann muss gesendet werden?",
+     "optionen": [
+      "Keine Sendeverpflichtung",
+      "Innerhalb von 10 Minuten",
+      "Innerhalb einer Stunde",
+      "Sofort"
+     ],
+     "richtig": "Sofort",
+     "erkl": "Hoch: sofort. Mittel: innerhalb von 10 min. Niedrig: keine Sendeverpflichtung.",
+     "quelle": "v-idf-z97 · Warnstufen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Warnstufe „Mittel“ (Gefahr): Welche Sendeverpflichtung gilt?",
+     "optionen": [
+      "Innerhalb von 30 Minuten",
+      "Keine Sendeverpflichtung",
+      "Innerhalb von 10 Minuten",
+      "Sofort"
+     ],
+     "richtig": "Innerhalb von 10 Minuten",
+     "erkl": "Mittel: innerhalb von 10 min.",
+     "quelle": "v-idf-z97 · Warnstufen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Über welchen Warnkanal läuft Cell Broadcast?",
+     "optionen": [
+      "Mobilfunknetzbetreiber",
+      "Radio und Fernsehen",
+      "Warnmittelbetreiber",
+      "WarnApps"
+     ],
+     "richtig": "Mobilfunknetzbetreiber",
+     "erkl": "Mobilfunknetzbetreiber: Cell Broadcast.",
+     "quelle": "v-idf-z97 · Warnkanäle"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wer warnt die Bevölkerung im Zivilschutz?",
+     "optionen": [
+      "Die Behörden der Länder im Auftrag des Bundes",
+      "Nur das Bundesministerium des Innern",
+      "Die Gemeinden in eigener Zuständigkeit",
+      "Ausschließlich die Bundeswehr"
+     ],
+     "richtig": "Die Behörden der Länder im Auftrag des Bundes",
+     "erkl": "Behörden der Länder warnen im Auftrag des Bundes; das BBK wirkt mit.",
+     "quelle": "v-idf-z97 · Warnung durch den Bund"
+    },
+    {
+     "typ": "reihe",
+     "frage": "Bring den Warnablauf in die richtige Reihenfolge.",
+     "optionen": [
+      "Entscheidung zu warnen",
+      "Warnmeldung erstellen, übermitteln und verbreiten",
+      "Gefahr erkennen und bewerten",
+      "Lage übermitteln",
+      "Bevölkerung empfängt, interpretiert und reagiert"
+     ],
+     "richtig": [
+      "Gefahr erkennen und bewerten",
+      "Entscheidung zu warnen",
+      "Lage übermitteln",
+      "Warnmeldung erstellen, übermitteln und verbreiten",
+      "Bevölkerung empfängt, interpretiert und reagiert"
+     ],
+     "erkl": "Ereignis / Lage → Modulares Warnsystem → Bevölkerung.",
+     "quelle": "v-idf-z97 · Warnablauf"
+    },
+    {
+     "typ": "multi",
+     "frage": "Was gehört nach § 1 Abs. 2 ZSKG zum Zivilschutz?",
+     "optionen": [
+      "Die Aufenthaltsregelung",
+      "Die Bündnisverteidigung",
+      "Die Warnung der Bevölkerung",
+      "Der Schutzbau",
+      "Der Selbstschutz"
+     ],
+     "richtig": [
+      "Der Selbstschutz",
+      "Die Warnung der Bevölkerung",
+      "Der Schutzbau",
+      "Die Aufenthaltsregelung"
+     ],
+     "erkl": "Außerdem: Katastrophenschutz nach § 11, Schutz der Gesundheit, Schutz von Kulturgut.",
+     "quelle": "v-idf-z97 · § 1 ZSKG"
+    }
+   ]
+  },
+  {
+   "titel": "Hilfe und Fähigkeiten",
+   "steckbrief": "Kräfte aus anderen Ländern werden gebraucht.",
+   "aufgaben": [
+    {
+     "typ": "reihe",
+     "frage": "Länderübergreifende Hilfe: Bring die ersten Schritte des Ersuchens in die richtige Reihenfolge.",
+     "optionen": [
+      "Abgabe des Unterstützungsangebots an das GMLZ",
+      "Verteilung des Ersuchens durch das GMLZ",
+      "Auswahl und Annahme des Angebots durch den Anforderer",
+      "Prüfung des Ersuchens durch die Innenbehörden",
+      "Freigabe und Weiterleitung durch die Innenbehörde des anfordernden Landes",
+      "Bedarfsanforderung durch die Einsatzleitung vor Ort"
+     ],
+     "richtig": [
+      "Bedarfsanforderung durch die Einsatzleitung vor Ort",
+      "Freigabe und Weiterleitung durch die Innenbehörde des anfordernden Landes",
+      "Verteilung des Ersuchens durch das GMLZ",
+      "Prüfung des Ersuchens durch die Innenbehörden",
+      "Abgabe des Unterstützungsangebots an das GMLZ",
+      "Auswahl und Annahme des Angebots durch den Anforderer"
+     ],
+     "erkl": "Danach: Information der anbietenden Innenbehörde, Information der Einheit, Alarmierung, Anreise, einsatzbereit im Einsatzraum.",
+     "quelle": "v-idf-z94 · Weg des Ersuchens"
+    },
+    {
+     "typ": "mc",
+     "frage": "Fähigkeitsmanagement: Wie lange muss eine Einheit nach dem Eintreffen unabhängig arbeiten können (Autarkie)?",
+     "optionen": [
+      "Die ersten 72 Stunden",
+      "Die ersten 36 Stunden",
+      "Die ersten 12 Stunden",
+      "Die ersten 96 Stunden"
+     ],
+     "richtig": "Die ersten 36 Stunden",
+     "erkl": "Autarkie: die ersten 36 Stunden nach Eintreffen.",
+     "quelle": "v-idf-z94 · Fähigkeitsmanagement"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was ist im Fähigkeitsmanagement die Mindestleistung?",
+     "optionen": [
+      "Eine messbare Größe, z. B. Förderung von Löschwasser über eine Strecke",
+      "Die Mindestdauer des Einsatzes",
+      "Die Mindestzahl an Einsatzkräften",
+      "Der Mindestbetrag der Kostenerstattung"
+     ],
+     "richtig": "Eine messbare Größe, z. B. Förderung von Löschwasser über eine Strecke",
+     "erkl": "Fähigkeiten werden anhand ihrer Leistung beschrieben.",
+     "quelle": "v-idf-z94 · Fähigkeitsmanagement"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Vorteile hat das Fähigkeitsmanagement?",
+     "optionen": [
+      "Vergleichbarkeit",
+      "Planungssicherheit",
+      "Effizienz",
+      "Wegfall der Obergrenzen"
+     ],
+     "richtig": [
+      "Vergleichbarkeit",
+      "Effizienz",
+      "Planungssicherheit"
+     ],
+     "erkl": "Vergleichbarkeit, Effizienz, Planungssicherheit.",
+     "quelle": "v-idf-z94 · Fähigkeitsmanagement"
+    },
+    {
+     "typ": "reihe",
+     "frage": "Bring den Regelkreis im Bevölkerungsschutz in die richtige Reihenfolge.",
+     "optionen": [
+      "Nachbereitung",
+      "Ereignis",
+      "Vorbereitung",
+      "Prävention",
+      "Bewältigung"
+     ],
+     "richtig": [
+      "Prävention",
+      "Vorbereitung",
+      "Ereignis",
+      "Bewältigung",
+      "Nachbereitung"
+     ],
+     "erkl": "Nach der Nachbereitung beginnt wieder die Prävention.",
+     "quelle": "v-idf-z91 · Regelkreis im Bevölkerungsschutz"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wer erstellt nach dem ZSKG die bundesweite Risikoanalyse für den Zivilschutz?",
+     "optionen": [
+      "Die NATO",
+      "Jede Gemeinde für sich",
+      "Der Bund im Zusammenwirken mit den Ländern",
+      "Die Hilfsorganisationen"
+     ],
+     "richtig": "Der Bund im Zusammenwirken mit den Ländern",
+     "erkl": "„Der Bund erstellt im Zusammenwirken mit den Ländern eine bundesweite Risikoanalyse für den Zivilschutz.“",
+     "quelle": "v-idf-z92 · ZSKG"
+    }
+   ]
+  },
+  {
+   "titel": "Alarmplanung und Bundeswehr",
+   "steckbrief": "Zivile Alarmplanung und Zusammenarbeit mit dem Militär.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Wer koordiniert die Zivile Alarmplanung (ZAP)?",
+     "optionen": [
+      "Das BBK",
+      "Die Bundeswehr",
+      "Das BMI",
+      "Die Länder"
+     ],
+     "richtig": "Das BMI",
+     "erkl": "Der Bund erlässt die erforderlichen Gesetze, das BMI koordiniert die ZAP.",
+     "quelle": "v-idf-z98 · Zivile Alarmplanung"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was bedeutet das Ressortprinzip in der Zivilen Alarmplanung?",
+     "optionen": [
+      "Jedes Ministerium operiert im eigenen Zuständigkeitsbereich und löst Alarmmaßnahmen aus",
+      "Das BMI entscheidet für alle Ministerien",
+      "Die Länder handeln ohne den Bund",
+      "Die NATO gibt jede Einzelmaßnahme vor"
+     ],
+     "richtig": "Jedes Ministerium operiert im eigenen Zuständigkeitsbereich und löst Alarmmaßnahmen aus",
+     "erkl": "Jedes Ministerium kommuniziert mit seinen nachgeordneten Stellen.",
+     "quelle": "v-idf-z98 · Zivile Alarmplanung"
+    },
+    {
+     "typ": "reihe",
+     "frage": "Zusammenspiel aller Ebenen: Bring sie von oben nach unten in die richtige Reihenfolge.",
+     "optionen": [
+      "Bundesländer",
+      "Bund",
+      "NATO",
+      "Landesbehörden und Kommunen"
+     ],
+     "richtig": [
+      "NATO",
+      "Bund",
+      "Bundesländer",
+      "Landesbehörden und Kommunen"
+     ],
+     "erkl": "NATO gibt Zielvorgaben, der Bund beschließt die Umsetzung, die Länder weisen an, Landesbehörden und Kommunen stellen die Leistung sicher.",
+     "quelle": "v-idf-z98 · Zusammenspiel aller Ebenen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Bei wem liegt die Befehlsgebung im Militärischen Sicherheitsbereich (MSB)?",
+     "optionen": [
+      "Beim Hauptverwaltungsbeamten",
+      "Beim Einsatzleiter der Feuerwehr",
+      "Immer beim Militär",
+      "Bei der Polizei"
+     ],
+     "richtig": "Immer beim Militär",
+     "erkl": "Im MSB liegt die Befehlsgebung immer beim Militär.",
+     "quelle": "v-idf-z99 · Feuerwehren in der Zivilen Verteidigung"
+    },
+    {
+     "typ": "mc",
+     "frage": "Können zivile Feuerwehrkräfte gezwungen werden, in einem MSB zu arbeiten?",
+     "optionen": [
+      "In Friedenszeiten nicht; im Spannungs- oder Verteidigungsfall ist es möglich",
+      "Nur mit Zustimmung des Personalrats",
+      "Ja, jederzeit",
+      "Nein, nie"
+     ],
+     "richtig": "In Friedenszeiten nicht; im Spannungs- oder Verteidigungsfall ist es möglich",
+     "erkl": "In Friedenszeiten nicht, im Spannungs- / Verteidigungsfall möglich.",
+     "quelle": "v-idf-z99 · Feuerwehren in der Zivilen Verteidigung"
+    },
+    {
+     "typ": "multi",
+     "frage": "Was gehört zum bedrohungsangepassten Verhalten?",
+     "optionen": [
+      "Sabotageschutz",
+      "Drohnenschutz (Beobachter und Scanner)",
+      "Freie Fluchtwege (Fahrzeuge in Fluchtrichtung)",
+      "Fahrzeuge dicht nebeneinander aufstellen",
+      "Dislozierte gedeckte Aufstellung"
+     ],
+     "richtig": [
+      "Drohnenschutz (Beobachter und Scanner)",
+      "Sabotageschutz",
+      "Dislozierte gedeckte Aufstellung",
+      "Freie Fluchtwege (Fahrzeuge in Fluchtrichtung)"
+     ],
+     "erkl": "Dazu: Verwendung von ferngeführten und robotischen Systemen.",
+     "quelle": "v-idf-z99 · Feuerwehren in der Zivilen Verteidigung"
+    },
+    {
+     "typ": "multi",
+     "frage": "Wonach können Heimatschutzregimenter ohne Verteidigungs- oder Spannungsfall eingesetzt werden?",
+     "optionen": [
+      "Bündnisverteidigung Ausland",
+      "Innerer Notstand",
+      "Terror – Unterstützung der Polizei",
+      "Amtshilfe"
+     ],
+     "richtig": [
+      "Amtshilfe",
+      "Innerer Notstand",
+      "Terror – Unterstützung der Polizei"
+     ],
+     "erkl": "Amtshilfe, innerer Notstand, Terror (Unterstützung der Polizei).",
+     "quelle": "v-idf-z96 · Heimatschutzregimenter"
+    }
+   ]
+  }
+ ]
+}

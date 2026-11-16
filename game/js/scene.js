@@ -107,9 +107,11 @@ const STAGE = (function(){
   }
 
   /* ---------- Spielfigur: Einsatzkraft mit Helm, Jacke, Atemschutzgerät; Hüfte, Knie, Schulter und Ellbogen sind Gelenke ---------- */
-  function figure(){
+  // opt.leicht: Dienstkleidung ohne Helm und Atemschutzgerät; opt.zivil: Zivilkleidung (jacke, hose, haar als Farben)
+  function figure(opt){
+    opt = opt || {}; const ohne = opt.zivil || opt.leicht;
     const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
-    const M = { jacke:mat('#1b2740', { roughness:0.8 }), hose:mat('#182236', { roughness:0.85 }), reflex:mat('#e8d23a', { roughness:0.4, emissive:C('#5a4f08') }), silber:mat('#d9dde2', { roughness:0.35, metalness:0.5 }),
+    const M = { jacke:mat(opt.jacke || '#1b2740', { roughness:0.8 }), hose:mat(opt.hose || '#182236', { roughness:0.85 }), reflex:mat('#e8d23a', { roughness:0.4, emissive:C('#5a4f08') }), silber:mat('#d9dde2', { roughness:0.35, metalness:0.5 }),
       haut:mat('#e0b08c', { roughness:0.7 }), helm:mat('#d8e04a', { roughness:0.3 }), leder:mat('#2a2622', { roughness:0.7 }), stiefel:mat('#141414', { roughness:0.6 }), flasche:mat('#e3b81f', { roughness:0.35, metalness:0.3 }), dunkel:mat('#15171a', { roughness:0.5 }) };
     const add = (geo, m, x, y, z, parent, sx, sy, sz) => { const o = new THREE.Mesh(geo, m); o.position.set(x, y, z); if(sx) o.scale.set(sx, sy, sz); o.castShadow = true; (parent || body).add(o); return o; };
     const cyl = (rt, rb, h, s) => new THREE.CylinderGeometry(rt, rb, h, s || 14), sph = (r, w, h) => new THREE.SphereGeometry(r, w || 16, h || 12);
@@ -117,29 +119,34 @@ const STAGE = (function(){
     add(cyl(0.2, 0.165, 0.5), M.jacke, 0, 1.3, 0, null, 1, 1, 0.68);
     add(cyl(0.17, 0.175, 0.22), M.jacke, 0, 0.99, 0, null, 1, 1, 0.72);
     add(cyl(0.178, 0.178, 0.05), M.leder, 0, 1.07, 0, null, 1, 1, 0.72); add(new THREE.BoxGeometry(0.06, 0.05, 0.02), M.silber, 0, 1.07, 0.13);
-    [1.16, 1.42].forEach(y => { add(cyl(0.2, 0.196, 0.045), M.reflex, 0, y, 0, null, 1, 1, 0.7); add(cyl(0.201, 0.2, 0.014), M.silber, 0, y, 0, null, 1, 1, 0.7); });
+    if(!opt.zivil) [1.16, 1.42].forEach(y => { add(cyl(0.2, 0.196, 0.045), M.reflex, 0, y, 0, null, 1, 1, 0.7); add(cyl(0.201, 0.2, 0.014), M.silber, 0, y, 0, null, 1, 1, 0.7); });
     add(cyl(0.085, 0.105, 0.07), M.jacke, 0, 1.58, 0);                                    // Kragen
     add(sph(0.1), M.jacke, -0.24, 1.5, 0); add(sph(0.1), M.jacke, 0.24, 1.5, 0);          // Schultern
     // Kopf und Helm
     const kopf = new THREE.Group(); kopf.position.set(0, 1.71, 0); body.add(kopf);
     add(cyl(0.05, 0.055, 0.08), M.haut, 0, -0.1, 0, kopf); add(sph(0.108), M.haut, 0, 0, 0, kopf, 1, 1.12, 1);
     add(sph(0.014, 8, 6), M.dunkel, -0.04, 0.015, 0.098, kopf); add(sph(0.014, 8, 6), M.dunkel, 0.04, 0.015, 0.098, kopf);
+    if(ohne) add(new THREE.SphereGeometry(0.116, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.5), mat(opt.haar || '#3a2a1c', { roughness:0.9 }), 0, 0.012, -0.008, kopf, 1, 1.1, 1.05);
+    else {
     add(new THREE.SphereGeometry(0.142, 18, 10, 0, Math.PI * 2, 0, Math.PI * 0.56), M.helm, 0, 0.03, 0, kopf);
     add(new THREE.BoxGeometry(0.03, 0.05, 0.24), M.helm, 0, 0.165, 0, kopf); add(cyl(0.152, 0.158, 0.018, 18), M.helm, 0, 0.012, 0, kopf);
     add(cyl(0.146, 0.146, 0.03, 18), M.reflex, 0, 0.05, 0, kopf); add(new THREE.BoxGeometry(0.24, 0.15, 0.02), M.leder, 0, -0.07, -0.135, kopf).rotation.x = -0.25;
     add(new THREE.BoxGeometry(0.2, 0.05, 0.02), M.dunkel, 0, 0.07, 0.135, kopf).rotation.x = -0.3;   // hochgeklapptes Visier
+    }
     // Atemschutzgerät
+    if(!ohne){
     add(new THREE.BoxGeometry(0.26, 0.4, 0.03), M.dunkel, 0, 1.3, -0.15); add(cyl(0.075, 0.075, 0.42), M.flasche, 0, 1.3, -0.23); add(sph(0.075), M.flasche, 0, 1.51, -0.23); add(cyl(0.025, 0.025, 0.06, 8), M.silber, 0, 1.07, -0.23);
     add(new THREE.BoxGeometry(0.05, 0.42, 0.02), M.dunkel, -0.12, 1.33, 0.135); add(new THREE.BoxGeometry(0.05, 0.42, 0.02), M.dunkel, 0.12, 1.33, 0.135);
     add(new THREE.BoxGeometry(0.06, 0.1, 0.04), M.dunkel, 0.13, 1.42, 0.16);              // Funkgerät
+    }
     // Gliedmaßen: Oberteil am Gelenk, Unterteil am zweiten Gelenk
     function glied(x, y, l1, l2, r, m1, hand){
       const o = new THREE.Group(); o.position.set(x, y, 0); body.add(o);
       add(cyl(r, r * 0.9, l1), m1, 0, -l1 / 2, 0, o); add(sph(r * 0.95, 10, 8), m1, 0, -l1, 0, o);
       const u = new THREE.Group(); u.position.y = -l1; o.add(u);
       add(cyl(r * 0.9, r * 0.8, l2), m1, 0, -l2 / 2, 0, u);
-      if(hand){ add(cyl(r * 0.93, r * 0.9, 0.04), M.reflex, 0, -l2 * 0.72, 0, u); add(sph(0.062, 10, 8), M.leder, 0, -l2 - 0.03, 0, u); }
-      else { add(cyl(r * 0.94, r * 0.9, 0.04), M.reflex, 0, -l2 * 0.55, 0, u); add(new THREE.BoxGeometry(0.13, 0.14, 0.17), M.stiefel, 0, -l2 - 0.02, 0, u); add(new THREE.BoxGeometry(0.13, 0.08, 0.14), M.stiefel, 0, -l2 - 0.05, 0.13, u); add(new THREE.BoxGeometry(0.135, 0.025, 0.31), M.dunkel, 0, -l2 - 0.095, 0.06, u); }
+      if(hand){ if(!opt.zivil) add(cyl(r * 0.93, r * 0.9, 0.04), M.reflex, 0, -l2 * 0.72, 0, u); add(sph(0.062, 10, 8), opt.zivil ? M.haut : M.leder, 0, -l2 - 0.03, 0, u); }
+      else { if(!opt.zivil) add(cyl(r * 0.94, r * 0.9, 0.04), M.reflex, 0, -l2 * 0.55, 0, u); add(new THREE.BoxGeometry(0.13, 0.14, 0.17), M.stiefel, 0, -l2 - 0.02, 0, u); add(new THREE.BoxGeometry(0.13, 0.08, 0.14), M.stiefel, 0, -l2 - 0.05, 0.13, u); add(new THREE.BoxGeometry(0.135, 0.025, 0.31), M.dunkel, 0, -l2 - 0.095, 0.06, u); }
       return { o, u };
     }
     const aL = glied(-0.285, 1.5, 0.3, 0.27, 0.064, M.jacke, true), aR = glied(0.285, 1.5, 0.3, 0.27, 0.064, M.jacke, true);

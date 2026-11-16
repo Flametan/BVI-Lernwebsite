@@ -3,7 +3,7 @@
   const $ = id => document.getElementById(id);
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
   const fmt = n => n.toLocaleString('de-DE');
-  let screen = 'home', mis = null, data = null, lvl = 0, run = null, tipT = 0;
+  let screen = 'home', mis = null, data = null, lvl = 0, run = null, tipT = 0, uhr = 0;
 
   function show(name){
     screen = name;
@@ -38,7 +38,7 @@
     const c = e.target.closest('.card'); if(!c || c.disabled) return;
     mis = CORE.MISSIONS.find(m => m.id === c.dataset.m);
     try{
-      const [d] = await Promise.all([fetch('data/' + mis.id + '.json').then(r => { if(!r.ok) throw new Error(r.status); return r.json(); }), script('js/m-' + mis.id + '.js')]);
+      const [d] = await Promise.all([fetch('data/' + mis.id + '.json').then(r => { if(!r.ok) throw new Error(r.status); return r.json(); }), script('js/m-' + (mis.welt ? 'welt' : mis.id) + '.js')]);
       data = d; levels();
     }catch(err){ $('daily').className = 'daily'; $('daily').textContent = 'Die Mission konnte nicht geladen werden. Bitte prüfe die Verbindung und versuche es erneut.'; }
   });
@@ -67,7 +67,9 @@
     lvl = i; stop();
     const L = data.level[i], n = L.aufgaben.length;
     const st = { pts:0, done:0, combo:0, fehler:0, max:n * 100 };
-    $('hud-s').textContent = L.steckbrief; $('result').hidden = true; $('sheet').hidden = true; $('tip').hidden = false;
+    $('hud-s').textContent = L.steckbrief; $('result').hidden = true; $('sheet').hidden = true; $('note').hidden = true;
+    $('tip').textContent = 'Lauf mit dem Stick oder mit WASD zu einer Leuchtsäule und drück den Knopf oder die Taste E. Ziehen dreht die Kamera.' + (mis.welt ? '' : ' Über die Treppe kommst du in die anderen Geschosse.');
+    $('tip').hidden = false;
     clearTimeout(tipT); tipT = setTimeout(() => { $('tip').hidden = true; }, 9000);
     show('play');
     const hud = () => {
@@ -76,8 +78,18 @@
     };
     hud();
     STAGE.audio.on = CORE.opt('ton');
-    try{ run = window.MISSIONS[mis.id].start({
-      canvas: $('stage'), level: L, ui: { joy:$('joy'), act:$('act'), up:$('up'), down:$('down'), info:$('info') },
+    // Zeitdruck: läuft, solange gespielt wird (nicht im Menü); bei null zählen die offenen Aufgaben als falsch
+    clearInterval(uhr); let rest = L.zeit || 0;
+    const zeit = () => { const e = $('hud-time'); e.hidden = !L.zeit; if(L.zeit){ e.textContent = Math.floor(rest / 60) + ':' + String(rest % 60).padStart(2, '0'); e.classList.toggle('knapp', rest <= 30); } };
+    zeit();
+    if(L.zeit) uhr = setInterval(() => {
+      if(!run || !$('menu').hidden || !$('result').hidden || document.hidden) return;
+      rest--; zeit(); if(rest > 0) return;
+      clearInterval(uhr); if(qDone){ const f = qDone; qDone = null; $('sheet').hidden = true; f(null); }
+      st.fehler += n - st.done; st.done = n; st.combo = 0; hud(); STAGE.sfx('bad'); result(st, true);
+    }, 1000);
+    try{ run = (window.MISSIONS[mis.id] || window.MISSIONS.welt).start({
+      canvas: $('stage'), level: L, welt: data.welt, note: t => { $('note').hidden = !t; $('note').textContent = t || ''; if(t) $('tip').hidden = true; }, ui: { joy:$('joy'), act:$('act'), up:$('up'), down:$('down'), info:$('info') },
       ask: a => ask(a, a.optionen || data.optionen[a.opt]),
       count(tries){
         st.done++;
@@ -87,7 +99,7 @@
         if(tries > 1 && CORE.opt('vib') && navigator.vibrate) navigator.vibrate(tries === 2 ? 40 : [60, 50, 60]);
         hud();
       },
-      finish(){ setTimeout(() => result(st), 350); },
+      finish(){ clearInterval(uhr); setTimeout(() => result(st), 350); },
       menu, fade
     }); }catch(e){ console.warn('3D-Start fehlgeschlagen', e); run = null; $('nogl').hidden = false; return; }
     run.stage.setQuality(CORE.opt('qual')); run.stage.input.sens = CORE.opt('sens');
@@ -122,28 +134,50 @@
   document.addEventListener('visibilitychange', () => { if(document.hidden && run && $('menu').hidden && $('sheet').hidden && $('result').hidden) menu(); else if(!document.hidden && run) wake(true); });
   $('nogl-ok').onclick = () => { $('nogl').hidden = true; levels(); };
 
-  function stop(){ wake(false); $('menu').hidden = true; if(run){ run.dispose(); run = null; } if(qDone){ const f = qDone; qDone = null; f(null); } }
+  function stop(){ wake(false); clearInterval(uhr); $('menu').hidden = true; $('note').hidden = true; if(run){ run.dispose(); run = null; } if(qDone){ const f = qDone; qDone = null; f(null); } }
 
-  /* Frage: erster Versuch 100 Punkte, zweiter 50, danach wird die Lösung gezeigt */
+  /* Frage: erster Versuch 100 Punkte, zweiter 50, danach wird die Lösung gezeigt.
+     typ mc = eine Antwort, multi = mehrere Antworten ankreuzen und prüfen, reihe = Antworten in der richtigen Reihenfolge antippen */
   let qDone = null;
   function ask(a, optionen){
     return new Promise(res => {
-      let tries = 0, fertig = false;
+      const typ = a.typ || 'mc', box = $('q-opts'), hint = $('q-hint'), check = $('q-check');
+      let tries = 0, fertig = false, folge = [];
       qDone = res; $('tip').hidden = true;
       $('q-title').textContent = a.frage; $('q-fb').hidden = true; $('q-close').hidden = false;
-      const box = $('q-opts');
-      box.innerHTML = optionen.map(o => '<button class="opt">' + esc(o) + '</button>').join('');
+      hint.hidden = typ === 'mc'; hint.textContent = typ === 'multi' ? 'Mehrere Antworten können richtig sein. Wähle alle richtigen und tippe auf „Prüfen“.' : 'Tippe die Antworten in der richtigen Reihenfolge an.';
+      check.hidden = typ !== 'multi';
+      box.innerHTML = optionen.map((o, i) => '<button class="opt" data-i="' + i + '">' + esc(o) + '</button>').join('');
+      const btns = [...box.querySelectorAll('.opt')], text = b => optionen[+b.dataset.i];
+      const zeichne = () => btns.forEach(b => { const k = folge.indexOf(+b.dataset.i); b.textContent = (k >= 0 ? (k + 1) + '. ' : '') + text(b); b.classList.toggle('sel', k >= 0); });
       const ende = ok => {
-        fertig = true; $('q-close').hidden = true;
-        box.querySelectorAll('.opt').forEach(b => { b.disabled = true; if(b.textContent === a.richtig) b.classList.add('yes'); });
-        $('q-fbt').textContent = (ok ? (tries === 1 ? 'Richtig. ' : 'Richtig im zweiten Versuch. ') : 'Richtig wäre: ' + a.richtig + '. ') + a.erkl;
+        fertig = true; $('q-close').hidden = true; check.hidden = true; hint.hidden = true;
+        let loesung = a.richtig;
+        if(typ === 'mc') btns.forEach(b => { if(text(b) === a.richtig) b.classList.add('yes'); });
+        else if(typ === 'multi'){ btns.forEach(b => { const r = a.richtig.includes(text(b)); if(r) b.classList.add('yes'); else if(b.classList.contains('sel')) b.classList.add('no'); b.classList.remove('sel'); }); loesung = a.richtig.join('; '); }
+        else { box.innerHTML = a.richtig.map((o, i) => '<button class="opt yes" disabled>' + (i + 1) + '. ' + esc(o) + '</button>').join(''); loesung = a.richtig.map((o, i) => (i + 1) + '. ' + o).join(' '); }
+        box.querySelectorAll('.opt').forEach(b => { b.disabled = true; });
+        $('q-fbt').textContent = (ok ? (tries === 1 ? 'Richtig. ' : 'Richtig im zweiten Versuch. ') : (typ === 'reihe' ? 'Die richtige Reihenfolge steht oben. ' : 'Richtig wäre: ' + loesung + '. ')) + (a.erkl || '');
         $('q-src').textContent = 'Quelle: ' + a.quelle; $('q-fb').hidden = false; $('q-next').focus();
+      };
+      const urteil = ok => {
+        tries++;
+        if(ok) return ende(true);
+        if(tries >= 2){ tries = 3; return ende(false); }
+        hint.hidden = false; hint.textContent = 'Noch nicht richtig. Du hast einen weiteren Versuch.'; folge = []; if(typ === 'reihe') zeichne();
       };
       box.onclick = e => {
         const b = e.target.closest('.opt'); if(!b || b.disabled || fertig) return;
-        tries++;
-        if(b.textContent === a.richtig) ende(true);
-        else { b.classList.add('no'); b.disabled = true; if(tries >= 2){ tries = 3; ende(false); } }
+        if(typ === 'mc'){ tries++; if(text(b) === a.richtig) ende(true); else { b.classList.add('no'); b.disabled = true; if(tries >= 2){ tries = 3; ende(false); } } }
+        else if(typ === 'multi') b.classList.toggle('sel');
+        else {
+          const i = +b.dataset.i, k = folge.indexOf(i); if(k >= 0) folge = folge.slice(0, k); else folge.push(i);
+          zeichne(); if(folge.length === optionen.length) urteil(folge.every((x, n) => optionen[x] === a.richtig[n]));
+        }
+      };
+      check.onclick = () => {
+        const sel = btns.filter(b => b.classList.contains('sel')).map(text); if(!sel.length) return;
+        urteil(sel.length === a.richtig.length && sel.every(x => a.richtig.includes(x)));
       };
       const close = v => { $('sheet').hidden = true; qDone = null; res(v); };
       $('q-next').onclick = () => close({ tries });
@@ -152,7 +186,7 @@
     });
   }
 
-  function result(st){
+  function result(st, zeitAus){
     const r = CORE.finish(mis.id, lvl, st.pts, st.max, st.fehler);
     if(run) run.pause(true); if(r.ok) STAGE.sfx('win');
     const last = lvl + 1 >= data.level.length;
@@ -161,7 +195,7 @@
     $('r-pts').textContent = fmt(st.pts); $('r-max').textContent = fmt(st.max);
     $('r-note').textContent = r.ok
       ? (r.rekord ? 'Neuer Bestwert. ' : '') + (last ? 'Das war das letzte Level dieser Mission.' : 'Das nächste Level ist frei.')
-      : 'Zum Bestehen brauchst du ' + fmt(Math.ceil(st.max * CORE.PASS)) + ' Punkte. Schau dir die Erklärungen an und versuch es noch einmal.';
+      : (zeitAus ? 'Die Zeit ist abgelaufen. ' : '') + 'Zum Bestehen brauchst du ' + fmt(Math.ceil(st.max * CORE.PASS)) + ' Punkte. Schau dir die Erklärungen an und versuch es noch einmal.';
     $('r-badges').innerHTML = r.neu.map(k => badge(k, true)).join('');
     $('r-next').hidden = !r.ok || last;
     $('st-total').textContent = fmt(CORE.total()); $('st-serie').textContent = CORE.serie();

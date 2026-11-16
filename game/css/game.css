@@ -111,3 +111,11 @@ button{font:inherit;color:inherit;cursor:pointer;}
 .row input[type=range]{flex:0 1 180px;accent-color:var(--accent);}
 .fade{position:absolute;inset:0;z-index:4;background:#000;opacity:0;pointer-events:none;transition:opacity .16s linear;}
 .fade.on{opacity:1;}
+
+/* Mehrfachauswahl, Reihenfolge, Zeit, Meldung in der Hand */
+.opt.sel{border-color:var(--accent);background:var(--accent-bg);}
+#q-check{margin-top:10px;align-self:flex-end;}
+#q-hint{margin-bottom:8px;}
+.hud-t{font-weight:700;color:var(--accent);}
+.hud-t.knapp{color:var(--bad);}
+.note{position:absolute;left:16px;right:16px;top:56px;margin:0 auto;max-width:560px;padding:10px 14px;border-radius:12px;background:var(--accent-bg);border:1px solid var(--accent);font-size:.9rem;text-align:center;pointer-events:none;}

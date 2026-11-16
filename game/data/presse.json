@@ -1,0 +1,319 @@
+{
+ "mission": "presse",
+ "welt": "einsatz",
+ "level": [
+  {
+   "titel": "Rechtsgrundlagen",
+   "steckbrief": "Die ersten Reporter treffen ein. Was gilt rechtlich?",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Wozu verpflichtet § 4 Landespressegesetz die Behörden?",
+     "optionen": [
+      "Nur schriftliche Anfragen zu beantworten",
+      "Der Presse auf konkrete Anfragen zweckdienliche und erschöpfende Auskünfte zu erteilen",
+      "Jede Einsatzstelle für die Presse zu sperren",
+      "Messwerte sofort als Rohdaten herauszugeben"
+     ],
+     "richtig": "Der Presse auf konkrete Anfragen zweckdienliche und erschöpfende Auskünfte zu erteilen",
+     "erkl": "Behörden müssen der Presse auf konkrete Anfragen zweckdienliche und erschöpfende Auskünfte erteilen.",
+     "quelle": "v-idf-p61 · § 4 LPG"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wer entscheidet nach § 43 Landesbeamtengesetz, wer den Medien Auskünfte erteilt?",
+     "optionen": [
+      "Jede Einsatzkraft für sich selbst",
+      "Die Leitung der Behörde; der HVB kann das delegieren",
+      "Die Leitstelle",
+      "Die dienstälteste Kraft an der Einsatzstelle"
+     ],
+     "richtig": "Die Leitung der Behörde; der HVB kann das delegieren",
+     "erkl": "Die Leitung der Behörde entscheidet; der HVB kann delegieren, z. B. an Pressesprecher oder Einsatzleiter.",
+     "quelle": "v-idf-p61 · § 43 LBG"
+    },
+    {
+     "typ": "mc",
+     "frage": "Ab wann kann die Presse auf Auskünften bestehen?",
+     "optionen": [
+      "Erst nach einem schriftlichen Antrag",
+      "Erst wenn das Einsatzgeschehen eine Beurteilung und die Weitergabe nach pflichtgemäßem Ermessen erlaubt",
+      "Erst nach dem Ende des Einsatzes",
+      "Sofort mit dem Eintreffen an der Einsatzstelle"
+     ],
+     "richtig": "Erst wenn das Einsatzgeschehen eine Beurteilung und die Weitergabe nach pflichtgemäßem Ermessen erlaubt",
+     "erkl": "Maßgeblich ist das pflichtgemäße Ermessen des Einsatzleiters bzw. des Pressesprechers.",
+     "quelle": "v-idf-p61 · Rechtliche Grundlagen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wem untersteht S5, wenn der Krisenstab die Arbeit aufnimmt?",
+     "optionen": [
+      "Dem S2",
+      "Der BuMA",
+      "Der Leitstelle",
+      "Dem Kreisbrandmeister"
+     ],
+     "richtig": "Der BuMA",
+     "erkl": "Bei Arbeitsaufnahme des Krisenstabes gehen Melde- und Berichtswesen auf die BuMA über, S5 untersteht dann der BuMA.",
+     "quelle": "v-idf-s52 · S5 Presse und Medienarbeit"
+    }
+   ]
+  },
+  {
+   "titel": "Die Kameras laufen",
+   "steckbrief": "Die Presse stellt Fragen zur Einsatzstelle.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Eine Reporterin fragt: „Wer ist schuld an dem Brand?“ Was antwortest du?",
+     "optionen": [
+      "„Das sehen Sie doch selbst.“",
+      "„Vermutlich war es der Mieter.“",
+      "„Zur Schuldfrage machen wir keine Aussagen.“",
+      "„Der Vermieter hat hier geschlampt.“"
+     ],
+     "richtig": "„Zur Schuldfrage machen wir keine Aussagen.“",
+     "erkl": "Keine Aussagen zu Schuldfragen, keine wertenden Aussagen.",
+     "quelle": "v-idf-p61 · Grundsätze der Pressearbeit"
+    },
+    {
+     "typ": "mc",
+     "frage": "Ein Reporter will den Namen des Verletzten wissen. Was antwortest du?",
+     "optionen": [
+      "„Den Namen gibt es gegen ein Belegexemplar.“",
+      "„Personalien geben wir nicht preis.“",
+      "„Fragen Sie die Nachbarn.“",
+      "„Ich buchstabiere Ihnen den Namen.“"
+     ],
+     "richtig": "„Personalien geben wir nicht preis.“",
+     "erkl": "Keine Personalien preisgeben.",
+     "quelle": "v-idf-p61 · Grundsätze der Pressearbeit"
+    },
+    {
+     "typ": "mc",
+     "frage": "Darf die Presse an der Einsatzstelle fotografieren?",
+     "optionen": [
+      "Nein, an Einsatzstellen ist das verboten",
+      "Nur nach dem Ende des Einsatzes",
+      "Ja, innerhalb der Schranken darf sie sich bewegen und fotografieren",
+      "Nur mit schriftlicher Genehmigung des Einsatzleiters"
+     ],
+     "richtig": "Ja, innerhalb der Schranken darf sie sich bewegen und fotografieren",
+     "erkl": "Die Presse darf sich bewegen und fotografieren, innerhalb der Schranken.",
+     "quelle": "v-idf-p61 · Schranken für die Presse"
+    },
+    {
+     "typ": "mc",
+     "frage": "Mitten in der Menschenrettung verlangt ein Kamerateam sofort ein Statement. Was gilt?",
+     "optionen": [
+      "Statements gibt es erst, wenn der Einsatz es zulässt",
+      "Das Kamerateam ist des Platzes zu verweisen",
+      "Statements gibt es grundsätzlich nie an der Einsatzstelle",
+      "Die Presse hat Vorrang vor dem Einsatz"
+     ],
+     "richtig": "Statements gibt es erst, wenn der Einsatz es zulässt",
+     "erkl": "Statements erst, wenn der Einsatz es zulässt.",
+     "quelle": "v-idf-p61 · Grundsätze der Pressearbeit"
+    }
+   ]
+  },
+  {
+   "titel": "Schranken und Grenzen",
+   "steckbrief": "Was die Presse darf und was du verweigern kannst.",
+   "aufgaben": [
+    {
+     "typ": "multi",
+     "frage": "Welche Schranken gelten für die Presse an der Einsatzstelle?",
+     "optionen": [
+      "Einsatzmaßnahmen nicht behindern",
+      "Bilder vor der Veröffentlichung der Feuerwehr vorlegen",
+      "Sich selbst nicht gefährden",
+      "Die Würde betroffener Personen achten"
+     ],
+     "richtig": [
+      "Einsatzmaßnahmen nicht behindern",
+      "Sich selbst nicht gefährden",
+      "Die Würde betroffener Personen achten"
+     ],
+     "erkl": "Nicht behindern, nicht selbst gefährden, Würde der Betroffenen achten (Pressekodex).",
+     "quelle": "v-idf-p61 · Schranken für die Presse"
+    },
+    {
+     "typ": "mc",
+     "frage": "Ein Reporter verlangt sofort die Messwerte. Was gilt nach dem Umweltinformationsgesetz?",
+     "optionen": [
+      "Kein Anspruch auf sofortige Rohdaten; ausgewertete Informationen innerhalb eines Monats",
+      "Messwerte bleiben immer geheim",
+      "Messwerte gibt es nur gegen Gebühr",
+      "Rohdaten sind sofort herauszugeben"
+     ],
+     "richtig": "Kein Anspruch auf sofortige Rohdaten; ausgewertete Informationen innerhalb eines Monats",
+     "erkl": "Kein Anspruch auf sofortige Herausgabe von Rohdaten; ausgewertete Informationen binnen eines Monats.",
+     "quelle": "v-idf-p61 · Umweltinformationsgesetz"
+    },
+    {
+     "typ": "multi",
+     "frage": "Wann können Auskünfte verweigert werden?",
+     "optionen": [
+      "Vorschriften über die Geheimhaltung stehen entgegen",
+      "Der Umfang würde das zumutbare Maß überschreiten",
+      "Die Frage ist unbequem",
+      "Ein überwiegendes öffentliches oder schutzwürdiges privates Interesse würde verletzt"
+     ],
+     "richtig": [
+      "Vorschriften über die Geheimhaltung stehen entgegen",
+      "Ein überwiegendes öffentliches oder schutzwürdiges privates Interesse würde verletzt",
+      "Der Umfang würde das zumutbare Maß überschreiten"
+     ],
+     "erkl": "Das sind die drei Grenzen des Auskunftsanspruchs.",
+     "quelle": "v-idf-p62 · Grenzen des Auskunftsanspruchs"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was gehört zur Presse- und Medienbetreuung des S5?",
+     "optionen": [
+      "Informieren, Führen und Unterbringen von Presse- und Medienvertretern",
+      "Führen der Lagekarte",
+      "Bereitstellen der Verpflegung",
+      "Planung der Fernmeldeorganisation"
+     ],
+     "richtig": "Informieren, Führen und Unterbringen von Presse- und Medienvertretern",
+     "erkl": "Dazu Vorbereitung und Durchführung von Presse- und Medienkonferenzen.",
+     "quelle": "v-idf-s52 · S5 Presse und Medienarbeit"
+    }
+   ]
+  },
+  {
+   "titel": "Das Statement",
+   "steckbrief": "Jetzt gibst du selbst den O-Ton.",
+   "aufgaben": [
+    {
+     "typ": "multi",
+     "frage": "Was macht ein gutes Pressestatement aus?",
+     "optionen": [
+      "Einfache Sprache",
+      "Sämtliche Probleme des Einsatzes aufzählen",
+      "Zahlensalat vermeiden",
+      "Auf die wichtigsten Punkte beschränken"
+     ],
+     "richtig": [
+      "Einfache Sprache",
+      "Zahlensalat vermeiden",
+      "Auf die wichtigsten Punkte beschränken"
+     ],
+     "erkl": "Nur auf die größte Herausforderung im Einsatz eingehen, statt sämtliche Probleme zu nennen.",
+     "quelle": "v-idf-p62 · Pressestatements abgeben"
+    },
+    {
+     "typ": "mc",
+     "frage": "Warum ist der Einsatzleiter vor Ort für die Presse besonders wertvoll?",
+     "optionen": [
+      "Er muss jede Frage sofort beantworten",
+      "Er kennt die Personalien der Betroffenen",
+      "Er darf als Einziger Schuldfragen beantworten",
+      "Die Presse möchte authentische Augenzeugenberichte; er ist der Experte vor Ort"
+     ],
+     "richtig": "Die Presse möchte authentische Augenzeugenberichte; er ist der Experte vor Ort",
+     "erkl": "Authentische Augenzeugenberichte; klare und verlässliche Aussagen sind wichtig.",
+     "quelle": "v-idf-p62 · Pressestatements abgeben"
+    },
+    {
+     "typ": "mc",
+     "frage": "Bevor du vor die Kamera trittst: Was klärst du zuerst?",
+     "optionen": [
+      "Welche gesicherten Fakten ich nennen kann und was meine Kernbotschaft ist",
+      "Wie ich die Fragen der Presse umgehe",
+      "Wie ich möglichst viele Zahlen unterbringe",
+      "Wem ich die Schuld geben kann"
+     ],
+     "richtig": "Welche gesicherten Fakten ich nennen kann und was meine Kernbotschaft ist",
+     "erkl": "Eigener Stoff, abgeleitet aus den Grundsätzen: wahrheitsgetreu, auf das Wichtigste beschränken.",
+     "quelle": "eigener Stoff"
+    },
+    {
+     "typ": "reihe",
+     "frage": "Bring die Teile eines kurzen O-Tons in eine sinnvolle Reihenfolge.",
+     "optionen": [
+      "Was sollen die Menschen in der Umgebung tun?",
+      "Was tut die Feuerwehr gerade?",
+      "Was ist passiert?",
+      "Wie geht es weiter?"
+     ],
+     "richtig": [
+      "Was ist passiert?",
+      "Was tut die Feuerwehr gerade?",
+      "Was sollen die Menschen in der Umgebung tun?",
+      "Wie geht es weiter?"
+     ],
+     "erkl": "Eigener Stoff: ein möglicher Aufbau. Die Kapitel der App verlangen einfache Sprache und die Beschränkung auf das Wichtigste.",
+     "quelle": "eigener Stoff"
+    }
+   ]
+  },
+  {
+   "titel": "Live-Schalte",
+   "steckbrief": "Die Fragen werden unbequem.",
+   "aufgaben": [
+    {
+     "typ": "multi",
+     "frage": "Welche Grundsätze gelten im Umgang mit der Presse?",
+     "optionen": [
+      "Wertende Aussagen sind erwünscht",
+      "Wahrheitsgetreu antworten",
+      "Vermutungen kennzeichnen",
+      "Keine Aussagen zu Schuldfragen",
+      "Keine Personalien preisgeben"
+     ],
+     "richtig": [
+      "Keine Aussagen zu Schuldfragen",
+      "Keine Personalien preisgeben",
+      "Vermutungen kennzeichnen",
+      "Wahrheitsgetreu antworten"
+     ],
+     "erkl": "Dazu: keine wertenden Aussagen, Statements erst, wenn der Einsatz es zulässt.",
+     "quelle": "v-idf-p61 · Grundsätze der Pressearbeit"
+    },
+    {
+     "typ": "mc",
+     "frage": "Du vermutest einen technischen Defekt als Ursache, gesichert ist das nicht. Wie sagst du es?",
+     "optionen": [
+      "Die Ursache einem Beteiligten zuschreiben",
+      "Als Vermutung kennzeichnen",
+      "Die Zahl der Verletzten schätzen und dazusagen",
+      "Als Tatsache nennen, das klingt sicherer"
+     ],
+     "richtig": "Als Vermutung kennzeichnen",
+     "erkl": "Vermutungen kennzeichnen, wahrheitsgetreu antworten.",
+     "quelle": "v-idf-p61 · Grundsätze der Pressearbeit"
+    },
+    {
+     "typ": "mc",
+     "frage": "Ein Reporter stellt eine Frage, deren Antwort du nicht kennst. Was sagst du?",
+     "optionen": [
+      "„Das weiß ich im Moment nicht. Ich reiche die Information nach, sobald sie gesichert ist.“",
+      "Irgendetwas, das plausibel klingt",
+      "Eine Schätzung, ohne sie zu kennzeichnen",
+      "„Kein Kommentar.“ und weggehen"
+     ],
+     "richtig": "„Das weiß ich im Moment nicht. Ich reiche die Information nach, sobald sie gesichert ist.“",
+     "erkl": "Eigener Stoff, abgeleitet aus den Grundsätzen: wahrheitsgetreu antworten, Vermutungen kennzeichnen.",
+     "quelle": "eigener Stoff"
+    },
+    {
+     "typ": "mc",
+     "frage": "Ein Reporter drängt: „Sagen Sie einfach irgendetwas, wir senden live.“ Wie reagierst du?",
+     "optionen": [
+      "Die Schuldfrage ansprechen, das interessiert die Zuschauer",
+      "Ruhig bleiben und nur gesicherte Fakten nennen",
+      "Die Einsatzstelle für die Presse sperren",
+      "Spekulieren, damit die Sendezeit gefüllt ist"
+     ],
+     "richtig": "Ruhig bleiben und nur gesicherte Fakten nennen",
+     "erkl": "Eigener Stoff, abgeleitet aus den Grundsätzen: wahrheitsgetreu, keine Schuldfragen, klare und verlässliche Aussagen.",
+     "quelle": "eigener Stoff"
+    }
+   ]
+  }
+ ]
+}

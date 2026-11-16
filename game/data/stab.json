@@ -1,0 +1,418 @@
+{
+ "mission": "stab",
+ "welt": "stab",
+ "level": [
+  {
+   "titel": "Meldungen sichten",
+   "steckbrief": "Hol die Meldungen am Sichter ab und bring jede zum zuständigen Sachgebiet.",
+   "aufgaben": [
+    {
+     "typ": "bringen",
+     "frage": "Für ortsunkundige Kräfte muss eine Lotsenstelle eingerichtet werden.",
+     "ziel": "S1",
+     "erkl": "Zuständig: S1.",
+     "quelle": "v-idf-s52 · S1 Personal / Innerer Dienst"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Die Lagekarte muss auf den neuen Stand gebracht werden.",
+     "ziel": "S2",
+     "erkl": "Zuständig: S2.",
+     "quelle": "v-idf-s52 · S2 Lage"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Für das Schadengebiet sind Absperrmaßnahmen anzuordnen.",
+     "ziel": "S3",
+     "erkl": "Zuständig: S3.",
+     "quelle": "v-idf-s52 · S3 Einsatz"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Die Einsatzkräfte brauchen Verpflegung und Unterkünfte.",
+     "ziel": "S4",
+     "erkl": "Zuständig: S4.",
+     "quelle": "v-idf-s52 · S4 Versorgung"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Eine Presse- und Medienkonferenz ist vorzubereiten.",
+     "ziel": "S5",
+     "erkl": "Zuständig: S5.",
+     "quelle": "v-idf-s52 · S5 Presse und Medienarbeit"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Das Kommunikationskonzept mit eindeutigen Bezeichnungen der Einsatzabschnitte ist zu planen.",
+     "ziel": "S6",
+     "erkl": "Zuständig: S6.",
+     "quelle": "v-idf-s52 · S6 Informations- und Kommunikationswesen"
+    }
+   ]
+  },
+  {
+   "titel": "Lagebesprechung",
+   "steckbrief": "Die Sachgebiete haben Fragen an dich.",
+   "aufgaben": [
+    {
+     "typ": "reihe",
+     "frage": "Arbeitsaufnahme des Stabes: Bring den Sieben-Punkte-Plan in die richtige Reihenfolge.",
+     "optionen": [
+      "Nachforderung kalkulieren",
+      "Bereitstellungsraum festlegen",
+      "Einsatzraum strukturieren",
+      "Vorhandene Kräfte einsetzen",
+      "Kommunikation schaffen",
+      "Eigenschutz veranlassen",
+      "Grundschutz zuweisen"
+     ],
+     "richtig": [
+      "Einsatzraum strukturieren",
+      "Bereitstellungsraum festlegen",
+      "Eigenschutz veranlassen",
+      "Grundschutz zuweisen",
+      "Kommunikation schaffen",
+      "Vorhandene Kräfte einsetzen",
+      "Nachforderung kalkulieren"
+     ],
+     "erkl": "Sieben-Punkte-Plan: 1 Einsatzraum strukturieren (S3), 2 Bereitstellungsraum (S1 & S3), 3 Eigenschutz (S4), 4 Grundschutz (S3), 5 Kommunikation (S3 oder S6), 6 vorhandene Kräfte (S1 & S3), 7 Nachforderung (S1 & S3).",
+     "quelle": "v-idf-s52 · Sieben-Punkte-Plan"
+    },
+    {
+     "typ": "mc",
+     "frage": "Zu wenig Personal im Stab: Mit welchem Sachgebiet wird S4 zusammengefasst?",
+     "optionen": [
+      "mit S6",
+      "mit S3",
+      "mit S2",
+      "mit S1"
+     ],
+     "richtig": "mit S1",
+     "erkl": "S4 mit S1, S2 mit S3, S5 zu S2, S6 zu S3.",
+     "quelle": "v-idf-s52 · Zusammenfassung der Sachgebiete"
+    },
+    {
+     "typ": "multi",
+     "frage": "Es soll eine Versorgungsstelle Verpflegung eingerichtet werden. Was sind Aufgaben dieser Versorgungsstelle?",
+     "optionen": [
+      "Wartungsarbeiten",
+      "Zubereitung von Speisen",
+      "Besorgung von Lebensmitteln und Getränken nach dem Konzept des S4",
+      "Hygiene"
+     ],
+     "richtig": [
+      "Zubereitung von Speisen",
+      "Besorgung von Lebensmitteln und Getränken nach dem Konzept des S4",
+      "Hygiene"
+     ],
+     "erkl": "Die Versorgungsstelle Verpflegung setzt das Versorgungskonzept des S4 um: Besorgung und Zubereitung von Speisen und Getränken sowie Hygiene. Wartungsarbeiten gehören zur Materialerhaltung, nicht zur Verpflegung.",
+     "quelle": "IdF-Quiz · Frage 48"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Aussagen zu den Führungsstufen im Sinne der FwDV 100 sind richtig (Führungsstufe D)?",
+     "optionen": [
+      "Führungsstufe D bedeutet Führen mit einer Führungsstaffel.",
+      "Die Führungsstufe D kommt zum Einsatz, wenn mehrere Verbände durch eine rückwärtige Führungseinheit geführt werden müssen.",
+      "Die Führungsstufe D schließt immer den Kreisbrandmeister (KBM) ein.",
+      "Führungseinheiten ergeben sich aus der Größe der Einsatzstelle bzw. den benötigten Einheiten.",
+      "Die Führungsstufe D soll eingesetzt werden, wenn mehrere Verbände an der Einsatzstelle bzw. im Schadensgebiet eingesetzt werden."
+     ],
+     "richtig": [
+      "Die Führungsstufe D kommt zum Einsatz, wenn mehrere Verbände durch eine rückwärtige Führungseinheit geführt werden müssen.",
+      "Führungseinheiten ergeben sich aus der Größe der Einsatzstelle bzw. den benötigten Einheiten.",
+      "Die Führungsstufe D soll eingesetzt werden, wenn mehrere Verbände an der Einsatzstelle bzw. im Schadensgebiet eingesetzt werden."
+     ],
+     "erkl": "Führungsstufe D ist der Führungsstab (Stabsraum, S1–S6) für mehrere Verbände bzw. Großeinsatzlagen und Katastrophen. Die Führungsstaffel gehört zur Stufe C. Eine zwingende Beteiligung des KBM gibt es nicht; die Führungsorganisation richtet sich nach Art und Umfang der Lage.",
+     "quelle": "IdF-Quiz · Frage 33"
+    },
+    {
+     "typ": "mc",
+     "frage": "Sowohl der Krisenstab als auch die Einsatzleitung sind im Dienst. Wer ist für die Einrichtung des Bürgertelefons zuständig?",
+     "optionen": [
+      "Der Einsatzleiter",
+      "Die Leitstelle",
+      "Die für die BuMA zuständige Person des Krisenstabs",
+      "Der S5 des operativen Stabes"
+     ],
+     "richtig": "Die für die BuMA zuständige Person des Krisenstabs",
+     "erkl": "Bei eingesetztem Krisenstab übernimmt die BuMA (Bevölkerungs- und Medienarbeit) die aktive Presse- und Medienarbeit, die Bevölkerungsinformation und richtet das Bürgertelefon ein; der S5 der Einsatzleitung untersteht dann der BuMA.",
+     "quelle": "IdF-Quiz · Frage 37"
+    },
+    {
+     "typ": "multi",
+     "frage": "Das THW wird zur Trinkwasseraufbereitung tätig. Welche Aussagen sind richtig?",
+     "optionen": [
+      "Das THW übernimmt die Technische Einsatzleitung.",
+      "Die Technische Einsatzleitung bleibt bei der örtlich zuständigen Kommune.",
+      "Die Zuständigkeit wird auf die Bundesebene gehoben.",
+      "Das THW wird im Zuge der Amtshilfe tätig."
+     ],
+     "richtig": [
+      "Die Technische Einsatzleitung bleibt bei der örtlich zuständigen Kommune.",
+      "Das THW wird im Zuge der Amtshilfe tätig."
+     ],
+     "erkl": "Wertung laut Protokoll: Das THW unterstützt im Wege der Amtshilfe; die Einsatzleitung und Zuständigkeit bleiben bei der örtlich zuständigen Behörde bzw. Kommune.",
+     "quelle": "IdF-Quiz · Frage 50"
+    }
+   ]
+  },
+  {
+   "titel": "Die Lage zieht an",
+   "steckbrief": "Mehr Meldungen, und die Zeit läuft.",
+   "zeit": 240,
+   "aufgaben": [
+    {
+     "typ": "bringen",
+     "frage": "Das Einsatztagebuch ist zu führen.",
+     "ziel": "S2",
+     "erkl": "Zuständig: S2.",
+     "quelle": "v-idf-s52 · S2 Lage"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Die Schichtplanung für den Stab ist aufzustellen.",
+     "ziel": "S1",
+     "erkl": "Zuständig: S1.",
+     "quelle": "v-idf-s52 · S1 Personal / Innerer Dienst"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Technischer, medizinischer und psychosozialer Eigenschutz der Einsatzkräfte ist bereitzustellen.",
+     "ziel": "S4",
+     "erkl": "Zuständig: S4.",
+     "quelle": "v-idf-s52 · S4 Versorgung"
+    },
+    {
+     "typ": "bringen",
+     "frage": "An- und Abmarschwege sind festzulegen.",
+     "ziel": "S3",
+     "erkl": "Zuständig: S3.",
+     "quelle": "v-idf-s52 · S3 Einsatz"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Presse- und Medienvertreter sind zu informieren, zu führen und unterzubringen.",
+     "ziel": "S5",
+     "erkl": "Zuständig: S5.",
+     "quelle": "v-idf-s52 · S5 Presse und Medienarbeit"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Die erforderliche IuK-Technik ist bereitzustellen und in Betrieb zu nehmen.",
+     "ziel": "S6",
+     "erkl": "Zuständig: S6.",
+     "quelle": "v-idf-s52 · S6 Informations- und Kommunikationswesen"
+    }
+   ]
+  },
+  {
+   "titel": "Großeinsatzlage",
+   "steckbrief": "Führungsorganisation, Einheiten und Krisenstab.",
+   "aufgaben": [
+    {
+     "typ": "multi",
+     "frage": "Welche Aussagen zum Krisenstab sind richtig?",
+     "optionen": [
+      "Der Krisenstab tritt nur zu Besprechungen im Stabsraum zusammen.",
+      "Die Aufgaben werden in den bestehenden Behördenstrukturen und Zuständigkeiten (Soziales, Polizei, Gesundheit usw.) abgearbeitet.",
+      "Der Krisenstab wird bei großen Lagen und fehlendem Personal im Führungsstab zur Führungseinheit der Führungsstufe E.",
+      "Der Krisenstab ist zusammen mit dem Führungsstab in einem Raum untergebracht, damit die Zusammenarbeit einfacher ist.",
+      "Führungsstab und Krisenstab benutzen die gleiche Lagedarstellung."
+     ],
+     "richtig": [
+      "Die Aufgaben werden in den bestehenden Behördenstrukturen und Zuständigkeiten (Soziales, Polizei, Gesundheit usw.) abgearbeitet."
+     ],
+     "erkl": "Der administrativ-organisatorische Krisenstab tagt als Konferenzstab mit Arbeitsphasen in den Fachämtern; die Aufgaben laufen in den bestehenden Zuständigkeiten. Er ist keine Führungseinheit der (nicht existierenden) Stufe E und arbeitet nicht grundsätzlich im selben Raum wie der Führungsstab. Die Wertung der Optionen zu Raum und Lagedarstellung stammt aus dem Bruchsal-Protokoll.",
+     "quelle": "IdF-Quiz · Frage 44"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Faktoren sind für die Festlegung eines Bereitstellungsraumes zu berücksichtigen?",
+     "optionen": [
+      "Möglichst innerhalb der Absperrzone unmittelbar an der Einsatzstelle",
+      "Verkehrstechnisch gut angebunden",
+      "Auf Versorgung (Unterkunft, Sanitär, Wetterschutz) kommt es nicht an, da der Aufenthalt nur kurz ist",
+      "Unterkünfte und Sanitärräume vorhanden"
+     ],
+     "richtig": [
+      "Verkehrstechnisch gut angebunden",
+      "Unterkünfte und Sanitärräume vorhanden"
+     ],
+     "erkl": "Ein Bereitstellungsraum sammelt, gliedert und hält Kräfte in Reserve; er muss gut erreichbar sein und Versorgung bieten (Tankstelle nah, Sanitär, Wetterschutz, Strom, Wasser, Kommunikationsanbindung). Er liegt außerhalb des Gefahrenbereichs. Distraktoren a und c ergänzt.",
+     "quelle": "IdF-Quiz · Frage 42"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Aussagen über die Bundeswehr im Einsatz sind richtig?",
+     "optionen": [
+      "Die Anforderung erfolgt über das Kreisverbindungskommando (KVK).",
+      "Die Bundeswehr verpflegt sich immer selbst.",
+      "Die Bundeswehr übernimmt bei Anforderung die Einsatzleitung.",
+      "Die Bundeswehr wird im Wege der Amtshilfe bzw. Katastrophenhilfe nach Art. 35 GG tätig."
+     ],
+     "richtig": [
+      "Die Anforderung erfolgt über das Kreisverbindungskommando (KVK).",
+      "Die Bundeswehr wird im Wege der Amtshilfe bzw. Katastrophenhilfe nach Art. 35 GG tätig."
+     ],
+     "erkl": "Die Bundeswehr wird über das Kreisverbindungskommando angefordert und leistet Amtshilfe/Katastrophenhilfe (Art. 35 GG); die Einsatzleitung verbleibt bei der zuständigen zivilen Behörde. Dass sie sich immer selbst verpflegt, ist falsch (laut Protokoll). Distraktoren c und d ergänzt.",
+     "quelle": "IdF-Quiz · Frage 53"
+    },
+    {
+     "typ": "multi",
+     "frage": "Wofür ist die KGS (Koordinierungsgruppe) im administrativ-organisatorischen Stab zuständig?",
+     "optionen": [
+      "Aktive Presse- und Medienarbeit",
+      "Befehlsgebung an die Einsatzkräfte im Schadensgebiet",
+      "Lagedarstellung und Dokumentation",
+      "Innerer Dienst (z. B. Alarmierung, Schichtplanung)"
+     ],
+     "richtig": [
+      "Lagedarstellung und Dokumentation",
+      "Innerer Dienst (z. B. Alarmierung, Schichtplanung)"
+     ],
+     "erkl": "Die KGS übernimmt Lage und Dokumentation (ETB, GIS) sowie den Inneren Dienst. Pressearbeit macht die BuMA, Befehle an die Kräfte erteilt die operativ-taktische Einsatzleitung. Optionen b, d ergänzt (d lt. Tab richtig).",
+     "quelle": "IdF-Quiz · Frage 57"
+    },
+    {
+     "typ": "mc",
+     "frage": "Aus welchen Bestandteilen setzt sich die administrativ-organisatorische Komponente zusammen?",
+     "optionen": [
+      "KGS, SMS, EMS",
+      "SMS, EMS",
+      "KGS, SMS"
+     ],
+     "richtig": "KGS, SMS, EMS",
+     "erkl": "Die Komponente besteht aus der KGS, den ständigen Mitgliedern des Stabes (SMS) und den ereignisspezifischen Mitgliedern (EMS), geführt vom Leiter des Stabes (BuMA als Funktion mit eingebunden).",
+     "quelle": "IdF-Quiz · Frage 58"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Aussagen zur MoFüSt (Mobile Führungsunterstützung von Stäben, NRW) stimmen?",
+     "optionen": [
+      "Bei MoFüSt 1 kommt ein ELW 1, bei MoFüSt 2 ein ELW 2, bei MoFüSt 3 ein ELW 3 und bei MoFüSt 4 eine Leitstelle in einem geländefähigen Fahrzeug.",
+      "In den MoFüSt-Stufen 2 und 3 wird ein Vorauskommando entsandt, das bei Eintreffen Kontakt mit der Einsatzleitung aufnimmt.",
+      "Die MoFüSt wird von der Leitstelle über die zuständige Bezirksregierung angefordert."
+     ],
+     "richtig": [
+      "In den MoFüSt-Stufen 2 und 3 wird ein Vorauskommando entsandt, das bei Eintreffen Kontakt mit der Einsatzleitung aufnimmt.",
+      "Die MoFüSt wird von der Leitstelle über die zuständige Bezirksregierung angefordert."
+     ],
+     "erkl": "Das MoFüSt-Konzept NRW kennt drei Stufen: Stufe 1 einzelne Führungskräfte, Stufe 2 Führungsgruppe, Stufe 3 kompletter Führungsstab – keine Zuordnung ELW 1/2/3/Leitstelle und keine Stufe 4. Die Anforderung läuft über die einheitliche Leitstelle bei der Bezirksregierung; in den Stufen 2 und 3 wird ein Vorauskommando entsandt.",
+     "quelle": "IdF-Quiz · Frage 31"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Stabsmodelle gibt es?",
+     "optionen": [
+      "Das Zwei-Stabsmodell",
+      "Die Feuerwehr-Einsatzleitung und der Krisenstab arbeiten grundsätzlich in einem Raum.",
+      "Das Ein-Stabsmodell",
+      "Führungsstab und Krisenstab benutzen die gleiche Lagedarstellung."
+     ],
+     "richtig": [
+      "Das Zwei-Stabsmodell",
+      "Das Ein-Stabsmodell"
+     ],
+     "erkl": "Es gibt das Ein-Stabsmodell und das Zwei-Stabsmodell (operativ-taktischer Stab plus administrativ-organisatorischer Stab unter dem HVB). Die beiden anderen Aussagen sind keine Stabsmodelle und laut Protokoll falsch.",
+     "quelle": "IdF-Quiz · Frage 45"
+    }
+   ]
+  },
+  {
+   "titel": "Schichtende",
+   "steckbrief": "Letzte Meldungen und Fragen vor der Übergabe, unter Zeitdruck.",
+   "zeit": 360,
+   "aufgaben": [
+    {
+     "typ": "bringen",
+     "frage": "Eine Kräfteübersicht ist zu führen.",
+     "ziel": "S1",
+     "erkl": "Zuständig: S1.",
+     "quelle": "v-idf-s52 · S1 Personal / Innerer Dienst"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Die Lagebesprechung ist durchzuführen und der Entschluss zu fassen.",
+     "ziel": "S3",
+     "erkl": "Zuständig: S3.",
+     "quelle": "v-idf-s52 · S3 Einsatz"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Kraftstoffe, Löschmittel und Atemschutzgeräte sind bereitzustellen.",
+     "ziel": "S4",
+     "erkl": "Zuständig: S4.",
+     "quelle": "v-idf-s52 · S4 Versorgung"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Fachberater von THW und Polizei sind anzufordern.",
+     "ziel": "S1",
+     "erkl": "Zuständig: S1.",
+     "quelle": "v-idf-s52 · S1 Personal / Innerer Dienst"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Der Abschlussbericht ist zu erstellen.",
+     "ziel": "S2",
+     "erkl": "Zuständig: S2.",
+     "quelle": "v-idf-s52 · S2 Lage"
+    },
+    {
+     "typ": "bringen",
+     "frage": "Die Befehlsstelle ist festzulegen.",
+     "ziel": "S3",
+     "erkl": "Zuständig: S3.",
+     "quelle": "v-idf-s52 · S3 Einsatz"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Sachgebiete sind für die Einrichtung und Festlegung von Bereitstellungsräumen zuständig?",
+     "optionen": [
+      "S3 und S4 zusammen",
+      "S1 und S5 zusammen",
+      "S1 und S3 zusammen",
+      "S1 und S4 zusammen"
+     ],
+     "richtig": "S1 und S3 zusammen",
+     "erkl": "7-Punkte-Plan, Punkt 2: Bereitstellungsraum festlegen (BR EL oder BR EA) durch S1 und S3.",
+     "quelle": "IdF-Quiz · Frage 41"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Aussagen treffen zum Einsatztagebuch (ETB) zu?",
+     "optionen": [
+      "Alle Ein- und Ausgänge werden erst eingetragen, wenn sie umgesetzt sind.",
+      "Wichtige Einsatzentscheidungen müssen eingetragen werden.",
+      "Das ETB wird grundsätzlich digital geführt."
+     ],
+     "richtig": [
+      "Wichtige Einsatzentscheidungen müssen eingetragen werden."
+     ],
+     "erkl": "Das ETB ist der urkundliche, chronologische Nachweis der Entscheidungen, Anordnungen und Maßnahmen und muss wichtige Einsatzentscheidungen enthalten. Eintragungen erfolgen zeitnah (nicht erst nach Umsetzung); eine grundsätzlich digitale Führung ist nicht vorgeschrieben.",
+     "quelle": "IdF-Quiz · Frage 55"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Aussagen zur Auftragstaktik und zum Befehl sind richtig?",
+     "optionen": [
+      "Je länger der Befehl gelten soll, desto freier muss er formuliert sein.",
+      "Die Kommunikation verläuft immer einseitig, von unten nach oben.",
+      "Ergeben sich vor Ort Gefahren, die dem Befehl zuwiderlaufen, kann vom Befehl abgewichen werden.",
+      "Kann der Einsatzabschnittsleiter Details vor Ort besser überblicken, sind diese zu berücksichtigen.",
+      "Lageinformationen und Kommunikation nach unten erhöhen die Motivation der Einsatzkräfte und stärken den Einsatzerfolg."
+     ],
+     "richtig": [
+      "Je länger der Befehl gelten soll, desto freier muss er formuliert sein.",
+      "Ergeben sich vor Ort Gefahren, die dem Befehl zuwiderlaufen, kann vom Befehl abgewichen werden.",
+      "Kann der Einsatzabschnittsleiter Details vor Ort besser überblicken, sind diese zu berücksichtigen.",
+      "Lageinformationen und Kommunikation nach unten erhöhen die Motivation der Einsatzkräfte und stärken den Einsatzerfolg."
+     ],
+     "erkl": "Auftragstaktik: Ziel und Zweck vorgeben, das Wie entscheidet der Geführte im Rahmen seiner Befugnisse (Befehle so wenig wie möglich, so viel wie nötig). Je weiter in die Zukunft ein Befehl reicht, desto freier ist er zu formulieren; bei Gefahr oder besserer Ortskenntnis darf abgewichen werden. Kommunikation ist keine Einbahnstraße.",
+     "quelle": "IdF-Quiz · Frage 34"
+    }
+   ]
+  }
+ ]
+}

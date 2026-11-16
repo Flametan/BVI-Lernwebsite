@@ -1,0 +1,426 @@
+{
+ "mission": "ibk",
+ "welt": "wache",
+ "level": [
+  {
+   "titel": "Ich-Zustände",
+   "steckbrief": "Auf der Wache: Die Kolleginnen und Kollegen haben Fragen zur Transaktionsanalyse.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Wer entwickelte die Transaktionsanalyse und was ist ihr Ziel?",
+     "optionen": [
+      "Vorteil: entscheidet in Notsituationen rasch, legt Wert auf Tradition und Norm. Nachteil: lehnt Neues ab, intolerant, unterdrückend, überkritisch, reagiert mit Ärger und Aggression.",
+      "Eric Berne. Psychologische Theorie der Persönlichkeit und des zwischenmenschlichen Verhaltens. Ziel: bewusste Kommunikation, bessere Beziehungen, Konfliktlösung und individuelle Autonomie.",
+      "Parallel 9, überkreuzt 72, angulär 36, Duplex (vollständig doppelbödig) 6480. In der Praxis spielen bei den überkreuzten und den Duplex-Transaktionen nur je sechs eine größere Rolle.",
+      "Bei einer Paralleltransaktion (komplementär) kommt die erwartbare Reaktion. Das Gespräch läuft glatt weiter und könnte theoretisch unbegrenzt andauern, auch aus „Langeweile“ endet es."
+     ],
+     "richtig": "Eric Berne. Psychologische Theorie der Persönlichkeit und des zwischenmenschlichen Verhaltens. Ziel: bewusste Kommunikation, bessere Beziehungen, Konfliktlösung und individuelle Autonomie.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-01"
+    },
+    {
+     "typ": "mc",
+     "frage": "Aus welchen sieben Bestandteilen besteht die TA?",
+     "optionen": [
+      "Es stellt grafisch dar, wie stark und wie oft eine Person die einzelnen funktionellen Ich-Zustände nutzt. Werkzeug zur Selbstreflexion und Verhaltensänderung.",
+      "Jede Form der Wahrnehmung oder Anerkennung eines Menschen durch einen anderen: körperlich (Händedruck), nonverbal (Blickkontakt, Lächeln) oder verbal (Lob, Kritik, Gespräch).",
+      "Strukturanalyse (Was geht in mir vor?), Transaktionsanalyse (Was geht zwischen uns vor?), Grundbedürfnisse, Grundeinstellungen, Spielanalyse, Antreiber, Skriptanalyse.",
+      "„Ich bin nicht o.k. – die anderen sind besser“ (– +). Fühlt sich hilflos, gibt Verantwortung ab, sucht einen Retter oder Verfolger. Typischer Satz: „Ich kann das nicht.“"
+     ],
+     "richtig": "Strukturanalyse (Was geht in mir vor?), Transaktionsanalyse (Was geht zwischen uns vor?), Grundbedürfnisse, Grundeinstellungen, Spielanalyse, Antreiber, Skriptanalyse.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-02"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was bezeichnet man als „Transaktion“?",
+     "optionen": [
+      "Wenn Konflikte nicht offen angesprochen werden. Man will Aufmerksamkeit/Bestätigung, eigene Ziele indirekt durchsetzen, echte Nähe vermeiden oder Verantwortung/Schuld abgeben.",
+      "Die Grundeinheit aller sozialen Verbindungen: die Interaktion, wenn sich zwei oder mehr Menschen begegnen. Entscheidend ist, aus welchen Ich-Zuständen heraus kommuniziert wird.",
+      "Jeder Mensch kann denken und Probleme lösen, ist in seiner Ganzheit in Ordnung, kann Verantwortung für sein Leben übernehmen und sein Lebenskonzept konstruktiv gestalten.",
+      "Maslows Grundbedürfnisse sind die unterste Stufe der Pyramide (physiologisch: Nahrung, Wasser, Luft, Schlaf). Bei Berne sind es psychologische Bedürfnisse neben den körperlichen."
+     ],
+     "richtig": "Die Grundeinheit aller sozialen Verbindungen: die Interaktion, wenn sich zwei oder mehr Menschen begegnen. Entscheidend ist, aus welchen Ich-Zuständen heraus kommuniziert wird.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-03"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Grundannahmen gelten in der TA über den Menschen?",
+     "optionen": [
+      "Wenn Konflikte nicht offen angesprochen werden. Man will Aufmerksamkeit/Bestätigung, eigene Ziele indirekt durchsetzen, echte Nähe vermeiden oder Verantwortung/Schuld abgeben.",
+      "Strukturanalyse (Was geht in mir vor?), Transaktionsanalyse (Was geht zwischen uns vor?), Grundbedürfnisse, Grundeinstellungen, Spielanalyse, Antreiber, Skriptanalyse.",
+      "Jeder Mensch kann denken und Probleme lösen, ist in seiner Ganzheit in Ordnung, kann Verantwortung für sein Leben übernehmen und sein Lebenskonzept konstruktiv gestalten.",
+      "„Ich bin nicht o.k. – die anderen sind besser“ (– +). Fühlt sich hilflos, gibt Verantwortung ab, sucht einen Retter oder Verfolger. Typischer Satz: „Ich kann das nicht.“"
+     ],
+     "richtig": "Jeder Mensch kann denken und Probleme lösen, ist in seiner Ganzheit in Ordnung, kann Verantwortung für sein Leben übernehmen und sein Lebenskonzept konstruktiv gestalten.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-04"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche drei Ich-Zustände unterscheidet die Strukturanalyse?",
+     "optionen": [
+      "Es hat keine Vorteile: wenig Lernen aus Erfahrung, wechselhaft, unberechenbar, geringes Selbstwertgefühl.",
+      "Vorteil: fantasievoll, spontan, offen, zeigt Gefühle. Nachteil: impulsiv, rücksichtslos, chaotisch, cholerisch.",
+      "Eltern-Ich (übernommene Werte und Regeln), Erwachsenen-Ich (rational, objektiv), Kind-Ich (emotional, impulsiv).",
+      "Fühlt sich überlegen, sucht Fehler bei anderen: dominant, kontrollierend, bevormundend, gibt Verantwortung ungern ab."
+     ],
+     "richtig": "Eltern-Ich (übernommene Werte und Regeln), Erwachsenen-Ich (rational, objektiv), Kind-Ich (emotional, impulsiv).",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-05"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche fünf Ich-Zustände sind an einer Transaktion beteiligt (Funktionsmodell)?",
+     "optionen": [
+      "Übermäßiges Kontrollieren (Verfolger), ungefragtes Helfen (Retter), Hilflosigkeit oder Schuldzuweisungen (Opfer).",
+      "Es hat keine Vorteile: wenig Lernen aus Erfahrung, wechselhaft, unberechenbar, geringes Selbstwertgefühl.",
+      "„Ich bin o.k. – du nicht“ (+ –). Kritisiert, kontrolliert, greift an. Typischer Satz: „Du bist schuld.“",
+      "Kritisches Eltern-Ich, fürsorgliches Eltern-Ich, Erwachsenen-Ich, natürliches Kind-Ich, angepasstes Kind-Ich."
+     ],
+     "richtig": "Kritisches Eltern-Ich, fürsorgliches Eltern-Ich, Erwachsenen-Ich, natürliches Kind-Ich, angepasstes Kind-Ich.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-06"
+    }
+   ]
+  },
+  {
+   "titel": "Transaktionen",
+   "steckbrief": "Was geht zwischen uns vor?",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Was zeigt das Egogramm?",
+     "optionen": [
+      "Es stellt grafisch dar, wie stark und wie oft eine Person die einzelnen funktionellen Ich-Zustände nutzt. Werkzeug zur Selbstreflexion und Verhaltensänderung.",
+      "Vorteil: nimmt Rücksicht, kompromissbereit, hält sich an Normen. Nachteil: überangepasst, Angst vor Fehlern, gibt schnell nach, zieht sich zurück.",
+      "Jeder Mensch kann denken und Probleme lösen, ist in seiner Ganzheit in Ordnung, kann Verantwortung für sein Leben übernehmen und sein Lebenskonzept konstruktiv gestalten.",
+      "1. Bedingungslose positive, 2. bedingte positive, 3. bedingte negative, 4. bedingungslose negative Beachtung, 5. keine Beachtung (am schlimmsten)."
+     ],
+     "richtig": "Es stellt grafisch dar, wie stark und wie oft eine Person die einzelnen funktionellen Ich-Zustände nutzt. Werkzeug zur Selbstreflexion und Verhaltensänderung.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-07"
+    },
+    {
+     "typ": "mc",
+     "frage": "Kritisches Eltern-Ich: Vorteile und Nachteile bei starker Ausprägung?",
+     "optionen": [
+      "Eric Berne. Psychologische Theorie der Persönlichkeit und des zwischenmenschlichen Verhaltens. Ziel: bewusste Kommunikation, bessere Beziehungen, Konfliktlösung und individuelle Autonomie.",
+      "Parallel 9, überkreuzt 72, angulär 36, Duplex (vollständig doppelbödig) 6480. In der Praxis spielen bei den überkreuzten und den Duplex-Transaktionen nur je sechs eine größere Rolle.",
+      "Einer der Gesprächspartner oder beide wechseln den Ich-Zustand. In lebhaften Gesprächen geschieht das oft unmerklich durch Themenwechsel oder Anpassung an den Ich-Zustand des anderen.",
+      "Vorteil: entscheidet in Notsituationen rasch, legt Wert auf Tradition und Norm. Nachteil: lehnt Neues ab, intolerant, unterdrückend, überkritisch, reagiert mit Ärger und Aggression."
+     ],
+     "richtig": "Vorteil: entscheidet in Notsituationen rasch, legt Wert auf Tradition und Norm. Nachteil: lehnt Neues ab, intolerant, unterdrückend, überkritisch, reagiert mit Ärger und Aggression.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-08"
+    },
+    {
+     "typ": "mc",
+     "frage": "Fürsorgliches Eltern-Ich: Vorteile und Nachteile bei starker Ausprägung?",
+     "optionen": [
+      "Vorteil: schafft Geborgenheit, hört geduldig zu, unterstützt. Nachteil: überfürsorglich, macht andere abhängig und verhindert Selbständigkeit.",
+      "1. ER/ER+K/K, 2. ER/ER+EL/EL, 3. ER/ER+EL/K – K/EL, 4. EL/EL+K/K, 5. ER/ER+K/ER, 6. ER/ER+EL/ER (jeweils offene Sachebene plus verdeckte Ebene).",
+      "Vorteil: nimmt Rücksicht, kompromissbereit, hält sich an Normen. Nachteil: überangepasst, Angst vor Fehlern, gibt schnell nach, zieht sich zurück.",
+      "Führungsrisiko: fehlende Fehlerkultur, Isolation, mangelnde Offenheit. Erlauber: „Du darfst Gefühle zeigen und Unterstützung annehmen.“"
+     ],
+     "richtig": "Vorteil: schafft Geborgenheit, hört geduldig zu, unterstützt. Nachteil: überfürsorglich, macht andere abhängig und verhindert Selbständigkeit.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-09"
+    },
+    {
+     "typ": "mc",
+     "frage": "Natürliches Kind-Ich: Vorteile und Nachteile bei starker Ausprägung?",
+     "optionen": [
+      "Vorteil: fantasievoll, spontan, offen, zeigt Gefühle. Nachteil: impulsiv, rücksichtslos, chaotisch, cholerisch.",
+      "Eltern-Ich (übernommene Werte und Regeln), Erwachsenen-Ich (rational, objektiv), Kind-Ich (emotional, impulsiv).",
+      "Es hat keine Vorteile: wenig Lernen aus Erfahrung, wechselhaft, unberechenbar, geringes Selbstwertgefühl.",
+      "Muster erkennen und aus dem Erwachsenen-Ich heraus offen, sachlich und verantwortungsvoll kommunizieren."
+     ],
+     "richtig": "Vorteil: fantasievoll, spontan, offen, zeigt Gefühle. Nachteil: impulsiv, rücksichtslos, chaotisch, cholerisch.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-11"
+    },
+    {
+     "typ": "mc",
+     "frage": "Angepasstes Kind-Ich: Vorteile und Nachteile bei starker Ausprägung?",
+     "optionen": [
+      "Taktische, oft unbewusste Gefühlsreaktionen, die in der Kindheit gelernt wurden, um andere zu beeinflussen oder Bedürfnisse indirekt durchzusetzen.",
+      "– + Ich bin nicht o.k., du bist o.k. · + – Ich bin o.k., du bist nicht o.k. · – – beide nicht o.k. · + + beide o.k. (gesund und konstruktiv).",
+      "1. Bedingungslose positive, 2. bedingte positive, 3. bedingte negative, 4. bedingungslose negative Beachtung, 5. keine Beachtung (am schlimmsten).",
+      "Vorteil: nimmt Rücksicht, kompromissbereit, hält sich an Normen. Nachteil: überangepasst, Angst vor Fehlern, gibt schnell nach, zieht sich zurück."
+     ],
+     "richtig": "Vorteil: nimmt Rücksicht, kompromissbereit, hält sich an Normen. Nachteil: überangepasst, Angst vor Fehlern, gibt schnell nach, zieht sich zurück.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-12"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was bedeutet ein schwach ausgeprägtes Erwachsenen-Ich?",
+     "optionen": [
+      "Sei perfekt, sei stark, sei anderen gefällig (mach es allen recht), streng dich an, beeil dich.",
+      "Eltern-Ich (übernommene Werte und Regeln), Erwachsenen-Ich (rational, objektiv), Kind-Ich (emotional, impulsiv).",
+      "Fühlt sich überlegen, sucht Fehler bei anderen: dominant, kontrollierend, bevormundend, gibt Verantwortung ungern ab.",
+      "Es hat keine Vorteile: wenig Lernen aus Erfahrung, wechselhaft, unberechenbar, geringes Selbstwertgefühl."
+     ],
+     "richtig": "Es hat keine Vorteile: wenig Lernen aus Erfahrung, wechselhaft, unberechenbar, geringes Selbstwertgefühl.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-13"
+    }
+   ]
+  },
+  {
+   "titel": "Grundbedürfnisse und Antreiber",
+   "steckbrief": "Was treibt Menschen an?",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Was besagt die erste Kommunikationsregel?",
+     "optionen": [
+      "Den unbewussten, in der Kindheit geformten Lebensplan. Sie erfordert Langzeitbetrachtung und tiefenpsychologische Informationen, daher nicht in einer Prüfungssituation bewertbar.",
+      "Bei einer Paralleltransaktion (komplementär) kommt die erwartbare Reaktion. Das Gespräch läuft glatt weiter und könnte theoretisch unbegrenzt andauern, auch aus „Langeweile“ endet es.",
+      "Vorteil: entscheidet in Notsituationen rasch, legt Wert auf Tradition und Norm. Nachteil: lehnt Neues ab, intolerant, unterdrückend, überkritisch, reagiert mit Ärger und Aggression.",
+      "Parallel 9, überkreuzt 72, angulär 36, Duplex (vollständig doppelbödig) 6480. In der Praxis spielen bei den überkreuzten und den Duplex-Transaktionen nur je sechs eine größere Rolle."
+     ],
+     "richtig": "Bei einer Paralleltransaktion (komplementär) kommt die erwartbare Reaktion. Das Gespräch läuft glatt weiter und könnte theoretisch unbegrenzt andauern, auch aus „Langeweile“ endet es.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-14"
+    },
+    {
+     "typ": "mc",
+     "frage": "Kann man den Ich-Zustand des Gesprächspartners bestimmen?",
+     "optionen": [
+      "Nein. Man kann ihn nur einladen, aus einem bestimmten Ich-Zustand zu reagieren.",
+      "Erlebt das Leben als sinnlos oder hoffnungslos: resigniert, pessimistisch, distanziert.",
+      "Nonverbal über Gestik, Mimik, Sprechweise und Tonlage.",
+      "Muster erkennen und aus dem Erwachsenen-Ich heraus offen, sachlich und verantwortungsvoll kommunizieren."
+     ],
+     "richtig": "Nein. Man kann ihn nur einladen, aus einem bestimmten Ich-Zustand zu reagieren.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-16"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie wird die verdeckte Botschaft übertragen?",
+     "optionen": [
+      "Sei perfekt, sei stark, sei anderen gefällig (mach es allen recht), streng dich an, beeil dich.",
+      "Es hat keine Vorteile: wenig Lernen aus Erfahrung, wechselhaft, unberechenbar, geringes Selbstwertgefühl.",
+      "„Ich bin o.k. – du nicht“ (+ –). Kritisiert, kontrolliert, greift an. Typischer Satz: „Du bist schuld.“",
+      "Nonverbal über Gestik, Mimik, Sprechweise und Tonlage."
+     ],
+     "richtig": "Nonverbal über Gestik, Mimik, Sprechweise und Tonlage.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-18"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie fordert man eine direkte Botschaft ein?",
+     "optionen": [
+      "Fühlt sich überlegen, sucht Fehler bei anderen: dominant, kontrollierend, bevormundend, gibt Verantwortung ungern ab.",
+      "Vorteil: fantasievoll, spontan, offen, zeigt Gefühle. Nachteil: impulsiv, rücksichtslos, chaotisch, cholerisch.",
+      "Fühlt sich unterlegen und unsicher, abhängig von Anerkennung: angepasst, zurückhaltend, entschuldigend, konfliktscheu.",
+      "Durch Nachfragen, z. B. „Was ist es, was Du mir damit sagen möchtest?“ oder „Sag mir bitte, was Du wirklich möchtest.“"
+     ],
+     "richtig": "Durch Nachfragen, z. B. „Was ist es, was Du mir damit sagen möchtest?“ oder „Sag mir bitte, was Du wirklich möchtest.“",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-21"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche psychologischen Grundbedürfnisse nennt Berne?",
+     "optionen": [
+      "– + Ich bin nicht o.k., du bist o.k. · + – Ich bin o.k., du bist nicht o.k. · – – beide nicht o.k. · + + beide o.k. (gesund und konstruktiv).",
+      "Führungsrisiko: Konfliktvermeidung, mangelnde Abgrenzung, Überlastung. Erlauber: „Du darfst eigene Bedürfnisse haben und vertreten.“",
+      "Fühlt sich unterlegen und unsicher, abhängig von Anerkennung: angepasst, zurückhaltend, entschuldigend, konfliktscheu.",
+      "Sinnliche Anregung, Zuwendung/Beachtung (Strokes) und Zeitgestaltung. Für Führungskräfte am wichtigsten: Zuwendung und Beachtung."
+     ],
+     "richtig": "Sinnliche Anregung, Zuwendung/Beachtung (Strokes) und Zeitgestaltung. Für Führungskräfte am wichtigsten: Zuwendung und Beachtung.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-22"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was ist ein Stroke?",
+     "optionen": [
+      "„Ich bin nicht o.k. – die anderen sind besser“ (– +). Fühlt sich hilflos, gibt Verantwortung ab, sucht einen Retter oder Verfolger. Typischer Satz: „Ich kann das nicht.“",
+      "Den unbewussten, in der Kindheit geformten Lebensplan. Sie erfordert Langzeitbetrachtung und tiefenpsychologische Informationen, daher nicht in einer Prüfungssituation bewertbar.",
+      "Jede Form der Wahrnehmung oder Anerkennung eines Menschen durch einen anderen: körperlich (Händedruck), nonverbal (Blickkontakt, Lächeln) oder verbal (Lob, Kritik, Gespräch).",
+      "Wenn Konflikte nicht offen angesprochen werden. Man will Aufmerksamkeit/Bestätigung, eigene Ziele indirekt durchsetzen, echte Nähe vermeiden oder Verantwortung/Schuld abgeben."
+     ],
+     "richtig": "Jede Form der Wahrnehmung oder Anerkennung eines Menschen durch einen anderen: körperlich (Händedruck), nonverbal (Blickkontakt, Lächeln) oder verbal (Lob, Kritik, Gespräch).",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-23"
+    }
+   ]
+  },
+  {
+   "titel": "Spiele und Skript",
+   "steckbrief": "Muster erkennen.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Welche fünf Formen der Beachtung gibt es (in Reihenfolge)?",
+     "optionen": [
+      "1. ER/ER+K/K, 2. ER/ER+EL/EL, 3. ER/ER+EL/K – K/EL, 4. EL/EL+K/K, 5. ER/ER+K/ER, 6. ER/ER+EL/ER (jeweils offene Sachebene plus verdeckte Ebene).",
+      "Führungsrisiko: Flüchtigkeitsfehler, vorschnelle Entscheidungen, Stressübertragung auf das Team. Erlauber: „Du darfst dir Zeit zum Denken nehmen.“",
+      "1. Bedingungslose positive, 2. bedingte positive, 3. bedingte negative, 4. bedingungslose negative Beachtung, 5. keine Beachtung (am schlimmsten).",
+      "Vorteil: nimmt Rücksicht, kompromissbereit, hält sich an Normen. Nachteil: überangepasst, Angst vor Fehlern, gibt schnell nach, zieht sich zurück."
+     ],
+     "richtig": "1. Bedingungslose positive, 2. bedingte positive, 3. bedingte negative, 4. bedingungslose negative Beachtung, 5. keine Beachtung (am schlimmsten).",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-25"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie lauten die fünf Stroke-Erlaubnisse?",
+     "optionen": [
+      "Kritisches Eltern-Ich, fürsorgliches Eltern-Ich, Erwachsenen-Ich, natürliches Kind-Ich, angepasstes Kind-Ich.",
+      "Sei perfekt, sei stark, sei anderen gefällig (mach es allen recht), streng dich an, beeil dich.",
+      "Du darfst Strokes geben, darum bitten, sie annehmen, sie ablehnen und dich selbst stroken.",
+      "Nein. Man kann ihn nur einladen, aus einem bestimmten Ich-Zustand zu reagieren."
+     ],
+     "richtig": "Du darfst Strokes geben, darum bitten, sie annehmen, sie ablehnen und dich selbst stroken.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-26"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie grenzt sich Berne von Maslow bei den Grundbedürfnissen ab?",
+     "optionen": [
+      "Parallel 9, überkreuzt 72, angulär 36, Duplex (vollständig doppelbödig) 6480. In der Praxis spielen bei den überkreuzten und den Duplex-Transaktionen nur je sechs eine größere Rolle.",
+      "Maslows Grundbedürfnisse sind die unterste Stufe der Pyramide (physiologisch: Nahrung, Wasser, Luft, Schlaf). Bei Berne sind es psychologische Bedürfnisse neben den körperlichen.",
+      "Bei einer Paralleltransaktion (komplementär) kommt die erwartbare Reaktion. Das Gespräch läuft glatt weiter und könnte theoretisch unbegrenzt andauern, auch aus „Langeweile“ endet es.",
+      "Wenn Konflikte nicht offen angesprochen werden. Man will Aufmerksamkeit/Bestätigung, eigene Ziele indirekt durchsetzen, echte Nähe vermeiden oder Verantwortung/Schuld abgeben."
+     ],
+     "richtig": "Maslows Grundbedürfnisse sind die unterste Stufe der Pyramide (physiologisch: Nahrung, Wasser, Luft, Schlaf). Bei Berne sind es psychologische Bedürfnisse neben den körperlichen.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-27"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche vier Grundeinstellungen unterscheidet die TA?",
+     "optionen": [
+      "– + Ich bin nicht o.k., du bist o.k. · + – Ich bin o.k., du bist nicht o.k. · – – beide nicht o.k. · + + beide o.k. (gesund und konstruktiv).",
+      "Führungsrisiko: fehlende Fehlerkultur, Isolation, mangelnde Offenheit. Erlauber: „Du darfst Gefühle zeigen und Unterstützung annehmen.“",
+      "Führungsrisiko: Flüchtigkeitsfehler, vorschnelle Entscheidungen, Stressübertragung auf das Team. Erlauber: „Du darfst dir Zeit zum Denken nehmen.“",
+      "Vorteil: schafft Geborgenheit, hört geduldig zu, unterstützt. Nachteil: überfürsorglich, macht andere abhängig und verhindert Selbständigkeit."
+     ],
+     "richtig": "– + Ich bin nicht o.k., du bist o.k. · + – Ich bin o.k., du bist nicht o.k. · – – beide nicht o.k. · + + beide o.k. (gesund und konstruktiv).",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-28"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie verhält sich jemand mit der Grundeinstellung „Ich bin nicht o.k. – du bist o.k.“?",
+     "optionen": [
+      "Durch Nachfragen, z. B. „Was ist es, was Du mir damit sagen möchtest?“ oder „Sag mir bitte, was Du wirklich möchtest.“",
+      "Fühlt sich überlegen, sucht Fehler bei anderen: dominant, kontrollierend, bevormundend, gibt Verantwortung ungern ab.",
+      "Kritisches Eltern-Ich, fürsorgliches Eltern-Ich, Erwachsenen-Ich, natürliches Kind-Ich, angepasstes Kind-Ich.",
+      "Fühlt sich unterlegen und unsicher, abhängig von Anerkennung: angepasst, zurückhaltend, entschuldigend, konfliktscheu."
+     ],
+     "richtig": "Fühlt sich unterlegen und unsicher, abhängig von Anerkennung: angepasst, zurückhaltend, entschuldigend, konfliktscheu.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-29"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie verhält sich jemand mit der Grundeinstellung „Ich bin o.k. – du bist nicht o.k.“?",
+     "optionen": [
+      "Durch Nachfragen, z. B. „Was ist es, was Du mir damit sagen möchtest?“ oder „Sag mir bitte, was Du wirklich möchtest.“",
+      "Führungsrisiko: Mikromanagement, Delegationsprobleme, Entscheidungsverzögerung. Erlauber: „Gut genug ist oft ausreichend.“",
+      "Fühlt sich überlegen, sucht Fehler bei anderen: dominant, kontrollierend, bevormundend, gibt Verantwortung ungern ab.",
+      "Eltern-Ich (übernommene Werte und Regeln), Erwachsenen-Ich (rational, objektiv), Kind-Ich (emotional, impulsiv)."
+     ],
+     "richtig": "Fühlt sich überlegen, sucht Fehler bei anderen: dominant, kontrollierend, bevormundend, gibt Verantwortung ungern ab.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-30"
+    }
+   ]
+  },
+  {
+   "titel": "Konflikte",
+   "steckbrief": "Ein Konflikt auf der Wache.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Wie ist ein Konflikt definiert?",
+     "optionen": [
+      "Ein Auseinandersetzungsprozess aus unterschiedlichen Interessen, Werten oder Zielen zwischen Personen, Gruppen oder innerhalb einer Person. Unvermeidlich, aber auch konstruktiv möglich.",
+      "Zuerst die Parteien befähigen, den Konflikt auszutragen, dazu das Selbstwertgefühl stärken. Direkte Konfrontation ruft anfangs Abwehr hervor; Vermeidungsprozeduren direktiv abändern.",
+      "Bewertungskonflikt (Ziele), Beurteilungskonflikt (Wege), Verteilungskonflikt (Mittel), Beziehungskonflikt (Verletzung des Selbstwertgefühls).",
+      "Intrapersonal (in einer Person), interpersonal (zwischen Einzelpersonen), Intra-Gruppenkonflikt (innerhalb einer Gruppe), Inter-Gruppenkonflikt (zwischen Gruppen), Personen-Gruppen-Konflikt."
+     ],
+     "richtig": "Ein Auseinandersetzungsprozess aus unterschiedlichen Interessen, Werten oder Zielen zwischen Personen, Gruppen oder innerhalb einer Person. Unvermeidlich, aber auch konstruktiv möglich.",
+     "erkl": "IBK · Konflikte",
+     "quelle": "Lernkarte k-ibk-50"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was kennzeichnet einen heißen Konflikt?",
+     "optionen": [
+      "Er verwandelt sich regelmäßig in einen kalten Konflikt (z. B. wenn Vorgesetzte oberflächlich eingreifen, statt zu mediieren).",
+      "Über die Wege: unterschiedliche Erfahrungen, Informationsquellen und Informationsverarbeitung.",
+      "Er wird offen ausgefochten. Vorteil: Beteiligte verstecken den Konflikt nicht, günstig für Bearbeitung und Lösung.",
+      "Bewertungskonflikt (Ziele), Beurteilungskonflikt (Wege), Verteilungskonflikt (Mittel), Beziehungskonflikt (Verletzung des Selbstwertgefühls)."
+     ],
+     "richtig": "Er wird offen ausgefochten. Vorteil: Beteiligte verstecken den Konflikt nicht, günstig für Bearbeitung und Lösung.",
+     "erkl": "IBK · Konflikte",
+     "quelle": "Lernkarte k-ibk-51"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was passiert, wenn man einen heißen Konflikt mit einem faulen Kompromiss „deckelt“?",
+     "optionen": [
+      "Er wird offen ausgefochten. Vorteil: Beteiligte verstecken den Konflikt nicht, günstig für Bearbeitung und Lösung.",
+      "Er verwandelt sich regelmäßig in einen kalten Konflikt (z. B. wenn Vorgesetzte oberflächlich eingreifen, statt zu mediieren).",
+      "Bewertungskonflikt (Ziele), Beurteilungskonflikt (Wege), Verteilungskonflikt (Mittel), Beziehungskonflikt (Verletzung des Selbstwertgefühls).",
+      "Er brodelt unterschwellig und fast unbemerkt, weil Ängste und Befürchtungen die Austragung verhindern (Firmenkultur, Führungspersönlichkeit, persönlicher Hintergrund)."
+     ],
+     "richtig": "Er verwandelt sich regelmäßig in einen kalten Konflikt (z. B. wenn Vorgesetzte oberflächlich eingreifen, statt zu mediieren).",
+     "erkl": "IBK · Konflikte",
+     "quelle": "Lernkarte k-ibk-52"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was kennzeichnet einen kalten Konflikt?",
+     "optionen": [
+      "Er verwandelt sich regelmäßig in einen kalten Konflikt (z. B. wenn Vorgesetzte oberflächlich eingreifen, statt zu mediieren).",
+      "Er brodelt unterschwellig und fast unbemerkt, weil Ängste und Befürchtungen die Austragung verhindern (Firmenkultur, Führungspersönlichkeit, persönlicher Hintergrund).",
+      "Zuerst die persönlichen Beziehungen klären, da der Konflikt hochgradig personalisiert ist. Über externe Bedingungen und Organisation wird erst später gesprochen.",
+      "Intrapersonal (in einer Person), interpersonal (zwischen Einzelpersonen), Intra-Gruppenkonflikt (innerhalb einer Gruppe), Inter-Gruppenkonflikt (zwischen Gruppen), Personen-Gruppen-Konflikt."
+     ],
+     "richtig": "Er brodelt unterschwellig und fast unbemerkt, weil Ängste und Befürchtungen die Austragung verhindern (Firmenkultur, Führungspersönlichkeit, persönlicher Hintergrund).",
+     "erkl": "IBK · Konflikte",
+     "quelle": "Lernkarte k-ibk-53"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Eskalationsstufen nach Glasl sind „heiß“, welche „kalt“?",
+     "optionen": [
+      "Heiß: Stufen 1, 2, 6, 8, 9. Kalt: Stufen 3, 4, 7.",
+      "Über die Ziele: unterschiedliche Werte und Normen, gegensätzliche Ziele.",
+      "Die Verletzung des Selbstwertgefühls.",
+      "Über die Wege: unterschiedliche Erfahrungen, Informationsquellen und Informationsverarbeitung."
+     ],
+     "richtig": "Heiß: Stufen 1, 2, 6, 8, 9. Kalt: Stufen 3, 4, 7.",
+     "erkl": "IBK · Konflikte",
+     "quelle": "Lernkarte k-ibk-54"
+    },
+    {
+     "typ": "mc",
+     "frage": "Ab welcher Glasl-Stufe ist man selbst nicht mehr handlungsfähig?",
+     "optionen": [
+      "Er brodelt unterschwellig und fast unbemerkt, weil Ängste und Befürchtungen die Austragung verhindern (Firmenkultur, Führungspersönlichkeit, persönlicher Hintergrund).",
+      "Zuerst die Parteien befähigen, den Konflikt auszutragen, dazu das Selbstwertgefühl stärken. Direkte Konfrontation ruft anfangs Abwehr hervor; Vermeidungsprozeduren direktiv abändern.",
+      "Er verwandelt sich regelmäßig in einen kalten Konflikt (z. B. wenn Vorgesetzte oberflächlich eingreifen, statt zu mediieren).",
+      "Auf den Stufen 1 bis 3 ist man noch selbst handlungsfähig. Ab Stufe 4 ist eine Lösung mithilfe eines externen Eingriffs sinnvoll."
+     ],
+     "richtig": "Auf den Stufen 1 bis 3 ist man noch selbst handlungsfähig. Ab Stufe 4 ist eine Lösung mithilfe eines externen Eingriffs sinnvoll.",
+     "erkl": "IBK · Konflikte",
+     "quelle": "Lernkarte k-ibk-55"
+    }
+   ]
+  }
+ ]
+}

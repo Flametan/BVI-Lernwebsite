@@ -7,20 +7,28 @@ const CORE = (function(){
   // bereit:true = spielbar; die übrigen Missionen folgen einzeln
   const MISSIONS = [
     { id:'begehung',      thema:'Vorbeugender Brandschutz', titel:'Begehung',        text:'Geh durch das Gebäude und bestimme Türen, Wände, Decken und Treppen.', levels:5, bereit:true },
-    { id:'stellungnahme', thema:'Vorbeugender Brandschutz', titel:'Stellungnahme',   text:'Prüfe ein Bauvorhaben und setze die Stellungnahme zusammen.', levels:5 },
-    { id:'stab',          thema:'Stabsarbeit',              titel:'Im Stab',         text:'Ordne Meldungen den Sachgebieten zu und entscheide unter Zeitdruck.', levels:5 },
-    { id:'presse',        thema:'Presse- und Öffentlichkeitsarbeit', titel:'Pressestatement', text:'Beantworte die Fragen der Reporter an der Einsatzstelle.', levels:5 },
-    { id:'lage',          thema:'Zivile Verteidigung und Katastrophenschutz', titel:'Lage Bevölkerungsschutz', text:'Entscheide am Lagetisch über Warnung, Zuständigkeit und Hilfe.', levels:5 },
-    { id:'ucpm',          thema:'Katastrophenschutzverfahren der EU', titel:'Hilfeersuchen', text:'Bring den Weg des Hilfeersuchens in die richtige Reihenfolge.', levels:5 },
-    { id:'ibk',           thema:'IBK',                      titel:'Mitarbeitergespräch', text:'Führe Gespräche: Konflikt, Führung und Kommunikation.', levels:5 },
-    { id:'vak',           thema:'VAk',                      titel:'Einsatzrecht vor Ort', text:'Prüfe Maßnahmen an der Einsatzstelle Schritt für Schritt auf Rechtmäßigkeit.', levels:5 },
-    { id:'feuak',         thema:'FeuAK',                    titel:'Feuerwehr planen', text:'Plane Bedarf, Haushalt und Beschaffung für eine Stadt.', levels:5 }
+    { id:'stellungnahme', thema:'Vorbeugender Brandschutz', titel:'Stellungnahme',   text:'In der Brandschutzdienststelle: Prüfe Bauvorhaben Frage für Frage.', levels:5, bereit:true, welt:true },
+    { id:'stab',          thema:'Stabsarbeit',              titel:'Im Stab',         text:'Bring Meldungen zum richtigen Sachgebiet und beantworte Fragen, teils unter Zeitdruck.', levels:5, bereit:true, welt:true },
+    { id:'presse',        thema:'Presse- und Öffentlichkeitsarbeit', titel:'Pressestatement', text:'Beantworte die Fragen der Reporter an der Einsatzstelle.', levels:5, bereit:true, welt:true },
+    { id:'lage',          thema:'Zivile Verteidigung und Katastrophenschutz', titel:'Lage Bevölkerungsschutz', text:'Im Lagezentrum: Zivile Verteidigung, Warnung und länderübergreifende Hilfe.', levels:5, bereit:true, welt:true },
+    { id:'ucpm',          thema:'Katastrophenschutzverfahren der EU', titel:'Hilfeersuchen', text:'Auf dem Flugfeld: Abkürzungen, Weg des Ersuchens und Kapazitäten der EU.', levels:5, bereit:true, welt:true },
+    { id:'ibk',           thema:'IBK',                      titel:'Mitarbeitergespräch', text:'Auf der Wache: Transaktionsanalyse und Konflikte.', levels:5, bereit:true, welt:true },
+    { id:'vak',           thema:'VAk',                      titel:'Rechtskunde im Hörsaal', text:'Beantworte Fragen zu Staatsrecht, Verwaltungsrecht und Dienstrecht.', levels:5, bereit:true, welt:true },
+    { id:'feuak',         thema:'FeuAK',                    titel:'Feuerwehr planen', text:'Im Planungsbüro: Haushalt, Projekte, Qualität, Vergabe.', levels:5, bereit:true, welt:true }
   ];
 
   const BADGES = {
-    erste:      { titel:'Erste Begehung',  text:'Erstes Level bestanden' },
+    erste:      { titel:'Erster Einsatz',  text:'Erstes Level bestanden' },
     fehlerfrei: { titel:'Fehlerfrei',      text:'Ein Level ohne Fehler' },
     begehung:   { titel:'Brandschutzprüfer', text:'Alle Level der Begehung bestanden' },
+    stellungnahme:{ titel:'Sachbearbeiter VB', text:'Alle Level der Stellungnahme bestanden' },
+    stab:       { titel:'Stabsmitglied',   text:'Alle Level im Stab bestanden' },
+    presse:     { titel:'Pressesprecher',  text:'Alle Level des Pressestatements bestanden' },
+    lage:       { titel:'Lagezentrum',     text:'Alle Level der Lage Bevölkerungsschutz bestanden' },
+    ucpm:       { titel:'Europa-Einsatz',  text:'Alle Level des Hilfeersuchens bestanden' },
+    ibk:        { titel:'Gesprächsführer', text:'Alle Level des Mitarbeitergesprächs bestanden' },
+    vak:        { titel:'Rechtskundig',    text:'Alle Level im Einsatzrecht bestanden' },
+    feuak:      { titel:'Planer',          text:'Alle Level von Feuerwehr planen bestanden' },
     serie7:     { titel:'Sieben Tage',     text:'Tagesziel an 7 Tagen in Folge' }
   };
 

@@ -43,7 +43,7 @@ if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if
 <main id="play" class="screen play" hidden>
   <div class="hud">
     <p class="hud-s" id="hud-s"></p>
-    <div class="hud-r"><span id="hud-prog">0 / 0</span><span class="hud-p"><b id="hud-pts">0</b> Punkte</span><span class="hud-c" id="hud-combo" hidden></span></div>
+    <div class="hud-r"><span class="hud-t" id="hud-time" hidden></span><span id="hud-prog">0 / 0</span><span class="hud-p"><b id="hud-pts">0</b> Punkte</span><span class="hud-c" id="hud-combo" hidden></span></div>
   </div>
   <div class="stagewrap">
     <canvas id="stage" aria-label="3D-Ansicht: Einsatzkraft im Gebäude"></canvas>
@@ -54,12 +54,15 @@ if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if
       <button class="btn" id="down" hidden></button>
       <button class="btn pri" id="act" hidden></button>
     </div>
-    <p class="tip" id="tip">Lauf mit dem Stick oder mit WASD zu einer Leuchtsäule und prüfe das Bauteil (Knopf oder Taste E). Ziehen dreht die Kamera. Über die Treppe kommst du in die anderen Geschosse.</p>
+    <p class="tip" id="tip"></p>
+    <p class="note" id="note" hidden></p>
   </div>
   <section class="sheet" id="sheet" hidden aria-live="polite">
     <div class="sheet-h"><h2 id="q-title"></h2><button class="ic" id="q-close" aria-label="Frage schließen">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <p class="src" id="q-hint" hidden></p>
     <div class="opts" id="q-opts"></div>
+    <button class="btn pri" id="q-check" hidden>Prüfen</button>
     <div class="fb" id="q-fb" hidden><p id="q-fbt"></p><p class="src" id="q-src"></p><button class="btn pri" id="q-next">Weiter</button></div>
   </section>
   <div class="fade" id="fade"></div>
