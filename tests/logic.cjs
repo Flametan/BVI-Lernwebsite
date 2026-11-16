@@ -254,7 +254,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   const sj = await page.evaluate(async () => {
     NAV.home();
     SEARCH.open();
-    const inp = document.getElementById('search-input'); inp.value = 'Untätigkeitsklage'; SEARCH.query(inp.value);
+    const inp = document.getElementById('search-input'); inp.value = 'Nebenbestimmungen'; SEARCH.query(inp.value);
     await new Promise(r => setTimeout(r, 600));
     const hit = document.querySelector('#search-results [onclick*="SEARCH.go"]'); hit && hit.click();
     await new Promise(r => setTimeout(r, 700));
@@ -1002,7 +1002,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   const hc = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
     NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
-    document.querySelector('#v-vak-verwaltungsrecht .lp-card').click(); await w(500);   // Kapitel öffnet im eigenen Fenster
+    document.querySelectorAll('#v-vak-verwaltungsrecht .lp-card')[2].click(); await w(500);   // Kapitel öffnet im eigenen Fenster
     const p = [...document.querySelectorAll('.lp-wbody .acc-body p')].find(e => e.textContent.trim().length > 40);
     const rg = document.createRange(); rg.selectNodeContents(p); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(rg);
     document.dispatchEvent(new Event('selectionchange')); await w(400);
@@ -1553,7 +1553,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
       // Kapitel ausblenden: Titel des ersten Kapitels, danach nicht mehr auffindbar
       SEARCH.close(); NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
       const key = JGUI.chapterKey('v-vak-verwaltungsrecht', document.querySelector('#v-vak-verwaltungsrecht .acc-item:not(.jg-kap)'));
-      const cnt = async () => { SEARCH.reset(); SEARCH.open(); await w(150); SEARCH.query('Planmäßige dauerhafte Tätigkeit Behörden Gesetzen'); await w(500); const n = (document.getElementById('search-results').innerText.match(/ALLGEMEINES VERWALTUNGSRECHT/gi) || []).length; SEARCH.close(); return n; };
+      const cnt = async () => { SEARCH.reset(); SEARCH.open(); await w(150); SEARCH.query('Bedarfsverwaltung Legislative Judikative'); await w(500); const n = (document.getElementById('search-results').innerText.match(/ALLGEMEINES VERWALTUNGSRECHT/gi) || []).length; SEARCH.close(); return n; };
       const before = await cnt(); r.before = before > 0;
       const l = JG.local(); l.ausg.push(key); JG.saveLocal(l); await w(300);
       r.hidden = (await cnt()) < before;

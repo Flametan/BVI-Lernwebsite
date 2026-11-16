@@ -4634,53 +4634,51 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .pc>[hidden]{display:none!important;}
 
 /* ── Kapitel 6: farbcodierte Tabellen (Matrix, TROST-Merkschemata) ── */
-.acc-body .vbt-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.8rem 0;border-radius:8px;}
-.acc-body table.vbt{border-collapse:collapse;width:100%;font-size:.78rem;line-height:1.35;}
-.acc-body table.vbt th{background:#2b3a4f!important;color:#fff!important;font-weight:700;padding:.45rem .5rem;border:1px solid #6b7a8c!important;text-align:center;vertical-align:middle;}
-.acc-body table.vbt td{padding:.4rem .5rem;border:1px solid #6b7a8c!important;vertical-align:middle;text-align:center;color:#111!important;background:#fff!important;}
+.acc-body .vbt-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.8rem 0;border-radius:8px;border:1px solid var(--m-line);}
+.acc-body table.vbt{--vb-ln:color-mix(in srgb,var(--m-fg) 18%,var(--m-card));border-collapse:collapse;width:100%;font-size:.78rem;line-height:1.35;color:var(--m-fg);}
+.acc-body table.vbt th{background:var(--m-raised)!important;color:var(--m-fg)!important;font-weight:700;padding:.45rem .5rem;border:1px solid var(--vb-ln)!important;text-align:center;vertical-align:middle;text-transform:none!important;letter-spacing:0!important;}
+.acc-body table.vbt td{padding:.4rem .5rem;border:1px solid var(--vb-ln)!important;vertical-align:middle;text-align:center;color:var(--m-fg)!important;background:var(--m-card)!important;min-width:4.2rem;}
 .acc-body table.vbt td small{display:block;font-size:.72em;opacity:.85;margin-top:.15rem;}
 .acc-body table.vbt td strong{color:inherit!important;}
 .acc-body table.vbt td:nth-child(1),.acc-body table.vbt td:nth-child(2){text-align:left;}
-.acc-body table.vbt .c0{background:#fff!important;color:#111!important;}
-.acc-body table.vbt .cfh{background:#ffef00!important;color:#111!important;}
-.acc-body table.vbt .chfh{background:#ffc000!important;color:#111!important;}
-.acc-body table.vbt .cfb{background:#c00000!important;color:#fff!important;font-weight:600;}
-.acc-body table.vbt .cbw{background:#7030a0!important;color:#fff!important;font-weight:600;}
-.acc-body table.vbt .cfs{background:#c6e0b4!important;color:#111!important;}
-.acc-body table.vbt .cT,.acc-body table.vbt .cH,.acc-body table.vbt .cK{background:#d9d9d9!important;color:#111!important;}
-.acc-body table.vbt .cK{background:#fff2cc!important;font-size:.9em;}
-.acc-body table.vbt .cR{background:#bdd7ee!important;color:#111!important;}
-.acc-body table.vbt .cO{background:#f4b6b6!important;color:#111!important;}
-.acc-body table.vbt .cS{background:#92d050!important;color:#111!important;}
-.acc-body table.vbt .cTe{background:#fce4d6!important;color:#111!important;}
-.acc-body table.vbt .cTs{background:#bfbfbf!important;color:#111!important;text-align:center;font-size:1.2em;width:2rem;}
-.acc-body table.vbt .cRs{background:#9dc3e6!important;color:#111!important;text-align:center;font-size:1.2em;width:2rem;}
-.acc-body table.vbt .cOs{background:#ef9a9a!important;color:#111!important;text-align:center;font-size:1.2em;width:2rem;}
-.acc-body table.vbt .cSs{background:#70ad47!important;color:#111!important;text-align:center;font-size:1.2em;width:2rem;}
-.acc-body table.vbt .cTes{background:#f8cbad!important;color:#111!important;text-align:center;font-size:1.2em;width:2rem;}
+.acc-body table.vbt .c0,.acc-body table.vbt .cH0{background:var(--m-card)!important;color:var(--m-fg)!important;}
+.acc-body table.vbt .cT,.acc-body table.vbt .cH{background:var(--m-raised)!important;color:var(--m-fg)!important;}
+.acc-body table.vbt .cTs{background:color-mix(in srgb,var(--m-fg) 16%,var(--m-card))!important;color:var(--m-fg)!important;text-align:center;font-size:1.2em;width:2rem;}
+.acc-body table.vbt .cfh{background:color-mix(in srgb,#e6c600 34%,var(--m-card))!important;color:var(--m-fg)!important;}
+.acc-body table.vbt .chfh{background:color-mix(in srgb,#f0a000 40%,var(--m-card))!important;color:var(--m-fg)!important;}
+.acc-body table.vbt .cfb{background:color-mix(in srgb,#d32f2f 52%,var(--m-card))!important;color:var(--m-fg)!important;font-weight:600;}
+.acc-body table.vbt .cbw{background:color-mix(in srgb,#8e44ad 50%,var(--m-card))!important;color:var(--m-fg)!important;font-weight:600;}
+.acc-body table.vbt .cfs{background:color-mix(in srgb,#6fb43f 32%,var(--m-card))!important;color:var(--m-fg)!important;}
+.acc-body table.vbt .cK{background:color-mix(in srgb,#f2c200 20%,var(--m-card))!important;color:var(--m-fg)!important;font-size:.9em;}
+.acc-body table.vbt .cR{background:color-mix(in srgb,#4a90d9 30%,var(--m-card))!important;color:var(--m-fg)!important;}
+.acc-body table.vbt .cO{background:color-mix(in srgb,#e57373 32%,var(--m-card))!important;color:var(--m-fg)!important;}
+.acc-body table.vbt .cS{background:color-mix(in srgb,#5cb85c 36%,var(--m-card))!important;color:var(--m-fg)!important;}
+.acc-body table.vbt .cTe{background:color-mix(in srgb,#f4a261 24%,var(--m-card))!important;color:var(--m-fg)!important;}
+.acc-body table.vbt .cRs{background:color-mix(in srgb,#4a90d9 46%,var(--m-card))!important;color:var(--m-fg)!important;text-align:center;font-size:1.2em;width:2rem;}
+.acc-body table.vbt .cOs{background:color-mix(in srgb,#e57373 50%,var(--m-card))!important;color:var(--m-fg)!important;text-align:center;font-size:1.2em;width:2rem;}
+.acc-body table.vbt .cSs{background:color-mix(in srgb,#5cb85c 54%,var(--m-card))!important;color:var(--m-fg)!important;text-align:center;font-size:1.2em;width:2rem;}
+.acc-body table.vbt .cTes{background:color-mix(in srgb,#f4a261 40%,var(--m-card))!important;color:var(--m-fg)!important;text-align:center;font-size:1.2em;width:2rem;}
+.acc-body table.vbt .cHb{background:color-mix(in srgb,#4a90d9 38%,var(--m-card))!important;color:var(--m-fg)!important;font-weight:700;}
+.acc-body table.vbt .cHr{background:color-mix(in srgb,#d32f2f 55%,var(--m-card))!important;color:var(--m-fg)!important;font-weight:700;}
+.acc-body table.vbt .cHg{background:color-mix(in srgb,#6fb43f 36%,var(--m-card))!important;color:var(--m-fg)!important;font-weight:700;}
+.acc-body table.vbt .cHg,.acc-body table.vbt .cH0{font-weight:700;}
 .acc-body table.vbt tr td:nth-child(2).cT{min-width:7rem;}
-.vbt-leg{display:flex;flex-wrap:wrap;gap:.4rem .9rem;font-size:.72rem;margin:.2rem 0 .9rem;opacity:.9;}
+.vbt-leg{display:flex;flex-wrap:wrap;gap:.4rem .9rem;font-size:.72rem;margin:.2rem 0 .9rem;color:var(--m-muted);}
 .vbt-leg span{display:inline-flex;align-items:center;gap:.3rem;}
-.vbt-leg i{display:inline-block;width:.9rem;height:.9rem;border:1px solid #6b7a8c;border-radius:2px;}
-.vbt-leg i.c0{background:#fff;}.vbt-leg i.cfh{background:#ffef00;}.vbt-leg i.chfh{background:#ffc000;}.vbt-leg i.cfb{background:#c00000;}.vbt-leg i.cbw{background:#7030a0;}
-.acc-body table.vbt th{text-transform:none!important;letter-spacing:0!important;}
-.acc-body table.vbt .cHb{background:#b4c7e7!important;color:#111!important;font-weight:700;}
-.acc-body table.vbt .cHr{background:#ff5050!important;color:#111!important;font-weight:700;}
-.acc-body table.vbt .cH0{background:#fff!important;color:#111!important;font-weight:700;}
-.acc-body table.vbt .cHg{background:#c6e0b4!important;color:#111!important;font-weight:700;}
-.acc-body table.vbt td{min-width:4.2rem;}
+.vbt-leg i{display:inline-block;width:.9rem;height:.9rem;border:1px solid color-mix(in srgb,var(--m-fg) 30%,var(--m-card));border-radius:2px;}
+.vbt-leg i.c0{background:var(--m-card);}.vbt-leg i.cfh{background:color-mix(in srgb,#e6c600 34%,var(--m-card));}.vbt-leg i.chfh{background:color-mix(in srgb,#f0a000 40%,var(--m-card));}.vbt-leg i.cfb{background:color-mix(in srgb,#d32f2f 52%,var(--m-card));}.vbt-leg i.cbw{background:color-mix(in srgb,#8e44ad 50%,var(--m-card));}
 
 /* ── Kapitel 7: Vierfach-Nachrichtenvordruck (farbcodierte Tabellen) ── */
-.acc-body .nvt-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.5rem 0 .9rem;border-radius:8px;}
-.acc-body table.nvt{border-collapse:collapse;width:100%;font-size:.82rem;line-height:1.35;}
-.acc-body table.nvt th{background:#2b3a4f!important;color:#fff!important;font-weight:700;padding:.45rem .5rem;border:1px solid #6b7a8c!important;text-align:left;text-transform:none!important;letter-spacing:0!important;}
-.acc-body table.nvt td{padding:.45rem .55rem;border:1px solid #6b7a8c!important;vertical-align:middle;color:#111!important;background:#fff!important;}
+.acc-body .nvt-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.5rem 0 .9rem;border-radius:8px;border:1px solid var(--m-line);}
+.acc-body table.nvt{--vb-ln:color-mix(in srgb,var(--m-fg) 18%,var(--m-card));border-collapse:collapse;width:100%;font-size:.82rem;line-height:1.35;color:var(--m-fg);}
+.acc-body table.nvt th{background:var(--m-raised)!important;color:var(--m-fg)!important;font-weight:700;padding:.45rem .5rem;border:1px solid var(--vb-ln)!important;text-align:left;text-transform:none!important;letter-spacing:0!important;}
+.acc-body table.nvt td{padding:.45rem .55rem;border:1px solid var(--vb-ln)!important;vertical-align:middle;color:var(--m-fg)!important;background:var(--m-card)!important;}
 .acc-body table.nvt td strong{color:inherit!important;}
 .acc-body table.nvt td.nv{font-weight:700;white-space:nowrap;width:6.2rem;}
 .acc-body table.nvt td.nv small{display:block;font-weight:500;font-size:.75em;}
-.acc-body table.nvt td.nv0,.acc-body table.nvt td.nvw{background:#fff!important;}
-.acc-body table.nvt td.nvy{background:#ffef00!important;}
-.acc-body table.nvt td.nvr{background:#f4b6b6!important;}
-.acc-body table.nvt td.nvg{background:#c6e0b4!important;}
+.acc-body table.nvt td.nv0,.acc-body table.nvt td.nvw{background:var(--m-card)!important;}
+.acc-body table.nvt td.nvy{background:color-mix(in srgb,#e6c600 34%,var(--m-card))!important;}
+.acc-body table.nvt td.nvr{background:color-mix(in srgb,#e57373 36%,var(--m-card))!important;}
+.acc-body table.nvt td.nvg{background:color-mix(in srgb,#6fb43f 34%,var(--m-card))!important;}
 .acc-body table.nvt.mb td{height:2.2rem;}
 .dg-svg.dg-svg-w{max-width:460px;}
