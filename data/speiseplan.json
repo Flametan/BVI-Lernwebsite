@@ -1,6 +1,6 @@
 {
   "hinweis": "Speiseplan des IdF Münster. Jede Woche neue Tage unter „tage“ ergänzen (Schlüssel = Datum JJJJ-MM-TT); alte Tage dürfen stehen bleiben. Die Kürzel in „a“ sind die Zusatzstoffe/Allergene wie auf dem Aushang.",
-  "stand": "09.11.2026",
+  "stand": "16.11.2026",
   "ausgabe": "12:00 bis 13:30 Uhr",
   "tage": {
     "2026-10-26": {
@@ -83,6 +83,33 @@
     "2026-11-13": {
       "stamm":   {"t": "IdF Burger", "a": "C, L, O, G/W"},
       "veg":     {"t": "Pinsa mit Mozzarella und Basilikum"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-16": {
+      "stamm":   {"t": "Grünkohl mit Kartoffeln und Mettwurst", "a": "J"},
+      "veg":     {"t": "Pfannkuchen mit Tomate und Aubergine überbacken", "a": "C, L, S, V, G/W"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-17": {
+      "stamm":   {"t": "Kartoffeltaschen mit Tortellini und Spinat in Rahm", "a": "C, L, S, V, G/W"},
+      "veg":     {"t": "Rosenkohl-Kartoffelauflauf mit Sonnenblumenkernen", "a": "L, V"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-18": {
+      "stamm":   {"t": "Rinderbraten mit Rotkohl und Kartoffelklöße", "a": "C, S, G/W"},
+      "veg":     {"t": "Gefüllte Paprikaschote mit Tomatensoße und Reis", "a": "S, V"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-19": {
+      "stamm":   {"t": "Pfannengyros mit Tzatziki und Krautsalat", "a": "L"},
+      "beilage": {"t": "Pommes frites"},
+      "veg":     {"t": "Grünkohl-Kartoffelgratin mit Cashewkernen", "a": "L, V"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-20": {
+      "stamm":   {"t": "Schweinerückensteak mit Zwiebeln und Spiegelei", "a": "C, G/W"},
+      "beilage": {"t": "Bratkartoffeln mit Speck und Zwiebeln"},
+      "veg":     {"t": "Poke Bowl", "a": "C, B, J, O, V"},
       "dessert": {"t": "Vario"}
     }
   }
