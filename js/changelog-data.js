@@ -2,6 +2,7 @@
 const CHANGELOG_ENTRIES=[
     {v:'3.2.4',ts:'2026-11-12T10:00',items:[
       'IBK, VAk Berlin und FeuAK Hamburg: Lerninhalte neu aus der Zusammenfassung V3.11 aufgebaut (ohne Kapitelnummern in den Überschriften), neue Grafiken, nicht mehr enthaltene Seiten entfernt (IBK PSNV, VAk Rettungsdienstrecht, FeuAK Analyse/Stakeholder/Risikoanalyse). Lernkarten und Quizfragen bleiben erhalten, einige wurden korrigiert.',
+      'Stabsarbeit, Schaubilder der Einsatzleitung: Die Leitstelle heißt jetzt LtS, der Stab trägt drei Punkte, und die IuK-Einheit steht mit Blitz-Symbol direkt am Stab.',
       'Kapitelfenster: Die Kopfzeile mit Zurück-Knopf, Üben/Fokus/Notiz/Lesezeichen und Profil endet jetzt auf allen Geräten bündig mit dem Text darunter (links und rechts).',
       'Gebäudeschnitt der Türen im Kapitel „Begriffe im Vorbeugenden Brandschutz“: Die Wohnnutzung trägt jetzt DSS statt DS (nach MBO).',
       'Stundenplan, Klausurwoche:Die Verabschiedung durch den Direktor ist am Montag um 14:00 Uhr (nicht mehr am Dienstag). Am Dienstag folgt nach der Klausur die Heimreise; Lunchpakete gibt es nach Absprache nach der Klausur, alternativ Mittagessen.',
