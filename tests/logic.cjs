@@ -1002,7 +1002,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   const hc = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
     NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
-    document.querySelector('#v-vak-verwaltungsrecht .lp-card').click(); await w(500);   // Kapitel öffnet im eigenen Fenster
+    document.querySelectorAll('#v-vak-verwaltungsrecht .lp-card')[2].click(); await w(500);   // Kapitel öffnet im eigenen Fenster
     const p = [...document.querySelectorAll('.lp-wbody .acc-body p')].find(e => e.textContent.trim().length > 40);
     const rg = document.createRange(); rg.selectNodeContents(p); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(rg);
     document.dispatchEvent(new Event('selectionchange')); await w(400);
