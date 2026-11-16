@@ -4889,8 +4889,8 @@ const IDF_PLAN = (function(){
       ['1-5|Konzepterarbeitung Großveranstaltung||C-205','6|Aufbau||C-205|Stabsraum „groß“','14:00-17:00|Gr. A: Stabsrahmenübung »Großveranstaltung«|hi|C-205|Küchenwagen mitbringen'],
       ['07:45-ca. 11:00|Gr. B: Stabsrahmenübung »Großveranstaltung«|hi|C-205|Küchenwagen mitbringen','ca. 11:15-12:15|Übungsauswertung beider Gruppen||C-205','6|Rückbau & Organisatorisches|||Evaluation der drei Wochen Stab','7|Abreise|ar']],TEL.spahl],
     [52,9,'Klausuren','2026-12-21','both',[
-      ['1|Anreise|ar','08:30-12:30|Klausur nach § 21|hi|B1-106, A3-25|4 Zeitstunden','7-8|unterrichtsfrei|ar'],
-      ['1|unterrichtsfrei|ar','08:30-12:30|Klausur nach § 21|hi|B1-106, A3-25|4 Zeitstunden','7-8|Verabschiedung durch den Direktor|hi|A2-1|Hemd/Krawatte'],
+      ['1|Anreise|ar','08:30-12:30|Klausur nach § 21|hi|B1-106, A3-25|4 Zeitstunden','14:00|Verabschiedung durch den Direktor|hi|A2-1|Hemd/Krawatte'],
+      ['1|unterrichtsfrei|ar','08:30-12:30|Klausur nach § 21|hi|B1-106, A3-25|4 Zeitstunden','nach der Klausur|Heimreise|ar||Lunchpakete nach Absprache nach der Klausur abholen oder vor der Heimreise Mittagessen'],
       [],['nachmittags|Heiligabend|ar'],['ganztägig|1. Weihnachtstag|ar']],TEL.spahl]
   ];
 

@@ -2,6 +2,7 @@
 const CHANGELOG_ENTRIES=[
     {v:'3.2.4',ts:'2026-11-12T10:00',items:[
       'IBK, VAk Berlin und FeuAK Hamburg: Lerninhalte neu aus der Zusammenfassung V3.11 aufgebaut (ohne Kapitelnummern in den Überschriften), neue Grafiken, nicht mehr enthaltene Seiten entfernt (IBK PSNV, VAk Rettungsdienstrecht, FeuAK Analyse/Stakeholder/Risikoanalyse). Lernkarten und Quizfragen bleiben erhalten, einige wurden korrigiert.',
+      'Stundenplan, Klausurwoche: Die Verabschiedung durch den Direktor ist am Montag um 14:00 Uhr (nicht mehr am Dienstag). Am Dienstag folgt nach der Klausur die Heimreise; Lunchpakete gibt es nach Absprache nach der Klausur, alternativ Mittagessen.',
       'Lernseiten: Der Profil-Knopf steht jetzt auch im geöffneten Kapitelfenster oben rechts, auf Tablet und PC neben der Suche, auf dem Handy und im Fokus-Modus in der Kopfzeile des Fensters.',
       'Tabellen auf dem Handy: In den Karten-Tabellen (z. B. Ich-Zustände mit Vor- und Nachteilen) ist die Beschriftungsspalte jetzt schmal, der Inhalt bekommt mehr Platz und wird nicht mehr zerrissen.',
       'Farbcodierte Tabellen (Brandschutz-Matrix, T-R-O-S-T-Schemata, Nachrichtenvordruck) passen sich jetzt dem gewählten Design (hell, dunkel, Sepia) an.',
