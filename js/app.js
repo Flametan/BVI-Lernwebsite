@@ -1963,7 +1963,14 @@ function fcCounted(){
   return fc;
 }
 const FC = (function(){
-  const CATS = ['laufbahn','ibk','vak','feuak','idf'];
+  const CATS = ['laufbahn','ibk','vak','feuak','vb','stab'];
+  // Prüfungsrelevante Hinweise: IBK, VAk, FeuAK, VB (IdF · Brandschutz), Stabsarbeit (IdF · Stabsarbeit); übrige IdF-Karten (Presse, UCPM, Zivile Verteidigung) nur bei „Alle Fächer“
+  const HSUB=[['ibk','IBK'],['vak','VAk'],['feuak','FeuAK'],['vb','VB'],['stab','Stabsarbeit']];
+  const HKEYS=HSUB.map(x=>x[0]), HDEF=['vb','stab'];
+  const hKey=c=>{ const k=c.cat.toLowerCase(); if(k.startsWith('ibk')) return 'ibk'; if(k.startsWith('vak')) return 'vak'; if(k.startsWith('feuak')) return 'feuak'; if(k==='idf · brandschutz') return 'vb'; if(k==='idf · stabsarbeit') return 'stab'; return k.startsWith('idf')?'rest':null; };
+  const hAll=()=>HKEYS.every(k=>activeFilters.has(k));
+  const hIn=c=>{ const k=hKey(c); return k==='rest'?hAll():!!k&&activeFilters.has(k); };
+  const inHint=()=>!activeFilters.has('laufbahn')&&HKEYS.some(k=>activeFilters.has(k));
   let deck=[], curIdx=0, flipped=false, sess={known:0,unknown:0};
   let activeFilters = new Set(['laufbahn']);
   // Unterteilung der Laufbahnklausuren: IBK, VAk, FeuAK, VB, Stabsarbeit (Mehrfachauswahl, Standard alle)
@@ -2048,7 +2055,7 @@ const FC = (function(){
   };
   const mic=(k,sz)=>'<svg viewBox="0 0 24 24" width="'+sz+'" height="'+sz+'" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+MODE_IC[k]+'</svg>';
   function getMode(){ try{ const m=localStorage.getItem('bvi_fc_mode'); return MODES.some(x=>x[0]===m)?m:'open'; }catch{ return 'open'; } }
-  function modePool(){ return FLASHCARD_DATA.filter(c=>CATS.filter(f=>activeFilters.has(f)).some(f=>c.cat.toLowerCase().startsWith(f)&&(f!=='laufbahn'||lbIn(c)))); }
+  function modePool(){ if(activeFilters.has('laufbahn')) return FLASHCARD_DATA.filter(c=>/^laufbahn/i.test(c.cat)&&lbIn(c)); return FLASHCARD_DATA.filter(c=>!c.own&&hIn(c)); }
   function modeFilter(pool,m){
     const kn=fcLoad(), weak=fcLoadWeak(), now=Date.now();
     if(m==='weak') return pool.filter(c=>weak.has(c.id));
@@ -2126,7 +2133,7 @@ const FC = (function(){
     if(seg){
       const nLb=FLASHCARD_DATA.filter(c=>/^laufbahn/i.test(c.cat)).length, nH=FLASHCARD_DATA.filter(c=>!c.own&&!/^laufbahn/i.test(c.cat)).length;
       seg.querySelectorAll('.fc-seg-b').forEach(b=>{
-        const lb=b.dataset.g==='lb', on=!isStarred&&(lb?inLb:!inLb);
+        const lb=b.dataset.g==='lb', on=!isStarred&&(lb?inLb:inHint());
         b.classList.toggle('on',on); b.setAttribute('aria-pressed',on);
         b.querySelector('small').textContent=(lb?nLb+' Karten für unsere Prüfung':nH+' Karten, Lernstoff aus den Reitern');
         b.querySelector('b').textContent=lb?'Laufbahnprüfung':'Prüfungsrelevante Hinweise';
@@ -2150,8 +2157,9 @@ const FC = (function(){
         b.classList.toggle('hidden',weakN===0&&!isWeak);
         b.innerHTML=`<b>${base}</b><small>${weakN}</small>`;
       } else if(df==='pruefung'){ /* kein eigener Zustand */
+      } else if(df==='laufbahn'){ b.classList.add('hidden'); /* Auswahl läuft über die Fächer-Kacheln */
       } else if(df){
-        const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df)&&(df!=='laufbahn'||lbIn(c)));
+        const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df));
         const knownCnt=cats.filter(c=>known[c.id]).length;
         // Variante 1: Laufbahn-Karten und Hinweise-Karten sind getrennte Gruppen; es zeigt sich nur die gewählte
         b.classList.toggle('hidden',isStarred||df==='laufbahn'||inLb);
@@ -2164,6 +2172,16 @@ const FC = (function(){
   function renderSub(){
     const row=document.getElementById('fc-sub-row'); if(!row) return;
     const special=activeFilters.has('starred')||activeFilters.has('own')||activeFilters.has('weak')||activeFilters.has('known');
+    if(!special&&inHint()){
+      const hc=FLASHCARD_DATA.filter(c=>!c.own&&hKey(c)), hk=hKey, kn0=fcKnown();
+      const cnt=k=>hc.filter(c=>hk(c)===k).length, kn=k=>hc.filter(c=>hk(c)===k&&kn0[c.id]).length, all=hAll();
+      const n=hc.filter(hIn).length;
+      row.hidden=false;
+      row.innerHTML='<div class="fc-sub-bar fc-sub-grid'+(all?' all':'')+'" role="group" aria-label="Hinweise nach Fach">'
+        +HSUB.map(x=>{ const on=activeFilters.has(x[0]), t=cnt(x[0]), k=kn(x[0]), p=t?Math.round(k/t*100):0; return '<button type="button" class="fc-t4'+(on?' on':'')+'" style="--p:'+p+'" aria-pressed="'+on+'" onclick="FC.setHint(\''+x[0]+'\')"><b>'+x[1]+'</b><small>'+k+'/'+t+'</small><u><s style="width:'+p+'%"></s></u></button>'; }).join('')
+        +'</div><div class="fc-sub-meta"><button type="button" class="fc-sub-all'+(all?' on':'')+'" aria-pressed="'+all+'" onclick="FC.setHint(\'all\')">Alle Fächer</button><span class="fc-sub-sum" aria-live="polite">'+n+' Karten</span></div>';
+      return;
+    }
     const show=activeFilters.has('laufbahn')&&!special; row.hidden=!show; if(!show) return;
     const lb=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith('laufbahn'));
     const cnt=k=>lb.filter(c=>lbKey(c)===k).length, all=lbSel.size===LBSUB.length;
@@ -2453,6 +2471,15 @@ const FC = (function(){
       try{ localStorage.setItem('bvi_fc_lbsub',JSON.stringify([...lbSel])); }catch{}
       updateFilterButtons(); this.start(true);
     },
+    setHint(k){
+      if(k==='all'||!HKEYS.includes(k)) activeFilters=new Set(HKEYS);
+      else{
+        const cur=new Set(HKEYS.filter(x=>activeFilters.has(x)));
+        if(cur.size===HKEYS.length) activeFilters=new Set([k]);   // aus „Alle“ heraus: erst nur dieses Fach
+        else{ if(cur.has(k)) cur.delete(k); else cur.add(k); activeFilters=cur.size?cur:new Set(HKEYS); }
+      }
+      updateFilterButtons(); this.start(true);
+    },
     setFilter(f){
       if(f==='starred'){
         activeFilters=activeFilters.has('starred')?new Set(['laufbahn']):new Set(['starred']);
@@ -2465,7 +2492,7 @@ const FC = (function(){
       } else if(f==='all'){
         activeFilters=new Set(['laufbahn']);
       } else if(f==='pruefung'){
-        activeFilters=new Set(['ibk','vak','feuak','idf']);
+        activeFilters=new Set(HDEF);
         updateFilterButtons(); this.start(true); return;
       } else {
         activeFilters.delete('starred'); activeFilters.delete('weak'); activeFilters.delete('own'); activeFilters.delete('known');
@@ -2475,7 +2502,7 @@ const FC = (function(){
       updateFilterButtons();
       this.start(true);
     },
-    setGroup(g){ activeFilters=g==='lb'?new Set(['laufbahn']):new Set(['ibk','vak','feuak','idf']); updateFilterButtons(); this.start(true); },
+    setGroup(g){ activeFilters=g==='lb'?new Set(['laufbahn']):new Set(HDEF); updateFilterButtons(); this.start(true); },
     back(){
       if(_seen.length===0) return;
       if(_reviewPos===-1) _reviewPos=_seen.length-1;
@@ -6816,7 +6843,7 @@ const SHELL=(function(){
     if(!cd||!list) return;
     const days=daysToExam();
     const tgt=examTarget();
-    cd.innerHTML=days<0?'':`<button type="button" class="m-card m-count m-count-go" onclick="${tgt[2]==='own'&&/^[\w-]+$/.test(tgt[0])?`JGUI.openExam('${tgt[0]}')`:goJs(tgt[0],tgt[1])}"><div class="m-count-big">${days===0?'Heute':days}</div><div class="m-tx"><span class="m-t2" style="margin:0">${days===0?'ist die':days===1?'Tag bis zur nächsten Klausur':'Tage bis zur nächsten Klausur'}</span><span class="m-t1">${esc(examCfg().name)}</span><span class="m-t2">${new Date(examCfg().date+'T00:00').toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'long',year:'numeric'})}</span></div><span class="m-count-link">${esc(tgt[1])} <i>›</i></span></button>`;
+    cd.innerHTML='';   // Countdown entfällt
     const dueQ=(typeof QUIZ!=='undefined'&&QUIZ.dueCount)?QUIZ.dueCount():0;
     const dueI=(typeof IDFQ!=='undefined'&&IDFQ.dueCount)?IDFQ.dueCount():0;
     const jd=JG.data(), weg=new Set(jd.pr.weg), edit=typeof JGUI!=='undefined'&&JGUI.isEditing()&&!JG.isMaster();
