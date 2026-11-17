@@ -4611,7 +4611,10 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .fc-review-nav{justify-content:flex-end;}
 
 /* Laufbahn-Hub: zuklappbare Fächer */
-.lb-hubw{display:flex;flex-direction:column;gap:.6rem;}
+.lb-hubw{display:flex;flex-direction:column;gap:.9rem;}
+.lb-kl{display:flex;flex-direction:column;gap:.6rem;border:2px solid var(--m-line,rgba(128,128,128,.3));border-radius:20px;padding:.7rem;background:color-mix(in srgb,var(--m-card) 35%,transparent);}
+.lb-kh{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;padding:.2rem .5rem .3rem;font-weight:800;font-size:1rem;}
+.lb-kh span{font-size:.72rem;font-weight:600;border-radius:99px;padding:3px 11px;background:color-mix(in srgb,var(--m-accent,#b8862b) 22%,transparent);}
 .lb-fach{background:var(--m-card);border:1px solid var(--m-line,rgba(128,128,128,.25));border-radius:16px;overflow:hidden;}
 .lb-fh{display:flex;align-items:center;gap:.8rem;width:100%;min-height:64px;padding:.7rem .9rem;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;}
 .lb-fi{min-width:3rem;padding:.35rem .5rem;border-radius:12px;background:var(--m-accent-dim,color-mix(in srgb,var(--m-accent) 16%,transparent));color:var(--m-accent-fg,var(--m-accent));font-weight:900;font-size:.8rem;text-align:center;}
@@ -4626,8 +4629,8 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .lb-fb .topic-card:last-child{border-bottom:0;}
 .lb-fb .topic-card .tc-icon{grid-row:1 / span 2;width:26px;height:26px;margin:0;}
 .lb-fb .topic-card .tc-name{font-size:.98rem;}.lb-fb .topic-card .tc-sub{font-size:.82rem;}
-#lb-hub.lb-in>.lb-fach{animation:lpCascade .45s cubic-bezier(.2,.8,.2,1) both;}
-#lb-hub.lb-in>.lb-fach:nth-child(2){animation-delay:70ms}#lb-hub.lb-in>.lb-fach:nth-child(3){animation-delay:140ms}#lb-hub.lb-in>.lb-fach:nth-child(4){animation-delay:210ms}
+#lb-hub.lb-in>.lb-kl{animation:lpCascade .45s cubic-bezier(.2,.8,.2,1) both;}
+#lb-hub.lb-in>.lb-kl+.lb-kl{animation-delay:90ms}
 .lb-relock{align-self:center;}
 
 /* Laufbahn-Hub: drei Arten von Einträgen */
@@ -4662,6 +4665,25 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .fc-sub-b:focus-visible{outline:2px solid var(--m-accent);outline-offset:1px;}
 .fc-sub-sum{flex:none;margin-left:auto;padding-left:.6rem;font-size:.8rem;color:var(--m-muted);white-space:nowrap;}
 @media print{.fc-sub-row{display:none!important;}}
+/* Fach-Kacheln mit Fortschrittsbalken: gleiches Layout in „Laufbahnprüfung“ und „Prüfungsrelevante Hinweise“ */
+.fc-t4{display:flex;flex-direction:row;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 6px;min-width:0;padding:10px 12px 12px;border:0;border-radius:14px;background:var(--m-card);color:var(--m-fg);font:inherit;text-align:left;cursor:pointer;}
+.fc-t4 b{font-size:.9rem;font-weight:700;}
+.fc-t4 small{font-size:.74rem;font-weight:600;color:var(--m-muted);font-variant-numeric:tabular-nums;opacity:1;}
+.fc-t4 u{flex:0 0 100%;display:block;height:5px;margin-top:7px;border-radius:9px;background:color-mix(in srgb,currentColor 14%,transparent);overflow:hidden;text-decoration:none;}
+.fc-t4 s{display:block;height:100%;min-width:4px;background:var(--m-accent);text-decoration:none;}
+.fc-t4.active,.fc-t4.on,.fc-f-btn.fc-t4.active{background:var(--m-accent-dim,color-mix(in srgb,var(--m-accent) 18%,transparent));color:var(--m-fg);box-shadow:0 0 0 2px var(--m-accent) inset;}
+.fc-t4.active small{color:var(--m-muted);opacity:1;}
+.fc-filter-row .fc-f-btn.fc-t4 b{font-size:.9rem;}
+.fc-filter-row .fc-f-btn.fc-t4 small{font-size:.74rem;}
+.fc-sub-bar.fc-sub-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;padding:0;background:none;overflow:visible;}
+@media (max-width:520px){.fc-t4{flex-direction:column;align-items:flex-start;gap:0;padding:9px 10px 10px;}.fc-t4 u{align-self:stretch;flex:none;}}
+.fc-sub-grid.all .fc-t4.on{background:var(--m-card);box-shadow:none;}
+@media (min-width:701px){.fc-filter-row{padding-left:32px!important;padding-right:32px!important;}}
+@media (min-width:1024px){.fc-filter-row{padding-left:48px!important;padding-right:48px!important;}}
+.fc-sub-meta{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.5rem .25rem 0;}
+.fc-sub-all{border:0;background:none;color:var(--m-muted);font:inherit;font-size:.8rem;font-weight:600;cursor:pointer;padding:.2rem .1rem;text-decoration:underline;text-underline-offset:3px;}
+.fc-sub-all.on{color:var(--m-accent-fg,var(--m-accent));text-decoration:none;}
+.fc-sub-meta .fc-sub-sum{margin:0;padding:0;}
 
 /* Altklausuren im Laufbahn-Hub */
 .lb-dot.alt{background:#c27a00;}
@@ -4722,3 +4744,71 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .acc-body table.nvt td.nvg{background:color-mix(in srgb,#6fb43f 34%,var(--m-card))!important;}
 .acc-body table.nvt.mb td{height:2.2rem;}
 .dg-svg.dg-svg-w{max-width:460px;}
+
+/* Lernkarten modern: Kartenstapel ab Tablet */
+@media (min-width:0px){
+  .fc-outer{isolation:isolate;margin-bottom:1.9rem;}
+  .fc-outer::before,.fc-outer::after{content:'';position:absolute;inset:0;border-radius:20px;background:var(--m-card);border:1px solid var(--m-line,rgba(128,128,128,.22));pointer-events:none;}
+  .fc-outer::before{z-index:-1;transform:translateY(11px) scale(.965);opacity:.9;box-shadow:0 8px 18px -12px rgba(0,0,0,.35);}
+  .fc-outer::after{z-index:-2;transform:translateY(22px) scale(.93);opacity:.55;}
+}
+/* Lernkarten modern, Desktop: Fächer links, Karte mittig, Stand rechts; Aktionen als kleine Knöpfe oben */
+@media (min-width:700px){
+  #v-flashcards.active{display:grid;grid-template-columns:240px minmax(0,1fr) 270px;column-gap:22px;align-content:start;max-width:1140px;margin:0 auto;padding-left:48px;padding-right:48px;}
+  #v-flashcards.active>.page-hero{grid-column:1/-1;grid-row:1;}
+  #v-flashcards.active>.page-hero .phi{padding:0;max-width:none;margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:1rem;align-items:end;}
+  #v-flashcards.active>.page-hero .phi>.fc-tiles{grid-column:2;grid-row:1/span 2;align-self:end;display:flex;gap:8px;margin:0 0 .35rem;max-width:none;}
+  #v-flashcards .fc-tile{flex-direction:row;gap:8px;padding:9px 16px;min-height:0;border-radius:99px;}
+  #v-flashcards .fc-tile .fc-ti{margin:0;}
+  #v-flashcards .fc-tile .fc-ti svg{width:16px;height:16px;}
+  #v-flashcards .fc-tile small{color:var(--m-muted);}
+  #v-flashcards.active>.fc-seg{grid-column:2;grid-row:2;display:flex;gap:8px;padding:0 0 12px;max-width:none;margin:0;}
+  #v-flashcards .fc-seg-b{flex:none;flex-direction:row;gap:8px;align-items:baseline;padding:9px 16px;border-radius:99px;}
+  #v-flashcards .fc-seg-b small{display:none;}
+  #v-flashcards.active>.fc-modebar{grid-column:2;grid-row:3;padding:0 0 14px;max-width:none;margin:0;}
+  #v-flashcards.active>.pc{display:contents;}
+  #v-flashcards.active #fc-container{grid-column:2;grid-row:4;min-width:0;}
+  #v-flashcards.active #m-fc-side{grid-column:3;grid-row:2/span 3;align-self:start;}
+  #v-flashcards.active>.fc-sub-row,#v-flashcards.active>.fc-filter-row{grid-column:1;grid-row:2/span 3;align-self:start;position:sticky;top:76px;max-width:none;margin:0;padding:18px!important;background:var(--m-card);border-radius:22px;}
+  #v-flashcards.active>.fc-filter-row{display:flex;flex-direction:column;gap:6px!important;grid-template-columns:none!important;}
+  #v-flashcards.active>.fc-filter-row:not(:has(.fc-f-btn:not(.hidden))){display:none;}
+  #v-flashcards.active>.fc-sub-row[hidden]{display:none;}
+  #v-flashcards.active>.fc-sub-row::before,#v-flashcards.active>.fc-filter-row::before{content:'Fächer';display:block;margin-bottom:8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--m-accent-fg);}
+  #v-flashcards .fc-sub-bar.fc-sub-grid{grid-template-columns:1fr;gap:4px;}
+  #v-flashcards .fc-t4{flex-direction:row;flex-wrap:nowrap;align-items:center;gap:10px;padding:8px 10px;border-radius:14px;background:none;box-shadow:none;}
+  #v-flashcards .fc-t4::before{content:'';flex:none;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle,var(--m-card) 0 57%,transparent 58%),conic-gradient(var(--m-accent) calc(var(--p,0)*1%),color-mix(in srgb,var(--m-fg) 14%,transparent) 0);}
+  #v-flashcards .fc-t4 b{flex:1;min-width:0;text-align:left;font-size:.95rem;}
+  #v-flashcards .fc-t4 small{flex:none;}
+  #v-flashcards .fc-t4 u{display:none;}
+  #v-flashcards .fc-t4.active,#v-flashcards .fc-t4.on,#v-flashcards .fc-f-btn.fc-t4.active{background:var(--m-accent-dim,color-mix(in srgb,var(--m-accent) 18%,transparent));box-shadow:none;}
+  #v-flashcards .fc-sub-grid.all .fc-t4.on{background:none;}
+  #v-flashcards .fc-sub-meta{padding:10px 4px 0;}
+}
+/* Lernkarten Tablet/Handy: Abstand zwischen Umschalter und Fach-Kacheln */
+@media (max-width:1023px){#v-flashcards .fc-seg{padding-bottom:.7rem;}}
+
+/* Lernkarten Handy: kompakter Kopf, alle Fächer in einer Reihe, Karte rückt nach oben */
+@media (max-width:699px){
+  #v-flashcards>.page-hero .phi{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:.6rem;align-items:end;}
+  #v-flashcards>.page-hero .phi>.fc-tiles{grid-column:2;grid-row:1/span 2;display:flex;gap:8px;margin:0 0 .3rem;max-width:none;}
+  #v-flashcards .fc-tile{width:40px;height:40px;min-height:0;padding:0;border-radius:50%;flex:none;}
+  #v-flashcards .fc-tile b,#v-flashcards .fc-tile small{display:none;}
+  #v-flashcards .fc-tile .fc-ti{margin:0;}
+  #v-flashcards .fc-seg{display:flex;gap:8px;padding:.5rem 16px .6rem;}
+  #v-flashcards .fc-seg-b{flex:none;flex-direction:row;padding:8px 14px;border-radius:99px;}
+  #v-flashcards .fc-seg-b small{display:none;}
+  #v-flashcards .fc-sub-bar.fc-sub-grid,#v-flashcards .fc-filter-row{grid-template-columns:repeat(auto-fit,minmax(60px,1fr))!important;grid-auto-flow:row!important;gap:6px!important;}
+  #v-flashcards .fc-t4{flex-direction:column;align-items:center;gap:2px;padding:8px 2px 7px;text-align:center;}
+  #v-flashcards .fc-t4::before{content:'';width:24px;height:24px;border-radius:50%;margin-bottom:2px;background:radial-gradient(circle,var(--m-card) 0 55%,transparent 56%),conic-gradient(var(--m-accent) calc(var(--p,0)*1%),color-mix(in srgb,var(--m-fg) 14%,transparent) 0);}
+  #v-flashcards .fc-t4 u{display:none;}
+  #v-flashcards .fc-t4 b,#v-flashcards .fc-filter-row .fc-f-btn.fc-t4 b{font-size:.74rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  #v-flashcards .fc-t4 small,#v-flashcards .fc-filter-row .fc-f-btn.fc-t4 small{font-size:.68rem;}
+}
+@media (max-width:699px){#v-flashcards .fc-filter-row{padding-left:16px!important;padding-right:16px!important;}}
+
+/* Lernkarten Tablet: wie Desktop, aber zwei Spalten; „Dein Stand“ und Tastatur unter der Karte */
+@media (min-width:700px) and (max-width:1023px){
+  #v-flashcards.active{grid-template-columns:210px minmax(0,1fr);padding-left:32px;padding-right:32px;}
+  #v-flashcards.active #m-fc-side{grid-column:2;grid-row:5;margin-top:1rem;}
+  #v-flashcards.active>.fc-sub-row,#v-flashcards.active>.fc-filter-row{grid-row:2/span 4;}
+}

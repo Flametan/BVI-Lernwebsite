@@ -321,7 +321,7 @@
       <tr><td><kbd>↑ ↓</kbd></td><td>Suchergebnis navigieren</td></tr>
       <tr><td><kbd>Enter</kbd></td><td>Suchergebnis öffnen</td></tr>
       <tr class="sc-sep"><td colspan="2">Lernkarten</td></tr>
-      <tr><td><kbd>↓</kbd></td><td>Karte umdrehen</td></tr>
+      <tr><td><kbd>↑</kbd></td><td>Karte umdrehen</td></tr>
       <tr><td><kbd>Leertaste</kbd></td><td>Karte markieren</td></tr>
       <tr><td><kbd>→</kbd> / <kbd>J</kbd></td><td>Gewusst</td></tr>
       <tr><td><kbd>←</kbd> / <kbd>F</kbd></td><td>Nicht gewusst</td></tr>
@@ -4981,7 +4981,7 @@
     </form>
     <div id="lb-hub" class="lb-hubw" hidden>
       <div class="lb-leg" role="list" aria-label="Legende"><span role="listitem"><i class="lb-dot o"></i>Eingrenzung</span><span role="listitem"><i class="lb-dot alt"></i>Altklausur</span><span role="listitem"><i class="lb-dot s"></i>Selbst erarbeitet</span><span role="listitem"><i class="lb-dot sim"></i>Simulation</span></div>
-      <div class="info-card" style="margin-bottom:1rem"><div class="info-card-title"><span class="dot dot-b"></span>Organisation der Laufbahnprüfung am IdF Münster</div><ul class="bl"><li><strong>Anreise:</strong> am Vortag möglich, Unterbringung am IdF</li><li><strong>Ablauf:</strong> pro Prüfungstag werden 6 Prüflinge in zwei Dreiergruppen geprüft; die Prüfung besteht aus drei Prüfungsteilen</li><li><strong>Wartezeiten:</strong> zwischen den Teilen können längere Wartezeiten entstehen, die man frei in einem „Quarantäneraum“ gestaltet</li><li><strong>Mittagspause:</strong> gemeinsam mit den Prüfern in der Kantine des IdF, sie soll die Atmosphäre auflockern</li></ul></div>
+      <div class="lb-kl"><div class="lb-kh">Laufbahnklausur 1<span>IBK · VAk · FeuAK</span></div>
       <div class="lb-fach"><button type="button" class="lb-fh" aria-expanded="false" data-f="IBK" onclick="LB.fach(this)"><span class="lb-fi">IBK</span><span class="lb-ft"><b>Personalführung</b><small>Heyrothsberge</small></span><span class="lb-cnt">5</span><span class="lb-chev" aria-hidden="true">⌄</span></button>
       <div class="lb-fb" hidden>
       <div class="topic-card lb-t-s" onclick="NAV.go('v-lb-ibk1','IBK Klausur 1')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><div class="tc-name">IBK Klausur 1: Ausbildung – Wertschätzung</div><div class="tc-sub"><b class="lb-kd">Selbst erarbeitet</b> · Konflikt in der Teeküche · Transaktionsanalyse, Kommunikation, Onboarding, Zeitmanagement · mit Musterlösung</div></div>
@@ -5006,14 +5006,19 @@
       <div class="topic-card lb-t-alt" onclick="LB.alt('v-laufbahn-2026','Management','Management Hamburg Juni 2026')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg><div class="tc-name">Management Hamburg Juni 2026</div><div class="tc-sub"><b class="lb-kd">Altklausur Juni 2026</b> · 7 Aufgaben · 50 Pkt. · Musterlösungen</div></div>
       <div class="topic-card lb-t-alt" onclick="LB.alt('v-laufbahn-2023','Management','Management Dez 2023')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg><div class="tc-name">Management Dez 2023</div><div class="tc-sub"><b class="lb-kd">Altklausur Dez 2023</b> · 11 Aufgaben · 42 Pkt. · Musterlösungen</div></div>
       </div></div>
-      <div class="lb-fach"><button type="button" class="lb-fh" aria-expanded="false" data-f="IdF" onclick="LB.fach(this)"><span class="lb-fi">IdF</span><span class="lb-ft"><b>Vorbeugender Brandschutz und Stabsarbeit</b><small>Brandschutzkonzept, Altklausuren</small></span><span class="lb-cnt">5</span><span class="lb-chev" aria-hidden="true">⌄</span></button>
+      </div>
+      <div class="lb-kl"><div class="lb-kh">Laufbahnklausur 2<span>IdF</span></div>
+      <div class="lb-fach"><button type="button" class="lb-fh" aria-expanded="false" data-f="VB" onclick="LB.fach(this)"><span class="lb-fi">VB</span><span class="lb-ft"><b>Brandschutzkonzept</b><small>Brandschutzkonzept, Altklausuren</small></span><span class="lb-cnt">3</span><span class="lb-chev" aria-hidden="true">⌄</span></button>
       <div class="lb-fb" hidden>
       <div class="topic-card lb-t-s" onclick="NAV.go('v-lb-vb','VB Übungsklausur')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg><div class="tc-name">VB Klausur IdF NRW: Brandschutzkonzept</div><div class="tc-sub"><b class="lb-kd">Selbst erarbeitet</b> · Konzept lesen, Mängel finden, zu mindestens 5 Punkten begründet Stellung nehmen · schreiben, im Text markieren oder im Lageplan anklicken · zwei Übungskonzepte</div></div>
       <div class="topic-card lb-t-alt" onclick="LB.alt('v-laufbahn-2026','Vorbeugender Brandschutz','VB Bruchsal Juni 2026')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg><div class="tc-name">VB Bruchsal Juni 2026</div><div class="tc-sub"><b class="lb-kd">Altklausur Juni 2026</b> · 3 Aufgaben · 50 Pkt. · Musterlösungen</div></div>
       <div class="topic-card lb-t-alt" onclick="LB.alt('v-laufbahn-2023','Vorbeugender Brandschutz','VB Dez 2023')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg><div class="tc-name">VB Dez 2023</div><div class="tc-sub"><b class="lb-kd">Altklausur Dez 2023</b> · 2 Aufgaben · 50 Pkt. · Musterlösungen</div></div>
+      </div></div>
+      <div class="lb-fach"><button type="button" class="lb-fh" aria-expanded="false" data-f="Stab" onclick="LB.fach(this)"><span class="lb-fi">Stab</span><span class="lb-ft"><b>Stabsarbeit</b><small>Altklausuren 2026 und 2023</small></span><span class="lb-cnt">2</span><span class="lb-chev" aria-hidden="true">⌄</span></button>
+      <div class="lb-fb" hidden>
       <div class="topic-card lb-t-alt" onclick="LB.alt('v-laufbahn-2026','Stabsarbeit','Stabsarbeit Bruchsal Juni 2026')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg><div class="tc-name">Stabsarbeit Bruchsal Juni 2026</div><div class="tc-sub"><b class="lb-kd">Altklausur Juni 2026</b> · 5 Aufgaben · 50 Pkt. · Musterlösungen</div></div>
       <div class="topic-card lb-t-alt" onclick="LB.alt('v-laufbahn-2023','Schriftlicher Führungsvorgang','Führungsvorgang Dez 2023')"><svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg><div class="tc-name">Führungsvorgang Dez 2023</div><div class="tc-sub"><b class="lb-kd">Altklausur Dez 2023</b> · 3 Aufgaben · 50 Pkt. · Stromausfall, S3 und S4</div></div>
-      </div></div>
+      </div></div></div>
       <button type="button" class="btn btn-ghost lb-relock" onclick="LB.lock()">Bereich wieder sperren</button>
     </div>
   </div>
@@ -10502,7 +10507,7 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
   <div class="page-hero"><div class="phi">
     <p class="page-eyebrow">Wiederholung nach Lernstand</p>
     <h1 class="page-title">Lernkarten</h1>
-    <div class="fc-tiles"><button type="button" class="fc-tile" onclick="CUSTOM.open()"><span class="fc-ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><b>Eigene Karte</b><small>anlegen</small></button><button type="button" class="fc-tile" id="fc-t-star-btn" data-filter="starred" onclick="FC.setFilter('starred')" aria-label="Markierte Karten"><span class="fc-ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></span><b>Markierte</b><small id="fc-t-star">0</small></button></div>
+    <div class="fc-tiles"><button type="button" class="fc-tile" onclick="CUSTOM.open()" aria-label="Eigene Karte anlegen"><span class="fc-ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><b>Eigene Karte</b><small>anlegen</small></button><button type="button" class="fc-tile" id="fc-t-star-btn" data-filter="starred" onclick="FC.setFilter('starred')" aria-label="Markierte Karten"><span class="fc-ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></span><b>Markierte</b><small id="fc-t-star">0</small></button></div>
   </div></div>
   <div class="fc-seg" id="fc-seg" role="group" aria-label="Kartenart wählen">
     <button type="button" class="fc-seg-b on" data-g="lb" aria-pressed="true" onclick="FC.setGroup('lb')"><b>Laufbahnprüfung</b><small>Karten für unsere Prüfung</small></button>
@@ -10513,10 +10518,10 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
     <button class="fc-f-btn fc-sp fc-weak-filter-btn hidden" data-filter="weak" data-label="Schwach" onclick="FC.setFilter('weak')">Schwach</button>
     <button class="fc-f-btn fc-sp fc-own-filter-btn hidden" data-filter="own" data-label="Eigene" onclick="FC.setFilter('own')">Eigene</button>
     <button class="fc-f-btn active" data-filter="laufbahn" data-label="Laufbahn" onclick="FC.setFilter('laufbahn')">Laufbahn</button>
-    <button class="fc-f-btn" data-filter="ibk" data-label="IBK" onclick="FC.setFilter('ibk')">IBK</button>
-    <button class="fc-f-btn" data-filter="vak" data-label="VAk" onclick="FC.setFilter('vak')">VAk</button>
-    <button class="fc-f-btn" data-filter="feuak" data-label="FeuAK" onclick="FC.setFilter('feuak')">FeuAK</button>
-    <button class="fc-f-btn" data-filter="idf" data-label="IdF" onclick="FC.setFilter('idf')">IdF</button>
+    <button class="fc-f-btn fc-t4" data-filter="ibk" data-label="IBK" onclick="FC.setFilter('ibk')">IBK</button>
+    <button class="fc-f-btn fc-t4" data-filter="vak" data-label="VAk" onclick="FC.setFilter('vak')">VAk</button>
+    <button class="fc-f-btn fc-t4" data-filter="feuak" data-label="FeuAK" onclick="FC.setFilter('feuak')">FeuAK</button>
+    <button class="fc-f-btn fc-t4" data-filter="idf" data-label="IdF" onclick="FC.setFilter('idf')">IdF</button>
   </div>
   <div class="fc-sub-row" id="fc-sub-row" hidden></div>
   <div class="fc-modebar" id="fc-modebar"><button type="button" class="fc-mode-btn" id="fc-mode-btn" aria-haspopup="dialog" aria-expanded="false" onclick="FC.openModes()"></button></div>
