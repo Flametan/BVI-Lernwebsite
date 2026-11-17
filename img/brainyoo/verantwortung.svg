@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 310" font-family="Arial,Helvetica,sans-serif" role="img" aria-label="Aufbau Stabsarbeit: politische Gesamtverantwortung, Krisenstab und Einsatzleitung/Führungsstab">
+<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#000"/></marker></defs>
+<rect width="640" height="310" fill="#fff"/>
+<rect x="148" y="8" width="340" height="84" fill="none" stroke="#000" stroke-width="2"/>
+<text x="318" y="43" font-size="18" text-anchor="middle">Politische Gesamtverantwortung</text><text x="318" y="72" font-size="18" font-weight="700" text-anchor="middle">Landrat oder HVB</text>
+<path d="M258 94 174 136M378 94 462 136" stroke="#000" stroke-width="4" marker-end="url(#a)"/>
+<rect x="12" y="124" width="278" height="84" fill="none" stroke="#000" stroke-width="2"/>
+<text x="22" y="158" font-size="18">Administrative-organisatorisch</text><text x="151" y="190" font-size="18" font-weight="700" text-anchor="middle">Krisenstab</text>
+<rect x="388" y="124" width="240" height="84" fill="none" stroke="#000" stroke-width="2"/>
+<text x="508" y="152" font-size="18" text-anchor="middle">Operativ-taktische</text><text x="508" y="177" font-size="18" font-weight="700" text-anchor="middle">Einsatzleitung /</text><text x="508" y="200" font-size="18" font-weight="700" text-anchor="middle">Führungsstab</text>
+<text x="32" y="245" font-size="17">-</text><text x="62" y="245" font-size="17">EMS = Ereignisspezifische Mitglieder</text><text x="388" y="245" font-size="17">Sachgebiet 1 – 6</text>
+<text x="32" y="276" font-size="17">-</text><text x="62" y="276" font-size="17">SMS = Ständige Mitglieder des Stabes</text>
+</svg>

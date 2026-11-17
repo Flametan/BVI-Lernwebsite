@@ -6265,19 +6265,19 @@ const SHELL=(function(){
       ['v-laufbahn-2026','Laufbahnklausuren Juni 2026','Recht, Management, Stabsarbeit, Vorbeugender Brandschutz · Musterlösungen','doc'],
       ['v-laufbahn-2023','Laufbahnklausuren Dez 2023','Führungsvorgang, Recht, Management, Heyrothsberge · Musterlösungen','doc']]],
     ['IdF Münster',[
-      ['v-idf-altklausur','Altklausur-Quiz IdF',(typeof IDF_QUIZ_Q!=='undefined'?IDF_QUIZ_Q.length:0)+' Fragen · Vorbeugender Brandschutz & Stabsarbeit · Lern- und Prüfungsmodus','doc',true]]],
+      ['v-idf-altklausur','IdF-Klausur',((typeof IDF_QUIZ_Q!=='undefined'?IDF_QUIZ_Q.length:0)+(typeof BRAINYOO_Q!=='undefined'?BRAINYOO_Q.length:0))+' Fragen · Eingrenzungen, Brainyoo und Altklausur · VB und Stabsarbeit · Lern- und Prüfungsmodus','doc',true]]],
     ['FeuAK Hamburg',[
-      ['v-klausur-0826','Klausur 08/2026','14 Originalfragen · 70 Punkte · Musterlösungen','doc',true],
+      ['v-klausur-0826','Klausur 08/2026','14 Originalfragen · 70 Punkte · Musterlösungen','doc'],
       ['v-klausurfragen','Klausurfragen','14 Fragen der Dozenten-Liste · Freitext und Selbstbewertung','pen'],
       ['v-eingrenzung-klausur','Eingrenzung 08/2026 & Münster','12 Fragen · Kurzantwort und Musterlösung','target'],
       ['v-feuak-altklausur','Altklausur-Training FeuAK','22 Fragen aus Aug 2025 und Feb 2026','doc']]],
     ['VAk Berlin',[
-      ['v-vak-altklausur','Altklausur-Quiz VAk','84 Fragen · Lernmodus oder Prüfungssimulation','doc',true],
-      ['v-vak-fallbearbeitung','Fallbearbeitung','9-Punkte-Schema mit sechs Übungsfällen','pen',true],
+      ['v-vak-altklausur','Altklausur-Quiz VAk','84 Fragen · Lernmodus oder Prüfungssimulation','doc'],
+      ['v-vak-fallbearbeitung','Fallbearbeitung','9-Punkte-Schema mit sechs Übungsfällen','pen'],
       ['v-vak-klausurhinweise','Klausurhinweise','Prüfungsrelevante Themen und Definitionen','doc'],
       ['v-vak-klausurvorbereitung','Klausurvorbereitung VAk','Alle VAk-Materialien auf einen Blick','target']]],
     ['IBK Heyrothsberge',[
-      ['v-simulator','Führungsdienstsimulator','8 Szenarien mit verzweigten Entscheidungen','sim',true]]]
+      ['v-simulator','Führungsdienstsimulator','8 Szenarien mit verzweigten Entscheidungen','sim']]]
   ];
   JG.setExams(EXAMS);
   const ICON={
@@ -6596,11 +6596,11 @@ const SHELL=(function(){
   function goalMin(){
     try{ const v=parseInt(localStorage.getItem('bvi_goal'),10); return v>=5&&v<=240?v:30; }catch(e){ return 30; }
   }
-  // Ziel der Countdown-Karte: Klausur nach § 21 → Laufbahnklausuren, sonst Altklausur-Quiz IdF
+  // Ziel der Countdown-Karte: Klausur nach § 21 → Laufbahnklausuren, sonst IdF-Klausur
   function examTarget(){
     const t=examCfg().target;
     if(t){ const it=examFind(t); if(it) return it; }   // it = [id, Titel, 'own' bei eigener Prüfung]
-    return /§\s*21/.test(examCfg().name)?['v-laufbahn-2026','Laufbahnklausuren Juni 2026']:['v-idf-altklausur','Altklausur-Quiz IdF']; }
+    return /§\s*21/.test(examCfg().name)?['v-laufbahn-2026','Laufbahnklausuren Juni 2026']:['v-idf-altklausur','IdF-Klausur']; }
   function daysToExam(){
     const t=new Date(); t.setHours(0,0,0,0);
     if(examCfg().off) return -1;   // Termin entfernt: kein Countdown

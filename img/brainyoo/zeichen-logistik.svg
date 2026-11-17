@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" font-family="Arial,Helvetica,sans-serif" role="img" aria-label="Fünf taktische Zeichen Logistik mit Antworten A bis E">
+<rect width="1000" height="300" fill="#fff"/>
+<g stroke="#000" stroke-width="2"><path d="M200 8V292M400 8V292M600 8V292M800 8V292"/></g>
+<defs><clipPath id="c"><circle r="44"/></clipPath>
+<g id="kr"><circle r="44" fill="#f5e000" stroke="#000" stroke-width="3"/><g clip-path="url(#c)"><rect x="-50" y="28" width="100" height="20" fill="#000"/></g></g></defs>
+<g transform="translate(100,60)"><use href="#kr"/><path d="M-22-20h44L6 0v24h-12V0Z M-4 24v14M4 24v14" fill="none" stroke="#000" stroke-width="3.5"/></g>
+<g transform="translate(300,60)"><use href="#kr"/><text y="9" font-size="30" font-weight="700" text-anchor="middle">Log</text></g>
+<g transform="translate(500,60)"><use href="#kr"/><path d="M-24-10q-8 0-8 10t8 10M24-10q8 0 8 10t-8 10M-24 0h48" fill="none" stroke="#000" stroke-width="3.5"/></g>
+<g transform="translate(700,60)"><path d="M0-44 44 0 0 44-44 0Z" fill="#f5e000" stroke="#000" stroke-width="3"/><path d="M-22-22 0-44 22-22Z" fill="#000"/><text y="12" font-size="22" font-weight="700" text-anchor="middle">OrgL</text></g>
+<g transform="translate(900,60)"><use href="#kr"/><path d="M12-18A20 20 0 1 0 12 18 M12-18 0 0 12 18" fill="none" stroke="#000" stroke-width="3.5"/></g>
+<g font-size="16" fill="#111">
+<text x="12" y="160" font-weight="700" text-decoration="underline">Antwort A:</text><text x="12" y="184">Das hier abgebildete</text><text x="12" y="204">Zeichen bedeutet</text><text x="12" y="224" font-weight="700">„Versorgungsstelle –</text><text x="12" y="244" font-weight="700">Materialerhaltung“.</text>
+<text x="212" y="160" font-weight="700" text-decoration="underline">Antwort B:</text><text x="212" y="184">Das hier abgebildete</text><text x="212" y="204">Zeichen bedeutet</text><text x="212" y="224" font-weight="700">„Logistikstützpunkt“.</text>
+<text x="412" y="160" font-weight="700" text-decoration="underline">Antwort C:</text><text x="412" y="184">Das hier abgebildete</text><text x="412" y="204">Zeichen bedeutet</text><text x="412" y="224" font-weight="700">„Versorgungsstelle –</text><text x="412" y="244" font-weight="700">Verbrauchsgüter“.</text>
+<text x="612" y="160" font-weight="700" text-decoration="underline">Antwort D:</text><text x="612" y="184">Das hier abgebildete</text><text x="612" y="204">Zeichen bedeutet</text><text x="612" y="224" font-weight="700">„Organisationsleiter –</text><text x="612" y="244" font-weight="700">Logistik“.</text>
+<text x="812" y="160" font-weight="700" text-decoration="underline">Antwort E:</text><text x="812" y="184">Das hier abgebildete</text><text x="812" y="204">Zeichen bedeutet</text><text x="812" y="224" font-weight="700">„Versorgungsstelle –</text><text x="812" y="244" font-weight="700">Verpflegung“.</text></g>
+</svg>

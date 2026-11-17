@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 560" font-family="Arial,Helvetica,sans-serif" role="img" aria-label="Einsatzleitung ohne und mit IuK-Einheit">
+<defs>
+<g id="eal"><path d="M0-27 27 0 0 27-27 0Z" fill="#f5e000" stroke="#000" stroke-width="2"/><path d="M-12-15 0-27 12-15Z" fill="#000"/><text y="9" font-size="19" font-weight="700" text-anchor="middle">EAL</text></g>
+<g id="ealg"><path d="M0-27 27 0 0 27-27 0Z" fill="#9a9a9a" stroke="#000" stroke-width="2"/><path d="M-12-15 0-27 12-15Z" fill="#000"/><text y="9" font-size="19" font-weight="700" text-anchor="middle">EAL</text></g>
+<g id="el"><path d="M0-34 34 0 0 34-34 0Z" fill="#f5e000" stroke="#000" stroke-width="2.5"/><path d="M-15-19 0-34 15-19Z" fill="#000"/><text y="11" font-size="26" font-weight="700" text-anchor="middle">EL</text></g>
+<g id="stab"><rect width="120" height="48" fill="#f5e000" stroke="#000" stroke-width="2"/><rect width="120" height="8" fill="#000"/><text x="60" y="38" font-size="26" font-weight="700" text-anchor="middle">Stab</text></g>
+<g id="lts"><circle r="31" fill="#f5e000" stroke="#000" stroke-width="2"/><path d="M-26-20 0-36 26-20" fill="none" stroke="#000" stroke-width="2.5"/><text y="9" font-size="25" font-weight="700" text-anchor="middle">LtS</text></g>
+<g id="ltsg"><circle r="31" fill="#9a9a9a" stroke="#000" stroke-width="2"/><path d="M-26-20 0-36 26-20" fill="none" stroke="#000" stroke-width="2.5"/><text y="9" font-size="25" font-weight="700" text-anchor="middle">LtS</text></g>
+<g id="row"><path d="M60 0H330M60 0V12M127 0V12M194 0V12M261 0V12M328 0V12" stroke="#000" stroke-width="1.6" fill="none"/><path d="M330 0H388V12" stroke="#000" stroke-width="1.6" fill="none" stroke-dasharray="5 4"/>
+<use href="#eal" x="60" y="40"/><use href="#eal" x="127" y="40"/><use href="#eal" x="194" y="40"/><use href="#eal" x="261" y="40"/><use href="#eal" x="328" y="40"/><use href="#ealg" x="388" y="40"/></g>
+<g id="cont"><rect x="22" y="0" width="400" height="150" rx="28" fill="none" stroke="#e8b84a" stroke-width="5" stroke-dasharray="18 8"/><text x="402" y="34" font-size="22" font-weight="700" fill="#555" text-anchor="end">Einsatzleitung</text></g>
+</defs>
+<rect width="440" height="560" fill="#fff"/>
+<use href="#cont" y="14"/>
+<path d="M165 110H265M193 110V170" stroke="#000" stroke-width="2"/>
+<use href="#stab" x="45" y="86"/><use href="#lts" x="285" y="112"/>
+<use href="#el" x="193" y="62"/>
+<path d="M193 96V110M193 134V170" stroke="#000" stroke-width="2"/>
+<use href="#row" y="170"/>
+<text x="220" y="288" font-size="16" fill="#111" text-anchor="middle">Abbildung 7 EL ohne IuK Einheit</text>
+<use href="#cont" y="305"/>
+<use href="#el" x="223" y="347"/>
+<path d="M223 381V415M60 415H330" stroke="#000" stroke-width="2"/>
+<use href="#stab" x="45" y="395"/>
+<g><rect x="175" y="391" width="96" height="62" fill="#d6171e" stroke="#000" stroke-width="2"/><path d="M175 391 271 453" stroke="#fff" stroke-width="1.5"/><text x="192" y="448" font-size="13" font-weight="700" fill="#000">IuK</text></g>
+<use href="#ltsg" x="312" y="422"/>
+<path d="M223 453V470" stroke="#000" stroke-width="2"/>
+<use href="#row" y="470"/>
+</svg>
