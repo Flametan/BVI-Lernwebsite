@@ -22,8 +22,8 @@ const SUDOKU=(function(){
   // Zählt Lösungen (Abbruch bei limit). g (81 Zahlen, 0 = leer) wird währenddessen verändert, am Ende aber wiederhergestellt.
   // rnd: zufällige Ziffernreihenfolge (Erzeugen), keep: Array, in das die erste gefundene Lösung kopiert wird.
   function countSol(g,limit,rnd,keep){
-    var R=[0,0,0,0,0,0,0,0,0], C=R.slice(), B=R.slice(), n=0, i, b;
-    for(i=0;i<81;i++){ if(g[i]){ b=1<<(g[i]-1); R[Math.floor(i/9)]|=b; C[i%9]|=b; B[BOX[i]]|=b; } }
+    var R=[0,0,0,0,0,0,0,0,0], C=R.slice(), B=R.slice(), n=0, i, b0;
+    for(i=0;i<81;i++){ if(g[i]){ b0=1<<(g[i]-1); R[Math.floor(i/9)]|=b0; C[i%9]|=b0; B[BOX[i]]|=b0; } }
     function rec(){
       var best=-1, bm=0, bc=10, i, m, c;
       for(i=0;i<81;i++){
@@ -35,7 +35,7 @@ const SUDOKU=(function(){
       if(bc===0) return false;
       var ds=[], d; for(d=0;d<9;d++) if(bm&(1<<d)) ds.push(d);
       if(rnd) shuffle(ds);
-      var r=(best/9)|0, cc=best%9, bx=BOX[best], stop=false;
+      var r=(best/9)|0, cc=best%9, bx=BOX[best], stop=false, b;
       for(var q=0;q<ds.length&&!stop;q++){
         d=ds[q]; b=1<<d; g[best]=d+1; R[r]|=b; C[cc]|=b; B[bx]|=b;
         stop=rec();

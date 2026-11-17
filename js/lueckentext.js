@@ -69,6 +69,7 @@ const LUECKENTEXT=(function(){
     const cand=[], add=function(list,rank){ list.forEach(function(p){
       const k=p.kw.toLowerCase(); if(p.id===it.id||seen[k]) return;
       if(own.indexOf(k)>=0||k.indexOf(key)>=0||key.indexOf(k)>=0) return;
+      if(own.indexOf(k.slice(0,Math.min(k.length,Math.max(6,k.length-3))))>=0) return;
       seen[k]=1;
       const sim=(/^[A-ZÄÖÜ]/.test(p.kw)===/^[A-ZÄÖÜ]/.test(it.kw)?0:2)+Math.abs(wcount(p.kw)-wcount(it.kw))+Math.abs(p.kw.length-it.kw.length)/12;
       cand.push({kw:p.kw,s:rank*3+sim+Math.random()*0.9});
@@ -95,7 +96,7 @@ const LUECKENTEXT=(function(){
 .lt-stat.r{align-items:flex-end;}
 .lt-time{position:relative;}
 .lt-time.low b{color:#e5484d;}
-.lt-pen{position:absolute;left:0;top:-4px;font-weight:800;font-size:1rem;color:#e5484d;pointer-events:none;opacity:0;}
+.lt-pen{position:absolute;left:3.3em;top:16px;white-space:nowrap;font-weight:800;font-size:1rem;color:#e5484d;pointer-events:none;opacity:0;}
 .lt-pen.go{animation:ltpen .9s ease-out;}
 @keyframes ltpen{0%{opacity:0;transform:translateY(8px);}15%{opacity:1;}100%{opacity:0;transform:translateY(-22px);}}
 .lt-bar{height:12px;border-radius:7px;background:var(--m-raised,#2a2a2a);overflow:hidden;position:relative;}
@@ -104,9 +105,9 @@ const LUECKENTEXT=(function(){
 .lt-bar.hit{animation:ltbar .45s;}
 @keyframes ltbar{0%,100%{box-shadow:none;}30%{box-shadow:0 0 0 3px rgba(229,72,77,.65);}}
 .lt-card{background:var(--m-card,#1b1b1b);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px;border:2px solid transparent;transition:border-color .2s;}
-.lt-card.bad{animation:ltshake .35s;border-color:#e5484d;}
+.lt-card.bad{animation:ltshake .45s;}
 .lt-card.ok{border-color:#2fae6b;}
-@keyframes ltshake{0%,100%{transform:none;}25%{transform:translateX(-6px);}60%{transform:translateX(6px);}}
+@keyframes ltshake{0%,100%{transform:none;border-color:transparent;}12%{border-color:#e5484d;}25%{transform:translateX(-6px);}60%{transform:translateX(6px);border-color:#e5484d;}}
 .lt-cat{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--m-muted,#888);font-weight:700;}
 .lt-ctx{font-size:.84rem;line-height:1.4;color:var(--m-muted,#888);margin:0;}
 .lt-sent{font-size:1.12rem;line-height:1.55;font-weight:700;color:var(--m-fg,#eee);margin:0;overflow-wrap:anywhere;hyphens:auto;}
