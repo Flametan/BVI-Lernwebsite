@@ -8,6 +8,7 @@
  *   GET    /v1/blob/<id>?have=<Version> → { version, updatedAt, unchanged:true } ohne Daten, wenn die Version noch stimmt
  *   PUT    /v1/blob/<id>      → { version, updatedAt }            Kopfzeilen X-Sync-Token, If-Match (Version, 0 = neu)
  *   DELETE /v1/blob/<id>      → 204                               Kopfzeile X-Sync-Token
+ *   /v1/rank/...              Ranking und Wochenduell, siehe rank.js
  *
  * <id> und Token werden in der App aus dem Sync-Code abgeleitet. Ohne den Code kommt niemand an die Daten.
  * Umgebungsvariablen: siehe CONFIG unten.
@@ -17,6 +18,7 @@ const fs = require('fs');
 const fsp = fs.promises;
 const path = require('path');
 const crypto = require('crypto');
+const rankMod = require('./rank.js');
 
 function config(env) {
   const num = (k, d) => { const v = Number(env[k]); return Number.isFinite(v) && v > 0 ? v : d; };
@@ -29,7 +31,14 @@ function config(env) {
     failPerMin: num('FAIL_PER_MIN', 10),                 // falsche Token je IP und Minute, danach gesperrt
     expireDays: num('EXPIRE_DAYS', 400),                 // ungenutzte Blöcke werden nach so vielen Tagen gelöscht
     allowOrigins: (env.ALLOW_ORIGINS || 'https://flametan.github.io').split(',').map(s => s.trim()).filter(Boolean),
-    trustProxy: env.TRUST_PROXY === '1'                  // hinter Tunnel/Proxy: X-Forwarded-For für die IP nutzen
+    trustProxy: env.TRUST_PROXY === '1',                 // hinter Tunnel/Proxy: X-Forwarded-For für die IP nutzen
+    rankTz: env.RANK_TZ || 'Europe/Berlin',              // Zeitzone, nach der die Ranking-Woche (Mo–So) zählt
+    rankMaxPlayers: num('RANK_MAX_PLAYERS', 2000),       // Teilnehmer im Ranking
+    rankMaxXp: num('RANK_MAX_XP', 500000),               // größter erlaubter Punktestand
+    rankMaxWeek: num('RANK_MAX_WEEK', 8000),             // größter erlaubter Wochenwert
+    rankDayXp: num('RANK_DAY_XP', 1500),                 // höchster Zuwachs je Tag (Plausibilitätsprüfung)
+    rankMaxDuels: num('RANK_MAX_DUELS', 3),              // offene Duelle je Teilnehmer
+    rankBlock: (env.RANK_BLOCK || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean)   // Wörter, die in Namen verboten sind
   };
 }
 
@@ -76,8 +85,8 @@ function createServer(cfg) {
       res.setHeader('Access-Control-Allow-Origin', cfg.allowOrigins.includes('*') ? '*' : o);
       res.setHeader('Vary', 'Origin');
     }
-    res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,X-Sync-Token,If-Match');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,X-Sync-Token,X-Rank-Token,If-Match');
     res.setHeader('Access-Control-Max-Age', '600');
   }
   function send(res, code, obj) {
@@ -109,11 +118,18 @@ function createServer(cfg) {
     names.add(id); remember(id, rec);
   }
 
+  const rank = rankMod.create(cfg, {});
   async function handle(req, res) {
     cors(req, res);
     if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
     const url = new URL(req.url, 'http://x');
     if (url.pathname === '/health') return send(res, 200, 'ok');
+    if (url.pathname.startsWith('/v1/rank/')) {
+      const h = slot(ipOf(req));
+      if (h.fails >= cfg.failPerMin) return send(res, 429, { error: 'zu viele Fehlversuche' });
+      if (++h.n > cfg.ratePerMin) return send(res, 429, { error: 'zu viele Anfragen' });
+      return rank.handle(req, res, url, { send, readBody, fail: () => { h.fails++; } });
+    }
     const m = /^\/v1\/blob\/([^/]+)$/.exec(url.pathname);
     if (!m) return send(res, 404, { error: 'nicht gefunden' });
 
@@ -184,11 +200,15 @@ function createServer(cfg) {
     try { if (fs.statSync(path.join(cfg.dataDir, f)).mtimeMs < Date.now() - cfg.expireDays * 86400000) { fs.unlinkSync(path.join(cfg.dataDir, f)); names.delete(f.slice(0, -5)); } } catch (e) {}
   }
   setInterval(() => { sweep().catch(() => {}); }, 86400000).unref();
+  server.on('close', () => { rank.flush(); });
+  server.flushRank = () => rank.flush();
   return server;
 }
 
 module.exports = { createServer, config };
 if (require.main === module) {
   const cfg = config(process.env);
-  createServer(cfg).listen(cfg.port, '0.0.0.0', () => console.log('B VI Sync-Dienst läuft auf Port ' + cfg.port));
+  const srv = createServer(cfg);
+  srv.listen(cfg.port, '0.0.0.0', () => console.log('B VI Sync-Dienst läuft auf Port ' + cfg.port));
+  for (const sig of ['SIGTERM', 'SIGINT']) process.on(sig, () => { srv.flushRank().finally(() => process.exit(0)); });
 }

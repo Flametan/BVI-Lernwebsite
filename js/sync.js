@@ -423,5 +423,5 @@ const SYNC=(function(){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0)); else setTimeout(init,0);
 
-  return {newCode,valid,norm,pretty,derive,merge,mergeVal,mergeArr,mergeText,collect,sync,connect,create,disconnect,connected,startNew,startJoin,showCode,now,editUrl,confirmWipe,open:menu,info,TRACK};
+  return {url,newCode,valid,norm,pretty,derive,merge,mergeVal,mergeArr,mergeText,collect,sync,connect,create,disconnect,connected,startNew,startJoin,showCode,now,editUrl,confirmWipe,open:menu,info,TRACK};
 })();

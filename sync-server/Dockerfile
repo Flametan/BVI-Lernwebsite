@@ -1,7 +1,7 @@
 FROM node:22-alpine
 ENV NODE_ENV=production PORT=8787 DATA_DIR=/data
 WORKDIR /app
-COPY server.js ./
+COPY server.js rank.js ./
 RUN mkdir -p /data && chown node:node /data
 USER node
 VOLUME /data
