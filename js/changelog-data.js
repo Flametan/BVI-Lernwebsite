@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+      'Tages- und Wochenaufgaben: Eine kurze Erklärung zeigt, was genau gezählt wird. Am PC erscheint sie beim Darüberfahren, am Handy und Tablet durch Antippen der Aufgabe (verschwindet nach wenigen Sekunden oder beim nächsten Tippen), per Tastatur beim Fokussieren.',
       'Tagesaufgaben: Jeden Tag gibt es andere Ziele, reihum aus mehr Arten: Lernkarten, Wiederholungen (Karten, die du schon kanntest oder falsch hattest), Prüfungsfragen, richtig in Folge (Treffsicherheit), Antworten, Minuten, neue Themen lesen und Karten markieren.',
       'Wochenaufgaben: Jede Woche gibt es andere Aufgaben, reihum aus mehr Arten: Lernkarten, Wiederholungen, Prüfungsfragen, Antworten, richtig in Folge, Probeklausur, Tage, Punkte, Lernzeit (Minuten), neue Themen, Karten markieren und Tage mit mindestens 10 Karten.',
       'Startseite (Handy): Die „Heute“-Leiste ist jetzt eine kompakte Karte mit drei Fortschrittsringen (Lernkarten, Prüfungsfragen, Minuten). Daneben steht der Wochenstand („0/3 Woche“); Antippen schiebt die Wochenaufgaben, ebenfalls als Ringe, von rechts in die Karte, „Heute“ schiebt zurück. Der Ranking-Knopf sitzt als Pille in der Akzentfarbe oben rechts.',

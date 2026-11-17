@@ -42,6 +42,29 @@ const GAME=(function(){
     const [y,m,d]=weekKeys()[0].split('-').map(Number), n=Math.floor(Date.UTC(y,m-1,d)/864e5/7);
     return WEEKLY_POOL.map((g,i)=>g[(n+i)%g.length]);
   }
+  /* Erklärungen zu den Aufgaben (Hover am PC, Tippen am Handy) */
+  const HINT={
+    cards:'Lernkarten, die du heute als „gewusst“ bewertest.', cards2:'Lernkarten, die du heute als „gewusst“ bewertest.', cards3:'Lernkarten, die du heute als „gewusst“ bewertest.',
+    redo:'Karten, die du schon einmal gelernt oder falsch hattest und heute erneut beantwortest (egal ob richtig).', redo2:'Karten, die du schon einmal gelernt oder falsch hattest und heute erneut beantwortest (egal ob richtig).',
+    quiz:'Prüfungsfragen, die du heute richtig beantwortest.', quiz2:'Prüfungsfragen, die du heute richtig beantwortest.',
+    quiz3:'Prüfungsfragen, die du heute beantwortest, egal ob richtig oder falsch.',
+    str:'So viele Karten oder Prüfungsfragen heute direkt nacheinander richtig, ohne Fehler dazwischen.', str2:'So viele Karten oder Prüfungsfragen heute direkt nacheinander richtig, ohne Fehler dazwischen.', str3:'So viele Karten oder Prüfungsfragen heute direkt nacheinander richtig, ohne Fehler dazwischen.',
+    time:'Zeit, die du heute in der App verbringst.', time2:'Zeit, die du heute in der App verbringst.', time3:'Zeit, die du heute in der App verbringst.',
+    new:'Themenseiten, die du heute zum ersten Mal öffnest.', new2:'Themenseiten, die du heute zum ersten Mal öffnest.',
+    star:'Lernkarten, die du heute neu mit dem Stern markierst.', star2:'Lernkarten, die du heute neu mit dem Stern markierst.',
+    wc:'Lernkarten, die du diese Woche (Mo–So) als „gewusst“ bewertest.', wc2:'Lernkarten, die du diese Woche (Mo–So) als „gewusst“ bewertest.', wc3:'Lernkarten, die du diese Woche (Mo–So) als „gewusst“ bewertest.',
+    wr:'Karten, die du schon einmal gelernt oder falsch hattest und diese Woche erneut beantwortest.', wr2:'Karten, die du schon einmal gelernt oder falsch hattest und diese Woche erneut beantwortest.',
+    wq:'Prüfungsfragen, die du diese Woche richtig beantwortest.', wq2:'Prüfungsfragen, die du diese Woche richtig beantwortest.',
+    wq3:'Prüfungsfragen, die du diese Woche beantwortest, egal ob richtig oder falsch.',
+    ws:'Deine längste Serie richtiger Antworten (Karten oder Prüfungsfragen) an einem einzigen Tag dieser Woche.', ws2:'Deine längste Serie richtiger Antworten (Karten oder Prüfungsfragen) an einem einzigen Tag dieser Woche.',
+    wk:'Eine Probeklausur bis zur Auswertung durcharbeiten.',
+    wd:'Tage dieser Woche, an denen du Punkte gesammelt hast.', wd2:'Tage dieser Woche, an denen du Punkte gesammelt hast.', wd3:'Tage dieser Woche, an denen du Punkte gesammelt hast.',
+    wx:'Punkte, die du diese Woche sammelst.',
+    wm:'Lernzeit in der App diese Woche.', wm2:'Lernzeit in der App diese Woche.',
+    wn:'Themenseiten, die du diese Woche zum ersten Mal öffnest.',
+    wf:'Lernkarten, die du diese Woche neu mit dem Stern markierst.',
+    wg:'Tage dieser Woche, an denen du mindestens 10 Lernkarten als „gewusst“ bewertet hast.'
+  };
   const WEEK_ALL_XP=100;
   const FZ_MAX=2, FZ_EVERY=7, MILES=[7,30,100,365], RISK_HOUR=18;
   const TASK_XP=25;
@@ -159,7 +182,7 @@ const GAME=(function(){
   }
   function weeklyState(){
     const w=weekSum();
-    return weeklyDefs().map(t=>{ const v=Math.min(t.max,t.get(w)); return {id:t.id,t:t.t,v,max:t.max,xp:t.xp,done:v>=t.max}; });
+    return weeklyDefs().map(t=>{ const v=Math.min(t.max,t.get(w)); return {id:t.id,t:t.t,v,max:t.max,xp:t.xp,h:HINT[t.id]||'',done:v>=t.max}; });
   }
   /* ISO-Wochenschlüssel (z. B. 2026-W47) für das Ranking */
   function isoWeek(d=new Date()){
@@ -171,7 +194,7 @@ const GAME=(function(){
 
   function taskState(){
     const rec=load().days[today()]||{};
-    return taskDefs().map(t=>{ const v=Math.min(t.max,t.get(rec)); return {id:t.id,t:t.t,v,max:t.max,done:v>=t.max}; });
+    return taskDefs().map(t=>{ const v=Math.min(t.max,t.get(rec)); return {id:t.id,t:t.t,v,max:t.max,h:HINT[t.id]||'',done:v>=t.max}; });
   }
 
   /* ── Toast als „Gooey Drop“: ein Tropfen fällt vom oberen Rand und wird zur Meldung ── */
@@ -450,16 +473,16 @@ const GAME=(function(){
   const tdOpen=()=>{ try{ return localStorage.getItem('bvi_td_o')==='1'; }catch(e){ return false; } };
   function tdToggle(){ try{ localStorage.setItem('bvi_td_o',tdOpen()?'0':'1'); }catch(e){} const td=document.getElementById('g-today'); if(td) td.outerHTML=todayHtml(); }
   /* Startseite: eine schmale Leiste (Ring, Stand, Pfeil); aufgeklappt Tages- und Wochenaufgaben, Ranking und Rang & Abzeichen */
-  function todayHtml(){
+  function todayHtml(){ if(typeof tipHide==='function') tipHide();
     if(load().off) return '';
     const gm=(typeof SHELL!=='undefined'&&SHELL.goalMin)?SHELL.goalMin():15, sec=(typeof USAGE!=='undefined')?USAGE.today():0;
     const min=Math.floor(sec/60), p=Math.min(1,sec/(gm*60)), C=2*Math.PI*42, done=p>=1, o=tdOpen();
     const ts=taskState(), dn=ts.filter(t=>t.done).length, wsx=weeklyState(), wn=wsx.filter(t=>t.done).length, L=tasksList();
     /* Tablet/PC: drei Ringe für die Tagesaufgaben, daneben die Wochenaufgaben (die Leiste oben gilt nur für Handy) */
     const R3=2*Math.PI*18;
-    const ring=t=>`<div class="g-r3${t.done?' ok':''}"><svg viewBox="0 0 44 44" width="64" height="64" role="img" aria-label="${esc(t.t)}: ${t.v} von ${t.max}"><circle class="t" cx="22" cy="22" r="18"/><circle class="v" cx="22" cy="22" r="18" stroke-dasharray="${(R3*Math.min(1,t.v/t.max)).toFixed(1)} ${R3.toFixed(1)}" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle">${t.v}/${t.max}</text></svg><em>${esc(t.t.replace(/^\d+ /,''))}</em></div>`;
+    const ring=t=>`<div class="g-r3${t.done?' ok':''}" data-h="${esc(t.h)}" tabindex="0"><svg viewBox="0 0 44 44" width="64" height="64" role="img" aria-label="${esc(t.t)}: ${t.v} von ${t.max}"><circle class="t" cx="22" cy="22" r="18"/><circle class="v" cx="22" cy="22" r="18" stroke-dasharray="${(R3*Math.min(1,t.v/t.max)).toFixed(1)} ${R3.toFixed(1)}" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle">${t.v}/${t.max}</text></svg><em>${esc(t.t.replace(/^\d+ /,''))}</em></div>`;
     const chev=r=>`<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${r?'m15 6-6 6 6 6':'m9 6 6 6-6 6'}"/></svg>`;
-    const d3=`<div class="g-d3"><div class="g-d3h"><span class="g-d3t"><h6>Heute</h6></span><button type="button" class="g-rk" onclick="NAV.go('v-rank','Ranking')"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>Ranking</button></div><div class="g-sl"><div class="g-trk"><div class="g-top"><div class="g-rs">${ts.map(ring).join('')}</div><button type="button" class="g-wsum${wn===wsx.length?' ok':''}" aria-label="Wochenaufgaben anzeigen" onclick="GAME.wk(this)"><b>${wn}/${wsx.length}</b><em>Woche</em>${chev(0)}</button></div><div class="g-w3" id="g-w3"><div class="g-wr"><div class="g-rs">${wsx.map(ring).join('')}</div><button type="button" class="g-wsum g-wback" aria-label="Zurück zu Heute" onclick="GAME.wk(this)"><b>${dn}/${ts.length}</b><em>Heute</em>${chev(1)}</button></div><div class="g-wl"><h6>Diese Woche</h6>${wsx.map(t=>`<div class="r${t.done?' ok':''}"><span>${esc(t.t)}</span><b>${t.v}/${t.max}</b></div>`).join('')}</div></div></div></div></div>`;
+    const d3=`<div class="g-d3"><div class="g-d3h"><span class="g-d3t"><h6>Heute</h6></span><button type="button" class="g-rk" onclick="NAV.go('v-rank','Ranking')"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>Ranking</button></div><div class="g-sl"><div class="g-trk"><div class="g-top"><div class="g-rs">${ts.map(ring).join('')}</div><button type="button" class="g-wsum${wn===wsx.length?' ok':''}" aria-label="Wochenaufgaben anzeigen" onclick="GAME.wk(this)"><b>${wn}/${wsx.length}</b><em>Woche</em>${chev(0)}</button></div><div class="g-w3" id="g-w3"><div class="g-wr"><div class="g-rs">${wsx.map(ring).join('')}</div><button type="button" class="g-wsum g-wback" aria-label="Zurück zu Heute" onclick="GAME.wk(this)"><b>${dn}/${ts.length}</b><em>Heute</em>${chev(1)}</button></div><div class="g-wl"><h6>Diese Woche</h6>${wsx.map(t=>`<div class="r${t.done?' ok':''}" data-h="${esc(t.h)}" tabindex="0"><span>${esc(t.t)}</span><b>${t.v}/${t.max}</b></div>`).join('')}</div></div></div></div></div>`;
     return `<div class="g-today${o?' open':''}" id="g-today"><button type="button" class="g-tbar${done?' ok':''}" aria-expanded="${o}" aria-controls="g-more" onclick="GAME.tdToggle()">`+
       `<span class="g-rg"><svg viewBox="0 0 100 100" width="38" height="38" aria-hidden="true"><circle cx="50" cy="50" r="42" class="g-rg-t"/><circle cx="50" cy="50" r="42" class="g-rg-v" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/></svg><b>${min}</b></span>`+
       `<span class="g-bt"><span><b>Heute ${dn}/${ts.length}</b> <em>· Woche ${wn}/${wsx.length}</em></span><small>${done?'Tagesziel geschafft':min+' von '+gm+' min'}</small></span>`+
@@ -632,6 +655,34 @@ const GAME=(function(){
     else if(id==='v-rank'){ const b=document.getElementById('rank-body'); if(b) rankLoad().then(R=>R.mount(b)).catch(()=>{ b.innerHTML='<p class="rk-msg err">Ranking konnte nicht geladen werden. Bitte Verbindung prüfen.</p>'; }); }
   }
   /* Handy: Tippen auf „Woche“ schiebt die Wochenaufgaben (auch als Ringe) von rechts in die Karte, Tippen auf „Heute“ zurück */
-  function wk(btn){ const d=btn.closest('.g-d3'); if(!d) return; const o=d.classList.toggle('wo'); const h=d.querySelector('.g-d3t h6'); if(h) h.textContent=o?'Diese Woche':'Heute'; }
+  /* Tooltip: Maus = Hover, Tastatur = Fokus, Touch = Tippen (schliesst nach 3,5 s oder beim nächsten Tippen) */
+  let tipEl=null,tipFor=null,tipTimer=0;
+  function tipHide(){ clearTimeout(tipTimer); tipFor=null; if(tipEl) tipEl.classList.remove('on'); }
+  function tipShow(el){
+    const h=el.getAttribute('data-h'); if(!h) return;
+    if(!tipEl){ tipEl=document.createElement('div'); tipEl.className='g-tip'; tipEl.setAttribute('role','tooltip'); document.body.appendChild(tipEl); }
+    tipEl.textContent=h; tipFor=el;
+    tipEl.style.maxWidth=Math.min(240,innerWidth-16)+'px';
+    const r=el.getBoundingClientRect(), tw=tipEl.offsetWidth, th=tipEl.offsetHeight;
+    let top=r.top-th-8; if(top<8) top=r.bottom+8;
+    const left=Math.max(8,Math.min(innerWidth-tw-8,r.left+r.width/2-tw/2));
+    tipEl.style.top=top+'px'; tipEl.style.left=left+'px';
+    tipEl.classList.add('on');
+  }
+  const tipTarget=e=>e.target.closest&&e.target.closest('.g-r3[data-h],.g-wl .r[data-h]');
+  document.addEventListener('pointerover',e=>{ if(e.pointerType!=='mouse') return; const el=tipTarget(e); if(el) tipShow(el); });
+  document.addEventListener('pointerout',e=>{ if(e.pointerType==='mouse'&&tipTarget(e)) tipHide(); });
+  document.addEventListener('focusin',e=>{ const el=tipTarget(e); if(el&&el.matches(':focus-visible')) tipShow(el); });
+  document.addEventListener('focusout',e=>{ if(tipTarget(e)) tipHide(); });
+  document.addEventListener('click',e=>{
+    const el=tipTarget(e);
+    if(!el){ tipHide(); return; }
+    if(e.pointerType==='mouse'||(e.detail===0)) return;
+    if(tipFor===el){ tipHide(); return; }
+    tipShow(el); clearTimeout(tipTimer); tipTimer=setTimeout(tipHide,3500);
+  });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') tipHide(); });
+  window.addEventListener('scroll',tipHide,{passive:true,capture:true});
+  function wk(btn){ tipHide(); const d=btn.closest('.g-d3'); if(!d) return; const o=d.classList.toggle('wo'); const h=d.querySelector('.g-d3t h6'); if(h) h.textContent=o?'Diese Woche':'Heute'; }
   return {wk,tdToggle,todayHtml,isoWeek,weeklyState,weekSum,heroHtml,shoulder,rankOf,barHtml,event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
