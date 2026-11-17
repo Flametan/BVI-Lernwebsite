@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+      'Bestenliste: Die Profilbilder der Teilnehmer werden wieder angezeigt, und Ihre bisherigen Rekorde stehen jetzt schon in den Listen.',
       'Pausenraum, Bestenliste: Mit „Alle Teilnehmer“ treten Sie in jedem Spiel gegen alle an, die am Ranking teilnehmen (Top 20 und Ihr eigener Platz). Die Teilnahme ist freiwillig; Name und Profilbild werden dann anderen angezeigt. Dafür muss der Sync-Server auf dem neuesten Stand sein.',
       'Pausenraum: Neuer Reiter „Bestenliste“ mit den zehn besten Ergebnissen für jedes Spiel (bei Sudoku und Minesweeper je Stufe). Die Listen werden mit dem Sync auf Ihre Geräte verteilt.',
       'Sudoku: Mit der Leertaste wechseln Sie zwischen Zahlen und Notizen.',

@@ -27,6 +27,15 @@ const PAUSE=(function(){
     let n="";try{n=(localStorage.getItem("bvi_profile_name")||"").slice(0,30);}catch(e){}
     const e={p:v,d:ymd(0),a:B.t?1:0};if(n)e.n=n;a.push(e);
     a.sort((x,y)=>B.t?x.p-y.p:y.p-x.p);T[id]=a.slice(0,10);set(TOPKEY,T);pushBests();}
+  // einmalig: bisherige Rekorde in die Bestenliste übernehmen (feste Datumsangabe, damit der Sync sie nicht doppelt führt)
+  (function seedTop(){try{if(localStorage.getItem("bvi_pause_seeded"))return;localStorage.setItem("bvi_pause_seeded","1");
+    const b=best(),T=get(TOPKEY,{});let ch=0,n="";n=(localStorage.getItem("bvi_profile_name")||"").slice(0,30);
+    const put=(id,v,B)=>{v=Math.round(+v);if(!isFinite(v)||v<0||(!B.t&&v<1)||(Array.isArray(T[id])&&T[id].length))return;const e={p:v,d:"2026-11-17",a:B.t?1:0};if(n)e.n=n;T[id]=[e];ch++;};
+    Object.keys(BOARDS).forEach(k=>{const B=BOARDS[k],v=b[k];if(v==null)return;
+      if(B.lv){if(v&&typeof v==="object")B.lv.forEach(l=>{if(typeof v[l[0]]==="number")put(k+":"+l[0],v[l[0]],B);});}
+      else if(k==="tagesfrage"){if(v&&typeof v==="object"&&v.max)put(k,v.max,B);}
+      else if(typeof v==="number")put(k,v,B);});
+    if(ch)set(TOPKEY,T);}catch(e){}})();
   const ICON={
     ladder:'<path d="M7 3v18M17 3v18M7 7h10M7 12h10M7 17h10"/>',
     bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
@@ -120,8 +129,10 @@ const PAUSE=(function(){
       body.innerHTML=Array.isArray(a)&&a.length?`<ol class="pz-lb">${a.map((e,i)=>`<li><span class="pz-lr">${i+1}</span><b>${fmtV(B,e.p)}${B.t?"":" <small>"+u+"</small>"}</b><span class="pz-ld">${e.n?esc(e.n)+" · ":""}${dd(e.d)}</span></li>`).join("")}</ol>`:`<div class="pz-card"><div class="pz-center">Noch kein Eintrag. Spiele eine Runde, dann erscheint dein Ergebnis hier.</div></div>`;
       return;}
     const cur=()=>ptab==="top"&&topS==="all"&&topG===g[0]&&(topL||"")===(B.lv?topL:"")&&body.isConnected;
+    const ini=n=>String(n).trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase();
+    const lav=r=>/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(r.av||"")?`<span class="rk-av" style="background-image:url(${r.av})"></span>`:`<span class="rk-av">${esc(ini(r.name))}</span>`;
     const draw=j=>{if(!cur())return;
-      body.innerHTML=(j.top.length?`<ol class="pz-lb">${j.top.map(r=>`<li class="${r.me?"me":""}"><span class="pz-lr">${r.place}</span><b>${fmtV(B,r.v)}${B.t?"":" <small>"+u+"</small>"}</b><span class="pz-ld">${esc(r.name)}</span></li>`).join("")}</ol>`:`<div class="pz-card"><div class="pz-center">Noch niemand in dieser Liste.</div></div>`)
+      body.innerHTML=(j.top.length?`<ol class="pz-lb">${j.top.map(r=>`<li class="pz-la${r.me?" me":""}"><span class="pz-lr">${r.place}</span>${lav(r)}<b>${fmtV(B,r.v)}${B.t?"":" <small>"+u+"</small>"}</b><span class="pz-ld">${esc(r.name)}</span></li>`).join("")}</ol>`:`<div class="pz-card"><div class="pz-center">Noch niemand in dieser Liste.</div></div>`)
         +(j.me&&j.me.place>20?`<p class="pz-lbn">Dein Platz: ${j.me.place} von ${j.total} (${fmtV(B,j.me.v)})</p>`:j.me?"":`<p class="pz-lbn">Du bist hier noch nicht dabei. Spiele eine Runde.</p>`);};
     const fail=e=>{if(cur())msg(esc(e&&e.message||"Der Server ist gerade nicht erreichbar."),`<button class="pz-chip" data-retry>Erneut versuchen</button>`);const r=root.querySelector("[data-retry]");if(r)r.onclick=hubTop;};
     msg("Liste wird geladen …");
