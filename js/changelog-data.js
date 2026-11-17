@@ -1,6 +1,9 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+      'Startseite (Tablet/PC): Die Tagesziele stehen jetzt größer und immer aufgeklappt links unter der Serien-Karte, mit allen Tages- und Wochenaufgaben. Der Tagesring ist auch bei erreichtem Tagesziel in der Akzentfarbe statt grün.',
+      'Lernkarten (PC): Die Seite hat jetzt dieselbe Breite wie die anderen Seiten, z. B. Prüfung.',
+      'Ranking: Der Schieber zwischen „Diese Woche“ und „Gesamt“ liegt jetzt immer exakt unter der gewählten Seite und gleitet beim Wechsel.',
       'Account: Das Design (Dunkel, Hell, Beige) steht jetzt über der Sicherung.',
       'Lernpfad entfernt: Das Feld an der Flamme zeigt keinen Lernpfad mehr. Auf der Seite „Rang & Abzeichen“ ist der Abschnitt „Aufgaben“ entfernt (die Aufgaben stehen auf der Startseite). Die doppelte XP-Leiste im orangen Kopf der Startseite ist entfernt, der Fortschritt steht nur noch im Feld darunter.',
       'Ranking: Freiwillig, erreichbar über den Account-Knopf oben rechts unter „Ranking“. Es erscheinen der Name und das Profilbild aus deinem Account. Es gibt eine Wochen- und eine Gesamtliste mit den Top 20 und deinem Platz. Übertragen werden nur Name, kleines Profilbild, Gesamt- und Wochenpunkte; Die Teilnahme gilt über den Sync für alle Geräte deines Accounts. Aussteigen löscht alles auf dem Server. Die Namen sind einmalig, die Punkte werden auf Plausibilität geprüft.',
