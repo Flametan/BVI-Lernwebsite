@@ -2,8 +2,9 @@
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
       'Ranking: Freiwillig, erreichbar über den Account-Knopf oben rechts unter „Ranking“. Es erscheinen der Name und das Profilbild aus deinem Account. Es gibt eine Wochen- und eine Gesamtliste mit den Top 20 und deinem Platz. Übertragen werden nur Name, kleines Profilbild, Gesamt- und Wochenpunkte; Die Teilnahme gilt über den Sync für alle Geräte deines Accounts. Aussteigen löscht alles auf dem Server. Die Namen sind einmalig, die Punkte werden auf Plausibilität geprüft.',
-      'Startseite: Die Tages- und Wochenaufgaben in der Karte „Heute“ lassen sich jetzt einzeln auf- und zuklappen (der Zustand bleibt gespeichert). Das Menü an der Flamme zeigt die Tagesaufgaben nicht mehr.',
+      'Startseite: Die Karte „Heute“ ist jetzt eine schmale Leiste (Tagesring, Stand der Tages- und Wochenaufgaben). Beim Aufklappen erscheinen die Aufgaben sowie Knöpfe zu „Ranking“ und „Rang & Abzeichen“. Das Menü an der Flamme zeigt die Tagesaufgaben nicht mehr.',
       'Lernkarten: Am Desktop ist die Karte jetzt deutlich größer (große Schrift, volle Breite), die Fächer stehen in einer schmalen Leiste rechts. Auf dem Tablet ist die Karte ebenfalls größer.',
+      'Ranking: Die Zeilen der Teilnehmer sind 50 % höher, mit größerem Profilbild, größerer Schrift und größerem Dienstgrad-Abzeichen.',
       'Sync-Server: Neu im Server ist das Ranking (Datei rank.js, Daten in rank.dat). Der Server muss einmal neu gebaut und gestartet werden, siehe sync-server/README.md.',
       'Startseite: Neue Karte „Heute“ mit Tagesziel-Ring (Lernminuten), den drei Tagesaufgaben und den Wochenaufgaben. Der Ring wird grün, sobald das Tagesziel erreicht ist.',
       'Wochenaufgaben: 100 Lernkarten üben, 25 Prüfungsfragen richtig und an 5 Tagen lernen. Jede bringt 50 Punkte, alle drei zusammen 100 Bonuspunkte und das Abzeichen „Wochenmeister“. Die Seite „Rang & Abzeichen“ zeigt Tages- und Wochenaufgaben jetzt im Bereich „Aufgaben“.',

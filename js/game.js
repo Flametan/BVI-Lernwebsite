@@ -451,21 +451,21 @@ const GAME=(function(){
     const li=t=>`<li class="${t.done?'ok':''}"><span class="g-tk">${t.done?svg('check',14):''}</span><span class="g-tt">${esc(t.t)}</span><span class="g-tv">${t.v}/${t.max}</span></li>`;
     return {d:taskState().map(li).join(''), w:weeklyState().map(li).join('')};
   }
-  const tdOpen=k=>{ try{ return localStorage.getItem('bvi_td_'+k)==='1'; }catch(e){ return false; } };
-  function tdSec(k,t,v,list){
-    const o=tdOpen(k);
-    return `<button type="button" class="g-td-h tg${k==='w'?' w':''}" aria-expanded="${o}" aria-controls="g-tl-${k}" onclick="GAME.tdToggle('${k}')"><b>${t}</b><span>${v}</span><svg class="g-tdc" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><ul class="g-tasks" id="g-tl-${k}"${o?'':' hidden'}>${list}</ul>`;
-  }
-  function tdToggle(k){ try{ localStorage.setItem('bvi_td_'+k,tdOpen(k)?'0':'1'); }catch(e){} const td=document.getElementById('g-today'); if(td) td.outerHTML=todayHtml(); }
+  const tdOpen=()=>{ try{ return localStorage.getItem('bvi_td_o')==='1'; }catch(e){ return false; } };
+  function tdToggle(){ try{ localStorage.setItem('bvi_td_o',tdOpen()?'0':'1'); }catch(e){} const td=document.getElementById('g-today'); if(td) td.outerHTML=todayHtml(); }
+  /* Startseite: eine schmale Leiste (Ring, Stand, Pfeil); aufgeklappt Tages- und Wochenaufgaben, Ranking und Rang & Abzeichen */
   function todayHtml(){
     if(load().off) return '';
     const gm=(typeof SHELL!=='undefined'&&SHELL.goalMin)?SHELL.goalMin():15, sec=(typeof USAGE!=='undefined')?USAGE.today():0;
-    const min=Math.floor(sec/60), p=Math.min(1,sec/(gm*60)), C=2*Math.PI*44, done=p>=1;
+    const min=Math.floor(sec/60), p=Math.min(1,sec/(gm*60)), C=2*Math.PI*42, done=p>=1, o=tdOpen();
     const ts=taskState(), dn=ts.filter(t=>t.done).length, wsx=weeklyState(), wn=wsx.filter(t=>t.done).length, L=tasksList();
-    return `<div class="g-today" id="g-today"><button type="button" class="g-ring-b${done?' ok':''}" onclick="NAV.go('v-game','Rang & Abzeichen')" aria-label="Tagesziel: ${min} von ${gm} Minuten">`+
-      `<svg viewBox="0 0 100 100" width="104" height="104" aria-hidden="true"><circle cx="50" cy="50" r="44" class="g-rg-t"/><circle cx="50" cy="50" r="44" class="g-rg-v" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/></svg>`+
-      `<span class="g-rg-n"><b>${done?svg('check',26):min}</b><small>${done?'geschafft':'von '+gm+' min'}</small></span></button>`+
-      `<div class="g-td">${tdSec('d','Heute',dn+'/'+ts.length+' Aufgaben',L.d)}${tdSec('w','Diese Woche',wn+'/'+wsx.length,L.w)}</div></div>`;
+    return `<div class="g-today${o?' open':''}" id="g-today"><button type="button" class="g-bar${done?' ok':''}" aria-expanded="${o}" aria-controls="g-more" onclick="GAME.tdToggle()">`+
+      `<span class="g-rg"><svg viewBox="0 0 100 100" width="38" height="38" aria-hidden="true"><circle cx="50" cy="50" r="42" class="g-rg-t"/><circle cx="50" cy="50" r="42" class="g-rg-v" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/></svg><b>${done?svg('check',16):min}</b></span>`+
+      `<span class="g-bt"><span><b>Heute ${dn}/${ts.length}</b> <em>· Woche ${wn}/${wsx.length}</em></span><small>${done?'Tagesziel geschafft':min+' von '+gm+' min'}</small></span>`+
+      `<svg class="g-tdc" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>`+
+      `<div class="g-more" id="g-more"${o?'':' hidden'}><div class="g-td"><div><div class="g-td-h"><b>Heute</b><span>${dn}/${ts.length} Aufgaben</span></div><ul class="g-tasks">${L.d}</ul></div>`+
+      `<div><div class="g-td-h"><b>Diese Woche</b><span>${wn}/${wsx.length}</span></div><ul class="g-tasks">${L.w}</ul></div></div>`+
+      `<div class="g-links"><button type="button" class="g-lk" onclick="NAV.go('v-rank','Ranking')">Ranking</button><button type="button" class="g-lk alt" onclick="NAV.go('v-game','Rang & Abzeichen')">Rang &amp; Abzeichen</button></div></div></div>`;
   }
   function homeHtml(){ return load().off?{chip:'',panel:'',rank:''}:{rank:rankLabel(),chip:chip(),panel:`<div class="g-panel" id="g-panel" hidden>${panel()}</div>`}; }
   let _open=false;
