@@ -150,7 +150,7 @@ const GAME=(function(){
     const w=weekSum();
     return WEEKLY.map(t=>{ const v=Math.min(t.max,t.get(w)); return {id:t.id,t:t.t,v,max:t.max,xp:t.xp,done:v>=t.max}; });
   }
-  /* ISO-Wochenschlüssel (z. B. 2026-W47) für Ranking und Duell */
+  /* ISO-Wochenschlüssel (z. B. 2026-W47) für das Ranking */
   function isoWeek(d=new Date()){
     const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())), n=t.getUTCDay()||7;
     t.setUTCDate(t.getUTCDate()+4-n);
