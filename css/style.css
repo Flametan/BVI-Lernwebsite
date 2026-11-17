@@ -4935,5 +4935,6 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .rk-da{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
 .rk-da .g-btn{flex:1 1 120px;}
 .rk-foot{margin-top:18px;}
+.g-rk>.g-btn,.g-rk .rk-me~.g-btn{padding:0 22px;}
 .rk-row .g-btn{flex:0 0 auto;padding:0 20px;}
 .rk-foot .g-btn{padding:0 18px;}
