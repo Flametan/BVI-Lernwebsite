@@ -4907,7 +4907,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #m-home .g-today{grid-column:1;grid-row:2;margin:0;align-self:stretch;display:flex;flex-direction:column;}
   #m-home .m-gameslot{grid-row:1;}
   #m-home .m-chart2{grid-column:2;grid-row:1 / span 2;align-self:stretch;}
-  #m-home .m-chart2 .m-plot{--pl:120px;}
+  #m-home .m-chart2 .m-plot{--pl:70px;}
   #m-home .g-today .g-td-h b,#m-home .g-today .g-td-h span{white-space:nowrap;}
   /* hier immer aufgeklappt: alle Tages- und Wochenaufgaben, größer dargestellt */
   #m-home .g-today{position:relative;}
@@ -4929,10 +4929,24 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #m-home .g-today .g-tlinks .g-lk{min-height:30px;padding:0 18px;flex:none;}
   /* Kopfkarte und Heute-Karte eng untereinander */
   #m-home .m-gameslot{gap:0;}
-  #m-home .g-hero-top{padding:10px 20px;}
-  #m-home .g-hero-n{font-size:2.4rem;line-height:1;}
-  #m-home .g-hero-rk svg{width:76px;height:auto;}
-  #m-home .g-today{margin-top:-12px;}
+  #m-home .g-hero-top{padding:6px 20px;}
+  #m-home .g-hero-n{font-size:1.9rem;line-height:1;}
+  #m-home .g-hero-rk svg{width:58px;height:auto;}
+  #m-home .g-today{margin-top:-16px;}
+  #m-home .g-today .g-tbar{min-height:36px;padding:6px 20px 0;}
+  #m-home .g-today .g-rg,#m-home .g-today .g-rg svg{width:26px;height:26px;}
+  #m-home .g-today .g-tlinks{top:5px;}
+  #m-home .g-today .g-tlinks .g-lk{min-height:26px;}
+  #m-home .g-today .g-tasks li{min-height:24px;}
+  #m-home .g-today .g-td-h{margin:0;}
+  #m-home .g-today .g-more,#m-home .g-today .g-more[hidden]{padding-bottom:6px;}
+  /* Kopfzeile entfällt: Ring und Ranking-Knopf sitzen oben rechts auf der Höhe der Spaltenüberschriften */
+  #m-home .g-today .g-tbar{position:absolute;top:5px;left:20px;right:auto;width:auto;min-height:0;padding:0;}
+  #m-home .g-today .g-td>div:first-child .g-td-h{padding-left:34px;}
+  #m-home .g-today .g-bt{display:none;}
+  #m-home .g-today .g-more,#m-home .g-today .g-more[hidden]{padding-top:10px;}
+  #m-home .g-today .g-td-h span{display:none;}
+  #m-home .g-today .g-tasks li{min-height:26px;}
   #m-home .m-mods{grid-row:3;}
   #m-home .m-cloud{grid-row:4;}
 }
@@ -4992,4 +5006,4 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .rk-row .g-btn{flex:0 0 auto;padding:0 20px;}
 .rk-foot .g-btn{padding:0 18px;}
 @media(min-width:1100px){#m-home .m-hgrid{grid-template-columns:1fr 1fr;}}
-@media(min-width:701px) and (max-width:1099px){#m-home .g-today .g-tasks li{font-size:.86rem;gap:8px;min-height:28px;}#m-home .g-today .g-tv{font-size:.82rem;}#m-home .g-today .g-more,#m-home .g-today .g-more[hidden]{padding:0 14px 8px;}#m-home .g-today .g-td{column-gap:14px;}#m-home .m-chart2 .m-plot{--pl:120px;}}
+@media(min-width:701px) and (max-width:1099px){#m-home .g-today .g-tasks li{font-size:.86rem;gap:8px;min-height:28px;}#m-home .g-today .g-tv{font-size:.82rem;}#m-home .g-today .g-more,#m-home .g-today .g-more[hidden]{padding:0 14px 8px;}#m-home .g-today .g-td{column-gap:14px;}#m-home .m-chart2 .m-plot{--pl:70px;}#m-home .g-today .g-more,#m-home .g-today .g-more[hidden]{padding-top:14px;}#m-home .g-today .g-tbar{top:6px;left:14px;}#m-home .g-today .g-tlinks{top:6px;right:14px;}#m-home .g-today .g-tlinks .g-lk{min-height:22px;padding:0 10px;font-size:.74rem;}#m-home .g-today .g-td>div:first-child .g-td-h{padding-left:32px;}}
