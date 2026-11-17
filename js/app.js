@@ -3614,6 +3614,8 @@ function makeQuiz(cfg){
   let _typeFilter='all',_posHistory={},_retriedCount=0,_examPendingSubmit=false,_filterOpen=false;
   let _examTimerInterval=null,_examTimeLeft=0,_msel=new Set(),_examQs=[];
   const setTxt=(el,t)=>{if(HTMLX)el.innerHTML=t;else el.textContent=t;};
+  // Lösung einer Freitextfrage: Text und, wenn vorhanden, die Abbildung (erscheint erst mit der Lösung)
+  const showRef=(el,q)=>{setTxt(el,q.ref||'');if(q.refimg){const d=document.createElement('div');d.className='quiz-ref-img';d.innerHTML=q.refimg;el.appendChild(d);}};
   const corrSet=q=>new Set(q.type==='multi'?q.correct:[q.correct]);
   const sameSet=(a,b)=>a.size===b.size&&[...a].every(x=>b.has(x));
   const TYPE_LBL={mc:'Multiple Choice',tf:'Richtig / Falsch',multi:'Mehrfachauswahl',essay:'Freitextfrage'};
@@ -3866,7 +3868,7 @@ function makeQuiz(cfg){
     if(hist){
       _answered=true;
       if(q.type==='essay'){
-        setTxt(exp,q.ref);exp.className='quiz-exp quiz-exp-ref';
+        showRef(exp,q);exp.className='quiz-exp quiz-exp-ref';
         const rb=$v().querySelector('.quiz-reveal-btn');if(rb)rb.disabled=true;
       }else{
         markOpts(q,new Set(hist.sel||(hist.userIdx==null?[]:[hist.userIdx])));
@@ -3945,7 +3947,7 @@ function makeQuiz(cfg){
     _revealEssay(){
       if(_answered)return;_answered=true;
       const q=curQ();
-      const exp=$('quiz-exp');setTxt(exp,q.ref);exp.className='quiz-exp quiz-exp-ref';
+      const exp=$('quiz-exp');showRef(exp,q);exp.className='quiz-exp quiz-exp-ref';
       $('quiz-skip').classList.add('hidden');$('quiz-next').classList.remove('hidden');
       const rb=$v().querySelector('.quiz-reveal-btn');if(rb)rb.disabled=true;
       if(!_masteryMap[q.id]||_masteryMap[q.id]==='err')_masteryMap[q.id]='ok';

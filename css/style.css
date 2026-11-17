@@ -2038,6 +2038,8 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .quiz-check-btn{margin-top:.8rem;}
 .quiz-img{margin:.2rem 0 .9rem;text-align:center;}
 .quiz-img svg,.quiz-img img{max-width:100%;height:auto;border-radius:12px;}
+.quiz-ref-img{margin:.8rem 0 .2rem;text-align:center;}
+.quiz-ref-img img{max-width:100%;height:auto;border-radius:12px;background:#fff;}
 .quiz-src{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 .7rem;}
 .quiz-src:empty{display:none;}
 .quiz-src-tag{font-size:.75rem;padding:3px 9px;border-radius:999px;background:var(--m-raised);color:var(--m-muted);}
