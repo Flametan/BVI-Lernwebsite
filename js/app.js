@@ -1040,6 +1040,16 @@ const FLASHCARD_DATA = [
   {"id":"k-idf-135","cat":"IdF · UCPM","q":"Wie sieht die Kapazitätenpyramide des Unionsverfahrens aus?","a":"Von oben: rescEU (Art. 12), European Civil Protection Pool ECPP (Art. 11, zertifiziert), zum internationalen Einsatz befähigte Kapazitäten (Art. 9), nationale Kapazitäten im Katastrophenschutz. Seitlich: Einsatzvorbehalt und Kofinanzierungsraten."},
   {"id":"k-idf-136","cat":"IdF · UCPM","q":"Welche Stellen sind im Weg des Hilfeersuchens nach Deutschland beteiligt?","a":"Betroffener Staat (NCA/NCP, LEMA, OSOCC) stellt die RfA an ERCC/CECIS, das ERCC leitet sie an das GMLZ (NCP) im BBK weiter. Austausch und Entscheidung mit BMI (NCA) und Bundesministerien, Steuerung mit den Anbietern (BPOL, HiOrgs, THW, Bundeswehr, Länder, sonstige), Angebot DEU an das ERCC, Akzeptanz oder Ablehnung, Entsendung."}
 ];
+// Karten aus IdF-Klausur → Eingrenzungen (Vorbeugender Brandschutz 12/2026): Frage, richtige Antwort(en) und Begründung
+if(typeof IDF_QUIZ_Q!=='undefined'){
+  const norm=s=>String(s).replace(/<[^>]*>/g,'').toLowerCase().replace(/[^a-z0-9äöüß]+/g,' ').trim();
+  const have=new Set(FLASHCARD_DATA.map(c=>norm(c.q)));
+  IDF_QUIZ_Q.filter(q=>q.cat==='Vorbeugender Brandschutz 12/2026'&&(q.type==='mc'||q.type==='multi')).forEach(q=>{
+    if(have.has(norm(q.q))) return;
+    const ok=(q.type==='multi'?q.correct:[q.correct]).map(i=>q.opts[i]);
+    FLASHCARD_DATA.push({id:'k-idf-e'+q.id,cat:'IdF · Brandschutz',q:q.q,a:'<strong>'+ok.join('</strong>; <strong>')+'</strong>'+(q.exp?'<br>'+q.exp:'')});
+  });
+}
 // Eigene Karten aus dem Speicher dazunehmen
 try{ JSON.parse(localStorage.getItem('bvi_fc_custom')||'[]').forEach(c=>{ if(c&&c.id&&c.q&&c.a) FLASHCARD_DATA.push({id:c.id,cat:c.cat,q:c.q,a:c.a,own:true}); }); }catch(e){}
 
@@ -2027,6 +2037,17 @@ const FC = (function(){
     const tk=document.getElementById('fc-t-known'), tkb=document.getElementById('fc-t-known-btn');
     if(tk) tk.textContent=Object.keys(known).length+'';
     if(tkb) tkb.classList.toggle('active',activeFilters.has('known'));
+    const inLb=activeFilters.has('laufbahn');
+    const seg=document.getElementById('fc-seg');
+    if(seg){
+      const nLb=FLASHCARD_DATA.filter(c=>/^laufbahn/i.test(c.cat)).length, nH=FLASHCARD_DATA.filter(c=>!c.own&&!/^laufbahn/i.test(c.cat)).length;
+      seg.querySelectorAll('.fc-seg-b').forEach(b=>{
+        const lb=b.dataset.g==='lb', on=!isStarred&&(lb?inLb:!inLb);
+        b.classList.toggle('on',on); b.setAttribute('aria-pressed',on);
+        b.querySelector('small').textContent=(lb?nLb+' Karten für unsere Prüfung':nH+' Karten, Lernstoff aus den Reitern');
+        b.querySelector('b').textContent=lb?'Laufbahnprüfung':'Prüfungsrelevante Hinweise';
+      });
+    }
     document.querySelectorAll('.fc-f-btn').forEach(b=>{
       const df=b.dataset.filter;
       const base=b.dataset.label||'';
@@ -2048,6 +2069,8 @@ const FC = (function(){
       } else if(df){
         const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df)&&(df!=='laufbahn'||lbIn(c)));
         const knownCnt=cats.filter(c=>known[c.id]).length;
+        // Variante 1: Laufbahn-Karten und Hinweise-Karten sind getrennte Gruppen; es zeigt sich nur die gewählte
+        b.classList.toggle('hidden',isStarred||df==='laufbahn'||inLb);
         b.classList.toggle('active',!isStarred&&activeFilters.has(df));
         b.innerHTML=`<b>${base}</b><small>${knownCnt}/${cats.length}</small>`;
       }
@@ -2366,6 +2389,7 @@ const FC = (function(){
       updateFilterButtons();
       this.start(true);
     },
+    setGroup(g){ activeFilters=g==='lb'?new Set(['laufbahn']):new Set(['ibk','vak','feuak','idf']); updateFilterButtons(); this.start(true); },
     back(){
       if(_seen.length===0) return;
       if(_reviewPos===-1) _reviewPos=_seen.length-1;
@@ -3697,7 +3721,7 @@ function makeQuiz(cfg){
       const inCat=Q.filter(q=>_catFilter==='all'||q.cat===_catFilter);
       const sc=[...new Set(inCat.map(q=>q.sub).filter(Boolean))].sort((a,b)=>(b==='VB')-(a==='VB'));   // VB vor Stabsarbeit
       if(_subFilter!=='all'&&!sc.includes(_subFilter)) _subFilter='all';   // gibt es im Reiter nicht (z. B. Stabsarbeit bei den Eingrenzungen)
-      const show=sc.length>0;
+      const show=sc.length>1;   // eine einzige Auswahl (z. B. Brainyoo nur Stabsarbeit) braucht keine Leiste
       sub.classList.toggle('hidden',!show);
       if(show){
         const ns=s=>inCat.filter(q=>s==='all'||q.sub===s).length;

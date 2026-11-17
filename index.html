@@ -6317,7 +6317,7 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
   <div class="page-hero"><div class="phi">
     <p class="page-eyebrow">IdF Münster · Gedächtnisprotokolle</p>
     <h1 class="page-title">IdF-<span class="accent">Klausur</span></h1>
-    <p class="page-lead">Drei Reiter: „Eingrenzungen“ (38 Übungsfragen zum Vorbeugenden Brandschutz 12/2026), „Brainyoo“ (98 Karten) und „Altklausur“ (Gedächtnisprotokolle 02.12.2025, Bruchsal 05/2026 und 13.05.2026). In jedem Reiter lässt sich zwischen Alle, VB und Stabsarbeit wählen. Die Reihenfolge der Antworten wechselt bei jeder Runde. Mehrfachauswahl: nur ganz richtig zählt. Lernmodus oder Prüfungssimulation.</p>
+    <p class="page-lead">Drei Reiter: „Eingrenzungen“ (38 Übungsfragen zum Vorbeugenden Brandschutz 12/2026), „Brainyoo“ (40 Karten, nur Stabsarbeit) und „Altklausur“ (Gedächtnisprotokolle 02.12.2025, Bruchsal 05/2026 und 13.05.2026). In jedem Reiter lässt sich zwischen Alle, VB und Stabsarbeit wählen. Die Reihenfolge der Antworten wechselt bei jeder Runde. Mehrfachauswahl: nur ganz richtig zählt. Lernmodus oder Prüfungssimulation.</p>
   </div></div>
   <div class="pc">
     <div class="quiz-disclaimer">Die Antworten stammen aus den Protokollen, dem Tab „IdF Münster“ oder eigener Recherche (Kennzeichnung je Frage). Fehlende Wertungen und Bilder sind Rekonstruktionen – im Zweifel am Skript prüfen.</div>
@@ -10507,6 +10507,10 @@ Für Berlin/Hamburg gelten oberhalb der Schwellenwerte GWB/VgV, darunter die Unt
     <h1 class="page-title">Lernkarten</h1>
     <div class="fc-tiles"><button type="button" class="fc-tile" onclick="CUSTOM.open()"><span class="fc-ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><b>Eigene Karte</b><small>anlegen</small></button><button type="button" class="fc-tile" id="fc-t-star-btn" data-filter="starred" onclick="FC.setFilter('starred')" aria-label="Markierte Karten"><span class="fc-ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></span><b>Markierte</b><small id="fc-t-star">0</small></button></div>
   </div></div>
+  <div class="fc-seg" id="fc-seg" role="group" aria-label="Kartenart wählen">
+    <button type="button" class="fc-seg-b on" data-g="lb" aria-pressed="true" onclick="FC.setGroup('lb')"><b>Laufbahnprüfung</b><small>Karten für unsere Prüfung</small></button>
+    <button type="button" class="fc-seg-b" data-g="hint" aria-pressed="false" onclick="FC.setGroup('hint')"><b>Prüfungsrelevante Hinweise</b><small>Lernstoff aus den Reitern</small></button>
+  </div>
   <div class="fc-filter-row" role="group" aria-label="Lernkarten filtern">
     <button class="fc-f-btn fc-sp fc-star-filter-btn hidden" data-filter="starred" data-label="Markiert" onclick="FC.setFilter('starred')">Markiert</button>
     <button class="fc-f-btn fc-sp fc-weak-filter-btn hidden" data-filter="weak" data-label="Schwach" onclick="FC.setFilter('weak')">Schwach</button>
