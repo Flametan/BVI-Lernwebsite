@@ -8,6 +8,8 @@
  *   GET    /v1/rank/<id>/duels                                                eigene Duelle mit Zwischenstand
  *   POST   /v1/rank/<id>/duel          { name }                               Herausforderung
  *   POST   /v1/rank/<id>/duel/<did>    { action: accept | decline | cancel }
+ *   PUT    /v1/rank/<id>/games         { g:{ <Spiel>:<Bestwert>, ... } }     beste Werte der Pausenspiele (nur Teilnehmer)
+ *   GET    /v1/rank/<id>/games?b=<Spiel>                                      Top 20 des Spiels, eigener Platz
  *   DELETE /v1/rank/<id>                                                      Teilnahme beenden (Spieler und Duelle weg)
  * Kopfzeile X-Rank-Token (zufällig, nur auf dem Gerät). Gespeichert wird nur ein Hash davon.
  */
@@ -20,6 +22,12 @@ const ID_RE = /^[a-f0-9]{32}$/;
 const TOKEN_RE = /^[A-Za-z0-9_-]{32,128}$/;
 const NAME_RE = /^[\p{L}\p{N}][\p{L}\p{N} ._-]{1,18}[\p{L}\p{N}]$/u;   // 3–20 Zeichen
 const AV_RE = /^data:image\/jpeg;base64,[A-Za-z0-9+/=]{20,6000}$/;   // kleines Vorschaubild
+// Pausenspiele: erlaubte Listen mit Höchstwert (Punkte, Serien) oder Zeitgrenzen in Sekunden (t: niedriger ist besser)
+const GAMES = { fahrt: { max: 6000 }, duell: { max: 2000 }, tagesfrage: { max: 4000 }, lueckentext: { max: 200 }, reihenfolge: { max: 5000 }, hangman: { max: 5000 }, kreuzwort: { max: 4000 },
+  mahjong: { t: [20, 86400] }, 'sudoku:leicht': { t: [20, 86400] }, 'sudoku:mittel': { t: [30, 86400] }, 'sudoku:schwer': { t: [40, 86400] },
+  tetris: { max: 2000000 }, solitaer: { max: 100000 }, g2048: { max: 4000000 }, snake: { max: 100000 },
+  'minesweeper:leicht': { t: [1, 86400] }, 'minesweeper:mittel': { t: [3, 86400] }, 'minesweeper:schwer': { t: [8, 86400] }, 'minesweeper:sehr': { t: [15, 86400] } };
+const gameOk = (k, v) => Object.prototype.hasOwnProperty.call(GAMES, k) && Number.isInteger(v) && (GAMES[k].t ? v >= GAMES[k].t[0] && v <= GAMES[k].t[1] : v >= 1 && v <= GAMES[k].max);
 const sha = s => crypto.createHash('sha256').update(s).digest('hex');
 const eqHex = (a, b) => { try { return crypto.timingSafeEqual(Buffer.from(a, 'hex'), Buffer.from(b, 'hex')); } catch (e) { return false; } };
 
@@ -104,7 +112,7 @@ function create(cfg, ctx) {
 
   async function handle(req, res, url, io) {
     const { send, readBody } = io;
-    const m = /^\/v1\/rank\/([^/]+)(?:\/(duels|duel)(?:\/([a-f0-9]{16}))?)?$/.exec(url.pathname);
+    const m = /^\/v1\/rank\/([^/]+)(?:\/(duels|duel|games)(?:\/([a-f0-9]{16}))?)?$/.exec(url.pathname);
     if (!m) return send(res, 404, { error: 'nicht gefunden' });
     const id = m[1], sub = m[2], did = m[3], token = String(req.headers['x-rank-token'] || '');
     if (!ID_RE.test(id) || !TOKEN_RE.test(token)) return send(res, 400, { error: 'ungültige Angaben' });
@@ -143,6 +151,26 @@ function create(cfg, ctx) {
     }
     if (!p) return send(res, 404, { error: 'unbekannt' });
     p.seen = Date.now();
+
+    if (sub === 'games' && req.method === 'PUT') {
+      const raw = await readBody(req, res); if (raw === null) return;
+      let j; try { j = JSON.parse(raw); } catch (e) { return send(res, 400, { error: 'kein JSON' }); }
+      const g = j && j.g;
+      if (!g || typeof g !== 'object' || Array.isArray(g) || Object.keys(g).length > 30) return send(res, 422, { error: 'Werte ungültig' });
+      p.g = p.g || {};   // ungültige Einträge werden übersprungen, damit ein einzelner Wert nicht alle blockiert
+      for (const [k, v] of Object.entries(g)) if (gameOk(k, v) && (p.g[k] == null || (GAMES[k].t ? v < p.g[k] : v > p.g[k]))) p.g[k] = v;
+      persist(); return send(res, 200, { ok: true });
+    }
+    if (sub === 'games' && req.method === 'GET') {
+      const b = url.searchParams.get('b') || '';
+      if (!Object.prototype.hasOwnProperty.call(GAMES, b)) return send(res, 422, { error: 'Spiel unbekannt' });
+      const low = !!GAMES[b].t;
+      const rows = Object.entries(db.players).filter(([, q]) => q.g && q.g[b] != null)
+        .map(([pid, q]) => ({ pid, name: q.name, av: q.av || null, v: q.g[b] }))
+        .sort((x, y) => (low ? x.v - y.v : y.v - x.v) || x.name.localeCompare(y.name, 'de'));
+      const me = rows.findIndex(r => r.pid === id);
+      return send(res, 200, { board: b, total: rows.length, top: rows.slice(0, 20).map((r, i) => ({ place: i + 1, name: r.name, av: r.av, v: r.v, me: r.pid === id })), me: me < 0 ? null : { place: me + 1, v: rows[me].v } });
+    }
 
     if (!sub && req.method === 'GET') {
       const kind = url.searchParams.get('board') === 'all' ? 'all' : 'week';
