@@ -2156,7 +2156,7 @@ const FC = (function(){
         // Variante 1: Laufbahn-Karten und Hinweise-Karten sind getrennte Gruppen; es zeigt sich nur die gewählte
         b.classList.toggle('hidden',isStarred||df==='laufbahn'||inLb);
         b.classList.toggle('active',!isStarred&&activeFilters.has(df));
-        b.innerHTML=`<b>${base}</b><small>${knownCnt}/${cats.length}</small>`;
+        b.innerHTML=`<b>${base}</b><small>${knownCnt}/${cats.length}</small><u><s style="width:${cats.length?Math.round(knownCnt/cats.length*100):0}%"></s></u>`;
       }
     });
   }
@@ -2167,9 +2167,10 @@ const FC = (function(){
     const lb=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith('laufbahn'));
     const cnt=k=>lb.filter(c=>lbKey(c)===k).length, all=lbSel.size===LBSUB.length;
     const n=lb.filter(lbIn).length;
-    row.innerHTML='<div class="fc-sub-bar" role="group" aria-label="Laufbahnklausuren nach Fach"><button type="button" class="fc-sub-b'+(all?' on':'')+'" aria-pressed="'+all+'" onclick="FC.setSub(\'all\')">Alle</button>'
-      +LBSUB.map(x=>{ const on=lbSel.has(x[0]); return '<button type="button" class="fc-sub-b'+(on?' on':'')+'" aria-pressed="'+on+'" onclick="FC.setSub(\''+x[0]+'\')">'+x[1]+'<small>'+cnt(x[0])+'</small></button>'; }).join('')
-      +'<span class="fc-sub-sum" aria-live="polite">'+n+' Karten</span></div>';
+    const known=fcKnown(), kn=k=>lb.filter(c=>lbKey(c)===k&&known[c.id]).length;
+    row.innerHTML='<div class="fc-sub-bar fc-sub-grid'+(all?' all':'')+'" role="group" aria-label="Laufbahnklausuren nach Fach">'
+      +LBSUB.map(x=>{ const on=lbSel.has(x[0]), t=cnt(x[0]), k=kn(x[0]); return '<button type="button" class="fc-t4'+(on?' on':'')+'" aria-pressed="'+on+'" onclick="FC.setSub(\''+x[0]+'\')"><b>'+x[1]+'</b><small>'+k+'/'+t+'</small><u><s style="width:'+(t?Math.round(k/t*100):0)+'%"></s></u></button>'; }).join('')
+      +'</div><div class="fc-sub-meta"><button type="button" class="fc-sub-all'+(all?' on':'')+'" aria-pressed="'+all+'" onclick="FC.setSub(\'all\')">Alle Fächer</button><span class="fc-sub-sum" aria-live="polite">'+n+' Karten</span></div>';
   }
   function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
 
