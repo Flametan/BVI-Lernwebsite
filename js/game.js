@@ -413,7 +413,6 @@ const GAME=(function(){
   function panel(){
     const s=load(), st=streak(), r=rankOf(s.xp), nx=nextRank(r), g=GROUPS[r.g];
     const pct=nx?Math.round((s.xp-r.xp)/(nx.xp-r.xp)*100):100;
-    const tasks=taskState().map(t=>`<li class="${t.done?'ok':''}"><span class="g-tk">${t.done?svg('check',14):''}</span><span class="g-tt">${esc(t.t)}</span><span class="g-tv">${t.v}/${t.max}</span></li>`).join('');
     const w=weekSum(), al=Math.min(ALARM_GOAL,w.cards+w.quiz), alDone=!!s.alarm[weekKeys()[0]];
     const pn=s.path?pathNext():null;
     const pathRow=s.path
@@ -425,8 +424,6 @@ const GAME=(function(){
       <div class="g-h">Serie</div>
       <div class="g-row"><span class="g-ri g-fl${st.cur>0&&st.todayDone?' on':''}">${flameIc(18)}</span><span class="g-rt"><b>${st.cur} ${st.cur===1?'Tag':'Tage'} in Folge</b><span>${st.todayDone?'Heute schon gelernt':st.cur>0?(st.risk?'Deine Serie ist in Gefahr – lerne noch heute':'Lerne heute, damit die Serie nicht reißt'):'Lerne heute, um eine Serie zu starten'} · Rekord ${st.best}</span></span></div>
       ${freezeRow(st)}
-      <div class="g-h">Tagesaufgaben</div>
-      <ul class="g-tasks">${tasks}</ul>
       <div class="g-h">Einsatz-Alarm der Woche</div>
       <div class="g-row"><span class="g-ri">${svg('bell',18)}</span><span class="g-rt"><b>${alDone?'Alarm bestanden':ALARM_GOAL+' Aufgaben bis Sonntag'}</b><span>${al}/${ALARM_GOAL} Karten und Prüfungsfragen · +${ALARM_XP} Punkte</span><span class="g-bar sm"><i style="width:${Math.round(al/ALARM_GOAL*100)}%"></i></span></span></div>
       ${pathRow}
@@ -454,6 +451,12 @@ const GAME=(function(){
     const li=t=>`<li class="${t.done?'ok':''}"><span class="g-tk">${t.done?svg('check',14):''}</span><span class="g-tt">${esc(t.t)}</span><span class="g-tv">${t.v}/${t.max}</span></li>`;
     return {d:taskState().map(li).join(''), w:weeklyState().map(li).join('')};
   }
+  const tdOpen=k=>{ try{ return localStorage.getItem('bvi_td_'+k)==='1'; }catch(e){ return false; } };
+  function tdSec(k,t,v,list){
+    const o=tdOpen(k);
+    return `<button type="button" class="g-td-h tg${k==='w'?' w':''}" aria-expanded="${o}" aria-controls="g-tl-${k}" onclick="GAME.tdToggle('${k}')"><b>${t}</b><span>${v}</span><svg class="g-tdc" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><ul class="g-tasks" id="g-tl-${k}"${o?'':' hidden'}>${list}</ul>`;
+  }
+  function tdToggle(k){ try{ localStorage.setItem('bvi_td_'+k,tdOpen(k)?'0':'1'); }catch(e){} const td=document.getElementById('g-today'); if(td) td.outerHTML=todayHtml(); }
   function todayHtml(){
     if(load().off) return '';
     const gm=(typeof SHELL!=='undefined'&&SHELL.goalMin)?SHELL.goalMin():15, sec=(typeof USAGE!=='undefined')?USAGE.today():0;
@@ -462,8 +465,7 @@ const GAME=(function(){
     return `<div class="g-today" id="g-today"><button type="button" class="g-ring-b${done?' ok':''}" onclick="NAV.go('v-game','Rang & Abzeichen')" aria-label="Tagesziel: ${min} von ${gm} Minuten">`+
       `<svg viewBox="0 0 100 100" width="104" height="104" aria-hidden="true"><circle cx="50" cy="50" r="44" class="g-rg-t"/><circle cx="50" cy="50" r="44" class="g-rg-v" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/></svg>`+
       `<span class="g-rg-n"><b>${done?svg('check',26):min}</b><small>${done?'geschafft':'von '+gm+' min'}</small></span></button>`+
-      `<div class="g-td"><div class="g-td-h"><b>Heute</b><span>${dn}/${ts.length} Aufgaben</span></div><ul class="g-tasks">${L.d}</ul>`+
-      `<div class="g-td-h w"><b>Diese Woche</b><span>${wn}/${wsx.length}</span></div><ul class="g-tasks">${L.w}</ul></div></div>`;
+      `<div class="g-td">${tdSec('d','Heute',dn+'/'+ts.length+' Aufgaben',L.d)}${tdSec('w','Diese Woche',wn+'/'+wsx.length,L.w)}</div></div>`;
   }
   function homeHtml(){ return load().off?{chip:'',panel:'',rank:''}:{rank:rankLabel(),chip:chip(),panel:`<div class="g-panel" id="g-panel" hidden>${panel()}</div>`}; }
   let _open=false;
@@ -629,5 +631,5 @@ const GAME=(function(){
     if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek();
     else if(id==='v-rank'){ const b=document.getElementById('rank-body'); if(b) rankLoad().then(R=>R.mount(b)).catch(()=>{ b.innerHTML='<p class="rk-msg err">Ranking konnte nicht geladen werden. Bitte Verbindung prüfen.</p>'; }); }
   }
-  return {todayHtml,isoWeek,weeklyState,weekSum,heroHtml,shoulder,rankOf,barHtml,event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
+  return {tdToggle,todayHtml,isoWeek,weeklyState,weekSum,heroHtml,shoulder,rankOf,barHtml,event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
