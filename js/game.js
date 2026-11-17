@@ -21,15 +21,15 @@ const GAME=(function(){
   RANKS.forEach((r,i)=>{ r.i=i; r.pip=RANKS.filter(x=>x.g===r.g&&x.i<=i).length; });
 
   const TASKS=[
-    {id:'cards',t:'10 Lernkarten üben',max:10,get:(d)=>d.cards||0},
-    {id:'quiz',t:'5 Prüfungsfragen richtig',max:5,get:(d)=>d.quizOk||0},
-    {id:'time',t:'10 Minuten lernen',max:10,get:()=>Math.floor((typeof USAGE!=='undefined'?USAGE.today():0)/60)}
+    {id:'cards',t:'10 Lernkarten',max:10,get:(d)=>d.cards||0},
+    {id:'quiz',t:'5 Prüfungsfragen',max:5,get:(d)=>d.quizOk||0},
+    {id:'time',t:'10 Minuten',max:10,get:()=>Math.floor((typeof USAGE!=='undefined'?USAGE.today():0)/60)}
   ];
   /* Wochenaufgaben (Mo–So): jede bringt Punkte, alle drei zusammen das Abzeichen „Wochenmeister“ */
   const WEEKLY=[
-    {id:'wc',t:'100 Lernkarten üben',max:100,xp:50,get:w=>w.cards},
-    {id:'wq',t:'25 Prüfungsfragen richtig',max:25,xp:50,get:w=>w.quizOk},
-    {id:'wd',t:'An 5 Tagen lernen',max:5,xp:50,get:w=>w.days}
+    {id:'wc',t:'100 Lernkarten',max:100,xp:50,get:w=>w.cards},
+    {id:'wq',t:'25 Prüfungsfragen',max:25,xp:50,get:w=>w.quizOk},
+    {id:'wd',t:'5 Tage',max:5,xp:50,get:w=>w.days}
   ];
   const WEEK_ALL_XP=100;
   const FZ_MAX=2, FZ_EVERY=7, MILES=[7,30,100,365], RISK_HOUR=18;
