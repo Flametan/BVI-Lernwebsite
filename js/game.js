@@ -1,6 +1,6 @@
 /* ======================================================================
    GAME – Belohnungen: Punkte, Dienstgrade, Abzeichen, Titel, Tagesaufgaben,
-   Combo, Lernpfad und Wochen-Rückblick.
+   Combo und Wochen-Rückblick.
    Alles bleibt auf dem Gerät (localStorage „bvi_game“) und wird mit der Sicherung gespeichert.
 ====================================================================== */
 const GAME=(function(){
@@ -401,26 +401,15 @@ const GAME=(function(){
     const s=load(), st=streak(), r=rankOf(s.xp);
     return `<button type="button" class="g-chip${chipCls(st)}" id="g-chip" aria-expanded="false" aria-controls="g-panel" aria-label="Belohnungen: ${st.cur} Tage Serie${st.risk?' in Gefahr':''}, ${esc(r.n)}" onclick="GAME.toggle(this)"><span class="g-fl${st.cur>0&&st.todayDone?' on':''}">${flameIc(15)}</span><b>${st.cur}</b></button>`;
   }
-  function pathNext(){
-    if(typeof SHELL==='undefined'||!SHELL.mods||typeof PROGRESS==='undefined') return null;
-    const cnt=PROGRESS.counts(); let best=null;
-    SHELL.mods().forEach(m=>{ const c=cnt[m[0]]||{done:0,total:0}; if(!c.total||c.done>=c.total) return; const p=c.done/c.total; if(!best||p<best.p) best={p,m,c}; });
-    return best;
-  }
   function panel(){
     const s=load(), st=streak(), r=rankOf(s.xp), nx=nextRank(r), g=GROUPS[r.g];
     const pct=nx?Math.round((s.xp-r.xp)/(nx.xp-r.xp)*100):100;
-    const pn=s.path?pathNext():null;
-    const pathRow=s.path
-      ?`<div class="g-row g-path"><span class="g-ri">${svg('bolt',18)}</span><span class="g-rt"><b>Lernpfad</b><span>${pn?`Als Nächstes: ${esc(pn.m[1])} · ${pn.c.done}/${pn.c.total} Themen`:'Alles geschafft'}</span></span>${pn?`<button type="button" class="g-go" onclick="NAV.go(${esc(JSON.stringify(pn.m[3]))},${esc(JSON.stringify(pn.m[4]))})">Weiter</button>`:''}<button type="button" class="g-off" aria-label="Lernpfad ausblenden" onclick="GAME.setPath(0)">×</button></div>`
-      :`<button type="button" class="g-row g-pathon" onclick="GAME.setPath(1)"><span class="g-ri">${svg('bolt',18)}</span><span class="g-rt"><b>Lernpfad einschalten</b><span>Zeigt dir das Thema mit dem größten Nachholbedarf</span></span></button>`;
     return `<button type="button" class="g-rank g-rank-go" aria-label="Rang und Abzeichen öffnen" onclick="GAME.openRank()"><span class="g-rk-ic">${shoulder(r,46)}</span><span class="g-rk-t"><b>${esc(r.n)}</b><span style="color:${g.c}">${g.n}${s.title?' · '+esc(s.title):''}</span></span><span class="g-xp">${s.xp}<small> Punkte</small></span><svg class="g-chv" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
       <div class="g-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Fortschritt zum nächsten Rang"><i style="width:${pct}%;background:${g.c}"></i></div>
       <div class="g-sub">${nx?`Noch ${nx.xp-s.xp} Punkte bis ${esc(nx.n)}`:'Höchster Rang erreicht'}</div>
       <div class="g-h">Serie</div>
       <div class="g-row"><span class="g-ri g-fl${st.cur>0&&st.todayDone?' on':''}">${flameIc(18)}</span><span class="g-rt"><b>${st.cur} ${st.cur===1?'Tag':'Tage'} in Folge</b><span>${st.todayDone?'Heute schon gelernt':st.cur>0?(st.risk?'Deine Serie ist in Gefahr – lerne noch heute':'Lerne heute, damit die Serie nicht reißt'):'Lerne heute, um eine Serie zu starten'} · Rekord ${st.best}</span></span></div>
       ${freezeRow(st)}
-      ${pathRow}
       <div class="g-links"><button type="button" onclick="NAV.go('v-week','Wochen-Rückblick')">Wochen-Rückblick</button></div>`;
   }
   /* Bereich auf der Startseite (Symbol + aufklappbares Feld); bei ausgeschalteten Belohnungen leer */
@@ -435,10 +424,8 @@ const GAME=(function(){
   // PC/Tablet-Startseite: große Karte mit Serie (Tipp = Belohnungen) und Dienstgrad (Tipp = Rang & Abzeichen)
   function heroHtml(){
     if(load().off) return '';
-    const s=load(), st=streak(), r=rankOf(s.xp), nx=RANKS[r.i+1];
-    const pct=nx?Math.min(100,Math.max(0,Math.round((s.xp-r.xp)/(nx.xp-r.xp)*100))):100;
-    const sub=nx?`noch ${nx.xp-s.xp} XP bis ${esc(nx.n)}`:'Höchster Dienstgrad erreicht';
-    return `<div class="g-hero"><div class="g-hero-top"><button type="button" class="g-hero-st" onclick="GAME.toggle()" aria-label="${st.cur} Tage Serie${st.risk?' in Gefahr':''}. Belohnungen anzeigen"><span class="g-hero-k">Serie${st.risk?' · in Gefahr':''}</span><span class="g-hero-n"><span class="g-hero-fl${st.cur>0&&st.todayDone?' on':''}">🔥</span> ${st.cur}</span><span class="g-hero-l">Tage in Folge</span></button><button type="button" class="g-hero-rk" onclick="GAME.openRank()" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen">${shoulder(r,118)}</button></div><div class="g-hero-bot"><div class="g-hero-row"><b>${esc(r.n)}</b><span>${sub}</span></div><div class="g-hero-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Fortschritt zum nächsten Dienstgrad"><i style="width:${pct}%"></i></div></div></div>`;
+    const s=load(), st=streak(), r=rankOf(s.xp);
+    return `<div class="g-hero"><div class="g-hero-top"><button type="button" class="g-hero-st" onclick="GAME.toggle()" aria-label="${st.cur} Tage Serie${st.risk?' in Gefahr':''}. Belohnungen anzeigen"><span class="g-hero-k">Serie${st.risk?' · in Gefahr':''}</span><span class="g-hero-n"><span class="g-hero-fl${st.cur>0&&st.todayDone?' on':''}">🔥</span> ${st.cur}</span><span class="g-hero-l">Tage in Folge</span></button><button type="button" class="g-hero-rk" onclick="GAME.openRank()" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen">${shoulder(r,118)}</button></div></div>`;
   }
   /* Karte „Heute“: Tagesziel-Ring (Lernzeit), Tagesaufgaben, Wochenaufgaben */
   function tasksList(){
@@ -459,7 +446,7 @@ const GAME=(function(){
       `<svg class="g-tdc" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>`+
       `<div class="g-more" id="g-more"${o?'':' hidden'}><div class="g-td"><div><div class="g-td-h"><b>Heute</b><span>${dn}/${ts.length} Aufgaben</span></div><ul class="g-tasks">${L.d}</ul></div>`+
       `<div><div class="g-td-h"><b>Diese Woche</b><span>${wn}/${wsx.length} · alle 3: +${WEEK_ALL_XP} XP</span></div><ul class="g-tasks">${L.w}</ul></div></div>`+
-      `<div class="g-tlinks"><button type="button" class="g-lk" onclick="NAV.go('v-rank','Ranking')">Ranking</button><button type="button" class="g-lk alt" onclick="NAV.go('v-game','Rang & Abzeichen')">Rang &amp; Abzeichen</button></div></div></div>`;
+      `<div class="g-tlinks"><button type="button" class="g-lk" onclick="NAV.go('v-rank','Ranking')">Ranking</button></div></div></div>`;
   }
   function homeHtml(){ return load().off?{chip:'',panel:'',rank:''}:{rank:rankLabel(),chip:chip(),panel:`<div class="g-panel" id="g-panel" hidden>${panel()}</div>`}; }
   let _open=false;
@@ -495,7 +482,6 @@ const GAME=(function(){
   }
   document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') pushIcon(); });
   setTimeout(pushIcon,3000);
-  function setPath(on){ load().path=on?1:0; save(); refresh(); }
   function setOff(off){ load().off=off?1:0; save(); pushIcon(); if(typeof SHELL!=='undefined'&&document.getElementById('v-home')?.classList.contains('active')) SHELL.renderHome(); }
   function isOn(){ return !load().off; }
 
@@ -506,7 +492,7 @@ const GAME=(function(){
     const titles=unlocked.length?unlocked.map(b=>`<button type="button" class="g-tt-b${s.title===b.t?' on':''}" onclick="GAME.setTitle('${b.t}')">${esc(b.t)}</button>`).join(''):'<p class="g-empty">Noch kein Titel. Jedes Abzeichen schaltet einen Titel frei.</p>';
     const grid=BADGES.map(b=>{ const got=s.badges[b.id]; return `<div class="g-bd${got?' got':''}"><span class="g-bdi">${svg(b.ic,24)}</span><b>${esc(b.n)}</b><span>${esc(b.d)}</span>${got?`<em>Titel: ${esc(b.t)}</em>`:''}</div>`; }).join('');
     el.innerHTML=`<div class="g-card"><div class="g-rank"><span class="g-rk-ic">${shoulder(r,76)}</span><span class="g-rk-t"><b>${esc(r.n)}</b><span style="color:${GROUPS[r.g].c}">${GROUPS[r.g].n}${s.title?' · '+esc(s.title):''}</span></span><span class="g-xp">${s.xp}<small> Punkte</small></span></div></div>
-      <h2 class="g-h2">Aufgaben</h2><div class="g-card g-aufg"><div class="g-td-h"><b>Täglich</b><span>+${TASK_XP} Punkte je Aufgabe</span></div><ul class="g-tasks">${tasksList().d}</ul><div class="g-td-h w"><b>Wöchentlich</b><span>+50 Punkte je Aufgabe · Bonus +${WEEK_ALL_XP}</span></div><ul class="g-tasks">${tasksList().w}</ul></div>
+
       <h2 class="g-h2">Dienstgrade</h2><div class="g-card g-ladder">${ladder}</div>
       <h2 class="g-h2">Titel</h2><div class="g-card"><div class="g-titles">${titles}</div></div>
       <h2 class="g-h2">Abzeichen · ${unlocked.length}/${BADGES.length}</h2><div class="g-badges">${grid}</div>`;
@@ -625,5 +611,5 @@ const GAME=(function(){
     if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek();
     else if(id==='v-rank'){ const b=document.getElementById('rank-body'); if(b) rankLoad().then(R=>R.mount(b)).catch(()=>{ b.innerHTML='<p class="rk-msg err">Ranking konnte nicht geladen werden. Bitte Verbindung prüfen.</p>'; }); }
   }
-  return {tdToggle,todayHtml,isoWeek,weeklyState,weekSum,heroHtml,shoulder,rankOf,barHtml,event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
+  return {tdToggle,todayHtml,isoWeek,weeklyState,weekSum,heroHtml,shoulder,rankOf,barHtml,event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
