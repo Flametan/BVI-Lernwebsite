@@ -4649,7 +4649,10 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lb-t-sim .lb-kd{color:#7db4ee;}:root:not([data-theme="light"]) .lb-t-o .lb-kd{color:#5fc47f;}}
 
 /* Lernkarten: Unterteilung der Laufbahnklausuren – eine Zeile in der Breite der Filter-Chips */
-.fc-sub-row{margin:0 auto;padding:0 12px .5rem;max-width:1140px;}
+.fc-sub-row{margin:0 auto;padding:0 16px .5rem;max-width:1140px;}
+/* Lernkarten: alle Zeilen (Kacheln, Umschalter, Filter, Unterzeile, Modus) in derselben Breite */
+@media (min-width:701px){.fc-seg,.fc-sub-row{padding-left:32px;padding-right:32px;}}
+@media (min-width:1024px){.fc-seg,.fc-sub-row,.fc-filter-row{max-width:1140px;margin-left:auto;margin-right:auto;padding-left:48px;padding-right:48px;}}
 .fc-sub-row[hidden]{display:none;}
 .fc-sub-bar{display:flex;flex-wrap:nowrap;align-items:center;gap:.4rem;padding:.4rem .5rem;border-radius:14px;background:var(--m-raised);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .fc-sub-bar::-webkit-scrollbar{display:none;}
