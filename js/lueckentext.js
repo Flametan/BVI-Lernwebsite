@@ -23,14 +23,14 @@ const LUECKENTEXT=(function(){
   function goodKw(kw){
     const w=kw.split(/\s+/);
     if(w.length>3||kw.length>26||kw.length<3) return false;
-    if(!/[A-Za-zÄÖÜäöüß]{3}/.test(kw)||BAD.test(kw)||/^\d+\.\s/.test(kw)||/&[a-z#0-9]+;/.test(kw)) return false;
+    if(!/[A-Za-zÄÖÜäöüß]{3}/.test(kw)||BAD.test(kw)||/^\d+\.\s/.test(kw)||/^§|[„“"‚‘']/.test(kw)||/&[a-z#0-9]+;/.test(kw)) return false;
     return true;
   }
   function itemsOf(c){
-    const out=[], a=prep(c.a||'');
-    a.split(/(?<=[a-zäöüß)>"“]{2}[.!?])\s+(?=[A-ZÄÖÜ<„])/).forEach(function(s){
+    const out=[], a=prep(c.a||''), q=plainOf(prep(String(c.q)));
+    a.split(/(?<=[a-zäöüß)>"“]{2}[.!?])(?<!\b(?:bzw|ggf|usw|ca|Nr|Abs|Art|vgl|evtl|inkl|sog|Std|Min|Mio|Mrd|Bln|Hrsg)\.)\s+(?=[A-ZÄÖÜ<„])/).forEach(function(s){
       s=s.trim(); const plain=plainOf(s);
-      if(plain.length<28||plain.length>170) return;
+      if(plain.length<28||plain.length>170||!/[a-zäöüß)"“][.!?"“]$/.test(plain)) return;
       if(/siehe|Abb|Tabelle|→|…|\.\.\.|;|&[a-z#0-9]+;|\bs\. /i.test(plain)) return;
       if(/\([^)]{25,}\)/.test(plain)||(plain.match(/,/g)||[]).length>4) return;
       if(!/^[A-ZÄÖÜ„"]/.test(plain)||/\b\d\.\s|\d\)\s/.test(plain)) return;
@@ -39,13 +39,13 @@ const LUECKENTEXT=(function(){
       const spans=s.match(/<strong>([^<]+)<\/strong>/g); if(!spans||spans.length>3) return;
       spans.forEach(function(sp){
         const kw=plainOf(sp).trim().replace(/[.,:;]+$/,''); if(!goodKw(kw)) return;
-        if(String(c.q).toLowerCase().indexOf(kw.toLowerCase())>=0) return;
+        if(q.toLowerCase().indexOf(kw.toLowerCase())>=0) return;
         const idx=s.indexOf(sp), pre=plainOf(s.slice(0,idx)), post=plainOf(s.slice(idx+sp.length));
         if(pre.replace(/\s/g,'').length<6&&post.replace(/\s/g,'').length<6) return;
         if(!pre.trim()&&/^\s*[:=(,.A-ZÄÖÜ„"]/.test(post)) return;
         if(/^[^\s]+\s*[:=]\s*$/.test(pre.trim())) return;
         if((pre+post).toLowerCase().indexOf(kw.toLowerCase())>=0) return;
-        out.push({id:c.id,cat:c.cat,q:c.q,pre:pre,kw:kw,post:post});
+        out.push({id:c.id,cat:c.cat,q:q,pre:pre,kw:kw,post:post});
       });
     });
     return out;
@@ -71,7 +71,7 @@ const LUECKENTEXT=(function(){
       if(own.indexOf(k)>=0||k.indexOf(key)>=0||key.indexOf(k)>=0) return;
       if(own.indexOf(k.slice(0,Math.min(k.length,Math.max(6,k.length-3))))>=0) return;
       seen[k]=1;
-      const sim=(/^[A-ZÄÖÜ]/.test(p.kw)===/^[A-ZÄÖÜ]/.test(it.kw)?0:2)+Math.abs(wcount(p.kw)-wcount(it.kw))+Math.abs(p.kw.length-it.kw.length)/12;
+      const sim=(/^[A-ZÄÖÜ]/.test(p.kw)===/^[A-ZÄÖÜ]/.test(it.kw)?0:3)+Math.abs(wcount(p.kw)-wcount(it.kw))+Math.abs(p.kw.length-it.kw.length)/12;
       cand.push({kw:p.kw,s:rank*3+sim+Math.random()*0.9});
     }); };
     add(B.pool[it.cat]||[],0);
@@ -80,7 +80,10 @@ const LUECKENTEXT=(function(){
     const rest=[]; Object.keys(B.pool).forEach(function(c){ if(grp(c)!==g) rest.push.apply(rest,B.pool[c]); });
     add(rest,2);
     cand.sort((a,b)=>a.s-b.s);
-    return cand.slice(0,3).map(x=>x.kw);
+    const stem=k=>k.toLowerCase().split(/\s+/).map(w=>w.slice(0,6)).join(' ');
+    const used=[stem(it.kw)], res=[];
+    for(let n=0;n<cand.length&&res.length<3;n++){ const st=stem(cand[n].kw); if(used.indexOf(st)>=0) continue; used.push(st); res.push(cand[n].kw); }
+    return res;
   }
 
   /* ── Stil ───────────────────────────────────────────────────────── */
