@@ -6876,16 +6876,7 @@ const SHELL=(function(){
 
   function renderFcSide(){
     const el=document.getElementById('m-fc-side'); if(!el) return;
-    let fc=fcCounted();
-    const cats=[['laufbahn','Laufbahn'],['ibk','IBK'],['vak','VAk'],['feuak','FeuAK'],['idf','IdF']];
-    const rows=cats.map(([k,l])=>{
-      const cs=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(k));
-      const p=cs.length?Math.round(cs.filter(c=>fc[c.id]).length/cs.length*100):0;
-      return `<div class="m-fc-row"><span>${l}</span><span class="m-bar"><i style="width:${p}%"></i></span><span class="m-val">${p} %</span></div>`;
-    }).join('');
-    const known=FLASHCARD_DATA.filter(c=>fc[c.id]).length;
-    el.innerHTML=`<div class="m-card"><div class="m-t1">Dein Stand</div>${rows}<div class="m-t2" style="margin-top:12px">${known} von ${FLASHCARD_DATA.length} Karten gewusst</div></div>
-      <div class="m-card m-kbd"><div class="m-t1">Tastatur</div><div class="m-t2" style="line-height:2.1"><span class="kb-r"><kbd>↑</kbd> aufdecken</span><span class="kb-r"><kbd>Leertaste</kbd> markieren</span><span class="kb-r"><kbd>→</kbd> gewusst</span><span class="kb-r"><kbd>←</kbd> nicht gewusst</span></div></div>`;
+    el.innerHTML=`<div class="m-card m-kbd"><div class="m-t1">Tastatur</div><div class="m-t2" style="line-height:2.1"><span class="kb-r"><kbd>↑</kbd> aufdecken</span><span class="kb-r"><kbd>Leertaste</kbd> markieren</span><span class="kb-r"><kbd>→</kbd> gewusst</span><span class="kb-r"><kbd>←</kbd> nicht gewusst</span></div></div>`;
   }
 
   let _tocIO=null;
