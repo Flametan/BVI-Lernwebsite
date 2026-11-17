@@ -58,7 +58,8 @@ const PAUSE=(function(){
   function bestChip(k){const b=best()[k];if(b==null)return'';
     if(k==='minesweeper'){const L=[['sehr','Sehr schwer'],['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']].find(x=>b[x[0]]!=null);return L?`${L[1]} ${fmtT(b[L[0]])}`:'';}
     if(k==='sudoku'){const L=[['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']].find(x=>b&&b[x[0]]!=null);return L?`${L[1]} ${fmtT(b[L[0]])}`:'';}
-    if(k==='tagesfrage'||k==='kreuzwort')return b&&b.streak?`${b.streak} ${b.streak===1?'Tag':'Tage'} in Folge`:'';
+    if(k==='tagesfrage'){const n=b&&b.max;return n?`Beste Serie ${n} ${n===1?'Tag':'Tage'}`:'';}
+    if(k==='kreuzwort')return typeof b==='number'&&b>0?`Beste Serie ${b} ${b===1?'Tag':'Tage'}`:'';
     if(k==='mahjong')return typeof b==='number'?'Bestzeit '+fmtT(b):'';
     if(k==='lueckentext')return `${b} in 60 s`;
     if(k==='reihenfolge'||k==='hangman')return `Serie ${b}`;
