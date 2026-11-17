@@ -2,7 +2,7 @@
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
       'Simulationen: Der Zurück-Pfeil oben links bringt Sie vom Startbildschirm zurück in die Lern-App (bzw. in den Pausenraum).',
-      'Simulation „Begehung“: Man kommt jetzt über die Treppe in die oberen Geschosse. Der Treppenraum hat eine zweite Tür zum Treppenabsatz, vorher war der Einstieg ins Treppenhaus im ersten Geschoss nicht erreichbar.',
+      'Simulation „Begehung“: Man kommt jetzt über die Treppe in die oberen Geschosse. Der Treppenraum ist nach Westen verbreitert: Ein Gang führt an der Treppe vorbei zum Treppenabsatz, vorher war der Einstieg im ersten Geschoss nicht erreichbar.',
       'Stundenplan IdF Gruppe 1, Woche 4 bis 6 (Stand 13.11.): Stab 1 mit neuen Räumen (Sachgebiete 1 bis 4 in C-205, C-211, C-212, C-213; Stabsrahmenübung Waldbrand in C-205 und C-215; Sachgebiete 5 und 6 in C-1 und C-205) und der EVA „Vorstellung Prüfung“. Stab 2: Krisenstäbe in C-1, am Dienstag ganztägig mit Küchenwagen, danach Selbststudium (die SAR-Exkursion entfällt), am Mittwoch Nachbesprechung Web-GIS und EVA LdS. Presse: Abfahrt zum WDR-Studio um 13:45 Uhr, Freitag Gutachten Ahrtal.',
       'Lernkarten: Oben lässt sich zwischen „Laufbahnprüfung“ (Karten für unsere Prüfung) und „Prüfungsrelevante Hinweise“ (Lernstoff aus den Reitern IBK, VAk, FeuAK, IdF) wählen. Neu: 38 Karten aus IdF-Klausur → Eingrenzungen (Reiter IdF, Brandschutz).',
       'Pausenraum: Einsatzfahrt und Duell nehmen nur noch Fragen aus der Laufbahnprüfung. VB und Stabsarbeit laufen dort unter „IdF“. Grundlage sind alle Laufbahn-Lernkarten als Auswahlfragen. Zur Auswahl stehen IBK (67 Fragen), VAk (89), FeuAK (96) und IdF (103).',

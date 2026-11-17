@@ -5,7 +5,7 @@
    ungerade in B nach Norden; der Lauf des unteren Geschosses ist im oberen das Treppenloch. Gezeichnet wird immer nur ein Geschoss. */
 (window.MISSIONS = window.MISSIONS || {}).begehung = (function(){
   const W = 26, DP = 12, FH = 3.0, WH = 2.7, TH = 0.25, XS = 5, XF = 9, XT = 18, R = 0.4, SPEED = 4.6;
-  const ZN = 7.4, ZS = 10.8, LEN = ZS - ZN, BAND = { A:[0.125, 2.44], B:[2.56, 4.875] }, STUFEN = 12;
+  const X0 = -1.6, ZN = 7.4, ZS = 10.8, LEN = ZS - ZN, BAND = { A:[0.125, 2.44], B:[2.56, 4.875] }, STUFEN = 12;
   const FARBE = { offen:'#f59e0b', ok:'#1f9d55', halb:'#b7791f', falsch:'#c53030' };
   // Wo die Leuchtsäule einer Aufgabe steht und wie das Bauteil heißt
   const ORT = {
@@ -50,32 +50,27 @@
       const wallZ = (x, z1, z2, m, th) => wand(x - (th || TH) / 2, z1, x + (th || TH) / 2, z2, m);
       const wallX = (z, x1, x2, m) => wand(x1, z - TH / 2, x2, z + TH / 2, m);
       const mBlatt = S('holz', 1, 1, { color:STAGE.C('#c79a6b') }), mZarge = Mt('#5a5f68'), mGriff = Mt('#d5d9de', { metalness:0.8, roughness:0.25 });
-      // Wand quer durch das Geschoss, auf Wunsch mit Tür bei z = 6; zweite Tür am südlichen Ende (zum Treppenabsatz, den die ungeraden Geschosse brauchen)
-      function divider(x, tuer, m, th, sued){
+      function divider(x, tuer, m, th){                 // Wand quer durch das Geschoss, auf Wunsch mit Tür bei z = 6
         if(!tuer){ wallZ(x, 0, DP, m, th); return; }
-        const op = [[5.2, 6.8]]; if(sued) op.push([10.7, 11.9]);
-        let z0 = 0; op.forEach(o => { wallZ(x, z0, o[0], m, th); z0 = o[1]; }); wallZ(x, z0, DP, m, th);
-        const d = (th || TH) + 0.06;
-        op.forEach(([a, e]) => {
-          quader(grp, x - d / 2, a - 0.06, x + d / 2, a + 0.02, 0, 2.2, mZarge); quader(grp, x - d / 2, e - 0.02, x + d / 2, e + 0.06, 0, 2.2, mZarge); quader(grp, x - d / 2, a - 0.06, x + d / 2, e + 0.06, 2.16, 0.1, mZarge);
-          const piv = new THREE.Group(); piv.position.set(x, 0, a + 0.02); grp.add(piv); const w = e - a - 0.06;
-          mesh(new THREE.BoxGeometry(0.06, 2.12, w), mBlatt, 0, 1.08, w / 2, piv);
-          mesh(new THREE.SphereGeometry(0.04, 8, 6), mGriff, 0.07, 1.05, w - 0.14, piv); mesh(new THREE.SphereGeometry(0.04, 8, 6), mGriff, -0.07, 1.05, w - 0.14, piv);
-          doors.push({ piv, x, z:(a + e) / 2, a:0, o:0 });
-        });
+        wallZ(x, 0, 5.2, m, th); wallZ(x, 6.8, DP, m, th);
+        const d = (th || TH) + 0.06; quader(grp, x - d / 2, 5.14, x + d / 2, 5.22, 0, 2.2, mZarge); quader(grp, x - d / 2, 6.78, x + d / 2, 6.86, 0, 2.2, mZarge); quader(grp, x - d / 2, 5.14, x + d / 2, 6.86, 2.16, 0.1, mZarge);
+        const piv = new THREE.Group(); piv.position.set(x, 0, 5.22); grp.add(piv);
+        mesh(new THREE.BoxGeometry(0.06, 2.12, 1.54), mBlatt, 0, 1.08, 0.78, piv);
+        mesh(new THREE.SphereGeometry(0.04, 8, 6), mGriff, 0.07, 1.05, 1.4, piv); mesh(new THREE.SphereGeometry(0.04, 8, 6), mGriff, -0.07, 1.05, 1.4, piv);
+        doors.push({ piv, x, z:6, a:0, o:0 });
       }
       // Böden (20 cm stark, Oberkante bei 0); im Treppenraum bleibt das Loch über dem Lauf des unteren Geschosses offen
       const boden = (x1, z1, x2, z2, m) => quader(grp, x1, z1, x2, z2, -0.2, 0.2, m, false);
       const mTr = S('fliese', 2.5, 2.5), loch = g > 0 ? upBand(g - 1) : null;
-      boden(0, 0, XS, ZN, mTr); boden(0, ZS, XS, DP, mTr); boden(2.44, ZN, 2.56, ZS, mTr);
+      boden(X0, 0, XS, ZN, mTr); boden(X0, ZS, XS, DP, mTr); boden(X0, ZN, 0.125, ZS, mTr); boden(2.44, ZN, 2.56, ZS, mTr);
       if(loch !== 'A') boden(0, ZN, 2.44, ZS, mTr); if(loch !== 'B') boden(2.56, ZN, XS, ZS, mTr);
       const art = keller ? 'beton' : /büro/.test(name) ? 'teppich' : /wohn/.test(name) ? 'holz' : /laden/.test(name) ? 'fliese' : 'estrich';
       const mRaum = S(art, art === 'holz' ? 5 : 9, art === 'holz' ? 6 : 5);
       if(G.flur){ boden(XS, 0, XF, DP, S('fliese', 2, 6, { color:STAGE.C('#f0dba6') })); boden(XF, 0, W, DP, mRaum); } else boden(XS, 0, W, DP, mRaum);
       // Wände
       const mAussen = S('putz', 6, 1, { color:STAGE.C(keller ? '#b9b6b0' : '#efe6d6') });
-      wallX(0, 0, W, mAussen); wallX(DP, 0, W, mAussen); wallZ(0, TH / 2, DP - TH / 2, mAussen); wallZ(W, TH / 2, DP - TH / 2, mAussen);
-      divider(XS, true, null, null, true);
+      wallX(0, X0, W, mAussen); wallX(DP, X0, W, mAussen); wallZ(X0, TH / 2, DP - TH / 2, mAussen); wallZ(W, TH / 2, DP - TH / 2, mAussen);
+      divider(XS, true);
       if(G.flur) divider(XF, true);
       const mBrand = S('ziegel', 4, 1.5);
       if(L.brand) divider(XT, braucht(g, 'tuer_trenn'), mBrand, 0.5); else if(G.trenn) divider(XT, braucht(g, 'tuer_trenn'));
@@ -85,7 +80,8 @@
       }
       // Treppe: eigener Lauf nach oben, Lauf des unteren Geschosses im Loch, Geländer an den gesperrten Enden
       if(g < n - 1) grp.add(lauf(g, 0)); if(g > 0) grp.add(lauf(g - 1, -FH));
-      boxes.push({ x1:2.44, x2:2.56, z1:ZN, z2:ZS });
+      boxes.push({ x1:2.44, x2:2.56, z1:ZN, z2:ZS }, { x1:-0.05, x2:0.1, z1:ZN, z2:ZS });
+      quader(grp, -0.03, ZN, 0.03, ZS, 0.92, 0.06, mRohr, false); for(let i = 0; i <= 4; i++){ const z = ZN + (ZS - ZN) * i / 4; quader(grp, -0.025, z - 0.025, 0.025, z + 0.025, 0, 0.95, mRohr, false); }
       const zGel = g % 2 === 0 ? ZS : ZN;
       [[g < n - 1, upBand(g)], [g > 0, loch]].forEach(([da, b]) => { if(!da) return; const r = BAND[b]; quader(grp, r[0], zGel - 0.03, r[1], zGel + 0.03, 0.95, 0.06, mRohr, false); quader(grp, r[0], zGel - 0.02, r[1], zGel + 0.02, 0.45, 0.04, mRohr, false); [r[0] + 0.05, (r[0] + r[1]) / 2, r[1] - 0.05].forEach(x => quader(grp, x - 0.025, zGel - 0.025, x + 0.025, zGel + 0.025, 0, 0.98, mRohr, false)); });
       einrichten(grp, boxes, name, L.brand || G.trenn, !!G.flur, keller);
@@ -137,9 +133,9 @@
     (function welt(){
       const flaeche = (x1, z1, x2, z2, y, m) => { const o = mesh(new THREE.PlaneGeometry(x2 - x1, z2 - z1), m, (x1 + x2) / 2, y, (z1 + z2) / 2, out, false); o.rotation.x = -Math.PI / 2; return o; };
       const gras = (x1, z1, x2, z2) => flaeche(x1, z1, x2, z2, -0.02, S('gras', (x2 - x1) / 5, (z2 - z1) / 5));
-      gras(-220, -220, -0.3, 240); gras(W + 0.3, -220, 250, 240); gras(-0.3, -220, W + 0.3, -0.3); gras(-0.3, DP + 0.3, W + 0.3, 240);
+      gras(-220, -220, X0 - 0.3, 240); gras(W + 0.3, -220, 250, 240); gras(X0 - 0.3, -220, W + 0.3, -0.3); gras(X0 - 0.3, DP + 0.3, W + 0.3, 240);
       const pfl = (x1, z1, x2, z2) => flaeche(x1, z1, x2, z2, 0.01, S('pflaster', (x2 - x1) / 2, (z2 - z1) / 2));
-      pfl(-2.2, -2.2, -0.3, DP + 2.2); pfl(W + 0.3, -2.2, W + 2.2, DP + 2.2); pfl(-0.3, -2.2, W + 0.3, -0.3); pfl(-0.3, DP + 0.3, W + 0.3, DP + 2.2); pfl(1.4, DP + 2.2, 3.6, 19.5);
+      pfl(X0 - 2.2, -2.2, X0 - 0.3, DP + 2.2); pfl(W + 0.3, -2.2, W + 2.2, DP + 2.2); pfl(X0 - 0.3, -2.2, W + 0.3, -0.3); pfl(X0 - 0.3, DP + 0.3, W + 0.3, DP + 2.2); pfl(1.4, DP + 2.2, 3.6, 19.5);
       pfl(-110, 19.5, 140, 22); flaeche(-110, 22, 140, 30, 0.0, S('asphalt', 60, 2)); pfl(-110, 30, 140, 32.5);
       const weiss = Mt('#e8e8e4'), kante = Mt('#8d8f92');
       for(let x = -105; x < 138; x += 7) quader(out, x, 25.9, x + 3, 26.1, 0, 0.012, weiss, false);
@@ -185,7 +181,7 @@
       [[-150, -170, 90], [20, -210, 120], [170, -150, 100], [-200, 60, 110], [210, 80, 120], [40, 220, 130]].forEach(h => { const o = mesh(new THREE.SphereGeometry(h[2], 20, 10), Mt('#5f8a5a'), h[0], -h[2] * 0.72, h[1], out, false); o.receiveShadow = false; });
     })();
     // Baukörper unter dem gezeigten Geschoss (wird je nach Geschoss gestreckt)
-    const mRumpf = S('fassade', 5, 1), rumpf = mesh(new THREE.BoxGeometry(W + 0.24, 1, DP + 0.24), mRumpf, W / 2, 0, DP / 2, sc);
+    const mRumpf = S('fassade', 5, 1), rumpf = mesh(new THREE.BoxGeometry(W - X0 + 0.24, 1, DP + 0.24), mRumpf, (W + X0) / 2, 0, DP / 2, sc);
 
     /* ---------- Aufgaben: Leuchtsäule und Schild am Bauteil ---------- */
     const tasks = L.aufgaben.map((a, i) => {
@@ -204,7 +200,7 @@
 
     // In welchem Lauf steht die Stelle (x, z) im Geschoss g? up = eigener Lauf nach oben, down = Lauf des unteren Geschosses
     function zone(x, z, g){
-      if(z <= ZN || z >= ZS || x >= XS - TH / 2) return null;
+      if(z <= ZN || z >= ZS || x >= XS - TH / 2 || x < 0.125) return null;
       const b = x < 2.5 ? 'A' : 'B';
       if(g < n - 1 && b === upBand(g)) return { k:g, dir:1 };
       if(g > 0 && b === upBand(g - 1)) return { k:g - 1, dir:-1 };
@@ -287,7 +283,7 @@
       const kf = Math.min(1, dt * 8); tgt.x += (pos.x - tgt.x) * kf; tgt.z += (pos.z - tgt.z) * kf; tgt.y += (pos.y + 1.2 - tgt.y) * kf;
       if(!gespiegelt && time > 0.05){ gespiegelt = true; fig.visible = false; st.spiegeln(W / 2, pos.y + 1.5, DP / 2); fig.visible = true; }
       st.cam(tgt, dt);
-      if(tick % 6 === 0 && ctx.karte) ctx.karte({ x1:-0.5, z1:-0.5, x2:W + 0.5, z2:DP + 0.5 }, floors[cur].boxes, tasks.filter(t => t.g === cur && t.state === null).map(t => ({ x:t.x, z:t.z, c:FARBE.offen })), { x:pos.x, z:pos.z, rot:face });
+      if(tick % 6 === 0 && ctx.karte) ctx.karte({ x1:X0 - 0.5, z1:-0.5, x2:W + 0.5, z2:DP + 0.5 }, floors[cur].boxes, tasks.filter(t => t.g === cur && t.state === null).map(t => ({ x:t.x, z:t.z, c:FARBE.offen })), { x:pos.x, z:pos.z, rot:face });
       // Wände zwischen Kamera und Figur werden durchsichtig (jeden dritten Durchlauf geprüft)
       if(++tick % 3 === 0){
         tmp.set(pos.x, pos.y + 1.3, pos.z); const len = tmp.distanceTo(st.camera.position);
