@@ -86,8 +86,8 @@ const RANK=(function(){
     busy=false;
   }
   function draw(b){
-    const me=myName(), rows=b.top.map(r=>`<li class="${r.me?'me':''}"><span class="rk-p">${r.place}</span>${av(r.name,r.av)}<span class="rk-n">${esc(r.name)}<small>${esc(GAME.rankOf(r.tx!=null?r.tx:r.xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(r.tx!=null?r.tx:r.xp),34)}<b>${r.xp}</b></li>`).join('');
-    const mine=b.me&&b.me.place>20?`<li class="me gap"><span class="rk-p">${b.me.place}</span>${av(me,st().av)}<span class="rk-n">${esc(me)}<small>${esc(GAME.rankOf(GAME._state().xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(GAME._state().xp),34)}<b>${b.me.xp}</b></li>`:'';
+    const me=myName(), rows=b.top.map(r=>`<li class="${r.me?'me':''}"><span class="rk-p">${r.place}</span>${av(r.name,r.av)}<span class="rk-n">${esc(r.name)}<small>${esc(GAME.rankOf(r.tx!=null?r.tx:r.xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(r.tx!=null?r.tx:r.xp),50)}<b>${r.xp}</b></li>`).join('');
+    const mine=b.me&&b.me.place>20?`<li class="me gap"><span class="rk-p">${b.me.place}</span>${av(me,st().av)}<span class="rk-n">${esc(me)}<small>${esc(GAME.rankOf(GAME._state().xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(GAME._state().xp),50)}<b>${b.me.xp}</b></li>`:'';
     el.innerHTML=`<div class="rk-tabs" role="tablist"><button type="button" role="tab" class="${tab==='week'?'on':''}" aria-selected="${tab==='week'}" onclick="RANK.setTab('week')">Diese Woche</button><button type="button" role="tab" class="${tab==='all'?'on':''}" aria-selected="${tab==='all'}" onclick="RANK.setTab('all')">Gesamt</button></div>
       <ol class="rk-list">${rows||'<li class="rk-empty">Noch niemand in der Liste.</li>'}${mine}</ol>
       <p class="rk-sub">${b.me?`Dein Platz: ${b.me.place} von ${b.total}`:'Sammle Punkte, um in der Liste zu erscheinen.'} · Du bist als „${esc(me)}“ dabei</p>

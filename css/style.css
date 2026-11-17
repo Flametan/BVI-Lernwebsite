@@ -4811,6 +4811,29 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #v-flashcards.active>.fc-sub-row,#v-flashcards.active>.fc-filter-row{grid-row:2/span 4;}
 }
 
+/* Lernkarten Desktop: große Karte, schmale Fächerleiste rechts; Kopf kompakt, damit die Karte Platz bekommt */
+@media (min-width:1024px){
+  #v-flashcards.active{max-width:1400px;grid-template-columns:minmax(0,1fr) 210px;padding-left:32px;padding-right:32px;}
+  #v-flashcards.active>.page-hero .page-eyebrow,#v-flashcards.active>.page-hero .page-title{display:none;}
+  #v-flashcards.active>.page-hero .phi{min-height:0;margin-top:8px;}
+  #v-flashcards.active>.page-hero .phi>.fc-tiles{grid-row:1;margin:0;}
+  #v-flashcards.active>.fc-sub-row,#v-flashcards.active>.fc-filter-row{grid-column:2;grid-row:2/span 3;}
+  #v-flashcards.active #m-fc-side{display:none;}
+  #v-flashcards.active>.fc-seg{grid-column:1;grid-row:2;}
+  #v-flashcards.active>.fc-modebar{grid-column:1;grid-row:3;}
+  #v-flashcards.active #fc-container{grid-column:1;grid-row:4;}
+  #v-flashcards .fc-outer{max-width:none;height:calc(100vh - 440px);min-height:230px;}
+  #v-flashcards .fc-q{font-size:2.2rem;}
+  #v-flashcards .fc-a{font-size:1.3rem;}
+  #v-flashcards .fc-face{padding:36px 3.4rem 36px 44px;}
+}
+/* Tablet: Karte ebenfalls größer und besser lesbar */
+@media (min-width:700px) and (max-width:1023px){
+  #v-flashcards .fc-outer{max-width:none;height:360px;}
+  #v-flashcards .fc-q{font-size:1.7rem;}
+  #v-flashcards .fc-a{font-size:1.1rem;}
+}
+
 /* Prüfung (Variante 5): wichtige Prüfungen als große Karten mit orangem Rand links, Module darunter */
 .ex-imp>.m-list{background:none;border-radius:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;overflow:visible;}
 .ex-f.jg-rw,.ex-f.jg-rw.hot,.ex-f.jg-rw.lbg{background:var(--m-card);border-radius:18px;border-top:0;box-shadow:inset 6px 0 0 var(--m-accent);overflow:hidden;}
@@ -4862,33 +4885,37 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 }
 
 /* Karte „Heute“: Tagesziel-Ring, Tages- und Wochenaufgaben */
-.g-today{display:flex;gap:16px;align-items:flex-start;background:var(--m-card);border-radius:18px;padding:16px;margin-bottom:14px;}
-.g-ring-b{flex:none;position:relative;width:104px;height:104px;border:0;background:none;padding:0;cursor:pointer;color:var(--m-fg);font-family:inherit;}
-.g-ring-b svg{display:block;}
-.g-rg-t{fill:none;stroke:var(--m-raised);stroke-width:9;}
-.g-rg-v{fill:none;stroke:var(--m-accent);stroke-width:9;stroke-linecap:round;transition:stroke-dasharray .6s ease;}
-.g-ring-b.ok .g-rg-v{stroke:#4cc38a;}
-.g-rg-n{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;}
-.g-rg-n b{font-size:1.7rem;font-weight:800;display:flex;}
-.g-rg-n small{font-size:.7rem;color:var(--m-muted);margin-top:2px;}
-.g-ring-b.ok .g-rg-n b{color:#4cc38a;}
-.g-td{flex:1;min-width:0;}
-.g-td-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:.78rem;color:var(--m-muted);}
+.g-today{background:var(--m-card);border-radius:16px;margin-bottom:14px;}
+.g-bar{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:8px 14px;border:0;background:none;color:var(--m-fg);font-family:inherit;text-align:left;cursor:pointer;border-radius:16px;}
+.g-bar:focus-visible{outline:2px solid var(--m-accent);outline-offset:2px;}
+.g-rg{position:relative;flex:none;width:38px;height:38px;display:grid;place-items:center;}
+.g-rg svg{position:absolute;inset:0;}
+.g-rg-t{fill:none;stroke:var(--m-raised);stroke-width:11;}
+.g-rg-v{fill:none;stroke:var(--m-accent);stroke-width:11;stroke-linecap:round;transition:stroke-dasharray .6s ease;}
+.g-bar.ok .g-rg-v{stroke:#4cc38a;}
+.g-rg b{position:relative;font-size:.78rem;font-weight:800;display:flex;}
+.g-bar.ok .g-rg b{color:#4cc38a;}
+.g-bt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;font-size:.88rem;}
+.g-bt b{font-weight:700;}.g-bt em{font-style:normal;color:var(--m-muted);}
+.g-bt small{font-size:.72rem;color:var(--m-muted);}
+.g-tdc{flex:none;color:var(--m-muted);transition:transform .2s;}
+.g-today.open .g-tdc{transform:rotate(180deg);}
+.g-more{padding:0 14px 14px;}.g-more[hidden]{display:none;}
+.g-td-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:.78rem;color:var(--m-muted);margin-top:6px;}
 .g-td-h b{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--m-fg);}
-.g-td-h.w{margin-top:10px;}
+.g-td>div+div{margin-top:8px;}
 .g-today .g-tasks li,.g-aufg .g-tasks li{min-height:30px;}
-@media (max-width:420px){.g-today{flex-direction:column;align-items:center;}.g-td{width:100%;}}
-@media (prefers-reduced-motion:reduce){.g-rg-v{transition:none;}}
-/* Startseite ab Tablet: „Heute“-Karte über die volle Breite zwischen Kopfkarten und Lernstoff */
+.g-links{display:flex;gap:8px;margin-top:10px;}
+.g-links .g-lk{flex:1;min-height:40px;border:0;border-radius:99px;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);font:inherit;font-weight:700;font-size:.86rem;cursor:pointer;}
+.g-links .g-lk.alt{background:var(--m-raised);color:var(--m-fg);}
+@media (prefers-reduced-motion:reduce){.g-rg-v,.g-tdc{transition:none;}}
+/* Startseite ab Tablet: „Heute“-Leiste über die volle Breite zwischen Kopfkarten und Lernstoff; aufgeklappt zwei Spalten */
 @media(min-width:701px){
   #m-home .m-hgrid{grid-template-rows:auto auto auto auto;}
-  #m-home .g-today{grid-column:1 / -1;grid-row:2;margin:0;align-items:center;}
+  #m-home .g-today{grid-column:1 / -1;grid-row:2;margin:0;}
   #m-home .g-today .g-td{display:grid;grid-template-columns:1fr 1fr;column-gap:28px;}
-  #m-home .g-today .g-td>.g-tasks{grid-row:2;}
-  #m-home .g-today .g-td>.g-td-h.w{margin-top:0;grid-column:2;grid-row:1;}
-  #m-home .g-today .g-td>.g-td-h:not(.w){grid-column:1;grid-row:1;}
-  #m-home .g-today .g-td>.g-tasks:nth-of-type(1){grid-column:1;}
-  #m-home .g-today .g-td>.g-tasks:nth-of-type(2){grid-column:2;}
+  #m-home .g-today .g-td>div+div{margin-top:0;}
+  #m-home .g-today .g-links{max-width:460px;}
   #m-home .m-mods{grid-row:3;}
   #m-home .m-cloud{grid-row:4;}
 }
@@ -4916,7 +4943,9 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .rk-tabs button{flex:1;border:0;background:none;color:var(--m-muted);font:inherit;font-weight:700;font-size:.85rem;min-height:38px;border-radius:99px;cursor:pointer;}
 .rk-tabs button.on{background:var(--m-card);color:var(--m-fg);box-shadow:0 1px 4px rgba(0,0,0,.12);}
 .rk-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;}
-.rk-list li{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 8px;border-radius:12px;font-size:.92rem;}
+.rk-list li{display:flex;align-items:center;gap:12px;min-height:66px;padding:0 12px;border-radius:16px;font-size:1.05rem;}
+.rk-list li .rk-av{width:45px;height:45px;font-size:.95rem;}
+.rk-list li .rk-n small{font-size:.82rem;}
 .rk-list li.me{background:var(--m-raised);outline:2px solid var(--m-accent);outline-offset:-2px;}
 .rk-list li.gap{margin-top:8px;}
 .rk-p{width:26px;text-align:center;font-weight:800;color:var(--m-muted);flex:none;}
