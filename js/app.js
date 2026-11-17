@@ -1040,6 +1040,16 @@ const FLASHCARD_DATA = [
   {"id":"k-idf-135","cat":"IdF · UCPM","q":"Wie sieht die Kapazitätenpyramide des Unionsverfahrens aus?","a":"Von oben: rescEU (Art. 12), European Civil Protection Pool ECPP (Art. 11, zertifiziert), zum internationalen Einsatz befähigte Kapazitäten (Art. 9), nationale Kapazitäten im Katastrophenschutz. Seitlich: Einsatzvorbehalt und Kofinanzierungsraten."},
   {"id":"k-idf-136","cat":"IdF · UCPM","q":"Welche Stellen sind im Weg des Hilfeersuchens nach Deutschland beteiligt?","a":"Betroffener Staat (NCA/NCP, LEMA, OSOCC) stellt die RfA an ERCC/CECIS, das ERCC leitet sie an das GMLZ (NCP) im BBK weiter. Austausch und Entscheidung mit BMI (NCA) und Bundesministerien, Steuerung mit den Anbietern (BPOL, HiOrgs, THW, Bundeswehr, Länder, sonstige), Angebot DEU an das ERCC, Akzeptanz oder Ablehnung, Entsendung."}
 ];
+// Karten aus IdF-Klausur → Eingrenzungen (Vorbeugender Brandschutz 12/2026): Frage, richtige Antwort(en) und Begründung
+if(typeof IDF_QUIZ_Q!=='undefined'){
+  const norm=s=>String(s).replace(/<[^>]*>/g,'').toLowerCase().replace(/[^a-z0-9äöüß]+/g,' ').trim();
+  const have=new Set(FLASHCARD_DATA.map(c=>norm(c.q)));
+  IDF_QUIZ_Q.filter(q=>q.cat==='Vorbeugender Brandschutz 12/2026'&&(q.type==='mc'||q.type==='multi')).forEach(q=>{
+    if(have.has(norm(q.q))) return;
+    const ok=(q.type==='multi'?q.correct:[q.correct]).map(i=>q.opts[i]);
+    FLASHCARD_DATA.push({id:'k-idf-e'+q.id,cat:'IdF · Brandschutz',q:q.q,a:'<strong>'+ok.join('</strong>; <strong>')+'</strong>'+(q.exp?'<br>'+q.exp:'')});
+  });
+}
 // Eigene Karten aus dem Speicher dazunehmen
 try{ JSON.parse(localStorage.getItem('bvi_fc_custom')||'[]').forEach(c=>{ if(c&&c.id&&c.q&&c.a) FLASHCARD_DATA.push({id:c.id,cat:c.cat,q:c.q,a:c.a,own:true}); }); }catch(e){}
 
