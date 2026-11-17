@@ -4956,7 +4956,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #m-home .g-r3{min-width:auto;}
   #m-home .g-wl{display:block;}
   #m-home .g-r3 svg{display:block;width:64px;height:64px;}
-  #m-home .g-r3 em{font-size:.72rem;}
+  #m-home .g-r3 em{font-size:.72rem;white-space:nowrap;}
   #m-home .g-w3 .r{font-size:.86rem;line-height:1.6;}
   #m-home .g-r3 .t{fill:none;stroke:var(--m-raised);stroke-width:4;}
   #m-home .g-r3 .v{fill:none;stroke:var(--m-accent);stroke-width:4;stroke-linecap:round;transition:stroke-dasharray .6s cubic-bezier(.3,.9,.3,1);}
