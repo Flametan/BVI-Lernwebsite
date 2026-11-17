@@ -89,7 +89,7 @@ const MINESWEEPER=(function(){
     board.insertAdjacentHTML('beforeend','<div class="mi-heat" aria-hidden="true"></div>');
   }
   function newGame(l){
-    if(l) lvl=l; clearInterval(timer); clearTimeout(hintT); clearTimeout(overT); timer=null; hintIdx=-1;
+    if(l) lvl=l; if(typeof PAUSE!=='undefined'&&PAUSE.board) PAUSE.board('minesweeper',lvl); clearInterval(timer); clearTimeout(hintT); clearTimeout(overT); timer=null; hintIdx=-1;
     S=create(lvl); ov.hidden=true; ov.innerHTML=''; saySm('');
     var L=LEVELS[lvl]; board.style.setProperty('--cols',L.cols); board.querySelectorAll('.mi-c').forEach(function(n){ n.remove(); });
     var h=''; for(var i=0;i<S.cells.length;i++) h+='<button type="button" class="mi-c v" data-i="'+i+'" aria-label="Zeile '+(Math.floor(i/L.cols)+1)+', Spalte '+(i%L.cols+1)+', verdeckt"></button>';

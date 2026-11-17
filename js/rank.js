@@ -123,7 +123,8 @@ const RANK=(function(){
     sure=0; try{ await leave(); mount(); }catch(e){ flash(e.message,true); }
   }
   // Pausenspiele: eigene Bestwerte melden, Liste eines Spiels holen
-  const games=g=>api('PUT','/games',{g});
-  const gameBoard=b=>api('GET','/games?b='+encodeURIComponent(b));
-  return {mount,touch,report,doJoin,setTab,doLeave,join,games,gameBoard,on:()=>!!st()};
+  const games=(g,w)=>api('PUT','/games',w?{g,w}:{g});
+  const gameBoard=(b,wk)=>api('GET','/games?b='+encodeURIComponent(b)+(wk?'&w=1':''));
+  const gamesAll=()=>api('GET','/games?all=1');
+  return {mount,touch,report,doJoin,setTab,doLeave,join,games,gameBoard,gamesAll,on:()=>!!st()};
 })();

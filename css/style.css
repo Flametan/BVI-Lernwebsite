@@ -4125,6 +4125,25 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .pz-lb li.pz-la{grid-template-columns:34px 30px 1fr auto;}
 .pz-lb li.me{background:var(--m-accent-dim);outline:2px solid var(--m-accent);}
 .pz-lbn{color:var(--m-muted);font-size:.82rem;margin:0 0 12px;}
+/* Platzierungen: Rang-Streifen, Platz auf der Kachel, Karte im Spiel */
+.pz-rk{display:block;width:100%;text-align:left;background:var(--m-card);border-radius:16px;padding:12px 14px;margin:0 0 14px;box-shadow:0 0 0 2px var(--m-accent);color:var(--m-text);font:inherit;border:0;}
+.pz-rk .pz-chips{margin-top:8px;margin-bottom:0;}
+.pz-rk .pz-chip{background:var(--m-raised);}
+.pz-rk .pz-chip.on{background:var(--m-accent);}
+.pz-rkh{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--m-muted);font-weight:700;}
+.pz-rkw{margin-top:12px;padding-top:10px;border-top:1px solid var(--m-line,rgba(128,128,128,.25));}
+.pz-rka{display:block;margin-top:8px;background:none;border:0;padding:4px 0;font:inherit;font-size:.8rem;font-weight:700;color:var(--m-accent-fg);cursor:pointer;}
+.pz-rkt{margin-top:6px;font-size:.82rem;color:var(--m-muted);}
+.pz-rkev{display:flex;gap:8px;align-items:flex-start;justify-content:space-between;margin-top:8px;padding:8px 10px;border-radius:12px;background:var(--m-accent-dim);font-size:.86rem;}
+.pz-rkev button{background:none;border:0;font-size:1.2rem;line-height:1;padding:0 4px;color:inherit;cursor:pointer;}
+.pz-rkn{display:flex;flex-direction:column;gap:2px;cursor:pointer;}
+.pz-rkn span{font-size:.82rem;color:var(--m-muted);}
+.pz-rkb{display:inline-block;margin-top:4px;background:var(--m-accent);color:var(--m-on-accent,#1a1205);border-radius:20px;padding:2px 9px;font-size:.72rem;font-weight:800;align-self:flex-start;}
+.pz-rk3{background:var(--m-raised);border-radius:14px;padding:10px 12px;margin:0 0 10px;box-shadow:0 0 0 2px var(--m-accent);}
+.pz-rk3 ol{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:3px;font-size:.88rem;}
+.pz-rk3 li{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:baseline;}
+.pz-rk3 li.me,.pz-rk3 li.me *{color:var(--m-accent-fg);font-weight:800;}
+.pz-rk3[hidden]{display:none;}
 .pz-card .pz-chip{margin-top:12px;}
 .pz-lgo{min-height:52px;max-width:560px;width:100%;justify-content:center;align-items:center;text-align:center;}
 

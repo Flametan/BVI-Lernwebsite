@@ -37,25 +37,38 @@ const MAHJONG=(function(){
   ];
   var NS=SYM.length; // 21 Symbole zu je 4 Steinen = 84 Steine
 
-  /* ---------- Layout: Pyramide mit 4 Ebenen, 84 Steine; x,y in Halbfeldern ---------- */
-  var POS=(function(){
-    var p=[], x, y;
-    for(y=0;y<=10;y+=2){ var x0=(y===0||y===10)?2:0, x1=(y===0||y===10)?16:18; for(x=x0;x<=x1;x+=2) p.push({x:x,y:y,z:0}); }
-    for(y=3;y<=7;y+=2) for(x=4;x<=14;x+=2) p.push({x:x,y:y,z:1});
-    for(y=4;y<=6;y+=2) for(x=6;x<=12;x+=2) p.push({x:x,y:y,z:2});
-    p.push({x:8,y:5,z:3}); p.push({x:10,y:5,z:3});
-    return p;
-  })();
-  var N=POS.length;
-  var ABOVE=[], LEFT=[], RIGHT=[];
-  POS.forEach(function(a,i){
-    ABOVE[i]=[]; LEFT[i]=[]; RIGHT[i]=[];
-    POS.forEach(function(b,j){
-      if(i===j) return;
-      if(b.z>a.z&&Math.abs(b.x-a.x)<2&&Math.abs(b.y-a.y)<2) ABOVE[i].push(j);
-      if(b.z===a.z&&Math.abs(b.y-a.y)<2){ if(b.x===a.x-2) LEFT[i].push(j); else if(b.x===a.x+2) RIGHT[i].push(j); }
+  /* ---------- Layouts (Stufen): x,y in Halbfeldern, z = Ebene ---------- */
+  var LV=[['leicht','Leicht'],['mittel','Mittel'],['pyramide','Pyramide'],['burg','Burg'],['festung','Festung']];
+  function grid(p,z,x0,x1,y0,y1){ for(var y=y0;y<=y1;y+=2) for(var x=x0;x<=x1;x+=2) p.push({x:x,y:y,z:z}); }
+  var LAY={
+    leicht:function(p){ grid(p,0,2,16,0,6); grid(p,1,6,12,2,4); },                       // 40 Steine
+    mittel:function(p){ grid(p,0,2,16,0,8); grid(p,1,4,14,2,6); grid(p,2,8,10,4,4); },    // 60 Steine
+    pyramide:function(p){                                                                  // 84 Steine
+      var x, y;
+      for(y=0;y<=10;y+=2){ var x0=(y===0||y===10)?2:0, x1=(y===0||y===10)?16:18; for(x=x0;x<=x1;x+=2) p.push({x:x,y:y,z:0}); }
+      for(y=3;y<=7;y+=2) for(x=4;x<=14;x+=2) p.push({x:x,y:y,z:1});
+      for(y=4;y<=6;y+=2) for(x=6;x<=12;x+=2) p.push({x:x,y:y,z:2});
+      p.push({x:8,y:5,z:3}); p.push({x:10,y:5,z:3});
+    },
+    burg:function(p){ grid(p,0,0,18,0,10); [[0,0],[16,0],[0,8],[16,8]].forEach(function(c){ grid(p,1,c[0],c[0]+2,c[1],c[1]+2); grid(p,2,c[0],c[0]+2,c[1],c[1]+2); }); },   // 92 Steine, vier Türme
+    festung:function(p){ grid(p,0,0,22,0,10); grid(p,1,2,20,2,8); grid(p,2,6,16,4,6); }  // 124 Steine
+  };
+  var POS=[], N=0, ABOVE=[], LEFT=[], RIGHT=[], VB=null, LVL='pyramide';
+  function setLayout(id){
+    if(!LAY[id]) id='pyramide'; LVL=id; if(typeof PAUSE!=='undefined'&&PAUSE.board) PAUSE.board('mahjong',id); POS=[]; LAY[id](POS); N=POS.length;
+    ABOVE=[]; LEFT=[]; RIGHT=[];
+    POS.forEach(function(a,i){
+      ABOVE[i]=[]; LEFT[i]=[]; RIGHT[i]=[];
+      POS.forEach(function(b,j){
+        if(i===j) return;
+        if(b.z>a.z&&Math.abs(b.x-a.x)<2&&Math.abs(b.y-a.y)<2) ABOVE[i].push(j);
+        if(b.z===a.z&&Math.abs(b.y-a.y)<2){ if(b.x===a.x-2) LEFT[i].push(j); else if(b.x===a.x+2) RIGHT[i].push(j); }
+      });
     });
-  });
+    var x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+    POS.forEach(function(p,i){ x0=Math.min(x0,fx(i)); y0=Math.min(y0,fy(i)); x1=Math.max(x1,fx(i)+FW+DX); y1=Math.max(y1,fy(i)+FH+DY); });
+    VB={x:x0-.35,y:y0-.35,w:x1-x0+.7,h:y1-y0+.7};
+  }
   // Stein ist frei: nichts liegt darauf und links ODER rechts ist frei
   function isFree(al,i){
     if(!al[i]) return false;
@@ -83,12 +96,12 @@ const MAHJONG=(function(){
     var all=[], i; for(i=0;i<N;i++) all.push(i);
     for(var t=0;t<500;t++){
       var pairs=genPairs(all); if(!pairs) continue;
-      var pool=[]; for(i=0;i<NS;i++){ pool.push(i); pool.push(i); } shuffleArr(pool);
+      var ord=[]; for(i=0;i<NS;i++) ord.push(i); shuffleArr(ord); var pool=[]; for(i=0;i<N/2;i++) pool.push(ord[Math.floor(i/2)%NS]); shuffleArr(pool);
       var sym=[]; pairs.forEach(function(pr,k){ sym[pr[0]]=pool[k]; sym[pr[1]]=pool[k]; });
       return sym;
     }
     // Notlösung (praktisch nie nötig): feste Paarung der Reihe nach
-    var s=[]; for(i=0;i<N;i++) s[i]=Math.floor(i/4)%NS; return s;
+    var s=[]; for(i=0;i<N;i++) s[i]=Math.floor(i/2)%NS; return s;
   }
   // Verbleibende Steine mit denselben Symbolen neu und wieder lösbar verteilen
   function reshuffle(al,sym){
@@ -113,14 +126,10 @@ const MAHJONG=(function(){
   var UX=1, UY=1.3, FW=1.78, FH=2.32, DX=.22, DY=.28, SH=.3;
   function fx(i){ return POS[i].x*UX-POS[i].z*SH; }
   function fy(i){ return POS[i].y*UY-POS[i].z*SH; }
-  var VB=(function(){
-    var a=1e9,b=1e9,c=-1e9,d=-1e9;
-    POS.forEach(function(p,i){ a=Math.min(a,fx(i)); b=Math.min(b,fy(i)); c=Math.max(c,fx(i)+FW+DX); d=Math.max(d,fy(i)+FH+DY); });
-    return {x:a-.35,y:b-.35,w:c-a+.7,h:d-b+.7};
-  })();
   var STYLE_ID='mj-style';
   var CSS=''
    +'.mj{max-width:620px;margin:0 auto;position:relative;width:100%;box-sizing:border-box;}'
+   +'.mj-lv{display:flex;flex-wrap:nowrap;gap:5px;}.mj-lv .pz-chip{flex:1 1 0;min-width:0;padding:0 2px;font-size:.74rem;min-height:36px;text-align:center;justify-content:center;background:var(--m-raised);}.mj-lv .pz-chip.on{background:var(--m-accent,#ffa31a);color:var(--m-on-accent,#1a1205);}'
    +'.mj-hud{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}'
    +'.mj-hud div{background:var(--m-raised);border-radius:12px;padding:7px 4px;text-align:center;}'
    +'.mj-hud b{display:block;font-size:1.15rem;font-weight:800;color:var(--m-fg);font-variant-numeric:tabular-nums;line-height:1.2;}'
@@ -176,7 +185,9 @@ const MAHJONG=(function(){
   var root=null, host=null, svg=null, ov=null, msgEl=null, tiles=[], S=null, handlers=[], timer=null, hintT=null, overT=null, RM=false, kb=false;
   function fmt(s){ var m=Math.floor(s/60); return m+':'+('0'+(s%60)).slice(-2); }
   function secs(){ if(!S||!S.t0) return 0; return Math.floor(((S.over?S.t1:Date.now())-S.t0)/1000); }
-  function best(){ var b=lget(BKEY,{}); return typeof b[KEY]==='number'?b[KEY]:null; }
+  function bestObj(){ var v=lget(BKEY,{})[KEY]; return typeof v==='number'?{pyramide:v}:(v&&typeof v==='object'?v:{}); }
+  function best(){ var v=bestObj()[LVL]; return typeof v==='number'?v:null; }
+  var OKEY='bvi_mahjong_opts';
   function setH(k,v){ var n=root&&root.querySelector('[data-h="'+k+'"]'); if(n&&n.textContent!==String(v)) n.textContent=v; }
   function setMsg(t,warn){ if(!msgEl) return; msgEl.textContent=t||''; msgEl.classList.toggle('mj-warn',!!warn); }
 
@@ -192,6 +203,7 @@ const MAHJONG=(function(){
     });
     var ico=function(k,t,a){ return '<button type="button" data-a="'+a+'" aria-label="'+t.l+'" title="'+t.t+'">'+IC[k]+'<span>'+t.s+'</span></button>'; };
     root.innerHTML='<div class="pz-card mj">'
+      +'<div class="pz-chips mj-lv" role="group" aria-label="Stufe">'+LV.map(function(l){ return '<button type="button" class="pz-chip'+(l[0]===LVL?' on':'')+'" data-lv="'+l[0]+'" aria-pressed="'+(l[0]===LVL)+'">'+l[1]+'</button>'; }).join('')+'</div>'
       +'<div class="mj-hud"><div><b data-h="time">0:00</b><span>Zeit</span></div><div><b data-h="left">'+N+'</b><span>Steine</span></div><div><b data-h="best">–</b><span>Bestzeit</span></div></div>'
       +'<div class="mj-bw"><svg class="mj-svg" viewBox="'+VB.x.toFixed(2)+' '+VB.y.toFixed(2)+' '+VB.w.toFixed(2)+' '+VB.h.toFixed(2)+'" tabindex="0" role="application" aria-label="Spielbrett. Pfeiltasten wählen einen freien Stein, Eingabetaste wählt ihn aus. Taste H: Tipp, U: Rückgängig, N: Neues Spiel.">'+defs+g+'</svg></div>'
       +'<div class="mj-msg" aria-live="polite"></div>'
@@ -301,8 +313,8 @@ const MAHJONG=(function(){
   }
   function finish(){
     if(!ov||!S) return;
-    var t=secs(), old=best(), hadOld=old!=null, isNew=false; if(typeof PAUSE!=='undefined') PAUSE.addScore('mahjong',t);
-    if(old==null||t<old){ var b=lget(BKEY,{}); b[KEY]=t; lset(BKEY,b); old=t; isNew=true; setH('best',fmt(t)); }
+    var t=secs(), old=best(), hadOld=old!=null, isNew=false; if(typeof PAUSE!=='undefined') PAUSE.addScore('mahjong',t,LVL);
+    if(old==null||t<old){ var b=lget(BKEY,{}), o=bestObj(); o[LVL]=t; b[KEY]=o; lset(BKEY,b); old=t; isNew=true; setH('best',fmt(t)); }
     if(typeof GAME!=='undefined') GAME.cheer('spiel','Mahjong',isNew&&hadOld?fmt(t):'');
     ov.hidden=false;
     ov.innerHTML='<div class="mj-win" role="dialog" aria-modal="true" aria-label="Brett gelöst"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.500c1 3.600 6.500 6.200 6.500 11.800a6.500 6.500 0 0 1-13 0c0-2.800 1.500-4.700 3-6.200.2 1.900 1.100 3 2.300 3.200C10.700 8.300 12 5.700 12 2.500z" fill="#f2711c"/><path d="M12 12.500c2 2 3 3.300 3 4.700a3 3 0 0 1-6 0c0-1.400 1-2.700 3-4.700z" fill="#ffd54a"/></svg>'
@@ -350,7 +362,8 @@ const MAHJONG=(function(){
     else if(k==='m'||k==='M'){ e.preventDefault(); mix(); }
   }
   function onRoot(e){
-    var b=e.target.closest&&e.target.closest('[data-a]'); if(!b||!root.contains(b)) return;
+    var b=e.target.closest&&e.target.closest('[data-a],[data-lv]'); if(!b||!root.contains(b)) return;
+    if(b.dataset.lv){ if(b.dataset.lv!==LVL){ lset(OKEY,{lv:b.dataset.lv}); var el=root; start(el); } return; }
     var a=b.dataset.a;
     if(a==='new') newGame(); else if(a==='hint') hint(); else if(a==='undo') undo(); else if(a==='mix') mix();
   }
@@ -359,7 +372,7 @@ const MAHJONG=(function(){
   function start(el){
     stop(); ensureStyle(); host=el; root=el;
     RM=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    build(); newGame();
+    setLayout((lget(OKEY,{})||{}).lv); build(); newGame();
     on(svg,'click',onClick); on(root,'click',onRoot); on(root,'keydown',onKey);
   }
   function stop(){
@@ -367,5 +380,5 @@ const MAHJONG=(function(){
     handlers.forEach(function(h){ h[0].removeEventListener(h[1],h[2],h[3]); }); handlers=[];
     root=null; host=null; svg=null; ov=null; msgEl=null; tiles=[]; S=null;
   }
-  return {start:start,stop:stop,_state:function(){ return S; },_t:{genPairs:genPairs,POS:POS,isFree:isFree,genBoard:genBoard,pairsAvail:pairsAvail,reshuffle:reshuffle}};
+  return {start:start,stop:stop,_state:function(){ return S; },_t:{setLayout:setLayout,pos:function(){ return POS; },genPairs:genPairs,isFree:isFree,genBoard:genBoard,pairsAvail:pairsAvail,reshuffle:reshuffle}};
 })();
