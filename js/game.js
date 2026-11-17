@@ -460,11 +460,15 @@ const GAME=(function(){
     return `<button type="button" class="tb-rk" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen" title="${esc(r.n)}" onclick="GAME.openRank()">${shoulder(r,38)}</button>`;
   }
   // PC/Tablet-Startseite: große Karte mit Serie (Tipp = Belohnungen) und Dienstgrad (Tipp = Rang & Abzeichen)
+  /* Fortschritt zum nächsten Rang: Streifen unter der Serien-Karte (Tablet/PC) */
+  function xpStrip(cls,s,r,nx,pct,gc){
+    return `<div class="${cls}"><div class="g-hero-xl"><span>${esc(r.n)}</span><span>${nx?`${s.xp} / ${nx.xp} P.`:'Höchster Rang'}</span></div><div class="g-hero-xb" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Fortschritt zum nächsten Rang"><i style="width:${pct}%;background:${gc}"></i></div></div>`;
+  }
   function heroHtml(){
     if(load().off) return '';
     const s=load(), st=streak(), r=rankOf(s.xp), nx=nextRank(r), gc=GROUPS[r.g].c;
     const pct=nx?Math.max(0,Math.min(100,Math.round((s.xp-r.xp)/(nx.xp-r.xp)*100))):100;
-    const xp=`<div class="g-hero-xp"><div class="g-hero-xl"><span>${esc(r.n)}</span><span>${nx?`${s.xp} / ${nx.xp} P.`:'Höchster Rang'}</span></div><div class="g-hero-xb" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Fortschritt zum nächsten Rang"><i style="width:${pct}%;background:${gc}"></i></div></div>`;
+    const xp=xpStrip('g-hero-xp',s,r,nx,pct,gc);
     return `<div class="g-hero"><div class="g-hero-top"><button type="button" class="g-hero-st" onclick="GAME.toggle()" aria-label="${st.cur} Tage Serie${st.risk?' in Gefahr':''}. Belohnungen anzeigen"><span class="g-hero-k">Serie${st.risk?' · in Gefahr':''}</span><span class="g-hero-n"><span class="g-hero-fl${st.cur>0&&st.todayDone?' on':''}">🔥</span> ${st.cur}</span><span class="g-hero-l">Tage in Folge</span></button><button type="button" class="g-hero-rk" onclick="GAME.openRank()" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen">${shoulder(r,118)}</button></div>${xp}<button type="button" class="g-hero-rkl" onclick="NAV.go('v-rank','Ranking')"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg><span>Ranking</span></button></div>`;
   }
   /* Karte „Heute“: Tagesziel-Ring (Lernzeit), Tagesaufgaben, Wochenaufgaben */

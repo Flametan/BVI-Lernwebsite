@@ -4426,7 +4426,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .g-hero-fl{display:inline-block;filter:grayscale(.55) opacity(.8);}.g-hero-fl.on{filter:none;}
 .g-hero-l{font-weight:700;opacity:.92;}
 .g-hero-rk{border:0;background:none;padding:0;cursor:pointer;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));display:grid;place-items:center;}
-.g-hero-xp{padding:8px 20px 12px;background:rgba(0,0,0,.5);color:#fff;display:flex;flex-direction:column;gap:5px;position:relative;}
+.g-hero-xp{--xph:56px;box-sizing:border-box;height:var(--xph);justify-content:center;padding:0 20px;background:rgba(0,0,0,.5);color:#fff;display:flex;flex-direction:column;gap:5px;position:relative;}
 .g-hero-xl{display:flex;justify-content:space-between;gap:10px;font-size:.74rem;font-weight:700;font-variant-numeric:tabular-nums;}
 .g-hero-xb{height:6px;border-radius:9px;background:rgba(255,255,255,.22);overflow:hidden;}
 .g-hero-xb i{display:block;height:100%;border-radius:9px;transition:width .6s cubic-bezier(.3,.9,.3,1);}
@@ -4949,7 +4949,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   /* Drei Ringe für die Tagesaufgaben, rechts die Wochenaufgaben als Liste; die Leiste der Handy-Ansicht entfällt */
   #m-home .g-today{position:relative;margin-top:-16px;}
   #m-home .g-today .g-tbar,#m-home .g-today .g-more,#m-home .g-today .g-more[hidden]{display:none;}
-  #m-home .g-d3{display:flex;align-items:center;gap:18px;padding:10px 20px;flex:1;}
+  #m-home .g-d3{display:flex;align-items:center;gap:18px;padding:10px 28px 10px 20px;flex:1;}
   #m-home .g-r3{display:flex;flex-direction:column;align-items:center;gap:2px;}
   #m-home .g-d3h{display:none;}
   #m-home .g-sl,#m-home .g-trk,#m-home .g-top,#m-home .g-rs{display:contents;}
@@ -4966,7 +4966,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #m-home .g-r3 .v{fill:none;stroke:var(--m-accent);stroke-width:4;stroke-linecap:round;transition:stroke-dasharray .6s cubic-bezier(.3,.9,.3,1);}
   #m-home .g-r3 text{fill:var(--m-fg);font-size:11px;font-weight:700;}
   #m-home .g-r3 em{font-style:normal;font-size:.72rem;color:var(--m-muted);}
-  #m-home .g-w3{margin-left:auto;flex:0 0 46%;border-left:1px solid var(--m-line);padding-left:18px;}
+  #m-home .g-w3{margin-left:auto;flex:0 1 auto;min-width:0;border-left:1px solid var(--m-line);padding-left:18px;}
   #m-home .g-w3 h6{margin:0 0 4px;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--m-muted);font-weight:700;}
   #m-home .g-w3 .r{display:flex;justify-content:space-between;gap:10px;font-size:.86rem;line-height:1.6;white-space:nowrap;}
   #m-home .g-w3 .r b{color:var(--m-muted);font-weight:600;}
@@ -4979,7 +4979,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   /* Ranking: dunkler Streifen mit schräger Kante rechts in der Kopfkarte; ragt über den Rand, die Kartenrundung schneidet ihn ab */
   #m-home .g-hero{position:relative;overflow:hidden;}
   #m-home .g-hero-rk{margin-right:90px;}
-  #m-home .g-hero-rkl{position:absolute;right:-2px;top:-2px;bottom:46px;width:98px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;color:#fff;font:inherit;font-weight:700;font-size:.74rem;background:rgba(0,0,0,.28);clip-path:polygon(14px 0,100% 0,100% 100%,0 100%);cursor:pointer;}
+  #m-home .g-hero-rkl{position:absolute;right:-2px;top:-2px;bottom:56px;width:98px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;color:#fff;font:inherit;font-weight:700;font-size:.74rem;background:rgba(0,0,0,.28);clip-path:polygon(14px 0,100% 0,100% 100%,0 100%);cursor:pointer;}
   #m-home .g-hero-rkl:hover{background:rgba(0,0,0,.36);}
   #m-home .g-hero-rkl:focus-visible{outline:2px solid #fff;outline-offset:-4px;}
   #m-home .m-mods{grid-row:3;}
@@ -5041,4 +5041,4 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .rk-row .g-btn{flex:0 0 auto;padding:0 20px;}
 .rk-foot .g-btn{padding:0 18px;}
 @media(min-width:1100px){#m-home .m-hgrid{grid-template-columns:1fr 1fr;}}
-@media(min-width:701px) and (max-width:1099px){#m-home .m-chart2 .m-plot{--pl:70px;}#m-home .g-d3{gap:12px;padding:10px 14px;}#m-home .g-w3{padding-left:12px;flex-basis:48%;}#m-home .g-w3 .r{font-size:.8rem;}}
+@media(min-width:701px) and (max-width:1099px){#m-home .m-chart2 .m-plot{--pl:70px;}#m-home .g-d3{gap:10px;padding:10px 24px 10px 14px;}#m-home .g-w3{padding-left:12px;flex:0 1 auto;min-width:0;}#m-home .g-w3 .r{font-size:.8rem;}#m-home .g-r3 em{font-size:.68rem;}}
