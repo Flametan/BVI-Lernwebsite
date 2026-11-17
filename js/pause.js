@@ -31,8 +31,8 @@ const PAUSE=(function(){
   };
   const svg=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
   const GAMES=[
-    ['fahrt','truck','Einsatzfahrt','Nur Prüfungsfragen aus IBK, VAk, FeuAK und IdF · 5, 10 oder 15 Fragen, Hilfsfrist schaffen',()=>FAHRT],
-    ['duell','duel','Einsatzfahrt-Duell','Zu zweit live gegeneinander · Verbindung per QR-Code · gleiche Prüfungsfragen',()=>DUELLGAME],
+    ['fahrt','truck','Einsatzfahrt','Nur Fragen aus der Laufbahnprüfung (IBK und IdF) · 5, 10 oder 15 Fragen, Hilfsfrist schaffen',()=>FAHRT],
+    ['duell','duel','Einsatzfahrt-Duell','Zu zweit live gegeneinander · Verbindung per QR-Code · gleiche Fragen aus der Laufbahnprüfung',()=>DUELLGAME],
     ['snake','flame','Einsatzleitung-Snake','Löschzug durchs Feuer steuern · wähle Atemluft und Löschwasser als Herausforderung',()=>SNAKEGAME],
     ['solitaer','cards','Solitär','Klondike mit Flammen, Löschern, Äxten und Leitern · Karten ziehen oder antippen',()=>SOLGAME],
     ['minesweeper','mine','Minesweeper','Brandherde im Dunkeln aufspüren · vier Stufen von Leicht bis Sehr schwer',()=>MSGAME],
@@ -172,7 +172,8 @@ const PAUSE=(function(){
     let Q=null;
     // Fragen: VAk und IdF aus den Altklausur-Quizzen der App, FeuAK und IBK aus pause-data.js; leuchtende Tabs (g) zählen dreifach
     // Module: nur Reiter mit „Glow“ (klausurrelevant); „Laufbahn“ nur mit eigenen Fragen
-    function refreshMods(){const g=typeof JG!=='undefined'?JG.glow():null;MODS.length=0;ALLM.forEach(([m,d,k])=>{if(!g||g.has(k))MODS.push([m,d]);});if((!g||g.has('laufbahn'))&&questions().some(q=>q.m==='Laufbahn'))MODS.push(['Laufbahn','Eigene Fragen']);return MODS;}
+    // Module: nur die, für die es Laufbahn-Fragen gibt (Glow-Tabs spielen hier keine Rolle mehr)
+    function refreshMods(){const qs=questions();MODS.length=0;ALLM.forEach(([m,d])=>{if(qs.some(q=>q.m===m))MODS.push([m,d]);});if(qs.some(q=>q.m==='Laufbahn'))MODS.push(['Laufbahn','Eigene Fragen']);return MODS;}
     let Qv=-1;
     function questions(){const v=typeof JG!=='undefined'?JG.ver():0;if(Q&&Qv===v)return Q;Qv=v;Q=[];
       const own=(D.exam||[]).some(q=>q.m==='VAk'||q.m==='IdF'); // überarbeitete Fragen aus pause-data.js haben Vorrang
@@ -186,6 +187,8 @@ const PAUSE=(function(){
       if(typeof JG!=='undefined')JG.data().pr.hinzu.forEach(p=>{const t=JG.TABS.find(x=>x[0]===p.tab);if(t)p.fragen.forEach(f=>{ if((f.typ||'sc')==='sc') Q.push({m:t[2],src:p.titel,g:1,q:f.q,o:f.o.slice(),c:f.c,e:f.e||'',custom:1}); });});
       // Fragen aus Prüfungen, die nicht klausurrelevant sind, fallen heraus
       if(typeof JG!=='undefined'){const SRC={'Altklausur-Quiz VAk':'v-vak-altklausur','Altklausur-Quiz IdF':'v-idf-altklausur'};JG.data().pr.hinzu.forEach(p=>SRC[p.titel]=p.seite||p.id);Q=Q.filter(q=>!SRC[q.src]||JG.rel(SRC[q.src]));}
+      // Einsatzfahrt und Duell: nur Fragen aus der Laufbahnprüfung (VB und Stabsarbeit laufen unter „IdF“)
+      Q=Q.filter(q=>q.m==='Laufbahn'||/^Laufbahn/.test(q.src||''));
       return Q;}
     const baseQuestions=()=>questions().filter(q=>!q.custom);
     let sel=new Set(get('bvi_pause_mods',['VAk','IBK'])),st=null,el=null,cv=null,ctx=null,raf=0,PART=[],last=0,shake=0,lastFx=null,stars=[];
@@ -208,7 +211,7 @@ const PAUSE=(function(){
     function panel(){const pn=el.querySelector('.pz-fp'),s=st,L='ABCDE';let h='';
       if(s.paused){h=`<div class="pz-lbl"><span>Duell</span><b>pausiert</b></div><div class="pz-qt">Verbindung unterbrochen</div><div class="pz-fb">Das Spiel steht still. Kommt ${esc(s.opp.name)} nicht innerhalb von <b class="pz-pc">${Math.max(0,30-Math.floor((performance.now()-s.pausedAt)/1000))}</b> Sekunden zurück, gewinnst du.</div>`;}
       else if(s.phase==='d-count'){h=`<div class="pz-lbl"><span>Duell gegen ${esc(s.opp.name)}</span><b>${s.qs.length} Fragen</b></div><div class="pz-big-n">${Math.max(1,s.cdLeft)}</div><div class="pz-center">Gleich geht es los. Gleiche Fragen, gleiche Strecke.</div>`;}
-      else if(s.phase==='select'){h=`<div class="pz-lbl"><span>Einsatzfahrt</span></div><div class="pz-qt">Aus welchen Modulen sollen die Fragen kommen?</div>${refreshMods().length?'':'<div class="pz-fb">Noch kein Reiter als klausurrelevant markiert. Das geht in „Prüfung“ unter „Prüfungen bearbeiten“ mit ★ Klausurrelevant.</div>'}<div class="pz-chips">${MODS.map(([m,d])=>`<button class="pz-chip${sel.has(m)?' on':''}" data-a="tog" data-v="${m}"><b>${m}</b><small>${d}<br>${count(m,1)} Prüfungsfragen</small></button>`).join('')}</div><button class="pz-pri" data-a="route" ${MODS.some(x=>sel.has(x[0]))?'':'disabled'}>Weiter: Einsatzmeldung</button>`;}
+      else if(s.phase==='select'){h=`<div class="pz-lbl"><span>Einsatzfahrt</span></div><div class="pz-qt">Aus welchen Modulen sollen die Fragen kommen?</div>${refreshMods().length?'':'<div class="pz-fb">Noch keine Laufbahn-Fragen vorhanden.</div>'}<div class="pz-chips">${MODS.map(([m,d])=>`<button class="pz-chip${sel.has(m)?' on':''}" data-a="tog" data-v="${m}"><b>${m}</b><small>${d}<br>${count(m,1)} Prüfungsfragen</small></button>`).join('')}</div><button class="pz-pri" data-a="route" ${MODS.some(x=>sel.has(x[0]))?'':'disabled'}>Weiter: Einsatzmeldung</button>`;}
       else if(s.phase==='route'){const pool=questions().filter(q=>sel.has(q.m)&&MODS.some(x=>x[0]===q.m)).length;h=`<div class="pz-lbl"><span>Alarm · Einsatzmeldung</span></div><div class="pz-qt">Feuer 2 · Wohnungsbrand, Musterstraße 12, Person vermisst</div><div class="pz-qt" style="font-size:.95rem;font-weight:500">Wie viele Fragen willst du auf der Anfahrt beantworten?</div>${COUNTS.map(n=>`<button class="pz-route" data-a="go" data-v="${n}" ${pool<n?'disabled':''}><b>${n} Fragen</b><div class="pz-rl">${pool<n?'nur '+pool+' Fragen verfügbar':errTxt(n)}</div></div></button>`).join('')}<button class="pz-sec2" data-a="sel" style="align-self:flex-start">‹ Module</button>`;}
       else if(s.phase==='drive'){h=`<div class="pz-lbl"><span>Einsatzfahrt · ${s.route.name}</span><b>${s.qi<s.qs.length?'Frage '+(s.qi+1)+'/'+s.qs.length:'Gleich da'}</b></div><div class="pz-drv"><i></i><span>Sondersignal · Status 3</span></div>`;}
       else if(s.phase==='ask'||s.phase==='fb'){const q=s.qs[s.qi];h=`<div class="pz-lbl"><span>${esc(q.m)} · ${esc(q.src)}</span><b>${s.qi+1}/${s.qs.length}</b></div>${s.duel?'<div class="pz-tmr"><i></i></div>':''}<div class="pz-qt">${esc(q.q)}</div>${q.o.map((o,i)=>{let c='';if(s.phase==='fb')c=i===q.c?' ok':i===s.pick?' bad':' dim';return`<button class="pz-opt${c}" data-a="ans" data-v="${i}" ${s.phase==='fb'?'disabled':''}><i>${L[i]}</i><span>${esc(o)}</span></button>`;}).join('')}`;
