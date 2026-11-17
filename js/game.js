@@ -21,15 +21,15 @@ const GAME=(function(){
   RANKS.forEach((r,i)=>{ r.i=i; r.pip=RANKS.filter(x=>x.g===r.g&&x.i<=i).length; });
 
   const TASKS=[
-    {id:'cards',t:'10 Lernkarten üben',max:10,get:(d)=>d.cards||0},
-    {id:'quiz',t:'5 Prüfungsfragen richtig',max:5,get:(d)=>d.quizOk||0},
-    {id:'time',t:'10 Minuten lernen',max:10,get:()=>Math.floor((typeof USAGE!=='undefined'?USAGE.today():0)/60)}
+    {id:'cards',t:'10 Lernkarten',max:10,get:(d)=>d.cards||0},
+    {id:'quiz',t:'5 Prüfungsfragen',max:5,get:(d)=>d.quizOk||0},
+    {id:'time',t:'10 Minuten',max:10,get:()=>Math.floor((typeof USAGE!=='undefined'?USAGE.today():0)/60)}
   ];
   /* Wochenaufgaben (Mo–So): jede bringt Punkte, alle drei zusammen das Abzeichen „Wochenmeister“ */
   const WEEKLY=[
-    {id:'wc',t:'100 Lernkarten üben',max:100,xp:50,get:w=>w.cards},
-    {id:'wq',t:'25 Prüfungsfragen richtig',max:25,xp:50,get:w=>w.quizOk},
-    {id:'wd',t:'An 5 Tagen lernen',max:5,xp:50,get:w=>w.days}
+    {id:'wc',t:'100 Lernkarten',max:100,xp:50,get:w=>w.cards},
+    {id:'wq',t:'25 Prüfungsfragen',max:25,xp:50,get:w=>w.quizOk},
+    {id:'wd',t:'5 Tage',max:5,xp:50,get:w=>w.days}
   ];
   const WEEK_ALL_XP=100;
   const FZ_MAX=2, FZ_EVERY=7, MILES=[7,30,100,365], RISK_HOUR=18;
@@ -425,7 +425,7 @@ const GAME=(function(){
   function heroHtml(){
     if(load().off) return '';
     const s=load(), st=streak(), r=rankOf(s.xp);
-    return `<div class="g-hero"><div class="g-hero-top"><button type="button" class="g-hero-st" onclick="GAME.toggle()" aria-label="${st.cur} Tage Serie${st.risk?' in Gefahr':''}. Belohnungen anzeigen"><span class="g-hero-k">Serie${st.risk?' · in Gefahr':''}</span><span class="g-hero-n"><span class="g-hero-fl${st.cur>0&&st.todayDone?' on':''}">🔥</span> ${st.cur}</span><span class="g-hero-l">Tage in Folge</span></button><button type="button" class="g-hero-rk" onclick="GAME.openRank()" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen">${shoulder(r,118)}</button></div></div>`;
+    return `<div class="g-hero"><div class="g-hero-top"><button type="button" class="g-hero-st" onclick="GAME.toggle()" aria-label="${st.cur} Tage Serie${st.risk?' in Gefahr':''}. Belohnungen anzeigen"><span class="g-hero-k">Serie${st.risk?' · in Gefahr':''}</span><span class="g-hero-n"><span class="g-hero-fl${st.cur>0&&st.todayDone?' on':''}">🔥</span> ${st.cur}</span><span class="g-hero-l">Tage in Folge</span></button><button type="button" class="g-hero-rk" onclick="GAME.openRank()" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen">${shoulder(r,118)}</button></div><button type="button" class="g-hero-rkl" onclick="NAV.go('v-rank','Ranking')"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg><span>Ranking</span></button></div>`;
   }
   /* Karte „Heute“: Tagesziel-Ring (Lernzeit), Tagesaufgaben, Wochenaufgaben */
   function tasksList(){
@@ -440,13 +440,16 @@ const GAME=(function(){
     const gm=(typeof SHELL!=='undefined'&&SHELL.goalMin)?SHELL.goalMin():15, sec=(typeof USAGE!=='undefined')?USAGE.today():0;
     const min=Math.floor(sec/60), p=Math.min(1,sec/(gm*60)), C=2*Math.PI*42, done=p>=1, o=tdOpen();
     const ts=taskState(), dn=ts.filter(t=>t.done).length, wsx=weeklyState(), wn=wsx.filter(t=>t.done).length, L=tasksList();
+    /* Tablet/PC: drei Ringe für die Tagesaufgaben, daneben die Wochenaufgaben (die Leiste oben gilt nur für Handy) */
+    const R3=2*Math.PI*18;
+    const d3=`<div class="g-d3">${ts.map(t=>`<div class="g-r3${t.done?' ok':''}"><svg viewBox="0 0 44 44" width="64" height="64" role="img" aria-label="${esc(t.t)}: ${t.v} von ${t.max}"><circle class="t" cx="22" cy="22" r="18"/><circle class="v" cx="22" cy="22" r="18" stroke-dasharray="${(R3*Math.min(1,t.v/t.max)).toFixed(1)} ${R3.toFixed(1)}" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle">${t.v}/${t.max}</text></svg><em>${esc(t.t.replace(/^\d+ /,''))}</em></div>`).join('')}<div class="g-w3"><h6>Diese Woche</h6>${wsx.map(t=>`<div class="r${t.done?' ok':''}"><span>${esc(t.t)}</span><b>${t.v}/${t.max}</b></div>`).join('')}</div></div>`;
     return `<div class="g-today${o?' open':''}" id="g-today"><button type="button" class="g-tbar${done?' ok':''}" aria-expanded="${o}" aria-controls="g-more" onclick="GAME.tdToggle()">`+
-      `<span class="g-rg"><svg viewBox="0 0 100 100" width="38" height="38" aria-hidden="true"><circle cx="50" cy="50" r="42" class="g-rg-t"/><circle cx="50" cy="50" r="42" class="g-rg-v" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/></svg><b>${done?svg('check',16):min}</b></span>`+
+      `<span class="g-rg"><svg viewBox="0 0 100 100" width="38" height="38" aria-hidden="true"><circle cx="50" cy="50" r="42" class="g-rg-t"/><circle cx="50" cy="50" r="42" class="g-rg-v" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/></svg><b>${min}</b></span>`+
       `<span class="g-bt"><span><b>Heute ${dn}/${ts.length}</b> <em>· Woche ${wn}/${wsx.length}</em></span><small>${done?'Tagesziel geschafft':min+' von '+gm+' min'}</small></span>`+
       `<svg class="g-tdc" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>`+
       `<div class="g-more" id="g-more"${o?'':' hidden'}><div class="g-td"><div><div class="g-td-h"><b>Heute</b><span>${dn}/${ts.length} · je +${TASK_XP} XP</span></div><ul class="g-tasks">${L.d}</ul></div>`+
       `<div><div class="g-td-h"><b>Diese Woche</b><span>${wn}/${wsx.length} · je +50 XP</span></div><ul class="g-tasks">${L.w}</ul></div></div>`+
-      `<div class="g-tlinks"><button type="button" class="g-lk" onclick="NAV.go('v-rank','Ranking')">Ranking</button></div></div></div>`;
+      `<div class="g-tlinks"><button type="button" class="g-lk" onclick="NAV.go('v-rank','Ranking')">Ranking</button></div></div>`+d3+`</div>`;
   }
   function homeHtml(){ return load().off?{chip:'',panel:'',rank:''}:{rank:rankLabel(),chip:chip(),panel:`<div class="g-panel" id="g-panel" hidden>${panel()}</div>`}; }
   let _open=false;

@@ -2014,11 +2014,13 @@ const FC = (function(){
   function fcSaveStars(s){ try{ localStorage.setItem('bvi_fc_stars',JSON.stringify([...s])); }catch{} }
   function fcLoadWeak(){ try{ return new Set(JSON.parse(localStorage.getItem('bvi_fc_weak')||'[]')); }catch{ return new Set(); } }
   function fcSaveWeak(s){ try{ localStorage.setItem('bvi_fc_weak',JSON.stringify([...s])); }catch{} }
+  // Nur Markierungen, deren Karte es im aktuellen Stapel gibt (gelöschte oder jahrgangsfremde Karten zählen nicht)
+  function fcLiveStars(){ const s=fcLoadStars(), ids=new Set(FLASHCARD_DATA.map(c=>c.id)); return new Set([...s].filter(id=>ids.has(id))); }
   function fcToggleStar(id){ const s=fcLoadStars(); if(s.has(id)) s.delete(id); else s.add(id); fcSaveStars(s); return s.has(id); }
 
   function getDeck(){
     if(activeFilters.has('starred')){
-      const stars=fcLoadStars();
+      const stars=fcLiveStars();
       return shuffle(FLASHCARD_DATA.filter(c=>stars.has(c.id)));
     }
     if(activeFilters.has('own')) return shuffle(FLASHCARD_DATA.filter(c=>c.own));
@@ -2114,7 +2116,7 @@ const FC = (function(){
   function updateFilterButtons(){ renderSub();
     renderModeBar();
     const known=fcKnown();
-    const stars=fcLoadStars();
+    const stars=fcLiveStars();
     const isStarred=activeFilters.has('starred')||activeFilters.has('weak')||activeFilters.has('own')||activeFilters.has('known');
     const isWeak=activeFilters.has('weak');
     const isOwn=activeFilters.has('own');
