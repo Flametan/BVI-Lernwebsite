@@ -2037,6 +2037,16 @@ const FC = (function(){
     const tk=document.getElementById('fc-t-known'), tkb=document.getElementById('fc-t-known-btn');
     if(tk) tk.textContent=Object.keys(known).length+'';
     if(tkb) tkb.classList.toggle('active',activeFilters.has('known'));
+    const inLb=activeFilters.has('laufbahn');
+    const seg=document.getElementById('fc-seg');
+    if(seg){
+      const nLb=FLASHCARD_DATA.filter(c=>/^laufbahn/i.test(c.cat)).length, nH=FLASHCARD_DATA.filter(c=>!c.own&&!/^laufbahn/i.test(c.cat)).length;
+      seg.querySelectorAll('.fc-seg-b').forEach(b=>{
+        const lb=b.dataset.g==='lb', on=!isStarred&&(lb?inLb:!inLb);
+        b.classList.toggle('on',on); b.setAttribute('aria-pressed',on);
+        b.querySelector('small').textContent=(lb?nLb+' Karten für unsere Prüfung':nH+' Karten, Lernstoff aus den Reitern');
+      });
+    }
     document.querySelectorAll('.fc-f-btn').forEach(b=>{
       const df=b.dataset.filter;
       const base=b.dataset.label||'';
@@ -2058,6 +2068,8 @@ const FC = (function(){
       } else if(df){
         const cats=FLASHCARD_DATA.filter(c=>c.cat.toLowerCase().startsWith(df)&&(df!=='laufbahn'||lbIn(c)));
         const knownCnt=cats.filter(c=>known[c.id]).length;
+        // Variante 1: Laufbahn-Karten und Hinweise-Karten sind getrennte Gruppen; es zeigt sich nur die gewählte
+        b.classList.toggle('hidden',isStarred||df==='laufbahn'||inLb);
         b.classList.toggle('active',!isStarred&&activeFilters.has(df));
         b.innerHTML=`<b>${base}</b><small>${knownCnt}/${cats.length}</small>`;
       }
@@ -2376,6 +2388,7 @@ const FC = (function(){
       updateFilterButtons();
       this.start(true);
     },
+    setGroup(g){ activeFilters=g==='lb'?new Set(['laufbahn']):new Set(['ibk','vak','feuak','idf']); updateFilterButtons(); this.start(true); },
     back(){
       if(_seen.length===0) return;
       if(_reviewPos===-1) _reviewPos=_seen.length-1;
