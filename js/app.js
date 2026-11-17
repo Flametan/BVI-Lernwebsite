@@ -2179,7 +2179,7 @@ const FC = (function(){
       row.hidden=false;
       row.innerHTML='<div class="fc-sub-bar fc-sub-grid'+(all?' all':'')+'" role="group" aria-label="Hinweise nach Fach">'
         +HSUB.map(x=>{ const on=activeFilters.has(x[0]), t=cnt(x[0]), k=kn(x[0]), p=t?Math.round(k/t*100):0; return '<button type="button" class="fc-t4'+(on?' on':'')+'" style="--p:'+p+'" aria-pressed="'+on+'" onclick="FC.setHint(\''+x[0]+'\')"><b>'+x[1]+'</b><small>'+k+'/'+t+'</small><u><s style="width:'+p+'%"></s></u></button>'; }).join('')
-        +'</div><div class="fc-sub-meta"><button type="button" class="fc-sub-all'+(all?' on':'')+'" aria-pressed="'+all+'" onclick="FC.setHint(\'all\')">Alle Fächer</button><span class="fc-sub-sum" aria-live="polite">'+n+' Karten</span></div>';
+        +'</div><div class="fc-sub-meta"><button type="button" class="fc-sub-all'+(all?' on':'')+'" aria-pressed="'+all+'" onclick="FC.setHint(\'all\')">Alle Fächer</button><span class="fc-sub-sum" aria-live="polite">'+n+' Karten</span></div>'+subExtra();
       return;
     }
     const show=activeFilters.has('laufbahn')&&!special; row.hidden=!show; if(!show) return;
@@ -2189,7 +2189,13 @@ const FC = (function(){
     const known=fcKnown(), kn=k=>lb.filter(c=>lbKey(c)===k&&known[c.id]).length;
     row.innerHTML='<div class="fc-sub-bar fc-sub-grid'+(all?' all':'')+'" role="group" aria-label="Laufbahnklausuren nach Fach">'
       +LBSUB.map(x=>{ const on=lbSel.has(x[0]), t=cnt(x[0]), k=kn(x[0]); return '<button type="button" class="fc-t4'+(on?' on':'')+'" style="--p:'+(t?Math.round(k/t*100):0)+'" aria-pressed="'+on+'" onclick="FC.setSub(\''+x[0]+'\')"><b>'+x[1]+'</b><small>'+k+'/'+t+'</small><u><s style="width:'+(t?Math.round(k/t*100):0)+'%"></s></u></button>'; }).join('')
-      +'</div><div class="fc-sub-meta"><button type="button" class="fc-sub-all'+(all?' on':'')+'" aria-pressed="'+all+'" onclick="FC.setSub(\'all\')">Alle Fächer</button><span class="fc-sub-sum" aria-live="polite">'+n+' Karten</span></div>';
+      +'</div><div class="fc-sub-meta"><button type="button" class="fc-sub-all'+(all?' on':'')+'" aria-pressed="'+all+'" onclick="FC.setSub(\'all\')">Alle Fächer</button><span class="fc-sub-sum" aria-live="polite">'+n+' Karten</span></div>'+subExtra();
+  }
+  // Schwach/Eigene (sonst im Filter-Kasten, der am Desktop/Tablet über den Fach-Kacheln läge)
+  function subExtra(){
+    const w=fcLoadWeak().size, o=FLASHCARD_DATA.filter(c=>c.own).length;
+    if(!w&&!o) return '';
+    return '<div class="fc-sub-x">'+(w?'<button type="button" onclick="FC.setFilter(\'weak\')">Schwach <small>'+w+'</small></button>':'')+(o?'<button type="button" onclick="FC.setFilter(\'own\')">Eigene <small>'+o+'</small></button>':'')+'</div>';
   }
   function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
 
