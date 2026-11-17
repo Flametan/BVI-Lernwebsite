@@ -304,20 +304,15 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     NAV.go('v-pause', 'Pausenraum'); await PAUSE_LOADER.load(); await w(300);
     r.card = (document.getElementById('pause-quip') || {}).textContent || '';
     r.games = document.querySelectorAll('#pause-root [data-g]').length;
-    r.modes = [];
-    for (const m of ['allg', 'fw', 'beides']) {
-      document.querySelector(`#pause-root [data-m="${m}"]`).click(); await w(50);
-      const res = {};
-      for (const g of ['quiz', 'tf', 'word', 'num', 'mem']) {
-        PAUSE.open(g); await w(60);
-        res[g] = !document.querySelector('#pause-root .pz-body').textContent.includes('noch keine Inhalte');
-        if (g === 'quiz') { document.querySelector('#pause-root .pz-opt').click(); await w(50); res.quizFb = !!document.querySelector('#pause-root .pz-fb'); }
-        if (g === 'word') { 'ABCDE'.split('').forEach(k => document.querySelector(`#pause-root [data-k="${k}"]`).click()); document.querySelector('#pause-root [data-k="ENTER"]').click(); await w(30); res.wordRow = document.querySelectorAll('#pause-root .pz-wc.gr,#pause-root .pz-wc.ye,#pause-root .pz-wc.xx').length; }
-        if (g === 'mem') res.memCards = document.querySelectorAll('#pause-root .pz-mc').length;
-        history.back(); await w(150);
-        res[g + 'Back'] = document.querySelector('.view.active').id === 'v-pause' && !!document.querySelector('#pause-root [data-g]');
-      }
-      r.modes.push(res);
+    // jedes nachgeladene Spiel öffnet sich (Datei wird geladen, Spielfeld erscheint) und Zurück führt zur Auswahl
+    r.opened = {};
+    for (const g of ['tagesfrage', 'kreuzwort', 'sudoku', 'hangman', 'lueckentext', 'reihenfolge', 'g2048', 'tetris', 'mahjong']) {
+      PAUSE.open(g);
+      for (let k = 0; k < 40 && document.querySelector('#pause-root .pz-body').textContent.includes('Lade Spiel'); k++) await w(100);
+      const t = document.querySelector('#pause-root .pz-body').textContent;
+      r.opened[g] = t.length > 20 && !t.includes('Lade Spiel') && !t.includes('nicht geladen werden');
+      history.back(); await w(150);
+      r.opened[g + 'Back'] = document.querySelector('.view.active').id === 'v-pause' && !!document.querySelector('#pause-root [data-g]');
     }
     PAUSE.open('fahrt'); await w(100);
     document.querySelector('#pause-root [data-a="route"]').click(); await w(30);
@@ -342,10 +337,9 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Startseite: ohne Lernkarten- und Pausenraum-Zeilen', !pz.home.includes('Pausenraum') && !/m-pause/.test(pz.home));
   ok('Tab-Leiste: Lernkarten und Pausenraum als eigene Tabs, Einstellungen im Account-Menü', pz.tabs.some(x => x.includes('Pausenraum')) && pz.tabs.some(x => x.includes('Lernkarten')) && !pz.tabs.some(x => x.includes('Einstellungen')));
   eq('Pausenraum: 50 Sätze ohne Emojis', [pz.quips, pz.emoji], [50, false]);
-  eq('Pausenraum: 10 Einträge (Einsatzfahrt, Duell, Snake, Solitär, Minesweeper und fünf weitere Spiele)', pz.games, 10);
-  ok('Spiele haben Inhalte in allen drei Modi', pz.modes.every(m => m.quiz && m.tf && m.word && m.num && m.mem));
-  ok('Zurück im Spiel führt zur Spieleauswahl (Browser-Zurück)', pz.modes.every(m => m.quizBack && m.tfBack && m.wordBack && m.numBack && m.memBack));
-  ok('Quizleiter, Wörter-Raten, Memory reagieren', pz.modes.every(m => m.quizFb && m.wordRow === 5 && m.memCards === 12));
+  eq('Pausenraum: 14 Einträge (Einsatzfahrt, Duell, Snake, Solitär, Minesweeper und neun weitere Spiele)', pz.games, 14);
+  ok('Nachgeladene Spiele öffnen sich', Object.keys(pz.opened).filter(k => !k.endsWith('Back')).every(k => pz.opened[k]));
+  ok('Zurück im Spiel führt zur Spieleauswahl (Browser-Zurück)', Object.keys(pz.opened).filter(k => k.endsWith('Back')).every(k => pz.opened[k]));
   ok('Einsatzfahrt: 5 Fragen, 4 Optionen, verloren bei 5 Fehlern', pz.fahrt.n === 5 && pz.fahrt.phase === 'end' && pz.fahrt.win === false && pz.fahrt.t > 390 && pz.fahrt.opts);
   ok('Zurück im Spiel führt zur Spieleliste, Verlassen stoppt', pz.backToHub && pz.left);
 
