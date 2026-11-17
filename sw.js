@@ -17,6 +17,7 @@ const CORE = [
   './js/jg-ui.js',
   './js/app.js',
   './js/idf-data.js',
+  './js/brainyoo-data.js',
   './js/laufbahn.js',
   './js/tour.js',
   './js/game.js',
