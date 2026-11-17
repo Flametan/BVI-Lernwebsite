@@ -4746,7 +4746,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .dg-svg.dg-svg-w{max-width:460px;}
 
 /* Lernkarten modern: Kartenstapel ab Tablet */
-@media (min-width:700px){
+@media (min-width:0px){
   .fc-outer{isolation:isolate;margin-bottom:1.9rem;}
   .fc-outer::before,.fc-outer::after{content:'';position:absolute;inset:0;border-radius:20px;background:var(--m-card);border:1px solid var(--m-line,rgba(128,128,128,.22));pointer-events:none;}
   .fc-outer::before{z-index:-1;transform:translateY(11px) scale(.965);opacity:.9;box-shadow:0 8px 18px -12px rgba(0,0,0,.35);}
@@ -4786,3 +4786,22 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 }
 /* Lernkarten Tablet/Handy: Abstand zwischen Umschalter und Fach-Kacheln */
 @media (max-width:1023px){#v-flashcards .fc-seg{padding-bottom:.7rem;}}
+
+/* Lernkarten Handy: kompakter Kopf, alle Fächer in einer Reihe, Karte rückt nach oben */
+@media (max-width:699px){
+  #v-flashcards>.page-hero .phi{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:.6rem;align-items:end;}
+  #v-flashcards>.page-hero .phi>.fc-tiles{grid-column:2;grid-row:1/span 2;display:flex;gap:8px;margin:0 0 .3rem;max-width:none;}
+  #v-flashcards .fc-tile{width:40px;height:40px;min-height:0;padding:0;border-radius:50%;flex:none;}
+  #v-flashcards .fc-tile b,#v-flashcards .fc-tile small{display:none;}
+  #v-flashcards .fc-tile .fc-ti{margin:0;}
+  #v-flashcards .fc-seg{display:flex;gap:8px;padding:.5rem 16px .6rem;}
+  #v-flashcards .fc-seg-b{flex:none;flex-direction:row;padding:8px 14px;border-radius:99px;}
+  #v-flashcards .fc-seg-b small{display:none;}
+  #v-flashcards .fc-sub-bar.fc-sub-grid,#v-flashcards .fc-filter-row{grid-template-columns:repeat(auto-fit,minmax(60px,1fr))!important;grid-auto-flow:row!important;gap:6px!important;}
+  #v-flashcards .fc-t4{flex-direction:column;align-items:center;gap:2px;padding:8px 2px 7px;text-align:center;}
+  #v-flashcards .fc-t4::before{content:'';width:24px;height:24px;border-radius:50%;margin-bottom:2px;background:radial-gradient(circle,var(--m-card) 0 55%,transparent 56%),conic-gradient(var(--m-accent) calc(var(--p,0)*1%),color-mix(in srgb,var(--m-fg) 14%,transparent) 0);}
+  #v-flashcards .fc-t4 u{display:none;}
+  #v-flashcards .fc-t4 b,#v-flashcards .fc-filter-row .fc-f-btn.fc-t4 b{font-size:.74rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  #v-flashcards .fc-t4 small,#v-flashcards .fc-filter-row .fc-f-btn.fc-t4 small{font-size:.68rem;}
+}
+@media (max-width:699px){#v-flashcards .fc-filter-row{padding-left:16px!important;padding-right:16px!important;}}
