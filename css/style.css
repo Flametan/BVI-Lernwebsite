@@ -4811,6 +4811,29 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #v-flashcards.active>.fc-sub-row,#v-flashcards.active>.fc-filter-row{grid-row:2/span 4;}
 }
 
+/* Lernkarten Desktop: große Karte, schmale Fächerleiste rechts; Kopf kompakt, damit die Karte Platz bekommt */
+@media (min-width:1024px){
+  #v-flashcards.active{max-width:1400px;grid-template-columns:minmax(0,1fr) 210px;padding-left:32px;padding-right:32px;}
+  #v-flashcards.active>.page-hero .page-eyebrow,#v-flashcards.active>.page-hero .page-title{display:none;}
+  #v-flashcards.active>.page-hero .phi{min-height:0;margin-top:8px;}
+  #v-flashcards.active>.page-hero .phi>.fc-tiles{grid-row:1;margin:0;}
+  #v-flashcards.active>.fc-sub-row,#v-flashcards.active>.fc-filter-row{grid-column:2;grid-row:2/span 3;}
+  #v-flashcards.active #m-fc-side{display:none;}
+  #v-flashcards.active>.fc-seg{grid-column:1;grid-row:2;}
+  #v-flashcards.active>.fc-modebar{grid-column:1;grid-row:3;}
+  #v-flashcards.active #fc-container{grid-column:1;grid-row:4;}
+  #v-flashcards .fc-outer{max-width:none;height:calc(100vh - 440px);min-height:230px;}
+  #v-flashcards .fc-q{font-size:2.2rem;}
+  #v-flashcards .fc-a{font-size:1.3rem;}
+  #v-flashcards .fc-face{padding:36px 3.4rem 36px 44px;}
+}
+/* Tablet: Karte ebenfalls größer und besser lesbar */
+@media (min-width:700px) and (max-width:1023px){
+  #v-flashcards .fc-outer{max-width:none;height:360px;}
+  #v-flashcards .fc-q{font-size:1.7rem;}
+  #v-flashcards .fc-a{font-size:1.1rem;}
+}
+
 /* Prüfung (Variante 5): wichtige Prüfungen als große Karten mit orangem Rand links, Module darunter */
 .ex-imp>.m-list{background:none;border-radius:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;overflow:visible;}
 .ex-f.jg-rw,.ex-f.jg-rw.hot,.ex-f.jg-rw.lbg{background:var(--m-card);border-radius:18px;border-top:0;box-shadow:inset 6px 0 0 var(--m-accent);overflow:hidden;}
