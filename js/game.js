@@ -440,13 +440,16 @@ const GAME=(function(){
     const gm=(typeof SHELL!=='undefined'&&SHELL.goalMin)?SHELL.goalMin():15, sec=(typeof USAGE!=='undefined')?USAGE.today():0;
     const min=Math.floor(sec/60), p=Math.min(1,sec/(gm*60)), C=2*Math.PI*42, done=p>=1, o=tdOpen();
     const ts=taskState(), dn=ts.filter(t=>t.done).length, wsx=weeklyState(), wn=wsx.filter(t=>t.done).length, L=tasksList();
+    /* Tablet/PC: drei Ringe für die Tagesaufgaben, daneben die Wochenaufgaben (die Leiste oben gilt nur für Handy) */
+    const R3=2*Math.PI*18;
+    const d3=`<div class="g-d3">${ts.map(t=>`<div class="g-r3${t.done?' ok':''}"><svg viewBox="0 0 44 44" width="64" height="64" role="img" aria-label="${esc(t.t)}: ${t.v} von ${t.max}"><circle class="t" cx="22" cy="22" r="18"/><circle class="v" cx="22" cy="22" r="18" stroke-dasharray="${(R3*Math.min(1,t.v/t.max)).toFixed(1)} ${R3.toFixed(1)}" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle">${t.v}/${t.max}</text></svg><em>${esc(t.t.replace(/^\d+ /,''))}</em></div>`).join('')}<div class="g-w3"><h6>Diese Woche</h6>${wsx.map(t=>`<div class="r${t.done?' ok':''}"><span>${esc(t.t)}</span><b>${t.v}/${t.max}</b></div>`).join('')}</div></div>`;
     return `<div class="g-today${o?' open':''}" id="g-today"><button type="button" class="g-tbar${done?' ok':''}" aria-expanded="${o}" aria-controls="g-more" onclick="GAME.tdToggle()">`+
       `<span class="g-rg"><svg viewBox="0 0 100 100" width="38" height="38" aria-hidden="true"><circle cx="50" cy="50" r="42" class="g-rg-t"/><circle cx="50" cy="50" r="42" class="g-rg-v" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/></svg><b>${min}</b></span>`+
       `<span class="g-bt"><span><b>Heute ${dn}/${ts.length}</b> <em>· Woche ${wn}/${wsx.length}</em></span><small>${done?'Tagesziel geschafft':min+' von '+gm+' min'}</small></span>`+
       `<svg class="g-tdc" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>`+
       `<div class="g-more" id="g-more"${o?'':' hidden'}><div class="g-td"><div><div class="g-td-h"><b>Heute</b><span>${dn}/${ts.length} · je +${TASK_XP} XP</span></div><ul class="g-tasks">${L.d}</ul></div>`+
       `<div><div class="g-td-h"><b>Diese Woche</b><span>${wn}/${wsx.length} · je +50 XP</span></div><ul class="g-tasks">${L.w}</ul></div></div>`+
-      `<div class="g-tlinks"><button type="button" class="g-lk" onclick="NAV.go('v-rank','Ranking')">Ranking</button></div></div></div>`;
+      `<div class="g-tlinks"><button type="button" class="g-lk" onclick="NAV.go('v-rank','Ranking')">Ranking</button></div></div>`+d3+`</div>`;
   }
   function homeHtml(){ return load().off?{chip:'',panel:'',rank:''}:{rank:rankLabel(),chip:chip(),panel:`<div class="g-panel" id="g-panel" hidden>${panel()}</div>`}; }
   let _open=false;
