@@ -3598,7 +3598,9 @@ button.g-row{cursor:pointer;min-height:44px;}
 .g-tk{width:20px;height:20px;border-radius:50%;border:2px solid var(--m-dim);display:grid;place-items:center;flex:none;color:var(--m-on-accent,#1c1c1c);}
 .g-tasks li.ok .g-tk{background:var(--m-accent);border-color:var(--m-accent);}
 .g-tasks li.ok .g-tt{color:var(--m-muted);text-decoration:line-through;}
-.g-tt{flex:1;min-width:0;}.g-tv{font-weight:700;font-size:.8rem;color:var(--m-muted);}
+.g-tasks li.ok .g-tx{color:var(--m-muted);}
+.g-tx{flex:none;font-size:.72rem;font-weight:700;color:var(--m-accent-fg,var(--m-accent));opacity:.9;}
+.g-tt{flex:1;min-width:0;}.g-tv{font-weight:700;font-size:.8rem;color:var(--m-muted);min-width:4.2ch;text-align:right;}
 .g-links{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
 .g-links button{flex:1 1 140px;border:0;background:var(--m-raised);color:var(--m-fg);font-family:inherit;font-weight:600;font-size:.84rem;border-radius:12px;min-height:44px;padding:0 12px;cursor:pointer;}
 /* Seiten Rang & Abzeichen, Wochen-Rückblick */
@@ -4886,15 +4888,15 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 
 /* Karte „Heute“: Tagesziel-Ring, Tages- und Wochenaufgaben */
 .g-today{background:var(--m-card);border-radius:16px;margin-bottom:14px;}
-.g-bar{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:8px 14px;border:0;background:none;color:var(--m-fg);font-family:inherit;text-align:left;cursor:pointer;border-radius:16px;}
-.g-bar:focus-visible{outline:2px solid var(--m-accent);outline-offset:2px;}
+.g-tbar{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:8px 14px;border:0;background:none;color:var(--m-fg);font-family:inherit;text-align:left;cursor:pointer;border-radius:16px;}
+.g-tbar:focus-visible{outline:2px solid var(--m-accent);outline-offset:2px;}
 .g-rg{position:relative;flex:none;width:38px;height:38px;display:grid;place-items:center;}
 .g-rg svg{position:absolute;inset:0;}
 .g-rg-t{fill:none;stroke:var(--m-raised);stroke-width:11;}
 .g-rg-v{fill:none;stroke:var(--m-accent);stroke-width:11;stroke-linecap:round;transition:stroke-dasharray .6s ease;}
-.g-bar.ok .g-rg-v{stroke:#4cc38a;}
+.g-tbar.ok .g-rg-v{stroke:#4cc38a;}
 .g-rg b{position:relative;font-size:.78rem;font-weight:800;display:flex;}
-.g-bar.ok .g-rg b{color:#4cc38a;}
+.g-tbar.ok .g-rg b{color:#4cc38a;}
 .g-bt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;font-size:.88rem;}
 .g-bt b{font-weight:700;}.g-bt em{font-style:normal;color:var(--m-muted);}
 .g-bt small{font-size:.72rem;color:var(--m-muted);}
@@ -4905,9 +4907,9 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .g-td-h b{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--m-fg);}
 .g-td>div+div{margin-top:8px;}
 .g-today .g-tasks li,.g-aufg .g-tasks li{min-height:30px;}
-.g-links{display:flex;gap:8px;margin-top:10px;}
-.g-links .g-lk{flex:1;min-height:40px;border:0;border-radius:99px;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);font:inherit;font-weight:700;font-size:.86rem;cursor:pointer;}
-.g-links .g-lk.alt{background:var(--m-raised);color:var(--m-fg);}
+.g-tlinks{display:flex;gap:8px;margin-top:10px;}
+.g-tlinks .g-lk{flex:1;min-height:40px;border:0;border-radius:99px;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);font:inherit;font-weight:700;font-size:.86rem;cursor:pointer;}
+.g-tlinks .g-lk.alt{background:var(--m-raised);color:var(--m-fg);}
 @media (prefers-reduced-motion:reduce){.g-rg-v,.g-tdc{transition:none;}}
 /* Startseite ab Tablet: „Heute“-Leiste über die volle Breite zwischen Kopfkarten und Lernstoff; aufgeklappt zwei Spalten */
 @media(min-width:701px){
@@ -4915,7 +4917,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #m-home .g-today{grid-column:1 / -1;grid-row:2;margin:0;}
   #m-home .g-today .g-td{display:grid;grid-template-columns:1fr 1fr;column-gap:28px;}
   #m-home .g-today .g-td>div+div{margin-top:0;}
-  #m-home .g-today .g-links{max-width:460px;}
+  #m-home .g-today .g-tlinks{max-width:460px;}
   #m-home .m-mods{grid-row:3;}
   #m-home .m-cloud{grid-row:4;}
 }
@@ -4939,13 +4941,17 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .rk-row input:focus-visible{outline:2px solid var(--m-accent);outline-offset:1px;}
 .g-rk .g-btn{min-height:44px;}
 .rk-msg{margin:10px 0 0;font-size:.85rem;color:var(--m-muted);}.rk-msg.err{color:#d6424a;}
-.rk-tabs{display:flex;gap:6px;background:var(--m-raised);border-radius:99px;padding:4px;margin-bottom:10px;}
-.rk-tabs button{flex:1;border:0;background:none;color:var(--m-muted);font:inherit;font-weight:700;font-size:.85rem;min-height:38px;border-radius:99px;cursor:pointer;}
-.rk-tabs button.on{background:var(--m-card);color:var(--m-fg);box-shadow:0 1px 4px rgba(0,0,0,.12);}
+.rk-tabs{position:relative;display:flex;gap:6px;background:var(--m-raised);border-radius:99px;padding:4px;margin-bottom:10px;}
+.rk-tabs::before{content:'';position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 14px) / 2);border-radius:99px;background:var(--m-card);box-shadow:0 1px 4px rgba(0,0,0,.12);transition:transform .32s cubic-bezier(.3,.9,.3,1);}
+.rk-tabs[data-tab="all"]::before{transform:translateX(calc(100% + 6px));}
+.rk-tabs button{position:relative;flex:1;border:0;background:none;color:var(--m-muted);font:inherit;font-weight:700;font-size:.85rem;min-height:38px;border-radius:99px;cursor:pointer;transition:color .25s;}
+.rk-tabs button.on{color:var(--m-fg);}
+.rk-body{transition:opacity .2s;}.rk-body.busy{opacity:.45;}
+@media (prefers-reduced-motion:reduce){.rk-tabs::before,.rk-tabs button,.rk-body{transition:none;}}
 .rk-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;}
-.rk-list li{display:flex;align-items:center;gap:12px;min-height:66px;padding:0 12px;border-radius:16px;font-size:1.05rem;}
-.rk-list li .rk-av{width:45px;height:45px;font-size:.95rem;}
-.rk-list li .rk-n small{font-size:.82rem;}
+.rk-list li{display:flex;align-items:center;gap:12px;height:55px;min-height:55px;padding:0 12px;border-radius:14px;font-size:1rem;}
+.rk-list li .rk-av{width:40px;height:40px;font-size:.9rem;}
+.rk-list li .rk-n small{font-size:.78rem;}
 .rk-list li.me{background:var(--m-raised);outline:2px solid var(--m-accent);outline-offset:-2px;}
 .rk-list li.gap{margin-top:8px;}
 .rk-p{width:26px;text-align:center;font-weight:800;color:var(--m-muted);flex:none;}
