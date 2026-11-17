@@ -4611,7 +4611,10 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .fc-review-nav{justify-content:flex-end;}
 
 /* Laufbahn-Hub: zuklappbare Fächer */
-.lb-hubw{display:flex;flex-direction:column;gap:.6rem;}
+.lb-hubw{display:flex;flex-direction:column;gap:.9rem;}
+.lb-kl{display:flex;flex-direction:column;gap:.6rem;border:2px solid var(--m-line,rgba(128,128,128,.3));border-radius:20px;padding:.7rem;background:color-mix(in srgb,var(--m-card) 35%,transparent);}
+.lb-kh{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;padding:.2rem .5rem .3rem;font-weight:800;font-size:1rem;}
+.lb-kh span{font-size:.72rem;font-weight:600;border-radius:99px;padding:3px 11px;background:color-mix(in srgb,var(--m-accent,#b8862b) 22%,transparent);}
 .lb-fach{background:var(--m-card);border:1px solid var(--m-line,rgba(128,128,128,.25));border-radius:16px;overflow:hidden;}
 .lb-fh{display:flex;align-items:center;gap:.8rem;width:100%;min-height:64px;padding:.7rem .9rem;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;}
 .lb-fi{min-width:3rem;padding:.35rem .5rem;border-radius:12px;background:var(--m-accent-dim,color-mix(in srgb,var(--m-accent) 16%,transparent));color:var(--m-accent-fg,var(--m-accent));font-weight:900;font-size:.8rem;text-align:center;}
@@ -4626,8 +4629,8 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .lb-fb .topic-card:last-child{border-bottom:0;}
 .lb-fb .topic-card .tc-icon{grid-row:1 / span 2;width:26px;height:26px;margin:0;}
 .lb-fb .topic-card .tc-name{font-size:.98rem;}.lb-fb .topic-card .tc-sub{font-size:.82rem;}
-#lb-hub.lb-in>.lb-fach{animation:lpCascade .45s cubic-bezier(.2,.8,.2,1) both;}
-#lb-hub.lb-in>.lb-fach:nth-child(2){animation-delay:70ms}#lb-hub.lb-in>.lb-fach:nth-child(3){animation-delay:140ms}#lb-hub.lb-in>.lb-fach:nth-child(4){animation-delay:210ms}
+#lb-hub.lb-in>.lb-kl{animation:lpCascade .45s cubic-bezier(.2,.8,.2,1) both;}
+#lb-hub.lb-in>.lb-kl+.lb-kl{animation-delay:90ms}
 .lb-relock{align-self:center;}
 
 /* Laufbahn-Hub: drei Arten von Einträgen */
