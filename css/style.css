@@ -4812,3 +4812,32 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #v-flashcards.active #m-fc-side{grid-column:2;grid-row:5;margin-top:1rem;}
   #v-flashcards.active>.fc-sub-row,#v-flashcards.active>.fc-filter-row{grid-row:2/span 4;}
 }
+
+/* Prüfung (Variante 5): wichtige Prüfungen als große Karten mit orangem Rand links, Module darunter */
+.ex-imp>.m-list{background:none;border-radius:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;overflow:visible;}
+.ex-f.jg-rw,.ex-f.jg-rw.hot,.ex-f.jg-rw.lbg{background:var(--m-card);border-radius:18px;border-top:0;box-shadow:inset 6px 0 0 var(--m-accent);overflow:hidden;}
+.ex-f.jg-rw+.jg-rw{border-top:0;}
+.ex-fb{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;height:100%;text-align:left;border:0;background:none;color:var(--m-fg);font-family:inherit;cursor:pointer;padding:16px 56px 16px 22px;}
+.ex-fb:focus-visible{outline:2px solid var(--m-accent);outline-offset:-2px;}
+.ex-ftag{font-size:.64rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:99px;background:var(--m-accent);color:var(--m-on-accent,#1a1205);}
+.ex-ft{font-size:1.22rem;font-weight:800;line-height:1.2;margin-top:6px;text-wrap:balance;}
+.ex-fs{font-size:.86rem;line-height:1.4;color:var(--m-muted);}
+.ex-fgo{display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:var(--m-accent);color:var(--m-on-accent,#1a1205);font-weight:700;font-size:.9rem;border-radius:99px;padding:9px 18px;}
+.ex-fgo i{font-style:normal;}
+.ex-fb:hover .ex-fgo{filter:brightness(1.08);}
+.ex-f .jg-starbtn{top:14px;right:10px;transform:none;}
+.ex-f.jg-rw:has(.jg-starbtn) .m-row{padding-right:0;}
+@media(min-width:701px){
+  /* Tablet und PC: wichtige Karten oben nebeneinander, darunter die Module in zwei Spalten */
+  .ex-wrap{grid-template-columns:minmax(0,1fr);gap:22px;}
+  .ex-imp{position:static;}
+  .ex-imp>.m-list{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+  .ex-ft{font-size:1.4rem;}
+  .ex-wrap[data-v] .ex-mod{display:block;column-count:2;column-gap:40px;}
+  .ex-mod>.ex-acc{break-inside:avoid;}
+  .ex-wrap.ex-edit .ex-mod{display:block;}
+  .ex-mod>.ex-ph{column-span:all;}
+  .ex-mod>.ex-acc:nth-of-type(1){border-top:0;}
+  .ex-acc+.ex-acc{border-top:0;}
+  .ex-acc{border-bottom:1px solid var(--m-line);}
+}

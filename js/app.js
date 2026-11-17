@@ -6833,7 +6833,7 @@ const SHELL=(function(){
     const mods=EXAMS.map(([name,items],si)=>{
       const key=JG.TABS[si][0], short=JG.TABS[si][2];
       const vis=items.filter(x=>!weg.has(x[0])&&!(x[0]==='v-lb-start'&&!JG.isMaster())), adds=jd.pr.hinzu.filter(p=>p.tab===key&&!p.seite);
-      const ent=[...vis.map(x=>({id:x[0],row:rw(x[0],card(x)),imp:()=>card([x[0],x[1],short+' · '+x[2],x[3]])})),...adds.map(p=>({id:p.id,row:rw(p.id,own(p)),imp:null,own:p}))];
+      const ent=[...vis.map(x=>({id:x[0],row:rw(x[0],card(x)),imp:()=>card([x[0],x[1],short+' · '+x[2],x[3]]),f:{t1:x[1],t2:x[0]==='v-vak-altklausur'&&dueQ?`${x[2]} · ${dueQ} zur Wiederholung fällig`:x[0]==='v-idf-altklausur'&&dueI?`${x[2]} · ${dueI} zur Wiederholung fällig`:x[2],on:x[0]==='v-lb-start'&&typeof LB!=='undefined'?'LB.ask(this)':goJs(x[0],x[1]),lock:x[0]==='v-lb-start'&&typeof LB!=='undefined'&&!LB.ok()}})),...adds.map(p=>({id:p.id,row:rw(p.id,own(p)),imp:null,own:p}))];
       return {key,name,short,ent};
     });
     const sec=m=>`<div class="m-col"><div class="m-sec jg-sh">${esc(m.name)}</div><div class="m-list">${m.ent.map(e=>e.row).join('')||'<div class="jg-none">Keine Prüfungen</div>'}</div></div>`;
@@ -6850,7 +6850,12 @@ const SHELL=(function(){
     const impList=[];
     mods.forEach(m=>m.ent.forEach(e=>{ if(e.id==='v-lb-start'||rel(e.id)) impList.push({m,e}); }));
     impList.sort((x,y)=>(y.e.id==='v-lb-start')-(x.e.id==='v-lb-start'));
-    const impRows=impList.map(({m,e})=>e.own?rw(e.id,row({ic:ic('doc'),t1:esc(e.own.titel),t2:m.short+' · '+e.own.fragen.length+' Fragen · eigene Prüfung',on:`JGUI.openExam('${e.own.id}')`,right:''})):rw(e.id,e.imp()));
+    // Wichtige Prüfungen als große Karten: orangener Rand links, Etikett „Wichtig“, Titel, Beschreibung, Knopf
+    const lockI='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-label="gesperrt"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+    const impRows=impList.map(({m,e})=>{
+      const f=e.own?{t1:e.own.titel,t2:e.own.fragen.length+' Fragen · eigene Prüfung',on:`JGUI.openExam('${e.own.id}')`,lock:false}:e.f;
+      return `<div class="jg-rw ex-f hot${e.id==='v-lb-start'?' lbg':''}"><button type="button" class="ex-fb" onclick="${f.on}"><span class="ex-ftag">Wichtig</span><span class="ex-ft">${esc(f.t1)}</span><span class="ex-fs">${esc(f.t2)}</span><span class="ex-fgo">${f.lock?lockI+' Entsperren':'Öffnen <i>›</i>'}</span></button>${starB(e.id)}${del(e.id)}</div>`;
+    });
     const nMods=mods.filter(m=>m.ent.length).length;
     let view='imp', openSet=null; try{ view=localStorage.getItem('bvi_exam_view')==='mod'?'mod':'imp'; openSet=JSON.parse(localStorage.getItem('bvi_exam_open')||'null'); }catch(e){}
     if(edit) view='mod';

@@ -2,6 +2,7 @@
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
       'IdF-Klausur, Brainyoo: Bei den Freitextfragen „Aufbau Stabsarbeit“ und „Operativ-taktische Einsatzleitung“ steht die Grafik jetzt wie bei Brainyoo in der Lösung und nicht mehr in der Frage. Alle 40 Karten wurden mit den Brainyoo-Daten verglichen (Fragen, Antworten, richtige Auswahl): sonst keine Abweichung.',
+      'Prüfung: Die wichtigen Prüfungen (Laufbahnprüfung, IdF-Klausur) stehen jetzt als große Karten mit orangem Rand, Etikett „Wichtig“ und Knopf ganz oben. Die übrigen Module folgen darunter, am Tablet und Desktop in zwei Spalten.',
       'Laufbahnprüfung: „VB“ und „Stabsarbeit“ sind zu einer Gruppe „IdF“ mit 5 Klausuren zusammengeführt.',
       'Lernkarten: Karte aufdecken jetzt mit Pfeil aufwärts (↑) statt abwärts; markieren weiterhin mit der Leertaste. Die Fach-Reihen zeigen Kacheln mit Fortschrittsbalken.',
       'Lernkarten am Handy und Tablet angepasst: Handy mit kompaktem Kopf und allen Fächern in einer Reihe, Tablet im Desktop-Design mit Fächern links. Der Kasten „Dein Stand“ entfällt.',
