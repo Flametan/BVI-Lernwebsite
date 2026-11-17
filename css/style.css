@@ -4860,3 +4860,35 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   .fc-sub-x button{font:inherit;font-size:.8rem;font-weight:600;color:var(--m-fg);background:var(--m-raised,transparent);border:1px solid var(--m-line);border-radius:99px;padding:5px 12px;cursor:pointer;}
   .fc-sub-x small{color:var(--m-muted);margin-left:4px;}
 }
+
+/* Karte „Heute“: Tagesziel-Ring, Tages- und Wochenaufgaben */
+.g-today{display:flex;gap:16px;align-items:flex-start;background:var(--m-card);border-radius:18px;padding:16px;margin-bottom:14px;}
+.g-ring-b{flex:none;position:relative;width:104px;height:104px;border:0;background:none;padding:0;cursor:pointer;color:var(--m-fg);font-family:inherit;}
+.g-ring-b svg{display:block;}
+.g-rg-t{fill:none;stroke:var(--m-raised);stroke-width:9;}
+.g-rg-v{fill:none;stroke:var(--m-accent);stroke-width:9;stroke-linecap:round;transition:stroke-dasharray .6s ease;}
+.g-ring-b.ok .g-rg-v{stroke:#4cc38a;}
+.g-rg-n{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;}
+.g-rg-n b{font-size:1.7rem;font-weight:800;display:flex;}
+.g-rg-n small{font-size:.7rem;color:var(--m-muted);margin-top:2px;}
+.g-ring-b.ok .g-rg-n b{color:#4cc38a;}
+.g-td{flex:1;min-width:0;}
+.g-td-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:.78rem;color:var(--m-muted);}
+.g-td-h b{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--m-fg);}
+.g-td-h.w{margin-top:10px;}
+.g-today .g-tasks li,.g-aufg .g-tasks li{min-height:30px;}
+@media (max-width:420px){.g-today{flex-direction:column;align-items:center;}.g-td{width:100%;}}
+@media (prefers-reduced-motion:reduce){.g-rg-v{transition:none;}}
+/* Startseite ab Tablet: „Heute“-Karte über die volle Breite zwischen Kopfkarten und Lernstoff */
+@media(min-width:701px){
+  #m-home .m-hgrid{grid-template-rows:auto auto auto auto;}
+  #m-home .g-today{grid-column:1 / -1;grid-row:2;margin:0;align-items:center;}
+  #m-home .g-today .g-td{display:grid;grid-template-columns:1fr 1fr;column-gap:28px;}
+  #m-home .g-today .g-td>.g-tasks{grid-row:2;}
+  #m-home .g-today .g-td>.g-td-h.w{margin-top:0;grid-column:2;grid-row:1;}
+  #m-home .g-today .g-td>.g-td-h:not(.w){grid-column:1;grid-row:1;}
+  #m-home .g-today .g-td>.g-tasks:nth-of-type(1){grid-column:1;}
+  #m-home .g-today .g-td>.g-tasks:nth-of-type(2){grid-column:2;}
+  #m-home .m-mods{grid-row:3;}
+  #m-home .m-cloud{grid-row:4;}
+}

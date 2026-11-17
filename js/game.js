@@ -25,6 +25,13 @@ const GAME=(function(){
     {id:'quiz',t:'5 Quizfragen richtig',max:5,get:(d)=>d.quizOk||0},
     {id:'time',t:'10 Minuten lernen',max:10,get:()=>Math.floor((typeof USAGE!=='undefined'?USAGE.today():0)/60)}
   ];
+  /* Wochenaufgaben (Mo–So): jede bringt Punkte, alle drei zusammen das Abzeichen „Wochenmeister“ */
+  const WEEKLY=[
+    {id:'wc',t:'100 Lernkarten üben',max:100,xp:50,get:w=>w.cards},
+    {id:'wq',t:'25 Quizfragen richtig',max:25,xp:50,get:w=>w.quizOk},
+    {id:'wd',t:'An 5 Tagen lernen',max:5,xp:50,get:w=>w.days}
+  ];
+  const WEEK_ALL_XP=100;
   const FZ_MAX=2, FZ_EVERY=7, MILES=[7,30,100,365], RISK_HOUR=18;
   const TASK_XP=25, ALARM_GOAL=40, ALARM_XP=60;
 
@@ -53,19 +60,24 @@ const GAME=(function(){
     {id:'f1',n:'Hilfsfrist geschafft',d:'Eine Einsatzfahrt rechtzeitig beenden',ic:'truck',t:'Blaulicht',ok:s=>s.tot.fahrt>=1},
     {id:'t3',n:'Tagessieger',d:'Alle drei Tagesaufgaben an einem Tag erledigen',ic:'sun',t:'Tagessieger',ok:s=>s.tot.allTasks>=1},
     {id:'a1',n:'Alarm bestanden',d:'Einen Einsatz-Alarm der Woche schaffen',ic:'bell',t:'Alarmbereit',ok:s=>s.tot.alarm>=1},
+    {id:'w1',n:'Wochenmeister',d:'Alle drei Wochenaufgaben in einer Woche erledigen',ic:'shield',t:'Wochenmeister',ok:s=>s.tot.weekly>=1},
+    {id:'w4',n:'Beständig',d:'Vier Wochen mit allen Wochenaufgaben',ic:'shield',t:'Beständig',ok:s=>s.tot.weekly>=4},
+    {id:'k500',n:'Kartenlegende',d:'500 Lernkarten bewerten',ic:'card',t:'Kartenlegende',ok:s=>s.tot.cards>=500},
+    {id:'q500',n:'Klausurlegende',d:'500 Quizfragen richtig beantworten',ic:'check',t:'Klausurlegende',ok:s=>s.tot.quizOk>=500},
+    {id:'s100',n:'Hundert Tage',d:'100 Tage in Folge lernen',ic:'flame',t:'Unerschütterlich',ok:s=>s.streak.best>=100},
     {id:'r4',n:'Gehobener Dienst',d:'Den Rang Brandinspektor erreichen',ic:'star',t:'Aufsteiger',ok:s=>rankOf(s.xp).i>=RANKS.findIndex(x=>x.g==='gd')},
     {id:'r7',n:'Höherer Dienst',d:'Den Rang Brandrat erreichen',ic:'star',t:'Führungskraft',ok:s=>rankOf(s.xp).i>=RANKS.findIndex(x=>x.g==='hd')}
   ];
 
   let queue=[], showing=false, combo=0, ST=null;
 
-  function blank(){ return {xp:0,days:{},badges:{},title:'',done:{},tot:{cards:0,quizOk:0,fahrt:0,combo:0,allTasks:0,alarm:0},alarm:{},path:0,off:0,fz:{have:0,used:{},last:''},seen:{}}; }
+  function blank(){ return {xp:0,days:{},badges:{},title:'',done:{},tot:{cards:0,quizOk:0,fahrt:0,combo:0,allTasks:0,alarm:0,weekly:0},alarm:{},wdone:{},path:0,off:0,fz:{have:0,used:{},last:''},seen:{}}; }
   function load(){
     if(ST) return ST;
     let j=null; try{ j=JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){}
     ST=Object.assign(blank(),j&&typeof j==='object'&&!Array.isArray(j)?j:{});
     ST.tot=Object.assign(blank().tot,ST.tot||{});
-    ['days','badges','done','alarm'].forEach(k=>{ if(!ST[k]||typeof ST[k]!=='object') ST[k]={}; });
+    ['days','badges','done','alarm','wdone'].forEach(k=>{ if(!ST[k]||typeof ST[k]!=='object') ST[k]={}; });
     if(!ST.fz||typeof ST.fz!=='object') ST.fz={have:0,used:{},last:''};
     if(!ST.seen||typeof ST.seen!=='object') ST.seen={};
     if(!ST.fz.used||typeof ST.fz.used!=='object') ST.fz.used={};
@@ -130,9 +142,20 @@ const GAME=(function(){
     return Array.from({length:7},(_,i)=>{ const x=new Date(mo); x.setDate(mo.getDate()+i); return dkey(x); });
   }
   function weekSum(offset=0){
-    const s=load(), a={xp:0,cards:0,quiz:0,quizOk:0};
-    weekKeys(offset).forEach(k=>{ const d=s.days[k]; if(d){ a.xp+=d.xp||0; a.cards+=d.cards||0; a.quiz+=d.quiz||0; a.quizOk+=d.quizOk||0; } });
+    const s=load(), a={xp:0,cards:0,quiz:0,quizOk:0,days:0};
+    weekKeys(offset).forEach(k=>{ const d=s.days[k]; if(d){ a.xp+=d.xp||0; a.cards+=d.cards||0; a.quiz+=d.quiz||0; a.quizOk+=d.quizOk||0; if((d.xp||0)>0) a.days++; } });
     return a;
+  }
+  function weeklyState(){
+    const w=weekSum();
+    return WEEKLY.map(t=>{ const v=Math.min(t.max,t.get(w)); return {id:t.id,t:t.t,v,max:t.max,xp:t.xp,done:v>=t.max}; });
+  }
+  /* ISO-Wochenschlüssel (z. B. 2026-W47) für Ranking und Duell */
+  function isoWeek(d=new Date()){
+    const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())), n=t.getUTCDay()||7;
+    t.setUTCDate(t.getUTCDate()+4-n);
+    const y=t.getUTCFullYear(), w=Math.ceil(((t-Date.UTC(y,0,1))/864e5+1)/7);
+    return y+'-W'+pad(w);
   }
 
   function taskState(){
@@ -231,6 +254,13 @@ const GAME=(function(){
     // Einsatz-Alarm
     const wk=weekKeys()[0], w=weekSum();
     if(w.cards+w.quiz>=ALARM_GOAL&&!s.alarm[wk]){ s.alarm[wk]=1; s.tot.alarm++; s.xp+=ALARM_XP; rec.xp+=ALARM_XP; toast('Einsatz-Alarm bestanden','Wochenziel erreicht · +'+ALARM_XP+' Punkte','bell'); confetti(); }
+    // Wochenaufgaben
+    const wd=s.wdone[wk]||(s.wdone[wk]={}); let wn=0;
+    weeklyState().forEach(t=>{
+      if(t.done){ wn++; if(!wd[t.id]){ wd[t.id]=1; s.xp+=t.xp; rec.xp+=t.xp; toast('Wochenaufgabe erledigt',t.t+' · +'+t.xp+' Punkte','star'); } }
+    });
+    if(wn===WEEKLY.length&&!wd.all){ wd.all=1; s.tot.weekly=(s.tot.weekly|0)+1; s.xp+=WEEK_ALL_XP; rec.xp+=WEEK_ALL_XP; toast('Alle Wochenaufgaben geschafft','Bonus · +'+WEEK_ALL_XP+' Punkte','shield'); confetti(); }
+    Object.keys(s.wdone).sort().slice(0,-8).forEach(k=>delete s.wdone[k]);
     // Abzeichen
     const ctx=context();
     BADGES.forEach(b=>{ if(!s.badges[b.id]&&b.ok(ctx)){ s.badges[b.id]=Date.now(); toast('Neues Abzeichen: '+b.n,'Titel „'+b.t+'“ freigeschaltet',b.ic); if(!s.title) s.title=b.t; } });
@@ -313,7 +343,7 @@ const GAME=(function(){
   }
   setTimeout(checkStart,3600);
   document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') setTimeout(checkStart,1200); });
-  setInterval(()=>{ if(!document.hidden) checkGoal(); },60000);
+  setInterval(()=>{ if(!document.hidden){ checkGoal(); const td=document.getElementById('g-today'); if(td) td.outerHTML=todayHtml(); } },60000);
   function setSmall(on){ load().small=on?1:0; save(); }
   function isSmall(){ return load().small!==0; }
   function event(type,ok){
@@ -418,6 +448,22 @@ const GAME=(function(){
     const sub=nx?`noch ${nx.xp-s.xp} XP bis ${esc(nx.n)}`:'Höchster Dienstgrad erreicht';
     return `<div class="g-hero"><div class="g-hero-top"><button type="button" class="g-hero-st" onclick="GAME.toggle()" aria-label="${st.cur} Tage Serie${st.risk?' in Gefahr':''}. Belohnungen anzeigen"><span class="g-hero-k">Serie${st.risk?' · in Gefahr':''}</span><span class="g-hero-n"><span class="g-hero-fl${st.cur>0&&st.todayDone?' on':''}">🔥</span> ${st.cur}</span><span class="g-hero-l">Tage in Folge</span></button><button type="button" class="g-hero-rk" onclick="GAME.openRank()" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen">${shoulder(r,118)}</button></div><div class="g-hero-bot"><div class="g-hero-row"><b>${esc(r.n)}</b><span>${sub}</span></div><div class="g-hero-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Fortschritt zum nächsten Dienstgrad"><i style="width:${pct}%"></i></div></div></div>`;
   }
+  /* Karte „Heute“: Tagesziel-Ring (Lernzeit), Tagesaufgaben, Wochenaufgaben */
+  function tasksList(){
+    const li=t=>`<li class="${t.done?'ok':''}"><span class="g-tk">${t.done?svg('check',14):''}</span><span class="g-tt">${esc(t.t)}</span><span class="g-tv">${t.v}/${t.max}</span></li>`;
+    return {d:taskState().map(li).join(''), w:weeklyState().map(li).join('')};
+  }
+  function todayHtml(){
+    if(load().off) return '';
+    const gm=(typeof SHELL!=='undefined'&&SHELL.goalMin)?SHELL.goalMin():15, sec=(typeof USAGE!=='undefined')?USAGE.today():0;
+    const min=Math.floor(sec/60), p=Math.min(1,sec/(gm*60)), C=2*Math.PI*44, done=p>=1;
+    const ts=taskState(), dn=ts.filter(t=>t.done).length, wsx=weeklyState(), wn=wsx.filter(t=>t.done).length, L=tasksList();
+    return `<div class="g-today" id="g-today"><button type="button" class="g-ring-b${done?' ok':''}" onclick="NAV.go('v-game','Rang & Abzeichen')" aria-label="Tagesziel: ${min} von ${gm} Minuten">`+
+      `<svg viewBox="0 0 100 100" width="104" height="104" aria-hidden="true"><circle cx="50" cy="50" r="44" class="g-rg-t"/><circle cx="50" cy="50" r="44" class="g-rg-v" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/></svg>`+
+      `<span class="g-rg-n"><b>${done?svg('check',26):min}</b><small>${done?'geschafft':'von '+gm+' min'}</small></span></button>`+
+      `<div class="g-td"><div class="g-td-h"><b>Heute</b><span>${dn}/${ts.length} Aufgaben</span></div><ul class="g-tasks">${L.d}</ul>`+
+      `<div class="g-td-h w"><b>Diese Woche</b><span>${wn}/${wsx.length}</span></div><ul class="g-tasks">${L.w}</ul></div></div>`;
+  }
   function homeHtml(){ return load().off?{chip:'',panel:'',rank:''}:{rank:rankLabel(),chip:chip(),panel:`<div class="g-panel" id="g-panel" hidden>${panel()}</div>`}; }
   let _open=false;
   function toggle(btn){
@@ -435,6 +481,7 @@ const GAME=(function(){
     const rl=document.querySelector('.g-rklab'); if(rl) rl.outerHTML=rankLabel();
     try{ ACCOUNT.refreshGame(); }catch(e){}
     const hs=document.querySelector('#m-gameslot .g-hero'); if(hs) hs.outerHTML=heroHtml();
+    const td=document.getElementById('g-today'); if(td) td.outerHTML=todayHtml();
     if(c){ const st=streak(); c.querySelector('b').textContent=st.cur; c.querySelector('.g-fl').classList.toggle('on',st.cur>0&&st.todayDone); c.classList.toggle('on',st.cur>0); c.classList.toggle('risk',!!st.risk); }
   }
   // Android-App: Startsymbol je Serienzustand (ab 18/21 Uhr schwächere Flamme, mit Serien-Schutz zusätzlich ein Schild, bei langer Serie Glut/Funken/Ring); Serie, letzten Lerntag und Schutz melden
@@ -462,6 +509,7 @@ const GAME=(function(){
     const titles=unlocked.length?unlocked.map(b=>`<button type="button" class="g-tt-b${s.title===b.t?' on':''}" onclick="GAME.setTitle('${b.t}')">${esc(b.t)}</button>`).join(''):'<p class="g-empty">Noch kein Titel. Jedes Abzeichen schaltet einen Titel frei.</p>';
     const grid=BADGES.map(b=>{ const got=s.badges[b.id]; return `<div class="g-bd${got?' got':''}"><span class="g-bdi">${svg(b.ic,24)}</span><b>${esc(b.n)}</b><span>${esc(b.d)}</span>${got?`<em>Titel: ${esc(b.t)}</em>`:''}</div>`; }).join('');
     el.innerHTML=`<div class="g-card"><div class="g-rank"><span class="g-rk-ic">${shoulder(r,76)}</span><span class="g-rk-t"><b>${esc(r.n)}</b><span style="color:${GROUPS[r.g].c}">${GROUPS[r.g].n}${s.title?' · '+esc(s.title):''}</span></span><span class="g-xp">${s.xp}<small> Punkte</small></span></div></div>
+      <h2 class="g-h2">Aufgaben</h2><div class="g-card g-aufg"><div class="g-td-h"><b>Täglich</b><span>+${TASK_XP} Punkte je Aufgabe</span></div><ul class="g-tasks">${tasksList().d}</ul><div class="g-td-h w"><b>Wöchentlich</b><span>+50 Punkte je Aufgabe · Bonus +${WEEK_ALL_XP}</span></div><ul class="g-tasks">${tasksList().w}</ul></div>
       <h2 class="g-h2">Dienstgrade</h2><div class="g-card g-ladder">${ladder}</div>
       <h2 class="g-h2">Titel</h2><div class="g-card"><div class="g-titles">${titles}</div></div>
       <h2 class="g-h2">Abzeichen · ${unlocked.length}/${BADGES.length}</h2><div class="g-badges">${grid}</div>`;
@@ -569,5 +617,5 @@ const GAME=(function(){
   }
 
   function onShow(id){ if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek(); }
-  return {heroHtml,shoulder,rankOf,barHtml,event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
+  return {todayHtml,isoWeek,weeklyState,weekSum,heroHtml,shoulder,rankOf,barHtml,event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
