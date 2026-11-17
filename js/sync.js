@@ -8,7 +8,7 @@ const SYNC=(function(){
   const APP_URL='https://flametan.github.io/BVI-Lernwebsite/';
   const K={code:'bvi_sync_code',base:'bvi_sync_base',ver:'bvi_sync_ver',last:'bvi_sync_last',url:'bvi_sync_url'};
   // Was synchronisiert wird: Lernstand, Notizen, Textmarkierungen, Lesezeichen – keine Geräte-Einstellungen
-  const TRACK=/^bvi_(avatar|cover|profile_name|fc|fc_weak|fc_stars|fc_custom|game|game_v1|progress|streak|usage|cards_day|cardgoal|hl|bookmarks|fb_answers|uk_scores|kf_scores|fq_scores|eq_scores|lb_ok|lb_vb|checks_[\w-]+|note_[\w-]+|quiz_(mastery|srs|stats|bm)|idfq_(mastery|srs|stats|bm|cat))$/;
+  const TRACK=/^bvi_(avatar|cover|profile_name|rank|fc|fc_weak|fc_stars|fc_custom|game|game_v1|progress|streak|usage|cards_day|cardgoal|hl|bookmarks|fb_answers|uk_scores|kf_scores|fq_scores|eq_scores|lb_ok|lb_vb|checks_[\w-]+|note_[\w-]+|quiz_(mastery|srs|stats|bm)|idfq_(mastery|srs|stats|bm|cat))$/;
   const enc=new TextEncoder(), dec=new TextDecoder();
   const ls={
     get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
@@ -116,7 +116,7 @@ const SYNC=(function(){
     return v;
   }
   function mergeKey(k,l,b,r){
-    if(/^bvi_(avatar|cover|profile_name)$/.test(k)) return l===b?r:(l===undefined?r:l);
+    if(/^bvi_(avatar|cover|profile_name|rank)$/.test(k)) return l===b?r:(l===undefined?r:l);
     if(/^bvi_note_/.test(k)) return mergeText(l,b,r);
     const P=s=>{ if(s===undefined||s===null) return undefined; try{ return JSON.parse(s); }catch(e){ return {__raw:s}; } };
     const v=k==='bvi_game_v1'?mergeGame(P(l),P(b),P(r)):mergeVal(P(l),P(b),P(r));
@@ -423,5 +423,5 @@ const SYNC=(function(){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0)); else setTimeout(init,0);
 
-  return {newCode,valid,norm,pretty,derive,merge,mergeVal,mergeArr,mergeText,collect,sync,connect,create,disconnect,connected,startNew,startJoin,showCode,now,editUrl,confirmWipe,open:menu,info,TRACK};
+  return {url,newCode,valid,norm,pretty,derive,merge,mergeVal,mergeArr,mergeText,collect,sync,connect,create,disconnect,connected,startNew,startJoin,showCode,now,editUrl,confirmWipe,open:menu,info,TRACK};
 })();

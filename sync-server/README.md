@@ -18,8 +18,14 @@ die App verschlüsselt auf dem Gerät, der Server sieht nur unlesbare Daten. Lä
 `PORT` (8787), `DATA_DIR` (./data), `MAX_BODY` (1 MiB), `MAX_BLOBS` (5000), `RATE_PER_MIN` (120), `FAIL_PER_MIN` (10),
 `EXPIRE_DAYS` (400), `ALLOW_ORIGINS` (`https://flametan.github.io`, kommagetrennt), `TRUST_PROXY` (`1` hinter einem Tunnel).
 
+## Ranking und Wochenduell
+Zusätzlich zum Sync liefert der Server ein freiwilliges Ranking (Wochen- und Gesamtliste) und Wochenduelle (`/v1/rank/...`, Code in `rank.js`).
+Gespeichert werden pro Teilnehmer nur Name (aus dem Account), ein 48×48-Vorschaubild (optional, höchstens wenige KB), Gesamtpunkte, Wochenpunkte und ein Hash des zufälligen Zugriffsschlüssels, in der Datei `rank.dat` im Datenordner (kein `.json`, daher nicht mit den Sync-Blöcken vermischt). Wer aussteigt, wird samt Duellen gelöscht.
+Weitere Einstellungen: `RANK_TZ` (Europe/Berlin, bestimmt Beginn und Ende der Woche), `RANK_MAX_PLAYERS` (2000), `RANK_MAX_XP` (500000), `RANK_MAX_WEEK` (8000), `RANK_DAY_XP` (1500, größter Punktezuwachs je Tag, Schutz vor Schummeln), `RANK_MAX_DUELS` (3), `RANK_BLOCK` (kommagetrennte Wörter, die in Namen verboten sind).
+Einen Teilnehmer entfernen: Container stoppen, den Eintrag in `rank.dat` löschen, Container starten.
+
 ## Tests
-`node --test sync-server/test/server.test.js`
+`node --test sync-server/test/*.test.js`
 
 ## Auf dem Umbrel starten
 ```

@@ -1,6 +1,12 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+      'Ranking: Freiwillig, erreichbar über den Account-Knopf oben rechts unter „Ranking & Duell“. Es erscheinen der Name und das Profilbild aus deinem Account. Es gibt eine Wochen- und eine Gesamtliste mit den Top 20 und deinem Platz. Übertragen werden nur Name, kleines Profilbild, Gesamt- und Wochenpunkte; Die Teilnahme gilt über den Sync für alle Geräte deines Accounts. Aussteigen löscht alles auf dem Server. Die Namen sind einmalig, die Punkte werden auf Plausibilität geprüft.',
+      'Wochenduell: Zwei Profile fordern sich für eine Kalenderwoche heraus (in der Liste auf ⚔ tippen oder den Namen eingeben). Es zählen die Wochenpunkte, beide müssen nicht gleichzeitig online sein. Ab Freitag gilt ein neues Duell für die Folgewoche.',
+      'Sync-Server: Neu im Server sind das Ranking und das Wochenduell (Datei rank.js, Daten in rank.dat). Der Server muss einmal neu gebaut und gestartet werden, siehe sync-server/README.md.',
+      'Startseite: Neue Karte „Heute“ mit Tagesziel-Ring (Lernminuten), den drei Tagesaufgaben und den Wochenaufgaben. Der Ring wird grün, sobald das Tagesziel erreicht ist.',
+      'Wochenaufgaben: 100 Lernkarten üben, 25 Prüfungsfragen richtig und an 5 Tagen lernen. Jede bringt 50 Punkte, alle drei zusammen 100 Bonuspunkte und das Abzeichen „Wochenmeister“. Die Seite „Rang & Abzeichen“ zeigt Tages- und Wochenaufgaben jetzt im Bereich „Aufgaben“.',
+      'Neue Abzeichen: Wochenmeister, Beständig, Kartenlegende, Klausurlegende und Hundert Tage.',
       'IdF-Klausur, Brainyoo: Bei den Freitextfragen „Aufbau Stabsarbeit“ und „Operativ-taktische Einsatzleitung“ steht die Grafik jetzt wie bei Brainyoo in der Lösung und nicht mehr in der Frage. Alle 40 Karten wurden mit den Brainyoo-Daten verglichen (Fragen, Antworten, richtige Auswahl): sonst keine Abweichung.',
       'Prüfung: Die wichtigen Prüfungen (Laufbahnprüfung, IdF-Klausur) stehen jetzt als große Karten mit orangem Rand, Etikett „Wichtig“ und Knopf ganz oben. Die übrigen Module folgen darunter, am Tablet und Desktop in zwei Spalten. Der Countdown oben ist entfallen.',
       'Lernkarten, Prüfungsrelevante Hinweise: Statt „IdF“ gibt es jetzt die Kacheln IBK, VAk, FeuAK, VB und Stabsarbeit. Beim Öffnen sind nur VB und Stabsarbeit gewählt; unten schaltet „Alle Fächer“ alles ein.',

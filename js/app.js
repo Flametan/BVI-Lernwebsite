@@ -6840,7 +6840,7 @@ const SHELL=(function(){
     el.innerHTML=`
       <div class="m-hello"><div><h1>${hi}</h1><p class="m-quip">${esc(quip(slot))}</p><div class="m-date">${now.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div></div>${nextBox}</div>
       ${(typeof TOUR!=='undefined'&&!TOUR.done())?`<div class="m-tourhome" id="tour-home"><button type="button" class="m-tourhome-go" onclick="TOUR.start('home')"><span class="m-tourhome-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21"/></svg></span><span class="m-tx"><span class="m-t1">Neu hier? App kennenlernen</span><span class="m-t2">Kurze Tour mit Spotlight – zeigt dir alles Wichtige</span></span><span class="m-tourhome-btn">Tour starten</span></button><button type="button" class="m-tourhome-x" aria-label="Hinweis ausblenden" onclick="TOUR.dismiss()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>`:''}
-      <div class="m-hgrid"><div class="m-hl">${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}<div class="m-card m-gameslot" id="m-gameslot" hidden></div></div></div>`;
+      <div class="m-hgrid"><div class="m-hl">${(typeof GAME!=='undefined')?GAME.todayHtml():''}${chartCard}</div><div class="m-hr2">${mods}${pause}${cloud}${donate}<div class="m-card m-gameslot" id="m-gameslot" hidden></div></div></div>`;
     placeGame();
   }
 
