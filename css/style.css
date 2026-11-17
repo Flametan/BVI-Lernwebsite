@@ -4929,6 +4929,12 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #m-home .g-hero-top{padding:6px 20px;}
   #m-home .g-hero-n{font-size:1.9rem;line-height:1;}
   #m-home .g-hero-rk svg{width:58px;height:auto;}
+  /* Ranking: dunkler Streifen mit schräger Kante rechts in der Kopfkarte; ragt über den Rand, die Kartenrundung schneidet ihn ab */
+  #m-home .g-hero{position:relative;overflow:hidden;}
+  #m-home .g-hero-rk{margin-right:90px;}
+  #m-home .g-hero-rkl{position:absolute;right:-2px;top:-2px;bottom:-2px;width:98px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;color:#fff;font:inherit;font-weight:700;font-size:.74rem;background:rgba(0,0,0,.28);clip-path:polygon(14px 0,100% 0,100% 100%,0 100%);cursor:pointer;}
+  #m-home .g-hero-rkl:hover{background:rgba(0,0,0,.36);}
+  #m-home .g-hero-rkl:focus-visible{outline:2px solid #fff;outline-offset:-4px;}
   #m-home .m-mods{grid-row:3;}
   #m-home .m-cloud{grid-row:4;}
 }
