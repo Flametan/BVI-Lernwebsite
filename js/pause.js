@@ -188,11 +188,11 @@ const PAUSE=(function(){
       // Fragen aus Prüfungen, die nicht klausurrelevant sind, fallen heraus
       if(typeof JG!=='undefined'){const SRC={'Altklausur-Quiz VAk':'v-vak-altklausur','Altklausur-Quiz IdF':'v-idf-altklausur'};JG.data().pr.hinzu.forEach(p=>SRC[p.titel]=p.seite||p.id);Q=Q.filter(q=>!SRC[q.src]||JG.rel(SRC[q.src]));}
       // Lernkarten der Laufbahnprüfung als Auswahlfragen: richtige Antwort = Kartenrückseite, falsche = Rückseiten anderer Karten desselben Moduls
-      // (nur kurze Antworten; Reihenfolge fest, damit beim Duell beide dieselben Fragen sehen; eigene Karten bleiben außen vor)
+      // (alle Laufbahn-Karten; Reihenfolge fest, damit beim Duell beide dieselben Fragen sehen; eigene Karten bleiben außen vor)
       if(typeof FLASHCARD_DATA!=='undefined'){
         const MOD={'heyrothsberge':'IBK','recht':'VAk','management':'FeuAK','vorbeugender brandschutz':'IdF','stabsarbeit':'IdF','führungsvorgang':'IdF'};
         const by={};
-        FLASHCARD_DATA.forEach(c=>{if(c.own||!/^Laufbahn · /i.test(c.cat))return;const m=MOD[c.cat.split(' · ')[1].toLowerCase()];if(!m)return;const a=strip(c.a);if(a.length<20||a.length>200)return;(by[m]=by[m]||[]).push({id:c.id,q:strip(c.q),a});});
+        FLASHCARD_DATA.forEach(c=>{if(c.own||!/^Laufbahn · /i.test(c.cat))return;const m=MOD[c.cat.split(' · ')[1].toLowerCase()];if(!m)return;const a=strip(c.a);if(a.length<20)return;(by[m]=by[m]||[]).push({id:c.id,q:strip(c.q),a});});
         Object.keys(by).forEach(m=>{const L=by[m];if(L.length<4)return;L.forEach((c,i)=>{
           const wr=[];for(let k=1;wr.length<3&&k<L.length;k+=Math.max(1,Math.floor(L.length/4))){const o=L[(i+k)%L.length];if(o.a!==c.a&&!wr.includes(o.a))wr.push(o.a);}
           if(wr.length<3)return;const pos=i%4,o=wr.slice();o.splice(pos,0,c.a);
