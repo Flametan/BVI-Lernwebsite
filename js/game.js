@@ -22,13 +22,13 @@ const GAME=(function(){
 
   const TASKS=[
     {id:'cards',t:'10 Lernkarten üben',max:10,get:(d)=>d.cards||0},
-    {id:'quiz',t:'5 Quizfragen richtig',max:5,get:(d)=>d.quizOk||0},
+    {id:'quiz',t:'5 Prüfungsfragen richtig',max:5,get:(d)=>d.quizOk||0},
     {id:'time',t:'10 Minuten lernen',max:10,get:()=>Math.floor((typeof USAGE!=='undefined'?USAGE.today():0)/60)}
   ];
   /* Wochenaufgaben (Mo–So): jede bringt Punkte, alle drei zusammen das Abzeichen „Wochenmeister“ */
   const WEEKLY=[
     {id:'wc',t:'100 Lernkarten üben',max:100,xp:50,get:w=>w.cards},
-    {id:'wq',t:'25 Quizfragen richtig',max:25,xp:50,get:w=>w.quizOk},
+    {id:'wq',t:'25 Prüfungsfragen richtig',max:25,xp:50,get:w=>w.quizOk},
     {id:'wd',t:'An 5 Tagen lernen',max:5,xp:50,get:w=>w.days}
   ];
   const WEEK_ALL_XP=100;
@@ -52,7 +52,7 @@ const GAME=(function(){
   const BADGES=[
     {id:'k1',n:'Erste Karte',d:'Eine Lernkarte bewerten',ic:'card',t:'Frischling',ok:s=>s.tot.cards>=1},
     {id:'k100',n:'Kartenprofi',d:'100 Lernkarten bewerten',ic:'card',t:'Kartenmeister',ok:s=>s.tot.cards>=100},
-    {id:'q100',n:'Klausurprofi',d:'100 Quizfragen richtig beantworten',ic:'check',t:'Klausurprofi',ok:s=>s.tot.quizOk>=100},
+    {id:'q100',n:'Klausurprofi',d:'100 Prüfungsfragen richtig beantworten',ic:'check',t:'Klausurprofi',ok:s=>s.tot.quizOk>=100},
     {id:'s3',n:'Dranbleiber',d:'3 Tage in Folge lernen',ic:'flame',t:'Dranbleiber',ok:s=>s.streak.best>=3},
     {id:'s7',n:'Wochenläufer',d:'7 Tage in Folge lernen',ic:'flame',t:'Wochenläufer',ok:s=>s.streak.best>=7},
     {id:'s30',n:'Dauerläufer',d:'30 Tage in Folge lernen',ic:'flame',t:'Dauerläufer',ok:s=>s.streak.best>=30},
@@ -63,7 +63,7 @@ const GAME=(function(){
     {id:'w1',n:'Wochenmeister',d:'Alle drei Wochenaufgaben in einer Woche erledigen',ic:'shield',t:'Wochenmeister',ok:s=>s.tot.weekly>=1},
     {id:'w4',n:'Beständig',d:'Vier Wochen mit allen Wochenaufgaben',ic:'shield',t:'Beständig',ok:s=>s.tot.weekly>=4},
     {id:'k500',n:'Kartenlegende',d:'500 Lernkarten bewerten',ic:'card',t:'Kartenlegende',ok:s=>s.tot.cards>=500},
-    {id:'q500',n:'Klausurlegende',d:'500 Quizfragen richtig beantworten',ic:'check',t:'Klausurlegende',ok:s=>s.tot.quizOk>=500},
+    {id:'q500',n:'Klausurlegende',d:'500 Prüfungsfragen richtig beantworten',ic:'check',t:'Klausurlegende',ok:s=>s.tot.quizOk>=500},
     {id:'s100',n:'Hundert Tage',d:'100 Tage in Folge lernen',ic:'flame',t:'Unerschütterlich',ok:s=>s.streak.best>=100},
     {id:'r4',n:'Gehobener Dienst',d:'Den Rang Brandinspektor erreichen',ic:'star',t:'Aufsteiger',ok:s=>rankOf(s.xp).i>=RANKS.findIndex(x=>x.g==='gd')},
     {id:'r7',n:'Höherer Dienst',d:'Den Rang Brandrat erreichen',ic:'star',t:'Führungskraft',ok:s=>rankOf(s.xp).i>=RANKS.findIndex(x=>x.g==='hd')}
@@ -427,7 +427,7 @@ const GAME=(function(){
       <div class="g-h">Tagesaufgaben</div>
       <ul class="g-tasks">${tasks}</ul>
       <div class="g-h">Einsatz-Alarm der Woche</div>
-      <div class="g-row"><span class="g-ri">${svg('bell',18)}</span><span class="g-rt"><b>${alDone?'Alarm bestanden':ALARM_GOAL+' Aufgaben bis Sonntag'}</b><span>${al}/${ALARM_GOAL} Karten und Quizfragen · +${ALARM_XP} Punkte</span><span class="g-bar sm"><i style="width:${Math.round(al/ALARM_GOAL*100)}%"></i></span></span></div>
+      <div class="g-row"><span class="g-ri">${svg('bell',18)}</span><span class="g-rt"><b>${alDone?'Alarm bestanden':ALARM_GOAL+' Aufgaben bis Sonntag'}</b><span>${al}/${ALARM_GOAL} Karten und Prüfungsfragen · +${ALARM_XP} Punkte</span><span class="g-bar sm"><i style="width:${Math.round(al/ALARM_GOAL*100)}%"></i></span></span></div>
       ${pathRow}
       <div class="g-links"><button type="button" onclick="NAV.go('v-week','Wochen-Rückblick')">Wochen-Rückblick</button></div>`;
   }
@@ -520,7 +520,7 @@ const GAME=(function(){
   function weekText(){
     const s=load(), w=weekSum(), st=streak(), r=rankOf(s.xp), secs=(typeof USAGE!=='undefined')?USAGE.week().reduce((a,b)=>a+b,0):0;
     const min=Math.round(secs/60), lt=min>=60?Math.floor(min/60)+' Std. '+(min%60)+' Min.':min+' Min.';
-    return `Meine Lernwoche (B VI – Höherer Dienst)\nLernzeit: ${lt}\nLernkarten: ${w.cards} · Quizfragen richtig: ${w.quizOk}\nSerie: ${st.cur} ${st.cur===1?'Tag':'Tage'}\nRang: ${r.n}${s.title?' · '+s.title:''} (${s.xp} Punkte)\nhttps://flametan.github.io/BVI-Lernwebsite/`;
+    return `Meine Lernwoche (B VI – Höherer Dienst)\nLernzeit: ${lt}\nLernkarten: ${w.cards} · Prüfungsfragen richtig: ${w.quizOk}\nSerie: ${st.cur} ${st.cur===1?'Tag':'Tage'}\nRang: ${r.n}${s.title?' · '+s.title:''} (${s.xp} Punkte)\nhttps://flametan.github.io/BVI-Lernwebsite/`;
   }
   /* Wochen-Rückblick als Bild im Story-Format (1080 × 1920) – passend für WhatsApp-Status, Instagram und andere Apps */
   function weekData(){
@@ -556,7 +556,7 @@ const GAME=(function(){
     c.fillStyle='#9a9a9a'; c.font='600 34px '+FONT; c.fillText('Lernzeit pro Tag',80,745); c.fillStyle='#fff'; c.font='800 84px '+FONT; c.fillText(d.lt,80,835);
     d.use.forEach((v,i)=>{ const h=Math.max(8,Math.round(v/mx*bh)), x=bx+i*(wd+gap); rr(c,x,by-h,wd,h,14); c.fillStyle=v>0?acc:'#333'; c.fill(); c.fillStyle='#9a9a9a'; c.font='600 30px '+FONT; c.textAlign='center'; c.fillText(DAYN[i],x+wd/2,by+46); c.textAlign='left'; });
     // Kacheln
-    const T=[[d.w.cards,'Lernkarten'],[d.w.quizOk,'Quizfragen richtig'],[d.st.cur,d.st.cur===1?'Tag Serie':'Tage Serie'],[Object.keys(d.s.badges).length,'Abzeichen']];
+    const T=[[d.w.cards,'Lernkarten'],[d.w.quizOk,'Prüfungsfragen richtig'],[d.st.cur,d.st.cur===1?'Tag Serie':'Tage Serie'],[Object.keys(d.s.badges).length,'Abzeichen']];
     T.forEach((t,i)=>{ const x=80+(i%2)*470, y=1170+Math.floor(i/2)*260; rr(c,x,y,450,230,32); c.fillStyle='#262626'; c.fill(); c.fillStyle='#fff'; c.font='800 96px '+FONT; c.fillText(String(t[0]),x+36,y+120); c.fillStyle='#9a9a9a'; c.font='500 36px '+FONT; c.fillText(t[1],x+36,y+182); });
     c.fillStyle='#9a9a9a'; c.font='500 36px '+FONT; c.textAlign='center'; c.fillText('flametan.github.io/BVI-Lernwebsite',W/2,1800); c.textAlign='left';
     return new Promise(res=>cv.toBlob(b=>res(b),'image/png'));

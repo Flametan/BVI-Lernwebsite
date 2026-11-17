@@ -2,7 +2,7 @@
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
       'Startseite: Neue Karte „Heute“ mit Tagesziel-Ring (Lernminuten), den drei Tagesaufgaben und den Wochenaufgaben. Der Ring wird grün, sobald das Tagesziel erreicht ist.',
-      'Wochenaufgaben: 100 Lernkarten üben, 25 Quizfragen richtig und an 5 Tagen lernen. Jede bringt 50 Punkte, alle drei zusammen 100 Bonuspunkte und das Abzeichen „Wochenmeister“. Die Seite „Rang & Abzeichen“ zeigt Tages- und Wochenaufgaben jetzt im Bereich „Aufgaben“.',
+      'Wochenaufgaben: 100 Lernkarten üben, 25 Prüfungsfragen richtig und an 5 Tagen lernen. Jede bringt 50 Punkte, alle drei zusammen 100 Bonuspunkte und das Abzeichen „Wochenmeister“. Die Seite „Rang & Abzeichen“ zeigt Tages- und Wochenaufgaben jetzt im Bereich „Aufgaben“.',
       'Neue Abzeichen: Wochenmeister, Beständig, Kartenlegende, Klausurlegende und Hundert Tage.',
       'IdF-Klausur, Brainyoo: Bei den Freitextfragen „Aufbau Stabsarbeit“ und „Operativ-taktische Einsatzleitung“ steht die Grafik jetzt wie bei Brainyoo in der Lösung und nicht mehr in der Frage. Alle 40 Karten wurden mit den Brainyoo-Daten verglichen (Fragen, Antworten, richtige Auswahl): sonst keine Abweichung.',
       'Prüfung: Die wichtigen Prüfungen (Laufbahnprüfung, IdF-Klausur) stehen jetzt als große Karten mit orangem Rand, Etikett „Wichtig“ und Knopf ganz oben. Die übrigen Module folgen darunter, am Tablet und Desktop in zwei Spalten. Der Countdown oben ist entfallen.',
