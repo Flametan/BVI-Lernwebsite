@@ -22,17 +22,19 @@ const GAME=(function(){
 
   /* Tagesaufgaben: jeden Tag wechselt die Auswahl (je eine aus drei Gruppen, rollierend nach Tag) */
   const mins=()=>Math.floor((typeof USAGE!=='undefined'?USAGE.today():0)/60);
+  /* Je Platz eine rollierende Liste; die Längen (5, 6, 7) sind teilerfremd, so ergeben sich viele verschiedene Tage */
+  const best=d=>d.best||0, G=(id,t,max,get)=>({id,t,max,get});
   const TASK_POOL=[
-    [{id:'cards',t:'10 Lernkarten',max:10,get:d=>d.cards||0},{id:'cards2',t:'15 Lernkarten',max:15,get:d=>d.cards||0},{id:'cards3',t:'20 Lernkarten',max:20,get:d=>d.cards||0}],
-    [{id:'quiz',t:'5 Prüfungsfragen',max:5,get:d=>d.quizOk||0},{id:'quiz2',t:'8 Prüfungsfragen',max:8,get:d=>d.quizOk||0},{id:'quiz3',t:'10 Fragen beantworten',max:10,get:d=>d.quiz||0}],
-    [{id:'time',t:'10 Minuten',max:10,get:mins},{id:'time2',t:'15 Minuten',max:15,get:mins},{id:'time3',t:'20 Minuten',max:20,get:mins}]
+    [G('cards','10 Lernkarten',10,d=>d.cards||0),G('cards2','15 Lernkarten',15,d=>d.cards||0),G('cards3','20 Lernkarten',20,d=>d.cards||0),G('redo','5 Wiederholungen',5,d=>d.redo||0),G('redo2','10 Wiederholungen',10,d=>d.redo||0)],
+    [G('quiz','5 Prüfungsfragen',5,d=>d.quizOk||0),G('quiz2','8 Prüfungsfragen',8,d=>d.quizOk||0),G('quiz3','10 Antworten',10,d=>d.quiz||0),G('str','3 richtig in Folge',3,best),G('str2','5 richtig in Folge',5,best),G('str3','8 richtig in Folge',8,best)],
+    [G('time','10 Minuten',10,mins),G('time2','15 Minuten',15,mins),G('time3','20 Minuten',20,mins),G('new','1 neues Thema',1,d=>d.newT||0),G('new2','2 neue Themen',2,d=>d.newT||0),G('star','3 Karten markieren',3,d=>d.stars||0),G('star2','5 Karten markieren',5,d=>d.stars||0)]
   ];
   function taskDefs(){ const n=Math.floor(Date.now()/864e5-new Date().getTimezoneOffset()/1440); return TASK_POOL.map((g,i)=>g[(n+i)%g.length]); }
   /* Wochenaufgaben (Mo–So): jede bringt Punkte, alle drei zusammen das Abzeichen „Wochenmeister“ */
   /* Jede Woche wechselt die Auswahl: je eine Aufgabe aus drei Gruppen (Karten, Fragen, Einsatz), rollierend nach Kalenderwoche */
   const WEEKLY_POOL=[
     [{id:'wc',t:'100 Lernkarten',max:100,xp:50,get:w=>w.cards},{id:'wc2',t:'150 Lernkarten',max:150,xp:60,get:w=>w.cards},{id:'wc3',t:'200 Lernkarten',max:200,xp:70,get:w=>w.cards}],
-    [{id:'wq',t:'25 Prüfungsfragen',max:25,xp:50,get:w=>w.quizOk},{id:'wq2',t:'40 Prüfungsfragen',max:40,xp:60,get:w=>w.quizOk},{id:'wq3',t:'60 Fragen beantworten',max:60,xp:60,get:w=>w.quiz}],
+    [{id:'wq',t:'25 Prüfungsfragen',max:25,xp:50,get:w=>w.quizOk},{id:'wq2',t:'40 Prüfungsfragen',max:40,xp:60,get:w=>w.quizOk},{id:'wq3',t:'60 Antworten',max:60,xp:60,get:w=>w.quiz}],
     [{id:'wd',t:'5 Tage',max:5,xp:50,get:w=>w.days},{id:'wd2',t:'4 Tage',max:4,xp:40,get:w=>w.days},{id:'wd3',t:'6 Tage',max:6,xp:60,get:w=>w.days},{id:'wx',t:'400 Punkte',max:400,xp:50,get:w=>w.xp}]
   ];
   function weeklyDefs(){
@@ -351,15 +353,17 @@ const GAME=(function(){
   setInterval(()=>{ if(!document.hidden){ checkGoal(); const td=document.getElementById('g-today'); if(td) td.outerHTML=todayHtml(); } },60000);
   function setSmall(on){ load().small=on?1:0; save(); }
   function isSmall(){ return load().small!==0; }
-  function event(type,ok){
+  function event(type,ok,x){
     try{
       const s=load(), pre=rankOf(s.xp), rec=dayRec(today());
       let gain=0;
-      if(type==='card'){ if(ok){ gain=2; rec.cards++; s.tot.cards++; } rec.cd=(rec.cd|0)+1; if(rec.cd%10===0) cardCheer(rec.cd); }
+      if(type==='card'){ if(ok){ gain=2; rec.cards++; s.tot.cards++; } if(x&&x.redo) rec.redo=(rec.redo|0)+1; rec.cd=(rec.cd|0)+1; if(rec.cd%10===0) cardCheer(rec.cd); }
       else if(type==='quiz'){ rec.quiz++; if(ok){ gain=3; rec.quizOk++; s.tot.quizOk++; } else gain=1; }
+      else if(type==='star') rec.stars=(rec.stars|0)+1;
+      else if(type==='new') rec.newT=(rec.newT|0)+1;
       else if(type==='fahrt'){ gain=20; if(ok){ s.tot.fahrt++; cheer('spiel','Einsatzfahrt'); } }
       if(type==='card'||type==='quiz'){
-        if(ok){ combo++; s.tot.combo=Math.max(s.tot.combo,combo); if(combo>=5&&combo%5===0){ comboPill(combo); if(combo%10===0) confetti(); } }
+        if(ok){ combo++; s.tot.combo=Math.max(s.tot.combo,combo); rec.best=Math.max(rec.best|0,combo); if(combo>=5&&combo%5===0){ comboPill(combo); if(combo%10===0) confetti(); } }
         else combo=0;
       }
       s.xp+=gain; rec.xp+=gain;

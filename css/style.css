@@ -4902,7 +4902,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .g-r3 .t{fill:none;stroke:var(--m-raised);stroke-width:4;}
 .g-r3 .v{fill:none;stroke:var(--m-accent);stroke-width:4;stroke-linecap:round;transition:stroke-dasharray .6s cubic-bezier(.3,.9,.3,1);}
 .g-r3 text{fill:var(--m-fg);font-size:11px;font-weight:700;}
-.g-r3 em{font-style:normal;font-size:.66rem;color:var(--m-muted);}
+.g-r3 em{font-style:normal;font-size:.66rem;color:var(--m-muted);text-align:center;}
 .g-sl{overflow:hidden;margin:0 -16px;}
 .g-trk{display:flex;width:200%;transition:transform .4s cubic-bezier(.3,.9,.3,1);}
 .g-trk>*{flex:0 0 50%;box-sizing:border-box;padding:0 16px;}
