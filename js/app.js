@@ -1161,7 +1161,8 @@ const PROGRESS = (function(){
 
   function track(viewId){
     if(!LEAF_PARENT[viewId]) return;
-    const d = load(); d[viewId] = true; save(d);
+    const d = load(), isNew = !d[viewId]; d[viewId] = true; save(d);
+    if(isNew && typeof GAME!=='undefined') GAME.event('new',true);
     updateUI();
   }
 
@@ -2016,7 +2017,7 @@ const FC = (function(){
   function fcSaveWeak(s){ try{ localStorage.setItem('bvi_fc_weak',JSON.stringify([...s])); }catch{} }
   // Nur Markierungen, deren Karte es im aktuellen Stapel gibt (gelöschte oder jahrgangsfremde Karten zählen nicht)
   function fcLiveStars(){ const s=fcLoadStars(), ids=new Set(FLASHCARD_DATA.map(c=>c.id)); return new Set([...s].filter(id=>ids.has(id))); }
-  function fcToggleStar(id){ const s=fcLoadStars(); if(s.has(id)) s.delete(id); else s.add(id); fcSaveStars(s); return s.has(id); }
+  function fcToggleStar(id){ const s=fcLoadStars(); if(s.has(id)) s.delete(id); else{ s.add(id); if(typeof GAME!=='undefined') GAME.event('star',true); } fcSaveStars(s); return s.has(id); }
 
   function getDeck(){
     if(activeFilters.has('starred')){
@@ -2416,9 +2417,9 @@ const FC = (function(){
     },
     // Karte außerhalb des Kartenstapels bewerten (z. B. im Übungs-Fenster neben der Lernseite)
     rateExternal(id,ok){
-      const d=fcLoad();
+      const d=fcLoad(), wasSeen=!!(d[id]||fcLoadWeak().has(id));
       if(ok){ d[id]=sm2(d[id]||{},2); if(typeof STREAK!=='undefined') STREAK.record(); } else delete d[id];
-      if(typeof GAME!=='undefined') GAME.event('card',!!ok);
+      if(typeof GAME!=='undefined') GAME.event('card',!!ok,{redo:wasSeen});
       const weak=fcLoadWeak(); if(ok) weak.delete(id); else weak.add(id); fcSaveWeak(weak);
       fcSave(d); SHELL.renderFcSide(); updateFilterButtons();
     },
@@ -2459,7 +2460,7 @@ const FC = (function(){
       if(navigator.vibrate) navigator.vibrate(q>0?[30]:[20,50,20]);
       const card=deck[curIdx];
       _seen.push(card); _reviewPos=-1;
-      const d=fcLoad();
+      const d=fcLoad(), wasSeen=!!(d[card.id]||fcLoadWeak().has(card.id));
       if(q===0){
         delete d[card.id]; sess.unknown++;
         const reps=card._reps||0;
@@ -2470,7 +2471,7 @@ const FC = (function(){
       }
       const weak=fcLoadWeak(); if(q===2) weak.delete(card.id); else weak.add(card.id); fcSaveWeak(weak);
       fcSave(d); curIdx++; renderCard(); SHELL.renderFcSide(); updateFilterButtons();
-      if(typeof GAME!=='undefined') GAME.event('card',q>0);
+      if(typeof GAME!=='undefined') GAME.event('card',q>0,{redo:wasSeen});
     },
     setSub(k){
       if(k==='all'||!LBSUB.some(x=>x[0]===k)){ lbSel=new Set(LBSUB.map(x=>x[0])); lbManual=false; }

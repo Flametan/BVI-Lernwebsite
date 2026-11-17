@@ -20,17 +20,27 @@ const GAME=(function(){
   ];
   RANKS.forEach((r,i)=>{ r.i=i; r.pip=RANKS.filter(x=>x.g===r.g&&x.i<=i).length; });
 
-  const TASKS=[
-    {id:'cards',t:'10 Lernkarten',max:10,get:(d)=>d.cards||0},
-    {id:'quiz',t:'5 Prüfungsfragen',max:5,get:(d)=>d.quizOk||0},
-    {id:'time',t:'10 Minuten',max:10,get:()=>Math.floor((typeof USAGE!=='undefined'?USAGE.today():0)/60)}
+  /* Tagesaufgaben: jeden Tag wechselt die Auswahl (je eine aus drei Gruppen, rollierend nach Tag) */
+  const mins=()=>Math.floor((typeof USAGE!=='undefined'?USAGE.today():0)/60);
+  /* Je Platz eine rollierende Liste; die Längen (5, 6, 7) sind teilerfremd, so ergeben sich viele verschiedene Tage */
+  const best=d=>d.best||0, G=(id,t,max,get)=>({id,t,max,get});
+  const TASK_POOL=[
+    [G('cards','10 Lernkarten',10,d=>d.cards||0),G('cards2','15 Lernkarten',15,d=>d.cards||0),G('cards3','20 Lernkarten',20,d=>d.cards||0),G('redo','5 Wiederholungen',5,d=>d.redo||0),G('redo2','10 Wiederholungen',10,d=>d.redo||0)],
+    [G('quiz','5 Prüfungsfragen',5,d=>d.quizOk||0),G('quiz2','8 Prüfungsfragen',8,d=>d.quizOk||0),G('quiz3','10 Antworten',10,d=>d.quiz||0),G('str','3 richtig in Folge',3,best),G('str2','5 richtig in Folge',5,best),G('str3','8 richtig in Folge',8,best)],
+    [G('time','10 Minuten',10,mins),G('time2','15 Minuten',15,mins),G('time3','20 Minuten',20,mins),G('new','1 neues Thema',1,d=>d.newT||0),G('new2','2 neue Themen',2,d=>d.newT||0),G('star','3 Karten markieren',3,d=>d.stars||0),G('star2','5 Karten markieren',5,d=>d.stars||0)]
   ];
+  function taskDefs(){ const n=Math.floor(Date.now()/864e5-new Date().getTimezoneOffset()/1440); return TASK_POOL.map((g,i)=>g[(n+i)%g.length]); }
   /* Wochenaufgaben (Mo–So): jede bringt Punkte, alle drei zusammen das Abzeichen „Wochenmeister“ */
-  const WEEKLY=[
-    {id:'wc',t:'100 Lernkarten',max:100,xp:50,get:w=>w.cards},
-    {id:'wq',t:'25 Prüfungsfragen',max:25,xp:50,get:w=>w.quizOk},
-    {id:'wd',t:'5 Tage',max:5,xp:50,get:w=>w.days}
+  /* Jede Woche wechselt die Auswahl: je eine Aufgabe aus drei Gruppen (Karten, Fragen, Einsatz), rollierend nach Kalenderwoche */
+  const WEEKLY_POOL=[
+    [{id:'wc',t:'100 Lernkarten',max:100,xp:50,get:w=>w.cards},{id:'wc2',t:'150 Lernkarten',max:150,xp:60,get:w=>w.cards},{id:'wc3',t:'200 Lernkarten',max:200,xp:70,get:w=>w.cards}],
+    [{id:'wq',t:'25 Prüfungsfragen',max:25,xp:50,get:w=>w.quizOk},{id:'wq2',t:'40 Prüfungsfragen',max:40,xp:60,get:w=>w.quizOk},{id:'wq3',t:'60 Antworten',max:60,xp:60,get:w=>w.quiz}],
+    [{id:'wd',t:'5 Tage',max:5,xp:50,get:w=>w.days},{id:'wd2',t:'4 Tage',max:4,xp:40,get:w=>w.days},{id:'wd3',t:'6 Tage',max:6,xp:60,get:w=>w.days},{id:'wx',t:'400 Punkte',max:400,xp:50,get:w=>w.xp}]
   ];
+  function weeklyDefs(){
+    const [y,m,d]=weekKeys()[0].split('-').map(Number), n=Math.floor(Date.UTC(y,m-1,d)/864e5/7);
+    return WEEKLY_POOL.map((g,i)=>g[(n+i)%g.length]);
+  }
   const WEEK_ALL_XP=100;
   const FZ_MAX=2, FZ_EVERY=7, MILES=[7,30,100,365], RISK_HOUR=18;
   const TASK_XP=25;
@@ -147,7 +157,7 @@ const GAME=(function(){
   }
   function weeklyState(){
     const w=weekSum();
-    return WEEKLY.map(t=>{ const v=Math.min(t.max,t.get(w)); return {id:t.id,t:t.t,v,max:t.max,xp:t.xp,done:v>=t.max}; });
+    return weeklyDefs().map(t=>{ const v=Math.min(t.max,t.get(w)); return {id:t.id,t:t.t,v,max:t.max,xp:t.xp,done:v>=t.max}; });
   }
   /* ISO-Wochenschlüssel (z. B. 2026-W47) für das Ranking */
   function isoWeek(d=new Date()){
@@ -159,7 +169,7 @@ const GAME=(function(){
 
   function taskState(){
     const rec=load().days[today()]||{};
-    return TASKS.map(t=>{ const v=Math.min(t.max,t.get(rec)); return {id:t.id,t:t.t,v,max:t.max,done:v>=t.max}; });
+    return taskDefs().map(t=>{ const v=Math.min(t.max,t.get(rec)); return {id:t.id,t:t.t,v,max:t.max,done:v>=t.max}; });
   }
 
   /* ── Toast als „Gooey Drop“: ein Tropfen fällt vom oberen Rand und wird zur Meldung ── */
@@ -256,7 +266,7 @@ const GAME=(function(){
     weeklyState().forEach(t=>{
       if(t.done){ wn++; if(!wd[t.id]){ wd[t.id]=1; s.xp+=t.xp; rec.xp+=t.xp; toast('Wochenaufgabe erledigt',t.t+' · +'+t.xp+' Punkte','star'); } }
     });
-    if(wn===WEEKLY.length&&!wd.all){ wd.all=1; s.tot.weekly=(s.tot.weekly|0)+1; s.xp+=WEEK_ALL_XP; rec.xp+=WEEK_ALL_XP; toast('Alle Wochenaufgaben geschafft','Bonus · +'+WEEK_ALL_XP+' Punkte','shield'); confetti(); }
+    if(wn===WEEKLY_POOL.length&&!wd.all){ wd.all=1; s.tot.weekly=(s.tot.weekly|0)+1; s.xp+=WEEK_ALL_XP; rec.xp+=WEEK_ALL_XP; toast('Alle Wochenaufgaben geschafft','Bonus · +'+WEEK_ALL_XP+' Punkte','shield'); confetti(); }
     Object.keys(s.wdone).sort().slice(0,-8).forEach(k=>delete s.wdone[k]);
     // Abzeichen
     const ctx=context();
@@ -343,15 +353,17 @@ const GAME=(function(){
   setInterval(()=>{ if(!document.hidden){ checkGoal(); const td=document.getElementById('g-today'); if(td) td.outerHTML=todayHtml(); } },60000);
   function setSmall(on){ load().small=on?1:0; save(); }
   function isSmall(){ return load().small!==0; }
-  function event(type,ok){
+  function event(type,ok,x){
     try{
       const s=load(), pre=rankOf(s.xp), rec=dayRec(today());
       let gain=0;
-      if(type==='card'){ if(ok){ gain=2; rec.cards++; s.tot.cards++; } rec.cd=(rec.cd|0)+1; if(rec.cd%10===0) cardCheer(rec.cd); }
+      if(type==='card'){ if(ok){ gain=2; rec.cards++; s.tot.cards++; } if(x&&x.redo) rec.redo=(rec.redo|0)+1; rec.cd=(rec.cd|0)+1; if(rec.cd%10===0) cardCheer(rec.cd); }
       else if(type==='quiz'){ rec.quiz++; if(ok){ gain=3; rec.quizOk++; s.tot.quizOk++; } else gain=1; }
+      else if(type==='star') rec.stars=(rec.stars|0)+1;
+      else if(type==='new') rec.newT=(rec.newT|0)+1;
       else if(type==='fahrt'){ gain=20; if(ok){ s.tot.fahrt++; cheer('spiel','Einsatzfahrt'); } }
       if(type==='card'||type==='quiz'){
-        if(ok){ combo++; s.tot.combo=Math.max(s.tot.combo,combo); if(combo>=5&&combo%5===0){ comboPill(combo); if(combo%10===0) confetti(); } }
+        if(ok){ combo++; s.tot.combo=Math.max(s.tot.combo,combo); rec.best=Math.max(rec.best|0,combo); if(combo>=5&&combo%5===0){ comboPill(combo); if(combo%10===0) confetti(); } }
         else combo=0;
       }
       s.xp+=gain; rec.xp+=gain;
@@ -442,7 +454,9 @@ const GAME=(function(){
     const ts=taskState(), dn=ts.filter(t=>t.done).length, wsx=weeklyState(), wn=wsx.filter(t=>t.done).length, L=tasksList();
     /* Tablet/PC: drei Ringe für die Tagesaufgaben, daneben die Wochenaufgaben (die Leiste oben gilt nur für Handy) */
     const R3=2*Math.PI*18;
-    const d3=`<div class="g-d3">${ts.map(t=>`<div class="g-r3${t.done?' ok':''}"><svg viewBox="0 0 44 44" width="64" height="64" role="img" aria-label="${esc(t.t)}: ${t.v} von ${t.max}"><circle class="t" cx="22" cy="22" r="18"/><circle class="v" cx="22" cy="22" r="18" stroke-dasharray="${(R3*Math.min(1,t.v/t.max)).toFixed(1)} ${R3.toFixed(1)}" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle">${t.v}/${t.max}</text></svg><em>${esc(t.t.replace(/^\d+ /,''))}</em></div>`).join('')}<div class="g-w3"><h6>Diese Woche</h6>${wsx.map(t=>`<div class="r${t.done?' ok':''}"><span>${esc(t.t)}</span><b>${t.v}/${t.max}</b></div>`).join('')}</div></div>`;
+    const ring=t=>`<div class="g-r3${t.done?' ok':''}"><svg viewBox="0 0 44 44" width="64" height="64" role="img" aria-label="${esc(t.t)}: ${t.v} von ${t.max}"><circle class="t" cx="22" cy="22" r="18"/><circle class="v" cx="22" cy="22" r="18" stroke-dasharray="${(R3*Math.min(1,t.v/t.max)).toFixed(1)} ${R3.toFixed(1)}" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle">${t.v}/${t.max}</text></svg><em>${esc(t.t.replace(/^\d+ /,''))}</em></div>`;
+    const chev=r=>`<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${r?'m15 6-6 6 6 6':'m9 6 6 6-6 6'}"/></svg>`;
+    const d3=`<div class="g-d3"><div class="g-d3h"><span class="g-d3t"><h6>Heute</h6></span><button type="button" class="g-rk" onclick="NAV.go('v-rank','Ranking')"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>Ranking</button></div><div class="g-sl"><div class="g-trk"><div class="g-top"><div class="g-rs">${ts.map(ring).join('')}</div><button type="button" class="g-wsum${wn===wsx.length?' ok':''}" aria-label="Wochenaufgaben anzeigen" onclick="GAME.wk(this)"><b>${wn}/${wsx.length}</b><em>Woche</em>${chev(0)}</button></div><div class="g-w3" id="g-w3"><div class="g-wr"><div class="g-rs">${wsx.map(ring).join('')}</div><button type="button" class="g-wsum g-wback" aria-label="Zurück zu Heute" onclick="GAME.wk(this)"><b>${dn}/${ts.length}</b><em>Heute</em>${chev(1)}</button></div><div class="g-wl"><h6>Diese Woche</h6>${wsx.map(t=>`<div class="r${t.done?' ok':''}"><span>${esc(t.t)}</span><b>${t.v}/${t.max}</b></div>`).join('')}</div></div></div></div></div>`;
     return `<div class="g-today${o?' open':''}" id="g-today"><button type="button" class="g-tbar${done?' ok':''}" aria-expanded="${o}" aria-controls="g-more" onclick="GAME.tdToggle()">`+
       `<span class="g-rg"><svg viewBox="0 0 100 100" width="38" height="38" aria-hidden="true"><circle cx="50" cy="50" r="42" class="g-rg-t"/><circle cx="50" cy="50" r="42" class="g-rg-v" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/></svg><b>${min}</b></span>`+
       `<span class="g-bt"><span><b>Heute ${dn}/${ts.length}</b> <em>· Woche ${wn}/${wsx.length}</em></span><small>${done?'Tagesziel geschafft':min+' von '+gm+' min'}</small></span>`+
@@ -614,5 +628,7 @@ const GAME=(function(){
     if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek();
     else if(id==='v-rank'){ const b=document.getElementById('rank-body'); if(b) rankLoad().then(R=>R.mount(b)).catch(()=>{ b.innerHTML='<p class="rk-msg err">Ranking konnte nicht geladen werden. Bitte Verbindung prüfen.</p>'; }); }
   }
-  return {tdToggle,todayHtml,isoWeek,weeklyState,weekSum,heroHtml,shoulder,rankOf,barHtml,event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
+  /* Handy: Tippen auf „Woche“ schiebt die Wochenaufgaben (auch als Ringe) von rechts in die Karte, Tippen auf „Heute“ zurück */
+  function wk(btn){ const d=btn.closest('.g-d3'); if(!d) return; const o=d.classList.toggle('wo'); const h=d.querySelector('.g-d3t h6'); if(h) h.textContent=o?'Diese Woche':'Heute'; }
+  return {wk,tdToggle,todayHtml,isoWeek,weeklyState,weekSum,heroHtml,shoulder,rankOf,barHtml,event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
