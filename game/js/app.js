@@ -12,7 +12,7 @@
   function show(name){
     screen = name;
     ['home', 'levels', 'play', 'rang'].forEach(s => { $(s).hidden = s !== name; });
-    $('btn-back').hidden = name === 'home'; $('btn-menu').hidden = name !== 'play';
+    $('btn-back').hidden = false; $('btn-back').setAttribute('aria-label', name === 'home' ? (VON === 'v-pause' ? 'Zurück zum Pausenraum' : 'Zurück zur Lern-App') : 'Zurück'); $('btn-menu').hidden = name !== 'play';
     $('top-kick').textContent = name === 'home' ? 'IdF Münster' : name === 'rang' ? 'Training' : mis.thema;
     $('top-title').textContent = name === 'home' ? 'Simulationen' : name === 'rang' ? 'Bestenliste' : name === 'levels' ? mis.titel : modus === 'mission' ? 'Level ' + (lvl + 1) + ' · ' + data.level[lvl].titel : mis.titel;
     $('st-total').textContent = fmt(CORE.total()); $('st-serie').textContent = CORE.serie();
@@ -535,7 +535,7 @@
   $('r-next').onclick = () => play(lvl + 1);
   $('r-list').onclick = zurueck;
 
-  $('btn-back').onclick = () => { if(screen === 'play') zurueck(); else home(); };
+  $('btn-back').onclick = () => { if(screen === 'play') zurueck(); else if(screen === 'home') location.href = '../index.html' + (VON ? '#' + VON : ''); else home(); };
   home();
   // Aus der Lern-App direkt in eine Mission springen: ?m=<Mission>&von=<Ansicht der App>
   if(PAR.get('m')) mission(PAR.get('m'));
