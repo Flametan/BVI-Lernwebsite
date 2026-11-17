@@ -4896,6 +4896,8 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 /* Ranking und Wochenduell */
 .rk-av{flex:none;width:30px;height:30px;border-radius:50%;background:var(--m-raised) center/cover no-repeat;border:1.5px solid var(--m-line);display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:var(--m-muted);}
 .rk-av.big{width:52px;height:52px;font-size:1rem;}
+.rk-n{line-height:1.25;}
+.rk-n small{display:block;font-size:.72rem;color:var(--m-muted);}
 .rk-me{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
 .rk-me b{display:block;font-size:1rem;color:var(--m-fg);}
 .rk-me span:not(.rk-av){font-size:.8rem;color:var(--m-muted);}
@@ -4935,5 +4937,6 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .rk-da{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
 .rk-da .g-btn{flex:1 1 120px;}
 .rk-foot{margin-top:18px;}
+.g-rk>.g-btn,.g-rk .rk-me~.g-btn{padding:0 22px;}
 .rk-row .g-btn{flex:0 0 auto;padding:0 20px;}
 .rk-foot .g-btn{padding:0 18px;}

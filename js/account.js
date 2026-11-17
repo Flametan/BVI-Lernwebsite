@@ -61,10 +61,10 @@ const ACCOUNT=(function(){
       +(g(AV)?'<button type="button" class="acc-rm" onclick="ACCOUNT.removeAvatar()">Bild entfernen</button>':'')+'</div>'
       +'<div class="acc-grid">'
       +'<button type="button" class="acc-g pri" onclick="ACCOUNT.go(\'sync\')"><i>'+svg(IC.login)+'</i>Sync</button>'
-      +'<button type="button" class="acc-g" onclick="ACCOUNT.go(\'save\')"><i>'+svg(IC.save)+'</i>Sicherung</button>'
+      +'<button type="button" class="acc-g" onclick="ACCOUNT.go(\'rank\')"><i>'+svg(IC.trophy)+'</i>Ranking</button>'
       +'<button type="button" class="acc-g" onclick="ACCOUNT.go(\'share\')"><i>'+svg(IC.share)+'</i>Teilen</button>'
       +'<button type="button" class="acc-g" onclick="ACCOUNT.go(\'set\')"><i>'+svg(IC.set)+'</i>Einstell.</button></div>'
-      +'<button type="button" class="acc-r" onclick="ACCOUNT.go(\'rank\')"><span class="acc-ri">'+svg(IC.trophy,20)+'</span><span class="acc-rt">Ranking &amp; Duell</span></button>'
+      +'<button type="button" class="acc-r" onclick="ACCOUNT.go(\'save\')"><span class="acc-ri">'+svg(IC.save,20)+'</span><span class="acc-rt">Sicherung</span></button>'
       +'<div class="acc-r acc-dr"><span class="acc-ri">'+svg(IC.moon,20)+'</span><span class="acc-rt">Design</span></div>'
       +'<div class="acc-seg" role="group" aria-label="Design">'+[['dark','Dunkel'],['light','Hell'],['beige','Beige']].map(m=>'<button type="button" data-m="'+m[0]+'" aria-pressed="'+(THEME.get()===m[0])+'" onclick="ACCOUNT.theme(\''+m[0]+'\')">'+m[1]+'</button>').join('')+'</div>'
       +'<button type="button" class="acc-r" onclick="ACCOUNT.go(\'tour\')"><span class="acc-ri">'+svg(IC.tour,20)+'</span><span class="acc-rt">App vorstellen</span></button>'
@@ -85,7 +85,7 @@ const ACCOUNT=(function(){
     else if(a==='set') NAV.go('v-settings','Einstellungen');
     else if(a==='save') BACKUP.export();
     else if(a==='share') APPSHARE.open();
-    else if(a==='rank') NAV.go('v-rank','Ranking & Duell');
+    else if(a==='rank') NAV.go('v-rank','Ranking');
     else if(a==='tour'&&typeof TOUR!=='undefined') TOUR.start('home');
   }
   function theme(m){ THEME.set(m); box.querySelectorAll('.acc-seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m)); }
