@@ -4677,7 +4677,6 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .fc-filter-row .fc-f-btn.fc-t4 small{font-size:.74rem;}
 .fc-sub-bar.fc-sub-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;padding:0;background:none;overflow:visible;}
 @media (max-width:520px){.fc-t4{flex-direction:column;align-items:flex-start;gap:0;padding:9px 10px 10px;}.fc-t4 u{align-self:stretch;flex:none;}}
-.fc-sub-grid.all .fc-t4.on{background:var(--m-card);box-shadow:none;}
 @media (min-width:701px){.fc-filter-row{padding-left:32px!important;padding-right:32px!important;}}
 @media (min-width:1024px){.fc-filter-row{padding-left:48px!important;padding-right:48px!important;}}
 .fc-sub-meta{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.5rem .25rem 0;}
@@ -4781,7 +4780,6 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #v-flashcards .fc-t4 small{flex:none;}
   #v-flashcards .fc-t4 u{display:none;}
   #v-flashcards .fc-t4.active,#v-flashcards .fc-t4.on,#v-flashcards .fc-f-btn.fc-t4.active{background:var(--m-accent-dim,color-mix(in srgb,var(--m-accent) 18%,transparent));box-shadow:none;}
-  #v-flashcards .fc-sub-grid.all .fc-t4.on{background:none;}
   #v-flashcards .fc-sub-meta{padding:10px 4px 0;}
 }
 /* Lernkarten Tablet/Handy: Abstand zwischen Umschalter und Fach-Kacheln */
@@ -4812,3 +4810,44 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #v-flashcards.active #m-fc-side{grid-column:2;grid-row:5;margin-top:1rem;}
   #v-flashcards.active>.fc-sub-row,#v-flashcards.active>.fc-filter-row{grid-row:2/span 4;}
 }
+
+/* Prüfung (Variante 5): wichtige Prüfungen als große Karten mit orangem Rand links, Module darunter */
+.ex-imp>.m-list{background:none;border-radius:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;overflow:visible;}
+.ex-f.jg-rw,.ex-f.jg-rw.hot,.ex-f.jg-rw.lbg{background:var(--m-card);border-radius:18px;border-top:0;box-shadow:inset 6px 0 0 var(--m-accent);overflow:hidden;}
+.ex-f.jg-rw+.jg-rw{border-top:0;}
+.ex-fb{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;height:100%;text-align:left;border:0;background:none;color:var(--m-fg);font-family:inherit;cursor:pointer;padding:16px 56px 16px 22px;}
+.ex-fb:focus-visible{outline:2px solid var(--m-accent);outline-offset:-2px;}
+.ex-ftag{font-size:.64rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:99px;background:var(--m-accent);color:var(--m-on-accent,#1a1205);}
+.ex-ft{font-size:1.22rem;font-weight:800;line-height:1.2;margin-top:6px;text-wrap:balance;}
+.ex-fs{font-size:.86rem;line-height:1.4;color:var(--m-muted);}
+.ex-fgo{display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:var(--m-accent);color:var(--m-on-accent,#1a1205);font-weight:700;font-size:.9rem;border-radius:99px;padding:9px 18px;}
+.ex-fgo i{font-style:normal;}
+.ex-fb:hover .ex-fgo{filter:brightness(1.08);}
+.ex-f .jg-starbtn{top:14px;right:10px;transform:none;}
+.ex-f.jg-rw:has(.jg-starbtn) .m-row{padding-right:0;}
+@media(min-width:701px){
+  /* Tablet und PC: wichtige Karten oben nebeneinander, darunter die Module in zwei Spalten */
+  .ex-wrap{grid-template-columns:minmax(0,1fr);gap:22px;}
+  .ex-imp{position:static;}
+  .ex-imp>.m-list{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;}
+  .ex-ft{font-size:1.4rem;}
+  .ex-wrap[data-v] .ex-mod{display:block;column-count:2;column-gap:40px;}
+  .ex-mod>.ex-acc{break-inside:avoid;}
+  .ex-wrap.ex-edit .ex-mod{display:block;}
+  .ex-mod>.ex-ph{column-span:all;}
+  .ex-mod>.ex-acc:nth-of-type(1){border-top:0;}
+  .ex-acc+.ex-acc{border-top:0;}
+  .ex-acc{border-bottom:1px solid var(--m-line);}
+}
+
+/* Prüfung: Countdown dezent – flache Zeile mit Haarlinie, kleine Zahl, Knopf nur als Text */
+#m-countdown .m-count.m-count-go{background:none;border:1px solid var(--m-line);border-radius:14px;padding:8px 8px 8px 14px;gap:12px;flex-wrap:nowrap;align-items:center;}
+#m-countdown .m-count-big{font-size:1.25rem;font-weight:700;min-width:0;color:var(--m-fg);}
+#m-countdown .m-tx{flex:1 1 0;min-width:0;display:flex;flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 8px;}
+#m-countdown .m-tx .m-t1{display:none;}
+#m-countdown .m-tx .m-t2{font-size:.8rem;line-height:1.3;margin:0;color:var(--m-muted);}
+#m-countdown .m-count-link{flex:0 0 auto;max-width:none;margin:0;min-height:0;background:none;color:var(--m-muted);font-size:.8rem;font-weight:600;padding:6px 8px;border-radius:99px;}
+#m-countdown .m-count-go:hover .m-count-link{filter:none;color:var(--m-fg);background:var(--m-raised);}
+
+/* Lernkarten: Kacheln behalten ihre Höhe */
+#v-flashcards .fc-sub-grid .fc-t4{flex-shrink:0;min-height:46px;}
