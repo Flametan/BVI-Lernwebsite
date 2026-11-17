@@ -85,15 +85,13 @@ const PAUSE=(function(){
     const tile=(k,wide)=>{const g=GAMES.find(x=>x[0]===k),chip=bestChip(k);
       return `<button class="pz-tile${wide?' wide':''}${k==='fahrt'?' hero':''}" data-g="${k}" title="${g[3]}" aria-label="${g[2]}. ${g[3]}${chip?'. '+chip:''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${chip?`<span class="pz-bst">${chip}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${SHORT[k]}</small>${k==='fahrt'?`<small class="pz-more">${g[3].split(' · ')[0]}</small>`:''}</span></button>`;};
     root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Feuerwehr</div>
-    <div class="pz-tiles pz-fw">${tile('fahrt',true)}${tile('snake')}${tile('solitaer')}${tile('minesweeper')}${tile('duell')}</div>
-    <div class="m-sec pz-sec">Wissen und Rätsel</div>
-    <div class="pz-tiles pz-wi">${['tagesfrage','kreuzwort','sudoku','hangman','lueckentext','reihenfolge'].map(k=>tile(k)).join('')}</div>
+    <div class="pz-tiles pz-fw">${tile('fahrt',true)}${['duell','tagesfrage','lueckentext','reihenfolge','hangman','kreuzwort'].map(k=>tile(k)).join('')}</div>
     <div class="m-sec pz-sec">Klassiker</div>
-    <div class="pz-tiles pz-kl">${['g2048','tetris','mahjong'].map(k=>tile(k)).join('')}</div></div>`;
+    <div class="pz-tiles pz-kl">${['snake','solitaer','minesweeper','sudoku','g2048','tetris','mahjong'].map(k=>tile(k)).join('')}</div></div>`;
     tabsOn();
     root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
   }
-  const LABEL={fahrt:'Prüfungsfragen',duell:'Prüfungsfragen',tagesfrage:'Prüfungsfragen',snake:'Geschicklichkeit',tetris:'Geschicklichkeit',g2048:'Knobelspiel',solitaer:'Kartenspiel',minesweeper:'Knobelspiel',sudoku:'Knobelspiel',mahjong:'Knobelspiel',kreuzwort:'Wissen und Rätsel',hangman:'Wissen und Rätsel',lueckentext:'Wissen',reihenfolge:'Wissen'};
+  const LABEL={fahrt:'Prüfungsfragen',duell:'Prüfungsfragen',tagesfrage:'Prüfungsfragen',snake:'Geschicklichkeit',tetris:'Geschicklichkeit',g2048:'Knobelspiel',solitaer:'Kartenspiel',minesweeper:'Knobelspiel',sudoku:'Knobelspiel',mahjong:'Knobelspiel',kreuzwort:'Fachbegriffe',hangman:'Fachbegriffe',lueckentext:'Lernkarten',reihenfolge:'Wissen'};
   function open(k){const g=GAMES.find(x=>x[0]===k);if(!g)return;stop();cur=g[4]();
     if(!pushed){try{history.pushState(Object.assign({},history.state,{pz:1}),'');pushed=true;}catch(e){}}
     root.innerHTML=`<div class="pz-wrap"><div class="pz-head"><button class="pz-back">‹ Alle Spiele</button><span class="pz-center" style="font-size:.78rem">${LABEL[k]||''}</span></div><div class="pz-body"></div></div>`;

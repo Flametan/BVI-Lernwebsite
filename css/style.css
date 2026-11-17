@@ -4106,14 +4106,15 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 /* Tablet: Feuerwehr 3 Spalten (Einsatzfahrt zwei breit), Wissen als 3 + 2 */
 @media(min-width:701px){
   .pz-fw{grid-template-columns:repeat(3,minmax(0,1fr));}
-  .pz-fw .pz-tile.wide{grid-column:span 2;}
-  .pz-wi,.pz-kl{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .pz-fw .pz-tile.wide{grid-column:1 / -1;}
+  .pz-kl{grid-template-columns:repeat(4,minmax(0,1fr));}
   .pz-tile{min-height:128px;}
 }
 @media(max-width:700px){.pz-kl .pz-tile:last-child:nth-child(odd){grid-column:1 / -1;}}
 /* Desktop: Feuerwehr 4 Spalten (Einsatzfahrt zwei breit und zwei hoch), Wissen in einer Reihe mit 5 */
 @media(min-width:1100px){
-  .pz-fw{grid-template-columns:repeat(4,minmax(0,1fr));}
+  .pz-fw{grid-template-columns:repeat(5,minmax(0,1fr));}
+  .pz-fw .pz-tile.wide{grid-column:span 2;}
   .pz-fw .pz-tile.hero{grid-row:span 2;min-height:0;}
   .pz-fw .pz-tile.hero b{font-size:1.25rem;}
   .pz-fw .pz-tile.hero small{font-size:.86rem;}
