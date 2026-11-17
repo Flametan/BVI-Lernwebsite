@@ -1878,6 +1878,22 @@ html,body,*{-webkit-tap-highlight-color:transparent;}
 .m-pl{font-size:.75rem;color:var(--m-muted);}
 .m-pl.cur{color:var(--m-accent-fg);font-weight:700;}
 .m-plot.many{gap:4px;}.m-plot.many .m-pb{max-width:14px;}.m-plot.many .m-pl{font-size:.75rem;}
+/* Wochen-Flächendiagramm der Startseite */
+.m-lc{display:block;width:100%;height:auto;margin-top:6px;overflow:visible;color:var(--m-accent);}
+.m-lc-g{stroke:var(--m-dim);stroke-width:1;stroke-dasharray:4 4;}
+.m-lc-gt{fill:var(--m-muted);font-size:9.5px;}
+.m-lc-b{stroke:var(--m-line);stroke-width:1;}
+.m-lc-a{fill:url(#m-lcg);}
+.m-lc-l{fill:none;stroke:var(--m-accent);stroke-width:3;stroke-linejoin:round;stroke-linecap:round;}
+.m-lc circle{stroke:var(--m-card);stroke-width:2;}
+.m-lc circle.on{fill:var(--m-accent);}.m-lc circle.off{fill:var(--m-raised);}
+.m-lc-v{fill:var(--m-fg);font-size:10.5px;font-weight:700;}
+.m-lc-d{fill:var(--m-muted);font-size:11px;}.m-lc-d.cur{fill:var(--m-accent-fg);font-weight:700;}
+.m-lc-go .m-lc-clip{transform-box:fill-box;transform-origin:0 0;animation:m-lcs 1.2s cubic-bezier(.35,.7,.25,1) both;}
+.m-lc-go .m-lc-pt{transform-box:fill-box;transform-origin:center;animation:m-lcp .4s cubic-bezier(.3,1.4,.5,1) both;}
+@keyframes m-lcs{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+@keyframes m-lcp{from{opacity:0;transform:scale(.4);}to{opacity:1;transform:scale(1);}}
+@media(prefers-reduced-motion:reduce){.m-lc-go .m-lc-clip,.m-lc-go .m-lc-pt{animation:none;}}
 .m-hr{height:1px;background:var(--m-line);margin:12px 0;}
 .m-chart2 .m-row{padding:0;min-height:0;}
 .m-mods{background:transparent;padding:0;}

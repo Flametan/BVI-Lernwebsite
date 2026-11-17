@@ -6682,7 +6682,7 @@ const SHELL=(function(){
     if(!_quip||_quip.slot!==slot){ const l=QUIPS[slot], old=_quip&&_quip.text; let t; do{ t=l[Math.floor(Math.random()*l.length)]; }while(t===old&&l.length>1); _quip={slot,text:t}; }
     return _quip.text;
   }
-  function newQuip(){ if(_quip) _quip.slot=null; }
+  function newQuip(){ if(_quip) _quip.slot=null; chartAnim=true; }   // Aufruf der Startseite: Diagramm baut sich neu auf
 
   function cardStats(){
     let fc=fcCounted();
@@ -6703,12 +6703,24 @@ const SHELL=(function(){
       } else bar=`<i class="m-pb${cls}" style="height:${h}%"></i>`;
       return `<button type="button" class="m-pc" onclick="SHELL.pick(this)" aria-label="${labels[i]}: ${dur(secs[i])}"><span class="m-tip${pos}" style="bottom:calc(${h}% + 22px)">${dur(secs[i])}</span>${bar}<span class="m-pl${i===cur?' cur':''}">${labels[i]}</span></button>`;}).join('')}</div>`;
   }
+  // Wochenansicht als Flächendiagramm: Linie bis heute, gestrichelt das Tagesziel; beim Öffnen der Startseite baut sie sich von links nach rechts auf
+  let chartAnim=false;
   function weekPlot(){
-    const w=USAGE.week(), today=(new Date().getDay()+6)%7;
-    const hours=Math.max(...w)>=7200, gm=goalMin(), g=hours?gm/60:gm;
-    const v=w.map(x=>hours?x/3600:x/60), top=Math.max(g,hours?Math.max(2,Math.ceil(Math.max(...v))):Math.max(30,Math.ceil(Math.max(...v)/10)*10));
+    const w=USAGE.week(), today=(new Date().getDay()+6)%7, gm=goalMin(), days=['Mo','Di','Mi','Do','Fr','Sa','So'];
+    const W=360, B=96, T=30, X0=26, DX=(W-2*X0)/6, top=Math.max(gm*60*1.5,Math.max(...w)*1.15);
+    const px=i=>+(X0+i*DX).toFixed(1), py=s=>+(B-s/top*(B-T)).toFixed(1);
+    const pts=w.slice(0,today+1).map((v,i)=>[px(i),py(v)]);
+    const line=pts.map((q,i)=>(i?'L':'M')+q[0]+' '+q[1]).join(' ');
+    const area=pts.length>1?`<path class="m-lc-a" d="${line} L${pts[pts.length-1][0]} ${B} L${pts[0][0]} ${B}Z"/>`:'';
+    const dots=w.map((v,i)=>{
+      const cur=i===today, d=(.15+i/6*.85).toFixed(2)+'s';
+      const pt=i>today?'':`<g class="m-lc-pt" style="animation-delay:${d}"><circle cx="${px(i)}" cy="${py(v)}" r="${cur?5:3.5}" class="${v>0?'on':'off'}"/>${v>0?`<text x="${px(i)}" y="${py(v)-10}" text-anchor="middle" class="m-lc-v">${dur(v)}</text>`:''}</g>`;
+      return pt+`<text x="${px(i)}" y="${B+17}" text-anchor="middle" class="m-lc-d${cur?' cur':''}">${days[i]}</text>`;
+    }).join('');
+    const aria='Lernzeit je Tag: '+w.slice(0,today+1).map((v,i)=>days[i]+' '+dur(v)).join(', ');
+    const html=`<svg class="m-lc${chartAnim?' m-lc-go':''}" viewBox="0 0 ${W} ${B+24}" role="img" aria-label="${aria}"><defs><linearGradient id="m-lcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".4"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient><clipPath id="m-lcc"><rect class="m-lc-clip" x="0" y="0" width="${W}" height="${B+24}"/></clipPath></defs><line class="m-lc-g" x1="8" x2="${W-8}" y1="${py(gm*60)}" y2="${py(gm*60)}"/><text class="m-lc-gt" x="${W-8}" y="${py(gm*60)-4}" text-anchor="end">Ziel ${gm} min</text><line class="m-lc-b" x1="8" x2="${W-8}" y1="${B}" y2="${B}"/><g clip-path="url(#m-lcc)">${area}<path class="m-lc-l" d="${line}"/></g>${dots}</svg>`;
     const avg=w.slice(0,today+1).reduce((s,x)=>s+x,0)/(today+1);   // Durchschnitt je Tag bis heute
-    return {html:plot(v,['Mo','Di','Mi','Do','Fr','Sa','So'],today,top,w,g),unit:hours?'Stunden pro Tag':'Minuten pro Tag',sum:w.reduce((a,b)=>a+b,0),avg,note:'Rahmen = Tagesziel '+gm+' min'};
+    return {html,unit:'Minuten pro Tag',sum:w.reduce((a,b)=>a+b,0),avg,note:'Gestrichelt = Tagesziel '+gm+' min'};
   }
   function monthPlot(){
     const ms=USAGE.months(12), names=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
@@ -6777,6 +6789,7 @@ const SHELL=(function(){
   // Lernzeit-Diagramm als eigene Karte: beim Wechsel Woche/Monate wird nur sie ersetzt, die Startseite animiert nicht neu
   function chartHtml(){
     const pl=chartRange==='month'?monthPlot():weekPlot(), isM=chartRange==='month';
+    chartAnim=false;
     return `<div class="m-card m-chart2"><div class="m-chart-h"><span class="m-seg m-seg-s" role="group" aria-label="Zeitraum"><button class="${isM?'':'active'}" onclick="SHELL.setRange('week')">Woche</button><button class="${isM?'active':''}" onclick="SHELL.setRange('month')">Monate</button></span><span class="m-st"><b>${dur(pl.sum)}</b> / ${isM?'12 Monate':'Woche'}</span></div>
       ${pl.html}<div class="m-glg"><span>${pl.note}</span><span class="m-gavg">Ø ${dur(pl.avg)} / Tag</span></div></div>`;
   }
@@ -7106,7 +7119,7 @@ const SHELL=(function(){
       if(!on&&typeof ETIMER!=='undefined') ETIMER.stop();
     },
     setRange(r){
-      chartRange=r==='month'?'month':'week';
+      chartRange=r==='month'?'month':'week'; chartAnim=true;
       const old=document.querySelector('#v-home .m-chart2');
       if(!old){ renderHome(); return; }
       const t=document.createElement('template'); t.innerHTML=chartHtml();
@@ -7351,12 +7364,13 @@ const RAIL=(function(){
     // Klick auf ein Symbol: Leiste bleibt schmal, bis die Maus sie verlässt
     let hv=0, hold=false;
     const want=o=>{ clearTimeout(hv); if(o&&hold) return; hv=setTimeout(()=>setOpen(o),o?90:260); };
-    r.addEventListener('pointerdown',e=>{ if(e.target.closest('.m-ri')&&!pinned()){ hold=true; clearTimeout(hv); setOpen(false); } });
+    // Einklappen erst nach dem Klick: klappt die Leiste schon beim Drücken zu, rutscht der Button unter der Maus weg und der Klick geht ins Leere
+    r.addEventListener('pointerdown',e=>{ if(e.target.closest('.m-ri')&&!pinned()){ hold=true; clearTimeout(hv); } });
     document.addEventListener('pointerdown',e=>{ if(!r.contains(e.target)) hold=false; },true);
     r.addEventListener('mouseleave',()=>{ hold=false; want(false); });
     r.addEventListener('focusin',e=>{ if(e.target.matches&&e.target.matches(':focus-visible')) want(true); });
     r.addEventListener('focusout',e=>{ if(!r.contains(e.relatedTarget)) want(false); });
-    r.addEventListener('click',e=>{ if(!open&&!pinned()&&mq.matches&&!e.target.closest('.m-ri,#m-pin,button,a')){ clearTimeout(hv); setOpen(true); } });
+    r.addEventListener('click',e=>{ if(open&&!pinned()&&e.target.closest('.m-ri')){ clearTimeout(hv); setOpen(false); return; } if(!open&&!pinned()&&mq.matches&&!e.target.closest('.m-ri,#m-pin,button,a')){ clearTimeout(hv); setOpen(true); } });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&open) setOpen(false); });
     (mq.addEventListener?mq.addEventListener.bind(mq,'change'):mq.addListener.bind(mq))(()=>sync());
     sync();
