@@ -4899,7 +4899,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .g-td-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:.78rem;color:var(--m-muted);margin-top:6px;}
 .g-td-h b{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--m-fg);}
 .g-td>div+div{margin-top:8px;}
-.g-today .g-tasks li,.g-aufg .g-tasks li{min-height:30px;}
+.g-today .g-tasks li{min-height:30px;}
 .g-tlinks{display:flex;gap:8px;margin-top:10px;}
 .g-tlinks .g-lk{flex:1;min-height:40px;border:0;border-radius:99px;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);font:inherit;font-weight:700;font-size:.86rem;cursor:pointer;}
 .g-tlinks .g-lk.alt{background:var(--m-raised);color:var(--m-fg);}

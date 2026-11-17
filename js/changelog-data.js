@@ -1,7 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
-      'Lernpfad entfernt: Das Feld an der Flamme zeigt keinen Lernpfad mehr. Die doppelte XP-Leiste im orangen Kopf der Startseite ist entfernt, der Fortschritt steht nur noch im Feld darunter.',
+      'Lernpfad entfernt: Das Feld an der Flamme zeigt keinen Lernpfad mehr. Auf der Seite „Rang & Abzeichen“ ist der Abschnitt „Aufgaben“ entfernt (die Aufgaben stehen auf der Startseite). Die doppelte XP-Leiste im orangen Kopf der Startseite ist entfernt, der Fortschritt steht nur noch im Feld darunter.',
       'Ranking: Freiwillig, erreichbar über den Account-Knopf oben rechts unter „Ranking“. Es erscheinen der Name und das Profilbild aus deinem Account. Es gibt eine Wochen- und eine Gesamtliste mit den Top 20 und deinem Platz. Übertragen werden nur Name, kleines Profilbild, Gesamt- und Wochenpunkte; Die Teilnahme gilt über den Sync für alle Geräte deines Accounts. Aussteigen löscht alles auf dem Server. Die Namen sind einmalig, die Punkte werden auf Plausibilität geprüft.',
       'Startseite: Die Karte „Heute“ ist jetzt eine schmale Leiste (Tagesring, Stand der Tages- und Wochenaufgaben). Beim Aufklappen erscheinen die Aufgaben sowie Knöpfe zu „Ranking“ und „Rang & Abzeichen“. Das Menü an der Flamme zeigt die Tagesaufgaben nicht mehr.',
       'Lernkarten: Am Desktop ist die Karte jetzt deutlich größer (große Schrift, volle Breite), die Fächer stehen in einer schmalen Leiste rechts. Auf dem Tablet ist die Karte ebenfalls größer.',
