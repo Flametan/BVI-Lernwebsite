@@ -4426,6 +4426,10 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .g-hero-fl{display:inline-block;filter:grayscale(.55) opacity(.8);}.g-hero-fl.on{filter:none;}
 .g-hero-l{font-weight:700;opacity:.92;}
 .g-hero-rk{border:0;background:none;padding:0;cursor:pointer;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));display:grid;place-items:center;}
+.g-hero-xp{padding:8px 20px 12px;background:rgba(0,0,0,.5);color:#fff;display:flex;flex-direction:column;gap:5px;position:relative;}
+.g-hero-xl{display:flex;justify-content:space-between;gap:10px;font-size:.74rem;font-weight:700;font-variant-numeric:tabular-nums;}
+.g-hero-xb{height:6px;border-radius:9px;background:rgba(255,255,255,.22);overflow:hidden;}
+.g-hero-xb i{display:block;height:100%;border-radius:9px;transition:width .6s cubic-bezier(.3,.9,.3,1);}
 .g-hero-st:focus-visible,.g-hero-rk:focus-visible{outline:2px solid #fff;outline-offset:3px;border-radius:8px;}
 @media(min-width:701px) and (max-width:1099px){
   #m-home .m-hgrid{grid-template-rows:auto 1fr auto auto;}
@@ -4975,7 +4979,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   /* Ranking: dunkler Streifen mit schräger Kante rechts in der Kopfkarte; ragt über den Rand, die Kartenrundung schneidet ihn ab */
   #m-home .g-hero{position:relative;overflow:hidden;}
   #m-home .g-hero-rk{margin-right:90px;}
-  #m-home .g-hero-rkl{position:absolute;right:-2px;top:-2px;bottom:-2px;width:98px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;color:#fff;font:inherit;font-weight:700;font-size:.74rem;background:rgba(0,0,0,.28);clip-path:polygon(14px 0,100% 0,100% 100%,0 100%);cursor:pointer;}
+  #m-home .g-hero-rkl{position:absolute;right:-2px;top:-2px;bottom:46px;width:98px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;color:#fff;font:inherit;font-weight:700;font-size:.74rem;background:rgba(0,0,0,.28);clip-path:polygon(14px 0,100% 0,100% 100%,0 100%);cursor:pointer;}
   #m-home .g-hero-rkl:hover{background:rgba(0,0,0,.36);}
   #m-home .g-hero-rkl:focus-visible{outline:2px solid #fff;outline-offset:-4px;}
   #m-home .m-mods{grid-row:3;}
