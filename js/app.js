@@ -7364,12 +7364,13 @@ const RAIL=(function(){
     // Klick auf ein Symbol: Leiste bleibt schmal, bis die Maus sie verlässt
     let hv=0, hold=false;
     const want=o=>{ clearTimeout(hv); if(o&&hold) return; hv=setTimeout(()=>setOpen(o),o?90:260); };
-    r.addEventListener('pointerdown',e=>{ if(e.target.closest('.m-ri')&&!pinned()){ hold=true; clearTimeout(hv); setOpen(false); } });
+    // Einklappen erst nach dem Klick: klappt die Leiste schon beim Drücken zu, rutscht der Button unter der Maus weg und der Klick geht ins Leere
+    r.addEventListener('pointerdown',e=>{ if(e.target.closest('.m-ri')&&!pinned()){ hold=true; clearTimeout(hv); } });
     document.addEventListener('pointerdown',e=>{ if(!r.contains(e.target)) hold=false; },true);
     r.addEventListener('mouseleave',()=>{ hold=false; want(false); });
     r.addEventListener('focusin',e=>{ if(e.target.matches&&e.target.matches(':focus-visible')) want(true); });
     r.addEventListener('focusout',e=>{ if(!r.contains(e.relatedTarget)) want(false); });
-    r.addEventListener('click',e=>{ if(!open&&!pinned()&&mq.matches&&!e.target.closest('.m-ri,#m-pin,button,a')){ clearTimeout(hv); setOpen(true); } });
+    r.addEventListener('click',e=>{ if(open&&!pinned()&&e.target.closest('.m-ri')){ clearTimeout(hv); setOpen(false); return; } if(!open&&!pinned()&&mq.matches&&!e.target.closest('.m-ri,#m-pin,button,a')){ clearTimeout(hv); setOpen(true); } });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&open) setOpen(false); });
     (mq.addEventListener?mq.addEventListener.bind(mq,'change'):mq.addListener.bind(mq))(()=>sync());
     sync();

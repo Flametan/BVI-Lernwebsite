@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+      'Seitenleiste (PC): Ein Klick auf einen Tab bei geöffneter, nicht angehefteter Leiste wechselt jetzt jedes Mal sofort die Seite. Vorher ging der erste Klick manchmal ins Leere, weil die Leiste schon beim Drücken zuklappte.',
       'Dienstgrade: Durch die Tages- und Wochenaufgaben gibt es mehr Punkte, daher wurde die Levelkurve angepasst. Die Aufgaben bringen etwas weniger Punkte (Tagesaufgabe 20, Wochenaufgaben und Bonus ca. 20 % weniger), die Schwellen der Dienstgrade liegen etwas niedriger als bisher (Höherer Dienst ab 2.850, Leitender Branddirektor ab 9.800). Wer täglich lernt und die Aufgaben erledigt, erreicht den höchsten Rang nach etwa 1,5 Monaten. Deine gesammelten Punkte bleiben erhalten, der angezeigte Dienstgrad kann sich dadurch ändern.',
       'Startseite: Die Lernzeit der Woche ist jetzt ein Flächendiagramm mit Linie, Punkten, Zeiten über den Tagen und gestricheltem Tagesziel. Beim Öffnen der Startseite baut es sich von links nach rechts auf.',
       'Startseite (Tablet/PC): Unter der Serien-Karte zeigt ein Streifen den Fortschritt zum nächsten Dienstgrad (Rang, Punkte und Balken). Der Balken hat die Farbe der Laufbahn: Mittlerer Dienst rot, Gehobener Dienst silber, Höherer Dienst gold.',
