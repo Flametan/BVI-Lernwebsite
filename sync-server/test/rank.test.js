@@ -84,17 +84,17 @@ test('rank.dat zählt nicht als Sync-Block', async () => {
 test('Spiel-Bestenlisten: melden, besser gewinnt, Zeit niedriger, Grenzen', async () => {
   const s = await boot();
   await rep(s, A, TA, 'Anna', 1, 1); await rep(s, B, TB, 'Ben', 1, 1);
-  assert.equal((await s.call('PUT', A + '/games', TA, { g: { tetris: 5000, mahjong: 300 } })).status, 200);
-  assert.equal((await s.call('PUT', B + '/games', TB, { g: { tetris: 7000, mahjong: 250 } })).status, 200);
-  await s.call('PUT', B + '/games', TB, { g: { tetris: 100, mahjong: 400 } });        // schlechter: bleibt wie vorher
+  assert.equal((await s.call('PUT', A + '/games', TA, { g: { tetris: 5000, 'mahjong:pyramide': 300 } })).status, 200);
+  assert.equal((await s.call('PUT', B + '/games', TB, { g: { tetris: 7000, 'mahjong:pyramide': 250 } })).status, 200);
+  await s.call('PUT', B + '/games', TB, { g: { tetris: 100, 'mahjong:pyramide': 400 } });        // schlechter: bleibt wie vorher
   let j = await (await s.call('GET', A + '/games?b=tetris', TA)).json();
   assert.deepEqual(j.top.map(x => [x.name, x.v]), [['Ben', 7000], ['Anna', 5000]]); assert.equal(j.me.place, 2);
-  j = await (await s.call('GET', A + '/games?b=mahjong', TA)).json();
+  j = await (await s.call('GET', A + '/games?b=mahjong:pyramide', TA)).json();
   assert.deepEqual(j.top.map(x => [x.name, x.v]), [['Ben', 250], ['Anna', 300]]);
   // Ungültiges (über dem Höchstwert, unmöglich schnell, unbekanntes Spiel) wird übersprungen, Gültiges gespeichert
-  assert.equal((await s.call('PUT', A + '/games', TA, { g: { tetris: 99999999, mahjong: 1, quatsch: 5, snake: 40 } })).status, 200);
+  assert.equal((await s.call('PUT', A + '/games', TA, { g: { tetris: 99999999, 'mahjong:pyramide': 1, quatsch: 5, snake: 40 } })).status, 200);
   j = await (await s.call('GET', A + '/games?b=tetris', TA)).json(); assert.equal(j.me.v, 5000);
-  j = await (await s.call('GET', A + '/games?b=mahjong', TA)).json(); assert.equal(j.me.v, 300);
+  j = await (await s.call('GET', A + '/games?b=mahjong:pyramide', TA)).json(); assert.equal(j.me.v, 300);
   assert.equal((await (await s.call('GET', A + '/games?b=snake', TA)).json()).me.v, 40);
   assert.equal((await s.call('PUT', A + '/games', TA, { g: [1] })).status, 422);
   assert.equal((await s.call('GET', A + '/games?b=quatsch', TA)).status, 422);

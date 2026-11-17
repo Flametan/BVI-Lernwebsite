@@ -18,7 +18,7 @@ const PAUSE=(function(){
   /* ---------- Bestenlisten: je Spiel (und Stufe) die zehn besten Läufe, nur auf dem Gerät und im Sync ---------- */
   const TOPKEY="bvi_pause_top";
   const LV4=[["leicht","Leicht"],["mittel","Mittel"],["schwer","Schwer"],["sehr","Sehr schwer"]];
-  const BOARDS={fahrt:{u:"Punkte"},duell:{u:"Punkte"},tagesfrage:{u:"Tage",s:1},lueckentext:{u:"Lücken"},reihenfolge:{u:"Serie",s:1},hangman:{u:"Serie",s:1},kreuzwort:{u:"Tage",s:1},mahjong:{t:1},sudoku:{t:1,lv:LV4.slice(0,3)},tetris:{u:"Punkte"},solitaer:{u:"Punkte"},g2048:{u:"Punkte"},minesweeper:{t:1,lv:LV4},snake:{u:"Punkte"}};
+  const BOARDS={fahrt:{u:"Punkte"},duell:{u:"Punkte"},tagesfrage:{u:"Tage",s:1},lueckentext:{u:"Lücken"},reihenfolge:{u:"Serie",s:1},hangman:{u:"Serie",s:1},kreuzwort:{u:"Tage",s:1},mahjong:{t:1,lv:[["leicht","Leicht"],["mittel","Mittel"],["pyramide","Pyramide"],["burg","Burg"],["festung","Festung"]]},sudoku:{t:1,lv:LV4.slice(0,3)},tetris:{u:"Punkte"},solitaer:{u:"Punkte"},g2048:{u:"Punkte"},minesweeper:{t:1,lv:LV4},snake:{u:"Punkte"}};
   const ymd=(off)=>{const d=new Date();d.setDate(d.getDate()+(off||0));const q=n=>("0"+n).slice(-2);return d.getFullYear()+"-"+q(d.getMonth()+1)+"-"+q(d.getDate());};
   // Ergebnis eintragen: v = Punkte, Sekunden (Zeitspiele, niedriger ist besser) oder Serie; lv = Stufe
   function addScore(k,v,lv){const B=BOARDS[k];v=Math.round(+v);if(!B||!isFinite(v)||v<0||(!B.t&&v<1))return;
@@ -27,6 +27,9 @@ const PAUSE=(function(){
     let n="";try{n=(localStorage.getItem("bvi_profile_name")||"").slice(0,30);}catch(e){}
     const e={p:v,d:ymd(0),a:B.t?1:0};if(n)e.n=n;a.push(e);
     a.sort((x,y)=>B.t?x.p-y.p:y.p-x.p);T[id]=a.slice(0,10);set(TOPKEY,T);pushBests();}
+  // früher gab es nur ein Mahjong-Brett (heute: Stufe Pyramide): Rekord und Liste umziehen
+  (function(){try{const b=best();if(typeof b.mahjong==='number'){b.mahjong={pyramide:b.mahjong};set(BKEY,b);}
+    const T=get(TOPKEY,{});if(T.mahjong){if(!(T['mahjong:pyramide']||[]).length&&Array.isArray(T.mahjong))T['mahjong:pyramide']=T.mahjong;delete T.mahjong;set(TOPKEY,T);}}catch(e){}})();
   // einmalig: bisherige Rekorde in die Bestenliste übernehmen (feste Datumsangabe, damit der Sync sie nicht doppelt führt)
   (function seedTop(){try{if(localStorage.getItem("bvi_pause_seeded"))return;localStorage.setItem("bvi_pause_seeded","1");
     const b=best(),T=get(TOPKEY,{});let ch=0,n="";n=(localStorage.getItem("bvi_profile_name")||"").slice(0,30);
@@ -81,13 +84,13 @@ const PAUSE=(function(){
     if(k==='sudoku'){const L=[['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']].find(x=>b&&b[x[0]]!=null);return L?`${L[1]} ${fmtT(b[L[0]])}`:'';}
     if(k==='tagesfrage'){const n=b&&b.max;return n?`Beste Serie ${n} ${n===1?'Tag':'Tage'}`:'';}
     if(k==='kreuzwort')return typeof b==='number'&&b>0?`Beste Serie ${b} ${b===1?'Tag':'Tage'}`:'';
-    if(k==='mahjong')return typeof b==='number'?'Bestzeit '+fmtT(b):'';
+    if(k==='mahjong'){const o=typeof b==='number'?{pyramide:b}:b;const L=[['festung','Festung'],['burg','Burg'],['pyramide','Pyramide'],['mittel','Mittel'],['leicht','Leicht']].find(x=>o&&o[x[0]]!=null);return L?`${L[1]} ${fmtT(o[L[0]])}`:'';}
     if(k==='lueckentext')return `${b} in 60 s`;
     if(k==='reihenfolge'||k==='hangman')return `Serie ${b}`;
     return `Rekord ${typeof b==='number'?b.toLocaleString('de-DE'):b}`;}
   const bestTxt=bestChip;
   // kurze Untertitel für die Kacheln
-  const SHORT={fahrt:'5, 10 oder 15 Fragen, Hilfsfrist',duell:'Zu zweit live, per QR-Code',snake:'Löschzug durchs Feuer steuern',solitaer:'Klondike mit Flammen und Leitern',minesweeper:'Brandherde im Dunkeln aufspüren',tagesfrage:'3 Fragen, jeden Tag neu',kreuzwort:'Jeden Tag ein neues Rätsel',sudoku:'Leicht, Mittel, Schwer',hangman:'Fachbegriffe erraten',lueckentext:'60 Sekunden, Lücken füllen',reihenfolge:'Abläufe sortieren',g2048:'Dienstgrade verschmelzen',tetris:'Fahrzeuge stapeln',mahjong:'Paare abräumen'};
+  const SHORT={fahrt:'5, 10 oder 15 Fragen, Hilfsfrist',duell:'Zu zweit live, per QR-Code',snake:'Löschzug durchs Feuer steuern',solitaer:'Klondike mit Flammen und Leitern',minesweeper:'Brandherde im Dunkeln aufspüren',tagesfrage:'3 Fragen, jeden Tag neu',kreuzwort:'Jeden Tag ein neues Rätsel',sudoku:'Leicht, Mittel, Schwer',hangman:'Fachbegriffe erraten',lueckentext:'60 Sekunden, Lücken füllen',reihenfolge:'Abläufe sortieren',g2048:'Dienstgrade verschmelzen',tetris:'Fahrzeuge stapeln',mahjong:'5 Stufen, Paare abräumen'};
   // Reiter „Simulationen“: führt in das eigene 3D-Spiel unter game/ (eigene Seite, Fortschritt in bvi_game_v1)
   const TKEY='bvi_pause_tab';let ptab=get(TKEY,'spiele');
   const IDF3D=[['begehung','grid','Begehung','Bauteile im Gebäude bestimmen'],['stellungnahme','cards','Stellungnahme','Aus Textbausteinen schreiben'],['stab','duel','Stab','Meldungen zum Sachgebiet bringen'],['presse','bolt','Presse','Statement vor laufender Kamera'],['lage','scale','Lage','Zivile Verteidigung im Lagezentrum'],['ucpm','truck','Hilfeersuchen','Hilfe über die EU anfordern'],['ibk','ladder','IBK','Gespräche und Fragen auf der Wache'],['vak','pairs','VAk','Fragen im Hörsaal'],['feuak','flame','FeuAK','Bedarfsplanung mit Budget']];

@@ -24,7 +24,7 @@ const NAME_RE = /^[\p{L}\p{N}][\p{L}\p{N} ._-]{1,18}[\p{L}\p{N}]$/u;   // 3–20
 const AV_RE = /^data:image\/jpeg;base64,[A-Za-z0-9+/=]{20,6000}$/;   // kleines Vorschaubild
 // Pausenspiele: erlaubte Listen mit Höchstwert (Punkte, Serien) oder Zeitgrenzen in Sekunden (t: niedriger ist besser)
 const GAMES = { fahrt: { max: 6000 }, duell: { max: 2000 }, tagesfrage: { max: 4000 }, lueckentext: { max: 200 }, reihenfolge: { max: 5000 }, hangman: { max: 5000 }, kreuzwort: { max: 4000 },
-  mahjong: { t: [20, 86400] }, 'sudoku:leicht': { t: [20, 86400] }, 'sudoku:mittel': { t: [30, 86400] }, 'sudoku:schwer': { t: [40, 86400] },
+  'mahjong:leicht': { t: [15, 86400] }, 'mahjong:mittel': { t: [20, 86400] }, 'mahjong:pyramide': { t: [25, 86400] }, 'mahjong:burg': { t: [30, 86400] }, 'mahjong:festung': { t: [40, 86400] }, 'sudoku:leicht': { t: [20, 86400] }, 'sudoku:mittel': { t: [30, 86400] }, 'sudoku:schwer': { t: [40, 86400] },
   tetris: { max: 2000000 }, solitaer: { max: 100000 }, g2048: { max: 4000000 }, snake: { max: 100000 },
   'minesweeper:leicht': { t: [1, 86400] }, 'minesweeper:mittel': { t: [3, 86400] }, 'minesweeper:schwer': { t: [8, 86400] }, 'minesweeper:sehr': { t: [15, 86400] } };
 const gameOk = (k, v) => Object.prototype.hasOwnProperty.call(GAMES, k) && Number.isInteger(v) && (GAMES[k].t ? v >= GAMES[k].t[0] && v <= GAMES[k].t[1] : v >= 1 && v <= GAMES[k].max);
