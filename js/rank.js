@@ -88,13 +88,24 @@ const RANK=(function(){
   function draw(b){
     const me=myName(), rows=b.top.map(r=>`<li class="${r.me?'me':''}"><span class="rk-p">${r.place}</span>${av(r.name,r.av)}<span class="rk-n">${esc(r.name)}<small>${esc(GAME.rankOf(r.tx!=null?r.tx:r.xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(r.tx!=null?r.tx:r.xp),44)}<b>${r.xp}</b></li>`).join('');
     const mine=b.me&&b.me.place>20?`<li class="me gap"><span class="rk-p">${b.me.place}</span>${av(me,st().av)}<span class="rk-n">${esc(me)}<small>${esc(GAME.rankOf(GAME._state().xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(GAME._state().xp),44)}<b>${b.me.xp}</b></li>`:'';
-    el.innerHTML=`<div class="rk-tabs" role="tablist"><button type="button" role="tab" class="${tab==='week'?'on':''}" aria-selected="${tab==='week'}" onclick="RANK.setTab('week')">Diese Woche</button><button type="button" role="tab" class="${tab==='all'?'on':''}" aria-selected="${tab==='all'}" onclick="RANK.setTab('all')">Gesamt</button></div>
-      <ol class="rk-list">${rows||'<li class="rk-empty">Noch niemand in der Liste.</li>'}${mine}</ol>
-      <p class="rk-sub">${b.me?`Dein Platz: ${b.me.place} von ${b.total}`:'Sammle Punkte, um in der Liste zu erscheinen.'} · Du bist als „${esc(me)}“ dabei</p>
+    const body=`<ol class="rk-list">${rows||'<li class="rk-empty">Noch niemand in der Liste.</li>'}${mine}</ol>
+      <p class="rk-sub">${b.me?`Dein Platz: ${b.me.place} von ${b.total}`:'Sammle Punkte, um in der Liste zu erscheinen.'} · Du bist als „${esc(me)}“ dabei</p>`;
+    const rb=el.querySelector('.rk-body');
+    if(rb&&el.querySelector('.rk-tabs')){ rb.innerHTML=body; rb.classList.remove('busy'); return; }   // Umschalter bleibt stehen, nur die Liste wechselt
+    el.innerHTML=`<div class="rk-tabs" role="tablist" data-tab="${tab}"><button type="button" role="tab" data-t="week" class="${tab==='week'?'on':''}" aria-selected="${tab==='week'}" onclick="RANK.setTab('week')">Diese Woche</button><button type="button" role="tab" data-t="all" class="${tab==='all'?'on':''}" aria-selected="${tab==='all'}" onclick="RANK.setTab('all')">Gesamt</button></div>
+      <div class="rk-body">${body}</div>
       <div class="rk-foot"><button type="button" class="g-btn alt" onclick="RANK.doLeave(this)">Ranking verlassen</button></div>`;
   }
   const flash=(t,err)=>{ if(!el) return; el.querySelectorAll('.rk-msg').forEach(n=>n.remove()); el.insertAdjacentHTML('beforeend',msg(t,err)); };
-  function setTab(t){ tab=t; busy=false; mount(); }
+  function setTab(t){
+    if(t===tab) return; tab=t;
+    const tb=el&&el.querySelector('.rk-tabs');
+    if(!tb){ busy=false; mount(); return; }
+    tb.dataset.tab=t;
+    tb.querySelectorAll('button').forEach(b=>{ const on=b.dataset.t===t; b.classList.toggle('on',on); b.setAttribute('aria-selected',on); });
+    const rb=el.querySelector('.rk-body'); if(rb) rb.classList.add('busy');
+    api('GET','?board='+t).then(b=>{ if(tab===t) draw(b); }).catch(()=>{ if(tab===t){ busy=false; mount(); } });
+  }
   let sure=0;
   async function doLeave(b){
     if(!sure){ sure=1; b.textContent='Wirklich verlassen? Nochmal tippen'; setTimeout(()=>{ sure=0; if(b.isConnected) b.textContent='Ranking verlassen'; },4000); return; }
