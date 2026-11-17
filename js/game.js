@@ -14,9 +14,9 @@ const GAME=(function(){
   /* Dienstgrade nach der Wikipedia-Übersicht (Berufsfeuerwehr NRW), nach Laufbahngruppe geordnet */
   const GROUPS={md:{n:'Mittlerer Dienst',s:'mD',c:'#e5484d'},gd:{n:'Gehobener Dienst',s:'gD',c:'#b9c2cf'},hd:{n:'Höherer Dienst',s:'hD',c:'#f0b83a'}};
   const RANKS=[
-    {n:'Brandmeister',g:'md',xp:0},{n:'Oberbrandmeister',g:'md',xp:170},{n:'Hauptbrandmeister',g:'md',xp:490},{n:'Hauptbrandmeister mit Amtszulage',g:'md',xp:770},
-    {n:'Brandinspektor',g:'gd',xp:1050},{n:'Brandoberinspektor',g:'gd',xp:1950},{n:'Brandamtmann',g:'gd',xp:3350},{n:'Brandamtsrat',g:'gd',xp:4200},
-    {n:'Brandrat',g:'hd',xp:5300},{n:'Oberbrandrat',g:'hd',xp:8100},{n:'Branddirektor',g:'hd',xp:12300},{n:'Leitender Branddirektor',g:'hd',xp:18200}
+    {n:'Brandmeister',g:'md',xp:0},{n:'Oberbrandmeister',g:'md',xp:120},{n:'Hauptbrandmeister',g:'md',xp:340},{n:'Hauptbrandmeister mit Amtszulage',g:'md',xp:540},
+    {n:'Brandinspektor',g:'gd',xp:740},{n:'Brandoberinspektor',g:'gd',xp:1370},{n:'Brandamtmann',g:'gd',xp:2350},{n:'Brandamtsrat',g:'gd',xp:2950},
+    {n:'Brandrat',g:'hd',xp:3700},{n:'Oberbrandrat',g:'hd',xp:5700},{n:'Branddirektor',g:'hd',xp:8600},{n:'Leitender Branddirektor',g:'hd',xp:12800}
   ];
   RANKS.forEach((r,i)=>{ r.i=i; r.pip=RANKS.filter(x=>x.g===r.g&&x.i<=i).length; });
 
