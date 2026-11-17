@@ -20,7 +20,7 @@ die App verschlüsselt auf dem Gerät, der Server sieht nur unlesbare Daten. Lä
 
 ## Ranking und Wochenduell
 Zusätzlich zum Sync liefert der Server ein freiwilliges Ranking (Wochen- und Gesamtliste) und Wochenduelle (`/v1/rank/...`, Code in `rank.js`).
-Gespeichert werden pro Teilnehmer nur Anzeigename, Gesamtpunkte, Wochenpunkte und ein Hash des zufälligen Zugriffsschlüssels, in der Datei `rank.dat` im Datenordner (kein `.json`, daher nicht mit den Sync-Blöcken vermischt). Wer aussteigt, wird samt Duellen gelöscht.
+Gespeichert werden pro Teilnehmer nur Name (aus dem Account), ein 48×48-Vorschaubild (optional, höchstens wenige KB), Gesamtpunkte, Wochenpunkte und ein Hash des zufälligen Zugriffsschlüssels, in der Datei `rank.dat` im Datenordner (kein `.json`, daher nicht mit den Sync-Blöcken vermischt). Wer aussteigt, wird samt Duellen gelöscht.
 Weitere Einstellungen: `RANK_TZ` (Europe/Berlin, bestimmt Beginn und Ende der Woche), `RANK_MAX_PLAYERS` (2000), `RANK_MAX_XP` (500000), `RANK_MAX_WEEK` (8000), `RANK_DAY_XP` (1500, größter Punktezuwachs je Tag, Schutz vor Schummeln), `RANK_MAX_DUELS` (3), `RANK_BLOCK` (kommagetrennte Wörter, die in Namen verboten sind).
 Einen Teilnehmer entfernen: Container stoppen, den Eintrag in `rank.dat` löschen, Container starten.
 

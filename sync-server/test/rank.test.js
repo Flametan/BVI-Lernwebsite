@@ -38,6 +38,14 @@ test('Falsches Token, ungültiger und gesperrter Name, unplausible Punkte', asyn
   assert.equal((await rep(s, A, TA, 'Anna', 200, 9000)).status, 422);        // Wochenwert über dem Maximum
   await s.close();
 });
+test('Vorschaubild wird gespeichert und angezeigt, ungültiges abgelehnt', async () => {
+  const s = await boot(); const av = 'data:image/jpeg;base64,' + 'QUJD'.repeat(20);
+  assert.equal((await s.call('PUT', A, TA, { name: 'Anna', xp: 1, week: { k: wk(), xp: 1 }, av: 'data:text/html;base64,AAAA' })).status, 422);
+  assert.equal((await s.call('PUT', A, TA, { name: 'Anna', xp: 5, week: { k: wk(), xp: 5 }, av })).status, 200);
+  await rep(s, A, TA, 'Anna', 6, 6);                                          // ohne av: bleibt erhalten
+  assert.equal((await (await s.call('GET', A + '?board=all', TA)).json()).top[0].av, av);
+  await s.close();
+});
 test('Teilnahme beenden', async () => {
   const s = await boot();
   await rep(s, A, TA, 'Anna', 100, 10);

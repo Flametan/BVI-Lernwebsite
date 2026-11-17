@@ -1,5 +1,6 @@
 /* ── Ranking und Wochenduell ────────────────────────────────────────────────
-   Freiwillig: Wer teilnimmt, sendet Anzeigename, Gesamtpunkte und Wochenpunkte an den Sync-Server (derselbe wie beim Sync).
+   Freiwillig, erreichbar über den Account-Knopf. Name und Profilbild kommen aus dem Account. Wer teilnimmt, sendet Name, ein kleines
+   Vorschaubild, Gesamtpunkte und Wochenpunkte an den Sync-Server (derselbe wie beim Sync).
    Kennung und Zugriffsschlüssel sind zufällig und liegen nur auf diesem Gerät. Wird erst bei Bedarf geladen (js/game.js). */
 const RANK=(function(){
   const K='bvi_rank', esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -8,6 +9,17 @@ const RANK=(function(){
   const st=()=>{ try{ return JSON.parse(localStorage.getItem(K)||'null'); }catch(e){ return null; } };
   const put=v=>{ try{ if(v) localStorage.setItem(K,JSON.stringify(v)); else localStorage.removeItem(K); }catch(e){} };
   const base=()=>(typeof SYNC!=='undefined'&&SYNC.url)?SYNC.url():'https://umbrel.taile733cb.ts.net';
+  const ls=k=>{ try{ return localStorage.getItem(k)||''; }catch(e){ return ''; } };
+  const myName=()=>ls('bvi_profile_name').trim().replace(/\s+/g,' ');
+  const nameOk=n=>/^[\p{L}\p{N}][\p{L}\p{N} ._-]{1,18}[\p{L}\p{N}]$/u.test(n);
+  // Vorschaubild 48 × 48 aus dem Profilbild des Accounts (klein, damit die Listen schlank bleiben)
+  function thumb(){
+    const a=ls('bvi_avatar');
+    if(!/^data:image\/jpeg;base64,/.test(a)) return Promise.resolve(null);
+    return new Promise(res=>{ const im=new Image(); im.onload=()=>{ try{ const c=document.createElement('canvas'); c.width=c.height=48; c.getContext('2d').drawImage(im,0,0,48,48); res(c.toDataURL('image/jpeg',.7)); }catch(e){ res(null); } }; im.onerror=()=>res(null); im.src=a; });
+  }
+  const ini=n=>n.split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+  const av=(n,a,cls)=>`<span class="rk-av${cls?' '+cls:''}"${a?` style="background-image:url(${a})"`:''}>${a?'':esc(ini(n))}</span>`;
   const kw=k=>String(k||'').slice(-2).replace(/^0/,'');
   let tab='week', el=null, busy=false, timer=0, lastRep=0;
 
@@ -21,61 +33,68 @@ const RANK=(function(){
     if(!r.ok){ const x=new Error(j.error||'Fehler '+r.status); x.code=r.status; throw x; }
     return j;
   }
-  const payload=()=>({name:st().name,xp:GAME._state().xp,week:{k:GAME.isoWeek(),xp:GAME.weekSum().xp}});
+  async function payload(){
+    const p={name:myName(),xp:GAME._state().xp,week:{k:GAME.isoWeek(),xp:GAME.weekSum().xp}}, s=st(), t=await thumb();
+    if((t||null)!==(s.av||null)) p.av=t;    // Bild nur senden, wenn es sich geändert hat
+    return {p,t};
+  }
+  async function send(){
+    const {p,t}=await payload(); await api('PUT','',p);
+    const s=st(); if(s&&p.av!==undefined){ s.av=t; put(s); }
+  }
   async function report(force){
     if(!st()||(!force&&Date.now()-lastRep<20000)) return;
     lastRep=Date.now();
-    try{ await api('PUT','',payload()); }catch(e){}
+    try{ await send(); }catch(e){}
   }
   // nach Spielereignissen: gesammelt, höchstens alle 30 Sekunden
   function touch(){ if(!st()) return; clearTimeout(timer); timer=setTimeout(()=>report(true),30000); }
 
-  async function join(name){
-    name=String(name||'').trim();
-    const old=st(), s=old||{id:rnd(16),token:tok()}; s.name=name;
-    put(s);
-    try{ await api('PUT','',payload()); lastRep=Date.now(); }
-    catch(e){ if(!old) put(null); else put(old); throw e; }
+  async function join(){
+    const old=st(); put(old||{id:rnd(16),token:tok(),av:null});
+    try{ await send(); lastRep=Date.now(); }
+    catch(e){ put(old); throw e; }
   }
   async function leave(){ try{ await api('DELETE',''); }catch(e){ if(!e.net&&e.code!==404) throw e; } put(null); }
 
   /* ── Darstellung ── */
   const msg=(t,err)=>`<p class="rk-msg${err?' err':''}" role="status">${esc(t)}</p>`;
-  function intro(note){
-    let nm=''; try{ nm=localStorage.getItem('bvi_profile_name')||''; }catch(e){}
-    el.innerHTML=`<p class="rk-lead">Vergleiche dich mit anderen Lernenden. Dafür werden dein <b>Anzeigename</b>, deine <b>Gesamtpunkte</b> und deine <b>Wochenpunkte</b> auf den Sync-Server übertragen, sonst nichts. Du kannst jederzeit wieder aussteigen, dann werden deine Daten dort gelöscht.</p>
-      <form class="rk-form" onsubmit="RANK.doJoin(event)"><label for="rk-name">Anzeigename</label><div class="rk-row"><input id="rk-name" maxlength="20" autocomplete="off" value="${esc(nm.slice(0,20))}" placeholder="3–20 Zeichen"><button type="submit" class="g-btn">Teilnehmen</button></div></form>${note||''}`;
+  async function intro(note){
+    const n=myName(), t=await thumb(), ok=nameOk(n);
+    el.innerHTML=`<div class="rk-me">${av(n||'?',t,'big')}<div><b>${esc(n||'Kein Name festgelegt')}</b><span>Dein Account</span></div></div>
+      <p class="rk-lead">Mit der Teilnahme erscheinst du in der Rangliste und kannst Wochenduelle spielen. Übertragen werden dein <b>Name</b>, dein <b>Profilbild</b> (klein), deine <b>Gesamtpunkte</b> und deine <b>Wochenpunkte</b> an den Sync-Server, sonst nichts. Beim Aussteigen wird alles dort gelöscht.</p>
+      ${ok?'<button type="button" class="g-btn" onclick="RANK.doJoin(this)">Teilnehmen</button>':'<p class="rk-msg err">Für das Ranking brauchst du im Account einen Namen mit 3–20 Zeichen (Buchstaben, Ziffern, Leerzeichen, . _ -).</p><button type="button" class="g-btn" onclick="ACCOUNT.open()">Account öffnen</button>'}${note||''}`;
   }
-  async function doJoin(ev){
-    ev.preventDefault();
-    const inp=document.getElementById('rk-name'), b=ev.target.querySelector('button'); b.disabled=true;
-    try{ await join(inp.value); mount(el); }
-    catch(e){ b.disabled=false; const n=el.querySelector('.rk-msg'); if(n) n.remove(); el.insertAdjacentHTML('beforeend',msg(e.message,true)); }
+  async function doJoin(b){
+    b.disabled=true;
+    try{ await join(); busy=false; mount(el); }
+    catch(e){ b.disabled=false; flash(e.message+(e.code===409?'. Ändere deinen Namen im Account.':''),true); }
   }
   async function mount(target){
     el=target||el; if(!el) return;
-    if(!st()){ intro(); return; }
+    if(!st()){ await intro(); return; }
     if(busy) return; busy=true;
     el.innerHTML='<p class="rk-lead">Ranking wird geladen …</p>';
     try{
-      await report(true);
+      lastRep=Date.now(); await send();
       const [b,d]=await Promise.all([api('GET','?board='+tab),api('GET','/duels')]);
       draw(b,d);
     }catch(e){
-      if(e.code===404){ put(null); intro(msg('Dein Eintrag war auf dem Server nicht mehr vorhanden. Du kannst erneut teilnehmen.')); }
+      if(e.code===404){ put(null); busy=false; await intro(msg('Dein Eintrag war auf dem Server nicht mehr vorhanden. Du kannst erneut teilnehmen.')); }
+      else if(e.code===409||e.code===422){ el.innerHTML=msg(e.message+'. Ändere deinen Namen im Account und öffne das Ranking erneut.',true)+'<button type="button" class="g-btn" onclick="ACCOUNT.open()">Account öffnen</button>'; }
       else el.innerHTML=msg(e.message,true)+'<button type="button" class="g-btn alt" onclick="RANK.mount()">Erneut versuchen</button>';
     }
     busy=false;
   }
   function draw(b,d){
-    const me=st().name, rows=b.top.map(r=>`<li class="${r.me?'me':''}"><span class="rk-p">${r.place}</span><span class="rk-n">${esc(r.name)}</span><b>${r.xp}</b>${r.me?'':`<button type="button" class="rk-sw" aria-label="${esc(r.name)} herausfordern" title="Herausfordern" onclick="RANK.challenge(this.dataset.n)" data-n="${esc(r.name)}">⚔</button>`}</li>`).join('');
-    const mine=b.me&&b.me.place>20?`<li class="me gap"><span class="rk-p">${b.me.place}</span><span class="rk-n">${esc(me)}</span><b>${b.me.xp}</b></li>`:'';
+    const me=myName(), rows=b.top.map(r=>`<li class="${r.me?'me':''}"><span class="rk-p">${r.place}</span>${av(r.name,r.av)}<span class="rk-n">${esc(r.name)}</span><b>${r.xp}</b>${r.me?'':`<button type="button" class="rk-sw" aria-label="${esc(r.name)} herausfordern" title="Herausfordern" onclick="RANK.challenge(this.dataset.n)" data-n="${esc(r.name)}">⚔</button>`}</li>`).join('');
+    const mine=b.me&&b.me.place>20?`<li class="me gap"><span class="rk-p">${b.me.place}</span>${av(me,st().av)}<span class="rk-n">${esc(me)}</span><b>${b.me.xp}</b></li>`:'';
     const dl=d.duels.map(x=>{
       const inc=x.status==='pending'&&!x.mine;
       const stat={pending:x.mine?'wartet auf Antwort':'fordert dich heraus',active:'läuft',done:x.result==='win'?'Sieg':x.result==='lose'?'Niederlage':'Unentschieden',declined:'abgelehnt',expired:'nicht angenommen'}[x.status]||x.status;
       const act=inc?`<button type="button" class="g-btn" onclick="RANK.act('${x.id}','accept')">Annehmen</button><button type="button" class="g-btn alt" onclick="RANK.act('${x.id}','decline')">Ablehnen</button>`:(x.status==='pending'&&x.mine?`<button type="button" class="g-btn alt" onclick="RANK.act('${x.id}','cancel')">Zurückziehen</button>`:'');
       const sc=(x.status==='active'||x.status==='done')?`<div class="rk-sc"><span class="${x.me>=x.opp?'lead':''}"><b>${x.me}</b>Du</span><i>:</i><span class="${x.opp>x.me?'lead':''}"><b>${x.opp}</b>${esc(x.oppName)}</span></div>`:'';
-      return `<li class="rk-d ${x.status}${x.result?' '+x.result:''}"><div class="rk-dh"><b>${esc(x.oppName)}</b><span>KW ${kw(x.wk)} · ${stat}</span></div>${sc}${act?`<div class="rk-da">${act}</div>`:''}</li>`;
+      return `<li class="rk-d ${x.status}${x.result?' '+x.result:''}"><div class="rk-dh"><b class="rk-dn">${av(x.oppName,x.oppAv)}${esc(x.oppName)}</b><span>KW ${kw(x.wk)} · ${stat}</span></div>${sc}${act?`<div class="rk-da">${act}</div>`:''}</li>`;
     }).join('');
     el.innerHTML=`<div class="rk-tabs" role="tablist"><button type="button" role="tab" class="${tab==='week'?'on':''}" aria-selected="${tab==='week'}" onclick="RANK.setTab('week')">Diese Woche</button><button type="button" role="tab" class="${tab==='all'?'on':''}" aria-selected="${tab==='all'}" onclick="RANK.setTab('all')">Gesamt</button></div>
       <ol class="rk-list">${rows||'<li class="rk-empty">Noch niemand in der Liste.</li>'}${mine}</ol>

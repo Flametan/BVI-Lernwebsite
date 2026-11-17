@@ -3,7 +3,7 @@
  * B VI Ranking und Wochenduell (gehört zum Sync-Dienst, eigene Datei rank.dat im Datenordner – bewusst ohne .json,
  * damit sie nicht als Sync-Datenblock gezählt wird).
  *
- *   PUT    /v1/rank/<id>               { name, xp, week:{k:'2026-W47', xp} }   Meldung, legt den Spieler beim ersten Mal an
+ *   PUT    /v1/rank/<id>               { name, xp, week:{k:'2026-W47', xp}, av? }   Meldung, legt den Spieler beim ersten Mal an
  *   GET    /v1/rank/<id>?board=week|all                                      Top 20, eigener Platz
  *   GET    /v1/rank/<id>/duels                                                eigene Duelle mit Zwischenstand
  *   POST   /v1/rank/<id>/duel          { name }                               Herausforderung
@@ -19,6 +19,7 @@ const crypto = require('crypto');
 const ID_RE = /^[a-f0-9]{32}$/;
 const TOKEN_RE = /^[A-Za-z0-9_-]{32,128}$/;
 const NAME_RE = /^[\p{L}\p{N}][\p{L}\p{N} ._-]{1,18}[\p{L}\p{N}]$/u;   // 3–20 Zeichen
+const AV_RE = /^data:image\/jpeg;base64,[A-Za-z0-9+/=]{20,6000}$/;   // kleines Vorschaubild
 const sha = s => crypto.createHash('sha256').update(s).digest('hex');
 const eqHex = (a, b) => { try { return crypto.timingSafeEqual(Buffer.from(a, 'hex'), Buffer.from(b, 'hex')); } catch (e) { return false; } };
 
@@ -79,11 +80,11 @@ function create(cfg, ctx) {
   function board(kind, id) {
     const k = curWk();
     const rows = Object.entries(db.players)
-      .map(([pid, p]) => ({ pid, name: p.name, xp: kind === 'week' ? weekXp(p, k) : p.xp }))
+      .map(([pid, p]) => ({ pid, name: p.name, av: p.av || null, xp: kind === 'week' ? weekXp(p, k) : p.xp }))
       .filter(r => r.xp > 0 || r.pid === id)
       .sort((a, b) => b.xp - a.xp || a.name.localeCompare(b.name, 'de'));
     const me = rows.findIndex(r => r.pid === id);
-    return { board: kind, week: k, total: rows.length, top: rows.slice(0, 20).map((r, i) => ({ place: i + 1, name: r.name, xp: r.xp, me: r.pid === id })), me: me < 0 ? null : { place: me + 1, xp: rows[me].xp } };
+    return { board: kind, week: k, total: rows.length, top: rows.slice(0, 20).map((r, i) => ({ place: i + 1, name: r.name, av: r.av, xp: r.xp, me: r.pid === id })), me: me < 0 ? null : { place: me + 1, xp: rows[me].xp } };
   }
   function duelsOf(id) {
     const k = curWk(), out = [];
@@ -96,7 +97,7 @@ function create(cfg, ctx) {
       let status = d.status;
       if (status === 'pending' && over) status = 'expired';
       else if (status === 'active' && over) status = 'done';
-      out.push({ id: did, wk: d.wk, status, mine: d.a === id, me: m, opp: o, oppName: opp.name, result: status === 'done' ? (m > o ? 'win' : m < o ? 'lose' : 'draw') : undefined });
+      out.push({ id: did, wk: d.wk, status, mine: d.a === id, me: m, opp: o, oppName: opp.name, oppAv: opp.av || null, result: status === 'done' ? (m > o ? 'win' : m < o ? 'lose' : 'draw') : undefined });
     }
     return out.sort((a, b) => wkNum(b.wk) - wkNum(a.wk));
   }
@@ -118,6 +119,8 @@ function create(cfg, ctx) {
       const wk = j && j.week, wxp = wk && num(wk.xp, cfg.rankMaxWeek), k = wk && wk.k;
       if (!name) return send(res, 422, { error: 'Name ungültig (3–20 Zeichen: Buchstaben, Ziffern, Leerzeichen, . _ -)' });
       if (xp === null || wxp === null || ![curWk(), nextWk(), isoWeek(new Date(Date.now() - 7 * 864e5), tz)].includes(k)) return send(res, 422, { error: 'Werte ungültig' });
+      const av = j.av === undefined ? undefined : (j.av === null ? null : (typeof j.av === 'string' && AV_RE.test(j.av) ? j.av : false));
+      if (av === false) return send(res, 422, { error: 'Bild ungültig' });
       const owner = byName.get(nameKey(name));
       if (owner && owner !== id) return send(res, 409, { error: 'Name schon vergeben' });
       if (!p && Object.keys(db.players).length >= cfg.rankMaxPlayers) return send(res, 507, { error: 'Ranking voll' });
@@ -129,9 +132,10 @@ function create(cfg, ctx) {
         if (wkNum(k) > wkNum(p.week.k)) { p.prev = p.week; p.week = { k, xp: wxp }; }
         else if (k === p.week.k) p.week.xp = wxp;
         if (name !== p.name) { byName.delete(nameKey(p.name)); p.name = name; byName.set(nameKey(name), id); }
+        if (av !== undefined) p.av = av;
         p.xp = xp; p.seen = t;
       } else {
-        db.players[id] = { name, tokenHash: th, xp, week: { k, xp: wxp }, prev: null, seen: t };
+        db.players[id] = { name, av: av || null, tokenHash: th, xp, week: { k, xp: wxp }, prev: null, seen: t };
         byName.set(nameKey(name), id);
       }
       persist();

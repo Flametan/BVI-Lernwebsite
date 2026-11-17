@@ -1,7 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
-      'Ranking: Freiwillig mit selbst gewähltem Anzeigenamen (Vorschlag: Profilname). Es gibt eine Wochen- und eine Gesamtliste mit den Top 20 und deinem Platz, zu finden unter „Rang & Abzeichen“. Übertragen werden nur Name, Gesamt- und Wochenpunkte; Aussteigen löscht alles auf dem Server. Die Namen sind einmalig, die Punkte werden auf Plausibilität geprüft.',
+      'Ranking: Freiwillig, erreichbar über den Account-Knopf oben rechts unter „Ranking & Duell“. Es erscheinen der Name und das Profilbild aus deinem Account. Es gibt eine Wochen- und eine Gesamtliste mit den Top 20 und deinem Platz. Übertragen werden nur Name, kleines Profilbild, Gesamt- und Wochenpunkte; Aussteigen löscht alles auf dem Server. Die Namen sind einmalig, die Punkte werden auf Plausibilität geprüft.',
       'Wochenduell: Zwei Profile fordern sich für eine Kalenderwoche heraus (in der Liste auf ⚔ tippen oder den Namen eingeben). Es zählen die Wochenpunkte, beide müssen nicht gleichzeitig online sein. Ab Freitag gilt ein neues Duell für die Folgewoche.',
       'Sync-Server: Neu im Server sind das Ranking und das Wochenduell (Datei rank.js, Daten in rank.dat). Der Server muss einmal neu gebaut und gestartet werden, siehe sync-server/README.md.',
       'Startseite: Neue Karte „Heute“ mit Tagesziel-Ring (Lernminuten), den drei Tagesaufgaben und den Wochenaufgaben. Der Ring wird grün, sobald das Tagesziel erreicht ist.',

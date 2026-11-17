@@ -511,11 +511,9 @@ const GAME=(function(){
     const grid=BADGES.map(b=>{ const got=s.badges[b.id]; return `<div class="g-bd${got?' got':''}"><span class="g-bdi">${svg(b.ic,24)}</span><b>${esc(b.n)}</b><span>${esc(b.d)}</span>${got?`<em>Titel: ${esc(b.t)}</em>`:''}</div>`; }).join('');
     el.innerHTML=`<div class="g-card"><div class="g-rank"><span class="g-rk-ic">${shoulder(r,76)}</span><span class="g-rk-t"><b>${esc(r.n)}</b><span style="color:${GROUPS[r.g].c}">${GROUPS[r.g].n}${s.title?' · '+esc(s.title):''}</span></span><span class="g-xp">${s.xp}<small> Punkte</small></span></div></div>
       <h2 class="g-h2">Aufgaben</h2><div class="g-card g-aufg"><div class="g-td-h"><b>Täglich</b><span>+${TASK_XP} Punkte je Aufgabe</span></div><ul class="g-tasks">${tasksList().d}</ul><div class="g-td-h w"><b>Wöchentlich</b><span>+50 Punkte je Aufgabe · Bonus +${WEEK_ALL_XP}</span></div><ul class="g-tasks">${tasksList().w}</ul></div>
-      <h2 class="g-h2">Ranking &amp; Wochenduell</h2><div class="g-card g-rk" id="rank-box"><p class="rk-lead">Wird geladen …</p></div>
       <h2 class="g-h2">Dienstgrade</h2><div class="g-card g-ladder">${ladder}</div>
       <h2 class="g-h2">Titel</h2><div class="g-card"><div class="g-titles">${titles}</div></div>
       <h2 class="g-h2">Abzeichen · ${unlocked.length}/${BADGES.length}</h2><div class="g-badges">${grid}</div>`;
-    rankLoad().then(R=>R.mount(document.getElementById('rank-box'))).catch(()=>{ const b=document.getElementById('rank-box'); if(b) b.innerHTML='<p class="rk-msg err">Ranking konnte nicht geladen werden. Bitte Verbindung prüfen.</p>'; });
   }
   /* Ranking-Baustein (js/rank.js) erst bei Bedarf laden */
   let rankP=null;
@@ -627,6 +625,9 @@ const GAME=(function(){
     }catch(e){ note(btn,'Speichern fehlgeschlagen'); }
   }
 
-  function onShow(id){ if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek(); }
+  function onShow(id){
+    if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek();
+    else if(id==='v-rank'){ const b=document.getElementById('rank-body'); if(b) rankLoad().then(R=>R.mount(b)).catch(()=>{ b.innerHTML='<p class="rk-msg err">Ranking konnte nicht geladen werden. Bitte Verbindung prüfen.</p>'; }); }
+  }
   return {todayHtml,isoWeek,weeklyState,weekSum,heroHtml,shoulder,rankOf,barHtml,event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setPath,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
