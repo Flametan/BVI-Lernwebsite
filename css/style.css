@@ -4902,7 +4902,6 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .g-today .g-tasks li{min-height:30px;}
 .g-tlinks{display:flex;gap:8px;margin-top:10px;}
 .g-tlinks .g-lk{flex:1;min-height:40px;border:0;border-radius:99px;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);font:inherit;font-weight:700;font-size:.86rem;cursor:pointer;}
-.g-tlinks .g-lk.alt{background:var(--m-raised);color:var(--m-fg);}
 @media (prefers-reduced-motion:reduce){.g-rg-v,.g-tdc{transition:none;}}
 /* Startseite ab Tablet: „Heute“-Leiste über die volle Breite zwischen Kopfkarten und Lernstoff; aufgeklappt zwei Spalten */
 @media(min-width:701px){

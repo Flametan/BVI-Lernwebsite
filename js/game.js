@@ -446,7 +446,7 @@ const GAME=(function(){
       `<svg class="g-tdc" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>`+
       `<div class="g-more" id="g-more"${o?'':' hidden'}><div class="g-td"><div><div class="g-td-h"><b>Heute</b><span>${dn}/${ts.length} Aufgaben</span></div><ul class="g-tasks">${L.d}</ul></div>`+
       `<div><div class="g-td-h"><b>Diese Woche</b><span>${wn}/${wsx.length} · alle 3: +${WEEK_ALL_XP} XP</span></div><ul class="g-tasks">${L.w}</ul></div></div>`+
-      `<div class="g-tlinks"><button type="button" class="g-lk" onclick="NAV.go('v-rank','Ranking')">Ranking</button><button type="button" class="g-lk alt" onclick="NAV.go('v-game','Rang & Abzeichen')">Rang &amp; Abzeichen</button></div></div></div>`;
+      `<div class="g-tlinks"><button type="button" class="g-lk" onclick="NAV.go('v-rank','Ranking')">Ranking</button></div></div></div>`;
   }
   function homeHtml(){ return load().off?{chip:'',panel:'',rank:''}:{rank:rankLabel(),chip:chip(),panel:`<div class="g-panel" id="g-panel" hidden>${panel()}</div>`}; }
   let _open=false;
