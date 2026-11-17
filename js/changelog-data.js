@@ -1,6 +1,8 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+      'Pausenraum: Neuer Reiter „Bestenliste“ mit den zehn besten Ergebnissen für jedes Spiel (bei Sudoku und Minesweeper je Stufe). Die Listen werden mit dem Sync auf Ihre Geräte verteilt.',
+      'Sudoku: Mit der Leertaste wechseln Sie zwischen Zahlen und Notizen.',
       'Pausenraum neu sortiert: Quizleiter, Wahr oder Falsch, Wörter-Raten, Mehr oder weniger und Memory sind entfernt. Der Bereich „Wissen und Rätsel“ entfällt: Wissensspiele stehen bei Feuerwehr, Geschicklichkeits- und Knobelspiele unter Klassiker. Neu dabei: Frage des Tages (drei Prüfungsfragen, jeden Tag neu, mit Serie), Kreuzworträtsel (täglich ein neues), Sudoku in drei Stufen, Galgenmännchen mit Fachbegriffen, Lückentext-Sprint, Reihenfolge bringen, 2048 mit Dienstgraden, Tetris im Look Gerätehaus und Mahjong mit Feuerwehr-Symbolen. Jedes Spiel merkt sich seinen Rekord.',
       'Seitenleiste (PC): Ein Klick auf einen Tab bei geöffneter, nicht angehefteter Leiste wechselt jetzt jedes Mal sofort die Seite. Vorher ging der erste Klick manchmal ins Leere, weil die Leiste schon beim Drücken zuklappte.',
       'Startseite: Die Lernzeit der Woche ist jetzt ein Flächendiagramm mit Linie, Punkten, Zeiten über den Tagen und gestricheltem Tagesziel. Beim Öffnen der Startseite baut es sich von links nach rechts auf.',

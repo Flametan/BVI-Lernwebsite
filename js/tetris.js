@@ -140,6 +140,7 @@ button.t4-box:disabled{opacity:.5;cursor:default;}
   function gameOver(){
     S.status='over'; S.cur=null; cancelAnimationFrame(raf); raf=0; stopRep();
     const hadBest=S.best>0, sc=S.score;
+    if(typeof PAUSE!=='undefined') PAUSE.addScore('tetris',sc);
     if(sc>S.best){ const b=lget(BKEY,{}); b.tetris=sc; lset(BKEY,b); S.best=sc; S.rec=true; }
     if(S.rec&&sc>=5000&&typeof GAME!=='undefined') GAME.cheer('spiel','Tetris',fmt(sc)+' Punkte');
     say('Spiel beendet. '+fmt(sc)+' Punkte, '+S.lines+' Reihen.'+(S.rec&&hadBest?' Neuer Rekord.':''));

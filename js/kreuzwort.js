@@ -486,7 +486,7 @@ STROM|Fließt durch das Kabel, gemessen in Ampere`.split('\n').map(l=>{ const i=
     mode='won'; bad=[]; entries=P.cells.slice(); saveState();
     const old=lget(SKEY,{}), oldBest=+((lget(BKEY,{}).kreuzwort)||0);
     const n=(old.last===yesterday(date))?(+old.n||0)+1:(old.last===date?(+old.n||1):1);
-    lset(SKEY,{n:n,last:date});
+    lset(SKEY,{n:n,last:date}); if(typeof PAUSE!=='undefined') PAUSE.addScore('kreuzwort',n);
     const rec=n>oldBest; if(rec){ const b=lget(BKEY,{}); b.kreuzwort=n; lset(BKEY,b); }
     refs.cur.textContent=''; renderResult(rec,oldBest);
     if(typeof GAME!=='undefined') GAME.cheer('spiel','Kreuzworträtsel',rec&&oldBest>0?'Serie '+n+' Tage':'');

@@ -24,7 +24,7 @@ const SNAKE=(function(){
   function note(t){ S.log.push(t); if(S.log.length>6) S.log.shift(); }
   function finish(why){
     S.status='over'; S.over=why; clearTimeout(timer);
-    const hadBest=S.best>0;
+    const hadBest=S.best>0; if(typeof PAUSE!=='undefined') PAUSE.addScore('snake',S.score);
     if(S.score>S.best){ const b=lget(BKEY,{}); b.snake=S.score; lset(BKEY,b); S.best=S.score; S.rec=true; }
     if(S.score>0&&typeof GAME!=='undefined') GAME.cheer('spiel','Snake',S.rec&&hadBest?S.score+' Punkte':'');
     note('Einsatz beendet: '+why); say('Einsatz beendet. '+why+'. '+S.score+' Punkte.'); render();

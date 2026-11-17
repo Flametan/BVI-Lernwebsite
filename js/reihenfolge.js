@@ -158,7 +158,7 @@ const REIHENFOLGE=(function(){
       if(S.streak>S.best){ const had=S.best>0; setBest(S.streak); S.rec=true; S.hadBest=had; }
       say('Richtig. Serie '+S.streak+'.');
     } else {
-      S.lastBroken=S.streak;
+      S.lastBroken=S.streak; if(typeof PAUSE!=='undefined') PAUSE.addScore('reihenfolge',S.streak);
       const hadBest=S.hadBest, rec=S.rec;
       if(S.streak>0&&typeof GAME!=='undefined') GAME.cheer('spiel','Reihenfolge',rec&&hadBest?'Serie '+S.streak:'');
       S.streak=0; S.rec=false;

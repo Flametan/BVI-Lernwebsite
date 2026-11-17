@@ -8,7 +8,7 @@ const SYNC=(function(){
   const APP_URL='https://flametan.github.io/BVI-Lernwebsite/';
   const K={code:'bvi_sync_code',base:'bvi_sync_base',ver:'bvi_sync_ver',last:'bvi_sync_last',url:'bvi_sync_url'};
   // Was synchronisiert wird: Lernstand, Notizen, Textmarkierungen, Lesezeichen – keine Geräte-Einstellungen
-  const TRACK=/^bvi_(avatar|cover|profile_name|rank|fc|fc_weak|fc_stars|fc_custom|game|game_v1|progress|streak|usage|cards_day|cardgoal|hl|bookmarks|fb_answers|uk_scores|kf_scores|fq_scores|eq_scores|lb_ok|lb_vb|checks_[\w-]+|note_[\w-]+|quiz_(mastery|srs|stats|bm)|idfq_(mastery|srs|stats|bm|cat))$/;
+  const TRACK=/^bvi_(avatar|cover|profile_name|rank|pause_top|fc|fc_weak|fc_stars|fc_custom|game|game_v1|progress|streak|usage|cards_day|cardgoal|hl|bookmarks|fb_answers|uk_scores|kf_scores|fq_scores|eq_scores|lb_ok|lb_vb|checks_[\w-]+|note_[\w-]+|quiz_(mastery|srs|stats|bm)|idfq_(mastery|srs|stats|bm|cat))$/;
   const enc=new TextEncoder(), dec=new TextDecoder();
   const ls={
     get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
@@ -115,11 +115,21 @@ const SYNC=(function(){
     if(Object.keys(R).length) v.rang=R;
     return v;
   }
+  // Pausenspiele: Bestenlisten beider Geräte zusammenlegen (je Spiel die zehn besten, ohne Doppelte)
+  function mergeTop(l,r){
+    if(!isObj(l)) return r; if(!isObj(r)) return l;
+    const out={};
+    new Set([...Object.keys(l),...Object.keys(r)]).forEach(id=>{
+      const seen=new Set(), all=[].concat(Array.isArray(l[id])?l[id]:[],Array.isArray(r[id])?r[id]:[]).filter(e=>isObj(e)&&typeof e.p==="number"&&{}.toString.call(e.d)==="[object String]");
+      out[id]=all.filter(e=>{ const key=JSON.stringify([e.p,e.d,e.n]); if(seen.has(key)) return false; seen.add(key); return true; }).sort((x,y)=>x.a?x.p-y.p:y.p-x.p).slice(0,10);
+    });
+    return out;
+  }
   function mergeKey(k,l,b,r){
     if(/^bvi_(avatar|cover|profile_name|rank)$/.test(k)) return l===b?r:(l===undefined?r:l);
     if(/^bvi_note_/.test(k)) return mergeText(l,b,r);
     const P=s=>{ if(s===undefined||s===null) return undefined; try{ return JSON.parse(s); }catch(e){ return {__raw:s}; } };
-    const v=k==='bvi_game_v1'?mergeGame(P(l),P(b),P(r)):mergeVal(P(l),P(b),P(r));
+    const v=k==='bvi_game_v1'?mergeGame(P(l),P(b),P(r)):k==='bvi_pause_top'?mergeTop(P(l),P(r)):mergeVal(P(l),P(b),P(r));
     return v===undefined?undefined:(isObj(v)&&'__raw' in v?v.__raw:JSON.stringify(v));
   }
   function merge(local,base,remote){

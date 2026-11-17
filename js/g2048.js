@@ -180,7 +180,7 @@ const G2048=(function(){
       if(typeof GAME!=='undefined') GAME.cheer('spiel','2048 Dienstgrade',S.rec?fmt(S.best)+' Punkte':'');
       say('Höchster Dienstgrad erreicht: Leitender Branddirektor. Du kannst weiterspielen.');
     } else if(!canMove()){
-      S.status='over';
+      S.status='over'; if(typeof PAUSE!=='undefined') PAUSE.addScore('g2048',S.score);
       if(S.score>0&&typeof GAME!=='undefined') GAME.cheer('spiel','2048 Dienstgrade',S.rec?fmt(S.best)+' Punkte':'');
       say('Kein Zug mehr möglich. '+fmt(S.score)+' Punkte.'+(S.rec?' Neuer Rekord.':''));
     }
