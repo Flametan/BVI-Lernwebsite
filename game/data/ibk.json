@@ -1,0 +1,1193 @@
+{
+ "mission": "ibk",
+ "welt": "wache",
+ "level": [
+  {
+   "titel": "Ich-Zustände",
+   "steckbrief": "Auf der Wache: Die Kolleginnen und Kollegen haben Fragen zur Transaktionsanalyse.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Wer entwickelte die Transaktionsanalyse und was ist ihr Ziel?",
+     "optionen": [
+      "Vorteil: entscheidet in Notsituationen rasch, legt Wert auf Tradition und Norm. Nachteil: lehnt Neues ab, intolerant, unterdrückend, überkritisch, reagiert mit Ärger und Aggression.",
+      "Eric Berne. Psychologische Theorie der Persönlichkeit und des zwischenmenschlichen Verhaltens. Ziel: bewusste Kommunikation, bessere Beziehungen, Konfliktlösung und individuelle Autonomie.",
+      "Parallel 9, überkreuzt 72, angulär 36, Duplex (vollständig doppelbödig) 6480. In der Praxis spielen bei den überkreuzten und den Duplex-Transaktionen nur je sechs eine größere Rolle.",
+      "Bei einer Paralleltransaktion (komplementär) kommt die erwartbare Reaktion. Das Gespräch läuft glatt weiter und könnte theoretisch unbegrenzt andauern, auch aus „Langeweile“ endet es."
+     ],
+     "richtig": "Eric Berne. Psychologische Theorie der Persönlichkeit und des zwischenmenschlichen Verhaltens. Ziel: bewusste Kommunikation, bessere Beziehungen, Konfliktlösung und individuelle Autonomie.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-01"
+    },
+    {
+     "typ": "gespraech",
+     "frage": "Führe das Gespräch. Wähle jeweils die Antwort, die das Gespräch voranbringt.",
+     "rolle": "Jonas, Brandmeister",
+     "lage": "Jonas kommt zum dritten Mal in diesem Monat zu spät zum Dienst. Du bist sein Wachabteilungsführer.",
+     "zuege": [
+      {
+       "sagt": "Tut mir leid, die Bahn ist ausgefallen. Ich weiß, ich bin spät dran.",
+       "optionen": [
+        {
+         "t": "Immer dasselbe mit dir! So geht das nicht!",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Nicht so schlimm, ich habe deine Aufgaben schon für dich erledigt.",
+         "gut": false,
+         "ich": "Fürsorgliches Eltern-Ich, übertrieben: nimmt dem anderen die Verantwortung ab"
+        },
+        {
+         "t": "Danke, dass du es gleich sagst. Das ist jetzt das dritte Mal. Woran liegt es?",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: sachlich, fragt nach"
+        }
+       ]
+      },
+      {
+       "sagt": "Die Verbindung am Morgen ist einfach unzuverlässig.",
+       "optionen": [
+        {
+         "t": "Wenn du meinst. Mir ist das egal.",
+         "gut": false,
+         "ich": "Angepasstes Kind-Ich: gibt nach, zieht sich zurück"
+        },
+        {
+         "t": "Dann musst du eben früher aufstehen, wie jeder anständige Mensch.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Dann lass uns klären, welche Möglichkeiten du siehst.",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: sachlich, fragt nach"
+        }
+       ]
+      },
+      {
+       "sagt": "Ich könnte den früheren Zug nehmen oder mit einem Kollegen fahren.",
+       "optionen": [
+        {
+         "t": "Das glaube ich erst, wenn ich es sehe.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Gut. Du nimmst den früheren Zug, und in zwei Wochen schauen wir, ob es klappt.",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: sachlich, fragt nach"
+        },
+        {
+         "t": "Super, das feiern wir mit einem Kaffee, die Übung kann warten!",
+         "gut": false,
+         "ich": "Natürliches Kind-Ich: spontan, aber an der Sache vorbei"
+        }
+       ]
+      }
+     ],
+     "erkl": "Aus dem Erwachsenen-Ich lädst du dein Gegenüber ein, ebenfalls sachlich zu antworten. Bestimmen kannst du seinen Ich-Zustand nicht.",
+     "quelle": "Eigener Übungsfall, abgeleitet aus den Lernkarten k-ibk-05 bis k-ibk-13 und k-ibk-16"
+    },
+    {
+     "typ": "mc",
+     "frage": "Aus welchen sieben Bestandteilen besteht die TA?",
+     "optionen": [
+      "Es stellt grafisch dar, wie stark und wie oft eine Person die einzelnen funktionellen Ich-Zustände nutzt. Werkzeug zur Selbstreflexion und Verhaltensänderung.",
+      "Jede Form der Wahrnehmung oder Anerkennung eines Menschen durch einen anderen: körperlich (Händedruck), nonverbal (Blickkontakt, Lächeln) oder verbal (Lob, Kritik, Gespräch).",
+      "Strukturanalyse (Was geht in mir vor?), Transaktionsanalyse (Was geht zwischen uns vor?), Grundbedürfnisse, Grundeinstellungen, Spielanalyse, Antreiber, Skriptanalyse.",
+      "„Ich bin nicht o.k. – die anderen sind besser“ (– +). Fühlt sich hilflos, gibt Verantwortung ab, sucht einen Retter oder Verfolger. Typischer Satz: „Ich kann das nicht.“"
+     ],
+     "richtig": "Strukturanalyse (Was geht in mir vor?), Transaktionsanalyse (Was geht zwischen uns vor?), Grundbedürfnisse, Grundeinstellungen, Spielanalyse, Antreiber, Skriptanalyse.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-02"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was bezeichnet man als „Transaktion“?",
+     "optionen": [
+      "Wenn Konflikte nicht offen angesprochen werden. Man will Aufmerksamkeit/Bestätigung, eigene Ziele indirekt durchsetzen, echte Nähe vermeiden oder Verantwortung/Schuld abgeben.",
+      "Die Grundeinheit aller sozialen Verbindungen: die Interaktion, wenn sich zwei oder mehr Menschen begegnen. Entscheidend ist, aus welchen Ich-Zuständen heraus kommuniziert wird.",
+      "Jeder Mensch kann denken und Probleme lösen, ist in seiner Ganzheit in Ordnung, kann Verantwortung für sein Leben übernehmen und sein Lebenskonzept konstruktiv gestalten.",
+      "Maslows Grundbedürfnisse sind die unterste Stufe der Pyramide (physiologisch: Nahrung, Wasser, Luft, Schlaf). Bei Berne sind es psychologische Bedürfnisse neben den körperlichen."
+     ],
+     "richtig": "Die Grundeinheit aller sozialen Verbindungen: die Interaktion, wenn sich zwei oder mehr Menschen begegnen. Entscheidend ist, aus welchen Ich-Zuständen heraus kommuniziert wird.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-03"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Grundannahmen gelten in der TA über den Menschen?",
+     "optionen": [
+      "Wenn Konflikte nicht offen angesprochen werden. Man will Aufmerksamkeit/Bestätigung, eigene Ziele indirekt durchsetzen, echte Nähe vermeiden oder Verantwortung/Schuld abgeben.",
+      "Strukturanalyse (Was geht in mir vor?), Transaktionsanalyse (Was geht zwischen uns vor?), Grundbedürfnisse, Grundeinstellungen, Spielanalyse, Antreiber, Skriptanalyse.",
+      "Jeder Mensch kann denken und Probleme lösen, ist in seiner Ganzheit in Ordnung, kann Verantwortung für sein Leben übernehmen und sein Lebenskonzept konstruktiv gestalten.",
+      "„Ich bin nicht o.k. – die anderen sind besser“ (– +). Fühlt sich hilflos, gibt Verantwortung ab, sucht einen Retter oder Verfolger. Typischer Satz: „Ich kann das nicht.“"
+     ],
+     "richtig": "Jeder Mensch kann denken und Probleme lösen, ist in seiner Ganzheit in Ordnung, kann Verantwortung für sein Leben übernehmen und sein Lebenskonzept konstruktiv gestalten.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-04"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche drei Ich-Zustände unterscheidet die Strukturanalyse?",
+     "optionen": [
+      "Es hat keine Vorteile: wenig Lernen aus Erfahrung, wechselhaft, unberechenbar, geringes Selbstwertgefühl.",
+      "Vorteil: fantasievoll, spontan, offen, zeigt Gefühle. Nachteil: impulsiv, rücksichtslos, chaotisch, cholerisch.",
+      "Eltern-Ich (übernommene Werte und Regeln), Erwachsenen-Ich (rational, objektiv), Kind-Ich (emotional, impulsiv).",
+      "Fühlt sich überlegen, sucht Fehler bei anderen: dominant, kontrollierend, bevormundend, gibt Verantwortung ungern ab."
+     ],
+     "richtig": "Eltern-Ich (übernommene Werte und Regeln), Erwachsenen-Ich (rational, objektiv), Kind-Ich (emotional, impulsiv).",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-05"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche fünf Ich-Zustände sind an einer Transaktion beteiligt (Funktionsmodell)?",
+     "optionen": [
+      "Übermäßiges Kontrollieren (Verfolger), ungefragtes Helfen (Retter), Hilflosigkeit oder Schuldzuweisungen (Opfer).",
+      "Es hat keine Vorteile: wenig Lernen aus Erfahrung, wechselhaft, unberechenbar, geringes Selbstwertgefühl.",
+      "„Ich bin o.k. – du nicht“ (+ –). Kritisiert, kontrolliert, greift an. Typischer Satz: „Du bist schuld.“",
+      "Kritisches Eltern-Ich, fürsorgliches Eltern-Ich, Erwachsenen-Ich, natürliches Kind-Ich, angepasstes Kind-Ich."
+     ],
+     "richtig": "Kritisches Eltern-Ich, fürsorgliches Eltern-Ich, Erwachsenen-Ich, natürliches Kind-Ich, angepasstes Kind-Ich.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-06"
+    }
+   ],
+   "auftrag": {
+    "wer": "Wachleiter",
+    "text": "Auf der Wache knirscht es im Miteinander. Ich möchte, dass du die Ich-Zustände erkennst und das erste Gespräch führst."
+   },
+   "ende": {
+    "gut": "Das Gespräch verlief sachlich. Der Kollege weiß, woran er ist.",
+    "schlecht": "Das Gespräch ist entgleist. Der Kollege hat dichtgemacht."
+   },
+   "licht": "tag"
+  },
+  {
+   "titel": "Transaktionen",
+   "steckbrief": "Was geht zwischen uns vor?",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Was zeigt das Egogramm?",
+     "optionen": [
+      "Es stellt grafisch dar, wie stark und wie oft eine Person die einzelnen funktionellen Ich-Zustände nutzt. Werkzeug zur Selbstreflexion und Verhaltensänderung.",
+      "Vorteil: nimmt Rücksicht, kompromissbereit, hält sich an Normen. Nachteil: überangepasst, Angst vor Fehlern, gibt schnell nach, zieht sich zurück.",
+      "Jeder Mensch kann denken und Probleme lösen, ist in seiner Ganzheit in Ordnung, kann Verantwortung für sein Leben übernehmen und sein Lebenskonzept konstruktiv gestalten.",
+      "1. Bedingungslose positive, 2. bedingte positive, 3. bedingte negative, 4. bedingungslose negative Beachtung, 5. keine Beachtung (am schlimmsten)."
+     ],
+     "richtig": "Es stellt grafisch dar, wie stark und wie oft eine Person die einzelnen funktionellen Ich-Zustände nutzt. Werkzeug zur Selbstreflexion und Verhaltensänderung.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-07"
+    },
+    {
+     "typ": "gespraech",
+     "frage": "Führe das Gespräch. Wähle jeweils die Antwort, die das Gespräch voranbringt.",
+     "rolle": "Petra, Wachabteilungsführerin",
+     "lage": "Petra kommt gereizt in dein Büro. Der Einsatzbericht von gestern ist noch nicht fertig.",
+     "zuege": [
+      {
+       "sagt": "Na, ist der Einsatzbericht vielleicht heute noch fertig?",
+       "optionen": [
+        {
+         "t": "Entschuldigung, ich bin einfach zu langsam.",
+         "gut": false,
+         "ich": "Angepasstes Kind-Ich: gibt nach, zieht sich zurück"
+        },
+        {
+         "t": "Der Bericht ist um 14 Uhr fertig. Was möchtest du mir damit sagen?",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: nimmt beim Wort und fordert die direkte Botschaft ein"
+        },
+        {
+         "t": "Mach ihn doch selbst, wenn es dir nicht schnell genug geht!",
+         "gut": false,
+         "ich": "Über-Kreuz-Transaktion aus dem Kind-Ich: Grundlage für einen Konflikt"
+        }
+       ]
+      },
+      {
+       "sagt": "Ich ärgere mich, weil ich den Bericht für die Besprechung brauche.",
+       "optionen": [
+        {
+         "t": "Das hättest du früher sagen müssen. So arbeitet man nicht.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Verstanden. Wann genau brauchst du ihn, und welchen Teil zuerst?",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: Paralleltransaktion, das Gespräch läuft glatt weiter"
+        },
+        {
+         "t": "Dann lass die Besprechung doch ausfallen.",
+         "gut": false,
+         "ich": "Natürliches Kind-Ich: spontan, aber an der Sache vorbei"
+        }
+       ]
+      },
+      {
+       "sagt": "Um 13 Uhr, vor allem die Kräfteübersicht.",
+       "optionen": [
+        {
+         "t": "Ich versuche es, aber versprechen kann ich nichts. Ich schaffe ja nie etwas.",
+         "gut": false,
+         "ich": "Angepasstes Kind-Ich: gibt nach, zieht sich zurück"
+        },
+        {
+         "t": "Typisch. Bei dir kommt immer alles auf den letzten Drücker.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Die Kräfteübersicht bekommst du bis 12:30 Uhr, den Rest bis 14 Uhr.",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: sachlich, fragt nach"
+        }
+       ]
+      }
+     ],
+     "erkl": "Bei einer verdeckten Transaktion entscheidet die Beziehungsebene. Nimm die offene Botschaft beim Wort und fordere die direkte Botschaft ein.",
+     "quelle": "Eigener Übungsfall, abgeleitet aus den Lernkarten k-ibk-14 bis k-ibk-21"
+    },
+    {
+     "typ": "mc",
+     "frage": "Kritisches Eltern-Ich: Vorteile und Nachteile bei starker Ausprägung?",
+     "optionen": [
+      "Eric Berne. Psychologische Theorie der Persönlichkeit und des zwischenmenschlichen Verhaltens. Ziel: bewusste Kommunikation, bessere Beziehungen, Konfliktlösung und individuelle Autonomie.",
+      "Parallel 9, überkreuzt 72, angulär 36, Duplex (vollständig doppelbödig) 6480. In der Praxis spielen bei den überkreuzten und den Duplex-Transaktionen nur je sechs eine größere Rolle.",
+      "Einer der Gesprächspartner oder beide wechseln den Ich-Zustand. In lebhaften Gesprächen geschieht das oft unmerklich durch Themenwechsel oder Anpassung an den Ich-Zustand des anderen.",
+      "Vorteil: entscheidet in Notsituationen rasch, legt Wert auf Tradition und Norm. Nachteil: lehnt Neues ab, intolerant, unterdrückend, überkritisch, reagiert mit Ärger und Aggression."
+     ],
+     "richtig": "Vorteil: entscheidet in Notsituationen rasch, legt Wert auf Tradition und Norm. Nachteil: lehnt Neues ab, intolerant, unterdrückend, überkritisch, reagiert mit Ärger und Aggression.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-08"
+    },
+    {
+     "typ": "mc",
+     "frage": "Fürsorgliches Eltern-Ich: Vorteile und Nachteile bei starker Ausprägung?",
+     "optionen": [
+      "Vorteil: schafft Geborgenheit, hört geduldig zu, unterstützt. Nachteil: überfürsorglich, macht andere abhängig und verhindert Selbständigkeit.",
+      "1. ER/ER+K/K, 2. ER/ER+EL/EL, 3. ER/ER+EL/K – K/EL, 4. EL/EL+K/K, 5. ER/ER+K/ER, 6. ER/ER+EL/ER (jeweils offene Sachebene plus verdeckte Ebene).",
+      "Vorteil: nimmt Rücksicht, kompromissbereit, hält sich an Normen. Nachteil: überangepasst, Angst vor Fehlern, gibt schnell nach, zieht sich zurück.",
+      "Führungsrisiko: fehlende Fehlerkultur, Isolation, mangelnde Offenheit. Erlauber: „Du darfst Gefühle zeigen und Unterstützung annehmen.“"
+     ],
+     "richtig": "Vorteil: schafft Geborgenheit, hört geduldig zu, unterstützt. Nachteil: überfürsorglich, macht andere abhängig und verhindert Selbständigkeit.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-09"
+    },
+    {
+     "typ": "mc",
+     "frage": "Natürliches Kind-Ich: Vorteile und Nachteile bei starker Ausprägung?",
+     "optionen": [
+      "Vorteil: fantasievoll, spontan, offen, zeigt Gefühle. Nachteil: impulsiv, rücksichtslos, chaotisch, cholerisch.",
+      "Eltern-Ich (übernommene Werte und Regeln), Erwachsenen-Ich (rational, objektiv), Kind-Ich (emotional, impulsiv).",
+      "Es hat keine Vorteile: wenig Lernen aus Erfahrung, wechselhaft, unberechenbar, geringes Selbstwertgefühl.",
+      "Muster erkennen und aus dem Erwachsenen-Ich heraus offen, sachlich und verantwortungsvoll kommunizieren."
+     ],
+     "richtig": "Vorteil: fantasievoll, spontan, offen, zeigt Gefühle. Nachteil: impulsiv, rücksichtslos, chaotisch, cholerisch.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-11"
+    },
+    {
+     "typ": "mc",
+     "frage": "Angepasstes Kind-Ich: Vorteile und Nachteile bei starker Ausprägung?",
+     "optionen": [
+      "Taktische, oft unbewusste Gefühlsreaktionen, die in der Kindheit gelernt wurden, um andere zu beeinflussen oder Bedürfnisse indirekt durchzusetzen.",
+      "– + Ich bin nicht o.k., du bist o.k. · + – Ich bin o.k., du bist nicht o.k. · – – beide nicht o.k. · + + beide o.k. (gesund und konstruktiv).",
+      "1. Bedingungslose positive, 2. bedingte positive, 3. bedingte negative, 4. bedingungslose negative Beachtung, 5. keine Beachtung (am schlimmsten).",
+      "Vorteil: nimmt Rücksicht, kompromissbereit, hält sich an Normen. Nachteil: überangepasst, Angst vor Fehlern, gibt schnell nach, zieht sich zurück."
+     ],
+     "richtig": "Vorteil: nimmt Rücksicht, kompromissbereit, hält sich an Normen. Nachteil: überangepasst, Angst vor Fehlern, gibt schnell nach, zieht sich zurück.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-12"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was bedeutet ein schwach ausgeprägtes Erwachsenen-Ich?",
+     "optionen": [
+      "Sei perfekt, sei stark, sei anderen gefällig (mach es allen recht), streng dich an, beeil dich.",
+      "Eltern-Ich (übernommene Werte und Regeln), Erwachsenen-Ich (rational, objektiv), Kind-Ich (emotional, impulsiv).",
+      "Fühlt sich überlegen, sucht Fehler bei anderen: dominant, kontrollierend, bevormundend, gibt Verantwortung ungern ab.",
+      "Es hat keine Vorteile: wenig Lernen aus Erfahrung, wechselhaft, unberechenbar, geringes Selbstwertgefühl."
+     ],
+     "richtig": "Es hat keine Vorteile: wenig Lernen aus Erfahrung, wechselhaft, unberechenbar, geringes Selbstwertgefühl.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-13"
+    }
+   ],
+   "auftrag": {
+    "wer": "Wachleiter",
+    "text": "Heute Abend geht es um Transaktionen. Achte darauf, was zwischen den Zeilen gesagt wird."
+   },
+   "ende": {
+    "gut": "Die verdeckte Botschaft ist auf dem Tisch. Das Gespräch läuft wieder glatt.",
+    "schlecht": "Die verdeckte Botschaft blieb unausgesprochen und der Ärger ist geblieben."
+   },
+   "licht": "abend"
+  },
+  {
+   "titel": "Grundbedürfnisse und Antreiber",
+   "steckbrief": "Was treibt Menschen an?",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Was besagt die erste Kommunikationsregel?",
+     "optionen": [
+      "Den unbewussten, in der Kindheit geformten Lebensplan. Sie erfordert Langzeitbetrachtung und tiefenpsychologische Informationen, daher nicht in einer Prüfungssituation bewertbar.",
+      "Bei einer Paralleltransaktion (komplementär) kommt die erwartbare Reaktion. Das Gespräch läuft glatt weiter und könnte theoretisch unbegrenzt andauern, auch aus „Langeweile“ endet es.",
+      "Vorteil: entscheidet in Notsituationen rasch, legt Wert auf Tradition und Norm. Nachteil: lehnt Neues ab, intolerant, unterdrückend, überkritisch, reagiert mit Ärger und Aggression.",
+      "Parallel 9, überkreuzt 72, angulär 36, Duplex (vollständig doppelbödig) 6480. In der Praxis spielen bei den überkreuzten und den Duplex-Transaktionen nur je sechs eine größere Rolle."
+     ],
+     "richtig": "Bei einer Paralleltransaktion (komplementär) kommt die erwartbare Reaktion. Das Gespräch läuft glatt weiter und könnte theoretisch unbegrenzt andauern, auch aus „Langeweile“ endet es.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-14"
+    },
+    {
+     "typ": "gespraech",
+     "frage": "Führe das Gespräch. Wähle jeweils die Antwort, die das Gespräch voranbringt.",
+     "rolle": "Aylin, Gerätewartin",
+     "lage": "Aylin hat den Pflegeplan für alle Fahrzeuge neu aufgestellt. Du bist ihre Vorgesetzte oder ihr Vorgesetzter.",
+     "zuege": [
+      {
+       "sagt": "Ich habe den Pflegeplan neu aufgestellt. Hat das eigentlich jemand bemerkt?",
+       "optionen": [
+        {
+         "t": "Ja. Der Plan ist übersichtlich, und die Fahrzeuge sind seitdem schneller wieder einsatzbereit. Danke dafür.",
+         "gut": true,
+         "ich": "Bedingte positive Beachtung: konkret und ehrlich"
+        },
+        {
+         "t": "Das ist doch Ihre Aufgabe.",
+         "gut": false,
+         "ich": "Bedingte negative Beachtung: wertet die Leistung ab"
+        },
+        {
+         "t": "Hm. Ich habe gerade keine Zeit.",
+         "gut": false,
+         "ich": "Keine Beachtung: die schlimmste Form"
+        }
+       ]
+      },
+      {
+       "sagt": "Manchmal habe ich das Gefühl, es fällt nur auf, wenn etwas schiefgeht.",
+       "optionen": [
+        {
+         "t": "Jetzt übertreiben Sie aber.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Wer Lob braucht, ist hier falsch.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Das nehme ich ernst. Ich gebe künftig auch Rückmeldung, wenn etwas gut läuft.",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: sachlich, fragt nach"
+        }
+       ]
+      },
+      {
+       "sagt": "Darf ich Sie dann auch direkt um Rückmeldung bitten?",
+       "optionen": [
+        {
+         "t": "Das wirkt aber ziemlich bedürftig.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Ja, jederzeit. Um Beachtung zu bitten ist erlaubt.",
+         "gut": true,
+         "ich": "Stroke-Erlaubnis: Du darfst um Strokes bitten"
+        },
+        {
+         "t": "Lob muss man sich verdienen, nicht einfordern.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        }
+       ]
+      }
+     ],
+     "erkl": "Zuwendung und Beachtung sind für Führungskräfte das wichtigste Grundbedürfnis nach Berne. Keine Beachtung ist die schlimmste Form.",
+     "quelle": "Eigener Übungsfall, abgeleitet aus den Lernkarten k-ibk-22 bis k-ibk-26"
+    },
+    {
+     "typ": "mc",
+     "frage": "Kann man den Ich-Zustand des Gesprächspartners bestimmen?",
+     "optionen": [
+      "Nein. Man kann ihn nur einladen, aus einem bestimmten Ich-Zustand zu reagieren.",
+      "Erlebt das Leben als sinnlos oder hoffnungslos: resigniert, pessimistisch, distanziert.",
+      "Nonverbal über Gestik, Mimik, Sprechweise und Tonlage.",
+      "Muster erkennen und aus dem Erwachsenen-Ich heraus offen, sachlich und verantwortungsvoll kommunizieren."
+     ],
+     "richtig": "Nein. Man kann ihn nur einladen, aus einem bestimmten Ich-Zustand zu reagieren.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-16"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie wird die verdeckte Botschaft übertragen?",
+     "optionen": [
+      "Sei perfekt, sei stark, sei anderen gefällig (mach es allen recht), streng dich an, beeil dich.",
+      "Es hat keine Vorteile: wenig Lernen aus Erfahrung, wechselhaft, unberechenbar, geringes Selbstwertgefühl.",
+      "„Ich bin o.k. – du nicht“ (+ –). Kritisiert, kontrolliert, greift an. Typischer Satz: „Du bist schuld.“",
+      "Nonverbal über Gestik, Mimik, Sprechweise und Tonlage."
+     ],
+     "richtig": "Nonverbal über Gestik, Mimik, Sprechweise und Tonlage.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-18"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie fordert man eine direkte Botschaft ein?",
+     "optionen": [
+      "Fühlt sich überlegen, sucht Fehler bei anderen: dominant, kontrollierend, bevormundend, gibt Verantwortung ungern ab.",
+      "Vorteil: fantasievoll, spontan, offen, zeigt Gefühle. Nachteil: impulsiv, rücksichtslos, chaotisch, cholerisch.",
+      "Fühlt sich unterlegen und unsicher, abhängig von Anerkennung: angepasst, zurückhaltend, entschuldigend, konfliktscheu.",
+      "Durch Nachfragen, z. B. „Was ist es, was Du mir damit sagen möchtest?“ oder „Sag mir bitte, was Du wirklich möchtest.“"
+     ],
+     "richtig": "Durch Nachfragen, z. B. „Was ist es, was Du mir damit sagen möchtest?“ oder „Sag mir bitte, was Du wirklich möchtest.“",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-21"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche psychologischen Grundbedürfnisse nennt Berne?",
+     "optionen": [
+      "– + Ich bin nicht o.k., du bist o.k. · + – Ich bin o.k., du bist nicht o.k. · – – beide nicht o.k. · + + beide o.k. (gesund und konstruktiv).",
+      "Führungsrisiko: Konfliktvermeidung, mangelnde Abgrenzung, Überlastung. Erlauber: „Du darfst eigene Bedürfnisse haben und vertreten.“",
+      "Fühlt sich unterlegen und unsicher, abhängig von Anerkennung: angepasst, zurückhaltend, entschuldigend, konfliktscheu.",
+      "Sinnliche Anregung, Zuwendung/Beachtung (Strokes) und Zeitgestaltung. Für Führungskräfte am wichtigsten: Zuwendung und Beachtung."
+     ],
+     "richtig": "Sinnliche Anregung, Zuwendung/Beachtung (Strokes) und Zeitgestaltung. Für Führungskräfte am wichtigsten: Zuwendung und Beachtung.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-22"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was ist ein Stroke?",
+     "optionen": [
+      "„Ich bin nicht o.k. – die anderen sind besser“ (– +). Fühlt sich hilflos, gibt Verantwortung ab, sucht einen Retter oder Verfolger. Typischer Satz: „Ich kann das nicht.“",
+      "Den unbewussten, in der Kindheit geformten Lebensplan. Sie erfordert Langzeitbetrachtung und tiefenpsychologische Informationen, daher nicht in einer Prüfungssituation bewertbar.",
+      "Jede Form der Wahrnehmung oder Anerkennung eines Menschen durch einen anderen: körperlich (Händedruck), nonverbal (Blickkontakt, Lächeln) oder verbal (Lob, Kritik, Gespräch).",
+      "Wenn Konflikte nicht offen angesprochen werden. Man will Aufmerksamkeit/Bestätigung, eigene Ziele indirekt durchsetzen, echte Nähe vermeiden oder Verantwortung/Schuld abgeben."
+     ],
+     "richtig": "Jede Form der Wahrnehmung oder Anerkennung eines Menschen durch einen anderen: körperlich (Händedruck), nonverbal (Blickkontakt, Lächeln) oder verbal (Lob, Kritik, Gespräch).",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-23"
+    }
+   ],
+   "auftrag": {
+    "wer": "Personalrat",
+    "text": "Guten Morgen. Eine Kollegin fühlt sich übersehen. Was Menschen antreibt und was Beachtung bewirkt, ist heute dein Thema."
+   },
+   "ende": {
+    "gut": "Die Kollegin fühlt sich gesehen und bleibt motiviert.",
+    "schlecht": "Die Kollegin fühlt sich weiter übersehen."
+   },
+   "licht": "morgen"
+  },
+  {
+   "titel": "Spiele und Skript",
+   "steckbrief": "Muster erkennen.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Welche fünf Formen der Beachtung gibt es (in Reihenfolge)?",
+     "optionen": [
+      "1. ER/ER+K/K, 2. ER/ER+EL/EL, 3. ER/ER+EL/K – K/EL, 4. EL/EL+K/K, 5. ER/ER+K/ER, 6. ER/ER+EL/ER (jeweils offene Sachebene plus verdeckte Ebene).",
+      "Führungsrisiko: Flüchtigkeitsfehler, vorschnelle Entscheidungen, Stressübertragung auf das Team. Erlauber: „Du darfst dir Zeit zum Denken nehmen.“",
+      "1. Bedingungslose positive, 2. bedingte positive, 3. bedingte negative, 4. bedingungslose negative Beachtung, 5. keine Beachtung (am schlimmsten).",
+      "Vorteil: nimmt Rücksicht, kompromissbereit, hält sich an Normen. Nachteil: überangepasst, Angst vor Fehlern, gibt schnell nach, zieht sich zurück."
+     ],
+     "richtig": "1. Bedingungslose positive, 2. bedingte positive, 3. bedingte negative, 4. bedingungslose negative Beachtung, 5. keine Beachtung (am schlimmsten).",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-25"
+    },
+    {
+     "typ": "gespraech",
+     "frage": "Führe das Gespräch. Wähle jeweils die Antwort, die das Gespräch voranbringt.",
+     "rolle": "Marc, Brandmeisteranwärter",
+     "lage": "Marc ist durch die Atemschutzübung gefallen und sucht dich in der Pause auf.",
+     "zuege": [
+      {
+       "sagt": "Ich schaffe die Übung nie, alle sind gegen mich. Kannst du nicht für mich mit dem Ausbilder reden?",
+       "optionen": [
+        {
+         "t": "Klar, ich regle das für dich. Lass mich nur machen.",
+         "gut": false,
+         "ich": "Retter im Drama-Dreieck"
+        },
+        {
+         "t": "Ich sehe, dass dich das belastet. Was genau fällt dir schwer, und was kannst du selbst als Nächstes tun?",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: bleibt außerhalb des Drama-Dreiecks"
+        },
+        {
+         "t": "Du bist selbst schuld. Stell dich nicht so an.",
+         "gut": false,
+         "ich": "Verfolger im Drama-Dreieck"
+        }
+       ]
+      },
+      {
+       "sagt": "Na toll, du hilfst mir also auch nicht.",
+       "optionen": [
+        {
+         "t": "Dann eben nicht. Undankbar wie immer!",
+         "gut": false,
+         "ich": "Verfolger im Drama-Dreieck"
+        },
+        {
+         "t": "Ich übe gern mit dir. Mit dem Ausbilder sprichst du selbst; wenn du möchtest, komme ich mit.",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: bietet Hilfe an, lässt die Verantwortung bei Marc"
+        },
+        {
+         "t": "Doch, doch, entschuldige, ich rufe ihn sofort an.",
+         "gut": false,
+         "ich": "Retter im Drama-Dreieck"
+        }
+       ]
+      },
+      {
+       "sagt": "Okay. Vielleicht frage ich ihn nach einem Übungstermin.",
+       "optionen": [
+        {
+         "t": "Wird ja auch Zeit.",
+         "gut": false,
+         "ich": "Verfolger im Drama-Dreieck"
+        },
+        {
+         "t": "Gute Idee. Wann fragst du ihn?",
+         "gut": true,
+         "ich": "Erwachsenen-Ich: sachlich, fragt nach"
+        },
+        {
+         "t": "Soll ich die Mail für dich schreiben?",
+         "gut": false,
+         "ich": "Retter im Drama-Dreieck"
+        }
+       ]
+      }
+     ],
+     "erkl": "Psychologische Spiele entstehen, wenn Konflikte nicht offen angesprochen werden. Im Drama-Dreieck gibt es Verfolger, Opfer und Retter; aus dem Erwachsenen-Ich steigst du aus.",
+     "quelle": "Eigener Übungsfall, abgeleitet aus den Lernkarten k-ibk-33 bis k-ibk-35"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie lauten die fünf Stroke-Erlaubnisse?",
+     "optionen": [
+      "Kritisches Eltern-Ich, fürsorgliches Eltern-Ich, Erwachsenen-Ich, natürliches Kind-Ich, angepasstes Kind-Ich.",
+      "Sei perfekt, sei stark, sei anderen gefällig (mach es allen recht), streng dich an, beeil dich.",
+      "Du darfst Strokes geben, darum bitten, sie annehmen, sie ablehnen und dich selbst stroken.",
+      "Nein. Man kann ihn nur einladen, aus einem bestimmten Ich-Zustand zu reagieren."
+     ],
+     "richtig": "Du darfst Strokes geben, darum bitten, sie annehmen, sie ablehnen und dich selbst stroken.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-26"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie grenzt sich Berne von Maslow bei den Grundbedürfnissen ab?",
+     "optionen": [
+      "Parallel 9, überkreuzt 72, angulär 36, Duplex (vollständig doppelbödig) 6480. In der Praxis spielen bei den überkreuzten und den Duplex-Transaktionen nur je sechs eine größere Rolle.",
+      "Maslows Grundbedürfnisse sind die unterste Stufe der Pyramide (physiologisch: Nahrung, Wasser, Luft, Schlaf). Bei Berne sind es psychologische Bedürfnisse neben den körperlichen.",
+      "Bei einer Paralleltransaktion (komplementär) kommt die erwartbare Reaktion. Das Gespräch läuft glatt weiter und könnte theoretisch unbegrenzt andauern, auch aus „Langeweile“ endet es.",
+      "Wenn Konflikte nicht offen angesprochen werden. Man will Aufmerksamkeit/Bestätigung, eigene Ziele indirekt durchsetzen, echte Nähe vermeiden oder Verantwortung/Schuld abgeben."
+     ],
+     "richtig": "Maslows Grundbedürfnisse sind die unterste Stufe der Pyramide (physiologisch: Nahrung, Wasser, Luft, Schlaf). Bei Berne sind es psychologische Bedürfnisse neben den körperlichen.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-27"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche vier Grundeinstellungen unterscheidet die TA?",
+     "optionen": [
+      "– + Ich bin nicht o.k., du bist o.k. · + – Ich bin o.k., du bist nicht o.k. · – – beide nicht o.k. · + + beide o.k. (gesund und konstruktiv).",
+      "Führungsrisiko: fehlende Fehlerkultur, Isolation, mangelnde Offenheit. Erlauber: „Du darfst Gefühle zeigen und Unterstützung annehmen.“",
+      "Führungsrisiko: Flüchtigkeitsfehler, vorschnelle Entscheidungen, Stressübertragung auf das Team. Erlauber: „Du darfst dir Zeit zum Denken nehmen.“",
+      "Vorteil: schafft Geborgenheit, hört geduldig zu, unterstützt. Nachteil: überfürsorglich, macht andere abhängig und verhindert Selbständigkeit."
+     ],
+     "richtig": "– + Ich bin nicht o.k., du bist o.k. · + – Ich bin o.k., du bist nicht o.k. · – – beide nicht o.k. · + + beide o.k. (gesund und konstruktiv).",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-28"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie verhält sich jemand mit der Grundeinstellung „Ich bin nicht o.k. – du bist o.k.“?",
+     "optionen": [
+      "Durch Nachfragen, z. B. „Was ist es, was Du mir damit sagen möchtest?“ oder „Sag mir bitte, was Du wirklich möchtest.“",
+      "Fühlt sich überlegen, sucht Fehler bei anderen: dominant, kontrollierend, bevormundend, gibt Verantwortung ungern ab.",
+      "Kritisches Eltern-Ich, fürsorgliches Eltern-Ich, Erwachsenen-Ich, natürliches Kind-Ich, angepasstes Kind-Ich.",
+      "Fühlt sich unterlegen und unsicher, abhängig von Anerkennung: angepasst, zurückhaltend, entschuldigend, konfliktscheu."
+     ],
+     "richtig": "Fühlt sich unterlegen und unsicher, abhängig von Anerkennung: angepasst, zurückhaltend, entschuldigend, konfliktscheu.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-29"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie verhält sich jemand mit der Grundeinstellung „Ich bin o.k. – du bist nicht o.k.“?",
+     "optionen": [
+      "Durch Nachfragen, z. B. „Was ist es, was Du mir damit sagen möchtest?“ oder „Sag mir bitte, was Du wirklich möchtest.“",
+      "Führungsrisiko: Mikromanagement, Delegationsprobleme, Entscheidungsverzögerung. Erlauber: „Gut genug ist oft ausreichend.“",
+      "Fühlt sich überlegen, sucht Fehler bei anderen: dominant, kontrollierend, bevormundend, gibt Verantwortung ungern ab.",
+      "Eltern-Ich (übernommene Werte und Regeln), Erwachsenen-Ich (rational, objektiv), Kind-Ich (emotional, impulsiv)."
+     ],
+     "richtig": "Fühlt sich überlegen, sucht Fehler bei anderen: dominant, kontrollierend, bevormundend, gibt Verantwortung ungern ab.",
+     "erkl": "IBK · Transaktionsanalyse",
+     "quelle": "Lernkarte k-ibk-30"
+    }
+   ],
+   "auftrag": {
+    "wer": "Ausbilder",
+    "text": "Es regnet, die Übung fällt aus, die Stimmung ist gereizt. Ein Anwärter sucht einen Retter. Erkenne das Spiel."
+   },
+   "ende": {
+    "gut": "Du bist nicht ins Drama-Dreieck eingestiegen. Der Anwärter übernimmt selbst Verantwortung.",
+    "schlecht": "Du steckst mitten im Drama-Dreieck."
+   },
+   "licht": "regen"
+  },
+  {
+   "titel": "Konflikte",
+   "steckbrief": "Ein Konflikt auf der Wache.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Wie ist ein Konflikt definiert?",
+     "optionen": [
+      "Ein Auseinandersetzungsprozess aus unterschiedlichen Interessen, Werten oder Zielen zwischen Personen, Gruppen oder innerhalb einer Person. Unvermeidlich, aber auch konstruktiv möglich.",
+      "Zuerst die Parteien befähigen, den Konflikt auszutragen, dazu das Selbstwertgefühl stärken. Direkte Konfrontation ruft anfangs Abwehr hervor; Vermeidungsprozeduren direktiv abändern.",
+      "Bewertungskonflikt (Ziele), Beurteilungskonflikt (Wege), Verteilungskonflikt (Mittel), Beziehungskonflikt (Verletzung des Selbstwertgefühls).",
+      "Intrapersonal (in einer Person), interpersonal (zwischen Einzelpersonen), Intra-Gruppenkonflikt (innerhalb einer Gruppe), Inter-Gruppenkonflikt (zwischen Gruppen), Personen-Gruppen-Konflikt."
+     ],
+     "richtig": "Ein Auseinandersetzungsprozess aus unterschiedlichen Interessen, Werten oder Zielen zwischen Personen, Gruppen oder innerhalb einer Person. Unvermeidlich, aber auch konstruktiv möglich.",
+     "erkl": "IBK · Konflikte",
+     "quelle": "Lernkarte k-ibk-50"
+    },
+    {
+     "typ": "gespraech",
+     "frage": "Führe das Gespräch. Wähle jeweils die Antwort, die das Gespräch voranbringt.",
+     "rolle": "Sven, Oberbrandmeister",
+     "lage": "Zwei Kollegen streiten laut über den Dienstplan. Sven steht aufgebracht vor dir, du bist der Vorgesetzte.",
+     "zuege": [
+      {
+       "sagt": "Mit dem arbeite ich nicht mehr zusammen! Der hat mir schon wieder die Wochenendschicht aufgedrückt!",
+       "optionen": [
+        {
+         "t": "Lasst uns erst einmal den Dienstplan neu organisieren.",
+         "gut": false,
+         "ich": "Organisation kommt bei einem heißen Konflikt erst später"
+        },
+        {
+         "t": "Ich höre, dass du verärgert bist. Wir setzen uns zu dritt hin und klären zuerst, was zwischen euch vorgefallen ist.",
+         "gut": true,
+         "ich": "Heißer Konflikt: zuerst die persönlichen Beziehungen klären"
+        },
+        {
+         "t": "Schluss jetzt. Ihr teilt euch die Schicht, und damit ist das Thema erledigt.",
+         "gut": false,
+         "ich": "Fauler Kompromiss: deckelt den Konflikt, er wird kalt"
+        }
+       ]
+      },
+      {
+       "sagt": "Er redet hinter meinem Rücken über mich. Das verletzt mich.",
+       "optionen": [
+        {
+         "t": "Sei nicht so empfindlich.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        },
+        {
+         "t": "Dann geht es nicht um den Plan, sondern um euren Umgang miteinander. Das sprechen wir offen an.",
+         "gut": true,
+         "ich": "Beziehungskonflikt: Ursache ist die Verletzung des Selbstwertgefühls"
+        },
+        {
+         "t": "Dann tauschen wir eben die Schicht, dann ist es gut.",
+         "gut": false,
+         "ich": "Sachebene: lässt die Ursache auf der Beziehungsebene unberührt"
+        }
+       ]
+      },
+      {
+       "sagt": "Und wenn wir uns nicht einigen?",
+       "optionen": [
+        {
+         "t": "Dann warten wir ab. Das legt sich von selbst.",
+         "gut": false,
+         "ich": "Deckelt den Konflikt: Er brodelt als kalter Konflikt weiter"
+        },
+        {
+         "t": "Noch können wir das selbst lösen. Wenn es weiter eskaliert, holen wir jemanden von außen dazu.",
+         "gut": true,
+         "ich": "Glasl: Stufen 1 bis 3 selbst handlungsfähig, ab Stufe 4 externer Eingriff"
+        },
+        {
+         "t": "Dann entscheide ich, wer von euch geht.",
+         "gut": false,
+         "ich": "Kritisches Eltern-Ich: wertet ab, weist zurecht"
+        }
+       ]
+      }
+     ],
+     "erkl": "Ein heißer Konflikt wird offen ausgetragen: zuerst die Beziehungen klären. Ein fauler Kompromiss macht daraus einen kalten Konflikt.",
+     "quelle": "Eigener Übungsfall, abgeleitet aus den Lernkarten k-ibk-51 bis k-ibk-63"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was kennzeichnet einen heißen Konflikt?",
+     "optionen": [
+      "Er verwandelt sich regelmäßig in einen kalten Konflikt (z. B. wenn Vorgesetzte oberflächlich eingreifen, statt zu mediieren).",
+      "Über die Wege: unterschiedliche Erfahrungen, Informationsquellen und Informationsverarbeitung.",
+      "Er wird offen ausgefochten. Vorteil: Beteiligte verstecken den Konflikt nicht, günstig für Bearbeitung und Lösung.",
+      "Bewertungskonflikt (Ziele), Beurteilungskonflikt (Wege), Verteilungskonflikt (Mittel), Beziehungskonflikt (Verletzung des Selbstwertgefühls)."
+     ],
+     "richtig": "Er wird offen ausgefochten. Vorteil: Beteiligte verstecken den Konflikt nicht, günstig für Bearbeitung und Lösung.",
+     "erkl": "IBK · Konflikte",
+     "quelle": "Lernkarte k-ibk-51"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was passiert, wenn man einen heißen Konflikt mit einem faulen Kompromiss „deckelt“?",
+     "optionen": [
+      "Er wird offen ausgefochten. Vorteil: Beteiligte verstecken den Konflikt nicht, günstig für Bearbeitung und Lösung.",
+      "Er verwandelt sich regelmäßig in einen kalten Konflikt (z. B. wenn Vorgesetzte oberflächlich eingreifen, statt zu mediieren).",
+      "Bewertungskonflikt (Ziele), Beurteilungskonflikt (Wege), Verteilungskonflikt (Mittel), Beziehungskonflikt (Verletzung des Selbstwertgefühls).",
+      "Er brodelt unterschwellig und fast unbemerkt, weil Ängste und Befürchtungen die Austragung verhindern (Firmenkultur, Führungspersönlichkeit, persönlicher Hintergrund)."
+     ],
+     "richtig": "Er verwandelt sich regelmäßig in einen kalten Konflikt (z. B. wenn Vorgesetzte oberflächlich eingreifen, statt zu mediieren).",
+     "erkl": "IBK · Konflikte",
+     "quelle": "Lernkarte k-ibk-52"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was kennzeichnet einen kalten Konflikt?",
+     "optionen": [
+      "Er verwandelt sich regelmäßig in einen kalten Konflikt (z. B. wenn Vorgesetzte oberflächlich eingreifen, statt zu mediieren).",
+      "Er brodelt unterschwellig und fast unbemerkt, weil Ängste und Befürchtungen die Austragung verhindern (Firmenkultur, Führungspersönlichkeit, persönlicher Hintergrund).",
+      "Zuerst die persönlichen Beziehungen klären, da der Konflikt hochgradig personalisiert ist. Über externe Bedingungen und Organisation wird erst später gesprochen.",
+      "Intrapersonal (in einer Person), interpersonal (zwischen Einzelpersonen), Intra-Gruppenkonflikt (innerhalb einer Gruppe), Inter-Gruppenkonflikt (zwischen Gruppen), Personen-Gruppen-Konflikt."
+     ],
+     "richtig": "Er brodelt unterschwellig und fast unbemerkt, weil Ängste und Befürchtungen die Austragung verhindern (Firmenkultur, Führungspersönlichkeit, persönlicher Hintergrund).",
+     "erkl": "IBK · Konflikte",
+     "quelle": "Lernkarte k-ibk-53"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Eskalationsstufen nach Glasl sind „heiß“, welche „kalt“?",
+     "optionen": [
+      "Heiß: Stufen 1, 2, 6, 8, 9. Kalt: Stufen 3, 4, 7.",
+      "Über die Ziele: unterschiedliche Werte und Normen, gegensätzliche Ziele.",
+      "Die Verletzung des Selbstwertgefühls.",
+      "Über die Wege: unterschiedliche Erfahrungen, Informationsquellen und Informationsverarbeitung."
+     ],
+     "richtig": "Heiß: Stufen 1, 2, 6, 8, 9. Kalt: Stufen 3, 4, 7.",
+     "erkl": "IBK · Konflikte",
+     "quelle": "Lernkarte k-ibk-54"
+    },
+    {
+     "typ": "mc",
+     "frage": "Ab welcher Glasl-Stufe ist man selbst nicht mehr handlungsfähig?",
+     "optionen": [
+      "Er brodelt unterschwellig und fast unbemerkt, weil Ängste und Befürchtungen die Austragung verhindern (Firmenkultur, Führungspersönlichkeit, persönlicher Hintergrund).",
+      "Zuerst die Parteien befähigen, den Konflikt auszutragen, dazu das Selbstwertgefühl stärken. Direkte Konfrontation ruft anfangs Abwehr hervor; Vermeidungsprozeduren direktiv abändern.",
+      "Er verwandelt sich regelmäßig in einen kalten Konflikt (z. B. wenn Vorgesetzte oberflächlich eingreifen, statt zu mediieren).",
+      "Auf den Stufen 1 bis 3 ist man noch selbst handlungsfähig. Ab Stufe 4 ist eine Lösung mithilfe eines externen Eingriffs sinnvoll."
+     ],
+     "richtig": "Auf den Stufen 1 bis 3 ist man noch selbst handlungsfähig. Ab Stufe 4 ist eine Lösung mithilfe eines externen Eingriffs sinnvoll.",
+     "erkl": "IBK · Konflikte",
+     "quelle": "Lernkarte k-ibk-55"
+    }
+   ],
+   "auftrag": {
+    "wer": "Wachleiter",
+    "text": "Zwei Kollegen streiten offen über den Dienstplan. Bevor das eskaliert, übernimmst du die Klärung."
+   },
+   "ende": {
+    "gut": "Der Konflikt ist auf dem Weg zur Lösung. Niemand hat das Gesicht verloren.",
+    "schlecht": "Der Konflikt ist gedeckelt und brodelt weiter."
+   },
+   "licht": "daemmerung"
+  },
+  {
+   "titel": "Fall: Funkstille in der Wachabteilung",
+   "steckbrief": "Zwei Kollegen Ihrer Wachabteilung gehen sich seit Wochen aus dem Weg, und Sie führen den Konflikt über mehrere Gespräche zu einer Lösung.",
+   "licht": "morgen",
+   "szenario": true,
+   "auftrag": {
+    "wer": "Herr Albers, Wachleiter",
+    "p": "p1",
+    "text": "Guten Morgen. In Ihrer Wachabteilung stimmt etwas nicht: Herr Brandt und Frau Yilmaz reden seit Wochen nur noch das Nötigste miteinander. Sie führen die Abteilung, also klären Sie das bitte. Ich bin in meinem Büro, wenn Sie mich brauchen."
+   },
+   "lage": {
+    "name": "Stimmung im Team",
+    "start": 55
+   },
+   "ende": {
+    "gut": "Herr Brandt und Frau Yilmaz haben eine klare Vereinbarung getroffen und sprechen wieder direkt miteinander. Die Wachabteilung arbeitet spürbar entspannter.",
+    "mittel": "Der Konflikt ist benannt, aber noch nicht ganz ausgeräumt. Sie müssen in den nächsten Diensten nachfassen, damit die Absprachen halten.",
+    "schlecht": "Der Konflikt schwelt unter der Oberfläche weiter und die beiden meiden sich mehr als zuvor. Die Stimmung in der Wachabteilung ist frostig."
+   },
+   "personen": [
+    {
+     "id": "p1",
+     "name": "Herr Albers",
+     "rolle": "Wachleiter",
+     "gut": [
+      "So stelle ich mir Führung vor.",
+      "Gut, dass Sie das selbst in die Hand nehmen."
+     ],
+     "schlecht": [
+      "Das hätte ich anders erwartet.",
+      "So wird es in der Abteilung nicht ruhiger."
+     ]
+    },
+    {
+     "id": "p2",
+     "name": "Herr Brandt",
+     "rolle": "Hauptbrandmeister, seit 20 Jahren auf der Wache",
+     "gut": [
+      "Gut. Damit kann ich arbeiten.",
+      "Das war eine klare Ansage. Danke."
+     ],
+     "schlecht": [
+      "Na, wie Sie meinen.",
+      "Dann sage ich eben nichts mehr."
+     ]
+    },
+    {
+     "id": "p3",
+     "name": "Frau Yilmaz",
+     "rolle": "Brandmeisterin, seit zwei Jahren in der Abteilung",
+     "gut": [
+      "Danke, das hilft mir weiter.",
+      "So fühle ich mich ernst genommen."
+     ],
+     "schlecht": [
+      "Ich sage dazu lieber nichts.",
+      "Dann bleibt wohl alles, wie es ist."
+     ]
+    }
+   ],
+   "aufgaben": [
+    {
+     "phase": "Wahrnehmung",
+     "ort": "Küche",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "frage": "Beim Frühstück sagt Herr Brandt spöttisch: „Unsere Expertin hat ja sicher wieder alles im Griff.“ Frau Yilmaz steht wortlos auf und geht. Seit Wochen meiden sich beide und regeln alles nur noch über Zettel am Dienstplan. Wie gehen Sie den Konflikt an?",
+     "optionen": [
+      {
+       "t": "Mit beiden zuerst einzeln sprechen und ihnen den Rücken stärken, damit sie den Konflikt austragen können.",
+       "wert": 2,
+       "folge": "Beide merken, dass Sie die Sache ernst nehmen. Herr Brandt und Frau Yilmaz sagen jeweils ein Einzelgespräch zu."
+      },
+      {
+       "t": "Zunächst nur mit Herrn Brandt unter vier Augen reden und Frau Yilmaz erst später einmal dazu ansprechen.",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Frau Yilmaz erfährt davon über Dritte und fühlt sich übergangen."
+      },
+      {
+       "t": "Beide sofort am Frühstückstisch vor der ganzen Mannschaft zur Rede stellen und eine offene Aussprache verlangen.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Beide wehren massiv ab. Herr Brandt wird förmlich, Frau Yilmaz schweigt.",
+       "dann": {
+        "phase": "Schadensbegrenzung",
+        "ort": "Küche",
+        "wer": "p3",
+        "typ": "entscheidung",
+        "frage": "Die Mannschaft schaut betreten auf ihre Teller. Frau Yilmaz sagt nur: „Von meiner Seite gibt es nichts zu besprechen.“ Wie retten Sie die Situation?",
+        "optionen": [
+         {
+          "t": "Die Runde beenden und beiden getrennt ein Gespräch unter vier Augen anbieten, um sie erst einmal zu stärken.",
+          "wert": 2,
+          "folge": "Die Spannung löst sich etwas. Beide nehmen das Angebot an."
+         },
+         {
+          "t": "Die Runde beenden und das Thema für die nächsten Dienste ruhen lassen, bis sich alle wieder beruhigt haben.",
+          "wert": 1,
+          "folge": "Vertretbar, aber mit Nachteil: Die Lage beruhigt sich, doch der Konflikt schwelt unbearbeitet weiter."
+         },
+         {
+          "t": "Nachhaken und beide vor der Mannschaft auffordern, jetzt endlich offen zu sagen, was sie am anderen stört.",
+          "wert": 0,
+          "folge": "Schlechte Folge: Die Abwehr wird noch stärker. Frau Yilmaz verlässt den Raum."
+         }
+        ],
+        "erkl": "Bei einem kalten Konflikt ruft direkte Konfrontation zu Beginn massive Abwehr und Ablehnung hervor. Zuerst müssen die Parteien befähigt werden, den Konflikt auszutragen. Dazu wird ihr Selbstwertgefühl gestärkt.",
+        "quelle": "Konflikte: Ansatzpunkte zur Bewältigung (v-ibk-konflikt) · eigener Übungsfall"
+       }
+      },
+      {
+       "t": "Den Dienstplan so umstellen, dass sich die beiden in den nächsten Wochen möglichst selten über den Weg laufen.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Der gewohnte Rückzug wird zur Dauerlösung. Die beiden reden gar nicht mehr miteinander."
+      }
+     ],
+     "erkl": "Spott, Rückzug auf Formalien und Meiden des direkten Kontakts sind Merkmale eines kalten Konflikts. Hier werden zuerst die Parteien befähigt, den Konflikt miteinander auszutragen. Direkte Konfrontation ruft zu Beginn massive Abwehr hervor, und Vermeidungswege sind abzustellen statt auszubauen.",
+     "quelle": "Konflikte: Heiße und kalte Konflikte, Ansatzpunkte zur Bewältigung (v-ibk-konflikt) · eigener Übungsfall"
+    },
+    {
+     "phase": "Einzelgespräch",
+     "ort": "Kollege",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "frage": "Herr Brandt lehnt am Fahrzeug, verschränkt die Arme und sagt mit einem schiefen Lächeln: „Bei mir ist alles in bester Ordnung. Die Kollegin macht doch immer alles richtig.“ Wie reagieren Sie?",
+     "optionen": [
+      {
+       "t": "Sagen: „Ich nehme zwei Informationen wahr. Sagen Sie mir bitte, was Sie wirklich meinen.“",
+       "wert": 2,
+       "folge": "Herr Brandt zögert und sagt dann: „Also gut. Mich ärgert schon länger etwas.“"
+      },
+      {
+       "t": "Ihn beim Wort nehmen und sagen: „Gut, dann halte ich fest, dass aus Ihrer Sicht alles geklärt ist.“",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Sie bestätigen sein indirektes Spiel nicht, doch der eigentliche Ärger bleibt unausgesprochen."
+      },
+      {
+       "t": "Im gleichen Ton antworten: „Na wunderbar, dann sind hier ja alle rundum glücklich und zufrieden.“",
+       "wert": 0,
+       "folge": "Schlechte Folge: Jetzt reden beide doppelbödig. Herr Brandt grinst und das Gespräch dreht sich im Kreis."
+      },
+      {
+       "t": "Scharf sagen: „Diesen Ton verbitte ich mir. Reißen Sie sich gefälligst zusammen, Herr Brandt.“",
+       "wert": 0,
+       "folge": "Schlechte Folge: Herr Brandt macht dicht und antwortet nur noch mit „Jawohl“."
+      }
+     ],
+     "frist": 75,
+     "erkl": "Herr Brandt sendet eine verdeckte Transaktion: Die Worte und die nonverbale Botschaft passen nicht zusammen. Liegt das Problem auf der Beziehungsebene, kann es nicht auf der Sachebene gelöst werden. Dann ist es sinnvoll, zu einer direkten Botschaft aufzufordern und auf eigene Doppelbödigkeit zu verzichten.",
+     "quelle": "Transaktionsanalyse: Transaktionstypen, verdeckte Transaktion (v-ibk-ta) · eigener Übungsfall"
+    },
+    {
+     "phase": "Einzelgespräch",
+     "ort": "Sofaecke",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "frage": "Frau Yilmaz sitzt mit hängenden Schultern in der Sofaecke: „Ich kann es ihm sowieso nie recht machen. Können Sie nicht mit ihm reden und das für mich regeln?“ Was antworten Sie?",
+     "optionen": [
+      {
+       "t": "Ihre gute Arbeit konkret benennen und sachlich fragen, was sie selbst Herrn Brandt sagen möchte.",
+       "wert": 2,
+       "folge": "Frau Yilmaz richtet sich auf: „Eigentlich möchte ich, dass er mit mir redet und nicht über mich.“"
+      },
+      {
+       "t": "Geduldig zuhören, Verständnis zeigen und ihr versichern, dass so etwas mit der Zeit vergeht.",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Frau Yilmaz fühlt sich verstanden, bleibt aber passiv und wartet weiter ab."
+      },
+      {
+       "t": "Zusagen: „Überlassen Sie das mir. Ich spreche mit ihm und bringe das für Sie in Ordnung.“",
+       "wert": 0,
+       "folge": "Schlechte Folge: Frau Yilmaz gibt die Verantwortung ab und verlässt sich künftig bei jedem Ärger auf Sie."
+      },
+      {
+       "t": "Erwidern: „Sie sind doch erwachsen. Stellen Sie sich nicht so an und klären Sie das allein.“",
+       "wert": 0,
+       "folge": "Schlechte Folge: Frau Yilmaz fühlt sich angegriffen und zieht sich noch weiter zurück."
+      }
+     ],
+     "erkl": "Frau Yilmaz lädt Sie aus der Opferrolle ein, den Retter zu spielen. Wer ungefragt Verantwortung übernimmt, macht andere abhängig, und Vorwürfe wären die Verfolgerrolle. Ziel ist, aus dem Erwachsenen-Ich offen, sachlich und verantwortungsvoll zu kommunizieren. Im kalten Konflikt wird außerdem zuerst das Selbstwertgefühl gestärkt.",
+     "quelle": "Transaktionsanalyse: Spielanalyse, Drama-Dreieck (v-ibk-ta); Konflikte: Ansatzpunkte (v-ibk-konflikt) · eigener Übungsfall"
+    },
+    {
+     "phase": "Ursache",
+     "ort": "Dienstplan",
+     "wer": "p2",
+     "typ": "mc",
+     "frage": "Vor dem Dienstplan bricht es aus Herrn Brandt heraus: „Die Gerätekunde habe ich jahrelang gemacht. Dann hing da plötzlich der Name der Kollegin, und keiner hat ein Wort mit mir gesprochen. Um die Aufgabe geht es mir gar nicht. Aber zwanzig Jahre zählen hier wohl nichts mehr.“ Welche Konfliktursache liegt vor?",
+     "optionen": [
+      "Bewertungskonflikt: Die beiden sind sich über die Ziele der Ausbildung uneinig.",
+      "Verteilungskonflikt: Die beiden streiten um knappe Mittel der Wachabteilung.",
+      "Beziehungskonflikt: Herr Brandt fühlt sich in seinem Selbstwertgefühl verletzt.",
+      "Beurteilungskonflikt: Die beiden sind sich über den Weg zum Ziel uneinig."
+     ],
+     "richtig": "Beziehungskonflikt: Herr Brandt fühlt sich in seinem Selbstwertgefühl verletzt.",
+     "erkl": "Ursache eines Beziehungskonflikts ist die Verletzung des Selbstwertgefühls. Bewertungskonflikte drehen sich um Ziele, Beurteilungskonflikte um Wege und Verteilungskonflikte um Mittel. Herr Brandt sagt selbst, dass es ihm nicht um die Aufgabe geht.",
+     "quelle": "Konflikte: Konfliktursachen (v-ibk-konflikt) · eigener Übungsfall"
+    },
+    {
+     "phase": "Vorbereitung",
+     "ort": "Besprechung",
+     "wer": "p1",
+     "typ": "reihe",
+     "frage": "Beide sind zu einem gemeinsamen Gespräch bereit. Herr Albers schaut kurz in den Besprechungsraum: „Wie bauen Sie das Gespräch auf?“ Bringen Sie die sechs Phasen des kooperativen Konfliktgesprächs in die richtige Reihenfolge.",
+     "optionen": [
+      "Vereinbarung treffen",
+      "Problem lösen",
+      "Erregung kontrollieren",
+      "Offen kommunizieren",
+      "Persönlich verarbeiten",
+      "Vertrauen bilden"
+     ],
+     "richtig": [
+      "Erregung kontrollieren",
+      "Vertrauen bilden",
+      "Offen kommunizieren",
+      "Problem lösen",
+      "Vereinbarung treffen",
+      "Persönlich verarbeiten"
+     ],
+     "erkl": "Das kooperative Konfliktgespräch nach Berkel führt in sechs Phasen von der Erregung bis zur persönlichen Verarbeitung. Wichtig ist dabei ein flexibles Vorgehen.",
+     "quelle": "Konflikte: Kooperatives Konfliktgespräch nach Berkel (v-ibk-konflikt) · eigener Übungsfall"
+    },
+    {
+     "phase": "Konfliktgespräch",
+     "ort": "Besprechung",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "frage": "Das Gespräch zu dritt läuft. Frau Yilmaz wird laut: „Er redet doch nur hinter meinem Rücken schlecht über mich!“ Herr Brandt holt schon Luft. Was tun Sie?",
+     "optionen": [
+      {
+       "t": "Den Vorwurf in einen Wunsch übersetzen: „Sie möchten, dass Herr Brandt Kritik direkt an Sie richtet?“",
+       "wert": 2,
+       "folge": "Frau Yilmaz nickt. Herr Brandt sagt nach kurzem Zögern: „Das kann ich machen. Dann will ich aber auch gefragt werden.“"
+      },
+      {
+       "t": "Das Gespräch auf die Sache lenken und gleich über die künftige Verteilung der Ausbildung reden.",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Sachfrage ist schnell geklärt, doch die Kränkung bleibt im Raum stehen."
+      },
+      {
+       "t": "Herrn Brandt auffordern, sofort zu erklären, ob er tatsächlich schlecht über sie geredet hat.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Aus dem Gespräch wird ein Verhör. Herr Brandt verteidigt sich und greift seinerseits an."
+      },
+      {
+       "t": "Frau Yilmaz ermahnen, sich im Ton zu mäßigen, weil solche Vorwürfe hier nicht weiterhelfen.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Frau Yilmaz verstummt und sagt für den Rest des Gesprächs nichts mehr."
+      }
+     ],
+     "frist": 60,
+     "erkl": "Zum offenen Kommunizieren gehört im kooperativen Konfliktgespräch: zuhören, nachfragen, Vorwürfe in Wünsche übersetzen und Ergebnisse zusammenfassen. Bei Fehlern wird zukunftsorientiert gedacht, statt nach Schuldigen zu suchen.",
+     "quelle": "Konflikte: Kooperatives Konfliktgespräch nach Berkel (v-ibk-konflikt); Führungsstile: Motivation (v-ibk-fuehrungsstile) · eigener Übungsfall"
+    },
+    {
+     "phase": "Vereinbarung",
+     "ort": "Besprechung",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "frage": "Nach einer Stunde sind alle müde. Herr Brandt winkt ab: „Lassen wir es gut sein. Schwamm drüber, wir sind doch erwachsene Leute.“ Frau Yilmaz zuckt mit den Schultern. Wie schließen Sie das Gespräch ab?",
+     "optionen": [
+      {
+       "t": "Eine kleine, klar formulierte Absprache festhalten und offen ansprechen, was bei einem Rückfall geschieht.",
+       "wert": 2,
+       "folge": "Beide einigen sich: Kritik nur noch direkt, und die Gerätekunde planen sie künftig gemeinsam. Das Ergebnis ist klein, aber tragfähig."
+      },
+      {
+       "t": "Einen ausführlichen Plan für alle Streitpunkte der letzten Monate aufsetzen und ihn heute noch beschließen.",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Das Paket ist zu groß für diesen Tag. Beide stimmen zu, ohne wirklich dahinterzustehen."
+      },
+      {
+       "t": "Den Vorschlag annehmen, das Gespräch ohne Absprache beenden und auf den guten Willen der beiden vertrauen.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Der Konflikt ist nur zugedeckt und schwelt unter der Oberfläche weiter.",
+       "dann": {
+        "phase": "Rückfall",
+        "ort": "Küche",
+        "wer": "p3",
+        "typ": "entscheidung",
+        "frage": "Eine Woche später hängt wieder ein Zettel am Dienstplan statt eines Gesprächs. Frau Yilmaz sagt in der Küche: „Sehen Sie, es hat sich nichts geändert.“ Was tun Sie?",
+        "optionen": [
+         {
+          "t": "Den Rückfall bei beiden offen ansprechen und die fehlende klare Absprache jetzt gemeinsam nachholen.",
+          "wert": 2,
+          "folge": "Beide setzen sich noch einmal zusammen und halten fest, wie sie künftig miteinander reden."
+         },
+         {
+          "t": "Frau Yilmaz bitten, den Zettel nicht so wichtig zu nehmen und Herrn Brandt noch etwas Zeit zu geben.",
+          "wert": 1,
+          "folge": "Vertretbar, aber mit Nachteil: Frau Yilmaz wartet ab, verliert aber das Vertrauen in das Gespräch."
+         },
+         {
+          "t": "Kraft Ihres Amtes anordnen, dass ab sofort Ruhe herrscht und das Thema damit endgültig erledigt ist.",
+          "wert": 0,
+          "folge": "Schlechte Folge: Nach außen ist Ruhe. Die beiden blockieren sich nun bei jeder Gelegenheit im Stillen."
+         }
+        ],
+        "erkl": "Zu einer Vereinbarung gehören klare Formulierungen, und Rückfälle werden angesprochen. Wird ein Konflikt von der Führungskraft mit einem schnellen, faulen Kompromiss gedeckelt, verwandelt er sich regelmäßig in einen kalten Konflikt.",
+        "quelle": "Konflikte: Kooperatives Konfliktgespräch nach Berkel, Heiße und kalte Konflikte (v-ibk-konflikt) · eigener Übungsfall"
+       }
+      },
+      {
+       "t": "Als Vorgesetzter festlegen, dass die Sache damit erledigt ist und ab morgen wieder normal gearbeitet wird.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Beide nicken. In der Fahrzeughalle gehen sie sich danach weiter aus dem Weg."
+      }
+     ],
+     "frist": 70,
+     "erkl": "In der Phase „Vereinbarung treffen“ werden kleine Ergebnisse als Erfolg gewertet, aber keine faulen Kompromisse geschlossen. Dazu gehören klare Formulierungen und das Ansprechen von Rückfällen. Zu schnelle, oberflächliche Kompromisse von oben lassen den Konflikt kalt weiterlaufen.",
+     "quelle": "Konflikte: Kooperatives Konfliktgespräch nach Berkel, Heiße und kalte Konflikte (v-ibk-konflikt) · eigener Übungsfall"
+    }
+   ],
+   "eingang": [
+    {
+     "phase": "Rückfrage",
+     "ort": "Wachleiter",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "nach": 60,
+     "frist": 80,
+     "frage": "Herr Albers ruft Sie in sein Büro: „Die zwei reden nicht mehr und schaffen lieber Tatsachen. Lager haben sich in der Mannschaft aber noch keine gebildet. Soll ich jemanden von außen holen?“ Was antworten Sie?",
+     "optionen": [
+      {
+       "t": "„Noch nicht. Solange sich keine Lager bilden, können wir den Konflikt in der Abteilung selbst lösen.“",
+       "wert": 2,
+       "folge": "Herr Albers nickt: „Einverstanden. Melden Sie sich, wenn die Mannschaft anfängt, Partei zu ergreifen.“"
+      },
+      {
+       "t": "„Ja, bitte. Mit einer Moderation von außen sind wir in jedem Fall auf der sicheren Seite.“",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Hilfe kommt, doch die beiden fragen sich, warum ihr eigener Chef nicht mit ihnen redet."
+      },
+      {
+       "t": "„Nein. Versetzen Sie am besten einen der beiden in eine andere Wachabteilung, dann ist Ruhe.“",
+       "wert": 0,
+       "folge": "Schlechte Folge: Herr Albers runzelt die Stirn. Der Konflikt wäre nur verschoben, und einer verliert sein Gesicht."
+      }
+     ],
+     "erkl": "Nach Glasl sind die Beteiligten auf den Stufen 1 bis 3 selber handlungsfähig. Stufe 3 heißt „Taten statt Worte“, Stufe 4 „Koalitionen“. Erst ab Stufe 4 ist eine Lösung mithilfe eines externen Eingriffs sinnvoll.",
+     "quelle": "Konflikte: Eskalationsstufen nach Glasl (v-ibk-konflikt) · eigener Übungsfall"
+    },
+    {
+     "phase": "Nebenbei",
+     "ort": "Spinde",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "nach": 130,
+     "frist": 70,
+     "frage": "An den Spinden sehen Sie, dass Herr Brandt unaufgefordert die Regale mit der Schutzkleidung neu geordnet und beschriftet hat. Er räumt gerade die letzten Jacken ein. Wie reagieren Sie?",
+     "optionen": [
+      {
+       "t": "Kurz stehen bleiben und ihm konkret sagen, dass Ihnen die neue Ordnung aufgefallen ist und gefällt.",
+       "wert": 2,
+       "folge": "Herr Brandt brummt etwas, lächelt aber zum ersten Mal an diesem Tag."
+      },
+      {
+       "t": "Ihn später vor der versammelten Mannschaft überschwänglich als Vorbild für alle anderen herausstellen.",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Das Lob wirkt übertrieben. Herrn Brandt ist der Auftritt sichtlich unangenehm."
+      },
+      {
+       "t": "Wortlos weitergehen, denn Ordnung an den Spinden gehört schließlich zu den Pflichten jedes Kollegen.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Herr Brandt schaut Ihnen nach und murmelt: „Sieht hier ja doch keiner.“"
+      }
+     ],
+     "erkl": "Menschen wollen wahrgenommen werden. Strokes sind Nahrung für die Seele: Führungskräfte dürfen und sollen Zuwendung geben, auch für Kleinigkeiten. Mit Lob und Anerkennung soll man aber nicht übertreiben.",
+     "quelle": "Transaktionsanalyse: Grundbedürfnisse, Strokes (v-ibk-ta); Führungsstile: Motivation (v-ibk-fuehrungsstile) · eigener Übungsfall"
+    }
+   ]
+  }
+ ]
+}

@@ -8,7 +8,7 @@ const SYNC=(function(){
   const APP_URL='https://flametan.github.io/BVI-Lernwebsite/';
   const K={code:'bvi_sync_code',base:'bvi_sync_base',ver:'bvi_sync_ver',last:'bvi_sync_last',url:'bvi_sync_url'};
   // Was synchronisiert wird: Lernstand, Notizen, Textmarkierungen, Lesezeichen – keine Geräte-Einstellungen
-  const TRACK=/^bvi_(avatar|cover|profile_name|fc|fc_weak|fc_stars|fc_custom|game|progress|streak|usage|cards_day|cardgoal|hl|bookmarks|fb_answers|uk_scores|kf_scores|fq_scores|eq_scores|lb_ok|lb_vb|checks_[\w-]+|note_[\w-]+|quiz_(mastery|srs|stats|bm)|idfq_(mastery|srs|stats|bm|cat))$/;
+  const TRACK=/^bvi_(avatar|cover|profile_name|fc|fc_weak|fc_stars|fc_custom|game|game_v1|progress|streak|usage|cards_day|cardgoal|hl|bookmarks|fb_answers|uk_scores|kf_scores|fq_scores|eq_scores|lb_ok|lb_vb|checks_[\w-]+|note_[\w-]+|quiz_(mastery|srs|stats|bm)|idfq_(mastery|srs|stats|bm|cat))$/;
   const enc=new TextEncoder(), dec=new TextDecoder();
   const ls={
     get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
@@ -105,11 +105,21 @@ const SYNC=(function(){
     if(r.includes(l)) return r;
     return l.replace(/\s+$/,'')+'\n\n'+r.replace(/^\s+/,'');
   }
+  // Simulationen: bestandene Level bleiben bestanden, die Bestenlisten beider Geräte werden zusammengelegt (die zehn besten)
+  function mergeGame(l,b,r){
+    const v=mergeVal(l,b,r); if(!isObj(v)||!isObj(l)||!isObj(r)) return v;
+    const lv=(o,mi,n)=>{ const x=isObj(o.m)&&isObj(o.m[mi])?o.m[mi][n]:null; return isObj(x)?x:{}; };
+    if(isObj(v.m)) Object.keys(v.m).forEach(mi=>{ if(isObj(v.m[mi])) Object.keys(v.m[mi]).forEach(n=>{ const o=v.m[mi][n]; if(!isObj(o)) return; ['ok','ernst'].forEach(f=>{ if(lv(l,mi,n)[f]||lv(r,mi,n)[f]) o[f]=true; }); }); });
+    const R={}; [l.rang,r.rang].forEach(x=>{ if(isObj(x)) Object.keys(x).forEach(a=>{ if(Array.isArray(x[a])) R[a]=(R[a]||[]).concat(x[a].filter(isObj)); }); });
+    Object.keys(R).forEach(a=>{ const seen=new Set(); R[a]=R[a].filter(e=>{ const key=JSON.stringify([e.n,e.d,e.p,e.t,e.w]); if(seen.has(key)) return false; seen.add(key); return true; }).sort((x,y)=>(y.p-x.p)||((x.t||0)-(y.t||0))).slice(0,10); });
+    if(Object.keys(R).length) v.rang=R;
+    return v;
+  }
   function mergeKey(k,l,b,r){
     if(/^bvi_(avatar|cover|profile_name)$/.test(k)) return l===b?r:(l===undefined?r:l);
     if(/^bvi_note_/.test(k)) return mergeText(l,b,r);
     const P=s=>{ if(s===undefined||s===null) return undefined; try{ return JSON.parse(s); }catch(e){ return {__raw:s}; } };
-    const v=mergeVal(P(l),P(b),P(r));
+    const v=k==='bvi_game_v1'?mergeGame(P(l),P(b),P(r)):mergeVal(P(l),P(b),P(r));
     return v===undefined?undefined:(isObj(v)&&'__raw' in v?v.__raw:JSON.stringify(v));
   }
   function merge(local,base,remote){

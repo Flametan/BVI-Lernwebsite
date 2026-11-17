@@ -1,0 +1,964 @@
+{
+ "mission": "vak",
+ "welt": "hoersaal",
+ "level": [
+  {
+   "titel": "Staatsorganisationsrecht",
+   "steckbrief": "Im Hörsaal: Grundgesetz, Staatsorgane, Gesetzgebung.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Wer hat nach Art. 76 Abs. 1 GG das Recht der Gesetzesinitiative?",
+     "optionen": [
+      "Bundestag, Bundesrat und Bundesregierung",
+      "Nur Bundestag und Bundesrat",
+      "Bundestag, Bundesrat, Bundesregierung und Bundespräsident",
+      "Bundestag und Bundesverfassungsgericht"
+     ],
+     "richtig": "Bundestag, Bundesrat und Bundesregierung",
+     "erkl": "Das Initiativrecht steht nach Art. 76 I GG dem Bundestag (aus seiner Mitte), dem Bundesrat und der Bundesregierung zu. Der Bundespräsident und das BVerfG haben kein Initiativrecht.",
+     "quelle": "VAk-Quiz · Frage 80"
+    },
+    {
+     "typ": "mc",
+     "frage": "Das Schulrecht fällt in die konkurrierende Gesetzgebungskompetenz des Bundes und der Länder.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Falsch",
+     "erkl": "Schulrecht ist Ländersache (Kulturhoheit der Länder); eine Bundeskompetenz nach Art. 70 ff. GG besteht dafür nicht.",
+     "quelle": "VAk-Quiz · Frage 5"
+    },
+    {
+     "typ": "reihe",
+     "frage": "Ein Bundesgesetz entsteht. Bringen Sie die Stationen des Gesetzgebungsverfahrens in die richtige Reihenfolge.",
+     "optionen": [
+      "Ausfertigung durch den Bundespräsidenten",
+      "Verkündung im Bundesgesetzblatt",
+      "Prüfung im Bundesrat",
+      "Gesetzesvorlage wird in den Bundestag eingebracht",
+      "Beratung in drei Lesungen und Gesetzesbeschluss des Bundestages"
+     ],
+     "richtig": [
+      "Gesetzesvorlage wird in den Bundestag eingebracht",
+      "Beratung in drei Lesungen und Gesetzesbeschluss des Bundestages",
+      "Prüfung im Bundesrat",
+      "Ausfertigung durch den Bundespräsidenten",
+      "Verkündung im Bundesgesetzblatt"
+     ],
+     "erkl": "Nach der Gesetzesvorlage berät und beschließt der Bundestag, dann prüft der Bundesrat das Gesetz. Nach der Gegenzeichnung fertigt der Bundespräsident das Gesetz aus, es wird im Bundesgesetzblatt verkündet und tritt in Kraft.",
+     "quelle": "Staatsrecht: Gesetzgebungsverfahren in Deutschland (v-vak-staatsrecht)"
+    },
+    {
+     "typ": "mc",
+     "frage": "Grundrechte sind Abwehrrechte der Bürgerinnen und Bürger gegen den Staat.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Richtig",
+     "erkl": "Das ist ihre klassische Funktion gegenüber dem Staat.",
+     "quelle": "VAk-Quiz · Frage 3"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Aussage zum Wahlgrundsatz der Gleichheit ist zutreffend?",
+     "optionen": [
+      "Jede Stimme hat den gleichen Zähl- und Erfolgswert",
+      "Der Erfolgswert darf unterschiedlich sein, solange alle wählen dürfen",
+      "Wahlgleichheit gilt nur für Bundestagswahlen",
+      "Wahlgleichheit verlangt zwingend Mehrheitswahl"
+     ],
+     "richtig": "Jede Stimme hat den gleichen Zähl- und Erfolgswert",
+     "erkl": "Das folgt aus Art. 38 I 1 GG: Jede Stimme hat denselben Zählwert und denselben Erfolgswert.",
+     "quelle": "VAk-Quiz · Frage 21"
+    },
+    {
+     "typ": "mc",
+     "frage": "Die Wahlrechtsgrundsätze lauten Allgemein, Unmittelbar, Frei und Geheim.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Falsch",
+     "erkl": "Art. 38 I 1 GG nennt fünf Grundsätze; es fehlen die Gleichheit der Wahl und die Öffentlichkeit (durch BVerfG aus Art. 38 i.V.m. Art. 20 GG entwickelt).",
+     "quelle": "VAk-Quiz · Frage 11"
+    },
+    {
+     "typ": "mc",
+     "frage": "Woran erkennt man in einer Norm typischerweise Ermessensspielräume?",
+     "optionen": [
+      "An der Verwendung von „muss\"",
+      "An der Verwendung von „kann\" oder „darf\"",
+      "An der Reihenfolge der Normabsätze",
+      "An der Länge des Gesetzestextes"
+     ],
+     "richtig": "An der Verwendung von „kann\" oder „darf\"",
+     "erkl": "„Kann\" oder „darf\" signalisieren Ermessen; „muss\" oder „ist\" weisen auf eine gebundene Entscheidung hin.",
+     "quelle": "VAk-Quiz · Frage 15"
+    },
+    {
+     "typ": "mc",
+     "frage": "Das Grundgesetz wurde am 23.05.1949 verkündet.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Richtig",
+     "erkl": "Verkündet wurde es am 23.05.1949. In Kraft getreten ist es erst am folgenden Tag, dem 24.05.1949.",
+     "quelle": "VAk-Quiz · Frage 12"
+    }
+   ],
+   "auftrag": {
+    "wer": "Dozentin",
+    "text": "Willkommen im Hörsaal. Wir beginnen mit dem Staatsorganisationsrecht. Jede Reihe hat eine Frage für Sie."
+   },
+   "ende": {
+    "gut": "Die Dozentin nickt zufrieden. Das Fundament steht.",
+    "schlecht": "Die Dozentin empfiehlt, das Kapitel noch einmal zu lesen."
+   },
+   "licht": "tag"
+  },
+  {
+   "titel": "Allgemeines Verwaltungsrecht",
+   "steckbrief": "Verwaltungsakt, Ermessen, Verfahren.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Welche Anforderung stellt § 37 VwVfG an den Tenor (Verfügungssatz) eines Verwaltungsaktes?",
+     "optionen": [
+      "Er muss schriftlich und handschriftlich unterschrieben sein",
+      "Er muss hinreichend bestimmt sein",
+      "Er muss stets eine Rechtsmittelbelehrung enthalten",
+      "Er darf keine Bedingungen oder Auflagen enthalten"
+     ],
+     "richtig": "Er muss hinreichend bestimmt sein",
+     "erkl": "§ 37 VwVfG verlangt, dass der Tenor eines VA hinreichend bestimmt ist – er muss klar und vollziehbar beschreiben, was die Behörde vom Bürger verlangt.",
+     "quelle": "VAk-Quiz · Frage 73"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wann wird ein Verwaltungsakt wirksam?",
+     "optionen": [
+      "Bei Unterschrift durch den Behördenleiter",
+      "Bei Veröffentlichung im Gesetzblatt",
+      "Mit seiner Bekanntgabe",
+      "Nach Zustimmung der betroffenen Person"
+     ],
+     "richtig": "Mit seiner Bekanntgabe",
+     "erkl": "So §§ 41, 43 VwVfG.",
+     "quelle": "VAk-Quiz · Frage 30"
+    },
+    {
+     "typ": "multi",
+     "frage": "Ein Bescheid soll ergänzt werden. Was davon sind Nebenbestimmungen nach § 36 VwVfG?",
+     "optionen": [
+      "Rechtsbehelfsbelehrung",
+      "Befristung",
+      "Auflage",
+      "Anhörung",
+      "Bedingung"
+     ],
+     "richtig": [
+      "Befristung",
+      "Bedingung",
+      "Auflage"
+     ],
+     "erkl": "Nebenbestimmungen nach § 36 VwVfG sind Befristung, Bedingung, Widerrufsvorbehalt, Auflage und Auflagenvorbehalt. Die Anhörung gehört zum Verwaltungsverfahren (§ 28 VwVfG), die Rechtsbehelfsbelehrung nennt Rechtsbehelf und Frist.",
+     "quelle": "Allgemeines Verwaltungsrecht: Nebenbestimmungen (v-vak-verwaltungsrecht)"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was versteht man unter einer Ermessensreduzierung auf Null?",
+     "optionen": [
+      "Die Behörde hat kein Ermessen und muss untätig bleiben",
+      "Aufgrund besonderer Umstände ist nur noch eine einzige rechtmäßige Entscheidung möglich",
+      "Die Behörde kann frei zwischen allen Maßnahmen wählen",
+      "Das Ermessen wird auf eine übergeordnete Behörde übertragen"
+     ],
+     "richtig": "Aufgrund besonderer Umstände ist nur noch eine einzige rechtmäßige Entscheidung möglich",
+     "erkl": "Bei der Ermessensreduzierung auf Null schrumpft der gesetzliche Spielraum der Behörde so stark, dass nur noch eine rechtmäßige Entscheidung verbleibt. Jede andere Handlung wäre rechtswidrig (gebundene Entscheidung).",
+     "quelle": "VAk-Quiz · Frage 70"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wann kann auf eine Anhörung vor Erlass eines Verwaltungsaktes verzichtet werden?",
+     "optionen": [
+      "Nie",
+      "Nur bei Gefahr im Verzug",
+      "Wenn dies durch Verwaltungsvorschriften vorgesehen ist",
+      "Wenn § 28 Abs. 2 VwVfG dies zulässt"
+     ],
+     "richtig": "Wenn § 28 Abs. 2 VwVfG dies zulässt",
+     "erkl": "§ 28 II VwVfG zählt mehrere Fallgruppen auf, etwa Gefahr im Verzug, Allgemeinverfügungen oder Massenverfahren – „nur bei Gefahr im Verzug\" wäre zu eng.",
+     "quelle": "VAk-Quiz · Frage 27"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welches der folgenden Merkmale muss ein Verwaltungsakt nach § 35 VwVfG erfüllen?",
+     "optionen": [
+      "Er muss schriftlich erlassen sein",
+      "Er muss von einem Gericht stammen",
+      "Er muss eine Regelung enthalten",
+      "Er muss sich auf Zivilrecht beziehen"
+     ],
+     "richtig": "Er muss eine Regelung enthalten",
+     "erkl": "Der Regelungscharakter ist das zentrale Tatbestandsmerkmal des § 35 VwVfG.",
+     "quelle": "VAk-Quiz · Frage 23"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was regelt das Entschließungsermessen einer Behörde?",
+     "optionen": [
+      "Das „Ob\" des behördlichen Handelns – ob die Behörde tätig wird",
+      "Das „Wie\" – die Art und Weise der Maßnahme",
+      "Die Auswahl zwischen mehreren Adressaten",
+      "Den Zeitpunkt des behördlichen Eingreifens"
+     ],
+     "richtig": "Das „Ob\" des behördlichen Handelns – ob die Behörde tätig wird",
+     "erkl": "Das Entschließungsermessen (§ 40 VwVfG) betrifft das „Ob\" – ob die Behörde bei Vorliegen aller Voraussetzungen tätig wird oder untätig bleibt. Das „Wie\" regelt das Auswahlermessen.",
+     "quelle": "VAk-Quiz · Frage 68"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Aussage trifft im Sinne des § 35 VwVfG am ehesten auf die „Außenwirkung\" eines Verwaltungsaktes zu?",
+     "optionen": [
+      "Der Verwaltungsakt muss für die allgemeine Öffentlichkeit bestimmt sein",
+      "Der Verwaltungsakt betrifft ausschließlich interne Verwaltungsabläufe",
+      "Der Verwaltungsakt muss gegenüber einer außerhalb der Verwaltung stehenden Person rechtliche Wirkung entfalten",
+      "Die Außenwirkung meint, dass der Verwaltungsakt öffentlich bekannt gemacht werden muss"
+     ],
+     "richtig": "Der Verwaltungsakt muss gegenüber einer außerhalb der Verwaltung stehenden Person rechtliche Wirkung entfalten",
+     "erkl": "Außenwirkung bedeutet Rechtswirkung gegenüber einer außerhalb der Verwaltung stehenden Person.",
+     "quelle": "VAk-Quiz · Frage 24"
+    }
+   ],
+   "auftrag": {
+    "wer": "Dozentin",
+    "text": "Heute früh: allgemeines Verwaltungsrecht. Verwaltungsakt, Ermessen, Verfahren. Bitte nach vorn."
+   },
+   "ende": {
+    "gut": "Verwaltungsakt und Ermessen sitzen.",
+    "schlecht": "Beim Verwaltungsakt gibt es noch Unsicherheiten."
+   },
+   "licht": "morgen"
+  },
+  {
+   "titel": "Beamten- und Disziplinarrecht",
+   "steckbrief": "Rechte und Pflichten im Dienst.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Welches Beamtenverhältnis gibt es nicht?",
+     "optionen": [
+      "Beamter auf Probe",
+      "Beamter auf Widerruf",
+      "Beamter auf Lebenszeit",
+      "Beamter auf Abruf"
+     ],
+     "richtig": "Beamter auf Abruf",
+     "erkl": "Nach § 4 BeamtStG gibt es Beamte auf Lebenszeit, auf Probe, auf Widerruf und auf Zeit. Einen „Beamten auf Abruf\" kennt das Beamtenrecht nicht.",
+     "quelle": "VAk-Quiz · Frage 43"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wann muss ein Disziplinarverfahren eingeleitet werden?",
+     "optionen": [
+      "Sobald der Personalrat zustimmt",
+      "Wenn eine anonyme Beschwerde eingeht",
+      "Bei zureichenden tatsächlichen Anhaltspunkten für ein Dienstvergehen",
+      "Wenn ein Strafbefehl rechtskräftig ist"
+     ],
+     "richtig": "Bei zureichenden tatsächlichen Anhaltspunkten für ein Dienstvergehen",
+     "erkl": "Es gilt das Legalitätsprinzip – dem Dienstvorgesetzten steht kein Ermessen zu, ob er tätig wird, nur wie er das Verfahren führt.",
+     "quelle": "VAk-Quiz · Frage 47"
+    },
+    {
+     "typ": "reihe",
+     "frage": "Gegen einen Beamten steht ein Vorwurf im Raum. Bringen Sie den Ablauf des Disziplinarverfahrens in die richtige Reihenfolge.",
+     "optionen": [
+      "Abschluss durch Einstellung oder Disziplinarverfügung",
+      "Verdacht eines Dienstvergehens",
+      "Ermittlung durch den Ermittlungsführer",
+      "Einleitungsverfügung mit Unterrichtung, Belehrung und Anhörung"
+     ],
+     "richtig": [
+      "Verdacht eines Dienstvergehens",
+      "Einleitungsverfügung mit Unterrichtung, Belehrung und Anhörung",
+      "Ermittlung durch den Ermittlungsführer",
+      "Abschluss durch Einstellung oder Disziplinarverfügung"
+     ],
+     "erkl": "Auf den Verdacht folgt die Einleitungsverfügung: Der Betroffene wird unterrichtet, belehrt und angehört. Danach erhebt der Ermittlungsführer die Beweise. Am Ende steht die Einstellung oder eine Disziplinarverfügung.",
+     "quelle": "Öffentliches Dienstrecht: Ablauf eines Disziplinarverfahrens (v-vak-dienstrecht)"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was gehört nicht zu den Dienstpflichten?",
+     "optionen": [
+      "Pflicht zur wöchentlichen Fortbildung",
+      "Neutralitätsgebot",
+      "Folgepflicht",
+      "Verschwiegenheitspflicht"
+     ],
+     "richtig": "Pflicht zur wöchentlichen Fortbildung",
+     "erkl": "Neutralitätsgebot, Folgepflicht und Verschwiegenheitspflicht sind ausdrücklich normiert (§§ 33, 35, 37 BeamtStG). Eine eigenständige, gesetzlich fixierte Pflicht zur wöchentlichen Fortbildung gibt es dagegen nicht.",
+     "quelle": "VAk-Quiz · Frage 49"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was regelt § 34 BeamtStG?",
+     "optionen": [
+      "Dienstunfall",
+      "Pflicht zum vollen persönlichen Einsatz",
+      "Wahlrecht",
+      "Nebentätigkeiten"
+     ],
+     "richtig": "Pflicht zum vollen persönlichen Einsatz",
+     "erkl": "Beamtinnen und Beamte haben sich mit vollem persönlichem Einsatz ihrem Beruf zu widmen und ihr Verhalten muss der Achtung und dem Vertrauen gerecht werden, die ihr Beruf erfordert.",
+     "quelle": "VAk-Quiz · Frage 42"
+    },
+    {
+     "typ": "mc",
+     "frage": "Eine Trunkenheitsfahrt in der Freizeit führt zu einem Disziplinarverfahren.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Falsch",
+     "erkl": "Rein außerdienstliches Verhalten ist nur dann relevant, wenn es in besonderem Maß geeignet ist, Achtung und Vertrauen in einer für das Amt bedeutsamen Weise zu beeinträchtigen (§ 34 S. 3 BeamtStG).",
+     "quelle": "VAk-Quiz · Frage 50"
+    },
+    {
+     "typ": "mc",
+     "frage": "Die Entfernung aus dem Beamtenverhältnis aufgrund von Verfehlungen muss im Rahmen einer Disziplinarklage vor dem Verwaltungsgericht erwirkt werden.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Richtig",
+     "erkl": "Diese schwerste Disziplinarmaßnahme kann die Behörde nicht selbst verfügen, sondern nur gerichtlich durchsetzen.",
+     "quelle": "VAk-Quiz · Frage 59"
+    },
+    {
+     "typ": "mc",
+     "frage": "Ein Beamter trägt bei einer privaten politischen Veranstaltung seine Dienstuniform ohne vorherige Abstimmung. Welche Rechtsgrundlagen sind für die Prüfung eines Dienstvergehens einschlägig?",
+     "optionen": [
+      "§ 33 Abs. 2 BeamtStG (Mäßigungsgebot) i.V.m. § 47 Abs. 1 BeamtStG (Dienstvergehen)",
+      "§ 12 BeamtStG (Eidesleistung)",
+      "§ 60 BeamtStG (Streikverbot)",
+      "§ 42 BeamtStG (Nebentätigkeit)"
+     ],
+     "richtig": "§ 33 Abs. 2 BeamtStG (Mäßigungsgebot) i.V.m. § 47 Abs. 1 BeamtStG (Dienstvergehen)",
+     "erkl": "§ 33 Abs. 2 BeamtStG verpflichtet Beamte zur Mäßigung und Zurückhaltung – das Tragen der Dienstuniform bei politischen Veranstaltungen verletzt diese Pflicht. § 47 Abs. 1 BeamtStG definiert die schuldhafte Verletzung von Dienstpflichten als Dienstvergehen.",
+     "quelle": "VAk-Quiz · Frage 79"
+    }
+   ],
+   "auftrag": {
+    "wer": "Dozent",
+    "text": "Beamten- und Disziplinarrecht. Das betrifft Sie alle persönlich. Los geht es."
+   },
+   "ende": {
+    "gut": "Rechte und Pflichten im Dienst sind klar.",
+    "schlecht": "Bei Rechten und Pflichten ist noch nicht alles klar."
+   },
+   "licht": "tag"
+  },
+  {
+   "titel": "Vollstreckung und Rechtsschutz",
+   "steckbrief": "Zwangsmittel, Widerspruch, Klage.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Was ist der wesentliche Unterschied zwischen Verwaltungsvollstreckung und Sofortvollzug?",
+     "optionen": [
+      "Es gibt keinen Unterschied",
+      "Der Sofortvollzug kann ohne vorherigen Verwaltungsakt erfolgen",
+      "Die Verwaltungsvollstreckung ist nur für Steuerschulden möglich",
+      "Der Sofortvollzug darf nur bei Notstand angewendet werden"
+     ],
+     "richtig": "Der Sofortvollzug kann ohne vorherigen Verwaltungsakt erfolgen",
+     "erkl": "§ 6 II VwVG: Der Sofortvollzug ist zulässig, wenn die vorherige Bekanntgabe eines Verwaltungsakts den Zweck der Maßnahme vereiteln würde.",
+     "quelle": "VAk-Quiz · Frage 37"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Zwangsmittel kennt das Verwaltungsvollstreckungsrecht typischerweise?",
+     "optionen": [
+      "Bußgeld, Freiheitsentzug, Enteignung",
+      "Zwangsgeld, Ersatzvornahme, unmittelbarer Zwang",
+      "Ordnungsstrafe, Hausverbot, Verwarnung",
+      "Verwarnungsgeld, Bußgeld, Verhaftung"
+     ],
+     "richtig": "Zwangsgeld, Ersatzvornahme, unmittelbarer Zwang",
+     "erkl": "Nach dem Bundes-VwVG: Ersatzvornahme (§ 10), Zwangsgeld (§ 11), unmittelbarer Zwang (§ 12), zusammengefasst in § 9 VwVG.",
+     "quelle": "VAk-Quiz · Frage 36"
+    },
+    {
+     "typ": "multi",
+     "frage": "Ein Verwaltungsakt soll mit Zwang durchgesetzt werden. In welchen Fällen ist das möglich?",
+     "optionen": [
+      "Eine aufschiebende Wirkung ist nicht möglich",
+      "Der Verwaltungsakt ist unanfechtbar",
+      "Die sofortige Vollziehung ist angeordnet",
+      "Der Widerspruch ist noch nicht entschieden",
+      "Ein Dritter hat den Verstoß angezeigt"
+     ],
+     "richtig": [
+      "Der Verwaltungsakt ist unanfechtbar",
+      "Die sofortige Vollziehung ist angeordnet",
+      "Eine aufschiebende Wirkung ist nicht möglich"
+     ],
+     "erkl": "Ein mit Zwang durchzusetzender Verwaltungsakt muss unanfechtbar sein, seine sofortige Vollziehung muss angeordnet sein oder es darf keine aufschiebende Wirkung möglich sein. Ein offener Widerspruch hat dagegen aufschiebende Wirkung (§ 80 Abs. 1 VwGO).",
+     "quelle": "Allgemeines Verwaltungsrecht: Verwaltungsvollstreckung (v-vak-verwaltungsrecht)"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Wirkung hat ein Widerspruch gegen einen belastenden Verwaltungsakt?",
+     "optionen": [
+      "Keine",
+      "Er verzögert die Zustellung",
+      "Er hat aufschiebende Wirkung",
+      "Er macht den Verwaltungsakt nichtig"
+     ],
+     "richtig": "Er hat aufschiebende Wirkung",
+     "erkl": "So § 80 I VwGO.",
+     "quelle": "VAk-Quiz · Frage 39"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie kann sich der Adressat gegen die Anordnung der sofortigen Vollziehung wehren?",
+     "optionen": [
+      "Mit Dienstaufsichtsbeschwerde",
+      "Mit Gegenvorstellung bei der Behörde",
+      "Mit Eilantrag beim Verwaltungsgericht",
+      "Mit Antrag beim Bundesverfassungsgericht"
+     ],
+     "richtig": "Mit Eilantrag beim Verwaltungsgericht",
+     "erkl": "So § 80 V VwGO.",
+     "quelle": "VAk-Quiz · Frage 41"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie kann ein VA trotz eingelegten Widerspruchs vollzogen werden?",
+     "optionen": [
+      "Gar nicht – der Widerspruch hat immer unüberwindliche aufschiebende Wirkung",
+      "Durch Anordnung des sofortigen Vollzugs mit schriftlicher Begründung nach § 80 Abs. 2 Nr. 4 VwGO",
+      "Durch eine einfache mündliche Anweisung des Vorgesetzten",
+      "Durch Verwirkung des Widerspruchsrechts nach drei Tagen"
+     ],
+     "richtig": "Durch Anordnung des sofortigen Vollzugs mit schriftlicher Begründung nach § 80 Abs. 2 Nr. 4 VwGO",
+     "erkl": "§ 80 Abs. 2 Nr. 4 VwGO ermöglicht die Anordnung des sofortigen Vollzugs. Sie muss schriftlich erfolgen und besonders begründet werden, damit die aufschiebende Wirkung des Widerspruchs entfällt.",
+     "quelle": "VAk-Quiz · Frage 76"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was muss vor dem Einsatz von Zwangsmitteln vorliegen?",
+     "optionen": [
+      "Eine richterliche Genehmigung",
+      "Ein Gesetz zur Anordnung",
+      "Ein wirksamer Verwaltungsakt, der nicht befolgt wird",
+      "Eine Anzeige durch Dritte"
+     ],
+     "richtig": "Ein wirksamer Verwaltungsakt, der nicht befolgt wird",
+     "erkl": "So § 6 I VwVG des Bundes beziehungsweise § 55 I VwVG NRW.",
+     "quelle": "VAk-Quiz · Frage 38"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Zwangsmittel nennt § 9 Abs. 1 VwVG zur Durchsetzung eines Verwaltungsaktes?",
+     "optionen": [
+      "Bußgeld, Strafanzeige, Zwangshaft",
+      "Zwangsgeld, Ersatzvornahme, unmittelbarer Zwang",
+      "Ordnungsgeld, Einspruch, Vollziehung",
+      "Bußgeld, Ersatzvornahme, Freiheitsstrafe"
+     ],
+     "richtig": "Zwangsgeld, Ersatzvornahme, unmittelbarer Zwang",
+     "erkl": "§ 9 Abs. 1 VwVG nennt abschließend drei Zwangsmittel: Zwangsgeld, Ersatzvornahme und unmittelbarer Zwang.",
+     "quelle": "VAk-Quiz · Frage 75"
+    }
+   ],
+   "auftrag": {
+    "wer": "Dozentin",
+    "text": "Draußen regnet es, drinnen geht es um Zwang: Vollstreckung und Rechtsschutz."
+   },
+   "ende": {
+    "gut": "Zwangsmittel und Rechtsbehelfe sind sauber auseinandergehalten.",
+    "schlecht": "Zwangsmittel und Rechtsbehelfe gehen noch durcheinander."
+   },
+   "licht": "regen"
+  },
+  {
+   "titel": "Gemischte Klausur",
+   "steckbrief": "Alles durcheinander, wie in der Prüfung.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Welches Kriterium gehört nicht zur Verhältnismäßigkeitsprüfung?",
+     "optionen": [
+      "Legitimer Zweck",
+      "Geeignetheit",
+      "Rechtmäßigkeit",
+      "Angemessenheit"
+     ],
+     "richtig": "Rechtmäßigkeit",
+     "erkl": "Die Prüfung umfasst legitimen Zweck, Geeignetheit, Erforderlichkeit und Angemessenheit. Die Rechtmäßigkeit ist keine eigene Stufe, sondern das Ergebnis der Prüfung.",
+     "quelle": "VAk-Quiz · Frage 14"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche der folgenden Institutionen gehört nicht zu den (ständigen) Verfassungsorganen der Bundesrepublik Deutschland?",
+     "optionen": [
+      "Der Bundesrat",
+      "Der Bundespräsident",
+      "Das Bundesverfassungsgericht",
+      "Die Bundesversammlung"
+     ],
+     "richtig": "Die Bundesversammlung",
+     "erkl": "Zu den fünf ständigen Verfassungsorganen zählen Bundestag, Bundesrat, Bundesregierung, Bundespräsident und Bundesverfassungsgericht. Die Bundesversammlung tritt nur bei Bedarf zur Präsidentenwahl zusammen.",
+     "quelle": "VAk-Quiz · Frage 19"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Aussage zur Konkurrenzgesetzgebung ist korrekt?",
+     "optionen": [
+      "Der Bund darf nur tätig werden, wenn die Länder zustimmen",
+      "Die Länder sind zuständig, bis der Bund tätig wird",
+      "Der Bund ist immer zuständig",
+      "Konkurrenzgesetzgebung betrifft nur das Steuerrecht"
+     ],
+     "richtig": "Die Länder sind zuständig, bis der Bund tätig wird",
+     "erkl": "Das folgt aus Art. 72 I GG: Die Länder haben die Gesetzgebungsbefugnis, solange und soweit der Bund von seiner Zuständigkeit nicht durch Gesetz Gebrauch gemacht hat.",
+     "quelle": "VAk-Quiz · Frage 16"
+    },
+    {
+     "typ": "mc",
+     "frage": "Bei einer Anscheinsgefahr muss die Feuerwehr ihre Maßnahmen sofort einstellen, sobald sich herausstellt, dass keine konkrete Gefahr vorliegt.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Richtig",
+     "erkl": "Richtig. Ergibt die Erkundung, dass keine konkrete Gefahr besteht, handelt es sich um eine Anscheinsgefahr – alle Maßnahmen sind unverzüglich einzustellen.",
+     "quelle": "VAk-Quiz · Frage 71"
+    },
+    {
+     "typ": "mc",
+     "frage": "Der Bundeskanzler beziehungsweise die Bundeskanzlerin vertritt im Falle der Verhinderung den Bundespräsidenten.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Falsch",
+     "erkl": "Das übernimmt nach Art. 57 GG der Präsident des Bundesrates.",
+     "quelle": "VAk-Quiz · Frage 7"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was ist vor dem Erlass eines belastenden Verwaltungsaktes grundsätzlich erforderlich?",
+     "optionen": [
+      "Die Veröffentlichung im Amtsblatt",
+      "Die Genehmigung durch das Bundesministerium",
+      "Die Anhörung des Betroffenen",
+      "Die Zustimmung des Landtages"
+     ],
+     "richtig": "Die Anhörung des Betroffenen",
+     "erkl": "So § 28 I VwVfG.",
+     "quelle": "VAk-Quiz · Frage 26"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche Möglichkeiten hat der Bundesrat im zweiten Durchgang (Art. 77 Abs. 2 ff. GG)?",
+     "optionen": [
+      "Er kann das Gesetz endgültig und unüberwindlich ablehnen",
+      "Er kann zustimmen, Einspruch einlegen oder den Vermittlungsausschuss anrufen",
+      "Er hat in dieser Phase keine Mitwirkungsrechte",
+      "Er leitet das Gesetz zur Prüfung an das BVerfG weiter"
+     ],
+     "richtig": "Er kann zustimmen, Einspruch einlegen oder den Vermittlungsausschuss anrufen",
+     "erkl": "Im 2. Durchgang kann der Bundesrat zustimmen, Einspruch einlegen oder den Vermittlungsausschuss anrufen (Art. 77 II ff. GG). Ein absolutes Veto hat er nur bei Zustimmungsgesetzen; bei Einspruchsgesetzen kann der Bundestag den Einspruch überstimmen.",
+     "quelle": "VAk-Quiz · Frage 83"
+    },
+    {
+     "typ": "mc",
+     "frage": "Gemeinderäte sind Bestandteile der vollziehenden Gewalt.",
+     "optionen": [
+      "Richtig",
+      "Falsch"
+     ],
+     "richtig": "Richtig",
+     "erkl": "Trotz parlamentsähnlicher Struktur gehört die kommunale Selbstverwaltung nach Art. 28 II GG organisatorisch zur Exekutive, da es auf kommunaler Ebene keine eigene Gewaltenteilung gibt.",
+     "quelle": "VAk-Quiz · Frage 4"
+    }
+   ],
+   "auftrag": {
+    "wer": "Prüfungsvorsitzender",
+    "text": "Guten Abend. Dies ist die gemischte Klausur. Alles kann drankommen."
+   },
+   "ende": {
+    "gut": "Die Klausur ist bestanden.",
+    "schlecht": "Die Klausur ist noch nicht bestanden. Sie dürfen wiederholen."
+   },
+   "licht": "abend"
+  },
+  {
+   "titel": "Planspiel: Zufahrt versperrt",
+   "steckbrief": "Im Hörsaal führen Sie als Sachbearbeiter ein Verwaltungsverfahren von der Anhörung bis zur Vollstreckung.",
+   "licht": "tag",
+   "szenario": true,
+   "auftrag": {
+    "wer": "Frau Dr. Albrecht, Dozentin und Spielleiterin",
+    "p": "p1",
+    "text": "Heute spielen wir ein ganzes Verfahren durch. Sie sind Sachbearbeiter der Behörde, Herr Brandt spielt den Betreiber eines Lagers und Frau Öztürk Ihre Amtsleiterin. Die Firma lagert Paletten in einer Feuerwehrzufahrt. Führen Sie das Verfahren so, dass es rechtlich hält."
+   },
+   "lage": {
+    "name": "Verfahren rechtssicher",
+    "start": 60
+   },
+   "ende": {
+    "gut": "Ihr Verfahren hält von der Anhörung bis zur Vollstreckung. Die Dozentin nimmt Ihre Akte als Musterlösung für den Kurs.",
+    "mittel": "Die Zufahrt ist am Ende frei, aber Ihre Akte hat Schwachstellen. Die Dozentin geht die Fehler mit Ihnen einzeln durch.",
+    "schlecht": "Ihr Verfahren hat mehrere Fehler, die Herr Brandt angreifen kann. Die Dozentin lässt das Planspiel wiederholen."
+   },
+   "personen": [
+    {
+     "id": "p1",
+     "name": "Frau Dr. Albrecht",
+     "rolle": "Dozentin und Spielleiterin",
+     "gut": [
+      "So steht es im Gesetz. Weiter.",
+      "Sauber begründet, das hält.",
+      "Genau so führt man ein Verfahren."
+     ],
+     "schlecht": [
+      "Das hält vor Gericht nicht.",
+      "Lesen Sie die Vorschrift bitte noch einmal.",
+      "Hier haben Sie einen Schritt ausgelassen."
+     ]
+    },
+    {
+     "id": "p2",
+     "name": "Herr Brandt",
+     "rolle": "spielt den Betreiber des Lagers",
+     "gut": [
+      "Das gefällt mir nicht, aber es ist korrekt.",
+      "Dagegen kann ich wohl nichts einwenden.",
+      "Gut, das muss ich hinnehmen."
+     ],
+     "schlecht": [
+      "Das lasse ich mir nicht bieten.",
+      "Damit gehe ich zu meinem Anwalt.",
+      "So dürfen Sie mit mir nicht umgehen."
+     ]
+    },
+    {
+     "id": "p3",
+     "name": "Frau Öztürk",
+     "rolle": "spielt die Amtsleiterin",
+     "gut": [
+      "Das zeichne ich so mit.",
+      "Gute Arbeit, die Akte ist rund.",
+      "So kann der Vorgang hinausgehen."
+     ],
+     "schlecht": [
+      "Das kann ich so nicht mitzeichnen.",
+      "Bitte bessern Sie den Vorgang nach.",
+      "Das bringt das Amt in Schwierigkeiten."
+     ]
+    }
+   ],
+   "aufgaben": [
+    {
+     "phase": "Anhörung",
+     "ort": "Reihe 1",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Bei einer Begehung fällt auf: Die Firma von Herrn Brandt lagert Paletten in der Feuerwehrzufahrt. Sie wollen die Räumung anordnen. Eine akute Gefahr besteht im Moment nicht. Was tun Sie zuerst?",
+     "optionen": [
+      {
+       "t": "Herrn Brandt anhören und ihm Gelegenheit zur Äußerung geben",
+       "wert": 2,
+       "folge": "Herr Brandt schildert seine Sicht. Sie kennen jetzt die Tatsachen und das Verfahren ist an dieser Stelle sauber."
+      },
+      {
+       "t": "Den Bescheid gleich erlassen und die Anhörung später nachholen",
+       "wert": 0,
+       "folge": "Das trägt nicht: Die Anhörung gehört vor den Bescheid. Ihr Bescheid hat einen Verfahrensfehler, den Sie erst nachträglich heilen müssen."
+      },
+      {
+       "t": "Auf die Anhörung verzichten, weil die Sachlage eindeutig ist",
+       "wert": 0,
+       "folge": "Schlechte Folge: Herr Brandt rügt, dass ihn niemand gefragt hat. Ihr Bescheid hat einen Verfahrensfehler.",
+       "dann": {
+        "phase": "Heilung",
+        "ort": "Reihe 1",
+        "wer": "p2",
+        "typ": "entscheidung",
+        "frage": "Herr Brandt beschwert sich laut, dass er vor dem Bescheid nicht angehört wurde. Wie begrenzen Sie den Schaden?",
+        "optionen": [
+         {
+          "t": "Die Anhörung jetzt nachholen und seine Äußerung würdigen",
+          "wert": 2,
+          "folge": "Herr Brandt kann sich äußern. Der Verfahrensfehler ist damit geheilt."
+         },
+         {
+          "t": "Ihm den Bescheid noch einmal ausführlich mündlich erklären",
+          "wert": 1,
+          "folge": "Vertretbar, aber mit Nachteil: Er versteht den Bescheid jetzt besser. Angehört wurde er damit aber noch nicht."
+         },
+         {
+          "t": "Erklären, dass eine Anhörung bei klarer Lage stets entfällt",
+          "wert": 0,
+          "folge": "Schlechte Folge: Das stimmt nicht. Der Fehler bleibt bestehen und Herr Brandt hat ein Argument mehr."
+         }
+        ],
+        "erkl": "Erfolgt die Anhörung nicht, kann sie nachgeholt werden. Das ist die Heilung nach § 45 VwVfG.",
+        "quelle": "Allgemeines Verwaltungsrecht: Verwaltungsverfahren (v-vak-verwaltungsrecht) · eigener Übungsfall"
+       }
+      }
+     ],
+     "frist": 60,
+     "erkl": "Ist die Entscheidung für den Bürger belastend, muss er angehört werden (§ 28 VwVfG). Die Anhörung kann etwa bei Gefahr im Verzug unterbleiben (§ 28 Abs. 2 VwVfG). Hier besteht keine akute Gefahr.",
+     "quelle": "Allgemeines Verwaltungsrecht: Verwaltungsverfahren (v-vak-verwaltungsrecht) · eigener Übungsfall"
+    },
+    {
+     "phase": "Ermessen",
+     "ort": "Gesetzessammlung",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Die Norm des Planspiels lautet: Die Behörde kann anordnen, dass Zufahrten für die Feuerwehr freigehalten werden. Herr Brandt hat erklärt, dass er die Lagerfläche braucht. Welche Maßnahme wählen Sie?",
+     "optionen": [
+      {
+       "t": "Die Räumung der Zufahrt mit einer angemessenen Frist anordnen",
+       "wert": 2,
+       "folge": "Die Maßnahme erreicht das Ziel und belastet den Betrieb nur so weit wie nötig."
+      },
+      {
+       "t": "Nur ein mahnendes Gespräch führen und die Lage weiter beobachten",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Das ist sehr mild. Ob die Zufahrt dadurch frei wird, bleibt aber offen."
+      },
+      {
+       "t": "Den gesamten Lagerbetrieb untersagen, bis alles geprüft ist",
+       "wert": 0,
+       "folge": "Schlechte Folge: Das geht weit über das Ziel hinaus. Es gibt ein milderes Mittel, das ebenso geeignet ist."
+      }
+     ],
+     "erkl": "Das Wort „kann“ zeigt Ermessen an. Beim Auswahlermessen muss die Behörde die verhältnismäßige Maßnahme ermitteln: legitimes Ziel, geeignet, erforderlich (bei mehreren geeigneten Mitteln das mildeste) und angemessen.",
+     "quelle": "Einführung in das juristische Denken: Ermessen und Grundsatz der Verhältnismäßigkeit (v-vak-jur-denken) · eigener Übungsfall"
+    },
+    {
+     "phase": "Bescheid",
+     "ort": "Tafel",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "frage": "Frau Öztürk möchte Ihren Entwurf an der Tafel sehen. Wie fassen Sie den schriftlichen Bescheid ab?",
+     "optionen": [
+      {
+       "t": "Bestimmter Tenor, Begründung mit Ermessenserwägungen und Rechtsbehelfsbelehrung",
+       "wert": 2,
+       "folge": "Herr Brandt weiß genau, was er bis wann zu tun hat und wie er sich wehren kann. Frau Öztürk zeichnet mit."
+      },
+      {
+       "t": "Bestimmter Tenor, Begründung mit Ermessenserwägungen, aber keine Belehrung",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Der Entwurf ist unvollständig. Frau Öztürk lässt die Belehrung über Rechtsbehelf und Frist nachtragen."
+      },
+      {
+       "t": "Tenor „Mängel sind zu beseitigen“, dazu eine kurze allgemeine Begründung",
+       "wert": 0,
+       "folge": "Schlechte Folge: Niemand weiß, was genau bis wann zu tun ist. Der Tenor ist nicht hinreichend bestimmt und die Begründung floskelhaft."
+      }
+     ],
+     "frist": 75,
+     "erkl": "Der Tenor muss hinreichend bestimmt sein: Wer, Was, Wann, Wo, Wie (§ 37 Abs. 1 VwVfG). Die Begründung eines schriftlichen Verwaltungsakts nennt die tatsächlichen und rechtlichen Gründe, insbesondere die Ermessensentscheidung (§ 39 VwVfG). Die Rechtsbehelfsbelehrung nennt Art des Rechtsbehelfs und Frist.",
+     "quelle": "Allgemeines Verwaltungsrecht: Der Verwaltungsakt (v-vak-verwaltungsrecht) · eigener Übungsfall"
+    },
+    {
+     "phase": "Widerspruch",
+     "ort": "Reihe 2",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "frage": "Der Bescheid ist bekannt gegeben. Herr Brandt legt Widerspruch ein und lässt die Paletten stehen. Am Wochenende findet nebenan ein großes Fest statt und die Zufahrt wird gebraucht. Was tun Sie?",
+     "optionen": [
+      {
+       "t": "Die sofortige Vollziehung anordnen und schriftlich begründen",
+       "wert": 2,
+       "folge": "Die aufschiebende Wirkung entfällt. Herr Brandt muss den Bescheid befolgen und die Behörde kann vollstrecken."
+      },
+      {
+       "t": "Die Entscheidung über den Widerspruch abwarten und nichts tun",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Sie achten die aufschiebende Wirkung. Die Zufahrt bleibt aber über das Wochenende versperrt."
+      },
+      {
+       "t": "Die Paletten trotz des Widerspruchs noch heute abräumen lassen",
+       "wert": 0,
+       "folge": "Schlechte Folge: Der Widerspruch hat aufschiebende Wirkung. Sie durften nicht vollstrecken und Herr Brandt kündigt den Gang zum Gericht an.",
+       "dann": {
+        "phase": "Korrektur",
+        "ort": "Reihe 2",
+        "wer": "p3",
+        "typ": "entscheidung",
+        "frage": "Frau Öztürk hält den Abtransport an. Die Zufahrt wird am Wochenende weiterhin gebraucht. Wie bringen Sie das Verfahren wieder in Ordnung?",
+        "optionen": [
+         {
+          "t": "Räumung anhalten, sofortige Vollziehung anordnen und begründen",
+          "wert": 2,
+          "folge": "Jetzt steht die Vollstreckung auf einer tragfähigen Grundlage. Die aufschiebende Wirkung ist beseitigt."
+         },
+         {
+          "t": "Räumung anhalten und den Ausgang des Widerspruchs abwarten",
+          "wert": 1,
+          "folge": "Vertretbar, aber mit Nachteil: Der Fehler ist gestoppt. Die Zufahrt bleibt aber über das Wochenende versperrt."
+         },
+         {
+          "t": "Räumung fortsetzen, weil der Bescheid in der Sache richtig ist",
+          "wert": 0,
+          "folge": "Schlechte Folge: Ohne Anordnung der sofortigen Vollziehung darf die Behörde nicht vollstrecken. Der Fehler wird größer."
+         }
+        ],
+        "erkl": "Die Behörde beseitigt die aufschiebende Wirkung durch die Anordnung der sofortigen Vollziehung (§ 80 Abs. 2 Nr. 4 VwGO). Sie muss das besondere öffentliche Interesse schriftlich begründen.",
+        "quelle": "Allgemeines Verwaltungsrecht: Bekanntgabe, Widerspruch und sofortige Vollziehung (v-vak-verwaltungsrecht) · eigener Übungsfall"
+       }
+      }
+     ],
+     "frist": 60,
+     "erkl": "Der Widerspruch hat aufschiebende Wirkung (§ 80 Abs. 1 VwGO): Der Bürger muss den Verwaltungsakt nicht befolgen, die Behörde darf nicht vollstrecken. Die Behörde kann die sofortige Vollziehung anordnen (§ 80 Abs. 2 Nr. 4 VwGO) und muss das besondere öffentliche Interesse schriftlich begründen.",
+     "quelle": "Allgemeines Verwaltungsrecht: Bekanntgabe, Widerspruch und sofortige Vollziehung (v-vak-verwaltungsrecht) · eigener Übungsfall"
+    },
+    {
+     "phase": "Rechtsschutz",
+     "ort": "Reihe 3",
+     "wer": "p2",
+     "typ": "mc",
+     "frage": "Herr Brandt will sich gegen die Anordnung der sofortigen Vollziehung wehren. Welchen Weg hat er?",
+     "optionen": [
+      "Eilantrag beim Verwaltungsgericht auf Wiederherstellung der aufschiebenden Wirkung",
+      "Gegenvorstellung bei der Behörde, die den laufenden Vollzug von selbst unterbricht",
+      "Antrag beim Bundesverfassungsgericht auf Aufhebung der Anordnung der Vollziehung",
+      "Dienstaufsichtsbeschwerde bei der Amtsleitung mit Wirkung für den laufenden Vollzug"
+     ],
+     "richtig": "Eilantrag beim Verwaltungsgericht auf Wiederherstellung der aufschiebenden Wirkung",
+     "erkl": "Der Betroffene beantragt beim Verwaltungsgericht die Wiederherstellung der aufschiebenden Wirkung (§ 80 Abs. 5 VwGO). Das Gericht wägt dabei Vollzugsinteresse und Aussetzungsinteresse ab.",
+     "quelle": "Altklausur: Rechtsschutz, § 80 VwGO (v-vak-altklausur), VAk-Quiz Frage 41 · eigener Übungsfall"
+    },
+    {
+     "phase": "Zwangsmittel",
+     "ort": "Fenster",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Im Planspiel bleibt der Eilantrag ohne Erfolg. Herr Brandt räumt trotzdem nicht. Paletten wegräumen kann auch ein anderer für ihn erledigen. Welches Zwangsmittel wählen Sie?",
+     "optionen": [
+      {
+       "t": "Ersatzvornahme: Ein beauftragter Dritter räumt die Zufahrt frei",
+       "wert": 2,
+       "folge": "Das Räumen ist eine vertretbare Handlung. Ein Unternehmen erledigt sie und die Zufahrt wird frei."
+      },
+      {
+       "t": "Zwangsgeld: Ein Geldbetrag soll ihn zum eigenen Räumen bewegen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Das Zwangsgeld ist für unvertretbare Handlungen gedacht. Die Zufahrt bleibt vorerst versperrt."
+      },
+      {
+       "t": "Unmittelbarer Zwang: Herrn Brandt mit körperlicher Gewalt zwingen",
+       "wert": 0,
+       "folge": "Schlechte Folge: Unmittelbarer Zwang kommt erst in Betracht, wenn die anderen Mittel nicht zum Ziel führen. Die Dozentin bricht die Szene ab."
+      },
+      {
+       "t": "Bußgeld: Herrn Brandt für sein Verhalten nachträglich bestrafen",
+       "wert": 0,
+       "folge": "Schlechte Folge: Die Verwaltungsvollstreckung ist ein Beugemittel und keine Strafe. Ein Bußgeld gehört nicht zu ihren Zwangsmitteln."
+      }
+     ],
+     "erkl": "Die Ersatzvornahme passt bei vertretbaren Handlungen, die ein Dritter vornehmen kann. Das Zwangsgeld ist für unvertretbare Handlungen gedacht. Unmittelbarer Zwang kommt nur in Betracht, wenn die anderen Mittel nicht zum Ziel führen oder untunlich sind.",
+     "quelle": "Allgemeines Verwaltungsrecht: Verwaltungsvollstreckung (v-vak-verwaltungsrecht) · eigener Übungsfall"
+    },
+    {
+     "phase": "Vollstreckung",
+     "ort": "Rednerpult",
+     "wer": "p1",
+     "typ": "reihe",
+     "frage": "Zum Abschluss tragen Sie am Rednerpult vor, wie die Vollstreckung abläuft. Bringen Sie die Schritte in die richtige Reihenfolge.",
+     "optionen": [
+      "Festsetzung des Zwangsmittels",
+      "Durchführung als Realakt",
+      "Vollziehbarer Verwaltungsakt liegt vor",
+      "Androhung des Zwangsmittels"
+     ],
+     "richtig": [
+      "Vollziehbarer Verwaltungsakt liegt vor",
+      "Androhung des Zwangsmittels",
+      "Festsetzung des Zwangsmittels",
+      "Durchführung als Realakt"
+     ],
+     "erkl": "Der durchzusetzende Verwaltungsakt muss unanfechtbar sein oder seine sofortige Vollziehung muss angeordnet sein. Dann folgen Androhung, Festsetzung und Durchführung. Die Durchführung ist ein Realakt.",
+     "quelle": "Allgemeines Verwaltungsrecht: Verwaltungsvollstreckung (v-vak-verwaltungsrecht) · eigener Übungsfall"
+    }
+   ],
+   "eingang": [
+    {
+     "phase": "Nebenmeldung",
+     "ort": "Ausgang",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "nach": 50,
+     "frist": 70,
+     "frage": "Am Ausgang spricht Sie ein Mann an, der für einen Mitbewerber von Herrn Brandt arbeitet. Er möchte wissen, was in der Akte steht. Wie reagieren Sie?",
+     "optionen": [
+      {
+       "t": "Keine Auskunft geben und auf die Verschwiegenheitspflicht hinweisen",
+       "wert": 2,
+       "folge": "Der Mann zieht ab. Aus der Akte ist nichts nach außen gedrungen."
+      },
+      {
+       "t": "Wortlos weitergehen und den Mann am Ausgang einfach stehen lassen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Sie haben nichts verraten. Der Mann hält die Behörde jetzt aber für unhöflich."
+      },
+      {
+       "t": "Kurz berichten, was bei der Begehung der Firma aufgefallen ist",
+       "wert": 0,
+       "folge": "Schlechte Folge: Sie haben Dienstliches weitergegeben. Frau Öztürk spricht Sie auf Ihre Dienstpflichten an."
+      }
+     ],
+     "erkl": "Die Verschwiegenheitspflicht gehört zu den Pflichten der Beamten mit Bezug auf das Amt (§§ 33 ff. BeamtStG).",
+     "quelle": "Öffentliches Dienstrecht: Rechte und Pflichten der Beamten (v-vak-dienstrecht) · eigener Übungsfall"
+    },
+    {
+     "phase": "Nebenmeldung",
+     "ort": "Gesetzessammlung",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "nach": 130,
+     "frist": 70,
+     "frage": "Frau Öztürk reicht eine Anfrage weiter: Ein Bürger hat in einer anderen Sache einen Bescheid mit der Post erhalten. Er fragt, bis wann und in welcher Form er Widerspruch einlegen kann. Was antworten Sie?",
+     "optionen": [
+      {
+       "t": "Ein Monat ab Bekanntgabe; schriftlich, zur Niederschrift oder elektronisch",
+       "wert": 2,
+       "folge": "Der Bürger weiß, woran er ist. Die Auskunft stimmt in Frist und Form."
+      },
+      {
+       "t": "Ein Monat ab Bekanntgabe; zur Form des Widerspruchs sagen Sie ihm nichts",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Frist stimmt. Der Bürger muss wegen der Form aber noch einmal nachfragen."
+      },
+      {
+       "t": "Zwei Wochen ab dem Datum des Bescheids; nur mit eigenhändigem Brief",
+       "wert": 0,
+       "folge": "Schlechte Folge: Frist und Form sind falsch. Frau Öztürk muss die Auskunft richtigstellen."
+      },
+      {
+       "t": "Ein Widerspruch lohne sich nicht; er solle den Bescheid lieber befolgen",
+       "wert": 0,
+       "folge": "Schlechte Folge: Das war keine Auskunft, sondern ein Abwimmeln. Der Bürger beschwert sich bei Frau Öztürk."
+      }
+     ],
+     "erkl": "Nach der Bekanntgabe wird der Verwaltungsakt wirksam, die Widerspruchsfrist beträgt dann einen Monat. Der Widerspruch kann schriftlich, zur Niederschrift oder elektronisch eingelegt werden.",
+     "quelle": "Allgemeines Verwaltungsrecht: Bekanntgabe, Widerspruch und sofortige Vollziehung (v-vak-verwaltungsrecht) · eigener Übungsfall"
+    }
+   ]
+  }
+ ]
+}

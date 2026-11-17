@@ -1,0 +1,199 @@
+{
+  "titel": "Einsatz: Hochwasser an der Else",
+  "steckbrief": "Nach Starkregen tritt die Else über die Ufer, und der Führungsstab muss die Großeinsatzlage von der ersten Meldung bis zur Ablösung führen.",
+  "licht": "regen",
+  "auftrag": {
+    "wer": "p1",
+    "text": "Nach tagelangem Starkregen ist die Else über die Ufer getreten. Mehrere Verbände arbeiten an drei Einsatzstellen, der Landrat hat die Großeinsatzlage festgestellt. Der Führungsstab nimmt jetzt die Arbeit auf, und Sie übernehmen das Sachgebiet S3."
+  },
+  "lage": { "name": "Lage im Griff", "start": 60 },
+  "ende": {
+    "gut": "Der Deich in Auenbruch hat gehalten, und die Räumung lief geordnet. Die Ablösung übernimmt eine klare Lage mit lückenlosem Einsatztagebuch.",
+    "mittel": "Die Lage ist stabil, aber der Stab hat an mehreren Stellen Zeit verloren. Die Ablösung muss einiges nacharbeiten, bevor sie führen kann.",
+    "schlecht": "Meldungen blieben liegen, und Kräfte warteten ohne Führung. Die Ablösung übernimmt eine Lage, die der Stab nicht mehr überblickt."
+  },
+  "personen": [
+    {
+      "id": "p1", "name": "Herr Brandt", "rolle": "Leiter des Stabes",
+      "gut": ["So arbeitet ein Stab.", "Gut, das trägt.", "Danke, damit kommen wir voran."],
+      "schlecht": ["Das kostet uns Zeit.", "So verlieren wir den Überblick.", "Das müssen wir jetzt ausbügeln."]
+    },
+    {
+      "id": "p2", "name": "Frau Kessler", "rolle": "Sachgebiet S2, Lage",
+      "gut": ["Die Lagekarte stimmt wieder.", "Das trage ich sofort ein.", "Jetzt haben alle dasselbe Bild."],
+      "schlecht": ["Dann zeigt die Karte den falschen Stand.", "Mir fehlen dafür die Angaben.", "Das Bild der Lage wird unscharf."]
+    },
+    {
+      "id": "p3", "name": "Herr Ahlers", "rolle": "Einsatzleiter",
+      "gut": ["Einverstanden, so machen wir es.", "Das ist ein klarer Vorschlag.", "Damit kann ich arbeiten."],
+      "schlecht": ["Das überzeugt mich nicht.", "Draußen merkt man das sofort.", "So kann ich das nicht verantworten."]
+    }
+  ],
+  "schritte": [
+    {
+      "phase": "Meldung",
+      "ort": "Leitstelle",
+      "wer": "p2",
+      "typ": "entscheidung",
+      "frage": "Die Großeinsatzlage ist seit zehn Minuten festgestellt. Der Krisenstab ist einberufen, tagt aber noch nicht. Die Leitstelle fragt, wie sie mit der Meldung an die vorgesetzten Stellen umgehen soll. Was veranlassen Sie?",
+      "optionen": [
+        { "t": "Sofortmeldung jetzt absetzen lassen und dafür die qualifizierte Rückmeldung des Einsatzleiters einholen", "wert": 2, "folge": "Die Sofortmeldung geht innerhalb der Frist hinaus. Die vorgesetzten Stellen kennen die Lage." },
+        { "t": "Sofortmeldung jetzt absetzen lassen und die Rückmeldung des Einsatzleiters erst später nachreichen", "wert": 1, "folge": "Vertretbar, aber mit Nachteil: Die Meldung ist pünktlich, doch die vorgesetzte Stelle fragt mehrfach nach und bindet die Leitstelle." },
+        { "t": "Mit der Meldung warten, bis der Krisenstab tagt und das Ausmaß der Schäden vollständig feststeht", "wert": 0, "folge": "Die Frist von 30 Minuten verstreicht. Die vorgesetzte Stelle erfährt aus den Medien von der Großeinsatzlage." }
+      ],
+      "frist": 60,
+      "erkl": "Die Sofortmeldung setzt die Leitstelle spätestens 30 Minuten nach Bekanntwerden eines meldepflichtigen Ereignisses ab, dazu ist eine qualifizierte Rückmeldung des Einsatzleiters erforderlich. Die Großeinsatzlage ist ein meldepflichtiges Ereignis; erst mit Arbeitsaufnahme des Krisenstabes geht die Meldepflicht auf diesen über.",
+      "quelle": "Stabsarbeit: Gliederung des administrativ-organisatorischen Krisenstabs, Meldewesen (v-idf-s53) · eigener Übungsfall"
+    },
+    {
+      "phase": "Lagefeststellung",
+      "ort": "Lagekarte",
+      "wer": "p2",
+      "typ": "entscheidung",
+      "frage": "Zum Stadtteil Auenbruch liegen zwei Meldungen vor, die sich widersprechen. Eine nennt nur überflutete Keller, die andere einen überströmten Deich. Was raten Sie dem Sachgebiet Lage?",
+      "optionen": [
+        { "t": "Lagemeldung aus dem Abschnitt anfordern, beide Meldungen bewerten und dann die Lagekarte ergänzen", "wert": 2, "folge": "Der Abschnitt bestätigt: Der Deich wird überströmt. Die Lagekarte zeigt jetzt den richtigen Schwerpunkt." },
+        { "t": "Die jüngere Meldung in die Lagekarte eintragen und die ältere Meldung ohne Rückfrage streichen", "wert": 1, "folge": "Vertretbar, aber mit Nachteil: Die Karte ist schnell ergänzt, doch niemand weiß, ob der Eintrag stimmt." },
+        { "t": "Die Lagekarte unverändert lassen, bis sich die Lage in Auenbruch von selbst geklärt hat", "wert": 0, "folge": "Der Stab plant weiter mit dem alten Stand. Der überströmte Deich taucht in der Lagebesprechung nicht auf." }
+      ],
+      "erkl": "Zur Lagefeststellung gehört das Beschaffen, Auswerten und Bewerten lagerelevanter Informationen. Das Sachgebiet S2 führt die Lagekarte und die Einsatzübersichten.",
+      "quelle": "Stabsarbeit: Gliederung der operativ-taktischen Einsatzleitung, S2 Lage (v-idf-s52) · eigener Übungsfall"
+    },
+    {
+      "phase": "Beurteilung",
+      "ort": "Leiter des Stabes",
+      "wer": "p1",
+      "typ": "entscheidung",
+      "frage": "In der Lagebesprechung schlägt jemand vor, Auenbruch sofort zu räumen. Alle nicken, niemand nennt eine andere Möglichkeit oder ein Risiko. Sie haben Zweifel. Wie verhalten Sie sich?",
+      "optionen": [
+        { "t": "Zweifel ansprechen und vorschlagen, Fakten, Optionen sowie Risiken und Nutzen kurz durchzugehen", "wert": 2, "folge": "Der Stab prüft zwei Optionen. Die Räumung bleibt, bekommt aber einen sicheren Abmarschweg." },
+        { "t": "Zweifel ansprechen und vorschlagen, die Entscheidung auf die nächste Lagebesprechung zu vertagen", "wert": 1, "folge": "Vertretbar, aber mit Nachteil: Die Bedenken sind auf dem Tisch, doch der Stab verliert Zeit, die in Auenbruch fehlt." },
+        { "t": "Zweifel zurückstellen, weil der Stab sich offenbar einig ist und die Zeit ohnehin drängt", "wert": 0, "folge": "Die Räumung beginnt ohne geprüften Abmarschweg. Die erste Straße steht nach kurzer Zeit unter Wasser." }
+      ],
+      "erkl": "Gruppen neigen dazu, Einstimmigkeit zu erzeugen. Wer die eigene Meinung zurückstellt, trägt zur Illusion der Einstimmigkeit bei, und Informationssuche sowie Risikobewertung bleiben eingeschränkt. Abhilfe schaffen Entscheidungsmodelle wie FOR-DEC: Fakten, Optionen, Risiken und Nutzen, Entscheidung, Ausführung, Kontrolle.",
+      "quelle": "Stabsarbeit: Human Factors in der Stabsarbeit, Schwierigkeit des Entscheidens und FOR-DEC (v-idf-s54) · eigener Übungsfall"
+    },
+    {
+      "phase": "Entschluss",
+      "ort": "Lagetisch",
+      "wer": "p3",
+      "typ": "entscheidung",
+      "frage": "Zwei überörtliche Verbände sind im Anmarsch und noch keinem Abschnitt zugeteilt. Ich will wissen, wohin Sie die Kräfte lenken. Was schlagen Sie vor?",
+      "optionen": [
+        { "t": "Bereitstellungsraum am Messegelände mit Führungseinheit, Tankstelle, Sanitärräumen und Verbindung zur Leitstelle", "wert": 2, "folge": "Die Verbände sammeln sich geordnet und sind als Reserve abrufbar. Die Kräfteübersicht stimmt." },
+        { "t": "Bereitstellungsraum auf einem Schulhof mit Führungseinheit, jedoch ohne Tankstelle und ohne Sanitärräume", "wert": 1, "folge": "Vertretbar, aber mit Nachteil: Die Kräfte sind geführt, doch nach zwei Stunden muss die Versorgung mühsam nachgeholt werden." },
+        { "t": "Beide Verbände direkt nach Auenbruch schicken und am Straßenrand warten lassen, bis ein Auftrag kommt", "wert": 0, "folge": "Die Fahrzeuge stauen sich in der Zufahrt. Niemand weiß, wer wo steht.",
+          "dann": {
+            "phase": "Schadensbegrenzung",
+            "ort": "Lagetisch",
+            "wer": "p3",
+            "typ": "entscheidung",
+            "frage": "Die Fahrzeuge stehen ungeordnet in der Zufahrt nach Auenbruch und blockieren den Abmarschweg. Niemand führt die wartenden Kräfte. Wie ordnen Sie das?",
+            "optionen": [
+              { "t": "Mit S1 einen Bereitstellungsraum festlegen, eine Führungseinheit einsetzen und Lotsen an die Zufahrt stellen", "wert": 2, "folge": "Die Verbände rücken geordnet ab. Der Abmarschweg ist wieder frei." },
+              { "t": "Die Fahrzeuge an den Fahrbahnrand rücken lassen und die Kräfte dort weiter auf ihre Aufträge warten lassen", "wert": 1, "folge": "Vertretbar, aber mit Nachteil: Der Weg ist frei, doch die Kräfte bleiben ohne Führung und ohne Versorgung." },
+              { "t": "Alle wartenden Kräfte ohne Auftrag in den überfluteten Bereich vorrücken lassen, damit die Zufahrt frei wird", "wert": 0, "folge": "Die Kräfte verteilen sich ungeführt im Schadengebiet. Die Kräfteübersicht ist wertlos." }
+            ],
+            "erkl": "Bereitstellungsräume richtet S1 in Absprache mit S3 ein, eine Führungseinheit ist notwendig. Für ortsunkundige Kräfte richtet S1 Lotsenstellen ein.",
+            "quelle": "Stabsarbeit: Gliederung der operativ-taktischen Einsatzleitung, S1 Personal und Innerer Dienst (v-idf-s52) · eigener Übungsfall"
+          }
+        }
+      ],
+      "erkl": "Im Bereitstellungsraum werden Kräfte gesammelt, gegliedert und bereitgestellt oder in Reserve gehalten. S1 und S3 legen ihn gemeinsam fest. Nötig sind eine Führungseinheit, die Versorgung (tankstellennah, sanitäre Einrichtung, Wetterschutz) und die Kommunikationsanbindung zu Einsatzleitung und Leitstelle.",
+      "quelle": "Stabsarbeit: Gliederung der operativ-taktischen Einsatzleitung, S1 und Sieben-Punkte-Plan (v-idf-s52); Begrifflichkeiten (v-idf-s51) · eigener Übungsfall"
+    },
+    {
+      "phase": "Befehl",
+      "ort": "Einsatzleiter",
+      "wer": "p3",
+      "typ": "entscheidung",
+      "frage": "Der Entschluss steht: Der Deich in Auenbruch wird über Nacht gehalten. Der Abschnittsleiter kennt den Deich besser als wir im Stab. Wie fassen Sie den Befehl an den Einsatzabschnitt?",
+      "optionen": [
+        { "t": "Nach Befehlsschema von Lage bis Führung; das Ziel vorgeben und die Ausführung dem Abschnittsleiter überlassen", "wert": 2, "folge": "Der Abschnittsleiter kennt Ziel, Versorgung und Meldewege. Er setzt seine Kräfte dort ein, wo der Deich es verlangt." },
+        { "t": "Nach Befehlsschema von Lage bis Führung; dazu genau vorgeben, welche Einheit an welcher Stelle arbeitet", "wert": 1, "folge": "Vertretbar, aber mit Nachteil: Der Befehl ist vollständig, doch die Vorgaben passen nach zwei Stunden nicht mehr zum Deich." },
+        { "t": "Kurz per Funk den Auftrag „Deich halten bis morgen früh“ geben; alles Weitere regelt der Abschnitt allein", "wert": 0, "folge": "Dem Abschnitt fehlen Angaben zu Versorgung und Meldewegen. In der Nacht gehen Kraftstoff und Sandsäcke aus." }
+      ],
+      "frist": 75,
+      "erkl": "Für die Führung über längere Zeiträume gibt es das Befehlsschema: Lage, Auftrag, Durchführung, Versorgung, Führung und Kommunikation. Je länger ein Befehl gelten soll, desto freier ist er zu formulieren; was der Abschnittsleiter vor Ort besser überblickt, ist zu berücksichtigen.",
+      "quelle": "Stabsarbeit: Gliederung der operativ-taktischen Einsatzleitung, Befehlsschema (v-idf-s52); IdF-Quiz Stabsarbeit, Frage 34 · eigener Übungsfall"
+    },
+    {
+      "phase": "Kontrolle",
+      "ort": "Lagekarte",
+      "wer": "p2",
+      "typ": "entscheidung",
+      "frage": "Der Befehl ist seit einer Stunde draußen. Aus dem Abschnitt Auenbruch kam seither keine Meldung, und auf der Lagekarte steht noch der alte Stand. Was tun Sie?",
+      "optionen": [
+        { "t": "Rückmeldung beim Abschnitt einfordern, die Wirkung der Maßnahmen prüfen und die Lagekarte anpassen lassen", "wert": 2, "folge": "Der Abschnitt meldet: Der Deich hält, eine Sickerstelle wird verbaut. Der Lagevortrag hat einen aktuellen Stand." },
+        { "t": "Bis zur nächsten Lagebesprechung warten und den Abschnittsleiter dann ausführlich nach dem Stand fragen", "wert": 1, "folge": "Vertretbar, aber mit Nachteil: Die Frage wird gestellt, doch bis dahin arbeitet der Stab mit einem veralteten Bild." },
+        { "t": "Den Auftrag auf der Lagekarte als erledigt eintragen lassen, weil bisher kein Problem gemeldet wurde", "wert": 0, "folge": "Die Lagekarte zeigt einen Erfolg, den niemand geprüft hat.",
+          "dann": {
+            "phase": "Schadensbegrenzung",
+            "ort": "Lagekarte",
+            "wer": "p2",
+            "typ": "entscheidung",
+            "frage": "Kurz darauf meldet der Abschnitt: Der Deich wird an einer Stelle durchsickert, die Sandsäcke reichen nicht. Auf der Lagekarte steht der Auftrag als erledigt. Wie geht es weiter?",
+            "optionen": [
+              { "t": "Lage neu feststellen, neu beurteilen und dem Abschnitt einen angepassten Befehl mit Nachschub geben", "wert": 2, "folge": "Die Lagekarte wird berichtigt, der Nachschub rollt. Der Abschnitt bekommt die Sickerstelle in den Griff." },
+              { "t": "Sandsäcke nachschicken lassen und den bisherigen Befehl ansonsten unverändert weiterlaufen lassen", "wert": 1, "folge": "Vertretbar, aber mit Nachteil: Das Material kommt an, doch niemand prüft, ob der alte Entschluss noch zur Lage passt." },
+              { "t": "Den Eintrag stehen lassen und die Meldung erst in der nächsten Lagebesprechung behandeln lassen", "wert": 0, "folge": "Die Sickerstelle wächst. Der Stab erfährt erst vom Schaden, als der Deich an dieser Stelle nachgibt." }
+            ],
+            "erkl": "Der Führungsvorgang nach FwDV 100 ist ein Kreislauf: Auf die Befehlsgebung folgt wieder die Lagefeststellung mit Erkundung und Kontrolle, dann Planung mit Beurteilung und Entschluss und ein neuer Befehl.",
+            "quelle": "Stabsarbeit: Werkzeuge der Stabsarbeit, Entscheidungshilfen (v-idf-s55) · eigener Übungsfall"
+          }
+        }
+      ],
+      "frist": 60,
+      "erkl": "Das Sachgebiet S3 beaufsichtigt und kontrolliert die Einsatzdurchführung. FOR-DEC endet mit dem Check, also der Kontrolle der Maßnahmeneffekte, und zur Stabsarbeit gehört das Einfordern von Rückmeldungen.",
+      "quelle": "Stabsarbeit: Gliederung der operativ-taktischen Einsatzleitung, S3 Einsatz (v-idf-s52); Human Factors, FOR-DEC und Rhythmus der Stabsarbeit (v-idf-s54) · eigener Übungsfall"
+    },
+    {
+      "phase": "Übergabe",
+      "ort": "Leiter des Stabes",
+      "wer": "p1",
+      "typ": "entscheidung",
+      "frage": "Die Ablösung steht im Stabsraum bereit. Der Entschluss zur Räumung von Auenbruch wurde nur mündlich gefasst und steht noch nicht im Einsatztagebuch. Wie übergeben Sie?",
+      "optionen": [
+        { "t": "Entschluss jetzt im Einsatztagebuch eintragen lassen und die Ablösung anhand von Tagebuch und Lagekarte einweisen", "wert": 2, "folge": "Die Ablösung kann jede Entscheidung der Schicht nachlesen. Sie übernimmt mit demselben Bild der Lage." },
+        { "t": "Ablösung mündlich an der Lagekarte einweisen und sie bitten, den Entschluss im Einsatztagebuch nachzutragen", "wert": 1, "folge": "Vertretbar, aber mit Nachteil: Die Ablösung kennt die Lage, doch der Eintrag stammt nun von Personen, die nicht dabei waren." },
+        { "t": "Ablösung mündlich an der Lagekarte einweisen und den Eintrag weglassen, weil die Räumung schon umgesetzt ist", "wert": 0, "folge": "Im Einsatztagebuch fehlt die wichtigste Entscheidung der Schicht. Später kann niemand belegen, wer sie wann getroffen hat." }
+      ],
+      "erkl": "Das Einsatztagebuch ist der urkundliche, chronologische Nachweis der Entscheidungsprozesse, Anordnungen, Informationen und Maßnahmen und dient als gerichtsfeste Dokumentation. Wichtige Einsatzentscheidungen müssen eingetragen werden, und zwar zeitnah.",
+      "quelle": "Stabsarbeit: Gliederung der operativ-taktischen Einsatzleitung, Einsatztagebuch (v-idf-s52); IdF-Quiz Stabsarbeit, Frage 55 · eigener Übungsfall"
+    }
+  ],
+  "eingang": [
+    {
+      "phase": "Nebenmeldung",
+      "ort": "Fachberater",
+      "wer": "p2",
+      "typ": "entscheidung",
+      "nach": 55,
+      "frist": 70,
+      "frage": "Der Fachberater des THW trägt seine Einschätzung zum Deich vor. Er benutzt Fachbegriffe und Abkürzungen, die am Lagetisch niemand einordnen kann. Wie gehen Sie damit um?",
+      "optionen": [
+        { "t": "Nachfragen, die Begriffe erklären lassen und seine Einschätzung in die Beurteilung einbeziehen", "wert": 2, "folge": "Der Stab versteht, wo der Deich gefährdet ist. Alle sprechen über dasselbe." },
+        { "t": "Seine Angaben unverändert notieren und die offenen Begriffe in der nächsten Besprechung klären", "wert": 1, "folge": "Vertretbar, aber mit Nachteil: Nichts geht verloren, doch bis zur Klärung deutet jeder die Angaben anders." },
+        { "t": "Ihn bitten, sich kurz zu fassen, und die Beurteilung ohne seine Einschätzung fortsetzen", "wert": 0, "folge": "Der Stab beurteilt den Deich ohne Fachwissen. Der Fachberater meldet sich nicht mehr zu Wort." }
+      ],
+      "erkl": "Fachfremde Personen im Stab wie Fachberater sind einzubeziehen, und Begrifflichkeiten sind zu erklären. Bei allen Stabsmitgliedern ist ein gemeinsames Situationsbewusstsein sicherzustellen.",
+      "quelle": "Stabsarbeit: Human Factors in der Stabsarbeit, Rhythmus der Stabsarbeit (v-idf-s54) · eigener Übungsfall"
+    },
+    {
+      "phase": "Nebenmeldung",
+      "ort": "Verbindungsperson",
+      "wer": "p1",
+      "typ": "entscheidung",
+      "nach": 125,
+      "frist": 70,
+      "frage": "Der Krisenstab hat inzwischen die Arbeit aufgenommen. Der S5 hat eine Presseinformation zur Räumung fertig und möchte sie sofort herausgeben. Die Verbindungsperson zum Krisenstab steht neben Ihnen. Was raten Sie?",
+      "optionen": [
+        { "t": "Die Presseinformation über die Verbindungsperson mit der BuMA abstimmen und erst dann herausgeben", "wert": 2, "folge": "Krisenstab und Einsatzleitung sprechen mit einer Stimme. Die Bevölkerung erhält eine einheitliche Information." },
+        { "t": "Die Presseinformation zurückhalten und abwarten, bis die BuMA von sich aus danach fragt", "wert": 1, "folge": "Vertretbar, aber mit Nachteil: Es geht nichts Unabgestimmtes hinaus, doch die Information erreicht die Bevölkerung spät." },
+        { "t": "Die Presseinformation durch den S5 sofort herausgeben und den Krisenstab danach unterrichten", "wert": 0, "folge": "Die BuMA hat zeitgleich andere Angaben veröffentlicht. In den Medien stehen zwei verschiedene Sammelstellen." }
+      ],
+      "erkl": "Der S5 der Einsatzleitung untersteht bei eingesetztem Krisenstab der BuMA. Das Meldewesen und die Warnung der Bevölkerung gehen auf den Krisenstab über, die Pressearbeit erfolgt abgestimmt mit der BuMA.",
+      "quelle": "Stabsarbeit: Gliederung des administrativ-organisatorischen Krisenstabs, BuMA und Zusammenarbeit mit der Einsatzleitung (v-idf-s53); IdF-Quiz Stabsarbeit, Frage 38 · eigener Übungsfall"
+    }
+  ]
+}

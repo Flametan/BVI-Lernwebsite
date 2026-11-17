@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Simulationen</title>
+<meta name="theme-color" content="#121212"/>
+<link rel="icon" href="../icons/icon-192.png"/>
+<script>(function(){var m='system';try{m=localStorage.getItem('bvi_theme')||'system';}catch(e){}
+if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if(m!=='system')document.documentElement.setAttribute('data-theme','light');})();</script>
+<link rel="stylesheet" href="../css/fonts.css"/>
+<link rel="stylesheet" href="css/game.css"/>
+</head>
+<body>
+<header class="top">
+  <button id="btn-back" class="ic" aria-label="Zurück" hidden>
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+  </button>
+  <div class="top-t"><p class="kick" id="top-kick">IdF Münster</p><h1 id="top-title">Simulationen</h1></div>
+  <button id="btn-menu" class="ic" aria-label="Pause und Einstellungen" hidden>
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 5v14M15 5v14"/></svg>
+  </button>
+  <div class="stats">
+    <div class="stat"><span class="stat-v" id="st-total">0</span><span class="stat-l">Punkte</span></div>
+    <div class="stat"><span class="stat-v" id="st-serie">0</span><span class="stat-l">Tage in Folge</span></div>
+  </div>
+</header>
+
+<main id="home" class="screen">
+  <p class="daily" id="daily"></p>
+  <h2 class="sec">Training</h2>
+  <div class="grid" id="training"></div>
+  <h2 class="sec">Thema wählen</h2>
+  <div class="grid" id="missions"></div>
+  <h2 class="sec">Abzeichen</h2>
+  <div class="badges" id="badges"></div>
+  <p class="foot"><a href="../index.html" id="app-link">Zur Lern-App</a></p>
+</main>
+
+<main id="rang" class="screen" hidden>
+  <p class="lead">Die Bestenliste bleibt auf diesem Gerät. Mit verschiedenen Namen können mehrere Personen auf einem Gerät gegeneinander antreten.</p>
+  <label class="row name"><span>Dein Name</span><input type="text" id="rang-name" maxlength="20" autocomplete="off" placeholder="Ich"/></label>
+  <h2 class="sec">Prüfung</h2>
+  <ol class="rangl" id="rang-p"></ol>
+  <h2 class="sec">Level</h2>
+  <ol class="rangl" id="rang-l"></ol>
+</main>
+
+<main id="levels" class="screen" hidden>
+  <p class="lead" id="lv-text"></p>
+  <p class="lv-links"><a id="lv-kap" href="../index.html">Im Kapitel nachlesen</a></p>
+  <div class="stufe">
+    <div class="seg" id="lv-stufe" role="radiogroup" aria-label="Schwierigkeit">
+      <button role="radio" data-s="lernen">Lernen</button><button role="radio" data-s="normal">Normal</button><button role="radio" data-s="ernst">Ernstfall</button>
+    </div>
+    <p class="src" id="lv-stufe-t"></p>
+  </div>
+  <div class="lvlist" id="lv-list"></div>
+</main>
+
+<main id="play" class="screen play" hidden>
+  <div class="hud">
+    <p class="hud-s" id="hud-s"></p>
+    <div class="hud-l" id="hud-lage" hidden><span id="hud-lname"></span><div class="hud-lb" role="img" id="hud-lrole"><i id="hud-lbar"></i></div><b id="hud-lwert"></b></div>
+    <ol class="hud-ph" id="hud-ph" hidden></ol>
+    <div class="hud-r"><span class="hud-t" id="hud-time" hidden></span><span id="hud-prog">0 / 0</span><span class="hud-p"><b id="hud-pts">0</b> Punkte</span><span class="hud-c" id="hud-combo" hidden></span></div>
+  </div>
+  <div class="stagewrap">
+    <canvas id="stage" aria-label="3D-Ansicht: Einsatzkraft im Gebäude"></canvas>
+    <p class="info" id="info"></p>
+    <canvas class="karte" id="karte" width="132" height="100" aria-hidden="true" hidden></canvas>
+    <p class="rec" id="rec" hidden><i></i>Aufnahme</p>
+    <p class="fps" id="fps" hidden></p>
+    <section class="coach" id="coach" hidden aria-live="polite">
+      <p class="kick" id="coach-n"></p>
+      <p id="coach-t"></p>
+      <button class="btn" id="coach-x">Überspringen</button>
+    </section>
+    <div class="blitz" id="blitz"></div>
+    <div class="joy" id="joy" aria-hidden="true"><i></i></div>
+    <div class="acts">
+      <button class="btn" id="up" hidden></button>
+      <button class="btn" id="down" hidden></button>
+      <button class="btn pri" id="act" hidden></button>
+    </div>
+    <p class="tip" id="tip"></p>
+    <p class="note" id="note" hidden></p>
+    <section class="brief" id="brief" hidden aria-live="polite">
+      <p class="kick" id="brief-wer"></p>
+      <p id="brief-text"></p>
+      <button class="btn pri" id="brief-ok">Los geht’s</button>
+    </section>
+  </div>
+  <section class="sheet" id="sheet" hidden aria-live="polite">
+    <div class="sheet-h"><h2 id="q-title"></h2><button class="ic" id="q-close" aria-label="Frage schließen">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="q-wer" id="q-wer" hidden></div>
+    <p class="src" id="q-hint" hidden></p>
+    <div class="q-bild" id="q-bild" hidden></div>
+    <div class="opts" id="q-opts"></div>
+    <div class="q-btns"><button class="btn" id="q-tipp" hidden>Tipp zeigen</button><button class="btn pri" id="q-check" hidden>Prüfen</button></div>
+    <div class="fb" id="q-fb" hidden><p id="q-fbt"></p><p class="src" id="q-src"></p><a class="src" id="q-link" target="_blank" rel="noopener" hidden>Im Kapitel nachlesen</a><button class="btn pri" id="q-next">Weiter</button></div>
+  </section>
+  <div class="fade" id="fade"></div>
+  <section class="result" id="menu" hidden>
+    <div class="result-b">
+      <p class="kick">Pause</p>
+      <h2>Einstellungen</h2>
+      <label class="row"><span>Ton</span><input type="checkbox" id="o-ton"/></label>
+      <label class="row"><span>Vibration</span><input type="checkbox" id="o-vib"/></label>
+      <label class="row"><span>Sprachausgabe</span><input type="checkbox" id="o-sprache"/></label>
+      <label class="row"><span>Minikarte</span><input type="checkbox" id="o-karte"/></label>
+      <label class="row"><span>Effekte</span><select id="o-fx"><option value="aus">Aus (am flüssigsten)</option><option value="mittel">Mittel (Lichtschein, Randabdunklung)</option><option value="hoch">Hoch (dazu Tiefenunschärfe)</option></select></label>
+      <label class="row"><span>Grafik</span><select id="o-qual"><option value="auto">Automatisch</option><option value="niedrig">Niedrig (flüssiger)</option><option value="hoch">Hoch (schärfer)</option></select></label>
+      <label class="row"><span>Bildrate anzeigen</span><input type="checkbox" id="o-fps"/></label>
+      <label class="row"><span>Kamera-Empfindlichkeit</span><input type="range" id="o-sens" min="0.5" max="2" step="0.1"/></label>
+      <p class="src">Steuerung: Stick oder WASD laufen · Ziehen dreht die Kamera · E prüfen · Esc Pause. Gamepad: linker Stick laufen, rechter Stick Kamera, A prüfen, Start Pause.</p>
+      <div class="r-btns"><button class="btn" id="m-tut">Einführung zeigen</button><button class="btn" id="m-full">Vollbild</button><button class="btn" id="m-restart">Level neu starten</button><button class="btn" id="m-exit">Zur Übersicht</button><button class="btn pri" id="m-resume">Weiter</button></div>
+    </div>
+  </section>
+  <section class="result" id="nogl" hidden>
+    <div class="result-b"><h2>3D wird nicht unterstützt</h2><p>Dieses Gerät oder dieser Browser kann die 3D-Ansicht (WebGL) nicht starten. Bitte aktualisiere den Browser oder versuche es auf einem anderen Gerät.</p>
+      <div class="r-btns"><button class="btn pri" id="nogl-ok">Zur Übersicht</button></div></div>
+  </section>
+  <section class="result" id="result" hidden>
+    <div class="result-b">
+      <p class="kick" id="r-kick"></p>
+      <h2 id="r-title"></h2>
+      <p class="r-pts"><b id="r-pts">0</b> von <span id="r-max">0</span> Punkten</p>
+      <p id="r-story"></p>
+      <p id="r-note"></p>
+      <p class="r-sum" id="r-sum" hidden></p>
+      <ul class="r-liste" id="r-liste" hidden></ul>
+      <div class="r-badges" id="r-badges"></div>
+      <div class="r-btns"><button class="btn" id="r-again">Nochmal</button><button class="btn" id="r-list">Zur Übersicht</button><button class="btn pri" id="r-next">Nächstes Level</button></div>
+    </div>
+  </section>
+</main>
+
+<script src="vendor/three.min.js"></script>
+<script src="js/core.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/scene.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

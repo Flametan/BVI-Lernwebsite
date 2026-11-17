@@ -1,0 +1,893 @@
+{
+ "mission": "lage",
+ "welt": "lagezentrum",
+ "level": [
+  {
+   "titel": "Grundlagen",
+   "steckbrief": "Im Lagezentrum: Erst die Begriffe klären.",
+   "aufgaben": [
+    {
+     "typ": "multi",
+     "frage": "Wen oder was schützen die Genfer Konventionen von 1949?",
+     "optionen": [
+      "Kombattanten im laufenden Gefecht",
+      "Zivilbevölkerung",
+      "Medizinisches Personal und Einrichtungen",
+      "Kriegsgefangene",
+      "Verwundete und Kranke"
+     ],
+     "richtig": [
+      "Verwundete und Kranke",
+      "Kriegsgefangene",
+      "Zivilbevölkerung",
+      "Medizinisches Personal und Einrichtungen"
+     ],
+     "erkl": "Schutz von Verwundeten und Kranken, Kriegsgefangenen, Zivilbevölkerung, medizinischem Personal und Einrichtungen.",
+     "quelle": "v-idf-z90 · Genfer Konventionen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Welche zwei zentralen Grundsätze nennen die Genfer Konventionen?",
+     "optionen": [
+      "Neutralität und Bündnistreue",
+      "Unterscheidung zwischen Kombattanten und Zivilpersonen sowie Verhältnismäßigkeit der Mittel",
+      "Abschreckung und Vergeltung",
+      "Ressortprinzip und Subsidiarität"
+     ],
+     "richtig": "Unterscheidung zwischen Kombattanten und Zivilpersonen sowie Verhältnismäßigkeit der Mittel",
+     "erkl": "Unterscheidung und Verhältnismäßigkeit.",
+     "quelle": "v-idf-z90 · Genfer Konventionen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Woraus besteht die Gesamtverteidigung?",
+     "optionen": [
+      "Aus ziviler und militärischer Verteidigung",
+      "Aus Bundeswehr und Polizei",
+      "Aus Zivilschutz und Katastrophenschutz",
+      "Aus Bund und Ländern"
+     ],
+     "richtig": "Aus ziviler und militärischer Verteidigung",
+     "erkl": "Gesamtverteidigung = Zivile Verteidigung + Militärische Verteidigung.",
+     "quelle": "v-idf-z90 · Gesamtverteidigung"
+    },
+    {
+     "typ": "multi",
+     "frage": "Was gehört zur Zivilen Verteidigung?",
+     "optionen": [
+      "Versorgung",
+      "Zivilschutz",
+      "Aufrechterhaltung der Staats- und Regierungsfunktion",
+      "Bündnisverteidigung Ausland",
+      "Unterstützung der Streitkräfte"
+     ],
+     "richtig": [
+      "Aufrechterhaltung der Staats- und Regierungsfunktion",
+      "Zivilschutz",
+      "Versorgung",
+      "Unterstützung der Streitkräfte"
+     ],
+     "erkl": "Die vier Säulen der Zivilen Verteidigung.",
+     "quelle": "v-idf-z90 · Gesamtverteidigung"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was ist Zivilschutz?",
+     "optionen": [
+      "Schutz der Bevölkerung vor Kriegseinwirkungen",
+      "Schutz militärischer Anlagen",
+      "Schutz der Staatsgrenzen",
+      "Schutz der Bevölkerung vor Naturkatastrophen"
+     ],
+     "richtig": "Schutz der Bevölkerung vor Kriegseinwirkungen",
+     "erkl": "Zivilschutz = Schutz der Bevölkerung vor Kriegseinwirkungen.",
+     "quelle": "v-idf-z97 · Warnung durch den Bund"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was kennzeichnet den äußeren Notstand?",
+     "optionen": [
+      "Ausfall kritischer Infrastruktur",
+      "Gefahren, bedingt durch auswärtige militärische Aggression",
+      "Gefahren aus der eigenen staatlich-gesellschaftlichen Sphäre",
+      "Naturkatastrophen und schwere Unglücksfälle"
+     ],
+     "richtig": "Gefahren, bedingt durch auswärtige militärische Aggression",
+     "erkl": "Innerer Notstand: Gefahren aus der eigenen staatlich-gesellschaftlichen Sphäre. Äußerer Notstand: auswärtige militärische Aggression.",
+     "quelle": "v-idf-z91 · Notstandsrecht"
+    }
+   ],
+   "auftrag": {
+    "wer": "Lagedienstführer",
+    "text": "Willkommen im Lagezentrum. Bevor es losgeht, klären wir die Grundlagen der zivilen Verteidigung."
+   },
+   "ende": {
+    "gut": "Die Grundlagen sitzen. Du bist bereit für die Lage.",
+    "schlecht": "Bei den Grundlagen gibt es noch Lücken."
+   },
+   "licht": "tag"
+  },
+  {
+   "titel": "Gesamtszenario",
+   "steckbrief": "Die Lage eskaliert in Phasen.",
+   "aufgaben": [
+    {
+     "typ": "reihe",
+     "frage": "Bring die vier Phasen des Gesamtszenarios in die richtige Reihenfolge.",
+     "optionen": [
+      "Hybride Bedrohungen",
+      "Landesverteidigung",
+      "Bündnisverteidigung, Übergang zur Landesverteidigung",
+      "Krise, Aufmarsch an den NATO-Außengrenzen"
+     ],
+     "richtig": [
+      "Hybride Bedrohungen",
+      "Krise, Aufmarsch an den NATO-Außengrenzen",
+      "Bündnisverteidigung, Übergang zur Landesverteidigung",
+      "Landesverteidigung"
+     ],
+     "erkl": "Phase I bis IV sind Eskalationsstufen.",
+     "quelle": "v-idf-z93 · Phasen der Eskalation"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wie lange dauert Phase I (Hybride Bedrohungen) im Gesamtszenario?",
+     "optionen": [
+      "Wenige Wochen",
+      "Mindestens ein Jahr",
+      "Mehrere Jahre in schwankender Intensität",
+      "Mehrere Monate"
+     ],
+     "richtig": "Mehrere Jahre in schwankender Intensität",
+     "erkl": "Phase I: mehrere Jahre in schwankender Intensität.",
+     "quelle": "v-idf-z93 · Phase I"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was kennzeichnet Phase III?",
+     "optionen": [
+      "Aufmarsch zur Abschreckung, erste Fluchtbewegungen",
+      "Aktionen überwiegend im Verborgenen",
+      "Durchbruch bis auf das Gebiet der Bundesrepublik",
+      "Angriff auf die Grenzen des NATO-Bündnisgebietes; die Schwelle zum klassischen Krieg ist überschritten"
+     ],
+     "richtig": "Angriff auf die Grenzen des NATO-Bündnisgebietes; die Schwelle zum klassischen Krieg ist überschritten",
+     "erkl": "Phase III: Bündnisverteidigung und Übergang zur Landesverteidigung.",
+     "quelle": "v-idf-z93 · Phase III"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was geschieht in Phase IV (Landesverteidigung)?",
+     "optionen": [
+      "Militärischer Aufmarsch an den NATO-Außengrenzen",
+      "Desinformationskampagnen und Cyberattacken",
+      "Punktuelle Angriffe, noch keine Kampfhandlungen im Land",
+      "Durchbruch der Verteidigungslinien der NATO bis auf das Gebiet der Bundesrepublik"
+     ],
+     "richtig": "Durchbruch der Verteidigungslinien der NATO bis auf das Gebiet der Bundesrepublik",
+     "erkl": "Phase IV: Kampfhandlungen auf deutschem Territorium.",
+     "quelle": "v-idf-z93 · Phase IV"
+    },
+    {
+     "typ": "multi",
+     "frage": "Was kennzeichnet hybride Bedrohungen?",
+     "optionen": [
+      "Aggressor operiert im Verborgenen",
+      "Ziel ist die Destabilisierung von Gesellschaften",
+      "Offene Kriegserklärung",
+      "Schwelle zum Krieg wird nicht überschritten"
+     ],
+     "richtig": [
+      "Aggressor operiert im Verborgenen",
+      "Schwelle zum Krieg wird nicht überschritten",
+      "Ziel ist die Destabilisierung von Gesellschaften"
+     ],
+     "erkl": "Mehrdimensionales Vorgehen, Beeinflussung der öffentlichen Meinung.",
+     "quelle": "v-idf-z91 · Hybride Bedrohungen"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Schutzgüter nennt das Kapitel bei den Kritischen Infrastrukturen?",
+     "optionen": [
+      "Umwelt",
+      "Mensch",
+      "Volkswirtschaft",
+      "Immateriell",
+      "Militär"
+     ],
+     "richtig": [
+      "Mensch",
+      "Umwelt",
+      "Volkswirtschaft",
+      "Immateriell"
+     ],
+     "erkl": "Schutzgüter: Mensch, Umwelt, Volkswirtschaft, Immateriell.",
+     "quelle": "v-idf-z93 · KRITIS"
+    }
+   ],
+   "auftrag": {
+    "wer": "Warnzentrale",
+    "text": "Es wird Abend, und wir müssen die Bevölkerung warnen. Welche Warnmittel setzen wir ein, und wer löst aus?"
+   },
+   "ende": {
+    "gut": "Die Warnung ist ausgelöst und kommt an.",
+    "schlecht": "Die Warnung hat nicht alle erreicht."
+   },
+   "licht": "abend"
+  },
+  {
+   "titel": "Warnung der Bevölkerung",
+   "steckbrief": "Eine Warnung muss raus.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Warnstufe „Hoch“ (extreme Gefahr): Wann muss gesendet werden?",
+     "optionen": [
+      "Keine Sendeverpflichtung",
+      "Innerhalb von 10 Minuten",
+      "Innerhalb einer Stunde",
+      "Sofort"
+     ],
+     "richtig": "Sofort",
+     "erkl": "Hoch: sofort. Mittel: innerhalb von 10 min. Niedrig: keine Sendeverpflichtung.",
+     "quelle": "v-idf-z97 · Warnstufen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Warnstufe „Mittel“ (Gefahr): Welche Sendeverpflichtung gilt?",
+     "optionen": [
+      "Innerhalb von 30 Minuten",
+      "Keine Sendeverpflichtung",
+      "Innerhalb von 10 Minuten",
+      "Sofort"
+     ],
+     "richtig": "Innerhalb von 10 Minuten",
+     "erkl": "Mittel: innerhalb von 10 min.",
+     "quelle": "v-idf-z97 · Warnstufen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Über welchen Warnkanal läuft Cell Broadcast?",
+     "optionen": [
+      "Mobilfunknetzbetreiber",
+      "Radio und Fernsehen",
+      "Warnmittelbetreiber",
+      "WarnApps"
+     ],
+     "richtig": "Mobilfunknetzbetreiber",
+     "erkl": "Mobilfunknetzbetreiber: Cell Broadcast.",
+     "quelle": "v-idf-z97 · Warnkanäle"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wer warnt die Bevölkerung im Zivilschutz?",
+     "optionen": [
+      "Die Behörden der Länder im Auftrag des Bundes",
+      "Nur das Bundesministerium des Innern",
+      "Die Gemeinden in eigener Zuständigkeit",
+      "Ausschließlich die Bundeswehr"
+     ],
+     "richtig": "Die Behörden der Länder im Auftrag des Bundes",
+     "erkl": "Behörden der Länder warnen im Auftrag des Bundes; das BBK wirkt mit.",
+     "quelle": "v-idf-z97 · Warnung durch den Bund"
+    },
+    {
+     "typ": "reihe",
+     "frage": "Bring den Warnablauf in die richtige Reihenfolge.",
+     "optionen": [
+      "Entscheidung zu warnen",
+      "Warnmeldung erstellen, übermitteln und verbreiten",
+      "Gefahr erkennen und bewerten",
+      "Lage übermitteln",
+      "Bevölkerung empfängt, interpretiert und reagiert"
+     ],
+     "richtig": [
+      "Gefahr erkennen und bewerten",
+      "Entscheidung zu warnen",
+      "Lage übermitteln",
+      "Warnmeldung erstellen, übermitteln und verbreiten",
+      "Bevölkerung empfängt, interpretiert und reagiert"
+     ],
+     "erkl": "Ereignis / Lage → Modulares Warnsystem → Bevölkerung.",
+     "quelle": "v-idf-z97 · Warnablauf"
+    },
+    {
+     "typ": "multi",
+     "frage": "Was gehört nach § 1 Abs. 2 ZSKG zum Zivilschutz?",
+     "optionen": [
+      "Die Aufenthaltsregelung",
+      "Die Bündnisverteidigung",
+      "Die Warnung der Bevölkerung",
+      "Der Schutzbau",
+      "Der Selbstschutz"
+     ],
+     "richtig": [
+      "Der Selbstschutz",
+      "Die Warnung der Bevölkerung",
+      "Der Schutzbau",
+      "Die Aufenthaltsregelung"
+     ],
+     "erkl": "Außerdem: Katastrophenschutz nach § 11, Schutz der Gesundheit, Schutz von Kulturgut.",
+     "quelle": "v-idf-z97 · § 1 ZSKG"
+    }
+   ],
+   "auftrag": {
+    "wer": "Lagedienstführer",
+    "text": "Starkregen im ganzen Land. Kritische Infrastrukturen melden Ausfälle. Verschaff dir am Lagetisch einen Überblick."
+   },
+   "ende": {
+    "gut": "Das Lagebild steht. Die Prioritäten sind gesetzt.",
+    "schlecht": "Das Lagebild ist unvollständig."
+   },
+   "licht": "regen"
+  },
+  {
+   "titel": "Hilfe und Fähigkeiten",
+   "steckbrief": "Kräfte aus anderen Ländern werden gebraucht.",
+   "aufgaben": [
+    {
+     "typ": "reihe",
+     "frage": "Länderübergreifende Hilfe: Bring die ersten Schritte des Ersuchens in die richtige Reihenfolge.",
+     "optionen": [
+      "Abgabe des Unterstützungsangebots an das GMLZ",
+      "Verteilung des Ersuchens durch das GMLZ",
+      "Auswahl und Annahme des Angebots durch den Anforderer",
+      "Prüfung des Ersuchens durch die Innenbehörden",
+      "Freigabe und Weiterleitung durch die Innenbehörde des anfordernden Landes",
+      "Bedarfsanforderung durch die Einsatzleitung vor Ort"
+     ],
+     "richtig": [
+      "Bedarfsanforderung durch die Einsatzleitung vor Ort",
+      "Freigabe und Weiterleitung durch die Innenbehörde des anfordernden Landes",
+      "Verteilung des Ersuchens durch das GMLZ",
+      "Prüfung des Ersuchens durch die Innenbehörden",
+      "Abgabe des Unterstützungsangebots an das GMLZ",
+      "Auswahl und Annahme des Angebots durch den Anforderer"
+     ],
+     "erkl": "Danach: Information der anbietenden Innenbehörde, Information der Einheit, Alarmierung, Anreise, einsatzbereit im Einsatzraum.",
+     "quelle": "v-idf-z94 · Weg des Ersuchens"
+    },
+    {
+     "typ": "mc",
+     "frage": "Fähigkeitsmanagement: Wie lange muss eine Einheit nach dem Eintreffen unabhängig arbeiten können (Autarkie)?",
+     "optionen": [
+      "Die ersten 72 Stunden",
+      "Die ersten 36 Stunden",
+      "Die ersten 12 Stunden",
+      "Die ersten 96 Stunden"
+     ],
+     "richtig": "Die ersten 36 Stunden",
+     "erkl": "Autarkie: die ersten 36 Stunden nach Eintreffen.",
+     "quelle": "v-idf-z94 · Fähigkeitsmanagement"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was ist im Fähigkeitsmanagement die Mindestleistung?",
+     "optionen": [
+      "Eine messbare Größe, z. B. Förderung von Löschwasser über eine Strecke",
+      "Die Mindestdauer des Einsatzes",
+      "Die Mindestzahl an Einsatzkräften",
+      "Der Mindestbetrag der Kostenerstattung"
+     ],
+     "richtig": "Eine messbare Größe, z. B. Förderung von Löschwasser über eine Strecke",
+     "erkl": "Fähigkeiten werden anhand ihrer Leistung beschrieben.",
+     "quelle": "v-idf-z94 · Fähigkeitsmanagement"
+    },
+    {
+     "typ": "multi",
+     "frage": "Welche Vorteile hat das Fähigkeitsmanagement?",
+     "optionen": [
+      "Vergleichbarkeit",
+      "Planungssicherheit",
+      "Effizienz",
+      "Wegfall der Obergrenzen"
+     ],
+     "richtig": [
+      "Vergleichbarkeit",
+      "Effizienz",
+      "Planungssicherheit"
+     ],
+     "erkl": "Vergleichbarkeit, Effizienz, Planungssicherheit.",
+     "quelle": "v-idf-z94 · Fähigkeitsmanagement"
+    },
+    {
+     "typ": "reihe",
+     "frage": "Bring den Regelkreis im Bevölkerungsschutz in die richtige Reihenfolge.",
+     "optionen": [
+      "Nachbereitung",
+      "Ereignis",
+      "Vorbereitung",
+      "Prävention",
+      "Bewältigung"
+     ],
+     "richtig": [
+      "Prävention",
+      "Vorbereitung",
+      "Ereignis",
+      "Bewältigung",
+      "Nachbereitung"
+     ],
+     "erkl": "Nach der Nachbereitung beginnt wieder die Prävention.",
+     "quelle": "v-idf-z91 · Regelkreis im Bevölkerungsschutz"
+    },
+    {
+     "typ": "mc",
+     "frage": "Wer erstellt nach dem ZSKG die bundesweite Risikoanalyse für den Zivilschutz?",
+     "optionen": [
+      "Die NATO",
+      "Jede Gemeinde für sich",
+      "Der Bund im Zusammenwirken mit den Ländern",
+      "Die Hilfsorganisationen"
+     ],
+     "richtig": "Der Bund im Zusammenwirken mit den Ländern",
+     "erkl": "„Der Bund erstellt im Zusammenwirken mit den Ländern eine bundesweite Risikoanalyse für den Zivilschutz.“",
+     "quelle": "v-idf-z92 · ZSKG"
+    }
+   ],
+   "auftrag": {
+    "wer": "Verbindungsoffizier",
+    "text": "Die Länder bitten um Unterstützung, auch die Bundeswehr ist angefragt. Was geht rechtlich, was nicht?"
+   },
+   "ende": {
+    "gut": "Die Hilfe ist rechtssicher auf dem Weg.",
+    "schlecht": "Die Anforderung hängt, weil die Rechtsgrundlage nicht geklärt ist."
+   },
+   "licht": "daemmerung"
+  },
+  {
+   "titel": "Alarmplanung und Bundeswehr",
+   "steckbrief": "Zivile Alarmplanung und Zusammenarbeit mit dem Militär.",
+   "aufgaben": [
+    {
+     "typ": "mc",
+     "frage": "Wer koordiniert die Zivile Alarmplanung (ZAP)?",
+     "optionen": [
+      "Das BBK",
+      "Die Bundeswehr",
+      "Das BMI",
+      "Die Länder"
+     ],
+     "richtig": "Das BMI",
+     "erkl": "Der Bund erlässt die erforderlichen Gesetze, das BMI koordiniert die ZAP.",
+     "quelle": "v-idf-z98 · Zivile Alarmplanung"
+    },
+    {
+     "typ": "mc",
+     "frage": "Was bedeutet das Ressortprinzip in der Zivilen Alarmplanung?",
+     "optionen": [
+      "Jedes Ministerium operiert im eigenen Zuständigkeitsbereich und löst Alarmmaßnahmen aus",
+      "Das BMI entscheidet für alle Ministerien",
+      "Die Länder handeln ohne den Bund",
+      "Die NATO gibt jede Einzelmaßnahme vor"
+     ],
+     "richtig": "Jedes Ministerium operiert im eigenen Zuständigkeitsbereich und löst Alarmmaßnahmen aus",
+     "erkl": "Jedes Ministerium kommuniziert mit seinen nachgeordneten Stellen.",
+     "quelle": "v-idf-z98 · Zivile Alarmplanung"
+    },
+    {
+     "typ": "reihe",
+     "frage": "Zusammenspiel aller Ebenen: Bring sie von oben nach unten in die richtige Reihenfolge.",
+     "optionen": [
+      "Bundesländer",
+      "Bund",
+      "NATO",
+      "Landesbehörden und Kommunen"
+     ],
+     "richtig": [
+      "NATO",
+      "Bund",
+      "Bundesländer",
+      "Landesbehörden und Kommunen"
+     ],
+     "erkl": "NATO gibt Zielvorgaben, der Bund beschließt die Umsetzung, die Länder weisen an, Landesbehörden und Kommunen stellen die Leistung sicher.",
+     "quelle": "v-idf-z98 · Zusammenspiel aller Ebenen"
+    },
+    {
+     "typ": "mc",
+     "frage": "Bei wem liegt die Befehlsgebung im Militärischen Sicherheitsbereich (MSB)?",
+     "optionen": [
+      "Beim Hauptverwaltungsbeamten",
+      "Beim Einsatzleiter der Feuerwehr",
+      "Immer beim Militär",
+      "Bei der Polizei"
+     ],
+     "richtig": "Immer beim Militär",
+     "erkl": "Im MSB liegt die Befehlsgebung immer beim Militär.",
+     "quelle": "v-idf-z99 · Feuerwehren in der Zivilen Verteidigung"
+    },
+    {
+     "typ": "mc",
+     "frage": "Können zivile Feuerwehrkräfte gezwungen werden, in einem MSB zu arbeiten?",
+     "optionen": [
+      "In Friedenszeiten nicht; im Spannungs- oder Verteidigungsfall ist es möglich",
+      "Nur mit Zustimmung des Personalrats",
+      "Ja, jederzeit",
+      "Nein, nie"
+     ],
+     "richtig": "In Friedenszeiten nicht; im Spannungs- oder Verteidigungsfall ist es möglich",
+     "erkl": "In Friedenszeiten nicht, im Spannungs- / Verteidigungsfall möglich.",
+     "quelle": "v-idf-z99 · Feuerwehren in der Zivilen Verteidigung"
+    },
+    {
+     "typ": "multi",
+     "frage": "Was gehört zum bedrohungsangepassten Verhalten?",
+     "optionen": [
+      "Sabotageschutz",
+      "Drohnenschutz (Beobachter und Scanner)",
+      "Freie Fluchtwege (Fahrzeuge in Fluchtrichtung)",
+      "Fahrzeuge dicht nebeneinander aufstellen",
+      "Dislozierte gedeckte Aufstellung"
+     ],
+     "richtig": [
+      "Drohnenschutz (Beobachter und Scanner)",
+      "Sabotageschutz",
+      "Dislozierte gedeckte Aufstellung",
+      "Freie Fluchtwege (Fahrzeuge in Fluchtrichtung)"
+     ],
+     "erkl": "Dazu: Verwendung von ferngeführten und robotischen Systemen.",
+     "quelle": "v-idf-z99 · Feuerwehren in der Zivilen Verteidigung"
+    },
+    {
+     "typ": "multi",
+     "frage": "Wonach können Heimatschutzregimenter ohne Verteidigungs- oder Spannungsfall eingesetzt werden?",
+     "optionen": [
+      "Bündnisverteidigung Ausland",
+      "Innerer Notstand",
+      "Terror – Unterstützung der Polizei",
+      "Amtshilfe"
+     ],
+     "richtig": [
+      "Amtshilfe",
+      "Innerer Notstand",
+      "Terror – Unterstützung der Polizei"
+     ],
+     "erkl": "Amtshilfe, innerer Notstand, Terror (Unterstützung der Polizei).",
+     "quelle": "v-idf-z96 · Heimatschutzregimenter"
+    }
+   ],
+   "auftrag": {
+    "wer": "Lagedienstführer",
+    "text": "Die Nacht war lang. Vor der Übergabe gehen wir das Gesamtszenario noch einmal durch."
+   },
+   "ende": {
+    "gut": "Übergabe mit vollständigem Lagebild. Gute Arbeit.",
+    "schlecht": "Zur Übergabe sind noch Punkte offen."
+   },
+   "licht": "morgen"
+  },
+  {
+   "titel": "Einsatz: Hochwasser an der Aue",
+   "steckbrief": "Ein Hochwasser trifft mehrere Kreise: Sie warnen die Bevölkerung, holen Hilfe aus anderen Ländern und binden die Bundeswehr ein.",
+   "licht": "regen",
+   "szenario": true,
+   "auftrag": {
+    "wer": "Frau Albers, Lagedienstführerin",
+    "p": "p1",
+    "text": "Sie haben heute Dienst im Lagezentrum des Innenministeriums. Seit zwei Tagen regnet es, die Aue führt Hochwasser und drei Kreise melden steigende Pegel. Wir müssen warnen, Hilfe organisieren und den Überblick behalten. Fangen Sie am Lagebild an."
+   },
+   "lage": {
+    "name": "Lage im Griff",
+    "start": 60
+   },
+   "ende": {
+    "gut": "Die Warnung kam rechtzeitig an und die Hilfe aus den anderen Ländern steht im Einsatzraum. Die Wege wurden eingehalten und jeder wusste, wer entscheidet.",
+    "mittel": "Die Lage ist bewältigt, aber an einigen Stellen ging Zeit verloren. Beim nächsten Mal müssen Warnung und Anforderungswege sicherer sitzen.",
+    "schlecht": "Die Warnung kam zu spät und die Hilfe lief an den vorgesehenen Wegen vorbei. Das Lagezentrum hat den Überblick über weite Strecken verloren."
+   },
+   "personen": [
+    {
+     "id": "p1",
+     "name": "Frau Albers",
+     "rolle": "Lagedienstführerin",
+     "gut": [
+      "So behalten wir den Überblick.",
+      "Genau so ist der Weg vorgesehen.",
+      "Gut, das trägt."
+     ],
+     "schlecht": [
+      "Das kostet uns jetzt Zeit.",
+      "So verlieren wir den Überblick.",
+      "Das war nicht der vorgesehene Weg."
+     ]
+    },
+    {
+     "id": "p2",
+     "name": "Herr Yilmaz",
+     "rolle": "Sachbearbeiter Warnung",
+     "gut": [
+      "Die Warnung ist draußen.",
+      "Das passt zur Gefahr.",
+      "So erreichen wir die Menschen."
+     ],
+     "schlecht": [
+      "Damit erreichen wir zu wenige.",
+      "Die Warnung kommt so zu spät.",
+      "Das müssen wir sofort nachbessern."
+     ]
+    },
+    {
+     "id": "p3",
+     "name": "Oberstleutnant Brandt",
+     "rolle": "Verbindungsoffizier der Bundeswehr",
+     "gut": [
+      "Damit können wir arbeiten.",
+      "Das ist rechtlich sauber.",
+      "Einverstanden, so läuft es."
+     ],
+     "schlecht": [
+      "Das gibt die Rechtslage nicht her.",
+      "So kann ich das nicht weitergeben.",
+      "Hier stimmt die Zuständigkeit nicht."
+     ]
+    }
+   ],
+   "aufgaben": [
+    {
+     "phase": "Lagebild",
+     "ort": "Lagebild",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Aus drei Kreisen kommen Meldungen, die sich zum Teil widersprechen. Ein Kreis hat schon seinen Krisenstab einberufen. Womit beginnen Sie im Lagezentrum?",
+     "optionen": [
+      {
+       "t": "Meldungen zu einem Lagebild zusammenführen und die Warnung der Bevölkerung vorbereiten",
+       "wert": 2,
+       "folge": "Nach kurzer Zeit steht ein gemeinsames Bild der drei Kreise. Die Warnzentrale weiß, für welche Gebiete sie Texte vorbereiten muss."
+      },
+      {
+       "t": "Zuerst die Warnung der Bevölkerung vorbereiten und das Lagebild erst danach zusammenführen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Warnzentrale arbeitet ohne gesichertes Bild und muss die Warngebiete später korrigieren."
+      },
+      {
+       "t": "Die Meldungen der Kreise zunächst sammeln und das Lagebild erst zur Morgenlage zusammenführen",
+       "wert": 0,
+       "folge": "Schlechte Folge: Über Stunden weiß niemand, wo die Lage am schlimmsten ist. Warnung und Hilfe laufen zu spät an."
+      }
+     ],
+     "erkl": "Im Regelkreis des Bevölkerungsschutzes gehören zur Bewältigung: Lagebild erstellen, Bevölkerung warnen, Krisenstab einberufen, operativer Einsatz und Krisenkommunikation.",
+     "quelle": "Konzeption Zivile Verteidigung: Regelkreis im Bevölkerungsschutz (v-idf-z91) · eigener Übungsfall"
+    },
+    {
+     "phase": "Warnstufe",
+     "ort": "Warnzentrale",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "frage": "Der Deich bei Auenrode weicht auf und kann jederzeit brechen. Für die Menschen hinter dem Deich besteht extreme Gefahr. Mit welcher Warnstufe geben Sie die Warnung heraus?",
+     "optionen": [
+      {
+       "t": "Warnstufe Hoch, damit die Warnung sofort gesendet werden muss",
+       "wert": 2,
+       "folge": "Die Warnung läuft sofort über die angeschlossenen Kanäle. Die ersten Bewohner verlassen die tief liegenden Straßen."
+      },
+      {
+       "t": "Warnstufe Mittel, damit die Warnung innerhalb von 10 Minuten läuft",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Warnung darf bis zu 10 Minuten auf die Sendung warten. Bei einem drohenden Deichbruch sind das wertvolle Minuten."
+      },
+      {
+       "t": "Warnstufe Niedrig, damit die Bevölkerung zunächst informiert ist",
+       "wert": 0,
+       "folge": "Schlechte Folge: Für eine Gefahreninformation gibt es keine Sendeverpflichtung. Im Radio läuft die Meldung zunächst gar nicht.",
+       "dann": {
+        "phase": "Nachsteuern",
+        "ort": "Warnzentrale",
+        "wer": "p2",
+        "typ": "entscheidung",
+        "frage": "Der Kreis ruft an: Im Radio war noch nichts zu hören und der Deich hält nicht mehr lange. Wie steuern Sie nach?",
+        "optionen": [
+         {
+          "t": "Die Warnung sofort mit Warnstufe Hoch neu herausgeben",
+          "wert": 2,
+          "folge": "Jetzt gilt die sofortige Sendeverpflichtung. Die Warnung läuft, wenn auch später als nötig."
+         },
+         {
+          "t": "Die Warnung mit Warnstufe Mittel neu herausgeben",
+          "wert": 1,
+          "folge": "Vertretbar, aber mit Nachteil: Die Warnung muss erst innerhalb von 10 Minuten gesendet werden. Für extreme Gefahr ist Hoch vorgesehen."
+         },
+         {
+          "t": "Die Meldung stehen lassen und die Sender einzeln anrufen",
+          "wert": 0,
+          "folge": "Schlechte Folge: Die Stufe bleibt falsch und es gibt weiter keine Sendeverpflichtung. Die Anrufe binden die Warnzentrale."
+         }
+        ],
+        "erkl": "Warnstufe Hoch steht für extreme Gefahr und löst die sofortige Sendeverpflichtung aus. Bei Mittel gilt eine Frist von 10 Minuten, bei Niedrig gibt es keine Sendeverpflichtung.",
+        "quelle": "Warnung durch den Bund: Warnstufen (v-idf-z97) · eigener Übungsfall"
+       }
+      }
+     ],
+     "frist": 60,
+     "erkl": "Warnstufe Hoch bedeutet extreme Gefahr, die Sendeverpflichtung gilt sofort. Mittel bedeutet Gefahr mit Sendung innerhalb von 10 Minuten, Niedrig ist eine Gefahreninformation ohne Sendeverpflichtung.",
+     "quelle": "Warnung durch den Bund: Warnstufen (v-idf-z97) · eigener Übungsfall"
+    },
+    {
+     "phase": "Warnkanäle",
+     "ort": "MoWaS-Platz",
+     "wer": "p2",
+     "typ": "multi",
+     "frage": "Die Warnung geht über das Modulare Warnsystem (MoWaS) hinaus. Welche Warnkanäle sind dort bereits angeschlossen?",
+     "optionen": [
+      "Stadtinformationstafeln",
+      "Warn-Apps wie NINA und KATWARN",
+      "Navigationssysteme",
+      "Mobilfunknetzbetreiber mit Cell Broadcast",
+      "Sirenenansteuerung über TETRA",
+      "Radio und Fernsehen"
+     ],
+     "richtig": [
+      "Radio und Fernsehen",
+      "Warn-Apps wie NINA und KATWARN",
+      "Mobilfunknetzbetreiber mit Cell Broadcast",
+      "Stadtinformationstafeln"
+     ],
+     "erkl": "MoWaS erreicht Radio und Fernsehen, Warn-Apps, Kritische Infrastruktur, Mobilfunknetzbetreiber (Cell Broadcast) und Warnmittelbetreiber wie Stadtinformationstafeln. Sirenenansteuerung über TETRA, Digitalradio und Navigationssysteme sind zukünftige Module.",
+     "quelle": "Warnung durch den Bund: Modulares Warnsystem und Warnkanäle (v-idf-z97) · eigener Übungsfall"
+    },
+    {
+     "phase": "Anforderung",
+     "ort": "Länder",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Die Einsatzleitung in Auenrode fordert weitere Einheiten zur Wasserförderung an. Im eigenen Land ist nichts mehr frei. Wie bringen Sie das Ersuchen auf den Weg?",
+     "optionen": [
+      {
+       "t": "Das Ersuchen als Innenbehörde freigeben und an das GMLZ weiterleiten",
+       "wert": 2,
+       "folge": "Das GMLZ verteilt das Ersuchen an die anderen Länder. Deren Innenbehörden prüfen, was sie anbieten können."
+      },
+      {
+       "t": "Das Ersuchen freigeben und die Innenbehörden der Nachbarländer einzeln anrufen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Sie erreichen nur wenige Länder und das GMLZ kann das Ersuchen nicht an alle verteilen."
+      },
+      {
+       "t": "Die Einsatzleitung bitten, passende Einheiten im Nachbarland selbst zu alarmieren",
+       "wert": 0,
+       "folge": "Schlechte Folge: Die Innenbehörden beider Länder wissen nichts davon. Die Einheit wartet auf eine Freigabe, die niemand angestoßen hat."
+      }
+     ],
+     "frist": 75,
+     "erkl": "Der Weg bei länderübergreifender Hilfe: Bedarfsanforderung durch die Einsatzleitung vor Ort, Freigabe und Weiterleitung durch die Innenbehörde des anfordernden Landes, Verteilung des Ersuchens durch das GMLZ.",
+     "quelle": "Länderübergreifende Hilfe und Fähigkeitsmanagement: Weg des Ersuchens (v-idf-z94) · eigener Übungsfall"
+    },
+    {
+     "phase": "Angebote",
+     "ort": "BBK",
+     "wer": "p1",
+     "typ": "reihe",
+     "frage": "Das Ersuchen liegt jetzt beim GMLZ. Bringen Sie die weiteren Schritte bis zum Abmarsch der Kräfte in die richtige Reihenfolge.",
+     "optionen": [
+      "Abgabe des Unterstützungsangebots an das GMLZ",
+      "Alarmierung der Kräfte und Inmarschsetzung",
+      "Information der anbietenden Innenbehörde über die Annahme",
+      "Auswahl und Annahme des Angebots durch den Anforderer",
+      "Prüfung des Ersuchens durch die Innenbehörden",
+      "Verteilung des Ersuchens durch das GMLZ"
+     ],
+     "richtig": [
+      "Verteilung des Ersuchens durch das GMLZ",
+      "Prüfung des Ersuchens durch die Innenbehörden",
+      "Abgabe des Unterstützungsangebots an das GMLZ",
+      "Auswahl und Annahme des Angebots durch den Anforderer",
+      "Information der anbietenden Innenbehörde über die Annahme",
+      "Alarmierung der Kräfte und Inmarschsetzung"
+     ],
+     "erkl": "Nach der Verteilung prüfen die Innenbehörden und geben ihr Angebot an das GMLZ ab. Der Anforderer wählt aus und nimmt an, erst dann werden die anbietende Innenbehörde und die Einheit informiert und die Kräfte alarmiert.",
+     "quelle": "Länderübergreifende Hilfe und Fähigkeitsmanagement: Weg des Ersuchens (v-idf-z94) · eigener Übungsfall"
+    },
+    {
+     "phase": "Aufnahme",
+     "ort": "Lagetisch",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Das Angebot eines anderen Landes ist angenommen, die Einheit ist als voll autark gemeldet und auf dem Marsch. Der Kreis fragt, ab wann er für ihre Versorgung sorgen muss. Was geben Sie vor?",
+     "optionen": [
+      {
+       "t": "Versorgung für die Zeit nach den ersten 36 Stunden im Einsatzraum planen",
+       "wert": 2,
+       "folge": "Der Kreis hat Zeit, Verpflegung und Betriebsstoffe geordnet zu beschaffen. Die Einheit arbeitet ohne Unterbrechung weiter."
+      },
+      {
+       "t": "Versorgung schon ab dem Eintreffen der Einheit im Einsatzraum bereitstellen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Der Kreis bindet in der ersten Phase knappe Logistik für eine Einheit, die sich zunächst selbst versorgt."
+      },
+      {
+       "t": "Keine Versorgung planen, weil die Einheit für den ganzen Einsatz autark ist",
+       "wert": 0,
+       "folge": "Schlechte Folge: Am zweiten Tag gehen der Einheit Verpflegung und Kraftstoff aus. Die Pumpen stehen, bis Nachschub organisiert ist."
+      }
+     ],
+     "erkl": "Im Fähigkeitsmanagement von Bund und Ländern bedeutet Autarkie die Fähigkeit, die ersten 36 Stunden nach Eintreffen unabhängig zu operieren. Danach muss die Versorgung geregelt sein.",
+     "quelle": "Länderübergreifende Hilfe und Fähigkeitsmanagement: Fähigkeitsmanagement (v-idf-z94) · eigener Übungsfall"
+    },
+    {
+     "phase": "Bundeswehr",
+     "ort": "Bundeswehr",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "frage": "Ein Kreis möchte Soldaten für die Deichverteidigung. Der Landrat schlägt vor, dass die Bundeswehr dort gleich einen ganzen Abschnitt in eigener Verantwortung übernimmt. Was raten Sie dem Kreis?",
+     "optionen": [
+      {
+       "t": "Als Amtshilfe über das Kreisverbindungskommando anfordern, die Einsatzleitung bleibt zivil",
+       "wert": 2,
+       "folge": "Die Anforderung läuft über das Kreisverbindungskommando. Die Soldaten verstärken den Deich und die Einsatzleitung des Kreises führt weiter."
+      },
+      {
+       "t": "Als Amtshilfe über das Kreisverbindungskommando anfordern und die Verpflegung der Truppe überlassen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Der Weg stimmt, doch Selbstverpflegung ist bei der Bundeswehr nicht immer gegeben. Der Kreis muss kurzfristig Verpflegung nachorganisieren."
+      },
+      {
+       "t": "Die Bundeswehr anfordern und ihr die Einsatzleitung für den Deichabschnitt übertragen",
+       "wert": 0,
+       "folge": "Schlechte Folge: Die Zuständigkeit ist unklar und die Anforderung bleibt liegen. Die Einsatzleitung muss bei der zivilen Behörde bleiben."
+      }
+     ],
+     "frist": 80,
+     "erkl": "Unterhalb der Einsatzschwelle wird die Bundeswehr als Amtshilfe verwendet. Die Anforderung läuft über das Kreisverbindungskommando (Art. 35 GG) und die Einsatzleitung bleibt bei der zivilen Behörde.",
+     "quelle": "Einsatz der Bundeswehr im Inneren: Umsetzung im Grundgesetz (v-idf-z96), Lernkarte Stabsarbeit: Bundeswehr im Einsatz · eigener Übungsfall"
+    }
+   ],
+   "eingang": [
+    {
+     "phase": "Sirenen",
+     "ort": "Sirene",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "nach": 60,
+     "frist": 70,
+     "frage": "Der Bürgermeister von Auenrode fragt, ob Sie seine Sirenen gleich über MoWaS mit auslösen können. Was antworten Sie?",
+     "optionen": [
+      {
+       "t": "Das geht noch nicht, die Sirenenansteuerung über TETRA ist ein zukünftiges Modul",
+       "wert": 2,
+       "folge": "Der Bürgermeister lässt die Sirenen vor Ort auslösen. Sie ergänzen die Warnung über die anderen Kanäle."
+      },
+      {
+       "t": "Das prüfen wir später, zunächst reichen Radio, Warn-Apps und Cell Broadcast",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Kanäle laufen, doch der Bürgermeister wartet auf eine Antwort und die Sirenen bleiben zunächst stumm."
+      },
+      {
+       "t": "Das geht, die Sirenen laufen mit jeder Warnung über MoWaS von selbst an",
+       "wert": 0,
+       "folge": "Schlechte Folge: Der Bürgermeister verlässt sich darauf und löst nicht selbst aus. In Auenrode heult keine Sirene."
+      }
+     ],
+     "erkl": "Die Sirenenansteuerung über TETRA gehört wie Digitalradio und Navigationssysteme zu den zukünftigen Modulen von MoWaS.",
+     "quelle": "Warnung durch den Bund: Modulares Warnsystem (v-idf-z97) · eigener Übungsfall"
+    },
+    {
+     "phase": "Bundesmittel",
+     "ort": "Lagebild",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "nach": 135,
+     "frist": 70,
+     "frage": "Ein Kreis möchte Ausstattung nutzen, die der Bund für den Zivilschutz vorhält. Der Kämmerer zweifelt, ob das bei einem Hochwasser zulässig ist. Was sagen Sie dem Kreis?",
+     "optionen": [
+      {
+       "t": "Das ist zulässig, sie steht den Ländern auch für den Katastrophenschutz zur Verfügung",
+       "wert": 2,
+       "folge": "Der Kreis setzt die Ausstattung sofort ein. Die Frage ist geklärt und kostet keine weitere Zeit."
+      },
+      {
+       "t": "Das ist wohl zulässig, der Kreis soll aber erst eine schriftliche Bestätigung abwarten",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Ausstattung bleibt stehen, bis die Bestätigung da ist. Das Gesetz regelt die Frage bereits."
+      },
+      {
+       "t": "Das ist nicht zulässig, sie darf nur im Spannungsfall oder Verteidigungsfall genutzt werden",
+       "wert": 0,
+       "folge": "Schlechte Folge: Die Ausstattung bleibt ungenutzt im Lager, obwohl sie am Deich dringend gebraucht wird."
+      }
+     ],
+     "erkl": "Nach § 12 ZSKG stehen Einrichtungen und Vorhaltungen des Bundes für den Zivilschutz den Ländern auch für den Katastrophenschutz zur Verfügung.",
+     "quelle": "Warnung durch den Bund: Hinterlegung der Warnung im ZSKG (v-idf-z97) · eigener Übungsfall"
+    }
+   ]
+  }
+ ]
+}
