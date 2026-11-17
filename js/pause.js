@@ -4,7 +4,7 @@
 ====================================================================== */
 const PAUSE=(function(){
   const D=typeof PAUSE_DATA!=='undefined'?PAUSE_DATA:{allg:{},fw:{},exam:[]};
-  const MKEY='bvi_pause_mode',BKEY='bvi_pause_best';
+  const BKEY='bvi_pause_best';
   const RM=!!(window.matchMedia&&false); // Bewegung reduzieren: Szene ohne Wackeln, weniger Partikel
   const say=m=>{ if(typeof A11Y!=='undefined') A11Y.say(m); };
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -12,11 +12,9 @@ const PAUSE=(function(){
   const rnd=a=>a[Math.floor(Math.random()*a.length)];
   const get=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}};
   const set=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
-  let root=null,cur=null,mode=get(MKEY,'beides'),pushed=false;
+  let root=null,cur=null,pushed=false;
   const best=()=>get(BKEY,{});
   function saveBest(k,v,lower){if(v<=0&&!lower)return false;const b=best();if(b[k]==null||(lower?v<b[k]:v>b[k])){b[k]=v;set(BKEY,b);return true;}return false;}
-  // Inhalte je Umschalter: Allgemeinwissen, Feuerwehrwissen oder beides
-  function pool(key){const a=(D.allg[key]||[]).map(x=>({...x,_k:'Allgemein'})),f=(D.fw[key]||[]).map(x=>({...x,_k:'Feuerwehr'}));return mode==='allg'?a:mode==='fw'?f:a.concat(f);}
   const ICON={
     ladder:'<path d="M7 3v18M17 3v18M7 7h10M7 12h10M7 17h10"/>',
     bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
@@ -27,7 +25,16 @@ const PAUSE=(function(){
     mine:'<circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/>',
     cards:'<rect x="3.5" y="4" width="11" height="16" rx="2"/><path d="m16 7 4.2 1.4a1.5 1.5 0 0 1 1 1.9l-3 8.7"/><path d="M9 9v.01M9 15v.01"/>',
     flame:'<path d="M12 2s5 4.6 5 10a5 5 0 0 1-10 0c0-2.2 1-3.8 2-5 0 2 1 3 2 3 0-3 1-6 1-8z"/>',
-    truck:'<path d="M2 16V8a1 1 0 0 1 1-1h10v9M13 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M6 4h4"/>'
+    truck:'<path d="M2 16V8a1 1 0 0 1 1-1h10v9M13 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M6 4h4"/>',
+    sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/>',
+    tile:'<rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><path d="M15 17h4M17 15v4"/>',
+    order:'<path d="M9 6h11M9 12h11M9 18h11M3.5 5.5l1-1v3M3.2 11.5h2.6l-2.6 3h2.6M3.2 17.2h2.6v1.4H4M3.2 19.9h2.6v-2"/>',
+    blank:'<path d="M4 7h16M4 12h5M13 12h7M4 17h16"/><path d="M9 11v2h4v-2"/>',
+    stack:'<rect x="3" y="14" width="6" height="6" rx="1"/><rect x="9" y="14" width="6" height="6" rx="1"/><rect x="15" y="14" width="6" height="6" rx="1"/><rect x="9" y="8" width="6" height="6" rx="1"/><rect x="3" y="2.5" width="6" height="5.5" rx="1"/>',
+    sudoku:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>',
+    hang:'<path d="M5 21h6M8 21V4h8v3"/><circle cx="16" cy="9.5" r="2.2"/><path d="M16 12v4l-2 3M16 16l2 3"/>',
+    cross:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18M15 9v12M3 15h12"/>',
+    mahjong:'<rect x="3" y="5" width="10" height="14" rx="2"/><path d="M8 5V3.5a1.5 1.5 0 0 1 1.5-1.5H19a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1.5"/><path d="M8 10v4"/>'
   };
   const svg=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
   const GAMES=[
@@ -36,16 +43,29 @@ const PAUSE=(function(){
     ['snake','flame','Einsatzleitung-Snake','Löschzug durchs Feuer steuern · wähle Atemluft und Löschwasser als Herausforderung',()=>SNAKEGAME],
     ['solitaer','cards','Solitär','Klondike mit Flammen, Löschern, Äxten und Leitern · Karten ziehen oder antippen',()=>SOLGAME],
     ['minesweeper','mine','Minesweeper','Brandherde im Dunkeln aufspüren · vier Stufen von Leicht bis Sehr schwer',()=>MSGAME],
-    ['quiz','ladder','Quizleiter','8 Stufen, ein 50:50-Joker – wie weit kommst du?',()=>QUIZL],
-    ['tf','bolt','Wahr oder Falsch','60 Sekunden, so viele Aussagen wie möglich',()=>TF],
-    ['word','grid','Wörter-Raten','Ein Begriff mit 5 Buchstaben, sechs Versuche',()=>WORD],
-    ['num','scale','Mehr oder weniger','Was ist größer? Halte die Serie',()=>NUM],
-    ['mem','pairs','Memory','Finde die Paare mit möglichst wenigen Zügen',()=>MEM]
+    ['tagesfrage','sun','Frage des Tages','Drei Prüfungsfragen, jeden Tag neu und für alle gleich · halte deine Serie',()=>TAGGAME],
+    ['kreuzwort','cross','Kreuzworträtsel','Fachbegriffe, jeden Tag ein neues Rätsel für alle',()=>KWGAME],
+    ['sudoku','sudoku','Sudoku','Drei Stufen · mit Notizen, Tipp und Rückgängig',()=>SUGAME],
+    ['hangman','hang','Galgenmännchen','Fachbegriffe erraten, bevor das Feuer die Leiter erreicht',()=>HMGAME],
+    ['lueckentext','blank','Lückentext-Sprint','60 Sekunden, so viele Lücken wie möglich füllen',()=>LTGAME],
+    ['reihenfolge','order','Reihenfolge bringen','Abläufe in die richtige Reihenfolge sortieren',()=>RFGAME],
+    ['g2048','tile','2048 mit Dienstgraden','Gleiche Dienstgrade verschmelzen · wie weit kommst du?',()=>G48GAME],
+    ['tetris','stack','Tetris Gerätehaus','Fahrzeuge und Geräte stapeln, volle Reihen räumen',()=>TTGAME],
+    ['mahjong','mahjong','Mahjong','Gleiche Feuerwehr-Steine paarweise abräumen',()=>MJGAME]
   ];
-  function bestTxt(k){const b=best()[k];if(b==null)return'';if(k==='minesweeper'){const L=[['sehr','Sehr schwer'],['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']].find(x=>b[x[0]]!=null);return L?`Rekord ${L[1]}: ${Math.floor(b[L[0]]/60)}:${('0'+b[L[0]]%60).slice(-2)}`:'';}return k==='mem'?`Bestwert: ${b} Züge`:k==='quiz'?`Bestwert: Stufe ${b}`:k==='num'?`Beste Serie: ${b}`:k==='word'?`Gelöst: ${b}`:`Bestwert: ${b} Punkte`;}
-  // kurze Untertitel und Rekord-Etiketten für die Kacheln
-  const SHORT={fahrt:'5, 10 oder 15 Fragen, Hilfsfrist',duell:'Zu zweit live, per QR-Code',snake:'Löschzug durchs Feuer steuern',solitaer:'Klondike mit Flammen und Leitern',minesweeper:'Brandherde im Dunkeln aufspüren',quiz:'8 Stufen, ein 50:50-Joker',tf:'60 Sekunden',word:'Begriff mit 5 Buchstaben',num:'Was ist größer?',mem:'Paare finden'};
-  function bestChip(k){const b=best()[k];if(b==null)return'';if(k==='minesweeper'){const L=[['sehr','Sehr schwer'],['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']].find(x=>b[x[0]]!=null);return L?`${L[1]} ${Math.floor(b[L[0]]/60)}:${('0'+b[L[0]]%60).slice(-2)}`:'';}return k==='mem'?`${b} Züge`:k==='quiz'?`Stufe ${b}`:k==='num'?`Serie ${b}`:k==='word'?`${b} gelöst`:`Rekord ${b}`;}
+  const fmtT=s=>Math.floor(s/60)+':'+('0'+s%60).slice(-2);
+  // Rekord-Texte: kurz für die Kachel (chip), lang für Hinweise (txt)
+  function bestChip(k){const b=best()[k];if(b==null)return'';
+    if(k==='minesweeper'){const L=[['sehr','Sehr schwer'],['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']].find(x=>b[x[0]]!=null);return L?`${L[1]} ${fmtT(b[L[0]])}`:'';}
+    if(k==='sudoku'){const L=[['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']].find(x=>b&&b[x[0]]!=null);return L?`${L[1]} ${fmtT(b[L[0]])}`:'';}
+    if(k==='tagesfrage'||k==='kreuzwort')return b&&b.streak?`${b.streak} ${b.streak===1?'Tag':'Tage'} in Folge`:'';
+    if(k==='mahjong')return typeof b==='number'?'Bestzeit '+fmtT(b):'';
+    if(k==='lueckentext')return `${b} in 60 s`;
+    if(k==='reihenfolge'||k==='hangman')return `Serie ${b}`;
+    return `Rekord ${typeof b==='number'?b.toLocaleString('de-DE'):b}`;}
+  const bestTxt=bestChip;
+  // kurze Untertitel für die Kacheln
+  const SHORT={fahrt:'5, 10 oder 15 Fragen, Hilfsfrist',duell:'Zu zweit live, per QR-Code',snake:'Löschzug durchs Feuer steuern',solitaer:'Klondike mit Flammen und Leitern',minesweeper:'Brandherde im Dunkeln aufspüren',tagesfrage:'3 Fragen, jeden Tag neu',kreuzwort:'Jeden Tag ein neues Rätsel',sudoku:'Leicht, Mittel, Schwer',hangman:'Fachbegriffe erraten',lueckentext:'60 Sekunden, Lücken füllen',reihenfolge:'Abläufe sortieren',g2048:'Dienstgrade verschmelzen',tetris:'Fahrzeuge stapeln',mahjong:'Paare abräumen'};
   // Reiter „Simulationen“: führt in das eigene 3D-Spiel unter game/ (eigene Seite, Fortschritt in bvi_game_v1)
   const TKEY='bvi_pause_tab';let ptab=get(TKEY,'spiele');
   const IDF3D=[['begehung','grid','Begehung','Bauteile im Gebäude bestimmen'],['stellungnahme','cards','Stellungnahme','Aus Textbausteinen schreiben'],['stab','duel','Stab','Meldungen zum Sachgebiet bringen'],['presse','bolt','Presse','Statement vor laufender Kamera'],['lage','scale','Lage','Zivile Verteidigung im Lagezentrum'],['ucpm','truck','Hilfeersuchen','Hilfe über die EU anfordern'],['ibk','ladder','IBK','Gespräche und Fragen auf der Wache'],['vak','pairs','VAk','Fragen im Hörsaal'],['feuak','flame','FeuAK','Bedarfsplanung mit Budget']];
@@ -63,94 +83,41 @@ const PAUSE=(function(){
   function hub(){stop();if(ptab==='idf3d')return hub3d();
     const tile=(k,wide)=>{const g=GAMES.find(x=>x[0]===k),chip=bestChip(k);
       return `<button class="pz-tile${wide?' wide':''}${k==='fahrt'?' hero':''}" data-g="${k}" title="${g[3]}" aria-label="${g[2]}. ${g[3]}${chip?'. '+chip:''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${chip?`<span class="pz-bst">${chip}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${SHORT[k]}</small>${k==='fahrt'?`<small class="pz-more">${g[3].split(' · ')[0]}</small>`:''}</span></button>`;};
-    // Einsatzfahrt und Duell immer mit Prüfungsfragen; der Umschalter gilt nur für „Wissen und Rätsel“
     root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Feuerwehr</div>
     <div class="pz-tiles pz-fw">${tile('fahrt',true)}${tile('snake')}${tile('solitaer')}${tile('minesweeper')}${tile('duell')}</div>
     <div class="m-sec pz-sec">Wissen und Rätsel</div>
-    <div class="pz-src"><span>Fragen aus</span><div class="pz-mode" role="tablist" aria-label="Fragen für die weiteren Spiele">${[['allg','Allgemeinwissen'],['fw','Feuerwehr'],['beides','Beides']].map(([k,t])=>`<button data-m="${k}" class="${mode===k?'on':''}">${t}</button>`).join('')}</div></div>
-    <div class="pz-tiles pz-wi">${['quiz','tf','word','num'].map(k=>tile(k)).join('')}${tile('mem',true)}</div></div>`;
+    <div class="pz-tiles pz-wi">${['tagesfrage','kreuzwort','sudoku','hangman','lueckentext','reihenfolge'].map(k=>tile(k)).join('')}</div>
+    <div class="m-sec pz-sec">Klassiker</div>
+    <div class="pz-tiles pz-kl">${['g2048','tetris','mahjong'].map(k=>tile(k)).join('')}</div></div>`;
     tabsOn();
-    root.querySelectorAll('[data-m]').forEach(x=>x.onclick=()=>{mode=x.dataset.m;set(MKEY,mode);hub();});
     root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
   }
+  const LABEL={fahrt:'Prüfungsfragen',duell:'Prüfungsfragen',tagesfrage:'Prüfungsfragen',snake:'Geschicklichkeit',tetris:'Geschicklichkeit',g2048:'Knobelspiel',solitaer:'Kartenspiel',minesweeper:'Knobelspiel',sudoku:'Knobelspiel',mahjong:'Knobelspiel',kreuzwort:'Wissen und Rätsel',hangman:'Wissen und Rätsel',lueckentext:'Wissen',reihenfolge:'Wissen'};
   function open(k){const g=GAMES.find(x=>x[0]===k);if(!g)return;stop();cur=g[4]();
     if(!pushed){try{history.pushState(Object.assign({},history.state,{pz:1}),'');pushed=true;}catch(e){}}
-    root.innerHTML=`<div class="pz-wrap"><div class="pz-head"><button class="pz-back">‹ Alle Spiele</button><span class="pz-center" style="font-size:.78rem">${k==='fahrt'||k==='duell'?'Prüfungsfragen':k==='snake'?'Geschicklichkeit':k==='solitaer'?'Kartenspiel':k==='minesweeper'?'Knobelspiel':mode==='allg'?'Allgemeinwissen':mode==='fw'?'Feuerwehr':'Allgemein + Feuerwehr'}</span></div><div class="pz-body"></div></div>`;
+    root.innerHTML=`<div class="pz-wrap"><div class="pz-head"><button class="pz-back">‹ Alle Spiele</button><span class="pz-center" style="font-size:.78rem">${LABEL[k]||''}</span></div><div class="pz-body"></div></div>`;
     root.querySelector('.pz-back').onclick=toHub;cur.start(root.querySelector('.pz-body'));}
   function stop(){if(cur&&cur.stop)cur.stop();cur=null;}
   function toHub(){if(pushed)history.back();else hub();}
   // Zurück (Browser, Wischgeste, Android) im Spiel: zur Spieleauswahl statt zur Startseite
   // toter pz-Eintrag (Spiel über die Navigation verlassen): beim Zurückgehen überspringen
   window.addEventListener('popstate',e=>{if(!pushed){if(history.state&&history.state.pz&&root&&root.isConnected){e.stopImmediatePropagation();try{history.back();}catch(x){}}return;}pushed=false;if(cur&&root&&root.isConnected){e.stopImmediatePropagation();hub();}},true);
-  const empty=el=>{el.innerHTML='<div class="pz-card"><div class="pz-center">Für diese Auswahl gibt es noch keine Inhalte. Schalte oben auf „Beides“.</div></div>';};
-
-  /* ---------- 1 Quizleiter ---------- */
-  const QUIZL={start(el){const P=pool('quiz');if(P.length<8)return empty(el);
-    const LV=[1,1,2,2,3,4,4,5],used=new Set();let i=0,joker=true;
-    const pick=lv=>{let c=P.filter(q=>q.lvl===lv&&!used.has(q));if(!c.length)c=P.filter(q=>!used.has(q));const q=rnd(c);used.add(q);const ord=shuf([0,1,2,3]);return{...q,o:ord.map(k=>q.o[k]),c:ord.indexOf(q.c)};};
-    let q=pick(LV[0]);
-    const draw=()=>{const L='ABCD';el.innerHTML=`<div class="pz-card"><div class="pz-lbl"><span>Stufe <b>${i+1}/8</b> · ${esc(q._k)}</span><button class="pz-sec2" data-j ${joker?'':'disabled'}>50:50</button></div><div class="pz-ladder">${LV.map((_,k)=>`<i class="${k<=i?'on':''}"></i>`).join('')}</div><div class="pz-qt">${esc(q.q)}</div>${q.o.map((o,k)=>`<button class="pz-opt" data-k="${k}"><i>${L[k]}</i><span>${esc(o)}</span></button>`).join('')}<div class="pz-fbx"></div></div>`;
-      el.querySelector('[data-j]').onclick=e=>{joker=false;e.currentTarget.disabled=true;shuf([0,1,2,3].filter(k=>k!==q.c)).slice(0,2).forEach(k=>el.querySelector(`[data-k="${k}"]`).classList.add('off'));};
-      el.querySelectorAll('.pz-opt').forEach(b=>b.onclick=()=>answer(+b.dataset.k,b));};
-    const answer=(k,b)=>{el.querySelectorAll('.pz-opt').forEach(x=>x.style.pointerEvents='none');el.querySelector('[data-j]').disabled=true;el.querySelector(`[data-k="${q.c}"]`).classList.add('ok');const ok=k===q.c;say(ok?'Richtig':'Falsch');if(!ok)b.classList.add('bad');
-      const fb=el.querySelector('.pz-fbx');fb.innerHTML=`<div class="pz-fb ${ok?'g':'r'}"><b>${ok?'Richtig':'Leider falsch'}</b>${q.e?' – '+esc(q.e):''}</div><button class="pz-pri">${ok?(i<7?'Nächste Stufe':'Zum Ergebnis'):'Ergebnis'}</button>`;
-      fb.querySelector('.pz-pri').onclick=()=>{if(ok&&i<7){i++;q=pick(LV[i]);draw();}else end(ok?8:i);};};
-    const end=n=>{const rec=n>0&&saveBest('quiz',n);el.innerHTML=`<div class="pz-card"><div class="pz-big-n">${n===8?'Geschafft':'Stufe '+n}</div><div class="pz-center">${n===8?'Alle 8 Stufen richtig beantwortet.':n?`Du hast ${n} von 8 Stufen geschafft.`:'Direkt an der ersten Stufe hängen geblieben.'}${rec?' Neuer Bestwert.':''}</div><button class="pz-pri">Neue Runde</button></div>`;el.querySelector('.pz-pri').onclick=()=>QUIZL.start(el);};
-    draw();}};
-
-  /* ---------- 2 Wahr oder Falsch ---------- */
-  const TF={t:0,start(el){const P=shuf(pool('tf'));if(P.length<5)return empty(el);const DUR=60;let left=DUR,score=0,streak=0,n=0,wrong=[],lock=false;
-    clearInterval(this.t);
-    const draw=()=>{const s=P[n%P.length];el.innerHTML=`<div class="pz-card"><div class="pz-lbl"><span>Punkte <b>${score}</b> · Serie <b>${streak}</b></span><b class="pz-tm">${left} s</b></div><div class="pz-bar"><i style="width:${left/DUR*100}%"></i></div><div class="pz-stmt">${esc(s.s)}</div><div class="pz-tf"><button class="pz-opt" data-v="1">Wahr</button><button class="pz-opt" data-v="0">Falsch</button></div></div>`;
-      el.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{if(lock)return;lock=true;const ok=(b.dataset.v==='1')===!!s.a;say(ok?'Richtig':'Falsch');streak=ok?streak+1:0;score+=ok?10+Math.min(streak-1,5)*2:0;if(!ok)wrong.push(s);n++;b.classList.add(ok?'ok':'bad');el.querySelector('.pz-card').classList.add(ok?'pz-flash-ok':'pz-flash-bad');setTimeout(()=>{lock=false;if(left>0)draw();},380);});};
-    const end=()=>{clearInterval(this.t);const rec=saveBest('tf',score);el.innerHTML=`<div class="pz-card"><div class="pz-big-n">${score}</div><div class="pz-center">Punkte · ${n} Aussagen · ${n-wrong.length} richtig${rec?' · neuer Bestwert':''}</div>${wrong.length?`<div class="pz-lbl"><span>Auflösung</span></div><ul class="pz-res">${wrong.slice(0,8).map(w=>`<li>${esc(w.s)}<br><small>${w.a?'Wahr':'Falsch'}${w.e?' – '+esc(w.e):''}</small></li>`).join('')}</ul>`:''}<button class="pz-pri">Nochmal</button></div>`;el.querySelector('.pz-pri').onclick=()=>TF.start(el);};
-    this.t=setInterval(()=>{left--;const t=el.querySelector('.pz-tm'),b=el.querySelector('.pz-bar i');if(t)t.textContent=left+' s';if(b)b.style.width=left/DUR*100+'%';if(left<=0)end();},1000);draw();},
-    stop(){clearInterval(this.t);}};
-
-  /* ---------- 3 Wörter-Raten ---------- */
-  // zweiphasig: erst Grün, dann Gelb nur so oft, wie der Buchstabe im Lösungswort noch übrig ist
-  const wordCols=(g,W)=>{const r=[],n={};for(let c=0;c<5;c++){if(g[c]===W[c])r[c]='gr';else n[W[c]]=(n[W[c]]||0)+1;}for(let c=0;c<5;c++)if(!r[c])r[c]=n[g[c]]>0?(n[g[c]]--,'ye'):'xx';return r;};
-  const WORD={start(el){this.stop();const P=pool('words');if(!P.length)return empty(el);const w=rnd(P),W=w.w;let rows=[],inp='',hint=false,msg='';const KB=['QWERTZUIOP','ASDFGHJKL','YXCVBNM'];
-    const rc=g=>wordCols(g,W);
-    const keyCol=()=>{const m={};rows.forEach(g=>{const r=rc(g);[...g].forEach((ch,c)=>{const k=r[c];if(m[ch]!=='gr')m[ch]=k==='gr'?'gr':(m[ch]==='ye'?'ye':k);});});return m;};
-    const done=()=>rows.at(-1)===W||rows.length>=6;
-    const draw=()=>{const km=keyCol(),fin=done();
-      el.innerHTML=`<div class="pz-card"><div class="pz-lbl"><span>${esc(w._k)} · 5 Buchstaben</span><b>${rows.length}/6</b></div><div class="pz-wg">${Array.from({length:6},(_,r)=>`<div class="pz-wr">${[0,1,2,3,4].map(c=>{const g=rows[r];if(g)return`<div class="pz-wc ${rc(g)[c]}">${g[c]}</div>`;if(r===rows.length&&!fin)return`<div class="pz-wc cur">${inp[c]||''}</div>`;return'<div class="pz-wc"></div>';}).join('')}</div>`).join('')}</div>
-      ${fin?`<div class="pz-fb ${rows.at(-1)===W?'g':'r'}" style="text-align:center"><b>${rows.at(-1)===W?'Richtig: '+W:'Lösung: '+W}</b>${w.h?'<br>'+esc(w.h):''}</div><button class="pz-pri">Neues Wort</button>`
-      :`<div class="pz-center" style="min-height:1.3em">${msg?esc(msg):hint?'Hinweis: '+esc(w.h||'–'):'<button class="pz-sec2" data-h>Hinweis zeigen</button>'}</div><div class="pz-kb">${KB.map((r,i)=>`<div>${i===2?'<button class="w" data-k="ENTER">OK</button>':''}${[...r].map(ch=>`<button class="${km[ch]||''}" data-k="${ch}">${ch}</button>`).join('')}${i===2?'<button class="w" data-k="DEL" aria-label="Löschen">⌫</button>':''}</div>`).join('')}</div>`}</div>`;
-      const p=el.querySelector('.pz-pri');if(p)p.onclick=()=>WORD.start(el);
-      const h=el.querySelector('[data-h]');if(h)h.onclick=()=>{hint=true;draw();};
-      el.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k;key(k);const n=el.querySelector(`[data-k="${k}"]`);if(n)n.focus();});};
-    const key=k=>{if(done())return;msg='';if(k==='DEL')inp=inp.slice(0,-1);else if(k==='ENTER'){if(inp.length<5){msg='Bitte 5 Buchstaben eingeben';}else{rows.push(inp);if(inp===W)saveBest('word',(best().word||0)+1);inp='';}}else if(inp.length<5)inp+=k;draw();};
-    this.kd=e=>{if(!el.isConnected||e.ctrlKey||e.metaKey||e.altKey)return;const t=e.target;if(t&&t.closest&&t.closest('input,textarea,select,[contenteditable]'))return;const k=e.key.toUpperCase();if((k==='ENTER'||k===' ')&&t&&t.closest&&t.closest('button'))return;if(k==='ENTER')key('ENTER');else if(k==='BACKSPACE')key('DEL');else if(/^[A-Z]$/.test(k))key(k);else if(k==='Ä')key('A');};
-    document.addEventListener('keydown',this.kd);draw();},
-    stop(){if(this.kd)document.removeEventListener('keydown',this.kd);}};
-
-  /* ---------- 4 Mehr oder weniger ---------- */
-  // Mit jeder richtigen Antwort liegen die beiden Werte näher beieinander (Verhältnis groß/klein sinkt)
-  const NUM={start(el){const P=pool('num');const isC=x=>/°C/.test(x.cat),val=x=>isC(x)?x.v+273.15:x.v; // °C: Reihenfolge über Kelvin, ohne Prozentanzeige
-    const cats={};P.forEach(x=>{const k=x._k+'|'+x.cat;(cats[k]=cats[k]||[]).push(x);});
-    const pairs=[];Object.values(cats).forEach(a=>{for(let i=0;i<a.length;i++)for(let j=i+1;j<a.length;j++){const x=a[i],y=a[j];const vx=val(x),vy=val(y);if(vx>0&&vy>0&&vx!==vy)pairs.push({a:x,b:y,r:Math.log(Math.max(vx,vy)/Math.min(vx,vy))});}});
-    if(!pairs.length)return empty(el);pairs.sort((p,q)=>q.r-p.r);let streak=0;const used=new Set();
-    const pickPair=()=>{const d=Math.min(1,streak/14),c=pairs.filter(p=>!used.has(p));const L=c.length?c:pairs;const idx=Math.round(d*(L.length-1)),w=Math.max(3,Math.round(L.length*.06));const lo=Math.max(0,idx-w),hi=Math.min(L.length,idx+w+1);const p=L[lo+Math.floor(Math.random()*(hi-lo))];used.add(p);return p;};
-    const round=()=>{const pr=pickPair(),[a,b]=shuf([pr.a,pr.b]);const big=a.v>b.v?0:1,diff=Math.round((Math.exp(pr.r)-1)*100);
-      el.innerHTML=`<div class="pz-card"><div class="pz-lbl"><span>${esc(a.cat)}</span><b>Serie ${streak}</b></div><div class="pz-qt">Was ist größer?</div><div class="pz-hl">${[a,b].map((x,i)=>`<button class="pz-opt" data-i="${i}"><span>${esc(x.n)}</span><b class="v" style="visibility:hidden">${esc(x.f)}</b></button>`).join('')}</div><div class="pz-fbx"></div></div>`;
-      el.querySelectorAll('[data-i]').forEach(btn=>btn.onclick=()=>{const ok=+btn.dataset.i===big;say(ok?'Richtig':'Falsch');el.querySelectorAll('[data-i]').forEach(x=>{x.style.pointerEvents='none';x.querySelector('.v').style.visibility='visible';});btn.classList.add(ok?'ok':'bad');
-        const fb=el.querySelector('.pz-fbx');if(ok){streak++;fb.innerHTML=`<div class="pz-fb g"><b>Richtig</b>${isC(a)?'':' · Unterschied '+diff+' %'}${streak%5===0?' · es wird knapper':''}</div>`;setTimeout(round,1300);}else{const rec=saveBest('num',streak);fb.innerHTML=`<div class="pz-fb r"><b>Serie beendet: ${streak}</b>${rec&&streak?' · neuer Bestwert':''}</div><button class="pz-pri">Neue Serie</button>`;fb.querySelector('.pz-pri').onclick=()=>NUM.start(el);}});};
-    round();}};
-
-  /* ---------- 5 Memory ---------- */
-  const MEM={start(el){const P=pool('pairs');const sets={};P.forEach(x=>{const k=x._k+'|'+x.set;(sets[k]=sets[k]||[]).push(x);});const keys=Object.keys(sets).filter(k=>sets[k].length>=4);if(!keys.length)return empty(el);
-    const sk=rnd(keys),pairs=shuf(sets[sk]).slice(0,6);let cards=shuf(pairs.flatMap((p,i)=>[{k:i,t:p.a},{k:i,t:p.b}])),open=[],found=0,moves=0,busy=false;
-    const draw=()=>{el.innerHTML=`<div class="pz-card"><div class="pz-lbl"><span>${esc(pairs[0].set)}</span><b>Züge ${moves} · ${found}/${pairs.length}</b></div><div class="pz-mg">${cards.map((c,i)=>`<button class="pz-mc ${c.m?'m':open.includes(i)?'h':'d'}" data-i="${i}">${c.m||open.includes(i)?esc(c.t):'?'}</button>`).join('')}</div>${found===pairs.length?`<div class="pz-center">Alle Paare gefunden in ${moves} Zügen${saveBest('mem',moves,true)?' · neuer Bestwert':''}</div><button class="pz-pri">Neues Spiel</button>`:'<div class="pz-center">Zwei Karten aufdecken, die zusammengehören.</div>'}</div>`;
-      const p=el.querySelector('.pz-pri');if(p)p.onclick=()=>MEM.start(el);
-      el.querySelectorAll('.pz-mc').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(busy||open.includes(i)||cards[i].m)return;open.push(i);if(open.length===2){moves++;const[a,c]=open;if(cards[a].k===cards[c].k){cards[a].m=cards[c].m=1;found++;open=[];draw();}else{busy=true;draw();setTimeout(()=>{open=[];busy=false;draw();},950);}}else draw();});};
-    draw();}};
-
   /* ---------- Einsatzfahrt-Duell: Verbindung und Lobby kommen aus js/duell.js (wird erst hier geladen) ---------- */
   const JS={};const loadJs=src=>JS[src]||(JS[src]=new Promise((ok,fail)=>{const x=document.createElement('script');x.src=src;x.onload=ok;x.onerror=()=>{delete JS[src];fail();};document.body.appendChild(x);}));
   const DUELLGAME={start(el){el.innerHTML='<div class="pz-card"><div class="pz-center">Lade Duell …</div></div>';loadJs('js/duell.js').then(()=>{if(cur===DUELLGAME&&el.isConnected)DUELL.start(el,FAHRT,loadJs);}).catch(()=>{el.innerHTML='<div class="pz-card"><div class="pz-center">Das Duell konnte nicht geladen werden. Bitte Verbindung prüfen.</div></div>';});},
     stop(){if(typeof DUELL!=='undefined')DUELL.stop();FAHRT.stop();}};
+  /* ---------- weitere Spiele: je eine eigene Datei, wird erst beim Öffnen geladen ---------- */
+  const lazy=(file,name,get)=>{const o={start(el){el.innerHTML='<div class="pz-card"><div class="pz-center">Lade Spiel …</div></div>';loadJs(file).then(()=>{if(cur===o&&el.isConnected)get().start(el,FAHRT);}).catch(()=>{el.innerHTML='<div class="pz-card"><div class="pz-center">Das Spiel konnte nicht geladen werden. Bitte Verbindung prüfen.</div></div>';});},
+    stop(){try{const g=get();if(g&&g.stop)g.stop();}catch(e){}}};return o;};
+  const TAGGAME=lazy('js/tagesfrage.js','TAGESFRAGE',()=>TAGESFRAGE);
+  const KWGAME=lazy('js/kreuzwort.js','KREUZWORT',()=>KREUZWORT);
+  const SUGAME=lazy('js/sudoku.js','SUDOKU',()=>SUDOKU);
+  const HMGAME=lazy('js/hangman.js','HANGMAN',()=>HANGMAN);
+  const LTGAME=lazy('js/lueckentext.js','LUECKENTEXT',()=>LUECKENTEXT);
+  const RFGAME=lazy('js/reihenfolge.js','REIHENFOLGE',()=>REIHENFOLGE);
+  const G48GAME=lazy('js/g2048.js','G2048',()=>G2048);
+  const TTGAME=lazy('js/tetris.js','TETRIS',()=>TETRIS);
+  const MJGAME=lazy('js/mahjong.js','MAHJONG',()=>MAHJONG);
   /* ---------- Einsatzleitung-Snake: Spielcode kommt aus js/snake.js (wird erst hier geladen) ---------- */
   /* ---------- Minesweeper: Spielcode kommt aus js/minesweeper.js (wird erst hier geladen) ---------- */
   const MSGAME={start(el){el.innerHTML='<div class="pz-card"><div class="pz-center">Lade Spiel …</div></div>';loadJs('js/minesweeper.js').then(()=>{if(cur===MSGAME&&el.isConnected)MINESWEEPER.start(el);}).catch(()=>{el.innerHTML='<div class="pz-card"><div class="pz-center">Das Spiel konnte nicht geladen werden. Bitte Verbindung prüfen.</div></div>';});},
@@ -325,6 +292,6 @@ const PAUSE=(function(){
     show(){root=document.getElementById('pause-root');if(!root)return;if(!cur)hub();},
     leave(){stop();pushed=false;if(root)root.innerHTML='';},
     back(){if(cur){toHub();return true;}return false;},
-    open, _fahrt:()=>FAHRT, _wordCols:wordCols
+    open, _fahrt:()=>FAHRT
   };
 })();
