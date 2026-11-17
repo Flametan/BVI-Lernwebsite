@@ -199,7 +199,7 @@ const PAUSE=(function(){
           Q.push({m,src:'Laufbahn-Lernkarten',g:1,q:c.q,o,c:pos,e:c.a});});});
       }
       // Einsatzfahrt und Duell: nur Fragen aus der Laufbahnprüfung (VB und Stabsarbeit laufen unter „IdF“)
-      Q=Q.filter(q=>q.m==='Laufbahn'||/^Laufbahn/.test(q.src||''));
+      Q=Q.filter(q=>q.m==='Laufbahn'||q.src==='Laufbahn-Lernkarten');
       return Q;}
     const baseQuestions=()=>questions().filter(q=>!q.custom);
     let sel=new Set(get('bvi_pause_mods',['VAk','IBK'])),st=null,el=null,cv=null,ctx=null,raf=0,PART=[],last=0,shake=0,lastFx=null,stars=[];
