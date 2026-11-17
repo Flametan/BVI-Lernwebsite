@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+      'Startseite (Tablet/PC): Unter der Serien-Karte zeigt ein Streifen den Fortschritt zum nächsten Dienstgrad (Rang, Punkte und Balken). Der Balken hat die Farbe der Laufbahn: Mittlerer Dienst rot, Gehobener Dienst silber, Höherer Dienst gold.',
       'Tages- und Wochenaufgaben: Eine kurze Erklärung zeigt, was genau gezählt wird. Am PC erscheint sie beim Darüberfahren, am Handy und Tablet durch Antippen der Aufgabe (verschwindet nach wenigen Sekunden oder beim nächsten Tippen), per Tastatur beim Fokussieren.',
       'Tagesaufgaben: Jeden Tag gibt es andere Ziele, reihum aus mehr Arten: Lernkarten, Wiederholungen (Karten, die du schon kanntest oder falsch hattest), Prüfungsfragen, richtig in Folge (Treffsicherheit), Antworten, Minuten, neue Themen lesen und Karten markieren.',
       'Wochenaufgaben: Jede Woche gibt es andere Aufgaben, reihum aus mehr Arten: Lernkarten, Wiederholungen, Prüfungsfragen, Antworten, richtig in Folge, Probeklausur, Tage, Punkte, Lernzeit (Minuten), neue Themen, Karten markieren und Tage mit mindestens 10 Karten.',

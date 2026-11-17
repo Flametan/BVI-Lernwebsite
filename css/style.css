@@ -4426,6 +4426,10 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .g-hero-fl{display:inline-block;filter:grayscale(.55) opacity(.8);}.g-hero-fl.on{filter:none;}
 .g-hero-l{font-weight:700;opacity:.92;}
 .g-hero-rk{border:0;background:none;padding:0;cursor:pointer;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));display:grid;place-items:center;}
+.g-hero-xp{padding:8px 20px 12px;background:rgba(0,0,0,.5);color:#fff;display:flex;flex-direction:column;gap:5px;position:relative;}
+.g-hero-xl{display:flex;justify-content:space-between;gap:10px;font-size:.74rem;font-weight:700;font-variant-numeric:tabular-nums;}
+.g-hero-xb{height:6px;border-radius:9px;background:rgba(255,255,255,.22);overflow:hidden;}
+.g-hero-xb i{display:block;height:100%;border-radius:9px;transition:width .6s cubic-bezier(.3,.9,.3,1);}
 .g-hero-st:focus-visible,.g-hero-rk:focus-visible{outline:2px solid #fff;outline-offset:3px;border-radius:8px;}
 @media(min-width:701px) and (max-width:1099px){
   #m-home .m-hgrid{grid-template-rows:auto 1fr auto auto;}
@@ -4887,8 +4891,8 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .g-d3h{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;}
 .g-d3t{display:flex;align-items:center;gap:10px;}
 .g-d3t h6{margin:0;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--m-muted);font-weight:700;}
-.g-rk{display:flex;align-items:center;gap:5px;border:0;border-radius:99px;background:var(--m-accent);color:#1a1000;font:inherit;font-weight:800;font-size:.72rem;padding:4px 11px 4px 8px;cursor:pointer;}
-.g-rk:focus-visible{outline:2px solid var(--m-fg);outline-offset:2px;}
+.g-rkp{display:flex;align-items:center;gap:5px;border:0;border-radius:99px;background:var(--m-accent);color:#1a1000;font:inherit;font-weight:800;font-size:.72rem;padding:4px 11px 4px 8px;cursor:pointer;}
+.g-rkp:focus-visible{outline:2px solid var(--m-fg);outline-offset:2px;}
 .g-top{display:flex;align-items:center;gap:10px;}
 .g-rs{flex:1;min-width:0;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;}
 .g-wsum{flex:none;display:flex;flex-direction:column;align-items:center;gap:0;padding:6px 4px 6px 12px;margin:0;border:0;border-left:1px solid var(--m-line);border-radius:0;background:none;color:var(--m-fg);font:inherit;cursor:pointer;}
@@ -4956,7 +4960,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #m-home .g-r3{min-width:auto;}
   #m-home .g-wl{display:block;}
   #m-home .g-r3 svg{display:block;width:64px;height:64px;}
-  #m-home .g-r3 em{font-size:.72rem;}
+  #m-home .g-r3 em{font-size:.72rem;white-space:nowrap;}
   #m-home .g-w3 .r{font-size:.86rem;line-height:1.6;}
   #m-home .g-r3 .t{fill:none;stroke:var(--m-raised);stroke-width:4;}
   #m-home .g-r3 .v{fill:none;stroke:var(--m-accent);stroke-width:4;stroke-linecap:round;transition:stroke-dasharray .6s cubic-bezier(.3,.9,.3,1);}
@@ -4975,7 +4979,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   /* Ranking: dunkler Streifen mit schräger Kante rechts in der Kopfkarte; ragt über den Rand, die Kartenrundung schneidet ihn ab */
   #m-home .g-hero{position:relative;overflow:hidden;}
   #m-home .g-hero-rk{margin-right:90px;}
-  #m-home .g-hero-rkl{position:absolute;right:-2px;top:-2px;bottom:-2px;width:98px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;color:#fff;font:inherit;font-weight:700;font-size:.74rem;background:rgba(0,0,0,.28);clip-path:polygon(14px 0,100% 0,100% 100%,0 100%);cursor:pointer;}
+  #m-home .g-hero-rkl{position:absolute;right:-2px;top:-2px;bottom:46px;width:98px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;color:#fff;font:inherit;font-weight:700;font-size:.74rem;background:rgba(0,0,0,.28);clip-path:polygon(14px 0,100% 0,100% 100%,0 100%);cursor:pointer;}
   #m-home .g-hero-rkl:hover{background:rgba(0,0,0,.36);}
   #m-home .g-hero-rkl:focus-visible{outline:2px solid #fff;outline-offset:-4px;}
   #m-home .m-mods{grid-row:3;}
