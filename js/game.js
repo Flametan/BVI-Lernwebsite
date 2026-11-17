@@ -20,11 +20,14 @@ const GAME=(function(){
   ];
   RANKS.forEach((r,i)=>{ r.i=i; r.pip=RANKS.filter(x=>x.g===r.g&&x.i<=i).length; });
 
-  const TASKS=[
-    {id:'cards',t:'10 Lernkarten',max:10,get:(d)=>d.cards||0},
-    {id:'quiz',t:'5 Prüfungsfragen',max:5,get:(d)=>d.quizOk||0},
-    {id:'time',t:'10 Minuten',max:10,get:()=>Math.floor((typeof USAGE!=='undefined'?USAGE.today():0)/60)}
+  /* Tagesaufgaben: jeden Tag wechselt die Auswahl (je eine aus drei Gruppen, rollierend nach Tag) */
+  const mins=()=>Math.floor((typeof USAGE!=='undefined'?USAGE.today():0)/60);
+  const TASK_POOL=[
+    [{id:'cards',t:'10 Lernkarten',max:10,get:d=>d.cards||0},{id:'cards2',t:'15 Lernkarten',max:15,get:d=>d.cards||0},{id:'cards3',t:'20 Lernkarten',max:20,get:d=>d.cards||0}],
+    [{id:'quiz',t:'5 Prüfungsfragen',max:5,get:d=>d.quizOk||0},{id:'quiz2',t:'8 Prüfungsfragen',max:8,get:d=>d.quizOk||0},{id:'quiz3',t:'10 Fragen beantworten',max:10,get:d=>d.quiz||0}],
+    [{id:'time',t:'10 Minuten',max:10,get:mins},{id:'time2',t:'15 Minuten',max:15,get:mins},{id:'time3',t:'20 Minuten',max:20,get:mins}]
   ];
+  function taskDefs(){ const n=Math.floor(Date.now()/864e5-new Date().getTimezoneOffset()/1440); return TASK_POOL.map((g,i)=>g[(n+i)%g.length]); }
   /* Wochenaufgaben (Mo–So): jede bringt Punkte, alle drei zusammen das Abzeichen „Wochenmeister“ */
   /* Jede Woche wechselt die Auswahl: je eine Aufgabe aus drei Gruppen (Karten, Fragen, Einsatz), rollierend nach Kalenderwoche */
   const WEEKLY_POOL=[
@@ -164,7 +167,7 @@ const GAME=(function(){
 
   function taskState(){
     const rec=load().days[today()]||{};
-    return TASKS.map(t=>{ const v=Math.min(t.max,t.get(rec)); return {id:t.id,t:t.t,v,max:t.max,done:v>=t.max}; });
+    return taskDefs().map(t=>{ const v=Math.min(t.max,t.get(rec)); return {id:t.id,t:t.t,v,max:t.max,done:v>=t.max}; });
   }
 
   /* ── Toast als „Gooey Drop“: ein Tropfen fällt vom oberen Rand und wird zur Meldung ── */
