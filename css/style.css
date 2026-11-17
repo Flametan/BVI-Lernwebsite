@@ -4903,6 +4903,10 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .g-r3 .v{fill:none;stroke:var(--m-accent);stroke-width:4;stroke-linecap:round;transition:stroke-dasharray .6s cubic-bezier(.3,.9,.3,1);}
 .g-r3 text{fill:var(--m-fg);font-size:11px;font-weight:700;}
 .g-r3 em{font-style:normal;font-size:.66rem;color:var(--m-muted);text-align:center;}
+.g-r3[data-h],.g-wl .r[data-h]{cursor:help;-webkit-tap-highlight-color:transparent;}
+.g-tip{position:fixed;z-index:10000;left:0;top:0;padding:8px 11px;border-radius:10px;background:var(--m-fg);color:var(--m-bg);font-size:.78rem;line-height:1.35;pointer-events:none;opacity:0;transition:opacity .15s;box-shadow:0 4px 16px rgba(0,0,0,.3);}
+.g-tip.on{opacity:1;}
+@media(prefers-reduced-motion:reduce){.g-tip{transition:none;}}
 .g-sl{overflow:hidden;margin:0 -16px;}
 .g-trk{display:flex;width:200%;transition:transform .4s cubic-bezier(.3,.9,.3,1);}
 .g-trk>*{flex:0 0 50%;box-sizing:border-box;padding:0 16px;}
