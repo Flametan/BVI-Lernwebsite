@@ -239,7 +239,7 @@ const G2048=(function(){
     let cells=''; for(let i=0;i<N*N;i++) cells+=`<div class="g48-cell" style="left:${(i%N)*25}%;top:${Math.floor(i/N)*25}%"><i></i></div>`;
     const leg=RANKS.map((r,i)=>`<li><i class="g48-l${i+1}">${r.a}</i><span>${esc(r.n)}</span><small>${esc(r.g)} · ${fmt(val(i+1))}</small></li>`).join('');
     el.innerHTML=`<div class="pz-card g48">
-      <div class="g48-hud"><div><b data-h="score">0</b><span>Punkte</span></div><div><b data-h="best">0</b><span>Rekord</span></div><div><b data-h="top">BM</b><span>Höchster Grad</span></div></div>
+      <div class="g48-hud"><div><b data-h="score">0</b><span>Punkte</span></div><div><b data-h="best">0</b><span>Rekord</span></div><div><b data-h="top">BM</b><span>Grad</span></div></div>
       <p class="g48-goal" data-h="goal"></p>
       <div class="g48-wrap">
         <div class="g48-board" role="img" aria-label="Spielfeld 2048 mit Dienstgraden, 4 mal 4 Felder. Steuerung mit Pfeiltasten, WASD oder Wischen."><div class="g48-grid">${cells}</div><div class="g48-tiles g48-grid"></div></div>

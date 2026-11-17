@@ -15,8 +15,6 @@ const REIHENFOLGE=(function(){
   const TASKS=[
     // Quelle: index.html, Führungsvorgang FwDV 100 (Merksatz „Lagefeststellung → Planung → Befehlsgebung → Kontrolle“)
     {t:'Führungsvorgang nach FwDV 100',s:['Lagefeststellung','Planung','Befehlsgebung','Kontrolle']},
-    // Quelle: index.html, Abschnitt „Befehlsgebung“ (Befehl ohne Bereitstellung: Einheit, Auftrag, Mittel, Ziel, Weg)
-    {t:'Aufbau eines Befehls',s:['Einheit','Auftrag','Mittel','Ziel','Weg']},
     // Quelle: index.html, Abschnitt „4 Phasen der Erkundung“
     {t:'Die 4 Phasen der Erkundung',s:['Frontalansicht des Schadenobjektes','Befragung anwesender Personen','Innenansicht und Zugänge','Gesamtansicht']},
     // Quelle: index.html, GABC-Führungsgrundsatz (Merksatz: Lagefeststellung → EIMER-Regel → Gefahrengruppe → Körperschutz → GAMS → Dekon-Stufe), die ersten sechs Schritte
