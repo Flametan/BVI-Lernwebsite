@@ -444,8 +444,8 @@ const GAME=(function(){
       `<span class="g-rg"><svg viewBox="0 0 100 100" width="38" height="38" aria-hidden="true"><circle cx="50" cy="50" r="42" class="g-rg-t"/><circle cx="50" cy="50" r="42" class="g-rg-v" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/></svg><b>${done?svg('check',16):min}</b></span>`+
       `<span class="g-bt"><span><b>Heute ${dn}/${ts.length}</b> <em>· Woche ${wn}/${wsx.length}</em></span><small>${done?'Tagesziel geschafft':min+' von '+gm+' min'}</small></span>`+
       `<svg class="g-tdc" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>`+
-      `<div class="g-more" id="g-more"${o?'':' hidden'}><div class="g-td"><div><div class="g-td-h"><b>Heute</b><span>${dn}/${ts.length} Aufgaben</span></div><ul class="g-tasks">${L.d}</ul></div>`+
-      `<div><div class="g-td-h"><b>Diese Woche</b><span>${wn}/${wsx.length} · alle 3: +${WEEK_ALL_XP} XP</span></div><ul class="g-tasks">${L.w}</ul></div></div>`+
+      `<div class="g-more" id="g-more"${o?'':' hidden'}><div class="g-td"><div><div class="g-td-h"><b>Heute</b><span>${dn}/${ts.length} · je +${TASK_XP} XP</span></div><ul class="g-tasks">${L.d}</ul></div>`+
+      `<div><div class="g-td-h"><b>Diese Woche</b><span>${wn}/${wsx.length} · je +50 XP</span></div><ul class="g-tasks">${L.w}</ul></div></div>`+
       `<div class="g-tlinks"><button type="button" class="g-lk" onclick="NAV.go('v-rank','Ranking')">Ranking</button></div></div></div>`;
   }
   function homeHtml(){ return load().off?{chip:'',panel:'',rank:''}:{rank:rankLabel(),chip:chip(),panel:`<div class="g-panel" id="g-panel" hidden>${panel()}</div>`}; }

@@ -92,10 +92,20 @@ const RANK=(function(){
       <p class="rk-sub">${b.me?`Dein Platz: ${b.me.place} von ${b.total}`:'Sammle Punkte, um in der Liste zu erscheinen.'} · Du bist als „${esc(me)}“ dabei</p>`;
     const rb=el.querySelector('.rk-body');
     if(rb&&el.querySelector('.rk-tabs')){ rb.innerHTML=body; rb.classList.remove('busy'); return; }   // Umschalter bleibt stehen, nur die Liste wechselt
-    el.innerHTML=`<div class="rk-tabs" role="tablist" data-tab="${tab}"><button type="button" role="tab" data-t="week" class="${tab==='week'?'on':''}" aria-selected="${tab==='week'}" onclick="RANK.setTab('week')">Diese Woche</button><button type="button" role="tab" data-t="all" class="${tab==='all'?'on':''}" aria-selected="${tab==='all'}" onclick="RANK.setTab('all')">Gesamt</button></div>
+    el.innerHTML=`<div class="rk-tabs" role="tablist" data-tab="${tab}"><i class="rk-pill" aria-hidden="true"></i><button type="button" role="tab" data-t="week" class="${tab==='week'?'on':''}" aria-selected="${tab==='week'}" onclick="RANK.setTab('week')">Diese Woche</button><button type="button" role="tab" data-t="all" class="${tab==='all'?'on':''}" aria-selected="${tab==='all'}" onclick="RANK.setTab('all')">Gesamt</button></div>
       <div class="rk-body">${body}</div>
       <div class="rk-foot"><button type="button" class="g-btn alt" onclick="RANK.doLeave(this)">Ranking verlassen</button></div>`;
+    place(false);
   }
+  // Der Schieber liegt immer exakt unter dem gewählten Knopf (Maße direkt aus der Darstellung, unabhängig von der Breite)
+  function place(anim){
+    const tb=el&&el.querySelector('.rk-tabs'), pl=tb&&tb.querySelector('.rk-pill'), on=tb&&tb.querySelector('button.on');
+    if(!pl||!on) return;
+    if(!anim) pl.style.transition='none';
+    pl.style.width=on.offsetWidth+'px'; pl.style.transform='translateX('+on.offsetLeft+'px)';
+    if(!anim){ void pl.offsetWidth; pl.style.transition=''; }
+  }
+  window.addEventListener('resize',()=>place(false));
   const flash=(t,err)=>{ if(!el) return; el.querySelectorAll('.rk-msg').forEach(n=>n.remove()); el.insertAdjacentHTML('beforeend',msg(t,err)); };
   function setTab(t){
     if(t===tab) return; tab=t;
@@ -103,6 +113,7 @@ const RANK=(function(){
     if(!tb){ busy=false; mount(); return; }
     tb.dataset.tab=t;
     tb.querySelectorAll('button').forEach(b=>{ const on=b.dataset.t===t; b.classList.toggle('on',on); b.setAttribute('aria-selected',on); });
+    place(true);
     const rb=el.querySelector('.rk-body'); if(rb) rb.classList.add('busy');
     api('GET','?board='+t).then(b=>{ if(tab===t) draw(b); }).catch(()=>{ if(tab===t){ busy=false; mount(); } });
   }
