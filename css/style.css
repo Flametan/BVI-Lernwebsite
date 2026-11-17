@@ -4784,3 +4784,5 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #v-flashcards .fc-sub-grid.all .fc-t4.on{background:none;}
   #v-flashcards .fc-sub-meta{padding:10px 4px 0;}
 }
+/* Lernkarten Tablet/Handy: Abstand zwischen Umschalter und Fach-Kacheln */
+@media (max-width:1023px){#v-flashcards .fc-seg{padding-bottom:.7rem;}}
