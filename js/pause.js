@@ -31,7 +31,7 @@ const PAUSE=(function(){
   };
   const svg=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
   const GAMES=[
-    ['fahrt','truck','Einsatzfahrt','Nur Fragen aus der Laufbahnprüfung (IBK und IdF) · 5, 10 oder 15 Fragen, Hilfsfrist schaffen',()=>FAHRT],
+    ['fahrt','truck','Einsatzfahrt','Nur Fragen aus der Laufbahnprüfung (IBK, VAk, FeuAK, IdF) · 5, 10 oder 15 Fragen, Hilfsfrist schaffen',()=>FAHRT],
     ['duell','duel','Einsatzfahrt-Duell','Zu zweit live gegeneinander · Verbindung per QR-Code · gleiche Fragen aus der Laufbahnprüfung',()=>DUELLGAME],
     ['snake','flame','Einsatzleitung-Snake','Löschzug durchs Feuer steuern · wähle Atemluft und Löschwasser als Herausforderung',()=>SNAKEGAME],
     ['solitaer','cards','Solitär','Klondike mit Flammen, Löschern, Äxten und Leitern · Karten ziehen oder antippen',()=>SOLGAME],
@@ -187,6 +187,17 @@ const PAUSE=(function(){
       if(typeof JG!=='undefined')JG.data().pr.hinzu.forEach(p=>{const t=JG.TABS.find(x=>x[0]===p.tab);if(t)p.fragen.forEach(f=>{ if((f.typ||'sc')==='sc') Q.push({m:t[2],src:p.titel,g:1,q:f.q,o:f.o.slice(),c:f.c,e:f.e||'',custom:1}); });});
       // Fragen aus Prüfungen, die nicht klausurrelevant sind, fallen heraus
       if(typeof JG!=='undefined'){const SRC={'Altklausur-Quiz VAk':'v-vak-altklausur','Altklausur-Quiz IdF':'v-idf-altklausur'};JG.data().pr.hinzu.forEach(p=>SRC[p.titel]=p.seite||p.id);Q=Q.filter(q=>!SRC[q.src]||JG.rel(SRC[q.src]));}
+      // Lernkarten der Laufbahnprüfung als Auswahlfragen: richtige Antwort = Kartenrückseite, falsche = Rückseiten anderer Karten desselben Moduls
+      // (nur kurze Antworten; Reihenfolge fest, damit beim Duell beide dieselben Fragen sehen; eigene Karten bleiben außen vor)
+      if(typeof FLASHCARD_DATA!=='undefined'){
+        const MOD={'heyrothsberge':'IBK','recht':'VAk','management':'FeuAK','vorbeugender brandschutz':'IdF','stabsarbeit':'IdF','führungsvorgang':'IdF'};
+        const by={};
+        FLASHCARD_DATA.forEach(c=>{if(c.own||!/^Laufbahn · /i.test(c.cat))return;const m=MOD[c.cat.split(' · ')[1].toLowerCase()];if(!m)return;const a=strip(c.a);if(a.length<20||a.length>200)return;(by[m]=by[m]||[]).push({id:c.id,q:strip(c.q),a});});
+        Object.keys(by).forEach(m=>{const L=by[m];if(L.length<4)return;L.forEach((c,i)=>{
+          const wr=[];for(let k=1;wr.length<3&&k<L.length;k+=Math.max(1,Math.floor(L.length/4))){const o=L[(i+k)%L.length];if(o.a!==c.a&&!wr.includes(o.a))wr.push(o.a);}
+          if(wr.length<3)return;const pos=i%4,o=wr.slice();o.splice(pos,0,c.a);
+          Q.push({m,src:'Laufbahn-Lernkarten',g:1,q:c.q,o,c:pos,e:c.a});});});
+      }
       // Einsatzfahrt und Duell: nur Fragen aus der Laufbahnprüfung (VB und Stabsarbeit laufen unter „IdF“)
       Q=Q.filter(q=>q.m==='Laufbahn'||/^Laufbahn/.test(q.src||''));
       return Q;}
