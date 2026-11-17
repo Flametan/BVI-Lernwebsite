@@ -4426,11 +4426,6 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .g-hero-fl{display:inline-block;filter:grayscale(.55) opacity(.8);}.g-hero-fl.on{filter:none;}
 .g-hero-l{font-weight:700;opacity:.92;}
 .g-hero-rk{border:0;background:none;padding:0;cursor:pointer;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));display:grid;place-items:center;}
-.g-hero-bot{padding:14px 20px 0;}
-.g-hero-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
-.g-hero-row b{font-size:1.1rem;color:var(--m-fg);}.g-hero-row span{font-size:.78rem;color:var(--m-muted);}
-.g-hero-bar{height:10px;border-radius:99px;background:var(--m-raised);overflow:hidden;margin-top:8px;}
-.g-hero-bar i{display:block;height:100%;background:var(--m-accent);border-radius:99px;}
 .g-hero-st:focus-visible,.g-hero-rk:focus-visible{outline:2px solid #fff;outline-offset:3px;border-radius:8px;}
 @media(min-width:701px) and (max-width:1099px){
   #m-home .m-hgrid{grid-template-rows:auto 1fr auto auto;}

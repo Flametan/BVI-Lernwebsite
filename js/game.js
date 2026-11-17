@@ -424,10 +424,8 @@ const GAME=(function(){
   // PC/Tablet-Startseite: große Karte mit Serie (Tipp = Belohnungen) und Dienstgrad (Tipp = Rang & Abzeichen)
   function heroHtml(){
     if(load().off) return '';
-    const s=load(), st=streak(), r=rankOf(s.xp), nx=RANKS[r.i+1];
-    const pct=nx?Math.min(100,Math.max(0,Math.round((s.xp-r.xp)/(nx.xp-r.xp)*100))):100;
-    const sub=nx?`noch ${nx.xp-s.xp} XP bis ${esc(nx.n)}`:'Höchster Dienstgrad erreicht';
-    return `<div class="g-hero"><div class="g-hero-top"><button type="button" class="g-hero-st" onclick="GAME.toggle()" aria-label="${st.cur} Tage Serie${st.risk?' in Gefahr':''}. Belohnungen anzeigen"><span class="g-hero-k">Serie${st.risk?' · in Gefahr':''}</span><span class="g-hero-n"><span class="g-hero-fl${st.cur>0&&st.todayDone?' on':''}">🔥</span> ${st.cur}</span><span class="g-hero-l">Tage in Folge</span></button><button type="button" class="g-hero-rk" onclick="GAME.openRank()" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen">${shoulder(r,118)}</button></div><div class="g-hero-bot"><div class="g-hero-row"><b>${esc(r.n)}</b><span>${sub}</span></div><div class="g-hero-bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Fortschritt zum nächsten Dienstgrad"><i style="width:${pct}%"></i></div></div></div>`;
+    const s=load(), st=streak(), r=rankOf(s.xp);
+    return `<div class="g-hero"><div class="g-hero-top"><button type="button" class="g-hero-st" onclick="GAME.toggle()" aria-label="${st.cur} Tage Serie${st.risk?' in Gefahr':''}. Belohnungen anzeigen"><span class="g-hero-k">Serie${st.risk?' · in Gefahr':''}</span><span class="g-hero-n"><span class="g-hero-fl${st.cur>0&&st.todayDone?' on':''}">🔥</span> ${st.cur}</span><span class="g-hero-l">Tage in Folge</span></button><button type="button" class="g-hero-rk" onclick="GAME.openRank()" aria-label="Dienstgrad ${esc(r.n)}. Rang und Abzeichen öffnen">${shoulder(r,118)}</button></div></div>`;
   }
   /* Karte „Heute“: Tagesziel-Ring (Lernzeit), Tagesaufgaben, Wochenaufgaben */
   function tasksList(){
