@@ -4527,7 +4527,7 @@ const KF_QUIZ = (function(){
       document.getElementById('kf-answer')?.classList.remove('hidden');
       document.getElementById('kf-score-row')?.classList.remove('hidden');
     },
-    showResult:function(){renderResult(); if(typeof GAME!=='undefined') GAME.cheer('pruefung','Klausurfragen');},
+    showResult:function(){renderResult(); if(typeof GAME!=='undefined'){ GAME.event('klausur',true); GAME.cheer('pruefung','Klausurfragen'); }},
     // Stand für die Übersichtskachel: nur Fragen, die es wirklich gibt
     info:function(){
       var sc={};try{sc=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){}
@@ -4910,7 +4910,7 @@ const UEBUNGSKLAUSUR = (function(){
       document.getElementById('uk-answer')?.classList.remove('hidden');
       document.getElementById('uk-score-row')?.classList.remove('hidden');
     },
-    showResult:function(){renderResult(); if(typeof GAME!=='undefined') GAME.cheer('pruefung','Klausurfragen');},
+    showResult:function(){renderResult(); if(typeof GAME!=='undefined'){ GAME.event('klausur',true); GAME.cheer('pruefung','Klausurfragen'); }},
     toggleTimer:function(){
       if(_timerOn) stopTimer(); else startTimer();
       updateTimerDisplay();

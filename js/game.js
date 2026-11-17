@@ -32,10 +32,11 @@ const GAME=(function(){
   function taskDefs(){ const n=Math.floor(Date.now()/864e5-new Date().getTimezoneOffset()/1440); return TASK_POOL.map((g,i)=>g[(n+i)%g.length]); }
   /* Wochenaufgaben (Mo–So): jede bringt Punkte, alle drei zusammen das Abzeichen „Wochenmeister“ */
   /* Jede Woche wechselt die Auswahl: je eine Aufgabe aus drei Gruppen (Karten, Fragen, Einsatz), rollierend nach Kalenderwoche */
+  const W=(id,t,max,xp,get)=>({id,t,max,xp,get});
   const WEEKLY_POOL=[
-    [{id:'wc',t:'100 Lernkarten',max:100,xp:50,get:w=>w.cards},{id:'wc2',t:'150 Lernkarten',max:150,xp:60,get:w=>w.cards},{id:'wc3',t:'200 Lernkarten',max:200,xp:70,get:w=>w.cards}],
-    [{id:'wq',t:'25 Prüfungsfragen',max:25,xp:50,get:w=>w.quizOk},{id:'wq2',t:'40 Prüfungsfragen',max:40,xp:60,get:w=>w.quizOk},{id:'wq3',t:'60 Antworten',max:60,xp:60,get:w=>w.quiz}],
-    [{id:'wd',t:'5 Tage',max:5,xp:50,get:w=>w.days},{id:'wd2',t:'4 Tage',max:4,xp:40,get:w=>w.days},{id:'wd3',t:'6 Tage',max:6,xp:60,get:w=>w.days},{id:'wx',t:'400 Punkte',max:400,xp:50,get:w=>w.xp}]
+    [W('wc','100 Lernkarten',100,50,w=>w.cards),W('wc2','150 Lernkarten',150,60,w=>w.cards),W('wc3','200 Lernkarten',200,70,w=>w.cards),W('wr','30 Wiederholungen',30,50,w=>w.redo),W('wr2','50 Wiederholungen',50,60,w=>w.redo)],
+    [W('wq','25 Prüfungsfragen',25,50,w=>w.quizOk),W('wq2','40 Prüfungsfragen',40,60,w=>w.quizOk),W('wq3','60 Antworten',60,60,w=>w.quiz),W('ws','10 richtig in Folge',10,50,w=>w.best),W('ws2','15 richtig in Folge',15,70,w=>w.best),W('wk','1 Probeklausur',1,60,w=>w.klausur)],
+    [W('wd','5 Tage',5,50,w=>w.days),W('wd2','4 Tage',4,40,w=>w.days),W('wd3','6 Tage',6,60,w=>w.days),W('wx','400 Punkte',400,50,w=>w.xp),W('wm','120 Minuten',120,50,w=>w.min),W('wm2','180 Minuten',180,60,w=>w.min),W('wn','5 neue Themen',5,50,w=>w.newT),W('wf','10 Karten markieren',10,40,w=>w.stars),W('wg','4 Tage à 10 Karten',4,60,w=>w.steady)]
   ];
   function weeklyDefs(){
     const [y,m,d]=weekKeys()[0].split('-').map(Number), n=Math.floor(Date.UTC(y,m-1,d)/864e5/7);
@@ -151,8 +152,9 @@ const GAME=(function(){
     return Array.from({length:7},(_,i)=>{ const x=new Date(mo); x.setDate(mo.getDate()+i); return dkey(x); });
   }
   function weekSum(offset=0){
-    const s=load(), a={xp:0,cards:0,quiz:0,quizOk:0,days:0};
-    weekKeys(offset).forEach(k=>{ const d=s.days[k]; if(d){ a.xp+=d.xp||0; a.cards+=d.cards||0; a.quiz+=d.quiz||0; a.quizOk+=d.quizOk||0; if((d.xp||0)>0) a.days++; } });
+    const s=load(), a={xp:0,cards:0,quiz:0,quizOk:0,days:0,redo:0,newT:0,stars:0,best:0,klausur:0,steady:0,min:0};
+    weekKeys(offset).forEach(k=>{ const d=s.days[k]; if(d){ a.xp+=d.xp||0; a.cards+=d.cards||0; a.quiz+=d.quiz||0; a.quizOk+=d.quizOk||0; if((d.xp||0)>0) a.days++; a.redo+=d.redo||0; a.newT+=d.newT||0; a.stars+=d.stars||0; a.klausur+=d.klausur||0; a.best=Math.max(a.best,d.best||0); if((d.cards||0)>=10) a.steady++; } });
+    if(!offset&&typeof USAGE!=='undefined'){ try{ a.min=Math.floor(USAGE.week().reduce((x,y)=>x+y,0)/60); }catch(e){} }
     return a;
   }
   function weeklyState(){
@@ -359,6 +361,7 @@ const GAME=(function(){
       let gain=0;
       if(type==='card'){ if(ok){ gain=2; rec.cards++; s.tot.cards++; } if(x&&x.redo) rec.redo=(rec.redo|0)+1; rec.cd=(rec.cd|0)+1; if(rec.cd%10===0) cardCheer(rec.cd); }
       else if(type==='quiz'){ rec.quiz++; if(ok){ gain=3; rec.quizOk++; s.tot.quizOk++; } else gain=1; }
+      else if(type==='klausur') rec.klausur=(rec.klausur|0)+1;
       else if(type==='star') rec.stars=(rec.stars|0)+1;
       else if(type==='new') rec.newT=(rec.newT|0)+1;
       else if(type==='fahrt'){ gain=20; if(ok){ s.tot.fahrt++; cheer('spiel','Einsatzfahrt'); } }

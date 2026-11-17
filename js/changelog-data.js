@@ -2,7 +2,7 @@
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
       'Tagesaufgaben: Jeden Tag gibt es andere Ziele, reihum aus mehr Arten: Lernkarten, Wiederholungen (Karten, die du schon kanntest oder falsch hattest), Prüfungsfragen, richtig in Folge (Treffsicherheit), Antworten, Minuten, neue Themen lesen und Karten markieren.',
-      'Wochenaufgaben: Jede Woche gibt es andere Aufgaben. Aus drei Gruppen (Lernkarten, Prüfungsfragen, Einsatz wie Tage oder Punkte) wird reihum je eine gewählt, z. B. 100, 150 oder 200 Lernkarten.',
+      'Wochenaufgaben: Jede Woche gibt es andere Aufgaben, reihum aus mehr Arten: Lernkarten, Wiederholungen, Prüfungsfragen, Antworten, richtig in Folge, Probeklausur, Tage, Punkte, Lernzeit (Minuten), neue Themen, Karten markieren und Tage mit mindestens 10 Karten.',
       'Startseite (Handy): Die „Heute“-Leiste ist jetzt eine kompakte Karte mit drei Fortschrittsringen (Lernkarten, Prüfungsfragen, Minuten). Daneben steht der Wochenstand („0/3 Woche“); Antippen schiebt die Wochenaufgaben, ebenfalls als Ringe, von rechts in die Karte, „Heute“ schiebt zurück. Der Ranking-Knopf sitzt als Pille in der Akzentfarbe oben rechts.',
       'Startseite (Tablet/PC): Die Tagesaufgaben stehen als drei Fortschrittsringe (Lernkarten, Prüfungsfragen, Minuten) mit der Wochenliste daneben. Der Ranking-Knopf sitzt jetzt als dunkler Streifen rechts in der orangen Serien-Karte.',
       'Lernkarten: „Markierte“ zeigt jetzt immer die markierten Karten. Markierungen von Karten, die es im aktuellen Stapel nicht mehr gibt (gelöscht oder aus einem anderen Jahrgang), werden nicht mehr mitgezählt.',
