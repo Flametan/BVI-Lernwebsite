@@ -3,6 +3,7 @@ const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
       'IdF-Klausur, Brainyoo: Bei den Freitextfragen „Aufbau Stabsarbeit“ und „Operativ-taktische Einsatzleitung“ steht die Grafik jetzt wie bei Brainyoo in der Lösung und nicht mehr in der Frage. Alle 40 Karten wurden mit den Brainyoo-Daten verglichen (Fragen, Antworten, richtige Auswahl): sonst keine Abweichung.',
       'Laufbahnprüfung: „VB“ und „Stabsarbeit“ sind zu einer Gruppe „IdF“ mit 5 Klausuren zusammengeführt.',
+      'Lernkarten Laufbahnprüfung: Karten für IBK, VAk, FeuAK und IdF stammen jetzt nur noch aus den Aufgaben des Prüfungstabs „Laufbahnprüfung · Dezember“ (80 neue Karten). Die Altklausur-Karten (Juni 2026, Dezember 2023) sind entfallen, nur die Stabsarbeit-Karten aus Juni 2026 bleiben.',
       'Lernkarten am Computer: Kacheln, Umschalter (Laufbahnprüfung / Prüfungsrelevante Hinweise), Unterzeile und Modus-Zeile sind jetzt alle gleich breit.',
       'Simulationen: Der Zurück-Pfeil oben links bringt Sie vom Startbildschirm zurück in die Lern-App (bzw. in den Pausenraum).',
       'Simulation „Begehung“: Man kommt jetzt über die Treppe in die oberen Geschosse. Der Treppenraum ist nach Westen verbreitert: Ein Gang führt an der Treppe vorbei zum Treppenabsatz, vorher war der Einstieg im ersten Geschoss nicht erreichbar.',
