@@ -9,7 +9,9 @@
  *   POST   /v1/rank/<id>/duel          { name }                               Herausforderung
  *   POST   /v1/rank/<id>/duel/<did>    { action: accept | decline | cancel }
  *   PUT    /v1/rank/<id>/games         { g:{ <Spiel>:<Bestwert>, ... } }     beste Werte der Pausenspiele (nur Teilnehmer)
- *   GET    /v1/rank/<id>/games?b=<Spiel>                                      Top 20 des Spiels, eigener Platz
+ *   GET    /v1/rank/<id>/games?b=<Spiel>[&w=1]                                Top 20 des Spiels (w=1: nur diese Woche), eigener Platz
+ *   GET    /v1/rank/<id>/games?all=1                                          mein Platz in allen Listen (gesamt und Woche)
+ *   (PUT games nimmt zusätzlich w:{k:<Woche>,g:{...}} mit den Wochenbestwerten)
  *   DELETE /v1/rank/<id>                                                      Teilnahme beenden (Spieler und Duelle weg)
  * Kopfzeile X-Rank-Token (zufällig, nur auf dem Gerät). Gespeichert wird nur ein Hash davon.
  */
@@ -157,17 +159,40 @@ function create(cfg, ctx) {
       let j; try { j = JSON.parse(raw); } catch (e) { return send(res, 400, { error: 'kein JSON' }); }
       const g = j && j.g;
       if (!g || typeof g !== 'object' || Array.isArray(g) || Object.keys(g).length > 30) return send(res, 422, { error: 'Werte ungültig' });
+      const better = (k, v, old) => old == null || (GAMES[k].t ? v < old : v > old);
       p.g = p.g || {};   // ungültige Einträge werden übersprungen, damit ein einzelner Wert nicht alle blockiert
-      for (const [k, v] of Object.entries(g)) if (gameOk(k, v) && (p.g[k] == null || (GAMES[k].t ? v < p.g[k] : v > p.g[k]))) p.g[k] = v;
+      for (const [k, v] of Object.entries(g)) if (gameOk(k, v) && better(k, v, p.g[k])) p.g[k] = v;
+      // Wochenwerte: nur für die laufende Woche, eine neue Woche beginnt leer
+      const w = j.w;
+      if (w && typeof w === 'object' && w.k === curWk() && w.g && typeof w.g === 'object' && !Array.isArray(w.g) && Object.keys(w.g).length <= 30) {
+        if (!p.w || p.w.k !== w.k) p.w = { k: w.k, g: {} };
+        for (const [k, v] of Object.entries(w.g)) if (gameOk(k, v) && better(k, v, p.w.g[k])) p.w.g[k] = v;
+      }
       persist(); return send(res, 200, { ok: true });
     }
     if (sub === 'games' && req.method === 'GET') {
+      const wk = curWk();
+      const rowsOf = (b, weekly) => {
+        const low = !!GAMES[b].t;
+        return Object.entries(db.players)
+          .map(([pid, q]) => ({ pid, name: q.name, av: q.av || null, v: weekly ? (q.w && q.w.k === wk && q.w.g ? q.w.g[b] : null) : (q.g ? q.g[b] : null) }))
+          .filter(r => r.v != null)
+          .sort((x, y) => (low ? x.v - y.v : y.v - x.v) || x.name.localeCompare(y.name, 'de'));
+      };
+      // Überblick über alle Listen: mein Platz je Spiel (gesamt und diese Woche), wer direkt vor mir liegt
+      if (url.searchParams.get('all') === '1') {
+        const out = {};
+        for (const b of Object.keys(GAMES)) {
+          const r = rowsOf(b, false), i = r.findIndex(x => x.pid === id);
+          if (i < 0) continue;
+          const wr = rowsOf(b, true), wi = wr.findIndex(x => x.pid === id);
+          out[b] = { place: i + 1, total: r.length, v: r[i].v, above: i > 0 ? r[i - 1].name : null, wplace: wi < 0 ? null : wi + 1, wtotal: wr.length };
+        }
+        return send(res, 200, { week: wk, boards: out });
+      }
       const b = url.searchParams.get('b') || '';
       if (!Object.prototype.hasOwnProperty.call(GAMES, b)) return send(res, 422, { error: 'Spiel unbekannt' });
-      const low = !!GAMES[b].t;
-      const rows = Object.entries(db.players).filter(([, q]) => q.g && q.g[b] != null)
-        .map(([pid, q]) => ({ pid, name: q.name, av: q.av || null, v: q.g[b] }))
-        .sort((x, y) => (low ? x.v - y.v : y.v - x.v) || x.name.localeCompare(y.name, 'de'));
+      const rows = rowsOf(b, url.searchParams.get('w') === '1');
       const me = rows.findIndex(r => r.pid === id);
       return send(res, 200, { board: b, total: rows.length, top: rows.slice(0, 20).map((r, i) => ({ place: i + 1, name: r.name, av: r.av, v: r.v, me: r.pid === id })), me: me < 0 ? null : { place: me + 1, v: rows[me].v } });
     }

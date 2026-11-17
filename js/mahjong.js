@@ -55,7 +55,7 @@ const MAHJONG=(function(){
   };
   var POS=[], N=0, ABOVE=[], LEFT=[], RIGHT=[], VB=null, LVL='pyramide';
   function setLayout(id){
-    if(!LAY[id]) id='pyramide'; LVL=id; POS=[]; LAY[id](POS); N=POS.length;
+    if(!LAY[id]) id='pyramide'; LVL=id; if(typeof PAUSE!=='undefined'&&PAUSE.board) PAUSE.board('mahjong',id); POS=[]; LAY[id](POS); N=POS.length;
     ABOVE=[]; LEFT=[]; RIGHT=[];
     POS.forEach(function(a,i){
       ABOVE[i]=[]; LEFT[i]=[]; RIGHT[i]=[];

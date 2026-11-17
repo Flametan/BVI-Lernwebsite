@@ -26,7 +26,12 @@ const PAUSE=(function(){
     if(B.s)a=a.filter(e=>!(e.p===v-1&&e.d===ymd(-1)&&B.u==="Tage"));
     let n="";try{n=(localStorage.getItem("bvi_profile_name")||"").slice(0,30);}catch(e){}
     const e={p:v,d:ymd(0),a:B.t?1:0};if(n)e.n=n;a.push(e);
-    a.sort((x,y)=>B.t?x.p-y.p:y.p-x.p);T[id]=a.slice(0,10);set(TOPKEY,T);pushBests();}
+    a.sort((x,y)=>B.t?x.p-y.p:y.p-x.p);T[id]=a.slice(0,10);set(TOPKEY,T);weekAdd(id,v,!!B.t);pushBests();}
+  // Wochenbestwerte (Wochenwertung): je Liste der beste Wert der laufenden ISO-Woche
+  const WKEY="bvi_pause_wk";
+  const wkNow=()=>{try{return GAME.isoWeek();}catch(e){return "";}};
+  function weekObj(){const k=wkNow(),w=get(WKEY,null);return w&&w.k===k&&w.g?w:{k,g:{}};}
+  function weekAdd(id,v,low){const w=weekObj();if(!w.k)return;const o=w.g[id];if(o==null||(low?v<o:v>o)){w.g[id]=v;set(WKEY,w);}}
   // früher gab es nur ein Mahjong-Brett (heute: Stufe Pyramide): Rekord und Liste umziehen
   (function(){try{const b=best();if(typeof b.mahjong==='number'){b.mahjong={pyramide:b.mahjong};set(BKEY,b);}
     const T=get(TOPKEY,{});if(T.mahjong){if(!(T['mahjong:pyramide']||[]).length&&Array.isArray(T.mahjong))T['mahjong:pyramide']=T.mahjong;delete T.mahjong;set(TOPKEY,T);}}catch(e){}})();
@@ -112,15 +117,65 @@ const PAUSE=(function(){
   // eigene besten Werte je Liste (für den Vergleich mit allen)
   function myBests(){const T=get(TOPKEY,{}),g={};Object.keys(T).forEach(id=>{const a=T[id];if(BOARDS[id.split(":")[0]]&&Array.isArray(a)&&a[0]&&typeof a[0].p==="number")g[id]=a[0].p;});return g;}
   let gTimer=0;
-  function pushBests(){if(!rankOn())return;clearTimeout(gTimer);gTimer=setTimeout(()=>rankLoad().then(R=>R.games(myBests())).catch(()=>{}),4000);}
+  // Werte senden (gesamt und Woche), danach Platzierungen und Karte im Spiel neu laden
+  const syncNow=()=>rankLoad().then(R=>R.games(myBests(),weekObj()).catch(e=>{if(e&&e.code===404)throw e;}).then(()=>R));
+  function pushBests(){if(!rankOn())return;clearTimeout(gTimer);gTimer=setTimeout(()=>{STAND=null;syncNow().then(()=>cardUp()).catch(()=>{});},4000);}
+  /* ---------- Platzierungen: Rang-Streifen, Plätze auf den Kacheln, Wochenwertung, Karte im Spiel ---------- */
+  let STAND=null,standT=0,curK=null,curB=null,cardSeq=0;
+  const bname=id=>{const k=id.split(":")[0],q=GAMES.find(x=>x[0]===k),B=BOARDS[k],l=B&&B.lv&&B.lv.find(z=>z[0]===id.split(":")[1]);return (q?q[2]:id)+(l?" · "+l[1]:"");};
+  const SING={Tage:"Tag",Punkte:"Punkt","Lücken":"Lücke",Sekunden:"Sekunde"};
+  const unitN=(n,u)=>n===1&&SING[u]?SING[u]:u;
+  // Überholt: wurde mein Platz schlechter, merken wir uns, wer vor mir liegt
+  function overtake(j){const P=get("bvi_pause_places",{}),np={};let ev=get("bvi_pause_ev",null);
+    Object.keys(j.boards||{}).forEach(b=>{const x=j.boards[b];np[b]=x.place;if(P[b]!=null&&x.place>P[b]&&x.above)ev={b,by:x.above,from:P[b],t:Date.now()};});
+    if(ev&&(Date.now()-ev.t>6048e5||(j.boards[ev.b]&&j.boards[ev.b].place<=ev.from)))ev=null;
+    set("bvi_pause_places",np);set("bvi_pause_ev",ev);}
+  function loadStand(){if(!rankOn())return Promise.resolve(null);if(STAND&&Date.now()-standT<6e4)return Promise.resolve(STAND);
+    return syncNow().then(R=>R.gamesAll()).then(j=>{if(!j||!j.boards)return null;overtake(j);STAND=j;standT=Date.now();return j;}).catch(()=>null);}
+  const gotoTop=(id)=>{if(id){const p=id.split(":");topG=p[0];topL=p[1]||"";set("bvi_pause_topg",topG);}ptab="top";topS="all";set(TKEY,ptab);set("bvi_pause_tops",topS);hub();};
+  function fillRank(){
+    if(ptab!=="spiele"||!root||!root.isConnected)return;
+    const place=()=>{root.querySelectorAll(".pz-rk,.pz-rkb").forEach(e=>e.remove());return root.querySelector(".pz-tabs");};
+    if(!rankOn()){const t=place();if(t&&Object.keys(myBests()).length){t.insertAdjacentHTML("afterend",`<button class="pz-rk pz-rkn" data-rk=""><b>Gegen alle antreten</b><span>Mit dem Ranking sehen Sie Ihre Plätze in allen Spielen. ›</span></button>`);t.nextElementSibling.onclick=()=>gotoTop("");}return;}
+    loadStand().then(j=>{if(!j||ptab!=="spiele"||!root.isConnected)return;const t=place();if(!t)return;
+      const ids=Object.keys(j.boards).sort((a,b)=>j.boards[a].place-j.boards[b].place||j.boards[b].total-j.boards[a].total);
+      // Plätze auf den Kacheln: bester Platz je Spiel
+      const bestOf={};ids.forEach(id=>{const k=id.split(":")[0];if(!bestOf[k])bestOf[k]=id;});
+      Object.keys(bestOf).forEach(k=>{const x=j.boards[bestOf[k]],tt=root.querySelector('.pz-tile[data-g="'+k+'"] .pz-tt');if(tt)tt.insertAdjacentHTML("beforeend",`<span class="pz-rkb">Platz ${x.place} von ${x.total}</span>`);});
+      const days=7-((new Date().getDay()+6)%7),ev=get("bvi_pause_ev",null);
+      const chips=ids.slice(0,3).map((id,i)=>`<button class="pz-chip${i?"":" on"}" data-rkb="${id}">${esc(bname(id))} · Platz ${j.boards[id].place}</button>`).join("");
+      const bad=[];ids.forEach(id=>{const x=j.boards[id];if(x.wplace===1&&x.wtotal>=2)bad.push(["Wochensieger "+bname(id),1,id]);else if(x.wplace&&x.wplace<=3&&x.wtotal>=3)bad.push(["Top 3 "+bname(id),0,id]);});
+      bad.sort((a,b)=>b[1]-a[1]);
+      const evT=ev&&j.boards[ev.b]?`<div class="pz-rkev"><span><b>${esc(ev.by)}</b> hat Sie in ${esc(bname(ev.b))} überholt. Holen Sie sich Platz ${ev.from} zurück!</span><button data-evx aria-label="Hinweis schließen">×</button></div>`:"";
+      t.insertAdjacentHTML("afterend",`<div class="pz-rk"><div class="pz-rkh">Dein Rang heute</div><div class="pz-chips">${chips}</div><button class="pz-rka" data-rka>Alle Bestenlisten ansehen ›</button>
+        <div class="pz-rkh pz-rkw">Wochenwertung · noch ${days} ${days===1?"Tag":"Tage"}</div>${evT}${bad.length?`<div class="pz-chips">${bad.slice(0,4).map(b=>`<button class="pz-chip${b[1]?" on":""}" data-rkb="${b[2]}">${esc(b[0])}</button>`).join("")}</div>`:`<div class="pz-rkt">Noch keine Platzierung diese Woche. Spielen Sie eine Runde, um vorn mitzumischen.</div>`}</div>`);
+      root.querySelectorAll("[data-rkb]").forEach(x=>x.onclick=()=>gotoTop(x.dataset.rkb));
+      const a=root.querySelector("[data-rka]");if(a)a.onclick=()=>gotoTop(ids[0]);
+      const x=root.querySelector("[data-evx]");if(x)x.onclick=()=>{set("bvi_pause_ev",null);const e=root.querySelector(".pz-rkev");if(e)e.remove();};
+    });
+  }
+  // Karte im Spiel: Top 3 der aktuellen Liste, eigener Platz, Abstand zum nächsten Platz
+  function board(k,lv){if(k!==curK)return;curB=lv?k+":"+lv:k;cardUp();}
+  function cardUp(){const el=root&&root.querySelector(".pz-rk3");if(!el)return;if(!curB||!rankOn()){el.hidden=true;return;}
+    const id=curB,B=BOARDS[id.split(":")[0]],my=++cardSeq;
+    rankLoad().then(R=>R.gameBoard(id)).then(j=>{if(my!==cardSeq||!el.isConnected||curB!==id)return;
+      const f=v=>fmtV(B,v)+(B.t?"":" "+B.u),row=r=>`<li${r.me?' class="me"':""}><b>${r.place}</b><span>${r.me?"Sie":esc(r.name)}</span><b>${f(r.v)}</b></li>`;
+      const rows=j.top.slice(0,3).map(row);if(j.me&&j.me.place>3)rows.push(row({place:j.me.place,v:j.me.v,me:1}));
+      let gap="Spielen Sie eine Runde, um in diese Liste zu kommen.";
+      if(j.me){const p=j.me.place,ref=p===1?j.top[1]:j.top[p-2];
+        if(p===1)gap=ref?"Sie liegen vorn, "+(B.t?ref.v-j.me.v:j.me.v-ref.v).toLocaleString("de-DE")+(B.t?" Sekunden":" "+unitN(j.me.v-ref.v,B.u))+" vor Platz 2.":"Sie führen die Liste an.";
+        else if(ref){const d=B.t?j.me.v-ref.v:ref.v-j.me.v;gap="Noch "+(B.t?(d<120?d+" "+(d===1?"Sekunde":"Sekunden"):fmtT(d)+" Min."):d.toLocaleString("de-DE")+" "+unitN(d,B.u))+" bis Platz "+(p-1)+".";}
+        else gap="Platz "+p+" von "+j.total+".";}
+      el.innerHTML=`<div class="pz-rkh">Bestenliste · ${esc(bname(id))}</div>${rows.length?`<ol>${rows.join("")}</ol>`:""}<div class="pz-rkt">${gap}</div>`;el.hidden=false;
+    }).catch(()=>{if(my===cardSeq)el.hidden=true;});}
   function hubTop(){
     if(!BOARDS[topG])topG="fahrt";const B=BOARDS[topG],g=GAMES.find(x=>x[0]===topG);if(B.lv&&!B.lv.some(l=>l[0]===topL))topL=B.lv[0][0];if(!B.lv)topL="";
-    const id=topL?topG+":"+topL:topG,all=topS==="all",u=B.t?"Bestzeit":B.u,dd=s=>s.slice(8,10)+"."+s.slice(5,7)+".";
+    const id=topL?topG+":"+topL:topG,all=topS!=="me",wk=topS==="week",u=B.t?"Bestzeit":B.u,dd=s=>s.slice(8,10)+"."+s.slice(5,7)+".";
     const chips=Object.keys(BOARDS).map(k=>{const q=GAMES.find(x=>x[0]===k);return `<button class="pz-chip${k===topG?" on":""}" data-tg="${k}" aria-pressed="${k===topG}">${q[2]}</button>`;}).join("");
     const lv=B.lv?`<div class="pz-chips pz-lvs" role="group" aria-label="Stufe">${B.lv.map(l=>`<button class="pz-chip${l[0]===topL?" on":""}" data-tl="${l[0]}" aria-pressed="${l[0]===topL}">${l[1]}</button>`).join("")}</div>`:"";
-    const scope=`<div class="pz-chips pz-scope" role="group" aria-label="Wer"><button class="pz-chip${all?"":" on"}" data-ts="me" aria-pressed="${!all}">Meine Ergebnisse</button><button class="pz-chip${all?" on":""}" data-ts="all" aria-pressed="${all}">Alle Teilnehmer</button></div>`;
+    const scope=`<div class="pz-chips pz-scope" role="group" aria-label="Wer"><button class="pz-chip${all?"":" on"}" data-ts="me" aria-pressed="${!all}">Meine Ergebnisse</button><button class="pz-chip${all&&!wk?" on":""}" data-ts="all" aria-pressed="${all&&!wk}">Alle Teilnehmer</button><button class="pz-chip${wk?" on":""}" data-ts="week" aria-pressed="${wk}">Diese Woche</button></div>`;
     root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Bestenliste</div>${scope}<div class="pz-chips" role="group" aria-label="Spiel">${chips}</div>${lv}
-    <div class="pz-lbh"><b>${g[2]}${B.lv?" · "+B.lv.find(l=>l[0]===topL)[1]:""}</b><small>${all?(B.t?"Die schnellsten Teilnehmer, je Person die beste Zeit":"Die besten Teilnehmer, je Person das beste Ergebnis"):(B.t?"Deine zehn schnellsten Läufe, nur auf deinen Geräten":"Deine zehn besten Läufe, nur auf deinen Geräten")}</small></div><div class="pz-lbb"></div>
+    <div class="pz-lbh"><b>${g[2]}${B.lv?" · "+B.lv.find(l=>l[0]===topL)[1]:""}</b><small>${wk?"Wochenwertung: nur Ergebnisse seit Montag, jeden Montag beginnt sie neu":all?(B.t?"Die schnellsten Teilnehmer, je Person die beste Zeit":"Die besten Teilnehmer, je Person das beste Ergebnis"):(B.t?"Deine zehn schnellsten Läufe, nur auf deinen Geräten":"Deine zehn besten Läufe, nur auf deinen Geräten")}</small></div><div class="pz-lbb"></div>
     <button class="pz-tile pz-lgo" data-g="${topG}"><span class="pz-tt"><b>${g[2]} spielen</b></span></button></div>`;
     tabsOn();
     root.querySelectorAll("[data-tg]").forEach(x=>x.onclick=()=>{topG=x.dataset.tg;set("bvi_pause_topg",topG);hubTop();});
@@ -131,7 +186,7 @@ const PAUSE=(function(){
     if(!all){const a=get(TOPKEY,{})[id];
       body.innerHTML=Array.isArray(a)&&a.length?`<ol class="pz-lb">${a.map((e,i)=>`<li><span class="pz-lr">${i+1}</span><b>${fmtV(B,e.p)}${B.t?"":" <small>"+u+"</small>"}</b><span class="pz-ld">${e.n?esc(e.n)+" · ":""}${dd(e.d)}</span></li>`).join("")}</ol>`:`<div class="pz-card"><div class="pz-center">Noch kein Eintrag. Spiele eine Runde, dann erscheint dein Ergebnis hier.</div></div>`;
       return;}
-    const cur=()=>ptab==="top"&&topS==="all"&&topG===g[0]&&(topL||"")===(B.lv?topL:"")&&body.isConnected;
+    const cur=()=>ptab==="top"&&topS!=="me"&&topG===g[0]&&(topL||"")===(B.lv?topL:"")&&body.isConnected;
     const ini=n=>String(n).trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase();
     const lav=r=>/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(r.av||"")?`<span class="rk-av" style="background-image:url(${r.av})"></span>`:`<span class="rk-av">${esc(ini(r.name))}</span>`;
     const draw=j=>{if(!cur())return;
@@ -142,7 +197,7 @@ const PAUSE=(function(){
     rankLoad().then(R=>{
       if(!R.on()){msg("Für den Vergleich mit allen nimmst du am Ranking teil. Dabei werden dein Name, dein kleines Profilbild und deine Bestwerte übertragen. Es ist freiwillig und kann jederzeit im Ranking beendet werden.",`<button class="pz-chip on" data-join>Am Ranking teilnehmen</button>`);
         const j=root.querySelector("[data-join]");if(j)j.onclick=()=>{j.disabled=true;R.join().then(()=>hubTop()).catch(e=>{j.disabled=false;fail(e);});};return;}
-      return R.games(myBests()).catch(e=>{if(e.code===404)throw e;}).then(()=>R.gameBoard(id)).then(draw);
+      return R.games(myBests(),weekObj()).catch(e=>{if(e.code===404)throw e;}).then(()=>R.gameBoard(id,wk)).then(draw);
     }).catch(fail);
   }
   function hub(){stop();if(ptab==='idf3d')return hub3d();if(ptab==='top')return hubTop();
@@ -154,11 +209,13 @@ const PAUSE=(function(){
     <div class="pz-tiles pz-kl">${['mahjong','sudoku','tetris','solitaer','g2048','minesweeper','snake'].map(k=>tile(k)).join('')}</div></div>`;
     tabsOn();
     root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
+    fillRank();
   }
   const LABEL={fahrt:'Prüfungsfragen',duell:'Prüfungsfragen',tagesfrage:'Prüfungsfragen',snake:'Geschicklichkeit',tetris:'Geschicklichkeit',g2048:'Knobelspiel',solitaer:'Kartenspiel',minesweeper:'Knobelspiel',sudoku:'Knobelspiel',mahjong:'Knobelspiel',kreuzwort:'Fachbegriffe',hangman:'Fachbegriffe',lueckentext:'Lernkarten',reihenfolge:'Wissen'};
   function open(k){const g=GAMES.find(x=>x[0]===k);if(!g)return;stop();cur=g[4]();
     if(!pushed){try{history.pushState(Object.assign({},history.state,{pz:1}),'');pushed=true;}catch(e){}}
-    root.innerHTML=`<div class="pz-wrap"><div class="pz-head"><button class="pz-back">‹ Alle Spiele</button><span class="pz-center" style="font-size:.78rem">${LABEL[k]||''}</span></div><div class="pz-body"></div></div>`;
+    root.innerHTML=`<div class="pz-wrap"><div class="pz-head"><button class="pz-back">‹ Alle Spiele</button><span class="pz-center" style="font-size:.78rem">${LABEL[k]||''}</span></div><div class="pz-rk3" hidden></div><div class="pz-body"></div></div>`;
+    curK=k;curB=BOARDS[k]&&!BOARDS[k].lv?k:null;cardUp();
     root.querySelector('.pz-back').onclick=toHub;cur.start(root.querySelector('.pz-body'));}
   function stop(){if(cur&&cur.stop)cur.stop();cur=null;}
   function toHub(){if(pushed)history.back();else hub();}
@@ -355,6 +412,6 @@ const PAUSE=(function(){
     show(){root=document.getElementById('pause-root');if(!root)return;if(!cur)hub();},
     leave(){stop();pushed=false;if(root)root.innerHTML='';},
     back(){if(cur){toHub();return true;}return false;},
-    open, addScore, _fahrt:()=>FAHRT
+    open, addScore, board, _fahrt:()=>FAHRT
   };
 })();

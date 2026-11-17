@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+      'Pausenraum, Bestenlisten präsenter: Oben bei den Pausenspielen zeigt „Dein Rang heute“ Ihre besten Plätze, jede Spielkachel nennt Ihren Platz („Platz 3 von 28“), und im Spiel zeigt eine Karte die Top 3, Ihren Platz und wie viele Punkte oder Sekunden bis zum nächsten Platz fehlen. Neu ist die Wochenwertung (neu jeden Montag) mit Abzeichen „Wochensieger“ und „Top 3“, einem Hinweis, wenn jemand Sie überholt hat, und dem Filter „Diese Woche“ in der Bestenliste. Gilt für Teilnehmer am Ranking; der Sync-Server muss dafür aktualisiert werden.',
       'Mahjong: Fünf Stufen mit eigenen Brettern (Leicht, Mittel, Pyramide, Burg, Festung, 40 bis 124 Steine). Jede Stufe hat eine eigene Bestzeit und eine eigene Bestenliste. Ihr bisheriger Rekord zählt für die Pyramide.',
       'Bestenliste: Die Profilbilder der Teilnehmer werden wieder angezeigt, und Ihre bisherigen Rekorde stehen jetzt schon in den Listen.',
       'Pausenraum, Bestenliste: Mit „Alle Teilnehmer“ treten Sie in jedem Spiel gegen alle an, die am Ranking teilnehmen (Top 20 und Ihr eigener Platz). Die Teilnahme ist freiwillig; Name und Profilbild werden dann anderen angezeigt. Dafür muss der Sync-Server auf dem neuesten Stand sein.',

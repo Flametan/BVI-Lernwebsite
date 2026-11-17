@@ -98,6 +98,14 @@ test('Spiel-Bestenlisten: melden, besser gewinnt, Zeit niedriger, Grenzen', asyn
   assert.equal((await (await s.call('GET', A + '/games?b=snake', TA)).json()).me.v, 40);
   assert.equal((await s.call('PUT', A + '/games', TA, { g: [1] })).status, 422);
   assert.equal((await s.call('GET', A + '/games?b=quatsch', TA)).status, 422);
+  // Wochenwerte und Überblick
+  assert.equal((await s.call('PUT', A + '/games', TA, { g: {}, w: { k: wk(), g: { tetris: 4000 } } })).status, 200);
+  assert.equal((await s.call('PUT', B + '/games', TB, { g: {}, w: { k: wk(), g: { tetris: 6000 } } })).status, 200);
+  j = await (await s.call('GET', A + '/games?b=tetris&w=1', TA)).json(); assert.deepEqual(j.top.map(x => [x.name, x.v]), [['Ben', 6000], ['Anna', 4000]]);
+  j = await (await s.call('GET', A + '/games?all=1', TA)).json();
+  assert.equal(j.boards.tetris.place, 2); assert.equal(j.boards.tetris.above, 'Ben'); assert.equal(j.boards.tetris.wplace, 2); assert.equal(j.boards.snake.wplace, null);
+  await s.call('PUT', A + '/games', TA, { g: {}, w: { k: '1999-W01', g: { tetris: 9999 } } });   // alte Woche wird ignoriert
+  j = await (await s.call('GET', A + '/games?b=tetris&w=1', TA)).json(); assert.equal(j.me.v, 4000);
   assert.equal((await s.call('GET', C + '/games?b=tetris', 'C'.repeat(43))).status, 404);      // nicht im Ranking
   await s.close();
 });

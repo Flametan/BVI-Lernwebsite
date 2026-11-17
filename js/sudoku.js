@@ -315,7 +315,7 @@ const SUDOKU=(function(){
     note('Aktuelles Spiel verwerfen? Tippe nochmal zur Bestätigung.',true); return false;
   }
   function newGame(l){
-    if(l) lvl=l; clearTimeout(genT); clearInterval(timer); timer=null; running=false; genId++; var id=genId;
+    if(l) lvl=l; if(typeof PAUSE!=='undefined'&&PAUSE.board) PAUSE.board('sudoku',lvl); clearTimeout(genT); clearInterval(timer); timer=null; running=false; genId++; var id=genId;
     S=null; undo=[]; sel=-1; notesMode=false; flashIdx=-1; pend=''; note('');
     ldel(SKEY); saveOpts(); paintUi();
     ov.hidden=true; ov.innerHTML='';
