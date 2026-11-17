@@ -4426,11 +4426,8 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .g-hero-fl{display:inline-block;filter:grayscale(.55) opacity(.8);}.g-hero-fl.on{filter:none;}
 .g-hero-l{font-weight:700;opacity:.92;}
 .g-hero-rk{border:0;background:none;padding:0;cursor:pointer;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));display:grid;place-items:center;}
-.g-hero-xp{padding:8px 20px 12px;background:rgba(0,0,0,.5);color:#fff;display:flex;flex-direction:column;gap:5px;position:relative;}
+.g-hero-xp{--xph:56px;box-sizing:border-box;height:var(--xph);justify-content:center;padding:0 20px;background:rgba(0,0,0,.5);color:#fff;display:flex;flex-direction:column;gap:5px;position:relative;}
 .g-hero-xl{display:flex;justify-content:space-between;gap:10px;font-size:.74rem;font-weight:700;font-variant-numeric:tabular-nums;}
-.g-d3xp{margin-top:6px;padding:8px 0 4px;border-top:1px solid var(--m-line);display:flex;flex-direction:column;gap:5px;}
-.g-d3xp .g-hero-xl{color:var(--m-fg);}
-.g-d3xp .g-hero-xb{background:var(--m-raised);}
 .g-hero-xb{height:6px;border-radius:9px;background:rgba(255,255,255,.22);overflow:hidden;}
 .g-hero-xb i{display:block;height:100%;border-radius:9px;transition:width .6s cubic-bezier(.3,.9,.3,1);}
 .g-hero-st:focus-visible,.g-hero-rk:focus-visible{outline:2px solid #fff;outline-offset:3px;border-radius:8px;}
@@ -4953,7 +4950,6 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #m-home .g-today{position:relative;margin-top:-16px;}
   #m-home .g-today .g-tbar,#m-home .g-today .g-more,#m-home .g-today .g-more[hidden]{display:none;}
   #m-home .g-d3{display:flex;align-items:center;gap:18px;padding:10px 28px 10px 20px;flex:1;}
-  #m-home .g-d3xp{display:none;}
   #m-home .g-r3{display:flex;flex-direction:column;align-items:center;gap:2px;}
   #m-home .g-d3h{display:none;}
   #m-home .g-sl,#m-home .g-trk,#m-home .g-top,#m-home .g-rs{display:contents;}
@@ -4983,7 +4979,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   /* Ranking: dunkler Streifen mit schräger Kante rechts in der Kopfkarte; ragt über den Rand, die Kartenrundung schneidet ihn ab */
   #m-home .g-hero{position:relative;overflow:hidden;}
   #m-home .g-hero-rk{margin-right:90px;}
-  #m-home .g-hero-rkl{position:absolute;right:-2px;top:-2px;bottom:46px;width:98px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;color:#fff;font:inherit;font-weight:700;font-size:.74rem;background:rgba(0,0,0,.28);clip-path:polygon(14px 0,100% 0,100% 100%,0 100%);cursor:pointer;}
+  #m-home .g-hero-rkl{position:absolute;right:-2px;top:-2px;bottom:56px;width:98px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;color:#fff;font:inherit;font-weight:700;font-size:.74rem;background:rgba(0,0,0,.28);clip-path:polygon(14px 0,100% 0,100% 100%,0 100%);cursor:pointer;}
   #m-home .g-hero-rkl:hover{background:rgba(0,0,0,.36);}
   #m-home .g-hero-rkl:focus-visible{outline:2px solid #fff;outline-offset:-4px;}
   #m-home .m-mods{grid-row:3;}
