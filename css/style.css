@@ -4881,7 +4881,34 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 
 /* Karte „Heute“: Tagesziel-Ring, Tages- und Wochenaufgaben */
 .g-today{background:var(--m-card);border-radius:16px;margin-bottom:14px;}
-.g-d3{display:none;}
+/* Handy: kompakte Karte – Ringe (Heute) und per Wisch die Wochenaufgaben, Ranking-Pille in Akzentfarbe */
+.g-d3{display:block;padding:8px 16px 8px;}
+.g-today .g-tbar,.g-today .g-more,.g-today .g-more[hidden]{display:none;}
+.g-d3h{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;}
+.g-d3t{display:flex;align-items:center;gap:10px;}
+.g-d3t h6{margin:0;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--m-muted);font-weight:700;}
+.g-dots{display:flex;gap:4px;}
+.g-dots i{width:5px;height:5px;border-radius:99px;background:var(--m-line);transition:width .2s,background .2s;}
+.g-dots i.on{width:14px;background:var(--m-accent);}
+.g-rk{display:flex;align-items:center;gap:5px;border:0;border-radius:99px;background:var(--m-accent);color:#1a1000;font:inherit;font-weight:800;font-size:.72rem;padding:4px 11px 4px 8px;cursor:pointer;}
+.g-rk:focus-visible{outline:2px solid var(--m-fg);outline-offset:2px;}
+.g-sl{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -16px;overscroll-behavior-x:contain;}
+.g-sl::-webkit-scrollbar{display:none;}
+.g-sl>*{flex:0 0 100%;box-sizing:border-box;padding:0 16px;scroll-snap-align:start;}
+.g-rs{display:flex;justify-content:space-between;}
+.g-r3{display:flex;flex-direction:column;align-items:center;gap:1px;}
+.g-r3 svg{display:block;width:50px;height:50px;}
+.g-r3 .t{fill:none;stroke:var(--m-raised);stroke-width:4;}
+.g-r3 .v{fill:none;stroke:var(--m-accent);stroke-width:4;stroke-linecap:round;transition:stroke-dasharray .6s cubic-bezier(.3,.9,.3,1);}
+.g-r3 text{fill:var(--m-fg);font-size:11px;font-weight:700;}
+.g-r3 em{font-style:normal;font-size:.66rem;color:var(--m-muted);}
+.g-w3 h6{display:none;}
+.g-w3{display:flex;flex-direction:column;justify-content:center;}
+.g-w3 .r{display:grid;grid-template-columns:116px 1fr 50px;gap:10px;align-items:center;font-size:.82rem;line-height:1.7;}
+.g-w3 .r s{height:5px;border-radius:9px;background:var(--m-raised);overflow:hidden;}
+.g-w3 .r s i{display:block;height:100%;background:var(--m-accent);}
+.g-w3 .r b{text-align:right;color:var(--m-muted);font-weight:600;font-size:.78rem;}
+.g-w3 .r.ok b{color:var(--m-accent);}
 .g-tbar{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:8px 14px;border:0;background:none;color:var(--m-fg);font-family:inherit;text-align:left;cursor:pointer;border-radius:16px;}
 .g-tbar:focus-visible{outline:2px solid var(--m-accent);outline-offset:2px;}
 .g-rg{position:relative;flex:none;width:38px;height:38px;display:grid;place-items:center;}
@@ -4914,7 +4941,14 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #m-home .g-today .g-tbar,#m-home .g-today .g-more,#m-home .g-today .g-more[hidden]{display:none;}
   #m-home .g-d3{display:flex;align-items:center;gap:18px;padding:10px 20px;flex:1;}
   #m-home .g-r3{display:flex;flex-direction:column;align-items:center;gap:2px;}
-  #m-home .g-r3 svg{display:block;}
+  #m-home .g-d3h{display:none;}
+  #m-home .g-sl,#m-home .g-rs{display:contents;}
+  #m-home .g-sl>*{padding:0;flex:none;}
+  #m-home .g-r3 svg{display:block;width:64px;height:64px;}
+  #m-home .g-r3 em{font-size:.72rem;}
+  #m-home .g-w3 h6{display:block;}
+  #m-home .g-w3 .r{display:flex;font-size:.86rem;line-height:1.6;}
+  #m-home .g-w3 .r s{display:none;}
   #m-home .g-r3 .t{fill:none;stroke:var(--m-raised);stroke-width:4;}
   #m-home .g-r3 .v{fill:none;stroke:var(--m-accent);stroke-width:4;stroke-linecap:round;transition:stroke-dasharray .6s cubic-bezier(.3,.9,.3,1);}
   #m-home .g-r3 text{fill:var(--m-fg);font-size:11px;font-weight:700;}

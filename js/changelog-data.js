@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+      'Startseite (Handy): Die „Heute“-Leiste ist jetzt eine kompakte Karte mit drei Fortschrittsringen (Lernkarten, Prüfungsfragen, Minuten). Nach links wischen zeigt die Wochenaufgaben, Punkte oben zeigen die Seite. Der Ranking-Knopf sitzt als Pille in der Akzentfarbe oben rechts.',
       'Startseite (Tablet/PC): Die Tagesaufgaben stehen als drei Fortschrittsringe (Lernkarten, Prüfungsfragen, Minuten) mit der Wochenliste daneben. Der Ranking-Knopf sitzt jetzt als dunkler Streifen rechts in der orangen Serien-Karte.',
       'Lernkarten: „Markierte“ zeigt jetzt immer die markierten Karten. Markierungen von Karten, die es im aktuellen Stapel nicht mehr gibt (gelöscht oder aus einem anderen Jahrgang), werden nicht mehr mitgezählt.',
       'Startseite (Tablet/PC): Die Tagesziele sind wieder niedrig, Serien-Karte und Tagesziele zusammen sind nur noch etwa 200 px hoch (Ring links neben „Heute“, Ranking-Knopf rechts oben, keine eigene Kopfzeile mehr). Der Haken im Tagesring ist weg, die Aufgaben haben kürzere Texte („10 Lernkarten“, „5 Prüfungsfragen“, „10 Minuten“, „5 Tage“).',
