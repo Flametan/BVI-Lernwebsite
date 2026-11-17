@@ -80,11 +80,11 @@ function create(cfg, ctx) {
   function board(kind, id) {
     const k = curWk();
     const rows = Object.entries(db.players)
-      .map(([pid, p]) => ({ pid, name: p.name, av: p.av || null, xp: kind === 'week' ? weekXp(p, k) : p.xp }))
+      .map(([pid, p]) => ({ pid, name: p.name, av: p.av || null, tx: p.xp, xp: kind === 'week' ? weekXp(p, k) : p.xp }))
       .filter(r => r.xp > 0 || r.pid === id)
       .sort((a, b) => b.xp - a.xp || a.name.localeCompare(b.name, 'de'));
     const me = rows.findIndex(r => r.pid === id);
-    return { board: kind, week: k, total: rows.length, top: rows.slice(0, 20).map((r, i) => ({ place: i + 1, name: r.name, av: r.av, xp: r.xp, me: r.pid === id })), me: me < 0 ? null : { place: me + 1, xp: rows[me].xp } };
+    return { board: kind, week: k, total: rows.length, top: rows.slice(0, 20).map((r, i) => ({ place: i + 1, name: r.name, av: r.av, tx: r.tx, xp: r.xp, me: r.pid === id })), me: me < 0 ? null : { place: me + 1, xp: rows[me].xp } };
   }
   function duelsOf(id) {
     const k = curWk(), out = [];
