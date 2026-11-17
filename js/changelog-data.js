@@ -6,6 +6,7 @@ const CHANGELOG_ENTRIES=[
       'Lernkarten: Am Desktop ist die Karte jetzt deutlich größer (große Schrift, volle Breite), die Fächer stehen in einer schmalen Leiste rechts. Auf dem Tablet ist die Karte ebenfalls größer.',
       'Ranking: Die Zeilen der Teilnehmer sind 55 px hoch, mit größerem Profilbild, größerer Schrift und größerem Dienstgrad-Abzeichen.',
       'Der „Einsatz-Alarm der Woche“ (Flammen-Menü, Bonuspunkte und Abzeichen „Alarm bestanden“) wurde entfernt. Die Wochenaufgaben ersetzen ihn.',
+      'Tages- und Wochenaufgaben zeigen jetzt die Punkte (XP) an, die jede Aufgabe bringt (Tag +25, Woche +50, alle drei Wochenaufgaben zusätzlich +100).',
       'Sync-Server: Neu im Server ist das Ranking (Datei rank.js, Daten in rank.dat). Der Server muss einmal neu gebaut und gestartet werden, siehe sync-server/README.md.',
       'Startseite: Neue Karte „Heute“ mit Tagesziel-Ring (Lernminuten), den drei Tagesaufgaben und den Wochenaufgaben. Der Ring wird grün, sobald das Tagesziel erreicht ist.',
       'Wochenaufgaben: 100 Lernkarten üben, 25 Prüfungsfragen richtig und an 5 Tagen lernen. Jede bringt 50 Punkte, alle drei zusammen 100 Bonuspunkte und das Abzeichen „Wochenmeister“. Die Seite „Rang & Abzeichen“ zeigt Tages- und Wochenaufgaben jetzt im Bereich „Aufgaben“.',

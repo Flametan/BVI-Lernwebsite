@@ -3598,7 +3598,9 @@ button.g-row{cursor:pointer;min-height:44px;}
 .g-tk{width:20px;height:20px;border-radius:50%;border:2px solid var(--m-dim);display:grid;place-items:center;flex:none;color:var(--m-on-accent,#1c1c1c);}
 .g-tasks li.ok .g-tk{background:var(--m-accent);border-color:var(--m-accent);}
 .g-tasks li.ok .g-tt{color:var(--m-muted);text-decoration:line-through;}
-.g-tt{flex:1;min-width:0;}.g-tv{font-weight:700;font-size:.8rem;color:var(--m-muted);}
+.g-tasks li.ok .g-tx{color:var(--m-muted);}
+.g-tx{flex:none;font-size:.72rem;font-weight:700;color:var(--m-accent-fg,var(--m-accent));opacity:.9;}
+.g-tt{flex:1;min-width:0;}.g-tv{font-weight:700;font-size:.8rem;color:var(--m-muted);min-width:4.2ch;text-align:right;}
 .g-links{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
 .g-links button{flex:1 1 140px;border:0;background:var(--m-raised);color:var(--m-fg);font-family:inherit;font-weight:600;font-size:.84rem;border-radius:12px;min-height:44px;padding:0 12px;cursor:pointer;}
 /* Seiten Rang & Abzeichen, Wochen-Rückblick */
