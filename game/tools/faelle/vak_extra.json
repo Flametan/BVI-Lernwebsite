@@ -1,0 +1,84 @@
+{
+  "1": [
+    {
+      "typ": "reihe",
+      "frage": "Ein Bundesgesetz entsteht. Bringen Sie die Stationen des Gesetzgebungsverfahrens in die richtige Reihenfolge.",
+      "optionen": [
+        "Gesetzesvorlage wird in den Bundestag eingebracht",
+        "Beratung in drei Lesungen und Gesetzesbeschluss des Bundestages",
+        "Prüfung im Bundesrat",
+        "Ausfertigung durch den Bundespräsidenten",
+        "Verkündung im Bundesgesetzblatt"
+      ],
+      "richtig": [
+        "Gesetzesvorlage wird in den Bundestag eingebracht",
+        "Beratung in drei Lesungen und Gesetzesbeschluss des Bundestages",
+        "Prüfung im Bundesrat",
+        "Ausfertigung durch den Bundespräsidenten",
+        "Verkündung im Bundesgesetzblatt"
+      ],
+      "erkl": "Nach der Gesetzesvorlage berät und beschließt der Bundestag, dann prüft der Bundesrat das Gesetz. Nach der Gegenzeichnung fertigt der Bundespräsident das Gesetz aus, es wird im Bundesgesetzblatt verkündet und tritt in Kraft.",
+      "quelle": "Staatsrecht: Gesetzgebungsverfahren in Deutschland (v-vak-staatsrecht)"
+    }
+  ],
+  "2": [
+    {
+      "typ": "multi",
+      "frage": "Ein Bescheid soll ergänzt werden. Was davon sind Nebenbestimmungen nach § 36 VwVfG?",
+      "optionen": [
+        "Befristung",
+        "Bedingung",
+        "Auflage",
+        "Anhörung",
+        "Rechtsbehelfsbelehrung"
+      ],
+      "richtig": [
+        "Befristung",
+        "Bedingung",
+        "Auflage"
+      ],
+      "erkl": "Nebenbestimmungen nach § 36 VwVfG sind Befristung, Bedingung, Widerrufsvorbehalt, Auflage und Auflagenvorbehalt. Die Anhörung gehört zum Verwaltungsverfahren (§ 28 VwVfG), die Rechtsbehelfsbelehrung nennt Rechtsbehelf und Frist.",
+      "quelle": "Allgemeines Verwaltungsrecht: Nebenbestimmungen (v-vak-verwaltungsrecht)"
+    }
+  ],
+  "3": [
+    {
+      "typ": "reihe",
+      "frage": "Gegen einen Beamten steht ein Vorwurf im Raum. Bringen Sie den Ablauf des Disziplinarverfahrens in die richtige Reihenfolge.",
+      "optionen": [
+        "Verdacht eines Dienstvergehens",
+        "Einleitungsverfügung mit Unterrichtung, Belehrung und Anhörung",
+        "Ermittlung durch den Ermittlungsführer",
+        "Abschluss durch Einstellung oder Disziplinarverfügung"
+      ],
+      "richtig": [
+        "Verdacht eines Dienstvergehens",
+        "Einleitungsverfügung mit Unterrichtung, Belehrung und Anhörung",
+        "Ermittlung durch den Ermittlungsführer",
+        "Abschluss durch Einstellung oder Disziplinarverfügung"
+      ],
+      "erkl": "Auf den Verdacht folgt die Einleitungsverfügung: Der Betroffene wird unterrichtet, belehrt und angehört. Danach erhebt der Ermittlungsführer die Beweise. Am Ende steht die Einstellung oder eine Disziplinarverfügung.",
+      "quelle": "Öffentliches Dienstrecht: Ablauf eines Disziplinarverfahrens (v-vak-dienstrecht)"
+    }
+  ],
+  "4": [
+    {
+      "typ": "multi",
+      "frage": "Ein Verwaltungsakt soll mit Zwang durchgesetzt werden. In welchen Fällen ist das möglich?",
+      "optionen": [
+        "Der Verwaltungsakt ist unanfechtbar",
+        "Die sofortige Vollziehung ist angeordnet",
+        "Eine aufschiebende Wirkung ist nicht möglich",
+        "Ein Dritter hat den Verstoß angezeigt",
+        "Der Widerspruch ist noch nicht entschieden"
+      ],
+      "richtig": [
+        "Der Verwaltungsakt ist unanfechtbar",
+        "Die sofortige Vollziehung ist angeordnet",
+        "Eine aufschiebende Wirkung ist nicht möglich"
+      ],
+      "erkl": "Ein mit Zwang durchzusetzender Verwaltungsakt muss unanfechtbar sein, seine sofortige Vollziehung muss angeordnet sein oder es darf keine aufschiebende Wirkung möglich sein. Ein offener Widerspruch hat dagegen aufschiebende Wirkung (§ 80 Abs. 1 VwGO).",
+      "quelle": "Allgemeines Verwaltungsrecht: Verwaltungsvollstreckung (v-vak-verwaltungsrecht)"
+    }
+  ]
+}

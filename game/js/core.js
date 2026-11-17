@@ -1,21 +1,22 @@
 /* IdF-Spiel – Kern: Missionen, Speichern, Punkte, Level, Abzeichen, Tagesziel, Wochenaufgabe,
    Wiederholung falscher Aufgaben (Abstand wächst), Prüfung und Bestenliste.
-   Der Stand bleibt auf dem Gerät (localStorage „bvi_game_v1“). */
+   Der Stand liegt in localStorage „bvi_game_v1“ und läuft über den Geräte-Abgleich der Lern-App mit;
+   Einstellungen des Geräts (Ton, Grafik, Stufe) liegen getrennt in „bvi_game_opt“ und bleiben auf dem Gerät. */
 const CORE = (function(){
-  const KEY = 'bvi_game_v1';
+  const KEY = 'bvi_game_v1', OKEY = 'bvi_game_opt';
   const PASS = 0.7;                       // Level bestanden ab 70 % der möglichen Punkte
 
   // bereit:true = spielbar; die übrigen Missionen folgen einzeln
   const MISSIONS = [
     { id:'begehung',      thema:'Vorbeugender Brandschutz', titel:'Begehung',        text:'Geh durch das Gebäude und bestimme Türen, Wände, Decken und Treppen.', levels:5, kapitel:'v-idf-vb', bereit:true },
-    { id:'stellungnahme', thema:'Vorbeugender Brandschutz', titel:'Stellungnahme',   text:'In der Brandschutzdienststelle: Prüfe Bauvorhaben und setze Stellungnahmen aus Textbausteinen zusammen.', levels:5, kapitel:'v-idf-vb', bereit:true, welt:true },
-    { id:'stab',          thema:'Stabsarbeit',              titel:'Im Stab',         text:'Bring Meldungen zum richtigen Sachgebiet und beantworte Fragen, teils unter Zeitdruck.', levels:5, kapitel:'v-idf-stabhub', bereit:true, welt:true },
-    { id:'presse',        thema:'Presse- und Öffentlichkeitsarbeit', titel:'Pressestatement', text:'Beantworte die Fragen der Reporter und gib dein Statement vor laufender Kamera.', levels:5, kapitel:'v-idf-presse', bereit:true, welt:true },
-    { id:'lage',          thema:'Zivile Verteidigung und Katastrophenschutz', titel:'Lage Bevölkerungsschutz', text:'Im Lagezentrum: Zivile Verteidigung, Warnung und länderübergreifende Hilfe.', levels:5, kapitel:'v-idf-zv', bereit:true, welt:true },
-    { id:'ucpm',          thema:'Katastrophenschutzverfahren der EU', titel:'Hilfeersuchen', text:'Auf dem Flugfeld: Abkürzungen, Weg des Ersuchens und Kapazitäten der EU.', levels:5, kapitel:'v-idf-ucpm', bereit:true, welt:true },
-    { id:'ibk',           thema:'IBK',                      titel:'Mitarbeitergespräch', text:'Auf der Wache: Führe Gespräche und beantworte Fragen zu Transaktionsanalyse und Konflikten.', levels:5, kapitel:'v-ibk', bereit:true, welt:true },
-    { id:'vak',           thema:'VAk',                      titel:'Rechtskunde im Hörsaal', text:'Beantworte Fragen zu Staatsrecht, Verwaltungsrecht und Dienstrecht.', levels:5, kapitel:'v-vak', bereit:true, welt:true },
-    { id:'feuak',         thema:'FeuAK',                    titel:'Feuerwehr planen', text:'Im Planungsbüro: Haushalt mit Budget, Standortwahl am Stadtmodell, Projekte, Qualität, Vergabe.', levels:5, kapitel:'v-feuak', bereit:true, welt:true }
+    { id:'stellungnahme', thema:'Vorbeugender Brandschutz', titel:'Stellungnahme',   text:'In der Brandschutzdienststelle: Prüfe Bauvorhaben und setze Stellungnahmen aus Textbausteinen zusammen.', levels:6, kapitel:'v-idf-vb', bereit:true, welt:true },
+    { id:'stab',          thema:'Stabsarbeit',              titel:'Im Stab',         text:'Bring Meldungen zum richtigen Sachgebiet und beantworte Fragen, teils unter Zeitdruck.', levels:6, kapitel:'v-idf-stabhub', bereit:true, welt:true },
+    { id:'presse',        thema:'Presse- und Öffentlichkeitsarbeit', titel:'Pressestatement', text:'Beantworte die Fragen der Reporter und gib dein Statement vor laufender Kamera.', levels:6, kapitel:'v-idf-presse', bereit:true, welt:true },
+    { id:'lage',          thema:'Zivile Verteidigung und Katastrophenschutz', titel:'Lage Bevölkerungsschutz', text:'Im Lagezentrum: Zivile Verteidigung, Warnung und länderübergreifende Hilfe.', levels:6, kapitel:'v-idf-zv', bereit:true, welt:true },
+    { id:'ucpm',          thema:'Katastrophenschutzverfahren der EU', titel:'Hilfeersuchen', text:'Auf dem Flugfeld: Abkürzungen, Weg des Ersuchens und Kapazitäten der EU.', levels:6, kapitel:'v-idf-ucpm', bereit:true, welt:true },
+    { id:'ibk',           thema:'IBK',                      titel:'Mitarbeitergespräch', text:'Auf der Wache: Führe Gespräche und beantworte Fragen zu Transaktionsanalyse und Konflikten.', levels:6, kapitel:'v-ibk', bereit:true, welt:true },
+    { id:'vak',           thema:'VAk',                      titel:'Rechtskunde im Hörsaal', text:'Beantworte Fragen zu Staatsrecht, Verwaltungsrecht und Dienstrecht.', levels:6, kapitel:'v-vak', bereit:true, welt:true },
+    { id:'feuak',         thema:'FeuAK',                    titel:'Feuerwehr planen', text:'Im Planungsbüro: Haushalt mit Budget, Standortwahl am Stadtmodell, Projekte, Qualität, Vergabe.', levels:6, kapitel:'v-feuak', bereit:true, welt:true }
   ];
 
   const BADGES = {
@@ -33,23 +34,30 @@ const CORE = (function(){
     serie7:     { titel:'Sieben Tage',     text:'Tagesziel an 7 Tagen in Folge' },
     woche:      { titel:'Wochenaufgabe',   text:'Eine Wochenaufgabe geschafft' },
     pruefung:   { titel:'Prüfung bestanden', text:'Die gemischte Prüfung mit Note 4 oder besser' },
-    aufgeholt:  { titel:'Aufgeholt',       text:'10 Aufgaben in der Wiederholung gekonnt' }
+    aufgeholt:  { titel:'Aufgeholt',       text:'10 Aufgaben in der Wiederholung gekonnt' },
+    ernstfall:  { titel:'Ernstfall',       text:'Ein Level in der Stufe „Ernstfall“ bestanden' },
+    lagegriff:  { titel:'Lage im Griff',   text:'Einen Einsatz (Level 6) mit gutem Ausgang beendet' }
   };
 
   const pad = n => String(n).padStart(2,'0');
   const dkey = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 
   let S = load();
-  const OPT = { ton:true, vib:true, qual:'auto', sens:1, fx:'mittel', sprache:true, karte:true, name:'' };
-  function blank(){ return { v:1, m:{}, badges:[], tag:{ last:'', serie:0 }, opt:{} }; }
+  const OPT = { ton:true, vib:true, qual:'auto', sens:1, fx:'mittel', sprache:true, karte:true, name:'', stufe:'normal', tut:false, fps:false };
+  function blank(){ return { v:1, m:{}, badges:[], tag:{ last:'', serie:0 } }; }
   function load(){
     try{
       const o = JSON.parse(localStorage.getItem(KEY) || 'null');
-      if(o && o.v === 1 && o.m && Array.isArray(o.badges) && o.tag){ o.opt = o.opt || {}; return o; }
+      if(o && o.v === 1 && o.m && Array.isArray(o.badges) && o.tag) return o;
     }catch(e){}
     return blank();
   }
   function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+  // Einstellungen: früher im Spielstand, jetzt eigener Schlüssel (einmalig umziehen)
+  let O = {};
+  try{ O = JSON.parse(localStorage.getItem(OKEY) || 'null') || {}; }catch(e){}
+  if(S.opt){ O = Object.assign({}, S.opt, O); delete S.opt; saveOpt(); save(); }
+  function saveOpt(){ try{ localStorage.setItem(OKEY, JSON.stringify(O)); }catch(e){} }
 
   function lv(mid, n){ return (S.m[mid] && S.m[mid][n]) || null; }
   function unlocked(mid, n){ return n === 0 || !!(lv(mid, n-1) && lv(mid, n-1).ok); }
@@ -62,16 +70,19 @@ const CORE = (function(){
   function award(id, neu){ if(BADGES[id] && !S.badges.includes(id)){ S.badges.push(id); neu.push(id); } }
 
   // Ergebnis eines Levels eintragen; liefert, was neu ist (für die Auswertung)
-  function finish(mid, n, punkte, max, fehler){
+  function finish(mid, n, punkte, max, fehler, extra){
     const ok = max > 0 && punkte / max >= PASS;
     const m = S.m[mid] || (S.m[mid] = {});
     const alt = m[n] || { best:0, ok:false };
     const rekord = punkte > alt.best;
     m[n] = { best: Math.max(alt.best, punkte), ok: alt.ok || ok };
+    if(alt.ernst || (ok && extra && extra.ernst)) m[n].ernst = true;
     const neu = [];
     if(ok){
       award('erste', neu);
       if(fehler === 0) award('fehlerfrei', neu);
+      if(extra && extra.ernst) award('ernstfall', neu);
+      if(extra && extra.gut) award('lagegriff', neu);
       const mi = MISSIONS.find(x => x.id === mid);
       if(mi && passed(mid) >= mi.levels && BADGES[mid]) award(mid, neu);
     }
@@ -122,8 +133,8 @@ const CORE = (function(){
   }
   function trainiert(){ const neu = []; tagesziel(neu); save(); return neu; }
 
-  const opt = k => (k in S.opt ? S.opt[k] : OPT[k]);
-  function setOpt(k, v){ S.opt[k] = v; save(); }
+  const opt = k => (k in O ? O[k] : OPT[k]);
+  function setOpt(k, v){ O[k] = v; saveOpt(); }
 
   return { MISSIONS, BADGES, PASS, opt, setOpt, lv, unlocked, best, passed, total, finish, dailyDone, woche, merke, gekonnt, faellig, vergiss, pruefung, trainiert,
            serie: () => S.tag.serie, badges: () => S.badges.slice(), rang: art => ((S.rang || {})[art] || []).slice(), pruefBest: () => (S.pruef ? S.pruef.best : 0) };

@@ -393,6 +393,345 @@
     "schlecht": "Die Einsatzbesprechung muss wiederholt werden."
    },
    "licht": "tag"
+  },
+  {
+   "titel": "Einsatz: Hilfeersuchen nach Hochwasser",
+   "steckbrief": "Ein Staat bittet nach einem Hochwasser um Hilfe: Sie führen ein deutsches Modul vom Ersuchen bis zur Rückkehr durch das EU-Verfahren.",
+   "licht": "morgen",
+   "szenario": true,
+   "auftrag": {
+    "wer": "Frau Kowalczyk, Verbindungsperson des GMLZ",
+    "p": "p1",
+    "text": "Guten Morgen. Ein Nachbarstaat steht nach tagelangem Regen unter Wasser und hat das Katastrophenschutzverfahren der Union aktiviert. Sie führen unser Modul für Hochleistungspumpen, das im European Civil Protection Pool gemeldet ist. Ich halte für das GMLZ die Verbindung. Wir treffen uns an der EU-Flagge."
+   },
+   "lage": {
+    "name": "Einsatz geordnet",
+    "start": 60
+   },
+   "ende": {
+    "gut": "Das Modul war über den vorgesehenen Weg im Einsatz und hat vor Ort eingebunden gearbeitet. Ersuchen, Annahme, Einsatz und Abrechnung waren jederzeit nachvollziehbar.",
+    "mittel": "Das Modul hat geholfen, aber nicht jeder Schritt lief über den vorgesehenen Weg. An einigen Stellen mussten GMLZ und Koordinierungsstelle nachsteuern.",
+    "schlecht": "Das Modul lief am Verfahren vorbei und war vor Ort kaum eingebunden. Der betroffene Staat hatte mit der Hilfe mehr Aufwand als Nutzen."
+   },
+   "personen": [
+    {
+     "id": "p1",
+     "name": "Frau Kowalczyk",
+     "rolle": "Verbindungsperson des GMLZ",
+     "gut": [
+      "So ist der Weg vorgesehen.",
+      "Das gebe ich so weiter.",
+      "Gut, damit kann das GMLZ arbeiten."
+     ],
+     "schlecht": [
+      "Das läuft am Verfahren vorbei.",
+      "So kann ich das nicht melden.",
+      "Das müssen wir jetzt geradeziehen."
+     ]
+    },
+    {
+     "id": "p2",
+     "name": "Herr Petersen",
+     "rolle": "Stellvertretender Modulführer",
+     "gut": [
+      "Verstanden, so machen wir es.",
+      "Damit ist das Team gut aufgestellt.",
+      "Das spart uns später Ärger."
+     ],
+     "schlecht": [
+      "Das fällt uns noch auf die Füße.",
+      "Dem Team fehlt jetzt etwas.",
+      "Das hätte ich anders gemacht."
+     ]
+    },
+    {
+     "id": "p3",
+     "name": "Frau Lindqvist",
+     "rolle": "Mitglied des EU Civil Protection Teams",
+     "gut": [
+      "Danke, so bleibt die Hilfe koordiniert.",
+      "Das hilft der örtlichen Einsatzleitung.",
+      "Gut, das nehme ich in den Lagebericht."
+     ],
+     "schlecht": [
+      "So verlieren wir vor Ort den Überblick.",
+      "Das war nicht abgestimmt.",
+      "Die örtliche Einsatzleitung weiß davon nichts."
+     ]
+    }
+   ],
+   "aufgaben": [
+    {
+     "phase": "Ersuchen",
+     "ort": "EU-Flagge",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Ein Bürgermeister aus dem Hochwassergebiet kennt Ihr Modul von einer Übung. Er ruft Sie direkt an und bittet, sofort zu kommen. Wie gehen Sie damit um?",
+     "optionen": [
+      {
+       "t": "Auf das Hilfeersuchen seines Staates über ERCC und CECIS verweisen und das GMLZ informieren",
+       "wert": 2,
+       "folge": "Kurz darauf geht das Request for Assistance über das ERCC beim GMLZ ein. Ihr Modul passt genau zum angefragten Bedarf."
+      },
+      {
+       "t": "Den Bedarf des Bürgermeisters notieren und ihn selbst an das zuständige Bundesministerium melden",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Meldung landet neben dem Verfahren. Das GMLZ muss erst klären, ob ein Request for Assistance vorliegt."
+      },
+      {
+       "t": "Dem Bürgermeister die Hilfe fest zusagen und das Modul für die Abfahrt alarmieren",
+       "wert": 0,
+       "folge": "Schlechte Folge: Es gibt kein Ersuchen des Staates und kein deutsches Angebot. Das GMLZ stoppt die Abfahrt und das Team steht ratlos am Fahrzeug."
+      }
+     ],
+     "erkl": "Der betroffene Staat stellt sein Request for Assistance an ERCC und CECIS. Das ERCC leitet es an das GMLZ weiter, das in Deutschland der National Contact Point ist.",
+     "quelle": "Weg des Hilfeersuchens: Weg des Hilfeersuchens nach Deutschland (v-idf-u101) · eigener Übungsfall"
+    },
+    {
+     "phase": "Angebot",
+     "ort": "Container",
+     "wer": "p1",
+     "typ": "reihe",
+     "frage": "Das Request for Assistance ist beim ERCC eingegangen. Bringen Sie den weiteren Weg bis zur Entsendung in die richtige Reihenfolge.",
+     "optionen": [
+      "Akzeptanz oder Ablehnung durch den betroffenen Staat",
+      "Entsendung und Hilfeleistung",
+      "Hilfsangebote der Anbieter gehen beim GMLZ ein",
+      "Austausch und Entscheidung mit BMI und Bundesministerien",
+      "Steuerung des Ersuchens und Informationsaustausch mit den Anbietern",
+      "Angebot Deutschlands geht an das ERCC",
+      "Das ERCC leitet das Ersuchen an das GMLZ weiter"
+     ],
+     "richtig": [
+      "Das ERCC leitet das Ersuchen an das GMLZ weiter",
+      "Austausch und Entscheidung mit BMI und Bundesministerien",
+      "Steuerung des Ersuchens und Informationsaustausch mit den Anbietern",
+      "Hilfsangebote der Anbieter gehen beim GMLZ ein",
+      "Angebot Deutschlands geht an das ERCC",
+      "Akzeptanz oder Ablehnung durch den betroffenen Staat",
+      "Entsendung und Hilfeleistung"
+     ],
+     "erkl": "Nach dem Ersuchen folgen Austausch und Entscheidung mit dem BMI als National Coordination Agency, die Steuerung mit den Anbietern, deren Hilfsangebote, das Angebot Deutschlands, die Akzeptanz oder Ablehnung und erst dann die Entsendung.",
+     "quelle": "Weg des Hilfeersuchens: Weg des Hilfeersuchens nach Deutschland (v-idf-u101) · eigener Übungsfall"
+    },
+    {
+     "phase": "Annahme",
+     "ort": "Modul-Fahrzeug",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "frage": "Das Angebot Deutschlands mit Ihrem Modul liegt beim ERCC. Eine Antwort des betroffenen Staates gibt es noch nicht. Das Team sitzt auf gepackten Fahrzeugen und will los. Was ordnen Sie an?",
+     "optionen": [
+      {
+       "t": "Abmarschbereit bleiben und erst nach der Akzeptanz des Angebots abrücken",
+       "wert": 2,
+       "folge": "Eine Stunde später kommt die Akzeptanz. Das Modul rückt geordnet zum Flugfeld ab und wird im Schadensgebiet erwartet."
+      },
+      {
+       "t": "Die Bereitschaft auflösen und das Team erst nach der Akzeptanz neu alarmieren",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Der Weg stimmt, doch nach der Akzeptanz vergehen Stunden, bis alle wieder am Fahrzeug stehen."
+      },
+      {
+       "t": "Sofort abrücken, damit das Modul bei der Akzeptanz schon unterwegs ist",
+       "wert": 0,
+       "folge": "Schlechte Folge: Der betroffene Staat hat noch nicht entschieden. Das Modul rollt ohne Akzeptanz auf die Grenze zu.",
+       "dann": {
+        "phase": "Halt",
+        "ort": "Modul-Fahrzeug",
+        "wer": "p1",
+        "typ": "entscheidung",
+        "frage": "Das GMLZ meldet sich: Der betroffene Staat hat das Angebot noch nicht akzeptiert, eine Ablehnung ist möglich. Ihr Modul ist bereits auf der Autobahn. Was tun Sie?",
+        "optionen": [
+         {
+          "t": "Am nächsten Rastplatz anhalten und die Akzeptanz dort abwarten",
+          "wert": 2,
+          "folge": "Das Modul wartet geordnet. Als die Akzeptanz kommt, setzt es den Marsch fort."
+         },
+         {
+          "t": "Zum Standort zurückfahren und die Akzeptanz dort abwarten",
+          "wert": 1,
+          "folge": "Vertretbar, aber mit Nachteil: Das Verfahren ist wieder eingehalten, doch der Rückweg kostet nach der Akzeptanz viel Zeit."
+         },
+         {
+          "t": "Weiterfahren und die Akzeptanz an der Grenze nachreichen lassen",
+          "wert": 0,
+          "folge": "Schlechte Folge: Das Modul steht ohne Akzeptanz im Schadensgebiet. Niemand hat es erwartet und niemand weist ihm einen Einsatzraum zu."
+         }
+        ],
+        "erkl": "Auf das Angebot Deutschlands folgt die Akzeptanz oder Ablehnung durch den betroffenen Staat. Die Entsendung steht im Weg des Hilfeersuchens erst danach.",
+        "quelle": "Weg des Hilfeersuchens: Weg des Hilfeersuchens nach Deutschland (v-idf-u101) · eigener Übungsfall"
+       }
+      }
+     ],
+     "frist": 70,
+     "erkl": "Im Weg des Hilfeersuchens folgt auf das Angebot Deutschlands zuerst die Akzeptanz oder Ablehnung. Die Entsendung und Hilfeleistung ist der Schritt danach.",
+     "quelle": "Weg des Hilfeersuchens: Weg des Hilfeersuchens nach Deutschland (v-idf-u101) · eigener Übungsfall"
+    },
+    {
+     "phase": "Verladung",
+     "ort": "Laderampe",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "frage": "Die Akzeptanz ist da, das Flugzeug wird beladen. Der Laderaum ist knapp und Sie müssen entscheiden, was neben den Pumpen mitkommt. Was lassen Sie verladen?",
+     "optionen": [
+      {
+       "t": "Versorgung für mindestens 96 Stunden und die eigene Führungsunterstützung",
+       "wert": 2,
+       "folge": "Das Modul kann vor Ort sofort arbeiten und sich selbst führen. Der Gastgeberstaat wird in den ersten Tagen nicht belastet."
+      },
+      {
+       "t": "Versorgung für mindestens 96 Stunden, die Führungsunterstützung folgt später nach",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Versorgung reicht, doch bis zum nächsten Flug fehlt dem Modul ein Teil seiner Führungsstruktur."
+      },
+      {
+       "t": "Versorgung für 36 Stunden, den Rest soll der Gastgeberstaat vor Ort stellen",
+       "wert": 0,
+       "folge": "Schlechte Folge: Am zweiten Tag fehlen Verpflegung und Betriebsstoffe. Der Gastgeberstaat muss mitten im Hochwasser Ihr Modul versorgen."
+      }
+     ],
+     "frist": 60,
+     "erkl": "Jedes Modul muss eigene Führungsstrukturen einschließlich Führungsunterstützung, definierte fachliche und operative Komponenten und eine Autarkie von mindestens 96 Stunden sicherstellen.",
+     "quelle": "Rechtsgrundlagen und Akteure: ECPP Kapazitätenpyramide (v-idf-u102) · eigener Übungsfall"
+    },
+    {
+     "phase": "Ankunft",
+     "ort": "Registrierung",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "frage": "Das Modul ist gelandet. Am Flugfeld hat der Gastgeberstaat eine Anlaufstelle eingerichtet. Ihr Team drängt, weil im Tal die ersten Keller volllaufen. Wie gehen Sie vor?",
+     "optionen": [
+      {
+       "t": "Einreise abwickeln, registrieren, Lageeinweisung erhalten und den Einsatzraum zuweisen lassen",
+       "wert": 2,
+       "folge": "Nach der Lageeinweisung kennt das Modul seinen Einsatzraum und seinen Ansprechpartner. Der Marsch dorthin wird unterstützt."
+      },
+      {
+       "t": "Das Modul ins Tal vorausschicken und als Modulführer Registrierung und Einweisung allein erledigen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Sie erhalten die Einweisung, doch das Team steht schon an einer Stelle, die nicht sein Einsatzraum ist."
+      },
+      {
+       "t": "Mit dem ganzen Modul sofort ins Tal fahren und den Einsatzraum nach eigener Erkundung wählen",
+       "wert": 0,
+       "folge": "Schlechte Folge: Niemand weiß, dass das Modul im Land ist. Es arbeitet an einer Stelle, an der bereits andere Kräfte eingeplant waren."
+      }
+     ],
+     "erkl": "Host Nation Support bedeutet praktisch: Ansprechpartner, Einreiseabwicklung, Registrierung, Lageeinweisung, Zuweisung eines Einsatzraums sowie Unterstützung bei Transport, Unterbringung und Versorgung.",
+     "quelle": "Rechtsgrundlagen und Akteure: Host Nation Support (v-idf-u102) · eigener Übungsfall"
+    },
+    {
+     "phase": "Einsatz",
+     "ort": "OSOCC-Zelt",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "frage": "Ihr Modul pumpt im zugewiesenen Einsatzraum. Der Vorsteher eines Nachbardorfes kommt an die Einsatzstelle und verlangt, dass Sie die Pumpen sofort zu ihm verlegen. Was tun Sie?",
+     "optionen": [
+      {
+       "t": "Die Bitte an das OSOCC geben, damit die örtliche Einsatzleitung über den Einsatzraum entscheidet",
+       "wert": 2,
+       "folge": "Das OSOCC stimmt die Bitte mit der örtlichen Einsatzleitung ab. Ein zweites Modul wird dem Nachbardorf zugewiesen."
+      },
+      {
+       "t": "Die Bitte an das EU Civil Protection Team geben, damit es über den Einsatzraum entscheidet",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Das Team unterstützt und berät, entscheidet aber nicht selbst. Die Bitte geht mit Umweg an die örtliche Einsatzleitung."
+      },
+      {
+       "t": "Die Pumpen in das Nachbardorf verlegen, weil der Schaden dort offenbar größer ist",
+       "wert": 0,
+       "folge": "Schlechte Folge: Der zugewiesene Einsatzraum läuft wieder voll. Die örtliche Einsatzleitung weiß nicht mehr, wo Ihr Modul steht."
+      }
+     ],
+     "frist": 75,
+     "erkl": "Die LEMA ist die örtliche Einsatzleitung, das OSOCC die örtliche Leitstelle und Koordinierungsstelle. Das EU Civil Protection Team unterstützt bei der Koordinierung der EU-Hilfe und berät die nationalen Behörden.",
+     "quelle": "Weg des Hilfeersuchens: Abkürzungen und Aufgaben des EUCPT (v-idf-u101) · eigener Übungsfall"
+    },
+    {
+     "phase": "Rückkehr",
+     "ort": "Flugzeug",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Der Einsatz ist beendet, das Modul fliegt zurück. Ihr Träger fragt, wer die Kosten trägt. Das Modul ist im European Civil Protection Pool zertifiziert. Was geben Sie dem Träger mit?",
+     "optionen": [
+      {
+       "t": "Einsatz- und Transportkosten trägt großteils die EU, die Einheit selbst bleibt national finanziert",
+       "wert": 2,
+       "folge": "Der Träger stellt die Einsatz- und Transportkosten für die Ko-Finanzierung zusammen. Die Vorhaltung des Moduls plant er weiter im eigenen Haushalt."
+      },
+      {
+       "t": "Einsatz- und Transportkosten trägt der Träger zunächst selbst, die Ko-Finanzierung klären wir später",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Belege werden erst Wochen später zusammengesucht. Ein Teil der Unterlagen fehlt dann."
+      },
+      {
+       "t": "Einsatz- und Transportkosten trägt allein der betroffene Staat, er hat die Hilfe angefordert",
+       "wert": 0,
+       "folge": "Schlechte Folge: Der Träger schickt eine Rechnung in das Hochwassergebiet. Das GMLZ muss sich bei den Partnern entschuldigen."
+      }
+     ],
+     "erkl": "Bei Einheiten im European Civil Protection Pool fördert die EU Zertifizierung und Anpassung und trägt einen Großteil der Einsatz- und Transportkosten. Die Einheiten selbst werden national finanziert.",
+     "quelle": "Rechtsgrundlagen und Akteure: ECPP Kapazitätenpyramide (v-idf-u102) · eigener Übungsfall"
+    }
+   ],
+   "eingang": [
+    {
+     "phase": "Sachspenden",
+     "ort": "Hilfsgüter",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "nach": 55,
+     "frist": 70,
+     "frage": "Ein Verein hat Decken und Trinkwasser gesammelt und stellt die Paletten ungefragt neben Ihre Ausrüstung. Er möchte, dass Sie alles mitnehmen. Was tun Sie?",
+     "optionen": [
+      {
+       "t": "Die Paletten dem GMLZ melden, damit sie als koordinierte Hilfsgüter angeboten werden",
+       "wert": 2,
+       "folge": "Das GMLZ nimmt die Hilfsgüter in ein Hilfsangebot auf. Sie werden dorthin transportiert, wo sie gebraucht werden."
+      },
+      {
+       "t": "Die Paletten annehmen und einlagern, bis das Modul aus dem Einsatz zurück ist",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Der Laderaum bleibt frei, doch Decken und Wasser liegen ungenutzt im Lager."
+      },
+      {
+       "t": "Die Paletten mitnehmen und nach der Landung an Betroffene im Tal verteilen",
+       "wert": 0,
+       "folge": "Schlechte Folge: Die Paletten nehmen den Platz für die Versorgung des Moduls. Vor Ort weiß niemand, wohin damit."
+      }
+     ],
+     "erkl": "In-Kind Assistance sind Hilfsgüter, die koordiniert in Schadensgebiete transportiert werden. Hilfsangebote können in kind, als Module oder als Experten abgegeben werden.",
+     "quelle": "Rechtsgrundlagen und Akteure: ECPP Kapazitätenpyramide (v-idf-u102) · eigener Übungsfall"
+    },
+    {
+     "phase": "Vorhersage",
+     "ort": "EU-Flagge",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "nach": 130,
+     "frist": 70,
+     "frage": "Für die Planung brauchen Sie eine Einschätzung, wie sich das Hochwasser im Einsatzgebiet entwickelt. Welchen Dienst von Copernicus lassen Sie abfragen?",
+     "optionen": [
+      {
+       "t": "EFAS, das European Flood Awareness System",
+       "wert": 2,
+       "folge": "Die Abfrage zeigt, dass die Pegel noch zwei Tage steigen. Sie planen das Modul für einen längeren Einsatz."
+      },
+      {
+       "t": "Keinen, die Lagekarten des ERCC müssen genügen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Das ERCC hält Lagekarten und Frühwarnsysteme vor, doch die Hochwasserentwicklung fragen Sie so nicht gezielt ab."
+      },
+      {
+       "t": "EFFIS, das European Forest Fire Information System",
+       "wert": 0,
+       "folge": "Schlechte Folge: Der Dienst liefert Angaben zur Waldbrandgefahr. Für das Hochwasser hilft das nicht und die Planung bleibt blind."
+      }
+     ],
+     "erkl": "Zu Copernicus gehören EFAS (European Flood Awareness System), EDO (European Drought Observatory) und EFFIS (European Forest Fire Information System). Für Hochwasser ist EFAS der passende Dienst.",
+     "quelle": "Rechtsgrundlagen und Akteure: Copernicus (v-idf-u102) · eigener Übungsfall"
+    }
+   ]
   }
  ]
 }

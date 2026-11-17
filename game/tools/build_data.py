@@ -102,7 +102,7 @@ def write(mission, welt, level):
     for L in level:
         for a in L['aufgaben']:
             a.pop('_cat', None)
-            assert a['typ'] in ('mc', 'multi', 'reihe', 'bringen', 'bausteine', 'gespraech', 'budget', 'statement'), a
+            assert a['typ'] in ('mc', 'multi', 'reihe', 'bringen', 'bausteine', 'gespraech', 'budget', 'statement', 'stadt', 'karte'), a
             assert a.get('quelle') and a.get('frage'), a
             if a['typ'] == 'bausteine':
                 assert all(f['richtig'] in f['optionen'] and len(f['optionen']) == 3 for f in a['felder']), a['frage']
@@ -118,9 +118,57 @@ def write(mission, welt, level):
                 assert a['richtig'] and all(r in a['optionen'] for r in a['richtig']), a['frage']
     assert len(level) == 5, (mission, len(level))
     geschichte(mission, level)
+    f = fall(mission)
+    if f:
+        level.append(f)
     with open(os.path.join(OUT, mission + '.json'), 'w', encoding='utf-8') as f:
         json.dump({'mission': mission, 'welt': welt, 'level': level}, f, ensure_ascii=False, indent=1)
-    print(mission, [len(L['aufgaben']) for L in level])
+    print(mission, [len(L['aufgaben']) + len(L.get('eingang', [])) for L in level])
+
+
+FAELLE = os.path.join(ROOT, 'game', 'tools', 'faelle')
+
+
+def fall(mission):
+    """Level 6: zusammenhängender Fall aus game/tools/faelle/<mission>.json (Entscheidungen mit Folgen, Meldungen mit Frist)."""
+    p = os.path.join(FAELLE, mission + '.json')
+    if not os.path.exists(p):
+        return None
+    with open(p, encoding='utf-8') as f:
+        d = json.load(f)
+    per = {x['id']: x for x in d['personen']}
+    rnd = random.Random(len(mission) * 7 + 61)
+
+    def pruef(s, tief=0):
+        assert s['typ'] in ('entscheidung', 'mc', 'multi', 'reihe'), (mission, s['typ'])
+        assert s.get('ort') and s.get('wer') in per and s.get('frage') and s.get('quelle') and s.get('erkl'), (mission, s.get('frage'))
+        if s['typ'] == 'entscheidung':
+            w = [o['wert'] for o in s['optionen']]
+            assert w.count(2) == 1 and 0 in w and all(o.get('folge') for o in s['optionen']), (mission, s['frage'])
+            for o in s['optionen']:
+                if o.get('dann'):
+                    assert tief == 0, (mission, 'dann in dann')
+                    pruef(o['dann'], 1)
+        elif s['typ'] == 'mc':
+            assert s['richtig'] in s['optionen'], s['frage']
+            rnd.shuffle(s['optionen'])
+        else:
+            assert s['richtig'] and all(r in s['optionen'] for r in s['richtig']), s['frage']
+            while True:
+                rnd.shuffle(s['optionen'])
+                if s['typ'] != 'reihe' or s['optionen'] != s['richtig']:
+                    break
+    for s in d['schritte']:
+        assert s.get('phase'), s['frage']
+        pruef(s)
+    for s in d['eingang']:
+        assert s.get('nach') and s.get('frist'), s['frage']
+        pruef(s)
+    w = per[d['auftrag']['wer']]
+    assert set(d['ende']) == {'gut', 'mittel', 'schlecht'} and len(d['titel']) <= 40, mission
+    return {'titel': d['titel'], 'steckbrief': d['steckbrief'], 'licht': d['licht'], 'szenario': True,
+            'auftrag': {'wer': w['name'] + ', ' + w['rolle'], 'p': w['id'], 'text': d['auftrag']['text']},
+            'lage': d['lage'], 'ende': d['ende'], 'personen': d['personen'], 'aufgaben': d['schritte'], 'eingang': d['eingang']}
 
 
 def geschichte(mission, level):
@@ -201,7 +249,7 @@ def stab():
         {'titel': 'Meldungen sichten', 'steckbrief': 'Hol die Meldungen am Sichter ab und bring jede zum zuständigen Sachgebiet.', 'aufgaben': b[0:6]},
         {'titel': 'Lagebesprechung', 'steckbrief': 'Die Sachgebiete haben Fragen an dich.', 'aufgaben': [plan, zus] + quiz[0:4]},
         {'titel': 'Die Lage zieht an', 'steckbrief': 'Mehr Meldungen, und die Zeit läuft.', 'zeit': 240, 'aufgaben': b[6:12]},
-        {'titel': 'Großeinsatzlage', 'steckbrief': 'Führungsorganisation, Einheiten und Krisenstab.', 'aufgaben': quiz[4:11]},
+        {'titel': 'Großeinsatzlage', 'steckbrief': 'Führungsorganisation, Einheiten und Krisenstab.', 'aufgaben': quiz[4:6] + [X.stab_karte()] + quiz[6:11]},
         {'titel': 'Schichtende', 'steckbrief': 'Letzte Meldungen und Fragen vor der Übergabe, unter Zeitdruck.', 'zeit': 360, 'aufgaben': b[12:18] + quiz[11:14]},
     ]
     write('stab', 'stab', level)
@@ -369,6 +417,15 @@ def vak():
         {'titel': 'Vollstreckung und Rechtsschutz', 'steckbrief': 'Zwangsmittel, Widerspruch, Klage.', 'aufgaben': by['Verwaltungsvollstreckung / Rechtsschutz'][:7]},
         {'titel': 'Gemischte Klausur', 'steckbrief': 'Alles durcheinander, wie in der Prüfung.', 'aufgaben': rest[:8]},
     ]
+    with open(os.path.join(FAELLE, 'vak_extra.json'), encoding='utf-8') as f:
+        ex = json.load(f)
+    for k, liste in ex.items():
+        for a in liste:
+            while True:
+                rnd.shuffle(a['optionen'])
+                if a['typ'] != 'reihe' or a['optionen'] != a['richtig']:
+                    break
+            level[int(k) - 1]['aufgaben'].insert(2, a)
     write('vak', 'hoersaal', level)
 
 

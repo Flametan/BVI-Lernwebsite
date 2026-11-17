@@ -14,7 +14,7 @@ const D = m => JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', m +
   add('begehung', 0, D('begehung').level[0].aufgaben[0].frage); add('stab', 0, D('stab').level[0].aufgaben[0].frage); add('vak', 1, D('vak').level[1].aufgaben[2].frage);
   add('ibk', 0, D('ibk').level[0].aufgaben.find(a => a.typ === 'gespraech').frage); add('vak', 0, 'Diese Frage gibt es nicht mehr'); add('vak', 2, D('vak').level[2].aufgaben[0].frage, '2999-01-01');
   await p.addInitScript(w => { if (!localStorage.getItem('bvi_game_v1')) localStorage.setItem('bvi_game_v1', JSON.stringify({ v: 1, m: {}, badges: [], tag: { last: '', serie: 0 }, opt: { fx: 'aus', sprache: false, name: 'Test' }, wdh: w })); }, w);
-  const pick = async t => { const i = await p.evaluate(t => [...document.querySelectorAll('#q-opts .opt')].findIndex(b => b.textContent.replace(/^\d+\. /, '') === t), t); if (i < 0) throw new Error('Option fehlt: ' + t); await p.click('#q-opts .opt >> nth=' + i); };
+  const pick = async t => { const i = await p.evaluate(t => [...document.querySelectorAll('#q-opts .opt')].findIndex(b => (b.textContent === t || b.textContent.replace(/^\d+\. /, '') === t)), t); if (i < 0) throw new Error('Option fehlt: ' + t); await p.click('#q-opts .opt >> nth=' + i); };
   async function durchlauf() {
     await p.waitForFunction(() => window.GAME_RUN && window.GAME_RUN._stage.frames() > 2, null, { timeout: 40000 });
     await p.click('#brief-ok'); let n = 0;

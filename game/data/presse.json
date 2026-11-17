@@ -401,6 +401,385 @@
     "schlecht": "In der Live-Schalte sind Sätze gefallen, die jetzt Fragen aufwerfen."
    },
    "licht": "daemmerung"
+  },
+  {
+   "titel": "Einsatz: Brand im Recyclinghof",
+   "steckbrief": "Ein Recyclinghof brennt, eine Rauchwolke zieht über die Stadt, und Sie führen die Pressearbeit vom ersten Anruf bis zur Nachbereitung.",
+   "licht": "abend",
+   "szenario": true,
+   "auftrag": {
+    "wer": "Herr Kramer, Einsatzleiter",
+    "p": "p1",
+    "text": "Auf dem Recyclinghof an der Hafenstraße brennt eine Lagerhalle, ein Mitarbeiter wird noch vermisst. Die ersten Medien sind unterwegs. Sie sind als Pressesprecher der Feuerwehr vor Ort und halten mir den Rücken frei."
+   },
+   "lage": {
+    "name": "Vertrauen der Presse",
+    "start": 60
+   },
+   "ende": {
+    "gut": "Die Berichte sind sachlich und stimmen mit der Lage überein. Die Redaktionen wissen, dass sie sich auf die Auskünfte der Feuerwehr verlassen können.",
+    "mittel": "Die Berichte sind im Kern richtig, aber einige Redaktionen fühlen sich hingehalten. Beim nächsten Einsatz werden sie hartnäckiger nachfragen.",
+    "schlecht": "In den Berichten stehen Vermutungen, Schuldzuweisungen und Angaben, die nie hätten hinausgehen dürfen. Die Feuerwehr muss sich jetzt öffentlich erklären."
+   },
+   "personen": [
+    {
+     "id": "p1",
+     "name": "Herr Kramer",
+     "rolle": "Einsatzleiter",
+     "gut": [
+      "Gut, so kann ich mich um den Einsatz kümmern.",
+      "Das war klar und richtig.",
+      "Danke, das entlastet mich."
+     ],
+     "schlecht": [
+      "Das fällt jetzt auf uns zurück.",
+      "Damit habe ich gleich die nächste Baustelle.",
+      "So war das nicht abgesprochen."
+     ]
+    },
+    {
+     "id": "p2",
+     "name": "Frau Sommer",
+     "rolle": "Fernsehreporterin",
+     "gut": [
+      "Danke, damit kann ich arbeiten.",
+      "Das ist eine klare Auskunft.",
+      "Verstanden, ich warte darauf."
+     ],
+     "schlecht": [
+      "Das werde ich genau so senden.",
+      "Dann frage ich eben woanders nach.",
+      "Interessant, das nehmen wir auf."
+     ]
+    },
+    {
+     "id": "p3",
+     "name": "Herr Petzold",
+     "rolle": "Redakteur der Lokalzeitung",
+     "gut": [
+      "In Ordnung, das ist nachvollziehbar.",
+      "Danke für die klare Antwort.",
+      "Damit ist meine Frage beantwortet."
+     ],
+     "schlecht": [
+      "Das schreibe ich so in die Zeitung.",
+      "So leicht lasse ich mich nicht abspeisen.",
+      "Das wird unsere Leser interessieren."
+     ]
+    }
+   ],
+   "aufgaben": [
+    {
+     "phase": "Erster Anruf",
+     "ort": "Radio",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Das Lokalradio ruft an und will sofort wissen, was brennt und wie viele Verletzte es gibt. Die Suche nach dem vermissten Mitarbeiter läuft noch, ein Überblick fehlt. Was sagen Sie dem Redakteur?",
+     "optionen": [
+      {
+       "t": "Um Geduld bitten und Auskunft zusagen, sobald das Einsatzgeschehen eine Beurteilung erlaubt",
+       "wert": 2,
+       "folge": "Der Redakteur meldet sachlich, dass ein Einsatz läuft. Er wartet auf Ihren Rückruf."
+      },
+      {
+       "t": "Den Anruf abweisen und erst nach dem Ende des gesamten Einsatzes eine Auskunft in Aussicht stellen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Es geht nichts Falsches hinaus, doch der Redakteur sucht sich jetzt andere Quellen."
+      },
+      {
+       "t": "Eine geschätzte Zahl von Verletzten durchgeben, damit der Redakteur etwas zu melden hat",
+       "wert": 0,
+       "folge": "Die Zahl läuft als Tatsache im Radio. Angehörige rufen besorgt in der Leitstelle an."
+      },
+      {
+       "t": "Erklären, dass die Presse an einer laufenden Einsatzstelle gar keinen Anspruch auf Auskunft hat",
+       "wert": 0,
+       "folge": "Der Redakteur verweist verärgert auf das Landespressegesetz. Im Radio heißt es, die Feuerwehr mauere."
+      }
+     ],
+     "frist": 60,
+     "erkl": "Behörden müssen der Presse auf konkrete Anfragen Auskunft erteilen. Bestehen kann die Presse darauf aber erst, wenn das Einsatzgeschehen eine Beurteilung und die Weitergabe nach pflichtgemäßem Ermessen des Einsatzleiters oder des Pressesprechers erlaubt. Vermutungen sind zu kennzeichnen.",
+     "quelle": "Presse- und Öffentlichkeitsarbeit: Rechtsgrundlagen und Grundsätze der Pressearbeit (v-idf-p61, Übersicht v-idf-presse) · eigener Übungsfall"
+    },
+    {
+     "phase": "Zuständigkeit",
+     "ort": "Löschfahrzeug",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Am Löschfahrzeug fragt ein Reporter den Maschinisten nach der Brandursache. Der Maschinist schaut hilfesuchend zu Ihnen. Wie greifen Sie ein?",
+     "optionen": [
+      {
+       "t": "Den Reporter an sich verweisen, weil nur die dafür bestimmte Person den Medien Auskunft erteilt",
+       "wert": 2,
+       "folge": "Der Maschinist arbeitet weiter. Der Reporter weiß, an wen er sich wenden kann."
+      },
+      {
+       "t": "Den Maschinisten kurz antworten lassen und erst danach selbst das Gespräch mit dem Reporter übernehmen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Sie übernehmen, doch ein unbedachter Halbsatz des Maschinisten steht schon im Notizblock."
+      },
+      {
+       "t": "Nicht eingreifen, weil jede Einsatzkraft selbst entscheiden darf, was sie den Medien erzählt",
+       "wert": 0,
+       "folge": "Drei Einsatzkräfte geben drei verschiedene Auskünfte. Die Pumpe läuft derweil unbeaufsichtigt."
+      }
+     ],
+     "erkl": "Nach § 43 Landesbeamtengesetz entscheidet die Leitung der Behörde, wer den Medien und der Öffentlichkeit Auskünfte erteilt. Der HVB kann das delegieren, zum Beispiel an den Pressesprecher der Feuerwehr oder den Einsatzleiter.",
+     "quelle": "Presse- und Öffentlichkeitsarbeit: Rechtsgrundlagen und Grundsätze der Pressearbeit (v-idf-p61, Übersicht v-idf-presse) · eigener Übungsfall"
+    },
+    {
+     "phase": "Schranken",
+     "ort": "Fotograf",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Ein Fotograf ist bis an die Halle vorgegangen. Er steht im Bereich der einsturzgefährdeten Fassade und mitten im Weg des Angriffstrupps. Was tun Sie?",
+     "optionen": [
+      {
+       "t": "Ihn aus dem Gefahrenbereich holen und ihm einen sicheren Platz zeigen, von dem aus er fotografieren kann",
+       "wert": 2,
+       "folge": "Der Fotograf bekommt seine Bilder aus sicherer Entfernung. Der Angriffstrupp hat freie Bahn."
+      },
+      {
+       "t": "Ihn aus dem Gefahrenbereich holen und bis zum Einsatzende hinter die äußere Absperrung verweisen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Er ist in Sicherheit, doch er beschwert sich zu Recht, dass er nichts mehr sehen kann."
+      },
+      {
+       "t": "Ihm das Fotografieren an der Einsatzstelle verbieten und die Herausgabe seiner Speicherkarte verlangen",
+       "wert": 0,
+       "folge": "Der Fotograf weigert sich und ruft seine Redaktion an. Am nächsten Tag ist der Streit das Thema, nicht der Einsatz."
+      },
+      {
+       "t": "Ihn dort stehen lassen, weil sich die Presse an der Einsatzstelle bewegen und fotografieren darf",
+       "wert": 0,
+       "folge": "Der Angriffstrupp muss um ihn herumlaufen. Fassadenteile fallen dicht neben ihm zu Boden.",
+       "dann": {
+        "phase": "Schadensbegrenzung",
+        "ort": "Fotograf",
+        "wer": "p1",
+        "typ": "entscheidung",
+        "frage": "Der Fotograf ist erschrocken, steht aber immer noch im Weg. Jetzt richtet er die Kamera auf den geretteten Mitarbeiter, der auf der Trage liegt. Wie handeln Sie?",
+        "optionen": [
+         {
+          "t": "Ihn sofort aus dem Bereich führen, auf die Würde des Verletzten hinweisen und einen sicheren Platz zeigen",
+          "wert": 2,
+          "folge": "Der Fotograf senkt die Kamera und folgt Ihnen. Der Rettungsdienst arbeitet ungestört."
+         },
+         {
+          "t": "Ihn sofort aus dem Bereich führen und ihm ohne weitere Erklärung jede Aufnahme der Einsatzstelle untersagen",
+          "wert": 1,
+          "folge": "Vertretbar, aber mit Nachteil: Die Gefahr ist gebannt, doch das pauschale Verbot geht über die Schranken hinaus."
+         },
+         {
+          "t": "Ihm zurufen, dass er auf eigene Gefahr handelt, und sich wieder um die anderen Medien kümmern",
+          "wert": 0,
+          "folge": "Das Bild des Verletzten erscheint am Abend im Netz. Die Familie erkennt ihn, bevor sie benachrichtigt ist."
+         }
+        ],
+        "erkl": "Die Presse darf die Einsatzmaßnahmen nicht behindern, sich selbst nicht gefährden und muss die Würde betroffener Personen achten (Pressekodex). Innerhalb dieser Schranken darf sie sich bewegen und fotografieren.",
+        "quelle": "Presse- und Öffentlichkeitsarbeit: Rechtsgrundlagen und Grundsätze der Pressearbeit, Schranken für die Presse (v-idf-p61, Übersicht v-idf-presse) · eigener Übungsfall"
+       }
+      }
+     ],
+     "frist": 50,
+     "erkl": "Die Presse darf sich an der Einsatzstelle bewegen und fotografieren, aber nur innerhalb der Schranken: Sie darf die Einsatzmaßnahmen nicht behindern, sich selbst nicht gefährden und muss die Würde betroffener Personen achten.",
+     "quelle": "Presse- und Öffentlichkeitsarbeit: Rechtsgrundlagen und Grundsätze der Pressearbeit, Schranken für die Presse (v-idf-p61, Übersicht v-idf-presse) · eigener Übungsfall"
+    },
+    {
+     "phase": "Messwerte",
+     "ort": "Zeitung",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "frage": "Die Rauchwolke zieht über die Nordstadt, Ihre Messtrupps sind unterwegs. Ich berufe mich auf das Umweltinformationsgesetz und möchte jetzt sofort alle Messwerte sehen. Was antworten Sie?",
+     "optionen": [
+      {
+       "t": "Die Rohdaten jetzt nicht herausgeben und ausgewertete Informationen innerhalb der gesetzlichen Frist zusagen",
+       "wert": 2,
+       "folge": "Herr Petzold notiert sich die Zusage. Er berichtet, dass gemessen wird und die Auswertung folgt."
+      },
+      {
+       "t": "Die Frage nach den Messwerten jetzt nicht beantworten und ihn allgemein auf das spätere Statement verweisen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Es gehen keine Rohdaten hinaus, doch der Redakteur bleibt ohne klare Antwort und hakt weiter nach."
+      },
+      {
+       "t": "Ihm die laufenden Messprotokolle zeigen, damit er sich selbst ein Bild von den Rohdaten machen kann",
+       "wert": 0,
+       "folge": "Ein einzelner Messwert steht ohne Einordnung in der Schlagzeile. Anwohner rufen verunsichert bei der Leitstelle an."
+      }
+     ],
+     "erkl": "Nach dem Umweltinformationsgesetz besteht kein Anspruch auf sofortige Herausgabe von Messwerten (Rohdaten). Es müssen lediglich ausgewertete Informationen innerhalb einer Frist von einem Monat zugänglich gemacht werden.",
+     "quelle": "Presse- und Öffentlichkeitsarbeit: Rechtsgrundlagen und Grundsätze der Pressearbeit, Umweltinformationsgesetz (v-idf-p61, Übersicht v-idf-presse) · eigener Übungsfall"
+    },
+    {
+     "phase": "Vorbereitung",
+     "ort": "Einsatzleitwagen",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Das Feuer ist unter Kontrolle, der vermisste Mitarbeiter ist gerettet. Jetzt lässt der Einsatz ein Statement zu. Das Fernsehen wartet auf einen O-Ton. Wie bereiten wir das vor?",
+     "optionen": [
+      {
+       "t": "Der Einsatzleiter spricht selbst, in einfacher Sprache und nur über die größte Herausforderung des Einsatzes",
+       "wert": 2,
+       "folge": "Herr Kramer hat drei klare Sätze im Kopf. Das Kamerateam baut auf."
+      },
+      {
+       "t": "Der Pressesprecher spricht anstelle des Einsatzleiters, in einfacher Sprache und über das Wichtigste",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Das Statement ist klar, doch die Redaktion hätte lieber den Einsatzleiter als Augenzeugen gehabt."
+      },
+      {
+       "t": "Der Einsatzleiter trägt selbst alle Einsatzzahlen vor und geht der Reihe nach auf sämtliche Probleme ein",
+       "wert": 0,
+       "folge": "Das Statement dauert vier Minuten. Gesendet wird ein Halbsatz, der ohne Zusammenhang missverständlich klingt."
+      }
+     ],
+     "erkl": "Statements gibt es erst, wenn der Einsatz es zulässt. Dann gilt: einfache Sprache, Zahlensalat vermeiden, auf die wichtigsten Punkte beschränken und nur auf die größte Herausforderung eingehen. Die Presse möchte authentische Augenzeugenberichte, deshalb ist der Einsatzleiter vor Ort als Experte besonders wertvoll.",
+     "quelle": "Presse- und Öffentlichkeitsarbeit: Presse- und Medienarbeit bei der Feuerwehr, Pressestatements (v-idf-p62); Grundsätze der Pressearbeit (v-idf-p61, Übersicht v-idf-presse) · eigener Übungsfall"
+    },
+    {
+     "phase": "Statement",
+     "ort": "Kamerateam",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "frage": "Die Kamera läuft. Anwohner sagen, auf dem Hof sei seit Jahren geschlampt worden. Wer ist aus Ihrer Sicht schuld an diesem Brand?",
+     "optionen": [
+      {
+       "t": "„Zur Schuldfrage äußern wir uns nicht. Gesichert ist: Das Feuer ist unter Kontrolle.“",
+       "wert": 2,
+       "folge": "Frau Sommer nickt und fragt nach dem Einsatzverlauf. Der O-Ton wird ungekürzt gesendet."
+      },
+      {
+       "t": "„Ich vermute einen technischen Defekt. Das ist aber nur eine Vermutung von mir.“",
+       "wert": 0,
+       "folge": "Das geht schief: Zur Ursache gibt es noch keine Fakten. In der Überschrift fehlt später das Wort Vermutung."
+      },
+      {
+       "t": "„Der Betreiber hat den Brandschutz offenbar vernachlässigt. Das sieht man doch.“",
+       "wert": 0,
+       "folge": "Der Satz läuft in den Abendnachrichten. Der Anwalt des Betreibers meldet sich noch in der Nacht.",
+       "dann": {
+        "phase": "Schadensbegrenzung",
+        "ort": "Kamerateam",
+        "wer": "p2",
+        "typ": "entscheidung",
+        "frage": "Die Kamera läuft weiter. Sie werfen dem Betreiber also Versäumnisse vor. Können Sie das belegen?",
+        "optionen": [
+         {
+          "t": "„Nein. Das war eine Wertung, die ich zurücknehme. Zur Schuldfrage sagen wir nichts.“",
+          "wert": 2,
+          "folge": "Frau Sommer sendet auch die Richtigstellung. Der Schaden bleibt begrenzt."
+         },
+         {
+          "t": "„Dazu möchte ich jetzt nichts mehr sagen. Wir beenden das Gespräch an dieser Stelle.“",
+          "wert": 1,
+          "folge": "Vertretbar, aber mit Nachteil: Es kommt nichts Neues hinzu, doch der Vorwurf bleibt unwidersprochen im Beitrag stehen."
+         },
+         {
+          "t": "„Belegen kann ich es nicht, aber die Anwohner sagen ja genau dasselbe wie ich.“",
+          "wert": 0,
+          "folge": "Aus der Wertung wird eine Schlagzeile. Die Stadt muss am nächsten Morgen eine Erklärung abgeben."
+         }
+        ],
+        "erkl": "Zu den Grundsätzen der Pressearbeit gehören: keine Aussagen zu Schuldfragen, keine wertenden Aussagen und wahrheitsgetreu antworten.",
+        "quelle": "Presse- und Öffentlichkeitsarbeit: Rechtsgrundlagen und Grundsätze der Pressearbeit (v-idf-p61, Übersicht v-idf-presse) · eigener Übungsfall"
+       }
+      }
+     ],
+     "frist": 45,
+     "erkl": "Grundsätze der Pressearbeit: keine Aussagen zu Schuldfragen, keine wertenden Aussagen, Vermutungen kennzeichnen. Im Statement zählen klare und verlässliche Aussagen.",
+     "quelle": "Presse- und Öffentlichkeitsarbeit: Rechtsgrundlagen und Grundsätze der Pressearbeit (v-idf-p61); Pressestatements (v-idf-p62, Übersicht v-idf-presse) · eigener Übungsfall"
+    },
+    {
+     "phase": "Nachbereitung",
+     "ort": "Zeitung",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "frage": "Der Einsatz ist beendet. Für meinen Hintergrundbericht hätte ich gern den vollständigen Einsatzbericht mit den Namen der Betroffenen. Außerdem habe ich drei konkrete Fragen zum Ablauf. Wie gehen Sie damit um?",
+     "optionen": [
+      {
+       "t": "Die konkreten Fragen erschöpfend beantworten, aber weder Personalien noch den gesamten Bericht herausgeben",
+       "wert": 2,
+       "folge": "Herr Petzold bekommt seine Antworten. Sein Bericht ist ausführlich und nennt keine Namen."
+      },
+      {
+       "t": "Auf das Statement vom Abend verweisen und die konkreten Fragen zum Ablauf nicht weiter beantworten",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Es geht nichts Geschütztes hinaus, doch konkrete Fragen bleiben offen, die Sie beantworten müssten."
+      },
+      {
+       "t": "Den vollständigen Einsatzbericht mit allen Namen übersenden, damit die Presse zufrieden ist",
+       "wert": 0,
+       "folge": "Die Namen der Betroffenen stehen in der Zeitung. Die Familie des Verletzten beschwert sich bei der Stadt."
+      },
+      {
+       "t": "Jede weitere Auskunft ablehnen, weil der Einsatz beendet ist und das Statement schon gegeben wurde",
+       "wert": 0,
+       "folge": "Herr Petzold schreibt, die Feuerwehr verweigere Auskünfte. Die Redaktion kündigt eine förmliche Anfrage an."
+      }
+     ],
+     "erkl": "Nach § 4 Landespressegesetz müssen Behörden der Presse auf konkrete Anfragen zweckdienliche und erschöpfende Auskünfte erteilen. Verweigert werden können Auskünfte, soweit ein schutzwürdiges privates Interesse verletzt würde oder ihr Umfang das zumutbare Maß überschreitet. Personalien werden nicht preisgegeben.",
+     "quelle": "Presse- und Öffentlichkeitsarbeit: Rechtsgrundlagen und Grundsätze der Pressearbeit (v-idf-p61); Grenzen des Auskunftsanspruchs (v-idf-p62, Übersicht v-idf-presse) · eigener Übungsfall"
+    }
+   ],
+   "eingang": [
+    {
+     "phase": "Nebenmeldung",
+     "ort": "Reporterin",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "nach": 60,
+     "frist": 70,
+     "frage": "Ich habe gehört, dass ein Mitarbeiter vermisst wird. Wie heißt der Mann, und wie alt ist er? Ich würde gern mit der Familie sprechen.",
+     "optionen": [
+      {
+       "t": "Bestätigen, dass ein Mitarbeiter gesucht wird, und erklären, dass Personalien nicht genannt werden",
+       "wert": 2,
+       "folge": "Frau Sommer berichtet von der Suche, ohne einen Namen zu nennen. Die Familie bleibt geschützt."
+      },
+      {
+       "t": "Weder die Suche bestätigen noch Personalien nennen und nur auf das spätere Statement verweisen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Personalien bleiben geschützt, doch die Reporterin holt sich die Bestätigung bei Schaulustigen."
+      },
+      {
+       "t": "Vornamen und Alter des Vermissten nennen, den Nachnamen aber aus Rücksicht auf die Familie weglassen",
+       "wert": 0,
+       "folge": "Auf dem kleinen Hof weiß jeder sofort, wer gemeint ist. Die Familie erfährt es aus dem Fernsehen."
+      }
+     ],
+     "erkl": "Grundsätze der Pressearbeit: keine Personalien preisgeben und wahrheitsgetreu antworten.",
+     "quelle": "Presse- und Öffentlichkeitsarbeit: Rechtsgrundlagen und Grundsätze der Pressearbeit (v-idf-p61, Übersicht v-idf-presse) · eigener Übungsfall"
+    },
+    {
+     "phase": "Nebenmeldung",
+     "ort": "Radio",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "nach": 135,
+     "frist": 70,
+     "frage": "Das Lokalradio ist wieder am Telefon und fragt, wie lange die Löscharbeiten noch dauern. Sicher weiß das im Moment niemand. Was geben Sie durch?",
+     "optionen": [
+      {
+       "t": "Eine Einschätzung nennen und ausdrücklich dazusagen, dass es sich um eine Vermutung handelt",
+       "wert": 2,
+       "folge": "Der Sender meldet die Einschätzung mit dem Hinweis, dass sie sich noch ändern kann."
+      },
+      {
+       "t": "Keine Einschätzung nennen und nur mitteilen, was zum jetzigen Zeitpunkt gesichert feststeht",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Auskunft ist richtig, doch die Hörer erfahren nicht, worauf sie sich einstellen sollen."
+      },
+      {
+       "t": "Eine feste Uhrzeit für das Ende der Löscharbeiten nennen, damit die Hörer Klarheit haben",
+       "wert": 0,
+       "folge": "Die Uhrzeit verstreicht, und die Halle brennt weiter. Der Sender fragt, warum die Feuerwehr sich geirrt hat."
+      }
+     ],
+     "erkl": "Grundsätze der Pressearbeit: Vermutungen kennzeichnen und wahrheitsgetreu antworten. Klare und verlässliche Aussagen sind wichtig.",
+     "quelle": "Presse- und Öffentlichkeitsarbeit: Rechtsgrundlagen und Grundsätze der Pressearbeit (v-idf-p61); Pressestatements (v-idf-p62, Übersicht v-idf-presse) · eigener Übungsfall"
+    }
+   ]
   }
  ]
 }

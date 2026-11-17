@@ -14,8 +14,8 @@ const FXL = process.argv[5] || 'aus';
     const p = await ctx.newPage(); const errs = [];
     p.on('console', x => { if (x.type() === 'error') errs.push(x.text()); }); p.on('pageerror', e => errs.push('PAGE ' + e.message));
     // Alle Level freischalten, Effekte nach Wunsch (ohne Effekte läuft die Software-Grafik des Tests schneller)
-    await p.addInitScript(([fx]) => { const ms = {}; ['stellungnahme', 'stab', 'presse', 'lage', 'ucpm', 'ibk', 'vak', 'feuak', 'begehung'].forEach(k => { ms[k] = {}; for (let i = 0; i < 5; i++) ms[k][i] = { best: 1, ok: true }; });
-      localStorage.setItem('bvi_game_v1', JSON.stringify({ v: 1, m: ms, badges: ['erste'], tag: { last: '', serie: 0 }, opt: { fx, sprache: false } })); }, [FXL]);
+    await p.addInitScript(([fx]) => { const ms = {}; ['stellungnahme', 'stab', 'presse', 'lage', 'ucpm', 'ibk', 'vak', 'feuak', 'begehung'].forEach(k => { ms[k] = {}; for (let i = 0; i < 6; i++) ms[k][i] = { best: 1, ok: true }; });
+      localStorage.setItem('bvi_game_v1', JSON.stringify({ v: 1, m: ms, badges: ['erste'], tag: { last: '', serie: 0 }, opt: { fx, sprache: false } })); localStorage.setItem('bvi_game_opt', JSON.stringify({ fx, sprache: false, tut: true })); }, [FXL]);
     await p.goto('http://localhost:8765/game/index.html?m=' + m); await p.waitForSelector('.lv'); await p.click('.lv >> nth=' + lv);
     await p.waitForFunction(() => window.GAME_RUN && window.GAME_RUN._stage.frames() > 2, null, { timeout: 40000 });
     if (await p.isVisible('#brief')) await p.click('#brief-ok');
@@ -37,6 +37,11 @@ const FXL = process.argv[5] || 'aus';
         else if (a.typ === 'bausteine') { for (let f = 0; f < a.felder.length; f++) await p.click('#q-opts .grp >> nth=' + f + ' >> .opt >> nth=' + a.felder[f].optionen.indexOf(a.felder[f].richtig)); await p.click('#q-check'); }
         else if (a.typ === 'gespraech') { for (let z = 0; z < a.zuege.length; z++) { await p.click('#q-opts .opt >> nth=' + a.zuege[z].optionen.findIndex(o => o.gut)); if (z < a.zuege.length - 1) await p.click('#q-check'); } }
         else if (a.typ === 'budget') { for (const t of a.richtig) await p.click('#q-opts .opt >> nth=' + a.posten.findIndex(x => x.t === t)); await p.click('#q-check'); }
+        else if (a.typ === 'stadt') { const S2 = a.standorte, nah = (q, o) => Math.hypot(q.x - o.x, q.y - o.y) <= a.radius, gew = a.orte.reduce((x, o) => x + o.gewicht, 0); let best = null;
+          for (let m2 = 0; m2 < (1 << S2.length); m2++) { const sel = S2.filter((x, i) => m2 >> i & 1), k = sel.reduce((x, q) => x + q.kosten, 0), q = a.orte.reduce((x, o) => x + ((a.bestand || []).concat(sel).some(w => nah(w, o)) ? o.gewicht : 0), 0) / gew * 100; if (q >= a.ziel && k <= a.budget && (!best || k < best.k)) best = { k, sel }; }
+          await p.waitForTimeout(900); await p.screenshot({ path: S + '/w-' + m + '-stadt0.png' });
+          for (const q of best.sel) await p.click('#q-opts .opt >> nth=' + S2.indexOf(q)); await p.waitForTimeout(400); await p.screenshot({ path: S + '/w-' + m + '-stadt1.png' }); await p.click('#q-check'); }
+        else if (a.typ === 'karte') { for (let i = 0; i < a.plaetze.length; i++) { await p.click('#q-opts .lk-t[data-z="' + a.plaetze[i].richtig + '"]'); await p.click('#q-opts .lk-pb[data-p="' + i + '"]'); } await p.screenshot({ path: S + '/w-' + m + '-karte.png' }); await p.click('#q-check'); }
         else for (const t of a.richtig) await pick(t);                                        // reihe, statement
         await p.waitForSelector('#q-fb:not([hidden])'); const fb = await p.textContent('#q-fbt'); if (!/^Richtig\. /.test(fb)) errs.push('nicht als richtig gewertet: ' + a.frage);
         await p.click('#q-next');

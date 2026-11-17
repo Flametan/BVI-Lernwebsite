@@ -816,6 +816,378 @@
     "schlecht": "Der Konflikt ist gedeckelt und brodelt weiter."
    },
    "licht": "daemmerung"
+  },
+  {
+   "titel": "Fall: Funkstille in der Wachabteilung",
+   "steckbrief": "Zwei Kollegen Ihrer Wachabteilung gehen sich seit Wochen aus dem Weg, und Sie führen den Konflikt über mehrere Gespräche zu einer Lösung.",
+   "licht": "morgen",
+   "szenario": true,
+   "auftrag": {
+    "wer": "Herr Albers, Wachleiter",
+    "p": "p1",
+    "text": "Guten Morgen. In Ihrer Wachabteilung stimmt etwas nicht: Herr Brandt und Frau Yilmaz reden seit Wochen nur noch das Nötigste miteinander. Sie führen die Abteilung, also klären Sie das bitte. Ich bin in meinem Büro, wenn Sie mich brauchen."
+   },
+   "lage": {
+    "name": "Stimmung im Team",
+    "start": 55
+   },
+   "ende": {
+    "gut": "Herr Brandt und Frau Yilmaz haben eine klare Vereinbarung getroffen und sprechen wieder direkt miteinander. Die Wachabteilung arbeitet spürbar entspannter.",
+    "mittel": "Der Konflikt ist benannt, aber noch nicht ganz ausgeräumt. Sie müssen in den nächsten Diensten nachfassen, damit die Absprachen halten.",
+    "schlecht": "Der Konflikt schwelt unter der Oberfläche weiter und die beiden meiden sich mehr als zuvor. Die Stimmung in der Wachabteilung ist frostig."
+   },
+   "personen": [
+    {
+     "id": "p1",
+     "name": "Herr Albers",
+     "rolle": "Wachleiter",
+     "gut": [
+      "So stelle ich mir Führung vor.",
+      "Gut, dass Sie das selbst in die Hand nehmen."
+     ],
+     "schlecht": [
+      "Das hätte ich anders erwartet.",
+      "So wird es in der Abteilung nicht ruhiger."
+     ]
+    },
+    {
+     "id": "p2",
+     "name": "Herr Brandt",
+     "rolle": "Hauptbrandmeister, seit 20 Jahren auf der Wache",
+     "gut": [
+      "Gut. Damit kann ich arbeiten.",
+      "Das war eine klare Ansage. Danke."
+     ],
+     "schlecht": [
+      "Na, wie Sie meinen.",
+      "Dann sage ich eben nichts mehr."
+     ]
+    },
+    {
+     "id": "p3",
+     "name": "Frau Yilmaz",
+     "rolle": "Brandmeisterin, seit zwei Jahren in der Abteilung",
+     "gut": [
+      "Danke, das hilft mir weiter.",
+      "So fühle ich mich ernst genommen."
+     ],
+     "schlecht": [
+      "Ich sage dazu lieber nichts.",
+      "Dann bleibt wohl alles, wie es ist."
+     ]
+    }
+   ],
+   "aufgaben": [
+    {
+     "phase": "Wahrnehmung",
+     "ort": "Küche",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "frage": "Beim Frühstück sagt Herr Brandt spöttisch: „Unsere Expertin hat ja sicher wieder alles im Griff.“ Frau Yilmaz steht wortlos auf und geht. Seit Wochen meiden sich beide und regeln alles nur noch über Zettel am Dienstplan. Wie gehen Sie den Konflikt an?",
+     "optionen": [
+      {
+       "t": "Mit beiden zuerst einzeln sprechen und ihnen den Rücken stärken, damit sie den Konflikt austragen können.",
+       "wert": 2,
+       "folge": "Beide merken, dass Sie die Sache ernst nehmen. Herr Brandt und Frau Yilmaz sagen jeweils ein Einzelgespräch zu."
+      },
+      {
+       "t": "Zunächst nur mit Herrn Brandt unter vier Augen reden und Frau Yilmaz erst später einmal dazu ansprechen.",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Frau Yilmaz erfährt davon über Dritte und fühlt sich übergangen."
+      },
+      {
+       "t": "Beide sofort am Frühstückstisch vor der ganzen Mannschaft zur Rede stellen und eine offene Aussprache verlangen.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Beide wehren massiv ab. Herr Brandt wird förmlich, Frau Yilmaz schweigt.",
+       "dann": {
+        "phase": "Schadensbegrenzung",
+        "ort": "Küche",
+        "wer": "p3",
+        "typ": "entscheidung",
+        "frage": "Die Mannschaft schaut betreten auf ihre Teller. Frau Yilmaz sagt nur: „Von meiner Seite gibt es nichts zu besprechen.“ Wie retten Sie die Situation?",
+        "optionen": [
+         {
+          "t": "Die Runde beenden und beiden getrennt ein Gespräch unter vier Augen anbieten, um sie erst einmal zu stärken.",
+          "wert": 2,
+          "folge": "Die Spannung löst sich etwas. Beide nehmen das Angebot an."
+         },
+         {
+          "t": "Die Runde beenden und das Thema für die nächsten Dienste ruhen lassen, bis sich alle wieder beruhigt haben.",
+          "wert": 1,
+          "folge": "Vertretbar, aber mit Nachteil: Die Lage beruhigt sich, doch der Konflikt schwelt unbearbeitet weiter."
+         },
+         {
+          "t": "Nachhaken und beide vor der Mannschaft auffordern, jetzt endlich offen zu sagen, was sie am anderen stört.",
+          "wert": 0,
+          "folge": "Schlechte Folge: Die Abwehr wird noch stärker. Frau Yilmaz verlässt den Raum."
+         }
+        ],
+        "erkl": "Bei einem kalten Konflikt ruft direkte Konfrontation zu Beginn massive Abwehr und Ablehnung hervor. Zuerst müssen die Parteien befähigt werden, den Konflikt auszutragen. Dazu wird ihr Selbstwertgefühl gestärkt.",
+        "quelle": "Konflikte: Ansatzpunkte zur Bewältigung (v-ibk-konflikt) · eigener Übungsfall"
+       }
+      },
+      {
+       "t": "Den Dienstplan so umstellen, dass sich die beiden in den nächsten Wochen möglichst selten über den Weg laufen.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Der gewohnte Rückzug wird zur Dauerlösung. Die beiden reden gar nicht mehr miteinander."
+      }
+     ],
+     "erkl": "Spott, Rückzug auf Formalien und Meiden des direkten Kontakts sind Merkmale eines kalten Konflikts. Hier werden zuerst die Parteien befähigt, den Konflikt miteinander auszutragen. Direkte Konfrontation ruft zu Beginn massive Abwehr hervor, und Vermeidungswege sind abzustellen statt auszubauen.",
+     "quelle": "Konflikte: Heiße und kalte Konflikte, Ansatzpunkte zur Bewältigung (v-ibk-konflikt) · eigener Übungsfall"
+    },
+    {
+     "phase": "Einzelgespräch",
+     "ort": "Kollege",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "frage": "Herr Brandt lehnt am Fahrzeug, verschränkt die Arme und sagt mit einem schiefen Lächeln: „Bei mir ist alles in bester Ordnung. Die Kollegin macht doch immer alles richtig.“ Wie reagieren Sie?",
+     "optionen": [
+      {
+       "t": "Sagen: „Ich nehme zwei Informationen wahr. Sagen Sie mir bitte, was Sie wirklich meinen.“",
+       "wert": 2,
+       "folge": "Herr Brandt zögert und sagt dann: „Also gut. Mich ärgert schon länger etwas.“"
+      },
+      {
+       "t": "Ihn beim Wort nehmen und sagen: „Gut, dann halte ich fest, dass aus Ihrer Sicht alles geklärt ist.“",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Sie bestätigen sein indirektes Spiel nicht, doch der eigentliche Ärger bleibt unausgesprochen."
+      },
+      {
+       "t": "Im gleichen Ton antworten: „Na wunderbar, dann sind hier ja alle rundum glücklich und zufrieden.“",
+       "wert": 0,
+       "folge": "Schlechte Folge: Jetzt reden beide doppelbödig. Herr Brandt grinst und das Gespräch dreht sich im Kreis."
+      },
+      {
+       "t": "Scharf sagen: „Diesen Ton verbitte ich mir. Reißen Sie sich gefälligst zusammen, Herr Brandt.“",
+       "wert": 0,
+       "folge": "Schlechte Folge: Herr Brandt macht dicht und antwortet nur noch mit „Jawohl“."
+      }
+     ],
+     "frist": 75,
+     "erkl": "Herr Brandt sendet eine verdeckte Transaktion: Die Worte und die nonverbale Botschaft passen nicht zusammen. Liegt das Problem auf der Beziehungsebene, kann es nicht auf der Sachebene gelöst werden. Dann ist es sinnvoll, zu einer direkten Botschaft aufzufordern und auf eigene Doppelbödigkeit zu verzichten.",
+     "quelle": "Transaktionsanalyse: Transaktionstypen, verdeckte Transaktion (v-ibk-ta) · eigener Übungsfall"
+    },
+    {
+     "phase": "Einzelgespräch",
+     "ort": "Sofaecke",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "frage": "Frau Yilmaz sitzt mit hängenden Schultern in der Sofaecke: „Ich kann es ihm sowieso nie recht machen. Können Sie nicht mit ihm reden und das für mich regeln?“ Was antworten Sie?",
+     "optionen": [
+      {
+       "t": "Ihre gute Arbeit konkret benennen und sachlich fragen, was sie selbst Herrn Brandt sagen möchte.",
+       "wert": 2,
+       "folge": "Frau Yilmaz richtet sich auf: „Eigentlich möchte ich, dass er mit mir redet und nicht über mich.“"
+      },
+      {
+       "t": "Geduldig zuhören, Verständnis zeigen und ihr versichern, dass so etwas mit der Zeit vergeht.",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Frau Yilmaz fühlt sich verstanden, bleibt aber passiv und wartet weiter ab."
+      },
+      {
+       "t": "Zusagen: „Überlassen Sie das mir. Ich spreche mit ihm und bringe das für Sie in Ordnung.“",
+       "wert": 0,
+       "folge": "Schlechte Folge: Frau Yilmaz gibt die Verantwortung ab und verlässt sich künftig bei jedem Ärger auf Sie."
+      },
+      {
+       "t": "Erwidern: „Sie sind doch erwachsen. Stellen Sie sich nicht so an und klären Sie das allein.“",
+       "wert": 0,
+       "folge": "Schlechte Folge: Frau Yilmaz fühlt sich angegriffen und zieht sich noch weiter zurück."
+      }
+     ],
+     "erkl": "Frau Yilmaz lädt Sie aus der Opferrolle ein, den Retter zu spielen. Wer ungefragt Verantwortung übernimmt, macht andere abhängig, und Vorwürfe wären die Verfolgerrolle. Ziel ist, aus dem Erwachsenen-Ich offen, sachlich und verantwortungsvoll zu kommunizieren. Im kalten Konflikt wird außerdem zuerst das Selbstwertgefühl gestärkt.",
+     "quelle": "Transaktionsanalyse: Spielanalyse, Drama-Dreieck (v-ibk-ta); Konflikte: Ansatzpunkte (v-ibk-konflikt) · eigener Übungsfall"
+    },
+    {
+     "phase": "Ursache",
+     "ort": "Dienstplan",
+     "wer": "p2",
+     "typ": "mc",
+     "frage": "Vor dem Dienstplan bricht es aus Herrn Brandt heraus: „Die Gerätekunde habe ich jahrelang gemacht. Dann hing da plötzlich der Name der Kollegin, und keiner hat ein Wort mit mir gesprochen. Um die Aufgabe geht es mir gar nicht. Aber zwanzig Jahre zählen hier wohl nichts mehr.“ Welche Konfliktursache liegt vor?",
+     "optionen": [
+      "Bewertungskonflikt: Die beiden sind sich über die Ziele der Ausbildung uneinig.",
+      "Verteilungskonflikt: Die beiden streiten um knappe Mittel der Wachabteilung.",
+      "Beziehungskonflikt: Herr Brandt fühlt sich in seinem Selbstwertgefühl verletzt.",
+      "Beurteilungskonflikt: Die beiden sind sich über den Weg zum Ziel uneinig."
+     ],
+     "richtig": "Beziehungskonflikt: Herr Brandt fühlt sich in seinem Selbstwertgefühl verletzt.",
+     "erkl": "Ursache eines Beziehungskonflikts ist die Verletzung des Selbstwertgefühls. Bewertungskonflikte drehen sich um Ziele, Beurteilungskonflikte um Wege und Verteilungskonflikte um Mittel. Herr Brandt sagt selbst, dass es ihm nicht um die Aufgabe geht.",
+     "quelle": "Konflikte: Konfliktursachen (v-ibk-konflikt) · eigener Übungsfall"
+    },
+    {
+     "phase": "Vorbereitung",
+     "ort": "Besprechung",
+     "wer": "p1",
+     "typ": "reihe",
+     "frage": "Beide sind zu einem gemeinsamen Gespräch bereit. Herr Albers schaut kurz in den Besprechungsraum: „Wie bauen Sie das Gespräch auf?“ Bringen Sie die sechs Phasen des kooperativen Konfliktgesprächs in die richtige Reihenfolge.",
+     "optionen": [
+      "Vereinbarung treffen",
+      "Problem lösen",
+      "Erregung kontrollieren",
+      "Offen kommunizieren",
+      "Persönlich verarbeiten",
+      "Vertrauen bilden"
+     ],
+     "richtig": [
+      "Erregung kontrollieren",
+      "Vertrauen bilden",
+      "Offen kommunizieren",
+      "Problem lösen",
+      "Vereinbarung treffen",
+      "Persönlich verarbeiten"
+     ],
+     "erkl": "Das kooperative Konfliktgespräch nach Berkel führt in sechs Phasen von der Erregung bis zur persönlichen Verarbeitung. Wichtig ist dabei ein flexibles Vorgehen.",
+     "quelle": "Konflikte: Kooperatives Konfliktgespräch nach Berkel (v-ibk-konflikt) · eigener Übungsfall"
+    },
+    {
+     "phase": "Konfliktgespräch",
+     "ort": "Besprechung",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "frage": "Das Gespräch zu dritt läuft. Frau Yilmaz wird laut: „Er redet doch nur hinter meinem Rücken schlecht über mich!“ Herr Brandt holt schon Luft. Was tun Sie?",
+     "optionen": [
+      {
+       "t": "Den Vorwurf in einen Wunsch übersetzen: „Sie möchten, dass Herr Brandt Kritik direkt an Sie richtet?“",
+       "wert": 2,
+       "folge": "Frau Yilmaz nickt. Herr Brandt sagt nach kurzem Zögern: „Das kann ich machen. Dann will ich aber auch gefragt werden.“"
+      },
+      {
+       "t": "Das Gespräch auf die Sache lenken und gleich über die künftige Verteilung der Ausbildung reden.",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Sachfrage ist schnell geklärt, doch die Kränkung bleibt im Raum stehen."
+      },
+      {
+       "t": "Herrn Brandt auffordern, sofort zu erklären, ob er tatsächlich schlecht über sie geredet hat.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Aus dem Gespräch wird ein Verhör. Herr Brandt verteidigt sich und greift seinerseits an."
+      },
+      {
+       "t": "Frau Yilmaz ermahnen, sich im Ton zu mäßigen, weil solche Vorwürfe hier nicht weiterhelfen.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Frau Yilmaz verstummt und sagt für den Rest des Gesprächs nichts mehr."
+      }
+     ],
+     "frist": 60,
+     "erkl": "Zum offenen Kommunizieren gehört im kooperativen Konfliktgespräch: zuhören, nachfragen, Vorwürfe in Wünsche übersetzen und Ergebnisse zusammenfassen. Bei Fehlern wird zukunftsorientiert gedacht, statt nach Schuldigen zu suchen.",
+     "quelle": "Konflikte: Kooperatives Konfliktgespräch nach Berkel (v-ibk-konflikt); Führungsstile: Motivation (v-ibk-fuehrungsstile) · eigener Übungsfall"
+    },
+    {
+     "phase": "Vereinbarung",
+     "ort": "Besprechung",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "frage": "Nach einer Stunde sind alle müde. Herr Brandt winkt ab: „Lassen wir es gut sein. Schwamm drüber, wir sind doch erwachsene Leute.“ Frau Yilmaz zuckt mit den Schultern. Wie schließen Sie das Gespräch ab?",
+     "optionen": [
+      {
+       "t": "Eine kleine, klar formulierte Absprache festhalten und offen ansprechen, was bei einem Rückfall geschieht.",
+       "wert": 2,
+       "folge": "Beide einigen sich: Kritik nur noch direkt, und die Gerätekunde planen sie künftig gemeinsam. Das Ergebnis ist klein, aber tragfähig."
+      },
+      {
+       "t": "Einen ausführlichen Plan für alle Streitpunkte der letzten Monate aufsetzen und ihn heute noch beschließen.",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Das Paket ist zu groß für diesen Tag. Beide stimmen zu, ohne wirklich dahinterzustehen."
+      },
+      {
+       "t": "Den Vorschlag annehmen, das Gespräch ohne Absprache beenden und auf den guten Willen der beiden vertrauen.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Der Konflikt ist nur zugedeckt und schwelt unter der Oberfläche weiter.",
+       "dann": {
+        "phase": "Rückfall",
+        "ort": "Küche",
+        "wer": "p3",
+        "typ": "entscheidung",
+        "frage": "Eine Woche später hängt wieder ein Zettel am Dienstplan statt eines Gesprächs. Frau Yilmaz sagt in der Küche: „Sehen Sie, es hat sich nichts geändert.“ Was tun Sie?",
+        "optionen": [
+         {
+          "t": "Den Rückfall bei beiden offen ansprechen und die fehlende klare Absprache jetzt gemeinsam nachholen.",
+          "wert": 2,
+          "folge": "Beide setzen sich noch einmal zusammen und halten fest, wie sie künftig miteinander reden."
+         },
+         {
+          "t": "Frau Yilmaz bitten, den Zettel nicht so wichtig zu nehmen und Herrn Brandt noch etwas Zeit zu geben.",
+          "wert": 1,
+          "folge": "Vertretbar, aber mit Nachteil: Frau Yilmaz wartet ab, verliert aber das Vertrauen in das Gespräch."
+         },
+         {
+          "t": "Kraft Ihres Amtes anordnen, dass ab sofort Ruhe herrscht und das Thema damit endgültig erledigt ist.",
+          "wert": 0,
+          "folge": "Schlechte Folge: Nach außen ist Ruhe. Die beiden blockieren sich nun bei jeder Gelegenheit im Stillen."
+         }
+        ],
+        "erkl": "Zu einer Vereinbarung gehören klare Formulierungen, und Rückfälle werden angesprochen. Wird ein Konflikt von der Führungskraft mit einem schnellen, faulen Kompromiss gedeckelt, verwandelt er sich regelmäßig in einen kalten Konflikt.",
+        "quelle": "Konflikte: Kooperatives Konfliktgespräch nach Berkel, Heiße und kalte Konflikte (v-ibk-konflikt) · eigener Übungsfall"
+       }
+      },
+      {
+       "t": "Als Vorgesetzter festlegen, dass die Sache damit erledigt ist und ab morgen wieder normal gearbeitet wird.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Beide nicken. In der Fahrzeughalle gehen sie sich danach weiter aus dem Weg."
+      }
+     ],
+     "frist": 70,
+     "erkl": "In der Phase „Vereinbarung treffen“ werden kleine Ergebnisse als Erfolg gewertet, aber keine faulen Kompromisse geschlossen. Dazu gehören klare Formulierungen und das Ansprechen von Rückfällen. Zu schnelle, oberflächliche Kompromisse von oben lassen den Konflikt kalt weiterlaufen.",
+     "quelle": "Konflikte: Kooperatives Konfliktgespräch nach Berkel, Heiße und kalte Konflikte (v-ibk-konflikt) · eigener Übungsfall"
+    }
+   ],
+   "eingang": [
+    {
+     "phase": "Rückfrage",
+     "ort": "Wachleiter",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "nach": 60,
+     "frist": 80,
+     "frage": "Herr Albers ruft Sie in sein Büro: „Die zwei reden nicht mehr und schaffen lieber Tatsachen. Lager haben sich in der Mannschaft aber noch keine gebildet. Soll ich jemanden von außen holen?“ Was antworten Sie?",
+     "optionen": [
+      {
+       "t": "„Noch nicht. Solange sich keine Lager bilden, können wir den Konflikt in der Abteilung selbst lösen.“",
+       "wert": 2,
+       "folge": "Herr Albers nickt: „Einverstanden. Melden Sie sich, wenn die Mannschaft anfängt, Partei zu ergreifen.“"
+      },
+      {
+       "t": "„Ja, bitte. Mit einer Moderation von außen sind wir in jedem Fall auf der sicheren Seite.“",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Hilfe kommt, doch die beiden fragen sich, warum ihr eigener Chef nicht mit ihnen redet."
+      },
+      {
+       "t": "„Nein. Versetzen Sie am besten einen der beiden in eine andere Wachabteilung, dann ist Ruhe.“",
+       "wert": 0,
+       "folge": "Schlechte Folge: Herr Albers runzelt die Stirn. Der Konflikt wäre nur verschoben, und einer verliert sein Gesicht."
+      }
+     ],
+     "erkl": "Nach Glasl sind die Beteiligten auf den Stufen 1 bis 3 selber handlungsfähig. Stufe 3 heißt „Taten statt Worte“, Stufe 4 „Koalitionen“. Erst ab Stufe 4 ist eine Lösung mithilfe eines externen Eingriffs sinnvoll.",
+     "quelle": "Konflikte: Eskalationsstufen nach Glasl (v-ibk-konflikt) · eigener Übungsfall"
+    },
+    {
+     "phase": "Nebenbei",
+     "ort": "Spinde",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "nach": 130,
+     "frist": 70,
+     "frage": "An den Spinden sehen Sie, dass Herr Brandt unaufgefordert die Regale mit der Schutzkleidung neu geordnet und beschriftet hat. Er räumt gerade die letzten Jacken ein. Wie reagieren Sie?",
+     "optionen": [
+      {
+       "t": "Kurz stehen bleiben und ihm konkret sagen, dass Ihnen die neue Ordnung aufgefallen ist und gefällt.",
+       "wert": 2,
+       "folge": "Herr Brandt brummt etwas, lächelt aber zum ersten Mal an diesem Tag."
+      },
+      {
+       "t": "Ihn später vor der versammelten Mannschaft überschwänglich als Vorbild für alle anderen herausstellen.",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Das Lob wirkt übertrieben. Herrn Brandt ist der Auftritt sichtlich unangenehm."
+      },
+      {
+       "t": "Wortlos weitergehen, denn Ordnung an den Spinden gehört schließlich zu den Pflichten jedes Kollegen.",
+       "wert": 0,
+       "folge": "Schlechte Folge: Herr Brandt schaut Ihnen nach und murmelt: „Sieht hier ja doch keiner.“"
+      }
+     ],
+     "erkl": "Menschen wollen wahrgenommen werden. Strokes sind Nahrung für die Seele: Führungskräfte dürfen und sollen Zuwendung geben, auch für Kleinigkeiten. Mit Lob und Anerkennung soll man aber nicht übertreiben.",
+     "quelle": "Transaktionsanalyse: Grundbedürfnisse, Strokes (v-ibk-ta); Führungsstile: Motivation (v-ibk-fuehrungsstile) · eigener Übungsfall"
+    }
+   ]
   }
  ]
 }

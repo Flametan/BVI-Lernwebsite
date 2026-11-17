@@ -57,7 +57,7 @@ const PAUSE=(function(){
     const url=k=>'game/index.html?'+(k?'m='+k+'&amp;':'')+'von=v-pause';
     root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}
     <div class="pz-tiles pz-3d"><a class="pz-tile wide hero" href="${url('')}"><span class="pz-ti"><span class="pz-gi">${svg('truck')}</span></span><span class="pz-tt"><b>Simulationen starten</b><small>Neun Missionen in begehbaren 3D-Welten, dazu Wiederholung, Prüfung, Wochenaufgabe und Bestenliste</small></span></a>
-    ${IDF3D.map(g=>{const n=fertig(g[0]);return `<a class="pz-tile" href="${url(g[0])}" aria-label="Mission ${g[2]}. ${g[3]}${n?'. '+n+' von 5 Leveln geschafft':''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${n?`<span class="pz-bst">${n} von 5</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${g[3]}</small></span></a>`;}).join('')}</div></div>`;
+    ${IDF3D.map(g=>{const n=fertig(g[0]);return `<a class="pz-tile" href="${url(g[0])}" aria-label="Mission ${g[2]}. ${g[3]}${n?'. '+n+' von '+(g[0]==='begehung'?5:6)+' Leveln geschafft':''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${n?`<span class="pz-bst">${n} von ${g[0]==='begehung'?5:6}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${g[3]}</small></span></a>`;}).join('')}</div></div>`;
     tabsOn();
   }
   function hub(){stop();if(ptab==='idf3d')return hub3d();

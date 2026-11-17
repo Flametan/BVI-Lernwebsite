@@ -1,7 +1,10 @@
 /* Missionen in einer begehbaren Welt auf einer Ebene (alle außer der Begehung):
    Stabsraum, Brandschutzdienststelle, Einsatzstelle, Lagezentrum, Flugfeld, Wache, Hörsaal, Planungsbüro.
    Die Aufgaben stehen an Stationen (Leuchtsäulen). Aufgabenarten: Frage (mc, multi, reihe) oder „bringen“
-   (Meldung am Sichter holen und zum zuständigen Sachgebiet tragen). Daten: game/data/<mission>.json, Feld „welt“ wählt die Kulisse. */
+   (Meldung am Sichter holen und zum zuständigen Sachgebiet tragen). Daten: game/data/<mission>.json, Feld „welt“ wählt die Kulisse.
+   Einsatz (Level mit „szenario“): Die Schritte folgen fest aufeinander, jeweils an einer Station; eine schlechte Entscheidung kann einen
+   Folgeschritt auslösen, Nebenmeldungen treffen nach einer Zeit von selbst ein und haben eine Frist.
+   Aufgabenart „stadt“: Über dem Raum erscheint ein Stadtmodell, auf dem Wachen gesetzt werden. */
 (window.MISSIONS = window.MISSIONS || {}).welt = (function(){
   const WH = 2.7, TH = 0.25, R = 0.4, SPEED = 4.8;
   const FARBE = { offen:'#f59e0b', ok:'#1f9d55', halb:'#b7791f', falsch:'#c53030', ziel:'#2f7de1' };
@@ -203,10 +206,33 @@
     const marke = (n, x, z, farbe) => { const b = STAGE.beam(farbe); b.position.set(x, 0, z); sc.add(b); const lb = STAGE.label(n, { color:'#ffffff', bg:'rgba(20,24,32,.78)', h:0.4 }); lb.position.set(x, 3.25, z); sc.add(lb); return { n, x, z, beam:b, lb, queue:[] }; };
     const spots = W.spots.map(s => marke(s[0], s[1], s[2], FARBE.offen));
     const fragen = L.aufgaben.filter(a => a.typ !== 'bringen'), meld = L.aufgaben.filter(a => a.typ === 'bringen');
-    fragen.forEach((a, i) => spots[i % spots.length].queue.push(a));
+    const SZ = L.szenario ? { haupt:L.aufgaben.slice(), ein:(L.eingang || []).slice().sort((a, b) => a.nach - b.nach), t:0, los:false } : null, fristen = new Map();
+    const ort = n => spots.find(s => s.n === n) || spots[0];
+    if(SZ) L.aufgaben.forEach(a => { a._kette = true; }); else fragen.forEach((a, i) => (a.ort ? ort(a.ort) : spots[i % spots.length]).queue.push(a));
     let sichter = null, desks = {};
     if(meld.length){ sichter = marke(W.sichter.n, W.sichter.x, W.sichter.z, FARBE.offen); sichter.queue = meld.slice(); Object.keys(W.desks).forEach(k => { const d = W.desks[k]; desks[k] = marke(d.n, d.x, d.z, FARBE.ziel); }); }
-    let left = L.aufgaben.length, trage = null, fehlv = 0, letzte = 'offen';
+    let left = L.aufgaben.length + (SZ ? SZ.ein.length : 0), trage = null, fehlv = 0, letzte = 'offen', noteT = 0;
+    const offen = () => spots.some(s => s.queue.length) || !!(sichter && sichter.queue.length);
+    const melde = (t, ms) => { clearTimeout(noteT); ctx.note(t); noteT = setTimeout(() => ctx.note(null), ms || 6000); };
+    // Einsatz: Aufgabe an ihre Station legen; mit Frist nur außerhalb der Stufe „Lernen“
+    function stelle(a){
+      const s = ort(a.ort); s.queue.push(a); s.fertig = false; s.beam.setColor(FARBE.offen, false); s.lb.visible = true;
+      if(a.frist && ctx.stufe !== 'lernen') fristen.set(a, { rest:a.frist, s, aus:false });
+      uiKey = ''; zeigen();
+    }
+    function naechster(){
+      const a = SZ.haupt.shift();
+      if(a){ stelle(a); if(ctx.phase) ctx.phase(a.phase); } else SZ.ein.splice(0).forEach(stelle);     // Hauptstrang fertig: offene Nebenmeldungen kommen sofort
+    }
+    function kommt(e){ stelle(e); STAGE.sfx('door'); melde('Neue Meldung: Station „' + ort(e.ort).n + '“' + (fristen.has(e) ? ' (Frist ' + Math.round(e.frist) + ' Sekunden)' : '') + '.'); }
+    function verfall(a, f){
+      f.aus = true; STAGE.sfx('bad');
+      if(a._kette){ f.s.beam.setColor(FARBE.falsch, true); ctx.verzug(a, false); melde('Die Station „' + f.s.n + '“ wartet schon zu lange. Das kostet Vertrauen.'); return; }
+      const i = f.s.queue.indexOf(a); if(i >= 0) f.s.queue.splice(i, 1); fristen.delete(a);
+      if(!f.s.queue.length){ f.s.fertig = true; f.s.beam.setColor(FARBE.falsch, false); }
+      melde('Frist verpasst: Die Meldung an der Station „' + f.s.n + '“ blieb liegen.'); ctx.verzug(a, true); ctx.count(3, a, { verpasst:true }); left--; uiKey = ''; zeigen(); fertig();
+    }
+    function fertig(){ if(left <= 0 && !offen()){ clearTimeout(noteT); ctx.note(null); ctx.finish(); } }
     function zeigen(){
       spots.concat(sichter ? [sichter] : []).forEach(s => { const an = s.queue.length > 0; s.beam.visible = an && !trage; s.lb.visible = an || s === sichter; if(!an && s.fertig) { s.beam.visible = !trage; } });
       Object.keys(desks).forEach(k => { desks[k].beam.visible = !!trage; });
@@ -220,10 +246,14 @@
     const pos = { x:W.start.x, z:W.start.z }; let face = Math.PI, near = null, busy = false, uiKey = '', gespiegelt = false;
     const tgt = new THREE.Vector3(pos.x, 1.2, pos.z), ray = new THREE.Raycaster(), tmp = new THREE.Vector3(); let faded = [], tick = 0;
 
-    function erledigt(s, tries){
-      const a = s.queue.shift(); letzte = tries === 1 ? 'ok' : tries === 2 ? 'halb' : 'falsch';
+    function erledigt(s, tries, res){
+      const a = s.queue.shift(); letzte = tries === 1 ? 'ok' : tries === 2 ? 'halb' : 'falsch'; fristen.delete(a);
       if(!s.queue.length){ s.fertig = true; s.beam.setColor(FARBE[letzte], false); }
-      uiKey = ''; zeigen(); st.feier(pos.x, 1.6, pos.z, tries); ctx.count(tries, a); if(--left === 0){ ctx.note(null); ctx.finish(); }
+      st.feier(pos.x, 1.6, pos.z, tries);
+      if(a._frei) ctx.folge(tries, a, res); else { ctx.count(tries, a, res); left--; }
+      // Einsatz: Nach einer schlechten Entscheidung folgt erst die Schadensbegrenzung, sonst der nächste Schritt
+      if(SZ && a._kette){ if(res && res.dann) stelle(Object.assign({}, res.dann, { _kette:true, _frei:true, phase:a.phase })); else naechster(); }
+      uiKey = ''; zeigen(); fertig();
     }
     async function aktion(){
       if(busy || !near || st.imAnflug() || !st.input.frei) return;
@@ -232,7 +262,7 @@
         trage = s.queue[0]; fehlv = 0; STAGE.sfx('door'); ctx.note('Meldung: „' + trage.frage + '“ Bring sie zum zuständigen Sachgebiet.'); uiKey = ''; zeigen(); return;
       }
       if(trage && s.desk){
-        if(s.desk === trage.ziel){ const t = fehlv + 1; trage = null; ctx.note(null); erledigt(sichter, t); return; }
+        if(s.desk === trage.ziel){ const t = fehlv + 1; trage = null; clearTimeout(noteT); ctx.note(null); erledigt(sichter, t); return; }
         fehlv++; STAGE.sfx('bad');
         if(fehlv >= 2){ const z = trage.ziel; trage = null; ctx.note('Zuständig war ' + W.desks[z].n + '.'); setTimeout(() => { if(!trage) ctx.note(null); }, 3500); erledigt(sichter, 3); }
         else ctx.note(s.n + ' ist nicht zuständig. Noch ein Versuch: „' + trage.frage + '“');
@@ -241,16 +271,69 @@
       if(!s.queue.length || trage) return;
       // Frage: Die Welt läuft weiter, die Figur bleibt stehen, die Kamera schwenkt zur Station
       busy = true; st.halt(true); st.fokus(s.x, s.z); face = Math.atan2(s.x - pos.x, s.z - pos.z) || face;
-      const res = await ctx.ask(s.queue[0], s.n);         // { tries } oder null, wenn die Frage geschlossen wurde
-      busy = false; st.halt(false); st.fokus(null); if(res) erledigt(s, res.tries);
+      const a = s.queue[0], modell = a.typ === 'stadt' ? stadtAuf(a) : null;
+      const res = await ctx.ask(a, s.n, modell);          // { tries } oder null, wenn die Frage geschlossen wurde
+      if(modell) modell.weg();
+      busy = false; st.halt(false); st.fokus(null); if(res) erledigt(s, res.tries, res);
     }
     Object.keys(desks).forEach(k => { desks[k].desk = k; });
+
+    /* ---------- Stadtmodell (Aufgabenart „stadt“): hoch über dem Raum, die Kamera schaut von oben darauf ----------
+       Koordinaten der Daten: x 0–100, y 0–75 (gleicher Maßstab). Die Auswahl und die Wertung macht die Oberfläche (app.js);
+       hier wird nur gezeichnet: Stadtteile, mögliche Standorte, gesetzte Wachen mit ihrem Einsatzbereich. */
+    function stadtAuf(a){
+      const g = new THREE.Group(), Y = 40, K = 0.12, cx = pos.x, cz = pos.z, alle = [], v = new THREE.Vector3();
+      const P = (x, y) => [(x - 50) * K, (y - 37.5) * K];
+      const add = (geo, m, x, y, z, sch) => { const o = new THREE.Mesh(geo, m); o.position.set(x, y, z); o.castShadow = sch !== false; o.receiveShadow = true; g.add(o); alle.push(o); return o; };
+      g.position.set(cx, Y, cz);
+      add(new THREE.CylinderGeometry(46, 46, 0.2, 40), Mt('#2b3038'), 0, -0.5, 0, false);
+      add(new THREE.BoxGeometry(12.8, 0.3, 9.8), Mt('#4a4f58'), 0, -0.16, 0);
+      add(new THREE.BoxGeometry(12.2, 0.04, 9.2), Mt('#8fae7c'), 0, 0.01, 0, false);
+      const str = Mt('#d8d4c8'), wasser = Mt('#6ea3d6', { roughness:0.2, metalness:0.3 });
+      [[-3.6, 0, 0.16, 9.2], [1.2, 0, 0.16, 9.2], [4.4, 0, 0.16, 9.2], [0, -2.2, 12.2, 0.16], [0, 1.6, 12.2, 0.16]].forEach(b => add(new THREE.BoxGeometry(b[2], 0.02, b[3]), str, b[0], 0.04, b[1], false));
+      (a.fluss || []).forEach(f => { const p1 = P(f[0], f[1]), p2 = P(f[2], f[3]), o = add(new THREE.BoxGeometry(Math.hypot(p2[0] - p1[0], p2[1] - p1[1]), 0.03, 0.42), wasser, (p1[0] + p2[0]) / 2, 0.045, (p1[1] + p2[1]) / 2, false); o.rotation.y = -Math.atan2(p2[1] - p1[1], p2[0] - p1[0]); });
+      const orte = a.orte.map((o, i) => {
+        const [x, z] = P(o.x, o.y), m = Mt('#d9d3c6'), n = 4 + o.gewicht * 3;
+        for(let k = 0; k < n; k++){ const w = 0.2 + ((k * 37 + i * 11) % 5) * 0.035, h = 0.16 + ((k * 53 + i * 7) % 7) * 0.07, r = 0.25 + (k % 4) * 0.2, wk = k * 2.4 + i; add(new THREE.BoxGeometry(w, h, w), m, x + Math.cos(wk) * r, 0.03 + h / 2, z + Math.sin(wk) * r); }
+        const lb = STAGE.label(o.n, { color:'#ffffff', bg:'rgba(20,24,32,.78)', h:0.34 }); lb.position.set(x, 1.15, z); g.add(lb); alle.push(lb);
+        return { m, lb };
+      });
+      const blau = Mt('#2f7de1'), rot = Mt('#c4261c', { roughness:0.4 }), kreisG = new THREE.CircleGeometry(a.radius * K, 40);
+      const sto = a.standorte.map(s => {
+        const [x, z] = P(s.x, s.y), sockel = add(new THREE.CylinderGeometry(0.2, 0.24, 0.12, 16), blau, x, 0.09, z), wache = add(new THREE.BoxGeometry(0.46, 0.5, 0.46), rot, x, 0.3, z);
+        const kreis = add(kreisG, new THREE.MeshBasicMaterial({ color:C('#1f9d55'), transparent:true, opacity:0.3, depthWrite:false }), x, 0.07, z, false); kreis.rotation.x = -Math.PI / 2; kreis.receiveShadow = false;
+        const lb = STAGE.label(s.n, { color:'#ffffff', bg:'rgba(47,125,225,.92)', h:0.42 }); lb.position.set(x, 0.75, z); g.add(lb); alle.push(lb);
+        wache.visible = kreis.visible = false; return { x, z, wache, kreis };
+      });
+      // bestehende Wachen: stehen fest und decken ihren Bereich immer ab
+      (a.bestand || []).forEach(s => {
+        const [x, z] = P(s.x, s.y); add(new THREE.BoxGeometry(0.5, 0.56, 0.5), rot, x, 0.31, z);
+        const kreis = add(kreisG, new THREE.MeshBasicMaterial({ color:C('#c4261c'), transparent:true, opacity:0.2, depthWrite:false }), x, 0.06, z, false); kreis.rotation.x = -Math.PI / 2; kreis.receiveShadow = false;
+        const lb = STAGE.label(s.n, { color:'#ffffff', bg:'rgba(196,38,28,.92)', h:0.36 }); lb.position.set(x, 0.95, z); g.add(lb); alle.push(lb);
+      });
+      // am breiten Bildschirm schwebt die Frage rechts: das Modell rückt nach links, damit es frei bleibt
+      const breit = window.innerWidth >= 900; sc.add(g); ctx.fade(() => st.aufsicht({ x:cx + (breit ? 3.6 : 0), y:Y, z:cz + 0.5, d:breit ? 14 : 12.5 }));
+      const h = {
+        onTap:null,
+        // sel = gewählte Standorte (Index), gedeckt = je Stadtteil true/false
+        zeige(sel, gedeckt){ sto.forEach((s, i) => { s.wache.visible = s.kreis.visible = sel.includes(i); }); orte.forEach((o, i) => o.m.color.set(gedeckt[i] ? '#8fd3a0' : '#d9d3c6')); },
+        weg(){ st.input.tap = null; ctx.fade(() => { st.aufsicht(null); sc.remove(g); alle.forEach(o => { if(o.geometry && o.geometry !== kreisG) o.geometry.dispose(); if(o.material){ if(o.material.map) o.material.map.dispose(); o.material.dispose(); } }); kreisG.dispose(); }); }
+      };
+      st.input.tap = (px, py) => {
+        const r = ctx.canvas.getBoundingClientRect(); let best = 60, bi = -1;
+        sto.forEach((s, i) => { v.set(cx + s.x, Y + 0.3, cz + s.z).project(st.camera); const d = Math.hypot(r.left + (v.x + 1) / 2 * r.width - px, r.top + (1 - v.y) / 2 * r.height - py); if(d < best){ best = d; bi = i; } });
+        if(bi >= 0 && h.onTap) h.onTap(bi);
+      };
+      return h;
+    }
     st.input.action = aktion; st.input.key = k => { if(k === 'Escape' || k === 'p') ctx.menu(); };
     ui.act.onclick = aktion; ui.up.hidden = ui.down.hidden = true;
 
     function refreshUi(){
-      const key = [near ? near.n : '', left, trage ? 1 : 0].join('|'); if(key === uiKey) return; uiKey = key;
-      ui.info.textContent = 'Offen: ' + left + (trage ? ' · Meldung in der Hand' : '');
+      let fk = 0; fristen.forEach(f => { if(!f.aus) fk += Math.ceil(f.rest); });
+      const key = [near ? near.n : '', left, trage ? 1 : 0, fk].join('|'); if(key === uiKey) return; uiKey = key;
+      let knapp = null; fristen.forEach(f => { if(!f.aus && (!knapp || f.rest < knapp.rest)) knapp = f; });
+      ui.info.textContent = 'Offen: ' + left + (trage ? ' · Meldung in der Hand' : '') + (knapp ? ' · Frist „' + knapp.s.n + '“: ' + Math.max(0, Math.ceil(knapp.rest)) + ' s' : '');
       ui.act.hidden = !near; if(near) ui.act.textContent = near === sichter ? 'Meldung holen' : near.desk ? 'Abgeben bei ' + near.n : 'Ansprechen: ' + near.n;
     }
 
@@ -275,12 +358,20 @@
         f.animate(dt, v, 0); l.sh.position.x = f.position.x; l.sh.position.z = f.position.z;
       }
       for(let i = 0; i < takt.length; i++) takt[i](dt, time);
+      // Einsatz: Die Zeit läuft ab „Los geht’s“. Nebenmeldungen treffen ein; Fristen laufen nicht, solange eine Frage offen ist
+      if(SZ){
+        if(!SZ.los && inp.frei && !st.imAnflug()){ SZ.los = true; naechster(); }
+        if(SZ.los){
+          SZ.t += dt; while(SZ.ein.length && SZ.ein[0].nach <= SZ.t) kommt(SZ.ein.shift());
+          if(!busy) fristen.forEach((f, a) => { if(f.aus) return; f.rest -= dt; if(f.rest <= 15 && !f.rot){ f.rot = true; f.s.beam.setColor(FARBE.falsch, true); } if(f.rest <= 0) verfall(a, f); });
+        }
+      }
       // Nächste Station in Reichweite und Ziel des Richtungspfeils
       near = null; let best = 2.2, zx = null, zz = 0, bd = 1e9;
       const aktiv = trage ? Object.keys(desks).map(k => desks[k]) : spots.concat(sichter ? [sichter] : []).filter(s => s.queue.length);
       aktiv.forEach(s => { const d = Math.hypot(pos.x - s.x, pos.z - s.z); if(d < best){ best = d; near = s; } if(!trage && d < bd){ bd = d; zx = s.x; zz = s.z; } });
       spots.forEach(s => { s.beam.userData.mat.uniforms.uTime.value = time; }); if(sichter) sichter.beam.userData.mat.uniforms.uTime.value = time; Object.keys(desks).forEach(k => { desks[k].beam.userData.mat.uniforms.uTime.value = time; });
-      pfeil.visible = zx !== null && bd > 2.6 && !busy;
+      pfeil.visible = zx !== null && bd > 2.6 && !busy && ctx.stufe !== 'ernst';
       if(pfeil.visible){ const a = Math.atan2(zx - pos.x, zz - pos.z), w = 1.1 + Math.sin(time * 5) * 0.12; pfeil.position.set(pos.x + Math.sin(a) * w, 0.07, pos.z + Math.cos(a) * w); pfeil.rotation.y = a; }
       refreshUi();
       const kf = Math.min(1, dt * 8); tgt.x += (pos.x - tgt.x) * kf; tgt.z += (pos.z - tgt.z) * kf;
@@ -296,14 +387,14 @@
     });
 
     return {
-      dispose(){ ui.act.hidden = true; ui.act.onclick = null; st.dispose(); },
+      dispose(){ clearTimeout(noteT); ui.act.hidden = true; ui.act.onclick = null; st.dispose(); },
       pause: v => st.pause(v), halt: v => st.halt(v), stage:st, rec:!!W.rec,
       // für die automatische Prüfung: Stationen mit offenen Aufgaben, Sichter, Schreibtische; Figur an eine Station stellen
       _stage:st, _pos:pos, _boxes:boxes,
       _check(){ const alle = spots.concat(sichter ? [sichter] : [], Object.keys(desks).map(k => desks[k]), [{ n:'Start', x:W.start.x, z:W.start.z }]); return alle.filter(x => STAGE.blocked(x.x, x.z, R, boxes)).map(x => x.n); },
       _next(){ if(trage) return { typ:'abgeben', ziel:trage.ziel }; if(sichter && sichter.queue.length) return { typ:'holen' }; const s = spots.find(x => x.queue.length); return s ? { typ:'frage', a:s.queue[0], n:s.n } : null; },
       _goto(was, ziel){ const s = was === 'holen' ? sichter : was === 'abgeben' ? desks[ziel] : spots.find(x => x.queue.length); pos.x = s.x; pos.z = s.z; tgt.set(pos.x, 1.2, pos.z); uiKey = ''; near = null; return s.n; },
-      _near: () => (near ? near.n : null)
+      _near: () => (near ? near.n : null), _sz:SZ, _fristen:fristen, _vor: sek => { if(SZ) SZ.t += sek; }, _ablauf: () => fristen.forEach(f => { if(!f.aus) f.rest = 0.01; })
     };
   }
   return { start };

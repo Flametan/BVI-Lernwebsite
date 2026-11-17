@@ -478,6 +478,112 @@
      "quelle": "Eigener Übungsfall mit frei gewählten Zahlen, abgeleitet aus den Lernkarten k-feuak-68 bis k-feuak-71"
     },
     {
+     "typ": "stadt",
+     "ort": "Stadtmodell",
+     "frage": "Stadtmodell: Setze neue Wachen so, dass das Schutzziel im Budget erreicht wird.",
+     "fall": "Die Hauptwache steht in der Stadtmitte. Im Norden, Nordosten, Osten und Süden wird die Hilfsfrist auch ab der zuständigen Wache verfehlt. Ziel: mindestens 90 % der Einwohner liegen im Einsatzbereich einer Wache. Für neue Standorte stehen 8.000 T€ bereit.",
+     "radius": 22,
+     "ziel": 90,
+     "budget": 8000,
+     "fluss": [
+      [
+       0,
+       54,
+       34,
+       50
+      ],
+      [
+       34,
+       50,
+       66,
+       56
+      ],
+      [
+       66,
+       56,
+       100,
+       52
+      ]
+     ],
+     "bestand": [
+      {
+       "n": "Hauptwache",
+       "x": 38,
+       "y": 38
+      }
+     ],
+     "orte": [
+      {
+       "n": "Mitte",
+       "x": 45,
+       "y": 38,
+       "gewicht": 5
+      },
+      {
+       "n": "West",
+       "x": 20,
+       "y": 35,
+       "gewicht": 3
+      },
+      {
+       "n": "Nordost",
+       "x": 80,
+       "y": 15,
+       "gewicht": 3
+      },
+      {
+       "n": "Ost",
+       "x": 80,
+       "y": 40,
+       "gewicht": 2
+      },
+      {
+       "n": "Süd",
+       "x": 50,
+       "y": 66,
+       "gewicht": 2
+      },
+      {
+       "n": "Nord",
+       "x": 45,
+       "y": 10,
+       "gewicht": 1
+      }
+     ],
+     "standorte": [
+      {
+       "n": "A",
+       "x": 78,
+       "y": 22,
+       "kosten": 4000,
+       "t": "Gewerbegebiet Nordost"
+      },
+      {
+       "n": "B",
+       "x": 48,
+       "y": 60,
+       "kosten": 3500,
+       "t": "Südufer"
+      },
+      {
+       "n": "C",
+       "x": 60,
+       "y": 12,
+       "kosten": 3000,
+       "t": "Nordrand"
+      },
+      {
+       "n": "D",
+       "x": 40,
+       "y": 45,
+       "kosten": 2000,
+       "t": "neben der Hauptwache"
+      }
+     ],
+     "erkl": "Wird die Hilfsfrist auch ab der zuständigen Wache verfehlt, ist das ein Standort- und Erreichbarkeitsproblem: Neue Standorte müssen die räumliche Versorgungslücke schließen. Ein Standort neben der bestehenden Wache schließt keine Lücke.",
+     "quelle": "Eigener Übungsfall mit frei gewählten Zahlen, abgeleitet aus den Lernkarten k-feuak-68 bis k-feuak-71. Der Einsatzbereich als Kreis ist ein vereinfachtes Modell."
+    },
+    {
      "typ": "mc",
      "frage": "Worauf ist bei der HLF-Beschaffung besonders zu achten?",
      "optionen": [
@@ -552,6 +658,335 @@
     "schlecht": "Der Rat vertagt die Entscheidung."
    },
    "licht": "regen"
+  },
+  {
+   "titel": "Projekt: Neue Wache Nordost",
+   "steckbrief": "Sie führen die Planung einer neuen Feuerwache vom Bedarf über Haushalt und Vergabe bis zum Bericht an den Ausschuss.",
+   "licht": "morgen",
+   "szenario": true,
+   "auftrag": {
+    "wer": "Herr Dr. Sommer, Dezernent",
+    "p": "p1",
+    "text": "Guten Morgen. Im Nordosten der Stadt erreichen wir das Schutzziel nicht. Sie leiten das Projekt: Bedarf klären, Mittel anmelden, das Löschfahrzeug für die neue Wache beschaffen und dem Ausschuss berichten. Frau Kessler aus der Kämmerei und Herr Petersen von der Technik arbeiten Ihnen zu."
+   },
+   "lage": {
+    "name": "Projekt auf Kurs",
+    "start": 60
+   },
+   "ende": {
+    "gut": "Bedarf, Haushalt und Vergabe greifen sauber ineinander. Der Ausschuss folgt Ihrem Vorschlag und das Projekt läuft nach Plan.",
+    "mittel": "Das Projekt kommt voran, aber einige Schritte mussten nachgebessert werden. Der Dezernent bittet Sie um engere Abstimmung.",
+    "schlecht": "Das Projekt steht still, weil Haushalt und Vergabe nicht zusammenpassen. Der Dezernent lässt die Planung neu aufsetzen."
+   },
+   "personen": [
+    {
+     "id": "p1",
+     "name": "Herr Dr. Sommer",
+     "rolle": "Dezernent",
+     "gut": [
+      "Das kann ich dem Rat so vorlegen.",
+      "Gut vorbereitet, danke.",
+      "So behalten wir das Projekt im Griff."
+     ],
+     "schlecht": [
+      "Das kann ich dem Rat nicht erklären.",
+      "Hier fehlt mir die Grundlage.",
+      "So gerät das Projekt in Schieflage."
+     ]
+    },
+    {
+     "id": "p2",
+     "name": "Frau Kessler",
+     "rolle": "Kämmerin",
+     "gut": [
+      "Das passt in den Haushalt.",
+      "So kann ich es einplanen.",
+      "Sauber angemeldet, vielen Dank."
+     ],
+     "schlecht": [
+      "Dafür gibt es keine Mittel.",
+      "Das muss ich leider zurückgeben.",
+      "So geht das haushaltsrechtlich nicht."
+     ]
+    },
+    {
+     "id": "p3",
+     "name": "Herr Petersen",
+     "rolle": "Leiter Technik im Projektteam",
+     "gut": [
+      "Damit können wir arbeiten.",
+      "Gute Entscheidung für die Technik.",
+      "Das Team zieht mit."
+     ],
+     "schlecht": [
+      "Das gibt Ärger bei der Vergabe.",
+      "Da fehlt uns jemand im Team.",
+      "Das wird uns später einholen."
+     ]
+    }
+   ],
+   "aufgaben": [
+    {
+     "phase": "Bedarf",
+     "ort": "Stadtmodell",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Am Stadtmodell liegt die Analyse der Hilfsfristerreichung für den Nordosten. Der Erreichungsgrad ist schlecht, und zwar auch ab der zuständigen Wache. Wie deuten Sie das und was schlagen Sie vor?",
+     "optionen": [
+      {
+       "t": "Als Standortproblem deuten und einen neuen Standort im Nordosten vorschlagen",
+       "wert": 2,
+       "folge": "Die Analyse zeigt eine räumliche Versorgungslücke. Ihr Vorschlag setzt an der Ursache an."
+      },
+      {
+       "t": "Als Standortproblem deuten, aber erst noch ein weiteres Jahr Daten sammeln",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Deutung stimmt. Die Versorgungslücke im Nordosten bleibt aber ein Jahr länger bestehen."
+      },
+      {
+       "t": "Als Ressourcenproblem deuten und ein weiteres Fahrzeug an der alten Wache fordern",
+       "wert": 0,
+       "folge": "Schlechte Folge: Das zusätzliche Fahrzeug steht am selben Ort. Der Nordosten wird weiterhin nicht rechtzeitig erreicht."
+      }
+     ],
+     "frist": 60,
+     "erkl": "Schlechte Erreichung auch ab der zuständigen Wache deutet man als Standort- und Erreichbarkeitsproblem. Gute Erreichung ab der zuständigen Wache bei schlechter Gesamterreichung wäre dagegen ein Problem der Ressourcenverfügbarkeit.",
+     "quelle": "Lernkarten Bedarfsplanung k-feuak-68 bis k-feuak-70 (v-feuak-rdbp) · eigener Übungsfall"
+    },
+    {
+     "phase": "Planungsziel",
+     "ort": "Dezernat",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Herr Dr. Sommer fragt, welches Schutzniveau im Nordosten gelten soll. Mehr Sicherheit kostet mehr Geld. Wie bereiten Sie die Entscheidung vor?",
+     "optionen": [
+      {
+       "t": "Varianten mit ihren Folgen ausarbeiten und der Politik zur Wahl vorlegen",
+       "wert": 2,
+       "folge": "Der Rat sieht, was jede Variante leistet und kostet. Er entscheidet und trägt die Verantwortung."
+      },
+      {
+       "t": "Eine einzige Lösung ausarbeiten und der Politik zum Beschluss vorlegen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Der Rat kann nur zustimmen oder ablehnen. Eine echte Abwägung findet nicht statt."
+      },
+      {
+       "t": "Das Schutzniveau selbst festlegen und die Politik nur darüber unterrichten",
+       "wert": 0,
+       "folge": "Schlechte Folge: Der Rat fühlt sich übergangen. Die Verantwortung für das Schutzniveau liegt jetzt allein bei Ihnen."
+      }
+     ],
+     "erkl": "Die Entscheidung über den Fokus der ethischen Aspekte kann und sollte an die Politik abgegeben werden, Stichwort Variantenplanung. Zu den Planungszielen gehören Planungsfristen, taktische Einheiten und der Erreichungsgrad.",
+     "quelle": "Brandschutzbedarfsplanung: Grundsätzliches und ethische Aspekte (v-feuak-bedarfsplanung) · eigener Übungsfall"
+    },
+    {
+     "phase": "Anmeldung",
+     "ort": "Kämmerei",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "frage": "Frau Kessler stellt den Haushalt für das kommende Jahr auf. Für das Löschfahrzeug der neuen Wache gibt es noch keine Angebote. Wann und wie melden Sie den Bedarf an?",
+     "optionen": [
+      {
+       "t": "Jetzt anmelden, fachlich begründet und getrennt nach fixen und variablen Kosten",
+       "wert": 2,
+       "folge": "Frau Kessler kann den Ansatz ermitteln. Ihr Bedarf geht mit dem Entwurf in die politische Beratung."
+      },
+      {
+       "t": "Jetzt anmelden, als eine Gesamtsumme und mit einer knappen Begründung",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Der Bedarf ist rechtzeitig da. Frau Kessler muss aber nachfragen und die Politik hat wenig in der Hand."
+      },
+      {
+       "t": "Erst anmelden, wenn die Angebote der Hersteller auf dem Tisch liegen",
+       "wert": 0,
+       "folge": "Schlechte Folge: Ohne Haushaltsmittel gibt es keine Vergabe und damit auch keine Angebote. Sie verlieren ein ganzes Haushaltsjahr."
+      }
+     ],
+     "frist": 75,
+     "erkl": "Der Weg von der Anmeldung bis zur Aufsichtsbehörde dauert bis zu 18 Monate, deshalb braucht es eine rechtzeitige, begründete Bedarfsanmeldung. Angemeldet wird getrennt nach fixen und variablen Kosten mit fachlicher Begründung. Keine Vergabe ohne Haushaltsmittel.",
+     "quelle": "Lernkarten Haushalt k-feuak-01, k-feuak-03 und k-feuak-11 (v-feuak-haushalt) · eigener Übungsfall"
+    },
+    {
+     "phase": "Haushalt",
+     "ort": "Haushaltsplan",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "frage": "Der Rat hat den Haushalt beschlossen. Genehmigung und Veröffentlichung stehen noch aus. Ein Hersteller bietet einen Nachlass, wenn Sie das Löschfahrzeug sofort bestellen. Was tun Sie?",
+     "optionen": [
+      {
+       "t": "Die Veröffentlichung abwarten und bis dahin die Vergabeunterlagen vorbereiten",
+       "wert": 2,
+       "folge": "Sobald der Haushalt rechtskräftig ist, können Sie die Vergabe ohne Verzug anstoßen."
+      },
+      {
+       "t": "Die Veröffentlichung abwarten und die Arbeit am Projekt so lange ruhen lassen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Sie halten die Regeln ein. Nach der Veröffentlichung fehlen Ihnen aber die Unterlagen und Zeit geht verloren."
+      },
+      {
+       "t": "Sofort bestellen, weil der Rat die Mittel ja schon beschlossen hat",
+       "wert": 0,
+       "folge": "Schlechte Folge: Bis zur Veröffentlichung gilt die vorläufige Haushaltsführung. Eine neue erhebliche Investition durften Sie nicht beginnen.",
+       "dann": {
+        "phase": "Korrektur",
+        "ort": "Haushaltsplan",
+        "wer": "p3",
+        "typ": "entscheidung",
+        "frage": "Herr Petersen meldet, dass Ihre Bestellung schon beim Hersteller liegt. Der Haushalt ist noch nicht veröffentlicht. Wie begrenzen Sie den Schaden?",
+        "optionen": [
+         {
+          "t": "Die Bestellung sofort anhalten und Frau Kessler offen informieren",
+          "wert": 2,
+          "folge": "Frau Kessler ist verärgert, kann aber reagieren. Die Vergabe startet nach der Veröffentlichung geordnet neu."
+         },
+         {
+          "t": "Die Bestellung anhalten und zunächst niemandem etwas davon sagen",
+          "wert": 1,
+          "folge": "Vertretbar, aber mit Nachteil: Der Fehler ist gestoppt. Frau Kessler erfährt später davon und vertraut Ihren Meldungen weniger."
+         },
+         {
+          "t": "Die Bestellung laufen lassen, weil der Nachlass sonst verfällt",
+          "wert": 0,
+          "folge": "Schlechte Folge: Die Investition läuft ohne rechtskräftigen Haushalt weiter. Frau Kessler schaltet den Dezernenten ein."
+         }
+        ],
+        "erkl": "Solange der Haushalt nicht veröffentlicht ist, gilt die vorläufige Haushaltsführung. Neue, im Umfang erhebliche Investitionsmaßnahmen dürfen in dieser Zeit nicht begonnen werden.",
+        "quelle": "Haushalt: Erstellung des Haushalts und vorläufige Haushaltsführung (v-feuak-haushalt) · eigener Übungsfall"
+       }
+      }
+     ],
+     "frist": 60,
+     "erkl": "Haushaltsmittel stehen erst nach Gremienbeschluss, Genehmigung durch die Aufsichtsbehörde und Veröffentlichung verbindlich zur Verfügung. Bis dahin gilt die vorläufige Haushaltsführung, in der keine neuen erheblichen Investitionen begonnen werden dürfen. Vergabeunterlagen und Leistungsverzeichnis werden vorher vorbereitet.",
+     "quelle": "Haushalt: Erstellung des Haushalts und vorläufige Haushaltsführung (v-feuak-haushalt), Lernkarten k-feuak-14 und k-feuak-52 · eigener Übungsfall"
+    },
+    {
+     "phase": "Vergabeart",
+     "ort": "Vergabeakte",
+     "wer": "p2",
+     "typ": "mc",
+     "frage": "Der Haushalt ist rechtskräftig. Die Auftragswertschätzung für das Löschfahrzeug liegt im Übungsfall bei 480.000 € netto. Welche Vergabe ist durchzuführen?",
+     "optionen": [
+      "Europaweite Vergabe nach der VgV, in der Regel im offenen Verfahren",
+      "Direktauftrag nach der UVgO ohne ein förmliches Verfahren",
+      "Nationale Vergabe nach der UVgO als Öffentliche Ausschreibung",
+      "Nationale Vergabe nach der UVgO als Verhandlungsvergabe"
+     ],
+     "richtig": "Europaweite Vergabe nach der VgV, in der Regel im offenen Verfahren",
+     "erkl": "Ab dem Schwellenwert ist europaweit zu vergeben. Für Liefer- und Dienstleistungen nennt der Lernstoff 216.000 € netto; Rechtsgrundlage der Oberschwellenvergabe ist die VgV. Für ein HLF ist das in der Regel das offene Verfahren. Die Schwellenwerte ändern sich regelmäßig.",
+     "quelle": "Vergabe: Vergabeverfahren (v-feuak-beschaffung), Lernblatt: Strategische Beschaffung einer neuen Fahrzeuggeneration (v-feuak-lernblatt-2026) · eigener Übungsfall"
+    },
+    {
+     "phase": "Leistungsverzeichnis",
+     "ort": "Projektwand",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "frage": "Herr Petersen hängt den Entwurf des Leistungsverzeichnisses an die Projektwand. Er möchte das Fabrikat nennen, mit dem die Wachen gute Erfahrungen haben. Wie entscheiden Sie?",
+     "optionen": [
+      {
+       "t": "Bedarf funktional und herstellerneutral beschreiben, Qualität in der Wertung gewichten",
+       "wert": 2,
+       "folge": "Mehrere Hersteller können anbieten. Die Wertung berücksichtigt, was Ihnen fachlich wichtig ist."
+      },
+      {
+       "t": "Bedarf funktional und herstellerneutral beschreiben, in der Wertung nur den Preis ansetzen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Die Beschreibung ist neutral. Das billigste Angebot gewinnt aber, auch wenn es fachlich schwächer ist."
+      },
+      {
+       "t": "Das bewährte Fabrikat mit Typ nennen, damit Ausbildung und Ersatzteile einheitlich bleiben",
+       "wert": 0,
+       "folge": "Schlechte Folge: Ein Mitbewerber rügt die Ausschreibung. Die Beschaffung steht still."
+      }
+     ],
+     "erkl": "Bedarfe müssen neutral und funktional beschrieben werden, nicht produkt- oder herstellerspezifisch. Das schützt vor Rügen und Verzögerungen. Zielorientiert wird der Vergabevorschlag, wenn Qualitätskriterien in der Wertungsmatrix gewichtet werden.",
+     "quelle": "Vergabe: Neutrales Leistungsverzeichnis (v-feuak-beschaffung), Lernkarten k-feuak-58, k-feuak-59 und k-feuak-64 · eigener Übungsfall"
+    },
+    {
+     "phase": "Steuerung",
+     "ort": "Kennzahlen",
+     "wer": "p1",
+     "typ": "entscheidung",
+     "frage": "Das Projekt liegt hinter dem Zeitplan. Morgen berichtet Herr Dr. Sommer im Ausschuss und bittet Sie um den Sachstand. Was liefern Sie?",
+     "optionen": [
+      {
+       "t": "Den Verzug offen nennen, verdichtet berichten und Schritte zum Nachsteuern vorschlagen",
+       "wert": 2,
+       "folge": "Der Ausschuss kennt die Lage und stimmt dem Nachsteuern zu. Ihr Bericht gilt als verlässlich."
+      },
+      {
+       "t": "Den Verzug offen nennen und dem Ausschuss sämtliche Einzeldaten des Projekts vorlegen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Der Bericht ist ehrlich. Der Ausschuss verliert sich aber in Einzelheiten und entscheidet nichts."
+      },
+      {
+       "t": "Den Verzug im Bericht auslassen, solange er sich vielleicht noch aufholen lässt",
+       "wert": 0,
+       "folge": "Schlechte Folge: Der Verzug wird später doch bekannt. Der Ausschuss zweifelt nun an allen Ihren Zahlen."
+      }
+     ],
+     "frist": 60,
+     "erkl": "Controlling bedeutet planen, koordinieren und nachsteuern. Politische Gremien erhalten im externen Controlling hochaggregierte Informationen. Informationen dürfen nicht beschönigt werden, denn die Führungskraft trägt die Verantwortung dafür.",
+     "quelle": "Qualitätsmanagement: Controlling (v-feuak-qm) · eigener Übungsfall"
+    }
+   ],
+   "eingang": [
+    {
+     "phase": "Nebenmeldung",
+     "ort": "Projektwand",
+     "wer": "p3",
+     "typ": "entscheidung",
+     "nach": 50,
+     "frist": 70,
+     "frage": "Herr Petersen fragt an der Projektwand, wer in das Projektteam für die Fahrzeugbeschaffung gehört. Wie besetzen Sie es?",
+     "optionen": [
+      {
+       "t": "Technik, Werkstatt, Ausbildung, Personalvertretung und strategische Planung",
+       "wert": 2,
+       "folge": "Das Team deckt Technik, Einsatz und Betrieb ab. Es betreut das Verfahren bis zur Endabnahme."
+      },
+      {
+       "t": "Nur Technik und Werkstatt, damit das Team klein und schnell bleibt",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Das Team arbeitet zügig. Ausbildung und Personalvertretung melden ihre Punkte aber erst spät an."
+      },
+      {
+       "t": "Kein Team bilden und das Ergebnis den Abteilungen später vorstellen",
+       "wert": 0,
+       "folge": "Schlechte Folge: Wichtige Anforderungen aus Werkstatt und Ausbildung fehlen. Herr Petersen muss den Entwurf neu beginnen."
+      }
+     ],
+     "erkl": "Zum Prozess einer strategischen Fahrzeugbeschaffung gehört ein Projektteam: Technik und Einsatzerfahrung, Gerätewart und Werkstatt, Ausbildungsabteilung, Personalvertretung, strategische Planung und vorbeugender Brandschutz betreuen das Verfahren bis zur Endabnahme.",
+     "quelle": "Lernblatt: Strategische Beschaffung einer neuen Fahrzeuggeneration (v-feuak-lernblatt-2026) · eigener Übungsfall"
+    },
+    {
+     "phase": "Nebenmeldung",
+     "ort": "Stadtmodell",
+     "wer": "p2",
+     "typ": "entscheidung",
+     "nach": 130,
+     "frist": 70,
+     "frage": "Frau Kessler steht am Stadtmodell und fragt, wie Sie die Ausgabe für die neue Wache bei knapper Kasse rechtfertigen. Was legen Sie vor?",
+     "optionen": [
+      {
+       "t": "Eine Kosten-Nutzen-Analyse, die Kosten und Nutzen in Geldwerten vergleicht",
+       "wert": 2,
+       "folge": "Die Entscheidung wird für Dritte nachvollziehbar. Frau Kessler nimmt die Analyse zu den Unterlagen."
+      },
+      {
+       "t": "Den Hinweis auf die indirekte Wertschöpfung der Feuerwehr, ohne eigene Zahlen",
+       "wert": 1,
+       "folge": "Vertretbar, aber mit Nachteil: Das Argument stimmt. Ohne Zahlen fehlt Frau Kessler aber der Nachweis der Wirtschaftlichkeit."
+      },
+      {
+       "t": "Die Aussage, dass sich Sicherheit grundsätzlich nicht in Geld ausdrücken lässt",
+       "wert": 0,
+       "folge": "Schlechte Folge: Frau Kessler hat nichts in der Hand. Die Ausgabe steht auf der Streichliste weit oben."
+      }
+     ],
+     "erkl": "Die Kosten-Nutzen-Analyse vergleicht systematisch alle Kosten und Nutzen einer Maßnahme in Geldwerten und ist bei finanzwirksamen Maßnahmen der Wirtschaftlichkeitsnachweis. Die indirekte Wertschöpfung zeigt den wirtschaftlichen Nutzen der Feuerwehr: Ausgaben verhindern höhere Schäden.",
+     "quelle": "Lernkarten Volkswirtschaft k-feuak-24 bis k-feuak-27 (v-feuak-vwl) · eigener Übungsfall"
+    }
+   ]
   }
  ]
 }

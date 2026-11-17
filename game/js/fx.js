@@ -205,10 +205,11 @@ const FX = (function(){
 
   /* ---------- Sprachausgabe mit der Stimme des Browsers (deutsch), abschaltbar ---------- */
   const STIMME = { on:true };
-  function sprich(text){
+  // art: { pitch, rate } gibt einer Figur ihre eigene Stimmlage
+  function sprich(text, art){
     try{
       const sy = window.speechSynthesis; if(!sy) return; sy.cancel(); if(!STIMME.on || !text) return;
-      const u = new SpeechSynthesisUtterance(String(text).replace(/[„“”"]/g, '')); u.lang = 'de-DE'; u.rate = 1.02;
+      const u = new SpeechSynthesisUtterance(String(text).replace(/[„“”"]/g, '')); u.lang = 'de-DE'; u.rate = (art && art.rate) || 1.02; if(art && art.pitch) u.pitch = art.pitch;
       const v = sy.getVoices().find(x => /^de/i.test(x.lang)); if(v) u.voice = v;
       sy.speak(u);
     }catch(e){}

@@ -1,0 +1,331 @@
+{
+ "titel": "Fall: Neubau eines Einkaufsmarkts",
+ "steckbrief": "Der Bauantrag für eine große erdgeschossige Verkaufsstätte läuft durch Ihre Brandschutzdienststelle, von der Beteiligung bis zur Rückfrage des Bauherrn.",
+ "licht": "tag",
+ "auftrag": {
+  "wer": "p1",
+  "text": "Guten Morgen. Die Bauaufsicht hat uns am Neubau eines Einkaufsmarkts beteiligt: erdgeschossig, 6.000 m² Verkaufsräume, mit Sprinkleranlage geplant. Sie bearbeiten den Vorgang bis zur fertigen Stellungnahme. Arbeiten Sie sauber, denn auf unsere Aussagen muss sich die Bauaufsicht verlassen können."
+ },
+ "lage": {
+  "name": "Verfahren rechtssicher",
+  "start": 60
+ },
+ "ende": {
+  "gut": "Ihre Stellungnahme ist vollständig, begründet und hält auch der Rückfrage des Bauherrn stand. Die Bauaufsicht kann darauf ohne Nachfragen aufbauen.",
+  "mittel": "Die Stellungnahme ist brauchbar, hat aber Lücken. Die Bauaufsicht muss an einigen Stellen nachfragen, bevor sie weiterarbeiten kann.",
+  "schlecht": "Die Stellungnahme trägt nicht: Forderungen sind falsch oder nicht begründet. Der Vorgang kommt zurück und das Verfahren verzögert sich."
+ },
+ "personen": [
+  {
+   "id": "p1",
+   "name": "Frau Lindner",
+   "rolle": "Leiterin Vorbeugender Brandschutz",
+   "gut": [
+    "Sauber begründet. So geht das raus.",
+    "Genau so will ich das in der Akte sehen."
+   ],
+   "schlecht": [
+    "Das hält keiner Nachfrage stand.",
+    "Schauen Sie bitte noch einmal in die Vorschrift."
+   ]
+  },
+  {
+   "id": "p2",
+   "name": "Herr Sauer",
+   "rolle": "Sachbearbeiter der Bauaufsicht",
+   "gut": [
+    "Danke, damit kann ich weiterarbeiten.",
+    "Klare Aussage. Das hilft mir sehr."
+   ],
+   "schlecht": [
+    "Damit kann ich so nichts anfangen.",
+    "Das muss ich Ihnen leider zurückgeben."
+   ]
+  },
+  {
+   "id": "p3",
+   "name": "Frau Brandes",
+   "rolle": "Brandschutzplanerin des Bauherrn",
+   "gut": [
+    "Einverstanden, das ist nachvollziehbar.",
+    "Gut, das nehme ich so in die Planung."
+   ],
+   "schlecht": [
+    "Das werde ich so nicht hinnehmen.",
+    "Auf welcher Grundlage fordern Sie das?"
+   ]
+  }
+ ],
+ "schritte": [
+  {
+   "phase": "Beteiligung",
+   "ort": "Posteingang",
+   "wer": "p2",
+   "typ": "reihe",
+   "frage": "Herr Sauer bringt die Unterlagen: „Hier ist der Bauantrag für den Einkaufsmarkt. Ich brauche Ihre Stellungnahme.“ Bevor Sie Anforderungen prüfen, klären Sie die Rechtslage. Bringen Sie die Schritte des Prüfschemas in die richtige Reihenfolge.",
+   "optionen": [
+    "Gebäudeklasse ermitteln",
+    "Nutzung bestimmen",
+    "Prüfen, ob ein Sonderbau vorliegt",
+    "Prüfen, ob es eine Sonderbau-Regelung gibt",
+    "Anforderungen aus der Sonderbau-Regelung anwenden"
+   ],
+   "richtig": [
+    "Gebäudeklasse ermitteln",
+    "Nutzung bestimmen",
+    "Prüfen, ob ein Sonderbau vorliegt",
+    "Prüfen, ob es eine Sonderbau-Regelung gibt",
+    "Anforderungen aus der Sonderbau-Regelung anwenden"
+   ],
+   "erkl": "Das Prüfschema lautet: Gebäudeklasse ermitteln, Nutzung bestimmen, Sonderbau nach § 2 Abs. 4 MBO prüfen, dann klären, ob eine Sonderbau-Regelung vorhanden ist. Beim geregelten Sonderbau kommen die Anforderungen aus der Sonderbau-Verordnung oder Richtlinie.",
+   "quelle": "Sonderbau: Prüfschema Sonderbau (v-idf-vb-47) · eigener Übungsfall"
+  },
+  {
+   "phase": "Einordnung",
+   "ort": "Vorschriften",
+   "wer": "p1",
+   "typ": "entscheidung",
+   "frage": "Frau Lindner steht am Regal mit den Vorschriften: „6.000 m² Verkaufsräume, alles erdgeschossig. Nach welchen Vorschriften beurteilen Sie das Vorhaben?“",
+   "optionen": [
+    {
+     "t": "Als geregelten Sonderbau nach der Muster-Verkaufsstättenverordnung, im Übrigen gilt die Bauordnung.",
+     "wert": 2,
+     "folge": "Frau Lindner nickt: „Richtig. Die Sonderbauregelung geht vor, und der Rest kommt aus der Bauordnung.“"
+    },
+    {
+     "t": "Als geregelten Sonderbau allein nach der Muster-Verkaufsstättenverordnung, die Bauordnung bleibt außen vor.",
+     "wert": 0,
+     "folge": "Das trägt nicht: Die Verordnung ergänzt die Bauordnung nur. Ohne die Bauordnung fehlen Ihnen alle Punkte, die die Verordnung nicht eigens regelt."
+    },
+    {
+     "t": "Als Regelbau nach der Musterbauordnung, weil das Gebäude nur ein einziges Geschoss über dem Gelände hat.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Die Anforderungen für Verkaufsstätten fehlen völlig. Frau Lindner gibt Ihnen den Entwurf zurück."
+    },
+    {
+     "t": "Nach derjenigen der beiden Vorschriften, die für den Bauherrn im jeweiligen Punkt die günstigere Lösung bietet.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Eine solche Wahlfreiheit gibt es nicht. Die Stellungnahme wäre rechtlich nicht haltbar."
+    }
+   ],
+   "frist": 75,
+   "erkl": "Die Muster-Verkaufsstättenverordnung gilt, wenn Verkaufsräume und Ladenstraßen insgesamt mehr als 2.000 m² haben. Die Sonderbauregelung geht als lex specialis vor. Sonderbauverordnungen regeln aber nur das Spezielle, im Übrigen gilt die Bauordnung. Eine Wahl nach Günstigkeit für den Bauherrn gibt es nicht.",
+   "quelle": "Sonderbau: Prüfschema, Verkaufsstätten (v-idf-vb-47); IdF-Quiz Vorbeugender Brandschutz, Fragen 10 und 102 · eigener Übungsfall"
+  },
+  {
+   "phase": "Umfang",
+   "ort": "Bauakte",
+   "wer": "p2",
+   "typ": "entscheidung",
+   "frage": "Herr Sauer blättert in der Bauakte: „In den Unterlagen steckt auch ein Antrag auf Abweichung. Und wenn Sie schon dabei sind: Schauen Sie doch gleich noch auf Schallschutz und Standsicherheit.“ Wozu nehmen Sie Stellung?",
+   "optionen": [
+    {
+     "t": "Zu den sieben Aufgabenfeldern, zur Abweichung und zu weiteren Anforderungen an den Sonderbau.",
+     "wert": 2,
+     "folge": "Herr Sauer notiert: „Gut. Schallschutz und Standsicherheit gebe ich dann an die zuständigen Stellen.“"
+    },
+    {
+     "t": "Zu den sieben Aufgabenfeldern, die Abweichung überlassen Sie ohne Äußerung allein der Bauaufsicht.",
+     "wert": 1,
+     "folge": "Vertretbar, aber mit Nachteil: Herr Sauer muss wegen der Abweichung noch einmal bei Ihnen nachfragen."
+    },
+    {
+     "t": "Zu allen Punkten des Antrags, also wie gewünscht auch zu Schallschutz und zur Standsicherheit.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Sie äußern sich außerhalb Ihrer Aufgabe. Diese Aussagen sind angreifbar und binden unnötig Zeit."
+    },
+    {
+     "t": "Nur zur Löschwasserversorgung und zu den Zufahrten, denn mehr betrifft den Einsatz der Feuerwehr nicht.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Brandmeldung, Löschanlagen und betriebliche Maßnahmen fehlen. Die Stellungnahme ist unvollständig."
+    }
+   ],
+   "erkl": "Die Brandschutzdienststelle nimmt nach dem Merkschema „7 + 2“ Stellung: Löschwasserversorgung, Löschwasserrückhaltung, Zugang und Zufahrt, Lage der Anleiterstellen, Anlagen und Geräte für die Brandbekämpfung, Anlagen für die Brandmeldung und betriebliche Maßnahmen. Dazu kommen Abweichungen nach § 67 MBO und weitere Anforderungen bei Sonderbauten nach § 51 MBO. Schallschutz gehört nicht dazu.",
+   "quelle": "Brandschutzdienststelle „7 + 2“ (v-idf-vb-41); IdF-Quiz Vorbeugender Brandschutz 12/2026, Fragen 86 und 87 · eigener Übungsfall"
+  },
+  {
+   "phase": "Prüfung",
+   "ort": "Plantisch",
+   "wer": "p3",
+   "typ": "entscheidung",
+   "frage": "Frau Brandes rollt den Grundriss aus: „Ein einziger Brandabschnitt mit 6.000 m², dazu ein Stahltragwerk ohne Feuerwiderstand. Die Sprinkleranlage deckt die ganze Halle ab. Tragen Sie das mit?“",
+   "optionen": [
+    {
+     "t": "Ja, und Sie halten fest, dass beides nur mit der geplanten Sprinkleranlage zulässig ist.",
+     "wert": 2,
+     "folge": "Frau Brandes ist einverstanden. In der Stellungnahme steht die Sprinkleranlage nun als Voraussetzung."
+    },
+    {
+     "t": "Ja, Sie stimmen dem Brandabschnitt und dem Tragwerk zu, ohne die Sprinkleranlage zu erwähnen.",
+     "wert": 1,
+     "folge": "Vertretbar, aber mit Nachteil: Die Zustimmung stimmt in der Sache. Fällt die Anlage später weg, fehlt in der Akte der Bezug."
+    },
+    {
+     "t": "Nein, denn ein Brandabschnitt darf in Verkaufsstätten grundsätzlich höchstens 3.000 m² groß sein.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Frau Brandes verweist auf die Verordnung. Ihre Forderung nach einer Brandwand ist nicht begründet."
+    },
+    {
+     "t": "Nein, denn das Tragwerk einer Verkaufsstätte muss in jedem Fall feuerbeständig ausgeführt werden.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Die Forderung trifft auf diese erdgeschossige Halle nicht zu. Der Bauherr legt Beschwerde ein."
+    }
+   ],
+   "frist": 80,
+   "erkl": "Nach der Muster-Verkaufsstättenverordnung sind Brandabschnitte erdgeschossiger Verkaufsstätten mit Sprinkleranlage bis 10.000 m² zulässig, ohne Sprinkleranlage höchstens 3.000 m². Erdgeschossig mit Sprinkleranlage ist die tragende Grundstruktur ohne Feuerwiderstand möglich.",
+   "quelle": "Sonderbau: Verkaufsstätten (v-idf-vb-47); IdF-Quiz Vorbeugender Brandschutz, Frage 24 · eigener Übungsfall"
+  },
+  {
+   "phase": "Prüfung",
+   "ort": "Modell",
+   "wer": "p1",
+   "typ": "entscheidung",
+   "frage": "Am Modell zeigt Frau Lindner auf die Halle: „Der Verkaufsraum hat 6.000 m². Für den Rauch sind bisher nur Fenster im oberen Drittel der Außenwände eingezeichnet. Was schreiben Sie dazu?“",
+   "optionen": [
+    {
+     "t": "Rauch- und Wärmeabzugsgeräte oder maschinelle Rauchabzüge fordern, dazu Zuluft unten und Auslösung durch die Feuerwehr.",
+     "wert": 2,
+     "folge": "Frau Lindner nickt. Die Planerin ergänzt Abzugsgeräte im Dach und Zuluftöffnungen im unteren Raumdrittel."
+    },
+    {
+     "t": "Rauch- und Wärmeabzugsgeräte im Dach fordern, zur Zuluft und zur Auslösung durch die Feuerwehr aber nichts schreiben.",
+     "wert": 1,
+     "folge": "Vertretbar, aber mit Nachteil: Die Geräte werden geplant. Wegen Zuluft und Auslösung gibt es später Nachfragen."
+    },
+    {
+     "t": "Die eingezeichneten Fenster als Rauchableitung anerkennen, weil sie richtig im oberen Raumdrittel angeordnet sind.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Fenster genügen nur bei deutlich kleineren Räumen. Die Halle hätte keine ausreichende Rauchableitung."
+    },
+    {
+     "t": "Auf Angaben zur Rauchableitung verzichten, weil die flächendeckende Sprinkleranlage den Brand ohnehin klein hält.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Die Rauchableitung fehlt in der Stellungnahme. Frau Lindner gibt den Entwurf zurück."
+    }
+   ],
+   "erkl": "In Verkaufsstätten werden Räume über 200 m² bis 1.000 m² über Öffnungen entraucht, meistens Fenster im oberen Raumdrittel. Räume über 1.000 m² brauchen Rauch- und Wärmeabzugsgeräte oder maschinelle Rauchabzugsanlagen. Für alle Arten gilt: Zuluft im unteren Raumdrittel, und die Öffnung oder Auslösung durch die Feuerwehr muss sichergestellt sein.",
+   "quelle": "Sonderbau: Verkaufsstätten, Rauchableitung (v-idf-vb-47) · eigener Übungsfall"
+  },
+  {
+   "phase": "Abstimmung",
+   "ort": "Kollege",
+   "wer": "p3",
+   "typ": "entscheidung",
+   "frage": "Frau Brandes fängt Sie am Schreibtisch ab: „Der Bauherr möchte auf die Wandhydranten verzichten. Das geht doch, wenn Sie zustimmen. Sagen Sie mir das jetzt gleich zu?“",
+   "optionen": [
+    {
+     "t": "Erst anhand der örtlichen Einsatzplanung prüfen und das Ergebnis dann ausdrücklich in die Stellungnahme schreiben.",
+     "wert": 2,
+     "folge": "Frau Brandes wartet das Ergebnis ab. Ihre Entscheidung steht später begründet in der Akte."
+    },
+    {
+     "t": "Den Verzicht vorsorglich ablehnen, ohne die örtliche Einsatzplanung für dieses Objekt näher anzusehen.",
+     "wert": 1,
+     "folge": "Vertretbar, aber mit Nachteil: Die Ablehnung ist möglich, aber nicht begründet. Frau Brandes fordert eine Begründung nach."
+    },
+    {
+     "t": "Sofort zusagen, weil die Halle ohnehin gesprinklert wird und Wandhydranten dann überflüssig sind.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Sie haben sich festgelegt, ohne die Einsatzplanung zu kennen. Die Zusage lässt sich kaum zurückholen."
+    },
+    {
+     "t": "Antworten, dass darüber allein die Planerin entscheidet und die Feuerwehr dazu nicht gefragt werden muss.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Der Verzicht wird ohne Ihr Einvernehmen geplant. Die Bauaufsicht schickt den Vorgang zurück."
+    }
+   ],
+   "frist": 60,
+   "erkl": "In Verkaufsstätten kann auf Wandhydranten oder trockene Löschleitungen nur im Einvernehmen mit der zuständigen Brandschutzdienststelle verzichtet werden. Maßstab ist die örtliche Einsatzplanung.",
+   "quelle": "Sonderbau: Verkaufsstätten, Technik (v-idf-vb-47) · eigener Übungsfall"
+  },
+  {
+   "phase": "Rückfrage",
+   "ort": "Posteingang",
+   "wer": "p3",
+   "typ": "entscheidung",
+   "frage": "Ihre Stellungnahme ist verschickt. Zwei Wochen später liegt ein Schreiben von Frau Brandes im Posteingang: „Der Bauherr will aus Kostengründen die Sprinkleranlage streichen. Sonst soll alles bleiben, wie es ist.“ Wie antworten Sie?",
+   "optionen": [
+    {
+     "t": "So nicht zulässig: Ohne Sprinkler höchstens 3.000 m² je Brandabschnitt und ein feuerhemmendes Tragwerk, also neue Planung.",
+     "wert": 2,
+     "folge": "Frau Brandes bespricht das mit dem Bauherrn. Er behält die Sprinkleranlage bei, weil der Umbau der Planung teurer wäre."
+    },
+    {
+     "t": "Die Änderung knapp ablehnen und auf Ihre Stellungnahme verweisen, ohne die Gründe und Folgen zu nennen.",
+     "wert": 1,
+     "folge": "Vertretbar, aber mit Nachteil: Die Ablehnung ist richtig. Der Bauherr versteht sie aber nicht und beschwert sich bei der Bauaufsicht."
+    },
+    {
+     "t": "Zustimmen, wenn stattdessen eine Brandmeldeanlage eingebaut wird, die den Brand früh an die Feuerwehr meldet.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Der Brandabschnitt ist ohne Sprinkleranlage doppelt so groß wie zulässig. Herr Sauer weist Ihre Antwort zurück."
+    },
+    {
+     "t": "Zustimmen, wenn dafür die Wandhydranten erhalten bleiben und die Feuerwehr damit selbst schnell löschen kann.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Brandabschnitt und Tragwerk passen nicht mehr zur Verordnung. Die Stellungnahme muss zurückgezogen werden."
+    }
+   ],
+   "erkl": "Ohne Sprinkleranlage sind Brandabschnitte erdgeschossiger Verkaufsstätten höchstens 3.000 m² groß. Ebenerdig ohne Löschanlage ist die tragende Grundstruktur feuerhemmend auszuführen. 6.000 m² in einem Brandabschnitt und ein Tragwerk ohne Feuerwiderstand setzen also die Sprinkleranlage voraus.",
+   "quelle": "Sonderbau: Verkaufsstätten (v-idf-vb-47) · eigener Übungsfall"
+  }
+ ],
+ "eingang": [
+  {
+   "phase": "Anruf",
+   "ort": "Planarchiv",
+   "wer": "p2",
+   "typ": "entscheidung",
+   "nach": 55,
+   "frist": 80,
+   "frage": "Herr Sauer ruft wegen eines anderen Vorgangs an: „Bei dem Wohnhaus in der Gartenstraße soll die Aufstellfläche für die Drehleiter auf dem Nachbargrundstück liegen. Der Nachbar hat mündlich zugestimmt. Reicht Ihnen das?“",
+   "optionen": [
+    {
+     "t": "Nein, auf dem Nachbargrundstück geht das nur mit einer Baulast. Eine mündliche Zusage genügt nicht.",
+     "wert": 2,
+     "folge": "Herr Sauer fordert die Baulast beim Bauherrn an. Die Fläche ist damit dauerhaft gesichert."
+    },
+    {
+     "t": "Nein, die Aufstellfläche muss in jedem Fall vollständig auf dem eigenen Baugrundstück hergestellt werden.",
+     "wert": 0,
+     "folge": "Das trägt nicht: Sie fordern mehr, als die Vorschrift verlangt. Der Bauherr muss ohne Grund umplanen."
+    },
+    {
+     "t": "Ja, wenn der Nachbar die Zustimmung am Telefon bestätigt, ist die Fläche ausreichend gesichert.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Der Nachbar verkauft später sein Grundstück. Die Aufstellfläche wird überbaut."
+    }
+   ],
+   "erkl": "Die Aufstellfläche für ein Hubrettungsfahrzeug muss nicht auf dem eigenen Grundstück liegen. Sie kann auf der öffentlichen Verkehrsfläche nachgewiesen werden, auf einem Nachbargrundstück aber nur mit Baulast.",
+   "quelle": "IdF-Quiz Vorbeugender Brandschutz 12/2026, Frage 75 (zu v-idf-vb) · eigener Übungsfall"
+  },
+  {
+   "phase": "Nachreichung",
+   "ort": "Planarchiv",
+   "wer": "p2",
+   "typ": "entscheidung",
+   "nach": 140,
+   "frist": 70,
+   "frage": "Herr Sauer legt Ihnen eine Mappe hin: „Zum Einkaufsmarkt hat der Entwurfsverfasser den Brandschutznachweis selbst aufgestellt und ungeprüft eingereicht. Er meint, das genüge. Wie sehen Sie das?“",
+   "optionen": [
+    {
+     "t": "Darauf hinweisen, dass der Brandschutznachweis bei einem Sonderbau geprüft werden muss.",
+     "wert": 2,
+     "folge": "Herr Sauer fordert den geprüften Nachweis nach. Ihre Stellungnahme baut später auf sicheren Unterlagen auf."
+    },
+    {
+     "t": "Den Nachweis anstelle eines Prüfers selbst Punkt für Punkt durchgehen und dann freigeben.",
+     "wert": 1,
+     "folge": "Vertretbar, aber mit Nachteil: Sie finden einige Fehler, doch Ihre Durchsicht ersetzt die geforderte Prüfung nicht."
+    },
+    {
+     "t": "Den Nachweis so annehmen, weil der Entwurfsverfasser für seinen Entwurf selbst verantwortlich ist.",
+     "wert": 0,
+     "folge": "Schlechte Folge: Das Verfahren läuft mit einem ungeprüften Nachweis weiter. Der Fehler fällt erst spät auf."
+    }
+   ],
+   "erkl": "Bei Sonderbauten, Garagen und Gebäudeklasse 5 muss der Brandschutznachweis geprüft werden. Entwurfsverfasser dürfen ihn nur bis Gebäudeklasse 3, je nach Land bis Gebäudeklasse 4, selbst aufstellen.",
+   "quelle": "IdF-Quiz Vorbeugender Brandschutz 12/2026, Frage 85 (zu v-idf-vb) · eigener Übungsfall"
+  }
+ ]
+}

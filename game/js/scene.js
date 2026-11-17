@@ -216,7 +216,7 @@ const STAGE = (function(){
     const ro = new ResizeObserver(resize); ro.observe(canvas); resize();
 
     /* Steuerung: Bewegung (Stick, WASD/Pfeile, Gamepad), Kamera (Ziehen, Zoom), Aktion (E, Enter, Knopf) */
-    const input = { mx:0, my:0, yaw:0.5, pitch:0.62, dist:8.5, sens:1, action:null, key:null, frei:true };
+    const input = { mx:0, my:0, yaw:0.5, pitch:0.62, dist:8.5, sens:1, action:null, key:null, tap:null, frei:true };
     const regie = { intro:0, dur:3.6, fAn:false, fx:0, fz:0, f:0, shake:0, nick:0 }, look = new THREE.Vector3();
     const kurz = () => { if(regie.intro > 0.45) regie.intro = 0.45; };          // Kamerafahrt mit einer Eingabe abkürzen
     const keys = new Set();
@@ -232,14 +232,16 @@ const STAGE = (function(){
 
     const pts = new Map(); let pinch = 0;
     const clampP = v => Math.max(0.22, Math.min(1.35, v)), clampD = v => Math.max(4.5, Math.min(18, v));
-    function pd(e){ kurz(); canvas.setPointerCapture(e.pointerId); pts.set(e.pointerId, { x:e.clientX, y:e.clientY }); pinch = 0; }
+    function pd(e){ kurz(); canvas.setPointerCapture(e.pointerId); pts.set(e.pointerId, { x:e.clientX, y:e.clientY, x0:e.clientX, y0:e.clientY, t:performance.now() }); pinch = 0; }
     function pm(e){
       const p = pts.get(e.pointerId); if(!p) return;
       const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
+      if(auf) return;                                                  // Aufsicht (Stadtmodell): Kamera steht fest
       if(pts.size === 1){ input.yaw -= dx * 0.008 * input.sens; input.pitch = clampP(input.pitch + dy * 0.005 * input.sens); }
       else if(pts.size === 2){ const a = [...pts.values()], d = Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); if(pinch) input.dist = clampD(input.dist * pinch / d); pinch = d; }
     }
-    function pu(e){ pts.delete(e.pointerId); pinch = 0; }
+    // Kurzes Antippen ohne Ziehen meldet die Stelle im Bild (für das Stadtmodell)
+    function pu(e){ const p = pts.get(e.pointerId); pts.delete(e.pointerId); pinch = 0; if(p && e.type === 'pointerup' && input.tap && Math.hypot(e.clientX - p.x0, e.clientY - p.y0) < 10 && performance.now() - p.t < 500) input.tap(e.clientX, e.clientY); }
     function wh(e){ e.preventDefault(); input.dist = clampD(input.dist * (e.deltaY > 0 ? 1.1 : 0.9)); }
     canvas.addEventListener('pointerdown', pd); canvas.addEventListener('pointermove', pm); canvas.addEventListener('pointerup', pu); canvas.addEventListener('pointercancel', pu);
     canvas.addEventListener('wheel', wh, { passive:false });
@@ -296,7 +298,9 @@ const STAGE = (function(){
     function start(fn){ update = fn; last = performance.now(); regie.intro = opt.anflug === false || ruhig ? 0 : regie.dur; if(!raf) raf = requestAnimationFrame(frame); }
     /* Kamera: folgt dem Ziel tgt hinter und über der Figur. Zu Beginn fliegt sie aus der Höhe heran, bei einer Aufgabe schwenkt sie
        sanft zur Station (fokus), bei richtiger Antwort nickt sie kurz, bei falscher wackelt sie. */
+    let auf = null;
     function cam(tgt, dt){
+      if(auf){ camera.position.set(auf.x, auf.y + auf.d * 0.86, auf.z + auf.d * 0.62); look.set(auf.x, auf.y, auf.z); camera.lookAt(look); follow(look); focus = auf.d; return; }
       dt = dt || 0.016; let yaw = input.yaw, pitch = input.pitch, d = input.dist, lx = tgt.x, ly = tgt.y, lz = tgt.z;
       if(regie.intro > 0){ regie.intro = Math.max(0, regie.intro - dt); const u = regie.intro / regie.dur, e = u * u * (3 - 2 * u); yaw += e * 1.9; d *= 1 + e * 2.6; pitch += (0.98 - pitch) * e; ly += e * 1.4; }
       regie.f += ((regie.fAn ? 1 : 0) - regie.f) * Math.min(1, dt * 3.4);
@@ -326,7 +330,7 @@ const STAGE = (function(){
       if(sun.shadow.map) sun.shadow.map.dispose(); if(post) post.dispose(); if(cube) cube.dispose(); renderer.dispose();
     }
     return { scene, camera, renderer, input, start, pause, dispose, setQuality, setFx, follow, cam, fokus, feier, spiegeln, lampe, blink, quellen, licht:L,
-      halt: v => { input.frei = !v; }, imAnflug: () => regie.intro > 0.45, frames: () => frames, pixelRatio: () => pr, effekte: () => (fx === 'aus' || !fxAuto ? 'aus' : fx) };
+      halt: v => { input.frei = !v; }, aufsicht: a => { auf = a || null; }, imAnflug: () => regie.intro > 0.45, frames: () => frames, pixelRatio: () => pr, effekte: () => (fx === 'aus' || !fxAuto ? 'aus' : fx) };
   }
 
   /* Kollision: Figur als Kreis (Radius r) gegen Quader { x1, x2, z1, z2 } */

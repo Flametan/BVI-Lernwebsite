@@ -49,12 +49,20 @@ if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if
 <main id="levels" class="screen" hidden>
   <p class="lead" id="lv-text"></p>
   <p class="lv-links"><a id="lv-kap" href="../index.html">Im Kapitel nachlesen</a></p>
+  <div class="stufe">
+    <div class="seg" id="lv-stufe" role="radiogroup" aria-label="Schwierigkeit">
+      <button role="radio" data-s="lernen">Lernen</button><button role="radio" data-s="normal">Normal</button><button role="radio" data-s="ernst">Ernstfall</button>
+    </div>
+    <p class="src" id="lv-stufe-t"></p>
+  </div>
   <div class="lvlist" id="lv-list"></div>
 </main>
 
 <main id="play" class="screen play" hidden>
   <div class="hud">
     <p class="hud-s" id="hud-s"></p>
+    <div class="hud-l" id="hud-lage" hidden><span id="hud-lname"></span><div class="hud-lb" role="img" id="hud-lrole"><i id="hud-lbar"></i></div><b id="hud-lwert"></b></div>
+    <ol class="hud-ph" id="hud-ph" hidden></ol>
     <div class="hud-r"><span class="hud-t" id="hud-time" hidden></span><span id="hud-prog">0 / 0</span><span class="hud-p"><b id="hud-pts">0</b> Punkte</span><span class="hud-c" id="hud-combo" hidden></span></div>
   </div>
   <div class="stagewrap">
@@ -62,6 +70,12 @@ if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if
     <p class="info" id="info"></p>
     <canvas class="karte" id="karte" width="132" height="100" aria-hidden="true" hidden></canvas>
     <p class="rec" id="rec" hidden><i></i>Aufnahme</p>
+    <p class="fps" id="fps" hidden></p>
+    <section class="coach" id="coach" hidden aria-live="polite">
+      <p class="kick" id="coach-n"></p>
+      <p id="coach-t"></p>
+      <button class="btn" id="coach-x">Überspringen</button>
+    </section>
     <div class="blitz" id="blitz"></div>
     <div class="joy" id="joy" aria-hidden="true"><i></i></div>
     <div class="acts">
@@ -80,10 +94,11 @@ if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if
   <section class="sheet" id="sheet" hidden aria-live="polite">
     <div class="sheet-h"><h2 id="q-title"></h2><button class="ic" id="q-close" aria-label="Frage schließen">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="q-wer" id="q-wer" hidden></div>
     <p class="src" id="q-hint" hidden></p>
     <div class="q-bild" id="q-bild" hidden></div>
     <div class="opts" id="q-opts"></div>
-    <button class="btn pri" id="q-check" hidden>Prüfen</button>
+    <div class="q-btns"><button class="btn" id="q-tipp" hidden>Tipp zeigen</button><button class="btn pri" id="q-check" hidden>Prüfen</button></div>
     <div class="fb" id="q-fb" hidden><p id="q-fbt"></p><p class="src" id="q-src"></p><a class="src" id="q-link" target="_blank" rel="noopener" hidden>Im Kapitel nachlesen</a><button class="btn pri" id="q-next">Weiter</button></div>
   </section>
   <div class="fade" id="fade"></div>
@@ -97,9 +112,10 @@ if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if
       <label class="row"><span>Minikarte</span><input type="checkbox" id="o-karte"/></label>
       <label class="row"><span>Effekte</span><select id="o-fx"><option value="aus">Aus (am flüssigsten)</option><option value="mittel">Mittel (Lichtschein, Randabdunklung)</option><option value="hoch">Hoch (dazu Tiefenunschärfe)</option></select></label>
       <label class="row"><span>Grafik</span><select id="o-qual"><option value="auto">Automatisch</option><option value="niedrig">Niedrig (flüssiger)</option><option value="hoch">Hoch (schärfer)</option></select></label>
+      <label class="row"><span>Bildrate anzeigen</span><input type="checkbox" id="o-fps"/></label>
       <label class="row"><span>Kamera-Empfindlichkeit</span><input type="range" id="o-sens" min="0.5" max="2" step="0.1"/></label>
       <p class="src">Steuerung: Stick oder WASD laufen · Ziehen dreht die Kamera · E prüfen · Esc Pause. Gamepad: linker Stick laufen, rechter Stick Kamera, A prüfen, Start Pause.</p>
-      <div class="r-btns"><button class="btn" id="m-full">Vollbild</button><button class="btn" id="m-restart">Level neu starten</button><button class="btn" id="m-exit">Zur Übersicht</button><button class="btn pri" id="m-resume">Weiter</button></div>
+      <div class="r-btns"><button class="btn" id="m-tut">Einführung zeigen</button><button class="btn" id="m-full">Vollbild</button><button class="btn" id="m-restart">Level neu starten</button><button class="btn" id="m-exit">Zur Übersicht</button><button class="btn pri" id="m-resume">Weiter</button></div>
     </div>
   </section>
   <section class="result" id="nogl" hidden>
@@ -113,6 +129,7 @@ if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if
       <p class="r-pts"><b id="r-pts">0</b> von <span id="r-max">0</span> Punkten</p>
       <p id="r-story"></p>
       <p id="r-note"></p>
+      <p class="r-sum" id="r-sum" hidden></p>
       <ul class="r-liste" id="r-liste" hidden></ul>
       <div class="r-badges" id="r-badges"></div>
       <div class="r-btns"><button class="btn" id="r-again">Nochmal</button><button class="btn" id="r-list">Zur Übersicht</button><button class="btn pri" id="r-next">Nächstes Level</button></div>

@@ -154,6 +154,16 @@ def feuak_extra():
           'bild': _karte('Stadtkarte: eine Wache im Westen, ihr Hilfsfrist-Bereich erreicht den Nordosten nicht; Kandidaten A im Nordosten, B neben der Wache, C im Süden außerhalb', [(78, 74)], [(78, 74, 82)], [('A', 246, 44), ('B', 112, 92), ('C', 150, 138)], [('Ab zuständiger Wache', 68), ('Alle Fahrzeuge gesamt', 64)]),
           'optionen': _mix(rnd, b_ok, ['Neue Wache am Standort B bauen', 'Neue Wache am Standort C bauen', 'Keinen neuen Standort bauen: nur mehr Fahrzeuge an der bestehenden Wache']), 'richtig': b_ok,
           'erkl': 'Schlechte Erreichung auch ab der zuständigen Wache deutet man als Standort- und Erreichbarkeitsproblem. Die Analyse zeigt die räumliche Versorgungslücke; Standort A schließt sie.', 'quelle': e + 'k-feuak-68 bis k-feuak-71'}
+    stadt = {'typ': 'stadt', 'ort': 'Stadtmodell', 'frage': 'Stadtmodell: Setze neue Wachen so, dass das Schutzziel im Budget erreicht wird.',
+             'fall': 'Die Hauptwache steht in der Stadtmitte. Im Norden, Nordosten, Osten und Süden wird die Hilfsfrist auch ab der zuständigen Wache verfehlt. Ziel: mindestens 90 % der Einwohner liegen im Einsatzbereich einer Wache. Für neue Standorte stehen 8.000 T€ bereit.',
+             'radius': 22, 'ziel': 90, 'budget': 8000, 'fluss': [[0, 54, 34, 50], [34, 50, 66, 56], [66, 56, 100, 52]],
+             'bestand': [{'n': 'Hauptwache', 'x': 38, 'y': 38}],
+             'orte': [{'n': 'Mitte', 'x': 45, 'y': 38, 'gewicht': 5}, {'n': 'West', 'x': 20, 'y': 35, 'gewicht': 3}, {'n': 'Nordost', 'x': 80, 'y': 15, 'gewicht': 3},
+                      {'n': 'Ost', 'x': 80, 'y': 40, 'gewicht': 2}, {'n': 'Süd', 'x': 50, 'y': 66, 'gewicht': 2}, {'n': 'Nord', 'x': 45, 'y': 10, 'gewicht': 1}],
+             'standorte': [{'n': 'A', 'x': 78, 'y': 22, 'kosten': 4000, 't': 'Gewerbegebiet Nordost'}, {'n': 'B', 'x': 48, 'y': 60, 'kosten': 3500, 't': 'Südufer'},
+                           {'n': 'C', 'x': 60, 'y': 12, 'kosten': 3000, 't': 'Nordrand'}, {'n': 'D', 'x': 40, 'y': 45, 'kosten': 2000, 't': 'neben der Hauptwache'}],
+             'erkl': 'Wird die Hilfsfrist auch ab der zuständigen Wache verfehlt, ist das ein Standort- und Erreichbarkeitsproblem: Neue Standorte müssen die räumliche Versorgungslücke schließen. Ein Standort neben der bestehenden Wache schließt keine Lücke.',
+             'quelle': e + 'k-feuak-68 bis k-feuak-71. Der Einsatzbereich als Kreis ist ein vereinfachtes Modell.'}
     fix = ['Miete der Feuerwache (fix)', 'Wartungsverträge (fix)', 'Leasing der Leitstellentechnik (fix)']
     return {
         0: [{'typ': 'reihe', 'frage': 'Bring den Weg eines Haushalts in die richtige Reihenfolge.', 'optionen': o, 'richtig': weg, 'erkl': 'Erst danach stehen die Mittel verbindlich zur Verfügung; bis dahin gilt die vorläufige Haushaltsführung.', 'quelle': 'Lernkarte k-feuak-10'},
@@ -161,8 +171,41 @@ def feuak_extra():
                    [(fix[0], 120), ('Projekt Priorität 1: neue Schutzkleidung', 150), (fix[1], 80), ('Projekt Priorität 2: Drohne für die Erkundung', 90), (fix[2], 100), ('Projekt Priorität 3: Anstrich der Fahrzeughalle', 40)],
                    fix + ['Projekt Priorität 1: neue Schutzkleidung'],
                    'Die Feuerwehr meldet getrennt nach fixen Kosten (Mieten, Verträge) und variablen Kosten (Projekte, Sonderbeschaffungen) an. Die Politik priorisiert; die Entscheidungshoheit liegt bei ihr.', e + 'k-feuak-11 und k-feuak-12')],
-        4: [k1, k2],
+        4: [k1, k2, stadt],
     }
+
+
+# ---------------------------------------------------------------- Stab: Lagekarte mit taktischen Zeichen
+def stab_karte():
+    """Zeichen nach dem Grundprinzip im Kapitel „Taktische Zeichen“: Quadrat = Einheit, Kreis = Person/Funktion, Linie = Grenze/Abschnitt,
+    Pfeil = Angriffsrichtung, Rot = Brandbekämpfung, Blau = technische Hilfeleistung, Gelb = ABC-Einsatz."""
+    q = lambda f: '<rect x="-10" y="-10" width="20" height="20" fill="%s" stroke="#1b1f27" stroke-width="1.5"/>' % f
+    zeichen = [
+        {'id': 'rot', 'n': 'Quadrat, rot', 'svg': q('#c4261c')},
+        {'id': 'blau', 'n': 'Quadrat, blau', 'svg': q('#2f7de1')},
+        {'id': 'gelb', 'n': 'Quadrat, gelb', 'svg': q('#f2c230')},
+        {'id': 'kreis', 'n': 'Kreis', 'svg': '<circle r="10" fill="#fff" stroke="#1b1f27" stroke-width="2"/>'},
+        {'id': 'linie', 'n': 'Linie', 'svg': '<path d="M-12 8L12 -8" stroke="#1b1f27" stroke-width="3.5" stroke-linecap="round"/><path d="M-12 8L12 -8" stroke="#fff" stroke-width="1"/>'},
+        {'id': 'pfeil', 'n': 'Pfeil', 'svg': '<path d="M-12 0H6" stroke="#1b1f27" stroke-width="3.5" stroke-linecap="round"/><path d="M4 -7L13 0L4 7z" fill="#1b1f27"/>'},
+    ]
+    plan = ('<rect x="1" y="1" width="318" height="198" rx="8" fill="currentColor" opacity=".06"/>'
+            '<path d="M0 150H320M0 176H320" stroke="currentColor" stroke-width="1" opacity=".3"/><path d="M0 163H320" stroke="currentColor" stroke-width="1" stroke-dasharray="8 8" opacity=".3"/>'
+            '<rect x="60" y="28" width="150" height="74" rx="3" fill="currentColor" opacity=".14" stroke="currentColor" stroke-width="1.5"/><text x="135" y="46" font-size="11" text-anchor="middle" fill="currentColor">Lagerhalle</text>'
+            '<path d="M150 62l6 -12 5 9 4 -6 5 14z" fill="#e2632a"/>'
+            '<rect x="238" y="126" width="46" height="16" rx="3" fill="currentColor" opacity=".3"/><text x="261" y="121" font-size="10" text-anchor="middle" fill="currentColor">Lkw</text>'
+            '<rect x="228" y="40" width="34" height="26" rx="13" fill="currentColor" opacity=".2" stroke="currentColor" stroke-width="1"/><text x="245" y="34" font-size="10" text-anchor="middle" fill="currentColor">Tank</text>'
+            '<path d="M296 44V16M296 16l-5 9M296 16l5 9" stroke="currentColor" stroke-width="1.5" fill="none"/><text x="296" y="56" font-size="10" text-anchor="middle" fill="currentColor">N</text>')
+    return {'typ': 'karte', 'ort': 'Lagekarte', 'frage': 'Lagekarte: Trag die Lage mit den passenden taktischen Zeichen ein.',
+            'fall': 'Brand in einer Lagerhalle. Auf der Straße ist ein Fahrer in seinem Lkw eingeklemmt, am Tank tritt ein Gefahrstoff aus. Wähle für jeden Platz das Zeichen nach dem Grundprinzip: Form für die Art, Farbe für die Aufgabe.',
+            'plan': plan, 'zeichen': zeichen,
+            'plaetze': [{'x': 96, 'y': 80, 't': 'Einheit zur Brandbekämpfung an der Halle', 'richtig': 'rot'},
+                        {'x': 214, 'y': 134, 't': 'Einheit zur technischen Hilfeleistung am Lkw', 'richtig': 'blau'},
+                        {'x': 284, 'y': 76, 't': 'Einheit für den ABC-Einsatz am Tank', 'richtig': 'gelb'},
+                        {'x': 36, 'y': 163, 't': 'Einsatzleiter (eine Person mit Funktion)', 'richtig': 'kreis'},
+                        {'x': 222, 'y': 92, 't': 'Grenze zwischen zwei Einsatzabschnitten', 'richtig': 'linie'},
+                        {'x': 135, 'y': 124, 't': 'Angriffsrichtung des Trupps in die Halle', 'richtig': 'pfeil'}],
+            'erkl': 'Grundprinzip: Quadrat = Einheit oder Fahrzeug, Kreis = Person oder Funktion, Linie = Grenze oder Abschnitt, Pfeil = Bewegungs- oder Angriffsrichtung. Rot steht für Brandbekämpfung, Blau für technische Hilfeleistung, Gelb für den ABC-Einsatz.',
+            'quelle': 'Kapitel Führung: Taktische Zeichen (Grundprinzip) · eigener Übungsfall'}
 
 
 # ---------------------------------------------------------------- Presse: Statement vor laufender Kamera

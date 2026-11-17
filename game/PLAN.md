@@ -1,6 +1,6 @@
 # IdF-Spiel – Plan
 
-Stand: Alle neun Missionen sind spielbar, je fünf Level. Dazu kommen Training (Wiederholung, Prüfung), Wochenaufgabe und Bestenliste.
+Stand: Alle neun Missionen sind spielbar, je fünf Level; alle außer der Begehung haben zusätzlich Level 6 „Einsatz“. Dazu kommen Training (Wiederholung, Prüfung), Wochenaufgabe und Bestenliste.
 
 - **Begehung** hat eine eigene Welt (`js/m-begehung.js`, mehrgeschossig mit Treppenhaus).
 - **Alle anderen** teilen sich `js/m-welt.js`: eine begehbare Kulisse je Mission (Stabsraum, Brandschutzdienststelle, Einsatzstelle,
@@ -20,7 +20,14 @@ Stand: Alle neun Missionen sind spielbar, je fünf Level. Dazu kommen Training (
   der Abstand (1, 3, 7, 16 Tage). Prüfung: 20 gemischte Fragen, 15 Minuten, ein Versuch je Frage, Note nach dem Schlüssel des Spiels.
 - **Verknüpfung mit der App:** Die App verlinkt das Spiel im Pausenraum unter dem Reiter „Simulationen“ (`js/pause.js`, `game/index.html?m=<Mission>&von=v-pause`), nicht in den Themenübersichten.
   Im Spiel führt „Im Kapitel nachlesen“ zur passenden Ansicht (`../index.html#<Ansicht>`).
-- **Tests:** `game/tests/smoke.cjs` (Begehung), `game/tests/welten.cjs` (alle Welt-Missionen, Level wählbar), `game/tests/training.cjs` (Wiederholung, Prüfung, Bestenliste).
+- **Level 6 „Einsatz“** (`szenario:true`): ein zusammenhängender Fall aus `game/tools/faelle/<mission>.json`. Die Schritte liegen
+  nacheinander an festen Stationen (`ort`), jede Wahl hat einen Wert (2 beste, 1 vertretbar, 0 falsch) und eine Folge; nach einer
+  schlechten Wahl kann ein Folgeschritt (`dann`) kommen. Nebenmeldungen (`eingang`) treffen nach `nach` Sekunden ein und verfallen
+  nach `frist`. Die Anzeige „Lage“ (0 bis 100) bestimmt das Ende (ab 70 gut, ab 40 mittel); bestanden wird weiter nach Punkten.
+- **Stufen** (`CORE.opt('stufe')`): Lernen (Tipp-Knopf, keine Zeit, keine Fristen), Normal, Ernstfall (ein Versuch, kein Pfeil, keine Minikarte).
+  Einstellungen des Geräts liegen in `bvi_game_opt`, der Spielstand in `bvi_game_v1` (wird von `js/sync.js` mit abgeglichen).
+- **Weitere Aufgabenarten:** `stadt` (Wachen auf einem 3D-Stadtmodell setzen, Erreichungsgrad und Budget), `karte` (taktische Zeichen in eine Lagekarte eintragen).
+- **Tests:** `game/tests/einsatz.cjs` (Level 6: guter Verlauf, schlechter Verlauf, verpasste Fristen), `game/tests/smoke.cjs` (Begehung), `game/tests/welten.cjs` (alle Welt-Missionen, Level wählbar), `game/tests/training.cjs` (Wiederholung, Prüfung, Bestenliste).
 - **Nicht gebaut:** Rangliste über mehrere Geräte (bräuchte einen Server). In VAk bleiben es Fragen an Stationen.
   Die Abschnitte unten beschreiben die ursprüngliche Idee.
 
@@ -92,7 +99,7 @@ Reihenfolge und ordnet Akteure und Rechtsgrundlagen zu. Bei richtiger Kette „f
 ## Punkte, Level, Abzeichen
 
 - **Punkte:** 100 je richtiger Entscheidung, 50 beim zweiten Versuch, 0 danach. Serie ab drei richtigen in Folge: +20 je Treffer.
-- **Level:** je Mission 5 Level; ein Level ist bestanden ab 70 % der möglichen Punkte, das nächste wird dann frei.
+- **Level:** je Mission 5 Level, dazu Level 6 „Einsatz“ (außer Begehung); ein Level ist bestanden ab 70 % der möglichen Punkte, das nächste wird dann frei.
 - **Highscore:** beste Punktzahl je Mission und Level, dazu eine Gesamtpunktzahl.
 - **Abzeichen:** je Mission eines für „alle Level bestanden" und eines für „ein Level fehlerfrei"; dazu drei übergreifende (erste Mission, 7 Tage Serie, alle Missionen bestanden).
 - **Tagesziel:** ein Level am Tag spielen; die Serie zählt aufeinanderfolgende Tage.
