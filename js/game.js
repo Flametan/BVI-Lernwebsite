@@ -26,11 +26,16 @@ const GAME=(function(){
     {id:'time',t:'10 Minuten',max:10,get:()=>Math.floor((typeof USAGE!=='undefined'?USAGE.today():0)/60)}
   ];
   /* Wochenaufgaben (Mo–So): jede bringt Punkte, alle drei zusammen das Abzeichen „Wochenmeister“ */
-  const WEEKLY=[
-    {id:'wc',t:'100 Lernkarten',max:100,xp:50,get:w=>w.cards},
-    {id:'wq',t:'25 Prüfungsfragen',max:25,xp:50,get:w=>w.quizOk},
-    {id:'wd',t:'5 Tage',max:5,xp:50,get:w=>w.days}
+  /* Jede Woche wechselt die Auswahl: je eine Aufgabe aus drei Gruppen (Karten, Fragen, Einsatz), rollierend nach Kalenderwoche */
+  const WEEKLY_POOL=[
+    [{id:'wc',t:'100 Lernkarten',max:100,xp:50,get:w=>w.cards},{id:'wc2',t:'150 Lernkarten',max:150,xp:60,get:w=>w.cards},{id:'wc3',t:'200 Lernkarten',max:200,xp:70,get:w=>w.cards}],
+    [{id:'wq',t:'25 Prüfungsfragen',max:25,xp:50,get:w=>w.quizOk},{id:'wq2',t:'40 Prüfungsfragen',max:40,xp:60,get:w=>w.quizOk},{id:'wq3',t:'60 Fragen beantworten',max:60,xp:60,get:w=>w.quiz}],
+    [{id:'wd',t:'5 Tage',max:5,xp:50,get:w=>w.days},{id:'wd2',t:'4 Tage',max:4,xp:40,get:w=>w.days},{id:'wd3',t:'6 Tage',max:6,xp:60,get:w=>w.days},{id:'wx',t:'400 Punkte',max:400,xp:50,get:w=>w.xp}]
   ];
+  function weeklyDefs(){
+    const [y,m,d]=weekKeys()[0].split('-').map(Number), n=Math.floor(Date.UTC(y,m-1,d)/864e5/7);
+    return WEEKLY_POOL.map((g,i)=>g[(n+i)%g.length]);
+  }
   const WEEK_ALL_XP=100;
   const FZ_MAX=2, FZ_EVERY=7, MILES=[7,30,100,365], RISK_HOUR=18;
   const TASK_XP=25;
@@ -147,7 +152,7 @@ const GAME=(function(){
   }
   function weeklyState(){
     const w=weekSum();
-    return WEEKLY.map(t=>{ const v=Math.min(t.max,t.get(w)); return {id:t.id,t:t.t,v,max:t.max,xp:t.xp,done:v>=t.max}; });
+    return weeklyDefs().map(t=>{ const v=Math.min(t.max,t.get(w)); return {id:t.id,t:t.t,v,max:t.max,xp:t.xp,done:v>=t.max}; });
   }
   /* ISO-Wochenschlüssel (z. B. 2026-W47) für das Ranking */
   function isoWeek(d=new Date()){
@@ -256,7 +261,7 @@ const GAME=(function(){
     weeklyState().forEach(t=>{
       if(t.done){ wn++; if(!wd[t.id]){ wd[t.id]=1; s.xp+=t.xp; rec.xp+=t.xp; toast('Wochenaufgabe erledigt',t.t+' · +'+t.xp+' Punkte','star'); } }
     });
-    if(wn===WEEKLY.length&&!wd.all){ wd.all=1; s.tot.weekly=(s.tot.weekly|0)+1; s.xp+=WEEK_ALL_XP; rec.xp+=WEEK_ALL_XP; toast('Alle Wochenaufgaben geschafft','Bonus · +'+WEEK_ALL_XP+' Punkte','shield'); confetti(); }
+    if(wn===WEEKLY_POOL.length&&!wd.all){ wd.all=1; s.tot.weekly=(s.tot.weekly|0)+1; s.xp+=WEEK_ALL_XP; rec.xp+=WEEK_ALL_XP; toast('Alle Wochenaufgaben geschafft','Bonus · +'+WEEK_ALL_XP+' Punkte','shield'); confetti(); }
     Object.keys(s.wdone).sort().slice(0,-8).forEach(k=>delete s.wdone[k]);
     // Abzeichen
     const ctx=context();
@@ -442,7 +447,9 @@ const GAME=(function(){
     const ts=taskState(), dn=ts.filter(t=>t.done).length, wsx=weeklyState(), wn=wsx.filter(t=>t.done).length, L=tasksList();
     /* Tablet/PC: drei Ringe für die Tagesaufgaben, daneben die Wochenaufgaben (die Leiste oben gilt nur für Handy) */
     const R3=2*Math.PI*18;
-    const d3=`<div class="g-d3"><div class="g-d3h"><span class="g-d3t"><h6>Heute</h6></span><button type="button" class="g-rk" onclick="NAV.go('v-rank','Ranking')"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>Ranking</button></div><div class="g-sl"><div class="g-top"><div class="g-rs">${ts.map(t=>`<div class="g-r3${t.done?' ok':''}"><svg viewBox="0 0 44 44" width="64" height="64" role="img" aria-label="${esc(t.t)}: ${t.v} von ${t.max}"><circle class="t" cx="22" cy="22" r="18"/><circle class="v" cx="22" cy="22" r="18" stroke-dasharray="${(R3*Math.min(1,t.v/t.max)).toFixed(1)} ${R3.toFixed(1)}" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle">${t.v}/${t.max}</text></svg><em>${esc(t.t.replace(/^\d+ /,''))}</em></div>`).join('')}</div><button type="button" class="g-wsum${wn===wsx.length?' ok':''}" aria-expanded="false" aria-controls="g-w3" onclick="GAME.wk(this)"><b>${wn}/${wsx.length}</b><em>Woche</em><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div><div class="g-w3" id="g-w3"><div><h6>Diese Woche</h6>${wsx.map(t=>`<div class="r${t.done?' ok':''}"><span>${esc(t.t)}</span><s><i style="width:${(100*Math.min(1,t.v/t.max)).toFixed(0)}%"></i></s><b>${t.v}/${t.max}</b></div>`).join('')}</div></div></div></div>`;
+    const ring=t=>`<div class="g-r3${t.done?' ok':''}"><svg viewBox="0 0 44 44" width="64" height="64" role="img" aria-label="${esc(t.t)}: ${t.v} von ${t.max}"><circle class="t" cx="22" cy="22" r="18"/><circle class="v" cx="22" cy="22" r="18" stroke-dasharray="${(R3*Math.min(1,t.v/t.max)).toFixed(1)} ${R3.toFixed(1)}" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle">${t.v}/${t.max}</text></svg><em>${esc(t.t.replace(/^\d+ /,''))}</em></div>`;
+    const chev=r=>`<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${r?'m15 6-6 6 6 6':'m9 6 6 6-6 6'}"/></svg>`;
+    const d3=`<div class="g-d3"><div class="g-d3h"><span class="g-d3t"><h6>Heute</h6></span><button type="button" class="g-rk" onclick="NAV.go('v-rank','Ranking')"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>Ranking</button></div><div class="g-sl"><div class="g-trk"><div class="g-top"><div class="g-rs">${ts.map(ring).join('')}</div><button type="button" class="g-wsum${wn===wsx.length?' ok':''}" aria-label="Wochenaufgaben anzeigen" onclick="GAME.wk(this)"><b>${wn}/${wsx.length}</b><em>Woche</em>${chev(0)}</button></div><div class="g-w3" id="g-w3"><div class="g-wr"><div class="g-rs">${wsx.map(ring).join('')}</div><button type="button" class="g-wsum g-wback" aria-label="Zurück zu Heute" onclick="GAME.wk(this)"><b>${dn}/${ts.length}</b><em>Heute</em>${chev(1)}</button></div><div class="g-wl"><h6>Diese Woche</h6>${wsx.map(t=>`<div class="r${t.done?' ok':''}"><span>${esc(t.t)}</span><b>${t.v}/${t.max}</b></div>`).join('')}</div></div></div></div></div>`;
     return `<div class="g-today${o?' open':''}" id="g-today"><button type="button" class="g-tbar${done?' ok':''}" aria-expanded="${o}" aria-controls="g-more" onclick="GAME.tdToggle()">`+
       `<span class="g-rg"><svg viewBox="0 0 100 100" width="38" height="38" aria-hidden="true"><circle cx="50" cy="50" r="42" class="g-rg-t"/><circle cx="50" cy="50" r="42" class="g-rg-v" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/></svg><b>${min}</b></span>`+
       `<span class="g-bt"><span><b>Heute ${dn}/${ts.length}</b> <em>· Woche ${wn}/${wsx.length}</em></span><small>${done?'Tagesziel geschafft':min+' von '+gm+' min'}</small></span>`+
@@ -614,7 +621,7 @@ const GAME=(function(){
     if(id==='v-game') renderGame(); else if(id==='v-week') renderWeek();
     else if(id==='v-rank'){ const b=document.getElementById('rank-body'); if(b) rankLoad().then(R=>R.mount(b)).catch(()=>{ b.innerHTML='<p class="rk-msg err">Ranking konnte nicht geladen werden. Bitte Verbindung prüfen.</p>'; }); }
   }
-  /* Handy: Tippen auf „Woche“ klappt die Wochenaufgaben animiert auf und zu */
-  function wk(btn){ const d=btn.closest('.g-d3'); if(!d) return; const o=d.classList.toggle('wo'); btn.setAttribute('aria-expanded',String(o)); }
+  /* Handy: Tippen auf „Woche“ schiebt die Wochenaufgaben (auch als Ringe) von rechts in die Karte, Tippen auf „Heute“ zurück */
+  function wk(btn){ const d=btn.closest('.g-d3'); if(!d) return; const o=d.classList.toggle('wo'); const h=d.querySelector('.g-d3t h6'); if(h) h.textContent=o?'Diese Woche':'Heute'; }
   return {wk,tdToggle,todayHtml,isoWeek,weeklyState,weekSum,heroHtml,shoulder,rankOf,barHtml,event,cheer,setSmall,isSmall,homeHtml,toggle,openRank,open,close,refresh,setOff,isOn,setTitle,share,saveImg,onShow,renderGame,renderWeek,_state:load,_ranks:RANKS,_badges:BADGES,_streak:streak,_tasks:taskState};
 })();
