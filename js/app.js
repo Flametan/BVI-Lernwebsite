@@ -4790,7 +4790,7 @@ const IDF_PLAN = (function(){
     vb:[['Heiko Böcking','-2220'],['Joachim Achtert','-2213'],['Stephanie Vöge','-2222'],['E-Mail VB','vb@idf.nrw.de'],['Abwesenheiten melden','poststelle@idf.nrw.de']],
     babz:[['Christoph Schaaf (BABZ)','0228 99550-5205'],['Thorsten Ohm (BABZ)','-5206']]
   };
-  const SG='Sachgebiete 1 bis 4|hi|C-205, C-213, C-214, C-215|in vier Gruppen rollierend';
+  const SG=g=>'Sachgebiete 1 bis 4|hi|'+(g===1?'C-205, C-211, C-212, C-213':'C-205, C-213, C-214, C-215')+'|in vier Gruppen rollierend';
   const VB1_G1=[
     ['1-2|Anreise|ar','3|Begrüßung|hi|C-1|Begrüßung durch den Direktor · Hemd/Krawatte','4|Einführung in das Teilmodul VB||B1-106','5-6|Rechtsgrundlagen Baurecht||B1-106','7-8|Gebäudeklassen||B1-106'],
     ['1-2|Baustoffnormung||B1-106','3-6|Bauliche Trennung||B1-106','7-8|Löschwasserversorgung||B1-106'],
@@ -4813,22 +4813,24 @@ const IDF_PLAN = (function(){
   const VB3_DI=['1-4|Einführung Brandverhütungsschau||B1-106','5-8|Brandverhütungsschau praktisch|hi||IdF NRW','EVA|Vorbereitung Exkursion anhand BSK'];
   const VB3_DO=['1-8|Veranstaltungssicherheit||B1-106|Orientierungsrahmen für Veranstaltungen im Freien'];
   const STAB1=(g)=>[
-    g===1?['1-2|Anreise|ar','3|Begrüßung & Organisation||C-205','4-7|Führungslehre||C-205|Zwei-Stäbe-Modell · FwDV 100 · Führungsstufe D · Rollenverständnis','8|Kommunikation|||Nachrichtenvordruck · Lagedarstellung · Lagevortrag · Einsatztagebuch','EVA|Sachgebiet 4']
+    g===1?['1-2|Anreise|ar','3|Begrüßung & Organisation||C-205','4-7|Führungslehre||C-205|Zwei-Stäbe-Modell · FwDV 100 · Führungsstufe D · Rollenverständnis','8|Kommunikation|||Nachrichtenvordruck · Lagedarstellung · Lagevortrag · Einsatztagebuch','EVA|Vorstellung Prüfung||C-205|durch ALK und ALB','EVA|Sachgebiet 4']
          :['1-2|Anreise|ar','3|Begrüßung|hi|C-1|Begrüßung durch den Direktor · Hemd/Krawatte · Vorstellungsrunde','4|Wochenorganisation||C-205','5-7|Führungslehre||C-205|Zwei-Stäbe-Modell · FwDV 100 · Führungsstufe D · Rollenverständnis · Lagedarstellung NRW','8|Kommunikation|||Nachrichtenvordruck · Lagedarstellung · Lagevortrag · Einsatztagebuch','EVA|Sachgebiet 4'],
-    ['07:45-09:00|Führungslehre||C-205|'+(g===1?'Wiederholung Vortrag · Meldewesen · FB & Verbinder':'Meldewesen · Fachberater & Verbinder'),'09:00-09:15|Stationsausbildung|||gemeinsame Lageeinweisung','09:30-10:30|'+SG,'10:45-11:45|'+SG,'12:00-13:00|'+SG,'14:00-15:00|'+SG,'15:00-15:30|Aufbau|||Stabsräume „klein“','EVA|Sichter/Sichterin'],
-    ['07:45-08:30|Innerer Dienst / Übernahme der EL|||gleitender Übergang zur Übung','08:30-12:15|Stabsrahmenübung »Waldbrand«|hi|'+(g===1?'C-204, C-205':'C-205, C-215')+'|Küchenwagen mitbringen','6|Übungsauswertung','14:00-15:00|Waldbrände||C-205|Einsatztaktiken · Einsatzmittel · Kooperation mit Forstbehörden','15:00-15:30|Rückbau|||Stabsräume „klein“',...(g===2?['19:00|Vortrag @fire|hi|C-1|freiwillig']:[]),'EVA|Führungsgrundsätze'],
-    ['1-2|Sachgebiete 5 und 6||'+(g===1?'C-204, A3-28':'C-204, C-205')+'|in Halbgruppen im Wechsel · in zivil','3-8|Mars, Venus & Saturn||C-215|in zivil','EVA|Fayol'],
+    ['07:45-09:00|Führungslehre||C-205|'+(g===1?'Wiederholung Vortrag · Meldewesen · FB & Verbinder':'Meldewesen · Fachberater & Verbinder'),'09:00-09:15|Stationsausbildung|||gemeinsame Lageeinweisung','09:30-10:30|'+SG(g),'10:45-11:45|'+SG(g),'12:00-13:00|'+SG(g),'14:00-15:00|'+SG(g),'15:00-15:30|Aufbau|||Stabsräume „klein“','EVA|Sichter/Sichterin'],
+    ['07:45-08:30|Innerer Dienst / Übernahme der EL|||gleitender Übergang zur Übung','08:30-12:15|Stabsrahmenübung »Waldbrand«|hi|'+'C-205, C-215|Küchenwagen mitbringen','6|Übungsauswertung','14:00-15:00|Waldbrände||C-205|Einsatztaktiken · Einsatzmittel · Kooperation mit Forstbehörden','15:00-15:30|Rückbau|||Stabsräume „klein“',...(g===2?['19:00|Vortrag @fire|hi|C-1|freiwillig']:[]),'EVA|Führungsgrundsätze'],
+    ['1-2|Sachgebiete 5 und 6||'+(g===1?'C-1, C-205':'C-204, C-205')+'|in Halbgruppen im Wechsel · in zivil','3-8|Mars, Venus & Saturn||C-215|in zivil','EVA|Fayol'],
     ['1-5|Mars, Venus & Saturn (Fortsetzung)|||in zivil','6|Rekapitulation & Organisatorisches||'+(g===1?'C-215':'C-205'),'7|Abreise|ar']];
   const STAB2=(g)=>[
-    ['1-2|Anreise|ar','3-8|Krisenstäbe||C-205|in zivil · Zuständigkeiten · Struktur · Methoden · Kooperation mit EL','EVA|Web-GIS||C-205'],
-    ['07:45-12:30|Krisenstäbe||C-1|in zivil · Aufbau · Anwendungstraining · Nachbesprechung','13:30-17:00|Exkursion zur SAR-Leitstelle|ex||Hemd/Krawatte, ggf. Wetterschutz · fußläufig · Abmarsch 13:30 vor Gebäude C','EVA|KatS-Konzepte'],
-    ['1|Wiederholung & Aufbau||C-205|Stabsraum „groß“','2-5|Stabsrahmenübung »Auswärtsspiel«|hi|C-205|Küchenwagen mitbringen','6|Übungsauswertung||C-205','7-8|Zusammenarbeit mit dem THW||C-205','EVA|Sachgebiet 3'],
-    g===1?['1-5|Stabsrahmenübung »Zugunglück«|hi|C-205|Küchenwagen mitbringen','6|Übungsauswertung & Rückbau','7|Abreise|ar','EVA|LdS']
+    ['1-2|Anreise|ar','3-8|Krisenstäbe||'+(g===1?'C-1':'C-205')+'|in zivil · Zuständigkeiten · Struktur · Methoden · Kooperation mit EL','EVA|Web-GIS||C-205'],
+    g===1?['1-6|Krisenstäbe||C-1|in zivil · Aufbau · Anwendungstraining · Nachbesprechung · Küchenwagen mitbringen','7-8|Selbststudium|ar||Inhalt und Ort nach eigenem Ermessen · die SAR-Exkursion entfällt','EVA|KatS-Konzepte']
+         :['07:45-12:30|Krisenstäbe||C-1|in zivil · Aufbau · Anwendungstraining · Nachbesprechung','13:30-17:00|Exkursion zur SAR-Leitstelle|ex||Hemd/Krawatte, ggf. Wetterschutz · fußläufig · Abmarsch 13:30 vor Gebäude C','EVA|KatS-Konzepte'],
+    g===1?['1|Nachbesprechung EVA Web-GIS||C-205','2-5|Stabsrahmenübung »Auswärtsspiel«|hi|C-205|Küchenwagen mitbringen','6|Übungsauswertung||C-205','7-8|Zusammenarbeit mit dem THW||C-205','EVA|LdS']
+         :['1|Wiederholung & Aufbau||C-205|Stabsraum „groß“','2-5|Stabsrahmenübung »Auswärtsspiel«|hi|C-205|Küchenwagen mitbringen','6|Übungsauswertung||C-205','7-8|Zusammenarbeit mit dem THW||C-205','EVA|Sachgebiet 3'],
+    g===1?['1-5|Stabsrahmenübung »Zugunglück«|hi|C-205|Küchenwagen mitbringen','6|Übungsauswertung & Rückbau','7|Abreise|ar']
          :['1-5|Stabsrahmenübung »Zugunglück«|hi|C-205|Küchenwagen mitbringen','6|Übungsauswertung & Rückbau','7-8|EVA: EU-Katastrophenschutz','EVA|LdS'],
     g===1?SELBST:['1-6|EU-Katastrophenschutz|hi|C-205|beide Halbgruppen gemeinsam','7|Abreise|ar']];
   const PRESSE=(g)=>{
     const r=g===1?'C-215':'C-205';
-    const wdr='13:30-ca. 17:00|Exkursion zum WDR-Studio|ex||zivil · Fahrt mit MTFs · Abfahrt 13:30, Parkplatz 2 · Ende in Dortmund';
+    const wdr=(g===1?'13:45':'13:30')+'-ca. 17:00|Exkursion zum WDR-Studio|ex||zivil · Fahrt mit MTFs · Abfahrt '+(g===1?'13:45':'13:30')+', Parkplatz 2 · Ende in Dortmund';
     return [
       ['1-2|Anreise|ar','3|Begrüßung, Vorstellung der Woche||'+r,'4-8|Presserecht||'+r,...(g===2?['18:00|Kaminabend in Präsenz|hi||Gebäude C · zivil/leger · inkl. Catering']:[])],
       ['1|Einführung in die Pressearbeit||'+r,'2|Strategische Pressearbeit','3|Medien im Wandel||'+r,'4|Öffentlichkeitsarbeit','5|Wie arbeitet Presse?','6|Erwartungen eines Journalisten','13:30-18:00|Exkursion zur Villa ten Hompel|ex||zivil · fußläufig · Abmarsch 13:30 vor Gebäude C'],
@@ -4836,7 +4838,7 @@ const IDF_PLAN = (function(){
            :['1-6|Gr. A: Pressearbeit in der Krise, Pressekonferenzen|hi|C-205','1-6|Gr. B: Kameratraining|hi|C-204',wdr],
       g===1?['1-6|Pressearbeit in der Krise / Kameratraining (Fortsetzung)',wdr]
            :['1|Pressearbeit in der Krise / Kameratraining (Fortsetzung)','2-8|Gruppenwechsel|||Fortsetzung'],
-      ['1-2|Spontanhelfende||'+r,'3-4|Virtual Operations Support Team (VOST)||'+r,'5-6|Krisenkommunikation in der Privatwirtschaft||'+r+'|Evaluation der Woche','7|Abreise|ar']];
+      ['1-2|Spontanhelfende||'+r,'3-4|Virtual Operations Support Team (VOST)||'+r,'5-6|'+(g===1?'Gutachten Ahrtal':'Krisenkommunikation in der Privatwirtschaft')+'||'+r+'|Evaluation der Woche','7|Abreise|ar']];
   };
   const W = [ // [KW, Woche, Thema, Montag, Gruppe, Tage Mo–Fr, Telefon, Hinweis]
     [44,1,'Vorbeugender Brandschutz 1','2026-10-26','g1',VB1_G1],
@@ -4883,14 +4885,14 @@ const IDF_PLAN = (function(){
       []],TEL.babz,
       'Die Woche gestaltet die BABZ in Ahrweiler (Konferenzgebäude, Ramersbacher Str. 95), Modul 3.5 „Strategische Leitung und Führung“, Veranstaltungsnummer 23.060/26/50-06. Programmstand 30.10.2026. Pausen können bei Bedarf verlaufsabhängig durchgeführt werden. Nach dem Programm vom Stand 30.10. endet die Woche am Donnerstag um 15:30 Uhr.'],
     [51,8,'Stab 3','2026-12-14','both',[
-      ['1-2|Anreise|ar','3|Leistungsnachweis nach § 13 Abs. 3|hi|C-1|siehe Prüfungsleitfaden','11:00-11:30|MoFüSt NRW||C-1','11:30-13:00|Historie der Stabsarbeit & Stabsarbeit international||C-1','13:30-14:45|Historie der Stabsarbeit (Fortsetzung)','8|Lageeinweisung||C-1','18:15|Stabsrahmenübung »Unwetter«|hi||Lunchpaket packen · spätes Ende · Küchenwagen mitbringen'],
+      ['1-2|Anreise|ar','3|Leistungsnachweis nach § 13 Abs. 3|hi|C-1|siehe Prüfungsleitfaden','11:00-11:30|MoFüSt NRW||C-1','11:30-13:00|Historie der Stabsarbeit & Stabsarbeit international||C-1','13:30-14:45|Historie der Stabsarbeit (Fortsetzung)','8|Lageeinweisung||C-1','18:15|Stabsrahmenübung »Unwetter«|hi|C-205|Lunchpaket packen · spätes Ende · Küchenwagen mitbringen'],
       ['1-6|unterrichtsfrei|ar','7-8|Übungsauswertung||C-205'],
       ['08:00-16:30|Fachtagung Stabsarbeit|hi|C-1|Get Together 08:00 · Beginn 08:45 · Hemd/Krawatte','EVA|Übungsbedarf'],
-      ['1-5|Konzepterarbeitung Großveranstaltung||C-205','6|Aufbau||C-205|Stabsraum „groß“','14:00-17:00|Gr. A: Stabsrahmenübung »Großveranstaltung«|hi|C-205|Küchenwagen mitbringen'],
+      ['1-5|Konzepterarbeitung Großveranstaltung||C-1','6|Aufbau||C-205|Stabsraum „groß“','14:00-17:00|Gr. A: Stabsrahmenübung »Großveranstaltung«|hi|C-205|Küchenwagen mitbringen'],
       ['07:45-ca. 11:00|Gr. B: Stabsrahmenübung »Großveranstaltung«|hi|C-205|Küchenwagen mitbringen','ca. 11:15-12:15|Übungsauswertung beider Gruppen||C-205','6|Rückbau & Organisatorisches|||Evaluation der drei Wochen Stab','7|Abreise|ar']],TEL.spahl],
     [52,9,'Klausuren','2026-12-21','both',[
-      ['1|Anreise|ar','08:30-12:30|Klausur nach § 21|hi|B1-106, A3-25|4 Zeitstunden','14:00|Verabschiedung durch den Direktor|hi|A2-1|Hemd/Krawatte'],
-      ['1|unterrichtsfrei|ar','08:30-12:30|Klausur nach § 21|hi|B1-106, A3-25|4 Zeitstunden','nach der Klausur|Heimreise|ar||Lunchpakete nach Absprache nach der Klausur abholen oder vor der Heimreise Mittagessen'],
+      ['1|Anreise|ar','08:30-12:30|Klausur nach § 21 (IdF)|hi|C-1|4 Zeitstunden · Thema: IdF','14:00|Verabschiedung durch den Direktor|hi|A2-1|Hemd/Krawatte'],
+      ['1|unterrichtsfrei|ar','08:30-12:30|Klausur nach § 21 (3.1 oder 3.3)|hi|B1-106, A3-25|4 Zeitstunden · in zivil · Thema: 3.1 oder 3.3','nach der Klausur|Heimreise|ar||Lunchpakete nach Absprache nach der Klausur abholen oder vor der Heimreise Mittagessen'],
       [],['nachmittags|Heiligabend|ar'],['ganztägig|1. Weihnachtstag|ar']],TEL.spahl]
   ];
 
