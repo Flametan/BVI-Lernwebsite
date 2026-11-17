@@ -4,6 +4,8 @@ const CHANGELOG_ENTRIES=[
       'IdF-Klausur, Brainyoo: Bei den Freitextfragen „Aufbau Stabsarbeit“ und „Operativ-taktische Einsatzleitung“ steht die Grafik jetzt wie bei Brainyoo in der Lösung und nicht mehr in der Frage. Alle 40 Karten wurden mit den Brainyoo-Daten verglichen (Fragen, Antworten, richtige Auswahl): sonst keine Abweichung.',
       'Laufbahnprüfung: „VB“ und „Stabsarbeit“ sind zu einer Gruppe „IdF“ mit 5 Klausuren zusammengeführt.',
       'Lernkarten: Karte aufdecken jetzt mit Pfeil aufwärts (↑) statt abwärts; markieren weiterhin mit der Leertaste. Die Fach-Reihen zeigen Kacheln mit Fortschrittsbalken.',
+      'Lernkarten am Handy und Tablet angepasst: Handy mit kompaktem Kopf und allen Fächern in einer Reihe, Tablet im Desktop-Design mit Fächern links. Der Kasten „Dein Stand“ entfällt.',
+      'Laufbahn-Hub: Die Klausuren sind in zwei Boxen (Laufbahnklausur 1 und 2) gruppiert. Der falsche April-Text zur Organisation am IdF Münster ist entfernt.',
       'Lernkarten am Desktop neu gestaltet: Fächer mit Fortschrittsring links, Karte als Stapel in der Mitte (runde Knöpfe „Gewusst“ und „Nicht gewusst“ bleiben), „Dein Stand“ und Tastatur rechts; „Eigene Karte“ und „Markierte“ als kleine Knöpfe oben.',
       'Lernkarten Laufbahnprüfung: Karten für IBK, VAk, FeuAK und IdF stammen jetzt nur noch aus den Aufgaben des Prüfungstabs „Laufbahnprüfung · Dezember“ (80 neue Karten). Die Altklausur-Karten (Juni 2026, Dezember 2023) sind entfallen, nur die Stabsarbeit-Karten aus Juni 2026 bleiben.',
       'Lernkarten am Computer: Kacheln, Umschalter (Laufbahnprüfung / Prüfungsrelevante Hinweise), Unterzeile und Modus-Zeile sind jetzt alle gleich breit.',
