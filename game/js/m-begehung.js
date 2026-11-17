@@ -50,14 +50,19 @@
       const wallZ = (x, z1, z2, m, th) => wand(x - (th || TH) / 2, z1, x + (th || TH) / 2, z2, m);
       const wallX = (z, x1, x2, m) => wand(x1, z - TH / 2, x2, z + TH / 2, m);
       const mBlatt = S('holz', 1, 1, { color:STAGE.C('#c79a6b') }), mZarge = Mt('#5a5f68'), mGriff = Mt('#d5d9de', { metalness:0.8, roughness:0.25 });
-      function divider(x, tuer, m, th){                 // Wand quer durch das Geschoss, auf Wunsch mit Tür bei z = 6
+      // Wand quer durch das Geschoss, auf Wunsch mit Tür bei z = 6; zweite Tür am südlichen Ende (zum Treppenabsatz, den die ungeraden Geschosse brauchen)
+      function divider(x, tuer, m, th, sued){
         if(!tuer){ wallZ(x, 0, DP, m, th); return; }
-        wallZ(x, 0, 5.2, m, th); wallZ(x, 6.8, DP, m, th);
-        const d = (th || TH) + 0.06; quader(grp, x - d / 2, 5.14, x + d / 2, 5.22, 0, 2.2, mZarge); quader(grp, x - d / 2, 6.78, x + d / 2, 6.86, 0, 2.2, mZarge); quader(grp, x - d / 2, 5.14, x + d / 2, 6.86, 2.16, 0.1, mZarge);
-        const piv = new THREE.Group(); piv.position.set(x, 0, 5.22); grp.add(piv);
-        mesh(new THREE.BoxGeometry(0.06, 2.12, 1.54), mBlatt, 0, 1.08, 0.78, piv);
-        mesh(new THREE.SphereGeometry(0.04, 8, 6), mGriff, 0.07, 1.05, 1.4, piv); mesh(new THREE.SphereGeometry(0.04, 8, 6), mGriff, -0.07, 1.05, 1.4, piv);
-        doors.push({ piv, x, z:6, a:0, o:0 });
+        const op = [[5.2, 6.8]]; if(sued) op.push([10.7, 11.9]);
+        let z0 = 0; op.forEach(o => { wallZ(x, z0, o[0], m, th); z0 = o[1]; }); wallZ(x, z0, DP, m, th);
+        const d = (th || TH) + 0.06;
+        op.forEach(([a, e]) => {
+          quader(grp, x - d / 2, a - 0.06, x + d / 2, a + 0.02, 0, 2.2, mZarge); quader(grp, x - d / 2, e - 0.02, x + d / 2, e + 0.06, 0, 2.2, mZarge); quader(grp, x - d / 2, a - 0.06, x + d / 2, e + 0.06, 2.16, 0.1, mZarge);
+          const piv = new THREE.Group(); piv.position.set(x, 0, a + 0.02); grp.add(piv); const w = e - a - 0.06;
+          mesh(new THREE.BoxGeometry(0.06, 2.12, w), mBlatt, 0, 1.08, w / 2, piv);
+          mesh(new THREE.SphereGeometry(0.04, 8, 6), mGriff, 0.07, 1.05, w - 0.14, piv); mesh(new THREE.SphereGeometry(0.04, 8, 6), mGriff, -0.07, 1.05, w - 0.14, piv);
+          doors.push({ piv, x, z:(a + e) / 2, a:0, o:0 });
+        });
       }
       // Böden (20 cm stark, Oberkante bei 0); im Treppenraum bleibt das Loch über dem Lauf des unteren Geschosses offen
       const boden = (x1, z1, x2, z2, m) => quader(grp, x1, z1, x2, z2, -0.2, 0.2, m, false);
@@ -70,7 +75,7 @@
       // Wände
       const mAussen = S('putz', 6, 1, { color:STAGE.C(keller ? '#b9b6b0' : '#efe6d6') });
       wallX(0, 0, W, mAussen); wallX(DP, 0, W, mAussen); wallZ(0, TH / 2, DP - TH / 2, mAussen); wallZ(W, TH / 2, DP - TH / 2, mAussen);
-      divider(XS, true);
+      divider(XS, true, null, null, true);
       if(G.flur) divider(XF, true);
       const mBrand = S('ziegel', 4, 1.5);
       if(L.brand) divider(XT, braucht(g, 'tuer_trenn'), mBrand, 0.5); else if(G.trenn) divider(XT, braucht(g, 'tuer_trenn'));
