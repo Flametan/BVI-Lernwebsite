@@ -257,6 +257,7 @@ const LUECKENTEXT=(function(){
     if(!S||S.phase!=='play') return;
     clearTimer(); S.phase='over';
     const score=S.score, old=best(), isNew=score>old&&score>0;
+    if(typeof PAUSE!=='undefined') PAUSE.addScore('lueckentext',score);
     if(isNew){ const b=lget(BKEY,{})||{}; b[KEY]=score; lset(BKEY,b); }
     if(score>0&&typeof GAME!=='undefined'){ try{ GAME.cheer('spiel','Lückentext-Sprint',isNew&&old>0?score+' in 60 s':''); }catch(e){} }
     const wl=S.wrong.map(function(w){

@@ -137,6 +137,7 @@ const MINESWEEPER=(function(){
   }
   function finish(){
     if(!ov||!S) return; var t=secs(S), b=lget(BKEY,{}), old=best(lvl), isNew=false, hadOld=old!=null;
+    if(S.won&&t>=0) { if(typeof PAUSE!=='undefined') PAUSE.addScore('minesweeper',t,lvl); }
     if(S.won&&t>=0&&(old==null||t<old)){ var m=Object.assign({},b.minesweeper||{}); m[lvl]=t; b.minesweeper=m; lset(BKEY,b); old=t; isNew=true; setH('best',fmt(t)); }
     var ok=S.won, L=LEVELS[lvl]; if(ok&&typeof GAME!=='undefined') GAME.cheer('spiel','Minesweeper',isNew&&hadOld?fmt(t):'');
     ov.hidden=false; ov.innerHTML='<div class="so-win" role="dialog" aria-modal="true" aria-label="'+(ok?'Alle Brandherde gesichert':'Brand außer Kontrolle')+'"><div class="so-wi">'+(ok?ICO.flag:ICO.flame).replace('mi-ic','mi-ic mi-big')+'</div><h3>'+(ok?'Alle Brandherde gesichert':'Brand außer Kontrolle')+'</h3><p>'+(ok?'Das Gebiet ist abgesucht.':'Ein Brandherd wurde übersehen.')+'</p>'

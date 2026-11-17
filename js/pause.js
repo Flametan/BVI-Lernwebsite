@@ -15,6 +15,18 @@ const PAUSE=(function(){
   let root=null,cur=null,pushed=false;
   const best=()=>get(BKEY,{});
   function saveBest(k,v,lower){if(v<=0&&!lower)return false;const b=best();if(b[k]==null||(lower?v<b[k]:v>b[k])){b[k]=v;set(BKEY,b);return true;}return false;}
+  /* ---------- Bestenlisten: je Spiel (und Stufe) die zehn besten Läufe, nur auf dem Gerät und im Sync ---------- */
+  const TOPKEY="bvi_pause_top";
+  const LV4=[["leicht","Leicht"],["mittel","Mittel"],["schwer","Schwer"],["sehr","Sehr schwer"]];
+  const BOARDS={fahrt:{u:"Punkte"},duell:{u:"Punkte"},tagesfrage:{u:"Tage",s:1},lueckentext:{u:"Lücken"},reihenfolge:{u:"Serie",s:1},hangman:{u:"Serie",s:1},kreuzwort:{u:"Tage",s:1},mahjong:{t:1},sudoku:{t:1,lv:LV4.slice(0,3)},tetris:{u:"Punkte"},solitaer:{u:"Punkte"},g2048:{u:"Punkte"},minesweeper:{t:1,lv:LV4},snake:{u:"Punkte"}};
+  const ymd=(off)=>{const d=new Date();d.setDate(d.getDate()+(off||0));const q=n=>("0"+n).slice(-2);return d.getFullYear()+"-"+q(d.getMonth()+1)+"-"+q(d.getDate());};
+  // Ergebnis eintragen: v = Punkte, Sekunden (Zeitspiele, niedriger ist besser) oder Serie; lv = Stufe
+  function addScore(k,v,lv){const B=BOARDS[k];v=Math.round(+v);if(!B||!isFinite(v)||v<0||(!B.t&&v<1))return;
+    const T=get(TOPKEY,{}),id=lv?k+":"+lv:k;let a=Array.isArray(T[id])?T[id]:[];
+    if(B.s)a=a.filter(e=>!(e.p===v-1&&e.d===ymd(-1)&&B.u==="Tage"));
+    let n="";try{n=(localStorage.getItem("bvi_profile_name")||"").slice(0,30);}catch(e){}
+    const e={p:v,d:ymd(0),a:B.t?1:0};if(n)e.n=n;a.push(e);
+    a.sort((x,y)=>B.t?x.p-y.p:y.p-x.p);T[id]=a.slice(0,10);set(TOPKEY,T);}
   const ICON={
     ladder:'<path d="M7 3v18M17 3v18M7 7h10M7 12h10M7 17h10"/>',
     bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
@@ -70,7 +82,7 @@ const PAUSE=(function(){
   // Reiter „Simulationen“: führt in das eigene 3D-Spiel unter game/ (eigene Seite, Fortschritt in bvi_game_v1)
   const TKEY='bvi_pause_tab';let ptab=get(TKEY,'spiele');
   const IDF3D=[['begehung','grid','Begehung','Bauteile im Gebäude bestimmen'],['stellungnahme','cards','Stellungnahme','Aus Textbausteinen schreiben'],['stab','duel','Stab','Meldungen zum Sachgebiet bringen'],['presse','bolt','Presse','Statement vor laufender Kamera'],['lage','scale','Lage','Zivile Verteidigung im Lagezentrum'],['ucpm','truck','Hilfeersuchen','Hilfe über die EU anfordern'],['ibk','ladder','IBK','Gespräche und Fragen auf der Wache'],['vak','pairs','VAk','Fragen im Hörsaal'],['feuak','flame','FeuAK','Bedarfsplanung mit Budget']];
-  const tabs=()=>`<div class="pz-mode pz-tabs" role="tablist" aria-label="Bereich im Pausenraum">${[['spiele','Pausenspiele'],['idf3d','Simulationen']].map(([k,t])=>`<button role="tab" aria-selected="${ptab===k}" data-pt="${k}" class="${ptab===k?'on':''}">${t}</button>`).join('')}</div>`;
+  const tabs=()=>`<div class="pz-mode pz-tabs" role="tablist" aria-label="Bereich im Pausenraum">${[['spiele','Pausenspiele'],['top','Bestenliste'],['idf3d','Simulationen']].map(([k,t])=>`<button role="tab" aria-selected="${ptab===k}" data-pt="${k}" class="${ptab===k?'on':''}">${t}</button>`).join('')}</div>`;
   const tabsOn=()=>root.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{ptab=x.dataset.pt;set(TKEY,ptab);hub();});
   function hub3d(){
     const st=get('bvi_game_v1',{}),m=(st&&st.m)||{};
@@ -81,7 +93,24 @@ const PAUSE=(function(){
     ${IDF3D.map(g=>{const n=fertig(g[0]);return `<a class="pz-tile" href="${url(g[0])}" aria-label="Mission ${g[2]}. ${g[3]}${n?'. '+n+' von '+(g[0]==='begehung'?5:6)+' Leveln geschafft':''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${n?`<span class="pz-bst">${n} von ${g[0]==='begehung'?5:6}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${g[3]}</small></span></a>`;}).join('')}</div></div>`;
     tabsOn();
   }
-  function hub(){stop();if(ptab==='idf3d')return hub3d();
+  let topG=get("bvi_pause_topg","fahrt"),topL="";
+  const fmtV=(B,v)=>B.t?fmtT(v):v.toLocaleString("de-DE");
+  function hubTop(){
+    if(!BOARDS[topG])topG="fahrt";const B=BOARDS[topG],g=GAMES.find(x=>x[0]===topG);if(B.lv&&!B.lv.some(l=>l[0]===topL))topL=B.lv[0][0];if(!B.lv)topL="";
+    const T=get(TOPKEY,{}),a=Array.isArray(T[topL?topG+":"+topL:topG])?T[topG+(topL?":"+topL:"")]:[];
+    const chips=Object.keys(BOARDS).map(k=>{const q=GAMES.find(x=>x[0]===k);return `<button class="pz-chip${k===topG?" on":""}" data-tg="${k}" aria-pressed="${k===topG}">${q[2]}</button>`;}).join("");
+    const lv=B.lv?`<div class="pz-chips pz-lvs" role="group" aria-label="Stufe">${B.lv.map(l=>`<button class="pz-chip${l[0]===topL?" on":""}" data-tl="${l[0]}" aria-pressed="${l[0]===topL}">${l[1]}</button>`).join("")}</div>`:"";
+    const u=B.t?"Bestzeit":B.u,dd=s=>s.slice(8,10)+"."+s.slice(5,7)+".";
+    const rows=a.length?`<ol class="pz-lb">${a.map((e,i)=>`<li><span class="pz-lr">${i+1}</span><b>${fmtV(B,e.p)}${B.t?"":" <small>"+u+"</small>"}</b><span class="pz-ld">${e.n?esc(e.n)+" · ":""}${dd(e.d)}</span></li>`).join("")}</ol>`:`<div class="pz-card"><div class="pz-center">Noch kein Eintrag. Spiele eine Runde, dann erscheint dein Ergebnis hier.</div></div>`;
+    root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Bestenliste</div><div class="pz-chips" role="group" aria-label="Spiel">${chips}</div>${lv}
+    <div class="pz-lbh"><b>${g[2]}${B.lv?" · "+B.lv.find(l=>l[0]===topL)[1]:""}</b><small>${B.t?"Die zehn schnellsten Läufe, nur auf deinen Geräten":"Die zehn besten Läufe, nur auf deinen Geräten"}</small></div>${rows}
+    <button class="pz-tile pz-lgo" data-g="${topG}"><span class="pz-tt"><b>${g[2]} spielen</b></span></button></div>`;
+    tabsOn();
+    root.querySelectorAll("[data-tg]").forEach(x=>x.onclick=()=>{topG=x.dataset.tg;set("bvi_pause_topg",topG);hubTop();});
+    root.querySelectorAll("[data-tl]").forEach(x=>x.onclick=()=>{topL=x.dataset.tl;hubTop();});
+    root.querySelector(".pz-lgo").onclick=()=>open(topG);
+  }
+  function hub(){stop();if(ptab==='idf3d')return hub3d();if(ptab==='top')return hubTop();
     const tile=(k,wide)=>{const g=GAMES.find(x=>x[0]===k),chip=bestChip(k);
       return `<button class="pz-tile${wide?' wide':''}${k==='fahrt'?' hero':''}" data-g="${k}" title="${g[3]}" aria-label="${g[2]}. ${g[3]}${chip?'. '+chip:''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${chip?`<span class="pz-bst">${chip}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${SHORT[k]}</small></span></button>`;};
     root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Feuerwehr</div>
@@ -211,7 +240,7 @@ const PAUSE=(function(){
       else if(a==='leave'&&s.duel){PAUSE.back();}}
     function drive(){const s=st,to=s.qi<s.qs.length?s.stops[s.qi]:1;if(s.duel)SESS.send({t:'p',to,tt:s.t});s.phase='drive';s.dr={from:s.p,to,t0:performance.now(),dur:1900,tt:s.t};panel();}
     function duelRes(s){const right=s.res.filter(r=>r.ok).length,score=right*100+(s.win?300:0),op=s.opp.done;let result=null;if(op){result=s.forfeit?'w':score>op.score?'w':score<op.score?'l':s.t<op.t?'w':s.t>op.t?'l':'d';}return{right,score,result};}
-    function duelFinish(){const s=st;s.sentFin=true;const r=duelRes(s);SESS.send({t:'fin',tm:s.t,score:r.score,right:r.right});if(typeof GAME!=='undefined')GAME.cheer('spiel','Duell');duelCheck();}
+    function duelFinish(){const s=st;s.sentFin=true;const r=duelRes(s);addScore('duell',r.score);SESS.send({t:'fin',tm:s.t,score:r.score,right:r.right});if(typeof GAME!=='undefined')GAME.cheer('spiel','Duell');duelCheck();}
     function duelCheck(){const s=st;if(!s||!s.duel||s.bilDone||s.phase!=='end'||!s.opp.done)return;s.bilDone=true;const r=duelRes(s);s.bil=SESS.record(s.opp.name,r.result);panel();}
     function tick(n){const s=st;const dtp=n-(s._ln||n);s._ln=n;
       if(s.paused){if(s.dr)s.dr.t0+=dtp;if(s.askT0)s.askT0+=dtp;if(s.fbT0)s.fbT0+=dtp;const e=document.querySelector('.pz-pc');if(e)e.textContent=Math.max(0,30-Math.floor((performance.now()-s.pausedAt)/1000));return;}
@@ -220,7 +249,7 @@ const PAUSE=(function(){
       if(s.duel&&s.phase==='ask'){const el_=n-s.askT0,tm=document.querySelector('.pz-tmr i');if(tm)tm.style.width=Math.max(0,100-el_/300)+'%';if(el_>=30000){act('ans','-1');}}
       if(s.duel&&s.phase==='fb'){if(!s.fbT0)s.fbT0=n;else if(n-s.fbT0>=15000){s.fbT0=0;act('next');return;}}else s.fbT0=0; // Gegner nicht beliebig aufhalten: nach ~15 s weiter
       if(s.phase==='drive'){const d=s.dr,k=Math.min(1,(n-d.t0)/d.dur),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;s.p=d.from+(d.to-d.from)*e;s.t=d.tt+s.route.base*(s.p-d.from);
-        if(k>=1){if(s.qi<s.qs.length){s.phase='ask';s.askT0=performance.now();panel();}else{s.phase='end';s.p=1;s.win=s.t<=hf();if(typeof GAME!=='undefined')GAME.event('fahrt',s.win);const right=s.res.filter(r=>r.ok).length;s.score=Math.max(0,Math.round((s.win?1000+(hf()-s.t)*3:0)+right*50));panel();if(s.duel)duelFinish();}}}
+        if(k>=1){if(s.qi<s.qs.length){s.phase='ask';s.askT0=performance.now();panel();}else{s.phase='end';s.p=1;s.win=s.t<=hf();if(typeof GAME!=='undefined')GAME.event('fahrt',s.win);const right=s.res.filter(r=>r.ok).length;s.score=Math.max(0,Math.round((s.win?1000+(hf()-s.t)*3:0)+right*50));if(!s.duel)addScore('fahrt',s.score);panel();if(s.duel)duelFinish();}}}
       if(s.fx&&n-s.fxT>1500)s.fx=null;const tg=s.phase==='end'&&s.win?0:Math.min(1.3,s.t/hf());s.lvl+=(tg-s.lvl)*(s.phase==='end'&&s.win?.02:.08);}
     // Szene „Glut“: Nachtszene mit Partikelfeuer, Brand wächst mit der Zeit
     const W=360,H=300,hy=78,hw=120,hh=132;let hx=205,WIN=[];
@@ -291,6 +320,6 @@ const PAUSE=(function(){
     show(){root=document.getElementById('pause-root');if(!root)return;if(!cur)hub();},
     leave(){stop();pushed=false;if(root)root.innerHTML='';},
     back(){if(cur){toHub();return true;}return false;},
-    open, _fahrt:()=>FAHRT
+    open, addScore, _fahrt:()=>FAHRT
   };
 })();

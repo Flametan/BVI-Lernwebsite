@@ -301,7 +301,7 @@ const MAHJONG=(function(){
   }
   function finish(){
     if(!ov||!S) return;
-    var t=secs(), old=best(), hadOld=old!=null, isNew=false;
+    var t=secs(), old=best(), hadOld=old!=null, isNew=false; if(typeof PAUSE!=='undefined') PAUSE.addScore('mahjong',t);
     if(old==null||t<old){ var b=lget(BKEY,{}); b[KEY]=t; lset(BKEY,b); old=t; isNew=true; setH('best',fmt(t)); }
     if(typeof GAME!=='undefined') GAME.cheer('spiel','Mahjong',isNew&&hadOld?fmt(t):'');
     ov.hidden=false;

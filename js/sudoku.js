@@ -186,7 +186,7 @@ const SUDOKU=(function(){
      +'<div class="sd-pad" role="group" aria-label="Ziffernblock">';
     for(var d=1;d<=9;d++) h+='<button type="button" class="sd-pb" data-d="'+d+'" aria-label="Ziffer '+d+'">'+d+'<small></small></button>';
     h+='<button type="button" class="sd-pb er" data-a="erase" aria-label="Feld leeren">'+ICO.erase+'</button></div>'
-     +'<div class="sd-tools"><button type="button" class="sd-tb" data-a="notes" role="switch" aria-checked="false" aria-label="Notizen-Modus (Taste N)">'+ICO.pencil+'<span>Notizen</span><small>aus</small></button>'
+     +'<div class="sd-tools"><button type="button" class="sd-tb" data-a="notes" role="switch" aria-checked="false" aria-label="Notizen-Modus (Taste N oder Leertaste)">'+ICO.pencil+'<span>Notizen</span><small>aus</small></button>'
      +'<button type="button" class="sd-tb" data-a="undo" aria-label="Rückgängig">'+ICO.undo+'<span>Zurück</span></button>'
      +'<button type="button" class="sd-tb" data-a="hint" aria-label="Tipp: ein Feld aufdecken, kostet 30 Sekunden Zeitstrafe">'+ICO.bulb+'<span>Tipp</span><small>+30 s</small></button></div>'
      +'<button type="button" class="sd-sw" data-a="err" role="switch" aria-checked="false"><i aria-hidden="true"></i><span>Fehler zeigen</span></button>'
@@ -288,7 +288,7 @@ const SUDOKU=(function(){
   function checkWin(){
     for(var i=0;i<81;i++) if(S.g[i]!==S.sol[i]) return;
     pauseT(); clearInterval(timer); timer=null; S.over=true; ldel(SKEY);
-    var t=secs(), b=lget(BKEY,{}), old=best(lvl), hadOld=old!=null, isNew=false;
+    var t=secs(), b=lget(BKEY,{}), old=best(lvl), hadOld=old!=null, isNew=false; if(typeof PAUSE!=='undefined') PAUSE.addScore('sudoku',t,lvl);
     if(old==null||t<old){ var m=Object.assign({},b.sudoku||{}); m[lvl]=t; b.sudoku=m; lset(BKEY,b); old=t; isNew=true; setH('best',fmt(t)); }
     if(typeof GAME!=='undefined') GAME.cheer('spiel','Sudoku',isNew&&hadOld?LEVELS[lvl].label+' '+fmt(t):'');
     setH('time',fmt(t)); sel=-1; paint();
@@ -363,7 +363,7 @@ const SUDOKU=(function(){
     var k=e.key;
     if(k>='1'&&k<='9'&&k.length===1){ e.preventDefault(); input(+k); }
     else if(k==='0'||k==='Backspace'||k==='Delete'){ e.preventDefault(); erase(); }
-    else if(k==='n'||k==='N'){ e.preventDefault(); notesMode=!notesMode; paintUi(); paint(); }
+    else if(k==='n'||k==='N'||k===' '||k==='Spacebar'){ e.preventDefault(); if(tag==='BUTTON'&&t.blur) t.blur(); notesMode=!notesMode; paintUi(); paint(); }
     else if(k==='u'||k==='U'){ e.preventDefault(); doUndo(); }
     else if(k==='ArrowUp'){ e.preventDefault(); move(-1,0); }
     else if(k==='ArrowDown'){ e.preventDefault(); move(1,0); }

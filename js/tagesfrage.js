@@ -24,7 +24,7 @@ const TAGESFRAGE=(function(){
   // Streak-Logik: Serie zählt Tage in Folge; wer gestern nicht war, startet bei 1
   function recStreak(){const b=get(BKEY,{}),o=b.tagesfrage&&typeof b.tagesfrage==='object'?b.tagesfrage:{streak:0,last:'',max:0},t=today();
     if(o.last===t)return o;
-    o.streak=o.last===yesterday()?(o.streak||0)+1:1;o.last=t;o.max=Math.max(o.max||0,o.streak);b.tagesfrage=o;set(BKEY,b);return o;}
+    o.streak=o.last===yesterday()?(o.streak||0)+1:1;o.last=t;o.max=Math.max(o.max||0,o.streak);b.tagesfrage=o;set(BKEY,b);if(typeof PAUSE!=='undefined') PAUSE.addScore('tagesfrage',o.streak);return o;}
   function pickQs(){const all=(src&&src.questions?src.questions():[]).filter(q=>q.o&&q.o.length>=3&&q.q&&q.q.length<260&&q.o.every(o=>String(o).length<220));
     if(all.length<3)return[];
     const R=rng(hash('bvi-tag-'+today())),A=all.slice().sort((x,y)=>{const a=hash(x.q),b=hash(y.q);return a<b?-1:a>b?1:0;}),out=[];

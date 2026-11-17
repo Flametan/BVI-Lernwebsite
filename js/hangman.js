@@ -302,7 +302,7 @@ const HANGMAN=(function(){
       head='Richtig, Brand gelöscht!'; cls='g';
       extra=(G.rec?'<p><b>Neuer Rekord: Serie '+G.streak+'</b></p>':'<p>Serie: '+G.streak+' Begriffe in Folge.</p>');
     } else {
-      const was=G.streak; G.streak=0; G.cheered=false; G.startBest=getBest(); G.rec=false;
+      const was=G.streak; if(typeof PAUSE!=='undefined') PAUSE.addScore('hangman',was); G.streak=0; G.cheered=false; G.startBest=getBest(); G.rec=false;
       head='Das Haus brennt, der Begriff war:'; cls='r';
       extra='<p>'+(was?'Deine Serie endet bei '+was+'. ':'')+'Mit dem nächsten Begriff startet eine neue Serie.</p>';
     }
