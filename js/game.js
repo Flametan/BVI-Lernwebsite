@@ -14,9 +14,9 @@ const GAME=(function(){
   /* Dienstgrade nach der Wikipedia-Übersicht (Berufsfeuerwehr NRW), nach Laufbahngruppe geordnet */
   const GROUPS={md:{n:'Mittlerer Dienst',s:'mD',c:'#e5484d'},gd:{n:'Gehobener Dienst',s:'gD',c:'#b9c2cf'},hd:{n:'Höherer Dienst',s:'hD',c:'#f0b83a'}};
   const RANKS=[
-    {n:'Brandmeister',g:'md',xp:0},{n:'Oberbrandmeister',g:'md',xp:200},{n:'Hauptbrandmeister',g:'md',xp:600},{n:'Hauptbrandmeister mit Amtszulage',g:'md',xp:950},
-    {n:'Brandinspektor',g:'gd',xp:1300},{n:'Brandoberinspektor',g:'gd',xp:2400},{n:'Brandamtmann',g:'gd',xp:4100},{n:'Brandamtsrat',g:'gd',xp:5100},
-    {n:'Brandrat',g:'hd',xp:6500},{n:'Oberbrandrat',g:'hd',xp:9900},{n:'Branddirektor',g:'hd',xp:15000},{n:'Leitender Branddirektor',g:'hd',xp:22000}
+    {n:'Brandmeister',g:'md',xp:0},{n:'Oberbrandmeister',g:'md',xp:170},{n:'Hauptbrandmeister',g:'md',xp:490},{n:'Hauptbrandmeister mit Amtszulage',g:'md',xp:770},
+    {n:'Brandinspektor',g:'gd',xp:1050},{n:'Brandoberinspektor',g:'gd',xp:1950},{n:'Brandamtmann',g:'gd',xp:3350},{n:'Brandamtsrat',g:'gd',xp:4200},
+    {n:'Brandrat',g:'hd',xp:5300},{n:'Oberbrandrat',g:'hd',xp:8100},{n:'Branddirektor',g:'hd',xp:12300},{n:'Leitender Branddirektor',g:'hd',xp:18200}
   ];
   RANKS.forEach((r,i)=>{ r.i=i; r.pip=RANKS.filter(x=>x.g===r.g&&x.i<=i).length; });
 
@@ -32,7 +32,7 @@ const GAME=(function(){
   function taskDefs(){ const n=Math.floor(Date.now()/864e5-new Date().getTimezoneOffset()/1440); return TASK_POOL.map((g,i)=>g[(n+i)%g.length]); }
   /* Wochenaufgaben (Mo–So): jede bringt Punkte, alle drei zusammen das Abzeichen „Wochenmeister“ */
   /* Jede Woche wechselt die Auswahl: je eine Aufgabe aus drei Gruppen (Karten, Fragen, Einsatz), rollierend nach Kalenderwoche */
-  const W=(id,t,max,xp,get)=>({id,t,max,xp,get});
+  const W=(id,t,max,xp,get)=>({id,t,max,xp:Math.round(xp*.8/5)*5,get});   // Punkte um 20 % gesenkt, auf 5er gerundet
   const WEEKLY_POOL=[
     [W('wc','100 Lernkarten',100,50,w=>w.cards),W('wc2','150 Lernkarten',150,60,w=>w.cards),W('wc3','200 Lernkarten',200,70,w=>w.cards),W('wr','30 Wiederholungen',30,50,w=>w.redo),W('wr2','50 Wiederholungen',50,60,w=>w.redo)],
     [W('wq','25 Prüfungsfragen',25,50,w=>w.quizOk),W('wq2','40 Prüfungsfragen',40,60,w=>w.quizOk),W('wq3','60 Antworten',60,60,w=>w.quiz),W('ws','10 richtig in Folge',10,50,w=>w.best),W('ws2','15 richtig in Folge',15,70,w=>w.best),W('wk','1 Probeklausur',1,60,w=>w.klausur)],
@@ -65,9 +65,9 @@ const GAME=(function(){
     wf:'Lernkarten, die du diese Woche neu mit dem Stern markierst.',
     wg:'Tage dieser Woche, an denen du mindestens 10 Lernkarten als „gewusst“ bewertet hast.'
   };
-  const WEEK_ALL_XP=100;
+  const WEEK_ALL_XP=80;
   const FZ_MAX=2, FZ_EVERY=7, MILES=[7,30,100,365], RISK_HOUR=18;
-  const TASK_XP=25;
+  const TASK_XP=20;
 
   const IC={
     flame:'<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .2 1.6 1 2.3 2 2.3C10.5 9 11 6 12 3z"/>',
