@@ -26,7 +26,7 @@ const PAUSE=(function(){
     if(B.s)a=a.filter(e=>!(e.p===v-1&&e.d===ymd(-1)&&B.u==="Tage"));
     let n="";try{n=(localStorage.getItem("bvi_profile_name")||"").slice(0,30);}catch(e){}
     const e={p:v,d:ymd(0),a:B.t?1:0};if(n)e.n=n;a.push(e);
-    a.sort((x,y)=>B.t?x.p-y.p:y.p-x.p);T[id]=a.slice(0,10);set(TOPKEY,T);}
+    a.sort((x,y)=>B.t?x.p-y.p:y.p-x.p);T[id]=a.slice(0,10);set(TOPKEY,T);pushBests();}
   const ICON={
     ladder:'<path d="M7 3v18M17 3v18M7 7h10M7 12h10M7 17h10"/>',
     bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
@@ -93,22 +93,43 @@ const PAUSE=(function(){
     ${IDF3D.map(g=>{const n=fertig(g[0]);return `<a class="pz-tile" href="${url(g[0])}" aria-label="Mission ${g[2]}. ${g[3]}${n?'. '+n+' von '+(g[0]==='begehung'?5:6)+' Leveln geschafft':''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${n?`<span class="pz-bst">${n} von ${g[0]==='begehung'?5:6}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${g[3]}</small></span></a>`;}).join('')}</div></div>`;
     tabsOn();
   }
-  let topG=get("bvi_pause_topg","fahrt"),topL="";
+  let topG=get("bvi_pause_topg","fahrt"),topL="",topS=get("bvi_pause_tops","me");
   const fmtV=(B,v)=>B.t?fmtT(v):v.toLocaleString("de-DE");
+  const rankOn=()=>{try{return !!localStorage.getItem("bvi_rank");}catch(e){return false;}};
+  const rankLoad=()=>typeof RANK!=="undefined"?Promise.resolve(RANK):loadJs("js/rank.js").then(()=>RANK);
+  // eigene besten Werte je Liste (für den Vergleich mit allen)
+  function myBests(){const T=get(TOPKEY,{}),g={};Object.keys(T).forEach(id=>{const a=T[id];if(BOARDS[id.split(":")[0]]&&Array.isArray(a)&&a[0]&&typeof a[0].p==="number")g[id]=a[0].p;});return g;}
+  let gTimer=0;
+  function pushBests(){if(!rankOn())return;clearTimeout(gTimer);gTimer=setTimeout(()=>rankLoad().then(R=>R.games(myBests())).catch(()=>{}),4000);}
   function hubTop(){
     if(!BOARDS[topG])topG="fahrt";const B=BOARDS[topG],g=GAMES.find(x=>x[0]===topG);if(B.lv&&!B.lv.some(l=>l[0]===topL))topL=B.lv[0][0];if(!B.lv)topL="";
-    const T=get(TOPKEY,{}),a=Array.isArray(T[topL?topG+":"+topL:topG])?T[topG+(topL?":"+topL:"")]:[];
+    const id=topL?topG+":"+topL:topG,all=topS==="all",u=B.t?"Bestzeit":B.u,dd=s=>s.slice(8,10)+"."+s.slice(5,7)+".";
     const chips=Object.keys(BOARDS).map(k=>{const q=GAMES.find(x=>x[0]===k);return `<button class="pz-chip${k===topG?" on":""}" data-tg="${k}" aria-pressed="${k===topG}">${q[2]}</button>`;}).join("");
     const lv=B.lv?`<div class="pz-chips pz-lvs" role="group" aria-label="Stufe">${B.lv.map(l=>`<button class="pz-chip${l[0]===topL?" on":""}" data-tl="${l[0]}" aria-pressed="${l[0]===topL}">${l[1]}</button>`).join("")}</div>`:"";
-    const u=B.t?"Bestzeit":B.u,dd=s=>s.slice(8,10)+"."+s.slice(5,7)+".";
-    const rows=a.length?`<ol class="pz-lb">${a.map((e,i)=>`<li><span class="pz-lr">${i+1}</span><b>${fmtV(B,e.p)}${B.t?"":" <small>"+u+"</small>"}</b><span class="pz-ld">${e.n?esc(e.n)+" · ":""}${dd(e.d)}</span></li>`).join("")}</ol>`:`<div class="pz-card"><div class="pz-center">Noch kein Eintrag. Spiele eine Runde, dann erscheint dein Ergebnis hier.</div></div>`;
-    root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Bestenliste</div><div class="pz-chips" role="group" aria-label="Spiel">${chips}</div>${lv}
-    <div class="pz-lbh"><b>${g[2]}${B.lv?" · "+B.lv.find(l=>l[0]===topL)[1]:""}</b><small>${B.t?"Die zehn schnellsten Läufe, nur auf deinen Geräten":"Die zehn besten Läufe, nur auf deinen Geräten"}</small></div>${rows}
+    const scope=`<div class="pz-chips pz-scope" role="group" aria-label="Wer"><button class="pz-chip${all?"":" on"}" data-ts="me" aria-pressed="${!all}">Meine Ergebnisse</button><button class="pz-chip${all?" on":""}" data-ts="all" aria-pressed="${all}">Alle Teilnehmer</button></div>`;
+    root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Bestenliste</div>${scope}<div class="pz-chips" role="group" aria-label="Spiel">${chips}</div>${lv}
+    <div class="pz-lbh"><b>${g[2]}${B.lv?" · "+B.lv.find(l=>l[0]===topL)[1]:""}</b><small>${all?(B.t?"Die schnellsten Teilnehmer, je Person die beste Zeit":"Die besten Teilnehmer, je Person das beste Ergebnis"):(B.t?"Deine zehn schnellsten Läufe, nur auf deinen Geräten":"Deine zehn besten Läufe, nur auf deinen Geräten")}</small></div><div class="pz-lbb"></div>
     <button class="pz-tile pz-lgo" data-g="${topG}"><span class="pz-tt"><b>${g[2]} spielen</b></span></button></div>`;
     tabsOn();
     root.querySelectorAll("[data-tg]").forEach(x=>x.onclick=()=>{topG=x.dataset.tg;set("bvi_pause_topg",topG);hubTop();});
     root.querySelectorAll("[data-tl]").forEach(x=>x.onclick=()=>{topL=x.dataset.tl;hubTop();});
+    root.querySelectorAll("[data-ts]").forEach(x=>x.onclick=()=>{topS=x.dataset.ts;set("bvi_pause_tops",topS);hubTop();});
     root.querySelector(".pz-lgo").onclick=()=>open(topG);
+    const body=root.querySelector(".pz-lbb"),msg=(t,btn)=>{body.innerHTML=`<div class="pz-card"><div class="pz-center">${t}</div>${btn||""}</div>`;};
+    if(!all){const a=get(TOPKEY,{})[id];
+      body.innerHTML=Array.isArray(a)&&a.length?`<ol class="pz-lb">${a.map((e,i)=>`<li><span class="pz-lr">${i+1}</span><b>${fmtV(B,e.p)}${B.t?"":" <small>"+u+"</small>"}</b><span class="pz-ld">${e.n?esc(e.n)+" · ":""}${dd(e.d)}</span></li>`).join("")}</ol>`:`<div class="pz-card"><div class="pz-center">Noch kein Eintrag. Spiele eine Runde, dann erscheint dein Ergebnis hier.</div></div>`;
+      return;}
+    const cur=()=>ptab==="top"&&topS==="all"&&topG===g[0]&&(topL||"")===(B.lv?topL:"")&&body.isConnected;
+    const draw=j=>{if(!cur())return;
+      body.innerHTML=(j.top.length?`<ol class="pz-lb">${j.top.map(r=>`<li class="${r.me?"me":""}"><span class="pz-lr">${r.place}</span><b>${fmtV(B,r.v)}${B.t?"":" <small>"+u+"</small>"}</b><span class="pz-ld">${esc(r.name)}</span></li>`).join("")}</ol>`:`<div class="pz-card"><div class="pz-center">Noch niemand in dieser Liste.</div></div>`)
+        +(j.me&&j.me.place>20?`<p class="pz-lbn">Dein Platz: ${j.me.place} von ${j.total} (${fmtV(B,j.me.v)})</p>`:j.me?"":`<p class="pz-lbn">Du bist hier noch nicht dabei. Spiele eine Runde.</p>`);};
+    const fail=e=>{if(cur())msg(esc(e&&e.message||"Der Server ist gerade nicht erreichbar."),`<button class="pz-chip" data-retry>Erneut versuchen</button>`);const r=root.querySelector("[data-retry]");if(r)r.onclick=hubTop;};
+    msg("Liste wird geladen …");
+    rankLoad().then(R=>{
+      if(!R.on()){msg("Für den Vergleich mit allen nimmst du am Ranking teil. Dabei werden dein Name, dein kleines Profilbild und deine Bestwerte übertragen. Es ist freiwillig und kann jederzeit im Ranking beendet werden.",`<button class="pz-chip on" data-join>Am Ranking teilnehmen</button>`);
+        const j=root.querySelector("[data-join]");if(j)j.onclick=()=>{j.disabled=true;R.join().then(()=>hubTop()).catch(e=>{j.disabled=false;fail(e);});};return;}
+      return R.games(myBests()).catch(e=>{if(e.code===404)throw e;}).then(()=>R.gameBoard(id)).then(draw);
+    }).catch(fail);
   }
   function hub(){stop();if(ptab==='idf3d')return hub3d();if(ptab==='top')return hubTop();
     const tile=(k,wide)=>{const g=GAMES.find(x=>x[0]===k),chip=bestChip(k);

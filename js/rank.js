@@ -122,5 +122,8 @@ const RANK=(function(){
     if(!sure){ sure=1; b.textContent='Wirklich verlassen? Nochmal tippen'; setTimeout(()=>{ sure=0; if(b.isConnected) b.textContent='Ranking verlassen'; },4000); return; }
     sure=0; try{ await leave(); mount(); }catch(e){ flash(e.message,true); }
   }
-  return {mount,touch,report,doJoin,setTab,doLeave,on:()=>!!st()};
+  // Pausenspiele: eigene Bestwerte melden, Liste eines Spiels holen
+  const games=g=>api('PUT','/games',{g});
+  const gameBoard=b=>api('GET','/games?b='+encodeURIComponent(b));
+  return {mount,touch,report,doJoin,setTab,doLeave,join,games,gameBoard,on:()=>!!st()};
 })();
