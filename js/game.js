@@ -1,6 +1,6 @@
 /* ======================================================================
    GAME – Belohnungen: Punkte, Dienstgrade, Abzeichen, Titel, Tagesaufgaben,
-   Combo, Einsatz-Alarm, Lernpfad und Wochen-Rückblick.
+   Combo, Lernpfad und Wochen-Rückblick.
    Alles bleibt auf dem Gerät (localStorage „bvi_game“) und wird mit der Sicherung gespeichert.
 ====================================================================== */
 const GAME=(function(){
@@ -33,7 +33,7 @@ const GAME=(function(){
   ];
   const WEEK_ALL_XP=100;
   const FZ_MAX=2, FZ_EVERY=7, MILES=[7,30,100,365], RISK_HOUR=18;
-  const TASK_XP=25, ALARM_GOAL=40, ALARM_XP=60;
+  const TASK_XP=25;
 
   const IC={
     flame:'<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .2 1.6 1 2.3 2 2.3C10.5 9 11 6 12 3z"/>',
@@ -59,7 +59,6 @@ const GAME=(function(){
     {id:'c10',n:'Treffsicher',d:'10 Antworten in Folge richtig',ic:'bolt',t:'Treffsicher',ok:s=>s.tot.combo>=10},
     {id:'f1',n:'Hilfsfrist geschafft',d:'Eine Einsatzfahrt rechtzeitig beenden',ic:'truck',t:'Blaulicht',ok:s=>s.tot.fahrt>=1},
     {id:'t3',n:'Tagessieger',d:'Alle drei Tagesaufgaben an einem Tag erledigen',ic:'sun',t:'Tagessieger',ok:s=>s.tot.allTasks>=1},
-    {id:'a1',n:'Alarm bestanden',d:'Einen Einsatz-Alarm der Woche schaffen',ic:'bell',t:'Alarmbereit',ok:s=>s.tot.alarm>=1},
     {id:'w1',n:'Wochenmeister',d:'Alle drei Wochenaufgaben in einer Woche erledigen',ic:'shield',t:'Wochenmeister',ok:s=>s.tot.weekly>=1},
     {id:'w4',n:'Beständig',d:'Vier Wochen mit allen Wochenaufgaben',ic:'shield',t:'Beständig',ok:s=>s.tot.weekly>=4},
     {id:'k500',n:'Kartenlegende',d:'500 Lernkarten bewerten',ic:'card',t:'Kartenlegende',ok:s=>s.tot.cards>=500},
@@ -251,10 +250,8 @@ const GAME=(function(){
     });
     if(n===3&&!dn.all){ dn.all=1; s.tot.allTasks++; }
     Object.keys(s.done).sort().slice(0,-10).forEach(k=>delete s.done[k]);
-    // Einsatz-Alarm
-    const wk=weekKeys()[0], w=weekSum();
-    if(w.cards+w.quiz>=ALARM_GOAL&&!s.alarm[wk]){ s.alarm[wk]=1; s.tot.alarm++; s.xp+=ALARM_XP; rec.xp+=ALARM_XP; toast('Einsatz-Alarm bestanden','Wochenziel erreicht · +'+ALARM_XP+' Punkte','bell'); confetti(); }
     // Wochenaufgaben
+    const wk=weekKeys()[0];
     const wd=s.wdone[wk]||(s.wdone[wk]={}); let wn=0;
     weeklyState().forEach(t=>{
       if(t.done){ wn++; if(!wd[t.id]){ wd[t.id]=1; s.xp+=t.xp; rec.xp+=t.xp; toast('Wochenaufgabe erledigt',t.t+' · +'+t.xp+' Punkte','star'); } }
@@ -413,7 +410,6 @@ const GAME=(function(){
   function panel(){
     const s=load(), st=streak(), r=rankOf(s.xp), nx=nextRank(r), g=GROUPS[r.g];
     const pct=nx?Math.round((s.xp-r.xp)/(nx.xp-r.xp)*100):100;
-    const w=weekSum(), al=Math.min(ALARM_GOAL,w.cards+w.quiz), alDone=!!s.alarm[weekKeys()[0]];
     const pn=s.path?pathNext():null;
     const pathRow=s.path
       ?`<div class="g-row g-path"><span class="g-ri">${svg('bolt',18)}</span><span class="g-rt"><b>Lernpfad</b><span>${pn?`Als Nächstes: ${esc(pn.m[1])} · ${pn.c.done}/${pn.c.total} Themen`:'Alles geschafft'}</span></span>${pn?`<button type="button" class="g-go" onclick="NAV.go(${esc(JSON.stringify(pn.m[3]))},${esc(JSON.stringify(pn.m[4]))})">Weiter</button>`:''}<button type="button" class="g-off" aria-label="Lernpfad ausblenden" onclick="GAME.setPath(0)">×</button></div>`
@@ -424,8 +420,6 @@ const GAME=(function(){
       <div class="g-h">Serie</div>
       <div class="g-row"><span class="g-ri g-fl${st.cur>0&&st.todayDone?' on':''}">${flameIc(18)}</span><span class="g-rt"><b>${st.cur} ${st.cur===1?'Tag':'Tage'} in Folge</b><span>${st.todayDone?'Heute schon gelernt':st.cur>0?(st.risk?'Deine Serie ist in Gefahr – lerne noch heute':'Lerne heute, damit die Serie nicht reißt'):'Lerne heute, um eine Serie zu starten'} · Rekord ${st.best}</span></span></div>
       ${freezeRow(st)}
-      <div class="g-h">Einsatz-Alarm der Woche</div>
-      <div class="g-row"><span class="g-ri">${svg('bell',18)}</span><span class="g-rt"><b>${alDone?'Alarm bestanden':ALARM_GOAL+' Aufgaben bis Sonntag'}</b><span>${al}/${ALARM_GOAL} Karten und Prüfungsfragen · +${ALARM_XP} Punkte</span><span class="g-bar sm"><i style="width:${Math.round(al/ALARM_GOAL*100)}%"></i></span></span></div>
       ${pathRow}
       <div class="g-links"><button type="button" onclick="NAV.go('v-week','Wochen-Rückblick')">Wochen-Rückblick</button></div>`;
   }
