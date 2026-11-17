@@ -4,7 +4,7 @@ const CHANGELOG_ENTRIES=[
       'Ranking: Freiwillig, erreichbar über den Account-Knopf oben rechts unter „Ranking“. Es erscheinen der Name und das Profilbild aus deinem Account. Es gibt eine Wochen- und eine Gesamtliste mit den Top 20 und deinem Platz. Übertragen werden nur Name, kleines Profilbild, Gesamt- und Wochenpunkte; Die Teilnahme gilt über den Sync für alle Geräte deines Accounts. Aussteigen löscht alles auf dem Server. Die Namen sind einmalig, die Punkte werden auf Plausibilität geprüft.',
       'Startseite: Die Karte „Heute“ ist jetzt eine schmale Leiste (Tagesring, Stand der Tages- und Wochenaufgaben). Beim Aufklappen erscheinen die Aufgaben sowie Knöpfe zu „Ranking“ und „Rang & Abzeichen“. Das Menü an der Flamme zeigt die Tagesaufgaben nicht mehr.',
       'Lernkarten: Am Desktop ist die Karte jetzt deutlich größer (große Schrift, volle Breite), die Fächer stehen in einer schmalen Leiste rechts. Auf dem Tablet ist die Karte ebenfalls größer.',
-      'Ranking: Die Zeilen der Teilnehmer sind 50 % höher, mit größerem Profilbild, größerer Schrift und größerem Dienstgrad-Abzeichen.',
+      'Ranking: Die Zeilen der Teilnehmer sind 55 px hoch, mit größerem Profilbild, größerer Schrift und größerem Dienstgrad-Abzeichen.',
       'Der „Einsatz-Alarm der Woche“ (Flammen-Menü, Bonuspunkte und Abzeichen „Alarm bestanden“) wurde entfernt. Die Wochenaufgaben ersetzen ihn.',
       'Sync-Server: Neu im Server ist das Ranking (Datei rank.js, Daten in rank.dat). Der Server muss einmal neu gebaut und gestartet werden, siehe sync-server/README.md.',
       'Startseite: Neue Karte „Heute“ mit Tagesziel-Ring (Lernminuten), den drei Tagesaufgaben und den Wochenaufgaben. Der Ring wird grün, sobald das Tagesziel erreicht ist.',

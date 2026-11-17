@@ -4943,9 +4943,9 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .rk-tabs button{flex:1;border:0;background:none;color:var(--m-muted);font:inherit;font-weight:700;font-size:.85rem;min-height:38px;border-radius:99px;cursor:pointer;}
 .rk-tabs button.on{background:var(--m-card);color:var(--m-fg);box-shadow:0 1px 4px rgba(0,0,0,.12);}
 .rk-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;}
-.rk-list li{display:flex;align-items:center;gap:12px;min-height:66px;padding:0 12px;border-radius:16px;font-size:1.05rem;}
-.rk-list li .rk-av{width:45px;height:45px;font-size:.95rem;}
-.rk-list li .rk-n small{font-size:.82rem;}
+.rk-list li{display:flex;align-items:center;gap:12px;height:55px;min-height:55px;padding:0 12px;border-radius:14px;font-size:1rem;}
+.rk-list li .rk-av{width:40px;height:40px;font-size:.9rem;}
+.rk-list li .rk-n small{font-size:.78rem;}
 .rk-list li.me{background:var(--m-raised);outline:2px solid var(--m-accent);outline-offset:-2px;}
 .rk-list li.gap{margin-top:8px;}
 .rk-p{width:26px;text-align:center;font-weight:800;color:var(--m-muted);flex:none;}
