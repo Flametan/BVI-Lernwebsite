@@ -2045,7 +2045,7 @@ const FC = (function(){
         const lb=b.dataset.g==='lb', on=!isStarred&&(lb?inLb:!inLb);
         b.classList.toggle('on',on); b.setAttribute('aria-pressed',on);
         b.querySelector('small').textContent=(lb?nLb+' Karten für unsere Prüfung':nH+' Karten, Lernstoff aus den Reitern');
-        b.querySelector('b').textContent=lb?'Laufbahnprüfung':'Prüfungshinweise';
+        b.querySelector('b').textContent=lb?'Laufbahnprüfung':'Prüfungsrelevante Hinweise';
       });
     }
     document.querySelectorAll('.fc-f-btn').forEach(b=>{

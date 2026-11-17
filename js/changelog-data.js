@@ -2,7 +2,7 @@
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
       'Stundenplan IdF Gruppe 1, Woche 4 bis 6 (Stand 13.11.): Stab 1 mit neuen Räumen (Sachgebiete 1 bis 4 in C-205, C-211, C-212, C-213; Stabsrahmenübung Waldbrand in C-205 und C-215; Sachgebiete 5 und 6 in C-1 und C-205) und der EVA „Vorstellung Prüfung“. Stab 2: Krisenstäbe in C-1, am Dienstag ganztägig mit Küchenwagen, danach Selbststudium (die SAR-Exkursion entfällt), am Mittwoch Nachbesprechung Web-GIS und EVA LdS. Presse: Abfahrt zum WDR-Studio um 13:45 Uhr, Freitag Gutachten Ahrtal.',
-      'Lernkarten: Oben lässt sich zwischen „Laufbahnprüfung“ (Karten für unsere Prüfung) und „Prüfungshinweise“ (Lernstoff aus den Reitern IBK, VAk, FeuAK, IdF) wählen. Neu: 38 Karten aus IdF-Klausur → Eingrenzungen (Reiter IdF, Brandschutz).',
+      'Lernkarten: Oben lässt sich zwischen „Laufbahnprüfung“ (Karten für unsere Prüfung) und „Prüfungsrelevante Hinweise“ (Lernstoff aus den Reitern IBK, VAk, FeuAK, IdF) wählen. Neu: 38 Karten aus IdF-Klausur → Eingrenzungen (Reiter IdF, Brandschutz).',
       'Pausenraum: Einsatzfahrt und Duell nehmen nur noch Fragen aus der Laufbahnprüfung. VB und Stabsarbeit laufen dort unter „IdF“. Grundlage sind alle Laufbahn-Lernkarten als Auswahlfragen. Zur Auswahl stehen IBK (67 Fragen), VAk (89), FeuAK (96) und IdF (103).',
       'Prüfungen: Unter „Wichtig“ stehen nur noch Laufbahnprüfung und IdF-Klausur (vorher auch Klausur 08/2026, Altklausur-Quiz VAk, Fallbearbeitung und Simulator).',
       'Stundenplan Woche 8 und 9 (beide Gruppen): Konzepterarbeitung Großveranstaltung in C-1, Stabsrahmenübung „Unwetter“ in C-205. Klausurwoche: Montag Klausur nach § 21 über IdF in C-1, Dienstag über 3.1 oder 3.3 in zivil in B1-106 und A3-25.',
