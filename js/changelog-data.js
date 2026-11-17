@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+      'IdF-Klausur, Brainyoo: Bei den Freitextfragen „Aufbau Stabsarbeit“ und „Operativ-taktische Einsatzleitung“ steht die Grafik jetzt wie bei Brainyoo in der Lösung und nicht mehr in der Frage. Alle 40 Karten wurden mit den Brainyoo-Daten verglichen (Fragen, Antworten, richtige Auswahl): sonst keine Abweichung.',
       'Simulationen: Der Zurück-Pfeil oben links bringt Sie vom Startbildschirm zurück in die Lern-App (bzw. in den Pausenraum).',
       'Simulation „Begehung“: Man kommt jetzt über die Treppe in die oberen Geschosse. Der Treppenraum ist nach Westen verbreitert: Ein Gang führt an der Treppe vorbei zum Treppenabsatz, vorher war der Einstieg im ersten Geschoss nicht erreichbar.',
       'Stundenplan IdF Gruppe 1, Woche 4 bis 6 (Stand 13.11.): Stab 1 mit neuen Räumen (Sachgebiete 1 bis 4 in C-205, C-211, C-212, C-213; Stabsrahmenübung Waldbrand in C-205 und C-215; Sachgebiete 5 und 6 in C-1 und C-205) und der EVA „Vorstellung Prüfung“. Stab 2: Krisenstäbe in C-1, am Dienstag ganztägig mit Küchenwagen, danach Selbststudium (die SAR-Exkursion entfällt), am Mittwoch Nachbesprechung Web-GIS und EVA LdS. Presse: Abfahrt zum WDR-Studio um 13:45 Uhr, Freitag Gutachten Ahrtal.',
