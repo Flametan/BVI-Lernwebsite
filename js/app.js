@@ -6300,7 +6300,7 @@ const SHELL=(function(){
   ];
   const EXAMS=[
     ['Laufbahnprüfung',[
-      ['v-lb-start','Laufbahnprüfung','IBK, VB, VAk und FeuAK: Klausuren, Eingrenzungen und Altklausuren mit Musterlösungen · Passwort nötig','doc',true],
+      ['v-lb-start','Laufbahnprüfung','IBK, VAk, FeuAK und IdF: Klausuren, Eingrenzungen und Altklausuren mit Musterlösungen · Passwort nötig','doc',true],
       ['v-laufbahn-2026','Laufbahnklausuren Juni 2026','Recht, Management, Stabsarbeit, Vorbeugender Brandschutz · Musterlösungen','doc'],
       ['v-laufbahn-2023','Laufbahnklausuren Dez 2023','Führungsvorgang, Recht, Management, Heyrothsberge · Musterlösungen','doc']]],
     ['IdF Münster',[
