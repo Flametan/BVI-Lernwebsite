@@ -2045,6 +2045,7 @@ const FC = (function(){
         const lb=b.dataset.g==='lb', on=!isStarred&&(lb?inLb:!inLb);
         b.classList.toggle('on',on); b.setAttribute('aria-pressed',on);
         b.querySelector('small').textContent=(lb?nLb+' Karten für unsere Prüfung':nH+' Karten, Lernstoff aus den Reitern');
+        b.querySelector('b').textContent=lb?'Laufbahnprüfung':'Prüfungshinweise';
       });
     }
     document.querySelectorAll('.fc-f-btn').forEach(b=>{
@@ -3720,7 +3721,7 @@ function makeQuiz(cfg){
       const inCat=Q.filter(q=>_catFilter==='all'||q.cat===_catFilter);
       const sc=[...new Set(inCat.map(q=>q.sub).filter(Boolean))].sort((a,b)=>(b==='VB')-(a==='VB'));   // VB vor Stabsarbeit
       if(_subFilter!=='all'&&!sc.includes(_subFilter)) _subFilter='all';   // gibt es im Reiter nicht (z. B. Stabsarbeit bei den Eingrenzungen)
-      const show=sc.length>0;
+      const show=sc.length>1;   // eine einzige Auswahl (z. B. Brainyoo nur Stabsarbeit) braucht keine Leiste
       sub.classList.toggle('hidden',!show);
       if(show){
         const ns=s=>inCat.filter(q=>s==='all'||q.sub===s).length;
