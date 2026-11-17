@@ -4753,7 +4753,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   .fc-outer::after{z-index:-2;transform:translateY(22px) scale(.93);opacity:.55;}
 }
 /* Lernkarten modern, Desktop: Fächer links, Karte mittig, Stand rechts; Aktionen als kleine Knöpfe oben */
-@media (min-width:1024px){
+@media (min-width:700px){
   #v-flashcards.active{display:grid;grid-template-columns:240px minmax(0,1fr) 270px;column-gap:22px;align-content:start;max-width:1140px;margin:0 auto;padding-left:48px;padding-right:48px;}
   #v-flashcards.active>.page-hero{grid-column:1/-1;grid-row:1;}
   #v-flashcards.active>.page-hero .phi{padding:0;max-width:none;margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:1rem;align-items:end;}
@@ -4805,3 +4805,10 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #v-flashcards .fc-t4 small,#v-flashcards .fc-filter-row .fc-f-btn.fc-t4 small{font-size:.68rem;}
 }
 @media (max-width:699px){#v-flashcards .fc-filter-row{padding-left:16px!important;padding-right:16px!important;}}
+
+/* Lernkarten Tablet: wie Desktop, aber zwei Spalten; „Dein Stand“ und Tastatur unter der Karte */
+@media (min-width:700px) and (max-width:1023px){
+  #v-flashcards.active{grid-template-columns:210px minmax(0,1fr);padding-left:32px;padding-right:32px;}
+  #v-flashcards.active #m-fc-side{grid-column:2;grid-row:5;margin-top:1rem;}
+  #v-flashcards.active>.fc-sub-row,#v-flashcards.active>.fc-filter-row{grid-row:2/span 4;}
+}
