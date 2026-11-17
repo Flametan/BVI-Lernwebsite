@@ -83,11 +83,11 @@ const PAUSE=(function(){
   }
   function hub(){stop();if(ptab==='idf3d')return hub3d();
     const tile=(k,wide)=>{const g=GAMES.find(x=>x[0]===k),chip=bestChip(k);
-      return `<button class="pz-tile${wide?' wide':''}${k==='fahrt'?' hero':''}" data-g="${k}" title="${g[3]}" aria-label="${g[2]}. ${g[3]}${chip?'. '+chip:''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${chip?`<span class="pz-bst">${chip}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${SHORT[k]}</small>${k==='fahrt'?`<small class="pz-more">${g[3].split(' · ')[0]}</small>`:''}</span></button>`;};
+      return `<button class="pz-tile${wide?' wide':''}${k==='fahrt'?' hero':''}" data-g="${k}" title="${g[3]}" aria-label="${g[2]}. ${g[3]}${chip?'. '+chip:''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${chip?`<span class="pz-bst">${chip}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${SHORT[k]}</small></span></button>`;};
     root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Feuerwehr</div>
-    <div class="pz-tiles pz-fw">${tile('fahrt',true)}${['duell','tagesfrage','lueckentext','reihenfolge','hangman','kreuzwort'].map(k=>tile(k)).join('')}</div>
+    <div class="pz-tiles pz-fw">${tile('fahrt')}${['duell','tagesfrage','lueckentext','reihenfolge','hangman','kreuzwort'].map(k=>tile(k)).join('')}</div>
     <div class="m-sec pz-sec">Klassiker</div>
-    <div class="pz-tiles pz-kl">${['snake','solitaer','minesweeper','sudoku','g2048','tetris','mahjong'].map(k=>tile(k)).join('')}</div></div>`;
+    <div class="pz-tiles pz-kl">${['mahjong','sudoku','tetris','solitaer','g2048','minesweeper','snake'].map(k=>tile(k)).join('')}</div></div>`;
     tabsOn();
     root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
   }

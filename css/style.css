@@ -4103,25 +4103,12 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .pz-hub a.pz-tile.hero{color:var(--m-on-accent,#1c1c1c);}
 @media(min-width:701px){.pz-3d{grid-template-columns:repeat(3,minmax(0,1fr));}.pz-3d .pz-tile.wide{grid-column:1 / -1;}}
 @media(min-width:1100px){.pz-3d{grid-template-columns:repeat(5,minmax(0,1fr));}.pz-3d .pz-tile.wide{grid-column:span 2;grid-row:span 2;}.pz-3d .pz-tile.hero b{font-size:1.25rem;}.pz-3d .pz-tile.hero small{font-size:.86rem;}}
-/* Tablet: Feuerwehr 3 Spalten (Einsatzfahrt zwei breit), Wissen als 3 + 2 */
+/* Tablet und Desktop: Feuerwehr und Klassiker je 4 Spalten */
 @media(min-width:701px){
-  .pz-fw{grid-template-columns:repeat(3,minmax(0,1fr));}
-  .pz-fw .pz-tile.wide{grid-column:1 / -1;}
-  .pz-kl{grid-template-columns:repeat(4,minmax(0,1fr));}
+  .pz-fw,.pz-kl{grid-template-columns:repeat(4,minmax(0,1fr));}
   .pz-tile{min-height:128px;}
 }
-@media(max-width:700px){.pz-kl .pz-tile:last-child:nth-child(odd){grid-column:1 / -1;}}
-/* Desktop: Feuerwehr 4 Spalten (Einsatzfahrt zwei breit und zwei hoch), Wissen in einer Reihe mit 5 */
-@media(min-width:1100px){
-  .pz-fw{grid-template-columns:repeat(5,minmax(0,1fr));}
-  .pz-fw .pz-tile.wide{grid-column:span 2;}
-  .pz-fw .pz-tile.hero{grid-row:span 2;min-height:0;}
-  .pz-fw .pz-tile.hero b{font-size:1.25rem;}
-  .pz-fw .pz-tile.hero small{font-size:.86rem;}
-  .pz-fw .pz-tile.hero .pz-more{display:block;margin-top:8px;}
-  .pz-fw .pz-tile.hero .pz-gi{width:56px;height:56px;border-radius:16px;}
-  .pz-fw .pz-tile.hero .pz-gi svg{width:28px;height:28px;}
-}
+@media(max-width:700px){.pz-fw .pz-tile:last-child:nth-child(odd),.pz-kl .pz-tile:last-child:nth-child(odd){grid-column:1 / -1;}}
 .pz-more{display:none;}
 
 /* Lernkarten: runde Antwort-Knöpfe, Stempel auf der Karte */
