@@ -1,6 +1,8 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+      'Lernkarten: „Markierte“ zeigt jetzt immer die markierten Karten. Markierungen von Karten, die es im aktuellen Stapel nicht mehr gibt (gelöscht oder aus einem anderen Jahrgang), werden nicht mehr mitgezählt.',
+      'Startseite: Der Haken im Tagesring ist weg, der Ring zeigt weiter die Minuten.',
       'Startseite (Tablet/PC): Die Tagesziele stehen jetzt größer und immer aufgeklappt links unter der Serien-Karte, mit allen Tages- und Wochenaufgaben. Der Tagesring ist auch bei erreichtem Tagesziel in der Akzentfarbe statt grün.',
       'Lernkarten (PC): Die Seite hat jetzt dieselbe Breite wie die anderen Seiten, z. B. Prüfung.',
       'Ranking: Der Schieber zwischen „Diese Woche“ und „Gesamt“ liegt jetzt immer exakt unter der gewählten Seite und gleitet beim Wechsel.',
