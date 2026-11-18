@@ -1,6 +1,6 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
-    {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+    {v:'3.3.0',ts:'2026-11-18T10:00',items:[
       'Pausenraum: Die Kachel „Wochenwertung“ über den Spielen ist entfernt. Plätze stehen weiter auf den Spielkarten und in der Bestenliste (Reiter „Woche“).',
       'Pausenraum – Wochenwertung: Die Zeile zeigt jetzt Ihren Wochenstand je Spiel („Tetris Gerätehaus · Platz 2 von 4“, „noch allein“), nicht mehr nur Siege und Top 3. „Noch keine Platzierung“ erscheint nicht mehr, wenn Sie diese Woche schon gespielt haben.',
       'Pausenraum: Der Reiter-Balken füllt jetzt die ganze Breite. Die Wochenwertung ist dezent gestaltet: eine schlichte Zeile ohne Kasten, mit sieben kleinen Punkten für die Woche (heutiger Tag in Akzentfarbe) und „noch x Tage“ rechts.',
