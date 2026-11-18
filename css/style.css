@@ -4116,7 +4116,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 @media (prefers-reduced-motion:reduce){.pz-tabs .rk-pill{transition:none;}}
 .pz-hub a.pz-tile{text-decoration:none;color:var(--m-fg);}
 .pz-hub a.pz-tile.hero{color:var(--m-on-accent,#1c1c1c);}
-.pz-hub a.pz-tile.pz-sim{display:flex;flex-direction:row;align-items:center;gap:14px;margin:18px 0 4px;min-height:0;}
+.pz-hub a.pz-tile.pz-sim{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:14px;margin:18px 0 4px;min-height:0;}
 /* Handy und Tablet: Simulation ganz unten; Desktop: oben unter den Reitern */
 #v-pause .pz-hub{display:flex;flex-direction:column;}
 #v-pause .pz-hub>.pz-tabs{order:-2;}
