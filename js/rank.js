@@ -50,18 +50,26 @@ const RANK=(function(){
   function touch(){ if(!st()) return; clearTimeout(timer); timer=setTimeout(()=>report(true),30000); }
 
   async function join(){
+    try{ localStorage.removeItem(OFF); }catch(e){}
     const old=st(); put(old||{id:rnd(16),token:tok(),av:null});
     try{ await send(); lastRep=Date.now(); }
     catch(e){ put(old); throw e; }
   }
-  async function leave(){ try{ await api('DELETE',''); }catch(e){ if(!e.net&&e.code!==404) throw e; } put(null); }
+  async function leave(){ try{ await api('DELETE',''); }catch(e){ if(!e.net&&e.code!==404) throw e; } put(null); try{ localStorage.setItem(OFF,'1'); }catch(e){} }
+  // Wer ein Konto hat (Sync verbunden, gültiger Name), nimmt automatisch teil. Wer das Ranking bewusst verlassen hat, bleibt draußen.
+  const OFF='bvi_rank_off';
+  let autoP=null;
+  function auto(){
+    if(st()||ls(OFF)||typeof SYNC==='undefined'||!SYNC.connected()||!nameOk(myName())) return Promise.resolve(!!st());
+    return autoP||(autoP=join().then(()=>true,()=>false).then(r=>{ autoP=null; return r; }));
+  }
 
   /* ── Darstellung ── */
   const msg=(t,err)=>`<p class="rk-msg${err?' err':''}" role="status">${esc(t)}</p>`;
   async function intro(note){
     const n=myName(), t=await thumb(), ok=nameOk(n);
     el.innerHTML=`<div class="rk-me">${av(n||'?',t,'big')}<div><b>${esc(n||'Kein Name festgelegt')}</b><span>Dein Account</span></div></div>
-      <p class="rk-lead">Mit der Teilnahme erscheinst du in der Rangliste und kannst dich mit allen vergleichen. Übertragen werden dein <b>Name</b>, dein <b>Profilbild</b> (klein), deine <b>Gesamtpunkte</b> und deine <b>Wochenpunkte</b> an den Sync-Server, sonst nichts. Beim Aussteigen wird alles dort gelöscht.</p>
+      <p class="rk-lead">Wenn du angemeldet bist, nimmst du automatisch teil. Mit der Teilnahme erscheinst du in der Rangliste und kannst dich mit allen vergleichen. Übertragen werden dein <b>Name</b>, dein <b>Profilbild</b> (klein), deine <b>Gesamtpunkte</b> und deine <b>Wochenpunkte</b> an den Sync-Server, sonst nichts. Beim Aussteigen wird alles dort gelöscht.</p>
       ${ok?'<button type="button" class="g-btn" onclick="RANK.doJoin(this)">Teilnehmen</button>':'<p class="rk-msg err">Für das Ranking brauchst du im Account einen Namen mit 3–20 Zeichen (Buchstaben, Ziffern, Leerzeichen, . _ -).</p><button type="button" class="g-btn" onclick="ACCOUNT.open()">Account öffnen</button>'}${note||''}`;
   }
   async function doJoin(b){
@@ -71,6 +79,7 @@ const RANK=(function(){
   }
   async function mount(target){
     el=target||el; if(!el) return;
+    if(!st()) await auto();
     if(!st()){ await intro(); return; }
     if(busy) return; busy=true;
     el.innerHTML='<p class="rk-lead">Ranking wird geladen …</p>';
@@ -79,14 +88,18 @@ const RANK=(function(){
       const b=await api('GET','?board='+tab);
       draw(b);
     }catch(e){
-      if(e.code===404){ put(null); busy=false; await intro(msg('Dein Eintrag war auf dem Server nicht mehr vorhanden. Du kannst erneut teilnehmen.')); }
+      if(e.code===404){ put(null); busy=false; if(await auto()) return mount(el); await intro(msg('Dein Eintrag war auf dem Server nicht mehr vorhanden. Du kannst erneut teilnehmen.')); }
       else if(e.code===409||e.code===422){ el.innerHTML=msg(e.message+'. Ändere deinen Namen im Account und öffne das Ranking erneut.',true)+'<button type="button" class="g-btn" onclick="ACCOUNT.open()">Account öffnen</button>'; }
       else el.innerHTML=msg(e.message,true)+'<button type="button" class="g-btn alt" onclick="RANK.mount()">Erneut versuchen</button>';
     }
     busy=false;
   }
   function draw(b){
-    const me=myName(), rows=b.top.map(r=>`<li class="${r.me?'me':''}"><span class="rk-p">${r.place}</span>${av(r.name,r.av)}<span class="rk-n">${esc(r.name)}<small>${esc(GAME.rankOf(r.tx!=null?r.tx:r.xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(r.tx!=null?r.tx:r.xp),44)}<b>${r.xp}</b></li>`).join('');
+    const me=myName(), row=r=>`<li class="${r.me?'me':''}"><span class="rk-p">${r.place}</span>${av(r.name,r.av)}<span class="rk-n">${esc(r.name)}<small>${esc(GAME.rankOf(r.tx!=null?r.tx:r.xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(r.tx!=null?r.tx:r.xp),44)}<b>${r.xp}</b></li>`;
+    // Treppchen: Platz 2, 1, 3 nebeneinander, der Rest als Liste
+    const pod=[2,1,3].map(n=>b.top.find(r=>r.place===n)).filter(Boolean), rest=b.top.filter(r=>r.place>3);
+    const step=r=>`<div class="pz-pd p${r.place}${r.me?' me':''}" role="listitem">${av(r.name,r.av)}<span class="pz-pn">${esc(r.name)}</span>${(rk=>`<span class="pz-pr">${GAME.shoulder(rk,r.place===1?46:40)}<small>${esc(rk.n)}</small></span>`)(GAME.rankOf(r.tx!=null?r.tx:r.xp))}<b>${r.xp} <small>XP</small></b><div class="pz-ps"><span class="rk-md m${r.place}" aria-label="Platz ${r.place}">${r.place}</span></div></div>`;
+    const rows=(pod.length?`<li class="rk-podli"><div class="pz-podium" role="list">${pod.map(step).join('')}</div></li>`:'')+rest.map(row).join('');
     const mine=b.me&&b.me.place>20?`<li class="me gap"><span class="rk-p">${b.me.place}</span>${av(me,st().av)}<span class="rk-n">${esc(me)}<small>${esc(GAME.rankOf(GAME._state().xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(GAME._state().xp),44)}<b>${b.me.xp}</b></li>`:'';
     const body=`<ol class="rk-list">${rows||'<li class="rk-empty">Noch niemand in der Liste.</li>'}${mine}</ol>
       <p class="rk-sub">${b.me?`Dein Platz: ${b.me.place} von ${b.total}`:'Sammle Punkte, um in der Liste zu erscheinen.'} · Du bist als „${esc(me)}“ dabei</p>`;
@@ -126,5 +139,5 @@ const RANK=(function(){
   const games=(g,w)=>api('PUT','/games',w?{g,w}:{g});
   const gameBoard=(b,wk)=>api('GET','/games?b='+encodeURIComponent(b)+(wk?'&w=1':''));
   const gamesAll=()=>api('GET','/games?all=1');
-  return {mount,touch,report,doJoin,setTab,doLeave,join,games,gameBoard,gamesAll,on:()=>!!st()};
+  return {mount,touch,report,auto,doJoin,setTab,doLeave,join,games,gameBoard,gamesAll,on:()=>!!st()};
 })();

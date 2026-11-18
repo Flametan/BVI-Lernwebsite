@@ -100,20 +100,15 @@ const PAUSE=(function(){
   const bestTxt=bestChip;
   // kurze Untertitel für die Kacheln
   const SHORT={fahrt:'5, 10 oder 15 Fragen, Hilfsfrist',duell:'Zu zweit live, per QR-Code',snake:'Löschzug durchs Feuer steuern',solitaer:'Klondike mit Flammen und Leitern',minesweeper:'Brandherde im Dunkeln aufspüren',kreuzwort:'Jeden Tag ein neues Rätsel',sudoku:'Leicht, Mittel, Schwer',hangman:'Fachbegriffe erraten',lueckentext:'60 Sekunden, Lücken füllen',reihenfolge:'Abläufe sortieren',g2048:'Dienstgrade verschmelzen',tetris:'Fahrzeuge stapeln',mahjong:'5 Stufen, Paare abräumen'};
-  // Reiter „Simulationen“: führt in das eigene 3D-Spiel unter game/ (eigene Seite, Fortschritt in bvi_game_v1)
-  const TKEY='bvi_pause_tab';let ptab=get(TKEY,'spiele');
-  const IDF3D=[['begehung','grid','Begehung','Bauteile im Gebäude bestimmen'],['stellungnahme','cards','Stellungnahme','Aus Textbausteinen schreiben'],['stab','duel','Stab','Meldungen zum Sachgebiet bringen'],['presse','bolt','Presse','Statement vor laufender Kamera'],['lage','scale','Lage','Zivile Verteidigung im Lagezentrum'],['ucpm','truck','Hilfeersuchen','Hilfe über die EU anfordern'],['ibk','ladder','IBK','Gespräche und Fragen auf der Wache'],['vak','pairs','VAk','Fragen im Hörsaal'],['feuak','flame','FeuAK','Bedarfsplanung mit Budget']];
-  const tabs=()=>`<div class="pz-mode pz-tabs" role="tablist" aria-label="Bereich im Pausenraum">${[['spiele','Pausenspiele'],['top','Bestenliste'],['idf3d','Simulationen']].map(([k,t])=>`<button role="tab" aria-selected="${ptab===k}" data-pt="${k}" class="${ptab===k?'on':''}">${t}</button>`).join('')}</div>`;
-  const tabsOn=()=>root.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{shOpen=false;ptab=x.dataset.pt;set(TKEY,ptab);hub();});
-  function hub3d(){
-    const st=get('bvi_game_v1',{}),m=(st&&st.m)||{};
-    const fertig=k=>Object.keys(m[k]||{}).filter(i=>m[k][i]&&m[k][i].ok).length;
-    const url=k=>'game/index.html?'+(k?'m='+k+'&amp;':'')+'von=v-pause';
-    root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}
-    <div class="pz-tiles pz-3d"><a class="pz-tile wide hero" href="${url('')}"><span class="pz-ti"><span class="pz-gi">${svg('truck')}</span></span><span class="pz-tt"><b>Simulationen starten</b><small>Neun Missionen in begehbaren 3D-Welten, dazu Wiederholung, Prüfung, Wochenaufgabe und Bestenliste</small></span></a>
-    ${IDF3D.map(g=>{const n=fertig(g[0]);return `<a class="pz-tile" href="${url(g[0])}" aria-label="Mission ${g[2]}. ${g[3]}${n?'. '+n+' von '+(g[0]==='begehung'?5:6)+' Leveln geschafft':''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${n?`<span class="pz-bst">${n} von ${g[0]==='begehung'?5:6}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${g[3]}</small></span></a>`;}).join('')}</div></div>`;
-    tabsOn();
-  }
+  // Die Simulationen (eigenes 3D-Spiel unter game/) starten über die Kachel oben im Reiter Pausenspiele
+  const TKEY='bvi_pause_tab';let ptab=get(TKEY,'spiele');if(ptab!=='top')ptab='spiele';
+  const tabs=()=>`<div class="pz-mode pz-tabs" role="tablist" aria-label="Bereich im Pausenraum"><i class="rk-pill" aria-hidden="true"></i>${[['spiele','Pausenspiele'],['top','Bestenliste']].map(([k,t])=>`<button role="tab" aria-selected="${ptab===k}" data-pt="${k}" class="${ptab===k?'on':''}">${t}</button>`).join('')}</div>`;
+  let pill=null;
+  const tabsOn=()=>{root.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{shOpen=false;ptab=x.dataset.pt;set(TKEY,ptab);hub();});
+    // Schieber gleitet vom bisherigen zum neuen Reiter (die Ansicht wird bei jedem Wechsel neu gezeichnet)
+    root.querySelectorAll('.pz-tabs').forEach(tb=>{const pl=tb.querySelector('.rk-pill'),on=tb.querySelector('button.on');if(!pl||!on)return;
+      const to={w:on.offsetWidth,x:on.offsetLeft},from=pill||to;pl.style.transition='none';pl.style.width=from.w+'px';pl.style.transform='translateX('+from.x+'px)';
+      void pl.offsetWidth;pl.style.transition='';pl.style.width=to.w+'px';pl.style.transform='translateX('+to.x+'px)';pill=to;});};
   let topG=get("bvi_pause_topg","fahrt"),topL=get("bvi_pause_topl",""),shOpen=false,topS=get("bvi_pause_tops","me");
   const fmtV=(B,v)=>B.t?fmtT(v):v.toLocaleString("de-DE");
   const rankOn=()=>{try{return !!localStorage.getItem("bvi_rank");}catch(e){return false;}};
@@ -123,7 +118,7 @@ const PAUSE=(function(){
   let gTimer=0;
   // Werte senden (gesamt und Woche), danach Platzierungen und Karte im Spiel neu laden
   const syncNow=()=>rankLoad().then(R=>R.games(myBests(),weekObj()).catch(e=>{if(e&&e.code===404)throw e;}).then(()=>R));
-  function pushBests(){if(!rankOn())return;clearTimeout(gTimer);gTimer=setTimeout(()=>{STAND=null;syncNow().then(()=>{cardUp();return loadStand();}).then(medalCheck).catch(()=>{});},4000);}
+  function pushBests(){if(!rankOn()){if(window.rankAuto)window.rankAuto();return;}clearTimeout(gTimer);gTimer=setTimeout(()=>{STAND=null;syncNow().then(()=>{cardUp();return loadStand();}).then(medalCheck).catch(()=>{});},4000);}
   /* ---------- Medaillen: Gold, Silber, Bronze für Platz 1 bis 3 ---------- */
   const MED={1:["#f8c53a","#b8860b","#7a5200","Gold"],2:["#dfe3ea","#8b93a1","#4a5160","Silber"],3:["#e29a5a","#9a5a22","#5e3210","Bronze"]};
   // kleine flache Medaille (SVG) für Karten, Listen und die Rückfallansicht
@@ -208,11 +203,14 @@ const PAUSE=(function(){
     const ini=n=>String(n).trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase();
     const lav=r=>/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(r.av||"")?`<span class="rk-av" style="background-image:url(${r.av})"></span>`:`<span class="rk-av">${esc(ini(r.name))}</span>`;
     const draw=j=>{if(!cur())return;
-      body.innerHTML=(j.top.length?`<ol class="pz-lb">${j.top.map(r=>`<li class="pz-la${r.me?" me":""}"><span class="pz-lr">${placeIcon(r.place)}</span>${lav(r)}<b>${fmtV(B,r.v)}${B.t?"":" <small>"+u+"</small>"}</b><span class="pz-ld">${esc(r.name)}</span></li>`).join("")}</ol>`:`<div class="pz-card"><div class="pz-center">Noch niemand in dieser Liste.</div></div>`)
+      const val=r=>`${fmtV(B,r.v)}${B.t?"":" <small>"+u+"</small>"}`,row=r=>`<li class="pz-la${r.me?" me":""}"><span class="pz-lr">${placeIcon(r.place)}</span>${lav(r)}<b>${val(r)}</b><span class="pz-ld">${esc(r.name)}</span></li>`;
+      const pod=[2,1,3].map(n=>j.top.find(r=>r.place===n)).filter(Boolean),rest=j.top.filter(r=>r.place>3);
+      const step=r=>`<div class="pz-pd p${r.place}${r.me?" me":""}">${lav(r)}<span class="pz-pn">${esc(r.name)}</span><b>${val(r)}</b><div class="pz-ps">${medalSvg(r.place,r.place===1?34:28)}</div></div>`;
+      body.innerHTML=(j.top.length?(pod.length?`<div class="pz-podium" role="list">${pod.map(step).join("")}</div>`:"")+(rest.length?`<ol class="pz-lb">${rest.map(row).join("")}</ol>`:""):`<div class="pz-card"><div class="pz-center">Noch niemand in dieser Liste.</div></div>`)
         +(j.me&&j.me.place>20?`<p class="pz-lbn">Dein Platz: ${j.me.place} von ${j.total} (${fmtV(B,j.me.v)})</p>`:j.me?"":`<p class="pz-lbn">Du bist hier noch nicht dabei. Spiele eine Runde.</p>`);};
     const fail=e=>{if(cur())msg(esc(e&&e.message||"Der Server ist gerade nicht erreichbar."),`<button class="pz-chip" data-retry>Erneut versuchen</button>`);const r=root.querySelector("[data-retry]");if(r)r.onclick=hubTop;};
     msg("Liste wird geladen …");
-    rankLoad().then(R=>{
+    rankLoad().then(R=>R.on()?R:R.auto().then(()=>R)).then(R=>{
       if(!R.on()){msg("Für den Vergleich mit allen nimmst du am Ranking teil. Dabei werden dein Name, dein kleines Profilbild und deine Bestwerte übertragen. Es ist freiwillig und kann jederzeit im Ranking beendet werden.",`<button class="pz-chip on" data-join>Am Ranking teilnehmen</button>`);
         const j=root.querySelector("[data-join]");if(j)j.onclick=()=>{j.disabled=true;R.join().then(()=>hubTop()).catch(e=>{j.disabled=false;fail(e);});};return;}
       return R.games(myBests(),weekObj()).catch(e=>{if(e.code===404)throw e;}).then(()=>R.gameBoard(id,wk)).then(draw);
@@ -229,14 +227,15 @@ const PAUSE=(function(){
     if(k==='lueckentext')return [String(b),'Lücken in 60 s'];
     if(k==='reihenfolge'||k==='hangman')return [String(b),'Beste Serie'];
     return [typeof b==='number'?b.toLocaleString('de-DE'):String(b),'Punkte'];}
-  function hub(){stop();if(ptab==='idf3d')return hub3d();if(ptab==='top')return hubTop();
+  function hub(){stop();if(ptab==='top')return hubTop();
     // Karte: Spiel starten (Tipp auf die Karte), darunter die Rang-Marke (öffnet die Bestenliste, kommt nach dem Laden)
     const tile=k=>{const g=GAMES.find(x=>x[0]===k),bp=bestParts(k),chip=bestChip(k);
       return `<div class="pz-gc${k==='fahrt'?' fw':''}" data-k="${k}"><button class="pz-gm" data-g="${k}" title="${g[3]}" aria-label="${g[2]}. ${g[3]}${chip?'. '+chip:''}"><span class="pz-gh"><span class="pz-gi">${svg(g[1])}</span><b>${g[2]}</b></span>${bp?`<span class="pz-gv">${bp[0]}<small>${bp[1]}</small></span>`:`<span class="pz-gs">${SHORT[k]}</span>`}</button><span class="pz-gr"${bp?' data-has':''}>${bp?'':'<span class="pz-gn">Noch nicht gespielt</span>'}</span></div>`;};
     root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Feuerwehr</div>
     <div class="pz-tiles pz-fw">${tile('fahrt')}${['duell','lueckentext','reihenfolge','hangman','kreuzwort'].map(k=>tile(k)).join('')}</div>
     <div class="m-sec pz-sec">Klassiker</div>
-    <div class="pz-tiles pz-kl">${['mahjong','sudoku','tetris','solitaer','g2048','minesweeper','snake'].map(k=>tile(k)).join('')}</div></div>`;
+    <div class="pz-tiles pz-kl">${['mahjong','sudoku','tetris','solitaer','g2048','minesweeper','snake'].map(k=>tile(k)).join('')}</div>
+    <a class="pz-tile hero pz-sim" href="game/index.html?von=v-pause"><span class="pz-ti"><span class="pz-gi">${svg('truck')}</span></span><span class="pz-tt"><b>Simulation starten</b><small>Neun Missionen in begehbaren 3D-Welten, dazu Wiederholung, Prüfung und Wochenaufgabe</small></span></a></div>`;
     tabsOn();
     root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
     fillRank();

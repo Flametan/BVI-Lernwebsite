@@ -1,6 +1,12 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.0',ts:'2026-11-18T10:00',items:[
+      'Simulationen: Im Pausenraum startet jetzt oben bei den Pausenspielen die Kachel „Simulation starten“; der Reiter „Simulationen“ ist entfallen. Im Simulationsraum sind die Abzeichen weg, und er übernimmt dein gewähltes Design (Dunkel, Hell, Beige, Hintergrundhelligkeit und Akzentfarbe).',
+      'Ranking: Die Ersten drei stehen jetzt wie auf einem Siegertreppchen, danach folgt die Liste.',
+      'Pausenraum: Die Reiter „Pausenspiele · Bestenliste“ sehen jetzt aus wie der Umschalter im Ranking (runde Leiste mit weißem Schieber) und der Schieber gleitet beim Wechsel zum neuen Reiter. Die Bestenliste passt sich außerdem der Breite von Tablet und Desktop an.',
+      'Ranking: Wer angemeldet ist und einen Namen im Account hat, nimmt jetzt automatisch am Ranking teil, ohne zusätzlichen Knopf. Wer das Ranking bewusst verlässt, bleibt draußen, bis er wieder selbst teilnimmt.',
+      'Pausenraum – Bestenlisten: Die ersten drei Plätze stehen jetzt wie ein Siegertreppchen (Platz 1 in der Mitte, 2 links, 3 rechts), ab Platz 4 folgt die Liste darunter.',
+      'Account – Abmelden: Die Sicherheitsabfrage passt jetzt in das Fenster („Wirklich abmelden?“ mit kurzem Hinweis darunter) und wird nicht mehr abgeschnitten.',
       'Account: Aus „Sync“ wird „Anmelden“ (nach der Anmeldung „Angemeldet“). Die Anmeldung öffnet kein Pop-up mehr, das Account-Fenster wechselt animiert dorthin; „Neuen Code erzeugen“, „Ich habe schon einen Code“ und die Code-Eingabe erscheinen im selben Fenster. Angemeldet gibt es nur noch „Code & QR anzeigen“ und „Abmelden“ (nach einer Rückfrage per zweitem Tippen). Abmelden löscht auf diesem Gerät Lernstand, Ranglisten-Konto, Profilname und Avatar; Server und andere Geräte bleiben unberührt. Serveradresse und Serverdaten löschen entfallen.',
       'Minesweeper: Der Rechtsklick setzt die Markierung jetzt schon beim Drücken der rechten Maustaste und nicht erst über das Kontextmenü-Ereignis; damit klappt er auch auf Tablets mit Maus und in Ansichten, die dieses Ereignis nicht senden.',
       'Pausenraum: Die Kachel „Wochenwertung“ über den Spielen ist entfernt. Plätze stehen weiter auf den Spielkarten und in der Bestenliste (Reiter „Woche“).',

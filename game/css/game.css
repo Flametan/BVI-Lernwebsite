@@ -1,19 +1,24 @@
 /* IdF-Spiel – Oberfläche. Farben nur über Tokens; hell ist der Grundzustand, dunkel folgt dem System oder der Wahl in der Lern-App. */
 :root{
   --bg:#f4f3ef; --card:#ffffff; --raised:#ebe9e3; --fg:#1c1b19; --muted:#66625b; --line:#dcd8cf;
-  --accent:#b45309; --accent-bg:#fdecc8; --on-accent:#ffffff; --ok:#1f7a45; --ok-bg:#dff3e6; --bad:#b42323; --bad-bg:#fbe1e1;
+  --accent:#b45309; --on-accent:#ffffff; --ok:#1f7a45; --ok-bg:#dff3e6; --bad:#b42323; --bad-bg:#fbe1e1;
   --scene:#e6eaef; --sky-top:#7fb2e5; --sky-bot:#e8eef5; --ground:#9fb39a; color-scheme:light;
 }
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
   --bg:#121212; --card:#1d1d1f; --raised:#28282b; --fg:#f2f1ee; --muted:#a8a49c; --line:#343438;
-  --accent:#f5a524; --accent-bg:#3a2a0c; --on-accent:#1a1205; --ok:#5fd08c; --ok-bg:#12331f; --bad:#ff8a8a; --bad-bg:#3d1717;
+  --accent:#f5a524; --on-accent:#1a1205; --ok:#5fd08c; --ok-bg:#12331f; --bad:#ff8a8a; --bad-bg:#3d1717;
   --scene:#1a1d22; --sky-top:#0d1626; --sky-bot:#2a3446; --ground:#3e4a41; color-scheme:dark;
 }}
 :root[data-theme="dark"]{
   --bg:#121212; --card:#1d1d1f; --raised:#28282b; --fg:#f2f1ee; --muted:#a8a49c; --line:#343438;
-  --accent:#f5a524; --accent-bg:#3a2a0c; --on-accent:#1a1205; --ok:#5fd08c; --ok-bg:#12331f; --bad:#ff8a8a; --bad-bg:#3d1717;
+  --accent:#f5a524; --on-accent:#1a1205; --ok:#5fd08c; --ok-bg:#12331f; --bad:#ff8a8a; --bad-bg:#3d1717;
   --scene:#1a1d22; --sky-top:#0d1626; --sky-bot:#2a3446; --ground:#3e4a41; color-scheme:dark;
 }
+:root[data-theme="light"][data-tone="beige"]{
+  --bg:#ddcfb1; --card:#ebe0c9; --raised:#d1c19f; --fg:#281f14; --muted:#5b4f3a; --line:#c2b18d;
+  --scene:#e3d8bf; --sky-bot:#efe6d2; --ground:#a9ac84;
+}
+:root{ --accent-bg:color-mix(in srgb,var(--accent) 18%,var(--bg)); }
 *{box-sizing:border-box;}
 html,body{height:100%;}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;flex-direction:column;-webkit-tap-highlight-color:transparent;}
@@ -45,11 +50,6 @@ button{font:inherit;color:inherit;cursor:pointer;}
 .card .bar i{display:block;height:100%;background:var(--accent);border-radius:99px;}
 .card[disabled]{opacity:.62;cursor:default;}
 .tag{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--raised);color:var(--muted);}
-.badges{display:flex;flex-wrap:wrap;gap:10px;}
-.badge{display:flex;flex-direction:column;gap:2px;padding:10px 14px;border-radius:14px;border:1px dashed var(--line);font-size:.8rem;color:var(--muted);min-width:150px;}
-.badge b{font-size:.92rem;color:var(--muted);}
-.badge.on{border-style:solid;border-color:var(--accent);background:var(--accent-bg);color:var(--fg);}
-.badge.on b{color:var(--fg);}
 .foot{margin-top:26px;font-size:.9rem;}
 .foot a{color:var(--accent);}
 

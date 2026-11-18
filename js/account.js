@@ -100,7 +100,7 @@ const ACCOUNT=(function(){
     const b=box.querySelector('.acc-name'); if(!b) return;
     const inp=document.createElement('input'); inp.className='acc-in'; inp.maxLength=30; inp.value=name(); inp.placeholder='Dein Name'; inp.setAttribute('aria-label','Name');
     b.replaceWith(inp); inp.focus();
-    const done=()=>{ const v=inp.value.replace(/[<>]/g,'').trim().slice(0,30); s(NAME,v||null); render(); refresh(); };
+    const done=()=>{ const v=inp.value.replace(/[<>]/g,'').trim().slice(0,30); s(NAME,v||null); render(); refresh(); try{ if(typeof rankAuto==='function') rankAuto(); }catch(e){} };
     inp.addEventListener('keydown',e=>{ if(e.key==='Enter') done(); if(e.key==='Escape'){ render(); } });
     inp.addEventListener('blur',done);
   }
