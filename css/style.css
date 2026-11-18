@@ -5211,4 +5211,4 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .pz-podium .pz-pd.p3 .pz-pnum{font-size:1.5rem;}
 @media(min-width:700px){.pz-podium{padding:24px 20px 0;gap:16px;}.pz-podium .pz-ps{height:80px;}.pz-podium .pz-pd.p1 .pz-ps{height:128px;}.pz-podium .pz-pd.p3 .pz-ps{height:58px;}.pz-pnum{font-size:2.6rem;}.pz-podium .pz-pd.p3 .pz-pnum{font-size:2rem;}}
 /* Handy: Auswahl-Blatt endet über der unteren Navigation, damit „Fertig“ sichtbar bleibt */
-@media(max-width:700px){.pz-shp{max-height:calc(100dvh - 90px);padding-bottom:calc(120px + env(safe-area-inset-bottom,0px));}}
+@media(max-width:700px){.pz-shp{max-height:calc(100dvh - 90px);padding-bottom:calc(165px + env(safe-area-inset-bottom,0px));}}
