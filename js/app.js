@@ -7248,7 +7248,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     setTimeout(()=>{
       if(document.getElementById('apk-up')) return;
       const d=document.createElement('div'); d.id='apk-up'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-labelledby','apk-up-t');
-      d.innerHTML='<div class="apk-box"><div class="apk-t" id="apk-up-t">Neue App-Version nötig</div><p>Für die neuesten Funktionen brauchen Sie die aktuelle Android-App. Laden Sie sie herunter, öffnen Sie die Datei und bestätigen Sie „Installieren“. Ihre Lernstände bleiben erhalten.</p><div class="apk-act"><button type="button" class="btn btn-ghost" data-later>Später</button><a class="btn btn-gold" href="'+URL+'" target="_blank" rel="noopener noreferrer" data-dl>Herunterladen</a></div></div>';
+      d.innerHTML='<div class="apk-box"><div class="apk-h"><img src="icons/icon-192.png" alt="" width="40" height="40"><b id="apk-up-t">B VI</b></div><p>Es gibt eine neue Version der App. Möchtest du diese App jetzt aktualisieren? Die Datei wird heruntergeladen, danach öffnest du sie und bestätigst „Aktualisieren“. Deine Lernstände bleiben erhalten.</p><div class="apk-act"><button type="button" data-later>Abbrechen</button><i></i><a href="'+URL+'" target="_blank" rel="noopener noreferrer" data-dl>Aktualisieren</a></div></div>';
       document.body.appendChild(d);
       const later=()=>{ try{ localStorage.setItem(KEY,String(Date.now())); }catch(e){} d.remove(); };
       d.querySelector('[data-later]').onclick=later;
