@@ -156,6 +156,7 @@ var SOL=(function(){
     if(S.stock.length) h.push(cardHtml({up:false},'data-t="stock" style="left:'+pos(0)+'px;top:6px"',''));
     h.push('<div class="so-slot" style="left:'+pos(1)+'px;top:6px"></div>');
     var wl=S.waste.length, show=S.draw===3?Math.min(3,wl):Math.min(1,wl);
+    if(wl>show){ var kb=S.waste[wl-show-1]; h.push(cardHtml(kb,'style="left:'+pos(1)+'px;top:6px"','')); } /* Karte darunter: sichtbar, wenn die oberste weggezogen wird */
     for(var i=0;i<show;i++){ var k=S.waste[wl-show+i], top=(i===show-1); h.push(cardHtml(k,(top?'data-t="waste" ':'')+'style="left:'+(pos(1)+i*Math.round(cw*.26))+'px;top:6px"',(selSet[k.s*20+k.r]?'sel ':'')+(hs[k.s*20+k.r]?'hint':''))); }
     for(var f=0;f<4;f++){ var fx=pos(3+f), fd=S.found[f]; h.push('<div class="so-slot fnd'+(ht&&ht.t==='found'&&ht.f===f?' hint':'')+'" data-t="found" data-f="'+f+'" style="left:'+fx+'px;top:6px">'+suit(f,'so-fi'+(SOL.SUITS[f].red?' red':''))+'</div>');
       if(fd.length){ var k2=fd[fd.length-1]; h.push(cardHtml(k2,'data-t="found" data-f="'+f+'" style="left:'+fx+'px;top:6px"',(selSet[k2.s*20+k2.r]?'sel':''))); } }

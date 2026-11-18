@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.0',ts:'2026-11-18T10:00',items:[
+      'Solitär: Wenn Sie die oberste Karte vom Ablagestapel wegziehen, sehen Sie jetzt die Karte darunter, statt eines leeren Feldes.',
       'Navigation: Am Desktop entfällt die doppelte Lupe in der linken Leiste; die Suche öffnen Sie weiter über die Lupe im Kopfbereich oder mit Strg K.',
       'Simulationsraum: Die Startseite ist neu gestaltet. Die neun Themen sind farbige Kacheln mit Symbol und Fortschrittsbalken, das Training (Wiederholung, Prüfung, Woche, Liste) liegt als feste Leiste am unteren Rand. „Woche“ öffnet direkt die Mission der Wochenaufgabe.',
       'Simulationen: Im Pausenraum startet jetzt oben bei den Pausenspielen die Kachel „Simulation starten“; der Reiter „Simulationen“ ist entfallen. Im Simulationsraum sind die Abzeichen weg, und er übernimmt dein gewähltes Design (Dunkel, Hell, Beige, Hintergrundhelligkeit und Akzentfarbe).',
