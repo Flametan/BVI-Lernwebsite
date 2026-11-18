@@ -153,7 +153,10 @@ const MINESWEEPER=(function(){
   var MS_hint=function(){ return hintOf(S); };
   function idxOf(e){ var el=e.target.closest&&e.target.closest('.mi-c'); return el&&board.contains(el)?+el.dataset.i:-1; }
   function onDown(e){
-    var i=idxOf(e); moveHeat(e); press.long=false; clearTimeout(press.t); if(i<0||(e.button&&e.button!==0)) return;
+    var i=idxOf(e); moveHeat(e); press.long=false; clearTimeout(press.t);
+    // Rechte Maustaste schon beim Drücken auswerten: Das contextmenu-Ereignis kommt nicht in jedem Browser (z. B. Tablet mit Maus, Stiftgriff, eingebettete Ansicht)
+    if(i>=0&&e.button===2&&e.pointerType!=='touch'){ e.preventDefault(); press.rc=Date.now(); act('flag',i); return; }
+    if(i<0||(e.button&&e.button!==0)) return;
     if(e.pointerType==='mouse') return;   // Maus: Rechtsklick setzt die Fahne, langes Drücken nur bei Touch und Stift
     press.i=i;
     press.t=setTimeout(function(){ press.long=true; if(S&&!S.over&&S.cells[i].s!==1){ act('flag',i); if(navigator.vibrate){ try{ navigator.vibrate(18); }catch(x){} } } },380);
@@ -168,7 +171,7 @@ const MINESWEEPER=(function(){
     }
     lastTap={i:-1,t:0}; act(flagMode?'flag':'open',i);
   }
-  function onCtx(e){ var i=idxOf(e); if(i<0) return; e.preventDefault(); if(press.long){ press.long=false; return; } act('flag',i); }
+  function onCtx(e){ var i=idxOf(e); if(i<0) return; e.preventDefault(); if(Date.now()-(press.rc||0)<700){ press.rc=0; return; } if(press.long){ press.long=false; return; } act('flag',i); }
   function onKey(e){ if((e.key==='f'||e.key==='F'||e.key==='m'||e.key==='M')&&e.target.classList&&e.target.classList.contains('mi-c')){ e.preventDefault(); act('flag',+e.target.dataset.i); } }
   function moveHeat(e){
     if(!board) return; var r=board.getBoundingClientRect(); board.style.setProperty('--mx',(e.clientX-r.left)+'px'); board.style.setProperty('--my',(e.clientY-r.top)+'px'); board.style.setProperty('--ho','1');
