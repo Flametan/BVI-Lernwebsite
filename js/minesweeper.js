@@ -153,8 +153,9 @@ const MINESWEEPER=(function(){
   var MS_hint=function(){ return hintOf(S); };
   function idxOf(e){ var el=e.target.closest&&e.target.closest('.mi-c'); return el&&board.contains(el)?+el.dataset.i:-1; }
   function onDown(e){
-    var i=idxOf(e); moveHeat(e); if(i<0||(e.button&&e.button!==0)) return;
-    press.long=false; press.i=i; clearTimeout(press.t);
+    var i=idxOf(e); moveHeat(e); press.long=false; clearTimeout(press.t); if(i<0||(e.button&&e.button!==0)) return;
+    if(e.pointerType==='mouse') return;   // Maus: Rechtsklick setzt die Fahne, langes Drücken nur bei Touch und Stift
+    press.i=i;
     press.t=setTimeout(function(){ press.long=true; if(S&&!S.over&&S.cells[i].s!==1){ act('flag',i); if(navigator.vibrate){ try{ navigator.vibrate(18); }catch(x){} } } },380);
   }
   function endPress(){ clearTimeout(press.t); }
