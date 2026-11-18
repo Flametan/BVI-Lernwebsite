@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.0',ts:'2026-11-18T10:00',items:[
+      'Simulationsraum: Die Startseite ist neu gestaltet. Die neun Themen sind farbige Kacheln mit Symbol und Fortschrittsbalken, das Training (Wiederholung, Prüfung, Woche, Liste) liegt als feste Leiste am unteren Rand. „Woche“ öffnet direkt die Mission der Wochenaufgabe.',
       'Simulationen: Im Pausenraum startet jetzt oben bei den Pausenspielen die Kachel „Simulation starten“; der Reiter „Simulationen“ ist entfallen. Im Simulationsraum sind die Abzeichen weg, und er übernimmt dein gewähltes Design (Dunkel, Hell, Beige, Hintergrundhelligkeit und Akzentfarbe).',
       'Ranking: Die Ersten drei stehen jetzt wie auf einem Siegertreppchen, danach folgt die Liste.',
       'Pausenraum: Die Reiter „Pausenspiele · Bestenliste“ sehen jetzt aus wie der Umschalter im Ranking (runde Leiste mit weißem Schieber) und der Schieber gleitet beim Wechsel zum neuen Reiter. Die Bestenliste passt sich außerdem der Breite von Tablet und Desktop an.',

@@ -33,14 +33,14 @@ const D = m => JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', m +
     await p.waitForSelector('#result:not([hidden])', { timeout: 15000 }); return n;
   }
   try {
-    await p.goto('http://localhost:8765/game/index.html'); await p.waitForSelector('#training .card');
-    const vorher = await p.textContent('#training .card[data-t="wdh"] p'); await p.screenshot({ path: S + '/t-home.png' });
-    await p.click('#training .card[data-t="wdh"]'); const nW = await durchlauf(); const tW = await p.textContent('#r-title'); await p.screenshot({ path: S + '/t-wdh.png' });
-    await p.click('#r-list'); const nachher = await p.textContent('#training .card[data-t="wdh"] p');
+    await p.goto('http://localhost:8765/game/index.html'); await p.waitForSelector('#training .pill');
+    const vorher = await p.getAttribute('#training .pill[data-t="wdh"]', 'title'); await p.screenshot({ path: S + '/t-home.png' });
+    await p.click('#training .pill[data-t="wdh"]'); const nW = await durchlauf(); const tW = await p.textContent('#r-title'); await p.screenshot({ path: S + '/t-wdh.png' });
+    await p.click('#r-list'); const nachher = await p.getAttribute('#training .pill[data-t="wdh"]', 'title');
     const st = await p.evaluate(() => JSON.parse(localStorage.getItem('bvi_game_v1')));
     const stufen = Object.values(st.wdh).filter(e => e.d < '2999').map(e => e.s).join('');
-    await p.click('#training .card[data-t="pruefung"]'); const nP = await durchlauf(); const tP = await p.textContent('#r-title'); await p.screenshot({ path: S + '/t-pruefung.png' });
-    await p.click('#r-list'); await p.click('#training .card[data-t="rang"]'); const rang = await p.textContent('#rang-p li'); await p.screenshot({ path: S + '/t-rang.png' });
+    await p.click('#training .pill[data-t="pruefung"]'); const nP = await durchlauf(); const tP = await p.textContent('#r-title'); await p.screenshot({ path: S + '/t-pruefung.png' });
+    await p.click('#r-list'); await p.click('#training .pill[data-t="rang"]'); const rang = await p.textContent('#rang-p li'); await p.screenshot({ path: S + '/t-rang.png' });
     const ok = /^5 Aufgaben sind fällig/.test(vorher) && nW === 4 && tW === 'Wiederholung beendet' && /^Nichts fällig/.test(nachher) && stufen === '1111' && nP === 20 && tP === 'Note 1 (sehr gut)' && /Test.*100 %.*Note 1/.test(rang) && !errs.length;
     if (!ok) bad++;
     console.log((ok ? 'OK   ' : 'FEHLER ') + 'training', JSON.stringify({ vorher, nW, tW, nachher, stufen, nP, tP, rang, errs }));

@@ -12,6 +12,7 @@
   function show(name){
     screen = name;
     ['home', 'levels', 'play', 'rang'].forEach(s => { $(s).hidden = s !== name; });
+    $('training').hidden = name !== 'home';
     $('btn-back').hidden = false; $('btn-back').setAttribute('aria-label', name === 'home' ? (VON === 'v-pause' ? 'Zurück zum Pausenraum' : 'Zurück zur Lern-App') : 'Zurück'); $('btn-menu').hidden = name !== 'play';
     $('top-kick').textContent = name === 'home' ? 'IdF Münster' : name === 'rang' ? 'Training' : mis.thema;
     $('top-title').textContent = name === 'home' ? 'Simulationen' : name === 'rang' ? 'Bestenliste' : name === 'levels' ? mis.titel : modus === 'mission' ? 'Level ' + (lvl + 1) + ' · ' + data.level[lvl].titel : mis.titel;
@@ -37,21 +38,33 @@
   const fehler = () => { $('daily').className = 'daily'; $('daily').textContent = 'Die Daten konnten nicht geladen werden. Bitte prüfe die Verbindung und versuche es erneut.'; };
 
   /* ---------- Startbildschirm ---------- */
+  const SYM = { begehung:'grid', stellungnahme:'doc', stab:'users', presse:'mic', lage:'globe', ucpm:'plane', ibk:'chat', vak:'book', feuak:'calc' };
+  const HUE = { begehung:28, stellungnahme:200, stab:160, presse:330, lage:262, ucpm:190, ibk:300, vak:12, feuak:45 };
+  const PATH = {
+    grid:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16M12 4v16"/>', doc:'<path d="M7 3h8l4 4v14H7z"/><path d="M10 12h6M10 16h6"/>',
+    users:'<circle cx="9" cy="9" r="3"/><circle cx="17" cy="10" r="2.4"/><path d="M3 20c0-3.5 3-6 6-6s6 2.5 6 6M15 15c3 0 6 1.5 6 5"/>', mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+    globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>', plane:'<path d="M3 13l18-8-6 16-3-7z"/>', chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+    book:'<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>', calc:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M8 16h2M12 16h2"/>',
+    repeat:'<path d="M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2M20 4v5h-5M4 20v-5h5"/>', clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    star:'<path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1.1 6.2L12 17.4 6.4 20.3l1.1-6.2L3 9.7l6.2-.9z"/>', trophy:'<path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3M12 14v4M8 20h8"/>'
+  };
+  const ICON = (n, s, c) => '<svg' + (c ? ' class="' + c + '"' : '') + ' viewBox="0 0 24 24" width="' + s + '" height="' + s + '" fill="none" stroke="currentColor" stroke-width="' + (c ? 1.4 : 2) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (PATH[n] || '') + '</svg>';
   function home(){
     const d = $('daily'), done = CORE.dailyDone();
     d.className = 'daily' + (done ? ' done' : '');
     d.textContent = done ? 'Tagesziel geschafft. Serie: ' + CORE.serie() + (CORE.serie() === 1 ? ' Tag.' : ' Tage.') : 'Tagesziel: Spiele heute ein Level, eine Wiederholung oder eine Prüfung.';
     const f = CORE.faellig().length, w = CORE.woche(), pb = CORE.pruefBest();
+    const pill = (t, ico, txt, sub, extra, ttl) => '<button class="pill" data-t="' + t + '"' + (extra || '') + ' title="' + esc(ttl) + '">' + ICON(ico, 18) + '<span>' + txt + '</span>' + (sub ? '<b>' + sub + '</b>' : '') + '</button>';
     $('training').innerHTML =
-      '<button class="card" data-t="wdh"' + (f ? '' : ' disabled') + '><span class="kick">Fehler aufholen</span><h3>Wiederholung</h3><p>' + (f ? (f === 1 ? 'Eine Aufgabe ist fällig.' : f + ' Aufgaben sind fällig.') + ' Was du kannst, kommt in größerem Abstand wieder.' : 'Nichts fällig. Aufgaben, die du in einem Level falsch löst, landen hier.') + '</p><div class="meta"><span>' + (f ? 'Bis zu 10 Aufgaben' : '') + '</span></div></button>'
-      + '<button class="card" data-t="pruefung"><span class="kick">Alle Themen</span><h3>Prüfung</h3><p>20 gemischte Fragen, 15 Minuten, ein Versuch je Frage. Am Ende gibt es eine Note.</p><div class="meta"><span>' + (pb ? 'Bestwert ' + pb + ' %' : 'Noch nicht abgelegt') + '</span></div></button>'
-      + '<div class="card info-c"><span class="kick">Wochenaufgabe</span><h3>' + esc(w.mission.titel) + '</h3><p>Bestehe in dieser Woche drei Level dieser Mission.</p><div class="wbar"><i style="width:' + Math.round(Math.min(1, w.n / w.ziel) * 100) + '%"></i></div><div class="meta"><span>' + Math.min(w.n, w.ziel) + ' / ' + w.ziel + (w.n >= w.ziel ? ' · geschafft' : '') + '</span></div></div>'
-      + '<button class="card" data-t="rang"><span class="kick">Auf diesem Gerät</span><h3>Bestenliste</h3><p>Die besten Läufe in den Leveln und in der Prüfung.</p><div class="meta"><span></span></div></button>';
-    $('missions').innerHTML = CORE.MISSIONS.map(m => {
+      pill('wdh', 'repeat', 'Wiederholung', f || '', f ? '' : ' disabled', f ? (f === 1 ? 'Eine Aufgabe ist fällig' : f + ' Aufgaben sind fällig') : 'Nichts fällig. Falsch gelöste Aufgaben landen hier.')
+      + pill('pruefung', 'clock', 'Prüfung', pb ? pb + ' %' : '', '', '20 gemischte Fragen, 15 Minuten' + (pb ? ' · Bestwert ' + pb + ' %' : ''))
+      + pill('woche', 'star', 'Woche', Math.min(w.n, w.ziel) + '/' + w.ziel, w.n >= w.ziel ? ' data-ok="1"' : '', 'Wochenaufgabe: ' + w.mission.titel + ' – drei Level bestehen')
+      + pill('rang', 'trophy', 'Liste', '', '', 'Bestenliste auf diesem Gerät');
+    $('missions').innerHTML = CORE.MISSIONS.map((m, i) => {
       const p = CORE.passed(m.id);
-      return '<button class="card" data-m="' + m.id + '"' + (m.bereit ? '' : ' disabled') + '>'
-        + '<span class="kick">' + esc(m.thema) + '</span><h3>' + esc(m.titel) + '</h3><p>' + esc(m.text) + '</p>'
-        + '<div class="bar"><i style="width:' + Math.round(p / m.levels * 100) + '%"></i></div><div class="meta"><span>Level ' + p + ' / ' + m.levels + '</span><span>Bestwert ' + fmt(CORE.best(m.id)) + '</span></div>'
+      return '<button class="card" data-m="' + m.id + '" style="--h:' + (HUE[m.id] != null ? HUE[m.id] : (i * 47) % 360) + '"' + (m.bereit ? '' : ' disabled') + ' title="' + esc(m.text) + '">'
+        + ICON(SYM[m.id] || 'grid', 96, 'bg') + '<span class="kick">' + esc(m.thema) + '</span><h3>' + esc(m.titel) + '</h3>'
+        + '<span class="lvl">Level ' + p + ' / ' + m.levels + '</span><div class="bar"><i style="width:' + Math.round(p / m.levels * 100) + '%"></i></div>'
         + '</button>';
     }).join('');
     if(VON){ $('app-link').href = '../index.html#' + VON; $('app-link').textContent = VON === 'v-pause' ? 'Zurück zum Pausenraum' : 'Zurück zum Kapitel in der Lern-App'; }
@@ -64,8 +77,8 @@
   }
   $('missions').addEventListener('click', e => { const c = e.target.closest('.card'); if(c && !c.disabled) mission(c.dataset.m); });
   $('training').addEventListener('click', e => {
-    const c = e.target.closest('button.card'); if(!c || c.disabled) return;
-    if(c.dataset.t === 'rang') rang(); else training(c.dataset.t);
+    const c = e.target.closest('button.pill'); if(!c || c.disabled) return;
+    if(c.dataset.t === 'rang') rang(); else if(c.dataset.t === 'woche') mission(CORE.woche().mission.id); else training(c.dataset.t);
   });
 
   /* ---------- Training: Wiederholung fälliger Aufgaben, Prüfung über alle Themen ---------- */

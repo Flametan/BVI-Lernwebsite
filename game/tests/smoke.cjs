@@ -12,7 +12,7 @@ async function hold(p, key, cond, max){ await p.keyboard.down(key); try{ await p
     const p = await ctx.newPage(); const errs = [];
     p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); }); p.on('pageerror', e => errs.push('PAGE ' + e.message));
     await p.goto('http://localhost:8765/game/index.html'); await p.waitForTimeout(500);
-    const cards = await p.locator('#missions .card').count(), train = await p.locator('#training .card').count();
+    const cards = await p.locator('#missions .card').count(), train = await p.locator('#training .pill').count();
     await p.screenshot({ path: S + '/g-home-' + nm + '.png' });
     await p.click('.card[data-m="begehung"]'); await p.waitForSelector('.lv');
     const locked = await p.locator('.lv[disabled]').count();
@@ -63,7 +63,7 @@ async function hold(p, key, cond, max){ await p.keyboard.down(key); try{ await p
     await p.screenshot({ path: S + '/g-result-' + nm + '.png' });
     await p.reload(); await p.waitForTimeout(400);
     const total = await p.textContent('#st-total'), badges = 0;
-    const wdh = await p.textContent('#training .card[data-t="wdh"] p');      // die erste Aufgabe war im ersten Versuch falsch: Sie ist jetzt zur Wiederholung fällig
+    const wdh = await p.getAttribute('#training .pill[data-t="wdh"]', 'title');      // die erste Aufgabe war im ersten Versuch falsch: Sie ist jetzt zur Wiederholung fällig
     await p.click('.card[data-m="begehung"]'); await p.waitForSelector('.lv');
     const locked2 = await p.locator('.lv[disabled]').count();
     const ok = cards === 9 && train === 4 && brief && story.length > 10 && /^Eine Aufgabe ist fällig/.test(wdh) && locked === 4 && p1.z < p0.z - 1 && p2.x > 0.5 && p2.x < 0.85 && menuOk && upVis && fl1 === fl0 + 1 && res && title === 'Bestanden' && total === '850' && locked2 === 3 && !errs.length;
