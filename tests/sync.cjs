@@ -94,7 +94,7 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'ok   ' : 'FAIL ') + m); 
   ok(await E.evaluate(() => { const b = document.querySelector('.m-hbtns .m-hacc'); return !!b && b.previousElementSibling.classList.contains('m-hsearch'); }), 'Account-Knopf sitzt rechts neben der Suche');
   ok(await E.evaluate(() => !document.getElementById('sync-card') && !document.getElementById('sync-promo')), 'keine Karte mehr in Einstellungen/Startseite');
   await E.click('.m-hbtns .m-hacc'); await E.waitForSelector('.acc-card'); await E.click('.acc-g.pri'); await E.waitForSelector('#sync-n');
-  ok(await E.evaluate(() => document.getElementById('sync-ov').textContent.includes('Neuen Code erzeugen')), 'Knopf öffnet die Auswahl');
+  ok(await E.evaluate(() => document.querySelector('.acc-card .sync-pn').textContent.includes('Neuen Code erzeugen') && !document.getElementById('sync-ov')), 'Anmelden zeigt die Auswahl im Account-Fenster, kein Pop-up');
   await E.keyboard.press('Escape');
   // Profil: Name, Hell/Dunkel, Dot
   await E.evaluate(() => { SYNC.disconnect && 0; localStorage.setItem('bvi_profile_name', 'Fabian'); });

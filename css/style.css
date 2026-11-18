@@ -4453,6 +4453,15 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .sync-err{color:#e5484d;font-size:.84rem;min-height:1em;}
 .sync-warn{font-size:.76rem;opacity:.65;line-height:1.45;margin:0;}
 .sync-ov .sync-b{justify-content:center;}
+.acc-pn{padding:12px 8px 8px;}
+.acc-back{font:inherit;font-size:.82rem;font-weight:600;color:var(--m-muted);background:none;border:0;cursor:pointer;padding:4px 6px;margin-bottom:6px;}
+.sync-pn{text-transform:none;letter-spacing:normal;display:flex;flex-direction:column;gap:14px;text-align:center;}
+.sync-pn .sync-t{padding:0;}
+.sync-pn .sync-x{display:none;}
+.sync-pn .sync-b{justify-content:center;flex-direction:column;}
+.sync-step{animation:accin .22s ease-out;}
+.acc-card.acc-sub{animation:accin .22s ease-out;}
+@media(prefers-reduced-motion:reduce){.sync-step,.acc-card.acc-sub{animation:none;}}
 
 /* ── Account-Menü ── */
 .m-hacc{position:relative;}

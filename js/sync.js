@@ -312,28 +312,28 @@ const SYNC=(function(){
   function disconnect(){
     [K.code,K.base,K.ver,K.last].forEach(ls.del); creds=null; setStatus('off');
   }
-  async function wipeServer(){
-    const c=await getCreds(); if(!c) return false;
-    const res=await fetch(url()+'/v1/blob/'+c.id,{method:'DELETE',headers:{'X-Sync-Token':c.token}});
-    if(res.status===204||res.status===200||res.status===404){ disconnect(); return true; }
-    throw new Error('Löschen fehlgeschlagen ('+res.status+')');
-  }
 
   function menu(){
     if(!connected()){
-      const c=dlg('<div class="sync-t">Auf mehreren Geräten lernen</div><p class="sync-p">Ohne Konto: Lernstand, Notizen, Markierungen und Lesezeichen gleichen sich über einen Code ab. Beliebig viele Geräte sind möglich.</p><div class="sync-b"><button class="btn btn-gold" id="sync-n">Neuen Code erzeugen</button><button class="btn btn-ghost" id="sync-j">Ich habe schon einen Code</button></div>');
+      const c=dlg('<div class="sync-t">Anmelden</div><p class="sync-p">Lernstand, Notizen, Markierungen und Lesezeichen gleichen sich über einen Code ab. Beliebig viele Geräte sind möglich.</p><div class="sync-b"><button class="btn btn-gold" id="sync-n">Neuen Code erzeugen</button><button class="btn btn-ghost" id="sync-j">Ich habe schon einen Code</button></div>');
       c.querySelector('#sync-n').onclick=startNew; c.querySelector('#sync-j').onclick=()=>startJoin();
     }else{
-      const c=dlg('<div class="sync-t">Sync ist aktiv</div><p class="sync-p" data-sync-status data-state="'+status.state+'">'+esc(label())+'</p><div class="sync-b"><button class="btn btn-gold" id="sync-a">Jetzt abgleichen</button><button class="btn btn-ghost" id="sync-c">Code &amp; QR anzeigen</button></div><div class="sync-b"><button class="btn btn-ghost" id="sync-u">Serveradresse</button><button class="btn btn-ghost" id="sync-d">Trennen</button><button class="btn btn-ghost sync-danger" id="sync-w">Serverdaten löschen</button></div>');
-      c.querySelector('#sync-a').onclick=e=>now(e.target); c.querySelector('#sync-c').onclick=showCode; c.querySelector('#sync-u').onclick=editUrl;
-      c.querySelector('#sync-d').onclick=()=>{ disconnect(); close(); TOAST.show('Sync auf diesem Gerät beendet'); };
-      c.querySelector('#sync-w').onclick=confirmWipe;
+      const c=dlg('<div class="sync-t">Angemeldet</div><p class="sync-p" data-sync-status data-state="'+status.state+'">'+esc(label())+'</p><div class="sync-b"><button class="btn btn-gold" id="sync-c">Code &amp; QR anzeigen</button><button class="btn btn-ghost sync-danger" id="sync-d">Abmelden</button></div>');
+      c.querySelector('#sync-c').onclick=showCode;
+      const d=c.querySelector('#sync-d'); let armed=0;
+      d.onclick=()=>{
+        if(!armed){ armed=setTimeout(()=>{ armed=0; d.textContent='Abmelden'; },4000); d.textContent='Wirklich? Daten auf diesem Gerät werden gelöscht'; return; }
+        logout();
+      };
     }
   }
   /* ── Oberfläche: Karte in den Einstellungen und Dialog ── */
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  let ov=null;
+  let ov=null, panelHost=null, panelClose=null;
+  // Im Account-Fenster eingebettet: dieselben Ansichten erscheinen dort statt in einem eigenen Pop-up
+  function panel(host,onClose){ panelHost=host||null; panelClose=host&&onClose||null; if(host) menu(); }
   function dlg(html,onClose){
+    if(panelHost){ panelHost.innerHTML=html; panelHost.classList.remove('sync-step'); void panelHost.offsetWidth; panelHost.classList.add('sync-step'); return panelHost; }
     if(!ov){
       ov=document.createElement('div'); ov.id='sync-ov'; ov.className='sync-ov'; ov.hidden=true;
       ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true');
@@ -344,7 +344,7 @@ const SYNC=(function(){
     ov.innerHTML='<div class="sync-card"><button class="sync-x" aria-label="Schließen">×</button>'+html+'</div>';
     ov.hidden=false; return ov.querySelector('.sync-card');
   }
-  function close(){ if(ov) ov.hidden=true; }
+  function close(){ if(panelHost){ const f=panelClose; panelHost=null; panelClose=null; if(f) f(); return; } if(ov) ov.hidden=true; }
   async function drawQr(el,code){
     try{ await APPSHARE.qr(el,APP_URL+'#sync='+norm(code)); }catch(e){ el.textContent='QR-Code nicht verfügbar – nutze den Code.'; }
   }
@@ -392,15 +392,12 @@ const SYNC=(function(){
     if(btn) btn.disabled=false;
     TOAST.show(r.ok?'Abgeglichen':(r.error||'Fehlgeschlagen'),r.ok?{type:'ok'}:undefined);
   }
-  function editUrl(){
-    const c=dlg('<div class="sync-t">Serveradresse</div><p class="sync-p">Nur ändern, wenn du einen eigenen Sync-Server betreibst.</p><input class="sync-in" id="sync-url" type="url" value="'+esc(url())+'" aria-label="Serveradresse"><div class="sync-b"><button class="btn btn-gold" id="sync-us">Speichern</button><button class="btn btn-ghost" id="sync-ud">Standard</button></div>');
-    c.querySelector('#sync-us').onclick=()=>{ const v=c.querySelector('#sync-url').value.trim(); if(/^https:\/\/[^\s]+$/.test(v)){ ls.set(K.url,v); close(); sync({force:true}); } else TOAST.show('Bitte eine https-Adresse eingeben'); };
-    c.querySelector('#sync-ud').onclick=()=>{ ls.del(K.url); close(); sync({force:true}); };
-  }
-  function confirmWipe(){
-    const c=dlg('<div class="sync-t">Serverdaten löschen?</div><p class="sync-p">Die verschlüsselten Daten werden auf dem Server gelöscht und der Sync endet auf diesem Gerät. Deine lokalen Daten bleiben. Andere Geräte verlieren die Verbindung.</p><div class="sync-b"><button class="btn btn-gold sync-danger" id="sync-yes">Löschen</button><button class="btn btn-ghost" id="sync-no">Abbrechen</button></div>');
-    c.querySelector('#sync-no').onclick=close;
-    c.querySelector('#sync-yes').onclick=async()=>{ try{ await wipeServer(); close(); TOAST.show('Serverdaten gelöscht',{type:'ok'}); }catch(e){ TOAST.show(e.message); } };
+  // Abmelden: dieses Gerät vergisst Sync-Code, Ranglisten-Konto, Profil und synchronisierte Daten; Server und andere Geräte bleiben unberührt
+  function logout(){
+    const keys=Object.keys(collect()); own=true;
+    try{ keys.forEach(ls.del); disconnect(); }finally{ own=false; }
+    try{ sessionStorage.removeItem('bvi_sync_rl'); }catch(e){}
+    location.reload();
   }
 
   /* ── Start: Link mit #sync=… / Auslöser ── */
@@ -435,5 +432,5 @@ const SYNC=(function(){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0)); else setTimeout(init,0);
 
-  return {url,newCode,valid,norm,pretty,derive,merge,mergeVal,mergeArr,mergeText,collect,sync,connect,create,disconnect,connected,startNew,startJoin,showCode,now,editUrl,confirmWipe,open:menu,info,TRACK};
+  return {url,newCode,valid,norm,pretty,derive,merge,mergeVal,mergeArr,mergeText,collect,sync,connect,create,disconnect,connected,startNew,startJoin,showCode,now,logout,panel,open:menu,info,TRACK};
 })();
