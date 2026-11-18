@@ -30,7 +30,14 @@ const PAUSE=(function(){
   // Wochenbestwerte (Wochenwertung): je Liste der beste Wert der laufenden ISO-Woche
   const WKEY="bvi_pause_wk";
   const wkNow=()=>{try{return GAME.isoWeek();}catch(e){return "";}};
-  function weekObj(){const k=wkNow(),w=get(WKEY,null);return w&&w.k===k&&w.g?w:{k,g:{}};}
+  // Läufe dieser Woche, die vor der Wochenwertung gespielt wurden, stehen nur in der lokalen Bestenliste (mit Datum): von dort nachtragen
+  function weekObj(){const k=wkNow(),s=get(WKEY,null),w=s&&s.k===k&&s.g?s:{k,g:{}};if(!k)return w;
+    const T=get(TOPKEY,{});
+    for(const id in T){const B=BOARDS[id.split(":")[0]];if(!B||!Array.isArray(T[id]))continue;
+      for(const e of T[id]){if(!e||typeof e.d!=="string"||e.d.length!==10||typeof e.p!=="number")continue;
+        let wk="";try{wk=GAME.isoWeek(new Date(+e.d.slice(0,4),+e.d.slice(5,7)-1,+e.d.slice(8,10)));}catch(x){}
+        if(wk===k){const o=w.g[id];if(o==null||(B.t?e.p<o:e.p>o))w.g[id]=e.p;}}}
+    return w;}
   function weekAdd(id,v,low){const w=weekObj();if(!w.k)return;const o=w.g[id];if(o==null||(low?v<o:v>o)){w.g[id]=v;set(WKEY,w);}}
   // früher gab es nur ein Mahjong-Brett (heute: Stufe Pyramide): Rekord und Liste umziehen
   (function(){try{const b=best();if(typeof b.mahjong==='number'){b.mahjong={pyramide:b.mahjong};set(BKEY,b);}
