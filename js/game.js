@@ -553,7 +553,9 @@ const GAME=(function(){
     return rankP||(rankP=new Promise((ok,fail)=>{ const s=document.createElement('script'); s.src='js/rank.js'; s.onload=()=>ok(RANK); s.onerror=()=>{ rankP=null; fail(); }; document.body.appendChild(s); }));
   }
   const rankOn=()=>{ try{ return !!localStorage.getItem('bvi_rank'); }catch(e){ return false; } };
-  setTimeout(()=>{ if(rankOn()) rankLoad().then(R=>R.report()).catch(()=>{}); },8000);
+  const acct=()=>{ try{ return !!localStorage.getItem('bvi_sync_code')&&!localStorage.getItem('bvi_rank_off')&&!!(localStorage.getItem('bvi_profile_name')||'').trim(); }catch(e){ return false; } };
+  window.rankAuto=()=>{ if(!rankOn()&&acct()) rankLoad().then(R=>R.auto()).catch(()=>{}); };
+  setTimeout(()=>{ if(rankOn()) rankLoad().then(R=>R.report()).catch(()=>{}); else window.rankAuto(); },8000);
   function setTitle(t){ const s=load(); if(BADGES.some(b=>b.t===t&&s.badges[b.id])){ s.title=t; save(); renderGame(); } }
 
   const DAYN=['Mo','Di','Mi','Do','Fr','Sa','So'];

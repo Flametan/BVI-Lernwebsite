@@ -178,6 +178,7 @@ const SYNC=(function(){
   }
   function setStatus(state,msg){
     status={state,msg:msg||''};
+    if(state==='ok') try{ if(typeof rankAuto==='function') rankAuto(); }catch(e){}
     try{ ACCOUNT.dot(); const c=document.querySelector('.acc-chip'); if(c){ const i=info(); c.dataset.state=i.state; c.lastChild.textContent=i.text; } }catch(e){}
     document.querySelectorAll('[data-sync-status]').forEach(e=>{ e.textContent=label(); e.dataset.state=state; });
   }
@@ -318,11 +319,11 @@ const SYNC=(function(){
       const c=dlg('<div class="sync-t">Anmelden</div><p class="sync-p">Lernstand, Notizen, Markierungen und Lesezeichen gleichen sich über einen Code ab. Beliebig viele Geräte sind möglich.</p><div class="sync-b"><button class="btn btn-gold" id="sync-n">Neuen Code erzeugen</button><button class="btn btn-ghost" id="sync-j">Ich habe schon einen Code</button></div>');
       c.querySelector('#sync-n').onclick=startNew; c.querySelector('#sync-j').onclick=()=>startJoin();
     }else{
-      const c=dlg('<div class="sync-t">Angemeldet</div><p class="sync-p" data-sync-status data-state="'+status.state+'">'+esc(label())+'</p><div class="sync-b"><button class="btn btn-gold" id="sync-c">Code &amp; QR anzeigen</button><button class="btn btn-ghost sync-danger" id="sync-d">Abmelden</button></div>');
+      const c=dlg('<div class="sync-t">Angemeldet</div><p class="sync-p" data-sync-status data-state="'+status.state+'">'+esc(label())+'</p><div class="sync-b"><button class="btn btn-gold" id="sync-c">Code &amp; QR anzeigen</button><button class="btn btn-ghost sync-danger" id="sync-d">Abmelden</button></div><p class="sync-warn" id="sync-hint" hidden>Die Daten auf diesem Gerät werden gelöscht. Auf Ihren anderen Geräten bleibt alles erhalten.</p>');
       c.querySelector('#sync-c').onclick=showCode;
-      const d=c.querySelector('#sync-d'); let armed=0;
+      const d=c.querySelector('#sync-d'); let armed=0; const hint=c.querySelector('#sync-hint');
       d.onclick=()=>{
-        if(!armed){ armed=setTimeout(()=>{ armed=0; d.textContent='Abmelden'; },4000); d.textContent='Wirklich? Daten auf diesem Gerät werden gelöscht'; return; }
+        if(!armed){ armed=setTimeout(()=>{ armed=0; d.textContent='Abmelden'; hint.hidden=true; },4000); d.textContent='Wirklich abmelden?'; hint.hidden=false; return; }
         logout();
       };
     }

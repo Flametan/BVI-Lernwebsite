@@ -123,7 +123,7 @@ const PAUSE=(function(){
   let gTimer=0;
   // Werte senden (gesamt und Woche), danach Platzierungen und Karte im Spiel neu laden
   const syncNow=()=>rankLoad().then(R=>R.games(myBests(),weekObj()).catch(e=>{if(e&&e.code===404)throw e;}).then(()=>R));
-  function pushBests(){if(!rankOn())return;clearTimeout(gTimer);gTimer=setTimeout(()=>{STAND=null;syncNow().then(()=>{cardUp();return loadStand();}).then(medalCheck).catch(()=>{});},4000);}
+  function pushBests(){if(!rankOn()){if(window.rankAuto)window.rankAuto();return;}clearTimeout(gTimer);gTimer=setTimeout(()=>{STAND=null;syncNow().then(()=>{cardUp();return loadStand();}).then(medalCheck).catch(()=>{});},4000);}
   /* ---------- Medaillen: Gold, Silber, Bronze für Platz 1 bis 3 ---------- */
   const MED={1:["#f8c53a","#b8860b","#7a5200","Gold"],2:["#dfe3ea","#8b93a1","#4a5160","Silber"],3:["#e29a5a","#9a5a22","#5e3210","Bronze"]};
   // kleine flache Medaille (SVG) für Karten, Listen und die Rückfallansicht
@@ -208,11 +208,14 @@ const PAUSE=(function(){
     const ini=n=>String(n).trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase();
     const lav=r=>/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(r.av||"")?`<span class="rk-av" style="background-image:url(${r.av})"></span>`:`<span class="rk-av">${esc(ini(r.name))}</span>`;
     const draw=j=>{if(!cur())return;
-      body.innerHTML=(j.top.length?`<ol class="pz-lb">${j.top.map(r=>`<li class="pz-la${r.me?" me":""}"><span class="pz-lr">${placeIcon(r.place)}</span>${lav(r)}<b>${fmtV(B,r.v)}${B.t?"":" <small>"+u+"</small>"}</b><span class="pz-ld">${esc(r.name)}</span></li>`).join("")}</ol>`:`<div class="pz-card"><div class="pz-center">Noch niemand in dieser Liste.</div></div>`)
+      const val=r=>`${fmtV(B,r.v)}${B.t?"":" <small>"+u+"</small>"}`,row=r=>`<li class="pz-la${r.me?" me":""}"><span class="pz-lr">${placeIcon(r.place)}</span>${lav(r)}<b>${val(r)}</b><span class="pz-ld">${esc(r.name)}</span></li>`;
+      const pod=[2,1,3].map(n=>j.top.find(r=>r.place===n)).filter(Boolean),rest=j.top.filter(r=>r.place>3);
+      const step=r=>`<div class="pz-pd p${r.place}${r.me?" me":""}">${lav(r)}<span class="pz-pn">${esc(r.name)}</span><b>${val(r)}</b><div class="pz-ps">${medalSvg(r.place,r.place===1?34:28)}</div></div>`;
+      body.innerHTML=(j.top.length?(pod.length?`<div class="pz-podium" role="list">${pod.map(step).join("")}</div>`:"")+(rest.length?`<ol class="pz-lb">${rest.map(row).join("")}</ol>`:""):`<div class="pz-card"><div class="pz-center">Noch niemand in dieser Liste.</div></div>`)
         +(j.me&&j.me.place>20?`<p class="pz-lbn">Dein Platz: ${j.me.place} von ${j.total} (${fmtV(B,j.me.v)})</p>`:j.me?"":`<p class="pz-lbn">Du bist hier noch nicht dabei. Spiele eine Runde.</p>`);};
     const fail=e=>{if(cur())msg(esc(e&&e.message||"Der Server ist gerade nicht erreichbar."),`<button class="pz-chip" data-retry>Erneut versuchen</button>`);const r=root.querySelector("[data-retry]");if(r)r.onclick=hubTop;};
     msg("Liste wird geladen …");
-    rankLoad().then(R=>{
+    rankLoad().then(R=>R.on()?R:R.auto().then(()=>R)).then(R=>{
       if(!R.on()){msg("Für den Vergleich mit allen nimmst du am Ranking teil. Dabei werden dein Name, dein kleines Profilbild und deine Bestwerte übertragen. Es ist freiwillig und kann jederzeit im Ranking beendet werden.",`<button class="pz-chip on" data-join>Am Ranking teilnehmen</button>`);
         const j=root.querySelector("[data-join]");if(j)j.onclick=()=>{j.disabled=true;R.join().then(()=>hubTop()).catch(e=>{j.disabled=false;fail(e);});};return;}
       return R.games(myBests(),weekObj()).catch(e=>{if(e.code===404)throw e;}).then(()=>R.gameBoard(id,wk)).then(draw);
