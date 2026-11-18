@@ -227,21 +227,39 @@ const PAUSE=(function(){
     if(k==='lueckentext')return [String(b),'Lücken in 60 s'];
     if(k==='reihenfolge'||k==='hangman')return [String(b),'Beste Serie'];
     return [typeof b==='number'?b.toLocaleString('de-DE'):String(b),'Punkte'];}
-  function hub(){stop();if(ptab==='top')return hubTop();
+  /* ---------- Spiele sortieren: Knopf oben rechts, dann Kacheln per Drag & Drop verschieben (Reihenfolge wird gemerkt) ---------- */
+  const OKEY='bvi_pause_order',DEF={fw:['fahrt','duell','lueckentext','reihenfolge','hangman','kreuzwort'],kl:['mahjong','sudoku','tetris','solitaer','g2048','minesweeper','snake']};
+  let editing=false;
+  const ordered=g=>{const sv=get(OKEY,{}),a=Array.isArray(sv[g])?sv[g].filter(k=>DEF[g].includes(k)):[];DEF[g].forEach(k=>{if(!a.includes(k))a.push(k);});return a;};
+  const saveOrder=()=>{const o={};root.querySelectorAll('[data-grp]').forEach(gr=>{o[gr.dataset.grp]=[...gr.querySelectorAll('.pz-gc')].map(x=>x.dataset.k);});set(OKEY,o);};
+  function syncEditBtn(){const phi=document.querySelector('#v-pause .phi');if(!phi)return;let b=phi.querySelector('.pz-sortbtn');
+    if(!b){b=document.createElement('button');b.type='button';b.className='pz-sortbtn';b.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12h18M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></svg><span class="pz-sortok">Fertig</span>';
+      b.onclick=()=>{editing=!editing;if(root&&root.isConnected&&!cur)hub();else syncEditBtn();};phi.appendChild(b);}
+    b.hidden=ptab==='top';b.classList.toggle('on',editing);b.setAttribute('aria-pressed',editing);const t=editing?'Sortieren beenden':'Spiele sortieren';b.setAttribute('aria-label',t);b.title=t;}
+  function dragOn(){let d=null;
+    root.querySelectorAll('.pz-gc').forEach(t=>{t.onpointerdown=e=>{if(e.pointerType==='mouse'&&e.button!==0)return;e.preventDefault();const r=t.getBoundingClientRect();d={t,grid:t.parentNode,gx:e.clientX-r.left,gy:e.clientY-r.top,id:e.pointerId};t.classList.add('pz-drag');try{t.setPointerCapture(e.pointerId);}catch(x){}};
+      t.onpointermove=e=>{if(!d||d.t!==t||e.pointerId!==d.id)return;e.preventDefault();
+        t.style.pointerEvents='none';const el=document.elementFromPoint(e.clientX,e.clientY);t.style.pointerEvents='';const o=el&&el.closest&&el.closest('.pz-gc');
+        if(o&&o!==t&&o.parentNode===d.grid){const kids=[...d.grid.children],after=kids.indexOf(t)<kids.indexOf(o);d.grid.insertBefore(t,after?o.nextSibling:o);}
+        t.style.transform='none';const r=t.getBoundingClientRect();t.style.transform=`translate(${e.clientX-d.gx-r.left}px,${e.clientY-d.gy-r.top}px)`;};
+      const end=e=>{if(!d||d.t!==t)return;t.classList.remove('pz-drag');t.style.transform='';d=null;saveOrder();};
+      t.onpointerup=end;t.onpointercancel=end;});}
+  function hub(){stop();if(ptab==='top')editing=false;syncEditBtn();if(ptab==='top')return hubTop();
     // Karte: Spiel starten (Tipp auf die Karte), darunter die Rang-Marke (öffnet die Bestenliste, kommt nach dem Laden)
     const tile=k=>{const g=GAMES.find(x=>x[0]===k),bp=bestParts(k),chip=bestChip(k);
       return `<div class="pz-gc${k==='fahrt'?' fw':''}" data-k="${k}"><button class="pz-gm" data-g="${k}" title="${g[3]}" aria-label="${g[2]}. ${g[3]}${chip?'. '+chip:''}"><span class="pz-gh"><span class="pz-gi">${svg(g[1])}</span><b>${g[2]}</b></span>${bp?`<span class="pz-gv">${bp[0]}<small>${bp[1]}</small></span>`:`<span class="pz-gs">${SHORT[k]}</span>`}</button><span class="pz-gr"${bp?' data-has':''}>${bp?'':'<span class="pz-gn">Noch nicht gespielt</span>'}</span></div>`;};
-    root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Feuerwehr</div>
-    <div class="pz-tiles pz-fw">${tile('fahrt')}${['duell','lueckentext','reihenfolge','hangman','kreuzwort'].map(k=>tile(k)).join('')}</div>
+    root.innerHTML=`<div class="pz-wrap pz-hub${editing?' pz-edit':''}">${tabs()}<div class="m-sec pz-sec">Feuerwehr</div>
+    <div class="pz-tiles pz-fw" data-grp="fw">${ordered('fw').map(k=>tile(k)).join('')}</div>
     <div class="m-sec pz-sec">Klassiker</div>
-    <div class="pz-tiles pz-kl">${['mahjong','sudoku','tetris','solitaer','g2048','minesweeper','snake'].map(k=>tile(k)).join('')}</div>
+    <div class="pz-tiles pz-kl" data-grp="kl">${ordered('kl').map(k=>tile(k)).join('')}</div>
     <a class="pz-tile hero pz-sim" href="game/index.html?von=v-pause"><span class="pz-ti"><span class="pz-gi">${svg('truck')}</span></span><span class="pz-tt"><b>Simulation starten</b><small>Neun Missionen in begehbaren 3D-Welten, dazu Wiederholung, Prüfung und Wochenaufgabe</small></span></a></div>`;
     tabsOn();
-    root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
+    root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>{if(!editing)open(x.dataset.g);});
+    if(editing)dragOn();
     fillRank();
   }
   const LABEL={fahrt:'Prüfungsfragen',duell:'Prüfungsfragen',snake:'Geschicklichkeit',tetris:'Geschicklichkeit',g2048:'Knobelspiel',solitaer:'Kartenspiel',minesweeper:'Knobelspiel',sudoku:'Knobelspiel',mahjong:'Knobelspiel',kreuzwort:'Fachbegriffe',hangman:'Fachbegriffe',lueckentext:'Lernkarten',reihenfolge:'Wissen'};
-  function open(k){const g=GAMES.find(x=>x[0]===k);if(!g)return;stop();cur=g[4]();
+  function open(k){const g=GAMES.find(x=>x[0]===k);if(!g)return;stop();editing=false;{const sb=document.querySelector('#v-pause .pz-sortbtn');if(sb)sb.hidden=true;}cur=g[4]();
     if(!pushed){try{history.pushState(Object.assign({},history.state,{pz:1}),'');pushed=true;}catch(e){}}
     root.innerHTML=`<div class="pz-wrap"><div class="pz-head"><button class="pz-back">‹ Alle Spiele</button><span class="pz-center" style="font-size:.78rem">${LABEL[k]||''}</span></div><div class="pz-rk3" hidden></div><div class="pz-body"></div></div>`;
     curK=k;curB=BOARDS[k]&&!BOARDS[k].lv?k:null;cardUp();
