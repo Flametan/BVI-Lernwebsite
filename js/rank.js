@@ -95,7 +95,11 @@ const RANK=(function(){
     busy=false;
   }
   function draw(b){
-    const me=myName(), rows=b.top.map(r=>`<li class="${r.me?'me':''}"><span class="rk-p">${r.place}</span>${av(r.name,r.av)}<span class="rk-n">${esc(r.name)}<small>${esc(GAME.rankOf(r.tx!=null?r.tx:r.xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(r.tx!=null?r.tx:r.xp),44)}<b>${r.xp}</b></li>`).join('');
+    const me=myName(), row=r=>`<li class="${r.me?'me':''}"><span class="rk-p">${r.place}</span>${av(r.name,r.av)}<span class="rk-n">${esc(r.name)}<small>${esc(GAME.rankOf(r.tx!=null?r.tx:r.xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(r.tx!=null?r.tx:r.xp),44)}<b>${r.xp}</b></li>`;
+    // Treppchen: Platz 2, 1, 3 nebeneinander, der Rest als Liste
+    const pod=[2,1,3].map(n=>b.top.find(r=>r.place===n)).filter(Boolean), rest=b.top.filter(r=>r.place>3);
+    const step=r=>`<div class="pz-pd p${r.place}${r.me?' me':''}" role="listitem">${av(r.name,r.av)}<span class="pz-pn">${esc(r.name)}</span>${(rk=>`<span class="pz-pr">${GAME.shoulder(rk,r.place===1?46:40)}<small>${esc(rk.n)}</small></span>`)(GAME.rankOf(r.tx!=null?r.tx:r.xp))}<b>${r.xp} <small>XP</small></b><div class="pz-ps"><span class="rk-md m${r.place}" aria-label="Platz ${r.place}">${r.place}</span></div></div>`;
+    const rows=(pod.length?`<li class="rk-podli"><div class="pz-podium" role="list">${pod.map(step).join('')}</div></li>`:'')+rest.map(row).join('');
     const mine=b.me&&b.me.place>20?`<li class="me gap"><span class="rk-p">${b.me.place}</span>${av(me,st().av)}<span class="rk-n">${esc(me)}<small>${esc(GAME.rankOf(GAME._state().xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(GAME._state().xp),44)}<b>${b.me.xp}</b></li>`:'';
     const body=`<ol class="rk-list">${rows||'<li class="rk-empty">Noch niemand in der Liste.</li>'}${mine}</ol>
       <p class="rk-sub">${b.me?`Dein Platz: ${b.me.place} von ${b.total}`:'Sammle Punkte, um in der Liste zu erscheinen.'} · Du bist als „${esc(me)}“ dabei</p>`;

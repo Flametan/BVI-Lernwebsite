@@ -100,25 +100,15 @@ const PAUSE=(function(){
   const bestTxt=bestChip;
   // kurze Untertitel für die Kacheln
   const SHORT={fahrt:'5, 10 oder 15 Fragen, Hilfsfrist',duell:'Zu zweit live, per QR-Code',snake:'Löschzug durchs Feuer steuern',solitaer:'Klondike mit Flammen und Leitern',minesweeper:'Brandherde im Dunkeln aufspüren',kreuzwort:'Jeden Tag ein neues Rätsel',sudoku:'Leicht, Mittel, Schwer',hangman:'Fachbegriffe erraten',lueckentext:'60 Sekunden, Lücken füllen',reihenfolge:'Abläufe sortieren',g2048:'Dienstgrade verschmelzen',tetris:'Fahrzeuge stapeln',mahjong:'5 Stufen, Paare abräumen'};
-  // Reiter „Simulationen“: führt in das eigene 3D-Spiel unter game/ (eigene Seite, Fortschritt in bvi_game_v1)
-  const TKEY='bvi_pause_tab';let ptab=get(TKEY,'spiele');
-  const IDF3D=[['begehung','grid','Begehung','Bauteile im Gebäude bestimmen'],['stellungnahme','cards','Stellungnahme','Aus Textbausteinen schreiben'],['stab','duel','Stab','Meldungen zum Sachgebiet bringen'],['presse','bolt','Presse','Statement vor laufender Kamera'],['lage','scale','Lage','Zivile Verteidigung im Lagezentrum'],['ucpm','truck','Hilfeersuchen','Hilfe über die EU anfordern'],['ibk','ladder','IBK','Gespräche und Fragen auf der Wache'],['vak','pairs','VAk','Fragen im Hörsaal'],['feuak','flame','FeuAK','Bedarfsplanung mit Budget']];
-  const tabs=()=>`<div class="pz-mode pz-tabs" role="tablist" aria-label="Bereich im Pausenraum"><i class="rk-pill" aria-hidden="true"></i>${[['spiele','Pausenspiele'],['top','Bestenliste'],['idf3d','Simulationen']].map(([k,t])=>`<button role="tab" aria-selected="${ptab===k}" data-pt="${k}" class="${ptab===k?'on':''}">${t}</button>`).join('')}</div>`;
+  // Die Simulationen (eigenes 3D-Spiel unter game/) starten über die Kachel oben im Reiter Pausenspiele
+  const TKEY='bvi_pause_tab';let ptab=get(TKEY,'spiele');if(ptab!=='top')ptab='spiele';
+  const tabs=()=>`<div class="pz-mode pz-tabs" role="tablist" aria-label="Bereich im Pausenraum"><i class="rk-pill" aria-hidden="true"></i>${[['spiele','Pausenspiele'],['top','Bestenliste']].map(([k,t])=>`<button role="tab" aria-selected="${ptab===k}" data-pt="${k}" class="${ptab===k?'on':''}">${t}</button>`).join('')}</div>`;
   let pill=null;
   const tabsOn=()=>{root.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{shOpen=false;ptab=x.dataset.pt;set(TKEY,ptab);hub();});
     // Schieber gleitet vom bisherigen zum neuen Reiter (die Ansicht wird bei jedem Wechsel neu gezeichnet)
     root.querySelectorAll('.pz-tabs').forEach(tb=>{const pl=tb.querySelector('.rk-pill'),on=tb.querySelector('button.on');if(!pl||!on)return;
       const to={w:on.offsetWidth,x:on.offsetLeft},from=pill||to;pl.style.transition='none';pl.style.width=from.w+'px';pl.style.transform='translateX('+from.x+'px)';
       void pl.offsetWidth;pl.style.transition='';pl.style.width=to.w+'px';pl.style.transform='translateX('+to.x+'px)';pill=to;});};
-  function hub3d(){
-    const st=get('bvi_game_v1',{}),m=(st&&st.m)||{};
-    const fertig=k=>Object.keys(m[k]||{}).filter(i=>m[k][i]&&m[k][i].ok).length;
-    const url=k=>'game/index.html?'+(k?'m='+k+'&amp;':'')+'von=v-pause';
-    root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}
-    <div class="pz-tiles pz-3d"><a class="pz-tile wide hero" href="${url('')}"><span class="pz-ti"><span class="pz-gi">${svg('truck')}</span></span><span class="pz-tt"><b>Simulationen starten</b><small>Neun Missionen in begehbaren 3D-Welten, dazu Wiederholung, Prüfung, Wochenaufgabe und Bestenliste</small></span></a>
-    ${IDF3D.map(g=>{const n=fertig(g[0]);return `<a class="pz-tile" href="${url(g[0])}" aria-label="Mission ${g[2]}. ${g[3]}${n?'. '+n+' von '+(g[0]==='begehung'?5:6)+' Leveln geschafft':''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${n?`<span class="pz-bst">${n} von ${g[0]==='begehung'?5:6}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${g[3]}</small></span></a>`;}).join('')}</div></div>`;
-    tabsOn();
-  }
   let topG=get("bvi_pause_topg","fahrt"),topL=get("bvi_pause_topl",""),shOpen=false,topS=get("bvi_pause_tops","me");
   const fmtV=(B,v)=>B.t?fmtT(v):v.toLocaleString("de-DE");
   const rankOn=()=>{try{return !!localStorage.getItem("bvi_rank");}catch(e){return false;}};
@@ -237,14 +227,15 @@ const PAUSE=(function(){
     if(k==='lueckentext')return [String(b),'Lücken in 60 s'];
     if(k==='reihenfolge'||k==='hangman')return [String(b),'Beste Serie'];
     return [typeof b==='number'?b.toLocaleString('de-DE'):String(b),'Punkte'];}
-  function hub(){stop();if(ptab==='idf3d')return hub3d();if(ptab==='top')return hubTop();
+  function hub(){stop();if(ptab==='top')return hubTop();
     // Karte: Spiel starten (Tipp auf die Karte), darunter die Rang-Marke (öffnet die Bestenliste, kommt nach dem Laden)
     const tile=k=>{const g=GAMES.find(x=>x[0]===k),bp=bestParts(k),chip=bestChip(k);
       return `<div class="pz-gc${k==='fahrt'?' fw':''}" data-k="${k}"><button class="pz-gm" data-g="${k}" title="${g[3]}" aria-label="${g[2]}. ${g[3]}${chip?'. '+chip:''}"><span class="pz-gh"><span class="pz-gi">${svg(g[1])}</span><b>${g[2]}</b></span>${bp?`<span class="pz-gv">${bp[0]}<small>${bp[1]}</small></span>`:`<span class="pz-gs">${SHORT[k]}</span>`}</button><span class="pz-gr"${bp?' data-has':''}>${bp?'':'<span class="pz-gn">Noch nicht gespielt</span>'}</span></div>`;};
     root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Feuerwehr</div>
     <div class="pz-tiles pz-fw">${tile('fahrt')}${['duell','lueckentext','reihenfolge','hangman','kreuzwort'].map(k=>tile(k)).join('')}</div>
     <div class="m-sec pz-sec">Klassiker</div>
-    <div class="pz-tiles pz-kl">${['mahjong','sudoku','tetris','solitaer','g2048','minesweeper','snake'].map(k=>tile(k)).join('')}</div></div>`;
+    <div class="pz-tiles pz-kl">${['mahjong','sudoku','tetris','solitaer','g2048','minesweeper','snake'].map(k=>tile(k)).join('')}</div>
+    <a class="pz-tile hero pz-sim" href="game/index.html?von=v-pause"><span class="pz-ti"><span class="pz-gi">${svg('truck')}</span></span><span class="pz-tt"><b>Simulation starten</b><small>Neun Missionen in begehbaren 3D-Welten, dazu Wiederholung, Prüfung und Wochenaufgabe</small></span></a></div>`;
     tabsOn();
     root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
     fillRank();

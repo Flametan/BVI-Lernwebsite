@@ -54,12 +54,9 @@
         + '<div class="bar"><i style="width:' + Math.round(p / m.levels * 100) + '%"></i></div><div class="meta"><span>Level ' + p + ' / ' + m.levels + '</span><span>Bestwert ' + fmt(CORE.best(m.id)) + '</span></div>'
         + '</button>';
     }).join('');
-    const have = CORE.badges();
-    $('badges').innerHTML = Object.keys(CORE.BADGES).map(k => badge(k, have.includes(k))).join('');
     if(VON){ $('app-link').href = '../index.html#' + VON; $('app-link').textContent = VON === 'v-pause' ? 'Zurück zum Pausenraum' : 'Zurück zum Kapitel in der Lern-App'; }
     modus = 'mission'; show('home');
   }
-  function badge(k, on){ const b = CORE.BADGES[k]; return '<div class="badge' + (on ? ' on' : '') + '"><b>' + esc(b.titel) + '</b>' + esc(b.text) + '</div>'; }
 
   async function mission(id){
     const m = CORE.MISSIONS.find(x => x.id === id); if(!m) return;
@@ -498,7 +495,6 @@
     nachbesprechung(st, L);
     if(ok) STAGE.sfx('win');
     $('r-pts').textContent = fmt(st.pts); $('r-max').textContent = fmt(st.max);
-    $('r-badges').innerHTML = neu.map(k => badge(k, true)).join('');
     $('r-next').hidden = modus !== 'mission' || !ok || last;
     $('st-total').textContent = fmt(CORE.total()); $('st-serie').textContent = CORE.serie();
     $('result').hidden = false;

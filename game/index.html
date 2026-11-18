@@ -6,8 +6,17 @@
 <title>Simulationen</title>
 <meta name="theme-color" content="#121212"/>
 <link rel="icon" href="../icons/icon-192.png"/>
-<script>(function(){var m='system';try{m=localStorage.getItem('bvi_theme')||'system';}catch(e){}
-if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if(m!=='system')document.documentElement.setAttribute('data-theme','light');})();</script>
+<script>/* Design der Lern-App übernehmen: Theme (Dunkel/Hell/Beige/System), Hintergrundhelligkeit, Akzentfarbe */
+(function(){var d=document.documentElement,s=d.style,g=function(k){try{return localStorage.getItem(k);}catch(e){return null;}};
+var m=g('bvi_theme')||'system',b=m==='beige',l=b||m==='light'||(m!=='dark'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);
+var v=parseInt(g('bvi_bg'),10),ok=v>=0&&v<=100;if(ok)l=v>=50;
+d.setAttribute('data-theme',l?'light':'dark');if(b)d.setAttribute('data-tone','beige');
+if(ok){var q=(b?38:0)/100*Math.min(v/100,1-v/100),f=function(n){var k=(n+(b?41:0)/30)%12;return Math.round(255*(v/100-q*Math.max(-1,Math.min(k-3,Math.min(9-k,1)))));},
+c='#'+[f(0),f(8),f(4)].map(function(x){return('0'+x.toString(16)).slice(-2);}).join('');s.setProperty('--bg',c);
+var mix=function(p){return 'color-mix(in srgb,'+c+' '+p+'%,'+(l?'#fff':'#000')+')';};s.setProperty('--card',mix(l?55:80));s.setProperty('--raised',mix(l?88:70));}
+var a=g('bvi_accent');if(/^#[0-9a-f]{6}$/i.test(a||'')){var n=parseInt(a.slice(1),16),ch=function(x){x/=255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4);},
+L=.2126*ch(n>>16&255)+.7152*ch(n>>8&255)+.0722*ch(n&255);s.setProperty('--accent',a);s.setProperty('--on-accent',(L+.05)/.0556>=1.05/(L+.05)?'#111':'#fff');}
+var t=document.querySelector('meta[name=theme-color]');if(t)t.content=l?(b?'#ddcfb1':'#f4f3ef'):'#121212';})();</script>
 <link rel="stylesheet" href="../css/fonts.css"/>
 <link rel="stylesheet" href="css/game.css"/>
 </head>
@@ -32,8 +41,6 @@ if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if
   <div class="grid" id="training"></div>
   <h2 class="sec">Thema wählen</h2>
   <div class="grid" id="missions"></div>
-  <h2 class="sec">Abzeichen</h2>
-  <div class="badges" id="badges"></div>
   <p class="foot"><a href="../index.html" id="app-link">Zur Lern-App</a></p>
 </main>
 
@@ -131,7 +138,6 @@ if(m==='dark')document.documentElement.setAttribute('data-theme','dark');else if
       <p id="r-note"></p>
       <p class="r-sum" id="r-sum" hidden></p>
       <ul class="r-liste" id="r-liste" hidden></ul>
-      <div class="r-badges" id="r-badges"></div>
       <div class="r-btns"><button class="btn" id="r-again">Nochmal</button><button class="btn" id="r-list">Zur Übersicht</button><button class="btn pri" id="r-next">Nächstes Level</button></div>
     </div>
   </section>

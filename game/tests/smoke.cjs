@@ -62,11 +62,11 @@ async function hold(p, key, cond, max){ await p.keyboard.down(key); try{ await p
     const res = await p.isVisible('#result'), title = res ? await p.textContent('#r-title') : '', rp = res ? await p.textContent('#r-pts') : '', story = res ? await p.textContent('#r-story') : '';
     await p.screenshot({ path: S + '/g-result-' + nm + '.png' });
     await p.reload(); await p.waitForTimeout(400);
-    const total = await p.textContent('#st-total'), badges = await p.locator('.badge.on').count();
+    const total = await p.textContent('#st-total'), badges = 0;
     const wdh = await p.textContent('#training .card[data-t="wdh"] p');      // die erste Aufgabe war im ersten Versuch falsch: Sie ist jetzt zur Wiederholung fällig
     await p.click('.card[data-m="begehung"]'); await p.waitForSelector('.lv');
     const locked2 = await p.locator('.lv[disabled]').count();
-    const ok = cards === 9 && train === 4 && brief && story.length > 10 && /^Eine Aufgabe ist fällig/.test(wdh) && locked === 4 && p1.z < p0.z - 1 && p2.x > 0.5 && p2.x < 0.85 && menuOk && upVis && fl1 === fl0 + 1 && res && title === 'Bestanden' && total === '850' && badges === 1 && locked2 === 3 && !errs.length;
+    const ok = cards === 9 && train === 4 && brief && story.length > 10 && /^Eine Aufgabe ist fällig/.test(wdh) && locked === 4 && p1.z < p0.z - 1 && p2.x > 0.5 && p2.x < 0.85 && menuOk && upVis && fl1 === fl0 + 1 && res && title === 'Bestanden' && total === '850' && locked2 === 3 && !errs.length;
     if(!ok) bad++;
     console.log((ok ? 'OK   ' : 'FEHLER ') + nm, JSON.stringify({ cards, train, brief, story, wdh, locked, p0, p1, p2, fps, menuOk, upVis, yMid, fl0, fl1, fl2, q, fb, res, title, rp, total, badges, locked2, errs }));
     await ctx.close();
