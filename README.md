@@ -57,6 +57,7 @@ BVI-Lernwebsite/
 │   ├── jg.js / jg-ui.js  # Jahrgänge: Daten und Oberfläche
 │   ├── pause.js / pause-data.js / duell.js / snake.js / solitaer.js / minesweeper.js / kreuzwort.js / sudoku.js / hangman.js / lueckentext.js / reihenfolge.js / g2048.js / tetris.js / mahjong.js  # Pausenraum mit Einsatzfahrt, Duell und allen Pausenspielen (je Spiel eine Datei)
 │   ├── raumplan.js / three.min.js      # Raumplan IdF Münster in 3D (wird erst beim ersten Tipp geladen)
+│   ├── medal.js                        # 3D-Medaille bei Platz 1 bis 3 im Pausenraum (three.js, wird erst beim ersten Gewinn geladen)
 │   ├── faq.js                          # FAQ zu den Standorten (Fragen, Antworten für IdF Münster, Karte im Stundenplan)
 │   └── version.js      # APP_VERSION (mit sw.js synchron halten)
 ├── jahrgaenge/         # optionale veröffentlichte Jahrgangs-Dateien (<ID>.json) und Anleitung

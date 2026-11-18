@@ -4159,6 +4159,25 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .pz-rk3 li{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:baseline;}
 .pz-rk3 li.me,.pz-rk3 li.me *{color:var(--m-accent-fg);font-weight:800;}
 .pz-rk3[hidden]{display:none;}
+/* Medaillen: kleine flache Medaille in Karten und Listen, Vollbild-Moment (js/medal.js) */
+.pzm{display:inline-block;vertical-align:middle;flex:none;}
+.pz-rkb .pzm{margin:0 -1px 0 -4px;}
+.pz-lr .pzm,.pz-rk3 li b .pzm{display:block;}
+.md-ov{position:fixed;inset:0;z-index:4000;background:rgba(10,8,5,.82);opacity:0;transition:opacity .35s ease;display:block;}
+.md-ov.show{opacity:1;}
+.md-ov canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;}
+.md-flat{position:absolute;inset:0 0 140px;display:flex;align-items:center;justify-content:center;}
+.md-flat[hidden]{display:none;}
+.md-flat.md-pop svg{animation:md-pop .7s cubic-bezier(.3,1.4,.5,1) both;}
+@keyframes md-pop{0%{transform:scale(0) rotate(-25deg);opacity:0}60%{transform:scale(1.2) rotate(5deg);opacity:1}100%{transform:none;opacity:1}}
+.md-txt{position:absolute;left:0;right:0;bottom:max(48px,env(safe-area-inset-bottom,0px));padding:0 16px;text-align:center;color:#fff;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;}
+.md-txt h3{margin:0;font-size:1.6rem;opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1);}
+.md-txt small{font-size:.9rem;opacity:0;transform:translateY(14px);transition:opacity .6s .12s cubic-bezier(.2,.8,.2,1),transform .6s .12s cubic-bezier(.2,.8,.2,1);}
+.md-x{pointer-events:auto;margin-top:10px;min-height:44px;padding:8px 26px;border:1px solid rgba(255,255,255,.4);border-radius:22px;background:transparent;color:#fff;font:inherit;font-weight:600;cursor:pointer;opacity:0;transition:opacity .5s .3s;}
+.md-x:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+.md-txt.in h3,.md-txt.in small{opacity:1;transform:none;}
+.md-txt.in .md-x{opacity:1;}
+@media (prefers-reduced-motion:reduce){.md-ov,.md-txt h3,.md-txt small,.md-x{transition-duration:.01s;transition-delay:0s;}.md-flat.md-pop svg{animation:none;}}
 .pz-card .pz-chip{margin-top:12px;}
 .pz-lgo{min-height:52px;max-width:560px;width:100%;justify-content:center;align-items:center;text-align:center;}
 /* Pausenraum: Spielkarten mit Bestleistung und Rang-Marke */
