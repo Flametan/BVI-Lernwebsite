@@ -7376,7 +7376,6 @@ const RAIL=(function(){
       const w=document.createElement('span'); w.className='m-tic'; w.innerHTML=N.svg(N.IC[id],'o')+N.svg(N.ICF[id]||N.IC[id],'f'); btn.replaceChild(w,old);
       btn.addEventListener('click',()=>N.tap(btn));
     });
-    const sb=document.querySelector('#m-rail .m-ri-search'); if(sb){ sb.dataset.ic='search'; sb.addEventListener('click',()=>{ window.NAVBAR&&NAVBAR.tap(sb); }); }
     const r=rail(); if(!r) return;
     // Premium-Sidebar: kein Aufklappen beim Darüberfahren; der Name des Tabs erscheint als Sprechblase (CSS, data-tip). Anheften über den Pin.
     // Aufgeklappt wird nur per Klick auf die freie Fläche der Leiste (nicht auf ein Symbol) oder mit der Tastatur (Tab-Fokus); Verlassen mit der Maus klappt sie wieder ein.
