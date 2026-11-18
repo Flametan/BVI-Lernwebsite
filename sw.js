@@ -41,6 +41,7 @@ const REST = [
   './js/fallbearbeitung.js',
   './js/changelog-data.js',
   './js/pause.js',
+  './js/medal.js',
   './js/rank.js',
   './js/pause-data.js',
   './js/duell.js',

@@ -116,7 +116,20 @@ const PAUSE=(function(){
   let gTimer=0;
   // Werte senden (gesamt und Woche), danach Platzierungen und Karte im Spiel neu laden
   const syncNow=()=>rankLoad().then(R=>R.games(myBests(),weekObj()).catch(e=>{if(e&&e.code===404)throw e;}).then(()=>R));
-  function pushBests(){if(!rankOn())return;clearTimeout(gTimer);gTimer=setTimeout(()=>{STAND=null;syncNow().then(()=>cardUp()).catch(()=>{});},4000);}
+  function pushBests(){if(!rankOn())return;clearTimeout(gTimer);gTimer=setTimeout(()=>{STAND=null;syncNow().then(()=>{cardUp();return loadStand();}).then(medalCheck).catch(()=>{});},4000);}
+  /* ---------- Medaillen: Gold, Silber, Bronze für Platz 1 bis 3 ---------- */
+  const MED={1:["#f8c53a","#b8860b","#7a5200","Gold"],2:["#dfe3ea","#8b93a1","#4a5160","Silber"],3:["#e29a5a","#9a5a22","#5e3210","Bronze"]};
+  // kleine flache Medaille (SVG) für Karten, Listen und die Rückfallansicht
+  const medalSvg=(n,px)=>{const c=MED[n];return c?`<svg class="pzm" viewBox="0 0 24 24" width="${px}" height="${px}" role="img" aria-label="${c[3]}medaille"><path d="M7.5 1h3.4l1.6 8h-3.4z" fill="#c81e1e"/><path d="M13.1 1h3.4l-1.6 8h-3.4z" fill="#8f1313"/><circle cx="12" cy="15.2" r="8" fill="${c[1]}"/><circle cx="12" cy="15.2" r="6.5" fill="${c[0]}"/><text x="12" y="18.6" text-anchor="middle" font-size="9.5" font-weight="800" font-family="system-ui,sans-serif" fill="${c[2]}">${n}</text></svg>`:"";};
+  const placeIcon=p=>p>=1&&p<=3?medalSvg(p,24):p;
+  // Neuer bester Platz (1 bis 3) in der zuletzt gespielten Liste: Medaille zeigen, je Liste nur bei Verbesserung
+  function medalCheck(j){if(!j||!j.boards||document.hidden)return;
+    const id=topL?topG+":"+topL:topG,x=j.boards[id];if(!x||x.place>3||x.place<1)return;
+    const M=get("bvi_pause_medal",null)||{};if(M[id]!=null&&x.place>=M[id])return;
+    M[id]=x.place;set("bvi_pause_medal",M);
+    loadJs("js/medal.js").then(()=>MEDAL.show(x.place,"Platz "+x.place+" · "+MED[x.place][3],bname(id)+" · neue Bestplatzierung",medalSvg(x.place,150))).catch(()=>{});}
+  // Beim ersten Öffnen der Plätze den Stand merken, ohne alte Platzierungen zu feiern
+  function medalSeed(j){if(get("bvi_pause_medal",null)!=null)return;const M={};Object.keys(j.boards).forEach(b=>{const p=j.boards[b].place;if(p>=1&&p<=3)M[b]=p;});set("bvi_pause_medal",M);}
   /* ---------- Platzierungen: Rang-Streifen, Plätze auf den Kacheln, Wochenwertung, Karte im Spiel ---------- */
   let STAND=null,standT=0,curK=null,curB=null,cardSeq=0;
   const bname=id=>{const k=id.split(":")[0],q=GAMES.find(x=>x[0]===k),B=BOARDS[k],l=B&&B.lv&&B.lv.find(z=>z[0]===id.split(":")[1]);return (q?q[2]:id)+(l?" · "+l[1]:"");};
@@ -134,11 +147,11 @@ const PAUSE=(function(){
     if(ptab!=="spiele"||!root||!root.isConnected)return;
     const place=()=>{root.querySelectorAll(".pz-rk,.pz-rkb").forEach(e=>e.remove());return root.querySelector(".pz-tabs");};
     if(!rankOn()){const t=place();if(t&&Object.keys(myBests()).length){t.insertAdjacentHTML("afterend",`<button class="pz-rk pz-rkn" data-rk=""><b>Gegen alle antreten</b><span>Mit dem Ranking sehen Sie Ihre Plätze in allen Spielen. ›</span></button>`);t.nextElementSibling.onclick=()=>gotoTop("");}return;}
-    loadStand().then(j=>{if(!j||ptab!=="spiele"||!root.isConnected)return;const t=place();if(!t)return;
+    loadStand().then(j=>{if(!j)return;medalSeed(j);if(ptab!=="spiele"||!root.isConnected)return;const t=place();if(!t)return;
       const ids=Object.keys(j.boards).sort((a,b)=>j.boards[a].place-j.boards[b].place||j.boards[b].total-j.boards[a].total);
       // Plätze auf den Kacheln: bester Platz je Spiel
       const bestOf={};ids.forEach(id=>{const k=id.split(":")[0];if(!bestOf[k])bestOf[k]=id;});
-      Object.keys(bestOf).forEach(k=>{const x=j.boards[bestOf[k]],tt=root.querySelector('.pz-gc[data-k="'+k+'"] .pz-gr[data-has]');if(tt)tt.innerHTML=`<button class="pz-rkb${x.place<=3?" g":""}" data-rkb="${bestOf[k]}" aria-label="Bestenliste ${esc(bname(bestOf[k]))} öffnen: Platz ${x.place} von ${x.total}">Platz ${x.place} von ${x.total}</button>`;});
+      Object.keys(bestOf).forEach(k=>{const x=j.boards[bestOf[k]],tt=root.querySelector('.pz-gc[data-k="'+k+'"] .pz-gr[data-has]');if(tt)tt.innerHTML=`<button class="pz-rkb${x.place<=3?" g":""}" data-rkb="${bestOf[k]}" aria-label="Bestenliste ${esc(bname(bestOf[k]))} öffnen: Platz ${x.place} von ${x.total}">${x.place<=3?medalSvg(x.place,18):""}Platz ${x.place} von ${x.total}</button>`;});
       const days=7-((new Date().getDay()+6)%7),ev=get("bvi_pause_ev",null);
       const bad=[];ids.forEach(id=>{const x=j.boards[id];if(x.wplace===1&&x.wtotal>=2)bad.push(["Wochensieger "+bname(id),1,id]);else if(x.wplace&&x.wplace<=3&&x.wtotal>=3)bad.push(["Top 3 "+bname(id),0,id]);});
       bad.sort((a,b)=>b[1]-a[1]);
@@ -153,7 +166,7 @@ const PAUSE=(function(){
   function cardUp(){const el=root&&root.querySelector(".pz-rk3");if(!el)return;if(!curB||!rankOn()){el.hidden=true;return;}
     const id=curB,B=BOARDS[id.split(":")[0]],my=++cardSeq;
     rankLoad().then(R=>R.gameBoard(id)).then(j=>{if(my!==cardSeq||!el.isConnected||curB!==id)return;
-      const f=v=>fmtV(B,v)+(B.t?"":" "+B.u),row=r=>`<li${r.me?' class="me"':""}><b>${r.place}</b><span>${r.me?"Sie":esc(r.name)}</span><b>${f(r.v)}</b></li>`;
+      const f=v=>fmtV(B,v)+(B.t?"":" "+B.u),row=r=>`<li${r.me?' class="me"':""}><b>${placeIcon(r.place)}</b><span>${r.me?"Sie":esc(r.name)}</span><b>${f(r.v)}</b></li>`;
       const rows=j.top.slice(0,3).map(row);if(j.me&&j.me.place>3)rows.push(row({place:j.me.place,v:j.me.v,me:1}));
       let gap="Spielen Sie eine Runde, um in diese Liste zu kommen.";
       if(j.me){const p=j.me.place,ref=p===1?j.top[1]:j.top[p-2];
@@ -194,7 +207,7 @@ const PAUSE=(function(){
     const ini=n=>String(n).trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase();
     const lav=r=>/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(r.av||"")?`<span class="rk-av" style="background-image:url(${r.av})"></span>`:`<span class="rk-av">${esc(ini(r.name))}</span>`;
     const draw=j=>{if(!cur())return;
-      body.innerHTML=(j.top.length?`<ol class="pz-lb">${j.top.map(r=>`<li class="pz-la${r.me?" me":""}"><span class="pz-lr">${r.place}</span>${lav(r)}<b>${fmtV(B,r.v)}${B.t?"":" <small>"+u+"</small>"}</b><span class="pz-ld">${esc(r.name)}</span></li>`).join("")}</ol>`:`<div class="pz-card"><div class="pz-center">Noch niemand in dieser Liste.</div></div>`)
+      body.innerHTML=(j.top.length?`<ol class="pz-lb">${j.top.map(r=>`<li class="pz-la${r.me?" me":""}"><span class="pz-lr">${placeIcon(r.place)}</span>${lav(r)}<b>${fmtV(B,r.v)}${B.t?"":" <small>"+u+"</small>"}</b><span class="pz-ld">${esc(r.name)}</span></li>`).join("")}</ol>`:`<div class="pz-card"><div class="pz-center">Noch niemand in dieser Liste.</div></div>`)
         +(j.me&&j.me.place>20?`<p class="pz-lbn">Dein Platz: ${j.me.place} von ${j.total} (${fmtV(B,j.me.v)})</p>`:j.me?"":`<p class="pz-lbn">Du bist hier noch nicht dabei. Spiele eine Runde.</p>`);};
     const fail=e=>{if(cur())msg(esc(e&&e.message||"Der Server ist gerade nicht erreichbar."),`<button class="pz-chip" data-retry>Erneut versuchen</button>`);const r=root.querySelector("[data-retry]");if(r)r.onclick=hubTop;};
     msg("Liste wird geladen …");
