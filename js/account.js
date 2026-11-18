@@ -60,7 +60,7 @@ const ACCOUNT=(function(){
       +'<span class="acc-chip" data-state="'+st.state+'"><i></i>'+esc(st.text)+'</span></div>'
       +(g(AV)?'<button type="button" class="acc-rm" onclick="ACCOUNT.removeAvatar()">Bild entfernen</button>':'')+'</div>'
       +'<div class="acc-grid">'
-      +'<button type="button" class="acc-g pri" onclick="ACCOUNT.go(\'sync\')"><i>'+svg(IC.login)+'</i>Sync</button>'
+      +'<button type="button" class="acc-g pri" onclick="ACCOUNT.go(\'sync\')"><i>'+svg(IC.login)+'</i>'+(typeof SYNC!=='undefined'&&SYNC.connected()?'Angemeldet':'Anmelden')+'</button>'
       +'<button type="button" class="acc-g" onclick="ACCOUNT.go(\'rank\')"><i>'+svg(IC.trophy)+'</i>Ranking</button>'
       +'<button type="button" class="acc-g" onclick="ACCOUNT.go(\'share\')"><i>'+svg(IC.share)+'</i>Teilen</button>'
       +'<button type="button" class="acc-g" onclick="ACCOUNT.go(\'set\')"><i>'+svg(IC.set)+'</i>Einstell.</button></div>'
@@ -77,12 +77,19 @@ const ACCOUNT=(function(){
     card.style.right=Math.max(8,Math.round(innerWidth-(r?r.right:innerWidth-16)))+'px';   // rechte Kante bündig mit dem Account-Knopf
   }
   function open(btn){ if(!box) build(); render(); box.hidden=false; place(btn); box.querySelector('.acc-g')?.focus({preventScroll:true}); }
-  function close(){ if(box) box.hidden=true; }
+  function close(){ if(box) box.hidden=true; try{ SYNC.panel(null); }catch(e){} }
   function toggle(btn){ if(box&&!box.hidden) close(); else open(btn); }
+  // Anmelden: kein neues Pop-up, das Account-Fenster wechselt animiert zur Anmelde-Ansicht
+  function syncPanel(){
+    const card=box.querySelector('.acc-card'); card.classList.remove('acc-sub'); void card.offsetWidth; card.classList.add('acc-sub');
+    card.innerHTML='<div class="acc-pn"><button type="button" class="acc-back" onclick="ACCOUNT.back()">‹ Zurück</button><div class="sync-pn"></div></div>';
+    SYNC.panel(card.querySelector('.sync-pn'),close);
+  }
+  function back(){ if(box){ box.querySelector('.acc-card').classList.remove('acc-sub'); render(); box.querySelector('.acc-g')?.focus({preventScroll:true}); } }
   function go(a){
+    if(a==='sync'){ syncPanel(); return; }
     close();
-    if(a==='sync') SYNC.open();
-    else if(a==='set') NAV.go('v-settings','Einstellungen');
+    if(a==='set') NAV.go('v-settings','Einstellungen');
     else if(a==='save') BACKUP.export();
     else if(a==='share') APPSHARE.open();
     else if(a==='rank') NAV.go('v-rank','Ranking');
@@ -141,5 +148,5 @@ const ACCOUNT=(function(){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount); else mount();
   addEventListener('resize',()=>{ if(box&&!box.hidden) place(); });
-  return {refreshGame,btnHtml,toggle,open,close,go,theme,rename,pick,pickCover,removeCover,removeAvatar,dot,refresh,NAME,AV,COVER};
+  return {refreshGame,btnHtml,toggle,open,close,go,back,theme,rename,pick,pickCover,removeCover,removeAvatar,dot,refresh,NAME,AV,COVER};
 })();
