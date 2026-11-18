@@ -205,7 +205,7 @@ const PAUSE=(function(){
     const draw=j=>{if(!cur())return;
       const val=r=>`${fmtV(B,r.v)}${B.t?"":" <small>"+u+"</small>"}`,row=r=>`<li class="pz-la${r.me?" me":""}"><span class="pz-lr">${placeIcon(r.place)}</span>${lav(r)}<b>${val(r)}</b><span class="pz-ld">${esc(r.name)}</span></li>`;
       const pod=[2,1,3].map(n=>j.top.find(r=>r.place===n)).filter(Boolean),rest=j.top.filter(r=>r.place>3);
-      const step=r=>`<div class="pz-pd p${r.place}${r.me?" me":""}">${lav(r)}<span class="pz-pn">${esc(r.name)}</span><b>${val(r)}</b><div class="pz-ps">${medalSvg(r.place,r.place===1?34:28)}</div></div>`;
+      const step=r=>`<div class="pz-pd p${r.place}${r.me?" me":""}">${lav(r)}<span class="pz-pn">${esc(r.name)}</span><b>${val(r)}</b><div class="pz-ps"><span class="pz-pnum">${r.place}</span></div></div>`;
       body.innerHTML=(j.top.length?(pod.length?`<div class="pz-podium" role="list">${pod.map(step).join("")}</div>`:"")+(rest.length?`<ol class="pz-lb">${rest.map(row).join("")}</ol>`:""):`<div class="pz-card"><div class="pz-center">Noch niemand in dieser Liste.</div></div>`)
         +(j.me&&j.me.place>20?`<p class="pz-lbn">Dein Platz: ${j.me.place} von ${j.total} (${fmtV(B,j.me.v)})</p>`:j.me?"":`<p class="pz-lbn">Du bist hier noch nicht dabei. Spiele eine Runde.</p>`);};
     const fail=e=>{if(cur())msg(esc(e&&e.message||"Der Server ist gerade nicht erreichbar."),`<button class="pz-chip" data-retry>Erneut versuchen</button>`);const r=root.querySelector("[data-retry]");if(r)r.onclick=hubTop;};
