@@ -4138,14 +4138,14 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .pz-lb li.me{background:var(--m-accent-dim);outline:2px solid var(--m-accent);}
 .pz-lbn{color:var(--m-muted);font-size:.82rem;margin:0 0 12px;}
 /* Platzierungen: Rang-Streifen, Platz auf der Kachel, Karte im Spiel */
-.pz-rk{display:block;width:100%;text-align:left;background:var(--m-card);border-radius:16px;padding:14px 16px;margin:14px 0;box-shadow:inset 4px 0 0 var(--m-accent);color:var(--m-text);font:inherit;border:0;}
-.pz-rkh{display:flex;align-items:center;justify-content:space-between;gap:10px;}
-.pz-rkh b{font-size:.95rem;letter-spacing:0;text-transform:none;color:var(--m-fg);}
-.pz-rkd{padding:3px 10px;border-radius:99px;background:var(--m-accent-dim);color:var(--m-accent-fg);font-size:.72rem;letter-spacing:.02em;text-transform:none;}
-.pz-rkw7{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px;max-width:340px;}
-.pz-rkw7 i{font-style:normal;text-align:center;font-size:.68rem;font-weight:600;padding:4px 0;border-radius:8px;background:var(--m-raised);color:var(--m-muted);}
-.pz-rkw7 i.p{opacity:.55;}
-.pz-rkw7 i.n{background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);}
+.pz-rk{display:block;width:100%;text-align:left;background:none;border-radius:0;padding:8px 2px 10px;margin:10px 0 12px;box-shadow:none;border:0;border-bottom:1px solid var(--m-line,rgba(128,128,128,.25));color:var(--m-text);font:inherit;}
+.pz-rkh{display:flex;align-items:center;gap:10px;}
+.pz-rkh b{font-size:.8rem;letter-spacing:0;text-transform:none;color:var(--m-muted);font-weight:600;}
+.pz-rkd{margin-left:auto;color:var(--m-muted);font-size:.74rem;font-weight:500;letter-spacing:0;text-transform:none;}
+.pz-rkw7{display:inline-flex;gap:4px;}
+.pz-rkw7 i{width:7px;height:7px;border-radius:50%;background:var(--m-raised);box-shadow:inset 0 0 0 1px var(--m-line,rgba(128,128,128,.3));}
+.pz-rkw7 i.p{background:var(--m-muted);opacity:.45;box-shadow:none;}
+.pz-rkw7 i.n{background:var(--m-accent);box-shadow:none;}
 .pz-rk .pz-chips{margin-top:8px;margin-bottom:0;}
 .pz-rk .pz-chip{background:var(--m-raised);}
 .pz-rk .pz-chip.on{background:var(--m-accent);}

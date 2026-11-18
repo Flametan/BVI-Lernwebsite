@@ -1,7 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
-      'Pausenraum: Der Reiter-Balken füllt jetzt die ganze Breite. Die Wochenwertung ist ruhiger gestaltet, mit Akzentstreifen, „noch x Tage“ als Marke und einer Wochenleiste Mo bis So mit dem heutigen Tag.',
+      'Pausenraum: Der Reiter-Balken füllt jetzt die ganze Breite. Die Wochenwertung ist dezent gestaltet: eine schlichte Zeile ohne Kasten, mit sieben kleinen Punkten für die Woche (heutiger Tag in Akzentfarbe) und „noch x Tage“ rechts.',
       'Pausenraum – Wochenwertung: Läufe, die Sie in der laufenden Woche vor dieser Funktion gespielt haben, zählen jetzt ebenfalls für „Woche“ (vorher blieb die Wochenliste leer, bis ein neuer Lauf gespielt wurde). Das Auswahl-Blatt ist auf größeren Bildschirmen breiter und zeigt 4 Spiele pro Reihe.',
       'Pausenraum: Wer in einer Bestenliste Platz 1, 2 oder 3 erreicht, bekommt eine Gold-, Silber- oder Bronzemedaille als 3D-Animation (aufpoppen, drehen, glänzen, Konfetti). Die Medaille erscheint pro Liste nur bei einer neuen Bestplatzierung. Auf den Spielkarten, in der Bestenliste und in der Karte im Spiel steht bei den Plätzen 1 bis 3 eine kleine Medaille. Auf schwachen Geräten wird die Animation automatisch einfacher, bei „Bewegung reduzieren“ erscheint die Medaille ohne Animation.',
       'Pausenraum – Bestenliste: Spiel und Stufe wählen Sie jetzt über ein Auswahl-Blatt statt über viele Schaltflächen. Angezeigt wird zuerst das zuletzt gespielte Spiel.',
