@@ -160,10 +160,13 @@ const PAUSE=(function(){
       const bestOf={};ids.forEach(id=>{const k=id.split(":")[0];if(!bestOf[k])bestOf[k]=id;});
       Object.keys(bestOf).forEach(k=>{const x=j.boards[bestOf[k]],tt=root.querySelector('.pz-gc[data-k="'+k+'"] .pz-gr[data-has]');if(tt)tt.innerHTML=`<button class="pz-rkb${x.place<=3?" g":""}" data-rkb="${bestOf[k]}" aria-label="Bestenliste ${esc(bname(bestOf[k]))} öffnen: Platz ${x.place} von ${x.total}">${x.place<=3?medalSvg(x.place,18):""}Platz ${x.place} von ${x.total}</button>`;});
       const days=7-((new Date().getDay()+6)%7),ev=get("bvi_pause_ev",null);
-      const bad=[];ids.forEach(id=>{const x=j.boards[id];if(x.wplace===1&&x.wtotal>=2)bad.push(["Wochensieger "+bname(id),1,id]);else if(x.wplace&&x.wplace<=3&&x.wtotal>=3)bad.push(["Top 3 "+bname(id),0,id]);});
-      bad.sort((a,b)=>b[1]-a[1]);
+      // Wochenstand: jede Liste, in der in dieser Woche ein Ergebnis zählt (nicht nur Siege), beste Plätze zuerst
+      const bad=[];ids.forEach(id=>{const x=j.boards[id];if(!x.wplace)return;const win=x.wplace===1&&x.wtotal>=2;
+        bad.push([bname(id)+" · "+(x.wtotal<2?"noch allein":win?"Platz 1 von "+x.wtotal:"Platz "+x.wplace+" von "+x.wtotal),win?1:0,id,x.wplace/Math.max(x.wtotal,1)]);});
+      bad.sort((a,b)=>b[1]-a[1]||a[3]-b[3]);
+      const wkPlayed=Object.keys(weekObj().g).length>0;
       const evT=ev&&j.boards[ev.b]?`<div class="pz-rkev"><span><b>${esc(ev.by)}</b> hat Sie in ${esc(bname(ev.b))} überholt. Holen Sie sich Platz ${ev.from} zurück!</span><button data-evx aria-label="Hinweis schließen">×</button></div>`:"";
-      t.insertAdjacentHTML("afterend",`<div class="pz-rk"><div class="pz-rkh">Wochenwertung · noch ${days} ${days===1?"Tag":"Tage"}</div>${evT}${bad.length?`<div class="pz-chips">${bad.slice(0,4).map(b=>`<button class="pz-chip${b[1]?" on":""}" data-rkb="${b[2]}">${esc(b[0])}</button>`).join("")}</div>`:`<div class="pz-rkt">Noch keine Platzierung diese Woche. Spielen Sie eine Runde, um vorn mitzumischen.</div>`}</div>`);
+      t.insertAdjacentHTML("afterend",`<div class="pz-rk"><div class="pz-rkh"><b>Wochenwertung</b><span class="pz-rkw7" aria-hidden="true">${[0,1,2,3,4,5,6].map(i=>`<i class="${i<7-days?"p":i===7-days?"n":""}"></i>`).join("")}</span><span class="pz-rkd">noch ${days} ${days===1?"Tag":"Tage"}</span></div>${evT}${bad.length?`<div class="pz-chips">${bad.slice(0,4).map(b=>`<button class="pz-chip${b[1]?" on":""}" data-rkb="${b[2]}">${esc(b[0])}</button>`).join("")}</div>`:`<div class="pz-rkt">${wkPlayed?"Ihre Ergebnisse dieser Woche sind noch nicht in der Wertung angekommen. Sie werden beim nächsten Öffnen mit Verbindung übertragen.":"Noch kein Ergebnis diese Woche. Spielen Sie eine Runde, um vorn mitzumischen."}</div>`}</div>`);
       root.querySelectorAll("[data-rkb]").forEach(x=>x.onclick=()=>gotoTop(x.dataset.rkb));
       const x=root.querySelector("[data-evx]");if(x)x.onclick=()=>{set("bvi_pause_ev",null);const e=root.querySelector(".pz-rkev");if(e)e.remove();};
     });
