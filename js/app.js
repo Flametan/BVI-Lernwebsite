@@ -7238,6 +7238,24 @@ document.addEventListener('DOMContentLoaded',()=>{
   window.addEventListener('online', updateOnlineStatus);
   document.addEventListener('visibilitychange', updateOnlineStatus);
   updateOnlineStatus();
+  // Android-App: ist die installierte APK älter als nötig (APK_MIN in js/version.js), erscheint ein Hinweis mit Download. Die Website selbst aktualisiert sich von allein.
+  (function(){
+    if(!window.BVIAndroid||typeof APK_MIN==='undefined') return;
+    let lvl=0; try{ if(typeof BVIAndroid.apkLevel==='function') lvl=+BVIAndroid.apkLevel()||0; }catch(e){}
+    if(lvl>=APK_MIN) return;
+    const KEY='bvi_apk_later', URL='https://github.com/Flametan/BVI-Lernwebsite/releases/download/android-latest/bvi-lernwebsite.apk';
+    try{ if(Date.now()-(+localStorage.getItem(KEY)||0)<864e5) return; }catch(e){}
+    setTimeout(()=>{
+      if(document.getElementById('apk-up')) return;
+      const d=document.createElement('div'); d.id='apk-up'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-labelledby','apk-up-t');
+      d.innerHTML='<div class="apk-box"><div class="apk-t" id="apk-up-t">Neue App-Version nötig</div><p>Für die neuesten Funktionen brauchen Sie die aktuelle Android-App. Laden Sie sie herunter, öffnen Sie die Datei und bestätigen Sie „Installieren“. Ihre Lernstände bleiben erhalten.</p><div class="apk-act"><button type="button" class="btn btn-ghost" data-later>Später</button><a class="btn btn-gold" href="'+URL+'" target="_blank" rel="noopener noreferrer" data-dl>Herunterladen</a></div></div>';
+      document.body.appendChild(d);
+      const later=()=>{ try{ localStorage.setItem(KEY,String(Date.now())); }catch(e){} d.remove(); };
+      d.querySelector('[data-later]').onclick=later;
+      d.querySelector('[data-dl]').addEventListener('click',()=>setTimeout(()=>d.remove(),300));
+      d.addEventListener('click',e=>{ if(e.target===d) later(); });
+    },3000);
+  })();
   if('serviceWorker' in navigator){
     // Neue Version: nicht mitten im Lernen neu laden, sondern einen Hinweis zeigen
     const hadSW=!!navigator.serviceWorker.controller;

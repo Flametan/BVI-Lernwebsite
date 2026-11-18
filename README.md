@@ -111,7 +111,7 @@ node smoke.cjs && node logic.cjs && node duell.cjs
 - **Speiseplan IdF** (Tipp auf „Mittagessen“ im Stundenplan): Pro Woche neue Tage in `data/speiseplan.json` unter `tage` ergänzen (Schlüssel = Datum), `stand` anpassen; Tage ohne Eintrag zeigen „noch kein Speiseplan“.
 - **Master-Klausurtermine** stehen in `DEF_EXAMS` (`js/app.js`); nach dem letzten Termin blendet sich der Countdown von selbst aus.
 - **Jahrgangs-Dateien** (`jahrgaenge/<ID>.json`) sind optional; ohne sie arbeitet jeder Jahrgang mit den eigenen Einträgen.
-- **Android:** Die APK wird nur bei Änderungen unter `android/**` oder an `js/version.js` neu gebaut; Inhalte kommen über die Website.
+- **Android:** Die APK wird nur bei Änderungen unter `android/**` oder an `js/version.js` neu gebaut; Inhalte kommen über die Website. Braucht eine Änderung zwingend die neue APK, `APK_LEVEL` in `MainActivity.kt` und `APK_MIN` in `js/version.js` auf dieselbe höhere Zahl setzen: Installierte Apps mit niedrigerem Stand zeigen dann ein Pop-up mit Download (Hinweis „Später“ gilt einen Tag). Apps ohne diese Funktion zählen als Stand 0.
 - **iPhone/iPad:** Safari löscht Website-Daten nach etwa 7 Tagen ohne Besuch. Als App auf dem Home-Bildschirm gilt das nicht; zusätzlich hilft die Sicherung.
 
 ---
