@@ -18,7 +18,7 @@ const PAUSE=(function(){
   /* ---------- Bestenlisten: je Spiel (und Stufe) die zehn besten Läufe, nur auf dem Gerät und im Sync ---------- */
   const TOPKEY="bvi_pause_top";
   const LV4=[["leicht","Leicht"],["mittel","Mittel"],["schwer","Schwer"],["sehr","Sehr schwer"]];
-  const BOARDS={fahrt:{u:"Punkte"},duell:{u:"Punkte"},tagesfrage:{u:"Tage",s:1},lueckentext:{u:"Lücken"},reihenfolge:{u:"Serie",s:1},hangman:{u:"Serie",s:1},kreuzwort:{u:"Tage",s:1},mahjong:{t:1,lv:[["leicht","Leicht"],["mittel","Mittel"],["pyramide","Pyramide"],["burg","Burg"],["festung","Festung"]]},sudoku:{t:1,lv:LV4.slice(0,3)},tetris:{u:"Punkte"},solitaer:{u:"Punkte"},g2048:{u:"Punkte"},minesweeper:{t:1,lv:LV4},snake:{u:"Punkte"}};
+  const BOARDS={fahrt:{u:"Punkte"},duell:{u:"Punkte"},lueckentext:{u:"Lücken"},reihenfolge:{u:"Serie",s:1},hangman:{u:"Serie",s:1},kreuzwort:{u:"Tage",s:1},mahjong:{t:1,lv:[["leicht","Leicht"],["mittel","Mittel"],["pyramide","Pyramide"],["burg","Burg"],["festung","Festung"]]},sudoku:{t:1,lv:LV4.slice(0,3)},tetris:{u:"Punkte"},solitaer:{u:"Punkte"},g2048:{u:"Punkte"},minesweeper:{t:1,lv:LV4},snake:{u:"Punkte"}};
   const ymd=(off)=>{const d=new Date();d.setDate(d.getDate()+(off||0));const q=n=>("0"+n).slice(-2);return d.getFullYear()+"-"+q(d.getMonth()+1)+"-"+q(d.getDate());};
   // Ergebnis eintragen: v = Punkte, Sekunden (Zeitspiele, niedriger ist besser) oder Serie; lv = Stufe
   function addScore(k,v,lv){const B=BOARDS[k];v=Math.round(+v);if(!B||!isFinite(v)||v<0||(!B.t&&v<1))return;
@@ -26,7 +26,7 @@ const PAUSE=(function(){
     if(B.s)a=a.filter(e=>!(e.p===v-1&&e.d===ymd(-1)&&B.u==="Tage"));
     let n="";try{n=(localStorage.getItem("bvi_profile_name")||"").slice(0,30);}catch(e){}
     const e={p:v,d:ymd(0),a:B.t?1:0};if(n)e.n=n;a.push(e);
-    a.sort((x,y)=>B.t?x.p-y.p:y.p-x.p);T[id]=a.slice(0,10);set(TOPKEY,T);weekAdd(id,v,!!B.t);pushBests();}
+    a.sort((x,y)=>B.t?x.p-y.p:y.p-x.p);T[id]=a.slice(0,10);set(TOPKEY,T);weekAdd(id,v,!!B.t);topG=k;topL=lv||"";set("bvi_pause_topg",topG);set("bvi_pause_topl",topL);pushBests();}
   // Wochenbestwerte (Wochenwertung): je Liste der beste Wert der laufenden ISO-Woche
   const WKEY="bvi_pause_wk";
   const wkNow=()=>{try{return GAME.isoWeek();}catch(e){return "";}};
@@ -41,7 +41,6 @@ const PAUSE=(function(){
     const put=(id,v,B)=>{v=Math.round(+v);if(!isFinite(v)||v<0||(!B.t&&v<1)||(Array.isArray(T[id])&&T[id].length))return;const e={p:v,d:"2026-11-17",a:B.t?1:0};if(n)e.n=n;T[id]=[e];ch++;};
     Object.keys(BOARDS).forEach(k=>{const B=BOARDS[k],v=b[k];if(v==null)return;
       if(B.lv){if(v&&typeof v==="object")B.lv.forEach(l=>{if(typeof v[l[0]]==="number")put(k+":"+l[0],v[l[0]],B);});}
-      else if(k==="tagesfrage"){if(v&&typeof v==="object"&&v.max)put(k,v.max,B);}
       else if(typeof v==="number")put(k,v,B);});
     if(ch)set(TOPKEY,T);}catch(e){}})();
   const ICON={
@@ -72,7 +71,6 @@ const PAUSE=(function(){
     ['snake','flame','Einsatzleitung-Snake','Löschzug durchs Feuer steuern · wähle Atemluft und Löschwasser als Herausforderung',()=>SNAKEGAME],
     ['solitaer','cards','Solitär','Klondike mit Flammen, Löschern, Äxten und Leitern · Karten ziehen oder antippen',()=>SOLGAME],
     ['minesweeper','mine','Minesweeper','Brandherde im Dunkeln aufspüren · vier Stufen von Leicht bis Sehr schwer',()=>MSGAME],
-    ['tagesfrage','sun','Frage des Tages','Drei Prüfungsfragen, jeden Tag neu und für alle gleich · halte deine Serie',()=>TAGGAME],
     ['kreuzwort','cross','Kreuzworträtsel','Fachbegriffe, jeden Tag ein neues Rätsel für alle',()=>KWGAME],
     ['sudoku','sudoku','Sudoku','Drei Stufen · mit Notizen, Tipp und Rückgängig',()=>SUGAME],
     ['hangman','hang','Galgenmännchen','Fachbegriffe erraten, bevor das Feuer die Leiter erreicht',()=>HMGAME],
@@ -87,7 +85,6 @@ const PAUSE=(function(){
   function bestChip(k){const b=best()[k];if(b==null)return'';
     if(k==='minesweeper'){const L=[['sehr','Sehr schwer'],['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']].find(x=>b[x[0]]!=null);return L?`${L[1]} ${fmtT(b[L[0]])}`:'';}
     if(k==='sudoku'){const L=[['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']].find(x=>b&&b[x[0]]!=null);return L?`${L[1]} ${fmtT(b[L[0]])}`:'';}
-    if(k==='tagesfrage'){const n=b&&b.max;return n?`Beste Serie ${n} ${n===1?'Tag':'Tage'}`:'';}
     if(k==='kreuzwort')return typeof b==='number'&&b>0?`Beste Serie ${b} ${b===1?'Tag':'Tage'}`:'';
     if(k==='mahjong'){const o=typeof b==='number'?{pyramide:b}:b;const L=[['festung','Festung'],['burg','Burg'],['pyramide','Pyramide'],['mittel','Mittel'],['leicht','Leicht']].find(x=>o&&o[x[0]]!=null);return L?`${L[1]} ${fmtT(o[L[0]])}`:'';}
     if(k==='lueckentext')return `${b} in 60 s`;
@@ -95,12 +92,12 @@ const PAUSE=(function(){
     return `Rekord ${typeof b==='number'?b.toLocaleString('de-DE'):b}`;}
   const bestTxt=bestChip;
   // kurze Untertitel für die Kacheln
-  const SHORT={fahrt:'5, 10 oder 15 Fragen, Hilfsfrist',duell:'Zu zweit live, per QR-Code',snake:'Löschzug durchs Feuer steuern',solitaer:'Klondike mit Flammen und Leitern',minesweeper:'Brandherde im Dunkeln aufspüren',tagesfrage:'3 Fragen, jeden Tag neu',kreuzwort:'Jeden Tag ein neues Rätsel',sudoku:'Leicht, Mittel, Schwer',hangman:'Fachbegriffe erraten',lueckentext:'60 Sekunden, Lücken füllen',reihenfolge:'Abläufe sortieren',g2048:'Dienstgrade verschmelzen',tetris:'Fahrzeuge stapeln',mahjong:'5 Stufen, Paare abräumen'};
+  const SHORT={fahrt:'5, 10 oder 15 Fragen, Hilfsfrist',duell:'Zu zweit live, per QR-Code',snake:'Löschzug durchs Feuer steuern',solitaer:'Klondike mit Flammen und Leitern',minesweeper:'Brandherde im Dunkeln aufspüren',kreuzwort:'Jeden Tag ein neues Rätsel',sudoku:'Leicht, Mittel, Schwer',hangman:'Fachbegriffe erraten',lueckentext:'60 Sekunden, Lücken füllen',reihenfolge:'Abläufe sortieren',g2048:'Dienstgrade verschmelzen',tetris:'Fahrzeuge stapeln',mahjong:'5 Stufen, Paare abräumen'};
   // Reiter „Simulationen“: führt in das eigene 3D-Spiel unter game/ (eigene Seite, Fortschritt in bvi_game_v1)
   const TKEY='bvi_pause_tab';let ptab=get(TKEY,'spiele');
   const IDF3D=[['begehung','grid','Begehung','Bauteile im Gebäude bestimmen'],['stellungnahme','cards','Stellungnahme','Aus Textbausteinen schreiben'],['stab','duel','Stab','Meldungen zum Sachgebiet bringen'],['presse','bolt','Presse','Statement vor laufender Kamera'],['lage','scale','Lage','Zivile Verteidigung im Lagezentrum'],['ucpm','truck','Hilfeersuchen','Hilfe über die EU anfordern'],['ibk','ladder','IBK','Gespräche und Fragen auf der Wache'],['vak','pairs','VAk','Fragen im Hörsaal'],['feuak','flame','FeuAK','Bedarfsplanung mit Budget']];
   const tabs=()=>`<div class="pz-mode pz-tabs" role="tablist" aria-label="Bereich im Pausenraum">${[['spiele','Pausenspiele'],['top','Bestenliste'],['idf3d','Simulationen']].map(([k,t])=>`<button role="tab" aria-selected="${ptab===k}" data-pt="${k}" class="${ptab===k?'on':''}">${t}</button>`).join('')}</div>`;
-  const tabsOn=()=>root.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{ptab=x.dataset.pt;set(TKEY,ptab);hub();});
+  const tabsOn=()=>root.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{shOpen=false;ptab=x.dataset.pt;set(TKEY,ptab);hub();});
   function hub3d(){
     const st=get('bvi_game_v1',{}),m=(st&&st.m)||{};
     const fertig=k=>Object.keys(m[k]||{}).filter(i=>m[k][i]&&m[k][i].ok).length;
@@ -110,7 +107,7 @@ const PAUSE=(function(){
     ${IDF3D.map(g=>{const n=fertig(g[0]);return `<a class="pz-tile" href="${url(g[0])}" aria-label="Mission ${g[2]}. ${g[3]}${n?'. '+n+' von '+(g[0]==='begehung'?5:6)+' Leveln geschafft':''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${n?`<span class="pz-bst">${n} von ${g[0]==='begehung'?5:6}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${g[3]}</small></span></a>`;}).join('')}</div></div>`;
     tabsOn();
   }
-  let topG=get("bvi_pause_topg","fahrt"),topL="",topS=get("bvi_pause_tops","me");
+  let topG=get("bvi_pause_topg","fahrt"),topL=get("bvi_pause_topl",""),shOpen=false,topS=get("bvi_pause_tops","me");
   const fmtV=(B,v)=>B.t?fmtT(v):v.toLocaleString("de-DE");
   const rankOn=()=>{try{return !!localStorage.getItem("bvi_rank");}catch(e){return false;}};
   const rankLoad=()=>typeof RANK!=="undefined"?Promise.resolve(RANK):loadJs("js/rank.js").then(()=>RANK);
@@ -132,7 +129,7 @@ const PAUSE=(function(){
     set("bvi_pause_places",np);set("bvi_pause_ev",ev);}
   function loadStand(){if(!rankOn())return Promise.resolve(null);if(STAND&&Date.now()-standT<6e4)return Promise.resolve(STAND);
     return syncNow().then(R=>R.gamesAll()).then(j=>{if(!j||!j.boards)return null;overtake(j);STAND=j;standT=Date.now();return j;}).catch(()=>null);}
-  const gotoTop=(id)=>{if(id){const p=id.split(":");topG=p[0];topL=p[1]||"";set("bvi_pause_topg",topG);}ptab="top";topS="all";set(TKEY,ptab);set("bvi_pause_tops",topS);hub();};
+  const gotoTop=(id)=>{if(id){const p=id.split(":");topG=p[0];topL=p[1]||"";set("bvi_pause_topg",topG);set("bvi_pause_topl",topL);}ptab="top";topS="all";shOpen=false;set(TKEY,ptab);set("bvi_pause_tops",topS);hub();};
   function fillRank(){
     if(ptab!=="spiele"||!root||!root.isConnected)return;
     const place=()=>{root.querySelectorAll(".pz-rk,.pz-rkb").forEach(e=>e.remove());return root.querySelector(".pz-tabs");};
@@ -141,16 +138,13 @@ const PAUSE=(function(){
       const ids=Object.keys(j.boards).sort((a,b)=>j.boards[a].place-j.boards[b].place||j.boards[b].total-j.boards[a].total);
       // Plätze auf den Kacheln: bester Platz je Spiel
       const bestOf={};ids.forEach(id=>{const k=id.split(":")[0];if(!bestOf[k])bestOf[k]=id;});
-      Object.keys(bestOf).forEach(k=>{const x=j.boards[bestOf[k]],tt=root.querySelector('.pz-tile[data-g="'+k+'"] .pz-tt');if(tt)tt.insertAdjacentHTML("beforeend",`<span class="pz-rkb">Platz ${x.place} von ${x.total}</span>`);});
+      Object.keys(bestOf).forEach(k=>{const x=j.boards[bestOf[k]],tt=root.querySelector('.pz-gc[data-k="'+k+'"] .pz-gr[data-has]');if(tt)tt.innerHTML=`<button class="pz-rkb${x.place<=3?" g":""}" data-rkb="${bestOf[k]}" aria-label="Bestenliste ${esc(bname(bestOf[k]))} öffnen: Platz ${x.place} von ${x.total}">Platz ${x.place} von ${x.total}</button>`;});
       const days=7-((new Date().getDay()+6)%7),ev=get("bvi_pause_ev",null);
-      const chips=ids.slice(0,3).map((id,i)=>`<button class="pz-chip${i?"":" on"}" data-rkb="${id}">${esc(bname(id))} · Platz ${j.boards[id].place}</button>`).join("");
       const bad=[];ids.forEach(id=>{const x=j.boards[id];if(x.wplace===1&&x.wtotal>=2)bad.push(["Wochensieger "+bname(id),1,id]);else if(x.wplace&&x.wplace<=3&&x.wtotal>=3)bad.push(["Top 3 "+bname(id),0,id]);});
       bad.sort((a,b)=>b[1]-a[1]);
       const evT=ev&&j.boards[ev.b]?`<div class="pz-rkev"><span><b>${esc(ev.by)}</b> hat Sie in ${esc(bname(ev.b))} überholt. Holen Sie sich Platz ${ev.from} zurück!</span><button data-evx aria-label="Hinweis schließen">×</button></div>`:"";
-      t.insertAdjacentHTML("afterend",`<div class="pz-rk"><div class="pz-rkh">Dein Rang heute</div><div class="pz-chips">${chips}</div><button class="pz-rka" data-rka>Alle Bestenlisten ansehen ›</button>
-        <div class="pz-rkh pz-rkw">Wochenwertung · noch ${days} ${days===1?"Tag":"Tage"}</div>${evT}${bad.length?`<div class="pz-chips">${bad.slice(0,4).map(b=>`<button class="pz-chip${b[1]?" on":""}" data-rkb="${b[2]}">${esc(b[0])}</button>`).join("")}</div>`:`<div class="pz-rkt">Noch keine Platzierung diese Woche. Spielen Sie eine Runde, um vorn mitzumischen.</div>`}</div>`);
+      t.insertAdjacentHTML("afterend",`<div class="pz-rk"><div class="pz-rkh">Wochenwertung · noch ${days} ${days===1?"Tag":"Tage"}</div>${evT}${bad.length?`<div class="pz-chips">${bad.slice(0,4).map(b=>`<button class="pz-chip${b[1]?" on":""}" data-rkb="${b[2]}">${esc(b[0])}</button>`).join("")}</div>`:`<div class="pz-rkt">Noch keine Platzierung diese Woche. Spielen Sie eine Runde, um vorn mitzumischen.</div>`}</div>`);
       root.querySelectorAll("[data-rkb]").forEach(x=>x.onclick=()=>gotoTop(x.dataset.rkb));
-      const a=root.querySelector("[data-rka]");if(a)a.onclick=()=>gotoTop(ids[0]);
       const x=root.querySelector("[data-evx]");if(x)x.onclick=()=>{set("bvi_pause_ev",null);const e=root.querySelector(".pz-rkev");if(e)e.remove();};
     });
   }
@@ -171,15 +165,25 @@ const PAUSE=(function(){
   function hubTop(){
     if(!BOARDS[topG])topG="fahrt";const B=BOARDS[topG],g=GAMES.find(x=>x[0]===topG);if(B.lv&&!B.lv.some(l=>l[0]===topL))topL=B.lv[0][0];if(!B.lv)topL="";
     const id=topL?topG+":"+topL:topG,all=topS!=="me",wk=topS==="week",u=B.t?"Bestzeit":B.u,dd=s=>s.slice(8,10)+"."+s.slice(5,7)+".";
-    const chips=Object.keys(BOARDS).map(k=>{const q=GAMES.find(x=>x[0]===k);return `<button class="pz-chip${k===topG?" on":""}" data-tg="${k}" aria-pressed="${k===topG}">${q[2]}</button>`;}).join("");
-    const lv=B.lv?`<div class="pz-chips pz-lvs" role="group" aria-label="Stufe">${B.lv.map(l=>`<button class="pz-chip${l[0]===topL?" on":""}" data-tl="${l[0]}" aria-pressed="${l[0]===topL}">${l[1]}</button>`).join("")}</div>`:"";
-    const scope=`<div class="pz-chips pz-scope" role="group" aria-label="Wer"><button class="pz-chip${all?"":" on"}" data-ts="me" aria-pressed="${!all}">Meine Ergebnisse</button><button class="pz-chip${all&&!wk?" on":""}" data-ts="all" aria-pressed="${all&&!wk}">Alle Teilnehmer</button><button class="pz-chip${wk?" on":""}" data-ts="week" aria-pressed="${wk}">Diese Woche</button></div>`;
-    root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Bestenliste</div>${scope}<div class="pz-chips" role="group" aria-label="Spiel">${chips}</div>${lv}
-    <div class="pz-lbh"><b>${g[2]}${B.lv?" · "+B.lv.find(l=>l[0]===topL)[1]:""}</b><small>${wk?"Wochenwertung: nur Ergebnisse seit Montag, jeden Montag beginnt sie neu":all?(B.t?"Die schnellsten Teilnehmer, je Person die beste Zeit":"Die besten Teilnehmer, je Person das beste Ergebnis"):(B.t?"Deine zehn schnellsten Läufe, nur auf deinen Geräten":"Deine zehn besten Läufe, nur auf deinen Geräten")}</small></div><div class="pz-lbb"></div>
-    <button class="pz-tile pz-lgo" data-g="${topG}"><span class="pz-tt"><b>${g[2]} spielen</b></span></button></div>`;
+    const lvName=B.lv?B.lv.find(l=>l[0]===topL)[1]:"";
+    const wsBtn=(a,v,on,t)=>`<button class="${on?"on":""}" data-${a}="${v}" aria-pressed="${on}">${t}</button>`;
+    const scope=`<div class="pz-ws" role="group" aria-label="Wer">${wsBtn("ts","me",!all,"Ich")}${wsBtn("ts","all",all&&!wk,"Alle")}${wsBtn("ts","week",wk,"Woche")}</div>`;
+    const tiles=Object.keys(BOARDS).map(k=>{const q=GAMES.find(x=>x[0]===k);return `<button class="pz-sht${k===topG?" on":""}" data-tg="${k}" aria-pressed="${k===topG}"><span class="pz-gi">${svg(q[1])}</span><span>${SHN[k]||q[2]}</span></button>`;}).join("");
+    const lvs=B.lv?`<h3>Stufe</h3><div class="pz-ws" role="group" aria-label="Stufe">${B.lv.map(l=>wsBtn("tl",l[0],l[0]===topL,l[1])).join("")}</div>`:"";
+    root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Bestenliste</div>
+    <button class="pz-pick" data-pick aria-haspopup="dialog" aria-expanded="${shOpen}"><span class="pz-gi">${svg(g[1])}</span><b>${g[2]}<small>${B.lv?"Stufe "+lvName:"Eine Liste"}</small></b><span class="pz-car" aria-hidden="true">▾</span></button>
+    ${scope}
+    <div class="pz-lbh"><b>${g[2]}${B.lv?" · "+lvName:""}</b><small>${wk?"Wochenwertung: nur Ergebnisse seit Montag, jeden Montag beginnt sie neu":all?(B.t?"Die schnellsten Teilnehmer, je Person die beste Zeit":"Die besten Teilnehmer, je Person das beste Ergebnis"):(B.t?"Deine zehn schnellsten Läufe, nur auf deinen Geräten":"Deine zehn besten Läufe, nur auf deinen Geräten")}</small></div><div class="pz-lbb"></div>
+    <button class="pz-tile pz-lgo" data-g="${topG}"><span class="pz-tt"><b>${g[2]} spielen</b></span></button>
+    <div class="pz-sh"${shOpen?"":" hidden"}><div class="pz-shd" data-shx></div><div class="pz-shp" role="dialog" aria-modal="true" aria-label="Spiel und Stufe wählen"><h3>Spiel</h3><div class="pz-shg">${tiles}</div>${lvs}<button class="pz-shc" data-shx>Fertig</button></div></div></div>`;
     tabsOn();
-    root.querySelectorAll("[data-tg]").forEach(x=>x.onclick=()=>{topG=x.dataset.tg;set("bvi_pause_topg",topG);hubTop();});
-    root.querySelectorAll("[data-tl]").forEach(x=>x.onclick=()=>{topL=x.dataset.tl;hubTop();});
+    const closeSh=()=>{shOpen=false;hubTop();const b=root.querySelector("[data-pick]");if(b)b.focus();};
+    root.querySelector("[data-pick]").onclick=()=>{shOpen=true;hubTop();const o=root.querySelector(".pz-sht.on");if(o)o.focus();};
+    root.querySelectorAll("[data-shx]").forEach(x=>x.onclick=closeSh);
+    const sh=root.querySelector(".pz-sh");if(shOpen)sh.onkeydown=e=>{if(e.key==="Escape"){e.stopPropagation();closeSh();}};
+    // Spiel gewählt: ohne Stufen schließt das Blatt, sonst bleibt es für die Stufe offen
+    root.querySelectorAll("[data-tg]").forEach(x=>x.onclick=()=>{topG=x.dataset.tg;topL="";set("bvi_pause_topg",topG);set("bvi_pause_topl","");shOpen=!!BOARDS[topG].lv;hubTop();if(shOpen){const o=root.querySelector(".pz-ws[aria-label=Stufe] button.on");if(o)o.focus();}});
+    root.querySelectorAll("[data-tl]").forEach(x=>x.onclick=()=>{topL=x.dataset.tl;set("bvi_pause_topl",topL);shOpen=false;hubTop();});
     root.querySelectorAll("[data-ts]").forEach(x=>x.onclick=()=>{topS=x.dataset.ts;set("bvi_pause_tops",topS);hubTop();});
     root.querySelector(".pz-lgo").onclick=()=>open(topG);
     const body=root.querySelector(".pz-lbb"),msg=(t,btn)=>{body.innerHTML=`<div class="pz-card"><div class="pz-center">${t}</div>${btn||""}</div>`;};
@@ -200,18 +204,30 @@ const PAUSE=(function(){
       return R.games(myBests(),weekObj()).catch(e=>{if(e.code===404)throw e;}).then(()=>R.gameBoard(id,wk)).then(draw);
     }).catch(fail);
   }
+  const SHN={fahrt:"Einsatzfahrt",duell:"Duell",snake:"Snake",kreuzwort:"Kreuzwort",hangman:"Galgenmännchen",lueckentext:"Lückentext",reihenfolge:"Reihenfolge",g2048:"2048",tetris:"Tetris"};   // kurze Namen für das Auswahl-Blatt
+  // Bestleistung als Wert + Zeile darunter (für die Karten im Pausenraum)
+  function bestParts(k){const b=best()[k];if(b==null)return null;
+    const lvl=(o,L)=>{const x=L.find(y=>o&&o[y[0]]!=null);return x?[fmtT(o[x[0]]),x[1]]:null;};
+    if(k==='minesweeper')return lvl(b,[['sehr','Sehr schwer'],['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']]);
+    if(k==='sudoku')return lvl(b,[['schwer','Schwer'],['mittel','Mittel'],['leicht','Leicht']]);
+    if(k==='mahjong'){const o=typeof b==='number'?{pyramide:b}:b;return lvl(o,[['festung','Festung'],['burg','Burg'],['pyramide','Pyramide'],['mittel','Mittel'],['leicht','Leicht']]);}
+    if(k==='kreuzwort')return typeof b==='number'&&b>0?[b+' '+(b===1?'Tag':'Tage'),'Beste Serie']:null;
+    if(k==='lueckentext')return [String(b),'Lücken in 60 s'];
+    if(k==='reihenfolge'||k==='hangman')return [String(b),'Beste Serie'];
+    return [typeof b==='number'?b.toLocaleString('de-DE'):String(b),'Punkte'];}
   function hub(){stop();if(ptab==='idf3d')return hub3d();if(ptab==='top')return hubTop();
-    const tile=(k,wide)=>{const g=GAMES.find(x=>x[0]===k),chip=bestChip(k);
-      return `<button class="pz-tile${wide?' wide':''}${k==='fahrt'?' hero':''}" data-g="${k}" title="${g[3]}" aria-label="${g[2]}. ${g[3]}${chip?'. '+chip:''}"><span class="pz-ti"><span class="pz-gi">${svg(g[1])}</span>${chip?`<span class="pz-bst">${chip}</span>`:''}</span><span class="pz-tt"><b>${g[2]}</b><small>${SHORT[k]}</small></span></button>`;};
+    // Karte: Spiel starten (Tipp auf die Karte), darunter die Rang-Marke (öffnet die Bestenliste, kommt nach dem Laden)
+    const tile=k=>{const g=GAMES.find(x=>x[0]===k),bp=bestParts(k),chip=bestChip(k);
+      return `<div class="pz-gc${k==='fahrt'?' fw':''}" data-k="${k}"><button class="pz-gm" data-g="${k}" title="${g[3]}" aria-label="${g[2]}. ${g[3]}${chip?'. '+chip:''}"><span class="pz-gh"><span class="pz-gi">${svg(g[1])}</span><b>${g[2]}</b></span>${bp?`<span class="pz-gv">${bp[0]}<small>${bp[1]}</small></span>`:`<span class="pz-gs">${SHORT[k]}</span>`}</button><span class="pz-gr"${bp?' data-has':''}>${bp?'':'<span class="pz-gn">Noch nicht gespielt</span>'}</span></div>`;};
     root.innerHTML=`<div class="pz-wrap pz-hub">${tabs()}<div class="m-sec pz-sec">Feuerwehr</div>
-    <div class="pz-tiles pz-fw">${tile('fahrt')}${['duell','tagesfrage','lueckentext','reihenfolge','hangman','kreuzwort'].map(k=>tile(k)).join('')}</div>
+    <div class="pz-tiles pz-fw">${tile('fahrt')}${['duell','lueckentext','reihenfolge','hangman','kreuzwort'].map(k=>tile(k)).join('')}</div>
     <div class="m-sec pz-sec">Klassiker</div>
     <div class="pz-tiles pz-kl">${['mahjong','sudoku','tetris','solitaer','g2048','minesweeper','snake'].map(k=>tile(k)).join('')}</div></div>`;
     tabsOn();
     root.querySelectorAll('[data-g]').forEach(x=>x.onclick=()=>open(x.dataset.g));
     fillRank();
   }
-  const LABEL={fahrt:'Prüfungsfragen',duell:'Prüfungsfragen',tagesfrage:'Prüfungsfragen',snake:'Geschicklichkeit',tetris:'Geschicklichkeit',g2048:'Knobelspiel',solitaer:'Kartenspiel',minesweeper:'Knobelspiel',sudoku:'Knobelspiel',mahjong:'Knobelspiel',kreuzwort:'Fachbegriffe',hangman:'Fachbegriffe',lueckentext:'Lernkarten',reihenfolge:'Wissen'};
+  const LABEL={fahrt:'Prüfungsfragen',duell:'Prüfungsfragen',snake:'Geschicklichkeit',tetris:'Geschicklichkeit',g2048:'Knobelspiel',solitaer:'Kartenspiel',minesweeper:'Knobelspiel',sudoku:'Knobelspiel',mahjong:'Knobelspiel',kreuzwort:'Fachbegriffe',hangman:'Fachbegriffe',lueckentext:'Lernkarten',reihenfolge:'Wissen'};
   function open(k){const g=GAMES.find(x=>x[0]===k);if(!g)return;stop();cur=g[4]();
     if(!pushed){try{history.pushState(Object.assign({},history.state,{pz:1}),'');pushed=true;}catch(e){}}
     root.innerHTML=`<div class="pz-wrap"><div class="pz-head"><button class="pz-back">‹ Alle Spiele</button><span class="pz-center" style="font-size:.78rem">${LABEL[k]||''}</span></div><div class="pz-rk3" hidden></div><div class="pz-body"></div></div>`;
@@ -229,7 +245,6 @@ const PAUSE=(function(){
   /* ---------- weitere Spiele: je eine eigene Datei, wird erst beim Öffnen geladen ---------- */
   const lazy=(file,name,get)=>{const o={start(el){el.innerHTML='<div class="pz-card"><div class="pz-center">Lade Spiel …</div></div>';loadJs(file).then(()=>{if(cur===o&&el.isConnected)get().start(el,FAHRT);}).catch(()=>{el.innerHTML='<div class="pz-card"><div class="pz-center">Das Spiel konnte nicht geladen werden. Bitte Verbindung prüfen.</div></div>';});},
     stop(){try{const g=get();if(g&&g.stop)g.stop();}catch(e){}}};return o;};
-  const TAGGAME=lazy('js/tagesfrage.js','TAGESFRAGE',()=>TAGESFRAGE);
   const KWGAME=lazy('js/kreuzwort.js','KREUZWORT',()=>KREUZWORT);
   const SUGAME=lazy('js/sudoku.js','SUDOKU',()=>SUDOKU);
   const HMGAME=lazy('js/hangman.js','HANGMAN',()=>HANGMAN);
