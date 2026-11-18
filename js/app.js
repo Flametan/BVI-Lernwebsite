@@ -3432,6 +3432,7 @@ const LP=(function(){
     const list=cardsFor(id);
     const on=!!list.length&&prefPrac()&&mq.matches;
     document.body.classList.toggle('lp-prac',on);
+    requestAnimationFrame(()=>{ if(cur&&win&&win.classList.contains('on')) place(); });   // die Seite wird mit dem Übungsfenster schmaler bzw. wieder breiter: Kapitelfenster nachziehen
     if(!on){ panel&&panel.classList.remove('on'); return; }
     if(!panel){ panel=document.createElement('aside'); panel.id='lp-practice'; panel.setAttribute('aria-label','Lernkarten zu dieser Seite'); document.body.appendChild(panel); }
     if(pr.id!==id){ pr={id,list:shuf(list),i:0,flip:false,known:0}; }
