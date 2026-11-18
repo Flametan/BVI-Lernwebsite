@@ -5195,3 +5195,18 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 @media(min-width:1100px){#m-home .m-hgrid{grid-template-columns:1fr 1fr;}}
 @media(min-width:701px) and (max-width:1099px){#m-home .m-chart2 .m-plot{--pl:70px;}#m-home .g-d3{gap:10px;padding:10px 24px 10px 14px;}#m-home .g-w3{padding-left:12px;flex:0 1 auto;min-width:0;}#m-home .g-w3 .r{font-size:.8rem;}#m-home .g-r3 em{font-size:.68rem;}}
 @media(min-width:700px){#v-pause .pz-pick,#v-pause .pz-lgo,#v-pause .pz-ws{max-width:100%;}}
+/* Treppchen im Arena-Stil: Leuchten um Platz 1, gefüllte Stufen in Gold, Silber und Bronze */
+.pz-podium{background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--m-accent) 16%,transparent),transparent 70%),var(--m-card);border-radius:20px;padding:18px 12px 0;overflow:hidden;gap:10px;}
+.pz-podium .pz-pd{gap:3px;}
+.pz-podium .pz-pd .rk-av{border:3px solid #aab1bd;background-color:var(--m-raised);}
+.pz-podium .pz-pd.p1 .rk-av{border-color:#f5b82e;box-shadow:0 0 0 4px color-mix(in srgb,#f5b82e 22%,transparent),0 0 26px 6px color-mix(in srgb,#f5b82e 55%,transparent);}
+.pz-podium .pz-pd.p3 .rk-av{border-color:#d9874a;}
+.pz-podium .pz-pn{color:var(--m-fg);font-weight:700;font-size:.82rem;}
+.pz-podium .pz-pd b{font-size:.82rem;color:var(--m-muted);font-weight:600;}
+.pz-podium .pz-ps{box-shadow:none;outline:0;border-radius:12px 12px 0 0;align-items:center;padding:0;height:56px;background:linear-gradient(180deg,#b5bcc8,#7e8693);}
+.pz-podium .pz-pd.p1 .pz-ps{height:84px;background:linear-gradient(180deg,#f7c33b,#d99a12);}
+.pz-podium .pz-pd.p3 .pz-ps{height:42px;background:linear-gradient(180deg,#e0914f,#b8672b);}
+.pz-podium .pz-pd.me .pz-ps{outline:2px solid var(--m-fg);outline-offset:-2px;}
+.pz-pnum{font-size:1.9rem;font-weight:800;line-height:1;color:rgba(0,0,0,.32);}
+.pz-podium .pz-pd.p3 .pz-pnum{font-size:1.5rem;}
+@media(min-width:700px){.pz-podium{padding:24px 20px 0;gap:16px;}.pz-podium .pz-ps{height:80px;}.pz-podium .pz-pd.p1 .pz-ps{height:128px;}.pz-podium .pz-pd.p3 .pz-ps{height:58px;}.pz-pnum{font-size:2.6rem;}.pz-podium .pz-pd.p3 .pz-pnum{font-size:2rem;}}
