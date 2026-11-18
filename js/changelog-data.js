@@ -1,6 +1,8 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+      'Android-App: Wird einmal eine neue App-Version von GitHub nötig, erscheint in der App ein Hinweis mit Knopf „Herunterladen“ (oder „Später“, dann erst nach einem Tag wieder). Heute ist noch keine neue Version nötig.',
+      'Lernseiten (Tablet/PC): Wenn Sie das Üben-Fenster schließen oder öffnen, passt sich das Kapitelfenster wieder an. Vorher blieb es schmal.',
       'Minesweeper (PC): Der Rechtsklick setzt zuverlässig eine Fahne. Mit der Maus löst langes Drücken keine Fahne mehr aus, das gilt nur noch für Touch und Stift. Vorher konnte ein langes Halten der linken Maustaste den nächsten Rechtsklick verschlucken.',
       'Pausenraum, Bestenlisten präsenter: Oben bei den Pausenspielen zeigt „Dein Rang heute“ Ihre besten Plätze, jede Spielkachel nennt Ihren Platz („Platz 3 von 28“), und im Spiel zeigt eine Karte die Top 3, Ihren Platz und wie viele Punkte oder Sekunden bis zum nächsten Platz fehlen. Neu ist die Wochenwertung (neu jeden Montag) mit Abzeichen „Wochensieger“ und „Top 3“, einem Hinweis, wenn jemand Sie überholt hat, und dem Filter „Diese Woche“ in der Bestenliste. Gilt für Teilnehmer am Ranking; der Sync-Server muss dafür aktualisiert werden.',
       'Mahjong: Fünf Stufen mit eigenen Brettern (Leicht, Mittel, Pyramide, Burg, Festung, 40 bis 124 Steine). Jede Stufe hat eine eigene Bestzeit und eine eigene Bestenliste. Ihr bisheriger Rekord zählt für die Pyramide.',

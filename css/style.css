@@ -1136,6 +1136,13 @@ body{padding-top:env(safe-area-inset-top,0px);}
 .search-box,.quiz-mastery-modal-box{background:var(--b-1a1a1a)!important;border-color:var(--m-line)!important;box-shadow:0 20px 60px rgba(0,0,0,.6)!important;max-height:calc(100dvh - env(safe-area-inset-top,0px) - 24px);}
 .toast-wrap{bottom:calc(var(--m-tabbar-h) + 14px + env(safe-area-inset-bottom,0px));}
 .toast{background:var(--b-2e2e2e);border-color:var(--m-line);}
+/* Hinweis „Neue App-Version nötig“ (Android-App) */
+#apk-up{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.6);}
+#apk-up .apk-box{width:100%;max-width:420px;background:var(--m-card);color:var(--m-fg);border-radius:20px;padding:22px 20px 18px;box-shadow:0 0 0 2px var(--m-accent);}
+#apk-up .apk-t{font-size:1.2rem;font-weight:700;margin-bottom:8px;}
+#apk-up p{margin:0 0 16px;line-height:1.5;color:var(--m-muted);}
+#apk-up .apk-act{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;}
+#apk-up .apk-act .btn{text-decoration:none;}
 
 /* Raster-Bausteine */
 .m-g2{display:flex;flex-direction:column;gap:1rem;}

@@ -26,6 +26,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 
+// Stand der App-Hülle; mit APK_MIN in js/version.js erhöhen, wenn eine neue APK nötig wird
+const val APK_LEVEL = 1
+
 open class MainActivity : AppCompatActivity() {
 
     // Die helle und die beige Variante (MainActivityLight, MainActivityBeige) starten mit hellem Fenster statt schwarzem
@@ -54,6 +57,10 @@ open class MainActivity : AppCompatActivity() {
     // Startsymbole je Akzentfarbe/Design und Streak-Zustand: siehe StreakIcon (activity-alias im Manifest); Orange ist per Manifest aktiv
 
     inner class IconBridge {
+        // Stand der App-Hülle: die Website vergleicht ihn mit APK_MIN (js/version.js) und bietet bei Bedarf den Download an
+        @JavascriptInterface
+        fun apkLevel(): Int = APK_LEVEL
+
         @JavascriptInterface
         fun setIcon(name: String) {
             StreakIcon.setBase(this@MainActivity, name)
