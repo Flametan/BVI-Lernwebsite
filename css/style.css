@@ -4110,7 +4110,10 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .pz-hub{max-width:none;}
 /* Reiter Pausenspiele / Simulationen und die Kacheln der Missionen (Links) */
 .pz-tabs{max-width:none;}
-.pz-tabs button{min-height:44px;font-size:.92rem;}
+.pz-tabs{position:relative;gap:6px;background:var(--m-raised);border-radius:99px;padding:4px;flex-wrap:nowrap;}
+.pz-tabs button{position:relative;min-height:40px;font-size:.92rem;font-weight:700;border-radius:99px;transition:color .25s;}
+.pz-tabs button.on{background:none;color:var(--m-fg);}
+@media (prefers-reduced-motion:reduce){.pz-tabs .rk-pill{transition:none;}}
 .pz-hub a.pz-tile{text-decoration:none;color:var(--m-fg);}
 .pz-hub a.pz-tile.hero{color:var(--m-on-accent,#1c1c1c);}
 @media(min-width:701px){.pz-3d{grid-template-columns:repeat(3,minmax(0,1fr));}.pz-3d .pz-tile.wide{grid-column:1 / -1;}}

@@ -103,8 +103,13 @@ const PAUSE=(function(){
   // Reiter „Simulationen“: führt in das eigene 3D-Spiel unter game/ (eigene Seite, Fortschritt in bvi_game_v1)
   const TKEY='bvi_pause_tab';let ptab=get(TKEY,'spiele');
   const IDF3D=[['begehung','grid','Begehung','Bauteile im Gebäude bestimmen'],['stellungnahme','cards','Stellungnahme','Aus Textbausteinen schreiben'],['stab','duel','Stab','Meldungen zum Sachgebiet bringen'],['presse','bolt','Presse','Statement vor laufender Kamera'],['lage','scale','Lage','Zivile Verteidigung im Lagezentrum'],['ucpm','truck','Hilfeersuchen','Hilfe über die EU anfordern'],['ibk','ladder','IBK','Gespräche und Fragen auf der Wache'],['vak','pairs','VAk','Fragen im Hörsaal'],['feuak','flame','FeuAK','Bedarfsplanung mit Budget']];
-  const tabs=()=>`<div class="pz-mode pz-tabs" role="tablist" aria-label="Bereich im Pausenraum">${[['spiele','Pausenspiele'],['top','Bestenliste'],['idf3d','Simulationen']].map(([k,t])=>`<button role="tab" aria-selected="${ptab===k}" data-pt="${k}" class="${ptab===k?'on':''}">${t}</button>`).join('')}</div>`;
-  const tabsOn=()=>root.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{shOpen=false;ptab=x.dataset.pt;set(TKEY,ptab);hub();});
+  const tabs=()=>`<div class="pz-mode pz-tabs" role="tablist" aria-label="Bereich im Pausenraum"><i class="rk-pill" aria-hidden="true"></i>${[['spiele','Pausenspiele'],['top','Bestenliste'],['idf3d','Simulationen']].map(([k,t])=>`<button role="tab" aria-selected="${ptab===k}" data-pt="${k}" class="${ptab===k?'on':''}">${t}</button>`).join('')}</div>`;
+  let pill=null;
+  const tabsOn=()=>{root.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{shOpen=false;ptab=x.dataset.pt;set(TKEY,ptab);hub();});
+    // Schieber gleitet vom bisherigen zum neuen Reiter (die Ansicht wird bei jedem Wechsel neu gezeichnet)
+    root.querySelectorAll('.pz-tabs').forEach(tb=>{const pl=tb.querySelector('.rk-pill'),on=tb.querySelector('button.on');if(!pl||!on)return;
+      const to={w:on.offsetWidth,x:on.offsetLeft},from=pill||to;pl.style.transition='none';pl.style.width=from.w+'px';pl.style.transform='translateX('+from.x+'px)';
+      void pl.offsetWidth;pl.style.transition='';pl.style.width=to.w+'px';pl.style.transform='translateX('+to.x+'px)';pill=to;});};
   function hub3d(){
     const st=get('bvi_game_v1',{}),m=(st&&st.m)||{};
     const fertig=k=>Object.keys(m[k]||{}).filter(i=>m[k][i]&&m[k][i].ok).length;
