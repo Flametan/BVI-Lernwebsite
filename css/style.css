@@ -4109,7 +4109,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .pz-src>span{font-size:.8rem;color:var(--m-muted);}
 .pz-hub{max-width:none;}
 /* Reiter Pausenspiele / Simulationen und die Kacheln der Missionen (Links) */
-.pz-tabs{max-width:460px;}
+.pz-tabs{max-width:none;}
 .pz-tabs button{min-height:44px;font-size:.92rem;}
 .pz-hub a.pz-tile{text-decoration:none;color:var(--m-fg);}
 .pz-hub a.pz-tile.hero{color:var(--m-on-accent,#1c1c1c);}
@@ -4138,7 +4138,14 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .pz-lb li.me{background:var(--m-accent-dim);outline:2px solid var(--m-accent);}
 .pz-lbn{color:var(--m-muted);font-size:.82rem;margin:0 0 12px;}
 /* Platzierungen: Rang-Streifen, Platz auf der Kachel, Karte im Spiel */
-.pz-rk{display:block;width:100%;text-align:left;background:var(--m-card);border-radius:16px;padding:12px 14px;margin:0 0 14px;box-shadow:0 0 0 2px var(--m-accent);color:var(--m-text);font:inherit;border:0;}
+.pz-rk{display:block;width:100%;text-align:left;background:var(--m-card);border-radius:16px;padding:14px 16px;margin:14px 0;box-shadow:inset 4px 0 0 var(--m-accent);color:var(--m-text);font:inherit;border:0;}
+.pz-rkh{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.pz-rkh b{font-size:.95rem;letter-spacing:0;text-transform:none;color:var(--m-fg);}
+.pz-rkd{padding:3px 10px;border-radius:99px;background:var(--m-accent-dim);color:var(--m-accent-fg);font-size:.72rem;letter-spacing:.02em;text-transform:none;}
+.pz-rkw7{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px;max-width:340px;}
+.pz-rkw7 i{font-style:normal;text-align:center;font-size:.68rem;font-weight:600;padding:4px 0;border-radius:8px;background:var(--m-raised);color:var(--m-muted);}
+.pz-rkw7 i.p{opacity:.55;}
+.pz-rkw7 i.n{background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);}
 .pz-rk .pz-chips{margin-top:8px;margin-bottom:0;}
 .pz-rk .pz-chip{background:var(--m-raised);}
 .pz-rk .pz-chip.on{background:var(--m-accent);}
