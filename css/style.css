@@ -5196,7 +5196,7 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 @media(min-width:701px) and (max-width:1099px){#m-home .m-chart2 .m-plot{--pl:70px;}#m-home .g-d3{gap:10px;padding:10px 24px 10px 14px;}#m-home .g-w3{padding-left:12px;flex:0 1 auto;min-width:0;}#m-home .g-w3 .r{font-size:.8rem;}#m-home .g-r3 em{font-size:.68rem;}}
 @media(min-width:700px){#v-pause .pz-pick,#v-pause .pz-lgo,#v-pause .pz-ws{max-width:100%;}}
 /* Treppchen im Arena-Stil: Leuchten um Platz 1, gefüllte Stufen in Gold, Silber und Bronze */
-.pz-podium{background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--m-accent) 16%,transparent),transparent 70%),var(--m-card);border-radius:20px;padding:18px 12px 0;overflow:hidden;gap:10px;}
+.pz-podium{background:radial-gradient(90% 75% at 50% 18%,color-mix(in srgb,var(--m-accent) 42%,transparent),transparent 72%),linear-gradient(180deg,color-mix(in srgb,var(--m-accent) 20%,var(--m-card)),var(--m-card) 85%);border-radius:20px;padding:18px 12px 0;overflow:hidden;gap:10px;}
 .pz-podium .pz-pd{gap:3px;}
 .pz-podium .pz-pd .rk-av{border:3px solid #aab1bd;background-color:var(--m-raised);}
 .pz-podium .pz-pd.p1 .rk-av{border-color:#f5b82e;box-shadow:0 0 0 4px color-mix(in srgb,#f5b82e 22%,transparent),0 0 26px 6px color-mix(in srgb,#f5b82e 55%,transparent);}
