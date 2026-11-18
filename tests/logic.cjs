@@ -124,6 +124,9 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   // ── IdF-Quiz: Mehrfachauswahl zählt nur ganz richtig ──
   const idfq = await page.evaluate(() => {
     NAV.go('v-idf-altklausur', 'IdF');
+    // Die Seite hat mehrere Reiter (Eingrenzungen, Brainyoo, Altklausur); Mehrfachauswahl-Fragen stehen im Reiter „Altklausur“
+    const alt = [...document.querySelectorAll('#v-idf-altklausur .quiz-topcat-btn')].find(b => /altklausur/i.test(b.dataset.cat));
+    if (alt) IDFQ.setCatFilter(alt.dataset.cat);
     IDFQ.setTypeFilter('multi');
     const cur = () => IDFQ._cq();   // die Frage so, wie sie angezeigt wird (Antworten gemischt)
     const res = {};
@@ -728,32 +731,30 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     NAV.go('v-idf-altklausur', 'IdF Quiz'); await w(500);
     const btns = () => [...document.querySelectorAll('#quiz-topcat-idf .quiz-topcat-btn')];
     r.knoepfe = btns().map(b => b.dataset.cat).join('|');
-    btns().find(b => b.dataset.cat === 'Stabsarbeit').click(); await w(150);
+    // Reiter: Eingrenzungen, Brainyoo, Altklausur; die Wahl wird gemerkt, Lern- und Prüfungsmodus zeigen nur Fragen des Reiters
+    const catOf = () => [...document.querySelectorAll('#quiz-exam-questions-idf .quiz-cat')].map(e => e.textContent);
+    btns().find(b => b.dataset.cat === 'Brainyoo').click(); await w(150);
+    r.merk = localStorage.getItem('bvi_idfq_cat') === 'Brainyoo';
     const cat = () => (document.getElementById('quiz-cat-idf') || {}).textContent;
     const seen = new Set(); for (let i = 0; i < 6; i++) { seen.add(cat()); IDFQ.skip(); await w(30); }
-    r.lern = seen.size === 1 && /Stabsarbeit/.test([...seen][0]);
-    r.merk = localStorage.getItem('bvi_idfq_cat') === 'Stabsarbeit';
+    r.lern = seen.size === 1 && /^Brainyoo/.test([...seen][0]);
     IDFQ.setMode('exam'); await w(200);
-    const qs = [...document.querySelectorAll('#quiz-exam-questions-idf .quiz-cat')].map(e => e.textContent);
-    r.pruef = qs.length === 25 && qs.every(t => t === 'Stabsarbeit');
-    btns().find(b => b.dataset.cat === 'Vorbeugender Brandschutz').click(); await w(200);
-    const qv = [...document.querySelectorAll('#quiz-exam-questions-idf .quiz-cat')].map(e => e.textContent);
-    r.pruefVb = qv.length === 25 && qv.every(t => t === 'Vorbeugender Brandschutz');
-    btns().find(b => b.dataset.cat === 'all').click(); await w(200);
-    r.alle = new Set([...document.querySelectorAll('#quiz-exam-questions-idf .quiz-cat')].map(e => e.textContent)).size >= 2 && localStorage.getItem('bvi_idfq_cat') === null;
+    let cs = catOf(); r.pruef = cs.length === 25 && cs.every(c => c === 'Brainyoo');
+    btns().find(b => b.dataset.cat === 'Eingrenzungen').click(); await w(200);
+    cs = catOf(); r.pruefEin = cs.length === 25 && cs.every(c => c === 'Eingrenzungen');
     IDFQ.setMode('learn'); NAV.go('v-home', 'Start'); return r;
   });
-  eq('Altklausur-Quiz IdF: Themenbereich wählen (Lernen und Prüfung)', iq, { knoepfe: 'all|Vorbeugender Brandschutz|Stabsarbeit|Vorbeugender Brandschutz 12/2026', lern: true, merk: true, pruef: true, pruefVb: true, alle: true });
+  eq('Altklausur-Quiz IdF: Themenbereich wählen (Lernen und Prüfung)', iq, { knoepfe: 'Eingrenzungen|Brainyoo|Altklausur', merk: true, lern: true, pruef: true, pruefEin: true });
 
-  // ── Altklausur-Quiz IdF: neuer Tab „Vorbeugender Brandschutz 12/2026“ (38 Übungsfragen) und gemischte Antwortreihenfolge ──
+  // ── Quiz IdF, Reiter „Eingrenzungen“ (38 Übungsfragen) und gemischte Antwortreihenfolge ──
   const br = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {}; localStorage.removeItem('bvi_idfq_cat');
     NAV.go('v-idf-altklausur', 'IdF Quiz'); await w(400);
-    const btn = [...document.querySelectorAll('#quiz-topcat-idf .quiz-topcat-btn')].find(b => b.dataset.cat === 'Vorbeugender Brandschutz 12/2026');
+    const btn = [...document.querySelectorAll('#quiz-topcat-idf .quiz-topcat-btn')].find(b => b.dataset.cat === 'Eingrenzungen');
     r.tab = !!btn && /38/.test(btn.textContent);
     btn.click(); await w(150); IDFQ.setTypeFilter('all');   // der Typfilter der Tests davor soll nicht stören
-    r.fragen = IDF_QUIZ_Q.filter(q => q.cat === 'Vorbeugender Brandschutz 12/2026').length;
-    r.nurMc = IDF_QUIZ_Q.filter(q => q.cat === 'Vorbeugender Brandschutz 12/2026').every(q => q.type === 'mc' && q.opts.length === 4 && q.correct >= 0 && q.correct < 4 && !/Antwort\s+[a-d]\)/.test(q.exp));
+    r.fragen = IDF_QUIZ_Q.filter(q => q.cat === 'Eingrenzungen').length;
+    r.nurMc = IDF_QUIZ_Q.filter(q => q.cat === 'Eingrenzungen').every(q => q.type === 'mc' && q.opts.length === 4 && q.correct >= 0 && q.correct < 4 && !/Antwort\s+[a-d]\)/.test(q.exp));
     // Lernmodus: oft neu mischen; die richtige Antwort steht nicht immer an derselben Stelle, bleibt aber die richtige
     const pos = new Set(); let stimmt = true, anders = false;
     for (let k = 0; k < 40; k++) {
@@ -784,7 +785,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.pruefOrdnung = ordnungOk; r.pruefGemischt = geaendert;
     IDFQ.setMode('learn'); NAV.go('v-home', 'Start'); return r;
   });
-  eq('Altklausur-Quiz IdF: neuer Tab mit 38 Übungsfragen, Antworten gemischt und richtig gewertet', br, { tab: true, fragen: 38, nurMc: true, positionen: true, stimmt: true, gemischt: true, wertung: 'ok', pruefOrdnung: true, pruefGemischt: true });
+  eq('Quiz IdF: Reiter Eingrenzungen mit 38 Übungsfragen, Antworten gemischt und richtig gewertet', br, { tab: true, fragen: 38, nurMc: true, positionen: true, stimmt: true, gemischt: true, wertung: 'ok', pruefOrdnung: true, pruefGemischt: true });
 
   // ── Standort-FAQ ──
   const faq = await page.evaluate(async () => {

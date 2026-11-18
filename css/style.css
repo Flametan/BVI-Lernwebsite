@@ -4215,7 +4215,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .pz-sht span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .pz-sht.on{border-color:var(--m-accent);background:var(--m-accent-dim);}
 .pz-shc{width:100%;margin-top:14px;min-height:44px;border:0;border-radius:12px;background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);font:inherit;font-weight:700;cursor:pointer;}
-@media(min-width:701px){.pz-sh{align-items:center;}.pz-shp{border-radius:24px;padding-bottom:16px;}}
+@media(min-width:701px){.pz-sh{align-items:center;}.pz-shp{max-width:760px;border-radius:24px;padding-bottom:16px;}.pz-shg{grid-template-columns:repeat(4,minmax(0,1fr));}}
 
 
 /* Lernkarten: runde Antwort-Knöpfe, Stempel auf der Karte */
