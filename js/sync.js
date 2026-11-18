@@ -118,10 +118,11 @@ const SYNC=(function(){
   // Pausenspiele: Bestenlisten beider Geräte zusammenlegen (je Spiel die zehn besten, ohne Doppelte)
   function mergeTop(l,r){
     if(!isObj(l)) return r; if(!isObj(r)) return l;
+    if(same(l,r)) return l;
     const out={};
     new Set([...Object.keys(l),...Object.keys(r)]).forEach(id=>{
       const seen=new Set(), all=[].concat(Array.isArray(l[id])?l[id]:[],Array.isArray(r[id])?r[id]:[]).filter(e=>isObj(e)&&typeof e.p==="number"&&{}.toString.call(e.d)==="[object String]");
-      out[id]=all.filter(e=>{ const key=JSON.stringify([e.p,e.d,e.n]); if(seen.has(key)) return false; seen.add(key); return true; }).sort((x,y)=>x.a?x.p-y.p:y.p-x.p).slice(0,10);
+      out[id]=all.filter(e=>{ const key=JSON.stringify([e.p,e.d,e.n]); if(seen.has(key)) return false; seen.add(key); return true; }).sort((x,y)=>(x.a?x.p-y.p:y.p-x.p)||(x.d<y.d?-1:x.d>y.d?1:0)||String(x.n||'').localeCompare(String(y.n||''))).slice(0,10);
     });
     return out;
   }
@@ -129,6 +130,7 @@ const SYNC=(function(){
     if(/^bvi_(avatar|cover|profile_name|rank)$/.test(k)) return l===b?r:(l===undefined?r:l);
     if(/^bvi_note_/.test(k)) return mergeText(l,b,r);
     const P=s=>{ if(s===undefined||s===null) return undefined; try{ return JSON.parse(s); }catch(e){ return {__raw:s}; } };
+    if(l===r) return l; if(l===b) return r; if(r===b) return l;   // nur bei Änderungen auf beiden Seiten zusammenführen (sonst bleibt der Wert unverändert)
     const v=k==='bvi_game_v1'?mergeGame(P(l),P(b),P(r)):k==='bvi_pause_top'?mergeTop(P(l),P(r)):mergeVal(P(l),P(b),P(r));
     return v===undefined?undefined:(isObj(v)&&'__raw' in v?v.__raw:JSON.stringify(v));
   }
