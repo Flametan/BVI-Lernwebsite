@@ -4842,7 +4842,8 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
   #v-flashcards .fc-tile b,#v-flashcards .fc-tile small{display:none;}
   #v-flashcards .fc-tile .fc-ti{margin:0;}
   #v-flashcards .fc-seg{display:flex;gap:8px;padding:.5rem 16px .6rem;}
-  #v-flashcards .fc-seg-b{flex:none;flex-direction:row;padding:8px 14px;border-radius:99px;}
+  #v-flashcards .fc-seg-b{flex:0 1 auto;min-width:0;flex-direction:row;padding:8px 14px;border-radius:20px;}
+  #v-flashcards .fc-seg-b b{white-space:normal;line-height:1.15;}
   #v-flashcards .fc-seg-b small{display:none;}
   #v-flashcards .fc-sub-bar.fc-sub-grid,#v-flashcards .fc-filter-row{grid-template-columns:repeat(auto-fit,minmax(60px,1fr))!important;grid-auto-flow:row!important;gap:6px!important;}
   #v-flashcards .fc-t4{flex-direction:column;align-items:center;gap:2px;padding:8px 2px 7px;text-align:center;}

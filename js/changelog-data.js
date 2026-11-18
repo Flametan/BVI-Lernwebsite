@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.2.5',ts:'2026-11-17T10:00',items:[
+      'Lernkarten (Handy): Der Reiter „Prüfungsrelevante Hinweise“ oben war rechts abgeschnitten. Die beiden Reiter passen sich jetzt der Breite an.',
       'Sync: Der Hinweis „Von einem anderen Gerät aktualisiert“ kam fälschlich immer wieder, auch mit nur einem Gerät. Die Bestenlisten der Pausenspiele werden jetzt nur noch zusammengeführt, wenn sie sich auf beiden Seiten geändert haben.',
       'Android-App: Wird einmal eine neue App-Version von GitHub nötig, erscheint in der App ein Hinweis mit Knopf „Herunterladen“ (oder „Später“, dann erst nach einem Tag wieder). Heute ist noch keine neue Version nötig.',
       'Lernseiten (Tablet/PC): Wenn Sie das Üben-Fenster schließen oder öffnen, passt sich das Kapitelfenster wieder an. Vorher blieb es schmal.',
