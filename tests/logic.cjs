@@ -306,7 +306,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.games = document.querySelectorAll('#pause-root [data-g]').length;
     // jedes nachgeladene Spiel öffnet sich (Datei wird geladen, Spielfeld erscheint) und Zurück führt zur Auswahl
     r.opened = {};
-    for (const g of ['tagesfrage', 'kreuzwort', 'sudoku', 'hangman', 'lueckentext', 'reihenfolge', 'g2048', 'tetris', 'mahjong']) {
+    for (const g of ['kreuzwort', 'sudoku', 'hangman', 'lueckentext', 'reihenfolge', 'g2048', 'tetris', 'mahjong']) {
       PAUSE.open(g);
       for (let k = 0; k < 40 && document.querySelector('#pause-root .pz-body').textContent.includes('Lade Spiel'); k++) await w(100);
       const t = document.querySelector('#pause-root .pz-body').textContent;
@@ -337,7 +337,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   ok('Startseite: ohne Lernkarten- und Pausenraum-Zeilen', !pz.home.includes('Pausenraum') && !/m-pause/.test(pz.home));
   ok('Tab-Leiste: Lernkarten und Pausenraum als eigene Tabs, Einstellungen im Account-Menü', pz.tabs.some(x => x.includes('Pausenraum')) && pz.tabs.some(x => x.includes('Lernkarten')) && !pz.tabs.some(x => x.includes('Einstellungen')));
   eq('Pausenraum: 50 Sätze ohne Emojis', [pz.quips, pz.emoji], [50, false]);
-  eq('Pausenraum: 14 Einträge (Einsatzfahrt, Duell, Snake, Solitär, Minesweeper und neun weitere Spiele)', pz.games, 14);
+  eq('Pausenraum: 13 Einträge (Einsatzfahrt, Duell, Snake, Solitär, Minesweeper und acht weitere Spiele)', pz.games, 13);
   ok('Nachgeladene Spiele öffnen sich', Object.keys(pz.opened).filter(k => !k.endsWith('Back')).every(k => pz.opened[k]));
   ok('Zurück im Spiel führt zur Spieleauswahl (Browser-Zurück)', Object.keys(pz.opened).filter(k => k.endsWith('Back')).every(k => pz.opened[k]));
   ok('Einsatzfahrt: 5 Fragen, 4 Optionen, verloren bei 5 Fehlern', pz.fahrt.n === 5 && pz.fahrt.phase === 'end' && pz.fahrt.win === false && pz.fahrt.t > 390 && pz.fahrt.opts);
@@ -560,7 +560,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const w = ms => new Promise(r => setTimeout(r, ms));
     const r = {}; localStorage.removeItem('bvi_snake_opts');
     NAV.go('v-pause', 'Pausenraum'); await w(600);
-    const names = [...document.querySelectorAll('#v-pause .pz-tile b')].map(b => b.textContent);
+    const names = [...document.querySelectorAll('#v-pause .pz-gc b')].map(b => b.textContent);
     r.order = names.indexOf('Einsatzleitung-Snake') === names.indexOf('Einsatzfahrt') + 1;
     document.querySelector('#v-pause [data-g="snake"]').click();
     for (let i = 0; i < 30 && !document.querySelector('.sn-board'); i++) await w(100);
@@ -803,7 +803,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const w = ms => new Promise(r => setTimeout(r, ms));
     const r = {}; localStorage.removeItem('bvi_solitaer_opts');
     NAV.go('v-pause', 'Pausenraum'); await w(600);
-    const names = [...document.querySelectorAll('#v-pause .pz-tile b')].map(b => b.textContent);
+    const names = [...document.querySelectorAll('#v-pause .pz-gc b')].map(b => b.textContent);
     r.order = names.indexOf('Solitär') === names.indexOf('Einsatzleitung-Snake') + 1;
     document.querySelector('#v-pause [data-g="solitaer"]').click();
     for (let i = 0; i < 30 && !document.querySelector('.so-board'); i++) await w(100);

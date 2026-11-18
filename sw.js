@@ -45,7 +45,6 @@ const REST = [
   './js/pause-data.js',
   './js/duell.js',
   './js/snake.js',
-  './js/tagesfrage.js',
   './js/kreuzwort.js',
   './js/sudoku.js',
   './js/hangman.js',
