@@ -41,14 +41,30 @@ button{font:inherit;color:inherit;cursor:pointer;}
 .sec{font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:22px 0 10px;}
 .daily{padding:12px 14px;border-radius:14px;background:var(--accent-bg);font-size:.92rem;}
 .daily.done{background:var(--ok-bg);}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;}
-.card{display:flex;flex-direction:column;gap:6px;text-align:left;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--card);min-height:150px;}
-.card h3{margin:0;font-size:1.12rem;line-height:1.25;}
-.card p{font-size:.88rem;color:var(--muted);}
-.card .meta{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.82rem;font-variant-numeric:tabular-nums;}
-.card .bar{height:6px;border-radius:99px;background:var(--raised);overflow:hidden;}
-.card .bar i{display:block;height:100%;background:var(--accent);border-radius:99px;}
-.card[disabled]{opacity:.62;cursor:default;}
+/* Startseite: Themen als Farbkacheln (Plakat), Training als feste Pillen-Leiste unten */
+#home{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px));}
+#home .daily{margin-bottom:12px;}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+@media (min-width:900px){ .grid{grid-template-columns:repeat(3,1fr);gap:12px;} }
+.card{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;text-align:left;min-height:150px;padding:14px;border:0;border-radius:22px;color:#fff;
+  background:linear-gradient(150deg,hsl(var(--h,28) 70% 38%),hsl(var(--h,28) 60% 22%));}
+.card .bg{position:absolute;right:-10px;top:-6px;width:96px;height:96px;opacity:.22;pointer-events:none;}
+.card .kick{color:inherit;opacity:.8;font-size:.66rem;letter-spacing:.05em;position:relative;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;line-height:1.3;overflow-wrap:break-word;hyphens:auto;}
+.card h3{margin:0;font-size:.95rem;line-height:1.2;position:relative;overflow-wrap:anywhere;hyphens:auto;}
+.card .lvl{margin-top:6px;font-size:.78rem;font-weight:600;font-variant-numeric:tabular-nums;position:relative;}
+.card .bar{height:4px;margin-top:6px;border-radius:99px;background:rgba(255,255,255,.25);overflow:hidden;position:relative;}
+.card .bar i{display:block;height:100%;background:#fff;border-radius:99px;}
+.card:active{filter:brightness(1.1);}
+.card[disabled]{opacity:.55;cursor:default;}
+.pillbar{position:fixed;left:0;right:0;bottom:0;z-index:4;display:flex;gap:8px;justify-content:center;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);}
+.pill{display:flex;align-items:center;gap:5px;min-height:44px;padding:9px 10px;border:0;border-radius:99px;background:var(--card);font-size:.76rem;font-weight:600;white-space:nowrap;}
+.pill svg{color:var(--accent);flex:none;}
+.pill b{font-size:.7rem;font-variant-numeric:tabular-nums;padding:1px 6px;border-radius:99px;background:var(--accent-bg);color:var(--accent);}
+.pill[data-ok] b{background:var(--ok-bg);color:var(--ok);}
+.pill[disabled]{opacity:.55;cursor:default;}
+.pill:active:not([disabled]){background:var(--raised);}
+@media (max-width:599px){ .pillbar{gap:6px;padding-left:8px;padding-right:8px;} .pill{padding:9px;gap:4px;} .pill svg{width:16px;height:16px;} .pill b{display:none;} }
+@media (min-width:600px){ .pill{font-size:.86rem;padding:9px 16px;gap:8px;} }
 .tag{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--raised);color:var(--muted);}
 .foot{margin-top:26px;font-size:.9rem;}
 .foot a{color:var(--accent);}
@@ -121,9 +137,6 @@ button{font:inherit;color:inherit;cursor:pointer;}
 .note{position:absolute;left:16px;right:16px;top:56px;margin:0 auto;max-width:560px;padding:10px 14px;border-radius:12px;background:var(--accent-bg);border:1px solid var(--accent);font-size:.9rem;text-align:center;pointer-events:none;}
 
 /* Training, Bestenliste, Links zum Kapitel */
-.card .wbar{height:6px;border-radius:99px;background:var(--raised);overflow:hidden;margin-top:auto;}
-.card .wbar i{display:block;height:100%;background:var(--ok);border-radius:99px;}
-.card.info-c{cursor:default;}
 .lv-links{margin:-6px 0 14px;font-size:.9rem;}
 .lv-links a,.fb a.src{color:var(--accent);}
 .row.name{border-top:0;max-width:440px;}
