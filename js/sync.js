@@ -326,7 +326,7 @@ const SYNC=(function(){
     }else{
       const c=dlg('<div class="sync-t">Sync ist aktiv</div><p class="sync-p" data-sync-status data-state="'+status.state+'">'+esc(label())+'</p><div class="sync-b"><button class="btn btn-gold" id="sync-a">Jetzt abgleichen</button><button class="btn btn-ghost" id="sync-c">Code &amp; QR anzeigen</button></div><div class="sync-b"><button class="btn btn-ghost" id="sync-u">Serveradresse</button><button class="btn btn-ghost" id="sync-d">Trennen</button><button class="btn btn-ghost sync-danger" id="sync-w">Serverdaten löschen</button></div>');
       c.querySelector('#sync-a').onclick=e=>now(e.target); c.querySelector('#sync-c').onclick=showCode; c.querySelector('#sync-u').onclick=editUrl;
-      c.querySelector('#sync-d').onclick=()=>{ disconnect(); close(); TOAST.show('Sync auf diesem Gerät beendet'); };
+      c.querySelector('#sync-d').onclick=confirmLeave;
       c.querySelector('#sync-w').onclick=confirmWipe;
     }
   }
@@ -396,6 +396,18 @@ const SYNC=(function(){
     const c=dlg('<div class="sync-t">Serveradresse</div><p class="sync-p">Nur ändern, wenn du einen eigenen Sync-Server betreibst.</p><input class="sync-in" id="sync-url" type="url" value="'+esc(url())+'" aria-label="Serveradresse"><div class="sync-b"><button class="btn btn-gold" id="sync-us">Speichern</button><button class="btn btn-ghost" id="sync-ud">Standard</button></div>');
     c.querySelector('#sync-us').onclick=()=>{ const v=c.querySelector('#sync-url').value.trim(); if(/^https:\/\/[^\s]+$/.test(v)){ ls.set(K.url,v); close(); sync({force:true}); } else TOAST.show('Bitte eine https-Adresse eingeben'); };
     c.querySelector('#sync-ud').onclick=()=>{ ls.del(K.url); close(); sync({force:true}); };
+  }
+  // Trennen: entweder nur den Abgleich beenden (Daten bleiben) oder dieses Gerät ganz abmelden (synchronisierte Daten, Ranglisten-Konto, Profil und Avatar werden hier entfernt)
+  function confirmLeave(){
+    const c=dlg('<div class="sync-t">Von diesem Gerät trennen</div><p class="sync-p">Auf dem Server und auf deinen anderen Geräten bleibt alles erhalten.</p><div class="sync-b"><button class="btn btn-gold sync-danger" id="sync-out">Abmelden und Daten von diesem Gerät entfernen</button></div><div class="sync-b"><button class="btn btn-ghost" id="sync-keep">Nur trennen, Daten bleiben hier</button><button class="btn btn-ghost" id="sync-no">Abbrechen</button></div>');
+    c.querySelector('#sync-no').onclick=close;
+    c.querySelector('#sync-keep').onclick=()=>{ disconnect(); close(); TOAST.show('Sync auf diesem Gerät beendet'); };
+    c.querySelector('#sync-out').onclick=()=>{
+      const keys=Object.keys(collect()); own=true;
+      try{ keys.forEach(ls.del); disconnect(); }finally{ own=false; }
+      try{ sessionStorage.removeItem('bvi_sync_rl'); }catch(e){}
+      close(); location.reload();
+    };
   }
   function confirmWipe(){
     const c=dlg('<div class="sync-t">Serverdaten löschen?</div><p class="sync-p">Die verschlüsselten Daten werden auf dem Server gelöscht und der Sync endet auf diesem Gerät. Deine lokalen Daten bleiben. Andere Geräte verlieren die Verbindung.</p><div class="sync-b"><button class="btn btn-gold sync-danger" id="sync-yes">Löschen</button><button class="btn btn-ghost" id="sync-no">Abbrechen</button></div>');

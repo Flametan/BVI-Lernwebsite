@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.0',ts:'2026-11-18T10:00',items:[
+      'Sync: „Trennen“ fragt jetzt nach. „Abmelden und Daten von diesem Gerät entfernen“ löscht hier Lernstand, Ranglisten-Konto, Profilname und Avatar und meldet das Gerät wirklich ab; „Nur trennen“ beendet wie bisher nur den Abgleich. Server und andere Geräte bleiben unberührt.',
       'Minesweeper: Der Rechtsklick setzt die Markierung jetzt schon beim Drücken der rechten Maustaste und nicht erst über das Kontextmenü-Ereignis; damit klappt er auch auf Tablets mit Maus und in Ansichten, die dieses Ereignis nicht senden.',
       'Pausenraum: Die Kachel „Wochenwertung“ über den Spielen ist entfernt. Plätze stehen weiter auf den Spielkarten und in der Bestenliste (Reiter „Woche“).',
       'Pausenraum – Wochenwertung: Die Zeile zeigt jetzt Ihren Wochenstand je Spiel („Tetris Gerätehaus · Platz 2 von 4“, „noch allein“), nicht mehr nur Siege und Top 3. „Noch keine Platzierung“ erscheint nicht mehr, wenn Sie diese Woche schon gespielt haben.',
