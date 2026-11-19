@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.0',ts:'2026-11-18T10:00',items:[
+      'Korrektur Prüfungsfrage „Welche Gebäude gehören in die GK 5?“: Die Antwort „Gebäude bis 13 m mit Nutzungseinheiten über 400 m²“ war ebenfalls richtig (GK 5). Sie lautet jetzt „… von höchstens 400 m²“ (das wäre GK 4), die Erklärung ist ergänzt.',
       'Pausenraum: Die Spiele lassen sich jetzt sortieren. Tippen Sie oben rechts auf den Pfeil-Knopf, ziehen Sie die Kacheln an die gewünschte Stelle und tippen Sie auf „Fertig“. Die Reihenfolge wird gemerkt.',
       'Solitär: Wenn Sie die oberste Karte vom Ablagestapel wegziehen, sehen Sie jetzt die Karte darunter, statt eines leeren Feldes.',
       'Navigation: Am Desktop entfällt die doppelte Lupe in der linken Leiste; die Suche öffnen Sie weiter über die Lupe im Kopfbereich oder mit Strg K.',
