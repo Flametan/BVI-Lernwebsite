@@ -56,6 +56,14 @@
     #sk .sk-tabs i{width:44px;height:30px;border-radius:10px;}
     #sk .sk-side{display:none;}
     @keyframes sk-p{50%{opacity:.5}}
+    /* Comet Outline: ein Lichtpunkt läuft um den Rand jedes Blocks (Reihenfolge nach Position, Zeit in --fd), dann blendet der Block aus */
+    @property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+    #sk.comet{pointer-events:none;transition:background-color .4s .45s;background-color:transparent;}
+    #sk.comet .cm{position:relative;animation:sk-cf .35s ease-in calc(var(--fd,0ms) + 520ms) both;}
+    #sk.comet .cm::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:2.5px;background:conic-gradient(from var(--a),transparent 0 62%,#ffa81f 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:sk-ca .7s linear var(--fd,0ms) both;}
+    #sk.comet .sk-rail,#sk.comet .sk-tabs{animation:sk-cf .35s ease-in .5s both;}
+    @keyframes sk-ca{0%{--a:0deg;opacity:0}10%{opacity:1}90%{opacity:1}100%{--a:360deg;opacity:0}}
+    @keyframes sk-cf{to{opacity:0}}
     /* Tablet: breitere Ränder, zwei Spalten */
     @media(min-width:701px){
       #sk .sk-nx{width:96px;height:56px;border-radius:14px;}
@@ -94,7 +102,9 @@
       #sk[data-t=set] .sk-main,#sk[data-t=list] .sk-main{max-width:900px;}
     }
       </style>
-  <script>window.SK=function(){var e=document.getElementById('sk');if(!e)return;e.classList.add('out');setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e);},320);};setTimeout(function(){window.SK();},12000);</script>
+  <script>window.SK=function(){var e=document.getElementById('sk');if(!e||e.getAttribute('data-go'))return;e.setAttribute('data-go','1');var rm=false;try{rm=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(x){}
+  if(!rm){try{var W=window.innerWidth||1000,H=window.innerHeight||800,mx=0,bs=e.querySelectorAll('i,.sk-card,.sk-rail,.sk-tabs');for(var n=0;n<bs.length;n++){var b=bs[n],r=b.getBoundingClientRect();if(!r.width||!r.height)continue;var d=Math.round(Math.max(0,Math.min(1,r.top/H))*220+Math.max(0,Math.min(1,r.left/W))*40);b.style.setProperty('--fd',d+'ms');if(d>mx)mx=d;if(r.width>=56&&r.height>=16&&!b.classList.contains('sk-rail')&&!b.classList.contains('sk-tabs'))b.classList.add('cm');}e.classList.add('comet');setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e);},mx+950);return;}catch(x){e.classList.remove('comet');}}
+  e.classList.add('out');setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e);},320);};setTimeout(function(){window.SK();},12000);</script>
   <link rel="icon" id="fav" type="image/svg+xml" href="icons/icon-512.svg"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
