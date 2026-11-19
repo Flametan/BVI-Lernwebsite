@@ -56,6 +56,10 @@
     #sk .sk-tabs i{width:44px;height:30px;border-radius:10px;}
     #sk .sk-side{display:none;}
     @keyframes sk-p{50%{opacity:.5}}
+    /* Flip Tiles: beim Ausblenden kippt jeder Block von oben nach unten weg (Reihenfolge nach Position, Zeit in --fd) und gibt die fertige Seite frei */
+    #sk.flip{background:transparent;pointer-events:none;transition:none;}
+    #sk.flip i,#sk.flip .sk-card,#sk.flip .sk-rail,#sk.flip .sk-tabs{animation:sk-flip .46s cubic-bezier(.45,.05,.55,.95) var(--fd,0ms) both;backface-visibility:hidden;will-change:transform,opacity;}
+    @keyframes sk-flip{0%{transform:perspective(600px) rotateX(0);opacity:1}55%{opacity:1}100%{transform:perspective(600px) rotateX(-90deg);opacity:0}}
     /* Tablet: breitere Ränder, zwei Spalten */
     @media(min-width:701px){
       #sk .sk-nx{width:96px;height:56px;border-radius:14px;}
@@ -94,7 +98,9 @@
       #sk[data-t=set] .sk-main,#sk[data-t=list] .sk-main{max-width:900px;}
     }
       </style>
-  <script>window.SK=function(){var e=document.getElementById('sk');if(!e)return;e.classList.add('out');setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e);},320);};setTimeout(function(){window.SK();},12000);</script>
+  <script>window.SK=function(){var e=document.getElementById('sk');if(!e||e.getAttribute('data-go'))return;e.setAttribute('data-go','1');var rm=false;try{rm=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(x){}
+  if(!rm){try{var W=window.innerWidth||1000,H=window.innerHeight||800,mx=0,bs=e.querySelectorAll('i,.sk-card,.sk-rail,.sk-tabs');for(var n=0;n<bs.length;n++){var r=bs[n].getBoundingClientRect();if(!r.width||!r.height)continue;var d=Math.round(Math.max(0,Math.min(1,r.top/H))*340+Math.max(0,Math.min(1,r.left/W))*60);bs[n].style.setProperty('--fd',d+'ms');if(d>mx)mx=d;}e.classList.add('flip');setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e);},mx+560);return;}catch(x){e.classList.remove('flip');}}
+  e.classList.add('out');setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e);},320);};setTimeout(function(){window.SK();},12000);</script>
   <link rel="icon" id="fav" type="image/svg+xml" href="icons/icon-512.svg"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>

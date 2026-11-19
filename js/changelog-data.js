@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.0',ts:'2026-11-18T10:00',items:[
+      'Ladebildschirm: Die grauen Platzhalter-Blöcke kippen jetzt wie Kacheln („Flip Tiles“) von oben nach unten weg und geben die fertige Seite frei. Mit „Bewegung reduzieren“ blendet der Ladebildschirm wie bisher einfach aus.',
       'Human Factors in der Stabsarbeit: Der Punkt „Spannungsfelder“ ist jetzt als Punkt 10 nummeriert (vorher 11).',
       'Korrektur Prüfungsfrage „Welche Gebäude gehören in die GK 5?“: Die Antwort „Gebäude bis 13 m mit Nutzungseinheiten über 400 m²“ war ebenfalls richtig (GK 5). Sie lautet jetzt „… von höchstens 400 m²“ (das wäre GK 4), die Erklärung ist ergänzt.',
       'Pausenraum: Die Spiele lassen sich jetzt sortieren. Tippen Sie oben rechts auf den Pfeil-Knopf, ziehen Sie die Kacheln an die gewünschte Stelle und tippen Sie auf „Fertig“. Die Reihenfolge wird gemerkt.',
