@@ -27,7 +27,7 @@
     /* neues Aussehen: Karten mit 16 px Rundung, Standort-Karten mit Ring, schwebende Seitenleiste am PC */
     #sk .sk-card.sk-st{flex-direction:row;align-items:center;gap:14px;padding:12px 14px;}#sk .sk-ringi{width:48px;height:48px;border-radius:50%;flex:none;}
     #sk .sk-seg{align-items:center;}#sk .sk-lbl{display:flex;align-items:center;gap:10px;}#sk .sk-lbl i:first-child{width:45px;height:32px;border-radius:6px;}#sk .sk-lbl i+i{width:56px;height:32px;border-radius:99px;}#sk .sk-yr{flex:none;width:132px;height:38px;border-radius:99px;}#sk .sk-nx{flex:none;width:44px;height:44px;border-radius:50%;}
-    #sk .sk-cp,#sk .sk-days{display:none;}#sk .sk-days i{flex:1;max-width:26px;height:10px;border-radius:5px;}#sk .sk-days{justify-content:space-between;}#sk .sk-bars i.sk-ln{flex:1;height:100%;border-radius:0;clip-path:polygon(0 100%,0 76%,16% 50%,33% 28%,50% 86%,66% 92%,100% 92%,100% 100%);}#sk .sk-bars{display:flex;align-items:flex-end;gap:8px;height:96px;}#sk .sk-bars i{flex:1;height:100%;border-radius:8px;}#sk .sk-card.sk-y1,#sk .sk-yh{display:none;}
+    #sk .sk-h2{display:none;}#sk .sk-cp,#sk .sk-days{display:none;}#sk .sk-days i{flex:1;max-width:26px;height:10px;border-radius:5px;}#sk .sk-days{justify-content:space-between;}#sk .sk-bars i.sk-ln{flex:1;height:100%;border-radius:0;clip-path:polygon(0 100%,0 76%,16% 50%,33% 28%,50% 86%,66% 92%,100% 92%,100% 100%);}#sk .sk-bars{display:flex;align-items:flex-end;gap:8px;height:96px;}#sk .sk-bars i{flex:1;height:100%;border-radius:8px;}#sk .sk-card.sk-y1,#sk .sk-yh{display:none;}
     #sk .sk-card.sk-set{flex-direction:row;align-items:center;gap:14px;padding:16px;}
     #sk .sk-lr{align-items:center;}#sk .sk-lg{gap:14px;}
     #sk .sk-gc{gap:9px;}#sk .sk-ch{gap:9px;}
@@ -83,6 +83,47 @@
       #sk .sk-cp{display:flex;}#sk .sk-days{display:flex;}#sk .sk-bars{height:88px;}#sk .sk-seg{margin-bottom:-9px;}#sk .sk-seg .sk-lbl{flex:none;}#sk .sk-seg .sk-lbl:last-child{margin-left:auto;}#sk .sk-seg .sk-lbl:first-child i:first-child{width:114px;height:36px;border-radius:99px;}#sk .sk-seg .sk-lbl:first-child i+i{display:none;}
       #sk .sk-seg .sk-lbl:last-child i.sk-fl{width:46px;height:30px;border-radius:3px;clip-path:polygon(0 0,80% 0,100% 50%,80% 100%,0 100%);}#sk .sk-seg .sk-lbl:last-child i.sk-yr{width:72px;height:36px;border-radius:99px;}
       #sk .sk-ringi{width:54px;height:54px;}#sk .sk-card.sk-st{padding:12px 16px;}
+    }
+    /* Handy, Startseite: Maße 1:1 von der fertigen Seite (360 px breit) */
+    @media(max-width:700px){
+      #sk .sk-h2{display:block;}
+      #sk .sk-ic{width:96px;gap:8px;top:calc(env(safe-area-inset-top,0px) + 15px);}#sk .sk-ic i{width:44px;height:44px;}
+      #sk[data-t=home] .sk-main{padding-top:env(safe-area-inset-top,0px);}
+      #sk[data-t=home] section[data-p=home]{gap:0;}
+      #sk[data-t=home] .sk-hd{margin:14px 0 0;}#sk[data-t=home] .sk-hd .sk-col{gap:0!important;}
+      #sk[data-t=home] .sk-hd i:nth-child(1){width:50%!important;height:28px!important;}
+      #sk[data-t=home] .sk-hd i:nth-child(2){width:58%!important;height:14px!important;margin-top:8px;}
+      #sk[data-t=home] .sk-hd i:nth-child(3){width:44%!important;height:14px!important;margin-top:6px;}
+      #sk[data-t=home] .sk-hd i:nth-child(4){width:39%!important;height:12px!important;margin-top:10px;}
+      #sk[data-t=home] .sk-sr{margin-top:9px;padding:8px 16px 20px;gap:0;}
+      #sk[data-t=home] .sk-sr>.sk-row{height:27px;}
+      #sk[data-t=home] .sk-sr>.sk-row i:first-child{width:38px!important;height:10px!important;}
+      #sk[data-t=home] .sk-sr>.sk-row i:last-child{width:82px!important;height:27px!important;}
+      #sk[data-t=home] .sk-sr .sk-rings{height:65px;margin:13px 0 0 -2px;gap:0;justify-content:flex-start;align-items:flex-start;}
+      #sk[data-t=home] .sk-sr .sk-rings i{position:relative;flex:none;width:47px;height:47px;max-width:none;aspect-ratio:auto;margin:0 16.5px;}
+      #sk[data-t=home] .sk-sr .sk-rings i::after{content:"";position:absolute;left:50%;top:55px;width:60px;height:10px;margin-left:-30px;border-radius:5px;background:inherit;}
+      #sk[data-t=home] .sk-sr .sk-rings i.sk-wk{margin:0 0 0 9px;width:58px;height:64px;border-radius:12px;}
+      #sk[data-t=home] .sk-sr .sk-rings i.sk-wk::after{display:none;}
+      #sk[data-t=home] .sk-seg{margin:25px 2px 0;height:33px;}
+      #sk[data-t=home] .sk-seg .sk-lbl:first-child i:first-child{width:132px;height:33px;}
+      #sk[data-t=home] .sk-seg .sk-lbl:last-child{gap:15px!important;}
+      #sk[data-t=home] .sk-seg .sk-lbl:last-child i.sk-fl{width:43px;height:25px;}
+      #sk[data-t=home] .sk-seg .sk-lbl:last-child i.sk-yr{width:64px;height:31px;}
+      #sk[data-t=home] .sk-r{margin-top:10px;gap:8.5px;}
+      #sk[data-t=home] .sk-card.sk-st{height:77px;padding:0 15px;gap:13px;box-sizing:border-box;}
+      #sk[data-t=home] .sk-st .sk-ringi{width:46px;height:46px;}
+      #sk[data-t=home] .sk-st>.sk-col{height:51px;margin-right:18px;justify-content:flex-start;gap:0!important;}
+      #sk[data-t=home] .sk-st>.sk-col i:nth-child(1){height:14px!important;}
+      #sk[data-t=home] .sk-st>.sk-col i:nth-child(2){height:12px!important;margin-top:9px;}
+      #sk[data-t=home] .sk-st>.sk-col i:nth-child(3){height:4px!important;margin-top:12px;}
+      #sk[data-t=home] .sk-card.sk-g{margin-top:10px;padding:13px 12px 15px;gap:0;}
+      #sk[data-t=home] .sk-g>.sk-row{height:24px;}
+      #sk[data-t=home] .sk-g>.sk-row i:first-child{width:108px!important;height:24px!important;border-radius:8px;}
+      #sk[data-t=home] .sk-g>.sk-row i:last-child{width:98px!important;height:16px!important;}
+      #sk[data-t=home] .sk-g .sk-bars{height:62px;margin:23px 0 0;}
+      #sk[data-t=home] .sk-g .sk-days{margin:10px 13px 0;height:10px;}#sk[data-t=home] .sk-g .sk-days i{flex:none;width:18px;}
+      #sk[data-t=home] .sk-g .sk-cp{margin-top:15px;height:14px;}
+      #sk[data-t=home] .sk-g .sk-cp i:first-child{width:162px!important;height:12px!important;}#sk[data-t=home] .sk-g .sk-cp i:last-child{width:76px!important;height:14px!important;}
     }
     /* Tablet: breitere Ränder, zwei Spalten */
     @media(min-width:701px){
@@ -146,13 +187,13 @@
     <div class="sk-bar"><i></i><i></i></div>
     <div class="sk-main">
     <section data-p="home">
-      <div class="sk-row sk-hd"><div class="sk-col" style="flex:1;gap:10px"><i style="width:56%;height:30px;"></i><i style="width:54%;height:14px;"></i><i style="width:36%;height:12px;"></i></div></div>
+      <div class="sk-row sk-hd"><div class="sk-col" style="flex:1;gap:10px"><i style="width:56%;height:30px;"></i><i style="width:54%;height:14px;"></i><i class="sk-h2" style="width:44%;height:14px;"></i><i style="width:36%;height:12px;"></i></div></div>
       <div class="sk-card sk-l sk-l1 sk-tour"><i style="width:40px;height:40px;border-radius:12px;flex:none"></i><div class="sk-col" style="flex:1;gap:7px"><i style="width:44%;height:14px;"></i><i style="width:70%;height:11px;"></i></div><i style="width:84px;height:30px;border-radius:99px;flex:none"></i></div>
       <div class="sk-card sk-l sk-l2 sk-sr"><div class="sk-row" style="align-items:center"><i style="width:34%;height:20px;"></i><i style="width:84px;height:28px;border-radius:99px"></i></div><div class="sk-rings"><i></i><i></i><i></i><i class="sk-wk"></i></div></div>
       <div class="sk-card sk-g"><div class="sk-row" style="align-items:center"><i style="width:30%;height:26px;"></i><i style="width:22%;height:16px;"></i></div><div class="sk-bars"><i class="sk-ln"></i></div><div class="sk-days"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="sk-row sk-cp" style="align-items:center;justify-content:space-between"><i style="width:44%;height:12px;"></i><i style="width:24%;height:14px;"></i></div></div>
       
       <div class="sk-row sk-seg"><div class="sk-lbl"><i></i><i></i></div><div class="sk-lbl" style="gap:20px"><i class="sk-fl"></i><i class="sk-yr"></i></div></div>
-      <div class="sk-col sk-r"><i class="sk-yh" style="width:150px"></i><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:18%;height:15px;"></i><i style="width:55%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:14%;height:15px;"></i><i style="width:60%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:22%;height:15px;"></i><i style="width:48%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:12%;height:15px;"></i><i style="width:52%;height:11px;"></i><i style="height:5px;"></i></div></div><i class="sk-yh" style="width:130px"></i><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:16%;height:15px;"></i><i style="width:50%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:12%;height:15px;"></i><i style="width:58%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:14%;height:15px;"></i><i style="width:46%;height:11px;"></i><i style="height:5px;"></i></div></div></div>
+      <div class="sk-col sk-r"><i class="sk-yh" style="width:150px"></i><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:18%;height:15px;"></i><i style="width:63%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:14%;height:15px;"></i><i style="width:64%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:22%;height:15px;"></i><i style="width:48%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:12%;height:15px;"></i><i style="width:69%;height:11px;"></i><i style="height:5px;"></i></div></div><i class="sk-yh" style="width:130px"></i><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:16%;height:15px;"></i><i style="width:50%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:12%;height:15px;"></i><i style="width:58%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:14%;height:15px;"></i><i style="width:46%;height:11px;"></i><i style="height:5px;"></i></div></div></div>
       
       <div class="sk-card sk-l sk-cl"><i style="width:40px;height:40px;border-radius:12px;flex:none"></i><i style="width:38%;height:16px;"></i></div>
     </section>

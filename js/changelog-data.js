@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.0',ts:'2026-11-18T10:00',items:[
+      'Ladebildschirm Startseite am Handy: Kacheln, Reiter und Abstände entsprechen jetzt Größe, Breite und Position der fertigen Seite (Kopfzeile mit Symbolen, „Heute“-Karte mit Ringen, Jahres-Reiter, Flagge und Serie, Kurskarten, Wochenkarte).',
       'Ladebildschirm Startseite am Handy: Der Rang-Wimpel sitzt rechts neben der Streak-Pille und blendet in einem Stück aus, die Streak ist rechtsbündig, Jahres-Reiter (schmaler) und Streak sind so flach wie in der App, und die Lernzeit zeigt wie die App ein Liniendiagramm mit Wochentagen und Fußzeile.',
       'Ladebildschirm: Die Karten stehen auf allen Seiten so eng beieinander wie in der App (ein versehentlicher Zusatzabstand ist weg), auf der Startseite sitzen die Kurskarten damit auf gleicher Höhe.',
       'Ladebildschirm Startseite am Handy: Der Prüfungs-Chip oben überlagert die Überschrift nicht mehr (er erscheint nur, wenn ein Prüfungstermin eingetragen ist), und das 1. Ausbildungsjahr taucht nicht mehr doppelt auf – wie in der App stehen vier Kurse und darunter die Wochenkarte.',
