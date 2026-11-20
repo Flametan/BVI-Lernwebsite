@@ -34,12 +34,14 @@
     #sk .sk-row.sk-tools{justify-content:flex-end;gap:8px;}
     #sk[data-t=home] .sk-hd{margin-bottom:2px;}
     /* Kopfleiste wie in der App: Prüfungs-Chip mittig, Suche und Profil rechts */
-    #sk .sk-chip{position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);left:50%;transform:translateX(-50%);width:min(300px,78vw);height:40px;border-radius:99px;}
-    #sk .sk-ic{position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);right:16px;width:40px;display:flex;gap:10px;}
-    #sk .sk-ic i{width:40px;height:40px;border-radius:50%;flex:none;}#sk .sk-ic i:first-child{display:none;}
-    #sk .sk-card.sk-tour{flex-direction:row;align-items:center;gap:12px;padding:12px 14px;}
-    #sk .sk-sr .sk-rings i{max-width:56px;}
-    #sk .sk-card.sk-g,#sk .sk-card.sk-cl,#sk .sk-side{display:none;}
+    #sk .sk-chip{display:none;position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);left:50%;transform:translateX(-50%);width:min(300px,78vw);height:40px;border-radius:99px;}
+    #sk[data-ch="1"] .sk-chip{display:block;}
+    #sk .sk-ic{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:16px;width:114px;display:flex;gap:14px;}
+    #sk .sk-ic i{width:50px;height:50px;border-radius:50%;flex:none;}
+    #sk .sk-card.sk-tour{display:none;flex-direction:row;align-items:center;gap:12px;padding:12px 14px;}
+    #sk[data-tr="1"] .sk-card.sk-tour{display:flex;}
+    #sk .sk-sr .sk-rings i{max-width:56px;}#sk .sk-rings i.sk-wk{flex:none;aspect-ratio:auto;width:46px;height:58px;max-width:none;border-radius:12px;}
+    #sk .sk-card.sk-cl,#sk .sk-side{display:none;}#sk .sk-card.sk-g{order:10;}
     #sk .sk-card.sk-cl{flex-direction:row;align-items:center;gap:14px;}
     #sk .sk-card.sk-ft{gap:9px;border-left:3px solid transparent;}#sk .sk-card.sk-ar{flex-direction:row;align-items:center;justify-content:space-between;padding:14px 16px;}
     #sk .sk-tl{grid-template-columns:repeat(2,minmax(0,1fr));}#sk .sk-card.sk-tile{gap:8px;padding:14px;min-height:124px;}
@@ -77,11 +79,17 @@
     #sk.comet .sk-rail,#sk.comet .sk-tabs,#sk.comet .sk-ic{animation:sk-cf .35s ease-in .5s both;}
     @keyframes sk-ca{0%{--a:0deg;opacity:0}10%{opacity:1}90%{opacity:1}100%{--a:360deg;opacity:0}}
     @keyframes sk-cf{to{opacity:0}}
+    @media(max-width:700px){
+      #sk .sk-seg .sk-lbl:first-child i:first-child{width:165px;height:44px;border-radius:99px;}#sk .sk-seg .sk-lbl:first-child i+i{display:none;}
+      #sk .sk-seg .sk-lbl:last-child i.sk-fl{width:56px;height:36px;border-radius:8px;}#sk .sk-seg .sk-lbl:last-child i.sk-yr{width:92px;height:48px;border-radius:99px;}
+      #sk .sk-ringi{width:54px;height:54px;}#sk .sk-card.sk-st{padding:12px 16px;}
+    }
     /* Tablet: breitere Ränder, zwei Spalten */
     @media(min-width:701px){
       #sk .sk-nx{width:96px;height:56px;border-radius:14px;}
       #sk .sk-main{padding-left:32px;padding-right:32px;}#sk .sk-bar{padding-left:32px;padding-right:32px;}
-      #sk .sk-ic{right:24px;width:90px;}#sk .sk-ic i:first-child{display:block;}
+      #sk .sk-ic{right:24px;width:90px;gap:10px;top:calc(env(safe-area-inset-top,0px) + 10px);}#sk .sk-ic i{width:40px;height:40px;}
+      #sk[data-t=home] .sk-card.sk-g{order:0;}#sk[data-t=home] .sk-wk,#sk[data-t=home] .sk-seg .sk-lbl:last-child{display:none;}
       #sk[data-t=home] section[data-p=home]{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
       /* Startseite wie in der App: Banner, Serie links und Wochenübersicht rechts, Jahres-Reiter, beide Ausbildungsjahre, Cloud */
       #sk[data-t=home] .sk-hd{grid-column:1 / -1;grid-row:1;}
@@ -138,12 +146,12 @@
     <div class="sk-bar"><i></i><i></i></div>
     <div class="sk-main">
     <section data-p="home">
-      <div class="sk-row sk-hd"><div class="sk-col" style="flex:1;gap:10px"><i style="width:56%;height:30px;"></i><i style="width:78%;height:14px;"></i><i style="width:36%;height:12px;"></i></div></div>
+      <div class="sk-row sk-hd"><div class="sk-col" style="flex:1;gap:10px"><i style="width:56%;height:30px;"></i><i style="width:54%;height:14px;"></i><i style="width:36%;height:12px;"></i></div></div>
       <div class="sk-card sk-l sk-l1 sk-tour"><i style="width:40px;height:40px;border-radius:12px;flex:none"></i><div class="sk-col" style="flex:1;gap:7px"><i style="width:44%;height:14px;"></i><i style="width:70%;height:11px;"></i></div><i style="width:84px;height:30px;border-radius:99px;flex:none"></i></div>
-      <div class="sk-card sk-l sk-l2 sk-sr"><div class="sk-row" style="align-items:center"><i style="width:34%;height:20px;"></i><i style="width:84px;height:28px;border-radius:99px"></i></div><div class="sk-rings"><i></i><i></i><i></i></div></div>
+      <div class="sk-card sk-l sk-l2 sk-sr"><div class="sk-row" style="align-items:center"><i style="width:34%;height:20px;"></i><i style="width:84px;height:28px;border-radius:99px"></i></div><div class="sk-rings"><i></i><i></i><i></i><i class="sk-wk"></i></div></div>
       <div class="sk-card sk-g"><div class="sk-row" style="align-items:center"><i style="width:30%;height:26px;"></i><i style="width:22%;height:16px;"></i></div><div class="sk-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
       
-      <div class="sk-row sk-seg"><div class="sk-lbl"><i></i><i></i></div><i class="sk-yr"></i></div>
+      <div class="sk-row sk-seg"><div class="sk-lbl"><i></i><i></i></div><div class="sk-lbl" style="gap:14px"><i class="sk-fl"></i><i class="sk-yr"></i></div></div>
       <div class="sk-col sk-r"><i class="sk-yh" style="width:150px"></i><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:18%;height:15px;"></i><i style="width:55%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:14%;height:15px;"></i><i style="width:60%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:22%;height:15px;"></i><i style="width:48%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:12%;height:15px;"></i><i style="width:52%;height:11px;"></i><i style="height:5px;"></i></div></div><i class="sk-yh" style="width:130px"></i><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:16%;height:15px;"></i><i style="width:50%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:12%;height:15px;"></i><i style="width:58%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:14%;height:15px;"></i><i style="width:46%;height:11px;"></i><i style="height:5px;"></i></div></div></div>
       
       <div class="sk-card sk-l sk-cl"><i style="width:40px;height:40px;border-radius:12px;flex:none"></i><i style="width:38%;height:16px;"></i></div>
@@ -160,7 +168,7 @@
   <div class="sk-tabs"><i></i><i></i><i style="width:56px;height:56px;border-radius:50%;margin-top:-26px"></i><i></i><i></i></div>
   <i class="sk-chip"></i><div class="sk-ic"><i></i><i></i></div>
 </div>
-<script>(function(){var e=document.getElementById("sk");if(!e)return;var q=new URLSearchParams(location.search).get("id")||location.hash.replace(/^#/,""),t="home";if(q&&q!=="v-home"){if(q==="v-plan")t="plan";else if(q==="v-settings"||q==="v-set-nav")t="set";else if(/^v-(pruefung|bookmarks|notizen)$/.test(q))t="list";else if(q==="v-flashcards")t="cards";else if(q==="v-pause")t="tiles";else if(/^v-(idf|vak|feuak|ibk|gal|sfs|hlfs)(-vb|-stabhub)?$/.test(q)||/hub$/.test(q))t="grid";else t="page";}e.setAttribute("data-t",t);})();</script>
+<script>(function(){var e=document.getElementById("sk");if(!e)return;var q=new URLSearchParams(location.search).get("id")||location.hash.replace(/^#/,""),t="home";if(q&&q!=="v-home"){if(q==="v-plan")t="plan";else if(q==="v-settings"||q==="v-set-nav")t="set";else if(/^v-(pruefung|bookmarks|notizen)$/.test(q))t="list";else if(q==="v-flashcards")t="cards";else if(q==="v-pause")t="tiles";else if(/^v-(idf|vak|feuak|ibk|gal|sfs|hlfs)(-vb|-stabhub)?$/.test(q)||/hub$/.test(q))t="grid";else t="page";}e.setAttribute("data-t",t);var ch=1,tr=1;try{var ex=JSON.parse(localStorage.getItem("bvi_exam")||"null");if(ex){if(ex.off)ch=0;else if(ex.date&&new Date(ex.date+"T23:59:59")<new Date())ch=0;}if(localStorage.getItem("bvi_tour_done"))tr=0;}catch(x){}e.setAttribute("data-ch",ch);e.setAttribute("data-tr",tr);})();</script>
 <a class="skip-link" href="#" onclick="A11Y.skip(event)">Zum Inhalt springen</a>
 <div id="a11y-live" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 <div class="offline-banner" id="offline-banner">
