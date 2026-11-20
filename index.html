@@ -48,11 +48,11 @@
     #sk .sk-lb,#sk .sk-grid.sk-acc{display:none;}#sk .sk-pl5 i{height:58px;border-radius:14px;}
     #sk .sk-card.sk-of{flex-direction:row;align-items:center;gap:12px;padding:12px 14px;}
     #sk .sk-side{flex-direction:column;}#sk .sk-side>.sk-card{gap:8px;}
-    #sk .sk-r{gap:8px;}
+    #sk .sk-col.sk-r{gap:8px;}
     #sk[data-t=set] .sk-main,#sk[data-t=list] .sk-main{padding-top:14px;}
     #sk[data-t=set] .sk-bar,#sk[data-t=list] .sk-bar{display:flex;}
     #sk[data-t=set] section[data-p=set]{display:flex;}#sk[data-t=list] section[data-p=list]{display:flex;}
-    #sk .sk-card{background:var(--m-card,#1d1d1d);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0;}
+    #sk .sk-card{margin:0;background:var(--m-card,#1d1d1d);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0;}
     #sk .sk-wrap{flex:1;min-width:0;display:flex;flex-direction:column;}
     #sk .sk-bar{display:none;height:52px;align-items:center;gap:12px;padding:calc(env(safe-area-inset-top,0px) + 8px) 16px 0;box-sizing:content-box;}
     #sk[data-t=page] .sk-bar,#sk[data-t=grid] .sk-bar,#sk[data-t=cards] .sk-bar{display:flex;}
@@ -80,8 +80,8 @@
     @keyframes sk-ca{0%{--a:0deg;opacity:0}10%{opacity:1}90%{opacity:1}100%{--a:360deg;opacity:0}}
     @keyframes sk-cf{to{opacity:0}}
     @media(max-width:700px){
-      #sk .sk-seg .sk-lbl:first-child i:first-child{width:165px;height:44px;border-radius:99px;}#sk .sk-seg .sk-lbl:first-child i+i{display:none;}
-      #sk .sk-seg .sk-lbl:last-child i.sk-fl{width:56px;height:36px;border-radius:8px;}#sk .sk-seg .sk-lbl:last-child i.sk-yr{width:92px;height:48px;border-radius:99px;}
+      #sk .sk-seg{margin-bottom:-13px;}#sk .sk-seg .sk-lbl:first-child i:first-child{width:165px;height:40px;border-radius:99px;}#sk .sk-seg .sk-lbl:first-child i+i{display:none;}
+      #sk .sk-seg .sk-lbl:last-child i.sk-fl{width:56px;height:36px;border-radius:8px;}#sk .sk-seg .sk-lbl:last-child i.sk-yr{width:92px;height:40px;border-radius:99px;}
       #sk .sk-ringi{width:54px;height:54px;}#sk .sk-card.sk-st{padding:12px 16px;}
     }
     /* Tablet: breitere Ränder, zwei Spalten */

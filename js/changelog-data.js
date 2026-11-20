@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.0',ts:'2026-11-18T10:00',items:[
+      'Ladebildschirm: Die Karten stehen auf allen Seiten so eng beieinander wie in der App (ein versehentlicher Zusatzabstand ist weg), auf der Startseite sitzen die Kurskarten damit auf gleicher Höhe.',
       'Ladebildschirm Startseite am Handy: Der Prüfungs-Chip oben überlagert die Überschrift nicht mehr (er erscheint nur, wenn ein Prüfungstermin eingetragen ist), und das 1. Ausbildungsjahr taucht nicht mehr doppelt auf – wie in der App stehen vier Kurse und darunter die Wochenkarte.',
       'Ladebildschirm Pausenraum: Das Skeleton entspricht jetzt der Seite – Sortier-Symbol oben rechts, Reiter-Leiste, zwei Spalten mit sechs Spielen (Feuerwehr) und sieben Klassikern, auf Tablet und PC vier Spalten und der „Simulation starten“-Banner.',
       'Ladebildschirm Startseite am Handy: Such- und Profil-Symbol oben rechts, „Heute“-Karte mit Ringen und Wochenzähler, Jahres-Reiter mit Flagge und Serie sowie die Wochenkarte unten. Prüfungs-Chip und „Neu hier?“-Banner erscheinen nur noch, wenn sie auch in der App zu sehen sind.',
