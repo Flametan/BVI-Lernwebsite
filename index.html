@@ -27,7 +27,7 @@
     /* neues Aussehen: Karten mit 16 px Rundung, Standort-Karten mit Ring, schwebende Seitenleiste am PC */
     #sk .sk-card.sk-st{flex-direction:row;align-items:center;gap:14px;padding:12px 14px;}#sk .sk-ringi{width:48px;height:48px;border-radius:50%;flex:none;}
     #sk .sk-seg{align-items:center;}#sk .sk-lbl{display:flex;align-items:center;gap:10px;}#sk .sk-lbl i:first-child{width:45px;height:32px;border-radius:6px;}#sk .sk-lbl i+i{width:56px;height:32px;border-radius:99px;}#sk .sk-yr{flex:none;width:132px;height:38px;border-radius:99px;}#sk .sk-nx{flex:none;width:44px;height:44px;border-radius:50%;}
-    #sk .sk-bars{display:flex;align-items:flex-end;gap:8px;height:96px;}#sk .sk-bars i{flex:1;height:100%;border-radius:8px;}#sk .sk-y1,#sk .sk-yh{display:none;}
+    #sk .sk-cp,#sk .sk-days{display:none;}#sk .sk-days i{flex:1;max-width:26px;height:10px;border-radius:5px;}#sk .sk-days{justify-content:space-between;}#sk .sk-bars i.sk-ln{flex:1;height:100%;border-radius:0;clip-path:polygon(0 100%,0 76%,16% 50%,33% 28%,50% 86%,66% 92%,100% 92%,100% 100%);}#sk .sk-bars{display:flex;align-items:flex-end;gap:8px;height:96px;}#sk .sk-bars i{flex:1;height:100%;border-radius:8px;}#sk .sk-card.sk-y1,#sk .sk-yh{display:none;}
     #sk .sk-card.sk-set{flex-direction:row;align-items:center;gap:14px;padding:16px;}
     #sk .sk-lr{align-items:center;}#sk .sk-lg{gap:14px;}
     #sk .sk-gc{gap:9px;}#sk .sk-ch{gap:9px;}
@@ -48,11 +48,11 @@
     #sk .sk-lb,#sk .sk-grid.sk-acc{display:none;}#sk .sk-pl5 i{height:58px;border-radius:14px;}
     #sk .sk-card.sk-of{flex-direction:row;align-items:center;gap:12px;padding:12px 14px;}
     #sk .sk-side{flex-direction:column;}#sk .sk-side>.sk-card{gap:8px;}
-    #sk .sk-r{gap:8px;}
+    #sk .sk-col.sk-r{gap:8px;}
     #sk[data-t=set] .sk-main,#sk[data-t=list] .sk-main{padding-top:14px;}
     #sk[data-t=set] .sk-bar,#sk[data-t=list] .sk-bar{display:flex;}
     #sk[data-t=set] section[data-p=set]{display:flex;}#sk[data-t=list] section[data-p=list]{display:flex;}
-    #sk .sk-card{background:var(--m-card,#1d1d1d);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0;}
+    #sk .sk-card{margin:0;background:var(--m-card,#1d1d1d);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0;}
     #sk .sk-wrap{flex:1;min-width:0;display:flex;flex-direction:column;}
     #sk .sk-bar{display:none;height:52px;align-items:center;gap:12px;padding:calc(env(safe-area-inset-top,0px) + 8px) 16px 0;box-sizing:content-box;}
     #sk[data-t=page] .sk-bar,#sk[data-t=grid] .sk-bar,#sk[data-t=cards] .sk-bar{display:flex;}
@@ -80,8 +80,8 @@
     @keyframes sk-ca{0%{--a:0deg;opacity:0}10%{opacity:1}90%{opacity:1}100%{--a:360deg;opacity:0}}
     @keyframes sk-cf{to{opacity:0}}
     @media(max-width:700px){
-      #sk .sk-seg .sk-lbl:first-child i:first-child{width:165px;height:44px;border-radius:99px;}#sk .sk-seg .sk-lbl:first-child i+i{display:none;}
-      #sk .sk-seg .sk-lbl:last-child i.sk-fl{width:56px;height:36px;border-radius:8px;}#sk .sk-seg .sk-lbl:last-child i.sk-yr{width:92px;height:48px;border-radius:99px;}
+      #sk .sk-cp{display:flex;}#sk .sk-days{display:flex;}#sk .sk-bars{height:88px;}#sk .sk-seg{margin-bottom:-9px;}#sk .sk-seg .sk-lbl{flex:none;}#sk .sk-seg .sk-lbl:last-child{margin-left:auto;}#sk .sk-seg .sk-lbl:first-child i:first-child{width:114px;height:36px;border-radius:99px;}#sk .sk-seg .sk-lbl:first-child i+i{display:none;}
+      #sk .sk-seg .sk-lbl:last-child i.sk-fl{width:46px;height:30px;border-radius:3px;clip-path:polygon(0 0,80% 0,100% 50%,80% 100%,0 100%);}#sk .sk-seg .sk-lbl:last-child i.sk-yr{width:72px;height:36px;border-radius:99px;}
       #sk .sk-ringi{width:54px;height:54px;}#sk .sk-card.sk-st{padding:12px 16px;}
     }
     /* Tablet: breitere Ränder, zwei Spalten */
@@ -149,9 +149,9 @@
       <div class="sk-row sk-hd"><div class="sk-col" style="flex:1;gap:10px"><i style="width:56%;height:30px;"></i><i style="width:54%;height:14px;"></i><i style="width:36%;height:12px;"></i></div></div>
       <div class="sk-card sk-l sk-l1 sk-tour"><i style="width:40px;height:40px;border-radius:12px;flex:none"></i><div class="sk-col" style="flex:1;gap:7px"><i style="width:44%;height:14px;"></i><i style="width:70%;height:11px;"></i></div><i style="width:84px;height:30px;border-radius:99px;flex:none"></i></div>
       <div class="sk-card sk-l sk-l2 sk-sr"><div class="sk-row" style="align-items:center"><i style="width:34%;height:20px;"></i><i style="width:84px;height:28px;border-radius:99px"></i></div><div class="sk-rings"><i></i><i></i><i></i><i class="sk-wk"></i></div></div>
-      <div class="sk-card sk-g"><div class="sk-row" style="align-items:center"><i style="width:30%;height:26px;"></i><i style="width:22%;height:16px;"></i></div><div class="sk-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="sk-card sk-g"><div class="sk-row" style="align-items:center"><i style="width:30%;height:26px;"></i><i style="width:22%;height:16px;"></i></div><div class="sk-bars"><i class="sk-ln"></i></div><div class="sk-days"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="sk-row sk-cp" style="align-items:center;justify-content:space-between"><i style="width:44%;height:12px;"></i><i style="width:24%;height:14px;"></i></div></div>
       
-      <div class="sk-row sk-seg"><div class="sk-lbl"><i></i><i></i></div><div class="sk-lbl" style="gap:14px"><i class="sk-fl"></i><i class="sk-yr"></i></div></div>
+      <div class="sk-row sk-seg"><div class="sk-lbl"><i></i><i></i></div><div class="sk-lbl" style="gap:20px"><i class="sk-fl"></i><i class="sk-yr"></i></div></div>
       <div class="sk-col sk-r"><i class="sk-yh" style="width:150px"></i><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:18%;height:15px;"></i><i style="width:55%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:14%;height:15px;"></i><i style="width:60%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:22%;height:15px;"></i><i style="width:48%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:12%;height:15px;"></i><i style="width:52%;height:11px;"></i><i style="height:5px;"></i></div></div><i class="sk-yh" style="width:130px"></i><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:16%;height:15px;"></i><i style="width:50%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:12%;height:15px;"></i><i style="width:58%;height:11px;"></i><i style="height:5px;"></i></div></div><div class="sk-card sk-st sk-y1"><i class="sk-ringi"></i><div class="sk-col" style="gap:7px;flex:1"><i style="width:14%;height:15px;"></i><i style="width:46%;height:11px;"></i><i style="height:5px;"></i></div></div></div>
       
       <div class="sk-card sk-l sk-cl"><i style="width:40px;height:40px;border-radius:12px;flex:none"></i><i style="width:38%;height:16px;"></i></div>
@@ -168,7 +168,7 @@
   <div class="sk-tabs"><i></i><i></i><i style="width:56px;height:56px;border-radius:50%;margin-top:-26px"></i><i></i><i></i></div>
   <i class="sk-chip"></i><div class="sk-ic"><i></i><i></i></div>
 </div>
-<script>(function(){var e=document.getElementById("sk");if(!e)return;var q=new URLSearchParams(location.search).get("id")||location.hash.replace(/^#/,""),t="home";if(q&&q!=="v-home"){if(q==="v-plan")t="plan";else if(q==="v-settings"||q==="v-set-nav")t="set";else if(/^v-(pruefung|bookmarks|notizen)$/.test(q))t="list";else if(q==="v-flashcards")t="cards";else if(q==="v-pause")t="tiles";else if(/^v-(idf|vak|feuak|ibk|gal|sfs|hlfs)(-vb|-stabhub)?$/.test(q)||/hub$/.test(q))t="grid";else t="page";}e.setAttribute("data-t",t);var ch=1,tr=1;try{var ex=JSON.parse(localStorage.getItem("bvi_exam")||"null");if(ex){if(ex.off)ch=0;else if(ex.date&&new Date(ex.date+"T23:59:59")<new Date())ch=0;}if(localStorage.getItem("bvi_tour_done"))tr=0;}catch(x){}e.setAttribute("data-ch",ch);e.setAttribute("data-tr",tr);})();</script>
+<script>(function(){var e=document.getElementById("sk");if(!e)return;var q=new URLSearchParams(location.search).get("id")||location.hash.replace(/^#/,""),t="home";if(q&&q!=="v-home"){if(q==="v-plan")t="plan";else if(q==="v-settings"||q==="v-set-nav")t="set";else if(/^v-(pruefung|bookmarks|notizen)$/.test(q))t="list";else if(q==="v-flashcards")t="cards";else if(q==="v-pause")t="tiles";else if(/^v-(idf|vak|feuak|ibk|gal|sfs|hlfs)(-vb|-stabhub)?$/.test(q)||/hub$/.test(q))t="grid";else t="page";}e.setAttribute("data-t",t);var ch=0,tr=1;try{var ex=JSON.parse(localStorage.getItem("bvi_exam")||"null");if(ex&&!ex.off&&/^\d{4}-\d{2}-\d{2}$/.test(ex.date||"")&&new Date(ex.date+"T23:59:59")>=new Date())ch=1;if(localStorage.getItem("bvi_tour_done"))tr=0;}catch(x){}e.setAttribute("data-ch",ch);e.setAttribute("data-tr",tr);})();</script>
 <a class="skip-link" href="#" onclick="A11Y.skip(event)">Zum Inhalt springen</a>
 <div id="a11y-live" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 <div class="offline-banner" id="offline-banner">
