@@ -1,6 +1,8 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.0',ts:'2026-11-18T10:00',items:[
+      'Ladebildschirm Pausenraum: Das Skeleton entspricht jetzt der Seite – Sortier-Symbol oben rechts, Reiter-Leiste, zwei Spalten mit sechs Spielen (Feuerwehr) und sieben Klassikern, auf Tablet und PC vier Spalten und der „Simulation starten“-Banner.',
+      'Ladebildschirm Startseite am Handy: Such- und Profil-Symbol oben rechts, „Heute“-Karte mit Ringen und Wochenzähler, Jahres-Reiter mit Flagge und Serie sowie die Wochenkarte unten. Prüfungs-Chip und „Neu hier?“-Banner erscheinen nur noch, wenn sie auch in der App zu sehen sind.',
       'Ladebildschirm: Die grauen Platzhalter sehen jetzt den echten Seiten ähnlich. Start (Banner, Serie, Wochenübersicht, Ausbildungsjahre, Cloud), Einstellungen, Prüfung, Lernkarten (mit Fächer-Leiste) und Pausenraum (Kachelraster) haben je einen eigenen Aufbau für Handy, Tablet und PC, dazu Prüfungs-Chip sowie Such- und Profil-Symbole oben.',
       'Ladebildschirm: Ein orangefarbenes Licht („Comet Outline“) läuft um den Rand jedes grauen Platzhalter-Blocks, danach blendet der Block aus und gibt die fertige Seite frei. Mit „Bewegung reduzieren“ blendet der Ladebildschirm wie bisher einfach aus.',
       'Human Factors in der Stabsarbeit: Der Punkt „Spannungsfelder“ ist jetzt als Punkt 10 nummeriert (vorher 11).',
