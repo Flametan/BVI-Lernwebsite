@@ -27,7 +27,7 @@
     /* neues Aussehen: Karten mit 16 px Rundung, Standort-Karten mit Ring, schwebende Seitenleiste am PC */
     #sk .sk-card.sk-st{flex-direction:row;align-items:center;gap:14px;padding:12px 14px;}#sk .sk-ringi{width:48px;height:48px;border-radius:50%;flex:none;}
     #sk .sk-seg{align-items:center;}#sk .sk-lbl{display:flex;align-items:center;gap:10px;}#sk .sk-lbl i:first-child{width:45px;height:32px;border-radius:6px;}#sk .sk-lbl i+i{width:56px;height:32px;border-radius:99px;}#sk .sk-yr{flex:none;width:132px;height:38px;border-radius:99px;}#sk .sk-nx{flex:none;width:44px;height:44px;border-radius:50%;}
-    #sk .sk-bars{display:flex;align-items:flex-end;gap:8px;height:96px;}#sk .sk-bars i{flex:1;height:100%;border-radius:8px;}#sk .sk-y1,#sk .sk-yh{display:none;}
+    #sk .sk-bars{display:flex;align-items:flex-end;gap:8px;height:96px;}#sk .sk-bars i{flex:1;height:100%;border-radius:8px;}#sk .sk-card.sk-y1,#sk .sk-yh{display:none;}
     #sk .sk-card.sk-set{flex-direction:row;align-items:center;gap:14px;padding:16px;}
     #sk .sk-lr{align-items:center;}#sk .sk-lg{gap:14px;}
     #sk .sk-gc{gap:9px;}#sk .sk-ch{gap:9px;}
@@ -168,7 +168,7 @@
   <div class="sk-tabs"><i></i><i></i><i style="width:56px;height:56px;border-radius:50%;margin-top:-26px"></i><i></i><i></i></div>
   <i class="sk-chip"></i><div class="sk-ic"><i></i><i></i></div>
 </div>
-<script>(function(){var e=document.getElementById("sk");if(!e)return;var q=new URLSearchParams(location.search).get("id")||location.hash.replace(/^#/,""),t="home";if(q&&q!=="v-home"){if(q==="v-plan")t="plan";else if(q==="v-settings"||q==="v-set-nav")t="set";else if(/^v-(pruefung|bookmarks|notizen)$/.test(q))t="list";else if(q==="v-flashcards")t="cards";else if(q==="v-pause")t="tiles";else if(/^v-(idf|vak|feuak|ibk|gal|sfs|hlfs)(-vb|-stabhub)?$/.test(q)||/hub$/.test(q))t="grid";else t="page";}e.setAttribute("data-t",t);var ch=1,tr=1;try{var ex=JSON.parse(localStorage.getItem("bvi_exam")||"null");if(ex){if(ex.off)ch=0;else if(ex.date&&new Date(ex.date+"T23:59:59")<new Date())ch=0;}if(localStorage.getItem("bvi_tour_done"))tr=0;}catch(x){}e.setAttribute("data-ch",ch);e.setAttribute("data-tr",tr);})();</script>
+<script>(function(){var e=document.getElementById("sk");if(!e)return;var q=new URLSearchParams(location.search).get("id")||location.hash.replace(/^#/,""),t="home";if(q&&q!=="v-home"){if(q==="v-plan")t="plan";else if(q==="v-settings"||q==="v-set-nav")t="set";else if(/^v-(pruefung|bookmarks|notizen)$/.test(q))t="list";else if(q==="v-flashcards")t="cards";else if(q==="v-pause")t="tiles";else if(/^v-(idf|vak|feuak|ibk|gal|sfs|hlfs)(-vb|-stabhub)?$/.test(q)||/hub$/.test(q))t="grid";else t="page";}e.setAttribute("data-t",t);var ch=0,tr=1;try{var ex=JSON.parse(localStorage.getItem("bvi_exam")||"null");if(ex&&!ex.off&&/^\d{4}-\d{2}-\d{2}$/.test(ex.date||"")&&new Date(ex.date+"T23:59:59")>=new Date())ch=1;if(localStorage.getItem("bvi_tour_done"))tr=0;}catch(x){}e.setAttribute("data-ch",ch);e.setAttribute("data-tr",tr);})();</script>
 <a class="skip-link" href="#" onclick="A11Y.skip(event)">Zum Inhalt springen</a>
 <div id="a11y-live" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 <div class="offline-banner" id="offline-banner">
