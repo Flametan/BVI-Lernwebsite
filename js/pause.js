@@ -12,7 +12,7 @@ const PAUSE=(function(){
   const rnd=a=>a[Math.floor(Math.random()*a.length)];
   const get=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}};
   const set=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
-  let root=null,cur=null,pushed=false;
+  let root=null,cur=null,pushed=false,shAnim=false;
   const best=()=>get(BKEY,{});
   function saveBest(k,v,lower){if(v<=0&&!lower)return false;const b=best();if(b[k]==null||(lower?v<b[k]:v>b[k])){b[k]=v;set(BKEY,b);return true;}return false;}
   /* ---------- Bestenlisten: je Spiel (und Stufe) die zehn besten Läufe, nur auf dem Gerät und im Sync ---------- */
@@ -184,10 +184,10 @@ const PAUSE=(function(){
     ${scope}
     <div class="pz-lbh"><b>${g[2]}${B.lv?" · "+lvName:""}</b><small>${wk?"Wochenwertung: nur Ergebnisse seit Montag, jeden Montag beginnt sie neu":all?(B.t?"Die schnellsten Teilnehmer, je Person die beste Zeit":"Die besten Teilnehmer, je Person das beste Ergebnis"):(B.t?"Deine zehn schnellsten Läufe, nur auf deinen Geräten":"Deine zehn besten Läufe, nur auf deinen Geräten")}</small></div><div class="pz-lbb"></div>
     <button class="pz-tile pz-lgo" data-g="${topG}"><span class="pz-tt"><b>${g[2]} spielen</b></span></button>
-    <div class="pz-sh"${shOpen?"":" hidden"}><div class="pz-shd" data-shx></div><div class="pz-shp" role="dialog" aria-modal="true" aria-label="Spiel und Stufe wählen"><h3>Spiel</h3><div class="pz-shg">${tiles}</div>${lvs}<button class="pz-shc" data-shx>Fertig</button></div></div></div>`;
+    <div class="pz-sh${shAnim?" pz-in":""}"${shOpen?"":" hidden"}><div class="pz-shd" data-shx></div><div class="pz-shp" role="dialog" aria-modal="true" aria-label="Spiel und Stufe wählen"><h3>Spiel</h3><div class="pz-shg">${tiles}</div>${lvs}<button class="pz-shc" data-shx>Fertig</button></div></div></div>`;
     tabsOn();
     const closeSh=()=>{shOpen=false;hubTop();const b=root.querySelector("[data-pick]");if(b)b.focus();};
-    root.querySelector("[data-pick]").onclick=()=>{shOpen=true;hubTop();const o=root.querySelector(".pz-sht.on");if(o)o.focus();};
+    root.querySelector("[data-pick]").onclick=()=>{shOpen=true;shAnim=true;hubTop();shAnim=false;const o=root.querySelector(".pz-sht.on");if(o)o.focus();};
     root.querySelectorAll("[data-shx]").forEach(x=>x.onclick=closeSh);
     const sh=root.querySelector(".pz-sh");
     /* Die Seite läuft in einem verschobenen Container; dort bezieht sich „fixed“ nicht auf den Bildschirm. Das Blatt wird deshalb auf den sichtbaren Bildschirm zurechtgerückt. */

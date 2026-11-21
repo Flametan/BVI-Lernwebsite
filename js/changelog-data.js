@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.0',ts:'2026-11-18T10:00',items:[
+      'Bestenliste: Das Fenster zur Spielauswahl fährt jetzt von unten hoch (mit „Bewegung reduzieren“ erscheint es sofort). Am Handy bleibt es komplett sichtbar, auch mit Stufen, und endet knapp über dem runden Prüfungs-Knopf.',
       'Bestenliste am Handy: Das Fenster zur Spielauswahl zeigt jetzt alle Spiele und „Fertig“ vollständig über der unteren Leiste. Die Kacheln sind dafür nur noch 48 px hoch.',
       'Brainyoo-Fragen (IdF-Klausur): Auch Aufgaben, bei denen nur eine Antwort richtig ist, lassen sich jetzt wie Mehrfachauswahl-Aufgaben bearbeiten – Sie können mehrere Antworten ankreuzen und müssen selbst entscheiden, wie viele stimmen.',
       'Tagesaufgaben: „1 neues Thema“ und „2 neue Themen“ (und „5 neue Themen“ in der Woche) erscheinen nur noch, solange es Themen gibt, die Sie noch nie geöffnet haben. Haben Sie alle Themen auf 100 %, kommt stattdessen die nächste Aufgabe.',
