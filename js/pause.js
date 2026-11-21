@@ -104,7 +104,9 @@ const PAUSE=(function(){
   const TKEY='bvi_pause_tab';let ptab=get(TKEY,'spiele');if(ptab!=='top')ptab='spiele';
   const tabs=()=>`<div class="pz-mode pz-tabs" role="tablist" aria-label="Bereich im Pausenraum"><i class="rk-pill" aria-hidden="true"></i>${[['spiele','Pausenspiele'],['top','Bestenliste']].map(([k,t])=>`<button role="tab" aria-selected="${ptab===k}" data-pt="${k}" class="${ptab===k?'on':''}">${t}</button>`).join('')}</div>`;
   let pill=null;
-  const tabsOn=()=>{root.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{shOpen=false;ptab=x.dataset.pt;set(TKEY,ptab);hub();});
+  const dropSh=()=>document.querySelectorAll("body > .pz-sh").forEach(x=>x.remove());
+  addEventListener("popstate",dropSh);addEventListener("hashchange",dropSh);
+  const tabsOn=()=>{dropSh();root.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{shOpen=false;ptab=x.dataset.pt;set(TKEY,ptab);hub();});
     // Schieber gleitet vom bisherigen zum neuen Reiter (die Ansicht wird bei jedem Wechsel neu gezeichnet)
     root.querySelectorAll('.pz-tabs').forEach(tb=>{const pl=tb.querySelector('.rk-pill'),on=tb.querySelector('button.on');if(!pl||!on)return;
       const to={w:on.offsetWidth,x:on.offsetLeft},from=pill||to;pl.style.transition='none';pl.style.width=from.w+'px';pl.style.transform='translateX('+from.x+'px)';
@@ -187,16 +189,16 @@ const PAUSE=(function(){
     <div class="pz-sh${shAnim?" pz-in":""}"${shOpen?"":" hidden"}><div class="pz-shd" data-shx></div><div class="pz-shp" role="dialog" aria-modal="true" aria-label="Spiel und Stufe wählen"><h3>Spiel</h3><div class="pz-shg">${tiles}</div>${lvs}<button class="pz-shc" data-shx>Fertig</button></div></div></div>`;
     tabsOn();
     const closeSh=()=>{shOpen=false;hubTop();const b=root.querySelector("[data-pick]");if(b)b.focus();};
-    root.querySelector("[data-pick]").onclick=()=>{shOpen=true;shAnim=true;hubTop();shAnim=false;const o=root.querySelector(".pz-sht.on");if(o)o.focus();};
+    root.querySelector("[data-pick]").onclick=()=>{shOpen=true;shAnim=true;hubTop();shAnim=false;const o=document.querySelector(".pz-sh .pz-sht.on");if(o)o.focus();};
     root.querySelectorAll("[data-shx]").forEach(x=>x.onclick=closeSh);
     const sh=root.querySelector(".pz-sh");
-    /* Die Seite läuft in einem verschobenen Container; dort bezieht sich „fixed“ nicht auf den Bildschirm. Das Blatt wird deshalb auf den sichtbaren Bildschirm zurechtgerückt. */
-    if(shOpen){sh.style.top=sh.style.bottom="0";const r=sh.getBoundingClientRect();sh.style.top=(-r.top)+"px";sh.style.bottom=(r.bottom-innerHeight)+"px";}
     if(shOpen)sh.onkeydown=e=>{if(e.key==="Escape"){e.stopPropagation();closeSh();}};
     // Spiel gewählt: ohne Stufen schließt das Blatt, sonst bleibt es für die Stufe offen
-    root.querySelectorAll("[data-tg]").forEach(x=>x.onclick=()=>{topG=x.dataset.tg;topL="";set("bvi_pause_topg",topG);set("bvi_pause_topl","");shOpen=!!BOARDS[topG].lv;hubTop();if(shOpen){const o=root.querySelector(".pz-ws[aria-label=Stufe] button.on");if(o)o.focus();}});
+    root.querySelectorAll("[data-tg]").forEach(x=>x.onclick=()=>{topG=x.dataset.tg;topL="";set("bvi_pause_topg",topG);set("bvi_pause_topl","");shOpen=!!BOARDS[topG].lv;hubTop();if(shOpen){const o=document.querySelector(".pz-sh .pz-ws[aria-label=Stufe] button.on");if(o)o.focus();}});
     root.querySelectorAll("[data-tl]").forEach(x=>x.onclick=()=>{topL=x.dataset.tl;set("bvi_pause_topl",topL);shOpen=false;hubTop();});
     root.querySelectorAll("[data-ts]").forEach(x=>x.onclick=()=>{topS=x.dataset.ts;set("bvi_pause_tops",topS);hubTop();});
+    /* Das offene Fenster hängt direkt am Seitenrahmen: Die Seite läuft in einem verschobenen Container, dort würde „fixed“ nicht auf den Bildschirm zeigen und das Fenster würde wandern. */
+    if(shOpen)document.body.appendChild(sh);
     root.querySelector(".pz-lgo").onclick=()=>open(topG);
     const body=root.querySelector(".pz-lbb"),msg=(t,btn)=>{body.innerHTML=`<div class="pz-card"><div class="pz-center">${t}</div>${btn||""}</div>`;};
     if(!all){const a=get(TOPKEY,{})[id];
