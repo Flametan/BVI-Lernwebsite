@@ -1159,6 +1159,8 @@ const PROGRESS = (function(){
   function load(){ try{ return JSON.parse(localStorage.getItem('bvi_progress')||'{}'); }catch{ return {}; } }
   function save(d){ try{ localStorage.setItem('bvi_progress',JSON.stringify(d)); }catch{} }
 
+  window.BVI_UNSEEN = () => { const d = load(); return Object.keys(LEAF_PARENT).filter(v => !d[v]).length; };
+
   function track(viewId){
     if(!LEAF_PARENT[viewId]) return;
     const d = load(), isNew = !d[viewId]; d[viewId] = true; save(d);
