@@ -1159,6 +1159,8 @@ const PROGRESS = (function(){
   function load(){ try{ return JSON.parse(localStorage.getItem('bvi_progress')||'{}'); }catch{ return {}; } }
   function save(d){ try{ localStorage.setItem('bvi_progress',JSON.stringify(d)); }catch{} }
 
+  window.BVI_UNSEEN = () => { const d = load(); return Object.keys(LEAF_PARENT).filter(v => !d[v]).length; };
+
   function track(viewId){
     if(!LEAF_PARENT[viewId]) return;
     const d = load(), isNew = !d[viewId]; d[viewId] = true; save(d);
@@ -4219,7 +4221,8 @@ const IDFQ=makeQuiz({G:'IDFQ',view:'v-idf-altklausur',sfx:'-idf',minutes:45,html
     const mk=(q,cat,sub)=>Object.assign({},q,{cat,sub});
     return [].concat(
       IQ.filter(q=>q.cat==='Vorbeugender Brandschutz 12/2026').map(q=>mk(q,'Eingrenzungen','VB')),
-      BQ.map(q=>mk(q,'Brainyoo',q.sub)),
+      /* Brainyoo: Auch Aufgaben mit nur einer richtigen Antwort werden als Mehrfachauswahl gezeigt – sonst verrät schon das Antippen-Verhalten, dass genau eine stimmt */
+      BQ.map(q=>{ const m=mk(q,'Brainyoo',q.sub); if(m.type==='mc'){ m.type='multi'; m.correct=[m.correct]; } return m; }),
       IQ.filter(q=>q.cat==='Vorbeugender Brandschutz').map(q=>mk(q,'Altklausur','VB')),
       IQ.filter(q=>q.cat==='Stabsarbeit').map(q=>mk(q,'Altklausur','Stabsarbeit')));
   })()});

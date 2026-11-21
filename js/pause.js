@@ -189,7 +189,10 @@ const PAUSE=(function(){
     const closeSh=()=>{shOpen=false;hubTop();const b=root.querySelector("[data-pick]");if(b)b.focus();};
     root.querySelector("[data-pick]").onclick=()=>{shOpen=true;hubTop();const o=root.querySelector(".pz-sht.on");if(o)o.focus();};
     root.querySelectorAll("[data-shx]").forEach(x=>x.onclick=closeSh);
-    const sh=root.querySelector(".pz-sh");if(shOpen)sh.onkeydown=e=>{if(e.key==="Escape"){e.stopPropagation();closeSh();}};
+    const sh=root.querySelector(".pz-sh");
+    /* Die Seite läuft in einem verschobenen Container; dort bezieht sich „fixed“ nicht auf den Bildschirm. Das Blatt wird deshalb auf den sichtbaren Bildschirm zurechtgerückt. */
+    if(shOpen){sh.style.top=sh.style.bottom="0";const r=sh.getBoundingClientRect();sh.style.top=(-r.top)+"px";sh.style.bottom=(r.bottom-innerHeight)+"px";}
+    if(shOpen)sh.onkeydown=e=>{if(e.key==="Escape"){e.stopPropagation();closeSh();}};
     // Spiel gewählt: ohne Stufen schließt das Blatt, sonst bleibt es für die Stufe offen
     root.querySelectorAll("[data-tg]").forEach(x=>x.onclick=()=>{topG=x.dataset.tg;topL="";set("bvi_pause_topg",topG);set("bvi_pause_topl","");shOpen=!!BOARDS[topG].lv;hubTop();if(shOpen){const o=root.querySelector(".pz-ws[aria-label=Stufe] button.on");if(o)o.focus();}});
     root.querySelectorAll("[data-tl]").forEach(x=>x.onclick=()=>{topL=x.dataset.tl;set("bvi_pause_topl",topL);shOpen=false;hubTop();});

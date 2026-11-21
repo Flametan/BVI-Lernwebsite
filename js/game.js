@@ -29,7 +29,11 @@ const GAME=(function(){
     [G('quiz','5 Prüfungsfragen',5,d=>d.quizOk||0),G('quiz2','8 Prüfungsfragen',8,d=>d.quizOk||0),G('quiz3','10 Antworten',10,d=>d.quiz||0),G('str','3 richtig in Folge',3,best),G('str2','5 richtig in Folge',5,best),G('str3','8 richtig in Folge',8,best)],
     [G('time','10 Minuten',10,mins),G('time2','15 Minuten',15,mins),G('time3','20 Minuten',20,mins),G('new','1 neues Thema',1,d=>d.newT||0),G('new2','2 neue Themen',2,d=>d.newT||0),G('star','3 Karten markieren',3,d=>d.stars||0),G('star2','5 Karten markieren',5,d=>d.stars||0)]
   ];
-  function taskDefs(){ const n=Math.floor(Date.now()/864e5-new Date().getTimezoneOffset()/1440); return TASK_POOL.map((g,i)=>g[(n+i)%g.length]); }
+  /* „Neues Thema“ geht nur, solange es noch nicht besuchte Themen gibt; sonst nimmt die Liste die nächste Aufgabe (bereits begonnene bleiben stehen) */
+  const unseen=()=>{ try{ return typeof window.BVI_UNSEEN==='function'?window.BVI_UNSEEN():99; }catch(e){ return 99; } };
+  const NEWID=/^(new\d?|wn)$/;
+  function pickRoll(g,k,started){ for(let j=0;j<g.length;j++){ const t=g[(k+j)%g.length]; if(!NEWID.test(t.id)||started||unseen()>=t.max) return t; } return g[k%g.length]; }
+  function taskDefs(){ const n=Math.floor(Date.now()/864e5-new Date().getTimezoneOffset()/1440), r=load().days[today()]||{}; return TASK_POOL.map((g,i)=>pickRoll(g,(n+i)%g.length,(r.newT|0)>0)); }
   /* Wochenaufgaben (Mo–So): jede bringt Punkte, alle drei zusammen das Abzeichen „Wochenmeister“ */
   /* Jede Woche wechselt die Auswahl: je eine Aufgabe aus drei Gruppen (Karten, Fragen, Einsatz), rollierend nach Kalenderwoche */
   const W=(id,t,max,xp,get)=>({id,t,max,xp,get});
@@ -40,7 +44,8 @@ const GAME=(function(){
   ];
   function weeklyDefs(){
     const [y,m,d]=weekKeys()[0].split('-').map(Number), n=Math.floor(Date.UTC(y,m-1,d)/864e5/7);
-    return WEEKLY_POOL.map((g,i)=>g[(n+i)%g.length]);
+    const nw=weekSum().newT|0;
+    return WEEKLY_POOL.map((g,i)=>pickRoll(g,(n+i)%g.length,nw>0));
   }
   /* Erklärungen zu den Aufgaben (Hover am PC, Tippen am Handy) */
   const HINT={

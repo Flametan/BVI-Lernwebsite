@@ -5213,4 +5213,11 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .pz-podium .pz-pd.p3 .pz-pnum{font-size:1.5rem;}
 @media(min-width:700px){.pz-podium{padding:24px 20px 0;gap:16px;}.pz-podium .pz-ps{height:80px;}.pz-podium .pz-pd.p1 .pz-ps{height:128px;}.pz-podium .pz-pd.p3 .pz-ps{height:58px;}.pz-pnum{font-size:2.6rem;}.pz-podium .pz-pd.p3 .pz-pnum{font-size:2rem;}}
 /* Handy: Auswahl-Blatt endet über der unteren Navigation, damit „Fertig“ sichtbar bleibt */
-@media(max-width:700px){.pz-shp{max-height:calc(100dvh - 90px);padding-bottom:calc(165px + env(safe-area-inset-bottom,0px));}}
+@media(max-width:700px){
+  .pz-sh{box-sizing:border-box;padding-bottom:calc(88px + env(safe-area-inset-bottom,0px));}
+  .pz-shp{max-height:calc(100dvh - 88px - env(safe-area-inset-bottom,0px) - 80px);padding:14px 16px 12px;border-radius:24px;}
+  .pz-shg{gap:6px;}
+  .pz-sht{min-height:48px;height:48px;gap:1px;padding:3px 4px;justify-content:center;border-radius:12px;font-size:.72rem;line-height:1.15;}
+  .pz-sht .pz-gi{width:24px;height:24px;border-radius:8px;}.pz-sht .pz-gi svg{width:15px;height:15px;}
+  .pz-shc{margin-top:10px;}
+}
