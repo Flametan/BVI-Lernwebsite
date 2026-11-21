@@ -4233,7 +4233,7 @@ html:root svg.d2 .nut{fill:#1b1b1b;font-weight:700;}
 .pz-ws button.on{background:var(--m-accent);color:var(--m-on-accent,#1c1c1c);font-weight:700;}
 .pz-sh{position:fixed;inset:0;z-index:3000;display:flex;align-items:flex-end;justify-content:center;}
 .pz-sh[hidden]{display:none;}
-.pz-shd{position:absolute;inset:0;background:rgba(0,0,0,.6);}
+.pz-shd{position:absolute;inset:0;background:rgba(0,0,0,.22);}
 .pz-shp{position:relative;width:100%;max-width:520px;max-height:88vh;overflow:auto;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));border-radius:24px 24px 0 0;background:var(--m-raised);box-shadow:0 -12px 40px rgba(0,0,0,.45);}
 .pz-shp h3{margin:12px 0 8px;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--m-muted);}
 .pz-shp h3:first-child{margin-top:0;}
