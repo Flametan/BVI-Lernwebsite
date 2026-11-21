@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.0',ts:'2026-11-18T10:00',items:[
+      'Brainyoo-Fragen (IdF-Klausur): Auch Aufgaben, bei denen nur eine Antwort richtig ist, lassen sich jetzt wie Mehrfachauswahl-Aufgaben bearbeiten – Sie können mehrere Antworten ankreuzen und müssen selbst entscheiden, wie viele stimmen.',
       'Tagesaufgaben: „1 neues Thema“ und „2 neue Themen“ (und „5 neue Themen“ in der Woche) erscheinen nur noch, solange es Themen gibt, die Sie noch nie geöffnet haben. Haben Sie alle Themen auf 100 %, kommt stattdessen die nächste Aufgabe.',
       'Ladebildschirm Startseite am Handy: Kacheln, Reiter und Abstände entsprechen jetzt Größe, Breite und Position der fertigen Seite (Kopfzeile mit Symbolen, „Heute“-Karte mit Ringen, Jahres-Reiter, Flagge und Serie, Kurskarten, Wochenkarte).',
       'Ladebildschirm Startseite am Handy: Der Rang-Wimpel sitzt rechts neben der Streak-Pille und blendet in einem Stück aus, die Streak ist rechtsbündig, Jahres-Reiter (schmaler) und Streak sind so flach wie in der App, und die Lernzeit zeigt wie die App ein Liniendiagramm mit Wochentagen und Fußzeile.',
