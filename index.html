@@ -170,7 +170,7 @@
     }
     /* Tablet, Startseite: Maße 1:1 von der fertigen Seite (800 px breit): Serie-Banner und Wochenkarte links, Wochenchart rechts */
     #sk .sk-bn{display:none;}
-    @media(min-width:701px) and (max-width:1099px){
+    @media(min-width:701px){
       #sk[data-t=home] .sk-main{padding-top:calc(env(safe-area-inset-top,0px) + 32px);}
       #sk[data-t=home] .sk-hd{margin-bottom:0;}#sk[data-tr="0"][data-t=home] .sk-hd{margin-bottom:9px;}
       #sk[data-t=home] .sk-hd .sk-col{gap:0!important;}
@@ -203,6 +203,31 @@
       #sk[data-t=home] .sk-yh{height:12px;margin-top:3px;margin-bottom:2px;}#sk[data-t=home] .sk-st+.sk-yh{margin-top:19px;}
       #sk[data-t=home] .sk-cl{grid-row:7;padding:13px 16px;}#sk[data-t=home] .sk-cl i:first-child{width:36px!important;height:36px!important;}
     }
+    /* PC, Startseite: Inhalt 1044 px breit (max. 1140 px inkl. Rand), zwei gleich breite Spalten */
+    @media(min-width:1100px){
+      #sk[data-t=home] .sk-main{max-width:1140px;padding-top:calc(env(safe-area-inset-top,0px) + 40px);}
+      #sk[data-t=home] .sk-hd i:nth-child(1){width:23%!important;}#sk[data-t=home] .sk-hd i:nth-child(2){width:40%!important;margin-top:18px;}#sk[data-t=home] .sk-hd i:nth-child(4){width:14%!important;}
+      #sk[data-tr="0"][data-t=home] .sk-hd{margin-bottom:5px;}
+      #sk[data-t=home] .sk-ic{top:calc(env(safe-area-inset-top,0px) + 40px);right:calc((100vw - 98px - min(100vw - 98px,1140px))/2 + 48px);}
+      #sk[data-t=home] section[data-p=home]{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
+      #sk[data-t=home] .sk-bn{margin-bottom:-12px;}
+      #sk[data-t=home] .sk-l2{height:113px;}#sk[data-t=home] .sk-l2 .sk-rings{height:113px;}
+      #sk[data-t=home] .sk-l2 .sk-rings i{top:17px;width:58px;height:58px;}
+      #sk[data-t=home] .sk-l2 .sk-rings i:nth-child(1){left:23px;}#sk[data-t=home] .sk-l2 .sk-rings i:nth-child(2){left:111px;}#sk[data-t=home] .sk-l2 .sk-rings i:nth-child(3){left:210px;}
+      #sk[data-t=home] .sk-l2 .sk-rings i::after{top:68px;}
+      #sk[data-t=home] .sk-l2::after{background:
+        linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 327px 15px/82px 9px no-repeat,
+        linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 327px 40px/118px 10px no-repeat,
+        linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 455px 40px/29px 10px no-repeat,
+        linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 327px 62px/98px 10px no-repeat,
+        linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 455px 62px/29px 10px no-repeat,
+        linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 327px 84px/41px 10px no-repeat,
+        linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 455px 84px/29px 10px no-repeat;}
+      #sk[data-t=home] .sk-g .sk-bars{height:58px;margin-top:75px;}
+      #sk[data-t=home] .sk-g .sk-days{margin:13px 14px 0;height:12px;}#sk[data-t=home] .sk-g .sk-days i{width:22px;height:12px;}
+      #sk[data-t=home] .sk-g .sk-cp{margin-top:19px;}
+      #sk[data-t=home] .sk-yh{margin-top:0;}#sk[data-t=home] .sk-st+.sk-yh{margin-top:18px;}
+    }
       </style>
   <script>window.SK=function(){var e=document.getElementById('sk');if(!e||e.getAttribute('data-go'))return;e.setAttribute('data-go','1');var rm=false;try{rm=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(x){}
   if(!rm){try{var W=window.innerWidth||1000,H=window.innerHeight||800,mx=0,bs=e.querySelectorAll('i,.sk-card,.sk-rail,.sk-tabs');for(var n=0;n<bs.length;n++){var b=bs[n],r=b.getBoundingClientRect();if(!r.width||!r.height)continue;var d=Math.round(Math.max(0,Math.min(1,r.top/H))*220+Math.max(0,Math.min(1,r.left/W))*40);b.style.setProperty('--fd',d+'ms');if(d>mx)mx=d;if(r.width>=56&&r.height>=16&&!b.classList.contains('sk-rail')&&!b.classList.contains('sk-tabs'))b.classList.add('cm');}e.classList.add('comet');setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e);},mx+950);return;}catch(x){e.classList.remove('comet');}}
@@ -224,7 +249,7 @@
     <section data-p="home">
       <div class="sk-row sk-hd"><div class="sk-col" style="flex:1;gap:10px"><i style="width:56%;height:30px;"></i><i style="width:54%;height:14px;"></i><i class="sk-h2" style="width:44%;height:14px;"></i><i style="width:36%;height:12px;"></i></div></div>
       <div class="sk-card sk-l sk-l1 sk-tour"><i style="width:40px;height:40px;border-radius:12px;flex:none"></i><div class="sk-col" style="flex:1;gap:7px"><i style="width:44%;height:14px;"></i><i style="width:70%;height:11px;"></i></div><i style="width:84px;height:30px;border-radius:99px;flex:none"></i></div>
-      <div class="sk-card sk-bn"><i style="left:20px;top:12px;width:34px;height:8px"></i><i style="left:20px;top:25px;width:32px;height:34px;border-radius:50%"></i><i style="left:64px;top:26px;width:22px;height:32px"></i><i style="left:20px;top:62px;width:76px;height:10px"></i><i style="left:280px;top:22px;width:54px;height:32px;border-radius:6px"></i><i style="left:393px;top:20px;width:20px;height:20px;border-radius:50%"></i><i style="left:381px;top:49px;width:44px;height:9px"></i><i style="left:20px;top:88px;width:64px;height:10px"></i><i style="right:90px;top:88px;width:44px;height:10px"></i><i style="left:20px;top:112px;right:20px;height:5px;border-radius:3px"></i></div>
+      <div class="sk-card sk-bn"><i style="left:20px;top:12px;width:34px;height:8px"></i><i style="left:20px;top:25px;width:32px;height:34px;border-radius:50%"></i><i style="left:64px;top:26px;width:22px;height:32px"></i><i style="left:20px;top:62px;width:76px;height:10px"></i><i style="right:112px;top:22px;width:54px;height:32px;border-radius:6px"></i><i style="right:32px;top:20px;width:20px;height:20px;border-radius:50%"></i><i style="right:20px;top:49px;width:44px;height:9px"></i><i style="left:20px;top:88px;width:64px;height:10px"></i><i style="right:90px;top:88px;width:44px;height:10px"></i><i style="left:20px;top:112px;right:20px;height:5px;border-radius:3px"></i></div>
       <div class="sk-card sk-l sk-l2 sk-sr"><div class="sk-row" style="align-items:center"><i style="width:34%;height:20px;"></i><i style="width:84px;height:28px;border-radius:99px"></i></div><div class="sk-rings"><i></i><i></i><i></i><i class="sk-wk"></i></div></div>
       <div class="sk-card sk-g"><div class="sk-row" style="align-items:center"><i style="width:30%;height:26px;"></i><i style="width:22%;height:16px;"></i></div><div class="sk-bars"><i class="sk-ln"></i></div><div class="sk-days"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="sk-row sk-cp" style="align-items:center;justify-content:space-between"><i style="width:44%;height:12px;"></i><i style="width:24%;height:14px;"></i></div></div>
       
