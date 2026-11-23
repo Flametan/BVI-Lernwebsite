@@ -22,6 +22,7 @@ const CORE = [
   './js/tour.js',
   './js/game.js',
   './js/sync.js',
+  './js/feel.js',
   './js/account.js',
   './js/version.js',
   './manifest.json',

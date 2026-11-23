@@ -42,6 +42,7 @@ const NAV = (function(){
 
   function show(id){
     if(typeof LB!=='undefined') id=LB.guard(id);   // gesperrter Bereich: ohne Passwort zur Sperrseite
+    const _o = typeof FEEL!=='undefined' ? FEEL.pre() : 0;   // läuft noch ein Seitenwechsel, übernimmt der nächste dessen Helligkeit
     // O(2) view swap: deactivate previous, activate next
     if(!_activeEl) _activeEl = document.querySelector('.view.active');
     const next = document.getElementById(id);
@@ -51,6 +52,7 @@ const NAV = (function(){
       next.classList.remove('nav-forward','nav-back');
       void next.offsetWidth;
       next.classList.add('active', _dir==='back'?'nav-back':'nav-forward');
+      if(typeof FEEL!=='undefined') FEEL.enter(next,_dir,_o);
       _activeEl = next;
     }
     window.scrollTo({top:0,behavior:'instant'});
@@ -2102,8 +2104,11 @@ const FC = (function(){
       if(!live||(e&&e.pointerId!==pid)) return; live=false;
       if(!drag) return;
       panel.classList.remove('drag');
-      if(dy>110||vy>0.6){ FC.closeModes(); }
-      else{ panel.style.transition='transform .5s cubic-bezier(.34,1.56,.64,1)'; setY(0); bd.style.opacity=''; setTimeout(()=>{ panel.style.transition=''; },520); }
+      if(dy>110||vy>0.6){
+        if(typeof FEEL!=='undefined'&&dy>0){ panel.style.transition='none'; FEEL.glide(panel,{from:dy,to:panel.offsetHeight*1.1,v:Math.max(vy,.4),min:120,max:270,at:y=>'translateY('+y+'px)'}); }
+        FC.closeModes();
+      }
+      else{ panel.style.transition='transform .5s '+(typeof FEEL!=='undefined'?FEEL.SPRING:'cubic-bezier(.34,1.56,.64,1)'); setY(0); bd.style.opacity=''; setTimeout(()=>{ panel.style.transition=''; },520); }
       setTimeout(()=>{ drag=false; },0);
     };
     panel.addEventListener('pointerup',end); panel.addEventListener('pointercancel',end);
@@ -2221,9 +2226,16 @@ const FC = (function(){
     const tilt=d=>Math.max(-TILT,Math.min(TILT,d*0.08));
     const stamps=(o,n)=>{ st.ok.style.opacity=o; st.no.style.opacity=n; };
     const reset=()=>{ outer.style.transform=''; stamps(0,0); };
-    const fly=(kind,ms)=>{
+    const fly=(kind,ms,v)=>{
       if(_flying) return; _flying=true;
       stamps(kind==='ok'?1:0,kind==='no'?1:0);
+      if(v&&typeof FEEL!=='undefined'){
+        // Schwung: die Karte setzt die Fingergeschwindigkeit fort und bremst ab, statt neu anzufahren
+        const sg=kind==='ok'?1:-1;
+        outer.style.transition='none';
+        FEEL.glide(outer,{from:dx,to:sg*window.innerWidth*1.1,v:Math.abs(v),min:150,max:380,opacity:[1,0],at:x=>`translateX(${x}px) rotate(${tilt(x)}deg)`}).then(()=>FC.answer(kind==='ok',true));
+        return;
+      }
       outer.style.transition=`transform ${ms}ms cubic-bezier(.4,0,.9,.6),opacity ${ms}ms ease`;
       outer.style.transform=`translateX(${(kind==='ok'?1:-1)*window.innerWidth*1.1}px) translateY(-30px) rotate(${(kind==='ok'?1:-1)*TILT}deg)`;
       outer.style.opacity='0';
@@ -2261,9 +2273,9 @@ const FC = (function(){
       } else if(mode==='x'&&(Math.abs(dx)>=THR||Math.abs(vx)>0.6)){
         // Wegschnippen: Schwung des Fingers bestimmt die Richtung und das Tempo
         const dir=(Math.abs(vx)>0.6?vx:dx)>0?1:-1;
-        fly(dir>0?'ok':'no',Math.max(180,Math.min(320,320-Math.abs(vx)*120)));
+        fly(dir>0?'ok':'no',Math.max(180,Math.min(320,320-Math.abs(vx)*120)),Math.abs(vx)>0.3?Math.abs(vx):0);
       } else {
-        outer.style.transition='transform .45s cubic-bezier(.34,1.56,.64,1)'; reset();
+        outer.style.transition='transform .45s '+(typeof FEEL!=='undefined'?FEEL.SPRING:'cubic-bezier(.34,1.56,.64,1)'); reset();
       }
     });
 
