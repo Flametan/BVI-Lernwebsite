@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.0',ts:'2026-11-18T10:00',items:[
+      'Ladebildschirm am Tablet: Der Platzhalter der Startseite entspricht jetzt der fertigen Seite (Serie-Banner, Wochenkarte, Wochenchart, Jahres-Reiter, Kacheln in den richtigen Größen).',
       'Bestenliste: Die Seite hinter dem Spielauswahl-Fenster bleibt sichtbar und wird nur noch leicht abgedunkelt, sodass Sie dort weiterhin alles erkennen.',
       'Bestenliste: Das Fenster zur Spielauswahl bleibt jetzt in der Bildschirmmitte stehen und rutscht nicht mehr nach unten (auch nicht beim Scrollen oder nach der Spielwahl).',
       'Bestenliste: Das Fenster zur Spielauswahl erscheint immer in der Mitte des Bildschirms und blendet langsam ein, egal wo Sie auf der Seite sind (mit „Bewegung reduzieren“ sofort). Am Handy ist es komplett sichtbar, auch mit Stufen und „Fertig“.',

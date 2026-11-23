@@ -168,6 +168,41 @@
       #sk .sk-wrap{margin-left:98px;}
       #sk[data-t=set] .sk-main{max-width:900px;}
     }
+    /* Tablet, Startseite: Maße 1:1 von der fertigen Seite (800 px breit): Serie-Banner und Wochenkarte links, Wochenchart rechts */
+    #sk .sk-bn{display:none;}
+    @media(min-width:701px) and (max-width:1099px){
+      #sk[data-t=home] .sk-main{padding-top:calc(env(safe-area-inset-top,0px) + 32px);}
+      #sk[data-t=home] .sk-hd{margin-bottom:0;}#sk[data-tr="0"][data-t=home] .sk-hd{margin-bottom:9px;}
+      #sk[data-t=home] .sk-hd .sk-col{gap:0!important;}
+      #sk[data-t=home] .sk-hd i:nth-child(1){width:32%!important;height:32px!important;margin-top:3px;}
+      #sk[data-t=home] .sk-hd i:nth-child(2){width:46%!important;height:16px!important;margin-top:16px;}
+      #sk[data-t=home] .sk-hd i:nth-child(4){width:21%!important;height:14px!important;margin-top:12px;}
+      #sk[data-t=home] .sk-ic{right:32px;width:96px;gap:8px;top:calc(env(safe-area-inset-top,0px) + 32px);}#sk[data-t=home] .sk-ic i{width:44px;height:44px;}
+      #sk[data-t=home] section[data-p=home]{grid-template-columns:minmax(0,1.628fr) minmax(0,1fr);}
+      #sk[data-t=home] .sk-bn{display:block;position:relative;grid-column:1;grid-row:3;height:133px;padding:0;gap:0;align-self:start;margin-bottom:-16px;}
+      #sk[data-t=home] .sk-bn i{position:absolute;}
+      #sk[data-t=home] .sk-l2{grid-column:1;grid-row:4;align-self:start;height:104px;padding:0;gap:0;position:relative;}
+      #sk[data-t=home] .sk-l2>.sk-row{display:none;}
+      #sk[data-t=home] .sk-l2 .sk-rings{display:block;height:104px;}
+      #sk[data-t=home] .sk-l2 .sk-rings i{position:absolute;top:13px;width:59px;height:59px;max-width:none;aspect-ratio:auto;margin:0;flex:none;}
+      #sk[data-t=home] .sk-l2 .sk-rings i:nth-child(1){left:17px;}#sk[data-t=home] .sk-l2 .sk-rings i:nth-child(2){left:94px;}#sk[data-t=home] .sk-l2 .sk-rings i:nth-child(3){left:181px;}
+      #sk[data-t=home] .sk-l2 .sk-rings i::after{content:"";position:absolute;left:50%;top:69px;width:52px;height:9px;margin-left:-26px;border-radius:5px;background:inherit;}
+      #sk[data-t=home] .sk-l2::after{content:"";position:absolute;inset:0;animation:sk-p 1.4s ease-in-out infinite;background:
+        linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 275px 13px/76px 9px no-repeat,
+        linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 275px 37px/108px 10px no-repeat,linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 395px 37px/27px 10px no-repeat,
+        linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 275px 57px/86px 10px no-repeat,linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 395px 57px/27px 10px no-repeat,
+        linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 275px 77px/37px 10px no-repeat,linear-gradient(var(--m-raised,#262626),var(--m-raised,#262626)) 395px 77px/27px 10px no-repeat;}
+      #sk[data-t=home] .sk-g{grid-column:2;grid-row:3 / span 2;align-self:stretch;padding:16px;gap:0;}
+      #sk[data-t=home] .sk-g>.sk-row:first-child i:first-child{width:86px!important;height:28px!important;border-radius:8px;}
+      #sk[data-t=home] .sk-g>.sk-row:first-child i:last-child{width:90px!important;height:16px!important;}
+      #sk[data-t=home] .sk-g .sk-bars{height:30px;margin-top:40px;}
+      #sk[data-t=home] .sk-g .sk-days{display:flex;margin:8px 8px 0;height:9px;}#sk[data-t=home] .sk-g .sk-days i{flex:none;width:14px;height:9px;}
+      #sk[data-t=home] .sk-g .sk-cp{display:flex;margin-top:14px;height:14px;}
+      #sk[data-t=home] .sk-seg{grid-row:5;}#sk[data-t=home] .sk-seg .sk-lbl:first-child i:first-child{width:131px;height:33px;border-radius:99px;}#sk[data-t=home] .sk-seg .sk-lbl:first-child i+i{display:none;}
+      #sk[data-t=home] .sk-r{grid-row:6;}
+      #sk[data-t=home] .sk-yh{height:12px;margin-top:3px;margin-bottom:2px;}#sk[data-t=home] .sk-st+.sk-yh{margin-top:19px;}
+      #sk[data-t=home] .sk-cl{grid-row:7;padding:13px 16px;}#sk[data-t=home] .sk-cl i:first-child{width:36px!important;height:36px!important;}
+    }
       </style>
   <script>window.SK=function(){var e=document.getElementById('sk');if(!e||e.getAttribute('data-go'))return;e.setAttribute('data-go','1');var rm=false;try{rm=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(x){}
   if(!rm){try{var W=window.innerWidth||1000,H=window.innerHeight||800,mx=0,bs=e.querySelectorAll('i,.sk-card,.sk-rail,.sk-tabs');for(var n=0;n<bs.length;n++){var b=bs[n],r=b.getBoundingClientRect();if(!r.width||!r.height)continue;var d=Math.round(Math.max(0,Math.min(1,r.top/H))*220+Math.max(0,Math.min(1,r.left/W))*40);b.style.setProperty('--fd',d+'ms');if(d>mx)mx=d;if(r.width>=56&&r.height>=16&&!b.classList.contains('sk-rail')&&!b.classList.contains('sk-tabs'))b.classList.add('cm');}e.classList.add('comet');setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e);},mx+950);return;}catch(x){e.classList.remove('comet');}}
@@ -189,6 +224,7 @@
     <section data-p="home">
       <div class="sk-row sk-hd"><div class="sk-col" style="flex:1;gap:10px"><i style="width:56%;height:30px;"></i><i style="width:54%;height:14px;"></i><i class="sk-h2" style="width:44%;height:14px;"></i><i style="width:36%;height:12px;"></i></div></div>
       <div class="sk-card sk-l sk-l1 sk-tour"><i style="width:40px;height:40px;border-radius:12px;flex:none"></i><div class="sk-col" style="flex:1;gap:7px"><i style="width:44%;height:14px;"></i><i style="width:70%;height:11px;"></i></div><i style="width:84px;height:30px;border-radius:99px;flex:none"></i></div>
+      <div class="sk-card sk-bn"><i style="left:20px;top:12px;width:34px;height:8px"></i><i style="left:20px;top:25px;width:32px;height:34px;border-radius:50%"></i><i style="left:64px;top:26px;width:22px;height:32px"></i><i style="left:20px;top:62px;width:76px;height:10px"></i><i style="left:280px;top:22px;width:54px;height:32px;border-radius:6px"></i><i style="left:393px;top:20px;width:20px;height:20px;border-radius:50%"></i><i style="left:381px;top:49px;width:44px;height:9px"></i><i style="left:20px;top:88px;width:64px;height:10px"></i><i style="right:90px;top:88px;width:44px;height:10px"></i><i style="left:20px;top:112px;right:20px;height:5px;border-radius:3px"></i></div>
       <div class="sk-card sk-l sk-l2 sk-sr"><div class="sk-row" style="align-items:center"><i style="width:34%;height:20px;"></i><i style="width:84px;height:28px;border-radius:99px"></i></div><div class="sk-rings"><i></i><i></i><i></i><i class="sk-wk"></i></div></div>
       <div class="sk-card sk-g"><div class="sk-row" style="align-items:center"><i style="width:30%;height:26px;"></i><i style="width:22%;height:16px;"></i></div><div class="sk-bars"><i class="sk-ln"></i></div><div class="sk-days"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="sk-row sk-cp" style="align-items:center;justify-content:space-between"><i style="width:44%;height:12px;"></i><i style="width:24%;height:14px;"></i></div></div>
       
