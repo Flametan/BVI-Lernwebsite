@@ -3271,7 +3271,7 @@ const LP=(function(){
     const r=cur.v.getBoundingClientRect(); win.style.setProperty('--lp-l',Math.max(0,r.left)+'px'); win.style.setProperty('--lp-w',r.width+'px');
     const tb=document.getElementById('m-tabbar');
     // Abstand bis zur wirklichen Oberkante der Tab-Leiste (aufgerundet, 1 px Überlappung), sonst blitzt die Seite dahinter als Schrift-Streifen durch
-    if(tb&&tb.offsetHeight) win.style.setProperty('--lp-tb',(Math.ceil(Math.max(tb.offsetHeight,window.innerHeight-tb.getBoundingClientRect().top))+1)+'px'); else win.style.removeProperty('--lp-tb');
+    if(tb&&tb.offsetHeight) win.style.setProperty('--lp-tb',(Math.ceil(Math.max(tb.offsetHeight,window.innerHeight-tb.getBoundingClientRect().top))-1)+'px'); else win.style.removeProperty('--lp-tb');
     if(again!==true) requestAnimationFrame(()=>place(true));
   }
   window.addEventListener('resize',()=>{ if(cur&&win&&win.classList.contains('on')) place(); });
