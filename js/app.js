@@ -3266,11 +3266,13 @@ const LP=(function(){
   function fitTables(){ if(!win) return; win.querySelectorAll('.lp-wbody .tbl-wrap').forEach(w=>w.classList.toggle('tw-fit',w.clientWidth>0&&w.scrollWidth<=w.clientWidth+1)); }
   window.addEventListener('resize',()=>{ if(cur) requestAnimationFrame(fitTables); });
   // Lage des Kapitel-Fensters: links/Breite wie die Seite, unten bis zur Tab-Leiste (nur wenn sie sichtbar ist; sonst Wert entfernen, z. B. nach Drehen aufs Querformat)
-  function place(){
+  function place(again){
     if(!win||!cur) return;
     const r=cur.v.getBoundingClientRect(); win.style.setProperty('--lp-l',Math.max(0,r.left)+'px'); win.style.setProperty('--lp-w',r.width+'px');
     const tb=document.getElementById('m-tabbar');
-    if(tb&&tb.offsetHeight) win.style.setProperty('--lp-tb',tb.offsetHeight+'px'); else win.style.removeProperty('--lp-tb');
+    // Abstand bis zur wirklichen Oberkante der Tab-Leiste (aufgerundet, 1 px Überlappung), sonst blitzt die Seite dahinter als Schrift-Streifen durch
+    if(tb&&tb.offsetHeight) win.style.setProperty('--lp-tb',(Math.ceil(Math.max(tb.offsetHeight,window.innerHeight-tb.getBoundingClientRect().top))+1)+'px'); else win.style.removeProperty('--lp-tb');
+    if(again!==true) requestAnimationFrame(()=>place(true));
   }
   window.addEventListener('resize',()=>{ if(cur&&win&&win.classList.contains('on')) place(); });
   function open(v,i,opt){
