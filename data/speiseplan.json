@@ -1,6 +1,6 @@
 {
   "hinweis": "Speiseplan des IdF Münster. Jede Woche neue Tage unter „tage“ ergänzen (Schlüssel = Datum JJJJ-MM-TT); alte Tage dürfen stehen bleiben. Die Kürzel in „a“ sind die Zusatzstoffe/Allergene wie auf dem Aushang.",
-  "stand": "16.11.2026",
+  "stand": "23.11.2026",
   "ausgabe": "12:00 bis 13:30 Uhr",
   "tage": {
     "2026-10-26": {
@@ -110,6 +110,35 @@
       "stamm":   {"t": "Schweinerückensteak mit Zwiebeln und Spiegelei", "a": "C, G/W"},
       "beilage": {"t": "Bratkartoffeln mit Speck und Zwiebeln"},
       "veg":     {"t": "Poke Bowl", "a": "C, B, J, O, V"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-23": {
+      "stamm":   {"t": "Jägerschnitzel mit Pilzsoße und Röstzwiebeln", "a": "C, L, G/W"},
+      "beilage": {"t": "Spätzle", "a": "C, G/W"},
+      "veg":     {"t": "Mediterraner Kartoffel-Fenchelauflauf", "a": "L, S, V"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-24": {
+      "stamm":   {"t": "Macaroni and Cheese", "a": "C, L, V, G/W"},
+      "veg":     {"t": "Blumenkohlschnitzel mit Paprika-Walnussdip und buntem Pfannengemüse", "a": "C, L, S, V, G/W"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-25": {
+      "stamm":   {"t": "Chili con Carne mit Sauerrahm", "a": "L, S"},
+      "beilage": {"t": "Reis"},
+      "veg":     {"t": "Gefüllte Backkartoffel mit Champignons und Schafskäse", "a": "L, V"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-26": {
+      "stamm":   {"t": "Putenschnitzel Mailänder Art mit Tomatensoße", "a": "C, L, S"},
+      "beilage": {"t": "Spaghetti", "a": "C, G/W"},
+      "veg":     {"t": "Kartoffel-Gemüseauflauf mit Gorgonzolakruste", "a": "L, S, V"},
+      "dessert": {"t": "Vario"}
+    },
+    "2026-11-27": {
+      "stamm":   {"t": "Fischfilet im Backteig mit Remouladensoße", "a": "C, D, L, G/W"},
+      "beilage": {"t": "Pommes frites"},
+      "veg":     {"t": "Veganes Kichererbsen-Curry mit Basmatireis", "a": "W, V"},
       "dessert": {"t": "Vario"}
     }
   }
