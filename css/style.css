@@ -5191,6 +5191,11 @@ html.lp-lock #m-topbar .tb-game,body:has(.lp-win.focus) #m-topbar .tb-game{displ
 .rk-da{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
 .rk-da .g-btn{flex:1 1 120px;}
 .rk-foot{margin-top:18px;}
+.rk-xh{margin:0 0 8px;font-size:1rem;}
+.rk-xl{list-style:none;margin:0;padding:0;}
+.rk-xl li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1px solid var(--m-line,rgba(128,128,128,.25));font-size:.9rem;line-height:1.4;}
+.rk-xl li:first-child{border-top:0;}
+.rk-xl b{white-space:nowrap;font-variant-numeric:tabular-nums;}
 .g-rk>.g-btn,.g-rk .rk-me~.g-btn{padding:0 22px;}
 .rk-row .g-btn{flex:0 0 auto;padding:0 20px;}
 .rk-foot .g-btn{padding:0 18px;}
