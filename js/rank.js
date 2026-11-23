@@ -84,24 +84,41 @@ const RANK=(function(){
     if(busy) return; busy=true;
     el.innerHTML='<p class="rk-lead">Ranking wird geladen …</p>';
     try{
-      lastRep=Date.now(); await send();
+      lastRep=Date.now();
+      try{ await send(); }catch(e){ if(!e.net) throw e; offline(tab,e); busy=false; return; }   // Server nicht erreichbar: gleich den gespeicherten Stand zeigen, nicht noch einmal warten
       const b=await api('GET','?board='+tab);
-      draw(b);
+      cacheSet(tab,b); draw(b);
     }catch(e){
-      if(e.code===404){ put(null); busy=false; if(await auto()) return mount(el); await intro(msg('Dein Eintrag war auf dem Server nicht mehr vorhanden. Du kannst erneut teilnehmen.')); }
+      if(e.net){ offline(tab,e); }
+      else if(e.code===404){ put(null); busy=false; if(await auto()) return mount(el); await intro(msg('Dein Eintrag war auf dem Server nicht mehr vorhanden. Du kannst erneut teilnehmen.')); }
       else if(e.code===409||e.code===422){ el.innerHTML=msg(e.message+'. Ändere deinen Namen im Account und öffne das Ranking erneut.',true)+'<button type="button" class="g-btn" onclick="ACCOUNT.open()">Account öffnen</button>'; }
       else el.innerHTML=msg(e.message,true)+'<button type="button" class="g-btn alt" onclick="RANK.mount()">Erneut versuchen</button>';
     }
     busy=false;
   }
-  function draw(b){
+  /* Letzter erfolgreich geladener Stand je Liste, mit Zeitpunkt (nur auf diesem Gerät) */
+  const CK='bvi_rank_cache';
+  const cacheGet=t=>{ try{ const c=JSON.parse(localStorage.getItem(CK)||'{}'); return c[t]||null; }catch(e){ return null; } };
+  const cacheSet=(t,b)=>{ try{ const c=JSON.parse(localStorage.getItem(CK)||'{}'); c[t]={t:Date.now(),b}; localStorage.setItem(CK,JSON.stringify(c)); }catch(e){} };
+  function stamp(ms){
+    const d=new Date(ms), n=new Date(), p=x=>String(x).padStart(2,'0'), hm=p(d.getHours())+':'+p(d.getMinutes());
+    const day=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime(), diff=Math.round((day(n)-day(d))/864e5);
+    return diff===0?'heute, '+hm+' Uhr':diff===1?'gestern, '+hm+' Uhr':p(d.getDate())+'.'+p(d.getMonth()+1)+'., '+hm+' Uhr';
+  }
+  function offline(t,e){
+    const c=cacheGet(t);
+    if(!c){ el.innerHTML=msg(e.message,true)+'<button type="button" class="g-btn alt" onclick="RANK.mount()">Erneut versuchen</button>'; return; }
+    draw(c.b,c.t);
+  }
+  function draw(b,staleAt){
     const me=myName(), row=r=>`<li class="${r.me?'me':''}"><span class="rk-p">${r.place}</span>${av(r.name,r.av)}<span class="rk-n">${esc(r.name)}<small>${esc(GAME.rankOf(r.tx!=null?r.tx:r.xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(r.tx!=null?r.tx:r.xp),44)}<b>${r.xp}</b></li>`;
     // Treppchen: Platz 2, 1, 3 nebeneinander, der Rest als Liste
     const pod=[2,1,3].map(n=>b.top.find(r=>r.place===n)).filter(Boolean), rest=b.top.filter(r=>r.place>3);
     const step=r=>`<div class="pz-pd p${r.place}${r.me?' me':''}" role="listitem">${av(r.name,r.av)}<span class="pz-pn">${esc(r.name)}</span>${(rk=>`<span class="pz-pr">${GAME.shoulder(rk,r.place===1?46:40)}<small>${esc(rk.n)}</small></span>`)(GAME.rankOf(r.tx!=null?r.tx:r.xp))}<b>${r.xp} <small>XP</small></b><div class="pz-ps"><span class="pz-pnum">${r.place}</span></div></div>`;
     const rows=(pod.length?`<li class="rk-podli"><div class="pz-podium" role="list">${pod.map(step).join('')}</div></li>`:'')+rest.map(row).join('');
     const mine=b.me&&b.me.place>20?`<li class="me gap"><span class="rk-p">${b.me.place}</span>${av(me,st().av)}<span class="rk-n">${esc(me)}<small>${esc(GAME.rankOf(GAME._state().xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(GAME._state().xp),44)}<b>${b.me.xp}</b></li>`:'';
-    const body=`<ol class="rk-list">${rows||'<li class="rk-empty">Noch niemand in der Liste.</li>'}${mine}</ol>
+    const note=staleAt?`<p class="rk-stale" role="status">Server nicht erreichbar. Gespeicherter Stand von ${stamp(staleAt)}. <button type="button" class="rk-retry" onclick="RANK.retry()">Erneut versuchen</button></p>`:'';
+    const body=note+`<ol class="rk-list">${rows||'<li class="rk-empty">Noch niemand in der Liste.</li>'}${mine}</ol>
       <p class="rk-sub">${b.me?`Dein Platz: ${b.me.place} von ${b.total}`:'Sammle Punkte, um in der Liste zu erscheinen.'} · Du bist als „${esc(me)}“ dabei</p>`;
     const rb=el.querySelector('.rk-body');
     if(rb&&el.querySelector('.rk-tabs')){ rb.innerHTML=body; rb.classList.remove('busy'); return; }   // Umschalter bleibt stehen, nur die Liste wechselt
@@ -128,8 +145,9 @@ const RANK=(function(){
     tb.querySelectorAll('button').forEach(b=>{ const on=b.dataset.t===t; b.classList.toggle('on',on); b.setAttribute('aria-selected',on); });
     place(true);
     const rb=el.querySelector('.rk-body'); if(rb) rb.classList.add('busy');
-    api('GET','?board='+t).then(b=>{ if(tab===t) draw(b); }).catch(()=>{ if(tab===t){ busy=false; mount(); } });
+    api('GET','?board='+t).then(b=>{ cacheSet(t,b); if(tab===t) draw(b); }).catch(e=>{ if(tab!==t) return; const c=e.net&&cacheGet(t); if(c) draw(c.b,c.t); else{ busy=false; mount(); } });
   }
+  const retry=()=>{ busy=false; el&&el.querySelector('.rk-body')&&el.querySelector('.rk-body').classList.add('busy'); mount(); };
   let sure=0;
   async function doLeave(b){
     if(!sure){ sure=1; b.textContent='Wirklich verlassen? Nochmal tippen'; setTimeout(()=>{ sure=0; if(b.isConnected) b.textContent='Ranking verlassen'; },4000); return; }
@@ -139,5 +157,5 @@ const RANK=(function(){
   const games=(g,w)=>api('PUT','/games',w?{g,w}:{g});
   const gameBoard=(b,wk)=>api('GET','/games?b='+encodeURIComponent(b)+(wk?'&w=1':''));
   const gamesAll=()=>api('GET','/games?all=1');
-  return {mount,touch,report,auto,doJoin,setTab,doLeave,join,games,gameBoard,gamesAll,on:()=>!!st()};
+  return {mount,retry,touch,report,auto,doJoin,setTab,doLeave,join,games,gameBoard,gamesAll,on:()=>!!st()};
 })();
