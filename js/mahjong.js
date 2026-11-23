@@ -275,7 +275,7 @@ const MAHJONG=(function(){
   function removePair(a,b){
     S.al[a]=false; S.al[b]=false; S.rem-=2; S.sel=-1; S.hist.push([a,b]);
     [a,b].forEach(function(i){
-      var g=tiles[i]; g.classList.remove('mj-sel','mj-hint','mj-in','mj-b'); g.classList.add(RM?'mj-gone':'mj-out'); g.setAttribute('aria-hidden','true');
+      var g=tiles[i]; g.classList.remove('mj-sel','mj-hint','mj-in','mj-b','mj-shake'); g.classList.add(RM?'mj-gone':'mj-out'); g.setAttribute('aria-hidden','true');
     });
     setMsg(''); say(SYM[S.sym[a]].n+' entfernt, noch '+S.rem+' Steine');
     if(S.rem===0){ S.over=true; S.t1=Date.now(); clearInterval(timer); timer=null; setH('time',fmt(secs())); refresh(); overT=setTimeout(finish,RM?100:520); return; }

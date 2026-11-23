@@ -29,6 +29,7 @@ const FEEL=(function(){
       if(e.button>0||rm()) return;
       const t=e.target.closest&&e.target.closest(PRESS);
       if(!t||t.matches(SKIP)||t.closest('[data-nopress]')) return;
+      if(getComputedStyle(t).touchAction==='none') return;   // Spielfelder und ziehbare Elemente (Solitär-Karten, Lernkarte) bleiben unberührt
       const r=t.getBoundingClientRect(), m=Math.max(r.width,r.height);
       if(m<8||m>520) return;
       if(cur) release();
