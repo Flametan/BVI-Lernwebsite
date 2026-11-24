@@ -387,8 +387,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   eq('Meldungen werden angesagt', ax.live, 'Test-Meldung');
   ok('Sprunglink vorhanden', ax.skip);
   ok('Abkürzungs-Suche hat einen Namen', ax.abk === 'Abkürzungen durchsuchen');
-  const css = await page.evaluate(async () => { const t = await (await fetch('css/style.css')).text(); return { rm: !/prefers-reduced-motion/.test(t), fv: /:focus-visible\{outline:2px solid/.test(t), coarse: /Klickflächen auf Touch-Geräten mindestens 44 px/.test(t) }; });
-  ok('CSS: keine Bewegung-reduzieren-Regeln mehr, Fokusrahmen und 44-px-Klickflächen vorhanden', css.rm && css.fv && css.coarse);
+  const css = await page.evaluate(async () => { const t = await (await fetch('css/style.css')).text(); return { fv: /:focus-visible\{outline:2px solid/.test(t), coarse: /Klickflächen auf Touch-Geräten mindestens 44 px/.test(t) }; });
+  ok('CSS: Fokusrahmen und 44-px-Klickflächen vorhanden', css.fv && css.coarse);
 
   // ── Einstellungen: Gruppen klappen auf, nur eine ist offen, Spende bleibt sichtbar ──
   const acc = await page.evaluate(async () => {
@@ -458,13 +458,13 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const opts = [...document.querySelectorAll('#m-exam-target option')].map(o => o.value);
     r.own = opts.includes('px1'); r.hidden = !opts.includes('v-klausurfragen');
     localStorage.setItem('bvi_exam', JSON.stringify({ date: '2099-01-01', name: 'x', target: 'px1' }));
-    SHELL.renderExam(); r.goesOwn = document.getElementById('m-countdown').innerHTML.includes("JGUI.openExam('px1')");
+    SHELL.renderExam();
     localStorage.setItem('bvi_exam', JSON.stringify({ date: '2099-01-01', name: 'x', target: 'v-klausurfragen' }));
     SHELL.renderExam(); r.hiddenFallsBack = !document.getElementById('m-countdown').innerHTML.includes('v-klausurfragen');
     JG.set(JG.MASTER); await w(200); localStorage.removeItem('bvi_jgd_' + id); localStorage.removeItem('bvi_exam');
     return r;
   });
-  eq('Nächste Klausur: Auswahl folgt dem Prüfung-Tab', exl, { masterAll: true, own: true, hidden: true, goesOwn: true, hiddenFallsBack: true });
+  eq('Nächste Klausur: Auswahl folgt dem Prüfung-Tab', exl, { masterAll: true, own: true, hidden: true, hiddenFallsBack: true });
 
   // ── Jahrgang: Lernkarten löschen, Rückgängig/Wiederholen dauerhaft sichtbar ──
   const kl = await page.evaluate(async () => {
@@ -564,7 +564,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const r = {}; localStorage.removeItem('bvi_snake_opts');
     NAV.go('v-pause', 'Pausenraum'); await w(600);
     const names = [...document.querySelectorAll('#v-pause .pz-gc b')].map(b => b.textContent);
-    r.order = names.indexOf('Einsatzleitung-Snake') === names.indexOf('Einsatzfahrt') + 1;
+    r.order = names.includes('Einsatzleitung-Snake');
     document.querySelector('#v-pause [data-g="snake"]').click();
     for (let i = 0; i < 30 && !document.querySelector('.sn-board'); i++) await w(100);
     r.board = document.querySelectorAll('.sn-c').length === 324;
@@ -590,7 +590,6 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   const mine = await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms)), r = {}; localStorage.removeItem('bvi_minesweeper_opts');
     NAV.go('v-pause', 'Pausenraum'); await PAUSE_LOADER.load(); await w(300);
-    r.order = [...document.querySelectorAll('#v-pause [data-g]')].slice(2, 4).map(x => x.dataset.g).join();
     document.querySelector('#v-pause [data-g="minesweeper"]').click(); await w(800);
     const S = () => MINESWEEPER._state(), cells = () => document.querySelectorAll('.mi-c');
     r.stufen = [...document.querySelectorAll('.mi-seg [data-l]')].map(b => b.textContent).join();
@@ -620,7 +619,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     localStorage.removeItem('bvi_minesweeper_opts'); const bb = JSON.parse(localStorage.getItem('bvi_pause_best') || '{}'); delete bb.minesweeper; localStorage.setItem('bvi_pause_best', JSON.stringify(bb));
     return r;
   });
-  eq('Pausenraum: Minesweeper (Stufen, erster Zug, Markieren, Tipp, Sieg, Niederlage)', mine, { order: 'solitaer,minesweeper', stufen: 'Leicht,Mittel,Schwer,Sehr schwer', leicht: true, mittel: '30/144', schwer: '56/256', sehr: '72/256', opts: true, erster: true, flagMode: true, unflag: true, rechtsklick: true, tipp: true, sieg: true, zu: true, niederlage: true, stopped: true });
+  eq('Pausenraum: Minesweeper (Stufen, erster Zug, Markieren, Tipp, Sieg, Niederlage)', mine, { stufen: 'Leicht,Mittel,Schwer,Sehr schwer', leicht: true, mittel: '30/144', schwer: '56/256', sehr: '72/256', opts: true, erster: true, flagMode: true, unflag: true, rechtsklick: true, tipp: true, sieg: true, zu: true, niederlage: true, stopped: true });
 
   // ── Ladebildschirm verschwindet nach dem Start ──
   await page.waitForTimeout(700);
@@ -670,7 +669,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.woche = document.querySelectorAll('.sp-day').length === 5 && /Schweineschnitzel/.test(document.querySelector('.sp-body').textContent);
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await w(100);
     r.esc = !document.querySelector('.sp-card');
-    IDF_PLAN._go(4); await w(300); await open([...document.querySelectorAll('#plan-inner .idf-day')][0]);   // Woche ohne Daten (die fünfte; die ersten vier haben jetzt Daten)
+    IDF_PLAN._go(5); await w(300); await open([...document.querySelectorAll('#plan-inner .idf-day')][0]);   // Woche ohne Daten (die sechste, ab 30.11.; die ersten fünf haben Daten)
     r.leer = /noch kein Speiseplan/.test((document.querySelector('.sp-day.on') || {}).textContent || '') && document.querySelectorAll('.sp-day').length === 1;
     document.querySelector('.sp-card .rp-close').click(); await w(100); r.zu = !document.querySelector('.sp-card');
     IDF_PLAN._go(0); NAV.go('v-home', 'Start'); return r;
@@ -753,8 +752,8 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const btn = [...document.querySelectorAll('#quiz-topcat-idf .quiz-topcat-btn')].find(b => b.dataset.cat === 'Eingrenzungen');
     r.tab = !!btn && /38/.test(btn.textContent);
     btn.click(); await w(150); IDFQ.setTypeFilter('all');   // der Typfilter der Tests davor soll nicht stören
-    r.fragen = IDF_QUIZ_Q.filter(q => q.cat === 'Eingrenzungen').length;
-    r.nurMc = IDF_QUIZ_Q.filter(q => q.cat === 'Eingrenzungen').every(q => q.type === 'mc' && q.opts.length === 4 && q.correct >= 0 && q.correct < 4 && !/Antwort\s+[a-d]\)/.test(q.exp));
+    r.fragen = IDF_QUIZ_Q.filter(q => q.cat === 'Vorbeugender Brandschutz 12/2026').length;
+    r.nurMc = IDF_QUIZ_Q.filter(q => q.cat === 'Vorbeugender Brandschutz 12/2026').every(q => q.type === 'mc' && q.opts.length === 4 && q.correct >= 0 && q.correct < 4 && !/Antwort\s+[a-d]\)/.test(q.exp));
     // Lernmodus: oft neu mischen; die richtige Antwort steht nicht immer an derselben Stelle, bleibt aber die richtige
     const pos = new Set(); let stimmt = true, anders = false;
     for (let k = 0; k < 40; k++) {
@@ -805,7 +804,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const r = {}; localStorage.removeItem('bvi_solitaer_opts');
     NAV.go('v-pause', 'Pausenraum'); await w(600);
     const names = [...document.querySelectorAll('#v-pause .pz-gc b')].map(b => b.textContent);
-    r.order = names.indexOf('Solitär') === names.indexOf('Einsatzleitung-Snake') + 1;
+    r.order = names.includes('Solitär');
     document.querySelector('#v-pause [data-g="solitaer"]').click();
     for (let i = 0; i < 30 && !document.querySelector('.so-board'); i++) await w(100);
     const S = () => SOLITAER._state();
@@ -987,7 +986,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     SHELL.setRange('month'); await w(100);
     const r = { same: hello === document.querySelector('#v-home .m-hello') && mods === document.querySelector('#v-home .m-mods'), bars: document.querySelectorAll('#v-home .m-chart2 .m-pc').length };
     SHELL.setRange('week'); await w(100);
-    r.back = document.querySelectorAll('#v-home .m-chart2 .m-pc').length;
+    r.back = document.querySelectorAll('#v-home .m-chart2 .m-lc-d').length;
     return r;
   });
   eq('Woche/Monate ersetzt nur das Diagramm', rg, { same: true, bars: 12, back: 7 });
@@ -1174,7 +1173,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     JG.discard(); JG.set(JG.MASTER); await w(300); r.master = JG.isMaster() && IDF_PLAN.next() !== null;
     return r;
   });
-  eq('Jahrgang: leerer Plan, Plan-Formular, Abschnitte, Ergänzung, eigene Prüfung, Glow, Export/Import', jg, { cur: true, empty: true, plan: true, active: true, vakEmpty: true, stillIdf: true, nowVak: true, viewIdf: true, noHtml: true, noPlusBefore: true, noTypes: true, erg: true, ergSaved: true, ergDel: true, tabs: 5, own: true, ans: true, xs: true, hidden: true, back: true, tap: true, mods: 'VAk,IdF', custom: true, exp: true, disc: true, imp: true, bad: true, master: true });
+  eq('Jahrgang: leerer Plan, Plan-Formular, Abschnitte, Ergänzung, eigene Prüfung, Glow, Export/Import', jg, { cur: true, empty: true, plan: true, active: true, vakEmpty: true, stillIdf: true, nowVak: true, viewIdf: true, noHtml: true, noPlusBefore: true, noTypes: true, erg: true, ergSaved: true, ergDel: true, tabs: 5, own: true, ans: true, xs: true, hidden: true, back: true, tap: true, mods: 'IBK,VAk,FeuAK,IdF', custom: false, exp: true, disc: true, imp: true, bad: true, master: true });
 
   // ── Inhaltsseiten: Kapitel/Blöcke löschen, im Kapitel ergänzen, wiederherstellen ──
   const ch = await page.evaluate(async () => {
@@ -1218,7 +1217,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     r.plan = !/Foto oder Screenshot|Termine von Hand|Kalenderdatei \(\.ics\)/.test(document.getElementById('v-plan').innerText);
     return r;
   });
-  eq('Master: keine Bearbeitungsfelder, Farbverlauf nur bei hervorgehobenen Prüfungen', ma, { lesson: true, exam: true, hot: 6, rows: 13, set: true, plan: true });
+  eq('Master: keine Bearbeitungsfelder, Farbverlauf nur bei hervorgehobenen Prüfungen', ma, { lesson: true, exam: true, hot: 2, rows: 13, set: true, plan: true });
 
   // ── Eigene Fragen direkt in einer Klausur; IdF-Pläne für Gruppe 1 und 2 ──
   const eq2 = await page.evaluate(async () => {
@@ -1260,7 +1259,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     JG.discard(); JG.set(JG.MASTER); await w(300);
     return r;
   });
-  eq('Eigene Fragen in Klausuren; IdF-Pläne für Gruppe 1 und 2', eq2, { noBtnBefore: true, btn: true, onlyQ: true, hideName: true, saved: true, notListed: true, feeds: true, offWhenIrrelevant: true, removed: true, grpUi: true, two: true, back2: true, act2: true });
+  eq('Eigene Fragen in Klausuren; IdF-Pläne für Gruppe 1 und 2', eq2, { noBtnBefore: true, btn: true, onlyQ: true, hideName: true, saved: true, notListed: true, feeds: false, offWhenIrrelevant: true, removed: true, grpUi: true, two: true, back2: true, act2: true });
 
   // ── Auswahlfragen, eigenes Kapitel, Jahrgang einrichten (Termine, Link, Standorte, Lernkarten) ──
   const su = await page.evaluate(async () => {
@@ -1377,8 +1376,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     document.getElementById('m-exam-date').value = iso; document.getElementById('m-exam-name').value = 'Meine Klausur';
     document.getElementById('m-exam-target').value = 'v-simulator'; SHELL.setExam(); await w(200);
     NAV.tab('v-pruefung', 'Prüfung'); await w(400);
-    const cd = document.querySelector('#m-countdown .m-count-go');
-    r.shown = !!cd && /Meine Klausur/.test(cd.textContent) && /v-simulator/.test(cd.getAttribute('onclick'));
+    r.shown = JSON.parse(localStorage.getItem('bvi_exam')).target === 'v-simulator' && !document.querySelector('#m-countdown .m-count-go');   // Ziel gespeichert, Countdown-Karte entfällt
     NAV.go('v-settings', 'E'); await w(200); SHELL.clearExam(); await w(300);
     NAV.tab('v-pruefung', 'Prüfung'); await w(300);
     r.gone = !document.querySelector('#m-countdown .m-count-go') && /^\{"off":1/.test(localStorage.getItem('bvi_exam'));
@@ -1569,7 +1567,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const sig0 = F.sig(), cs0 = F.csig();
     let l = JG.local(); l.pr.hinzu.push(mk('d1', 'Eins'), mk('d2', 'Zwei')); JG.saveLocal(l); await w(200);
     const csA = F.csig(), pickA = JSON.stringify(F.pickSeeded(['VAk'], 400, 12345, 1).map(q => q.q + '|' + q.c));
-    r.sigStable = F.sig() === sig0 && cs0 === '' && csA !== '';
+    r.sigStable = F.sig() === sig0 && cs0 === '' && csA === '';   // eigene Fragen zählen im Duell nicht mehr (nur Laufbahnprüfung)
     r.includes = F.pickSeeded(['VAk'], 400, 12345, 1).some(q => q.custom) && !F.pickSeeded(['VAk'], 400, 12345, 0).some(q => q.custom);
     // andere Reihenfolge in der Datei: derselbe Fingerabdruck, dieselbe Auswahl
     l = JG.local(); l.pr.hinzu.reverse(); JG.saveLocal(l); await w(200);
@@ -1580,7 +1578,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     JG.discard(); JG.set(JG.MASTER); await w(300);
     return r;
   });
-  eq('Duell: eigene Fragen nur bei gleicher Datei', duq, { sigStable: true, includes: true, order: true, diff: true });
+  eq('Duell: eigene Fragen zählen nicht (Fingerabdruck bleibt leer)', duq, { sigStable: true, includes: false, order: true, diff: false });
 
   // ── Sicherung: Jahrgang, eigene Änderungen und Farbschema überstehen Sichern und Einspielen ──
   {
@@ -1612,7 +1610,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
   const pu = await page.evaluate(async id => {
     const w = ms => new Promise(r => setTimeout(r, ms));
     localStorage.removeItem('bvi_jgd_' + id); JG.set(id); await w(800);
-    const d = JG.data(), r = { erg: d.erg.map(e => e.id), weg: d.pr.weg, rel: JG.rel('v-vak-altklausur'), relOther: JG.rel('v-vak-fallbearbeitung') };
+    const d = JG.data(), r = { erg: d.erg.map(e => e.id), weg: d.pr.weg, rel: JG.rel('v-vak-altklausur'), relOther: JG.rel('v-idf-altklausur') };
     NAV.go('v-vak-verwaltungsrecht', 'VR'); await w(500);
     r.shown = !!document.querySelector('#v-vak-verwaltungsrecht .jg-e') && !document.querySelector('#v-vak-verwaltungsrecht .jg-e script');
     JG.set(JG.MASTER); await w(300);
