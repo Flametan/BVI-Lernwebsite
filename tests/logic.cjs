@@ -1632,8 +1632,11 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     chart[m] = await tp.evaluate(async m => {
       [...document.querySelectorAll('.m-seg button')].find(b => b.textContent.trim() === m).click();
       await new Promise(r => setTimeout(r, 300));
-      const pl = document.querySelector('.m-plot'), pr = pl.getBoundingClientRect();
-      return [...pl.querySelectorAll('.m-pc')].filter(e => { const q = e.getBoundingClientRect(); return q.right > pr.right + 1 || q.left < pr.left - 1 || q.right > innerWidth; }).length;
+      const card = document.querySelector('.m-chart2'), cr = card.getBoundingClientRect();
+      const pl = document.querySelector('.m-plot') || document.querySelector('.m-lc');   // Woche = SVG-Linie, Monate = Balken
+      if (!pl) return -1;
+      const items = pl.matches('.m-plot') ? [...pl.querySelectorAll('.m-pc')] : [pl];
+      return items.filter(e => { const q = e.getBoundingClientRect(); return q.right > cr.right + 1 || q.left < cr.left - 1 || q.right > innerWidth; }).length;
     }, m);
   }
   eq('Diagramm Woche/Monate ragt nicht über den Rand (Touch, 360 px)', chart, { Woche: 0, Monate: 0 });
