@@ -9,7 +9,7 @@
 ====================================================================== */
 const REIHENFOLGE=(function(){
   'use strict';
-  const BKEY='bvi_pause_best', SID='rf-style';
+  const BKEY0='bvi_pause_best', SID='rf-style';
 
   /* Aufgaben: t = Titel, s = Schritte in korrekter Reihenfolge. */
   const TASKS=[
@@ -105,7 +105,7 @@ const REIHENFOLGE=(function(){
     document.head.appendChild(st);
   }
 
-  function best(){ return +(lget(BKEY,{}).reihenfolge||0); }
+  function best(){ return +(lget(JG.key(BKEY0),{}).reihenfolge||0); }
   function nextTask(){
     if(!deck.length) deck=shuffle(TASKS.map((_,i)=>i));
     return TASKS[deck.pop()];
@@ -126,7 +126,7 @@ const REIHENFOLGE=(function(){
     S={phase:'start',streak:0,solved:0,total:0,best:best(),order:[],task:null,sel:-1,errors:0,rec:false,lastBroken:0};
   }
   function setBest(v){
-    const b=lget(BKEY,{}); b.reihenfolge=v; lset(BKEY,b); S.best=v;
+    const b=lget(JG.key(BKEY0),{}); b.reihenfolge=v; lset(JG.key(BKEY0),b); S.best=v;
   }
 
   function move(from,to){

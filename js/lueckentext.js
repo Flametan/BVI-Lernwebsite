@@ -6,7 +6,7 @@
 ====================================================================== */
 const LUECKENTEXT=(function(){
   'use strict';
-  const BKEY='bvi_pause_best', KEY='lueckentext', STYLE_ID='lt-style';
+  const BKEY0='bvi_pause_best', KEY='lueckentext', STYLE_ID='lt-style';
   const DUR=60000, PENALTY=3000, TICK=100, LOCK=140;
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const lget=(k,d)=>{ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } };
@@ -144,7 +144,7 @@ const LUECKENTEXT=(function(){
 
   /* ── Zustand ────────────────────────────────────────────────────── */
   let root=null, S=null, timer=null, kd=null, vis=null, B=null;
-  const best=()=>{ const v=(lget(BKEY,{})||{})[KEY]; return typeof v==='number'?v:0; };
+  const best=()=>{ const v=(lget(JG.key(BKEY0),{})||{})[KEY]; return typeof v==='number'?v:0; };
 
   function clearTimer(){ if(timer){ clearInterval(timer); timer=null; } }
   function removeListeners(){
@@ -258,7 +258,7 @@ const LUECKENTEXT=(function(){
     clearTimer(); S.phase='over';
     const score=S.score, old=best(), isNew=score>old&&score>0;
     if(typeof PAUSE!=='undefined') PAUSE.addScore('lueckentext',score);
-    if(isNew){ const b=lget(BKEY,{})||{}; b[KEY]=score; lset(BKEY,b); }
+    if(isNew){ const b=lget(JG.key(BKEY0),{})||{}; b[KEY]=score; lset(JG.key(BKEY0),b); }
     if(score>0&&typeof GAME!=='undefined'){ try{ GAME.cheer('spiel','Lückentext-Sprint',isNew&&old>0?score+' in 60 s':''); }catch(e){} }
     const wl=S.wrong.map(function(w){
       return '<li>'+esc(w.it.pre)+'<span class="c">'+esc(w.it.kw)+'</span>'+esc(w.it.post)

@@ -7,7 +7,7 @@
 ====================================================================== */
 const G2048=(function(){
   'use strict';
-  const N=4, BKEY='bvi_pause_best', SKEY='bvi_g2048_state', STYLE_ID='g2048-style';
+  const N=4, BKEY0='bvi_pause_best', SKEY='bvi_g2048_state', STYLE_ID='g2048-style';
   /* a = Kürzel, n = Dienstgrad, g = Laufbahngruppe */
   const RANKS=[
     {a:'BM', n:'Brandmeister',            g:'Mittlerer Dienst'},
@@ -103,7 +103,7 @@ const G2048=(function(){
 
   /* ---------- Spiellogik ---------- */
   function fresh(){
-    const best=+(lget(BKEY,{}).g2048||0);
+    const best=+(lget(JG.key(BKEY0),{}).g2048||0);
     S={tiles:[],score:0,best:best,start:best,status:'play',won:false,keep:false,top:0,rec:false};
     spawn(); spawn(); S.top=maxN();
   }
@@ -174,7 +174,7 @@ const G2048=(function(){
       S.top=top;
       if(top>=3) say('Neuer höchster Dienstgrad: '+rk(top).n+'.');
     }
-    if(S.score>S.best){ S.best=S.score; const b=lget(BKEY,{}); b.g2048=S.best; lset(BKEY,b); S.rec=S.start>0; }
+    if(S.score>S.best){ S.best=S.score; const b=lget(JG.key(BKEY0),{}); b.g2048=S.best; lset(JG.key(BKEY0),b); S.rec=S.start>0; }
     if(!S.won&&!S.keep&&top>=TOP){
       S.won=true; S.status='win';
       if(typeof GAME!=='undefined') GAME.cheer('spiel','2048 Dienstgrade',S.rec?fmt(S.best)+' Punkte':'');
@@ -202,7 +202,7 @@ const G2048=(function(){
       if(seen.has(r*N+c)) return false; seen.add(r*N+c);
       tiles.push({id:++uid,r,c,n});
     }
-    const best=+(lget(BKEY,{}).g2048||0);
+    const best=+(lget(JG.key(BKEY0),{}).g2048||0);
     S={tiles,score:Math.max(0,d.s),best:Math.max(best,d.s),start:typeof d.b0==='number'?d.b0:best,status:'play',won:!!d.w,keep:!!d.k,top:0,rec:false};
     S.top=maxN();
     if(!canMove()){ ldel(SKEY); return false; }

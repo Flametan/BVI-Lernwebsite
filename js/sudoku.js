@@ -8,7 +8,7 @@ const SUDOKU=(function(){
   'use strict';
   var LEVELS={leicht:{label:'Leicht',givens:40},mittel:{label:'Mittel',givens:32},schwer:{label:'Schwer',givens:26}};
   var LV=['leicht','mittel','schwer'];
-  var BKEY='bvi_pause_best', SKEY='bvi_sudoku_state', OKEY='bvi_sudoku_opts', PENALTY=30;
+  var BKEY0='bvi_pause_best', SKEY='bvi_sudoku_state', OKEY='bvi_sudoku_opts', PENALTY=30;
 
   /* ---------- Engine: Löser mit Bitmasken, Lösungszähler, Generator ---------- */
   var PC=(function(){ var a=[],i; for(i=0;i<512;i++) a.push((i&1)+((i>>1)&1)+((i>>2)&1)+((i>>3)&1)+((i>>4)&1)+((i>>5)&1)+((i>>6)&1)+((i>>7)&1)+((i>>8)&1)); return a; })();
@@ -69,7 +69,7 @@ const SUDOKU=(function(){
   var ldel=function(k){ try{ localStorage.removeItem(k); }catch(e){} };
   var say=function(m){ if(typeof A11Y!=='undefined') A11Y.say(m); };
   function fmt(s){ s=Math.max(0,Math.floor(s)); var m=Math.floor(s/60); return m+':'+('0'+(s%60)).slice(-2); }
-  function best(l){ var b=(lget(BKEY,{}).sudoku)||{}; return typeof b[l]==='number'?b[l]:null; }
+  function best(l){ var b=(lget(JG.key(BKEY0),{}).sudoku)||{}; return typeof b[l]==='number'?b[l]:null; }
   var I='viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
   var ICO={
     pencil:'<svg width="18" height="18" '+I+'><path d="M4 20l1-4L16.500 4.500a2.100 2.100 0 0 1 3 3L8 19z"/><path d="M14.500 6.500l3 3"/></svg>',
@@ -288,8 +288,8 @@ const SUDOKU=(function(){
   function checkWin(){
     for(var i=0;i<81;i++) if(S.g[i]!==S.sol[i]) return;
     pauseT(); clearInterval(timer); timer=null; S.over=true; ldel(SKEY);
-    var t=secs(), b=lget(BKEY,{}), old=best(lvl), hadOld=old!=null, isNew=false; if(typeof PAUSE!=='undefined') PAUSE.addScore('sudoku',t,lvl);
-    if(old==null||t<old){ var m=Object.assign({},b.sudoku||{}); m[lvl]=t; b.sudoku=m; lset(BKEY,b); old=t; isNew=true; setH('best',fmt(t)); }
+    var t=secs(), b=lget(JG.key(BKEY0),{}), old=best(lvl), hadOld=old!=null, isNew=false; if(typeof PAUSE!=='undefined') PAUSE.addScore('sudoku',t,lvl);
+    if(old==null||t<old){ var m=Object.assign({},b.sudoku||{}); m[lvl]=t; b.sudoku=m; lset(JG.key(BKEY0),b); old=t; isNew=true; setH('best',fmt(t)); }
     if(typeof GAME!=='undefined') GAME.cheer('spiel','Sudoku',isNew&&hadOld?LEVELS[lvl].label+' '+fmt(t):'');
     setH('time',fmt(t)); sel=-1; paint();
     if(!RM) cells.forEach(function(el,i){ var d=((Math.floor(i/9)+i%9)*40); el.classList.add('wv'); el.style.animationDelay=d+'ms'; });

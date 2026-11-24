@@ -104,7 +104,7 @@ var SOL=(function(){
   return {SUITS:SUITS,RANKS:RANKS,RNAME:RNAME,deal:deal,act:act,tryMove:tryMove,drawStock:drawStock,autoTo:autoTo,bestMove:bestMove,undo:undo,redo:redo,hint:hint,canAuto:canAuto,autoStep:autoStep,seqOf:seqOf,selectable:selectable,same:same,total:total,rng:rng};
 })();
 
-  var BKEY='bvi_pause_best', OKEY='bvi_solitaer_opts';
+  var BKEY0='bvi_pause_best', OKEY='bvi_solitaer_opts';
   var lget=function(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } };
   var lset=function(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} };
   var say=function(m){ if(typeof A11Y!=='undefined') A11Y.say(m); };
@@ -128,7 +128,7 @@ var SOL=(function(){
   function setH(k,v){ var n=root&&root.querySelector('[data-h="'+k+'"]'); if(n&&n.textContent!==String(v)) n.textContent=v; }
   function tick(){ if(!root||!root.isConnected){ stop(); return; } secs=Math.floor((Date.now()-t0)/1000); setH('time',fmt(secs)); }
   function begin(){ if(started) return; started=true; t0=Date.now(); timer=setInterval(tick,500); }
-  function newGame(){ clearTimeout(autoT); clearInterval(timer); ovClosed=false; rec=false; S=SOL.deal(null,opts.draw); sel=null; hintObj=null; started=false; secs=0; best=+(lget(BKEY,{}).solitaer||0); render(); saySm(''); }
+  function newGame(){ clearTimeout(autoT); clearInterval(timer); ovClosed=false; rec=false; S=SOL.deal(null,opts.draw); sel=null; hintObj=null; started=false; secs=0; best=+(lget(JG.key(BKEY0),{}).solitaer||0); render(); saySm(''); }
   function build(){
     root.innerHTML='<div class="pz-card so">'
      +'<div class="so-hud"><div><b data-h="score">0</b><span>Punkte</span></div><div><b data-h="moves">0</b><span>Züge</span></div><div><b data-h="time">0:00</b><span>Zeit</span></div><div><b data-h="best">–</b><span>Rekord</span></div></div>'
@@ -175,7 +175,7 @@ var SOL=(function(){
   }
   function auto(){ autoT=null; if(!S||S.won||!root||!root.isConnected) return; var n=SOL.autoStep(S); if(n===S) return; S=n; render(); autoT=setTimeout(auto,90); }
   function finish(){
-    clearInterval(timer); if(typeof PAUSE!=='undefined') PAUSE.addScore('solitaer',S.score); var hadBest=best>0; if(S.score>best){ var b=lget(BKEY,{}); b.solitaer=S.score; lset(BKEY,b); best=S.score; rec=true; }
+    clearInterval(timer); if(typeof PAUSE!=='undefined') PAUSE.addScore('solitaer',S.score); var hadBest=best>0; if(S.score>best){ var b=lget(JG.key(BKEY0),{}); b.solitaer=S.score; lset(JG.key(BKEY0),b); best=S.score; rec=true; }
     if(typeof GAME!=='undefined') GAME.cheer('spiel','Solitär',rec&&hadBest?S.score+' Punkte':'');
     ov.hidden=false; ov.innerHTML='<div class="so-win" role="dialog" aria-modal="true" aria-label="Einsatz erfolgreich"><div class="so-wi"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path fill="currentColor" d="'+SOL.SUITS[0].path+'"/></svg></div><h3>Einsatz erfolgreich</h3><p>Alle vier Stapel sind komplett.'+(rec?' Neuer Rekord!':'')+'</p>'
       +'<div class="so-stats"><div><b>'+S.score+'</b><span>Punkte</span></div><div><b>'+S.moves+'</b><span>Züge</span></div><div><b>'+fmt(secs)+'</b><span>Zeit</span></div></div>'

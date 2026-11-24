@@ -10,6 +10,9 @@ const RANK=(function(){
   const put=v=>{ try{ if(v) localStorage.setItem(K,JSON.stringify(v)); else localStorage.removeItem(K); }catch(e){} };
   const base=()=>(typeof SYNC!=='undefined'&&SYNC.url)?SYNC.url():'https://umbrel.taile733cb.ts.net';
   const ls=k=>{ try{ return localStorage.getItem(k)||''; }catch(e){ return ''; } };
+  // Jahrgang (Lehrgang): Ranking und Spielelisten gelten je Jahrgang
+  const jgId=()=>typeof JG!=='undefined'?JG.current():'';
+  const jgQ=()=>'jg='+encodeURIComponent(jgId());
   const myName=()=>ls('bvi_profile_name').trim().replace(/\s+/g,' ');
   const nameOk=n=>/^[\p{L}\p{N}][\p{L}\p{N} ._-]{1,18}[\p{L}\p{N}]$/u.test(n);
   // Vorschaubild 48 × 48 aus dem Profilbild des Accounts (klein, damit die Listen schlank bleiben)
@@ -33,7 +36,7 @@ const RANK=(function(){
     return j;
   }
   async function payload(){
-    const p={name:myName(),xp:GAME._state().xp,week:{k:GAME.isoWeek(),xp:GAME.weekSum().xp}}, s=st(), t=await thumb();
+    const p={name:myName(),jg:jgId(),xp:GAME._state().xp,week:{k:GAME.isoWeek(),xp:GAME.weekSum().xp}}, s=st(), t=await thumb();
     if((t||null)!==(s.av||null)) p.av=t;    // Bild nur senden, wenn es sich geändert hat
     return {p,t};
   }
@@ -86,7 +89,7 @@ const RANK=(function(){
     try{
       lastRep=Date.now();
       try{ await send(); }catch(e){ if(!e.net) throw e; offline(tab,e); busy=false; return; }   // Server nicht erreichbar: gleich den gespeicherten Stand zeigen, nicht noch einmal warten
-      const b=await api('GET','?board='+tab);
+      const b=await api('GET','?board='+tab+'&'+jgQ());
       cacheSet(tab,b); draw(b);
     }catch(e){
       if(e.net){ offline(tab,e); }
@@ -98,8 +101,8 @@ const RANK=(function(){
   }
   /* Letzter erfolgreich geladener Stand je Liste, mit Zeitpunkt (nur auf diesem Gerät) */
   const CK='bvi_rank_cache';
-  const cacheGet=t=>{ try{ const c=JSON.parse(localStorage.getItem(CK)||'{}'); return c[t]||null; }catch(e){ return null; } };
-  const cacheSet=(t,b)=>{ try{ const c=JSON.parse(localStorage.getItem(CK)||'{}'); c[t]={t:Date.now(),b}; localStorage.setItem(CK,JSON.stringify(c)); }catch(e){} };
+  const cacheGet=t=>{ try{ const c=JSON.parse(localStorage.getItem(CK)||'{}'); return c[jgId()+'|'+t]||null; }catch(e){ return null; } };
+  const cacheSet=(t,b)=>{ try{ const c=JSON.parse(localStorage.getItem(CK)||'{}'); c[jgId()+'|'+t]={t:Date.now(),b}; localStorage.setItem(CK,JSON.stringify(c)); }catch(e){} };
   function stamp(ms){
     const d=new Date(ms), n=new Date(), p=x=>String(x).padStart(2,'0'), hm=p(d.getHours())+':'+p(d.getMinutes());
     const day=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime(), diff=Math.round((day(n)-day(d))/864e5);
@@ -119,7 +122,7 @@ const RANK=(function(){
     const mine=b.me&&b.me.place>20?`<li class="me gap"><span class="rk-p">${b.me.place}</span>${av(me,st().av)}<span class="rk-n">${esc(me)}<small>${esc(GAME.rankOf(GAME._state().xp).n)}</small></span>${GAME.shoulder(GAME.rankOf(GAME._state().xp),44)}<b>${b.me.xp}</b></li>`:'';
     const note=staleAt?`<p class="rk-stale" role="status">Server nicht erreichbar. Gespeicherter Stand von ${stamp(staleAt)}. <button type="button" class="rk-retry" onclick="RANK.retry()">Erneut versuchen</button></p>`:'';
     const body=note+`<ol class="rk-list">${rows||'<li class="rk-empty">Noch niemand in der Liste.</li>'}${mine}</ol>
-      <p class="rk-sub">${b.me?`Dein Platz: ${b.me.place} von ${b.total}`:'Sammle Punkte, um in der Liste zu erscheinen.'} · Du bist als „${esc(me)}“ dabei</p>`;
+      <p class="rk-sub">${esc(typeof JG!=='undefined'?JG.labelOf(jgId()):'')} · ${b.me?`Dein Platz: ${b.me.place} von ${b.total}`:'Sammle Punkte, um in der Liste zu erscheinen.'} · Du bist als „${esc(me)}“ dabei</p>`;
     const rb=el.querySelector('.rk-body');
     if(rb&&el.querySelector('.rk-tabs')){ rb.innerHTML=body; rb.classList.remove('busy'); return; }   // Umschalter bleibt stehen, nur die Liste wechselt
     el.innerHTML=`<div class="rk-tabs" role="tablist" data-tab="${tab}"><i class="rk-pill" aria-hidden="true"></i><button type="button" role="tab" data-t="week" class="${tab==='week'?'on':''}" aria-selected="${tab==='week'}" onclick="RANK.setTab('week')">Diese Woche</button><button type="button" role="tab" data-t="all" class="${tab==='all'?'on':''}" aria-selected="${tab==='all'}" onclick="RANK.setTab('all')">Gesamt</button></div>
@@ -145,7 +148,7 @@ const RANK=(function(){
     tb.querySelectorAll('button').forEach(b=>{ const on=b.dataset.t===t; b.classList.toggle('on',on); b.setAttribute('aria-selected',on); });
     place(true);
     const rb=el.querySelector('.rk-body'); if(rb) rb.classList.add('busy');
-    api('GET','?board='+t).then(b=>{ cacheSet(t,b); if(tab===t) draw(b); }).catch(e=>{ if(tab!==t) return; const c=e.net&&cacheGet(t); if(c) draw(c.b,c.t); else{ busy=false; mount(); } });
+    api('GET','?board='+t+'&'+jgQ()).then(b=>{ cacheSet(t,b); if(tab===t) draw(b); }).catch(e=>{ if(tab!==t) return; const c=e.net&&cacheGet(t); if(c) draw(c.b,c.t); else{ busy=false; mount(); } });
   }
   const retry=()=>{ busy=false; el&&el.querySelector('.rk-body')&&el.querySelector('.rk-body').classList.add('busy'); mount(); };
   let sure=0;
@@ -154,8 +157,8 @@ const RANK=(function(){
     sure=0; try{ await leave(); mount(); }catch(e){ flash(e.message,true); }
   }
   // Pausenspiele: eigene Bestwerte melden, Liste eines Spiels holen
-  const games=(g,w)=>api('PUT','/games',w?{g,w}:{g});
-  const gameBoard=(b,wk)=>api('GET','/games?b='+encodeURIComponent(b)+(wk?'&w=1':''));
-  const gamesAll=()=>api('GET','/games?all=1');
+  const games=(g,w)=>api('PUT','/games',w?{jg:jgId(),g,w}:{jg:jgId(),g});
+  const gameBoard=(b,wk)=>api('GET','/games?b='+encodeURIComponent(b)+(wk?'&w=1':'')+'&'+jgQ());
+  const gamesAll=()=>api('GET','/games?all=1&'+jgQ());
   return {mount,retry,touch,report,auto,doJoin,setTab,doLeave,join,games,gameBoard,gamesAll,on:()=>!!st()};
 })();

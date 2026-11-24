@@ -4,7 +4,7 @@
 ====================================================================== */
 const PAUSE=(function(){
   const D=typeof PAUSE_DATA!=='undefined'?PAUSE_DATA:{allg:{},fw:{},exam:[]};
-  const BKEY='bvi_pause_best';
+  const BKEY0='bvi_pause_best';
   const RM=!!(window.matchMedia&&false); // Bewegung reduzieren: Szene ohne Wackeln, weniger Partikel
   const say=m=>{ if(typeof A11Y!=='undefined') A11Y.say(m); };
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -13,43 +13,43 @@ const PAUSE=(function(){
   const get=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}};
   const set=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
   let root=null,cur=null,pushed=false,shAnim=false;
-  const best=()=>get(BKEY,{});
-  function saveBest(k,v,lower){if(v<=0&&!lower)return false;const b=best();if(b[k]==null||(lower?v<b[k]:v>b[k])){b[k]=v;set(BKEY,b);return true;}return false;}
+  const best=()=>get(JG.key(BKEY0),{});
+  function saveBest(k,v,lower){if(v<=0&&!lower)return false;const b=best();if(b[k]==null||(lower?v<b[k]:v>b[k])){b[k]=v;set(JG.key(BKEY0),b);return true;}return false;}
   /* ---------- Bestenlisten: je Spiel (und Stufe) die zehn besten Läufe, nur auf dem Gerät und im Sync ---------- */
-  const TOPKEY="bvi_pause_top";
+  const TOPKEY0="bvi_pause_top";const TK=()=>JG.key(TOPKEY0);
   const LV4=[["leicht","Leicht"],["mittel","Mittel"],["schwer","Schwer"],["sehr","Sehr schwer"]];
   const BOARDS={fahrt:{u:"Punkte"},duell:{u:"Punkte"},lueckentext:{u:"Lücken"},reihenfolge:{u:"Serie",s:1},hangman:{u:"Serie",s:1},kreuzwort:{u:"Tage",s:1},mahjong:{t:1,lv:[["leicht","Leicht"],["mittel","Mittel"],["pyramide","Pyramide"],["burg","Burg"],["festung","Festung"]]},sudoku:{t:1,lv:LV4.slice(0,3)},tetris:{u:"Punkte"},solitaer:{u:"Punkte"},g2048:{u:"Punkte"},minesweeper:{t:1,lv:LV4},snake:{u:"Punkte"}};
   const ymd=(off)=>{const d=new Date();d.setDate(d.getDate()+(off||0));const q=n=>("0"+n).slice(-2);return d.getFullYear()+"-"+q(d.getMonth()+1)+"-"+q(d.getDate());};
   // Ergebnis eintragen: v = Punkte, Sekunden (Zeitspiele, niedriger ist besser) oder Serie; lv = Stufe
   function addScore(k,v,lv){const B=BOARDS[k];v=Math.round(+v);if(!B||!isFinite(v)||v<0||(!B.t&&v<1))return;
-    const T=get(TOPKEY,{}),id=lv?k+":"+lv:k;let a=Array.isArray(T[id])?T[id]:[];
+    const T=get(TK(),{}),id=lv?k+":"+lv:k;let a=Array.isArray(T[id])?T[id]:[];
     if(B.s)a=a.filter(e=>!(e.p===v-1&&e.d===ymd(-1)&&B.u==="Tage"));
     let n="";try{n=(localStorage.getItem("bvi_profile_name")||"").slice(0,30);}catch(e){}
     const e={p:v,d:ymd(0),a:B.t?1:0};if(n)e.n=n;a.push(e);
-    a.sort((x,y)=>B.t?x.p-y.p:y.p-x.p);T[id]=a.slice(0,10);set(TOPKEY,T);weekAdd(id,v,!!B.t);topG=k;topL=lv||"";set("bvi_pause_topg",topG);set("bvi_pause_topl",topL);pushBests();}
+    a.sort((x,y)=>B.t?x.p-y.p:y.p-x.p);T[id]=a.slice(0,10);set(TK(),T);weekAdd(id,v,!!B.t);topG=k;topL=lv||"";set("bvi_pause_topg",topG);set("bvi_pause_topl",topL);pushBests();}
   // Wochenbestwerte (Wochenwertung): je Liste der beste Wert der laufenden ISO-Woche
-  const WKEY="bvi_pause_wk";
+  const WKEY0="bvi_pause_wk";
   const wkNow=()=>{try{return GAME.isoWeek();}catch(e){return "";}};
   // Läufe dieser Woche, die vor der Wochenwertung gespielt wurden, stehen nur in der lokalen Bestenliste (mit Datum): von dort nachtragen
-  function weekObj(){const k=wkNow(),s=get(WKEY,null),w=s&&s.k===k&&s.g?s:{k,g:{}};if(!k)return w;
-    const T=get(TOPKEY,{});
+  function weekObj(){const k=wkNow(),s=get(JG.key(WKEY0),null),w=s&&s.k===k&&s.g?s:{k,g:{}};if(!k)return w;
+    const T=get(TK(),{});
     for(const id in T){const B=BOARDS[id.split(":")[0]];if(!B||!Array.isArray(T[id]))continue;
       for(const e of T[id]){if(!e||typeof e.d!=="string"||e.d.length!==10||typeof e.p!=="number")continue;
         let wk="";try{wk=GAME.isoWeek(new Date(+e.d.slice(0,4),+e.d.slice(5,7)-1,+e.d.slice(8,10)));}catch(x){}
         if(wk===k){const o=w.g[id];if(o==null||(B.t?e.p<o:e.p>o))w.g[id]=e.p;}}}
     return w;}
-  function weekAdd(id,v,low){const w=weekObj();if(!w.k)return;const o=w.g[id];if(o==null||(low?v<o:v>o)){w.g[id]=v;set(WKEY,w);}}
+  function weekAdd(id,v,low){const w=weekObj();if(!w.k)return;const o=w.g[id];if(o==null||(low?v<o:v>o)){w.g[id]=v;set(JG.key(WKEY0),w);}}
   // früher gab es nur ein Mahjong-Brett (heute: Stufe Pyramide): Rekord und Liste umziehen
-  (function(){try{const b=best();if(typeof b.mahjong==='number'){b.mahjong={pyramide:b.mahjong};set(BKEY,b);}
-    const T=get(TOPKEY,{});if(T.mahjong){if(!(T['mahjong:pyramide']||[]).length&&Array.isArray(T.mahjong))T['mahjong:pyramide']=T.mahjong;delete T.mahjong;set(TOPKEY,T);}}catch(e){}})();
+  (function(){try{const b=best();if(typeof b.mahjong==='number'){b.mahjong={pyramide:b.mahjong};set(JG.key(BKEY0),b);}
+    const T=get(TK(),{});if(T.mahjong){if(!(T['mahjong:pyramide']||[]).length&&Array.isArray(T.mahjong))T['mahjong:pyramide']=T.mahjong;delete T.mahjong;set(TK(),T);}}catch(e){}})();
   // einmalig: bisherige Rekorde in die Bestenliste übernehmen (feste Datumsangabe, damit der Sync sie nicht doppelt führt)
   (function seedTop(){try{if(localStorage.getItem("bvi_pause_seeded"))return;localStorage.setItem("bvi_pause_seeded","1");
-    const b=best(),T=get(TOPKEY,{});let ch=0,n="";n=(localStorage.getItem("bvi_profile_name")||"").slice(0,30);
+    const b=best(),T=get(TK(),{});let ch=0,n="";n=(localStorage.getItem("bvi_profile_name")||"").slice(0,30);
     const put=(id,v,B)=>{v=Math.round(+v);if(!isFinite(v)||v<0||(!B.t&&v<1)||(Array.isArray(T[id])&&T[id].length))return;const e={p:v,d:"2026-11-17",a:B.t?1:0};if(n)e.n=n;T[id]=[e];ch++;};
     Object.keys(BOARDS).forEach(k=>{const B=BOARDS[k],v=b[k];if(v==null)return;
       if(B.lv){if(v&&typeof v==="object")B.lv.forEach(l=>{if(typeof v[l[0]]==="number")put(k+":"+l[0],v[l[0]],B);});}
       else if(typeof v==="number")put(k,v,B);});
-    if(ch)set(TOPKEY,T);}catch(e){}})();
+    if(ch)set(TK(),T);}catch(e){}})();
   const ICON={
     ladder:'<path d="M7 3v18M17 3v18M7 7h10M7 12h10M7 17h10"/>',
     bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
@@ -116,7 +116,7 @@ const PAUSE=(function(){
   const rankOn=()=>{try{return !!localStorage.getItem("bvi_rank");}catch(e){return false;}};
   const rankLoad=()=>typeof RANK!=="undefined"?Promise.resolve(RANK):loadJs("js/rank.js").then(()=>RANK);
   // eigene besten Werte je Liste (für den Vergleich mit allen)
-  function myBests(){const T=get(TOPKEY,{}),g={};Object.keys(T).forEach(id=>{const a=T[id];if(BOARDS[id.split(":")[0]]&&Array.isArray(a)&&a[0]&&typeof a[0].p==="number")g[id]=a[0].p;});return g;}
+  function myBests(){const T=get(TK(),{}),g={};Object.keys(T).forEach(id=>{const a=T[id];if(BOARDS[id.split(":")[0]]&&Array.isArray(a)&&a[0]&&typeof a[0].p==="number")g[id]=a[0].p;});return g;}
   let gTimer=0;
   // Werte senden (gesamt und Woche), danach Platzierungen und Karte im Spiel neu laden
   const syncNow=()=>rankLoad().then(R=>R.games(myBests(),weekObj()).catch(e=>{if(e&&e.code===404)throw e;}).then(()=>R));
@@ -129,21 +129,22 @@ const PAUSE=(function(){
   // Neuer bester Platz (1 bis 3) in der zuletzt gespielten Liste: Medaille zeigen, je Liste nur bei Verbesserung
   function medalCheck(j){if(!j||!j.boards||document.hidden)return;
     const id=topL?topG+":"+topL:topG,x=j.boards[id];if(!x||x.place>3||x.place<1)return;
-    const M=get("bvi_pause_medal",null)||{};if(M[id]!=null&&x.place>=M[id])return;
-    M[id]=x.place;set("bvi_pause_medal",M);
+    const M=get(JG.key("bvi_pause_medal"),null)||{};if(M[id]!=null&&x.place>=M[id])return;
+    M[id]=x.place;set(JG.key("bvi_pause_medal"),M);
     loadJs("js/medal.js").then(()=>MEDAL.show(x.place,"Platz "+x.place+" · "+MED[x.place][3],bname(id)+" · neue Bestplatzierung",medalSvg(x.place,150))).catch(()=>{});}
   // Beim ersten Öffnen der Plätze den Stand merken, ohne alte Platzierungen zu feiern
-  function medalSeed(j){if(get("bvi_pause_medal",null)!=null)return;const M={};Object.keys(j.boards).forEach(b=>{const p=j.boards[b].place;if(p>=1&&p<=3)M[b]=p;});set("bvi_pause_medal",M);}
+  function medalSeed(j){if(get(JG.key("bvi_pause_medal"),null)!=null)return;const M={};Object.keys(j.boards).forEach(b=>{const p=j.boards[b].place;if(p>=1&&p<=3)M[b]=p;});set(JG.key("bvi_pause_medal"),M);}
   /* ---------- Platzierungen: Rang-Streifen, Plätze auf den Kacheln, Wochenwertung, Karte im Spiel ---------- */
   let STAND=null,standT=0,curK=null,curB=null,cardSeq=0;
+  if(typeof JG!=="undefined")JG.on(()=>{STAND=null;standT=0;});   // anderer Jahrgang: Platzierungen neu laden
   const bname=id=>{const k=id.split(":")[0],q=GAMES.find(x=>x[0]===k),B=BOARDS[k],l=B&&B.lv&&B.lv.find(z=>z[0]===id.split(":")[1]);return (q?q[2]:id)+(l?" · "+l[1]:"");};
   const SING={Tage:"Tag",Punkte:"Punkt","Lücken":"Lücke",Sekunden:"Sekunde"};
   const unitN=(n,u)=>n===1&&SING[u]?SING[u]:u;
   // Überholt: wurde mein Platz schlechter, merken wir uns, wer vor mir liegt
-  function overtake(j){const P=get("bvi_pause_places",{}),np={};let ev=get("bvi_pause_ev",null);
+  function overtake(j){const P=get(JG.key("bvi_pause_places"),{}),np={};let ev=get(JG.key("bvi_pause_ev"),null);
     Object.keys(j.boards||{}).forEach(b=>{const x=j.boards[b];np[b]=x.place;if(P[b]!=null&&x.place>P[b]&&x.above)ev={b,by:x.above,from:P[b],t:Date.now()};});
     if(ev&&(Date.now()-ev.t>6048e5||(j.boards[ev.b]&&j.boards[ev.b].place<=ev.from)))ev=null;
-    set("bvi_pause_places",np);set("bvi_pause_ev",ev);}
+    set(JG.key("bvi_pause_places"),np);set(JG.key("bvi_pause_ev"),ev);}
   function loadStand(){if(!rankOn())return Promise.resolve(null);if(STAND&&Date.now()-standT<6e4)return Promise.resolve(STAND);
     return syncNow().then(R=>R.gamesAll()).then(j=>{if(!j||!j.boards)return null;overtake(j);STAND=j;standT=Date.now();return j;}).catch(()=>null);}
   const gotoTop=(id)=>{if(id){const p=id.split(":");topG=p[0];topL=p[1]||"";set("bvi_pause_topg",topG);set("bvi_pause_topl",topL);}ptab="top";topS="all";shOpen=false;set(TKEY,ptab);set("bvi_pause_tops",topS);hub();};
@@ -201,7 +202,7 @@ const PAUSE=(function(){
     if(shOpen)document.body.appendChild(sh);
     root.querySelector(".pz-lgo").onclick=()=>open(topG);
     const body=root.querySelector(".pz-lbb"),msg=(t,btn)=>{body.innerHTML=`<div class="pz-card"><div class="pz-center">${t}</div>${btn||""}</div>`;};
-    if(!all){const a=get(TOPKEY,{})[id];
+    if(!all){const a=get(TK(),{})[id];
       body.innerHTML=Array.isArray(a)&&a.length?`<ol class="pz-lb">${a.map((e,i)=>`<li><span class="pz-lr">${i+1}</span><b>${fmtV(B,e.p)}${B.t?"":" <small>"+u+"</small>"}</b><span class="pz-ld">${e.n?esc(e.n)+" · ":""}${dd(e.d)}</span></li>`).join("")}</ol>`:`<div class="pz-card"><div class="pz-center">Noch kein Eintrag. Spiele eine Runde, dann erscheint dein Ergebnis hier.</div></div>`;
       return;}
     const cur=()=>ptab==="top"&&topS!=="me"&&topG===g[0]&&(topL||"")===(B.lv?topL:"")&&body.isConnected;

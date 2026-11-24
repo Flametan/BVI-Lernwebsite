@@ -6,7 +6,7 @@
    ====================================================================== */
 const MAHJONG=(function(){
   'use strict';
-  var BKEY='bvi_pause_best', KEY='mahjong';
+  var BKEY0='bvi_pause_best', KEY='mahjong';
   var lget=function(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } };
   var lset=function(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} };
   var say=function(m){ if(typeof A11Y!=='undefined') A11Y.say(m); };
@@ -185,7 +185,7 @@ const MAHJONG=(function(){
   var root=null, host=null, svg=null, ov=null, msgEl=null, tiles=[], S=null, handlers=[], timer=null, hintT=null, overT=null, RM=false, kb=false;
   function fmt(s){ var m=Math.floor(s/60); return m+':'+('0'+(s%60)).slice(-2); }
   function secs(){ if(!S||!S.t0) return 0; return Math.floor(((S.over?S.t1:Date.now())-S.t0)/1000); }
-  function bestObj(){ var v=lget(BKEY,{})[KEY]; return typeof v==='number'?{pyramide:v}:(v&&typeof v==='object'?v:{}); }
+  function bestObj(){ var v=lget(JG.key(BKEY0),{})[KEY]; return typeof v==='number'?{pyramide:v}:(v&&typeof v==='object'?v:{}); }
   function best(){ var v=bestObj()[LVL]; return typeof v==='number'?v:null; }
   var OKEY='bvi_mahjong_opts';
   function setH(k,v){ var n=root&&root.querySelector('[data-h="'+k+'"]'); if(n&&n.textContent!==String(v)) n.textContent=v; }
@@ -314,7 +314,7 @@ const MAHJONG=(function(){
   function finish(){
     if(!ov||!S) return;
     var t=secs(), old=best(), hadOld=old!=null, isNew=false; if(typeof PAUSE!=='undefined') PAUSE.addScore('mahjong',t,LVL);
-    if(old==null||t<old){ var b=lget(BKEY,{}), o=bestObj(); o[LVL]=t; b[KEY]=o; lset(BKEY,b); old=t; isNew=true; setH('best',fmt(t)); }
+    if(old==null||t<old){ var b=lget(JG.key(BKEY0),{}), o=bestObj(); o[LVL]=t; b[KEY]=o; lset(JG.key(BKEY0),b); old=t; isNew=true; setH('best',fmt(t)); }
     if(typeof GAME!=='undefined') GAME.cheer('spiel','Mahjong',isNew&&hadOld?fmt(t):'');
     ov.hidden=false;
     ov.innerHTML='<div class="mj-win" role="dialog" aria-modal="true" aria-label="Brett gelöst"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.500c1 3.600 6.500 6.200 6.500 11.800a6.500 6.500 0 0 1-13 0c0-2.800 1.500-4.700 3-6.200.2 1.900 1.100 3 2.300 3.200C10.700 8.300 12 5.700 12 2.500z" fill="#f2711c"/><path d="M12 12.500c2 2 3 3.300 3 4.700a3 3 0 0 1-6 0c0-1.400 1-2.700 3-4.700z" fill="#ffd54a"/></svg>'

@@ -56,7 +56,7 @@ const MINESWEEPER=(function(){
   })();
 
   var create=MS.create, open=MS.open, flag=MS.flag, chord=MS.chord, secs=MS.secs, left=MS.left, LEVELS=MS.LEVELS, hintOf=MS.hint;
-  var BKEY='bvi_pause_best', OKEY='bvi_minesweeper_opts', LV=['leicht','mittel','schwer','sehr'];
+  var BKEY0='bvi_pause_best', OKEY='bvi_minesweeper_opts', LV=['leicht','mittel','schwer','sehr'];
   var lget=function(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } };
   var lset=function(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} };
   var say=function(m){ if(typeof A11Y!=='undefined') A11Y.say(m); };
@@ -72,7 +72,7 @@ const MINESWEEPER=(function(){
   var root=null, S=null, lvl='leicht', flagMode=false, cellEls=[], board=null, wrap=null, ov=null, msg=null, handlers=[], timer=null, hintT=null, hintIdx=-1, tmo=null;
   var press={t:0,long:false,i:-1}, lastTap={i:-1,t:0}, snap=[], overT=null;
   function fmt(s){ var m=Math.floor(s/60); return m+':'+('0'+(s%60)).slice(-2); }
-  function best(l){ var b=(lget(BKEY,{}).minesweeper)||{}; return b[l]; }
+  function best(l){ var b=(lget(JG.key(BKEY0),{}).minesweeper)||{}; return b[l]; }
   function setH(k,v){ var n=root&&root.querySelector('[data-h="'+k+'"]'); if(n&&n.textContent!==String(v)) n.textContent=v; }
   function saySm(t){ if(msg) msg.textContent=t||''; }
   function build(){
@@ -136,9 +136,9 @@ const MINESWEEPER=(function(){
     after(i); if(type==='flag') say(S.cells[i].s===2?'Markiert':'Markierung entfernt'); return true;
   }
   function finish(){
-    if(!ov||!S) return; var t=secs(S), b=lget(BKEY,{}), old=best(lvl), isNew=false, hadOld=old!=null;
+    if(!ov||!S) return; var t=secs(S), b=lget(JG.key(BKEY0),{}), old=best(lvl), isNew=false, hadOld=old!=null;
     if(S.won&&t>=0) { if(typeof PAUSE!=='undefined') PAUSE.addScore('minesweeper',t,lvl); }
-    if(S.won&&t>=0&&(old==null||t<old)){ var m=Object.assign({},b.minesweeper||{}); m[lvl]=t; b.minesweeper=m; lset(BKEY,b); old=t; isNew=true; setH('best',fmt(t)); }
+    if(S.won&&t>=0&&(old==null||t<old)){ var m=Object.assign({},b.minesweeper||{}); m[lvl]=t; b.minesweeper=m; lset(JG.key(BKEY0),b); old=t; isNew=true; setH('best',fmt(t)); }
     var ok=S.won, L=LEVELS[lvl]; if(ok&&typeof GAME!=='undefined') GAME.cheer('spiel','Minesweeper',isNew&&hadOld?fmt(t):'');
     ov.hidden=false; ov.innerHTML='<div class="so-win" role="dialog" aria-modal="true" aria-label="'+(ok?'Alle Brandherde gesichert':'Brand außer Kontrolle')+'"><div class="so-wi">'+(ok?ICO.flag:ICO.flame).replace('mi-ic','mi-ic mi-big')+'</div><h3>'+(ok?'Alle Brandherde gesichert':'Brand außer Kontrolle')+'</h3><p>'+(ok?'Das Gebiet ist abgesucht.':'Ein Brandherd wurde übersehen.')+'</p>'
       +'<div class="so-stats"><div><b>'+fmt(t)+'</b><span>Zeit</span></div><div><b>'+(old==null?'–':fmt(old))+'</b><span>Rekord</span></div><div><b>'+L.mines+'</b><span>Brandherde</span></div></div>'+(isNew?'<p><b>Neuer Rekord!</b></p>':'')
