@@ -14,7 +14,7 @@
 ====================================================================== */
 const KREUZWORT=(function(){
   'use strict';
-  const BKEY='bvi_pause_best', SKEY='bvi_kreuzwort_streak', STKEY='bvi_kreuzwort_state_', G=13;
+  const BKEY0='bvi_pause_best', SKEY='bvi_kreuzwort_streak', STKEY='bvi_kreuzwort_state_', G=13;
   /* WORT|Hinweis, Großbuchstaben, Ä Ö Ü, ß als SS, 4 bis 12 Buchstaben */
   const WORDS=`DREHLEITER|Rettungsgerät mit Korb, Kürzel DLK
 RÜSTWAGEN|Fahrzeug für die technische Hilfeleistung, Kürzel RW
@@ -282,7 +282,7 @@ STROM|Fließt durch das Kabel, gemessen in Ampere`.split('\n').map(l=>{ const i=
   }
 
   /* ---------- Serie ---------- */
-  function streakInfo(d){ const s=lget(SKEY,{}), n=+s.n||0; const cur=(s.last===d||s.last===yesterday(d))?n:0; const b=+((lget(BKEY,{}).kreuzwort)||0); return {cur,best:Math.max(b,cur),last:s.last||'',n}; }
+  function streakInfo(d){ const s=lget(SKEY,{}), n=+s.n||0; const cur=(s.last===d||s.last===yesterday(d))?n:0; const b=+((lget(JG.key(BKEY0),{}).kreuzwort)||0); return {cur,best:Math.max(b,cur),last:s.last||'',n}; }
 
   /* ---------- CSS ---------- */
   const CSS=`
@@ -484,10 +484,10 @@ STROM|Fließt durch das Kabel, gemessen in Ampere`.split('\n').map(l=>{ const i=
 
   function win(){
     mode='won'; bad=[]; entries=P.cells.slice(); saveState();
-    const old=lget(SKEY,{}), oldBest=+((lget(BKEY,{}).kreuzwort)||0);
+    const old=lget(SKEY,{}), oldBest=+((lget(JG.key(BKEY0),{}).kreuzwort)||0);
     const n=(old.last===yesterday(date))?(+old.n||0)+1:(old.last===date?(+old.n||1):1);
     lset(SKEY,{n:n,last:date}); if(typeof PAUSE!=='undefined') PAUSE.addScore('kreuzwort',n);
-    const rec=n>oldBest; if(rec){ const b=lget(BKEY,{}); b.kreuzwort=n; lset(BKEY,b); }
+    const rec=n>oldBest; if(rec){ const b=lget(JG.key(BKEY0),{}); b.kreuzwort=n; lset(JG.key(BKEY0),b); }
     refs.cur.textContent=''; renderResult(rec,oldBest);
     if(typeof GAME!=='undefined') GAME.cheer('spiel','Kreuzworträtsel',rec&&oldBest>0?'Serie '+n+' Tage':'');
     say('Rätsel gelöst. Serie: '+n+(n===1?' Tag.':' Tage.'));

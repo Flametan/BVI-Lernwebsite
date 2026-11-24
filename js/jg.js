@@ -38,6 +38,8 @@ const JG=(function(){
   const labelOf=id=>{ const j=list().find(x=>x.id===id); return j?j.label:String(id).replace(/_/g,' - ').replace(/-(\d\d)-/g,' $1/').replace(/-/g,'/'); };
   function current(){ const id=lsGet(K); return id&&/^BRef-\d\d-\d{4}_AB-\d\d-\d{4}$/.test(id)?id:MASTER; }
   const isMaster=()=>current()===MASTER;
+  // Speicherschlüssel je Jahrgang: Der Master behält die bisherigen Namen, jeder andere Jahrgang bekommt eigene (Bestenlisten der Pausenspiele)
+  const key=base=>isMaster()?base:base+'@'+current();
 
   // ── Bilder (IndexedDB, damit der kleine Speicher des Browsers für Lernstand und Notizen frei bleibt) ──
   let _db=null;
@@ -224,6 +226,6 @@ const JG=(function(){
   function restore(prev){ const id=current(); record(id,lsGet(PRE+id),prev||null); setRaw(id,prev||null); changed(); }
   const hasLocal=()=>{ const l=local(); return !!(Object.keys(l.plane).length||l.aktiv||l.erg.length||l.pr.hinzu.length||l.pr.weg.length||Object.keys(l.rel).length||l.ausg.length||Object.keys(l.links).length||l.karten.length||l.kweg.length||Object.keys(l.orte).length||Object.keys(l.kuerzel).length||l.reiter.length); };
 
-  return { MASTER, TABS, PLANKEYS, list, labelOf, current, isMaster, data, local, saveLocal, glow, rel, setExams, examOf, load, set, on, ver:()=>ver, img, okImg,
+  return { MASTER, key, TABS, PLANKEYS, list, labelOf, current, isMaster, data, local, saveLocal, glow, rel, setExams, examOf, load, set, on, ver:()=>ver, img, okImg,
     exportJson, importJson, peek, snapshot, discard, restore, undo, redo, canUndo, canRedo, hasLocal, empty, newId:()=>'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6) };
 })();

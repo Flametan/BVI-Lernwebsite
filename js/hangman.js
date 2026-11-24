@@ -5,7 +5,7 @@
 ====================================================================== */
 const HANGMAN=(function(){
   'use strict';
-  const BKEY='bvi_pause_best', MAXERR=7, STYLE_ID='hm-style';
+  const BKEY0='bvi_pause_best', MAXERR=7, STYLE_ID='hm-style';
   const KEYS='ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ'.split('');
 
   /* Format: Begriff|Kategorie|optionale Erklärung (nur wo aus den Lernkarten der App belegt) */
@@ -85,8 +85,8 @@ const HANGMAN=(function(){
   const lget=(k,d)=>{ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } };
   const lset=(k,v)=>{ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} };
   const say=m=>{ if(typeof A11Y!=='undefined') A11Y.say(m); };
-  const getBest=()=>{ const b=lget(BKEY,{}); return (b&&+b.hangman)||0; };
-  const setBest=n=>{ const b=lget(BKEY,{}); const o=(b&&typeof b==='object')?b:{}; o.hangman=n; lset(BKEY,o); };
+  const getBest=()=>{ const b=lget(JG.key(BKEY0),{}); return (b&&+b.hangman)||0; };
+  const setBest=n=>{ const b=lget(JG.key(BKEY0),{}); const o=(b&&typeof b==='object')?b:{}; o.hangman=n; lset(JG.key(BKEY0),o); };
 
   let root=null, ui={}, G=null, kd=null, ft=null;
 

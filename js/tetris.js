@@ -5,7 +5,7 @@
 ====================================================================== */
 const TETRIS=(function(){
   'use strict';
-  const W=10, H=20, BKEY='bvi_pause_best', SID='t4-style';
+  const W=10, H=20, BKEY0='bvi_pause_best', SID='t4-style';
   /* Steine: Form (Matrix), Farbe, Buchstabe auf den Zellen, Kürzel für die Legende */
   const PIECES={
     I:{m:[[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]],c:'#4fc3e8',l:'D',n:'DLK'},
@@ -74,7 +74,7 @@ button.t4-box:disabled{opacity:.5;cursor:default;}
   function refill(){ const a=KEYS.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } bag=bag.concat(a); }
   function draw7(){ if(bag.length<8) refill(); return bag.shift(); }
   function fresh(keepStatus){
-    const b=lget(BKEY,{});
+    const b=lget(JG.key(BKEY0),{});
     bag=[]; refill();
     S={board:Array.from({length:H},()=>new Array(W).fill(null)),cur:null,next:draw7(),hold:null,canHold:true,score:0,lines:0,level:1,
        status:'idle',acc:0,clearRows:null,clearT:0,msg:'',msgT:0,best:+b.tetris||0,rec:false};
@@ -141,7 +141,7 @@ button.t4-box:disabled{opacity:.5;cursor:default;}
     S.status='over'; S.cur=null; cancelAnimationFrame(raf); raf=0; stopRep();
     const hadBest=S.best>0, sc=S.score;
     if(typeof PAUSE!=='undefined') PAUSE.addScore('tetris',sc);
-    if(sc>S.best){ const b=lget(BKEY,{}); b.tetris=sc; lset(BKEY,b); S.best=sc; S.rec=true; }
+    if(sc>S.best){ const b=lget(JG.key(BKEY0),{}); b.tetris=sc; lset(JG.key(BKEY0),b); S.best=sc; S.rec=true; }
     if(S.rec&&sc>=5000&&typeof GAME!=='undefined') GAME.cheer('spiel','Tetris',fmt(sc)+' Punkte');
     say('Spiel beendet. '+fmt(sc)+' Punkte, '+S.lines+' Reihen.'+(S.rec&&hadBest?' Neuer Rekord.':''));
     upd(); draw(); overlay();

@@ -4,7 +4,7 @@
    und Löschwasser (Aufnehmen löscht einen Brandherd).
 ====================================================================== */
 const SNAKE=(function(){
-  const N=18, OKEY='bvi_snake_opts', BKEY='bvi_pause_best';
+  const N=18, OKEY='bvi_snake_opts', BKEY0='bvi_pause_best';
   const LEVELS=[{n:'Einsatzstufe 1',s:190,f:0.10,t:'Kleinbrand'},{n:'Einsatzstufe 2',s:150,f:0.17,t:'Zimmerbrand'},{n:'Einsatzstufe 3',s:115,f:0.26,t:'Großbrand'}];
   const CH={head:'🧑‍🚒',item:'🧯',fire:'🔥',water:'💧',air:'💨'};
   const rnd=n=>Math.floor(Math.random()*n), key=(x,y)=>y*N+x;
@@ -17,7 +17,7 @@ const SNAKE=(function(){
   function occupied(x,y){ const k=key(x,y); return S.snake.some(c=>c.x===x&&c.y===y)||S.fires.has(k)||(S.item&&key(S.item.x,S.item.y)===k)||(S.water&&key(S.water.x,S.water.y)===k)||(S.airItem&&key(S.airItem.x,S.airItem.y)===k); }
   function freeCell(far){ for(let i=0;i<500;i++){ const x=rnd(N),y=rnd(N); if(occupied(x,y)) continue; if(far&&Math.max(Math.abs(x-S.snake[0].x),Math.abs(y-S.snake[0].y))<far) continue; return {x,y}; } return {x:0,y:0}; }
   function fresh(){
-    S={snake:[{x:9,y:9},{x:8,y:9},{x:7,y:9}],dir:{x:1,y:0},next:{x:1,y:0},grow:0,fires:new Set(),item:null,water:null,waterT:0,airItem:null,airT:0,air:100,score:0,status:'idle',tick:0,eaten:0,over:'',log:['Einsatzleitung bereit. Wähle die Herausforderungen und die Einsatzstufe.'],best:+(lget(BKEY,{}).snake||0),rec:false};
+    S={snake:[{x:9,y:9},{x:8,y:9},{x:7,y:9}],dir:{x:1,y:0},next:{x:1,y:0},grow:0,fires:new Set(),item:null,water:null,waterT:0,airItem:null,airT:0,air:100,score:0,status:'idle',tick:0,eaten:0,over:'',log:['Einsatzleitung bereit. Wähle die Herausforderungen und die Einsatzstufe.'],best:+(lget(JG.key(BKEY0),{}).snake||0),rec:false};
     S.item=freeCell(3); const f=freeCell(5); S.fires.add(key(f.x,f.y));
   }
   const speed=()=>LEVELS[level].s-Math.min(60,S.eaten*4);
@@ -25,7 +25,7 @@ const SNAKE=(function(){
   function finish(why){
     S.status='over'; S.over=why; clearTimeout(timer);
     const hadBest=S.best>0; if(typeof PAUSE!=='undefined') PAUSE.addScore('snake',S.score);
-    if(S.score>S.best){ const b=lget(BKEY,{}); b.snake=S.score; lset(BKEY,b); S.best=S.score; S.rec=true; }
+    if(S.score>S.best){ const b=lget(JG.key(BKEY0),{}); b.snake=S.score; lset(JG.key(BKEY0),b); S.best=S.score; S.rec=true; }
     if(S.score>0&&typeof GAME!=='undefined') GAME.cheer('spiel','Snake',S.rec&&hadBest?S.score+' Punkte':'');
     note('Einsatz beendet: '+why); say('Einsatz beendet. '+why+'. '+S.score+' Punkte.'); render();
   }

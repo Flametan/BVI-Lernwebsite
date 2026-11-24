@@ -109,3 +109,23 @@ test('Spiel-Bestenlisten: melden, besser gewinnt, Zeit niedriger, Grenzen', asyn
   assert.equal((await s.call('GET', C + '/games?b=tetris', 'C'.repeat(43))).status, 404);      // nicht im Ranking
   await s.close();
 });
+
+test('Listen gelten je Jahrgang: XP-Ranking und Spielwerte sind getrennt', async () => {
+  const s = await boot(), J1 = 'BRef-10-2025_AB-10-2026', M = 'BRef-04-2025_AB-04-2026';
+  const put = (id, tok, name, jg, xp) => s.call('PUT', id, tok, { name, jg, xp, week: { k: wk(), xp } });
+  assert.equal((await put(A, TA, 'Anna', M, 50)).status, 200);
+  assert.equal((await put(B, TB, 'Ben', J1, 80)).status, 200);
+  assert.equal((await put(C, 'C'.repeat(43), 'Cem', undefined, 20)).status, 200);          // ohne Angabe: Master
+  let j = await (await s.call('GET', A + '?board=all&jg=' + M, TA)).json(); assert.deepEqual(j.top.map(x => x.name), ['Anna', 'Cem']);
+  j = await (await s.call('GET', B + '?board=all&jg=' + J1, 'B'.repeat(43))).json(); assert.deepEqual(j.top.map(x => x.name), ['Ben']);
+  // Spielwerte: je Jahrgang eigene Liste; der Master nutzt die bisherigen Felder
+  await s.call('PUT', A + '/games', TA, { jg: M, g: { tetris: 1000 } });
+  await s.call('PUT', B + '/games', TB, { jg: J1, g: { tetris: 9000 } });
+  await s.call('PUT', A + '/games', TA, { jg: J1, g: { tetris: 400 } });
+  j = await (await s.call('GET', A + '/games?b=tetris&jg=' + M, TA)).json(); assert.deepEqual(j.top.map(x => [x.name, x.v]), [['Anna', 1000]]);
+  j = await (await s.call('GET', A + '/games?b=tetris&jg=' + J1, TA)).json(); assert.deepEqual(j.top.map(x => [x.name, x.v]), [['Ben', 9000], ['Anna', 400]]);
+  j = await (await s.call('GET', A + '/games?all=1&jg=' + J1, TA)).json(); assert.equal(j.boards.tetris.place, 2);
+  assert.equal((await s.call('PUT', A + '/games', TA, { jg: 'unsinn', g: { snake: 7 } })).status, 200);   // ungültige Kennung: Master
+  j = await (await s.call('GET', A + '/games?b=snake&jg=' + M, TA)).json(); assert.equal(j.me.v, 7);
+  await s.close();
+});

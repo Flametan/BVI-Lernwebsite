@@ -3,14 +3,16 @@
  * B VI Ranking und Wochenduell (gehört zum Sync-Dienst, eigene Datei rank.dat im Datenordner – bewusst ohne .json,
  * damit sie nicht als Sync-Datenblock gezählt wird).
  *
- *   PUT    /v1/rank/<id>               { name, xp, week:{k:'2026-W47', xp}, av? }   Meldung, legt den Spieler beim ersten Mal an
- *   GET    /v1/rank/<id>?board=week|all                                      Top 20, eigener Platz
+ * Alle Listen gelten je Jahrgang (Lehrgang): Die Kennung (jg, z. B. BRef-04-2025_AB-04-2026) kommt vom Gerät. Fehlt sie, gilt der Master.
+ *
+ *   PUT    /v1/rank/<id>               { name, jg, xp, week:{k:'2026-W47', xp}, av? }   Meldung, legt den Spieler beim ersten Mal an
+ *   GET    /v1/rank/<id>?board=week|all[&jg=<Jahrgang>]                      Top 20 des Jahrgangs, eigener Platz
  *   GET    /v1/rank/<id>/duels                                                eigene Duelle mit Zwischenstand
  *   POST   /v1/rank/<id>/duel          { name }                               Herausforderung
  *   POST   /v1/rank/<id>/duel/<did>    { action: accept | decline | cancel }
- *   PUT    /v1/rank/<id>/games         { g:{ <Spiel>:<Bestwert>, ... } }     beste Werte der Pausenspiele (nur Teilnehmer)
- *   GET    /v1/rank/<id>/games?b=<Spiel>[&w=1]                                Top 20 des Spiels (w=1: nur diese Woche), eigener Platz
- *   GET    /v1/rank/<id>/games?all=1                                          mein Platz in allen Listen (gesamt und Woche)
+ *   PUT    /v1/rank/<id>/games         { jg, g:{ <Spiel>:<Bestwert>, ... } }  beste Werte der Pausenspiele im Jahrgang (nur Teilnehmer)
+ *   GET    /v1/rank/<id>/games?b=<Spiel>[&w=1][&jg=<Jahrgang>]                Top 20 des Spiels (w=1: nur diese Woche), eigener Platz
+ *   GET    /v1/rank/<id>/games?all=1[&jg=<Jahrgang>]                          mein Platz in allen Listen (gesamt und Woche)
  *   (PUT games nimmt zusätzlich w:{k:<Woche>,g:{...}} mit den Wochenbestwerten)
  *   DELETE /v1/rank/<id>                                                      Teilnahme beenden (Spieler und Duelle weg)
  * Kopfzeile X-Rank-Token (zufällig, nur auf dem Gerät). Gespeichert wird nur ein Hash davon.
@@ -21,6 +23,10 @@ const path = require('path');
 const crypto = require('crypto');
 
 const ID_RE = /^[a-f0-9]{32}$/;
+const MASTER = 'BRef-04-2025_AB-04-2026';   // der bisherige Jahrgang: ältere Einträge und Geräte ohne Angabe gehören dorthin
+const JG_RE = /^BRef-\d\d-\d{4}_AB-\d\d-\d{4}$/;
+const MAX_JG = 12;   // so viele Jahrgänge pro Spieler genügen (zwei pro Jahr)
+const jgOf = v => (typeof v === 'string' && JG_RE.test(v) ? v : MASTER);
 const TOKEN_RE = /^[A-Za-z0-9_-]{32,128}$/;
 const NAME_RE = /^[\p{L}\p{N}][\p{L}\p{N} ._-]{1,18}[\p{L}\p{N}]$/u;   // 3–20 Zeichen
 const AV_RE = /^data:image\/jpeg;base64,[A-Za-z0-9+/=]{20,6000}$/;   // kleines Vorschaubild
@@ -76,6 +82,16 @@ function create(cfg, ctx) {
     if (block.some(w => low.includes(w))) return null;
     return n;
   }
+  // Spielwerte eines Spielers je Jahrgang: der Master nutzt die bisherigen Felder g und w, die übrigen liegen unter gj
+  const gOf = (q, jg) => jg === MASTER ? q.g : (q.gj && q.gj[jg] ? q.gj[jg].g : undefined);
+  const wOf = (q, jg) => jg === MASTER ? q.w : (q.gj && q.gj[jg] ? q.gj[jg].w : undefined);
+  function slot(q, jg) {
+    if (jg === MASTER) return { get g() { return q.g = q.g || {}; }, get w() { return q.w; }, set w(v) { q.w = v; } };
+    q.gj = q.gj || {};
+    if (!q.gj[jg]) { if (Object.keys(q.gj).length >= MAX_JG) return null; q.gj[jg] = { g: {}, w: null }; }
+    return q.gj[jg];
+  }
+  const jgParam = (url, p) => url.searchParams.has('jg') ? jgOf(url.searchParams.get('jg')) : jgOf(p.jg);
   const num = (v, max) => Number.isInteger(v) && v >= 0 && v <= max ? v : null;
 
   function prune() {
@@ -87,9 +103,10 @@ function create(cfg, ctx) {
   setInterval(() => { prune(); persist(); }, 86400000).unref();
 
   const view = (p, k) => ({ name: p.name, xp: k ? weekXp(p, k) : p.xp });
-  function board(kind, id) {
+  function board(kind, id, jg) {
     const k = curWk();
     const rows = Object.entries(db.players)
+      .filter(([pid, p]) => pid === id || jgOf(p.jg) === jg)
       .map(([pid, p]) => ({ pid, name: p.name, av: p.av || null, tx: p.xp, xp: kind === 'week' ? weekXp(p, k) : p.xp }))
       .filter(r => r.xp > 0 || r.pid === id)
       .sort((a, b) => b.xp - a.xp || a.name.localeCompare(b.name, 'de'));
@@ -143,9 +160,9 @@ function create(cfg, ctx) {
         else if (k === p.week.k) p.week.xp = wxp;
         if (name !== p.name) { byName.delete(nameKey(p.name)); p.name = name; byName.set(nameKey(name), id); }
         if (av !== undefined) p.av = av;
-        p.xp = xp; p.seen = t;
+        p.xp = xp; p.seen = t; p.jg = jgOf(j.jg);
       } else {
-        db.players[id] = { name, av: av || null, tokenHash: th, xp, week: { k, xp: wxp }, prev: null, seen: t };
+        db.players[id] = { name, jg: jgOf(j.jg), av: av || null, tokenHash: th, xp, week: { k, xp: wxp }, prev: null, seen: t };
         byName.set(nameKey(name), id);
       }
       persist();
@@ -160,22 +177,22 @@ function create(cfg, ctx) {
       const g = j && j.g;
       if (!g || typeof g !== 'object' || Array.isArray(g) || Object.keys(g).length > 30) return send(res, 422, { error: 'Werte ungültig' });
       const better = (k, v, old) => old == null || (GAMES[k].t ? v < old : v > old);
-      p.g = p.g || {};   // ungültige Einträge werden übersprungen, damit ein einzelner Wert nicht alle blockiert
-      for (const [k, v] of Object.entries(g)) if (gameOk(k, v) && better(k, v, p.g[k])) p.g[k] = v;
+      const sl = slot(p, jgOf(j.jg)); if (!sl) return send(res, 422, { error: 'Zu viele Jahrgänge' });
+      for (const [k, v] of Object.entries(g)) if (gameOk(k, v) && better(k, v, sl.g[k])) sl.g[k] = v;   // ungültige Einträge werden übersprungen, damit ein einzelner Wert nicht alle blockiert
       // Wochenwerte: nur für die laufende Woche, eine neue Woche beginnt leer
       const w = j.w;
       if (w && typeof w === 'object' && w.k === curWk() && w.g && typeof w.g === 'object' && !Array.isArray(w.g) && Object.keys(w.g).length <= 30) {
-        if (!p.w || p.w.k !== w.k) p.w = { k: w.k, g: {} };
-        for (const [k, v] of Object.entries(w.g)) if (gameOk(k, v) && better(k, v, p.w.g[k])) p.w.g[k] = v;
+        if (!sl.w || sl.w.k !== w.k) sl.w = { k: w.k, g: {} };
+        for (const [k, v] of Object.entries(w.g)) if (gameOk(k, v) && better(k, v, sl.w.g[k])) sl.w.g[k] = v;
       }
       persist(); return send(res, 200, { ok: true });
     }
     if (sub === 'games' && req.method === 'GET') {
-      const wk = curWk();
+      const wk = curWk(), jg = jgParam(url, p);
       const rowsOf = (b, weekly) => {
         const low = !!GAMES[b].t;
         return Object.entries(db.players)
-          .map(([pid, q]) => ({ pid, name: q.name, av: q.av || null, v: weekly ? (q.w && q.w.k === wk && q.w.g ? q.w.g[b] : null) : (q.g ? q.g[b] : null) }))
+          .map(([pid, q]) => ({ pid, name: q.name, av: q.av || null, v: weekly ? (wOf(q, jg) && wOf(q, jg).k === wk && wOf(q, jg).g ? wOf(q, jg).g[b] : null) : (gOf(q, jg) ? gOf(q, jg)[b] : null) }))
           .filter(r => r.v != null)
           .sort((x, y) => (low ? x.v - y.v : y.v - x.v) || x.name.localeCompare(y.name, 'de'));
       };
@@ -199,7 +216,7 @@ function create(cfg, ctx) {
 
     if (!sub && req.method === 'GET') {
       const kind = url.searchParams.get('board') === 'all' ? 'all' : 'week';
-      return send(res, 200, board(kind, id));
+      return send(res, 200, board(kind, id, jgParam(url, p)));
     }
     if (!sub && req.method === 'DELETE') {
       byName.delete(nameKey(p.name)); delete db.players[id];
