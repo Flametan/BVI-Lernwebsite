@@ -62,7 +62,7 @@ const GAME=(function(){
     wq:'Prüfungsfragen, die du diese Woche richtig beantwortest.', wq2:'Prüfungsfragen, die du diese Woche richtig beantwortest.',
     wq3:'Prüfungsfragen, die du diese Woche beantwortest, egal ob richtig oder falsch.',
     ws:'Deine längste Serie richtiger Antworten (Karten oder Prüfungsfragen) an einem einzigen Tag dieser Woche.', ws2:'Deine längste Serie richtiger Antworten (Karten oder Prüfungsfragen) an einem einzigen Tag dieser Woche.',
-    wk:'Eine Probeklausur bis zur Auswertung durcharbeiten.',
+    wk:'Eine Klausur aus dem Reiter Prüfung bis zur Auswertung durcharbeiten (Klausurfragen, Übungsklausur, Quiz im Prüfungsmodus, Laufbahn-Simulationen, eigene Prüfungen).',
     wd:'Tage dieser Woche, an denen du Punkte gesammelt hast.', wd2:'Tage dieser Woche, an denen du Punkte gesammelt hast.', wd3:'Tage dieser Woche, an denen du Punkte gesammelt hast.',
     wx:'Punkte, die du diese Woche sammelst.',
     wm:'Lernzeit in der App diese Woche.', wm2:'Lernzeit in der App diese Woche.',

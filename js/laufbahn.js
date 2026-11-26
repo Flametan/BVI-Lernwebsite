@@ -478,7 +478,7 @@ const LB=(function(){
     drop(){ clearInterval(simTick); S={phase:'start',mode:S.mode||'text',acc:0,a:{},r:{},mk:{},tal:{p:0,k:0,v:0}}; sSave(); simRender(); window.scrollTo({top:0}); },
     pause(){ if(S.run){ S.acc+=Date.now()-S.t0; S.run=false; } else { S.run=true; S.t0=Date.now(); } sSave(); simRender(); },
     work(){ S.phase='work'; sSave(); simRender(); window.scrollTo({top:0}); },
-    finish(){ if(S.run){ S.acc+=Date.now()-S.t0; S.run=false; } S.phase='eval'; sSave(); simRender(); window.scrollTo({top:0}); },
+    finish(){ if(S.run){ S.acc+=Date.now()-S.t0; S.run=false; } if(S.phase!=='eval'&&typeof GAME!=='undefined') GAME.event('klausur',true); S.phase='eval'; sSave(); simRender(); window.scrollTo({top:0}); },
     type(key,ta){ S.a[key]=ta.value; sSave(); const w=ta.nextElementSibling; if(w) w.textContent=words(ta.value)+' Wörter'; const D=parse(S.k), bl=allBlocks(D), dn=bl.filter(b=>words(S.a[b.key])>=15).length, r=root(), p=r&&r.querySelector('[data-p]'); if(p){ p.textContent=dn+' von '+bl.length+' Teilaufgaben bearbeitet'; r.querySelector('.lbsim-prog .bar i').style.width=Math.round(dn/bl.length*100)+'%'; } },
     msel(n){ S.msel=S.msel===n?null:n; sSave(); const y=window.scrollY; simRender(); window.scrollTo(0,y); },
     mk(n,key,v){ const D=parse(S.k), m=mk(D,n); if(m[key]===v) delete m[key]; else m[key]=v; sSave(); const y=window.scrollY; simRender(); window.scrollTo(0,y); },
@@ -793,7 +793,7 @@ const EX=(function(){
     resume(){ if(!S.run&&S.phase!=='eval'){ S.run=true; S.t0=Date.now(); save(); } render(); },
     drop(){ clearInterval(tick); S={phase:'start',acc:0,a:{},r:{}}; save(); render(); window.scrollTo({top:0}); },
     pause(){ if(S.run){ S.acc+=Date.now()-S.t0; S.run=false; } else { S.run=true; S.t0=Date.now(); } save(); keep(); },
-    finish(){ if(S.run){ S.acc+=Date.now()-S.t0; S.run=false; } S.phase='eval'; save(); render(); window.scrollTo({top:0}); },
+    finish(){ if(S.run){ S.acc+=Date.now()-S.t0; S.run=false; } if(S.phase!=='eval'&&typeof GAME!=='undefined') GAME.event('klausur',true); S.phase='eval'; save(); render(); window.scrollTo({top:0}); },
     type(key,ta){ S.a[key]=ta.value; save(); const w=ta.nextElementSibling; if(w) w.textContent=words(ta.value)+' Wörter'; const D=parse(S.k), dn=D.tasks.filter(t=>words(S.a[t.key])>=25).length, r=root(), p=r&&r.querySelector('[data-p]'); if(p){ p.textContent=dn+' von '+D.tasks.length+' Fragen beantwortet'; r.querySelector('.lbsim-prog .bar i').style.width=Math.round(dn/D.tasks.length*100)+'%'; } },
     rate(key,v){ S.r[key]=v; save(); keep(); }
   };
