@@ -181,7 +181,11 @@ const GAME=(function(){
   }
   function weekSum(offset=0){
     const s=load(), a={xp:0,cards:0,quiz:0,quizOk:0,days:0,redo:0,newT:0,stars:0,best:0,klausur:0,steady:0,min:0};
+    // Rückwirkend: Prüfungsmodus-Klausuren aus dem Quiz (VAk/IdF), die diese Woche schon abgegeben wurden, zählen mit
+    let pre=0; const wkeys=weekKeys(offset);
+    ['bvi_quiz_stats','bvi_idfq_stats'].forEach(key=>{ try{ const e=(JSON.parse(localStorage.getItem(key)||'{}').exams)||[]; e.forEach(x=>{ if(x&&x.ts&&wkeys.includes(String(x.ts).slice(0,10))) pre++; }); }catch(_){} });
     weekKeys(offset).forEach(k=>{ const d=s.days[k]; if(d){ a.xp+=d.xp||0; a.cards+=d.cards||0; a.quiz+=d.quiz||0; a.quizOk+=d.quizOk||0; if((d.xp||0)>0) a.days++; a.redo+=d.redo||0; a.newT+=d.newT||0; a.stars+=d.stars||0; a.klausur+=d.klausur||0; a.best=Math.max(a.best,d.best||0); if((d.cards||0)>=10) a.steady++; } });
+    a.klausur=Math.max(a.klausur,pre);
     if(!offset&&typeof USAGE!=='undefined'){ try{ a.min=Math.floor(USAGE.week().reduce((x,y)=>x+y,0)/60); }catch(e){} }
     return a;
   }
