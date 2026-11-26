@@ -1,5 +1,8 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
+    {v:'3.3.1',ts:'2026-11-26T10:00',items:[
+      'Wochenaufgabe „Probeklausur“: Es zählen jetzt alle Klausuren aus dem Reiter Prüfung, sobald sie bis zur Auswertung durchgearbeitet sind – Klausurfragen, Übungsklausur, Quiz im Prüfungsmodus (VAk/IdF), die Laufbahn-Simulationen und eigene Prüfungen. Eine Quiz-Klausur (VAk/IdF), die du diese Woche schon abgegeben hast, erfüllt die Aufgabe rückwirkend.',
+    ]},
     {v:'3.3.0',ts:'2026-11-18T10:00',items:[
       'Kapitelfenster (Tablet): Unter den Knöpfen „Vorheriges/Nächstes Kapitel“ blitzte ein schmaler Streifen Text der Seite dahinter durch. Das Fenster reicht jetzt lückenlos bis zur Tab-Leiste.',
       'Ladebildschirm am Tablet und am PC: Der Platzhalter der Startseite entspricht jetzt der fertigen Seite (Serie-Banner, Wochenkarte, Wochenchart, Jahres-Reiter, Kacheln in den richtigen Größen).',

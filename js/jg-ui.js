@@ -552,6 +552,7 @@ const JGUI=(function(){
     const eb=document.querySelector('#v-jg-pruefung .page-eyebrow'), tt=document.querySelector('#v-jg-pruefung .page-title');
     if(eb) eb.textContent=(JG.TABS.find(t=>t[0]===p.tab)||[])[1]||'Eigene Prüfung'; if(tt) tt.textContent=p.titel;
     if(P.i>=n){
+      if(!P.counted){ P.counted=true; if(typeof GAME!=='undefined') GAME.event('klausur',true); }   // Wochenaufgabe „Probeklausur“
       const ok=P.res.filter(r=>r.ok).length, wrong=P.res.filter(r=>!r.ok);
       el.innerHTML='<div class="m-card"><div class="m-t1">'+ok+' von '+n+' richtig</div><div class="m-bar" style="margin:10px 0"><i style="width:'+Math.round(ok/n*100)+'%"></i></div>'
         +(wrong.length?'<div class="m-t2">Zum Nacharbeiten:</div>'+wrong.map(r=>'<div class="jg-wr"><b>'+E(r.q.q)+'</b><div>Richtig: '+E(r.q.typ==='text'?r.q.a:r.q.typ==='mc'?r.q.c.map(k=>r.q.o[k]).join(' · '):r.q.o[r.q.c])+'</div>'+(r.q.e?'<div class="m-t2">'+E(r.q.e)+'</div>':'')+'</div>').join(''):'<div class="m-t2">Alles richtig!</div>')

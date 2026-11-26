@@ -4205,7 +4205,7 @@ function makeQuiz(cfg){
       });
       const pct=Math.round((correct/total)*100);
       const grade=pct>=90?'Sehr gut':pct>=75?'Gut':pct>=60?'Befriedigend':pct>=50?'Ausreichend':'Nicht bestanden';
-      recordExam(correct,total,pct,grade); if(typeof GAME!=='undefined') GAME.cheer('pruefung','Quiz');
+      recordExam(correct,total,pct,grade); if(typeof GAME!=='undefined'){ GAME.event('klausur',true); GAME.cheer('pruefung','Quiz'); }
       const catBreakdown=[...new Set(_examQs.filter(q=>q.type!=='essay').map(q=>q.cat))].map(cat=>{
         const cq=_examQs.filter(q=>q.cat===cat&&q.type!=='essay');
         const cok=cq.filter(examOk).length;
