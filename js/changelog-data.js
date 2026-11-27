@@ -2,6 +2,7 @@
 const CHANGELOG_ENTRIES=[
     {v:'3.3.2',ts:'2026-11-27T10:00',items:[
       'Ranking: Nach einer neuen Anmeldung an einem anderen Gerät (z. B. am PC) erschien „Punkte unplausibel“, weil der Server noch den niedrigeren alten Stand kannte. Die App meldet den höheren Stand jetzt automatisch nach. Dafür muss der Sync-Server einmal aktualisiert werden.',
+      'Transaktionsanalyse: Es sind fünf Ich-Zustände, nicht sechs. Korrigiert im Kapitel „Transaktionstypen“ und in den zugehörigen Lernkarten.',
     ]},
     {v:'3.3.1',ts:'2026-11-26T10:00',items:[
       'Wochenaufgabe „Probeklausur“: Es zählen jetzt alle Klausuren aus dem Reiter Prüfung, sobald sie bis zur Auswertung durchgearbeitet sind – Klausurfragen, Übungsklausur, Quiz im Prüfungsmodus (VAk/IdF), die Laufbahn-Simulationen und eigene Prüfungen. Eine Quiz-Klausur (VAk/IdF), die du diese Woche schon abgegeben hast, erfüllt die Aufgabe rückwirkend.',
