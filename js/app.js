@@ -3823,7 +3823,10 @@ function makeQuiz(cfg){
     saveStats(d);
   }
   function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=0|Math.random()*(i+1);[r[i],r[j]]=[r[j],r[i]];}return r;}
-  function filteredIds(){let p=_filter==='bookmarked'?Q.filter(q=>_bookmarks.has(q.id)):_filter==='wrong'?Q.filter(q=>_masteryMap[q.id]==='err'):_filter==='due'?Q.filter(q=>isDue(q.id)):Q;if(_catFilter!=='all')p=p.filter(q=>q.cat===_catFilter&&subOk(q));if(_typeFilter!=='all')p=p.filter(q=>q.type===_typeFilter);return p.map(q=>q.id);}
+  function filteredIds(){
+    // Gespeicherte Auswahl (z. B. „Stabsarbeit“) gibt es nicht in jedem Reiter (Eingrenzungen: nur VB) – dann gilt „Alle“, sonst bliebe die Liste leer
+    if(cfg.sub&&_subFilter!=='all'&&!Q.some(q=>(_catFilter==='all'||q.cat===_catFilter)&&q.sub===_subFilter)) _subFilter='all';
+    let p=_filter==='bookmarked'?Q.filter(q=>_bookmarks.has(q.id)):_filter==='wrong'?Q.filter(q=>_masteryMap[q.id]==='err'):_filter==='due'?Q.filter(q=>isDue(q.id)):Q;if(_catFilter!=='all')p=p.filter(q=>q.cat===_catFilter&&subOk(q));if(_typeFilter!=='all')p=p.filter(q=>q.type===_typeFilter);return p.map(q=>q.id);}
   function buildOrder(){_order=shuffle(filteredIds());_cur=0;_answered=false;_sessionCorrect=0;_sessionWrong=0;_sessionSkipped=0;_retried=new Set();_retriedCount=0;_posHistory={};_viewAt={};hideSummary();renderFilterStatus();}
   // Antwortreihenfolge mischen (cfg.shuffle): bei Multiple Choice und Mehrfachauswahl steht eine richtige Antwort mal oben, mal unten.
   // Die Ansicht einer Frage (Antworten umgestellt, richtige Positionen angepasst) bleibt innerhalb einer Runde stabil, damit Zurückblättern und Auswertung passen.
