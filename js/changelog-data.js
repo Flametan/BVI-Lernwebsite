@@ -2,6 +2,8 @@
 const CHANGELOG_ENTRIES=[
     {v:'3.3.2',ts:'2026-11-27T10:00',items:[
       'Ranking: Nach einer neuen Anmeldung an einem anderen Gerät (z. B. am PC) erschien „Punkte unplausibel“, weil der Server noch den niedrigeren alten Stand kannte. Die App meldet den höheren Stand jetzt automatisch nach. Dafür muss der Sync-Server einmal aktualisiert werden.',
+      'Nummerierte Listen: Die Zahlen stehen jetzt linksbündig mit dem übrigen Text der Seite, der Listentext rückt ein – am Handy, Tablet und PC.',
+      'Maslow-Pyramide (Mitarbeitermotivation): Sie ist jetzt eine richtige Pyramide mit Spitze statt gestufter Trapeze. Die Ebene „Wertschätzung“ heißt dort „Individualbedürfnisse“.',
       'Transaktionsanalyse: Es sind fünf Ich-Zustände, nicht sechs. Korrigiert im Kapitel „Transaktionstypen“ und in den zugehörigen Lernkarten.',
     ]},
     {v:'3.3.1',ts:'2026-11-26T10:00',items:[
