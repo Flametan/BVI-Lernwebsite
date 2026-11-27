@@ -41,7 +41,10 @@ const RANK=(function(){
     return {p,t};
   }
   async function send(){
-    const {p,t}=await payload(); await api('PUT','',p);
+    const {p,t}=await payload();
+    // Neu angemeldetes Gerät mit viel mehr XP als auf dem Server: einmal mit Aufholen nachmelden statt zu scheitern
+    try{ await api('PUT','',p); }
+    catch(e){ if(e.code===422&&/unplausibel/.test(e.message)) await api('PUT','',{...p,catchup:true}); else throw e; }
     const s=st(); if(s&&p.av!==undefined){ s.av=t; put(s); }
   }
   async function report(force){
