@@ -3845,6 +3845,12 @@ function makeQuiz(cfg){
     return (_viewAt[_cur]=permuted(q));
   }
 
+  // Nach „Weiter“ steht die nächste Frage wieder oben im Bild – man muss nicht erst hochscrollen
+  function toQuestion(){
+    const el=$('quiz-learn'); if(!el) return;
+    const top=el.getBoundingClientRect().top+window.scrollY-72;
+    if(el.getBoundingClientRect().top<60) window.scrollTo({top:Math.max(0,top),behavior:'instant'});
+  }
   function renderCatBar(){
     const bar=$('quiz-cat-bar');if(!bar)return;
     const cats=[...new Set(Q.map(q=>q.cat))];
@@ -4131,8 +4137,8 @@ function makeQuiz(cfg){
       if(ok)_sessionCorrect++;else _sessionWrong++;
       renderMastery();renderMasteryCats();
     },
-    next(){_cur++;if(_cur>=_order.length){showSummary();return;}renderLearn();},
-    skip(){_sessionSkipped++;_cur++;if(_cur>=_order.length){showSummary();return;}renderLearn();},
+    next(){_cur++;if(_cur>=_order.length){showSummary();return;}renderLearn();toQuestion();},
+    skip(){_sessionSkipped++;_cur++;if(_cur>=_order.length){showSummary();return;}renderLearn();toQuestion();},
     newRound(){buildOrder();renderLearn();},
     toggleBookmark(){
       const q=curQ();if(!q)return;
