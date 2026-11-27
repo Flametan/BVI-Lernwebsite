@@ -155,7 +155,8 @@ function create(cfg, ctx) {
       if (p) {
         // Plausibilität: höchstens so viele Punkte wie an einem sehr fleißigen Tag je vergangenem Tag
         const days = Math.ceil((t - p.seen) / 864e5) + 1, room = cfg.rankDayXp * days;
-        if (xp > p.xp + room || (k === p.week.k && wxp > p.week.xp + room)) return send(res, 422, { error: 'Punkte unplausibel' });
+        // catchup: Gerät mit dem eigenen (token-geprüften) Konto meldet einen höheren Stand nach, z. B. nach neuer Anmeldung am PC
+        if (j.catchup !== true && (xp > p.xp + room || (k === p.week.k && wxp > p.week.xp + room))) return send(res, 422, { error: 'Punkte unplausibel' });
         if (wkNum(k) > wkNum(p.week.k)) { p.prev = p.week; p.week = { k, xp: wxp }; }
         else if (k === p.week.k) p.week.xp = wxp;
         if (name !== p.name) { byName.delete(nameKey(p.name)); p.name = name; byName.set(nameKey(name), id); }
