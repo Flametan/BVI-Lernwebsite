@@ -157,6 +157,10 @@
   .acc-body ul{list-style:none;margin:.4rem 0;display:flex;flex-direction:column;gap:.25rem;}
   .acc-body ul li{position:relative;padding-left:1.1rem;overflow-wrap:break-word;word-break:break-word;}
   .acc-body ul li::before{content:'▸';color:var(--c-gold);font-size:.75rem;position:absolute;left:0;top:.35em;}
+  /* Nummerierte Listen: Zahl steht am linken Textrand wie der Rest der Seite, der Text rückt ein (auch am Handy) */
+  ol:not([class]){list-style:none;counter-reset:olz;margin:.4rem 0;padding:0;}
+  ol:not([class])>li{position:relative;counter-increment:olz;padding-left:1.7rem;overflow-wrap:break-word;word-break:break-word;}
+  ol:not([class])>li::before{content:counter(olz) '.';position:absolute;left:0;top:0;min-width:1.4rem;font-variant-numeric:tabular-nums;color:var(--c-gold);font-weight:600;}
   .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;margin:.75rem 0;}
   .tbl-wrap>table{margin:0;min-width:0;width:100%;}
   .acc-body table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.75rem 0;}
@@ -1632,7 +1636,7 @@ kbd{font-family:var(--f-b);font-size:.75rem;background:var(--m-raised);color:var
 .acc-arrow{color:var(--m-dim);}
 .acc-body{border-top:1px solid var(--m-line);font-size:.92rem;line-height:1.7;color:var(--k-d2d2d2);}
 .acc-body strong{color:var(--m-fg);font-weight:600;}
-.acc-body ul li::before{color:var(--m-accent-fg);}
+.acc-body ul li::before,ol:not([class])>li::before{color:var(--m-accent-fg);}
 .acc-sub{font-weight:500;letter-spacing:.06em;color:var(--m-accent-fg);}
 .acc-check{border:1.5px solid var(--b-4a4a4a);}
 .acc-check:hover{border-color:var(--m-accent);}
