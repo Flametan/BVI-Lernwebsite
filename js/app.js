@@ -4648,7 +4648,7 @@ const CHANGELOG=(function(){
     const seen=_seen;
     el.innerHTML=ENTRIES.map((e,i)=>{
       const isNew=i===0&&e.v!==seen;
-      return`<div class="cl-entry${isNew?' cl-new':''}"><div class="cl-meta"><span class="cl-version">v${e.v}</span>${isNew?'<span class="cl-new-badge">Neu</span>':''}<span class="cl-date">${_fmtTs(e.ts)}</span></div><ul class="cl-items">${e.items.map(it=>`<li>${it}</li>`).join('')}</ul></div>`;
+      return`<div class="cl-entry${isNew?' cl-new':''}"><div class="cl-meta"><span class="cl-version">v${APP_VERSION_ANZEIGE}</span>${isNew?'<span class="cl-new-badge">Neu</span>':''}<span class="cl-date">${_fmtTs(e.ts)}</span></div><ul class="cl-items">${e.items.map(it=>`<li>${it}</li>`).join('')}</ul></div>`;
     }).join('');
   }
   function _updateTile(){
@@ -4658,7 +4658,7 @@ const CHANGELOG=(function(){
     const seen=localStorage.getItem(KEY);
     if(seen!==APP_VERSION){
       badge.classList.remove('hidden');
-      if(desc) desc.textContent='Neu in v'+APP_VERSION+' · Update-Verlauf';
+      if(desc) desc.textContent='Neu in v'+APP_VERSION_ANZEIGE+' · Update-Verlauf';
     } else {
       badge.classList.add('hidden');
       if(desc) desc.textContent='Update-Verlauf · Was ist neu';
@@ -7038,7 +7038,7 @@ const SHELL=(function(){
     const set=(id,txt)=>{ const e=document.getElementById(id); if(e) e.textContent=txt; };
     set('m-notes-count',nc||'');
     set('m-bm-count',bc||'');
-    set('m-version',APP_VERSION);
+    set('m-version',APP_VERSION_ANZEIGE);
     set('m-notif-hour',NOTIF.hour()+':00');
     set('m-goal-val',goalMin()+' min');
     const gt=document.getElementById('m-game-toggle'); if(gt&&typeof GAME!=='undefined') gt.checked=GAME.isOn();
@@ -7120,7 +7120,7 @@ const SHELL=(function(){
       const ctxT=[...v.querySelectorAll('details.acc-item[open] > summary .acc-title')].slice(0,3).map(x=>x.textContent.trim()).filter(Boolean);
       const kon=v.querySelector('.lb-ktab.on'); if(kon) ctxT.unshift('Konzept: '+kon.textContent.trim());
       if(ctxT.length) extra=(extra?extra+'\n':'')+'Geöffnet: '+ctxT.join(' | ');
-      const body='Seite: '+title+(eb?' ('+eb+')':'')+'\nLink: '+location.origin+location.pathname+'?id='+v.id+'\nApp-Version: '+APP_VERSION+'\n'+(extra?'\n'+extra+'\n':'')+'\nWas ist falsch oder unklar?\n';
+      const body='Seite: '+title+(eb?' ('+eb+')':'')+'\nLink: '+location.origin+location.pathname+'?id='+v.id+'\nApp-Version: '+APP_VERSION_ANZEIGE+' ('+APP_VERSION+')'+'\n'+(extra?'\n'+extra+'\n':'')+'\nWas ist falsch oder unklar?\n';
       const mail='mailto:fabian.flemig@gmx.de?subject='+encodeURIComponent('B VI – Fehler: '+title)+'&body='+encodeURIComponent(body);
       const gh='https://github.com/Flametan/BVI-Lernwebsite/issues/new?labels=fehler&title='+encodeURIComponent('Fehler: '+title)+'&body='+encodeURIComponent(body);
       if(!window.__noMail) REPORT.open(mail,gh);
@@ -7301,7 +7301,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   // Übrige Ansichten im Leerlauf nach dem Start einsetzen
   // Ansichten werden erst beim Öffnen (oder beim Aufbau des Suchindex, in Häppchen) eingesetzt: das hält das Dokument klein (3.000 statt 43.000 Knoten) und Seitenwechsel schnell
 
-  console.log('%c B VI %c Lernwebsite '+APP_VERSION+' · flametan/BVI-Lernwebsite ',
+  console.log('%c B VI %c Lernwebsite '+APP_VERSION_ANZEIGE+' · flametan/BVI-Lernwebsite ',
     'background:#A50000;color:#fff;padding:3px 8px;border-radius:4px 0 0 4px;font-family:"DM Mono",monospace;font-weight:700',
     'background:#0A192F;color:#C9A84C;padding:3px 8px;border-radius:0 4px 4px 0;font-family:"DM Mono",monospace');
 });
