@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.2',ts:'2026-11-27T10:00',items:[
+      'Laufbahnprüfung: Die vier Eingrenzungen (IBK, Recht VAk Berlin, FeuAK Modul 3.3, VB IdF NRW) liegen jetzt im Original als eigener Reiter bei der passenden Klausur, zum Nachlesen, was gemeint ist.',
       'Brainyoo (Prüfung): Die Frage zur Lagekarte „Turmstraße / Wiesenstraße“ (Abb. 303) wurde entfernt.',
       'FeuAK: Die Reiter „Prüfungsleistung Hamburg“ und „Lernarbeitsblatt Hamburg BVI April 2026“ wurden entfernt, ebenso die Verweise darauf in anderen Kapiteln.',
       'IBK: Der Reiter „Projektarbeiten“ (Themen April 2026 und Oktober 2025) wurde entfernt.',
