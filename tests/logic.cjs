@@ -738,7 +738,7 @@ const ok = (name, cond, info = '') => { checks++; if (!cond) fails.push(`${name}
     const seen = new Set(); for (let i = 0; i < 6; i++) { seen.add(cat()); IDFQ.skip(); await w(30); }
     r.lern = seen.size === 1 && /^Brainyoo/.test([...seen][0]);
     IDFQ.setMode('exam'); await w(200);
-    let cs = catOf(); r.pruef = cs.length === 25 && cs.every(c => c === 'Brainyoo');
+    let cs = catOf(); r.pruef = cs.length >= 20 && cs.length <= 25 && cs.every(c => c === 'Brainyoo');   // Brainyoo hat nur 24 Fragen ohne Freitext, die Prüfung zeigt alle
     btns().find(b => b.dataset.cat === 'Eingrenzungen').click(); await w(200);
     cs = catOf(); r.pruefEin = cs.length === 25 && cs.every(c => c === 'Eingrenzungen');
     IDFQ.setMode('learn'); NAV.go('v-home', 'Start'); return r;

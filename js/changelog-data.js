@@ -1,6 +1,7 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
     {v:'3.3.2',ts:'2026-11-27T10:00',items:[
+      'Brainyoo (Prüfung): Die Frage zur Lagekarte „Turmstraße / Wiesenstraße“ (Abb. 303) wurde entfernt.',
       'FeuAK: Die Reiter „Prüfungsleistung Hamburg“ und „Lernarbeitsblatt Hamburg BVI April 2026“ wurden entfernt, ebenso die Verweise darauf in anderen Kapiteln.',
       'IBK: Der Reiter „Projektarbeiten“ (Themen April 2026 und Oktober 2025) wurde entfernt.',
       'Die angezeigte Version steigt nur noch monatlich: jetzt 3.3, ab 30.11.2026 3.3.1, ab 31.12.2026 3.3.2 (Einstellungen, Update-Verlauf, Fehlermeldung).',
