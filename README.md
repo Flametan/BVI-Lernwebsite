@@ -154,7 +154,7 @@ Wichtige CSS-Klassen: `.info-card`, `.def-box`, `.hint`, `.step-stack`, `.acc-li
 
 ## Version
 
-Aktuelle Version: **3.3.2**  
+Aktuelle Version: **3.3.3**  
 (Angezeigt wird in der App nur eine monatlich steigende Version: 3.3, ab 30.11.2026 3.3.1, ab 31.12.2026 3.3.2 – `APP_VERSION_ANZEIGE` in `js/version.js`.)  
 `js/version.js` und `sw.js` müssen immer synchron gehalten werden.
 
@@ -162,10 +162,10 @@ Aktuelle Version: **3.3.2**
 
 ```javascript
 // js/version.js
-const APP_VERSION = '3.3.2';
+const APP_VERSION = '3.3.3';
 
 // sw.js (erste Zeile)
-const APP_VERSION = '3.3.2'; // keep in sync with js/version.js
+const APP_VERSION = '3.3.3'; // keep in sync with js/version.js
 ```
 
 ---

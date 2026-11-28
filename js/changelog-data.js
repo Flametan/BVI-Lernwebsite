@@ -1,5 +1,8 @@
 /* Update-Verlauf. Neueste Version zuerst; Änderungen eines Tages gehören in den Eintrag dieses Tages. Wird erst beim Öffnen des Verlaufs geladen. */
 const CHANGELOG_ENTRIES=[
+    {v:'3.3.3',ts:'2026-11-28T10:00',items:[
+      'Prüfung: Neuer Reiter „Lernskript“ mit dem Lernskript (5 Kapitel, 17 Schemata) und dem Spickzettel zum Lesen am Handy. Mit Suche, „Weiterlesen“, Springen-Blatt und Lesefortschritt.',
+    ]},
     {v:'3.3.2',ts:'2026-11-27T10:00',items:[
       'Laufbahnprüfung: Die vier Eingrenzungen (IBK, Recht VAk Berlin, FeuAK Modul 3.3, VB IdF NRW) liegen jetzt im Original als eigener Reiter bei der passenden Klausur, zum Nachlesen, was gemeint ist.',
       'Brainyoo (Prüfung): Die Frage zur Lagekarte „Turmstraße / Wiesenstraße“ (Abb. 303) wurde entfernt.',
