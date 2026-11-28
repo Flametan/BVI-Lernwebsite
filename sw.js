@@ -1,4 +1,4 @@
-const APP_VERSION = '3.3.2'; // keep in sync with js/version.js
+const APP_VERSION = '3.3.3'; // keep in sync with js/version.js
 const CACHE = 'bvi-v' + APP_VERSION;
 // Kern: wird beim Installieren zwingend geladen (ohne ihn startet die App nicht)
 const CORE = [
@@ -40,6 +40,11 @@ const REST = [
   './js/laufbahn-data.js',
   './js/scenarios.js',
   './js/fallbearbeitung.js',
+  './js/lernskript.js',
+  './js/lernskript-data.js',
+  './img/lernskript/01.png','./img/lernskript/02.png','./img/lernskript/03.png','./img/lernskript/04.png','./img/lernskript/05.png','./img/lernskript/06.png',
+  './img/lernskript/07.png','./img/lernskript/08.png','./img/lernskript/09.png','./img/lernskript/10.png','./img/lernskript/11.png','./img/lernskript/12.png',
+  './img/lernskript/13.png','./img/lernskript/14.png','./img/lernskript/15.png','./img/lernskript/16.png','./img/lernskript/17.png',
   './js/changelog-data.js',
   './js/pause.js',
   './js/medal.js',

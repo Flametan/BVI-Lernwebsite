@@ -3,6 +3,8 @@
    NAV.go(id, label) · NAV.back() · NAV.home() · NAV.jumpTo(idx)
 ====================================================================== */
 /* ── Nachladen selten gebrauchter Teile (Szenarien, Fallbearbeitung, Update-Verlauf): ein Skript pro Datei, nur einmal ── */
+/* Lernskript und Spickzettel (Prüfung → Lernskript): Skript und Inhalt werden beim ersten Öffnen nachgeladen */
+function lsLoad(){ return typeof LS!=='undefined'?Promise.resolve():LAZY.script('js/lernskript-data.js').then(()=>LAZY.script('js/lernskript.js')); }
 const LAZY=(function(){
   const P={};
   return { script(src){ return P[src]||(P[src]=new Promise((ok,no)=>{ const x=document.createElement('script'); x.src=src; x.onload=ok; x.onerror=()=>{ delete P[src]; x.remove(); no(new Error(src)); }; document.body.appendChild(x); })); } };
@@ -67,6 +69,7 @@ const NAV = (function(){
     if(id==='v-home'){ SHELL.newQuip(); SHELL.renderHome(); }
     if(typeof GAME!=='undefined') GAME.onShow(id);
     if(id==='v-pruefung') SHELL.renderExam();
+    if(id==='v-ls') lsLoad().then(()=>{ if(document.getElementById('v-ls').classList.contains('active')) LS.render(); }).catch(()=>TOAST.show('Das Lernskript konnte nicht geladen werden. Bitte Verbindung prüfen.',{type:'info'}));
     if(typeof LB!=='undefined') LB.onShow(id);
     if(typeof JGUI!=='undefined'&&JGUI.names) setTimeout(JGUI.names,0);
     if(id==='v-settings') SHELL.syncSettings();
@@ -101,16 +104,17 @@ const NAV = (function(){
   }
 
   return {
-    go(id,label){ _dir='forward'; stack.push({id,label}); history.pushState({stack:[...stack]},''); show(id); },
+    go(id,label,r){ _dir='forward'; stack.push(r?{id,label,r}:{id,label}); history.pushState({stack:[...stack]},''); show(id); },
     back(){ if(typeof LP!=='undefined'&&LP.isOpen()){ LP.back(); return; } if(typeof PAUSE!=='undefined'&&_activeEl&&_activeEl.id==='v-pause'&&PAUSE.back()) return; if(!stack.length) return; _dir='back'; stack.pop(); show(stack.length?stack[stack.length-1].id:'v-home'); },
     jumpTo(idx){ _dir=idx<stack.length-1?'back':'forward'; stack=stack.slice(0,idx+1); history.pushState({stack:[...stack]},''); show(idx>=0?stack[idx].id:'v-home'); },
     home(){ _dir='back'; stack=[]; history.pushState({home:true},''); show('v-home'); },
     tab(id,label){ _dir='forward'; stack=[{id,label}]; history.pushState({stack:[...stack]},''); show(id); },
     depth(){ return stack.length; },
+    top(){ return stack.length?stack[stack.length-1]:null; },
     // Seite davor im Verlauf (z. B. die Themenübersicht, von der man kam)
     parent(){ return stack.length>1?stack[stack.length-2].id:null; },
     // Aktuelle Seite durch eine andere ersetzen (Kapitel-Blättern über Seitengrenzen), ohne neuen Verlaufseintrag
-    replace(id,label){ _dir='forward'; if(stack.length) stack[stack.length-1]={id,label}; else stack=[{id,label}]; try{ history.replaceState(Object.assign({},history.state||{},{stack:[...stack]}),''); }catch(e){} show(id); },
+    replace(id,label,r){ _dir='forward'; const e=r?{id,label,r}:{id,label}; if(stack.length) stack[stack.length-1]=e; else stack=[e]; try{ history.replaceState(Object.assign({},history.state||{},{stack:[...stack]}),''); }catch(e){} show(id); },
     _restoreStack(s){ _dir='back'; stack=s; show(s.length?s[s.length-1].id:'v-home'); }
   };
 })();
@@ -1776,7 +1780,7 @@ const SETTINGS = (function(){
 ====================================================================== */
 const NOTES = (function(){
   let _view = null, _openKey = null;
-  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz','v-plan','v-pruefung','v-settings','v-notizen']);
+  const SKIP = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz','v-plan','v-pruefung','v-ls','v-settings','v-notizen']);
   function key(){ return _openKey||'bvi_note_'+(_view||'home'); }
   function getBtn(){
     if(!_view) return null;
@@ -1904,7 +1908,7 @@ const BOOKMARKS = (function(){
 /* ======================================================================
    LESEFORTSCHRITT
 ====================================================================== */
-const NO_PROG = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz','v-plan','v-pruefung','v-settings','v-notizen']);
+const NO_PROG = new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz','v-plan','v-pruefung','v-ls','v-settings','v-notizen']);
 function updateReadProgress(){
   const bar = document.getElementById('read-prog');
   const fill = document.getElementById('read-prog-fill');
@@ -3088,7 +3092,7 @@ const POMO=(function(){
    CHECKS – Abschnitte abhaken
 ====================================================================== */
 const CHECKS=(function(){
-  const SKIP=new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz','v-plan','v-pruefung','v-settings','v-notizen']);
+  const SKIP=new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz','v-plan','v-pruefung','v-ls','v-settings','v-notizen']);
   function key(id){ return 'bvi_checks_'+id; }
   function load(id){ try{ return JSON.parse(localStorage.getItem(key(id))||'{}'); }catch{ return {}; } }
   function save(id,d){ try{ localStorage.setItem(key(id),JSON.stringify(d)); }catch{} }
@@ -3664,7 +3668,7 @@ const WEAK=(function(){
 ====================================================================== */
 const RECENT=(function(){
   const KEY='bvi_recent'; const MAX=5;
-  const SKIP=new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz','v-plan','v-pruefung','v-settings','v-notizen']);
+  const SKIP=new Set(['v-home','v-flashcards','v-simulator','v-bookmarks','v-abkuerzungen','v-app','v-impressum','v-datenschutz','v-plan','v-pruefung','v-ls','v-settings','v-notizen']);
   function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch{ return []; } }
   function save(d){ try{ localStorage.setItem(KEY,JSON.stringify(d)); }catch{} }
   return {
@@ -6809,20 +6813,31 @@ const SHELL=(function(){
       return `<div class="jg-rw ex-f hot${e.id==='v-lb-start'?' lbg':''}"><button type="button" class="ex-fb" onclick="${f.on}"><span class="ex-ftag">Wichtig</span><span class="ex-ft">${esc(f.t1)}</span><span class="ex-fs">${esc(f.t2)}</span><span class="ex-fgo">${f.lock?lockI+' Entsperren':'Öffnen <i>›</i>'}</span></button>${starB(e.id)}${del(e.id)}</div>`;
     });
     const nMods=mods.filter(m=>m.ent.length).length;
-    let view='imp', openSet=null; try{ view=localStorage.getItem('bvi_exam_view')==='mod'?'mod':'imp'; openSet=JSON.parse(localStorage.getItem('bvi_exam_open')||'null'); }catch(e){}
+    let view='imp', openSet=null; try{ const sv=localStorage.getItem('bvi_exam_view'); view=sv==='mod'||sv==='ls'?sv:'imp'; openSet=JSON.parse(localStorage.getItem('bvi_exam_open')||'null'); }catch(e){}
     if(edit) view='mod';
     if(!Array.isArray(openSet)){ const tid=tgt&&tgt[0], hit=mods.find(m=>m.ent.some(e=>e.id===tid))||mods.find(m=>m.ent.length); openSet=hit?[hit.key]:[]; }
     const acc=m=>{ const o=openSet.includes(m.key)||edit; const n=m.ent.length;
       return `<div class="ex-acc${o?' open':''}" data-k="${m.key}"><button type="button" class="ex-ah" aria-expanded="${o}" onclick="SHELL.examAcc('${m.key}')"><span class="ex-an">${esc(m.name)}</span><span class="ex-ac">${n}</span><svg class="m-acc-chv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="ex-ab"><div class="m-list">${m.ent.map(e=>e.row).join('')||'<div class="jg-none">Keine Prüfungen</div>'}</div></div></div>`; };
-    const seg=edit?'':`<div class="ex-seg" role="tablist" aria-label="Ansicht"><button type="button" role="tab" class="${view==='imp'?'on':''}" aria-selected="${view==='imp'}" onclick="SHELL.examView('imp')">Wichtig <b>${impList.length}</b></button><button type="button" role="tab" class="${view==='mod'?'on':''}" aria-selected="${view==='mod'}" onclick="SHELL.examView('mod')">Module <b>${nMods}</b></button><i class="ex-pill" aria-hidden="true"></i></div>`;
+    const seg=edit?'':`<div class="ex-seg" role="tablist" aria-label="Ansicht"><button type="button" role="tab" class="${view==='imp'?'on':''}" aria-selected="${view==='imp'}" onclick="SHELL.examView('imp')">Wichtig <b>${impList.length}</b></button><button type="button" role="tab" class="${view==='mod'?'on':''}" aria-selected="${view==='mod'}" onclick="SHELL.examView('mod')">Module <b>${nMods}</b></button><button type="button" role="tab" class="${view==='ls'?'on':''}" aria-selected="${view==='ls'}" onclick="SHELL.examView('ls')">Lernskript</button><i class="ex-pill" aria-hidden="true"></i></div>`;
     const impPane=`<div class="ex-pane ex-imp"><div class="ex-ph"><span>Wichtig</span><span class="ex-star"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9 6.8 19.7l1-5.9-4.3-4.1 5.9-.8z"/></svg>${impList.length}</span></div><div class="m-list">${impRows.join('')||'<div class="jg-none">Noch nichts als wichtig markiert. Im Reiter „Module“ lässt sich der Stern bei einer Prüfung antippen.</div>'}</div></div>`;
-    list.innerHTML=`${hint}<div class="ex-wrap${edit?' ex-edit':''}" data-v="${view}">${seg}${impPane}<div class="ex-pane ex-mod"><div class="ex-ph"><span>Module</span></div>${mods.map(acc).join('')}</div></div>${legend}`;
+    list.innerHTML=`${hint}<div class="ex-wrap${edit?' ex-edit':''}" data-v="${view}">${seg}${impPane}<div class="ex-pane ex-mod"><div class="ex-ph"><span>Module</span></div>${mods.map(acc).join('')}</div>${edit?'':'<div class="ex-pane ex-ls" id="ls-pane"></div>'}</div>${legend}`;
+    if(!edit) lsMount(view);
+  }
+  // Reiter „Lernskript“: Inhalt wird erst geladen, wenn er gebraucht wird (Handy: Reiter offen; Tablet und PC: immer sichtbar)
+  function lsMount(view){
+    const el=document.getElementById('ls-pane'); if(!el) return;
+    if(view!=='ls'&&!(window.matchMedia&&matchMedia('(min-width:701px)').matches)) return;
+    if(el.dataset.ok) return;
+    lsLoad().then(()=>{ LS.home(el); el.dataset.ok='1'; }).catch(()=>{ el.innerHTML='<div class="m-note">Das Lernskript konnte nicht geladen werden. Bitte Verbindung prüfen.</div>'; });
   }
   function examView(v){
-    try{ localStorage.setItem('bvi_exam_view',v==='mod'?'mod':'imp'); }catch(e){}
+    v=v==='mod'||v==='ls'?v:'imp';
+    try{ localStorage.setItem('bvi_exam_view',v); }catch(e){}
     const w=document.querySelector('#m-exam-list .ex-wrap'); if(!w) return;
-    w.dataset.v=v==='mod'?'mod':'imp';
-    w.querySelectorAll('.ex-seg button').forEach(b=>{ const on=(b.textContent.startsWith('Wichtig'))===(v!=='mod'); b.classList.toggle('on',on); b.setAttribute('aria-selected',on); });
+    w.dataset.v=v;
+    const names={imp:'Wichtig',mod:'Module',ls:'Lernskript'};
+    w.querySelectorAll('.ex-seg button').forEach(b=>{ const on=b.textContent.startsWith(names[v]); b.classList.toggle('on',on); b.setAttribute('aria-selected',on); });
+    if(v==='ls') lsMount(v);
   }
   function examAcc(key){
     const el=document.querySelector(`#m-exam-list .ex-acc[data-k="${key}"]`); if(!el) return;
